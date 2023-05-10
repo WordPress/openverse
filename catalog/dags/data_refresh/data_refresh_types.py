@@ -51,6 +51,7 @@ class DataRefresh:
     refresh_matview_timeout: timedelta = timedelta(hours=1)
     create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
     create_materialized_view_timeout: timedelta = timedelta(hours=1)
+    create_filtered_index_timeout: timedelta = timedelta(days=1)
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
@@ -65,8 +66,8 @@ DATA_REFRESH_CONFIGS = [
         data_refresh_timeout=timedelta(days=4),
         refresh_metrics_timeout=timedelta(hours=24),
         refresh_matview_timeout=timedelta(days=21),
-        create_pop_constants_view_timeout=timedelta(hours=8),
-        create_materialized_view_timeout=timedelta(hours=5),
+        create_pop_constants_view_timeout=timedelta(hours=24),
+        create_materialized_view_timeout=timedelta(days=21),
     ),
     DataRefresh(media_type="audio"),
 ]

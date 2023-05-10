@@ -2,29 +2,25 @@ name: openverse/build-docs
 description: Build Openverse full-stack docs
 
 inputs:
-  glotpress_username:
+  github_token:
     required: true
-    description: The username for the GlotPress account for bulk download
-
-  glotpress_password:
-    required: true
-    description: The password for the GlotPress account for bulk download
+    description: GitHub token to use for issue link resolution in documentation
 
 runs:
   using: "composite"
   steps:
     - name: Build Sphinx
       shell: bash
+      env:
+        LINK_ISSUES_GITHUB_TOKEN: ${{ inputs.github_token }}
       run: |
-        just documentation/build
+        # Pass -W to fail CI if warnings exist
+        just documentation/build -W
 
     - name: Install translations
       shell: bash
       run: |
         just frontend/run i18n
-      env:
-        GLOTPRESS_USERNAME: ${{ inputs.glotpress_username }}
-        GLOTPRESS_PASSWORD: ${{ inputs.glotpress_password }}
 
     - name: Build Storybook
       shell: bash

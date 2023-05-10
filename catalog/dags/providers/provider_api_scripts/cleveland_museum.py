@@ -39,15 +39,17 @@ class ClevelandDataIngester(ProviderDataIngester):
     def get_record_data(self, data):
         license_ = data.get("share_license_status", "").lower()
         if license_ != "cc0":
-            logger.error("Wrong license image")
+            logger.debug(f"Wrong license image: {license_}")
             return None
 
-        foreign_id = data.get("id")
-        if foreign_id is None:
+        # This would also be falsy if id is equal to `0`.
+        if not (foreign_id := data.get("id")):
             return None
 
-        image = self._get_image_data(data.get("images", {}))
-        if image is None or image.get("url") is None:
+        if not (foreign_landing_url := data.get("url")):
+            return None
+
+        if not (image := self._get_image_data(data.get("images", {}))):
             return None
 
         if data.get("creators"):
@@ -57,7 +59,7 @@ class ClevelandDataIngester(ProviderDataIngester):
 
         return {
             "foreign_identifier": f"{foreign_id}",
-            "foreign_landing_url": data.get("url"),
+            "foreign_landing_url": foreign_landing_url,
             "title": data.get("title", None),
             "creator": creator_name,
             "image_url": image["url"],
@@ -69,14 +71,16 @@ class ClevelandDataIngester(ProviderDataIngester):
         }
 
     @staticmethod
-    def _get_image_data(image_data):
+    def _get_image_data(image_data) -> dict | None:
         # Returns the best available image in the `image_data` dict,
         # preferring `web` and falling back to other types.
-        if image_data is None:
+        if not image_data:
             return None
 
         for key in ["web", "print", "full"]:
-            if keyed_image := image_data.get(key):
+            # This dictionary contains the required `url` parameter, so we
+            # only use the item that contains the `url` key.
+            if (keyed_image := image_data.get(key)) and "url" in keyed_image:
                 return keyed_image
         return None
 

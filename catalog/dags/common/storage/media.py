@@ -5,7 +5,6 @@ from datetime import datetime
 
 from common import urls
 from common.extensions import extract_filetype
-from common.licenses import is_valid_license_info
 from common.loader import provider_details as prov
 from common.storage.tsv_columns import CURRENT_VERSION
 
@@ -101,7 +100,6 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         Returns a dictionary: media_type-specific fields are untouched,
         and for common metadata we:
-        - validate `license_info`
         - validate `filetype`
         - validate `url`, `foreign_landing_url`, `thumbnail_url`, and `creator_url`
           (stripping trailing slashes if requested)
@@ -111,16 +109,11 @@ class MediaStore(metaclass=abc.ABCMeta):
         - add `provider`,
         - add default `category`, if available.
 
-        Returns None if license is invalid. Raises an error if missing required
-        `foreign_identifier`, `foreign_landing_url`, or `url`.
+        Raises an error if missing any of the required fields:
+        `license_info`, `foreign_identifier`, `foreign_landing_url`, or `url`.
         """
-        if media_data["license_info"].license is None or not is_valid_license_info(
-            media_data["license_info"]
-        ):
-            logger.debug("Discarding media due to invalid license")
-            return None
-
         for field in [
+            "license_info",
             "foreign_identifier",
             "foreign_landing_url",
             f"{self.media_type}_url",

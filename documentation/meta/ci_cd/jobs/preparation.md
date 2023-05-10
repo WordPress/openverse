@@ -1,6 +1,6 @@
 # Preparation jobs
 
-### `get-changes`
+## `get-changes`
 
 Triggers the [`get-changes`](#get-changes) action to determine the changes. In
 addition to the `changes` from the action output, it emits some additional
@@ -22,7 +22,7 @@ changes for the corresponding stack.
 }
 ```
 
-### `get-image-tag`
+## `get-image-tag`
 
 Determines the tag to use for the Docker images. If the job is triggered via a
 workflow dispatch, the images are tagged with the `image_tag` input taken by the

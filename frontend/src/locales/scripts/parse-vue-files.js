@@ -111,7 +111,7 @@ function parseVueFiles(vueFilesPath) {
     file: '/components/AppModal.vue'
   },
  * @param {string} vueFiles - glob pattern to find all the vue files,
- * from the BASE_PATH (`openverse-frontend/src`)
+ * from the BASE_PATH (`openverse/frontend/src`)
  * @return {Array<Object>}
  */
 const getParsedVueFiles = (vueFiles) => {

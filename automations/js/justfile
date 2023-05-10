@@ -42,6 +42,7 @@ render-release-drafter:
     just render templates/release-drafter.yml.jinja .github/release-drafter-api.yml '{ "app": "API" }'
     just render templates/release-drafter.yml.jinja .github/release-drafter-ingestion_server.yml '{ "app": "Ingestion server" }'
     just render templates/release-drafter.yml.jinja .github/release-drafter-frontend.yml '{ "app": "Frontend" }'
+    just render templates/release-drafter.yml.jinja .github/release-drafter-catalog.yml '{ "app": "Catalog" }'
 
 # Render all templates (shortcut for easy iteration)
 render-templates:

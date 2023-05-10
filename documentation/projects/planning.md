@@ -50,6 +50,14 @@ appendixes that go beyond the required scope of the project planning process
 described in this document. Those documents should accompany the required ones
 in the same subdirectory for the project.
 
+```{warning}
+Subdirectories require an `index.md` in order to be included in the documentation site's table of contents.
+
+Because project documents prefix their titles with a date, we can safely use a glob to include all project planning documents in a project directory and have them intuitively ordered by date.
+
+Refer to the [project `index.md` templates](/projects/templates/index.md) for a starting point.
+```
+
 All project documentation can be authored with any tool, but must be written in
 [MyST/Commonmark+ flavored Markdown](https://myst-parser.readthedocs.io/en/latest/syntax/reference.html).
 
@@ -227,9 +235,12 @@ will be extended by one week at a time as-necessary.
 #### Wrapping up
 
 Finally, the plan is merged, then the project thread is given a substantial
-update. At this point we should be able to fill in all metadata, including some
-additional fields:
+update. At this point we should be able to fill in most project metadata and
+some additional details:
 
+- Create GitHub issues for all necessary implementation plans and link to them
+  in the project thread body. This allows implementation plans to be assigned
+  and scheduled properly.
 - Links to the kick-off and technical implementation documents
 - Links to any other external documents or supporting materials
 - List stakeholders:

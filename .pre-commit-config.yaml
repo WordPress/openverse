@@ -19,7 +19,7 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: check-executables-have-shebangs
       - id: check-json
-        exclude: tsconfig.json # contains comments
+        exclude: tsconfig.json|.devcontainer/devcontainer.json # contains comments
       - id: check-case-conflict
       - id: check-toml
       - id: check-merge-conflict
@@ -125,6 +125,11 @@ repos:
     rev: v0.9.0
     hooks:
       - id: shellcheck
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.6.0-2
+    hooks:
+      - id: shfmt-docker
 
   - repo: https://github.com/rhysd/actionlint
     rev: v1.6.24

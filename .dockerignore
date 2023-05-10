@@ -1,0 +1,6 @@
+# Exclude everything and only include certain files.
+# This Docker context is used to build the frontend Docker image.
+*
+!.npmrc
+!.pnpmfile.cjs
+!pnpm-lock.yaml

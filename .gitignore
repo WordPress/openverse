@@ -27,6 +27,7 @@ __pycache__/
 node_modules/
 npm-debug.log*
 .pnpm-debug.log
+.pnpm-store/
 
 # Nuxt
 .nuxt

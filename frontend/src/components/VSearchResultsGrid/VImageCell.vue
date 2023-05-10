@@ -31,7 +31,7 @@
       <figcaption
         class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
       >
-        <span class="sr-only">{{ image.title }}</span>
+        <h2 class="sr-only">{{ image.title }}</h2>
         <VLicense :license="image.license" :hide-name="true" />
       </figcaption>
     </figure>

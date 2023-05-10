@@ -48,7 +48,7 @@
         v-else
         v-show="localCheckedState"
         class="absolute inset-0 transform text-white"
-        :icon-path="checkIcon"
+        name="check"
         :size="5"
       />
     </span>
@@ -63,8 +63,6 @@ import { computed, defineComponent, ref, watch } from "vue"
 import { defineEvent } from "~/types/emits"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import checkIcon from "~/assets/icons/check.svg"
 
 type CheckboxAttrs = {
   name: string
@@ -182,7 +180,6 @@ export default defineComponent({
       })
     }
     return {
-      checkIcon,
       localCheckedState,
       labelClasses,
       inputAttrs,

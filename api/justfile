@@ -79,8 +79,8 @@ stats media="images" host="localhost:50280":
     just _curl-get "{{ media }}/stats/" {{ host }}
 
 # Launch a `pgcli` shell in the web container
-pgcli db_host="db" db_port="5432" db_name="openledger" db_user="deploy" db_password="deploy": up
-    env DC_USER="opener" just ../exec web pgcli postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+pgcli db_user_pass="deploy" db_name="openledger": up
+    env DC_USER="opener" just ../_pgcli web {{ db_user_pass }} {{ db_name }} db
 
 #########################
 # Django administration #
@@ -116,7 +116,10 @@ test-local *args:
 
 # Run smoke test for the API docs
 doc-test: wait-up
-    curl --fail 'http://localhost:50280/v1/?format=openapi'
+    curl \
+      -H 'Accept: application/vnd.oai.openapi+json' \
+      --fail \
+      'http://localhost:50280/v1/schema/' > openapi.json
 
 #########
 # NGINX #

@@ -31,7 +31,7 @@ jobs:
           script: |
             await github.rest.issues.deleteComment({
               owner: 'WordPress',
-              repo: 'openverse-api',
+              repo: 'openverse',
               comment_id: ${{ steps.existing-warning.outputs.comment-id }},
             })
 

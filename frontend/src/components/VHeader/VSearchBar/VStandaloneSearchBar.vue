@@ -32,14 +32,14 @@
       type="submit"
       :aria-label="$t('search.search').toString()"
       size="disabled"
-      :variant="isHomeRoute ? 'primary' : 'plain'"
-      class="h-full w-14 flex-shrink-0 rounded-s-none transition-none sm:w-16"
+      :variant="isHomeRoute ? 'filled-pink' : 'plain'"
+      class="h-full w-14 flex-shrink-0 rounded-s-none sm:w-16"
       :class="{
         'search-button border !border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:!border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:!border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:!border-tx group-hover:bg-pink group-hover:text-white group-focus:!border-tx':
           !isHomeRoute,
       }"
     >
-      <VIcon :icon-path="searchIcon" />
+      <VIcon name="search" />
     </VButton>
   </form>
 </template>
@@ -51,8 +51,6 @@ import { defineEvent } from "~/types/emits"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import searchIcon from "~/assets/icons/search.svg"
 
 /**
  * Displays a search input for a search query and is attached to an action button
@@ -97,8 +95,6 @@ export default defineComponent({
       inputRef,
       handleSearch,
       isHomeRoute,
-
-      searchIcon,
     }
   },
 })

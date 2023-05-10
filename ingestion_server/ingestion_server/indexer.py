@@ -488,6 +488,21 @@ class TableIndexer:
         destination_index_suffix: str | None = None,
         **_,
     ):
+        """
+        Create and populate a filtered index without documents with sensitive terms.
+
+        :param model_name: The model/media type the filtered index is for.
+        :param origin_index_suffix: The suffix of the origin index on which the
+        filtered index should be based. If not supplied, the filtered index will be
+        based upon the index aliased to ``model_name`` at the time of execution.
+        :param destination_index_suffix: The suffix to use for the destination index.
+        This can be configured independently of the origin index suffix to allow for
+        multiple filtered index creations to occur against the same origin index, i.e.,
+        in the case where sensitive terms change before a data refresh creates a new
+        origin index and we wish to update the filtered index immediately. If not
+        supplied, a UUID based suffix will be generated. This does not affect the
+        final alias used.
+        """
         # Allow relying on the model-name-based alias by
         # not suppliying `origin_index_suffix`
         source_index = (
@@ -533,4 +548,6 @@ class TableIndexer:
 
         self.refresh(index_name=destination_index, change_settings=True)
 
+        if self.progress is not None:
+            self.progress.value = 100  # mark job as completed
         self.ping_callback()

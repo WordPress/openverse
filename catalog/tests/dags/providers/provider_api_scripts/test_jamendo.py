@@ -104,14 +104,31 @@ def test_get_record_data():
 @pytest.mark.parametrize(
     "required_field",
     [
-        "shareurl",  # foreign identifier
-        "audio",  # audio url
-        "license_ccurl",  # license
+        pytest.param("id", id="id-foreign_identifier"),
+        pytest.param("shareurl", id="shareurl-foreign_landing_url"),
+        pytest.param("audio", id="audio-audio_url"),
+        pytest.param("license_ccurl", id="license_ccurl-license_info"),
     ],
 )
 def test_get_record_data_returns_none_when_required_data_is_null(required_field):
     audio_data = _get_resource_json("audio_data_example.json")
     audio_data.pop(required_field, None)
+    assert jamendo.get_record_data(audio_data) is None
+
+
+@pytest.mark.parametrize(
+    "required_field",
+    [
+        # TODO: uncomment when the stricter checks for required parameters are merged
+        # pytest.param("id", id="id-foreign_identifier"),
+        # pytest.param("shareurl", id="shareurl-foreign_landing_url"),
+        # pytest.param("audio", id="audio-audio_url"),
+        pytest.param("license_ccurl", id="license_ccurl-license_info"),
+    ],
+)
+def test_get_record_data_returns_none_when_required_data_is_falsy(required_field):
+    audio_data = _get_resource_json("audio_data_example.json")
+    audio_data[required_field] = ""
     assert jamendo.get_record_data(audio_data) is None
 
 
@@ -169,4 +186,24 @@ def test_get_tags():
 )
 def test_add_trailing_slash(url, expected):
     actual = jamendo._add_trailing_slash(url)
+    assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "thumbnail_url, expected",
+    [
+        (
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300&trackid=100007",
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+        ),
+        (
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+            "https://usercontent.jamendo.com/?type=album&id=100007&width=300",
+        ),
+        (None, None),
+        ("", None),
+    ],
+)
+def test_remove_track_id_handles_data(thumbnail_url, expected):
+    actual = jamendo._remove_trackid(thumbnail_url)
     assert actual == expected

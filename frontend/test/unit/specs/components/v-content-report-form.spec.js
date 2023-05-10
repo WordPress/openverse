@@ -1,21 +1,20 @@
-import { fireEvent, render, screen } from "@testing-library/vue"
-import VueI18n from "vue-i18n"
+import { fireEvent, screen } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import ReportService from "~/data/report-service"
 
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 
-const messages = require("~/locales/en.json")
-
-const i18n = new VueI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: messages },
-})
+jest.mock("~/composables/use-analytics", () => ({
+  useAnalytics: jest.fn(() => ({
+    sendCustomEvent: jest.fn(),
+  })),
+}))
 
 const getDmcaInput = () =>
   screen.getByRole("radio", {
-    name: /dmca/i,
+    name: /Infringes copyright/i,
   })
 const getMatureInput = () =>
   screen.getByRole("radio", {
@@ -31,18 +30,18 @@ const getCancelButton = () =>
   })
 const getReportButton = () =>
   screen.getByRole("button", {
-    name: /submit/i,
+    name: /report/i,
   })
 
 // When DMCA selected
 const getReportLink = () =>
   screen.getByRole("link", {
-    name: /dmca\.open/i,
+    name: /DMCA form/i,
   })
 // When other selected
 const getDescriptionTextarea = () =>
   screen.getByRole("textbox", {
-    name: /other\.note/i,
+    name: /Describe the issue. Required/i,
   })
 
 const mockImplementation = () => Promise.resolve()
@@ -69,7 +68,6 @@ describe("VContentReportForm", () => {
 
     options = {
       propsData: props,
-      i18n,
       stubs: ["VIcon"],
     }
   })
@@ -100,7 +98,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getReportButton())
 
     // Submission error message
-    getByText("media-details.content-report.failure.note")
+    getByText(/Something went wrong, please try again after some time./i)
   })
 
   it("should render DMCA notice", async () => {
@@ -119,7 +117,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getOtherInput())
 
     // Report form with a submit button
-    getByText("media-details.content-report.form.other.note")
+    getByText(/Describe the issue./i)
     getDescriptionTextarea()
   })
 

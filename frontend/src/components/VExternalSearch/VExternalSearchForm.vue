@@ -48,39 +48,28 @@
       }}<VIcon
         class="text-dark-charcoal-40"
         :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
-        :icon-path="caretDownIcon"
+        name="caret-down"
       />
     </VButton>
     <template v-if="triggerElement">
-      <VPopoverContent
-        v-if="isMd"
-        id="external-sources-popover"
-        aria-labelledby="external-sources-button"
+      <Component
+        :is="isMd ? 'VPopoverContent' : 'VModalContent'"
+        :id="isMd ? 'external-sources-popover' : 'external-sources-modal'"
+        :aria-labelledby="'external-sources-button'"
         :hide="closeDialog"
         :trigger-element="triggerElement"
         :visible="isVisible"
-        z-index="popover"
+        :z-index="isMd ? 'popover' : 'modal'"
+        :variant="isMd ? undefined : 'centered'"
       >
         <VExternalSourceList
           class="flex flex-col"
           :external-sources="externalSources"
-          @close="closeDialog"
-      /></VPopoverContent>
-      <VModalContent
-        v-else
-        id="external-sources-modal"
-        aria-labelledby="external-sources-button"
-        :trigger-element="triggerElement"
-        :hide="closeDialog"
-        :visible="isVisible"
-        variant="centered"
-      >
-        <VExternalSourceList
-          class="flex-col justify-center"
-          :external-sources="externalSources"
+          :media-type="type"
+          :search-term="searchTerm"
           @close="closeDialog"
         />
-      </VModalContent>
+      </Component>
     </template>
   </section>
 </template>
@@ -102,8 +91,6 @@ import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
-
-import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 export default defineComponent({
   name: "VExternalSearchForm",
@@ -176,8 +163,6 @@ export default defineComponent({
       triggerA11yProps,
 
       isVisible,
-
-      caretDownIcon,
     }
   },
 })

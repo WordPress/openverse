@@ -1,4 +1,6 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VInputField from "~/components/VInputField/VInputField.vue"
 

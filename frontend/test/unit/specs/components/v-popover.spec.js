@@ -1,6 +1,8 @@
 import Vue from "vue"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { noFocusableElementWarning } from "~/composables/use-focus-on-show"
 
@@ -31,7 +33,7 @@ const TestWrapper = Vue.component("TestWrapper", {
       <div>External area</div>
       <VPopover label="Test label" v-bind="popoverProps">
         <template #trigger="{ visible, a11yProps }">
-          <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
+          <VButton variant="bordered-white" :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>
         <div :tabindex="popoverContentTabIndex">Code is Poetry</div>
       </VPopover>

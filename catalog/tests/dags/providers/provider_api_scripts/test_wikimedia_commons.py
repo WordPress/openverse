@@ -249,6 +249,33 @@ def test_extract_title_gets_cleaned_title(wmc):
     assert actual_title == expected_title
 
 
+def test_get_record_data_returns_none_when_missing_foreign_identifier(wmc):
+    media_data = _get_resource_json("image_data_example.json")
+    media_data["pageid"] = ""
+
+    record_data = wmc.get_record_data(media_data)
+
+    assert record_data is None
+
+
+@pytest.mark.parametrize(
+    "missing_parameter",
+    [
+        pytest.param("url", id="url"),
+        pytest.param("descriptionshorturl", id="foreign_landing_url"),
+    ],
+)
+def test_get_record_data_returns_none_when_missing_required_fields(
+    wmc, missing_parameter
+):
+    media_data = _get_resource_json("image_data_example.json")
+    media_data["imageinfo"][0][missing_parameter] = ""
+
+    record_data = wmc.get_record_data(media_data)
+
+    assert record_data is None
+
+
 def test_get_record_data_handles_example_dict(wmc):
     """
     Converts sample json data to correct image metadata,
@@ -379,11 +406,10 @@ def test_extract_license_info_finds_license_url(wmc):
     assert actual_license_url == expect_license_url
 
 
-def test_extract_license_url_handles_missing_license_url(wmc):
+def test_extract_license_info_returns_none_if_missing_license_url(wmc):
     image_info = _get_resource_json("image_info_artist_partial_link.json")
-    expect_license_url = None
-    actual_license_url = wmc.extract_license_info(image_info).url
-    assert actual_license_url == expect_license_url
+    actual_license_info = wmc.extract_license_info(image_info)
+    assert actual_license_info is None
 
 
 def test_create_meta_data_scrapes_text_from_html_description(wmc):

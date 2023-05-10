@@ -18,10 +18,10 @@ This report is only sent if all the following conditions are met.
 
 The workflow sends a Slack message, listing the outcome of four jobs
 
-- [`emit-docs`](#emit-docs)
-- [`publish-images`](#publish-images)
-- [`deploy-frontend`](#deploy-frontend)
-- [`deploy-api`](#deploy-api)
+- [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs)
+- [`publish-images`](/meta/ci_cd/jobs/docker.md#publish-images)
+- [`deploy-frontend`](/meta/ci_cd/jobs/deployment.md#deploy-frontend)
+- [`deploy-api`](/meta/ci_cd/jobs/deployment.md#deploy-api)
 
 Receiving this report in Slack is an indicator that the workflow did not
 complete successfully. It is up to the MSR to investigate the cause of the

@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
 
@@ -30,7 +31,7 @@ describe("VAudioDetails", () => {
 
   it("renders the album title", () => {
     render(VAudioDetails, options)
-    screen.getByText("audio-details.table.album")
+    screen.getByText(/Test Album/i)
     const album = screen.getByText(overrides.audio_set.title)
     expect(album).toHaveAttribute(
       "href",

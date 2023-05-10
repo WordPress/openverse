@@ -8,10 +8,6 @@ import {
 import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
-import closeIcon from "~/assets/icons/close-small.svg"
-import chevronLeftIcon from "~/assets/icons/chevron-left.svg"
-import sourceIcon from "~/assets/icons/source.svg"
-
 <Meta
   title="Components/VHeader/VHeaderMobile/VSearchBarButton"
   component={VSearchBarButton}
@@ -19,8 +15,8 @@ import sourceIcon from "~/assets/icons/source.svg"
     iconPath: {
       control: {
         type: "select",
-        options: [closeIcon, chevronLeftIcon, sourceIcon],
-        default: closeIcon,
+        options: ["close-small", "chevron-left", "source"],
+        default: "close-small",
       },
     },
     innerSize: {
@@ -49,10 +45,10 @@ export const Template = (args) => ({
   template: `<div class="bg-white"><VSearchBarButton label="VSearchBarButton" v-bind="args" v-on="args" /></div>`,
   components: { VSearchBarButton },
   setup() {
-    if (!args.iconPath) {
-      args.iconPath = closeIcon
+    if (!args.icon) {
+      args.icon = "close"
     }
-    return { args, closeIcon, chevronLeftIcon, sourceIcon }
+    return { args }
   },
 })
 
@@ -95,21 +91,21 @@ corner.
 export const activeButtonsTemplate = (args) => ({
   template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink">
   <VSearchBarButton
-    :icon-path="chevronLeftIcon"
+    icon="chevron-left"
     :inner-size="8"
     :label="$t('header.back-button')"
     inner-area-classes="hover:bg-dark-charcoal hover:text-white"
     :rtl-flip="true"
   />
   <VSearchBarButton
-    :icon-path="closeIcon"
+    icon="close-small"
     :label="$t('browse-page.search-form.clear')"
     inner-area-classes="bg-white hover:bg-dark-charcoal-10"
   />
 </div>`,
   components: { VContentSettingsButton },
   setup() {
-    return { args, closeIcon, chevronLeftIcon }
+    return { args }
   },
 })
 

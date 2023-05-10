@@ -3,7 +3,7 @@ from test.factory.models.media import IdentifierFactory, MediaFactory
 
 from factory.django import DjangoModelFactory
 
-from catalog.api.models.audio import Audio, AudioAddOn
+from api.models.audio import Audio, AudioAddOn
 
 
 class AudioFactory(MediaFactory):

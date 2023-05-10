@@ -1,4 +1,6 @@
-# Project Proposal - 2022-02-21
+# 2022-02-21 Project Proposal: 3D model support
+
+**Author**: @aetherunbound
 
 - [x] @sarayourfriend
 - [x] @panchovm

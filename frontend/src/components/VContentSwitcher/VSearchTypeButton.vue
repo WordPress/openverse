@@ -1,17 +1,17 @@
 <template>
   <VButton
-    class="group h-12 flex-shrink-0 gap-2"
-    :class="showLabel ? 'w-auto gap-2 px-3' : 'w-12'"
-    variant="action-menu"
-    size="disabled"
+    class="min-w-12 gap-x-2"
+    :class="showLabel ? '!px-3' : 'w-12'"
+    variant="bordered-white"
+    size="large"
     :aria-label="$t('search-type.select-label', { type: label })"
     v-bind="$attrs"
     @click="$emit('click')"
   >
-    <VIcon :icon-path="icon" />
+    <VIcon :name="searchType" class="h-6 w-6" />
     <template v-if="showLabel">
       <span class="label-regular block truncate text-start">{{ label }}</span>
-      <VIcon :icon-path="caretDownIcon" />
+      <VIcon name="caret-down" />
     </template>
   </VButton>
 </template>
@@ -24,8 +24,6 @@ import { warn } from "~/utils/console"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
-
-import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 /**
  * This is the search type switcher button that appears in the header or the homepage search bar.
@@ -59,10 +57,6 @@ export default defineComponent({
       warn(
         "You should provide `aria-haspopup` and `aria-expanded` props to VSearchTypeButton."
       )
-    }
-
-    return {
-      caretDownIcon,
     }
   },
 })

@@ -23,8 +23,8 @@ live port="50230": clean
     pipenv run sphinx-autobuild -b html . _serve/ --port {{ port }}
 
 # Compile the documentation into a static site
-build:
-    pipenv run sphinx-build -b html . _build/
+build *args:
+    pipenv run sphinx-build {{ args }} -b html . _build/
 
 # Serve the compiled docs using a simple HTTP server
 serve port="50231":

@@ -1,6 +1,8 @@
 import Vue, { ref } from "vue"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useI18n } from "~/composables/use-i18n"
 

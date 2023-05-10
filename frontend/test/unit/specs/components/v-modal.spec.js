@@ -1,6 +1,8 @@
 import Vue, { ref, computed } from "vue"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VModal from "~/components/VModal/VModal.vue"
 import VModalTarget from "~/components/VModal/VModalTarget.vue"
@@ -22,7 +24,7 @@ const TestWrapper = Vue.component("TestWrapper", {
     <div>
       <VModal label="modal label" :initial-focus-element="resolvedInitialFocusElement">
         <template #trigger="{ a11yProps, visible }">
-          <VButton v-bind="a11yProps">{{ visible }}</VButton>
+          <VButton variant="filled-white" v-bind="a11yProps">{{ visible }}</VButton>
         </template>
 
         <div>Code is Poetry</div>
@@ -37,7 +39,7 @@ const TestWrapper = Vue.component("TestWrapper", {
 const nextTick = async () =>
   await new Promise((resolve) => setTimeout(resolve, 1))
 
-const getCloseButton = () => screen.getByText("modal.close")
+const getCloseButton = () => screen.getByText(/close/i)
 const getDialog = () => screen.getByRole("dialog")
 const queryDialog = () => screen.queryByRole("dialog")
 const getTrigger = () => screen.getByRole("button")
@@ -89,7 +91,7 @@ describe("VModal", () => {
     expect(container.ownerDocument.body.style.position).toBe("fixed")
     expect(container.ownerDocument.body.style.top).toBe(`-${scrollY}px`)
 
-    await userEvent.click(screen.getByText("modal.close"))
+    await userEvent.click(screen.getByText(/close/i))
     await nextTick()
 
     expect(window.scrollTo).toHaveBeenCalledWith(0, scrollY)

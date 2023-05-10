@@ -43,6 +43,7 @@ importers:
       '@nuxtjs/storybook': ^4.3.2
       '@nuxtjs/style-resources': ^1.0.0
       '@nuxtjs/svg': ^0.4.0
+      '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1
       '@pinia/testing': ^0.0.15
       '@playwright/test': 1.30.0
@@ -50,11 +51,10 @@ importers:
       '@tailwindcss/typography': ^0.5.9
       '@testing-library/dom': ^8.13.0
       '@testing-library/jest-dom': ^5.16.1
-      '@testing-library/user-event': ^13.5.0
+      '@testing-library/user-event': ^14.0.0
       '@testing-library/vue': ^5.8.2
       '@types/express-useragent': ^1.0.2
       '@types/jest': ^26.0.22
-      '@types/lodash.sortby': ^4.7.7
       '@types/module-alias': ^2.0.1
       '@types/node': ^17.0.32
       '@types/throttle-debounce': ^5.0.0
@@ -97,6 +97,7 @@ importers:
       focus-visible: ^5.2.0
       glob: ^8.0.1
       jest: ^26.6.3
+      jest-fail-on-console: ^3.1.1
       jest-transform-stub: ^2.0.0
       module-alias: ^2.2.2
       node-html-parser: ^5.3.3
@@ -141,6 +142,7 @@ importers:
       '@nuxtjs/sentry': 7.1.4_vue@2.7.14
       '@nuxtjs/sitemap': 2.4.0
       '@nuxtjs/svg': 0.4.0_jjogt4bliw5zkzgrcodkvsva3y
+      '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1_pinia@2.0.33+vue@2.7.14
       '@popperjs/core': 2.11.2
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.1
@@ -191,11 +193,10 @@ importers:
       '@playwright/test': 1.30.0
       '@testing-library/dom': 8.13.0
       '@testing-library/jest-dom': 5.16.1
-      '@testing-library/user-event': 13.5.0_tlwynutqiyp5mns3woioasuxnq
+      '@testing-library/user-event': 14.4.3_tlwynutqiyp5mns3woioasuxnq
       '@testing-library/vue': 5.8.2_rhqkolmkwunxzlyyxxsuwaiuri
       '@types/express-useragent': 1.0.2
       '@types/jest': 26.0.24
-      '@types/lodash.sortby': 4.7.7
       '@types/module-alias': 2.0.1
       '@types/node': 17.0.32
       '@types/throttle-debounce': 5.0.0
@@ -222,6 +223,7 @@ importers:
       eslint-plugin-vue: 9.9.0_eslint@8.28.0
       eslint-plugin-vuejs-accessibility: 1.1.1_eslint@8.28.0
       jest: 26.6.3_ts-node@10.9.1
+      jest-fail-on-console: 3.1.1
       jest-transform-stub: 2.0.0
       module-alias: 2.2.2
       npm-run-all: 4.1.5
@@ -4351,6 +4353,17 @@ packages:
       sass-resources-loader: 2.2.4
     dev: true
 
+  /@nuxtjs/svg-sprite/0.5.2:
+    resolution: {integrity: sha512-zxNQbLHUMrKZjW80w0i0SONAqGF5BLUvNYx+j7dnuzUh0pxolJ0a2DIIfjxFs1hUxLk4dHTsclzl/vvV3mU+vA==}
+    dependencies:
+      chalk: 4.1.2
+      chokidar: 3.5.3
+      consola: 2.15.3
+      fs-extra: 9.1.0
+      svgo: 1.3.2
+      vue-functional-data-merge: 3.1.0
+    dev: false
+
   /@nuxtjs/svg/0.4.0_jjogt4bliw5zkzgrcodkvsva3y:
     resolution: {integrity: sha512-XF8uvV5YKBPAJr52SFRVkhltAsjCBTwwTc4GTysSm8WPYB2utJLY48qXdVC/J9dNQiMd7NHo1xmEYEqQfzqpqg==}
     dependencies:
@@ -6138,13 +6151,12 @@ packages:
       redent: 3.0.0
     dev: true
 
-  /@testing-library/user-event/13.5.0_tlwynutqiyp5mns3woioasuxnq:
-    resolution: {integrity: sha512-5Kwtbo3Y/NowpkbRuSepbyMFkZmHgD+vPzYB/RJ4oxt5Gj/avFFBYjhw27cqSVPVw/3a67NK1PbiIr9k4Gwmdg==}
-    engines: {node: '>=10', npm: '>=6'}
+  /@testing-library/user-event/14.4.3_tlwynutqiyp5mns3woioasuxnq:
+    resolution: {integrity: sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==}
+    engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
     dependencies:
-      '@babel/runtime': 7.18.9
       '@testing-library/dom': 8.13.0
     dev: true
 
@@ -6375,12 +6387,6 @@ packages:
 
   /@types/less/3.0.3:
     resolution: {integrity: sha512-1YXyYH83h6We1djyoUEqTlVyQtCfJAFXELSKW2ZRtjHD4hQ82CC4lvrv5D0l0FLcKBaiPbXyi3MpMsI9ZRgKsw==}
-    dev: true
-
-  /@types/lodash.sortby/4.7.7:
-    resolution: {integrity: sha512-J/4IS+jQopGBrrRetBXDCX0KnSeXJZ0rOTmGAxR9MWGV24YdHxX8IRi9LCGAU9GKWlBov9KRSfQpuup9PReqrw==}
-    dependencies:
-      '@types/lodash': 4.14.182
     dev: true
 
   /@types/lodash/4.14.182:
@@ -11400,7 +11406,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -12903,6 +12909,12 @@ packages:
       '@types/node': 17.0.32
       jest-mock: 26.6.2
       jest-util: 26.6.2
+    dev: true
+
+  /jest-fail-on-console/3.1.1:
+    resolution: {integrity: sha512-g9HGhKcWOz8lHeZhLCXGg+RD/7upngiKkkBrHimsO/tGB0qi++QZffOgybjeI2bDW1qgdFiJJEG6t/WeTlfmOw==}
+    dependencies:
+      chalk: 4.1.2
     dev: true
 
   /jest-get-type/26.3.0:
@@ -19208,6 +19220,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /vue-functional-data-merge/3.1.0:
+    resolution: {integrity: sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==}
+    dev: false
 
   /vue-hot-reload-api/2.3.4:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}

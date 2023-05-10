@@ -2,9 +2,10 @@
 <template>
   <NuxtLink
     v-if="isNuxtLink"
-    :class="{ 'inline-flex flex-row items-center gap-2': showExternalIcon }"
+    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
     :to="linkTo"
     v-on="$listeners"
+    @mousedown.native="$emit('mousedown', $event)"
     @click.native="$emit('click', $event)"
   >
     <slot />
@@ -21,7 +22,7 @@
   >
     <slot /><VIcon
       v-if="showExternalIcon && !isInternal"
-      :icon-path="externalLinkIcon"
+      name="external-link"
       class="inline-block"
       :size="externalIconSize"
       rtl-flip
@@ -43,8 +44,6 @@ import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
-
-import externalLinkIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VLink",
@@ -98,7 +97,6 @@ export default defineComponent({
       linkTo,
       isNuxtLink,
       isInternal,
-      externalLinkIcon,
     }
   },
 })

@@ -1,6 +1,7 @@
 import logging
 from typing import TypedDict
 
+from common import constants
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -64,16 +65,14 @@ class VictoriaDataIngester(ProviderDataIngester):
             }
 
     def get_record_data(self, data: dict):
-        object_id = data.get("id")
-        if object_id in self.RECORDS_IDS:
+        if not (object_id := data.get("id")) or object_id in self.RECORDS_IDS:
             return None
         self.RECORDS_IDS.add(object_id)
         foreign_landing_url = f"{self.LANDING_PAGE}{object_id}"
 
-        if (media_data := data.get("media")) is None:
-            return None
-        images = self._get_images(media_data)
-        if len(images) == 0:
+        if not (media_data := data.get("media")) or not (
+            images := self._get_images(media_data)
+        ):
             return None
         meta_data = self._get_metadata(data)
         title = data.get("displayTitle")
@@ -96,17 +95,18 @@ class VictoriaDataIngester(ProviderDataIngester):
         for media in media_data:
             if media.get("type") != "image":
                 continue
-            image_id = media.get("id")
+            if not (foreign_identifier := media.get("id")):
+                continue
             image_url, height, width, filesize = VictoriaDataIngester._get_image_data(
                 media
             )
             license_info = VictoriaDataIngester._get_license_info(media)
-            if image_url is None or image_id is None or license_info is None:
+            if not image_url or not license_info:
                 continue
             creator = VictoriaDataIngester._get_creator(media)
 
             image: ImageDetails = {
-                "foreign_identifier": image_id,
+                "foreign_identifier": foreign_identifier,
                 "image_url": image_url,
                 "height": height,
                 "width": width,
@@ -117,7 +117,7 @@ class VictoriaDataIngester(ProviderDataIngester):
         return images
 
     def get_media_type(self, record: dict) -> str:
-        return "image"
+        return constants.IMAGE
 
     @staticmethod
     def _get_image_data(
@@ -126,11 +126,10 @@ class VictoriaDataIngester(ProviderDataIngester):
         height, width, filesize = None, None, None
         media_data = {}
         for size in ["large", "medium", "small"]:
-            if size in media:
+            if isinstance(media.get(size), dict) and media[size].get("uri"):
                 media_data = media[size]
                 break
-        image_url = media_data.get("uri")
-        if image_url is not None:
+        if image_url := media_data.get("uri"):
             height = media_data.get("height")
             width = media_data.get("width")
             filesize = media_data.get("size")

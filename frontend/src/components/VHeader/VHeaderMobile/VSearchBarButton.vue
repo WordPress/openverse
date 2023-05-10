@@ -11,7 +11,7 @@
         :class="[`h-${innerSize} w-${innerSize}`, innerAreaClasses]"
       >
         <VIcon
-          :icon-path="iconPath"
+          :name="icon"
           :rtl-flip="rtlFlip"
           class="pointer-events-none"
           :size="iconSize"
@@ -43,7 +43,7 @@ export default defineComponent({
     /**
      * The path for the icon.
      */
-    iconPath: {
+    icon: {
       type: String,
       required: true,
     },

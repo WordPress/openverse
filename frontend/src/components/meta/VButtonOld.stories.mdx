@@ -146,36 +146,3 @@ There are three variants of secondary buttons: filled, bordered and text
     {VariantsTemplate.bind({})}
   </Story>
 </Canvas>
-
-### Action-menu
-
-The styles used for header 'action-menu' buttons.
-
-'action-menu' also has no border and no background. On hover, there is a light
-border. It is used in the desktop header buttons and for the content type
-switcher inside the searchbar.
-
-'action-menu-bordered' has a border but no background. It is used in the desktop
-header buttons when the (old) header is scrolled.
-
-'action-menu-muted' has a light charcoal background. It is used for filters when
-some filters are applied.
-
-<Canvas>
-  <Story
-    name="action-menu"
-    args={{
-      variants: ["action-menu", "action-menu-bordered", "action-menu-muted"],
-    }}
-    argTypes={{
-      pressed: { control: "boolean" },
-      size: {
-        options: buttonSizes,
-        control: { type: "radio" },
-      },
-      disabled: { control: "boolean" },
-    }}
-  >
-    {VariantsTemplate.bind({})}
-  </Story>
-</Canvas>

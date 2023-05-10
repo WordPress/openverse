@@ -3,8 +3,12 @@ from unittest import mock
 
 import pytest
 
+from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
+    MockProviderDataIngester,
+)
 from catalog.utilities.dag_doc_gen import dag_doc_generation
 from catalog.utilities.dag_doc_gen.dag_doc_generation import DagInfo
+from providers.provider_workflows import ProviderWorkflow
 
 
 class DagMock(NamedTuple):
@@ -32,7 +36,6 @@ _MODULE = "catalog.utilities.dag_doc_gen.dag_doc_generation"
         ("# Big header", "### Big header"),
     ],
 )
-@pytest.mark.parametrize("catchup", [True, False])
 @pytest.mark.parametrize(
     "tags, type_",
     [
@@ -42,16 +45,44 @@ _MODULE = "catalog.utilities.dag_doc_gen.dag_doc_generation"
         (["foo", "bar"], "foo"),
     ],
 )
-@pytest.mark.parametrize("provider_workflow", ["foo_bar", None])
+@pytest.mark.parametrize(
+    "provider_workflow, catchup, expected_dated",
+    [
+        # Dated is always equal to provider_workflow.dated
+        (
+            ProviderWorkflow(ingester_class=MockProviderDataIngester, dated=False),
+            True,
+            False,
+        ),
+        (
+            ProviderWorkflow(ingester_class=MockProviderDataIngester, dated=False),
+            False,
+            False,
+        ),
+        (
+            ProviderWorkflow(ingester_class=MockProviderDataIngester, dated=True),
+            True,
+            True,
+        ),
+        (
+            ProviderWorkflow(ingester_class=MockProviderDataIngester, dated=True),
+            False,
+            True,
+        ),
+        # If ProviderWorkflow is None, fall back to the value of 'catchup'
+        (None, True, True),
+        (None, False, False),
+    ],
+)
 def test_get_dags_info(
-    schedule, doc, expected_doc, catchup, tags, type_, provider_workflow
+    schedule, doc, expected_doc, tags, type_, provider_workflow, catchup, expected_dated
 ):
     dag = DagMock(schedule_interval=schedule, doc_md=doc, catchup=catchup, tags=tags)
     expected = DagInfo(
         dag_id=DAG_ID,
         schedule=schedule,
         doc=expected_doc,
-        dated=catchup,
+        dated=expected_dated,
         type_=type_,
         provider_workflow=provider_workflow,
     )

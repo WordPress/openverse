@@ -1,54 +1,65 @@
-"""Determine which Docker images to build and publish."""
+"""
+Determine which Docker images to build and publish. For more information refer
+to the documentation:
+https://docs.openverse.org/meta/ci_cd/jobs/docker.html#determine-images
+"""
 
 import json
 import os
-import sys
+
+from shared.actions import write_to_github_output
 
 
 changes = json.loads(os.environ.get("CHANGES"))
 
-build_matrix = {"image": [], "include": []}
-publish_matrix = {"image": []}
 
-if "frontend" in changes:
-    build_matrix["image"].append("frontend")
-    build_matrix["include"].append(
-        {"image": "frontend", "context": "frontend", "target": "app"}
-    )
-    publish_matrix["image"].append("frontend")
-if any(item in changes for item in ["api", "ingestion_server", "catalog"]):
-    build_matrix["image"].append("upstream_db")
-    build_matrix["include"].append(
-        {"image": "upstream_db", "context": "docker/upstream_db", "target": "db"}
-    )
+def ser_set(x):
+    """Convert ``set`` into ``list``, else return the parameter as-is."""
+    return list(x) if isinstance(x, set) else x
+
+
+build_matrix = {"image": set()}
+publish_matrix = {"image": set()}
+
+includes = {
+    "upstream_db": {
+        "image": "upstream_db",
+        "context": "docker/upstream_db",
+        "target": "db",
+    },
+    "catalog": {"image": "catalog", "target": "cat"},
+    "ingestion_server": {"image": "ingestion_server", "target": "ing"},
+    "api": {"image": "api", "target": "api"},
+    "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
+    "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
+}
+
+if "ci_cd" in changes:
+    build_matrix["image"] |= set(includes.keys())
 if "catalog" in changes:
-    build_matrix["image"].append("catalog")
-    build_matrix["include"].append(
-        {"image": "catalog", "context": "catalog", "target": "cat"}
-    )
-    publish_matrix["image"].append("catalog")
-if "api" in changes or "ingestion_server" in changes:
-    # Always build the ingestion server and API images for either changeset
-    build_matrix["image"] += ["api", "ingestion_server"]
-    build_matrix["include"] += [
-        {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
-        {"image": "api", "context": "api", "target": "api"},
-    ]
-    if "api" in changes:
-        build_matrix["image"].append("api_nginx")
-        build_matrix["include"].append(
-            {"image": "api_nginx", "context": "api", "target": "nginx"}
-        )
-        publish_matrix["image"] += ["api", "api_nginx"]
-    if "ingestion_server" in changes:
-        publish_matrix["image"].append("ingestion_server")
+    build_matrix["image"] |= {"upstream_db", "catalog"}
+    publish_matrix["image"].add("catalog")
+if "ingestion_server" in changes:
+    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api"}
+    publish_matrix["image"].add("ingestion_server")
+if "api" in changes:
+    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api", "api_nginx"}
+    publish_matrix["image"] |= {"api", "api_nginx"}
+if "frontend" in changes:
+    build_matrix["image"].add("frontend")
+    publish_matrix["image"].add("frontend")
+
+build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
 
 do_build = "true" if len(build_matrix["image"]) else "false"
 do_publish = "true" if len(publish_matrix["image"]) else "false"
+build_matrix = json.dumps(build_matrix, default=ser_set)
+publish_matrix = json.dumps(publish_matrix, default=ser_set)
 
-with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-    for dest in [sys.stdout, gh_out]:
-        print(f"do_build={do_build}", file=dest)
-        print(f"build_matrix={json.dumps(build_matrix)}", file=dest)
-        print(f"do_publish={do_publish}", file=dest)
-        print(f"publish_matrix={json.dumps(publish_matrix)}", file=dest)
+lines = [
+    f"do_build={do_build}",
+    f"build_matrix={build_matrix}",
+    f"do_publish={do_publish}",
+    f"publish_matrix={publish_matrix}",
+]
+write_to_github_output(lines)

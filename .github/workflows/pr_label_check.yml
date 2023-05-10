@@ -14,42 +14,74 @@ on:
       - unlabeled
 
 jobs:
+  # Extract the current label list by group
+  get_label_groups:
+    name: Get label groups
+    runs-on: ubuntu-latest
+    outputs:
+      aspect: ${{ steps.get_groups.outputs.aspect }}
+      goal: ${{ steps.get_groups.outputs.goal }}
+      priority: ${{ steps.get_groups.outputs.priority }}
+      stack: ${{ steps.get_groups.outputs.stack }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get label groups
+        id: get_groups
+        env:
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_label_groups.py
+
+  # List of aspect labels: https://github.com/WordPress/openverse/labels?q=aspect
   check_aspect_label:
     name: Check aspect label
     runs-on: ubuntu-latest
+    needs:
+      - get_label_groups
     steps:
       - name: Check aspect label
-        uses: docker://agilepathway/pull-request-label-checker:v1.2.13
+        uses: docker://agilepathway/pull-request-label-checker:v1.4.26
         with:
-          one_of: "💻 aspect: code,📄 aspect: text,🤖 aspect: dx,🕹 aspect: interface,♿️ aspect: a11y"
+          one_of: ${{ needs.get_label_groups.outputs.aspect }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+  # List of goal labels: https://github.com/WordPress/openverse/labels?q=goal
   check_goal_label:
     name: Check goal label
     runs-on: ubuntu-latest
+    needs:
+      - get_label_groups
     steps:
       - name: Check goal label
-        uses: docker://agilepathway/pull-request-label-checker:v1.2.13
+        uses: docker://agilepathway/pull-request-label-checker:v1.4.26
         with:
-          one_of: "🌟 goal: addition,🛠 goal: fix,✨ goal: improvement,🧰 goal: internal improvement"
+          one_of: ${{ needs.get_label_groups.outputs.goal }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+  # List of priority labels: https://github.com/WordPress/openverse/labels?q=priority
   check_priority_label:
     name: Check priority label
     runs-on: ubuntu-latest
+    needs:
+      - get_label_groups
     steps:
       - name: Check priority label
-        uses: docker://agilepathway/pull-request-label-checker:v1.2.13
+        uses: docker://agilepathway/pull-request-label-checker:v1.4.26
         with:
-          one_of: "🟩 priority: low,🟨 priority: medium,🟧 priority: high,🟥 priority: critical"
+          one_of: ${{ needs.get_label_groups.outputs.priority }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+  # List of stack labels: https://github.com/WordPress/openverse/labels?q=stack
   check_stack_label:
     name: Check stack label
     runs-on: ubuntu-latest
+    needs:
+      - get_label_groups
     steps:
       - name: Check stack label
-        uses: docker://agilepathway/pull-request-label-checker:v1.2.13
+        uses: docker://agilepathway/pull-request-label-checker:v1.4.26
         with:
-          any_of: "🧱 stack: backend,🧱 stack: documentation,🧱 stack: frontend,🧱 stack: mgmt,🧱 stack: api,🧱 stack: catalog,🧱 stack: ingestion server"
+          any_of: ${{ needs.get_label_groups.outputs.stack }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
