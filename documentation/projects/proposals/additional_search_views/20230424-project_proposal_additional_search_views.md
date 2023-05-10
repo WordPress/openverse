@@ -1,4 +1,4 @@
-# 2023-04-24 Project Proposal
+# 2023-04-24 Project Proposal: Additional search views
 
 ## Reviewers
 
