@@ -199,24 +199,21 @@ def make_events(origin_days_ago: int, events: list[str | EventsConfig]) -> list[
     of days to increment the event past the previous event.
     """
     result = []
+    print(f"{origin_days_ago=}")
     previous_event_days_ago = origin_days_ago
-    for event_name in events:
+    for event_name in reversed(events):
         days_since_previous_event = 0
         if isinstance(event_name, tuple):
-            if origin_days_ago == 0:
-                # If origin days is 0 then treat all events as occurring today,
-                # otherwise events configured with days lapsed would end up
-                # in the future.
-                days_since_previous_event = 0
-            else:
-                days_since_previous_event = event_name[1]
+            days_since_previous_event = event_name[1]
 
             event_name = event_name[0]
+        print(f"{event_name=}, {days_since_previous_event=}")
 
         days_ago = previous_event_days_ago + days_since_previous_event
         created_at = walk_backwards_in_time_until_weekday_count(
             datetime.datetime.now(), days_ago
         )
+        print(f"{days_ago=}, {created_at=}")
 
         event = _read_fixture(f"events/{event_name}")
         event["created_at"] = _gh_date(created_at)
@@ -224,7 +221,7 @@ def make_events(origin_days_ago: int, events: list[str | EventsConfig]) -> list[
         previous_event_days_ago = days_ago
         result.append(event)
 
-    return result
+    return list(reversed(result))
 
 
 def make_non_urgent_events(events: list[str | EventsConfig]) -> list[dict]:
