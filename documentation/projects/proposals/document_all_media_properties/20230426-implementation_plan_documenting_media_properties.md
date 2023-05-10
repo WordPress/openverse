@@ -115,17 +115,22 @@ This section describes where the data for the documentation will be coming from.
 
 Located at `docker/upstream_db/`: `0003_openledger_image_schema.sql`,
 `0004_openledger_image_view.sql`, `0006_openledger_audio_schema.sql`,
-`0007_openledger_audio_view.sql`. These files define the database schema for the
-catalog. This will be parsed by the python script and converted into a table
-with the data properties. In the beginning, we will use the materialized views
-(`image_view` and `audio_view`) to get the list of properties and some
-properties that are not available in the main database (`popularity`). After
+`0007_openledger_audio_view.sql`.
+
+These files define the database schema for the catalog. This will be parsed by
+the python script and converted into a Markdown table with the data properties.
+In the beginning, we will use the materialized views (`image_view` and
+`audio_view`) to get the list of properties and some properties that are not
+available in the main database (`popularity`). After
 [Popularity calculation optimizations (Matview refresh)](https://github.com/WordPress/openverse/issues/433)
 is implemented, and we drop the materialized views, only the main tables
-(`image` and `audio`) will be used. A Python method will extract the information
-from the SQL files into a mapping (dictionary) with the name of the media
-property and the following values: SQL datatype, and SQL constraints. More data
-will be added to this mapping in the further steps.
+(`image` and `audio`) will be used.
+
+A Python method will extract the information from the SQL files into
+`media_properties` dictionary with the name of the media property and the
+following values: SQL datatype, and SQL constraints. More data will be added to
+this dictionary in the further steps. It will also be possible to add API
+information into this dictionary in the API portion of this project.
 
 ```python
 media_properties = {
@@ -150,7 +155,8 @@ column in the table with the data properties.
 The `Column` class and its child classes describe the validations we use to
 write the data collected by provider scripts. The `add_item` method has
 docstrings with short descriptions of what each property is. The information
-from these items will be added into the mapping from step 1.
+from these items will be added into the `media_properties` dictionary from
+step 1.
 
 ```{code-block} python
 media_properties = {
@@ -172,9 +178,9 @@ media_properties = {
 Located in `catalog/dags/common/storage/`.
 
 These files contain the `MediaStore`, `ImageStore` and `AudioStore` classes that
-validate and transform the data. They are not easy to parse, so they are only
-used for the CI checks. When a PR adds changes to these files, the CI will show
-a warning that the documentation needs to be updated.
+validate and transform the data. They are not easy to parse, so they will only
+be used for the CI checks. When a PR adds changes to these files, the CI will
+show a warning that the documentation needs to be updated.
 
 ### New files
 
@@ -193,7 +199,8 @@ is manually written by the maintainers and contains the detailed information
 about the shape and kind of data we expect to have for the property, how to
 select it from the provider, and any inconsistencies between the data we have in
 the database and the data we expect to have. This file is parsed in step 3 and
-the information is added to the final page on the documentation site.
+the information is added to the `media_properties` dictionary. This dictionary
+will be used to write the final page on the documentation site.
 
 #### Information to include in `media_properties.md` for each property
 
@@ -226,7 +233,7 @@ This is a Python script that parses the SQL DDL files, Python files, and the
 `media_properties.md` file to generate the `media_properties_documentation.md`
 file. This script is run by the `just` script.
 
-## Outlined Steps
+## Outlined Steps (parallelizable workstreams)
 
 1. Create a Python script that parses the DDL files, Python files and
    `media_properties.md` file to generate the
@@ -234,7 +241,9 @@ file. This script is run by the `just` script.
 2. Create a `just` script that runs the Python script from step 1 and posts a
    note about how to update the documentation if there are differences.
 3. Create markdown files: `general.md` and `media_properties.md` with the
-   information about the media properties.
+   information about the media properties. This will require going through the
+   issues and data in the database to collect the information about any
+   inconsistencies.
 4. Create checks for changes in `MediaStore` files that will post a note about
    how to update the documentation if there are differences (in precommit).
 5. Add the CI workflows to `openverse` repository CI workflows.
