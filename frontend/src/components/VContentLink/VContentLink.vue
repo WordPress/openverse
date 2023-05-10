@@ -38,7 +38,6 @@ import useSearchType from "~/composables/use-search-type"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
 
 export default defineComponent({
   name: "VContentLink",

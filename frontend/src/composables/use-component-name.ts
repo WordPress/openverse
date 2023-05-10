@@ -6,5 +6,5 @@ import { getCurrentInstance } from "vue"
  */
 export const useComponentName = () => {
   const vm = getCurrentInstance()
-  return vm?.proxy.$options.name
+  return vm?.proxy.$options.name ?? "Unknown"
 }

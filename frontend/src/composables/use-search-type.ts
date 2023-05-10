@@ -58,7 +58,7 @@ export default function useSearchType() {
     analytics.sendCustomEvent("CHANGE_CONTENT_TYPE", {
       previous: previousSearchType.value,
       next: searchType,
-      component: componentName ?? "Unknown",
+      component: componentName,
     })
     useSearchStore().setSearchType(searchType)
     previousSearchType.value = searchType
