@@ -57,7 +57,9 @@ class ReviewDelta:
     days: int
 
 
-def days_without_weekends(today: datetime, updated_at: datetime) -> int:
+def days_without_weekends(
+    today: datetime.datetime, updated_at: datetime.datetime
+) -> int:
     """
     Return the number of days between two dates, excluding weekends.
 
