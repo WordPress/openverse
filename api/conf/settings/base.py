@@ -6,7 +6,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Third-party installed apps, more can be added in other settings files.
-    "corsheaders",
     "sslserver",
 ]
 
