@@ -115,6 +115,8 @@ if DJANGO_DB_LOGGING:
 
     if not DEBUG:
         # WARNING: Do not run in production long-term as it can impact performance.
-        MIDDLEWARE.append(
-            "api.middleware.force_debug_cursor_middleware.force_debug_cursor_middleware"  # noqa: E501
+        middleware = (
+            "api.middleware.force_debug_cursor_middleware.force_debug_cursor_middleware"
         )
+        if middleware not in MIDDLEWARE:
+            MIDDLEWARE.append(middleware)
