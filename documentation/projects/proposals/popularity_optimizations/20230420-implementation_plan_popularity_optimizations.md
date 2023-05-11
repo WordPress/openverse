@@ -338,8 +338,8 @@ advantages:
 ### Remove popularity steps from the data_refresh DAGs
 
 We can simply remove the popularity tasks from the relevant data refresh DAG
-factories. See the [Parallelizable Streams](#parallelizable-streams) section for more information on the
-timing of this change.
+factories. See the [Parallelizable Streams](#parallelizable-streams) section for
+more information on the timing of this change.
 
 ### Run the data refresh from the media tables
 
