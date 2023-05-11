@@ -101,7 +101,7 @@ data refresh is:
    `audio` tables. ([link](#add-standardized-popularity-to-the-media-tables))
 1. Update the `provider_dag_factory` and `ProviderDataIngester` to calculate
    `standardized_popularity` **at ingestion**.
-   ([link](#update-provider-DAGs-to-calculate-standardized-popularity))
+   ([link](#update-provider-dags-to-calculate-standardized-popularity))
 1. Create a new `popularity_refresh` DAG
    ([link](#create-a-popularity_refresh-dag)) which:
    1. Recalculates the popularity constants
