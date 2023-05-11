@@ -82,8 +82,6 @@ def test_get_batch_data(response_json, expected):
             full_expected_data[0].get("meta_data"),
             id="full_object",
         ),
-        pytest.param({}, None, id="empty_dict"),
-        pytest.param(None, None, id="None"),
     ],
 )
 def test_get_meta_data(response_json, expected):
@@ -104,8 +102,6 @@ def test_get_meta_data(response_json, expected):
             full_expected_data[0].get("raw_tags"),
             id="full_object",
         ),
-        pytest.param({}, [], id="empty_dict"),
-        pytest.param(None, None, id="None"),
     ],
 )
 def test_get_tag_list(response_json, expected):
@@ -131,8 +127,6 @@ def test_get_tag_list(response_json, expected):
             "Yes, empty title",
             id="empty_string_title",
         ),
-        pytest.param({}, None, id="empty_json"),
-        pytest.param(None, None, id="None"),
     ],
 )
 def test_get_title(response_json, expected):
@@ -144,7 +138,6 @@ def test_get_title(response_json, expected):
     "response_json, expected",
     [
         pytest.param({}, None, id="empty_json"),
-        pytest.param(None, None, id="None"),
         pytest.param(
             {"artistDisplayName": "Unidentified flying obj"},
             "Unidentified flying obj",

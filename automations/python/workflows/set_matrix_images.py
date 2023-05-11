@@ -1,12 +1,13 @@
 """
 Determine which Docker images to build and publish. For more information refer
 to the documentation:
-https://docs.openverse.org/meta/ci_cd/jobs/docker_preparation.html#determine-images
+https://docs.openverse.org/meta/ci_cd/jobs/docker.html#determine-images
 """
 
 import json
 import os
-import sys
+
+from shared.actions import write_to_github_output
 
 
 changes = json.loads(os.environ.get("CHANGES"))
@@ -26,15 +27,11 @@ includes = {
         "context": "docker/upstream_db",
         "target": "db",
     },
-    "catalog": {"image": "catalog", "context": "catalog", "target": "cat"},
-    "ingestion_server": {
-        "image": "ingestion_server",
-        "context": "ingestion_server",
-        "target": "ing",
-    },
-    "api": {"image": "api", "context": "api", "target": "api"},
+    "catalog": {"image": "catalog", "target": "cat"},
+    "ingestion_server": {"image": "ingestion_server", "target": "ing"},
+    "api": {"image": "api", "target": "api"},
     "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
-    "frontend": {"image": "frontend", "context": "frontend", "target": "app"},
+    "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
 }
 
 if "ci_cd" in changes:
@@ -59,9 +56,10 @@ do_publish = "true" if len(publish_matrix["image"]) else "false"
 build_matrix = json.dumps(build_matrix, default=ser_set)
 publish_matrix = json.dumps(publish_matrix, default=ser_set)
 
-with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as gh_out:
-    for dest in [sys.stdout, gh_out]:
-        print(f"do_build={do_build}", file=dest)
-        print(f"build_matrix={build_matrix}", file=dest)
-        print(f"do_publish={do_publish}", file=dest)
-        print(f"publish_matrix={publish_matrix}", file=dest)
+lines = [
+    f"do_build={do_build}",
+    f"build_matrix={build_matrix}",
+    f"do_publish={do_publish}",
+    f"publish_matrix={publish_matrix}",
+]
+write_to_github_output(lines)

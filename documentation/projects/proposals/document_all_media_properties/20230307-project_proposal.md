@@ -1,5 +1,7 @@
 # 2023-03-07 Project proposal for [Document all media properties](https://github.com/WordPress/openverse/issues/412)
 
+**Author**: @obulat
+
 ## Due date:
 
 2023-03-21

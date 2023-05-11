@@ -21,7 +21,7 @@ import {
 import {
   ApiQueryParams,
   filtersToQueryData,
-  qToSearchTerm,
+  queryDictionaryToQueryParams,
   queryStringToSearchType,
   queryToFilterData,
 } from "~/utils/search-query-transform"
@@ -224,8 +224,8 @@ export const useSearchStore = defineStore("search", {
      * use the first one.
      * @param q - The URL `q` query parameter
      */
-    setSearchTerm(q: string | (null | string)[] | null) {
-      const formattedTerm = qToSearchTerm(q)
+    setSearchTerm(q: string | undefined | null) {
+      const formattedTerm = q ? q.trim() : ""
       if (this.searchTerm === formattedTerm) return
       this.searchTerm = formattedTerm
       this.localSearchTerm = formattedTerm
@@ -401,12 +401,13 @@ export const useSearchStore = defineStore("search", {
       path: string
       urlQuery: Context["query"]
     }) {
-      this.setSearchTerm(urlQuery.q)
+      const query = queryDictionaryToQueryParams(urlQuery)
+      this.setSearchTerm(query.q)
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
+
       // When setting filters from URL query, 'mature' has a value of 'true',
       // but we need the 'mature' code. Creating a local shallow copy to prevent mutation.
-      const query: Record<string, string> = { ...urlQuery, q: this.searchTerm }
       if (query.mature === "true") {
         query.mature = "mature"
       } else {

@@ -93,10 +93,10 @@ class WordPressDataIngester(ProviderDataIngester):
 
     def get_record_data(self, data):
         """Extract data for individual item."""
-        if (foreign_identifier := data.get("slug")) is None:
+        if not (foreign_identifier := data.get("slug")):
             return None
 
-        if (foreign_landing_url := data.get("link")) is None:
+        if not (foreign_landing_url := data.get("link")):
             return None
 
         try:
@@ -109,7 +109,7 @@ class WordPressDataIngester(ProviderDataIngester):
             return None
 
         image_url, height, width, filesize = self._get_file_info(media_details)
-        if image_url is None:
+        if not image_url:
             return None
 
         title = self._get_title(data)
@@ -135,8 +135,7 @@ class WordPressDataIngester(ProviderDataIngester):
         preferred_sizes = ["2048x2048", "1536x1536", "medium_large", "large", "full"]
         for size in preferred_sizes:
             file_details = media_details.get("sizes", {}).get(size, {})
-            image_url = file_details.get("source_url")
-            if not image_url or image_url == "":
+            if not (image_url := file_details.get("source_url")):
                 continue
 
             height = file_details.get("height")
@@ -165,11 +164,9 @@ class WordPressDataIngester(ProviderDataIngester):
             raw_author = image.get("_embedded", {}).get("author", [])[0]
         except IndexError:
             return None, None
-        author = raw_author.get("name")
-        if author is None or author == "":
+        if not (author := raw_author.get("name")):
             author = raw_author.get("slug")
-        author_url = raw_author.get("url")
-        if author_url == "":
+        if not (author_url := raw_author.get("url")):
             author_url = raw_author.get("link")
         return author, author_url
 

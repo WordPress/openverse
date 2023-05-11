@@ -5,24 +5,30 @@ can assume it to take place across several stages.
 
 ```{mermaid}
 flowchart TD
-  preparation[Preparation] --> bypass_jobs[Bypass jobs] --- a[&nbsp]
+  preparation[Preparation] --- a[&nbsp]
   %% a is a fork
-  a --> frontend_tests[Frontend tests] & docker_preparation[Docker preparation]
+  a --> frontend_tests[Frontend tests] & docker_preparation[Docker preparation] & documentation_tests[Documentation tests]
   docker_preparation --> dockerised_tests[Dockerised tests]
-  frontend_tests & dockerised_tests --- b[&nbsp]
+  frontend_tests --- e[&nbsp]
+  %% e is a fork
+  dockerised_tests --- f[&nbsp]
+  %% f is a fork
+  e & f --- b[&nbsp]
   %% b is a join
-  b --- c[&nbsp]
-  %% c is fork
-  c --> documentation_publishing[Documentation] & docker_publishing[Docker publishing]
-  docker_publishing --> deployment[Deployment]
-  documentation_publishing & deployment --- d[&nbsp]
-  %% d is a join
+  b --> docker_publishing[Docker publishing] --> deployment[Deployment]
+  documentation_tests ---- c[&nbsp]
+  e & f --- c
+  %% c is a join
+  c --> documentation_emit[Documentation emit]
+  documentation_emit & deployment --- d[&nbsp]
   d --> notification[Notification]
 
   style a height:0,width:0
   style b height:0,width:0
   style c height:0,width:0
   style d height:0,width:0
+  style e height:0,width:0
+  style f height:0,width:0
 ```
 
 ```{caution}
@@ -64,47 +70,38 @@ flowchart TD
 - [`get-image-tag`](./jobs/preparation.md#get-image-tag)
 - `lint`
 
-## Bypass jobs
+## Documentation tests
 
-If a job is marked as a required check in GitHub it must
-[either pass or be skipped](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/troubleshooting-required-status-checks#handling-skipped-but-required-checks)
-to allow the PR to be merged. This is different for matrix jobs because if a
-matrix is skipped due to an `if` condition, it is not expanded into individual
-jobs but skipped as a whole, leaving the checks associated with that matrix in a
-pending state, preventing PRs from being merged.
+The documentation tests run outside the Docker containers, so they don't need to
+wait for the Docker containers to be build. This stage happens in parallel with
+the [frontend tests](#frontend-tests) and the
+[Docker preparation](#docker-preparation) stages.
 
-For such jobs, we use a bypass job, conventionally named `bypass-<job name>`,
-that is run on the opposite of the condition of the original job `<job name>`.
-This bypass job is an identical matrix, except it always succeeds, and satisfies
-the required checks by having the same job names as the original.
+These tests are only executed if the documentation has changed. Else they will
+be skipped.
 
 ```{mermaid}
 flowchart TD
   subgraph preparation[Preparation]
+    lint
     get-changes
   end
 
-  subgraph bypass_jobs[Bypass jobs]
-    bypass-django-checks
-    bypass-nuxt-checks
-    bypass-playwright
+  get-changes -- documentation == true &#124&#124 frontend == true --- x
+  lint --- x
+  x[&nbsp] --> build-docs
+
+  subgraph documentation_tests[Documentation tests]
+    build-docs
   end
 
-  get-changes -- api == false --> bypass-django-checks
-  get-changes -- frontend == false --> bypass-nuxt-checks
-  get-changes -- frontend == false --> bypass-playwright
-
+  style x height:0
   style preparation opacity:0.3
 ```
 
 **Jobs:**
 
-- `bypass-django-checks` (opposite of
-  [`django-checks`](./jobs/api.md#django-checks))
-- `bypass-nuxt-checks` (opposite of
-  [`nuxt-checks`](./jobs/frontend.md#nuxt-checks))
-- `bypass-playwright` (opposite of
-  [`playwright`](./jobs/frontend.md#playwright))
+- [`build-docs`](./jobs/documentation.md#build-docs)
 
 ## Frontend tests
 
@@ -134,6 +131,14 @@ flowchart TD
     playwright
   end
 
+  subgraph bypass_jobs[Bypass jobs]
+    bypass-nuxt-checks
+    bypass-playwright
+  end
+
+  nuxt-checks -- skipped --> bypass-nuxt-checks
+  playwright -- skipped --> bypass-playwright
+
   style x height:0
   style preparation opacity:0.3
 ```
@@ -143,6 +148,8 @@ flowchart TD
 - [`nuxt-checks`](./jobs/frontend.md#nuxt-checks)
 - [`nuxt-build`](./jobs/frontend.md#nuxt-build)
 - [`playwright`](./jobs/frontend.md#playwright)
+- [`bypass-nuxt-checks`](#bypass-jobs)
+- [`bypass-playwright`](#bypass-jobs)
 
 ## Docker preparation
 
@@ -181,8 +188,8 @@ flowchart TD
 
 **Jobs:**
 
-- [`determine-images`](./jobs/docker_preparation.md#determine-images)
-- [`build-images`](./jobs/docker_preparation.md#build-images)
+- [`determine-images`](./jobs/docker.md#determine-images)
+- [`build-images`](./jobs/docker.md#build-images)
 
 ## Dockerised tests
 
@@ -223,6 +230,12 @@ flowchart TD
     django-checks
   end
 
+  subgraph bypass_jobs[Bypass jobs]
+    bypass-django-checks
+  end
+
+  django-checks -- skipped --> bypass-django-checks
+
   style x height:0
   style y height:0
   style z height:0
@@ -237,11 +250,12 @@ flowchart TD
 - [`test-ing`](./jobs/ingestion_server.md#test-ing)
 - [`test-api`](./jobs/api.md#test-api)
 - [`django-checks`](./jobs/api.md#django-checks)
+- [`bypass-django-checks`](#bypass-jobs)
 
-## Documentation
+## Documentation emit
 
 After all the [proof-of-functionality](./proof_of_functionality.md) tests have
-concluded, we can initiate the stage of building the new documentation. The
+concluded, we can initiate the stage of publishing the new documentation. The
 documentation is published to the [docs site](https://docs.openverse.org)
 side-by-side with the [publishing of the Docker images](#docker-publishing).
 
@@ -249,6 +263,10 @@ side-by-side with the [publishing of the Docker images](#docker-publishing).
 flowchart TD
   subgraph preparation[Preparation]
     get-changes
+  end
+
+  subgraph documentation_tests[Documentation tests]
+    build-docs
   end
 
   subgraph frontend_tests[Frontend tests]
@@ -265,12 +283,14 @@ flowchart TD
     emit-docs
   end
 
-  get-changes -- frontend == true &#124&#124 documentation == true --> emit-docs
+  get-changes -- documentation == true &#124&#124 frontend == true  --> emit-docs
+  build-docs -- success --> emit-docs
   test-cat & test-ing & test-api & nuxt-build -. success/skipped .-> emit-docs
 
   style preparation opacity:0.3
   style frontend_tests opacity:0.3
   style dockerised_tests opacity:0.3
+  style documentation_tests opacity:0.3
 ```
 
 **Jobs:**
@@ -282,7 +302,7 @@ flowchart TD
 In this stage we publish the Docker images that have passed the
 [proof-of-functionality](./proof_of_functionality.md) tests to
 [GHCR](https://github.com/orgs/WordPress/packages?repo_name=openverse). We
-[publish the new developer docs](#documentation) alongside these images.
+[publish the new developer docs](#documentation-emit) alongside these images.
 
 The `determine-images` job determines the images to publish (and also build, see
 section on [Docker preparation](#docker-preparation) above) based on the changes
@@ -331,7 +351,7 @@ flowchart TD
 
 **Jobs:**
 
-- [`publish-images`](./jobs/docker_publishing.md#publish-images)
+- [`publish-images`](./jobs/docker.md#publish-images)
 
 ## Deployment
 
@@ -430,3 +450,17 @@ flowchart TD
 **Jobs:**
 
 - [`send-report`](./jobs/notification.md#send-report)
+
+## Bypass jobs
+
+If a job is marked as a required check in GitHub it must
+[either pass or be skipped](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/troubleshooting-required-status-checks#handling-skipped-but-required-checks)
+to allow the PR to be merged. This is different for matrix jobs because if a
+matrix is skipped due to an `if` condition, it is not expanded into individual
+jobs but skipped as a whole, leaving the checks associated with that matrix in a
+pending state, preventing PRs from being merged.
+
+For such jobs, we use a bypass job, conventionally named `bypass-<job name>`,
+that is run on the opposite of the condition of the original job `<job name>`.
+This bypass job is an identical matrix, except it always succeeds, and satisfies
+the required checks by having the same job names as the original.

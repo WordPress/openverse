@@ -1,5 +1,7 @@
 # 2023-03-09 Implementation Plan: Sensitive Terms List
 
+**Author**: @zackkrida
+
 > **Content Warning**
 >
 > This document **does not** include sensitive content or direct links to

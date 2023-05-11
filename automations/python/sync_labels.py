@@ -1,36 +1,14 @@
 import logging
-from copy import deepcopy
 
 from github import Repository
 from models.label import Label
-from models.label_group import LabelGroup
 from shared.data import get_data
 from shared.github import get_client
+from shared.labels import get_labels
 from shared.log import configure_logger
 
 
 log = logging.getLogger(__name__)
-
-
-def get_labels() -> list[Label]:
-    """
-    Get all the standard labels as a list.
-
-    :return: a list of Label objects
-    """
-
-    labels_file = deepcopy(get_data("labels.yml"))
-    standard_labels = []
-    for group_info in labels_file["groups"]:
-        labels = group_info.pop("labels", [])
-        group = LabelGroup(**group_info)
-        for label_info in labels:
-            label = Label(**label_info, group=group)
-            standard_labels.append(label)
-    for label_info in labels_file["standalone"]:
-        label = Label(**label_info)
-        standard_labels.append(label)
-    return standard_labels
 
 
 def set_labels(repo: Repository, labels: list[Label]):
@@ -45,7 +23,7 @@ def set_labels(repo: Repository, labels: list[Label]):
     """
 
     log.info(f"Fetching existing labels from {repo.full_name}")
-    existing_labels = {label.name.casefold(): label for label in repo.get_labels()}
+    existing_labels = {label.name.casefold(): label for label in get_labels()}
     log.info(f"Found {len(existing_labels)} existing labels")
 
     for label in labels:

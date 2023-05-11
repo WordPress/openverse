@@ -33,7 +33,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue"
 
-import { useContext, useRouter } from "@nuxtjs/composition-api"
+import { useRouter } from "@nuxtjs/composition-api"
 import { kebab } from "case"
 
 import { watchDebounced } from "@vueuse/core"
@@ -42,6 +42,7 @@ import { useSearchStore } from "~/stores/search"
 import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
 import type { NonMatureFilterCategory } from "~/constants/filters"
 import { defineEvent } from "~/types/emits"
+import { useI18n } from "~/composables/use-i18n"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
 import VButton from "~/components/VButton.vue"
@@ -77,7 +78,7 @@ export default defineComponent({
   setup() {
     const searchStore = useSearchStore()
 
-    const { i18n } = useContext()
+    const i18n = useI18n()
     const router = useRouter()
 
     const filtersFormRef = ref<HTMLFormElement | null>(null)

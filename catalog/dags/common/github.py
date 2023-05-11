@@ -54,6 +54,12 @@ class GitHubAPI:
             f"repos/{owner}/{repo}/issues/{issue_number}/comments",
         )
 
+    def get_issue_events(self, repo: str, issue_number: int, owner: str = "WordPress"):
+        return self._make_request(
+            "GET",
+            f"repos/{owner}/{repo}/issues/{issue_number}/events",
+        )
+
     def delete_issue_comment(
         self, repo: str, comment_id: int, owner: str = "WordPress"
     ):

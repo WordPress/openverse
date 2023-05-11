@@ -1,12 +1,6 @@
-import { mount } from "@vue/test-utils"
-
-import { useI18n } from "~/composables/use-i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
-
-jest.mock("~/composables/use-i18n", () => ({
-  useI18n: jest.fn(),
-}))
 
 jest.mock("~/utils/resampling", () => {
   return {
@@ -20,7 +14,6 @@ describe("VWaveform", () => {
   let props = null
 
   beforeEach(() => {
-    useI18n.mockImplementation(() => ({ t: (v) => v, tc: (v) => v }))
     props = {
       peaks: [],
       audioId: "test",
@@ -30,24 +23,25 @@ describe("VWaveform", () => {
       propsData: props,
     }
   })
-  afterEach(() => {
-    useI18n.mockReset()
-  })
 
   it("should use given peaks when peaks array is provided", () => {
-    props.peaks = Array.from({ length: 5 }, () => 0)
-    const wrapper = mount(VWaveform, options)
-    expect(wrapper.vm.normalizedPeaks.length).toBe(5)
+    const peaksCount = 5
+    props.peaks = Array.from({ length: peaksCount }, () => 0)
+    const { container } = render(VWaveform, options)
+    // There is also a yellow "played" rectangle
+    expect(container.querySelectorAll("rect").length).toBe(peaksCount + 1)
   })
 
   it("should use random peaks when peaks not set", () => {
-    const wrapper = mount(VWaveform, options)
-    expect(wrapper.vm.normalizedPeaks.length).toBe(100)
+    const peaksCount = 100
+    const { container } = render(VWaveform, options)
+    expect(container.querySelectorAll("rect")).toHaveLength(peaksCount + 1)
   })
 
   it("should use random peaks when peaks array is blank", () => {
+    const peaksCount = 100
     props.peaks = null
-    const wrapper = mount(VWaveform, options)
-    expect(wrapper.vm.normalizedPeaks.length).toBe(100)
+    const { container } = render(VWaveform, options)
+    expect(container.querySelectorAll("rect")).toHaveLength(peaksCount + 1)
   })
 })

@@ -5,8 +5,7 @@
 
 preparation
 frontend
-docker_preparation
-docker_publishing
+docker
 catalog
 ingestion_server
 api

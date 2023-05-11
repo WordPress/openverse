@@ -4,13 +4,15 @@ import { useContext } from "@nuxtjs/composition-api"
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useI18n } from "~/composables/use-i18n"
 
 /**
  * The `ctx` parameter must be supplied if using this composable outside the
  * bounds of the composition API.
  */
 export const useAnalytics = () => {
-  const { $plausible, $ua, i18n } = useContext()
+  const { $plausible, $ua } = useContext()
+  const i18n = useI18n()
   const uiStore = useUiStore()
   const featureFlagStore = useFeatureFlagStore()
 

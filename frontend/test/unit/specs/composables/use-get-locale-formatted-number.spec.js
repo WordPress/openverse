@@ -1,14 +1,13 @@
 import Vue from "vue"
-import { render } from "@testing-library/vue"
-import VueI18n from "vue-i18n"
 
-import messages from "~/locales/en.json"
+import { render } from "~~/test/unit/test-utils/render"
+
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 
 const TestWrapper = Vue.component("TestWrapper", {
-  props: ["n"],
-  setup() {
-    const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
+  props: ["n", "locale"],
+  setup(props) {
+    const getLocaleFormattedNumber = useGetLocaleFormattedNumber(props.locale)
 
     return { getLocaleFormattedNumber }
   },
@@ -16,24 +15,11 @@ const TestWrapper = Vue.component("TestWrapper", {
 })
 
 describe("use-get-locale-formatted-number", () => {
-  const getMockedI18n = (locale) => ({
-    $nuxt: {
-      context: {
-        i18n: new VueI18n({
-          locale,
-          fallbackLocale: "en",
-          messages: { en: messages },
-        }),
-      },
-    },
-  })
-
   it.each(["ar", "fa", "ckb", "ps"])(
     "should use en formatting for locales like %s that use Eastern Arabic Numerals",
     (locale) => {
       const { container } = render(TestWrapper, {
-        mocks: getMockedI18n(locale),
-        props: { n: 1000.01 },
+        props: { n: 1000.01, locale },
       })
 
       expect(container.firstChild.textContent).toEqual(
@@ -49,8 +35,7 @@ describe("use-get-locale-formatted-number", () => {
     "should use the default formatting for locales not matching eastern arabic numeral locales like %s",
     (locale) => {
       const { container } = render(TestWrapper, {
-        mocks: getMockedI18n(locale),
-        props: { n: 1000.01 },
+        props: { n: 1000.01, locale },
       })
 
       expect(container.firstChild.textContent).toEqual(

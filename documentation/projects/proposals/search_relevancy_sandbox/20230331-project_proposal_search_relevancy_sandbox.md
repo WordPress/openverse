@@ -1,12 +1,14 @@
 # 2023-03-31 Project Proposal: Search relevancy sandbox
 
+**Author**: @aetherunbound
+
 ## Reviewers
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [x] sarayourfriend
-- [x] zackkrida
-- [x] krysal
+- [x] @sarayourfriend
+- [x] @zackkrida
+- [x] @krysal
 
 ## Project summary
 

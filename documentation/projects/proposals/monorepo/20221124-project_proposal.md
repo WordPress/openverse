@@ -1,5 +1,7 @@
 # 2022-11-24 Project Proposal: Monorepo
 
+**Author**: @dhruvkb
+
 ## Reviewers
 
 - [x] @zackkrida

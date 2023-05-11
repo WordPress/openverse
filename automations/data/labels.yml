@@ -100,6 +100,10 @@ groups:
         description: Related to the analytics setup
       - name: ingestion server
         description: Related to the ingestion/data refresh server
+      - name: documentation
+        description: Related to Sphinx documentation
+      - name: infra
+        description: Related to the Terraform config and other infrastructure
 
   - name: tooling
     labels:
@@ -179,6 +183,24 @@ groups:
       - name: typescript
         description: Requires familiarity with TypeScript
         emoji: "⌨️"
+
+  # Labels related to new source issues
+  - name: provider
+    emoji: "☁️"
+    color: "478d04"
+    labels:
+      - name: any
+        description: Replace with the actual provider type
+      - name: audio
+        description: Audio provider
+      - name: images
+        description: Image provider
+      - name: text
+        description: Text provider
+      - name: video
+        description: Video provider
+      - name: 3D models
+        description: 3D model provider
 
   - name: project
     color: "8b3dcd"

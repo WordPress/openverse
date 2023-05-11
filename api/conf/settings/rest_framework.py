@@ -12,6 +12,7 @@ THROTTLE_ANON_BURST = config("THROTTLE_ANON_BURST", default="5/hour")
 THROTTLE_ANON_SUSTAINED = config("THROTTLE_ANON_SUSTAINED", default="100/day")
 THROTTLE_ANON_THUMBS = config("THROTTLE_ANON_THUMBS", default="150/minute")
 THROTTLE_OAUTH2_THUMBS = config("THROTTLE_OAUTH2_THUMBS", default="500/minute")
+THROTTLE_ANON_HEALTHCHECK = config("THROTTLE_ANON_HEALTHCHECK", default="3/minute")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -36,6 +37,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "anon_burst": THROTTLE_ANON_BURST,
         "anon_sustained": THROTTLE_ANON_SUSTAINED,
+        "anon_healthcheck": THROTTLE_ANON_HEALTHCHECK,
         "anon_thumbnail": THROTTLE_ANON_THUMBS,
         "oauth2_client_credentials_thumbnail": THROTTLE_OAUTH2_THUMBS,
         "oauth2_client_credentials_sustained": "10000/day",
