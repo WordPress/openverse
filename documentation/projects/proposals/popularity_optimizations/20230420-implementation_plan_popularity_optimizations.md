@@ -119,7 +119,7 @@ implemented, is included in the following sections.
 
 This step is simple:
 
-```pgsql
+```plpgsql
 ALTER TABLE image ADD COLUMN standardized_popularity DOUBLE PRECISION;
 ALTER TABLE audio ADD COLUMN standardized_popularity DOUBLE PRECISION;
 ```
@@ -278,7 +278,7 @@ will only ever have to wait for a second or two before locked rows are released.
 
 The approach is easiest explained with some sample code:
 
-```pgsql
+```plpgsql
 -- The final product will be generalized by provider and media type.
 -- In a local test, this successfully updated ~1 million Flickr
 -- records in ~6 seconds, while the reingestion DAG was running.
