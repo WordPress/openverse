@@ -3,13 +3,12 @@ from decouple import config
 from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
 
 
-INSTALLED_APPS += [
-    "oauth2_provider",
-]
+if "oauth2_provider" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("oauth2_provider")
 
-MIDDLEWARE += [
-    "oauth2_provider.middleware.OAuth2TokenMiddleware",
-]
+middleware = "oauth2_provider.middleware.OAuth2TokenMiddleware"
+if middleware not in MIDDLEWARE:
+    MIDDLEWARE.append(middleware)
 
 OAUTH2_PROVIDER = {
     "SCOPES": {

@@ -2,6 +2,8 @@ from socket import gethostbyname, gethostname
 
 from decouple import config
 
+from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -35,6 +37,13 @@ BASE_URL = config("BASE_URL", default="https://openverse.org/")
 CSRF_TRUSTED_ORIGINS = ["https://*.openverse.engineering"]
 
 # Allow anybody to access the API from any domain
+if "corsheaders" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("corsheaders")
+
+middleware = "corsheaders.middleware.CorsMiddleware"
+if middleware not in MIDDLEWARE:
+    MIDDLEWARE.insert(0, middleware)
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 # Proxy handling, for production
