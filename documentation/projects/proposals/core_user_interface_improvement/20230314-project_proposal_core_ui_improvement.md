@@ -1,5 +1,7 @@
 # 2023-03-14 Project Proposal: Core UI Improvement
 
+**Author**: @fcoveram
+
 ## Reviewers
 
 - [x] @obulat

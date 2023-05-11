@@ -1,7 +1,7 @@
 """
 Determine which Docker images to build and publish. For more information refer
 to the documentation:
-https://docs.openverse.org/meta/ci_cd/jobs/docker_preparation.html#determine-images
+https://docs.openverse.org/meta/ci_cd/jobs/docker.html#determine-images
 """
 
 import json

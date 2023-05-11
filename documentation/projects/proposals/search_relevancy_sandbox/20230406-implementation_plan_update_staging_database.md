@@ -1,5 +1,7 @@
 # 2023-04-06 Implementation Plan: Update Staging Database
 
+**Author**: @aetherunbound
+
 <!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
 <!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
 

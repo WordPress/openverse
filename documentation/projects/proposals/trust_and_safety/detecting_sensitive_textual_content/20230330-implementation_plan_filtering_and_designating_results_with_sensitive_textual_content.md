@@ -1,5 +1,7 @@
 # 2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content
 
+**Author**: @sarayourfriend
+
 ## Reviewers
 
 - [x] @stacimc

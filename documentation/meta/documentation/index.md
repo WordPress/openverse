@@ -5,5 +5,5 @@
 
 quickstart
 guidelines
-link_issues
+extensions
 ```

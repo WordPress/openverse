@@ -3,6 +3,8 @@
 ```md
 # {YYYY-MM-DD} Implementation Plan: {Piece of project or project being implemented}
 
+**Author**: @username
+
 <!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
 <!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
 

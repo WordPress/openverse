@@ -170,7 +170,7 @@ services:
   plausible_ch:
     profiles:
       - frontend
-    image: clickhouse/clickhouse-server:22.6-alpine
+    image: clickhouse/clickhouse-server:22.12-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
       - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro

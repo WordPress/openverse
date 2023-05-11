@@ -82,6 +82,10 @@ class SustainedRateThrottle(AbstractAnonRateThrottle):
     scope = "anon_sustained"
 
 
+class HealthcheckAnonRateThrottle(AbstractAnonRateThrottle):
+    scope = "anon_healthcheck"
+
+
 class AnonThumbnailRateThrottle(AbstractAnonRateThrottle):
     scope = "anon_thumbnail"
 

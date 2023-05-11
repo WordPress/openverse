@@ -1,5 +1,7 @@
 # 2023-03-07 Implementation Plan: Analytics backend and visualisation service
 
+**Author**: @dhruvkb
+
 This RFC deals with the backend of analytics, about how we record events sent
 from the frontend and what we do with those events.
 
