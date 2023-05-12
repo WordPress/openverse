@@ -44,13 +44,14 @@ def get_latest_prod_snapshot(rds_hook: RdsHook = None):
         DBInstanceIdentifier=PROD_IDENTIFIER,
         SnapshotType="automated",
     ).get("DBSnapshots", [])
-    if not snapshots:
-        raise ValueError(f"No snapshots found for {PROD_IDENTIFIER}")
-    # Filter by those that are available, then sort by creation time
-    latest_snapshot = sorted(
-        [snapshot for snapshot in snapshots if snapshot["Status"] == "available"],
+    # Sort by descending creation time
+    snapshots = sorted(
+        snapshots,
         key=lambda x: x["SnapshotCreateTime"],
         reverse=True,
-    )[0]
-    log.info(f"Latest snapshot: {latest_snapshot['DBSnapshotIdentifier']}")
-    return latest_snapshot
+    )
+    if not snapshots:
+        raise ValueError(f"No snapshots found for {PROD_IDENTIFIER}")
+    latest_snapshot = snapshots[0]
+    log.info(f"Latest snapshot: {latest_snapshot}")
+    return latest_snapshot["DBSnapshotIdentifier"]
