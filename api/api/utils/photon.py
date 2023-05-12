@@ -30,7 +30,7 @@ HEADERS = {
 }
 
 
-def _get_extension_from_url(image_url: str) -> str:
+def _get_file_extension_from_url(image_url: str) -> str:
     """Return the image extension if present in the URL."""
     parsed = urlparse(image_url)
     _, ext = splitext(parsed.path)
@@ -41,7 +41,7 @@ def check_image_type(image_url: str, media_obj) -> None:
     key = f"media:{media_obj.identifier}:thumb_type"
     cache = django_redis.get_redis_connection("default")
 
-    ext = _get_extension_from_url(image_url)
+    ext = _get_file_extension_from_url(image_url)
 
     if not ext:
         # If the extension is not present in the URL, try to get it from the redis cache

@@ -6,7 +6,11 @@ import pook
 import pytest
 import requests
 
-from api.utils.photon import HEADERS, UpstreamThumbnailException
+from api.utils.photon import (
+    HEADERS,
+    UpstreamThumbnailException,
+    _get_file_extension_from_url,
+)
 from api.utils.photon import get as photon_get
 
 
@@ -287,7 +291,7 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
 
 
 @pook.on
-def test_get_unsuccessful_request_raises_exception():
+def test_get_unsuccessful_request_raises_custom_exception():
     mock_get: pook.Mock = pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
 
     with pytest.raises(
@@ -296,3 +300,21 @@ def test_get_unsuccessful_request_raises_exception():
         photon_get(TEST_IMAGE_URL)
 
     assert mock_get.matched
+
+
+@pytest.mark.parametrize(
+    "image_url, expected_ext",
+    [
+        ("www.example.com/image.jpg", "jpg"),
+        ("https://example.com/image.jpeg", "jpeg"),
+        ("https://subdomain.example.com/image.svg", "svg"),
+        ("https://example.com/image.png?foo=1&bar=2#fragment", "png"),
+        ("https://example.com/possibleimagewithoutext", ""),
+        (
+            "https://iip.smk.dk/iiif/jp2/kksgb22133.tif.jp2/full/!400,/0/default.jpg",
+            "jpg",
+        ),
+    ],
+)
+def test__get_extension_from_url(image_url, expected_ext):
+    assert _get_file_extension_from_url(image_url) == expected_ext
