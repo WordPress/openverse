@@ -19,11 +19,10 @@ def setup_rds_hook(func: callable) -> callable:
     return wrapped
 
 
-def ensure_staging(db_identifier: str) -> None:
+def ensure_mutate_allowed(db_identifier: str) -> None:
     """
-    Ensure that the staging database is the one being used for a target function.
-    This requires that the target function has a db_instance parameter in its keyword
-    arguments.
+    Ensure that the only those databases which are safe to mutate are being used
+    for a target function.
     """
 
     if db_identifier not in constants.SAFE_TO_MUTATE:

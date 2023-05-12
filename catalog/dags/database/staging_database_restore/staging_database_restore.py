@@ -11,7 +11,10 @@ from airflow.utils.trigger_rule import TriggerRule
 
 from common import slack
 from database.staging_database_restore import constants
-from database.staging_database_restore.utils import ensure_staging, setup_rds_hook
+from database.staging_database_restore.utils import (
+    ensure_mutate_allowed,
+    setup_rds_hook,
+)
 
 
 REQUIRED_DB_INFO = {
@@ -114,8 +117,8 @@ def restore_staging_from_snapshot(
 @setup_rds_hook
 def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None):
     log.info("Checking input values")
-    ensure_staging(source)
-    ensure_staging(target)
+    ensure_mutate_allowed(source)
+    ensure_mutate_allowed(target)
     log.info(f"Renaming {source} to {target}")
     rds_hook.conn.modify_db_instance(
         DBInstanceIdentifier=source,
