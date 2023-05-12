@@ -244,7 +244,8 @@ def _is_tsv_column_from_different_version(
     Check that a column appears in the available columns for a TSV verison.
 
     Check that column is a column that exists in TSV files (unlike the db-only
-    columns like IDENTIFIER or CREATED_ON), but is not available for `tsv_version`.
+    columns like IDENTIFIER or CREATED_ON, or calculated values like
+    STANDARDIZED_POPULARITY), but is not available for `tsv_version`.
     For example, Category column was added to Image TSV in version 001:
     >>> from common.storage import CATEGORY, DIRECT_URL
     >>> _is_tsv_column_from_different_version(CATEGORY, IMAGE, '000')
@@ -253,6 +254,8 @@ def _is_tsv_column_from_different_version(
     False
     >>> from common.storage import IDENTIFIER
     >>> _is_tsv_column_from_different_version(IDENTIFIER, IMAGE, '000')
+    False
+    >>> _is_tsv_column_from_different_version(STANDARDIZED_POPULARITY, IMAGE, '000')
     False
     """
     return (
@@ -300,16 +303,16 @@ def upsert_records_to_db_table(
     column_conflict_values = {}
     for column in db_columns:
         if column.upsert_strategy == UpsertStrategy.no_change:
-            column_inserts[column.db_name] = column.upsert_name
+            column_inserts[column.db_name] = column.get_insert_value(media_type)
         elif _is_tsv_column_from_different_version(column, media_type, tsv_version):
             column_inserts[column.db_name] = NULL
             column_conflict_values[column.db_name] = NULL
         else:
-            column_conflict_values[column.db_name] = column.upsert_value
+            column_conflict_values[column.db_name] = column.get_update_value(media_type)
             # The direct_url is handled specially to ensure uniqueness and
             # should not be added to the column_inserts.
             if not column.db_name == col.DIRECT_URL.name:
-                column_inserts[column.db_name] = column.upsert_name
+                column_inserts[column.db_name] = column.get_insert_value(media_type)
 
     upsert_conflict_string = ",\n    ".join(column_conflict_values.values())
     upsert_query = dedent(
