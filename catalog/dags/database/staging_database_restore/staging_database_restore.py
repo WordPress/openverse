@@ -1,5 +1,5 @@
 import logging
-from airflow.utils.trigger_rule import TriggerRule
+from datetime import timedelta
 from pprint import pformat
 
 from airflow.decorators import task
@@ -7,6 +7,7 @@ from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.sensors.rds import RdsDbSensor
 from airflow.utils.task_group import TaskGroup
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import slack
 from database.staging_database_restore import constants
@@ -123,6 +124,16 @@ def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None):
     )
 
 
+@task
+def notify_slack(text: str) -> None:
+    slack.send_message(
+        text,
+        username=constants.SLACK_USERNAME,
+        icon_emoji=constants.SLACK_ICON,
+        dag_id=constants.DAG_ID,
+    )
+
+
 def make_rds_sensor(task_id: str, db_identifier: str, retries: int = 0) -> RdsDbSensor:
     return RdsDbSensor(
         task_id=task_id,
@@ -132,6 +143,7 @@ def make_rds_sensor(task_id: str, db_identifier: str, retries: int = 0) -> RdsDb
         mode="reschedule",
         timeout=60 * 60,  # 1 hour
         retries=retries,
+        retry_delay=timedelta(minutes=1),
     )
 
 

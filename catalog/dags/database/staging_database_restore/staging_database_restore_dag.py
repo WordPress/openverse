@@ -9,15 +9,13 @@ https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-
 """
 
 import logging
-from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
-from airflow.utils.trigger_rule import TriggerRule
 from datetime import datetime, timedelta
 
 from airflow.decorators import dag
-from airflow.operators.python import PythonOperator
+from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+from airflow.utils.trigger_rule import TriggerRule
 
-from common import slack
 from common.constants import DAG_DEFAULT_ARGS
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
@@ -25,6 +23,7 @@ from database.staging_database_restore.staging_database_restore import (
     get_staging_db_details,
     make_rds_sensor,
     make_rename_task_group,
+    notify_slack,
     restore_staging_from_snapshot,
     skip_restore,
 )
@@ -76,15 +75,9 @@ def restore_staging_database():
     )
     restore_snapshot >> await_staging_creation
 
-    notify_outage = PythonOperator(
-        task_id="notify_outage",
-        python_callable=slack.send_message,
-        op_kwargs={
-            "message": ":warning: Staging database is being restored, staging "
-            "will be down for the duration.",
-            "username": constants.SLACK_USERNAME,
-            "dag_id": constants.DAG_ID,
-        },
+    notify_outage = notify_slack.override(task_id="notify_outage")(
+        ":warning: Staging database is being restored, staging will "
+        "be down for the duration."
     )
 
     rename_staging_to_old = make_rename_task_group(
@@ -103,27 +96,14 @@ def restore_staging_database():
         constants.STAGING_IDENTIFIER,
         trigger_rule=TriggerRule.ALL_FAILED,
     )
-    notify_failed_but_back = PythonOperator(
-        task_id="notify_failed_but_back",
-        python_callable=slack.send_message,
-        op_kwargs={
-            "message": ":warning: Staging database rename failed, but staging should "
-            "now be available. Please investigate the cause of the failure.",
-            "username": constants.SLACK_USERNAME,
-            "dag_id": constants.DAG_ID,
-        },
+    notify_failed_but_back = notify_slack.override(task_id="notify_failed_but_back")(
+        ":warning: Staging database rename failed, but staging should "
+        "now be available. Please investigate the cause of the failure."
     )
     rename_temp_to_staging >> rename_old_to_staging >> notify_failed_but_back
 
-    notify_complete = PythonOperator(
-        task_id="notify_complete",
-        python_callable=slack.send_message,
-        op_kwargs={
-            "message": ":info: Staging database restore complete, staging "
-            "should now be available.",
-            "username": constants.SLACK_USERNAME,
-            "dag_id": constants.DAG_ID,
-        },
+    notify_complete = notify_slack.override(task_id="notify_complete")(
+        ":info: Staging database restore complete, staging should now be available.",
     )
 
     delete_old = RdsDeleteDbInstanceOperator(
