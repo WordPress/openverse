@@ -6,13 +6,12 @@ from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 
 from common import slack
+from database.staging_database_restore.constants import (
+    DAG_ID,
+    PROD_IDENTIFIER,
+    SKIP_VARIABLE,
+)
 from database.staging_database_restore.utils import setup_rds_hook
-
-
-DAG_ID = "staging_database_restore"
-PROD_IDENTIFIER = "prod-openverse-db"
-STAGING_IDENTIFIER = "dev-openverse-db"
-SKIP_VARIABLE = "SKIP_STAGING_DATABASE_RESTORE"
 
 
 log = logging.getLogger(__name__)

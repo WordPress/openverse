@@ -14,12 +14,11 @@ from datetime import datetime, timedelta
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 
+from database.staging_database_restore.constants import AWS_RDS_CONN_ID, DAG_ID
 from database.staging_database_restore.staging_database_restore import (
-    DAG_ID,
     get_latest_prod_snapshot,
     skip_restore,
 )
-from database.staging_database_restore.utils import AWS_RDS_CONN_ID
 
 
 log = logging.getLogger(__name__)

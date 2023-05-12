@@ -1,12 +1,8 @@
 import functools
-import os
 
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 
-from common.constants import AWS_CONN_ID
-
-
-AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
+from database.staging_database_restore.constants import AWS_RDS_CONN_ID
 
 
 def setup_rds_hook(func: callable) -> callable:
