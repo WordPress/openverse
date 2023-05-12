@@ -126,7 +126,7 @@ def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None):
     )
 
 
-def make_rds_sensor(task_id: str, db_identifier: str) -> RdsDbSensor:
+def make_rds_sensor(task_id: str, db_identifier: str, retries: int = 0) -> RdsDbSensor:
     return RdsDbSensor(
         task_id=task_id,
         db_identifier=db_identifier,
@@ -134,6 +134,7 @@ def make_rds_sensor(task_id: str, db_identifier: str) -> RdsDbSensor:
         aws_conn_id=constants.AWS_RDS_CONN_ID,
         mode="reschedule",
         timeout=60 * 60,  # 1 hour
+        retries=retries,
     )
 
 
@@ -150,6 +151,7 @@ def make_rename_task_group(source: str, target: str) -> TaskGroup:
         await_rename = make_rds_sensor(
             task_id=f"await_{target_name}",
             db_identifier=target,
+            retries=2,
         )
         rename >> await_rename
 

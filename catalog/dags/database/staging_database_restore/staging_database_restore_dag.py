@@ -41,7 +41,11 @@ log = logging.getLogger(__name__)
     catchup=False,
     # Use the docstring at the top of the file as md docs in the UI
     doc_md=__doc__,
-    default_args=DAG_DEFAULT_ARGS,
+    default_args={
+        **DAG_DEFAULT_ARGS,
+        # Don't add any retries by defalut
+        "retries": 0,
+    },
     render_template_as_native_obj=True,
 )
 def restore_staging_database():
