@@ -152,9 +152,12 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def thumbnail(self, image_url, request, *_, **__):
+    def thumbnail(self, request, media_obj, image_url):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
+
+        photon.check_image_type(image_url, media_obj)
+
         return photon.get(
             image_url,
             accept_header=request.headers.get("Accept", "image/*"),

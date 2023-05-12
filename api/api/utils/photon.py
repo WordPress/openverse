@@ -1,10 +1,11 @@
 import logging
+from os.path import splitext
 from urllib.parse import urlparse
 
 from django.conf import settings
 from django.http import HttpResponse
 from rest_framework import status
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, UnsupportedMediaType
 
 import django_redis
 import requests
@@ -20,11 +21,49 @@ class UpstreamThumbnailException(APIException):
     default_code = "upstream_photon_failure"
 
 
+ALLOWED_TYPES = ["gif", "jpg", "jpeg", "png", "webp"]
+
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
         purpose="ThumbnailGeneration"
     )
 }
+
+
+def _get_extension_from_url(image_url: str) -> str:
+    """Return the image extension if present in the URL."""
+    parsed = urlparse(image_url)
+    _, ext = splitext(parsed.path)
+    return ext[1:]  # remove the leading dot
+
+
+def check_image_type(image_url: str, media_obj) -> None:
+    key = f"media:{media_obj.identifier}:thumb_type"
+    cache = django_redis.get_redis_connection("default")
+
+    ext = _get_extension_from_url(image_url)
+
+    if not ext:
+        # If the extension is not present in the URL, try to get it from the redis cache
+        ext = cache.get(key)
+
+    if not ext:
+        # If the extension is still not present, try getting it from the content type
+        try:
+            response = requests.head(image_url)
+            response.raise_for_status()
+        except Exception as exc:
+            sentry_sdk.capture_exception(exc)
+            raise UpstreamThumbnailException(
+                f"Failed to render thumbnail due to inability to check media "
+                f"type. {exc}"
+            )
+        else:
+            ext = response.headers["Content-Type"].split("/")[1]
+            cache.set(key, ext)
+
+    if ext not in ALLOWED_TYPES:
+        raise UnsupportedMediaType(ext)
 
 
 def _get_photon_params(image_url, is_full_size, is_compressed):
