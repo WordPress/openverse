@@ -17,6 +17,7 @@ from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from database.staging_database_restore.constants import AWS_RDS_CONN_ID, DAG_ID
 from database.staging_database_restore.staging_database_restore import (
     get_latest_prod_snapshot,
+    get_staging_db_details,
     skip_restore,
 )
 
@@ -37,8 +38,9 @@ log = logging.getLogger(__name__)
     render_template_as_native_obj=True,
 )
 def restore_staging_database():
+    should_skip = skip_restore()
     latest_snapshot = get_latest_prod_snapshot()
-    skip_restore() >> latest_snapshot
+    should_skip >> latest_snapshot
 
     RdsSnapshotExistenceSensor(
         task_id="ensure_snapshot_ready",
@@ -48,6 +50,9 @@ def restore_staging_database():
         mode="reschedule",
         timeout=60 * 60 * 4,  # 4 hours
     )
+
+    staging_details = get_staging_db_details()
+    should_skip >> staging_details
 
 
 restore_staging_database()

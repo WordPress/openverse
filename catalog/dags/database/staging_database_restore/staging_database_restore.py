@@ -10,8 +10,20 @@ from database.staging_database_restore.constants import (
     DAG_ID,
     PROD_IDENTIFIER,
     SKIP_VARIABLE,
+    STAGING_IDENTIFIER,
 )
 from database.staging_database_restore.utils import setup_rds_hook
+
+
+REQUIRED_DB_INFO = {
+    "MultiAZ",
+    "AvailabilityZone",
+    "VpcSecurityGroups",
+    "DBSubnetGroup",
+    "PubliclyAccessible",
+    "DBInstanceClass",
+    "AllocatedStorage",
+}
 
 
 log = logging.getLogger(__name__)
@@ -54,3 +66,22 @@ def get_latest_prod_snapshot(rds_hook: RdsHook = None):
     latest_snapshot = snapshots[0]
     log.info(f"Latest snapshot: {latest_snapshot}")
     return latest_snapshot["DBSnapshotIdentifier"]
+
+
+@task()
+@setup_rds_hook
+def get_staging_db_details(rds_hook: RdsHook = None):
+    # Get staging DB details
+    instances = rds_hook.conn.describe_db_instances(
+        DBInstanceIdentifier=STAGING_IDENTIFIER,
+    ).get("DBInstances", [])
+    if not instances:
+        raise ValueError(f"No staging DB found for {STAGING_IDENTIFIER}")
+    staging_db = instances[0]
+    # While it might be tempting to log this information, it contains sensitive
+    # values. Instead, we'll select only the information we need, then log that.
+    staging_db = {
+        key: value for key, value in staging_db.items() if key in REQUIRED_DB_INFO
+    }
+    log.info(f"Staging DB config: {staging_db}")
+    return staging_db
