@@ -12,14 +12,17 @@ import logging
 from datetime import datetime, timedelta
 
 from airflow.decorators import dag
+from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.sensors.rds import (
     RdsDbSensor,
     RdsSnapshotExistenceSensor,
 )
 
+from common import slack
 from database.staging_database_restore.constants import (
     AWS_RDS_CONN_ID,
     DAG_ID,
+    SLACK_USERNAME,
     TEMP_IDENTIFIER,
 )
 from database.staging_database_restore.staging_database_restore import (
@@ -74,6 +77,17 @@ def restore_staging_database():
         timeout=60 * 60,  # 1 hour
     )
     restore_snapshot >> await_staging_creation
+
+    PythonOperator(
+        task_id="notify_outage",
+        python_callable=slack.send_message,
+        op_kwargs={
+            "message": ":warning: Staging database is being restored, the site "
+            "will be down for the duration.",
+            "username": SLACK_USERNAME,
+            "dag_id": DAG_ID,
+        },
+    )
 
 
 restore_staging_database()
