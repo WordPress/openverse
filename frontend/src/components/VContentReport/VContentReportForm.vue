@@ -1,121 +1,123 @@
 <template>
-  <div v-if="status === SENT">
-    <p class="heading-6 mb-4">
-      {{ $t("media-details.content-report.success.title") }}
-    </p>
-    <i18n
-      path="media-details.content-report.success.note"
-      class="text-sm"
-      tag="p"
-    >
-      <template #source>
-        <VLink
-          :href="media.foreign_landing_url"
-          class="text-pink hover:underline"
-          >{{ providerName }}</VLink
-        >
-      </template>
-    </i18n>
-  </div>
-
-  <div v-else-if="status === FAILED">
-    <p class="heading-6 mb-4">
-      {{ $t("media-details.content-report.failure.title") }}
-    </p>
-    <p class="text-sm">
-      {{ $t("media-details.content-report.failure.note") }}
-    </p>
-  </div>
-
-  <!-- Main form -->
-  <div v-else>
-    <div class="heading-6 mb-4">
-      {{ $t("media-details.content-report.long") }}
+  <div id="content-report-form">
+    <div v-if="status === SENT">
+      <h2 class="heading-6 mb-4">
+        {{ $t("media-details.content-report.success.title") }}
+      </h2>
+      <i18n
+        path="media-details.content-report.success.note"
+        class="text-sm"
+        tag="p"
+      >
+        <template #source>
+          <VLink
+            :href="media.foreign_landing_url"
+            class="text-pink hover:underline"
+            >{{ providerName }}</VLink
+          >
+        </template>
+      </i18n>
     </div>
 
-    <p class="mb-4 text-sm">
-      {{
-        $t("media-details.content-report.form.disclaimer", {
-          openverse: "Openverse",
-        })
-      }}
-    </p>
+    <div v-else-if="status === FAILED">
+      <h2 class="heading-6 mb-4">
+        {{ $t("media-details.content-report.failure.title") }}
+      </h2>
+      <p class="text-sm">
+        {{ $t("media-details.content-report.failure.note") }}
+      </p>
+    </div>
 
-    <form class="text-sm" @submit="handleSubmit">
-      <fieldset class="flex flex-col">
-        <legend class="label-bold mb-4">
-          {{ $t("media-details.content-report.form.question") }}
-        </legend>
-        <VRadio
-          v-for="reason in reasons"
-          :id="reason"
-          :key="reason"
-          v-model="selectedReason"
-          class="mb-4"
-          name="reason"
-          :value_="reason"
-        >
-          {{ $t(`media-details.content-report.form.${reason}.option`) }}
-        </VRadio>
-      </fieldset>
-
-      <div class="mb-4 min-h-[7rem]">
-        <VDmcaNotice
-          v-if="media.foreign_landing_url && selectedReason === DMCA"
-          :provider="providerName"
-          :foreign-landing-url="media.foreign_landing_url"
-          @click="handleDmcaSubmit"
-        />
-        <VReportDescForm
-          v-if="selectedReason !== DMCA"
-          key="other"
-          v-model="description"
-          :reason="selectedReason"
-          :is-required="selectedReason === OTHER"
-        />
+    <!-- Main form -->
+    <div v-else>
+      <div class="heading-6 mb-4">
+        {{ $t("media-details.content-report.long") }}
       </div>
 
-      <div class="flex flex-row items-center justify-end gap-4">
-        <VButton
-          v-if="allowCancel"
-          variant="bordered-gray"
-          size="medium"
-          class="label-bold"
-          @click="handleCancel"
-        >
-          {{ $t("media-details.content-report.form.cancel") }}
-        </VButton>
+      <p class="mb-4 text-sm">
+        {{
+          $t("media-details.content-report.form.disclaimer", {
+            openverse: "Openverse",
+          })
+        }}
+      </p>
 
-        <VButton
-          v-if="selectedReason === DMCA"
-          key="dmca"
-          as="VLink"
-          variant="filled-dark"
-          size="medium"
-          class="label-bold"
-          has-icon-end
-          show-external-icon
-          :external-icon-size="6"
-          :href="DMCA_FORM_URL"
-          @click="handleDmcaSubmit"
-        >
-          {{ $t("media-details.content-report.form.dmca.open") }}
-        </VButton>
-        <VButton
-          v-else
-          key="non-dmca"
-          type="submit"
-          :disabled="isSubmitDisabled"
-          :focusable-when-disabled="true"
-          variant="filled-dark"
-          size="medium"
-          class="label-bold"
-          :value="$t('media-details.content-report.form.submit')"
-        >
-          {{ $t("media-details.content-report.form.submit") }}
-        </VButton>
-      </div>
-    </form>
+      <form class="text-sm" @submit="handleSubmit">
+        <fieldset class="flex flex-col">
+          <legend class="label-bold mb-4">
+            {{ $t("media-details.content-report.form.question") }}
+          </legend>
+          <VRadio
+            v-for="reason in reasons"
+            :id="reason"
+            :key="reason"
+            v-model="selectedReason"
+            class="mb-4"
+            name="reason"
+            :value_="reason"
+          >
+            {{ $t(`media-details.content-report.form.${reason}.option`) }}
+          </VRadio>
+        </fieldset>
+
+        <div class="mb-4 min-h-[7rem]">
+          <VDmcaNotice
+            v-if="media.foreign_landing_url && selectedReason === DMCA"
+            :provider="providerName"
+            :foreign-landing-url="media.foreign_landing_url"
+            @click="handleDmcaSubmit"
+          />
+          <VReportDescForm
+            v-if="selectedReason !== DMCA"
+            key="other"
+            v-model="description"
+            :reason="selectedReason"
+            :is-required="selectedReason === OTHER"
+          />
+        </div>
+
+        <div class="flex flex-row items-center justify-end gap-x-4">
+          <VButton
+            v-if="allowCancel"
+            variant="bordered-gray"
+            size="medium"
+            class="label-bold"
+            @click="handleCancel"
+          >
+            {{ $t("media-details.content-report.form.cancel") }}
+          </VButton>
+
+          <VButton
+            v-if="selectedReason === DMCA"
+            key="dmca"
+            as="VLink"
+            variant="filled-dark"
+            size="medium"
+            class="label-bold"
+            has-icon-end
+            show-external-icon
+            :external-icon-size="6"
+            :href="DMCA_FORM_URL"
+            @click="handleDmcaSubmit"
+          >
+            {{ $t("media-details.content-report.form.dmca.open") }}
+          </VButton>
+          <VButton
+            v-else
+            key="non-dmca"
+            type="submit"
+            :disabled="isSubmitDisabled"
+            :focusable-when-disabled="true"
+            variant="filled-dark"
+            size="medium"
+            class="label-bold"
+            :value="$t('media-details.content-report.form.submit')"
+          >
+            {{ $t("media-details.content-report.form.submit") }}
+          </VButton>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 

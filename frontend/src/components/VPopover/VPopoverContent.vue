@@ -96,6 +96,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    trapFocus: {
+      type: Boolean,
+      default: true,
+    },
     /**
      * Optional Tailwind class for fixed width.
      */

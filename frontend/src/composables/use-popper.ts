@@ -19,6 +19,7 @@ export type PopoverContentProps = {
   placement: Placement
   strategy: PositioningStrategy
   clippable: boolean
+  trapFocus: boolean
   zIndex: number | string
 }
 
