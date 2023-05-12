@@ -1,5 +1,4 @@
 from copy import deepcopy
-from itertools import chain
 
 from models.label import Label
 from models.label_group import LabelGroup
@@ -29,7 +28,9 @@ def get_labels() -> list[Label]:
     """
     labels_file = deepcopy(get_data("labels.yml"))
     grouped_labels = get_labels_by_group(labels_file)
-    standard_labels = list(chain(group.labels for group in grouped_labels.values()))
+    standard_labels = [
+        label for group in grouped_labels.values() for label in group.labels
+    ]
     # Also grab standard labels
     for label_info in labels_file["standalone"]:
         label = Label(**label_info)
