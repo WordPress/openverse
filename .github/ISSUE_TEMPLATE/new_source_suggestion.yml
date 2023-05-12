@@ -5,6 +5,10 @@ labels:
   - "🚦 status: awaiting triage"
   - "🧹 status: ticket work required"
   - "☁️ provider: any"
+  - "💻 aspect: code"
+  - "🌟 goal: addition"
+  - "🧱 stack: catalog"
+  - "🟩 priority: low"
 body:
   - type: input
     id: source
