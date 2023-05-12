@@ -12,9 +12,16 @@ import logging
 from datetime import datetime, timedelta
 
 from airflow.decorators import dag
-from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+from airflow.providers.amazon.aws.sensors.rds import (
+    RdsDbSensor,
+    RdsSnapshotExistenceSensor,
+)
 
-from database.staging_database_restore.constants import AWS_RDS_CONN_ID, DAG_ID
+from database.staging_database_restore.constants import (
+    AWS_RDS_CONN_ID,
+    DAG_ID,
+    TEMP_IDENTIFIER,
+)
 from database.staging_database_restore.staging_database_restore import (
     get_latest_prod_snapshot,
     get_staging_db_details,
@@ -57,6 +64,16 @@ def restore_staging_database():
 
     restore_snapshot = restore_staging_from_snapshot(latest_snapshot, staging_details)
     ensure_snapshot_ready >> restore_snapshot
+
+    await_staging_creation = RdsDbSensor(
+        task_id="await_staging_creation",
+        db_identifier=TEMP_IDENTIFIER,
+        target_statuses=["available"],
+        aws_conn_id=AWS_RDS_CONN_ID,
+        mode="reschedule",
+        timeout=60 * 60,  # 1 hour
+    )
+    restore_snapshot >> await_staging_creation
 
 
 restore_staging_database()
