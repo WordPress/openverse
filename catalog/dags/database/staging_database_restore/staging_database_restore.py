@@ -2,7 +2,6 @@ import logging
 from pprint import pformat
 
 from airflow.decorators import task
-from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.sensors.rds import RdsDbSensor
@@ -27,28 +26,25 @@ REQUIRED_DB_INFO = {
 log = logging.getLogger(__name__)
 
 
-@task()
+@task.short_circuit
 def skip_restore(should_skip: bool = False) -> None:
-    if not (
-        should_skip
-        or Variable.get(
-            constants.SKIP_VARIABLE, default_var=False, deserialize_json=True
-        )
-    ):
-        return
-    slack.send_message(
-        f"""
-:info: The staging database restore has been skipped.
+    will_skip = should_skip or Variable.get(
+        constants.SKIP_VARIABLE, default_var=False, deserialize_json=True
+    )
+    if not will_skip:
+        slack.send_message(
+            f"""
+    :info: The staging database restore has been skipped.
 (Set the `{constants.SKIP_VARIABLE}` Airflow Variable to `false`
 to disable this behavior.)
 """,
-        username=":database-pink:",
-        dag_id=constants.DAG_ID,
-    )
-    raise AirflowSkipException("Skipping restore step")
+            username=":database-pink:",
+            dag_id=constants.DAG_ID,
+        )
+    return will_skip
 
 
-@task()
+@task
 @setup_rds_hook
 def get_latest_prod_snapshot(rds_hook: RdsHook = None):
     # Get snapshots
@@ -69,7 +65,7 @@ def get_latest_prod_snapshot(rds_hook: RdsHook = None):
     return latest_snapshot["DBSnapshotIdentifier"]
 
 
-@task()
+@task
 @setup_rds_hook
 def get_staging_db_details(rds_hook: RdsHook = None):
     # Get staging DB details
@@ -112,7 +108,7 @@ def restore_staging_from_snapshot(
     )
 
 
-@task()
+@task
 @setup_rds_hook
 def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None):
     log.info("Checking input values")
