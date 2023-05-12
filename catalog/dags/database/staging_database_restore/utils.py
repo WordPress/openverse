@@ -7,13 +7,16 @@ from database.staging_database_restore import constants
 
 def setup_rds_hook(func: callable) -> callable:
     """
-    Provide an rds_hook as one of the parameters for the called function
+    Provide an rds_hook as one of the parameters for the called function.
+    If the function is explicitly supplied with an rds_hook, use that one.
     :return:
     """
 
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
-        rds_hook = RdsHook(aws_conn_id=constants.AWS_RDS_CONN_ID)
+        rds_hook = kwargs.pop("rds_hook", None) or RdsHook(
+            aws_conn_id=constants.AWS_RDS_CONN_ID
+        )
         return func(*args, **kwargs, rds_hook=rds_hook)
 
     return wrapped

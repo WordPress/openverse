@@ -12,6 +12,16 @@ def test_setup_rds_hook():
     test_func()
 
 
+def test_setup_rds_hook_uses_existing():
+    shim_hook = object()
+
+    @utils.setup_rds_hook
+    def test_func(rds_hook: RdsHook = None):
+        assert rds_hook is shim_hook
+
+    test_func(rds_hook=shim_hook)
+
+
 def test_setup_rds_hook_fails_without_kwargs():
     @utils.setup_rds_hook
     def test_func():
