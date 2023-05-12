@@ -6,6 +6,7 @@ from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.sensors.rds import RdsDbSensor
+from airflow.utils.task_group import TaskGroup
 
 from common import slack
 from database.staging_database_restore import constants
@@ -24,17 +25,6 @@ REQUIRED_DB_INFO = {
 
 
 log = logging.getLogger(__name__)
-
-
-def make_rds_sensor(task_id: str, db_identifier: str) -> RdsDbSensor:
-    return RdsDbSensor(
-        task_id=task_id,
-        db_identifier=db_identifier,
-        target_statuses=["available"],
-        aws_conn_id=constants.AWS_RDS_CONN_ID,
-        mode="reschedule",
-        timeout=60 * 60,  # 1 hour
-    )
 
 
 @task()
@@ -134,3 +124,33 @@ def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None):
         NewDBInstanceIdentifier=target,
         ApplyImmediately=True,
     )
+
+
+def make_rds_sensor(task_id: str, db_identifier: str) -> RdsDbSensor:
+    return RdsDbSensor(
+        task_id=task_id,
+        db_identifier=db_identifier,
+        target_statuses=["available"],
+        aws_conn_id=constants.AWS_RDS_CONN_ID,
+        mode="reschedule",
+        timeout=60 * 60,  # 1 hour
+    )
+
+
+def make_rename_task_group(source: str, target: str) -> TaskGroup:
+    source_name = source.removesuffix("-openverse-db")
+    target_name = target.removesuffix("-openverse-db")
+    with TaskGroup(group_id=f"rename_{source_name}_to_{target_name}") as rename_group:
+        rename = rename_db_instance.override(
+            task_id=f"rename_{source_name}_to_{target_name}"
+        )(
+            source=source,
+            target=target,
+        )
+        await_rename = make_rds_sensor(
+            task_id=f"await_{target_name}",
+            db_identifier=target,
+        )
+        rename >> await_rename
+
+    return rename_group

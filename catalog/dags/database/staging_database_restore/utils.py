@@ -26,7 +26,7 @@ def ensure_staging(db_identifier: str) -> None:
     arguments.
     """
 
-    if db_identifier not in {constants.STAGING_IDENTIFIER, constants.TEMP_IDENTIFIER}:
+    if db_identifier not in constants.SAFE_TO_MUTATE:
         raise ValueError(
             f"The target function must be called with the staging database "
             f"identifier ({constants.STAGING_IDENTIFIER}), not {db_identifier}"
