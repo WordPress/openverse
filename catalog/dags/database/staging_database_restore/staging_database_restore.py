@@ -1,4 +1,5 @@
 import logging
+from pprint import pformat
 
 from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
@@ -11,6 +12,7 @@ from database.staging_database_restore.constants import (
     PROD_IDENTIFIER,
     SKIP_VARIABLE,
     STAGING_IDENTIFIER,
+    TEMP_IDENTIFIER,
 )
 from database.staging_database_restore.utils import setup_rds_hook
 
@@ -83,5 +85,29 @@ def get_staging_db_details(rds_hook: RdsHook = None):
     staging_db = {
         key: value for key, value in staging_db.items() if key in REQUIRED_DB_INFO
     }
-    log.info(f"Staging DB config: {staging_db}")
+    # Pull the DBSubnetGroup name out of the DBSubnetGroup object
+    staging_db["DBSubnetGroupName"] = staging_db.pop("DBSubnetGroup")[
+        "DBSubnetGroupName"
+    ]
+    # Pull the VPC IDs out of the VpcSecurityGroups objects
+    staging_db["VpcSecurityGroupIds"] = [
+        vpc["VpcSecurityGroupId"] for vpc in staging_db.pop("VpcSecurityGroups")
+    ]
+    log.info(f"Staging DB config: \n{pformat(staging_db)}")
     return staging_db
+
+
+@task()
+@setup_rds_hook
+def restore_staging_from_snapshot(
+    latest_snapshot: str, staging_config: dict, rds_hook: RdsHook = None
+):
+    log.info(
+        f"Creating a new {TEMP_IDENTIFIER} instance from {latest_snapshot} "
+        f"with: \n{pformat(staging_config)}"
+    )
+    rds_hook.conn.restore_db_instance_from_db_snapshot(
+        DBInstanceIdentifier=TEMP_IDENTIFIER,
+        DBSnapshotIdentifier=latest_snapshot,
+        **staging_config,
+    )

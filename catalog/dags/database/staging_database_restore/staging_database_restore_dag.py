@@ -18,6 +18,7 @@ from database.staging_database_restore.constants import AWS_RDS_CONN_ID, DAG_ID
 from database.staging_database_restore.staging_database_restore import (
     get_latest_prod_snapshot,
     get_staging_db_details,
+    restore_staging_from_snapshot,
     skip_restore,
 )
 
@@ -42,7 +43,7 @@ def restore_staging_database():
     latest_snapshot = get_latest_prod_snapshot()
     should_skip >> latest_snapshot
 
-    RdsSnapshotExistenceSensor(
+    ensure_snapshot_ready = RdsSnapshotExistenceSensor(
         task_id="ensure_snapshot_ready",
         db_type="instance",
         db_snapshot_identifier=latest_snapshot,
@@ -53,6 +54,9 @@ def restore_staging_database():
 
     staging_details = get_staging_db_details()
     should_skip >> staging_details
+
+    restore_snapshot = restore_staging_from_snapshot(latest_snapshot, staging_details)
+    ensure_snapshot_ready >> restore_snapshot
 
 
 restore_staging_database()
