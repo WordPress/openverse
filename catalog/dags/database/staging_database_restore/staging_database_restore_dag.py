@@ -9,6 +9,8 @@ https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-
 """
 
 import logging
+from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
+from airflow.utils.trigger_rule import TriggerRule
 from datetime import datetime, timedelta
 
 from airflow.decorators import dag
@@ -78,7 +80,7 @@ def restore_staging_database():
         task_id="notify_outage",
         python_callable=slack.send_message,
         op_kwargs={
-            "message": ":warning: Staging database is being restored, the site "
+            "message": ":warning: Staging database is being restored, staging "
             "will be down for the duration.",
             "username": constants.SLACK_USERNAME,
             "dag_id": constants.DAG_ID,
@@ -89,6 +91,50 @@ def restore_staging_database():
         constants.STAGING_IDENTIFIER, constants.OLD_IDENTIFIER
     )
     await_staging_creation >> [notify_outage, rename_staging_to_old]
+
+    rename_temp_to_staging = make_rename_task_group(
+        constants.TEMP_IDENTIFIER, constants.STAGING_IDENTIFIER
+    )
+    rename_staging_to_old >> rename_temp_to_staging
+
+    # Only run this if the secondary rename failed
+    rename_old_to_staging = make_rename_task_group(
+        constants.OLD_IDENTIFIER,
+        constants.STAGING_IDENTIFIER,
+        trigger_rule=TriggerRule.ALL_FAILED,
+    )
+    notify_failed_but_back = PythonOperator(
+        task_id="notify_failed_but_back",
+        python_callable=slack.send_message,
+        op_kwargs={
+            "message": ":warning: Staging database rename failed, but staging should "
+            "now be available. Please investigate the cause of the failure.",
+            "username": constants.SLACK_USERNAME,
+            "dag_id": constants.DAG_ID,
+        },
+    )
+    rename_temp_to_staging >> rename_old_to_staging >> notify_failed_but_back
+
+    notify_complete = PythonOperator(
+        task_id="notify_complete",
+        python_callable=slack.send_message,
+        op_kwargs={
+            "message": ":info: Staging database restore complete, staging "
+            "should now be available.",
+            "username": constants.SLACK_USERNAME,
+            "dag_id": constants.DAG_ID,
+        },
+    )
+
+    delete_old = RdsDeleteDbInstanceOperator(
+        task_id="delete_old",
+        db_instance_identifier=constants.OLD_IDENTIFIER,
+        rds_kwargs={"SkipFinalSnapshot": True, "DeleteAutomatedBackups": False},
+        aws_conn_id=constants.AWS_RDS_CONN_ID,
+        wait_for_completion=True,
+    )
+
+    rename_temp_to_staging >> [notify_complete, delete_old]
 
 
 restore_staging_database()

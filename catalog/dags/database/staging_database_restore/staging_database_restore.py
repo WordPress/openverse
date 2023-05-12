@@ -1,4 +1,5 @@
 import logging
+from airflow.utils.trigger_rule import TriggerRule
 from pprint import pformat
 
 from airflow.decorators import task
@@ -35,9 +36,9 @@ def skip_restore(should_skip: bool = False) -> None:
         slack.send_message(
             f"""
     :info: The staging database restore has been skipped.
-(Set the `{constants.SKIP_VARIABLE}` Airflow Variable to `false`
-to disable this behavior.)
-""",
+    (Set the `{constants.SKIP_VARIABLE}` Airflow Variable to `false`
+    to disable this behavior.)
+    """,
             username=":database-pink:",
             dag_id=constants.DAG_ID,
         )
@@ -134,12 +135,17 @@ def make_rds_sensor(task_id: str, db_identifier: str, retries: int = 0) -> RdsDb
     )
 
 
-def make_rename_task_group(source: str, target: str) -> TaskGroup:
+def make_rename_task_group(
+    source: str,
+    target: str,
+    trigger_rule: TriggerRule = TriggerRule.ALL_SUCCESS,
+) -> TaskGroup:
     source_name = source.removesuffix("-openverse-db")
     target_name = target.removesuffix("-openverse-db")
     with TaskGroup(group_id=f"rename_{source_name}_to_{target_name}") as rename_group:
         rename = rename_db_instance.override(
-            task_id=f"rename_{source_name}_to_{target_name}"
+            task_id=f"rename_{source_name}_to_{target_name}",
+            trigger_rule=trigger_rule,
         )(
             source=source,
             target=target,
