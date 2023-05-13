@@ -47,14 +47,10 @@ def skip_restore(should_skip: bool = False) -> bool:
         )
     )
     if not should_continue:
-        slack.send_message(
-            f"""
-    :info: The staging database restore has been skipped.
-    (Set the `{constants.SKIP_VARIABLE}` Airflow Variable to `false`
-    to disable this behavior.)
-    """,
-            username=":database-pink:",
-            dag_id=constants.DAG_ID,
+        notify_slack.function(
+            "The staging database restore has been skipped. "
+            f"(Set the `{constants.SKIP_VARIABLE}` Airflow Variable to `false`"
+            "to disable this behavior.)"
         )
     return should_continue
 
