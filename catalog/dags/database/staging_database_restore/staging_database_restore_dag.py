@@ -6,6 +6,14 @@ snapshot of the production database.
 
 For a full explanation of the DAG, see the implementation plan description:
 https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag
+
+This DAG will default to using the standard AWS connection ID for the RDS operations.
+For local testing, you can set up two environment variables to have the RDS operations
+run using a different hook:
+- `AWS_RDS_CONN_ID`: The Airflow connection ID to use for RDS operations
+  (e.g. `aws_rds`)
+- `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the above
+  example, it might be `AIRFLOW_CONN_AWS_RDS`)
 """
 
 import logging
