@@ -1,16 +1,12 @@
 <template>
   <div>
-    <div
-      v-if="!noResults"
-      class="results-grid mb-4 grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
-    >
+    <div v-if="!noResults" class="results-grid mb-4 grid grid-cols-2 gap-x-4">
       <VContentLink
         v-for="[mediaType, count] in resultCounts"
         :key="mediaType"
         :media-type="mediaType"
         :results-count="count"
         :to="contentLinkPath(mediaType)"
-        class="lg:col-span-2"
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">

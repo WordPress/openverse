@@ -15,6 +15,7 @@ const propsData = {
     fetchingError: null,
   },
   isSinglePage: false,
+  imageGridLabel: "Image Results",
 }
 
 describe("VImageGrid", () => {
