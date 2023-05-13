@@ -146,7 +146,7 @@ export default defineComponent({
      * the popover content is accessible.
      * @default true
      */
-    trapFocus: { type: Boolean, default: true },
+    trapFocus: { type: Boolean, default: undefined },
     /**
      * Optional Tailwind class for fixed width popover content.
      *
