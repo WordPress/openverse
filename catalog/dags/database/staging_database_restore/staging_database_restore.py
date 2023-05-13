@@ -61,7 +61,7 @@ def skip_restore(should_skip: bool = False) -> bool:
 
 @task
 @setup_rds_hook
-def get_latest_prod_snapshot(rds_hook: RdsHook = None):
+def get_latest_prod_snapshot(rds_hook: RdsHook = None) -> str:
     """
     Get the latest automated snapshot for the production database.
     https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_snapshots.html
@@ -88,7 +88,7 @@ def get_latest_prod_snapshot(rds_hook: RdsHook = None):
 
 @task
 @setup_rds_hook
-def get_staging_db_details(rds_hook: RdsHook = None):
+def get_staging_db_details(rds_hook: RdsHook = None) -> dict:
     """
     Retrieve the details of the staging database. Only some details are required (and
     others are actually sensitive) so filter down to only what we need.
@@ -122,7 +122,7 @@ def get_staging_db_details(rds_hook: RdsHook = None):
 @setup_rds_hook
 def restore_staging_from_snapshot(
     latest_snapshot: str, staging_config: dict, rds_hook: RdsHook = None
-):
+) -> None:
     """
     Restore the staging database from the latest snapshot.
     Augment the restore operation with the existing details determined from
@@ -142,7 +142,7 @@ def restore_staging_from_snapshot(
 
 @task
 @setup_rds_hook
-def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None):
+def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None) -> None:
     """
     Rename a database instance.
     This can only be run on instances where mutation is allowed.
