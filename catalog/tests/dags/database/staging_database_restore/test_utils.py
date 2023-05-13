@@ -37,7 +37,7 @@ def test_setup_rds_hook_fails_without_kwargs():
 @pytest.mark.parametrize(
     "db_identifier",
     [
-        *constants.SAFE_TO_MUTATE,
+        *sorted(constants.SAFE_TO_MUTATE),
         pytest.param(
             constants.PROD_IDENTIFIER, marks=pytest.mark.raises(exception=ValueError)
         ),
