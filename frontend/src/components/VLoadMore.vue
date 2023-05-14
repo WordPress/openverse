@@ -1,8 +1,9 @@
 <template>
   <VButton
     v-show="canLoadMore"
-    class="px-8 py-6"
-    variant="full"
+    class="label-bold lg:description-bold h-16 w-full lg:h-18"
+    variant="filled-gray"
+    size="disabled"
     :disabled="isFetching"
     data-testid="load-more"
     @click="onLoadMore"
