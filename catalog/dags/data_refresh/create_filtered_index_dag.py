@@ -57,7 +57,9 @@ from airflow import DAG
 from airflow.decorators import task
 from airflow.exceptions import AirflowSensorTimeout
 from airflow.models.param import Param
+from airflow.operators.empty import EmptyOperator
 from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
@@ -199,7 +201,7 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
 
         get_current_index = ingestion_server.get_current_index(target_alias)
 
-        do_create = create_and_populate_filtered_index(
+        do_create, await_create = create_and_populate_filtered_index(
             origin_index_suffix="{{ params.origin_index_suffix }}",
             destination_index_suffix=destination_index_suffix,
         )
@@ -218,12 +220,18 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
 
         (
             prevent_concurrency
-            >> destination_index_suffix
-            >> get_current_index
+            >> [destination_index_suffix, get_current_index]
+            # Gather step which will run even if the get current index step is skipped
+            >> EmptyOperator(
+                task_id="pre_create_check",
+                trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+            )
             >> do_create
-            >> do_point_alias
-            >> delete_old_index
         )
+
+        await_create >> do_point_alias
+
+        [get_current_index, do_point_alias] >> delete_old_index
 
     return dag
 
