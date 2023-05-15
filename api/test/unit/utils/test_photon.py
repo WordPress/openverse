@@ -1,6 +1,9 @@
+from test.factory.models.image import ImageFactory
+from unittest import mock
 from urllib.parse import urlencode
 
 from django.conf import settings
+from rest_framework.exceptions import UnsupportedMediaType
 
 import pook
 import pytest
@@ -10,6 +13,7 @@ from api.utils.photon import (
     HEADERS,
     UpstreamThumbnailException,
     _get_file_extension_from_url,
+    check_image_type,
 )
 from api.utils.photon import get as photon_get
 
@@ -243,6 +247,24 @@ def test_get_timeout_existing_cache_key(
     assert redis.get(key) == b"6"
 
 
+def test_get_http_error_pass_threshold(
+    capture_exception, setup_requests_get_exception, redis
+):
+    exc = requests.HTTPError()
+    setup_requests_get_exception(exc)
+    key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}subdomain.example.com"
+    redis.set(key, settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY - 1)
+
+    with pytest.raises(
+        UpstreamThumbnailException, match=r"Failed to render thumbnail."
+    ):
+        photon_get(TEST_IMAGE_URL)
+
+    capture_exception.assert_called_once_with(exc)
+
+    assert redis.get(key) == b"1000"
+
+
 @pytest.mark.parametrize(
     "exception, expected_message",
     [
@@ -318,3 +340,26 @@ def test_get_unsuccessful_request_raises_custom_exception():
 )
 def test__get_extension_from_url(image_url, expected_ext):
     assert _get_file_extension_from_url(image_url) == expected_ext
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("image_type", ["apng", "svg", "bmp"])
+def test_check_image_type_raises_by_not_allowed_types(image_type):
+    image_url = TEST_IMAGE_URL.replace(".jpg", f".{image_type}")
+    image = ImageFactory.create(url=image_url)
+
+    with pytest.raises(UnsupportedMediaType):
+        check_image_type(image_url, image)
+
+
+@pytest.mark.django_db
+def test_check_image_type_saves_image_type_to_cache(redis):
+    image_url = TEST_IMAGE_URL.replace(".jpg", "")
+    image = ImageFactory.create(url=image_url)
+
+    with mock.patch("requests.head") as mock_head, pytest.raises(UnsupportedMediaType):
+        mock_head.return_value.headers = {"Content-Type": "image/svg+xml"}
+        check_image_type(image_url, image)
+
+    key = f"media:{image.identifier}:thumb_type"
+    assert redis.get(key) == b"svg+xml"

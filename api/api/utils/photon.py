@@ -14,8 +14,6 @@ import sentry_sdk
 
 parent_logger = logging.getLogger(__name__)
 
-cache = django_redis.get_redis_connection("default")
-
 
 class UpstreamThumbnailException(APIException):
     status_code = status.HTTP_424_FAILED_DEPENDENCY
@@ -23,7 +21,7 @@ class UpstreamThumbnailException(APIException):
     default_code = "upstream_photon_failure"
 
 
-ALLOWED_TYPES = ["gif", "jpg", "jpeg", "png", "webp"]
+ALLOWED_TYPES = {"gif", "jpg", "jpeg", "png", "webp"}
 
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
@@ -40,6 +38,7 @@ def _get_file_extension_from_url(image_url: str) -> str:
 
 
 def check_image_type(image_url: str, media_obj) -> None:
+    cache = django_redis.get_redis_connection("default")
     key = f"media:{media_obj.identifier}:thumb_type"
 
     ext = _get_file_extension_from_url(image_url)
@@ -56,12 +55,16 @@ def check_image_type(image_url: str, media_obj) -> None:
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
             raise UpstreamThumbnailException(
-                f"Failed to render thumbnail due to inability to check media "
+                "Failed to render thumbnail due to inability to check media "
                 f"type. {exc}"
             )
         else:
-            ext = response.headers["Content-Type"].split("/")[1]
-            cache.set(key, ext)
+            ext = response.headers["Content-Type"]
+            if ext and "/" in ext:
+                ext = ext.split("/")[1]
+                cache.set(key, ext)
+            else:
+                ext = None
 
     if ext not in ALLOWED_TYPES:
         raise UnsupportedMediaType(ext)
@@ -104,6 +107,8 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     logger = parent_logger.getChild("get")
+    cache = django_redis.get_redis_connection("default")
+
     params, parsed_image_url = _get_photon_params(
         image_url, is_full_size, is_compressed
     )
