@@ -19,3 +19,11 @@ THUMBNAIL_QUALITY = config("THUMBNAIL_JPG_QUALITY", default="80")
 THUMBNAIL_TIMEOUT_PREFIX = config(
     "THUMBNAIL_TIMEOUT_PREFIX", default="thumbnail_timeout:"
 )
+
+THUMBNAIL_HTTP_ERROR_PREFIX = config(
+    "THUMBNAIL_HTTP_ERROR_PREFIX", default="thumbnail_http_error:"
+)
+
+THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY = config(
+    "THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY", default=1000, cast=int
+)
