@@ -14,6 +14,8 @@ import sentry_sdk
 
 parent_logger = logging.getLogger(__name__)
 
+cache = django_redis.get_redis_connection("default")
+
 
 class UpstreamThumbnailException(APIException):
     status_code = status.HTTP_424_FAILED_DEPENDENCY
@@ -39,7 +41,6 @@ def _get_file_extension_from_url(image_url: str) -> str:
 
 def check_image_type(image_url: str, media_obj) -> None:
     key = f"media:{media_obj.identifier}:thumb_type"
-    cache = django_redis.get_redis_connection("default")
 
     ext = _get_file_extension_from_url(image_url)
 
@@ -128,7 +129,6 @@ def get(
     except requests.ReadTimeout as exc:
         # Count the incident so that we can identify providers with most timeouts.
         key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}{domain}"
-        cache = django_redis.get_redis_connection("default")
         try:
             cache.incr(key)
         except ValueError:  # Key does not exist.
@@ -138,6 +138,19 @@ def get(
         raise UpstreamThumbnailException(
             f"Failed to render thumbnail due to timeout: {exc}"
         )
+    except requests.HTTPError as exc:
+        # Save occurrences to redis and only sent to Sentry when reached a
+        # threshold to prevent providers downtime consuming all the events
+        # quota.
+        key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}{domain}"
+        errors = 1
+        try:
+            errors = cache.incr(key)
+        except ValueError:  # Key does not exist.
+            cache.set(key, 1)
+        if errors >= settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY:
+            sentry_sdk.capture_exception(exc)
+        raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
     except requests.RequestException as exc:
         sentry_sdk.capture_exception(exc)
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
