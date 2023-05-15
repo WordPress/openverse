@@ -56,9 +56,7 @@ def response_check_wait_for_completion(response: Response) -> bool:
         return False
 
     if data["error"]:
-        raise AirflowException(
-            "Ingestion server encountered an error during data refresh."
-        )
+        raise ValueError("Ingestion server encountered an error during data refresh.")
 
     logger.info(f"Data refresh done with {data['progress']}% completed.")
     return True
