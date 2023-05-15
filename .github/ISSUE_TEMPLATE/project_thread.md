@@ -1,7 +1,7 @@
 ---
 name: Project Thread
 about: An issue to track and outline a new project
-labels: "project"
+labels: "🧭 project: thread"
 title: "<Replace this with actual title>"
 ---
 

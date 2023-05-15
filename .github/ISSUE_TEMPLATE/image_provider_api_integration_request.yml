@@ -3,9 +3,12 @@ description: Tell us about an API providing CC-licensed images
 title: "<Provider name here>"
 labels:
   - "🚦 status: awaiting triage"
-  - "✨ goal: improvement"
   - "🧹 status: ticket work required"
   - "☁️ provider: images"
+  - "💻 aspect: code"
+  - "🌟 goal: addition"
+  - "🧱 stack: catalog"
+  - "🟩 priority: low"
 body:
   - type: input
     id: provider
