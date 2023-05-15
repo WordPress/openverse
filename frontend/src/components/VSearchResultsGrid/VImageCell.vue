@@ -7,34 +7,36 @@
     :aria-label="image.title"
     :style="styles.container"
   >
-    <figure
-      itemprop="image"
-      itemscope
-      itemtype="https://schema.org/ImageObject"
-      class="absolute w-full rounded-sm"
-      :class="{ 'relative aspect-square': isSquare }"
-      :style="styles.figure"
-    >
-      <img
-        ref="img"
-        loading="lazy"
-        class="block w-full rounded-sm object-cover"
-        :class="isSquare ? 'h-full' : 'margin-auto'"
-        :alt="image.title"
-        :src="imageUrl"
-        :width="imgWidth"
-        :height="imgHeight"
-        itemprop="thumbnailUrl"
-        @load="getImgDimension"
-        @error="onImageLoadError($event)"
-      />
-      <figcaption
-        class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
+    <Component :is="as">
+      <figure
+        itemprop="image"
+        itemscope
+        itemtype="https://schema.org/ImageObject"
+        class="absolute w-full rounded-sm"
+        :class="{ 'relative aspect-square': isSquare }"
+        :style="styles.figure"
       >
-        <h2 class="sr-only">{{ image.title }}</h2>
-        <VLicense :license="image.license" :hide-name="true" />
-      </figcaption>
-    </figure>
+        <img
+          ref="img"
+          loading="lazy"
+          class="block w-full rounded-sm object-cover"
+          :class="isSquare ? 'h-full' : 'margin-auto'"
+          :alt="image.title"
+          :src="imageUrl"
+          :width="imgWidth"
+          :height="imgHeight"
+          itemprop="thumbnailUrl"
+          @load="getImgDimension"
+          @error="onImageLoadError($event)"
+        />
+        <figcaption
+          class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
+        >
+          <h2 class="sr-only">{{ image.title }}</h2>
+          <VLicense :license="image.license" :hide-name="true" />
+        </figcaption>
+      </figure>
+    </Component>
     <i v-if="!isSquare" :style="styles.iPadding" class="block" aria-hidden />
   </VLink>
 </template>
@@ -79,6 +81,10 @@ export default defineComponent({
     aspectRatio: {
       type: String as PropType<AspectRatio>,
       default: "square",
+    },
+    as: {
+      type: String as PropType<"li" | "div">,
+      default: "li",
     },
   },
   setup(props) {
