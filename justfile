@@ -149,8 +149,10 @@ build *args:
     just dc build {{ args }}
 
 # List all services and their URLs and ports
-ps:
-    python3 utilities/ps.py
+@ps:
+    # ps is a helper command & intermediate dependency, so it should not fail the whole
+    # command if it fails
+    python3 utilities/ps.py || true
 
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
