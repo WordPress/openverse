@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!noResults" class="results-grid mb-4 grid grid-cols-2 gap-x-4">
+    <div v-if="!noResults" class="results-grid mb-4 grid grid-cols-2 gap-4">
       <VContentLink
         v-for="[mediaType, count] in resultCounts"
         :key="mediaType"

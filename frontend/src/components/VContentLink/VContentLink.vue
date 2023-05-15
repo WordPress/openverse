@@ -1,27 +1,22 @@
 <template>
-  <!-- VLink handles rendering a disabled element when `href` is undefined. -->
-  <VLink
-    :href="hasResults ? to : undefined"
-    class="flex w-full flex-col items-start overflow-hidden rounded-sm border border-dark-charcoal/20 bg-white py-4 pe-12 ps-4 md:flex-row md:items-center md:justify-between md:p-6"
-    :class="
-      hasResults
-        ? ' text-dark-charcoal hover:bg-dark-charcoal hover:text-white hover:no-underline focus:border-tx focus:outline-none focus-visible:ring focus-visible:ring-pink'
-        : 'cursor-not-allowed text-dark-charcoal/40'
-    "
+  <VButton
+    as="VLink"
+    :href="to"
+    variant="bordered-gray"
+    size="disabled"
+    class="lg:h-18 h-auto w-full flex-col !items-start gap-2 overflow-hidden p-4 lg:flex-row lg:!items-center lg:px-6"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
-    <div class="flex flex-col items-start md:flex-row md:items-center">
-      <VIcon :name="mediaType" />
-      <p class="hidden pt-1 font-semibold md:block md:ps-2 md:pt-0 md:text-2xl">
-        {{ $t(`search-type.see-${mediaType}`) }}
-      </p>
-      <p class="block pt-1 font-semibold md:hidden md:ps-2 md:pt-0 md:text-2xl">
-        {{ $t(`search-type.${mediaType}`) }}
-      </p>
-    </div>
-    <span class="text-sr">{{ resultsCountLabel }}</span>
-  </VLink>
+    <VIcon :name="mediaType" />
+    <p class="label-bold md:description-bold">
+      {{ $t(`search-type.${mediaType}`) }}
+    </p>
+    <span
+      class="label-regular lg:description-regular text-dark-charcoal-70 lg:ms-auto"
+      >{{ resultsCountLabel }}</span
+    >
+  </VButton>
 </template>
 
 <script lang="ts">
@@ -36,12 +31,12 @@ import { defineEvent } from "~/types/emits"
 
 import useSearchType from "~/composables/use-search-type"
 
+import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
   name: "VContentLink",
-  components: { VIcon, VLink },
+  components: { VIcon, VButton },
   props: {
     /**
      * One of the media types supported.
@@ -70,7 +65,6 @@ export default defineComponent({
   },
   setup(props) {
     const { getI18nCount } = useI18nResultsCount()
-    const hasResults = computed(() => props.resultsCount > 0)
     const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
 
     const { activeType } = useSearchType()
@@ -86,7 +80,6 @@ export default defineComponent({
 
     return {
       resultsCountLabel,
-      hasResults,
 
       handleClick,
     }
