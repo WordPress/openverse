@@ -65,6 +65,7 @@
         variant="text"
         class="!font-normal"
         :disabled="isClearButtonDisabled"
+        size="large"
         @click="clearFilters"
         >{{ $t("filter-list.clear") }}
       </VButton>

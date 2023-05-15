@@ -6,6 +6,7 @@
         variant="filled-pink"
         class="z-50 ms-2 mt-2 focus:fixed focus:absolute"
         :class="$style.skipButton"
+        size="medium"
         @click="skipToContent"
         >{{ $t("skip-to-content") }}</VButton
       >

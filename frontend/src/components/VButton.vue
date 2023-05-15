@@ -120,7 +120,7 @@ const VButton = defineComponent({
      */
     size: {
       type: String as PropType<ButtonSize>,
-      default: "medium-old",
+      required: true,
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -289,10 +289,6 @@ export default VButton
 .button[disabled="disabled"],
 .button[aria-disabled="true"] {
   @apply cursor-not-allowed;
-}
-
-.size-medium-old {
-  @apply px-4 py-2;
 }
 
 .size-small {
