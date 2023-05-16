@@ -41,10 +41,6 @@ def _replace_username(match: re.Match) -> str:
 
 
 def replace_username_references(app, docname, source):
-    # Changelogs are already created with the usernames as references, so these files
-    # should just be skipped entirely
-    if docname.startswith("changelogs"):
-        return
     logger.debug(f"In file: {docname}")
     source[0] = GITHUB_USERNAME_REGEX.sub(_replace_username, source[0])
 
