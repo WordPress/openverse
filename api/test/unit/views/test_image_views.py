@@ -78,4 +78,4 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
         mock_response = HttpResponse("mock_response")
         thumb_call.return_value = mock_response
         api_client.get(f"/v1/images/{image.identifier}/thumb/")
-    thumb_call.assert_called_once_with(expected_thumb_url, ANY)
+    thumb_call.assert_called_once_with(ANY, image, expected_thumb_url)
