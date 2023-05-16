@@ -197,8 +197,9 @@ def main():
     pr = get_pull_request(gh, args.pr_url)
     log.info(f"Found PR: {pr.title}")
 
-    # Skip a PR if it already has labels, as long as it has labels that are NOT
-    # a stack label - if all of its labels are stack labels, apply the new labels too
+    # Skip a PR if it already has labels, as long as it has labels that are NOT a stack
+    # label. Stack labels are applied automatically in another part of the CI/CD.
+    # If all of its labels are stack labels, apply the new labels too.
     if pr.labels and not all(["stack" in label.name for label in pr.labels]):
         log.info("PR already labelled")
         return
