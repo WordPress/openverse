@@ -144,9 +144,9 @@ def get(
             f"Failed to render thumbnail due to timeout: {exc}"
         )
     except requests.HTTPError as exc:
-        # Save number of occurrences to redis. Only raise a Sentry error when the number of
-        # occurrences reaches the configured threshold, to prevent provider API downtime from
-        # causing excessive Sentry events.
+        # Save number of occurrences to redis. Only raise a Sentry error when
+        # the number of occurrences reaches the configured threshold, to
+        # prevent provider API downtime from causing excessive Sentry events.
         key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}{domain}"
         errors = 1
         try:
