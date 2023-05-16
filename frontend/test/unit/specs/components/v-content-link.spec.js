@@ -1,8 +1,14 @@
-import { screen } from "@testing-library/vue"
+import { fireEvent, screen } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
+import { useAnalytics } from "~/composables/use-analytics"
+
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
+
+jest.mock("~/composables/use-analytics", () => ({
+  useAnalytics: jest.fn(),
+}))
 
 describe("VContentLink", () => {
   let options = {}
@@ -29,5 +35,22 @@ describe("VContentLink", () => {
     expect(btn).not.toHaveAttribute("href")
     expect(btn).toHaveAttribute("aria-disabled")
     expect(btn.getAttribute("aria-disabled")).toBeTruthy()
+  })
+
+  it("sends CHANGE_CONTENT_TYPE event when clicked", async () => {
+    const sendCustomEventMock = jest.fn()
+
+    useAnalytics.mockImplementation(() => ({
+      sendCustomEvent: sendCustomEventMock,
+    }))
+    render(VContentLink, options)
+    const btn = screen.getByRole("link")
+
+    await fireEvent.click(btn)
+    expect(sendCustomEventMock).toHaveBeenCalledWith("CHANGE_CONTENT_TYPE", {
+      component: "VContentLink",
+      next: "image",
+      previous: "all",
+    })
   })
 })
