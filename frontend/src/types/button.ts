@@ -10,7 +10,6 @@ export const buttonVariants = [
   "text",
   "plain",
   "plain--avoid",
-  "full",
   "dropdown-label",
   "dropdown-label-pressed",
   "filled-pink",
