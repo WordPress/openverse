@@ -2,6 +2,7 @@
   <VButton
     as="VLink"
     :href="to"
+    :aria-label="resultsAriaLabel"
     variant="bordered-gray"
     size="disabled"
     class="lg:h-18 h-auto w-full flex-col !items-start gap-2 overflow-hidden p-4 lg:flex-row lg:!items-center lg:px-6"
@@ -46,6 +47,13 @@ export default defineComponent({
       required: true,
     },
     /**
+     * Current search term for aria-label.
+     */
+    searchTerm: {
+      type: String,
+      required: true,
+    },
+    /**
      * The number of results that the search returned. The link
      * will be disabled if this value is zero.
      */
@@ -64,8 +72,16 @@ export default defineComponent({
     "shift-tab": defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
-    const { getI18nCount } = useI18nResultsCount()
+    const { getI18nCount, getI18nContentLinkLabel } = useI18nResultsCount()
     const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
+
+    const resultsAriaLabel = computed(() =>
+      getI18nContentLinkLabel(
+        props.resultsCount,
+        props.searchTerm,
+        props.mediaType
+      )
+    )
 
     const { activeType } = useSearchType()
     const analytics = useAnalytics()
@@ -80,6 +96,7 @@ export default defineComponent({
 
     return {
       resultsCountLabel,
+      resultsAriaLabel,
 
       handleClick,
     }

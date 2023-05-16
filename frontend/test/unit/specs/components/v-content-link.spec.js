@@ -15,7 +15,12 @@ describe("VContentLink", () => {
 
   beforeEach(() => {
     options = {
-      props: { mediaType: "image", resultsCount: 123, to: "/images" },
+      props: {
+        mediaType: "image",
+        resultsCount: 123,
+        to: "/images",
+        searchTerm: "cat",
+      },
     }
   })
 

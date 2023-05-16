@@ -5,6 +5,7 @@
         v-for="[mediaType, count] in resultCounts"
         :key="mediaType"
         :media-type="mediaType"
+        :search-term="searchTerm"
         :results-count="count"
         :to="contentLinkPath(mediaType)"
       />
