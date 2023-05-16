@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test"
+import { expect, Page, test } from "@playwright/test"
 
 import {
   goToSearchTerm,
@@ -10,7 +10,14 @@ import {
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
+
 test.describe.configure({ mode: "parallel" })
+
+const getContentLink = async (page: Page, mediaType: SupportedMediaType) => {
+  const linkName = new RegExp(`See .+${mediaType}.+found for`)
+  return page.getByRole("link", { name: linkName })
+}
 
 test.describe("search history navigation", () => {
   breakpoints.describeMobileAndDesktop(() => {
@@ -49,20 +56,18 @@ test.describe("search history navigation", () => {
       page,
     }) => {
       await goToSearchTerm(page, "galah")
-      await page.click('a:has-text("See all images")')
+      await page
+        .getByRole("link", { name: /See.*images found for .*/i })
+        .click()
 
-      await page.waitForSelector('p:has-text("See all images")', {
-        state: "hidden",
-      })
       expect(page.url()).toContain("/search/image")
-      await page.goBack()
-      await page.waitForSelector('a:has-text("See all images")')
-      expect(
-        await page.locator('a:has-text("See all images")').isVisible()
-      ).toBe(true)
-      expect(
-        await page.locator('a:has-text("See all audio")').isVisible()
-      ).toBe(true)
+      // There are no content links on single media type search pages
+      await expect(await getContentLink(page, IMAGE)).not.toBeVisible()
+
+      await page.goBack({ waitUntil: "networkidle" })
+
+      await expect(await getContentLink(page, IMAGE)).toBeVisible()
+      await expect(await getContentLink(page, AUDIO)).toBeVisible()
     })
 
     test("should update search term when back button is clicked", async ({
@@ -74,7 +79,9 @@ test.describe("search history navigation", () => {
       expect(await page.locator('input[name="q"]').inputValue()).toBe("cat")
 
       await page.goBack()
-      await page.waitForSelector('a:has-text("See all images")')
+
+      await expect(await getContentLink(page, IMAGE)).toBeVisible()
+
       expect(await page.locator('input[name="q"]').inputValue()).toBe("galah")
     })
 
