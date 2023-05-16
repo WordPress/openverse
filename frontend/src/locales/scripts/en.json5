@@ -382,12 +382,12 @@
     "all-result-count-more": "Over {localeCount} results",
     contentLink: {
       image: {
-        zero: "No images found for {query}. Try an external search source.",
-        count: "See {localeCount} image found for {query}|See {localeCount} images found for {query}",
+        zero: "No images found for {query}.",
+        count: "See {localeCount} image found for {query}|See {localeCount} images found for {query}.",
         countMore: "See over {localeCount} images found for {query}",
       },
       audio: {
-        zero: "No audio found for {query}. Try an external search source.",
+        zero: "No audio found for {query}.",
         count: "See {localeCount} audio found for {query}",
         countMore: "See over {localeCount} audio found for {query}",
       },

@@ -5,16 +5,16 @@
     :aria-label="resultsAriaLabel"
     variant="bordered-gray"
     size="disabled"
-    class="lg:h-18 h-auto w-full flex-col !items-start gap-2 overflow-hidden p-4 lg:flex-row lg:!items-center lg:px-6"
+    class="h-auto w-full flex-col !items-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
     <VIcon :name="mediaType" />
-    <p class="label-bold md:description-bold">
+    <p class="label-bold sm:description-bold mt-1 sm:mt-0">
       {{ $t(`search-type.${mediaType}`) }}
     </p>
     <span
-      class="label-regular lg:description-regular text-dark-charcoal-70 lg:ms-auto"
+      class="label-regular sm:description-regular text-dark-charcoal-70 group-hover/button:text-dark-charcoal sm:ms-auto"
       >{{ resultsCountLabel }}</span
     >
   </VButton>
