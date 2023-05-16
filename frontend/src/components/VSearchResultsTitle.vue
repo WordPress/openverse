@@ -1,7 +1,11 @@
 <template>
   <h1
     class="sr-only break-words md:not-sr-only"
-    :class="[size === 'large' ? 'heading-1' : 'heading-2']"
+    :class="[
+      size === 'large'
+        ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
+        : 'heading-2 !leading-none',
+    ]"
   >
     <slot default />
   </h1>

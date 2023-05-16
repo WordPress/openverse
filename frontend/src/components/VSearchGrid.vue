@@ -6,11 +6,7 @@
       (!fetchState.isFetching && resultsCount)
     "
   >
-    <header
-      v-if="query.q && supported"
-      class="mt-5"
-      :class="isAllView ? 'mb-10' : 'mb-8'"
-    >
+    <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
       <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">
         {{ searchTerm }}
       </VSearchResultsTitle>
