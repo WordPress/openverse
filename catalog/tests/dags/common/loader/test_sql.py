@@ -12,7 +12,10 @@ from airflow.models import TaskInstance
 from flaky import flaky
 from psycopg2.errors import InvalidTextRepresentation
 
-from catalog.tests.dags.common.popularity.test_sql import _set_up_std_popularity_func
+from catalog.tests.dags.common.popularity.test_sql import (
+    TableInfo,
+    _set_up_std_popularity_func,
+)
 from common.constants import IMAGE
 from common.loader import sql
 from common.loader.sql import TSV_COLUMNS, create_column_definitions
@@ -107,6 +110,24 @@ def create_query_values(
 def load_table(identifier):
     # Parallelized tests need to use distinct database tables
     return f"load_image_{identifier}"
+
+
+@pytest.fixture
+def table_info(
+    image_table,
+    identifier,
+) -> TableInfo:
+    return TableInfo(
+        image=image_table,
+        image_view=f"image_view_{identifier}",
+        constants=f"image_popularity_constants_{identifier}",
+        metrics=f"image_popularity_metrics_{identifier}",
+        standardized_popularity=f"standardized_popularity_{identifier}",
+        popularity_percentile=f"popularity_percentile_{identifier}",
+        pop_constants_idx=f"test_popularity_constants_{identifier}_idx",
+        image_view_idx=f"test_view_id_{identifier}_idx",
+        provider_fid_idx=f"test_view_provider_fid_{identifier}_idx",
+    )
 
 
 @pytest.fixture
