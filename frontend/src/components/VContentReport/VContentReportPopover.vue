@@ -4,19 +4,20 @@
     :hide-on-click-outside="false"
     :label="$t('media-details.content-report.long').toString()"
     placement="bottom-end"
+    width="w-80"
   >
     <template #trigger="{ a11yProps }">
       <VContentReportButton v-bind="a11yProps" />
     </template>
     <template #default="{ close }">
-      <div class="relative" data-testid="content-report-popover">
+      <div class="grid w-80 items-stretch justify-stretch">
         <VCloseButton
           :label="$t('modal.close')"
-          class="!absolute end-0 top-0"
+          class="z-10 col-start-1 row-start-1 self-start justify-self-end"
           @close="close"
         />
         <VContentReportForm
-          class="w-80 p-6"
+          class="col-start-1 row-start-1 p-6"
           :close-fn="close"
           :media="media"
           :provider-name="media.providerName || media.provider"
