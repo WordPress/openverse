@@ -150,7 +150,7 @@ def test_get_record_data_returns_main_image():
         "height": 5141,
         "width": 3076,
         "thumbnail_url": "https://iip-thumb.smk.dk/iiif/jp2/kks1615.tif.jp2/full/!1024,/0/default.jpg",
-        "image_url": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2/full/!2048,/0/default.jpg",
+        "url": "https://iip.smk.dk/iiif/jp2/kks1615.tif.jp2/full/!2048,/0/default.jpg",
         "license_info": CC0_SMK,
         "meta_data": {
             "collection": "Gammel bestand",
@@ -167,7 +167,7 @@ def test_get_record_data_returns_main_image():
         pytest.param(["object_number"], id="falsy foreign_landing_url"),
         pytest.param(["rights"], id="falsy license_info"),
         # For items with iiif id, the image_url is constructed from it.
-        pytest.param(["image_native", "image_iiif_id"], id="falsy image_url"),
+        pytest.param(["image_native", "image_iiif_id"], id="falsy url"),
         pytest.param(["id", "image_iiif_id"], id="falsy foreign_identifier"),
     ],
 )

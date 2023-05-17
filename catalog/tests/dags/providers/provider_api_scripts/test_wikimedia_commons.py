@@ -293,7 +293,7 @@ def test_get_record_data_handles_example_dict(wmc):
             "https://commons.wikimedia.org/w/index.php?curid=81754323"
         ),
         "foreign_identifier": 81754323,
-        "image_url": (
+        "url": (
             "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_"
             "PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg"
         ),
@@ -447,11 +447,11 @@ def test_create_meta_data_tallies_zero_global_usage_count(wmc):
 
 def test_get_audio_record_data_parses_ogg_streams(wmc):
     file_metadata = _get_resource_json("audio_filedata_ogg.json")
-    original_data = {"media_url": "myurl.com", "meta_data": {}}
+    original_data = {"url": "myurl.com", "meta_data": {}}
     actual_parsed_data = wmc.get_audio_record_data(original_data, file_metadata)
 
     expected_parsed_data = {
-        "audio_url": "myurl.com",
+        "url": "myurl.com",
         "bit_rate": 112000,
         "sample_rate": 48000,
         "meta_data": {"channels": 2},
@@ -461,11 +461,11 @@ def test_get_audio_record_data_parses_ogg_streams(wmc):
 
 def test_get_audio_record_data_parses_wav_audio_data(wmc):
     file_metadata = _get_resource_json("audio_filedata_wav.json")
-    original_data = {"media_url": "myurl.com", "meta_data": {}}
+    original_data = {"url": "myurl.com", "meta_data": {}}
     actual_parsed_data = wmc.get_audio_record_data(original_data, file_metadata)
 
     expected_parsed_data = {
-        "audio_url": "myurl.com",
+        "url": "myurl.com",
         "bit_rate": 768000,
         "sample_rate": 48000,
         "meta_data": {"channels": 1},
@@ -475,14 +475,14 @@ def test_get_audio_record_data_parses_wav_audio_data(wmc):
 
 def test_get_audio_record_data_parses_wav_audio_data_missing_streams(wmc):
     file_metadata = _get_resource_json("audio_filedata_wav.json")
-    original_data = {"media_url": "myurl.com", "meta_data": {}}
+    original_data = {"url": "myurl.com", "meta_data": {}}
     # Remove any actual audio metadata
     file_metadata["metadata"] = (
         file_metadata["metadata"][:5] + file_metadata["metadata"][6:]
     )
     actual_parsed_data = wmc.get_audio_record_data(original_data, file_metadata)
     expected_parsed_data = {
-        "audio_url": "myurl.com",
+        "url": "myurl.com",
         "meta_data": {},
     }
     # No data is available, so nothing should be added
@@ -491,13 +491,13 @@ def test_get_audio_record_data_parses_wav_audio_data_missing_streams(wmc):
 
 def test_get_audio_record_data_parses_wav_invalid_bit_rate(wmc):
     file_metadata = _get_resource_json("audio_filedata_wav.json")
-    original_data = {"media_url": "myurl.com", "meta_data": {}}
+    original_data = {"url": "myurl.com", "meta_data": {}}
     # Set the bit rate higher than the int max
     file_metadata["metadata"][5]["value"][3]["value"][0]["value"][3][
         "value"
     ] = 4294967294
     expected_parsed_data = {
-        "audio_url": "myurl.com",
+        "url": "myurl.com",
         "bit_rate": None,
         "sample_rate": 48000,
         "meta_data": {"channels": 1},

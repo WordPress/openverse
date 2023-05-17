@@ -119,7 +119,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "foreign_landing_url": (
             "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?" "id=26229"
         ),
-        "image_url": (
+        "url": (
             "http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes"
             "/imagen_id.cmd?idImagen=102620362"
         ),
@@ -271,7 +271,7 @@ def test_process_image_data_with_sub_provider(record_builder):
 
     assert record_data == {
         "foreign_landing_url": "https://wellcomecollection.org/works/zzwnbyhb",
-        "image_url": (
+        "url": (
             "https://iiif.wellcomecollection.org/image/V0013398.jpg/full/512,"
             "/0/default.jpg"
         ),

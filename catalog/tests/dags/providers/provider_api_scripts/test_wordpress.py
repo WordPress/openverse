@@ -80,7 +80,7 @@ def test_get_record_data_returns_none_when_necessary_data_is_falsy(
     assert actual_image_info is None
 
 
-def test_get_record_data_returns_none_when_no_image_url(ingester):
+def test_get_record_data_returns_none_when_no_url(ingester):
     image_data = _get_resource_json("full_item.json")
     image_data["_embedded"]["wp:featuredmedia"][0]["media_details"].pop("sizes")
     actual_image_info = ingester.get_record_data(image_data)
@@ -103,7 +103,7 @@ def test_get_file_info(ingester):
     )
     actual_result = ingester._get_file_info(image_details)
     expected_result = (
-        "https://pd.w.org/2022/05/203627f31f8770f03.61535278-2048x1366.jpg",  # image_url
+        "https://pd.w.org/2022/05/203627f31f8770f03.61535278-2048x1366.jpg",  # url
         1366,  # height
         2048,  # width
         544284,  # filesize

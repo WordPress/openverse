@@ -62,7 +62,7 @@ class EuropeanaRecordBuilder:
         try:
             record = {
                 "foreign_landing_url": self._get_foreign_landing_url(data),
-                "image_url": self._get_image_url(data),
+                "url": self._get_image_url(data),
                 "foreign_identifier": self._get_foreign_identifier(data),
                 "meta_data": self._get_meta_data_dict(data),
                 "title": self._get_title(data),

@@ -35,7 +35,7 @@ TEST_IMAGE_URL = "https://wordpress.org/openverese/image.jpg"
 
 TEST_IMAGE_DICT = {
     "foreign_landing_url": None,
-    "image_url": None,
+    "url": None,
     "thumbnail_url": None,
     "filetype": None,
     "filesize": None,
@@ -66,7 +66,7 @@ INT_MAX_PARAMETERIZATION = pytest.mark.parametrize(
 TEST_REQUIRED_FIELDS = {
     "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
     "foreign_identifier": "02",
-    "image_url": TEST_IMAGE_URL,
+    "url": TEST_IMAGE_URL,
     "license_info": BY_LICENSE_INFO,
 }
 
@@ -120,25 +120,25 @@ def test_MediaStore_add_item_flushes_buffer(tmpdir):
     image_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
-        image_url="https://images.org/image01.jpg",
+        url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://images.org/image02",
-        image_url="https://images.org/image02.jpg",
+        url="https://images.org/image02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://images.org/image03",
-        image_url="https://images.org/image03.jpg",
+        url="https://images.org/image03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="04",
         foreign_landing_url="https://images.org/image04",
-        image_url="https://images.org/image04.jpg",
+        url="https://images.org/image04.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert len(image_store._media_buffer) == 1
@@ -157,19 +157,19 @@ def test_MediaStore_produces_correct_total_images():
     image_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
-        image_url="https://images.org/image01.jpg",
+        url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://images.org/image02",
-        image_url="https://images.org/image02.jpg",
+        url="https://images.org/image02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://images.org/image03",
-        image_url="https://images.org/image03.jpg",
+        url="https://images.org/image03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert image_store.total_items == 3
@@ -187,7 +187,7 @@ def test_MediaStore_clean_media_metadata_does_not_change_required_media_argument
     }
     cleaned_data = image_store.clean_media_metadata(**image_data)
 
-    assert cleaned_data["image_url"] == TEST_IMAGE_URL
+    assert cleaned_data["url"] == TEST_IMAGE_URL
     assert cleaned_data["foreign_landing_url"] == TEST_FOREIGN_LANDING_URL
 
 
@@ -263,7 +263,7 @@ def test_MediaStore_clean_media_metadata_does_not_replace_category_with_default(
 
 
 @pytest.mark.parametrize(
-    "field", ("foreign_identifier", "foreign_landing_url", "image_url", "license_info")
+    "field", ("foreign_identifier", "foreign_landing_url", "url", "license_info")
 )
 def test_MediaStore_clean_media_metadata_raises_when_missing_required_field(
     field,
@@ -315,7 +315,7 @@ def test_MediaStore_clean_media_strips_url_trailing_slashes(
     image_store = image.ImageStore(strip_url_trailing_slashes=remove_slashes)
     test_data = {
         "foreign_landing_url": input_url,
-        "image_url": input_url,
+        "url": input_url,
         "thumbnail_url": input_url,
         "creator_url": input_url,
     }
@@ -332,7 +332,7 @@ def test_MediaStore_get_image_gets_source(monkeypatch):
     actual_image = image_store._get_image(
         license_info=BY_LICENSE_INFO,
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
@@ -358,7 +358,7 @@ def test_MediaStore_sets_source_to_provider_if_source_is_none(monkeypatch):
     actual_image = image_store._get_image(
         license_info=BY_LICENSE_INFO,
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=1000,
@@ -388,7 +388,7 @@ def test_MediaStore_add_image_replaces_non_dict_meta_data_with_no_license_url():
         image_store.add_item(
             license_info=BY_LICENSE_INFO,
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-            image_url=TEST_IMAGE_URL,
+            url=TEST_IMAGE_URL,
             thumbnail_url=None,
             foreign_identifier="02",
             width=None,
@@ -424,7 +424,7 @@ def test_MediaStore_add_item_creates_meta_data_with_valid_license_url(
         image_store.add_item(
             license_info=LicenseInfo("by", "4.0", valid_license_url, license_url),
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-            image_url=TEST_IMAGE_URL,
+            url=TEST_IMAGE_URL,
             thumbnail_url=None,
             foreign_identifier="02",
             width=None,
@@ -461,7 +461,7 @@ def test_MediaStore_add_item_adds_valid_license_url_to_dict_meta_data(
         image_store.add_item(
             license_info=LicenseInfo("by", "4.0", valid_license_url, license_url),
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-            image_url=TEST_IMAGE_URL,
+            url=TEST_IMAGE_URL,
             foreign_identifier="02",
             width=None,
             height=None,
@@ -496,7 +496,7 @@ def test_MediaStore_add_item_fixes_invalid_license_url():
         image_store.add_item(
             license_info=LicenseInfo("by-nc-sa", "2.0", updated_url, original_url),
             foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-            image_url=TEST_IMAGE_URL,
+            url=TEST_IMAGE_URL,
             foreign_identifier="02",
             meta_data={},
         )
@@ -518,7 +518,7 @@ def test_MediaStore_get_image_enriches_singleton_tags():
             license_url="https://license/url",
         ),
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
@@ -556,7 +556,7 @@ def test_MediaStore_get_image_tag_blacklist():
             license_version="4.0",
         ),
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         meta_data=None,
         raw_tags=raw_tags,
         category=None,
@@ -585,7 +585,7 @@ def test_MediaStore_get_image_enriches_multiple_tags():
             license_version="4.0",
         ),
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
@@ -625,7 +625,7 @@ def test_MediaStore_get_image_leaves_preenriched_tags(setup_env):
             license_version="4.0",
         ),
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
@@ -657,7 +657,7 @@ def test_MediaStore_get_image_nones_nonlist_tags():
             license_version="4.0",
         ),
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        image_url=TEST_IMAGE_URL,
+        url=TEST_IMAGE_URL,
         thumbnail_url=None,
         filetype=None,
         filesize=None,
@@ -684,7 +684,7 @@ def test_MediaStore_get_image_nones_nonlist_tags():
 # Does not use extracted extension if it's not a valid image extension.
 # Uses the `filetype` even if the `url` extension is different.
 @pytest.mark.parametrize(
-    "filetype, image_url, expected_filetype",
+    "filetype, url, expected_filetype",
     [
         (None, "https://example.com/image.jpg", "jpg"),
         (None, "https://example.com/image.jpeg", "jpg"),
@@ -693,13 +693,13 @@ def test_MediaStore_get_image_nones_nonlist_tags():
         ("jpeg", "https://example.com/image.gif", "jpg"),
     ],
 )
-def test_MediaStore_validates_filetype(filetype, image_url, expected_filetype):
+def test_MediaStore_validates_filetype(filetype, url, expected_filetype):
     image_store = image.MockImageStore("test_provider")
     test_image_args = TEST_IMAGE_DICT | {
         "license_info": BY_LICENSE_INFO,
         "foreign_landing_url": "https://example.com/image.html",
         "foreign_identifier": "image1",
-        "image_url": image_url,
+        "url": url,
         "filetype": filetype,
     }
     test_image_args.pop("thumbnail_url")
@@ -722,7 +722,7 @@ def test_MediaStore_validates_filesize(value, expected):
         "license_info": BY_LICENSE_INFO,
         "foreign_landing_url": "https://example.com/image.html",
         "foreign_identifier": "image1",
-        "image_url": TEST_IMAGE_URL,
+        "url": TEST_IMAGE_URL,
         "filesize": value,
     }
     test_image_args.pop("thumbnail_url")
