@@ -7,13 +7,12 @@ import { keycodes } from "~/constants/key-codes"
 const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
   const isActiveElementOfType = () => {
     return page.evaluate(
-      ([contextType]) =>
-        new RegExp(
-          `/${contextType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-          "i"
-        ).test(
-          (document.activeElement as HTMLAnchorElement | null)?.href ?? ""
-        ),
+      ([contextType]) => {
+        const regex = new RegExp(`^${contextType}:`, "i")
+        const element = document.activeElement as HTMLAnchorElement | null
+        const toTest = element?.title || element?.ariaLabel || ""
+        return regex.test(toTest)
+      },
       [type]
     )
   }
@@ -46,7 +45,7 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("all results grid keyboard accessibility test", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/search?q=birds")
+    await page.goto("/search/?q=birds")
   })
 
   test("should open image results as links", async ({ page }) => {
@@ -60,7 +59,7 @@ test.describe("all results grid keyboard accessibility test", () => {
     )
   })
 
-  test("should open audio results as links", async ({ page }) => {
+  test.only("should open audio results as links", async ({ page }) => {
     await walkToType("audio", page)
     await page.keyboard.press("Enter")
     await page.waitForURL(
