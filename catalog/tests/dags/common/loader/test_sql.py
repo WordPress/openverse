@@ -159,19 +159,7 @@ def postgres_with_load_and_image_table(
 
     conn.commit()
 
-    pg = PostgresRef(cursor=cur, connection=conn)
-    # Do the popularity stuff
-    # _set_up_std_popularity_func(
-    #     pg,
-    #     None, # Test values to be inserted into the popularity metrics table.
-    #     {
-    #         "my_provider": {"metric": "views", "percentile": 0.8},
-    #     },
-    #     table_info,
-    #     mock_pg_hook_task
-    # )
-
-    yield pg
+    yield PostgresRef(cursor=cur, connection=conn)
 
     cur.execute(drop_test_relations_query)
     cur.close()
