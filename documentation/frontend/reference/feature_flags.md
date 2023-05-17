@@ -101,6 +101,20 @@ page.
 should [populate `en.json5`](#key-title) if the feature is switchable and
 visible to the user.
 
+##### `storage`
+
+This determines whether the feature is stored in a cookie (`'cookie'`) or in
+`sessionStorage` (`'session'`). By default all feature flags are stored in
+cookies but certain preferences that should only be applicable for a single
+session can be stored in `sessionStorage` instead.
+
+##### `supportsQuery`
+
+By default, all switchable flags can be set per-request using the `ff_<flag>`
+query parameters. This is useful for testing and debugging. However, some flags
+dealing with sensitivity can be used to make malicious URLs, so they can avoid
+being set via query parameters by setting this to `false`.
+
 ### `groups`
 
 This setting pertains to how feature flags can serve as user-level preferences.
