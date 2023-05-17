@@ -1,14 +1,16 @@
 <template>
-  <div class="flex flex-col gap-3 p-3 pb-0">
-    <VMigrationNotice
-      v-if="shouldShowMigrationBanner"
-      @close="dismissBanner('cc-referral')"
-    />
-    <VTranslationStatusBanner
-      v-if="shouldShowTranslationBanner"
-      :banner-key="translationBannerId"
-      @close="dismissBanner(translationBannerId)"
-    />
+  <div>
+    <div v-show="showBanners" class="flex flex-col gap-3 p-3 pb-0">
+      <VMigrationNotice
+        v-if="shouldShowMigrationBanner"
+        @close="dismissBanner('cc-referral')"
+      />
+      <VTranslationStatusBanner
+        v-if="shouldShowTranslationBanner"
+        :banner-key="translationBannerId"
+        @close="dismissBanner(translationBannerId)"
+      />
+    </div>
   </div>
 </template>
 
@@ -42,11 +44,15 @@ export default defineComponent({
       uiStore.dismissBanner(bannerKey)
     }
 
+    const showBanners = computed(
+      () => shouldShowMigrationBanner.value || shouldShowTranslationBanner.value
+    )
+
     return {
       translationBannerId,
       shouldShowMigrationBanner,
       shouldShowTranslationBanner,
-
+      showBanners,
       dismissBanner,
     }
   },
