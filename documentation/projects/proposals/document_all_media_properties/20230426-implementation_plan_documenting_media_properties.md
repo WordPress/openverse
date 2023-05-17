@@ -54,9 +54,6 @@ the media properties in the catalog.
   property the API returns and what is described in the table (e.g., is `null`
   for a non-nullable property) is described in the documents so that I can open
   a new issue if necessary.
-- As a maintainer, I need to know what data properties are available for each
-  media type so that I can identify any gaps or inconsistencies in the data
-  properties.
 - As an API user, I need to know what exactly this media property is and what
   data points from the providers are used for it (e.g., does the "creator" refer
   to the person who created the object or took the picture?) so that I can use
@@ -75,11 +72,10 @@ The result of this project will be a markdown page with a table of media
 properties and a long-form description of each property.
 
 The page will be published on
-https://docs.openverse.org/openverse_media_properties_documentation.html with
-the title of "Openverse Media Properties".
+https://docs.openverse.org/meta/media_properties.html with the title of "Media
+Properties".
 
-The source will be located at
-`documentation/catalog/media_properties_documentation.md`.
+The source will be located at `documentation/meta/media_properties.md`.
 
 See sample at
 [media_properties_documentation.md](samples/openverse_media_properties.md).
@@ -186,7 +182,7 @@ show a warning that the documentation needs to be updated.
 
 This project will create the following documents that will be used to generate
 the final documentation page posted on
-https://docs.openverse.org/openverse_media_properties_documentation.html.
+https://docs.openverse.org/meta/media_properties.html.
 
 ### `media_properties.md`
 
