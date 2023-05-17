@@ -88,17 +88,21 @@ class MediaViewSet(ReadOnlyModelViewSet):
         if qa:
             logger.info("Using QA index for media.")
             search_index = self.qa_index
+            exact_index = False
         elif pref_index := params.validated_data.get("index"):
             logger.info(f"Using preferred index {pref_index} for media.")
             search_index = pref_index
+            exact_index = True
         else:
             logger.info("Using default index for media.")
             search_index = self.default_index
+            exact_index = False
 
         try:
             results, num_pages, num_results = search_controller.search(
                 params,
                 search_index,
+                exact_index,
                 page_size,
                 hashed_ip,
                 request,
