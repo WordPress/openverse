@@ -30,6 +30,7 @@
           v-if="isLg"
           z-index="popover"
           :hide="closeContentSwitcher"
+          :trap-focus="false"
           :visible="isContentSwitcherVisible"
           :trigger-element="triggerElement"
           width="w-66"

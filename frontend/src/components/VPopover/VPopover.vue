@@ -31,6 +31,7 @@
       :hide-on-click-outside="hideOnClickOutside"
       :auto-focus-on-show="autoFocusOnShow"
       :auto-focus-on-hide="autoFocusOnHide"
+      :trap-focus="trapFocus"
       :hide="close"
       :aria-label="label"
       :aria-labelledby="labelledBy"
@@ -139,6 +140,13 @@ export default defineComponent({
      * @default false
      */
     clippable: { type: Boolean, default: false },
+    /**
+     * Whether the popover should trap focus. This means that when the popover is open,
+     * the user cannot tab out of the popover content. This is useful for ensuring that
+     * the popover content is accessible.
+     * @default true
+     */
+    trapFocus: { type: Boolean, default: undefined },
     /**
      * Optional Tailwind class for fixed width popover content.
      *

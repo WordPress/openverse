@@ -24,6 +24,7 @@
         v-if="isLicense(item.code)"
         strategy="fixed"
         :label="$t('browse-page.aria.license-explanation').toString()"
+        :trap-focus="false"
       >
         <template #trigger="{ a11yProps }">
           <VButton
