@@ -5,6 +5,7 @@
     placement="bottom-end"
     width="w-66"
     :clippable="true"
+    :trap-focus="false"
   >
     <template #trigger="{ a11yProps }">
       <VSearchTypeButton
