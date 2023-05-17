@@ -117,7 +117,8 @@ export default defineComponent({
       checked: boolean
     }) => {
       featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-      $cookies.set("features", featureFlagStore.flagStateMap)
+      featureFlagStore.writeToCookies($cookies)
+      featureFlagStore.writeToSession()
     }
 
     return {
