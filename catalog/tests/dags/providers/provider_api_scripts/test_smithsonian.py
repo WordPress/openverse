@@ -567,6 +567,32 @@ def test_extract_tags(input_is, expect_tags):
                     "usage": {"access": "CC0"},
                     "guid": "http://gu.id.one",
                     "type": "Images",
+                    "content": "",
+                },
+            ],
+            [],
+        ),
+        (
+            [
+                {
+                    "thumbnail": "https://thumbnail.one",
+                    "idsId": "",
+                    "usage": {"access": "CC0"},
+                    "guid": "http://gu.id.one",
+                    "type": "Images",
+                    "content": "https://image.url.one",
+                }
+            ],
+            [],
+        ),
+        (
+            [
+                {
+                    "thumbnail": "https://thumbnail.one",
+                    "idsId": "id_one",
+                    "usage": {"access": "CC0"},
+                    "guid": "http://gu.id.one",
+                    "type": "Images",
                     "content": "https://image.url.one",
                 },
                 {
@@ -581,11 +607,11 @@ def test_extract_tags(input_is, expect_tags):
             [
                 {
                     "foreign_identifier": "id_one",
-                    "image_url": "https://image.url.one",
+                    "url": "https://image.url.one",
                 },
                 {
                     "foreign_identifier": "id_two",
-                    "image_url": "https://image.url.two",
+                    "url": "https://image.url.two",
                 },
             ],
         ),
@@ -611,7 +637,7 @@ def test_get_record_data():
     actual_data = ingester.get_record_data(data)
     expected_data = [
         {
-            "image_url": "https://collections.nmnh.si.edu/media/?irn=15814382",
+            "url": "https://collections.nmnh.si.edu/media/?irn=15814382",
             "foreign_identifier": "https://collections.nmnh.si.edu/media/?irn=15814382",
             "foreign_landing_url": "http://n2t.net/ark:/65665/34857ca78-9195-4156-849b-1ec47f7cd1ce",
             "title": "Passerculus sandwichensis nevadensis",

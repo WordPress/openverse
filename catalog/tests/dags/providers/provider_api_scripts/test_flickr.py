@@ -151,9 +151,7 @@ def test_get_record_data():
 
     expected_data = {
         "foreign_landing_url": "https://www.flickr.com/photos/71925535@N03/49514824541",
-        "image_url": (
-            "https://live.staticflickr.com/65535/49514824541_35d1b4f8db" "_b.jpg"
-        ),
+        "url": ("https://live.staticflickr.com/65535/49514824541_35d1b4f8db" "_b.jpg"),
         "license_info": test_license_info,
         "foreign_identifier": "49514824541",
         "width": 1024,
@@ -176,17 +174,37 @@ def test_get_record_data():
     assert actual_data == expected_data
 
 
-def test_get_record_data_returns_none_when_missing_owner():
+@pytest.mark.parametrize(
+    "missing_params",
+    [
+        pytest.param(["owner"], id="owner-foreign_landing_url"),
+        pytest.param(["license"], id="license"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-url"),
+        pytest.param(["id"], id="id-foreign_identifier"),
+    ],
+)
+def test_get_record_data_returns_none_when_missing_required_params(missing_params):
     image_data = _get_resource_json("image_data_complete_example.json")
-    image_data.pop("owner")
+    for param in missing_params:
+        image_data.pop(param)
 
     actual_data = flickr.get_record_data(image_data)
     assert actual_data is None
 
 
-def test_get_record_data_returns_none_when_missing_foreign_id():
+@pytest.mark.parametrize(
+    "falsy_params",
+    [
+        pytest.param(["owner"], id="owner-foreign_landing_url"),
+        pytest.param(["license"], id="license"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-url"),
+        pytest.param(["id"], id="id-foreign_identifier"),
+    ],
+)
+def test_get_record_data_returns_none_when_required_params_falsy(falsy_params):
     image_data = _get_resource_json("image_data_complete_example.json")
-    image_data.pop("id")
+    for param in falsy_params:
+        image_data[param] = ""
 
     actual_data = flickr.get_record_data(image_data)
     assert actual_data is None
@@ -323,9 +341,7 @@ def test_get_record_data_with_sub_provider():
         "foreign_landing_url": (
             "https://www.flickr.com/photos/35067687@N04/49950595947"
         ),
-        "image_url": (
-            "https://live.staticflickr.com/65535/49950595947_65a3560ddc" "_b.jpg"
-        ),
+        "url": ("https://live.staticflickr.com/65535/49950595947_65a3560ddc" "_b.jpg"),
         "license_info": test_license_info,
         "foreign_identifier": "49950595947",
         "width": 1024,

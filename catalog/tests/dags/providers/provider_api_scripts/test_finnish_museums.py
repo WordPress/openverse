@@ -98,18 +98,21 @@ def test_get_object_list_from_json_returns_expected_output():
     assert actual_items_list == expect_items_list
 
 
-def test_get_object_list_return_none_if_empty():
-    test_dict = {"records": []}
-    assert fm.get_batch_data(test_dict) is None
-
-
-def test_get_object_list_return_none_if_missing():
-    test_dict = {}
-    assert fm.get_batch_data(test_dict) is None
-
-
-def test_get_object_list_return_none_if_none_json():
-    assert fm.get_batch_data(None) is None
+@pytest.mark.parametrize(
+    "response_json",
+    [
+        {"records": None},
+        {"records": {}},
+        {"records": ""},
+        {"records": []},
+        {"status": "OK"},
+        None,
+        {},
+        [],
+    ],
+)
+def test_get_object_list_returns_none_if_response_json_invalid(response_json):
+    assert fm.get_batch_data(response_json) is None
 
 
 def test_process_object_with_real_example():
@@ -122,7 +125,7 @@ def test_process_object_with_real_example():
         ),
         "foreign_identifier": "sa-kuva.sa-kuva-1835",
         "foreign_landing_url": "https://www.finna.fi/Record/sa-kuva.sa-kuva-1835",
-        "image_url": "https://api.finna.fi/Cover/Show?source=Solr&id=sa-kuva.sa-kuva-1835&index=0&size=large",
+        "url": "https://api.finna.fi/Cover/Show?source=Solr&id=sa-kuva.sa-kuva-1835&index=0&size=large",
         "title": "Vuokkiniemen koulu",
         "source": "finnish_military_museum",
         "creator": "Uomala, valokuvaaja",
@@ -133,6 +136,15 @@ def test_process_object_with_real_example():
 
     assert len(actual_data) == 1
     assert actual_data[0] == expected_data
+
+
+def test_get_record_data_returns_none_without_license_info():
+    object_data = _get_resource_json("object_complete_example.json")
+    object_data["imageRights"]["link"] = ""
+
+    actual_data = fm.get_record_data(object_data)
+
+    assert actual_data is None
 
 
 def test_get_image_url():
@@ -146,22 +158,26 @@ def test_get_image_url():
     "image_rights_obj, expected_license_url",
     [
         ({}, None),
+        ({"imageRights": {"link": ""}}, None),
         (
             {
                 "imageRights": {
                     "link": "http://creativecommons.org/licenses/by/4.0/deed.fi"
                 }
             },
-            "http://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
         ),
         (
             {"imageRights": {"link": "http://creativecommons.org/licenses/by/4.0/"}},
-            "http://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/",
         ),
     ],
 )
 def test_get_license_url(image_rights_obj, expected_license_url):
-    assert fm.get_license_url(image_rights_obj) == expected_license_url
+    if expected_license_url is None:
+        assert fm.get_license_info(image_rights_obj) is None
+    else:
+        assert fm.get_license_info(image_rights_obj).url == expected_license_url
 
 
 @pytest.mark.parametrize(

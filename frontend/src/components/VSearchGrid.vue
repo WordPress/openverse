@@ -6,11 +6,7 @@
       (!fetchState.isFetching && resultsCount)
     "
   >
-    <header
-      v-if="query.q && supported"
-      class="mt-5"
-      :class="isAllView ? 'mb-10' : 'mb-8'"
-    >
+    <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
       <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">
         {{ searchTerm }}
       </VSearchResultsTitle>
@@ -24,14 +20,17 @@
       :external-sources="externalSources"
       :search-term="searchTerm"
       :is-supported="supported"
-      @tab="$emit('tab', $event)"
     />
   </section>
   <VErrorSection v-else class="w-full py-10">
     <template #image>
       <VErrorImage error-code="NO_RESULT" />
     </template>
-    <VNoResults :external-sources="externalSources" :search-term="searchTerm" />
+    <VNoResults
+      :external-sources="externalSources"
+      :search-term="searchTerm"
+      :media-type="externalSourcesType"
+    />
   </VErrorSection>
 </template>
 

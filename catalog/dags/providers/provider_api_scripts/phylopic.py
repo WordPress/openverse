@@ -89,28 +89,31 @@ class PhylopicDataIngester(ProviderDataIngester):
         TODO: Adapt `url` and `creator_url` to avoid redirects.
         """
 
-        uid = data.get("uuid")
-        if not uid:
+        if not (foreign_identifier := data.get("uuid")):
             return None
 
-        data = data.get("_links", {})
-        license_url = data.get("license", {}).get("href")
-        img_url = data.get("sourceFile", {}).get("href")
-        foreign_url = data.get("self", {}).get("href")
-        if not license_url or not img_url or not foreign_url:
+        links = data.get("_links", {})
+
+        if not (url := links.get("sourceFile", {}).get("href")):
             return None
 
-        foreign_url = self.host + foreign_url
+        if not (foreign_url_path := links.get("self", {}).get("href")):
+            return None
+        foreign_landing_url = self.host + foreign_url_path
 
-        title = data.get("self", {}).get("title")
-        creator, creator_url = self._get_creator(data.get("contributor", {}))
-        width, height = self._get_image_sizes(data)
+        license_url = links.get("license", {}).get("href")
+        if not (license_info := get_license_info(license_url)):
+            return None
+
+        title = links.get("self", {}).get("title")
+        creator, creator_url = self._get_creator(links.get("contributor", {}))
+        width, height = self._get_image_sizes(links)
 
         return {
-            "license_info": get_license_info(license_url=license_url),
-            "foreign_identifier": uid,
-            "foreign_landing_url": foreign_url,
-            "image_url": img_url,
+            "license_info": license_info,
+            "foreign_identifier": foreign_identifier,
+            "foreign_landing_url": foreign_landing_url,
+            "url": url,
             "title": title,
             "creator": creator,
             "creator_url": creator_url,

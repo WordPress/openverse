@@ -5,7 +5,7 @@ import pytest
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
-from common.licenses import LicenseInfo
+from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
@@ -15,6 +15,9 @@ bkm = BrooklynMuseumDataIngester()
 image_store = ImageStore(provider=prov.BROOKLYN_DEFAULT_PROVIDER)
 bkm.media_stores = {"image": image_store}
 _get_resource_json = make_resource_json_func("brooklynmuseum")
+
+CC_BY_3_0 = get_license_info("https://creativecommons.org/licenses/by/3.0/")
+CC0 = get_license_info("https://creativecommons.org/publicdomain/zero/1.0/")
 
 
 def test_build_query_param_default():
@@ -52,12 +55,6 @@ def test_get_data_from_response(resource_name, expected):
     assert actual == expected
 
 
-def test_docstring_example():
-    json_func_ex = make_resource_json_func("brooklynmuseum")
-    json_dict = json_func_ex("cc_license_info.json")
-    assert json_dict["public_name"] == "Creative Commons-BY"
-
-
 @pytest.mark.parametrize(
     "batch_objects_name, object_data_name, expected_count",
     [
@@ -90,13 +87,8 @@ def test_process_batch(batch_objects_name, object_data_name, expected_count):
                     "foreign_identifier": 170425,
                     "foreign_landing_url": "https://www.brooklynmuseum.org/opencollection/objects/90636",
                     "height": 1152,
-                    "image_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CUR.66.242.29.jpg",
-                    "license_info": LicenseInfo(
-                        license="by",
-                        version="3.0",
-                        url="https://creativecommons.org/licenses/by/3.0/",
-                        raw_url="https://creativecommons.org/licenses/by/3.0/",
-                    ),
+                    "url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CUR.66.242.29.jpg",
+                    "license_info": CC_BY_3_0,
                     "meta_data": {
                         "accession_number": "66.242.29",
                         "classification": "Clothing",
@@ -113,18 +105,27 @@ def test_process_batch(batch_objects_name, object_data_name, expected_count):
 )
 def test_handle_object_data(resource_name, expected):
     response_json = _get_resource_json(resource_name)
-    license_url = "https://creativecommons.org/licenses/by/3.0/"
 
-    actual = bkm._handle_object_data(response_json, license_url)
+    actual = bkm._handle_object_data(response_json, license_info=CC_BY_3_0)
     assert actual == expected
 
 
 @pytest.mark.parametrize("field", ["id", "largest_derivative_url"])
 def test_handle_object_data_missing_field(field):
     response_json = _get_resource_json("object_data.json")
-    license_url = "https://creativecommons.org/licenses/by/3.0/"
+
     # Remove the requested field
     response_json["images"][0].pop(field)
+    actual = bkm._handle_object_data(response_json, license_info=CC_BY_3_0)
+    assert actual == []
+
+
+@pytest.mark.parametrize("field", ["id", "largest_derivative_url"])
+def test_handle_object_data_falsy_field(field):
+    response_json = _get_resource_json("object_data.json")
+    license_url = "https://creativecommons.org/licenses/by/3.0/"
+    # Remove the requested field
+    response_json["images"][0][field] = ""
     actual = bkm._handle_object_data(response_json, license_url)
     assert actual == []
 
@@ -146,17 +147,14 @@ def test_get_image_size(resource_name, expected):
 @pytest.mark.parametrize(
     "resource_name, expected",
     [
-        ("cc_license_info.json", "https://creativecommons.org/licenses/by/3.0/"),
-        (
-            "public_license_info.json",
-            "https://creativecommons.org/publicdomain/zero/1.0/",
-        ),
+        ("cc_license_info.json", CC_BY_3_0),
+        ("public_license_info.json", CC0),
         ("no_license_info.json", None),
     ],
 )
-def test_get_license_url(resource_name, expected):
-    response_json = _get_resource_json(resource_name)
-    actual = bkm._get_license_url(response_json)
+def test_get_license_info(resource_name, expected):
+    response_json = {"rights_type": _get_resource_json(resource_name)}
+    actual = bkm._get_license_info(response_json)
 
     assert actual == expected
 
@@ -182,10 +180,10 @@ def test_get_creators(data, expected):
 
 
 @pytest.mark.parametrize(
-    "license_url, license_is_none",
+    "license_info, license_is_none",
     [
         (None, True),
-        ("someurl", False),
+        (get_license_info("https://creativecommons.org/licenses/by/4.0"), False),
     ],
 )
 @pytest.mark.parametrize(
@@ -193,6 +191,7 @@ def test_get_creators(data, expected):
     [
         ({}, True),
         ({"doesnt-have-id": "foobar"}, True),
+        ({"id": ""}, True),
         ({"id": "foobar"}, False),
     ],
 )
@@ -204,11 +203,11 @@ def test_get_creators(data, expected):
     ],
 )
 def test_get_record_data(
-    license_url, license_is_none, data, data_is_none, object_data, object_data_is_none
+    license_info, license_is_none, data, data_is_none, object_data, object_data_is_none
 ):
     should_be_none = any([license_is_none, data_is_none, object_data_is_none])
     with (
-        patch.object(bkm, "_get_license_url", return_value=license_url),
+        patch.object(bkm, "_get_license_info", return_value=license_info),
         patch.object(bkm, "get_response_json"),
         patch.object(bkm, "_get_data_from_response", return_value=object_data),
         patch.object(bkm, "_handle_object_data"),

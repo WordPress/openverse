@@ -68,6 +68,7 @@ import re
 from string import Template
 
 from airflow import DAG
+from airflow.models import Variable
 from airflow.models.mappedoperator import MappedOperator
 from airflow.models.param import Param
 from airflow.operators.empty import EmptyOperator
@@ -347,6 +348,12 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
     """
     default_args = {**DAG_DEFAULT_ARGS, **(conf.default_args or {})}
 
+    # catchup is turned on by default for dated DAGs to allow backfilling.
+    # It can be overridden with the `CATCHUP_ENABLED` Airflow variable.
+    catchup_enabled = conf.dated and Variable.get(
+        "CATCHUP_ENABLED", default_var=True, deserialize_json=True
+    )
+
     dag = DAG(
         dag_id=conf.dag_id,
         default_args={**default_args, "start_date": conf.start_date},
@@ -354,7 +361,7 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
         max_active_runs=conf.max_active_runs,
         start_date=conf.start_date,
         schedule=conf.schedule_string,
-        catchup=conf.dated,  # catchup is turned on for dated DAGs to allow backfilling
+        catchup=catchup_enabled,
         doc_md=conf.doc_md,
         tags=[
             "provider",

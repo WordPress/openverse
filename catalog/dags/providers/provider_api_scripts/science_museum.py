@@ -14,7 +14,7 @@ import re
 from datetime import date
 
 from common import slack
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -111,45 +111,39 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         if id_ in self.RECORD_IDS:
             return None
         self.RECORD_IDS.add(id_)
-        foreign_landing_url = record.get("links", {}).get("self")
-        if foreign_landing_url is None:
+        if not (foreign_landing_url := record.get("links", {}).get("self")):
             return None
-        attributes = record.get("attributes")
-        if attributes is None:
+        if not (attributes := record.get("attributes")) or not (
+            multimedia := attributes.get("multimedia")
+        ):
             return None
+
         title = attributes.get("summary_title")
         creator = self._get_creator_info(attributes)
-
         metadata = self._get_metadata(attributes)
-        multimedia = attributes.get("multimedia")
-        if not multimedia:
-            return None
         images = []
         for image_data in multimedia:
-            foreign_id = image_data.get("admin", {}).get("uid")
-            if foreign_id is None:
+            if not (foreign_identifier := image_data.get("admin", {}).get("uid")):
                 continue
             processed = image_data.get("processed")
+            if not isinstance(processed, dict):
+                continue
             (
-                image_url,
+                url,
                 height,
                 width,
                 filetype,
             ) = self._get_image_info(processed)
-            if image_url is None:
+            if not url:
                 continue
 
-            license_pair = self._get_license(image_data)
-            if license_pair is None:
-                # some items do not return license anywhere, but in the UI
-                # they look like CC
+            if not (license_info := self._get_license_info(image_data)):
                 continue
-            license_, version = license_pair
-            license_info = get_license_info(license_=license_, license_version=version)
+
             image = {
-                "foreign_identifier": foreign_id,
+                "foreign_identifier": foreign_identifier,
                 "foreign_landing_url": foreign_landing_url,
-                "image_url": image_url,
+                "url": url,
                 "height": height,
                 "width": width,
                 "filetype": filetype,
@@ -173,12 +167,12 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         return creator_info
 
     @staticmethod
-    def check_url(image_url: str | None) -> str | None:
-        if not image_url:
+    def check_url(url: str | None) -> str | None:
+        if not url:
             return None
-        if image_url.startswith("http"):
-            return image_url
-        return f"https://coimages.sciencemuseumgroup.org.uk/images/{image_url}"
+        if url.startswith("http"):
+            return url
+        return f"https://coimages.sciencemuseumgroup.org.uk/images/{url}"
 
     @staticmethod
     def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
@@ -202,15 +196,13 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         processed: dict,
     ) -> tuple[str | None, int | None, int | None, str | None]:
         height, width, filetype = None, None, None
-        image_data = processed.get("large")
-        if image_data is None:
-            image_data = processed.get("medium", {})
+        image_data = processed.get("large") or processed.get("medium", {})
 
-        image_url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
-        if image_url:
+        url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
+        if url:
             filetype = image_data.get("format")
             height, width = ScienceMuseumDataIngester._get_dimensions(image_data)
-        return image_url, height, width, filetype
+        return url, height, width, filetype
 
     @staticmethod
     def _get_first_list_value(key: str, attributes: dict) -> str | None:
@@ -241,7 +233,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         return metadata
 
     @staticmethod
-    def _get_license(image_data) -> None | tuple[str, str]:
+    def _get_license_info(image_data) -> LicenseInfo | None:
+        # some items do not return license anywhere, but in the UI
+        # they look like CC
         rights = image_data.get("source", {}).get("legal", {}).get("rights")
         if isinstance(rights, list):
             license_name = rights[0].get("usage_terms")
@@ -253,7 +247,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 # Unidentifiable license
                 return None
             license_, version = license_name.split(" ")
-            return license_, version
+            return get_license_info(license_=license_, license_version=version)
         return None
 
     def get_should_continue(self, response_json) -> bool:

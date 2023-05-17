@@ -85,6 +85,37 @@ export type Events = {
     /** the reason for the report */
     reason: ReportReason
   }
+  /**
+   * Description: When the user chooses an external source from the dropdown of external sources
+   * Questions:
+   *   - Which external sources are most popular? This could drive inclusion in Openverse.
+   *   - Are certain media types more popular externally?
+   */
+  SELECT_EXTERNAL_SOURCE: {
+    /** The name of the external source */
+    name: string
+    /** The media type being searched */
+    mediaType: MediaType
+    /** The search term */
+    query: string
+    /** The component that triggered the event */
+    component: "VNoResults" | "VExternalSourceList"
+  }
+  /**
+   * Description: Whenever a user changes the content type
+   * Questions:
+   *   - Which content types are most popular?
+   *   - Is there interest in the non-supported content types?
+   *   - Do users switch content types? Where in their journeys?
+   */
+  CHANGE_CONTENT_TYPE: {
+    /** The previously-set media type */
+    previous: SearchType
+    /** The new media type */
+    next: SearchType
+    /** The name of the Vue component used to switch content types. */
+    component: string
+  }
 }
 
 /**

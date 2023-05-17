@@ -1,6 +1,8 @@
 import Vue from "vue"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { noFocusableElementWarning } from "~/composables/use-focus-on-show"
 
@@ -131,7 +133,9 @@ describe("VPopover", () => {
 
     describe("autoFocusOnHide", () => {
       it("should return focus to the trigger", async () => {
-        render(TestWrapper)
+        render(TestWrapper, {
+          props: { popoverProps: { trapFocus: false } },
+        })
         await doOpen()
         await clickOutside()
         expectClosed()
@@ -140,7 +144,7 @@ describe("VPopover", () => {
 
       it("should not return focus to the trigger when false", async () => {
         render(TestWrapper, {
-          props: { popoverProps: { autoFocusOnHide: false } },
+          props: { popoverProps: { trapFocus: false, autoFocusOnHide: false } },
         })
         await doOpen()
         await clickOutside()

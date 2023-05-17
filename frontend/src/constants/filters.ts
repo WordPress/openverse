@@ -113,7 +113,7 @@ const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
  *   "audioCategories": [
  *     {
  *       "code": "music",
- *       "name": "filters.audioCategories.music",
+ *       "name": "filters['audio-categories'].music",
  *       "checked": false
  *     }, ...
  *   ],

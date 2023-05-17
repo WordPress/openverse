@@ -1,4 +1,6 @@
-# 2023-03-09 Project Proposal
+# 2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results
+
+**Author**: @sarayourfriend
 
 ## Reviewers
 

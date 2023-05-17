@@ -22,7 +22,7 @@ from urllib.parse import urlencode
 from airflow.models import Variable
 
 from common import constants
-from common.licenses import NO_LICENSE_FOUND, get_license_info
+from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -246,28 +246,27 @@ class RawpixelDataIngester(ProviderDataIngester):
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         # verify the license and extract the metadata
-        if not (foreign_id := data.get("id")):
+        if not (foreign_identifier := data.get("id")):
             return None
 
-        if not (foreign_url := data.get("url")):
+        if not (foreign_landing_url := data.get("url")):
             return None
 
         if not (metadata := data.get("metadata")):
             return None
 
-        license_info = get_license_info(metadata["licenseUrl"])
-        if license_info == NO_LICENSE_FOUND:
+        if not (license_info := get_license_info(metadata["licenseUrl"])):
             return None
 
-        if not (image_url := self._get_image_url(data, self.full_size_option)):
+        if not (url := self._get_image_url(data, self.full_size_option)):
             return None
 
         width, height = self._get_image_properties(data)
         return {
-            "foreign_landing_url": foreign_url,
-            "image_url": image_url,
+            "foreign_landing_url": foreign_landing_url,
+            "url": url,
             "license_info": license_info,
-            "foreign_identifier": foreign_id,
+            "foreign_identifier": foreign_identifier,
             "width": width,
             "height": height,
             "title": self._get_title(metadata),

@@ -444,9 +444,7 @@ class ProviderDataIngester(ABC):
         processed_count = 0
 
         for data in media_batch:
-            record_data = self.get_record_data(data)
-
-            if record_data is None:
+            if not (record_data := self.get_record_data(data)):
                 continue
 
             record_data = (

@@ -423,6 +423,7 @@
       creator: "search by creator",
       "image-title": "Image: {title}",
       "audio-title": "Audio: {title}",
+      results: "Search results for {query}.",
     },
   },
   "media-details": {

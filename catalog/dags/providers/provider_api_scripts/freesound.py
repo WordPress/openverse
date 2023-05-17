@@ -131,14 +131,6 @@ class FreesoundDataIngester(ProviderDataIngester):
                 metadata[field] = field_value
         return metadata
 
-    @staticmethod
-    def _get_license(item):
-        item_license = get_license_info(license_url=item.get("license"))
-
-        if item_license.license is None:
-            return None
-        return item_license
-
     @functools.lru_cache(maxsize=1024)
     def _get_set_info(self, set_url):
         try:
@@ -188,9 +180,8 @@ class FreesoundDataIngester(ProviderDataIngester):
     def _get_audio_files(
         self, media_data
     ) -> tuple[dict, list[dict]] | tuple[None, None]:
-        previews = media_data.get("previews")
         # If there are no previews, then we will not be able to play the file
-        if not previews:
+        if not (previews := media_data.get("previews")):
             return None, None
 
         # If our preferred preview type is not present, skip this audio
@@ -199,11 +190,11 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         # If unable to get filesize from the preview, skip this audio
         # This may happen if the preview 404s
-        if (filesize := self._get_audio_file_size(preview_url)) is None:
+        if not (filesize := self._get_audio_file_size(preview_url)):
             return None, None
 
         main_file = {
-            "audio_url": preview_url,
+            "url": preview_url,
             "filetype": self.preferred_preview.split("-")[-1],
             "bit_rate": FreesoundDataIngester.preview_bitrates[self.preferred_preview],
             "filesize": int(filesize),
@@ -227,19 +218,16 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         Freesound does not have audio thumbnails.
         """
-        foreign_landing_url = media_data.get("url")
-        if not foreign_landing_url:
+        if not (foreign_landing_url := media_data.get("url")):
             return None
 
-        foreign_identifier = media_data.get("id")
-        if not foreign_identifier:
+        if not (foreign_identifier := media_data.get("id")):
             return None
 
-        item_license = self._get_license(media_data)
-        if item_license is None:
+        if not (item_license := get_license_info(media_data.get("license"))):
             return None
 
-        # We use the mp3-hq preview url as `audio_url` as the main url
+        # We use the mp3-hq preview url as `url` as the main url
         # for playing on the frontend,
         # and the actual uploaded file as an alt_file that is available
         # for download (and requires a user to be authenticated to download)
@@ -250,7 +238,7 @@ class FreesoundDataIngester(ProviderDataIngester):
                 f"Unable to get file size for {foreign_landing_url}, skipping"
             )
             return None
-        if main_audio is None:
+        if not main_audio:
             return None
 
         creator, creator_url = self._get_creator_data(media_data)
@@ -270,7 +258,7 @@ class FreesoundDataIngester(ProviderDataIngester):
             "audio_set": audio_set,
             "set_url": set_url,
             "alt_files": alt_files,
-            # audio_url, filetype, bit_rate
+            # url, filetype, bit_rate
             **main_audio,
         }
 

@@ -1,9 +1,9 @@
 <template>
   <div id="content-report-form">
     <div v-if="status === SENT">
-      <p class="heading-6 mb-4">
+      <h2 class="heading-6 mb-4">
         {{ $t("media-details.content-report.success.title") }}
-      </p>
+      </h2>
       <i18n
         path="media-details.content-report.success.note"
         class="text-sm"
@@ -20,9 +20,9 @@
     </div>
 
     <div v-else-if="status === FAILED">
-      <p class="heading-6 mb-4">
+      <h2 class="heading-6 mb-4">
         {{ $t("media-details.content-report.failure.title") }}
-      </p>
+      </h2>
       <p class="text-sm">
         {{ $t("media-details.content-report.failure.note") }}
       </p>
@@ -76,7 +76,7 @@
           />
         </div>
 
-        <div class="flex flex-row items-center justify-end gap-4">
+        <div class="flex flex-row items-center justify-end gap-x-4">
           <VButton
             v-if="allowCancel"
             variant="bordered-gray"

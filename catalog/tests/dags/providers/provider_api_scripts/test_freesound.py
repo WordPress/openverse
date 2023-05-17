@@ -116,7 +116,7 @@ def test_get_audio_files_handles_example_audio_data(audio_data, file_size_patch)
     actual = fsd._get_audio_files(audio_data)
     expected = (
         {
-            "audio_url": "https://freesound.org/data/previews/415/415362_6044691-hq.mp3",
+            "url": "https://freesound.org/data/previews/415/415362_6044691-hq.mp3",
             "bit_rate": 128000,
             "filesize": AUDIO_FILE_SIZE,
             "filetype": "mp3",
@@ -170,6 +170,21 @@ def test_get_record_data_returns_none_when_missing_data(missing_fields, audio_da
     assert actual is None
 
 
+@pytest.mark.parametrize(
+    "missing_fields",
+    [
+        ("id",),
+        ("url", "download"),
+        ("license",),
+    ],
+)
+def test_get_record_data_returns_none_when_data_falsy(missing_fields, audio_data):
+    for field in missing_fields:
+        audio_data[field] = ""
+    actual = fsd.get_record_data(audio_data)
+    assert actual is None
+
+
 def test_get_audio_set_info(audio_data):
     set_foreign_id, audio_set, set_url = fsd._get_audio_set_info(audio_data)
     expected_audio_set_info = (
@@ -210,7 +225,7 @@ def test_extract_audio_data_handles_example_dict(audio_data, file_size_patch):
             },
         ],
         "audio_set": "https://freesound.org/apiv2/packs/23434/",
-        "audio_url": "https://freesound.org/data/previews/415/415362_6044691-hq.mp3",
+        "url": "https://freesound.org/data/previews/415/415362_6044691-hq.mp3",
         "bit_rate": 128000,
         "creator": "owly-bee",
         "creator_url": "https://freesound.org/people/owly-bee/",

@@ -29,6 +29,7 @@
           :hide="closePageMenu"
           :visible="isModalVisible"
           :trigger-element="triggerElement"
+          :trap-focus="false"
           aria-labelledby="menu-button"
         >
           <VPageLinks

@@ -1,4 +1,6 @@
-# Project Proposal: Popularity Calculation Optimizations
+# 2023-04-06 Project Proposal: Popularity Calculation Optimizations
+
+**Author**: @stacimc
 
 ## Reviewers
 

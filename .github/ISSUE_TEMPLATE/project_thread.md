@@ -1,7 +1,7 @@
 ---
 name: Project Thread
 about: An issue to track and outline a new project
-labels: "project"
+labels: "🧭 project: thread"
 title: "<Replace this with actual title>"
 ---
 
@@ -18,7 +18,7 @@ title: "<Replace this with actual title>"
 <!-- Please link to these documents once they are written. -->
 
 - [ ] Project Proposal
-- [ ] Implementation Plan
+- [ ] Implementation Plan(s)
 
 ## Issues
 

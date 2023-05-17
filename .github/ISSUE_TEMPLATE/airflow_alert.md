@@ -1,7 +1,7 @@
 ---
 name: Airflow Alert
 about: Report an alert raised by Airflow
-labels: "🛠 goal: fix, 🚦 status: awaiting triage, 🌬️ tooling: airflow"
+labels: "🛠 goal: fix, 🚦 status: awaiting triage, 🌬️ tooling: airflow, 🧱 stack: catalog"
 title: "<Replace this with actual title>"
 ---
 

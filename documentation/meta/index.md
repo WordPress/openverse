@@ -1,5 +1,12 @@
 # Managing the Openverse
 
-```{include} ../_toc_templates/stack_root.md
+```{toctree}
+:titlesonly:
 
+github_contribution_practices
+dev_flow
+ci_cd/index
+decision_making/index
+documentation/index
+traffic/index
 ```

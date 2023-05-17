@@ -61,6 +61,15 @@ def test_get_query_param_offset():
     assert actual_param == expected_param
 
 
+def test_get_record_data_returns_empty_list_if_missing_license():
+    media = _get_resource_json("record_data.json")["media"]
+    for item in media:
+        if "licence" in item:
+            item["licence"].pop("uri", None)
+    actual_image_data = mv._get_images(media)
+    assert actual_image_data == []
+
+
 def test_get_record_data():
     media = _get_resource_json("record_data.json")
     actual_image_data = mv.get_record_data(media)
@@ -68,7 +77,7 @@ def test_get_record_data():
 
     expected_image_data = {
         "foreign_identifier": "media/488013",
-        "image_url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
+        "url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
         "height": 1753,
         "width": 3000,
         "creator": "",
@@ -110,6 +119,18 @@ def test_no_duplicate_records():
     assert actual_image_data is None
 
 
+@pytest.mark.parametrize(
+    "falsy_parameter",
+    ["id", "media"],
+)
+def test_get_record_data_returns_none_with_falsy_param(falsy_parameter):
+    media = _get_resource_json("record_data.json")
+    media[falsy_parameter] = ""
+    actual_image_data = mv.get_record_data(media)
+
+    assert actual_image_data is None
+
+
 def test_get_images_success():
     media = _get_resource_json("media_data_success.json")
     actual_image_data = mv._get_images([media])
@@ -117,7 +138,7 @@ def test_get_images_success():
     expected_image_data = {
         "creator": "Photographer: Deb Tout-Smith",
         "foreign_identifier": "media/329745",
-        "image_url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
+        "url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
         "license_info": get_license_info(
             license_url="https://creativecommons.org/licenses/by/4.0"
         ),
@@ -135,62 +156,39 @@ def test_get_media_info_failure():
     assert actual_image_data is None
 
 
-def test_get_image_data_large():
-    image_data = _get_resource_json("large_image_data.json")
+@pytest.mark.parametrize(
+    "image_size, expected_height, expected_width, expected_filesize",
+    [
+        pytest.param("large", 2581, 2785, 890933, id="large"),
+        pytest.param("medium", 1390, 1500, 170943, id="medium"),
+        pytest.param("small", 500, 540, 20109, id="small"),
+    ],
+)
+def test_get_image_data(image_size, expected_height, expected_width, expected_filesize):
+    image_data = _get_resource_json(f"{image_size}_image_data.json")
+    expected_url = (
+        f"https://collections.museumsvictoria.com.au/content/media/45/"
+        f"329745-{image_size}.jpg"
+    )
 
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+    actual_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
         image_data
     )
 
-    assert actual_image_url == (
-        "https://collections.museumsvictoria.com.au/content/media/45/"
-        "329745-large.jpg"
-    )
-    assert actual_height == 2581
-    assert actual_width == 2785
-    assert actual_filesize == 890933
-
-
-def test_get_image_data_medium():
-    image_data = _get_resource_json("medium_image_data.json")
-
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
-        image_data
-    )
-
-    assert actual_image_url == (
-        "https://collections.museumsvictoria.com.au/content/media/45/"
-        "329745-medium.jpg"
-    )
-    assert actual_height == 1390
-    assert actual_width == 1500
-    assert actual_filesize == 170943
-
-
-def test_get_image_data_small():
-    image_data = _get_resource_json("small_image_data.json")
-
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
-        image_data
-    )
-
-    assert actual_image_url == (
-        "https://collections.museumsvictoria.com.au/content/media/45/"
-        "329745-small.jpg"
-    )
-    assert actual_height == 500
-    assert actual_width == 540
-    assert actual_filesize == 20109
+    assert actual_url == expected_url
+    assert actual_height == expected_height
+    assert actual_width == expected_width
+    assert actual_filesize == expected_filesize
 
 
 def test_get_image_data_none():
     image_data = {}
 
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+    actual_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
         image_data
     )
 
-    assert actual_image_url is None
+    assert actual_url is None
     assert actual_height is None
     assert actual_width is None
     assert actual_filesize is None

@@ -36,6 +36,7 @@ jobs:
       api: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'api') }}
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
+      ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -79,6 +80,7 @@ jobs:
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
         working-directory: automations/python/workflows
         run: python set_matrix_images.py
 
@@ -124,26 +126,27 @@ jobs:
       - get-changes
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Add API stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.api == 'true' }}
+      - name: Apply stack labels
+        uses: actions/github-script@v6
         with:
-          labels: "🧱 stack: api"
-
-      - name: Add ingestion server stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
-        with:
-          labels: "🧱 stack: ingestion server"
-
-      - name: Add frontend stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
-        with:
-          labels: "🧱 stack: frontend"
+          # Also see
+          # - list of stack filters: `.github/filters.yml`
+          # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
+          script: |
+            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
+            const labels = JSON
+              .parse('${{ needs.get-changes.outputs.changes }}')
+              .filter(change => stacks.includes(change))
+              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
+            if (labels.len == 0) {
+              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+            }
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels,
+            })
 
   build-images:
     name: Build Docker images
@@ -182,16 +185,10 @@ jobs:
       # This step
       # - downloads translation strings from GlotPress so that they can be
       #   bundled inside the Docker image
-      # - copies pnpm config files from the root to the `frontend/` directory
-      #   so that they can be used to mock a workspace inside the Docker image
       - name: Prepare frontend for building
         if: matrix.image == 'frontend'
         run: |
           just frontend/run i18n
-          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -201,13 +198,14 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.context }}
+          context: ${{ matrix.context || matrix.image }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
+          build-contexts: ${{ matrix.build-contexts || '' }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
@@ -229,7 +227,9 @@ jobs:
 
   test-cat:
     name: Run tests for the catalog
-    if: needs.get-changes.outputs.catalog == 'true'
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -260,7 +260,9 @@ jobs:
 
   catalog-checks:
     name: Run catalog checks
-    if: needs.get-changes.outputs.catalog == 'true'
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -293,7 +295,9 @@ jobs:
 
   test-ing:
     name: Run tests for ingestion-server
-    if: needs.get-changes.outputs.ingestion_server == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -337,7 +341,10 @@ jobs:
 
   test-api:
     name: Run tests for the API
-    if: needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -383,7 +390,9 @@ jobs:
 
   django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -440,10 +449,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api != 'true'
+    if: |
+      !cancelled() &&
+      needs.django-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - django-checks
     strategy:
       matrix:
         name:
@@ -462,7 +473,9 @@ jobs:
 
   nuxt-build:
     name: Check Nuxt build
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -480,13 +493,12 @@ jobs:
 
       - name: Run build
         run: just frontend/run build
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
   nuxt-checks:
     name: Run Nuxt checks
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -520,10 +532,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-nuxt-checks:
     name: Run Nuxt checks
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: |
+      !cancelled() &&
+      needs.nuxt-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - nuxt-checks
     strategy:
       fail-fast: false
       matrix:
@@ -537,7 +551,9 @@ jobs:
 
   playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -582,10 +598,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: |
+      !cancelled() &&
+      needs.playwright.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - playwright
     strategy:
       matrix:
         name:
@@ -602,10 +620,9 @@ jobs:
     if: |
       !cancelled() &&
       github.event_name == 'pull_request' &&
-      needs.get-changes.outputs.frontend == 'true'
+      needs.playwright.result != ''
     runs-on: ubuntu-latest
     needs:
-      - get-changes
       - playwright
 
     steps:
@@ -637,7 +654,9 @@ jobs:
 
           It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
 
-          You can read the [docs on how to use this artifact](https://docs.openverse.org/guides/frontend/playwright_tests.html#debugging).
+          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/playwright_tests.html#debugging).
+
+          If the test is flaky, follow the [flaky test triage procedure](https://docs.openverse.org/general/test.html#flaky-tests).
           $EOF
           HEREDOC
           )
@@ -662,6 +681,35 @@ jobs:
   # Documentation #
   #################
 
+  build-docs:
+    name: Build full-stack docs
+    if: |
+      needs.get-changes.outputs.documentation == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+
+      - name: Compile documentation
+        uses: ./.github/actions/build-docs
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        # Docs will be located at `/tmp/docs`.
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: /tmp/docs/
+
   emit-docs:
     name: Emit full-stack docs
     # https://github.com/actions/runner/issues/491#issuecomment-850884422
@@ -678,14 +726,12 @@ jobs:
           github.actor != 'dependabot[bot]'
         )
       ) &&
-      (
-        needs.get-changes.outputs.frontend == 'true' ||
-        needs.get-changes.outputs.documentation == 'true'
-      ) &&
+      needs.get-changes.outputs.documentation == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
       (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
+      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped') &&
+      needs.build-docs.result == 'success'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -693,20 +739,14 @@ jobs:
       - test-ing
       - test-api
       - nuxt-build
+      - build-docs
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-
-      - name: Compile documentation
-        uses: ./.github/actions/build-docs
+      - name: Download documentation
+        uses: actions/download-artifact@v3
         with:
-          glotpress_username: ${{ secrets.MAKE_USERNAME }}
-          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
-        # Docs will be located at `/tmp/docs`.
+          name: documentation
+          path: /tmp/docs
 
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
         run: |
@@ -842,6 +882,17 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get commit message
+        id: commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
       - name: Deploy staging frontend
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
@@ -852,7 +903,8 @@ jobs:
           client_payload: |
             {
               "actor": "${{ github.actor }}",
-              "tag": "${{ needs.get-image-tag.outputs.image_tag }}"
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
@@ -870,6 +922,17 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get commit message
+        id: commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
       - name: Deploy staging API
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
@@ -880,7 +943,8 @@ jobs:
           client_payload: |
             {
               "actor": "${{ github.actor }}",
-              "tag": "${{ needs.get-image-tag.outputs.image_tag }}"
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
@@ -897,13 +961,7 @@ jobs:
       github.event_name == 'push' &&
       github.repository == 'WordPress/openverse' &&
       (
-        (
-          (
-            needs.get-changes.outputs.frontend == 'true' ||
-            needs.get-changes.outputs.documentation == 'true'
-          ) &&
-          needs.emit-docs.result != 'success'
-        ) ||
+        (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
@@ -930,6 +988,7 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
         working-directory: automations/python/workflows
         run: python generate_report.py
 

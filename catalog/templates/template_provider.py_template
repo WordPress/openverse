@@ -89,19 +89,17 @@ class {provider}DataIngester(ProviderDataIngester):
         # - foreign_identifier
         # - foreign_landing_url
         # - license_info
-        # - image_url / audio_url
+        # - url
         #
-        # If a required field is missing, return early to prevent unnecesary
+        # If a required field is missing, return early to prevent unnecessary
         # processing.
-        if (foreign_identifier := data.get("foreign_id")) is None:
+        if not (foreign_identifier := data.get("foreign_id")):
             return None
 
-        if (foreign_landing_url := data.get("url")) is None:
+        if not (foreign_landing_url := data.get("foreign_landing_url")):
             return None
 
-        # TODO: Note the url field name differs depending on field type. Append
-        # `image_url` or `audio_url` depending on the type of record being processed.
-        if (image_url := data.get("image_url")) is None:
+        if not (url := data.get("url")):
             return None
 
         # Use the `get_license_info` utility to get license information from a URL.
@@ -136,7 +134,7 @@ class {provider}DataIngester(ProviderDataIngester):
 
         return {
             "foreign_landing_url": foreign_landing_url,
-            "image_url": image_url,
+            "url": url,
             "license_info": license_info,
             # Optional fields
             "foreign_identifier": foreign_identifier,

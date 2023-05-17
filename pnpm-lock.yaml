@@ -51,7 +51,7 @@ importers:
       '@tailwindcss/typography': ^0.5.9
       '@testing-library/dom': ^8.13.0
       '@testing-library/jest-dom': ^5.16.1
-      '@testing-library/user-event': ^13.5.0
+      '@testing-library/user-event': ^14.0.0
       '@testing-library/vue': ^5.8.2
       '@types/express-useragent': ^1.0.2
       '@types/jest': ^26.0.22
@@ -97,6 +97,7 @@ importers:
       focus-visible: ^5.2.0
       glob: ^8.0.1
       jest: ^26.6.3
+      jest-fail-on-console: ^3.1.1
       jest-transform-stub: ^2.0.0
       module-alias: ^2.2.2
       node-html-parser: ^5.3.3
@@ -192,7 +193,7 @@ importers:
       '@playwright/test': 1.30.0
       '@testing-library/dom': 8.13.0
       '@testing-library/jest-dom': 5.16.1
-      '@testing-library/user-event': 13.5.0_tlwynutqiyp5mns3woioasuxnq
+      '@testing-library/user-event': 14.4.3_tlwynutqiyp5mns3woioasuxnq
       '@testing-library/vue': 5.8.2_rhqkolmkwunxzlyyxxsuwaiuri
       '@types/express-useragent': 1.0.2
       '@types/jest': 26.0.24
@@ -222,6 +223,7 @@ importers:
       eslint-plugin-vue: 9.9.0_eslint@8.28.0
       eslint-plugin-vuejs-accessibility: 1.1.1_eslint@8.28.0
       jest: 26.6.3_ts-node@10.9.1
+      jest-fail-on-console: 3.1.1
       jest-transform-stub: 2.0.0
       module-alias: 2.2.2
       npm-run-all: 4.1.5
@@ -6149,13 +6151,12 @@ packages:
       redent: 3.0.0
     dev: true
 
-  /@testing-library/user-event/13.5.0_tlwynutqiyp5mns3woioasuxnq:
-    resolution: {integrity: sha512-5Kwtbo3Y/NowpkbRuSepbyMFkZmHgD+vPzYB/RJ4oxt5Gj/avFFBYjhw27cqSVPVw/3a67NK1PbiIr9k4Gwmdg==}
-    engines: {node: '>=10', npm: '>=6'}
+  /@testing-library/user-event/14.4.3_tlwynutqiyp5mns3woioasuxnq:
+    resolution: {integrity: sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==}
+    engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
     dependencies:
-      '@babel/runtime': 7.18.9
       '@testing-library/dom': 8.13.0
     dev: true
 
@@ -12908,6 +12909,12 @@ packages:
       '@types/node': 17.0.32
       jest-mock: 26.6.2
       jest-util: 26.6.2
+    dev: true
+
+  /jest-fail-on-console/3.1.1:
+    resolution: {integrity: sha512-g9HGhKcWOz8lHeZhLCXGg+RD/7upngiKkkBrHimsO/tGB0qi++QZffOgybjeI2bDW1qgdFiJJEG6t/WeTlfmOw==}
+    dependencies:
+      chalk: 4.1.2
     dev: true
 
   /jest-get-type/26.3.0:

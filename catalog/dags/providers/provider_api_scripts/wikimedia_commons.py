@@ -115,7 +115,7 @@ from types import MappingProxyType
 import lxml.html as html
 
 from common.constants import AUDIO, IMAGE
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -298,21 +298,22 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return None
 
     def get_record_data(self, record):
-        foreign_id = record.get("pageid")
+        if not (foreign_identifier := record.get("pageid")):
+            return None
 
         media_info = self.extract_media_info_dict(record)
 
-        valid_media_type = self.extract_media_type(media_info)
-        if not valid_media_type:
+        if not (valid_media_type := self.extract_media_type(media_info)):
             # Do not process unsupported media types, like Video
             return None
 
-        license_info = self.extract_license_info(media_info)
-        if license_info.url is None:
+        if not (license_info := self.extract_license_info(media_info)):
             return None
 
-        media_url = media_info.get("url")
-        if media_url is None:
+        if not (url := media_info.get("url")):
+            return None
+
+        if not (foreign_landing_url := media_info.get("descriptionshorturl")):
             return None
 
         creator, creator_url = self.extract_creator_info(media_info)
@@ -322,9 +323,9 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         meta_data = self.create_meta_data_dict(record)
 
         record_data = {
-            "media_url": media_url,
-            "foreign_landing_url": media_info.get("descriptionshorturl"),
-            "foreign_identifier": foreign_id,
+            "url": url,
+            "foreign_landing_url": foreign_landing_url,
+            "foreign_identifier": foreign_identifier,
             "license_info": license_info,
             "creator": creator,
             "creator_url": creator_url,
@@ -345,7 +346,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
     @staticmethod
     def get_image_record_data(record_data, media_info):
         """Extend record_data with image-specific fields."""
-        record_data["image_url"] = record_data.pop("media_url")
         if record_data["filetype"] == "svg":
             record_data["category"] = "illustration"
 
@@ -357,8 +357,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     def get_audio_record_data(self, record_data, media_info):
         """Extend record_data with audio-specific fields."""
-        record_data["audio_url"] = record_data.pop("media_url")
-
         duration = int(float(media_info.get("duration", 0)) * 1000)
         record_data["duration"] = duration
         record_data["category"] = self.extract_audio_category(record_data)
@@ -420,16 +418,14 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         }
 
     @staticmethod
-    def extract_media_info_dict(media_data):
+    def extract_media_info_dict(media_data) -> dict:
         media_info_list = media_data.get("imageinfo")
-        if media_info_list:
-            media_info = media_info_list[0]
-        else:
-            media_info = {}
-        return media_info
+        if media_info_list and isinstance(media_info_list, list):
+            return media_info_list[0]
+        return {}
 
     @staticmethod
-    def get_value_by_name(key_value_list: list, prop_name: str):
+    def get_value_by_name(key_value_list: list | None, prop_name: str):
         """Get the first value for the given prop_name in a list of key value pairs."""
         if key_value_list is None:
             key_value_list = []
@@ -489,7 +485,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         # Titles often have 'File:filename.jpg' form
         # We remove the 'File:' and extension from title
         title = WikimediaCommonsDataIngester.extract_ext_value(media_info, "ObjectName")
-        if title is None:
+        if not title:
             title = media_info.get("title")
         if title.startswith("File:"):
             title = title.replace("File:", "", 1)
@@ -542,7 +538,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         return None if filetype == "" else filetype
 
     @staticmethod
-    def extract_license_info(media_info):
+    def extract_license_info(media_info) -> LicenseInfo | None:
         license_url = (
             WikimediaCommonsDataIngester.extract_ext_value(media_info, "LicenseUrl")
             or ""
@@ -553,8 +549,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         #     if license_name.lower() in {"public_domain", "pdm-owner"}:
         #         pass
 
-        license_info = get_license_info(license_url=license_url.strip())
-        return license_info
+        return get_license_info(license_url=license_url.strip())
 
     @staticmethod
     def extract_geo_data(media_data):

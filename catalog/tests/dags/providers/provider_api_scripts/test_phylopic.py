@@ -104,10 +104,50 @@ def test_get_record_data():
         "license_info": license_info,
         "foreign_identifier": "5b1e88b5-159d-495d-b8cb-04f9e28d2f02",
         "foreign_landing_url": "https://www.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02?build=194",
-        "image_url": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/source.svg",
+        "url": "https://images.phylopic.org/images/5b1e88b5-159d-495d-b8cb-04f9e28d2f02/source.svg",
         "title": "Hemaris tityus",
         "creator": "Andy Wilson",
         "creator_url": "https://www.phylopic.org/contributors/c3ac6939-e85a-4a10-99d1-4079537f34de?build=194",
         "width": 2048,
         "height": 2048,
     }
+
+
+@pytest.mark.parametrize(
+    "property",
+    [
+        pytest.param("sourceFile", id="sourceFile-url"),
+        pytest.param("uuid", id="uuid-foreign_identifier"),
+        pytest.param("self", id="self-foreign_landing_url"),
+        pytest.param("license", id="license-license"),
+    ],
+)
+def test_get_record_data_returns_none_when_required_values_falsy(property):
+    data = get_json("sample_record.json")
+    if property == "uuid":
+        data[property] = ""
+    else:
+        data["_links"][property]["href"] = ""
+
+    image = pp.get_record_data(data)
+    assert image is None
+
+
+@pytest.mark.parametrize(
+    "property",
+    [
+        pytest.param("sourceFile", id="sourceFile-url"),
+        pytest.param("uuid", id="uuid-foreign_identifier"),
+        pytest.param("self", id="self-foreign_landing_url"),
+        pytest.param("license", id="license-license"),
+    ],
+)
+def test_get_record_data_returns_none_when_required_values_missing(property):
+    data = get_json("sample_record.json")
+    if property == "uuid":
+        data.pop(property)
+    else:
+        data["_links"].pop(property)
+
+    image = pp.get_record_data(data)
+    assert image is None

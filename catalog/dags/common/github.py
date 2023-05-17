@@ -54,6 +54,21 @@ class GitHubAPI:
             f"repos/{owner}/{repo}/issues/{issue_number}/comments",
         )
 
+    def get_issue_events(self, repo: str, issue_number: int, owner: str = "WordPress"):
+        # GitHub by default returns only 30 results, so we need to paginate over
+        # all of them to get the full list of events
+        # https://docs.github.com/en/rest/issues/events?apiVersion=2022-11-28#list-issue-events
+        page = 1
+        all_events = []
+        while events := self._make_request(
+            "GET",
+            f"repos/{owner}/{repo}/issues/{issue_number}/events",
+            params={"page": page},
+        ):
+            all_events.extend(events)
+            page += 1
+        return all_events
+
     def delete_issue_comment(
         self, repo: str, comment_id: int, owner: str = "WordPress"
     ):

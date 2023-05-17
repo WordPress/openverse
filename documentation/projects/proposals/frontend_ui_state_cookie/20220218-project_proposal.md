@@ -1,5 +1,7 @@
 # 2022-02-18 Project Propsal: Frontend UI State Cookie
 
+**Author**: @sarayourfriend
+
 - [x] @obulat
 - [x] @zackkrida
 

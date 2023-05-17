@@ -179,7 +179,7 @@ def test_get_record_data_handles_example_dict(filesize_mock):
     image_data = _get_resource_json("full_item.json")
     filesize_mock.return_value = 123456
     actual_image_info = stocksnap.get_record_data(image_data)
-    image_url = "https://cdn.stocksnap.io/img-thumbs/960w/7VAQUG1X3B.jpg"
+    url = "https://cdn.stocksnap.io/img-thumbs/960w/7VAQUG1X3B.jpg"
     expected_image_info = {
         "title": "Female Fitness",
         "creator": "Matt Moloney",
@@ -189,7 +189,7 @@ def test_get_record_data_handles_example_dict(filesize_mock):
         "license_info": get_license_info(
             license_url="https://creativecommons.org/publicdomain/zero/1.0/"
         ),
-        "image_url": image_url,
+        "url": url,
         "filesize": 123456,
         "filetype": "jpg",
         "height": 4000,

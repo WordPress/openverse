@@ -90,10 +90,21 @@ def test_get_should_continue(response_json, expected_result):
         pytest.param({}, None, id="empty_dict"),
         pytest.param(FULL_BATCH_RESPONSE, None, id="no_urls"),
         pytest.param(
+            {**SINGLE_ITEM, "foreign_landing_url": ""},
+            None,
+            id="falsy_foreign_landing_url",
+        ),
+        pytest.param(
+            {**SINGLE_ITEM, "foreign_identifier": ""},
+            None,
+            id="falsy_foreign_identifier",
+        ),
+        pytest.param({**SINGLE_ITEM, "url": ""}, None, id="falsy_url"),
+        pytest.param(
             SINGLE_ITEM,
             {
                 "foreign_landing_url": "https://nappy.co/photo/9/woman-with-tattoos",
-                "image_url": "https://images.nappy.co/uploads/large/101591721349meykm7s6hvaswwvslpjrwibeyzru1fcxtxh0hf09cs7kdhmtptef4y3k4ua5z1bkyrbxov8tmagnafm8upwa3hxaxururtx7azaf.jpg",
+                "url": "https://images.nappy.co/uploads/large/101591721349meykm7s6hvaswwvslpjrwibeyzru1fcxtxh0hf09cs7kdhmtptef4y3k4ua5z1bkyrbxov8tmagnafm8upwa3hxaxururtx7azaf.jpg",
                 "license_info": get_license_info(
                     "https://creativecommons.org/publicdomain/zero/1.0/"
                 ),

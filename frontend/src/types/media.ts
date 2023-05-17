@@ -101,3 +101,12 @@ export interface ImageDimensions {
 }
 
 export type AspectRatio = "square" | "intrinsic"
+
+export const isDetail = {
+  audio: (media: Media): media is AudioDetail => {
+    return media.frontendMediaType === "audio"
+  },
+  image: (media: Media): media is ImageDetail => {
+    return media.frontendMediaType === "image"
+  },
+}

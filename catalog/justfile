@@ -85,8 +85,8 @@ ipython: up-deps
         bash -c \'ipython\'
 
 # Launch a `pgcli` shell in the PostgreSQL container
-pgcli db_host="upstream_db" db_port="5432" db_name="openledger" db_user="airflow" db_password="airflow": up
-    just ../exec upstream_db pgcli postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+pgcli db_user_pass="deploy" db_name="openledger": up
+    just ../_pgcli upstream_db {{ db_user_pass }} {{ db_name }} upstream_db
 
 #########
 # Tests #

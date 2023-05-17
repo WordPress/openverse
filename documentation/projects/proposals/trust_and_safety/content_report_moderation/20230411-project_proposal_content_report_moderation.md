@@ -1,11 +1,13 @@
-# 2023-04-11 Project Proposal
+# 2023-04-11 Project Proposal: Sensitive content report moderation: initial practices
+
+**Author**: @sarayourfriend
 
 ## Reviewers
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] @zackkrida
-- [ ] @olgabulat
+- [x] @zackkrida
+- [x] @olgabulat
 
 ## Project summary
 
