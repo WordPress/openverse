@@ -1,6 +1,7 @@
 import logging
 import string
 
+import pytest
 import tldextract
 
 from common import urls
@@ -367,3 +368,56 @@ def test_ArrayColumn_of_IntegerColumn_prepare_string_returns_pg_array():
     actual_str = ac.prepare_string(given_list)
     expected_str = '{"1", "22", "3", "456"}'
     assert actual_str == expected_str
+
+
+@pytest.mark.parametrize(
+    "function, prefix, args, expected_output",
+    [
+        ("my_func", "", [], "my_func()"),
+        ("my_func", "EXCLUDED.", [], "my_func()"),
+        ("my_func", "", ["foo"], "my_func(foo)"),
+        ("my_func", "", ["foo", "bar"], "my_func(foo, bar)"),
+        ("my_func", "EXCLUDED.", ["foo"], "my_func(EXCLUDED.foo)"),
+        ("my_func", "EXCLUDED.", ["foo", "bar"], "my_func(EXCLUDED.foo, EXCLUDED.bar)"),
+        ("my_func", "", [1, 2, "foo"], "my_func(1, 2, foo)"),
+    ],
+)
+def test_calculate_value(function, prefix, args, expected_output):
+    actual_output = columns._calculate_value(function, prefix, *args)
+    assert actual_output == expected_output
+
+
+@pytest.mark.parametrize(
+    "input, expected_output",
+    [
+        # returns None for non-number strings
+        ("abc123", None),
+        # Returns string representation of float when possible
+        (2.34, "2.34"),
+        ("3.45", "3.45"),
+        (4, "4.0"),
+        ("5", "5.0"),
+    ],
+)
+def test_CalculatedColumn_prepare_string_nones_non_number_strings(
+    input, expected_output
+):
+    cc = columns.CalculatedColumn("test", False, [])
+    actual_output = cc.prepare_string(input)
+    assert actual_output == expected_output
+
+
+def test_CalculatedColumn_get_insert_value():
+    cc = columns.CalculatedColumn("test", required=False, sql_args=["foo", "bar"])
+    actual_insert_value = cc.get_insert_value(sql_function="my_func")
+
+    # _calculate_value is tested separately
+    assert actual_insert_value == "my_func(foo, bar)"
+
+
+def test_CalculatedColumn_get_update_value():
+    cc = columns.CalculatedColumn("test", required=False, sql_args=["foo", "bar"])
+    actual_insert_value = cc.get_update_value(sql_function="my_func")
+
+    # _calculate_value is tested separately
+    assert actual_insert_value == "test = my_func(EXCLUDED.foo, EXCLUDED.bar)"
