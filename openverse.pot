@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-05-15T15:35:56+00:00\n"
+"POT-Creation-Date: 2023-05-17T19:08:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,12 +41,12 @@ msgid "Search for content"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHomepageContent.vue:59
+#: src/components/VHomepageContent.vue:60
 msgctxt "hero.disclaimer.content"
 msgid "All ###openverse### content is under a ###license### or is in the public domain."
 msgstr ""
 
-#: src/components/VHomepageContent.vue:65
+#: src/components/VHomepageContent.vue:66
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
@@ -1222,12 +1222,12 @@ msgid_plural "Over ###localeCount### results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/VLoadMore.vue:65
+#: src/components/VLoadMore.vue:66
 msgctxt "browse-page.load"
 msgid "Load more results"
 msgstr ""
 
-#: src/components/VLoadMore.vue:64
+#: src/components/VLoadMore.vue:65
 msgctxt "browse-page.loading"
 msgid "Loading..."
 msgstr ""
@@ -1352,14 +1352,25 @@ msgid "remove filter"
 msgstr ""
 
 #: src/components/VFilters/VFilterChecklist.vue:26
-#: src/components/VFilters/VFilterChecklist.vue:33
-#: src/components/VFilters/VFilterChecklist.vue:132
+#: src/components/VFilters/VFilterChecklist.vue:34
+#: src/components/VFilters/VFilterChecklist.vue:133
 msgctxt "browse-page.aria.license-explanation"
 msgid "license explanation"
 msgstr ""
 
 msgctxt "browse-page.aria.creator"
 msgid "search by creator"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VSearchResultsGrid/VImageCell.vue:142
+msgctxt "browse-page.aria.image-title"
+msgid "Image: ###title###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.aria.audio-title"
+msgid "Audio: ###title###"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1891,18 +1902,18 @@ msgstr ""
 #: src/components/VAudioTrack/VAudioTrack.vue:476
 #: src/components/VAudioTrack/VGlobalAudioTrack.vue:71
 msgctxt "audio-track.aria-label"
-msgid "###title### - Audio Player"
+msgid "Audio: ###title###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "audio-track.aria-label-interactive"
+msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio"
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/VAudioTrack/VAudioTrack.vue:473
-msgctxt "audio-track.aria-label-interactive"
-msgid "###title### - audio player - press the spacebar to play and pause a preview of the audio"
-msgstr ""
-
-#. Do not translate words between ### ###.
 msgctxt "audio-track.aria-label-interactive-seekable"
-msgid "###title### - audio player - press the spacebar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track."
+msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track."
 msgstr ""
 
 msgctxt "audio-track.messages.err_aborted"
@@ -2058,7 +2069,7 @@ msgctxt "interpunct"
 msgid "•"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportPopover.vue:14
+#: src/components/VContentReport/VContentReportPopover.vue:15
 #: src/components/VExternalSearch/VExternalSourceList.vue:7
 #: src/components/VModal/VModalContent.vue:42
 msgctxt "modal.close"
@@ -2070,7 +2081,7 @@ msgid "Close the modal"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFilters/VFilterChecklist.vue:131
+#: src/components/VFilters/VFilterChecklist.vue:132
 msgctxt "modal.close-named"
 msgid "Close ###name###"
 msgstr ""
@@ -2080,7 +2091,7 @@ msgctxt "modal.close-content-settings"
 msgid "Close the content settings menu"
 msgstr ""
 
-#: src/components/VHeader/VHeaderInternal.vue:61
+#: src/components/VHeader/VHeaderInternal.vue:62
 msgctxt "modal.close-pages-menu"
 msgid "Close the pages menu"
 msgstr ""
