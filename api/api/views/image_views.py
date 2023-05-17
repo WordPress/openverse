@@ -118,7 +118,7 @@ class ImageViewSet(MediaViewSet):
         if "iip.smk.dk" in image_url and image.thumbnail:
             image_url = image.thumbnail
 
-        return super().thumbnail(image_url, request)
+        return super().thumbnail(request, image, image_url)
 
     @watermark_doc
     @action(detail=True, url_path="watermark", url_name="watermark")

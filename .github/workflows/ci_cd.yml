@@ -882,6 +882,17 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get commit message
+        id: commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
       - name: Deploy staging frontend
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
@@ -893,7 +904,7 @@ jobs:
             {
               "actor": "${{ github.actor }}",
               "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
-              "run_name": "${{ github.event.head_commit.message }}"
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
@@ -911,6 +922,17 @@ jobs:
       - get-image-tag
       - publish-images
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get commit message
+        id: commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
       - name: Deploy staging API
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
@@ -922,7 +944,7 @@ jobs:
             {
               "actor": "${{ github.actor }}",
               "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
-              "run_name": "${{ github.event.head_commit.message }}"
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
