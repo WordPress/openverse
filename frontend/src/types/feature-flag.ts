@@ -13,5 +13,7 @@ export interface FeatureFlag {
   defaultState?: FeatureState
   preferredState?: FeatureState // only set for switchable flag with known preference
 
+  supportsQuery?: boolean // default: true
+
   storage: Storage
 }

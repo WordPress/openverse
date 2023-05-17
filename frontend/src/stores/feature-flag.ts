@@ -188,8 +188,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
           // TODO: type `FlagName` should be inferred by TS
           const flagName = name.substring(3) as FlagName
           const flag = this.flags[flagName]
-          if (getFlagStatus(flag) === SWITCHABLE) {
-            flag.preferredState = state
+          if (
+            getFlagStatus(flag) === SWITCHABLE &&
+            flag.supportsQuery !== false
+          ) {
+            Vue.set(flag, "preferredState", state)
           }
         })
     },
