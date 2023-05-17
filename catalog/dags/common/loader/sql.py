@@ -7,6 +7,10 @@ from psycopg2.errors import InvalidTextRepresentation
 from common.constants import AUDIO, IMAGE, MediaType
 from common.loader import provider_details as prov
 from common.loader.paths import _extract_media_type
+from common.popularity.constants import (
+    STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
+    STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
+)
 from common.sql import PostgresHook
 from common.storage import columns as col
 from common.storage.columns import NULL, Column, UpsertStrategy
@@ -270,6 +274,7 @@ def upsert_records_to_db_table(
     db_table: str = None,
     media_type: str = IMAGE,
     tsv_version: str = CURRENT_TSV_VERSION,
+    popularity_function: str = STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
     task: AbstractOperator = None,
 ):
     """
@@ -290,6 +295,9 @@ def upsert_records_to_db_table(
     if db_table is None:
         db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
 
+    if media_type is AUDIO:
+        popularity_function = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
+
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Upserting new records into {db_table}.")
     postgres = PostgresHook(
@@ -302,17 +310,23 @@ def upsert_records_to_db_table(
     column_inserts = {}
     column_conflict_values = {}
     for column in db_columns:
+        args = []
+        if column.db_name == col.STANDARDIZED_POPULARITY.db_name:
+            args = [
+                popularity_function,
+            ]
+
         if column.upsert_strategy == UpsertStrategy.no_change:
-            column_inserts[column.db_name] = column.get_insert_value(media_type)
+            column_inserts[column.db_name] = column.get_insert_value()
         elif _is_tsv_column_from_different_version(column, media_type, tsv_version):
             column_inserts[column.db_name] = NULL
             column_conflict_values[column.db_name] = NULL
         else:
-            column_conflict_values[column.db_name] = column.get_update_value(media_type)
+            column_conflict_values[column.db_name] = column.get_update_value(*args)
             # The direct_url is handled specially to ensure uniqueness and
             # should not be added to the column_inserts.
             if not column.db_name == col.DIRECT_URL.name:
-                column_inserts[column.db_name] = column.get_insert_value(media_type)
+                column_inserts[column.db_name] = column.get_insert_value(*args)
 
     upsert_conflict_string = ",\n    ".join(column_conflict_values.values())
     upsert_query = dedent(

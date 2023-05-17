@@ -4,12 +4,6 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 from typing import NewType
 
-from common.constants import AUDIO, IMAGE, MediaType
-from common.popularity.constants import (
-    STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
-    STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-)
-
 
 logger = logging.getLogger(__name__)
 
@@ -43,13 +37,13 @@ Datatypes = NewType("Datatype", Datatype)
 UpsertStrategies = NewType("UpsertStrategy", UpsertStrategy)
 
 
-def _calculate_value(column: str, function: str, prefix: str, *args) -> str:
+def _calculate_value(function: str, prefix: str, *args) -> str:
     """
     Return SQL to calculate the value by calling the given
     function with the given args.
     """
     if args:
-        arguments = (",").join([prefix + str(arg) for arg in args])
+        arguments = (", ").join([prefix + str(arg) for arg in args])
         return f"{function}({arguments})"
 
     # Handle function with no args
@@ -281,7 +275,6 @@ class CalculatedColumn(Column):
         self,
         name: str,
         required: bool,
-        sql_functions: dict[MediaType, str],
         sql_args: list[str] | None = None,
         constraint: str | None = None,
         db_name: str | None = None,
@@ -294,10 +287,9 @@ class CalculatedColumn(Column):
             constraint=constraint,
             db_name=db_name,
         )
-        self.sql_functions = sql_functions
         self.sql_args = sql_args
 
-    def get_insert_value(self, media_type, prefix=""):
+    def get_insert_value(self, sql_function, prefix=""):
         """
         Return the string used for this column in an INSERT statement.
 
@@ -306,16 +298,9 @@ class CalculatedColumn(Column):
 
         `standardized_image_popularity(provider, meta_data)`
         """
-        if not (sql_function := self.sql_functions.get(media_type)):
-            logger.warning(
-                f"No SQL function configured for {self.name} for media type"
-                f" {media_type}; setting to NULL during upsert"
-            )
-            return NULL
+        return _calculate_value(sql_function, prefix, *self.sql_args)
 
-        return _calculate_value(self.db_name, sql_function, prefix, *self.sql_args)
-
-    def get_update_value(self, media_type):
+    def get_update_value(self, sql_function):
         """
         Return the string used for this column in an UPDATE statement, when there is
         a conflict during INSERT.
@@ -333,7 +318,7 @@ class CalculatedColumn(Column):
         ```
         )
         """
-        function_call = self.get_insert_value(media_type, prefix="EXCLUDED.")
+        function_call = self.get_insert_value(sql_function, prefix="EXCLUDED.")
         return f"{self.db_name} = {function_call}"
 
     def prepare_string(self, value):
@@ -776,9 +761,5 @@ FILETYPE = StringColumn(name="filetype", required=False, truncate=False, size=5)
 STANDARDIZED_POPULARITY = CalculatedColumn(
     name="standardized_popularity",
     required=False,
-    sql_functions={
-        AUDIO: STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
-        IMAGE: STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    },
     sql_args=[PROVIDER.db_name, META_DATA.db_name],
 )
