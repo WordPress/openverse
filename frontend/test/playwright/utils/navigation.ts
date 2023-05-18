@@ -239,10 +239,11 @@ export const currentContentType = async (page: Page) => {
   return currentContentType
 }
 
-export const dismissTranslationBannersUsingCookies = async (page: Page) => {
-  const uiDismissedBanners = ["ru", "en", "ar", "es"].map(
-    (lang) => `translation-${lang}`
-  )
+export const dismissAllBannersUsingCookies = async (page: Page) => {
+  const uiDismissedBanners = [
+    ...["ru", "en", "ar", "es"].map((lang) => `translation-${lang}`),
+    "analytics",
+  ]
   await setCookies(page.context(), { uiDismissedBanners })
 }
 
@@ -251,9 +252,23 @@ export const dismissTranslationBannersUsingCookies = async (page: Page) => {
  * so the page should finish rendering before calling `dismissTranslationBanner`.
  */
 export const dismissTranslationBanner = async (page: Page) => {
-  await dismissTranslationBannersUsingCookies(page)
+  await dismissAllBannersUsingCookies(page)
   const bannerCloseButton = page.locator(
     '[data-testid="banner-translation"] button'
+  )
+  if (await bannerCloseButton.isVisible()) {
+    await bannerCloseButton.click()
+  }
+}
+
+/**
+ * Dismisses the analytics banner if it is visible. It does not wait for the banner to become visible,
+ * so the page should finish rendering before calling `dismissAnalyticsBanner`.
+ */
+export const dismissAnalyticsBanner = async (page: Page) => {
+  await dismissAllBannersUsingCookies(page)
+  const bannerCloseButton = page.locator(
+    '[data-testid="banner-analytics"] button'
   )
   if (await bannerCloseButton.isVisible()) {
     await bannerCloseButton.click()
@@ -274,6 +289,7 @@ export const selectHomepageSearchType = async (
 }
 
 export const dismissBannersUsingCookies = async (page: Page) => {
+  await dismissAnalyticsBanner(page)
   await dismissTranslationBanner(page)
 }
 
@@ -380,6 +396,14 @@ export const pathWithDir = (rawPath: string, dir: string) => {
 
 export interface CookieMap {
   [key: string]: string | boolean | string[] | CookieMap
+}
+
+export const getCookies = async (
+  context: BrowserContext,
+  name: string
+): Promise<string> => {
+  const cookies = await context.cookies()
+  return cookies.find((cookie) => cookie.name === name)?.value ?? "[]"
 }
 
 export const setCookies = async (

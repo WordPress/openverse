@@ -2,6 +2,7 @@ import { test } from "@playwright/test"
 
 import {
   dismissTranslationBanner,
+  dismissAnalyticsBanner,
   languageDirections,
   pathWithDir,
 } from "~~/test/playwright/utils/navigation"
@@ -14,6 +15,7 @@ for (const dir of languageDirections) {
       page,
     }) => {
       await dismissTranslationBanner(page)
+      await dismissAnalyticsBanner(page)
       await page.goto(
         pathWithDir("/search/audio/?q=honey&length=shortest", dir)
       )
