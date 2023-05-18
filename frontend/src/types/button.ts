@@ -3,10 +3,7 @@ export const buttonForms = ["VLink", "button"] as const
 export type ButtonForm = typeof buttonForms[number]
 
 export const buttonVariants = [
-  "secondary",
   "secondary-bordered",
-  "secondary-filled",
-  "menu",
   "text",
   "plain",
   "plain--avoid",
