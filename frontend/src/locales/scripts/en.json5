@@ -692,11 +692,11 @@
     groups: {
       analytics: {
         title: "Analytics",
-        desc: "Participate in anonymous analytics to improve user experience.",
+        desc: "Openverse uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here.",
       },
     },
     features: {
-      analytics: "Record custom events and page views.",
+      analytics: "Record custom events and page views for analytics.",
     },
     "non-switchable": {
       title: "Non-switchable features",
