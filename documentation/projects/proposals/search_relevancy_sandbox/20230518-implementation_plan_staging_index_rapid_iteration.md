@@ -23,7 +23,7 @@
 
 <!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
 
-This document describes a DAG (and associated machinery) which can be used to
+This document describes a DAG (and associated dependencies) which can be used to
 generate a new index in Elasticsearch without requiring a data refresh,
 ingestion server deployment, or any interaction with the ingestion server.
 
@@ -31,8 +31,8 @@ ingestion server deployment, or any interaction with the ingestion server.
 
 <!-- List any succinct expected products from this implementation plan. -->
 
-Once this implementation is complete, a maintainer should be able to run this
-DAG to create a new index on either elasticsearch environment with an altered
+Once the implementation is complete, a maintainer should be able to run this DAG
+to create a new index on either elasticsearch environment with an altered
 configuration. The maintainer should only need to specify the pieces of the
 configuration that are different from the default configuration, although they
 can supply a full configuration if they wish. The DAG will report when it is
@@ -44,7 +44,7 @@ The following are prerequisites for the DAG:
 
 - Installation of the
   [`elasticsearch` Airflow provider package](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/)
-- Airflow Connections to each Elasticsearch cluster
+- Airflow Connections for each Elasticsearch cluster
 - Sharing of the
   [`es_mappings.py` configuration](https://github.com/WordPress/openverse/blob/0a5f4ab2ce5d80a48bd1c57d2a2dbcca14fcbedc/ingestion_server/ingestion_server/es_mapping.py)
 
@@ -52,7 +52,7 @@ The following are prerequisites for the DAG:
 
 The
 [`elasticsearch` provider](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/)
-will need to be added to the list of dependencies for our catalog container.
+will need to be added to the list of dependencies for our catalog Docker image.
 This will be done first and deployed on its own, as the connections will be
 needed for the rest of the work.
 
@@ -81,12 +81,12 @@ any additional Python dependencies, but does not exist in a form that can be
 imported by the DAG. To make this configuration available to the DAG, we will
 add the `es_mapping.py` file to the
 [`sync.yml` workflow configuration](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/.github/sync.yml)
-to keep the file up-to-date across both services.
+to keep the file up-to-date across both services. The destination for this sync
+could be `catalog/dags/common/elasticsearch/es_mapping.py`.
 
 It would be trivial for local development to use a symlink, but all of our
-services run both locally and in production within Docker containers.
-Unfortunately, symlinks are generally difficult (or impractical) to set up
-within Docker[^1].
+services run within Docker containers. Unfortunately, symlinks are generally
+difficult (or impractical) to set up within Docker[^1].
 
 [^1]:
     [Stack Overflow: Mount host directory with a symbolic link inside in docker container](https://stackoverflow.com/a/40322275/3277713)
@@ -112,21 +112,23 @@ discussed in [issue #2070](https://github.com/WordPress/openverse/issues/2070).
 <!-- Describe the implementation step necessary for completion. -->
 
 Once the prerequisites above have been filled, the DAG can be created. This DAG
-will be named `create_new_es_index`, and will have the following parameters and
-steps.
+will be named `create_new_es_index`, and will have the parameters and steps
+described below. It will have a schedule of `None` so that it is only run when
+triggered.
 
 ### Parameters
 
 1. `media_type`: The media type for which the index is being created. Presently
    this would only be `image` or `audio`.
 2. `environment`: The Elasticsearch environment to operate against. Options are
-   `production` and `staging`.
+   `production` and `staging` (and will be mapped to the appropriate
+   Elasticsearch connection).
 3. `index_config`: A JSON object containing the configuration for the new index.
    The values in this object will be merged with the existing configuration,
    where the value specified at a leaf key in the object will override the
-   existing value. This can also be the entire index configuration, in which
-   case the existing configuration will be replaced entirely (see
-   `override_config` parameter below).
+   existing value (see [Merging policy](#merging-policy) below). This can also
+   be the entire index configuration, in which case the existing configuration
+   will be replaced entirely (see `override_config` parameter below).
 4. `index_suffix`: (Optional) The name suffix of the new index to create. This
    will be a string, and will be used to name the index in Elasticsearch of the
    form `{media_type}-{index_suffix}`. If not provided, the suffix will be a
@@ -280,7 +282,7 @@ extra dependency for this step is possible.
 
 Instead of using a self-referential sync operation, we could read or pull the
 `es_mapping.py` file directly from GitHub (e.g.
-https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py).
+[https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py)).
 This would require that GitHub be available, and (in order to ensure the most
 up-to-date version is being used) could cause issues if the file is moved to a
 different location. Since this would create unnecessary dependencies on an
@@ -299,38 +301,57 @@ approach was abandoned when @sarayourfriend suggested
 
 <!-- Note any design requirements for this plan. -->
 
+No new design work is required for this plan.
+
 ## Parallelizable streams
 
 <!-- What, if any, work within this plan can be parallelized? -->
+
+The addition of the Elasticsearch provider is a blocker for the rest of the work
+described here, sans the `es_mapping.py` sync. The sync change can occur at any
+time, all other work must be done serially.
 
 ## Blockers
 
 <!-- What hard blockers exist which might prevent further work on this project? -->
 
+There are no external blockers to this project.
+
 ## API version changes
 
 <!-- Explore or mention any changes to the API versioning scheme. -->
+
+No API verison changes should be necessary.
 
 ## Accessibility
 
 <!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
 
+No accessibility concerns are expected.
+
 ## Rollback
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-## Privacy
-
-<!-- How does this approach protect users' privacy? -->
-
-## Localization
-
-<!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
+Rollback would likely involve deleting the DAG. The `es_mapping.py`, provider
+dependency, and Elasticsearch connections are all likely to be useful in the
+future, so it may behoove us to keep them even if the DAG is deleted.
 
 ## Risks
 
 <!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
 
+This approach does allow for maintainers to affect production resources, so the
+same care should be taken when triggering this DAG as with triggering a
+deployment. The described DAG will only ever create new indices, and so there is
+no risk losing or affecting the production indices.
+
 ## Prior art
 
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+
+- [Discussion about the approach on the original project proposal](https://github.-com/WordPress/openverse/pull/1107#discussion_r1155399508)
+- [`jsonmerge` Python package](https://pypi.org/project/jsonmerge/)
+- [Elasticsearch reindex API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html)
+- [Airflow Elasticsearch Provider](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/)
+- [`create_and_populate_filtered_index` Pull Request](https://github.com/WordPress/openverse/pull/1202)
