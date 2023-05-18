@@ -5,7 +5,7 @@
     :aria-label="resultsAriaLabel"
     variant="bordered-gray"
     size="disabled"
-    class="h-auto w-full flex-col !items-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
+    class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
