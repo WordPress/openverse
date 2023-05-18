@@ -3,10 +3,12 @@
     <div v-show="showBanners" class="flex flex-col gap-2 p-2 pb-0">
       <VMigrationNotice
         v-if="shouldShowMigrationBanner"
+        :variant="variant"
         @close="dismissBanner('cc-referral')"
       />
       <VTranslationStatusBanner
         v-if="shouldShowTranslationBanner"
+        :variant="variant"
         :banner-key="translationBannerId"
         @close="dismissBanner(translationBannerId)"
       />
@@ -18,7 +20,9 @@
 import { computed, defineComponent } from "vue"
 
 import { useUiStore } from "~/stores/ui"
-import type { TranslationBannerId } from "~/types/banners"
+import usePages from "~/composables/use-pages"
+
+import type { TranslationBannerId, BannerId } from "~/types/banners"
 
 export default defineComponent({
   name: "VBanners",
@@ -40,7 +44,12 @@ export default defineComponent({
       () => uiStore.translationBannerId
     )
 
-    const dismissBanner = (bannerKey: TranslationBannerId) => {
+    const { current: currentPage } = usePages()
+    const variant = computed(() =>
+      currentPage.value === "index" ? "dark" : "regular"
+    )
+
+    const dismissBanner = (bannerKey: BannerId) => {
       uiStore.dismissBanner(bannerKey)
     }
 
@@ -54,6 +63,7 @@ export default defineComponent({
       shouldShowTranslationBanner,
       showBanners,
       dismissBanner,
+      variant,
     }
   },
 })
