@@ -81,7 +81,6 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import featureData from "~~/feat/feature-flags.json"
 
@@ -99,7 +98,6 @@ export default defineComponent({
   },
   layout: "content-layout",
   setup() {
-    const { $cookies } = useContext()
     const featureFlagStore = useFeatureFlagStore()
 
     const flags = computed(() => featureFlagStore.flags)
@@ -117,7 +115,6 @@ export default defineComponent({
       checked: boolean
     }) => {
       featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-      $cookies.set("features", featureFlagStore.flagStateMap)
     }
 
     return {

@@ -61,12 +61,8 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  useMeta,
-  useContext,
-} from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -81,7 +77,6 @@ export default defineComponent({
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
-    const { $cookies } = useContext()
     const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
@@ -97,7 +92,6 @@ export default defineComponent({
 
     const handleChange = ({ checked }: { checked: boolean }) => {
       featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
-      $cookies.set("features", featureFlagStore.flagStateMap)
     }
 
     return {
