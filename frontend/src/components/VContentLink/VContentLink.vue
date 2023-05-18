@@ -1,27 +1,23 @@
 <template>
-  <!-- VLink handles rendering a disabled element when `href` is undefined. -->
-  <VLink
-    :href="hasResults ? to : undefined"
-    class="flex w-full flex-col items-start overflow-hidden rounded-sm border border-dark-charcoal/20 bg-white py-4 pe-12 ps-4 md:flex-row md:items-center md:justify-between md:p-6"
-    :class="
-      hasResults
-        ? ' text-dark-charcoal hover:bg-dark-charcoal hover:text-white hover:no-underline focus:border-tx focus:outline-none focus-visible:ring focus-visible:ring-pink'
-        : 'cursor-not-allowed text-dark-charcoal/40'
-    "
+  <VButton
+    as="VLink"
+    :href="to"
+    :aria-label="resultsAriaLabel"
+    variant="bordered-gray"
+    size="disabled"
+    class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
-    <div class="flex flex-col items-start md:flex-row md:items-center">
-      <VIcon :name="mediaType" />
-      <p class="hidden pt-1 font-semibold md:block md:ps-2 md:pt-0 md:text-2xl">
-        {{ $t(`search-type.see-${mediaType}`) }}
-      </p>
-      <p class="block pt-1 font-semibold md:hidden md:ps-2 md:pt-0 md:text-2xl">
-        {{ $t(`search-type.${mediaType}`) }}
-      </p>
-    </div>
-    <span class="text-sr">{{ resultsCountLabel }}</span>
-  </VLink>
+    <VIcon :name="mediaType" />
+    <p class="label-bold sm:description-bold mt-1 sm:mt-0">
+      {{ $t(`search-type.${mediaType}`) }}
+    </p>
+    <span
+      class="label-regular sm:description-regular text-dark-charcoal-70 group-hover/button:text-dark-charcoal sm:ms-auto"
+      >{{ resultsCountLabel }}</span
+    >
+  </VButton>
 </template>
 
 <script lang="ts">
@@ -36,18 +32,25 @@ import { defineEvent } from "~/types/emits"
 
 import useSearchType from "~/composables/use-search-type"
 
+import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
   name: "VContentLink",
-  components: { VIcon, VLink },
+  components: { VIcon, VButton },
   props: {
     /**
      * One of the media types supported.
      */
     mediaType: {
       type: String as PropType<SupportedMediaType>,
+      required: true,
+    },
+    /**
+     * Current search term for aria-label.
+     */
+    searchTerm: {
+      type: String,
       required: true,
     },
     /**
@@ -69,9 +72,16 @@ export default defineComponent({
     "shift-tab": defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
-    const { getI18nCount } = useI18nResultsCount()
-    const hasResults = computed(() => props.resultsCount > 0)
+    const { getI18nCount, getI18nContentLinkLabel } = useI18nResultsCount()
     const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
+
+    const resultsAriaLabel = computed(() =>
+      getI18nContentLinkLabel(
+        props.resultsCount,
+        props.searchTerm,
+        props.mediaType
+      )
+    )
 
     const { activeType } = useSearchType()
     const analytics = useAnalytics()
@@ -86,7 +96,7 @@ export default defineComponent({
 
     return {
       resultsCountLabel,
-      hasResults,
+      resultsAriaLabel,
 
       handleClick,
     }

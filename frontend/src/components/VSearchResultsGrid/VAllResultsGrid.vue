@@ -1,10 +1,14 @@
 <template>
   <div>
-    <div v-if="!noResults" class="results-grid mb-4 grid grid-cols-2 gap-x-4">
+    <div
+      v-if="!noResults"
+      class="results-grid mb-4 mt-2 grid grid-cols-2 gap-4 md:mt-0"
+    >
       <VContentLink
         v-for="[mediaType, count] in resultCounts"
         :key="mediaType"
         :media-type="mediaType"
+        :search-term="searchTerm"
         :results-count="count"
         :to="contentLinkPath(mediaType)"
       />
