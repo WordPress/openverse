@@ -6,6 +6,11 @@
         :variant="variant"
         @close="dismissBanner('cc-referral')"
       />
+      <VAnalyticsNotice
+        v-if="shouldShowAnalyticsBanner"
+        :variant="variant"
+        @close="dismissBanner('analytics')"
+      />
       <VTranslationStatusBanner
         v-if="shouldShowTranslationBanner"
         :variant="variant"
@@ -30,6 +35,7 @@ export default defineComponent({
     VMigrationNotice: () => import("~/components/VBanner/VMigrationNotice.vue"),
     VTranslationStatusBanner: () =>
       import("~/components/VBanner/VTranslationStatusBanner.vue"),
+    VAnalyticsNotice: () => import("~/components/VBanner/VAnalyticsNotice.vue"),
   },
   setup() {
     const uiStore = useUiStore()
@@ -38,6 +44,9 @@ export default defineComponent({
     )
     const shouldShowTranslationBanner = computed(
       () => uiStore.shouldShowTranslationBanner
+    )
+    const shouldShowAnalyticsBanner = computed(
+      () => uiStore.shouldShowAnalyticsBanner
     )
 
     const translationBannerId = computed<TranslationBannerId>(
@@ -53,14 +62,19 @@ export default defineComponent({
       uiStore.dismissBanner(bannerKey)
     }
 
-    const showBanners = computed(
-      () => shouldShowMigrationBanner.value || shouldShowTranslationBanner.value
+    const showBanners = computed(() =>
+      [
+        shouldShowMigrationBanner.value,
+        shouldShowTranslationBanner.value,
+        shouldShowAnalyticsBanner.value,
+      ].some((item) => item)
     )
 
     return {
       translationBannerId,
       shouldShowMigrationBanner,
       shouldShowTranslationBanner,
+      shouldShowAnalyticsBanner,
       showBanners,
       dismissBanner,
       variant,
