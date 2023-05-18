@@ -18,7 +18,7 @@
 import { computed, defineComponent } from "vue"
 
 import { useUiStore } from "~/stores/ui"
-import type { TranslationBannerId } from "~/types/banners"
+import type { BannerId, TranslationBannerId } from "~/types/banners"
 
 export default defineComponent({
   name: "VBanners",
@@ -40,7 +40,7 @@ export default defineComponent({
       () => uiStore.translationBannerId
     )
 
-    const dismissBanner = (bannerKey: TranslationBannerId) => {
+    const dismissBanner = (bannerKey: BannerId) => {
       uiStore.dismissBanner(bannerKey)
     }
 

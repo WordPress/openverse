@@ -9,6 +9,7 @@
         ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
         : 'grid-cols-1',
     ]"
+    :style="bannerHeight"
   >
     <div class="header-el sticky top-0 z-40 block bg-white">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
@@ -26,7 +27,7 @@
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar fixed end-0 z-10 mt-[80px] h-[calc(100dvh-80px)] h-[calc(100vh-80px)] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
+      class="sidebar h-[calc(100vh-5rem -var(--banner-height,0))] fixed end-0 z-10 mt-[calc(5rem+var(--banner-height,0))] h-[calc(100dvh-5rem-var(--banner-height,0))] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
     >
       <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
     </aside>
@@ -127,6 +128,17 @@ export default defineComponent({
         isDesktopLayout.value
     )
 
+    const bannerHeight = computed(() => {
+      let height = 0
+      if (uiStore.shouldShowMigrationBanner) {
+        height += 4
+      }
+      if (uiStore.shouldShowTranslationBanner) {
+        height += 4
+      }
+      return "--banner-height: " + height + "rem;"
+    })
+
     const closeSidebar = () => {
       uiStore.setFiltersState(false)
     }
@@ -149,6 +161,8 @@ export default defineComponent({
       isSearchRoute,
       isSearchHeader,
       breakpoint,
+
+      bannerHeight,
 
       closeSidebar,
     }
