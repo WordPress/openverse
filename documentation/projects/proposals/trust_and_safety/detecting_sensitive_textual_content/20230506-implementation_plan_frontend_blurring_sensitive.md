@@ -115,8 +115,16 @@ everywhere.
 The second toggle in the mockups that determines whether to blur the sensitive
 results (let's refer to as `blur_sensitive`) is an ephemeral toggle that is
 off + disabled when `fetch_sensitive` is off and enabled only when
-`fetch_sensitive` is on. It is stored temporarily in the state and resets to off
+`fetch_sensitive` is on.
+
+It will be stored in Pinia so that it can be accessed by the components of
+search result cells and blur button in single result view. The UI store would be
+a good place to store the value of this toggle. However, unlike other values in
+the UI store, it would not be persisted to a cookie and instead would be reset
 on a hard refresh.
+
+Note that the hide button that appears on an unblurred single result page is
+gone if the user has completely disabled blurring from the search sidebar.
 
 ### Step 3: Updating search store
 
