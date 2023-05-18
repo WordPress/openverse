@@ -225,6 +225,30 @@ Other than the above mentioned, I do not foresee any accessibility concerns
 because all other components have clear, well-defined interactions using
 standard HTML components.
 
+## Analytics
+
+The proposal suggests
+[4 analytics events](https://docs.openverse.org/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html#id3)
+to help us understand the impact and utility of these safety features.
+
+The first two are sent by the respective toggle buttons in the search sidebar.
+Statistics from them will give us an insight into the users preferences for
+accessing and viewing (respectively) sensitive content.
+
+The other two are sent from the single result page, which gives us an idea of
+how suggestive/informative the blurred images are when the user has not opted to
+see sensitive content from the search results. They will not appear unless the
+user has blurred images in search results and then chosen to visit a sensitive
+image. The latter two will also give us insight about shared links which lead to
+sensitive content.
+
+| Event                      | Component                               |
+| -------------------------- | --------------------------------------- |
+| `TOGGLE_SENSITIVE_RESULTS` | `fetch_sensitive` toggle                |
+| `TOGGLE_DO_NOT_BLUR`       | `blur_sensitive` toggle                 |
+| `UNBLUR_SENSITIVE_RESULT`  | Content safety wall, unblur button      |
+| `REBLUR_SENSITIVE_RESULT`  | Single result page, hide content button |
+
 ## Rollback
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
