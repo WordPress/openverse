@@ -43,7 +43,7 @@ def _calculate_value(function: str, prefix: str, *args) -> str:
     function with the given args.
     """
     if args:
-        arguments = (", ").join([prefix + str(arg) for arg in args])
+        arguments = ", ".join([prefix + str(arg) for arg in args])
         return f"{function}({arguments})"
 
     # Handle function with no args
@@ -243,7 +243,7 @@ class IntegerColumn(Column):
         """
         Return a string representation to the best integer approx of input.
 
-        If there is no sane mapping from the input to an integer,
+        If there is no reasonable mapping from the input to an integer,
         returns None.
 
         value: for useful output this should be reasonably castable to an int.
@@ -265,8 +265,6 @@ class CalculatedColumn(Column):
     required:  whether the column should be considered required by the
                instantiating script.  (Not necessarily mapping to
                `not null` columns in the PostgreSQL table)
-    sql_functions: a dict mapping media type to the name of the SQL function
-                   that should be used to calculate the column value
     sql_args:  optionally, a list of string arguments passed to the SQL
                function used to calculate the column value
     """
@@ -316,7 +314,6 @@ class CalculatedColumn(Column):
             EXCLUDED.provider, EXCLUDED.meta_data
         )
         ```
-        )
         """
         function_call = self.get_insert_value(sql_function, prefix="EXCLUDED.")
         return f"{self.db_name} = {function_call}"
@@ -325,7 +322,7 @@ class CalculatedColumn(Column):
         """
         Return a string representation to the best float approx of input.
 
-        If there is no sane mapping from the input to a float,
+        If there is no reasonable mapping from the input to a float,
         returns None.
 
         value: for useful output this should be reasonably castable to a float.
@@ -372,7 +369,7 @@ class BooleanColumn(Column):
         """
         Return a string `t` or `f`, as appropriate to input.
 
-        If there is no sane mapping from the input to a boolean,
+        If there is no reasonable mapping from the input to a boolean,
         returns None.
 
         value: for useful output this should be reasonably castable to a bool.

@@ -397,6 +397,8 @@ def test_calculate_value(function, prefix, args, expected_output):
         ("3.45", "3.45"),
         (4, "4.0"),
         ("5", "5.0"),
+        # Maximally preserves sigfigs
+        (1.123456789012345678901234567890, "1.1234567890123457"),
     ],
 )
 def test_CalculatedColumn_prepare_string_nones_non_number_strings(
