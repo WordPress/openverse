@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-05-17T19:08:41+00:00\n"
+"POT-Creation-Date: 2023-05-18T14:32:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1217,10 +1217,40 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.all-result-count-more"
-msgid "Over ###localeCount### result"
-msgid_plural "Over ###localeCount### results"
+msgid "Over ###localeCount### results"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.contentLink.image.zero"
+msgid "No images found for ###query###."
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.contentLink.image.count"
+msgid "See ###localeCount### image found for ###query###"
+msgid_plural "See ###localeCount### images found for ###query###."
 msgstr[0] ""
 msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.contentLink.image.countMore"
+msgid "See over ###localeCount### images found for ###query###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.contentLink.audio.zero"
+msgid "No audio found for ###query###."
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.contentLink.audio.count"
+msgid "See ###localeCount### audio found for ###query###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browse-page.contentLink.audio.countMore"
+msgid "See over ###localeCount### audio found for ###query###"
+msgstr ""
 
 #: src/components/VLoadMore.vue:66
 msgctxt "browse-page.load"
@@ -1233,7 +1263,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:108
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:112
 msgctxt "browse-page.fetching-error"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -1263,7 +1293,7 @@ msgctxt "browse-page.search-form.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:107
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:111
 msgctxt "browse-page.search-form.audio"
 msgid "audio"
 msgstr ""
@@ -1374,7 +1404,7 @@ msgid "Audio: ###title###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:31
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:35
 #: src/pages/search/audio.vue:20
 #: src/pages/search/image.vue:6
 msgctxt "browse-page.aria.results"
@@ -1757,12 +1787,12 @@ msgid "Get this audio"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:13
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:17
 msgctxt "all-results.snackbar.text"
 msgid "Press ###spacebar### to play or pause the track."
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:15
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:19
 msgctxt "all-results.snackbar.spacebar"
 msgid "Spacebar"
 msgstr ""
