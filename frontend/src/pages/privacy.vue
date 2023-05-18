@@ -49,7 +49,7 @@
     <VCheckbox
       id="analytics"
       class="flex-row items-center"
-      :checked="featureState('analytics') === ON"
+      :checked="isChecked"
       is-switch
       @change="handleChange"
     >
@@ -61,10 +61,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta, useContext } from "@nuxtjs/composition-api"
+import {
+  computed,
+  defineComponent,
+  useMeta,
+  useContext,
+} from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
-import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON, OFF } from "~/constants/feature-flag"
 
 import VLink from "~/components/VLink.vue"
@@ -86,16 +91,18 @@ export default defineComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
+    const isChecked = computed(
+      () => featureFlagStore.featureState("analytics") === ON
+    )
+
     const handleChange = ({ checked }: { checked: boolean }) => {
       featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
       $cookies.set("features", featureFlagStore.flagStateMap)
     }
 
     return {
-      ON,
+      isChecked,
       handleChange,
-      getFlagStatus,
-      featureState: featureFlagStore.featureState,
     }
   },
   head: {},
