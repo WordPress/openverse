@@ -16,7 +16,9 @@
         {{ $t(`pref-page.groups.${group.title}.title`) }}
       </h2>
       <p class="label-regular mb-4">
-        {{ $t(`pref-page.groups.${group.title}.desc`) }}
+        {{
+          $t(`pref-page.groups.${group.title}.desc`, { openverse: "Openverse" })
+        }}
       </p>
       <ul>
         <li

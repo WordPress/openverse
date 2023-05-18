@@ -692,7 +692,7 @@
     groups: {
       analytics: {
         title: "Analytics",
-        desc: "Openverse uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here.",
+        desc: "{openverse} uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here.",
       },
     },
     features: {

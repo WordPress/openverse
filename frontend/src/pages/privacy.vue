@@ -44,7 +44,9 @@
 
     <h2>{{ $t("pref-page.groups.analytics.title") }}</h2>
 
-    <p>{{ $t("pref-page.groups.analytics.desc") }}</p>
+    <p>
+      {{ $t("pref-page.groups.analytics.desc", { openverse: "Openverse" }) }}
+    </p>
 
     <VCheckbox
       id="analytics"
