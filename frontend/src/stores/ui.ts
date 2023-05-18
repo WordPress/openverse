@@ -116,6 +116,15 @@ export const useUiStore = defineStore("ui", {
         navigationStore.isReferredFromCc
       )
     },
+    /**
+     * The count of the shown banners. Necessary to set the height and margin of the sidebar.
+     */
+    shownBannersCount(): number {
+      return (
+        Number(this.shouldShowTranslationBanner) +
+        Number(this.shouldShowMigrationBanner)
+      )
+    },
   },
 
   actions: {

@@ -129,14 +129,7 @@ export default defineComponent({
     )
 
     const bannerHeight = computed(() => {
-      let height = 0
-      if (uiStore.shouldShowMigrationBanner) {
-        height += 4
-      }
-      if (uiStore.shouldShowTranslationBanner) {
-        height += 4
-      }
-      return "--banner-height: " + height + "rem;"
+      return "--banner-height: " + uiStore.shownBannersCount * 4 + "rem;"
     })
 
     const closeSidebar = () => {
