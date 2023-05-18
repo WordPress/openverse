@@ -383,13 +383,13 @@
     contentLink: {
       image: {
         zero: "No images found for {query}.",
-        count: "See {localeCount} image found for {query}|See {localeCount} images found for {query}.",
-        countMore: "See over {localeCount} images found for {query}",
+        count: "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
+        countMore: "See over {localeCount} images found for {query}.",
       },
       audio: {
         zero: "No audio found for {query}.",
-        count: "See {localeCount} audio found for {query}",
-        countMore: "See over {localeCount} audio found for {query}",
+        count: "See {localeCount} audio found for {query}.",
+        countMore: "See over {localeCount} audio found for {query}.",
       },
     },
     load: "Load more results",
