@@ -10,7 +10,7 @@
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
 - [ ] @obulat for frontend experience
-- [ ] @zackkrida 
+- [ ] @zackkrida
 
 ## Project links
 
@@ -100,7 +100,7 @@ the switches in the search results sidebar.
 This flag will not support the use of `ff_` query parameters, to prevent
 URL-based malicious action.
 
-#### `sensitive_content_handling`
+#### `sensitive_content`
 
 This is the main, real feature flag that enables the entire feature of being
 able to get (or avoid) mature content and then see or blur it. This flag will
