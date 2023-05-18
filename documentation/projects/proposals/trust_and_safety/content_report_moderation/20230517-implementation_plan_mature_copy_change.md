@@ -157,58 +157,79 @@ which no longer exists.
 
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
+No infrastructure changes are necessary for this copy change. A migration may be
+generated, but it should be a no-op.
+
 ### Tools & packages
 
 <!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
+
+No other tools or packages should be required.
 
 ### Other projects or work
 
 <!-- Note any projects this plan is dependent on. -->
 
-## Alternatives
-
-<!-- Describe any alternatives considered and why they were not chosen or recommended. -->
+This work intersects with, but is distinct from, the
+["Detecting and Blurring Sensitive Textual Content" project](https://docs.openverse.org/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/index.html).
 
 ## Design
 
 <!-- Note any design requirements for this plan. -->
 
+No design work should be necessary.
+
 ## Parallelizable streams
 
 <!-- What, if any, work within this plan can be parallelized? -->
+
+The frontend copy work and the API copy & code work can be done simultaneously.
+The frontend code work should wait until the API work is complete so the content
+reporting using `sensitive` rather than `mature` is available on the API prior
+to the frontend code changes.
 
 ## Blockers
 
 <!-- What hard blockers exist which might prevent further work on this project? -->
 
+No known blockers at the time of drafting.
+
 ## API version changes
 
 <!-- Explore or mention any changes to the API versioning scheme. -->
+
+If the API backwards compatibility for using `mature` rather than `sensitive` on
+the content reporting endpoint is removed, we will need to change the API
+versioning scheme. The removal of this backwards compatibility is not strictly a
+requirement for the success of this IP, so there is not an urgent necessity to
+change the API version.
 
 ## Accessibility
 
 <!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
 
+No accessibility changes should be necessary, as this should only affect copy.
+
 ## Rollback
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-## Privacy
-
-<!-- How does this approach protect users' privacy? -->
+In the case that we needed to roll back, the code and copy changes could be
+easily undone. Since we're not changing the underlying table names, a rollback
+should similarly not necessitate a migration (or at least one with SQL
+operations associated with it).
 
 ## Localization
 
 <!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
 
+Any changes that we make to the frontend copy will need to have new or existing
+translations associated with it.
+
 ## Risks
 
 <!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
 
-## Prior art
-
-<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
-
-```
-
-```
+We should be careful that any changes made to the API as part of this effort are
+done in a backwards compatible way, and that we do not introduce any breaking
+behavior.
