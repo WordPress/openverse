@@ -1,0 +1,336 @@
+# 2023-05-18 Implementation Plan: Rapid iteration of ingestion server index configuration
+
+**Author**: @aetherunbound
+
+<!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
+<!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
+
+## Reviewers
+
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+
+- [ ] @sarayourfriend
+- [ ] @stacimc
+
+## Project links
+
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+
+- [Project Thread](https://github.com/WordPress/openverse/issues/392)
+- [Project Proposal](https://github.com/WordPress/openverse/issues/392)
+
+## Overview
+
+<!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
+
+This document describes a DAG (and associated machinery) which can be used to
+generate a new index in Elasticsearch without requiring a data refresh,
+ingestion server deployment, or any interaction with the ingestion server.
+
+## Expected Outcomes
+
+<!-- List any succinct expected products from this implementation plan. -->
+
+Once this implementation is complete, a maintainer should be able to run this
+DAG to create a new index on either elasticsearch environment with an altered
+configuration. The maintainer should only need to specify the pieces of the
+configuration that are different from the default configuration, although they
+can supply a full configuration if they wish. The DAG will report when it is
+complete and what the name of the new index is.
+
+## Dependencies
+
+The following are prerequisites for the DAG:
+
+- Installation of the
+  [`elasticsearch` Airflow provider package](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/)
+- Airflow Connections to each Elasticsearch cluster
+- Sharing of the
+  [`es_mappings.py` configuration](https://github.com/WordPress/openverse/blob/0a5f4ab2ce5d80a48bd1c57d2a2dbcca14fcbedc/ingestion_server/ingestion_server/es_mapping.py)
+
+### Elasticsearch provider
+
+The
+[`elasticsearch` provider](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/)
+will need to be added to the list of dependencies for our catalog container.
+This will be done first and deployed on its own, as the connections will be
+needed for the rest of the work.
+
+The
+[production requirements](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/catalog/requirements_prod.txt#L5)
+will need to be changed from `apache-airflow[amazon,postgres,http]` to
+`apache-airflow[amazon,postgres,http,elasticsearch]`.
+
+### Airflow connections
+
+Once the provider is installed,
+[Airflow Connections](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/connections/elasticsearch.html)
+will need to be created for each Elasticsearch cluster. The connections will be
+named `elasticsearch_production` and `elasticsearch_staging` and reference each
+respective environment. These will be created by hand in the Airflow UI. For
+local development, defaults will be added to the
+[`env.template` file](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/catalog/env.template).
+
+### Sharing `es_mappings.py`
+
+The
+[`es_mappings.py` configuration](https://github.com/WordPress/openverse/blob/0a5f4ab2ce5d80a48bd1c57d2a2dbcca14fcbedc/ingestion_server/ingestion_server/es_mapping.py)
+in the `ingestion_server` module defines, in python, the default index
+configuration we use for all media types. This configuration does not require
+any additional Python dependencies, but does not exist in a form that can be
+imported by the DAG. To make this configuration available to the DAG, we will
+add the `es_mapping.py` file to the
+[`sync.yml` workflow configuration](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/.github/sync.yml)
+to keep the file up-to-date across both services.
+
+It would be trivial for local development to use a symlink, but all of our
+services run both locally and in production within Docker containers.
+Unfortunately, symlinks are generally difficult (or impractical) to set up
+within Docker[^1].
+
+[^1]:
+    [Stack Overflow: Mount host directory with a symbolic link inside in docker container](https://stackoverflow.com/a/40322275/3277713)
+
+### Infrastructure
+
+<!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
+
+No infrastructure changes should be necessary for this implementation, beyond
+that described above.
+
+### Other projects or work
+
+<!-- Note any projects this plan is dependent on. -->
+
+This work does not depend on any other projects and can be implemented at any
+time. In order to be utilized however, the API will need a mechanism for
+specifying which index to use for a given query. This is currently being
+discussed in [issue #2070](https://github.com/WordPress/openverse/issues/2070).
+
+## Outlined Steps
+
+<!-- Describe the implementation step necessary for completion. -->
+
+Once the prerequisites above have been filled, the DAG can be created. This DAG
+will be named `create_new_es_index`, and will have the following parameters and
+steps.
+
+### Parameters
+
+1. `media_type`: The media type for which the index is being created. Presently
+   this would only be `image` or `audio`.
+2. `environment`: The Elasticsearch environment to operate against. Options are
+   `production` and `staging`.
+3. `index_config`: A JSON object containing the configuration for the new index.
+   The values in this object will be merged with the existing configuration,
+   where the value specified at a leaf key in the object will override the
+   existing value. This can also be the entire index configuration, in which
+   case the existing configuration will be replaced entirely (see
+   `override_config` parameter below).
+4. `index_suffix`: (Optional) The name suffix of the new index to create. This
+   will be a string, and will be used to name the index in Elasticsearch of the
+   form `{media_type}-{index_suffix}`. If not provided, the suffix will be a
+   timestamp of the form `YYYYMMDDHHMMSS`.
+5. `source_index`: (Optional) The existing index on Elasticsearch to use as the
+   basis for the new index. If not provided, the index aliased to `media_type`
+   will be used (e.g. `image` for the `image` media type).
+6. `override_config`: (Optional) A boolean value which can be toggled to replace
+   the existing index configuration entirely with the new configuration. If
+   `True`, the `index_config` parameter will be used as the entire
+   configuration. If `False`, the `index_config` parameter will be merged with
+   the existing configuration. Defaults to `False`.
+7. `query`: (Optional) An
+   [Elasticsearch query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
+   to use to filter the documents to be copied to the new index. If not
+   provided, all documents will be copied. See
+   [`create_and_populate_filtered_index` on the ingestion server](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L529)
+   for an example of how this is used.
+
+### DAG
+
+Once the parameters are provided, the DAG will execute the following steps:
+
+1. Create the index configuration. If `override_config` is supplied, the
+   `index_config` parameter will be used as the entire configuration. If not,
+   the `index_config` parameter will be merged with the configuration generated
+   by `es_mapping::index_settings`. See [Merging policy](#merging-policy) for
+   how this merge will be performed.
+2. Create the new index with the configuration generated in step 1. The index
+   name will either be a combination of the `media_type` and `index_suffix`
+   parameters (`{media_type}-{index_suffix}`, e.g. `image-my-special-suffix`),
+   or the `media_type` and a timestamp (`{media_type}-{timestamp}`, e.g.
+   `image-20200102030405`). This will be done using the
+   [`ElasticsearchPythonHook`](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_api/airflow/providers/elasticsearch/hooks/elasticsearch/index.html#airflow.providers.elasticsearch.hooks.elasticsearch.ElasticsearchPythonHook)
+   ([example from the existing ingestion server code](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L518-L521)).
+3. Initiate a reindex using the `source_index` as the source
+   ([example from the ingestion server](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L525-L547)).
+   Rather than setting `wait_for_completion=True` and having this step halt
+   until the reindex is complete, this step will set `wait_for_completion=False`
+   and continue to the next step. The
+   [task ID returned from Elasticsearch for the reindex operation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html#docs-reindex-task-api)
+   will be stored in an XCom variable. This step will have `refresh=True` on the
+   request to ensure the reindex will immediately refresh after completion to
+   make the data available to searches.
+4. Use a sensor and the previously emitted task ID to wait for the reindex to
+   complete. This will check the task using the
+   [Task API](https://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html).
+   This could be done either using a subsequent `wait_for_completion` call with
+   a low timeout which is polled repeatedly, or by using the `status` value of
+   the response to determine if polling should continue. Elasticsearch
+   documentation notes that
+   [`status` may not always be available](https://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html#_get_more_information_about_tasks),
+   so we'd need to determine if the reindex task returns a `status` field first.
+5. Once the reindex & refresh are complete, report that the new index is ready
+   via Slack. This message should include both the index name and the
+   Elasticsearch environment.
+
+#### Merging policy
+
+The configuration should be merged such that the leaf key overwrites the entire
+value present in the default configuration at that key. For example, if the
+default configuration is:
+
+```json
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    }
+  }
+}
+```
+
+An override value of `{"settings": {"index": {"number_of_shards": 2}}}` will
+overwrite the `number_of_shards` value, but leave the `number_of_replicas` value
+unchanged. The resulting configuration will be:
+
+```json
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 2,
+      "number_of_replicas": 1
+    }
+  }
+}
+```
+
+This will be a naive merge, and list values will not be appended automatically.
+For instance:
+
+```json
+{
+  "analysis": {
+    "filter": {
+      "stem_overrides": {
+        "type": "stemmer_override",
+        "rules": [
+          "animals => animal",
+          "animal => animal",
+          "anime => anime",
+          "animate => animate",
+          "animated => animate",
+          "universe => universe"
+        ]
+      }
+    }
+  }
+}
+```
+
+with an override of
+
+```json
+{
+  "analysis": {
+    "filter": {
+      "stem_overrides": {
+        "rules": ["crim => cribble"]
+      }
+    }
+  }
+}
+```
+
+will result in
+
+```json
+{
+  "analysis": {
+    "filter": {
+      "stem_overrides": {
+        "type": "stemmer_override",
+        "rules": ["crim => cribble"]
+      }
+    }
+  }
+}
+```
+
+The [`jsonmerge` Python library](https://pypi.org/project/jsonmerge/) provides a
+good example of the naive approach, although we will want to avoid adding an
+extra dependency for this step is possible.
+
+## Alternatives
+
+<!-- Describe any alternatives considered and why they were not chosen or recommended. -->
+
+### Sharing `es_mapping.py`
+
+Instead of using a self-referential sync operation, we could read or pull the
+`es_mapping.py` file directly from GitHub (e.g.
+https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py).
+This would require that GitHub be available, and (in order to ensure the most
+up-to-date version is being used) could cause issues if the file is moved to a
+different location. Since this would create unnecessary dependencies on an
+external service, I opted not to suggest this approach.
+
+### Using the ingestion server
+
+The first idea for this approach was to use the ingestion server directly, and
+alter the `es_mappings.py` file either dynamically or in a mechanism similar to
+[the dag-sync script on the catalog](https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html#required-implementation-plans).
+This might have been made easier by a move of this service from EC2 to ECS. This
+approach was abandoned when @sarayourfriend suggested
+[interacting with Elasticsearch directly](https://github.com/WordPress/openverse/pull/1107#discussion_r1155399508).
+
+## Design
+
+<!-- Note any design requirements for this plan. -->
+
+## Parallelizable streams
+
+<!-- What, if any, work within this plan can be parallelized? -->
+
+## Blockers
+
+<!-- What hard blockers exist which might prevent further work on this project? -->
+
+## API version changes
+
+<!-- Explore or mention any changes to the API versioning scheme. -->
+
+## Accessibility
+
+<!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+
+## Rollback
+
+<!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
+
+## Privacy
+
+<!-- How does this approach protect users' privacy? -->
+
+## Localization
+
+<!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
+
+## Risks
+
+<!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
+
+## Prior art
+
+<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
