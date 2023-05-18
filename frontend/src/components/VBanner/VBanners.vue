@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="showBanners" class="flex flex-col gap-3 p-3 pb-0">
+    <div v-show="showBanners" class="flex flex-col gap-2 p-2 pb-0">
       <VMigrationNotice
         v-if="shouldShowMigrationBanner"
         @close="dismissBanner('cc-referral')"
