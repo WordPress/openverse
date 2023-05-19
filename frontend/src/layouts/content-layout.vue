@@ -10,7 +10,7 @@
         : 'grid-cols-1',
     ]"
   >
-    <div class="header-el sticky top-0 z-40 block">
+    <div class="header-el sticky top-0 z-40 block bg-white">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
       <template v-if="isSearchHeader">
