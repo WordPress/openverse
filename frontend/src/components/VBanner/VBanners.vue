@@ -55,7 +55,7 @@ export default defineComponent({
 
     const { current: currentPage } = usePages()
     const variant = computed(() =>
-      currentPage.value === "index" ? "dark" : "regular"
+      ["", "index"].includes(currentPage.value) ? "dark" : "regular"
     )
 
     const dismissBanner = (bannerKey: BannerId) => {
