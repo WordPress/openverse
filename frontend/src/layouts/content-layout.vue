@@ -128,9 +128,9 @@ export default defineComponent({
         isDesktopLayout.value
     )
 
-    const bannerHeight = computed(() => {
-      return "--banner-height: " + uiStore.shownBannersCount * 4 + "rem;"
-    })
+    const appStyles = computed(() => {{
+      "--banner-height": `${uiStore.shownBannersCount * 4}rem`
+    }})
 
     const closeSidebar = () => {
       uiStore.setFiltersState(false)
