@@ -1,15 +1,10 @@
 <template>
   <div class="error grid overflow-x-hidden">
-    <svg
+    <VSvg
       class="z-0 pointer-events-none col-start-1 row-start-1 -mx-[15%] fill-dark-charcoal opacity-5 lg:mx-15 lg:-mt-20"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1320 569"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <use :href="`${Oops}#oops`" />
-    </svg>
-
+      name="oops"
+    />
     <div
       class="page-404 col-start-1 row-start-1 flex flex-col justify-self-stretch px-6 lg:max-w-2xl lg:justify-self-center lg:px-0"
     >
@@ -51,8 +46,7 @@ import { ALL_MEDIA } from "~/constants/media"
 import VLink from "~/components/VLink.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
-
-import Oops from "~/assets/oops.svg"
+import VSvg from "~/components/VSvg/VSvg.vue"
 
 export default defineComponent({
   name: "VFourOhFour",
@@ -60,6 +54,7 @@ export default defineComponent({
     VLink,
     VSkipToContentContainer,
     VStandaloneSearchBar,
+    VSvg,
   },
   props: ["error"],
   setup() {
@@ -83,7 +78,6 @@ export default defineComponent({
 
     return {
       handleSearch,
-      Oops,
     }
   },
   head: {},
