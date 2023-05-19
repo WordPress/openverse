@@ -12,7 +12,7 @@
     "
     class="h-12 px-4 text-[1.125rem]"
   >
-    <OpenverseLogoAndWordmark class="h-[1em] w-auto" />
+    <VSvg name="logo_and_wordmark" class="h-[1em] w-auto" />
   </VButton>
 </template>
 
@@ -20,8 +20,7 @@
 import { type PropType, defineComponent } from "vue"
 
 import VButton from "~/components/VButton.vue"
-
-import OpenverseLogoAndWordmark from "~/assets/logo_and_wordmark.svg?inline"
+import VSvg from "~/components/VSvg/VSvg.vue"
 
 /**
  * The home link for the internal header. Shows the Openverse logo and wordmark,
@@ -30,8 +29,8 @@ import OpenverseLogoAndWordmark from "~/assets/logo_and_wordmark.svg?inline"
 export default defineComponent({
   name: "VHomeLink",
   components: {
-    OpenverseLogoAndWordmark,
     VButton,
+    VSvg,
   },
   props: {
     /**
