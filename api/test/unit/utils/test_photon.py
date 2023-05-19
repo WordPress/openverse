@@ -353,13 +353,20 @@ def test_check_image_type_raises_by_not_allowed_types(image_type):
 
 
 @pytest.mark.django_db
-def test_check_image_type_saves_image_type_to_cache(redis):
+@pytest.mark.parametrize(
+    "headers, expected_cache_val",
+    [
+        ({"Content-Type": "image/svg+xml"}, b"svg+xml"),
+        (None, b"unknown"),
+    ],
+)
+def test_check_image_type_saves_image_type_to_cache(redis, headers, expected_cache_val):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
 
     with mock.patch("requests.head") as mock_head, pytest.raises(UnsupportedMediaType):
-        mock_head.return_value.headers = {"Content-Type": "image/svg+xml"}
+        mock_head.return_value.headers = headers
         check_image_type(image_url, image)
 
     key = f"media:{image.identifier}:thumb_type"
-    assert redis.get(key) == b"svg+xml"
+    assert redis.get(key) == expected_cache_val

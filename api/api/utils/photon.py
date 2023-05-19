@@ -37,6 +37,16 @@ def _get_file_extension_from_url(image_url: str) -> str:
     return ext[1:]  # remove the leading dot
 
 
+def _get_file_extension_from_content_type(content_type: str) -> str | None:
+    """
+    Return the image extension if present in the Response's content type
+    header.
+    """
+    if content_type and "/" in content_type:
+        return content_type.split("/")[1]
+    return None
+
+
 def check_image_type(image_url: str, media_obj) -> None:
     cache = django_redis.get_redis_connection("default")
     key = f"media:{media_obj.identifier}:thumb_type"
@@ -59,12 +69,13 @@ def check_image_type(image_url: str, media_obj) -> None:
                 f"type. {exc}"
             )
         else:
-            ext = response.headers["Content-Type"]
-            if ext and "/" in ext:
-                ext = ext.split("/")[1]
-                cache.set(key, ext)
+            if response.headers and "Content-Type" in response.headers:
+                content_type = response.headers["Content-Type"]
+                ext = _get_file_extension_from_content_type(content_type)
             else:
                 ext = None
+
+            cache.set(key, ext if ext else "unknown")
 
     if ext not in ALLOWED_TYPES:
         raise UnsupportedMediaType(ext)
