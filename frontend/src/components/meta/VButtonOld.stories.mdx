@@ -11,7 +11,6 @@ import {
   buttonVariants as allButtonVariants,
 } from "~/types/button"
 import VButton from "~/components/VButton.vue"
-import { capital } from "case"
 
 <Meta title="Components/VButtonOld" components={VButton} />
 
@@ -72,77 +71,8 @@ export const Template = (args) => ({
       focusableWhenDisabled: { control: "boolean" },
       type: { control: "text" },
     }}
+    args={{ size: "medium", variant: "text" }}
   >
     {Template.bind({})}
-  </Story>
-</Canvas>
-
-export const VariantsTemplate = (args) => ({
-  template: `
-<div class="flex gap-4 flex-wrap">
-<VButton v-for="variant in args.variants"
-    :variant="variant"
-    :key="variant"
-    class="caption-bold"
-    v-bind="args">
-    {{ capitalize(variant) }}
-    </VButton>
-  </div>`,
-  components: { VButton },
-  methods: {
-    capitalize(str) {
-      return capital(str)
-    },
-  },
-  setup() {
-    return { args }
-  },
-})
-
-## Button variants
-
-### Primary
-
-The style used for Call-to-action buttons, such as the 'Search' button or 'Get
-this media item' buttons. It is a pink button.
-
-<Canvas>
-  <Story
-    name="primary"
-    args={{ variants: ["primary"] }}
-    argTypes={{
-      pressed: { control: "boolean" },
-      size: {
-        options: buttonSizes,
-        control: { type: "radio" },
-      },
-      disabled: { control: "boolean" },
-    }}
-  >
-    {VariantsTemplate.bind({})}
-  </Story>
-</Canvas>
-
-### Secondary
-
-The styles used for other buttons.
-
-There are three variants of secondary buttons: filled, bordered and text
-(without border).
-
-<Canvas>
-  <Story
-    name="secondary"
-    args={{ variants: ["secondary-bordered", "secondary-filled", "secondary"] }}
-    argTypes={{
-      pressed: { control: "boolean" },
-      size: {
-        options: buttonSizes,
-        control: { type: "radio" },
-      },
-      disabled: { control: "boolean" },
-    }}
-  >
-    {VariantsTemplate.bind({})}
   </Story>
 </Canvas>

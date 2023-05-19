@@ -4,6 +4,9 @@ import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 const wrapperLocator = "#wrapper"
+
+test.describe.configure({ mode: "parallel" })
+
 test.describe("VLoadMore button", () => {
   const gotoWithArgs = makeGotoWithArgs(
     "components-custombuttoncomponents--v-load-more"

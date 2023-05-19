@@ -22,7 +22,7 @@ describe("VButton", () => {
   })
   it('should render a `button` by default with type="button" and no tabindex', async () => {
     render(VButton, {
-      props: { variant: "filled-white" },
+      props: { variant: "filled-white", size: "medium" },
       slots: { default: "Code is Poetry" },
     })
 
@@ -35,7 +35,7 @@ describe("VButton", () => {
 
   it("should allow passing an explicit type", async () => {
     render(VButton, {
-      props: { type: "submit", variant: "filled-white" },
+      props: { type: "submit", variant: "filled-white", size: "medium" },
       slots: { default: "Code is Poetry" },
     })
 
@@ -47,7 +47,7 @@ describe("VButton", () => {
   it("should render an anchor with no type attribute", async () => {
     render(VButton, {
       attrs: { href: "http://localhost" },
-      props: { as: "VLink", variant: "filled-white" },
+      props: { as: "VLink", variant: "filled-white", size: "medium" },
       slots: { default: "Code is Poetry" },
     })
     await nextTick()
@@ -64,6 +64,7 @@ describe("VButton", () => {
         disabled: true,
         focusableWhenDisabled: false,
         variant: "filled-white",
+        size: "medium",
       },
       slots: { default: "Code is Poetry" },
     })
@@ -80,6 +81,7 @@ describe("VButton", () => {
         disabled: true,
         focusableWhenDisabled: true,
         variant: "filled-white",
+        size: "medium",
       },
       slots: { default: "Code is Poetry" },
     })
@@ -98,6 +100,7 @@ describe("VButton", () => {
         focusableWhenDisabled: true,
         href: "https://wordpress.org",
         variant: "filled-white",
+        size: "medium",
       },
       slots: { default: "Code is Poetry" },
     })

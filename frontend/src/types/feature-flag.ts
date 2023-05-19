@@ -1,4 +1,8 @@
-import type { FeatureState, FlagStatus } from "~/constants/feature-flag"
+import type {
+  FeatureState,
+  FlagStatus,
+  Storage,
+} from "~/constants/feature-flag"
 import type { DeployEnv } from "~/constants/deploy-env"
 
 export interface FeatureFlag {
@@ -8,4 +12,8 @@ export interface FeatureFlag {
 
   defaultState?: FeatureState
   preferredState?: FeatureState // only set for switchable flag with known preference
+
+  supportsQuery?: boolean // default: true
+
+  storage: Storage
 }

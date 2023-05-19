@@ -69,7 +69,7 @@ def test_get_record_data():
     actual = jamendo.get_record_data(item_data)
     expected = {
         "audio_set": "Opera I",
-        "audio_url": "https://mp3d.jamendo.com/?trackid=732&format=mp32",
+        "url": "https://mp3d.jamendo.com/?trackid=732&format=mp32",
         "category": "music",
         "creator": "Haeresis",
         "creator_url": "https://www.jamendo.com/artist/92/haeresis",

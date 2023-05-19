@@ -151,9 +151,7 @@ def test_get_record_data():
 
     expected_data = {
         "foreign_landing_url": "https://www.flickr.com/photos/71925535@N03/49514824541",
-        "image_url": (
-            "https://live.staticflickr.com/65535/49514824541_35d1b4f8db" "_b.jpg"
-        ),
+        "url": ("https://live.staticflickr.com/65535/49514824541_35d1b4f8db" "_b.jpg"),
         "license_info": test_license_info,
         "foreign_identifier": "49514824541",
         "width": 1024,
@@ -181,7 +179,7 @@ def test_get_record_data():
     [
         pytest.param(["owner"], id="owner-foreign_landing_url"),
         pytest.param(["license"], id="license"),
-        pytest.param(["url_l", "url_m", "url_s"], id="url_x-image_url"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-url"),
         pytest.param(["id"], id="id-foreign_identifier"),
     ],
 )
@@ -199,7 +197,7 @@ def test_get_record_data_returns_none_when_missing_required_params(missing_param
     [
         pytest.param(["owner"], id="owner-foreign_landing_url"),
         pytest.param(["license"], id="license"),
-        pytest.param(["url_l", "url_m", "url_s"], id="url_x-image_url"),
+        pytest.param(["url_l", "url_m", "url_s"], id="url_x-url"),
         pytest.param(["id"], id="id-foreign_identifier"),
     ],
 )
@@ -343,9 +341,7 @@ def test_get_record_data_with_sub_provider():
         "foreign_landing_url": (
             "https://www.flickr.com/photos/35067687@N04/49950595947"
         ),
-        "image_url": (
-            "https://live.staticflickr.com/65535/49950595947_65a3560ddc" "_b.jpg"
-        ),
+        "url": ("https://live.staticflickr.com/65535/49950595947_65a3560ddc" "_b.jpg"),
         "license_info": test_license_info,
         "foreign_identifier": "49950595947",
         "width": 1024,

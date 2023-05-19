@@ -76,8 +76,8 @@ class StockSnapDataIngester(ProviderDataIngester):
         slug = "-".join(data.get("keywords", [])[:2])
         foreign_landing_url = f"https://{HOST}/photo/{slug}-{foreign_id}"
 
-        image_url, width, height = self._get_image_info(data)
-        if image_url is None:
+        url, width, height = self._get_image_info(data)
+        if not url:
             logger.info("Found no image url.")
             logger.info(f"{json.dumps(data, indent=2)}")
             return None
@@ -91,7 +91,7 @@ class StockSnapDataIngester(ProviderDataIngester):
         creator, creator_url = self._get_creator_data(data)
         metadata = self._get_metadata(data)
         tags = self._get_tags(data)
-        filesize = self._get_filesize(image_url)
+        filesize = self._get_filesize(url)
 
         return {
             "title": title,
@@ -99,7 +99,7 @@ class StockSnapDataIngester(ProviderDataIngester):
             "creator_url": creator_url,
             "foreign_identifier": foreign_id,
             "foreign_landing_url": foreign_landing_url,
-            "image_url": image_url,
+            "url": url,
             "filesize": filesize,
             "filetype": "jpg",
             "height": height,

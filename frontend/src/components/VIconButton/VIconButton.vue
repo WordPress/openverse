@@ -63,7 +63,7 @@ export default defineComponent({
      * See documentation on `VButton`.
      */
     buttonProps: {
-      type: Object as PropType<ButtonProps>,
+      type: Object as PropType<Omit<ButtonProps, "size">>,
       default: () => ({ variant: "plain" }),
     },
     /**

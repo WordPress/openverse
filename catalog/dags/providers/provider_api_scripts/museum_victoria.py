@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class ImageDetails(TypedDict, total=False):
     foreign_identifier: str
-    image_url: str
+    url: str
     license_info: LicenseInfo
     foreign_landing_url: str
     title: str
@@ -97,17 +97,15 @@ class VictoriaDataIngester(ProviderDataIngester):
                 continue
             if not (foreign_identifier := media.get("id")):
                 continue
-            image_url, height, width, filesize = VictoriaDataIngester._get_image_data(
-                media
-            )
+            url, height, width, filesize = VictoriaDataIngester._get_image_data(media)
             license_info = VictoriaDataIngester._get_license_info(media)
-            if not image_url or not license_info:
+            if not url or not license_info:
                 continue
             creator = VictoriaDataIngester._get_creator(media)
 
             image: ImageDetails = {
                 "foreign_identifier": foreign_identifier,
-                "image_url": image_url,
+                "url": url,
                 "height": height,
                 "width": width,
                 "license_info": license_info,

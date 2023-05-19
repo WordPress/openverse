@@ -7,16 +7,18 @@
       {{ $t("no-results.alternatives") }}
     </h2>
 
-    <div class="mt-10 flex flex-col flex-wrap gap-4 md:flex-row">
+    <div class="mt-10 flex flex-col flex-wrap gap-4 sm:flex-row">
       <VButton
         v-for="source in externalSources"
         :key="source.name"
         as="VLink"
         :href="source.url"
-        variant="secondary-bordered"
-        class="label-bold !w-full justify-between text-dark-charcoal md:!w-auto md:justify-start md:gap-x-2"
+        variant="bordered-gray"
+        size="medium"
+        class="label-bold !w-full text-dark-charcoal sm:!w-auto"
         show-external-icon
-        :external-icon-size="4"
+        has-icon-end
+        :external-icon-size="6"
         @mousedown="handleClick(source.name)"
       >
         {{ source.name }}

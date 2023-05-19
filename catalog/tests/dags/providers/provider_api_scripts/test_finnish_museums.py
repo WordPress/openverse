@@ -125,7 +125,7 @@ def test_process_object_with_real_example():
         ),
         "foreign_identifier": "sa-kuva.sa-kuva-1835",
         "foreign_landing_url": "https://www.finna.fi/Record/sa-kuva.sa-kuva-1835",
-        "image_url": "https://api.finna.fi/Cover/Show?source=Solr&id=sa-kuva.sa-kuva-1835&index=0&size=large",
+        "url": "https://api.finna.fi/Cover/Show?source=Solr&id=sa-kuva.sa-kuva-1835&index=0&size=large",
         "title": "Vuokkiniemen koulu",
         "source": "finnish_military_museum",
         "creator": "Uomala, valokuvaaja",

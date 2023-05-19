@@ -15,7 +15,12 @@ describe("VContentLink", () => {
 
   beforeEach(() => {
     options = {
-      props: { mediaType: "image", resultsCount: 123, to: "/images" },
+      props: {
+        mediaType: "image",
+        resultsCount: 123,
+        to: "/images",
+        searchTerm: "cat",
+      },
     }
   })
 
@@ -25,16 +30,6 @@ describe("VContentLink", () => {
 
     expect(btn).toHaveAttribute("href")
     expect(btn).not.toHaveAttribute("aria-disabled")
-  })
-
-  it("is disabled when there are no results", () => {
-    options.props.resultsCount = 0
-    render(VContentLink, options)
-    const btn = screen.getByRole("link")
-
-    expect(btn).not.toHaveAttribute("href")
-    expect(btn).toHaveAttribute("aria-disabled")
-    expect(btn.getAttribute("aria-disabled")).toBeTruthy()
   })
 
   it("sends CHANGE_CONTENT_TYPE event when clicked", async () => {

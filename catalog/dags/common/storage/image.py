@@ -44,7 +44,7 @@ class ImageStore(MediaStore):
     def add_item(
         self,
         foreign_landing_url: str,
-        image_url: str,
+        url: str,
         license_info: LicenseInfo,
         foreign_identifier: str,
         thumbnail_url: str | None = None,
@@ -70,7 +70,7 @@ class ImageStore(MediaStore):
         Required Arguments:
         foreign_landing_url:  URL of page where the image lives on the
                               source website.
-        image_url:            Direct link to the image file
+        url:                  Direct link to the image file
 
         license_info:         LicenseInfo object that has
                               - the URL of the license for the image,
@@ -125,7 +125,7 @@ class ImageStore(MediaStore):
 
         image_data = {
             "foreign_landing_url": foreign_landing_url,
-            "image_url": image_url,
+            "url": url,
             "thumbnail_url": thumbnail_url,
             "filesize": filesize,
             "filetype": filetype,
@@ -153,9 +153,6 @@ class ImageStore(MediaStore):
         image_metadata = self.clean_media_metadata(**kwargs)
         if image_metadata is None:
             return None
-        # Convert the `image_url` key used in ImageStore, TSV and
-        # provider API scripts into `url` key used in db
-        image_metadata["url"] = image_metadata.pop("image_url")
         return Image(**image_metadata)
 
 

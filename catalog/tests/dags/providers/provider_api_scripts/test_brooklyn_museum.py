@@ -87,7 +87,7 @@ def test_process_batch(batch_objects_name, object_data_name, expected_count):
                     "foreign_identifier": 170425,
                     "foreign_landing_url": "https://www.brooklynmuseum.org/opencollection/objects/90636",
                     "height": 1152,
-                    "image_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CUR.66.242.29.jpg",
+                    "url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CUR.66.242.29.jpg",
                     "license_info": CC_BY_3_0,
                     "meta_data": {
                         "accession_number": "66.242.29",

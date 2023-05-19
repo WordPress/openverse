@@ -6,21 +6,24 @@ from airflow.models.abstractoperator import AbstractOperator
 
 from common.constants import AUDIO, IMAGE
 from common.loader.sql import TABLE_NAMES
+from common.popularity.constants import (
+    AUDIO_POPULARITY_CONSTANTS_VIEW,
+    AUDIO_POPULARITY_PERCENTILE_FUNCTION,
+    AUDIO_VIEW_NAME,
+    AUDIOSET_VIEW_NAME,
+    IMAGE_POPULARITY_CONSTANTS_VIEW,
+    IMAGE_POPULARITY_PERCENTILE_FUNCTION,
+    IMAGE_VIEW_NAME,
+    STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
+    STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
+)
 from common.sql import PostgresHook
 from common.storage import columns as col
+from common.storage.db_columns import AUDIO_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
 
 
 DEFAULT_PERCENTILE = 0.85
 
-IMAGE_VIEW_NAME = "image_view"
-AUDIO_VIEW_NAME = "audio_view"
-AUDIOSET_VIEW_NAME = "audioset_view"
-IMAGE_POPULARITY_CONSTANTS_VIEW = "image_popularity_constants"
-AUDIO_POPULARITY_CONSTANTS_VIEW = "audio_popularity_constants"
-IMAGE_POPULARITY_PERCENTILE_FUNCTION = "image_popularity_percentile"
-AUDIO_POPULARITY_PERCENTILE_FUNCTION = "audio_popularity_percentile"
-STANDARDIZED_IMAGE_POPULARITY_FUNCTION = "standardized_image_popularity"
-STANDARDIZED_AUDIO_POPULARITY_FUNCTION = "standardized_audio_popularity"
 
 IMAGE_POP_CONSTANTS_IDX = "image_popularity_constants_provider_metric_idx"
 AUDIO_POP_CONSTANTS_IDX = "audio_popularity_constants_provider_metric_idx"
@@ -247,6 +250,7 @@ def create_media_popularity_constants_view(
         popularity_constants_idx = AUDIO_POP_CONSTANTS_IDX
         popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
         popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
+
     create_view_query = dedent(
         f"""
         CREATE MATERIALIZED VIEW public.{popularity_constants} AS
@@ -365,6 +369,7 @@ def create_media_view(
     media_type=IMAGE,
     standardized_popularity_func=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
     table_name=TABLE_NAMES[IMAGE],
+    db_columns=IMAGE_TABLE_COLUMNS,
     db_view_name=IMAGE_VIEW_NAME,
     db_view_id_idx=IMAGE_VIEW_ID_IDX,
     db_view_provider_fid_idx=IMAGE_VIEW_PROVIDER_FID_IDX,
@@ -372,6 +377,7 @@ def create_media_view(
 ):
     if media_type == AUDIO:
         table_name = TABLE_NAMES[AUDIO]
+        db_columns = AUDIO_TABLE_COLUMNS
         db_view_name = AUDIO_VIEW_NAME
         db_view_id_idx = AUDIO_VIEW_ID_IDX
         db_view_provider_fid_idx = AUDIO_VIEW_PROVIDER_FID_IDX
@@ -383,11 +389,19 @@ def create_media_view(
     audio_set_id_str = (
         "\naudio_set ->> 'foreign_identifier' AS audio_set_foreign_identifier,"
     )
+    # We want to copy all columns except standardized popularity, which is calculated
+    columns_to_select = (", ").join(
+        [
+            column.db_name
+            for column in db_columns
+            if column.db_name != col.STANDARDIZED_POPULARITY.db_name
+        ]
+    )
     create_view_query = dedent(
         f"""
         CREATE MATERIALIZED VIEW public.{db_view_name} AS
           SELECT
-            *,{audio_set_id_str if media_type == AUDIO else ""}
+            {columns_to_select},{audio_set_id_str if media_type == AUDIO else ""}
             {standardized_popularity_func}(
               {table_name}.{PARTITION},
               {table_name}.{METADATA_COLUMN}

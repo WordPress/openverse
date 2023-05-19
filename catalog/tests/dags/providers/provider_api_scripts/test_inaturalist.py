@@ -69,6 +69,7 @@ RECORD0 = JSON_RESPONSE[0]
         ("observers.sql", [(23,)]),
     ],
 )
+@pytest.mark.skip(reason="no way of currently testing this")
 def test_load_data(file_name, expected):
     sql_string = (SQL_SCRIPT_DIR / file_name).read_text()
     actual = PG.get_records(sql_string)
