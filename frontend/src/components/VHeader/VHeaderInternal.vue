@@ -3,7 +3,7 @@
     ref="nodeRef"
     class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 pe-3 ps-2 md:py-4 lg:pe-10 lg:ps-6"
   >
-    <VHomeLink variant="dark" class="px-4 hover:bg-yellow" />
+    <VHomeLink variant="dark" />
     <nav class="hidden lg:flex">
       <VPageLinks
         mode="light"
@@ -51,11 +51,8 @@
           @open="openPageMenu"
         >
           <template #top-bar>
-            <div class="flex h-20 w-full justify-between py-4 pe-3 ps-6">
-              <VHomeLink
-                variant="light"
-                class="focus-visible:ring-yellow focus-visible:ring-offset-0"
-              />
+            <div class="flex h-20 w-full justify-between py-4 pe-3 ps-2">
+              <VHomeLink variant="light" />
               <VCloseButton
                 variant="black"
                 icon-size="large"

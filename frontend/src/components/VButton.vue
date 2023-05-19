@@ -355,6 +355,10 @@ a.button {
 .bordered-gray {
   @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
 }
+
+.transparent-tx {
+  @apply border-tx;
+}
 .transparent-gray {
   @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
 }

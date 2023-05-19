@@ -7,7 +7,7 @@
         : 'border-white'
     "
   >
-    <VLogoButton :is-fetching="isFetching" class="h-12" />
+    <VLogoButton :is-fetching="isFetching" />
 
     <VSearchBar
       ref="searchBarRef"
