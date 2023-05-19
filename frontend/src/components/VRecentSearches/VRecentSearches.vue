@@ -16,6 +16,7 @@
         v-show="entries.length"
         variant="text"
         class="caption-bold"
+        size="small"
         :aria-label="$t('recent-searches.clear.label').toString()"
         @click="handleClear"
       >
