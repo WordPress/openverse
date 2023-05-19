@@ -3,8 +3,8 @@
   <div class="flex flex-row items-center">
     <!-- Using `flex` to place two SVGs side by side. -->
     <span class="inline-flex h-[1em] flex-row gap-[0.4em]" aria-hidden="true">
-      <VSvg class="h-full w-auto" viewbox="0 0 50 42" name="logo" />
-      <VSvg class="h-full w-auto" viewbox="0 0 215 42" name="brand" />
+      <VSvg class="h-full w-auto" viewBox="0 0 50 42" name="logo" />
+      <VSvg class="h-full w-auto" viewBox="0 0 215 42" name="brand" />
     </span>
     <span v-if="srText" class="sr-only">{{ srText }}</span>
   </div>

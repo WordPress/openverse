@@ -12,7 +12,11 @@
     "
     class="h-12 px-4 text-[1.125rem]"
   >
-    <VSvg name="logo_and_wordmark" class="h-[1em] w-auto" />
+    <VSvg
+      name="logo_and_wordmark"
+      class="h-[1em] w-auto"
+      viewBox="0 0 226 34"
+    />
   </VButton>
 </template>
 
