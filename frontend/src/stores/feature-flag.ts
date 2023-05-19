@@ -1,5 +1,5 @@
+import Vue from "vue"
 import { defineStore } from "pinia"
-
 import { useStorage } from "@vueuse/core"
 
 import featureData from "~~/feat/feature-flags.json"
@@ -15,8 +15,12 @@ import {
   ON,
   OFF,
   DISABLED,
+  COOKIE,
+  SESSION,
 } from "~/constants/feature-flag"
 import { LOCAL, DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
+
+import type { Context } from "@nuxt/types"
 
 import type { Dictionary } from "vue-router/types/router"
 
@@ -93,14 +97,16 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
     /**
      * Get the mapping of switchable features to their preferred states.
      */
-    flagStateMap: (state: FeatureFlagState): Record<string, FeatureState> => {
-      const featureMap: Record<string, FeatureState> = {}
-      Object.entries(state.flags).forEach(([name, flag]) => {
-        if (getFlagStatus(flag) === SWITCHABLE)
-          featureMap[name] = getFeatureState(flag)
-      })
-      return featureMap
-    },
+    flagStateMap:
+      (state: FeatureFlagState) =>
+      (dest: string): Record<string, FeatureState> => {
+        const featureMap: Record<string, FeatureState> = {}
+        Object.entries(state.flags).forEach(([name, flag]) => {
+          if (getFlagStatus(flag) === SWITCHABLE && flag.storage === dest)
+            featureMap[name] = getFeatureState(flag)
+        })
+        return featureMap
+      },
   },
   actions: {
     /**
@@ -114,8 +120,33 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      */
     initFromCookies(cookies: Record<string, FeatureState>) {
       Object.entries(this.flags).forEach(([name, flag]) => {
-        if (getFlagStatus(flag) === SWITCHABLE)
-          flag.preferredState = cookies[name]
+        if (getFlagStatus(flag) === SWITCHABLE && flag.storage === COOKIE)
+          Vue.set(flag, "preferredState", cookies[name])
+      })
+    },
+    /**
+     * Write the current state of the switchable flags to the cookie.
+     *
+     * @param cookies - the Nuxt cookies module
+     */
+    writeToCookies(cookies: Context["$cookies"]) {
+      cookies.set("features", this.flagStateMap(COOKIE))
+    },
+    /**
+     * Initialize the state of the switchable flags from the session storage.
+     * `Vue.set` is used to ensure reactivity is maintained.
+     */
+    initFromSession() {
+      if (typeof window === "undefined") return
+      const features = useStorage<Record<string, FeatureState>>(
+        "features",
+        {},
+        sessionStorage
+      )
+      Object.entries(this.flags).forEach(([name, flag]) => {
+        if (getFlagStatus(flag) === SWITCHABLE && flag.storage === SESSION) {
+          Vue.set(flag, "preferredState", features.value[name])
+        }
       })
     },
     /**
@@ -123,7 +154,19 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      this.$nuxt.$cookies.set("features", this.flagStateMap)
+      this.$nuxt.$cookies.set("features", this.flagStateMap(COOKIE))
+    },
+    /**
+     * Write the current state of the switchable flags to the session storage.
+     */
+    writeToSession() {
+      if (typeof window === "undefined") return
+      const features = useStorage<Record<string, FeatureState>>(
+        "features",
+        {},
+        sessionStorage
+      )
+      features.value = this.flagStateMap(SESSION)
     },
     /**
      * Set the value of flag entries from the query parameters. Only those
@@ -152,8 +195,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
           // TODO: type `FlagName` should be inferred by TS
           const flagName = name.substring(3) as FlagName
           const flag = this.flags[flagName]
-          if (getFlagStatus(flag) === SWITCHABLE) {
-            flag.preferredState = state
+          if (
+            getFlagStatus(flag) === SWITCHABLE &&
+            flag.supportsQuery !== false
+          ) {
+            Vue.set(flag, "preferredState", state)
           }
         })
     },
@@ -168,6 +214,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       if (getFlagStatus(flag) === SWITCHABLE) {
         flag.preferredState = targetState
         this.writeToCookie()
+        this.writeToSession()
         if (name === "analytics") this.syncAnalyticsWithLocalStorage()
       } else warn(`Cannot set preferred state for non-switchable flag: ${name}`)
     },

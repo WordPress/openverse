@@ -54,6 +54,7 @@ import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
@@ -86,6 +87,11 @@ export default defineComponent({
     const { app } = useContext()
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
+
+    const featureStore = useFeatureFlagStore()
+    onMounted(() => {
+      featureStore.initFromSession()
+    })
 
     const { updateBreakpoint } = useLayout()
 
