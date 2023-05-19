@@ -255,14 +255,16 @@ def test_get_http_error_pass_threshold(
     key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}subdomain.example.com"
     redis.set(key, settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY - 1)
 
-    with pytest.raises(
-        UpstreamThumbnailException, match=r"Failed to render thumbnail."
-    ):
-        photon_get(TEST_IMAGE_URL)
+    # Call several times
+    for _ in range(3):
+        with pytest.raises(
+            UpstreamThumbnailException, match=r"Failed to render thumbnail."
+        ):
+            photon_get(TEST_IMAGE_URL)
 
     capture_exception.assert_called_once_with(exc)
 
-    assert redis.get(key) == b"1000"
+    assert redis.get(key) == b"1002"
 
 
 @pytest.mark.parametrize(
