@@ -124,12 +124,12 @@ class JamendoDataIngester(ProviderDataIngester):
         >>> _remove_param_from_url(url, "from")
         'https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31'
         :return: Tuple with main audio file information:
-        - audio_url
+        - url
         - duration (in milliseconds)
         """
-        if not (audio_url := data.get("audio")):
+        if not (url := data.get("audio")):
             return None
-        return self._remove_param_from_url(audio_url, "from")
+        return self._remove_param_from_url(url, "from")
 
     @staticmethod
     def _get_creator_data(data):
@@ -184,7 +184,7 @@ class JamendoDataIngester(ProviderDataIngester):
         if not (foreign_landing_url := data.get("shareurl")):
             return None
 
-        if not (audio_url := self._get_audio_url(data)):
+        if not (url := self._get_audio_url(data)):
             return None
 
         if not (license_info := get_license_info(data.get("license_ccurl"))):
@@ -221,7 +221,7 @@ class JamendoDataIngester(ProviderDataIngester):
             "creator_url": creator_url,
             "foreign_identifier": foreign_identifier,
             "foreign_landing_url": foreign_landing_url,
-            "audio_url": audio_url,
+            "url": url,
             "duration": duration,
             "filetype": filetype,
             "thumbnail_url": thumbnail,

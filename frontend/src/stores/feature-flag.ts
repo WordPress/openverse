@@ -150,6 +150,13 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       })
     },
     /**
+     * Write the current state of the feature flags to the cookie. These cookies
+     * are read in the corresponding `initFromCookies` method.
+     */
+    writeToCookie() {
+      this.$nuxt.$cookies.set("features", this.flagStateMap(COOKIE))
+    },
+    /**
      * Write the current state of the switchable flags to the session storage.
      */
     writeToSession() {
@@ -206,6 +213,8 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       const flag = this.flags[name]
       if (getFlagStatus(flag) === SWITCHABLE) {
         flag.preferredState = targetState
+        this.writeToCookie()
+        this.writeToSession()
         if (name === "analytics") this.syncAnalyticsWithLocalStorage()
       } else warn(`Cannot set preferred state for non-switchable flag: ${name}`)
     },

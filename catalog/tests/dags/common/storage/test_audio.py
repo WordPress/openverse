@@ -18,7 +18,7 @@ BY_LICENSE_INFO = LicenseInfo(
 
 mock_audio_args = {
     "foreign_landing_url": "https://landing_page.com",
-    "audio_url": "https://audiourl.com",
+    "url": "https://audiourl.com",
     "license_info": BY_LICENSE_INFO,
     "foreign_identifier": "foreign_id",
     "thumbnail_url": "https://thumbnail.com",
@@ -60,7 +60,7 @@ def test_AudioStore_add_item_adds_realistic_audio_to_buffer():
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        audio_url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.jpg",
         license_info=license_info,
         ingestion_type="provider_api",
     )
@@ -72,25 +72,25 @@ def test_AudioStore_add_item_adds_multiple_audios_to_buffer():
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        audio_url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
-        audio_url="https://audios.org/audio02.jpg",
+        url="https://audios.org/audio02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
-        audio_url="https://audios.org/audio03.jpg",
+        url="https://audios.org/audio03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="04",
         foreign_landing_url="https://audios.org/audio04",
-        audio_url="https://audios.org/audio04.jpg",
+        url="https://audios.org/audio04.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert len(audio_store._media_buffer) == 4
@@ -104,25 +104,25 @@ def test_AudioStore_add_item_flushes_buffer(tmpdir):
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        audio_url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
-        audio_url="https://audios.org/audio02.jpg",
+        url="https://audios.org/audio02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
-        audio_url="https://audios.org/audio03.jpg",
+        url="https://audios.org/audio03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="04",
         foreign_landing_url="https://audios.org/audio04",
-        audio_url="https://audios.org/audio04.jpg",
+        url="https://audios.org/audio04.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert len(audio_store._media_buffer) == 1
@@ -141,19 +141,19 @@ def test_AudioStore_produces_correct_total_audios():
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        audio_url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
-        audio_url="https://audios.org/audio02.jpg",
+        url="https://audios.org/audio02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
-        audio_url="https://audios.org/audio03.jpg",
+        url="https://audios.org/audio03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert audio_store.total_items == 3

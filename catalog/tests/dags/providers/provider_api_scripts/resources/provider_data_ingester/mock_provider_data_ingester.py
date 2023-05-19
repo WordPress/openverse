@@ -47,14 +47,11 @@ class MockProviderDataIngesterMixin:
     def get_record_data(self, record):
         data = {
             "foreign_identifier": record["id"],
-            "foreign_landing_url": record["url"],
+            "foreign_landing_url": record["foreign_landing_url"],
             "media_type": record["media_type"],
             "license_info": LICENSE_INFO,
+            "url": record["url"],
         }
-        if record["media_type"] == "audio":
-            data["audio_url"] = record["audio_url"]
-        elif record["media_type"] == "image":
-            data["image_url"] = record["image_url"]
         return data
 
 
@@ -112,22 +109,22 @@ EXPECTED_BATCH_DATA = [
         "id": 100,
         "media_type": "image",
         "title": "Title 100",
-        "image_url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_web.jpg",  # noqa: E501
-        "url": "https://clevelandart.org/art/1916.586.a",
+        "url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_web.jpg",  # noqa: E501
+        "foreign_landing_url": "https://clevelandart.org/art/1916.586.a",
     },
     {
         "id": 101,
         "media_type": "audio",
         "title": "Title 101",
-        "audio_url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",  # noqa: E501
-        "url": "https://clevelandart.org/art/1335.1917",
+        "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",  # noqa: E501
+        "foreign_landing_url": "https://clevelandart.org/art/1335.1917",
     },
     {
         "id": 102,
         "media_type": "image",
         "title": "Title 102",
-        "image_url": "https://openaccess-cdn.clevelandart.org/1915.534/1915.534_web.jpg",  # noqa: E501
-        "url": "https://clevelandart.org/art/1915.534",
+        "url": "https://openaccess-cdn.clevelandart.org/1915.534/1915.534_web.jpg",  # noqa: E501
+        "foreign_landing_url": "https://clevelandart.org/art/1915.534",
     },
 ]
 
@@ -138,13 +135,13 @@ MOCK_RECORD_DATA_LIST = [
         "foreign_landing_url": "https://clevelandart.org/art/1335.1917",
         "media_type": "audio",
         "license_info": LICENSE_INFO,
-        "audio_url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",  # noqa: E501
+        "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",  # noqa: E501
     },
     {
         "foreign_identifier": 100,
         "foreign_landing_url": "https://clevelandart.org/art/1916.586.a",
         "media_type": "image",
         "license_info": LICENSE_INFO,
-        "image_url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_web.jpg",  # noqa: E501
+        "url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_web.jpg",  # noqa: E501
     },
 ]

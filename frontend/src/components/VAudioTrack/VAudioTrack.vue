@@ -470,7 +470,7 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t("audio-track.aria-label-interactive", {
+        ? i18n.t("audio-track.aria-label-interactive-seekable", {
             title: props.audio.title,
           })
         : i18n.t("audio-track.aria-label", { title: props.audio.title })

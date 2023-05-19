@@ -116,13 +116,13 @@ class MediaStore(metaclass=abc.ABCMeta):
             "license_info",
             "foreign_identifier",
             "foreign_landing_url",
-            f"{self.media_type}_url",
+            "url",
         ]:
             if media_data.get(field) is None:
                 raise ValueError(f"Record missing required field: `{field}`")
 
         for field in [
-            f"{self.media_type}_url",
+            "url",
             "foreign_landing_url",
             "thumbnail_url",
             "creator_url",
@@ -143,7 +143,7 @@ class MediaStore(metaclass=abc.ABCMeta):
                 media_data["ingestion_type"] = "provider_api"
 
         media_data["filetype"] = self._validate_filetype(
-            media_data["filetype"], media_data[f"{self.media_type}_url"]
+            media_data["filetype"], media_data["url"]
         )
         media_data["filesize"] = self._validate_integer(media_data.get("filesize"))
 

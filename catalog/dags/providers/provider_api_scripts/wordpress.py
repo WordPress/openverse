@@ -108,8 +108,8 @@ class WordPressDataIngester(ProviderDataIngester):
         except (KeyError, IndexError):
             return None
 
-        image_url, height, width, filesize = self._get_file_info(media_details)
-        if not image_url:
+        url, height, width, filesize = self._get_file_info(media_details)
+        if not url:
             return None
 
         title = self._get_title(data)
@@ -122,7 +122,7 @@ class WordPressDataIngester(ProviderDataIngester):
             "creator_url": author_url,
             "foreign_identifier": foreign_identifier,
             "foreign_landing_url": foreign_landing_url,
-            "image_url": image_url,
+            "url": url,
             "height": height,
             "width": width,
             "filesize": filesize,

@@ -16,7 +16,9 @@
         {{ $t(`pref-page.groups.${group.title}.title`) }}
       </h2>
       <p class="label-regular mb-4">
-        {{ $t(`pref-page.groups.${group.title}.desc`) }}
+        {{
+          $t(`pref-page.groups.${group.title}.desc`, { openverse: "Openverse" })
+        }}
       </p>
       <ul>
         <li
@@ -81,7 +83,6 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import featureData from "~~/feat/feature-flags.json"
 
@@ -99,7 +100,6 @@ export default defineComponent({
   },
   layout: "content-layout",
   setup() {
-    const { $cookies } = useContext()
     const featureFlagStore = useFeatureFlagStore()
 
     const flags = computed(() => featureFlagStore.flags)
@@ -117,8 +117,6 @@ export default defineComponent({
       checked: boolean
     }) => {
       featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-      featureFlagStore.writeToCookies($cookies)
-      featureFlagStore.writeToSession()
     }
 
     return {

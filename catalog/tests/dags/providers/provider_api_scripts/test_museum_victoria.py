@@ -77,7 +77,7 @@ def test_get_record_data():
 
     expected_image_data = {
         "foreign_identifier": "media/488013",
-        "image_url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
+        "url": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
         "height": 1753,
         "width": 3000,
         "creator": "",
@@ -138,7 +138,7 @@ def test_get_images_success():
     expected_image_data = {
         "creator": "Photographer: Deb Tout-Smith",
         "foreign_identifier": "media/329745",
-        "image_url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
+        "url": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
         "license_info": get_license_info(
             license_url="https://creativecommons.org/licenses/by/4.0"
         ),
@@ -171,11 +171,11 @@ def test_get_image_data(image_size, expected_height, expected_width, expected_fi
         f"329745-{image_size}.jpg"
     )
 
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+    actual_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
         image_data
     )
 
-    assert actual_image_url == expected_url
+    assert actual_url == expected_url
     assert actual_height == expected_height
     assert actual_width == expected_width
     assert actual_filesize == expected_filesize
@@ -184,11 +184,11 @@ def test_get_image_data(image_size, expected_height, expected_width, expected_fi
 def test_get_image_data_none():
     image_data = {}
 
-    actual_image_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
+    actual_url, actual_height, actual_width, actual_filesize = mv._get_image_data(
         image_data
     )
 
-    assert actual_image_url is None
+    assert actual_url is None
     assert actual_height is None
     assert actual_width is None
     assert actual_filesize is None
