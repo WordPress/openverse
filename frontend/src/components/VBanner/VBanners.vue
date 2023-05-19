@@ -64,10 +64,10 @@ export default defineComponent({
 
     const showBanners = computed(() =>
       [
-        shouldShowMigrationBanner.value,
-        shouldShowTranslationBanner.value,
-        shouldShowAnalyticsBanner.value,
-      ].some((item) => item)
+        shouldShowMigrationBanner,
+        shouldShowTranslationBanner,
+        shouldShowAnalyticsBanner,
+      ].some((item) => item.value)
     )
 
     return {
