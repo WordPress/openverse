@@ -63,7 +63,7 @@ for (const dir of languageDirections) {
         test("content switcher with external sources open", async ({
           page,
         }) => {
-          await page.goto(pathWithDir("/?ff_external_sources=on", dir))
+          await page.goto(pathWithDir("/?ff_additional_search_types=on", dir))
           await cleanImageCarousel(page)
 
           await page.locator("#search-type-button").click()

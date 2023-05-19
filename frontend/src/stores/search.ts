@@ -212,7 +212,7 @@ export const useSearchStore = defineStore("search", {
         isAdditionalSearchType(type)
       ) {
         throw new Error(
-          `Please enable the 'external_sources' flag to use the ${type}`
+          `Please enable the 'additional_search_types' flag to use the ${type}`
         )
       }
 
