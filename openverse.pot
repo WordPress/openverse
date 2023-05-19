@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-05-18T19:43:28+00:00\n"
+"POT-Creation-Date: 2023-05-19T06:42:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1227,14 +1227,14 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.contentLink.image.count"
-msgid "See ###localeCount### image found for ###query###"
+msgid "See ###localeCount### image found for ###query###."
 msgid_plural "See ###localeCount### images found for ###query###."
 msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.contentLink.image.countMore"
-msgid "See over ###localeCount### images found for ###query###"
+msgid "See over ###localeCount### images found for ###query###."
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1244,12 +1244,12 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.contentLink.audio.count"
-msgid "See ###localeCount### audio found for ###query###"
+msgid "See ###localeCount### audio found for ###query###."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browse-page.contentLink.audio.countMore"
-msgid "See over ###localeCount### audio found for ###query###"
+msgid "See over ###localeCount### audio found for ###query###."
 msgstr ""
 
 #: src/components/VLoadMore.vue:66
