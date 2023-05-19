@@ -3,6 +3,7 @@ import logging
 import os
 import time
 from collections import namedtuple
+from textwrap import dedent
 from unittest import mock
 
 import psycopg2
@@ -11,6 +12,10 @@ from airflow.models import TaskInstance
 from flaky import flaky
 from psycopg2.errors import InvalidTextRepresentation
 
+from catalog.tests.dags.common.popularity.test_sql import (
+    TableInfo,
+    _set_up_std_popularity_func,
+)
 from common.constants import IMAGE
 from common.loader import sql
 from common.loader.sql import TSV_COLUMNS, create_column_definitions
@@ -81,6 +86,7 @@ removed_idx = COLUMN_NAMES.index(col.REMOVED.db_name)
 watermarked_idx = COLUMN_NAMES.index(col.WATERMARKED.db_name)
 width_idx = COLUMN_NAMES.index(col.WIDTH.db_name)
 height_idx = COLUMN_NAMES.index(col.HEIGHT.db_name)
+standardized_popularity_idx = COLUMN_NAMES.index(col.STANDARDIZED_POPULARITY.db_name)
 
 
 def create_query_values(
@@ -104,6 +110,24 @@ def create_query_values(
 def load_table(identifier):
     # Parallelized tests need to use distinct database tables
     return f"load_image_{identifier}"
+
+
+@pytest.fixture
+def table_info(
+    image_table,
+    identifier,
+) -> TableInfo:
+    return TableInfo(
+        image=image_table,
+        image_view=f"image_view_{identifier}",
+        constants=f"image_popularity_constants_{identifier}",
+        metrics=f"image_popularity_metrics_{identifier}",
+        standardized_popularity=f"standardized_popularity_{identifier}",
+        popularity_percentile=f"popularity_percentile_{identifier}",
+        pop_constants_idx=f"test_popularity_constants_{identifier}_idx",
+        image_view_idx=f"test_view_id_{identifier}_idx",
+        provider_fid_idx=f"test_view_provider_fid_{identifier}_idx",
+    )
 
 
 @pytest.fixture
@@ -132,18 +156,23 @@ def postgres_with_load_table(postgres: PostgresRef, load_table) -> PostgresRef:
 
 
 @pytest.fixture
-def postgres_with_load_and_image_table(load_table, image_table):
+def postgres_with_load_and_image_table(
+    load_table, image_table, table_info, mock_pg_hook_task
+):
     conn = psycopg2.connect(POSTGRES_TEST_URI)
     cur = conn.cursor()
-    drop_load_table_query = f"DROP TABLE IF EXISTS {load_table} CASCADE;"
-    drop_image_table_query = f"DROP TABLE IF EXISTS {image_table} CASCADE;"
-    drop_image_index_query = f"DROP INDEX IF EXISTS {image_table}_provider_fid_idx;"
+    drop_test_relations_query = f"""
+    DROP TABLE IF EXISTS {load_table} CASCADE;
+    DROP TABLE IF EXISTS {image_table} CASCADE;
+    DROP INDEX IF EXISTS {image_table}_provider_fid_idx;
+    DROP MATERIALIZED VIEW IF EXISTS {table_info.constants} CASCADE;
+    DROP TABLE IF EXISTS {table_info.metrics} CASCADE;
+    DROP FUNCTION IF EXISTS {table_info.standardized_popularity} CASCADE;
+    DROP FUNCTION IF EXISTS {table_info.popularity_percentile} CASCADE;
+    """
 
-    logging.info(f"dropping load table: {drop_load_table_query}")
-    logging.info(f"dropping image table: {drop_image_table_query}")
-    cur.execute(drop_load_table_query)
-    cur.execute(drop_image_table_query)
-    cur.execute(drop_image_index_query)
+    cur.execute(drop_test_relations_query)
+
     cur.execute(CREATE_LOAD_TABLE_QUERY.format(load_table))
     cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;')
     cur.execute(CREATE_IMAGE_TABLE_QUERY.format(image_table))
@@ -153,9 +182,7 @@ def postgres_with_load_and_image_table(load_table, image_table):
 
     yield PostgresRef(cursor=cur, connection=conn)
 
-    cur.execute(drop_load_table_query)
-    cur.execute(drop_image_table_query)
-    cur.execute(drop_image_index_query)
+    cur.execute(drop_test_relations_query)
     cur.close()
     conn.commit()
     conn.close()
@@ -1419,6 +1446,138 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
     assert actual_rows[0][metadata_idx] == expected_meta_data
     assert actual_rows[0][fid_idx] == "a"
     assert actual_rows[1][fid_idx] == "c"
+
+
+def test_upsert_records_calculates_standardized_popularity(
+    postgres_with_load_and_image_table,
+    tmpdir,
+    load_table,
+    image_table,
+    identifier,
+    table_info,
+    mock_pg_hook_task,
+):
+    postgres_conn_id = POSTGRES_CONN_ID
+
+    PROVIDER = "images_provider"
+    FID_A = "fid_a"
+    FID_B = "fid_b"
+    FID_C = "fid_c"
+
+    # To test standardized popularity calculation, we want to have existing popularity
+    # data. This query will be used to insert a few rows into the image table.
+    data_query = dedent(
+        f"""
+        INSERT INTO {image_table} (
+          created_on, updated_on, provider, foreign_identifier, url,
+          meta_data, license, removed_from_source
+        )
+        VALUES
+          (
+            NOW(), NOW(), '{PROVIDER}', '{FID_A}', 'https://test.com/a.jpg',
+            '{{"views": 0, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), '{PROVIDER}', '{FID_B}', 'https://test.com/b.jpg',
+            '{{"views": 50, "description": "cats"}}', 'cc0', false
+          )
+        ;
+        """
+    )
+
+    # Sample data to insert into the `image_popularity_metrics` table, so that popularity
+    # constants will be calculated for our fake provider.
+    metrics = {
+        PROVIDER: {"metric": "views", "percentile": 0.8},
+    }
+
+    # Now we set up the popularity constants tables, views, and functions. This method will
+    # run the `data_query` to insert our test rows, which will initially have `null` standardized
+    # popularity (because no popularity constants exist). Then it will insert `metrics` into
+    # the `image_popularity_metrics` table, and create the `image_popularity_constants` view,
+    # calculating a value for the popularity constant for PROVIDER using those initial records.
+    # Then it sets up the standardized popularity function itself.
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        data_query,
+        metrics,
+        table_info,
+        mock_pg_hook_task,
+    )
+
+    # Now we want to try to upsert some records into the db. We want to update one of the existing
+    # records, and also insert a new one.
+
+    # A record matching one of our existing records into the load table.
+    query_values_update_old_record = create_query_values(
+        {
+            col.FOREIGN_ID.db_name: FID_A,  # Matching a record that was already inserted
+            col.DIRECT_URL.db_name: "https://test.com/a.jpg",
+            col.LICENSE.db_name: "cc0",
+            col.META_DATA.db_name: '{"views": 10, "description": "cats"}',  # Update the number of views
+            col.PROVIDER.db_name: PROVIDER,
+        }
+    )
+
+    # A brand new record into the load table.
+    query_values_update_new_record = create_query_values(
+        {
+            col.FOREIGN_ID.db_name: FID_C,
+            col.DIRECT_URL.db_name: "https://test.com/z.jpg",
+            col.LICENSE.db_name: "cc0",
+            col.META_DATA.db_name: '{"views": 20, "description": "dogs"}',
+            col.PROVIDER.db_name: PROVIDER,
+        }
+    )
+
+    # Queries to insert the two records into the load table.
+    load_data_query_old_record = f"""INSERT INTO {load_table} VALUES(
+        {query_values_update_old_record}
+    );"""
+
+    load_data_query_new_record = f"""INSERT INTO {load_table} VALUES(
+        {query_values_update_new_record}
+    );"""
+
+    # Now actually insert the records into the load table. This simulates a DagRun which ingests both
+    # records.
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_old_record)
+    postgres_with_load_and_image_table.cursor.execute(load_data_query_new_record)
+    postgres_with_load_and_image_table.connection.commit()
+
+    # Confirm that both made it to the loading table.
+    postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {load_table};")
+    rows = postgres_with_load_and_image_table.cursor.fetchall()
+    assert len(rows) == 2
+
+    # Now try upserting the records from the loading table to the final image table. Standardized popularity
+    # should be calculated for both records.
+    sql.upsert_records_to_db_table(
+        postgres_conn_id,
+        identifier,
+        db_table=image_table,
+        popularity_function=table_info.standardized_popularity,
+        task=mock_pg_hook_task,
+    )
+    postgres_with_load_and_image_table.connection.commit()
+
+    # Now check the final state of the image table. We expect there to be three rows total.
+    postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
+    actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
+    assert len(actual_rows) == 3
+
+    # This record was present on the image table but was not updated, so it still has null popularity.
+    assert actual_rows[0][fid_idx] == FID_B
+    assert actual_rows[0][standardized_popularity_idx] is None
+
+    # This is the row that was updated; it should have standardized popularity calculated based on its
+    # updated raw popularity score, rather than the initial raw score.
+    assert actual_rows[1][fid_idx] == FID_A
+    assert actual_rows[1][standardized_popularity_idx] == 0.44444444444444453
+
+    # This is the new record
+    assert actual_rows[2][fid_idx] == FID_C
+    assert actual_rows[2][standardized_popularity_idx] == 0.6153846153846154
 
 
 def test_drop_load_table_drops_table(postgres_with_load_table, load_table, identifier):

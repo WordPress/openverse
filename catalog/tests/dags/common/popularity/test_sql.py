@@ -8,7 +8,9 @@ from typing import NamedTuple
 import psycopg2
 import pytest
 
+from common.loader.sql import create_column_definitions
 from common.popularity import sql
+from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 
 
 DDL_DEFINITIONS_PATH = Path(__file__).parents[5] / "docker" / "upstream_db"
@@ -63,35 +65,10 @@ def postgres_with_image_table(table_info):
 
     cur.execute(drop_test_relations_query)
     cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;')
-    cur.execute(
-        f"""
-CREATE TABLE public.{table_info.image} (
-identifier uuid PRIMARY KEY DEFAULT public.uuid_generate_v4(),
-created_on timestamp with time zone NOT NULL,
-updated_on timestamp with time zone NOT NULL,
-ingestion_type character varying(80),
-provider character varying(80),
-source character varying(80),
-foreign_identifier character varying(3000),
-foreign_landing_url character varying(1000),
-url character varying(3000) NOT NULL,
-thumbnail character varying(3000),
-width integer,
-height integer,
-filesize integer,
-license character varying(50) NOT NULL,
-license_version character varying(25),
-creator character varying(2000),
-creator_url character varying(2000),
-title character varying(5000),
-meta_data jsonb,
-tags jsonb,
-watermarked boolean,
-last_synced_with_source timestamp with time zone,
-removed_from_source boolean NOT NULL
-);
-"""
-    )
+
+    image_columns = create_column_definitions(IMAGE_TABLE_COLUMNS)
+    cur.execute(f"CREATE TABLE public.{table_info.image} ({image_columns});")
+
     cur.execute(
         f"""
 CREATE UNIQUE INDEX {table_info.image}_provider_fid_idx
