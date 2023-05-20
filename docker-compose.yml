@@ -72,13 +72,12 @@ services:
     env_file:
       - .env
       - docker/minio/.env
-    # Create empty buckets on every container startup
-    # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
-    # argument, so it must be re-added at the beginning of the exec call
-    entrypoint: docker/minio/s3_entrypoint.sh
+    
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
+      - ./docker/minio/s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro
+    entrypoint: /opt/minio/s3_entrypoint.sh
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
       interval: 30s
@@ -99,14 +98,13 @@ services:
       # Buckets for testing provider data imported from s3 are subdirectories under
       # /tests/s3-data/
       - ./catalog/tests/s3-data:/data:rw
+      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro
     # Loop through subdirectories mounted to the volume and load them to s3/minio.
     # This takes care of filesystem delays on some local dev environments that may make
     # minio miss files included directly in the minio volume.
     # More info here: https://stackoverflow.com/questions/72867045
-    # This does *not* allow for testing permissions issues that may come up in real AWS.
-    # And, if you remove files from /tests/s3-data, you will need to use `just down -v`
-    # and `just up` or `just recreate` to see the minio bucket without those files.
-    entrypoint: docker/minio/load_to_s3_entrypoint.sh
+    
+    entrypoint: /opt/minio/load_to_s3_entrypoint.sh
 
   # Dev changes for the scheduler
   scheduler:
