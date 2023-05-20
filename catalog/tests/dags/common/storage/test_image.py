@@ -28,7 +28,7 @@ def test_ImageStore_add_item_adds_realistic_image_to_buffer(setup_env):
     image_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
-        image_url="https://images.org/image01.jpg",
+        url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert len(image_store._media_buffer) == 1
@@ -41,25 +41,25 @@ def test_ImageStore_add_item_adds_multiple_images_to_buffer(
     image_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://images.org/image01",
-        image_url="https://images.org/image01.jpg",
+        url="https://images.org/image01.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://images.org/image02",
-        image_url="https://images.org/image02.jpg",
+        url="https://images.org/image02.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://images.org/image03",
-        image_url="https://images.org/image03.jpg",
+        url="https://images.org/image03.jpg",
         license_info=PD_LICENSE_INFO,
     )
     image_store.add_item(
         foreign_identifier="04",
         foreign_landing_url="https://images.org/image04",
-        image_url="https://images.org/image04.jpg",
+        url="https://images.org/image04.jpg",
         license_info=PD_LICENSE_INFO,
     )
     assert len(image_store._media_buffer) == 4
@@ -71,7 +71,7 @@ def test_ImageStore_get_image_places_given_args(
     image_store = image.ImageStore(provider="testing_provider")
     args_dict = {
         "foreign_landing_url": "https://landing_page.com",
-        "image_url": "https://imageurl.com",
+        "url": "https://imageurl.com",
         "license_info": BY_LICENSE_INFO,
         "foreign_identifier": "foreign_id",
         "thumbnail_url": "https://thumbnail.com",
@@ -106,7 +106,6 @@ def test_ImageStore_get_image_places_given_args(
     args_dict["filesize"] = 1000
     args_dict["license_"] = args_dict.get("license_info").license
     args_dict["license_version"] = args_dict.pop("license_info").version
-    args_dict["url"] = args_dict.pop("image_url")
 
     assert actual_image == image.Image(**args_dict)
 

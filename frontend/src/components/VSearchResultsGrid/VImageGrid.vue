@@ -1,14 +1,19 @@
 <template>
   <section>
-    <div class="image-grid flex flex-wrap gap-4">
+    <VGridSkeleton
+      v-if="!images.length && !fetchState.isFinished"
+      is-for-tab="image"
+    />
+    <ol class="image-grid flex flex-wrap gap-4" :aria-label="imageGridLabel">
       <VImageCell
         v-for="image in images"
         :key="image.id"
+        as="li"
         :image="image"
         :search-term="searchTerm"
         aspect-ratio="intrinsic"
       />
-    </div>
+    </ol>
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
       {{ fetchState.fetchingError }}
     </h5>
@@ -33,12 +38,13 @@ import { useSearchStore } from "~/stores/search"
 import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
 
+import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
 
 export default defineComponent({
   name: "ImageGrid",
-  components: { VLoadMore, VImageCell },
+  components: { VGridSkeleton, VLoadMore, VImageCell },
   props: {
     images: {
       type: Array as PropType<ImageDetail[]>,
@@ -56,6 +62,10 @@ export default defineComponent({
     },
     fetchState: {
       type: Object as PropType<FetchState>,
+      required: true,
+    },
+    imageGridLabel: {
+      type: String,
       required: true,
     },
   },

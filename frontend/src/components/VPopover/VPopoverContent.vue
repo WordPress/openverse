@@ -8,6 +8,8 @@
   >
     <div
       ref="popoverRef"
+      role="dialog"
+      aria-modal="true"
       class="popover-content overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
       :class="[`z-${zIndex}`, width]"
       :style="heightProperties"
@@ -93,6 +95,10 @@ export default defineComponent({
     clippable: {
       type: Boolean,
       default: false,
+    },
+    trapFocus: {
+      type: Boolean,
+      default: true,
     },
     /**
      * Optional Tailwind class for fixed width.

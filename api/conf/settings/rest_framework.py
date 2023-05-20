@@ -3,9 +3,8 @@ from decouple import config
 from conf.settings.base import INSTALLED_APPS
 
 
-INSTALLED_APPS += [
-    "rest_framework",
-]
+if "rest_framework" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("rest_framework")
 
 
 THROTTLE_ANON_BURST = config("THROTTLE_ANON_BURST", default="5/hour")

@@ -202,7 +202,7 @@ def test_get_record_data_with_non_ok():
                 '{"isPublicDomain": true, "objectURL": "test.com", "primaryImage": ""}'
             ),
             None,
-            id="missing_image_url",
+            id="missing_url",
         ),
     ],
 )

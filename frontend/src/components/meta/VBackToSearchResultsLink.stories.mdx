@@ -8,7 +8,7 @@ import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 />
 
 export const Template = (args) => ({
-  template: `<VBackToSearchResultsLink v-bind="args" :id="id" />`,
+  template: `<VBackToSearchResultsLink v-bind="args" />`,
   components: { VBackToSearchResultsLink },
   setup() {
     return { args }
@@ -20,7 +20,7 @@ export const Template = (args) => ({
 <Description of={VBackToSearchResultsLink} />
 
 <Canvas>
-  <Story name="Default" args={{ href: "#" }}>
+  <Story name="Default" args={{ href: "#", id: "123" }}>
     {Template.bind({})}
   </Story>
 </Canvas>

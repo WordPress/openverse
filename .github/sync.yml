@@ -6,6 +6,11 @@ group:
   - repos: |
       WordPress/openverse-infrastructure
     files:
+      # Dependencies for some workflows
+      - source: automations/python/
+        dest: automations/python/
+      - source: automations/data/
+        dest: automations/data/
       # Synced workflows
       - source: .github/workflows/new_issues.yml
         dest: .github/workflows/new_issues.yml

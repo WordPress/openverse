@@ -16,6 +16,10 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useI18n } from "~/composables/use-i18n"
 
+import { useAnalytics } from "~/composables/use-analytics"
+
+import { useComponentName } from "./use-component-name"
+
 const icons = {
   [ALL_MEDIA]: "all",
   [AUDIO]: "audio",
@@ -34,6 +38,9 @@ const labels = {
 
 export default function useSearchType() {
   const i18n = useI18n()
+  const componentName = useComponentName()
+  const analytics = useAnalytics()
+
   const activeType = computed(() => useSearchStore().searchType)
 
   const previousSearchType = ref(activeType.value)
@@ -47,6 +54,12 @@ export default function useSearchType() {
 
   const setActiveType = (searchType: SearchType) => {
     if (previousSearchType.value === searchType) return
+
+    analytics.sendCustomEvent("CHANGE_CONTENT_TYPE", {
+      previous: previousSearchType.value,
+      next: searchType,
+      component: componentName,
+    })
     useSearchStore().setSearchType(searchType)
     previousSearchType.value = searchType
   }

@@ -10,9 +10,8 @@ USE_S3 = config("USE_S3", default=False, cast=bool)
 
 
 if USE_S3:
-    INSTALLED_APPS += [
-        "storages",
-    ]
+    if "storages" not in INSTALLED_APPS:
+        INSTALLED_APPS.append("storages")
 
     STORAGES["default"]["BACKEND"] = "storages.backends.s3boto3.S3Boto3Storage"
 

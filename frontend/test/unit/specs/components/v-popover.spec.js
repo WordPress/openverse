@@ -33,7 +33,7 @@ const TestWrapper = Vue.component("TestWrapper", {
       <div>External area</div>
       <VPopover label="Test label" v-bind="popoverProps">
         <template #trigger="{ visible, a11yProps }">
-          <VButton variant="bordered-white" :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
+          <VButton variant="bordered-white" size="medium" :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>
         <div :tabindex="popoverContentTabIndex">Code is Poetry</div>
       </VPopover>
@@ -133,7 +133,9 @@ describe("VPopover", () => {
 
     describe("autoFocusOnHide", () => {
       it("should return focus to the trigger", async () => {
-        render(TestWrapper)
+        render(TestWrapper, {
+          props: { popoverProps: { trapFocus: false } },
+        })
         await doOpen()
         await clickOutside()
         expectClosed()
@@ -142,7 +144,7 @@ describe("VPopover", () => {
 
       it("should not return focus to the trigger when false", async () => {
         render(TestWrapper, {
-          props: { popoverProps: { autoFocusOnHide: false } },
+          props: { popoverProps: { trapFocus: false, autoFocusOnHide: false } },
         })
         await doOpen()
         await clickOutside()

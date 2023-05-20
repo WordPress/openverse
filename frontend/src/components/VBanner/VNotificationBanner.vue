@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex items-center justify-between gap-x-2 px-4 py-2 md:px-7"
+    class="flex items-center justify-between gap-x-2 rounded-sm px-4 py-2 md:px-7"
     :class="$style[variant]"
     :data-testid="`banner-${id}`"
   >

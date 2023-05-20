@@ -290,7 +290,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
             if image_data.get("type") != "Images" or usage != "CC0":
                 continue
 
-            if not (image_url := image_data.get("content")):
+            if not (url := image_data.get("content")):
                 continue
 
             if not (foreign_identifier := image_data.get("idsId")):
@@ -299,7 +299,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
             images.append(
                 {
                     **partial_image_data,
-                    "image_url": image_url,
+                    "url": url,
                     "foreign_identifier": foreign_identifier,
                 }
             )

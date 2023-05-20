@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
-import { OFF, ON } from "~/constants/feature-flag"
+import { OFF, ON, COOKIE, SESSION } from "~/constants/feature-flag"
 
 jest.mock(
   "~~/feat/feature-flags.json",
@@ -10,20 +10,30 @@ jest.mock(
       feat_enabled: {
         status: "enabled",
         description: "Will always be enabled",
+        storage: "cookie",
       },
       feat_disabled: {
         status: "disabled",
         description: "Will always be disabled",
+        storage: "cookie",
       },
       feat_switchable_optout: {
         status: "switchable",
         description: "Can be switched between on and off",
         defaultState: "on",
+        storage: "cookie",
       },
       feat_switchable_optin: {
         status: "switchable",
         description: "Can be switched between on and off",
         defaultState: "off",
+        storage: "session",
+      },
+      feat_no_query: {
+        status: "switchable",
+        description: "Cannot be flipped by ff_ query params",
+        defaultState: "off",
+        supportsQuery: false,
       },
       feat_env_specific: {
         status: {
@@ -33,6 +43,7 @@ jest.mock(
         },
         description: "Depends on the environment",
         defaultState: "off",
+        storage: "cookie",
       },
     },
   }),
@@ -46,7 +57,7 @@ describe("Feature flag store", () => {
 
   it("initialises state from JSON", () => {
     const featureFlagStore = useFeatureFlagStore()
-    expect(Object.keys(featureFlagStore.flags).length).toBe(5)
+    expect(Object.keys(featureFlagStore.flags).length).toBe(6)
   })
 
   it.each`
@@ -63,20 +74,39 @@ describe("Feature flag store", () => {
   )
 
   it.each`
-    flagName                    | doCookieInit | featureState
-    ${"feat_switchable_optout"} | ${false}     | ${"on"}
-    ${"feat_switchable_optin"}  | ${false}     | ${"off"}
-    ${"feat_switchable_optout"} | ${true}      | ${"off"}
-    ${"feat_switchable_optin"}  | ${true}      | ${"on"}
+    doCookieInit | featureState
+    ${false}     | ${"on"}
+    ${true}      | ${"off"}
   `(
-    "cascades flag $flagName from cookies",
-    ({ flagName, doCookieInit, featureState }) => {
+    "cascades cookie-storage flag from cookies",
+    ({ doCookieInit, featureState }) => {
+      const flagName = "feat_switchable_optout"
       const featureFlagStore = useFeatureFlagStore()
       if (doCookieInit)
         featureFlagStore.initFromCookies({
           feat_switchable_optout: OFF,
-          feat_switchable_optin: ON,
         })
+      expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
+      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
+    }
+  )
+
+  it.each`
+    doSessionInit | featureState
+    ${false}      | ${"off"}
+    ${true}       | ${"on"}
+  `(
+    "cascades session-storage flag from sessionStorage",
+    ({ doSessionInit, featureState }) => {
+      const flagName = "feat_switchable_optin"
+      const featureFlagStore = useFeatureFlagStore()
+
+      window.sessionStorage.setItem(
+        "features",
+        JSON.stringify({ feat_switchable_optin: ON })
+      )
+      if (doSessionInit) featureFlagStore.initFromSession()
+
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
       expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
     }
@@ -117,6 +147,15 @@ describe("Feature flag store", () => {
       expect(featureFlagStore.featureState(flagName)).toEqual(finalState)
     }
   )
+
+  it("does not cascade query-unsupporting flags from query params", () => {
+    const featureFlagStore = useFeatureFlagStore()
+    expect(featureFlagStore.featureState("feat_no_query")).toEqual(OFF)
+    featureFlagStore.initFromQuery({
+      feat_no_query: "on",
+    })
+    expect(featureFlagStore.featureState("feat_no_query")).toEqual(OFF)
+  })
 
   it.each`
     environment     | featureState
@@ -164,12 +203,15 @@ describe("Feature flag store", () => {
     }
   )
 
-  it("returns mapping of switchable flags", () => {
+  it.each`
+    storage    | flagName
+    ${COOKIE}  | ${"feat_switchable_optout"}
+    ${SESSION} | ${"feat_switchable_optin"}
+  `("returns mapping of switchable flags", ({ storage, flagName }) => {
     const featureFlagStore = useFeatureFlagStore()
-    const flagStateMap = featureFlagStore.flagStateMap
+    const flagStateMap = featureFlagStore.flagStateMap(storage)
 
-    expect(flagStateMap).toHaveProperty("feat_switchable_optout")
-    expect(flagStateMap).toHaveProperty("feat_switchable_optin")
+    expect(flagStateMap).toHaveProperty(flagName)
 
     expect(flagStateMap).not.toHaveProperty("feat_enabled")
     expect(flagStateMap).not.toHaveProperty("feat_disabled")

@@ -19,6 +19,7 @@ class Datatype(Enum):
     jsonb = "jsonb"
     timestamp = "timestamp with time zone"
     uuid = "uuid"
+    double = "double precision"
 
 
 class UpsertStrategy(Enum):
@@ -29,10 +30,24 @@ class UpsertStrategy(Enum):
     merge_jsonb_arrays = auto()
     merge_array = auto()
     no_change = ()
+    calculate_value = auto()
 
 
 Datatypes = NewType("Datatype", Datatype)
 UpsertStrategies = NewType("UpsertStrategy", UpsertStrategy)
+
+
+def _calculate_value(function: str, prefix: str, *args) -> str:
+    """
+    Return SQL to calculate the value by calling the given
+    function with the given args.
+    """
+    if args:
+        arguments = ", ".join([prefix + str(arg) for arg in args])
+        return f"{function}({arguments})"
+
+    # Handle function with no args
+    return f"{function}()"
 
 
 def _newest_non_null(column: str) -> str:
@@ -169,8 +184,8 @@ class Column(ABC):
         else:
             return string
 
-    @property
-    def upsert_name(self):
+    def get_insert_value(self, *args):
+        """Return the string used for this column in an INSERT statement."""
         if self.upsert_strategy == UpsertStrategy.now:
             return NOW
         elif self.upsert_strategy == UpsertStrategy.false:
@@ -178,8 +193,8 @@ class Column(ABC):
         else:
             return self.db_name
 
-    @property
-    def upsert_value(self):
+    def get_update_value(self, *args):
+        """Return the string used for this column in the UPDATE statement."""
         strategy = Column.strategies.get(self.upsert_strategy)
         if strategy is None:
             logging.warning(
@@ -228,7 +243,7 @@ class IntegerColumn(Column):
         """
         Return a string representation to the best integer approx of input.
 
-        If there is no sane mapping from the input to an integer,
+        If there is no reasonable mapping from the input to an integer,
         returns None.
 
         value: for useful output this should be reasonably castable to an int.
@@ -237,6 +252,87 @@ class IntegerColumn(Column):
             number = str(int(float(value)))
         except (TypeError, ValueError) as e:
             logger.debug(f"input {value} is not castable to an int.  The error was {e}")
+            number = None
+        return number
+
+
+class CalculatedColumn(Column):
+    """
+    A specially handled PostgreSQL column of type double precision, which
+    is always calculated at insertion and update.
+
+    name:      name of the corresponding column in the DB
+    required:  whether the column should be considered required by the
+               instantiating script.  (Not necessarily mapping to
+               `not null` columns in the PostgreSQL table)
+    sql_args:  optionally, a list of string arguments passed to the SQL
+               function used to calculate the column value
+    """
+
+    def __init__(
+        self,
+        name: str,
+        required: bool,
+        sql_args: list[str] | None = None,
+        constraint: str | None = None,
+        db_name: str | None = None,
+    ):
+        super().__init__(
+            name,
+            required,
+            datatype=Datatype.double,
+            upsert_strategy=UpsertStrategy.calculate_value,
+            constraint=constraint,
+            db_name=db_name,
+        )
+        self.sql_args = sql_args
+
+    def get_insert_value(self, sql_function, prefix=""):
+        """
+        Return the string used for this column in an INSERT statement.
+
+        For a calculated column, this will be a call to the SQL function with the
+        given arguments, with no prefix applied. E.g.:
+
+        `standardized_image_popularity(provider, meta_data)`
+        """
+        return _calculate_value(sql_function, prefix, *self.sql_args)
+
+    def get_update_value(self, sql_function):
+        """
+        Return the string used for this column in an UPDATE statement, when there is
+        a conflict during INSERT.
+
+        For a calculated column, this will be an assignment to the SQL function with
+        the given arguments, with the `EXCLUDED.` prefix applied: this indicates that
+        in the upsert, the columns used as arguments should come from the new row we
+        are attempting to upsert, rather than the existing data (i.e., we should use the
+        more up-to-date information). E.g.:
+
+        ```
+        standardized_popularity = standardized_image_popularity(
+            EXCLUDED.provider, EXCLUDED.meta_data
+        )
+        ```
+        """
+        function_call = self.get_insert_value(sql_function, prefix="EXCLUDED.")
+        return f"{self.db_name} = {function_call}"
+
+    def prepare_string(self, value):
+        """
+        Return a string representation to the best float approx of input.
+
+        If there is no reasonable mapping from the input to a float,
+        returns None.
+
+        value: for useful output this should be reasonably castable to a float.
+        """
+        try:
+            number = str(float(value))
+        except (TypeError, ValueError) as e:
+            logger.debug(
+                f"input {value} is not castable to a float.  The error was {e}"
+            )
             number = None
         return number
 
@@ -273,7 +369,7 @@ class BooleanColumn(Column):
         """
         Return a string `t` or `f`, as appropriate to input.
 
-        If there is no sane mapping from the input to a boolean,
+        If there is no reasonable mapping from the input to a boolean,
         returns None.
 
         value: for useful output this should be reasonably castable to a bool.
@@ -444,8 +540,7 @@ class TimestampColumn(Column):
             upsert_strategy=upsert_strategy or UpsertStrategy.now,
         )
 
-    @property
-    def upsert_name(self):
+    def get_insert_value(self, *args):
         return NOW
 
     def prepare_string(self, value):
@@ -659,3 +754,9 @@ REMOVED = BooleanColumn(
 )
 
 FILETYPE = StringColumn(name="filetype", required=False, truncate=False, size=5)
+
+STANDARDIZED_POPULARITY = CalculatedColumn(
+    name="standardized_popularity",
+    required=False,
+    sql_args=[PROVIDER.db_name, META_DATA.db_name],
+)

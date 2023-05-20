@@ -1,4 +1,5 @@
 import subprocess
+import traceback
 from dataclasses import dataclass
 
 
@@ -63,7 +64,10 @@ def parse_ps() -> list[Service]:
     lines = get_ps()
     lines = [stripped for line in lines if (stripped := line.strip())]
     for line in lines:
-        service, image, ports = line.split("\t")
+        parts = line.split("\t")
+        if len(parts) != 3:
+            raise ValueError(f"Unexpected line format from `docker ps`: {line}")
+        service, image, ports = parts
         # Services are usually of the form openverse-<name>-1 or openverse_<name>_1,
         # but we can't always tell which one is used.
         strip_char = service.removeprefix("openverse")[0]
@@ -96,8 +100,13 @@ def print_ps():
     print("=" * 80)
     print(f"{'Service Ports':^80}")
     print("=" * 80)
-    for service in parse_ps():
-        service.print()
+    try:
+        for service in parse_ps():
+            service.print()
+    except Exception as err:
+        print(traceback.format_exc())
+        print("=" * 80)
+        print(f"Failed to get service info ({err.__class__.__name__}): \n{err}")
     print("=" * 80)
 
 

@@ -1,10 +1,11 @@
 import logging
+from os.path import splitext
 from urllib.parse import urlparse
 
 from django.conf import settings
 from django.http import HttpResponse
 from rest_framework import status
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, UnsupportedMediaType
 
 import django_redis
 import requests
@@ -20,11 +21,64 @@ class UpstreamThumbnailException(APIException):
     default_code = "upstream_photon_failure"
 
 
+ALLOWED_TYPES = {"gif", "jpg", "jpeg", "png", "webp"}
+
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
         purpose="ThumbnailGeneration"
     )
 }
+
+
+def _get_file_extension_from_url(image_url: str) -> str:
+    """Return the image extension if present in the URL."""
+    parsed = urlparse(image_url)
+    _, ext = splitext(parsed.path)
+    return ext[1:]  # remove the leading dot
+
+
+def _get_file_extension_from_content_type(content_type: str) -> str | None:
+    """
+    Return the image extension if present in the Response's content type
+    header.
+    """
+    if content_type and "/" in content_type:
+        return content_type.split("/")[1]
+    return None
+
+
+def check_image_type(image_url: str, media_obj) -> None:
+    cache = django_redis.get_redis_connection("default")
+    key = f"media:{media_obj.identifier}:thumb_type"
+
+    ext = _get_file_extension_from_url(image_url)
+
+    if not ext:
+        # If the extension is not present in the URL, try to get it from the redis cache
+        ext = cache.get(key)
+
+    if not ext:
+        # If the extension is still not present, try getting it from the content type
+        try:
+            response = requests.head(image_url)
+            response.raise_for_status()
+        except Exception as exc:
+            sentry_sdk.capture_exception(exc)
+            raise UpstreamThumbnailException(
+                "Failed to render thumbnail due to inability to check media "
+                f"type. {exc}"
+            )
+        else:
+            if response.headers and "Content-Type" in response.headers:
+                content_type = response.headers["Content-Type"]
+                ext = _get_file_extension_from_content_type(content_type)
+            else:
+                ext = None
+
+            cache.set(key, ext if ext else "unknown")
+
+    if ext not in ALLOWED_TYPES:
+        raise UnsupportedMediaType(ext)
 
 
 def _get_photon_params(image_url, is_full_size, is_compressed):
@@ -64,6 +118,8 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     logger = parent_logger.getChild("get")
+    cache = django_redis.get_redis_connection("default")
+
     params, parsed_image_url = _get_photon_params(
         image_url, is_full_size, is_compressed
     )
@@ -89,7 +145,6 @@ def get(
     except requests.ReadTimeout as exc:
         # Count the incident so that we can identify providers with most timeouts.
         key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}{domain}"
-        cache = django_redis.get_redis_connection("default")
         try:
             cache.incr(key)
         except ValueError:  # Key does not exist.
@@ -99,6 +154,22 @@ def get(
         raise UpstreamThumbnailException(
             f"Failed to render thumbnail due to timeout: {exc}"
         )
+    except requests.HTTPError as exc:
+        # Save number of occurrences to redis. Only raise a Sentry error when
+        # the number of occurrences reaches the configured threshold, to
+        # prevent provider API downtime from causing excessive Sentry events.
+        key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}{domain}"
+        errors = 1
+        try:
+            errors = cache.incr(key)
+        except ValueError:  # Key does not exist.
+            cache.set(key, 1)
+        if errors >= settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY and (
+            errors % settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_FOR_REPEATED_NOTIFICATIONS
+            == 0
+        ):
+            sentry_sdk.capture_exception(exc)
+        raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
     except requests.RequestException as exc:
         sentry_sdk.capture_exception(exc)
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")

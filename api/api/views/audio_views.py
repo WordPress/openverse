@@ -66,14 +66,14 @@ class AudioViewSet(MediaViewSet):
         audio = self.get_object()
 
         image_url = None
-        if thumbnail := audio.thumbnail:
-            image_url = thumbnail
-        elif audio.audio_set and (thumbnail := audio.audio_set.thumbnail):
-            image_url = thumbnail
+        if audio_thumbnail := audio.thumbnail:
+            image_url = audio_thumbnail
+        elif audio.audio_set and (audio_thumbnail := audio.audio_set.thumbnail):
+            image_url = audio_thumbnail
         if not image_url:
             raise NotFound("Could not find artwork.")
 
-        return super().thumbnail(image_url, request)
+        return super().thumbnail(request, audio, image_url)
 
     @waveform
     @action(

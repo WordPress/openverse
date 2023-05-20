@@ -1,6 +1,5 @@
 from conf.settings.base import INSTALLED_APPS
 
 
-INSTALLED_APPS += [
-    "api",
-]
+if "api" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("api")

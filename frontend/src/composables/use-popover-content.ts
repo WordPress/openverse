@@ -34,7 +34,7 @@ export function usePopoverContent({
       autoFocusOnHideRef: popoverPropsRefs.autoFocusOnHide,
       hideOnClickOutsideRef: popoverPropsRefs.hideOnClickOutside,
       hideOnEscRef: popoverPropsRefs.hideOnEsc,
-      trapFocusRef: ref(false),
+      trapFocusRef: popoverPropsRefs.trapFocus,
     },
     emit,
     attrs,
