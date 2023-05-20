@@ -94,7 +94,8 @@ const VButton = defineComponent({
     /**
      * The variant of the button.
      *
-     * Plain removes all styles except the focus ring.
+     * Plain removes all styles except the focus ring. The button
+     * should set a border color, otherwise the browser default is used.
      * Plain--avoid removes _all_ styles including the focus ring.
      */
     variant: {
