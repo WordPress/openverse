@@ -17,11 +17,10 @@
         'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
         // Custom tailwind classes don't work with CSS modules in Vue, so they are
         // written here explicitly instead of accessed off of `$style`.
-        'focus-slim-filled': isFilled,
-        'focus-slim-tx': isBordered || isTransparent,
+        'focus-slim-filled': isFocusSlimFilled,
+        'focus-slim-tx': isFocusSlimTx,
+        'focus-bold-filled ': variant === 'dropdown-label-pressed',
         border: !isPlainDangerous,
-        'border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
-          !isPlainDangerous && !isNewVariant,
       },
     ]"
     :aria-pressed="pressed"
@@ -208,14 +207,15 @@ const VButton = defineComponent({
     const isPlainDangerous = computed(() => {
       return propsRef.variant.value === "plain--avoid"
     })
-    const isFilled = computed(() => {
+    const isFocusSlimFilled = computed(() => {
       return props.variant.startsWith("filled-")
     })
-    const isBordered = computed(() => {
-      return props.variant.startsWith("bordered-")
-    })
-    const isTransparent = computed(() => {
-      return props.variant.startsWith("transparent-")
+    const isFocusSlimTx = computed(() => {
+      return (
+        props.variant.startsWith("bordered-") ||
+        props.variant.startsWith("transparent-") ||
+        ["dropdown-label", "plain"].includes(props.variant)
+      )
     })
 
     watch(
@@ -258,15 +258,6 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
-    // TODO: remove after the Core UI improvements are done
-    const isNewVariant = computed(() => {
-      return (
-        props.variant.startsWith("filled-") ||
-        props.variant.startsWith("bordered-") ||
-        props.variant.startsWith("transparent-")
-      )
-    })
-
     return {
       disabledAttributeRef,
       ariaDisabledRef,
@@ -274,10 +265,8 @@ const VButton = defineComponent({
       isActive,
       isConnected,
       isPlainDangerous,
-      isNewVariant,
-      isFilled,
-      isBordered,
-      isTransparent,
+      isFocusSlimFilled,
+      isFocusSlimTx,
     }
   },
 })
@@ -367,10 +356,10 @@ a.button {
 }
 
 .dropdown-label {
-  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .dropdown-label-pressed {
-  @apply border-tx bg-dark-charcoal text-white focus-bold-filled active:hover:border-white;
+  @apply border-tx bg-dark-charcoal text-white active:hover:border-white;
 }
 
 .connection-start {
