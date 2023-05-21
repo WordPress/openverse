@@ -64,7 +64,7 @@ export default defineComponent({
      */
     buttonProps: {
       type: Object as PropType<Omit<ButtonProps, "size">>,
-      default: () => ({ variant: "plain" }),
+      default: () => ({ variant: "transparent-tx" }),
     },
     /**
      * the label for the button; This is used for accessibility purposes.

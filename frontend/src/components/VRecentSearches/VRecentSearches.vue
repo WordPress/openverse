@@ -14,7 +14,7 @@
       </span>
       <VButton
         v-show="entries.length"
-        variant="text"
+        variant="transparent-gray"
         class="caption-bold"
         size="small"
         :aria-label="$t('recent-searches.clear.label').toString()"

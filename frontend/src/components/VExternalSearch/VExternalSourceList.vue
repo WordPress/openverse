@@ -15,7 +15,7 @@
       v-for="source in externalSources"
       :key="source.name"
       as="VLink"
-      variant="plain"
+      variant="transparent-tx"
       size="disabled"
       class="caption-bold !w-full justify-between px-4 py-3 text-dark-charcoal hover:bg-dark-charcoal-10"
       show-external-icon
