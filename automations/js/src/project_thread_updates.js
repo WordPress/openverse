@@ -44,12 +44,13 @@ async function run() {
             `Would have commented on issue #${issue.number}: ${body}`
           )
         } else {
-          await octokit.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: issue.number,
-            body,
-          })
+          console.error("Dry run didn't work")
+          // await octokit.rest.issues.createComment({
+          //   owner: context.repo.owner,
+          //   repo: context.repo.repo,
+          //   issue_number: issue.number,
+          //   body,
+          // })
         }
       }
     }
