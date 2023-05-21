@@ -38,6 +38,7 @@
         :external-icon-size="6"
         has-icon-end
         size="large"
+        :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
         {{ $t("image-details.weblink") }}
@@ -56,6 +57,8 @@
                 })
               "
               :href="image.creator_url"
+              :send-external-link-click-event="false"
+              @click="sendVisitCreatorLinkEvent"
               >{{ image.creator }}</VLink
             >
             <span v-else>{{ image.creator }}</span>
@@ -222,6 +225,16 @@ export default defineComponent({
       })
     }
 
+    const sendVisitCreatorLinkEvent = () => {
+      if (!image.value) {
+        return
+      }
+      sendCustomEvent("VISIT_CREATOR_LINK", {
+        id: image.value.id,
+        url: image.value.creator_url,
+      })
+    }
+
     return {
       image,
       hasRelatedMedia,
@@ -239,6 +252,7 @@ export default defineComponent({
       backToSearchPath,
 
       sendGetMediaEvent,
+      sendVisitCreatorLinkEvent,
     }
   },
   async asyncData({ app, error, route, $pinia }) {
