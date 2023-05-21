@@ -39,7 +39,7 @@ async function run() {
           : issue.user.login
         const body = `Hi @${recipient}, this project has not received an update comment in 14 days. Please leave an update comment as soon as you can. See the [documentation on project updates](https://docs.openverse.org/projects/planning.html#providing-project-updates) for more information.`
 
-        if (process.env.DRY_RUN === 'true') {
+        if (process.env.DRY_RUN) {
           console.info(
             `Would have commented on issue #${issue.number}: ${body}`
           )

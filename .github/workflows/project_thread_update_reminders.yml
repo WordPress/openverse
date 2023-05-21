@@ -8,9 +8,10 @@ on:
   workflow_dispatch:
     inputs:
       dry_run:
+        type: boolean
         description: "Dry run"
         required: true
-        default: "true"
+        default: true
 
 jobs:
   check:
@@ -29,4 +30,4 @@ jobs:
         working-directory: ./automations/js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          DRY_RUN: ${{ inputs.dry_run }}
