@@ -5,6 +5,7 @@ async function run() {
   try {
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
     const context = github.context
+    const isDryRun = core.getBooleanInput('dry_run') ?? false
 
     // Fetch all issues with the label "🧭 project: thread" and not labeled with "blocked"
     const { data: issues } = await octokit.rest.issues.listForRepo({
@@ -17,7 +18,6 @@ async function run() {
     const currentDate = new Date()
 
     for (const issue of issues) {
-      // Check if the issue has been commented on in the last 14 days
       const { data: comments } = await octokit.rest.issues.listComments({
         owner: context.repo.owner,
         repo: context.repo.repo,
@@ -29,6 +29,7 @@ async function run() {
       )
 
       if (
+        // Check if the issue has been commented on in the last 14 days
         !comments.some(
           (comment) => new Date(comment.created_at) > fourteenDaysAgo
         )
@@ -39,18 +40,17 @@ async function run() {
           : issue.user.login
         const body = `Hi @${recipient}, this project has not received an update comment in 14 days. Please leave an update comment as soon as you can. See the [documentation on project updates](https://docs.openverse.org/projects/planning.html#providing-project-updates) for more information.`
 
-        if (process.env.DRY_RUN) {
+        if (isDryRun) {
           console.info(
             `Would have commented on issue #${issue.number}: ${body}`
           )
         } else {
-          console.error("Dry run didn't work")
-          // await octokit.rest.issues.createComment({
-          //   owner: context.repo.owner,
-          //   repo: context.repo.repo,
-          //   issue_number: issue.number,
-          //   body,
-          // })
+          await octokit.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issue.number,
+            body,
+          })
         }
       }
     }
