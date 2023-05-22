@@ -3,6 +3,7 @@ import { test } from "@playwright/test"
 import {
   goToSearchTerm,
   languageDirections,
+  scrollToBottom,
   t,
 } from "~~/test/playwright/utils/navigation"
 
@@ -24,7 +25,9 @@ for (const dir of languageDirections) {
           name: t("externalSources.button", dir),
         })
 
+        await scrollToBottom(page)
         await externalSourcesButton.click()
+        await page.mouse.move(0, 0)
 
         await expectSnapshot(
           `external-${searchType}-sources-popover-${dir}`,

@@ -8,7 +8,11 @@ import { useSearchStore } from "~/stores/search"
 
 import SearchIndex from "~/pages/search.vue"
 
-import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
+import {
+  IsHeaderScrolledKey,
+  IsSidebarVisibleKey,
+  ShowScrollButtonKey,
+} from "~/types/provides"
 
 describe("SearchIndex", () => {
   let options
@@ -16,6 +20,7 @@ describe("SearchIndex", () => {
     showScrollButton: ref(false),
     [IsHeaderScrolledKey]: ref(false),
     [IsSidebarVisibleKey]: ref(false),
+    [ShowScrollButtonKey]: ref(false),
   }
   let searchStore
 
@@ -47,7 +52,7 @@ describe("SearchIndex", () => {
   })
 
   it("shows the scroll button when injected value is true", () => {
-    options.provide.showScrollButton.value = true
+    options.provide[ShowScrollButtonKey].value = true
     render(SearchIndex, options, (localVue, options) => {
       searchStore = useSearchStore(options.pinia)
       searchStore.setSearchTerm("cat")
