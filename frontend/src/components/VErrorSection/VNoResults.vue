@@ -28,9 +28,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent, onMounted, PropType } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
+import { useUiStore } from "~/stores/ui"
 
 import type { ExternalSource } from "~/types/external-source"
 
@@ -74,6 +75,11 @@ export default defineComponent({
         component: "VNoResults",
       })
     }
+
+    onMounted(() => {
+      const uiStore = useUiStore()
+      uiStore.setFiltersState(false)
+    })
 
     return {
       handleClick,
