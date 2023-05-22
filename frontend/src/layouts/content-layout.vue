@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app flex grid min-h-[100dvh] min-h-screen grid-rows-[auto,1fr,auto] bg-white"
+    class="app grid min-h-[100dvh] min-h-screen grid-rows-[auto,1fr,auto] bg-white"
     :class="[
       isDesktopLayout ? 'desktop' : 'mobile',
       breakpoint,
@@ -9,9 +9,9 @@
         ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
         : 'grid-cols-1',
     ]"
-    :style="bannerHeight"
+    :style="appStyles"
   >
-    <div class="header-el sticky top-0 z-40 block bg-white">
+    <div ref="headerEl" class="header-el sticky top-0 z-40 block bg-white">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
       <template v-if="isSearchHeader">
@@ -27,7 +27,7 @@
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar h-[calc(100vh-5rem -var(--banner-height,0))] fixed end-0 z-10 mt-[calc(5rem+var(--banner-height,0))] h-[calc(100dvh-5rem-var(--banner-height,0))] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
+      class="sidebar fixed end-0 z-10 mt-[calc(var(--banner-height))] h-[calc(100dvh-var(--banner-height))] h-[calc(100vh-var(--banner-height))] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
     >
       <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
     </aside>
@@ -48,6 +48,7 @@
 import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
+import { useElementSize } from "@vueuse/core"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"
 import { useMatchSearchRoutes } from "~/composables/use-match-routes"
@@ -85,6 +86,7 @@ export default defineComponent({
     VSearchGridFilter,
   },
   setup() {
+    const headerEl = ref<null | HTMLElement>(null)
     const { app } = useContext()
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
@@ -93,6 +95,7 @@ export default defineComponent({
     onMounted(() => {
       featureStore.initFromSession()
     })
+    const { height: headerHeight } = useElementSize(headerEl)
 
     const { updateBreakpoint } = useLayout()
 
@@ -128,9 +131,11 @@ export default defineComponent({
         isDesktopLayout.value
     )
 
-    const appStyles = computed(() => {{
-      "--banner-height": `${uiStore.shownBannersCount * 4}rem`
-    }})
+    const appStyles = computed(() => ({
+      "--banner-height": `${
+        (Number.isFinite(headerHeight.value) ? headerHeight.value : 0) / 16
+      }rem`,
+    }))
 
     const closeSidebar = () => {
       uiStore.setFiltersState(false)
@@ -148,6 +153,7 @@ export default defineComponent({
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
     return {
+      headerEl,
       isHeaderScrolled,
       isDesktopLayout,
       isSidebarVisible,
@@ -155,7 +161,7 @@ export default defineComponent({
       isSearchHeader,
       breakpoint,
 
-      bannerHeight,
+      appStyles,
 
       closeSidebar,
     }
