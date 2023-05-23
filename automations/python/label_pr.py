@@ -226,8 +226,9 @@ def main():
             pr.set_labels(*labels_to_add, *pr.labels)
             # Only break when all labels are applied, if we're missing any
             # then continue to the else to apply the awaiting triage label.
-            # Stack can have more than one label and is typically already applied
-            # by this step, so remove it from the total count of labels to add.
+            # Stack can have more than one label and on most PRs the CI/CD workflow
+            # will already have added a stack label by the time this step runs,
+            # so remove it from the total count of labels to add.
             if len(labels_to_add) >= len(required_label_categories) - 1:
                 break
     else:
