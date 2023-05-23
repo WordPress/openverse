@@ -3,7 +3,6 @@ import { test } from "@playwright/test"
 import {
   goToSearchTerm,
   languageDirections,
-  scrollToBottom,
   t,
 } from "~~/test/playwright/utils/navigation"
 
@@ -25,7 +24,10 @@ for (const dir of languageDirections) {
           name: t("externalSources.button", dir),
         })
 
-        await scrollToBottom(page)
+        await page
+          .getByRole("contentinfo")
+          .getByRole("link", { name: "Openverse" })
+          .hover()
         await externalSourcesButton.click()
 
         await expectSnapshot(
