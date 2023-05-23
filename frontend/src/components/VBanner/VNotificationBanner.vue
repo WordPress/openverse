@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex flex-row items-start gap-2 rounded-sm px-2 py-3 lg:p-4"
+    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:px-3 lg:py-4"
     :class="classNames"
     :data-testid="`banner-${id}`"
   >
@@ -17,7 +17,7 @@
         class="flex-grow-0"
         variant="plain--avoid"
         size="tiny"
-        icon-size="medium"
+        icon-size="small"
         :label="closeButtonLabel || $t('modal.close-banner')"
         @close="$emit('close')"
       />
