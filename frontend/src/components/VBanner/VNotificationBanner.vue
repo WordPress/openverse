@@ -5,7 +5,7 @@
     :data-testid="`banner-${id}`"
   >
     <slot name="start">
-      <VIcon :name="icon" :class="iconClassNames" />
+      <VIcon :name="nature" :class="iconClassNames" />
     </slot>
 
     <p class="caption-regular lg:paragraph-small flex-grow">
@@ -92,10 +92,6 @@ export default defineComponent({
             error: "bg-error-light",
           }[props.nature]
     )
-
-    const icon = computed(() =>
-      props.nature === "success" ? "check" : props.nature
-    )
     const iconClassNames = computed(() =>
       props.variant === "dark"
         ? ""
@@ -109,7 +105,6 @@ export default defineComponent({
 
     return {
       classNames,
-      icon,
       iconClassNames,
     }
   },
