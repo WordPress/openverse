@@ -52,7 +52,7 @@ log = logging.getLogger(__name__)
     doc_md=__doc__,
     default_args={
         **DAG_DEFAULT_ARGS,
-        # Don't add any retries by defalut
+        # Don't add any retries by default
         "retries": 0,
     },
     render_template_as_native_obj=True,
