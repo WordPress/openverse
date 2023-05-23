@@ -51,6 +51,12 @@ opt-in, meaning that it will be concealed by default.
 The implementation would require the following frontend components to be
 developed.
 
+- Sidebar component
+
+  - Two toggle switches
+    - Fetch sensitive content
+    - Blur sensitive content
+
 - Blurrable search result components
 
   - image cell
