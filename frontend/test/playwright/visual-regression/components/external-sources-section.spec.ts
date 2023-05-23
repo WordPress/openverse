@@ -27,7 +27,6 @@ for (const dir of languageDirections) {
 
         await scrollToBottom(page)
         await externalSourcesButton.click()
-        await page.mouse.move(0, 0)
 
         await expectSnapshot(
           `external-${searchType}-sources-popover-${dir}`,
