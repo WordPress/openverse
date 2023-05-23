@@ -3,7 +3,7 @@ import os
 from datetime import timedelta
 from urllib.parse import urlparse
 
-from airflow.exceptions import AirflowException
+from airflow.exceptions import AirflowSkipException
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
@@ -24,7 +24,10 @@ def response_filter_stat(response: Response) -> str:
     This is used to extract the name of the current index that the concerned alias
     points to. This index name will be available via XCom in the downstream tasks.
     """
-    index_name = response.json()["alt_names"]
+    data = response.json()
+    if not (data["exists"]):
+        raise AirflowSkipException("Index does not exist.")
+    index_name = data["alt_names"]
     # Indices are named as '<media type>-<suffix>', so everything after the first
     # hyphen '-' is the suffix.
     _, index_suffix = index_name.split("-", maxsplit=1)
@@ -56,9 +59,7 @@ def response_check_wait_for_completion(response: Response) -> bool:
         return False
 
     if data["error"]:
-        raise AirflowException(
-            "Ingestion server encountered an error during data refresh."
-        )
+        raise ValueError("Ingestion server encountered an error during data refresh.")
 
     logger.info(f"Data refresh done with {data['progress']}% completed.")
     return True
