@@ -9,6 +9,11 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
+# Enable stop-on-error
+# https://www.postgresql.org/docs/current/app-psql.html
+#ENV PGOPTIONS="-c on_error_stop=on"
+RUN echo "\set ON_ERROR_STOP on" >> /root/.psqlrc
+
 RUN apt-get update \
     && apt-get -yqq install \
       python3-boto3 \
