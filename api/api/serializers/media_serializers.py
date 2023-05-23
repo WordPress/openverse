@@ -489,7 +489,11 @@ class MediaSerializer(BaseModelSerializer):
     def get_unstable__sensitivity(self, obj: Hit | AbstractMedia) -> list[str]:
         result = []
 
-        if obj.identifier in self.context.get(
+        # obj.identifier needs to be cast to a string because
+        # Django UUID fields return UUID objects by default
+        # and UUID comparison fails against _any_ string object,
+        # even if the string matches the UUID.
+        if str(obj.identifier) in self.context.get(
             "sensitive_text_result_identifiers", set()
         ):
             result.append(sensitivity.TEXT)
