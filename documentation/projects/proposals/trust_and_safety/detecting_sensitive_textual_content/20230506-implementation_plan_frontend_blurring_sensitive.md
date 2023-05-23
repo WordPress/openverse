@@ -18,6 +18,7 @@
 
 - [Project Thread](https://github.com/WordPress/openverse/issues/377)
 - [Project Proposal](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.md)
+- [API IP](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.md)
 
 ## Scope
 
@@ -26,11 +27,12 @@
 This plan describes the approach, particularly pertaining to the frontend, for
 blurring sensitive content.
 
-The content safety project has an
-[API side](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.md#api),
-extensively documented in the project proposal but out of the scope for this IP.
-For now, we document what the frontend needs and assume that these needs will be
-met by the API.
+The content safety project has an API side, that is covered in the
+[project proposal](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.md#api)
+and
+[implementation plan](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.md),
+and therefore, out of the scope for this IP. For now, we document what the
+frontend needs and assume that these needs will be met by the API.
 
 ## Expected Outcomes
 
