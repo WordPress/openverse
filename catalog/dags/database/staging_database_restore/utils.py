@@ -30,6 +30,6 @@ def ensure_mutate_allowed(db_identifier: str) -> None:
 
     if db_identifier not in constants.SAFE_TO_MUTATE:
         raise ValueError(
-            f"The target function must be called with the staging database "
-            f"identifier ({constants.STAGING_IDENTIFIER}), not {db_identifier}"
+            f"The target function must be called with a non-production database "
+            f"identifier, not {db_identifier}"
         )
