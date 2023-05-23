@@ -45,7 +45,7 @@ for (const searchType of supportedSearchTypes) {
         const viewportWidth = (await page.viewportSize()?.width) ?? 0
         await page.setViewportSize({
           width: viewportWidth,
-          height: viewportHeight,
+          height: viewportHeight + 1,
         })
 
         await expectSnapshot(`no-results-${searchType}-${dir}`, page)
