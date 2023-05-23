@@ -86,20 +86,20 @@ export default defineComponent({
       props.variant === "dark"
         ? "bg-dark-charcoal text-white"
         : {
-            info: "bg-info-light",
-            warning: "bg-warning-light",
-            success: "bg-success-light",
-            error: "bg-error-light",
+            info: "bg-info-soft",
+            warning: "bg-warning-soft",
+            success: "bg-success-soft",
+            error: "bg-error-soft",
           }[props.nature]
     )
     const iconClassNames = computed(() =>
       props.variant === "dark"
         ? ""
         : {
-            info: "text-info-dark",
-            warning: "text-warning-dark",
-            success: "text-success-dark",
-            error: "text-error-dark",
+            info: "text-info",
+            warning: "text-warning",
+            success: "text-success",
+            error: "text-error",
           }[props.nature]
     )
 
