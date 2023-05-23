@@ -61,6 +61,10 @@ developed.
   - Content safety wall
   - Hide content button
 
+- Additonal pages
+
+  - Sensitivity documentation page
+
 #### Blur mechanism
 
 For the purposes of faster development, we will go with a CSS blur based
@@ -176,6 +180,17 @@ Care must be taken to not show the content at all unless we have the information
 about the sensitivity of the media item. A flash of clearly visible sensitive
 content before the wall appears will be jarring and will defeat the purpose of
 the wall.
+
+### Step 6: Sensitivity documentation
+
+Based on the contents of the `sensitivity` array, the single result page
+content-safety wall shows a message to the user to explain why the result is
+hidden and to help them decide whether to proceed or not.
+
+This message contains terms like "sensitive" (from the source), and "sensitive
+textual content" whose meaning may not be immediately clear. They should link to
+a page explaining our process and that it's currently imperfect and that we are
+actively working on improving it.
 
 ## Design
 
