@@ -218,17 +218,23 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             },
         )
 
-        (
-            prevent_concurrency
-            >> [destination_index_suffix, get_current_index]
-            # Gather step which will run even if the get current index step is skipped
-            >> EmptyOperator(
-                task_id="pre_create_check",
-                trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
-            )
-            >> do_create
+        # Once concurrency has been checked against, determine the destination index
+        # suffix and get the current index. The current index retrieval has to happen
+        # prior to any of the index creation steps to ensure the appropriate index
+        # information is retrieved.
+        prevent_concurrency >> [get_current_index, destination_index_suffix]
+
+        # The current index retrieval step can be skipped if the index does not
+        # currently exist. The empty operator below works as a control flow management
+        # step to ensure the create step runs even if the current index retrieval step
+        # is skipped (the trigger rule would be tedious to percolate through all the
+        # helper functions to the index creation step itself).
+        ensure_continue = EmptyOperator(
+            task_id="ensure_continue",
+            trigger_rule=TriggerRule.NONE_FAILED,
         )
 
+        get_current_index >> ensure_continue >> do_create
         await_create >> do_point_alias
 
         [get_current_index, do_point_alias] >> delete_old_index
