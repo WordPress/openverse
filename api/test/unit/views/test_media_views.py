@@ -22,7 +22,7 @@ def test_list_query_count(api_client, media_type_config):
     ), pytest_django.asserts.assertNumQueries(
         1
     ):
-        res = api_client.get(f"/v1/{media_type_config.media_type}/")
+        res = api_client.get(f"/v1/{media_type_config.url_prefix}/")
 
     assert res.status_code == 200
 
@@ -33,6 +33,6 @@ def test_retrieve_query_count(api_client, media_type_config):
 
     # This number goes up without `select_related` in the viewset queryset.
     with pytest_django.asserts.assertNumQueries(1):
-        res = api_client.get(f"/v1/{media_type_config.media_type}/{media.identifier}/")
+        res = api_client.get(f"/v1/{media_type_config.url_prefix}/{media.identifier}/")
 
     assert res.status_code == 200

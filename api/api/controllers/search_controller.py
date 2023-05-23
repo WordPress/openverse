@@ -475,7 +475,7 @@ def search(
     return results or [], page_count, result_count, search_context.asdict()
 
 
-def related_media(uuid, index, request, filter_dead):
+def related_media(uuid, index, filter_dead):
     """Given a UUID, find related search results."""
 
     search_client = Search(index=index)
@@ -502,13 +502,12 @@ def related_media(uuid, index, request, filter_dead):
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
     response = s.execute()
-    results = _post_process_results(
-        s, start, end, page_size, response, request, filter_dead
-    )
+    results = _post_process_results(s, start, end, page_size, response, filter_dead)
 
     result_count, _ = _get_result_and_page_count(response, results, page_size, page)
 
-    return results or [], result_count
+    search_context = SearchContext.build(results, index)
+    return results or [], result_count, search_context.asdict()
 
 
 def get_sources(index):

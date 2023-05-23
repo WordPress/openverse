@@ -45,6 +45,7 @@ def request_factory() -> APIRequestFactory():
 @dataclass
 class MediaTypeConfig:
     media_type: str
+    url_prefix: str
     origin_index: str
     filtered_index: str
     model_factory: MediaFactory
@@ -56,6 +57,7 @@ class MediaTypeConfig:
 MEDIA_TYPE_CONFIGS = (
     MediaTypeConfig(
         media_type="image",
+        url_prefix="images",
         origin_index="image",
         filtered_index="image-filtered",
         model_factory=model_factories.ImageFactory,
@@ -65,6 +67,7 @@ MEDIA_TYPE_CONFIGS = (
     ),
     MediaTypeConfig(
         media_type="audio",
+        url_prefix="audio",
         origin_index="audio",
         filtered_index="audio-filtered",
         model_factory=model_factories.AudioFactory,

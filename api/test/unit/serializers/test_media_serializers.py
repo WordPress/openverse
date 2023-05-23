@@ -120,14 +120,13 @@ def test_media_serializer_adds_license_url_if_missing(
 def test_media_serializer_sensitivity(
     has_sensitive_text,
     has_confirmed_report,
-    provider_marked_mature,
     media_type_config,
     anon_request,
 ):
     model, hit = media_type_config.model_factory.create(
         sensitive_text=has_sensitive_text,
         mature_reported=has_confirmed_report,
-        with_es=True,
+        with_hit=True,
     )
 
     other_result_ids = [str(uuid.uuid4()) for _ in range(6)]
@@ -145,6 +144,8 @@ def test_media_serializer_sensitivity(
     expected_sensitivity = set()
     if has_sensitive_text:
         expected_sensitivity.add(sensitivity.TEXT)
+    if has_confirmed_report:
+        expected_sensitivity.add(sensitivity.USER_REPORTED)
 
     assert set(serializer.data["unstable__sensitivity"]) == expected_sensitivity
 
