@@ -25,9 +25,10 @@ const transformSearchQuery = (
 })
 
 type SearchFunctions = {
-  [k in MediaType]?: (
-    search: AdditionalSearchQuery
-  ) => { queryParams: Record<string, string | string[]>, url: string }
+  [k in MediaType]?: (search: AdditionalSearchQuery) => {
+    queryParams: Record<string, string | string[]>
+    url: string
+  }
 }
 
 /**
