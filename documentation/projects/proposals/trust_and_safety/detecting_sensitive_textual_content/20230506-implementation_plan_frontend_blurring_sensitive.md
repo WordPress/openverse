@@ -136,8 +136,11 @@ parameter. The list of search results will include mature content if this is set
 to `true`.
 
 Since the API will also send the `sensitivity` field, the types for media items
-will need to be updated to account for that. This will boil down to a boolean
-value of `is_sensitive` for each media item.
+will need to be updated to account for that. This field will compute two values:
+
+- a boolean for whether the media is sensitive and needs to be blurred
+- the message to show to the user to help them know why a media is blurred (to
+  help them decide whether to unblur it)
 
 ### Step 4: Blurring in search results
 
