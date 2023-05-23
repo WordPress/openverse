@@ -203,15 +203,13 @@ together.
 
 <!-- What hard blockers exist which might prevent further work on this project? -->
 
-This project will need the `include_sensitive_results` parameter to no longer be
-unstable so that it can be used by the frontend. The API also needs to supply
-the `sensitivity` field which will tell the frontend whether to blur or not.
+There is no blocker for development, we can use the unstable form of the
+`include_sensitive_results` parameter for development and there is already a
+[PR for the API changes](https://github.com/WordPress/openverse/pull/2057).
 
-This however, is only a blocker for enabling the feature flag in production, and
-not a blocker for development and staging deployment. For those, we have the
-`fake_sensitive` feature flag to deterministically mark 50% of media as mature.
-This is a temporary solution and will be removed once the API is ready to
-provide the field.
+We would ideally want the parameter to be stable before promoting the feature to
+GA in production, but since we manage both the API and the frontend, we can
+coordinate any breaking changes.
 
 ## Accessibility
 
