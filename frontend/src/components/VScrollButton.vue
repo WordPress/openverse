@@ -2,7 +2,7 @@
   <button
     :aria-label="$t('browse-page.aria.scroll')"
     type="button"
-    class="scroll sticky bottom-4 mb-4 ms-auto h-14 w-14 rounded-full bg-pink text-center text-white transition-all duration-100 ease-linear hover:bg-dark-pink hover:shadow-md"
+    class="scroll fixed bottom-4 mb-4 ms-auto h-14 w-14 rounded-full bg-pink text-center text-white transition-all duration-100 ease-linear hover:bg-dark-pink hover:shadow-md"
     :class="hClass"
     @click="scrollToTop"
     @keydown.tab.exact="$emit('tab', $event)"
@@ -25,7 +25,7 @@ import { computed, defineComponent } from "vue"
 import { defineEvent } from "~/types/emits"
 
 const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
-const positionWithSidebar = "ltr:right-[21rem] rtl:left-[21rem]"
+const positionWithSidebar = "ltr:right-[22rem] rtl:left-[22rem]"
 
 export default defineComponent({
   name: "VScrollButton",
@@ -44,8 +44,13 @@ export default defineComponent({
         ? positionWithSidebar
         : positionWithoutSidebar
     )
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    const scrollToTop = (e: MouseEvent) => {
+      const mainPage = e.currentTarget?.closest("#main-page")
+      if (mainPage) {
+        mainPage.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+      }
     }
     return { hClass, scrollToTop }
   },

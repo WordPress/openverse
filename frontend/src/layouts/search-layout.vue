@@ -1,13 +1,13 @@
 <template>
   <div
-    class="app grid grid-rows-[auto,1fr,auto] bg-white"
+    class="app grid h-[100dvh] h-[100vh] min-h-[100dvh] min-h-[100vh] grid-rows-[auto,1fr,auto] bg-white"
     :class="[
       isDesktopLayout ? 'desktop' : 'mobile',
       breakpoint,
       { 'has-sidebar': isSidebarVisible },
       isSidebarVisible
-        ? 'h-[100dvh] h-[100vh] min-h-[100dvh] min-h-[100vh] grid-cols-[1fr_var(--filter-sidebar-width)]'
-        : 'min-h-[100dvh] min-h-[100vh] grid-cols-1',
+        ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
+        : 'grid-cols-1',
     ]"
   >
     <div class="header-el bg-white">
@@ -25,8 +25,8 @@
     </aside>
 
     <div
-      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-scroll"
-      :class="{ 'overflow-hidden': isSidebarVisible }"
+      id="main-page"
+      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
       <Nuxt />
       <VFooter
@@ -41,9 +41,9 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
+import { useScroll } from "@vueuse/core"
 import { PortalTarget as VTeleportTarget } from "portal-vue"
 
-import { useWindowScroll } from "~/composables/use-window-scroll"
 import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
@@ -80,6 +80,9 @@ export default defineComponent({
     VSearchGridFilter,
   },
   setup() {
+    const headerRef = ref<HTMLElement | null>(null)
+    const mainPageRef = ref<HTMLElement | null>(null)
+
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
 
@@ -118,17 +121,33 @@ export default defineComponent({
     }
 
     const isHeaderScrolled = ref(false)
-    const { isScrolled: isMainContentScrolled, y: scrollY } = useWindowScroll()
-    watch([isMainContentScrolled], ([isMainContentScrolled]) => {
-      isHeaderScrolled.value = isMainContentScrolled
+    const showScrollButton = ref(false)
+
+    /**
+     * Update the `isHeaderScrolled` and `showScrollButton` values on `main-page` scroll.
+     *
+     * Note: template refs do not work in a Nuxt layout, so we get the `main-page` element using `document.getElementById`.
+     */
+    let mainPageElement = ref<HTMLElement | null>(null)
+
+    const { y: mainPageY } = useScroll(mainPageElement)
+    watch(mainPageY, (y) => {
+      isHeaderScrolled.value = y > 0
+      showScrollButton.value = y > 70
     })
-    const showScrollButton = computed(() => scrollY.value > 70)
+
+    onMounted(() => {
+      mainPageElement.value = document.getElementById("main-page")
+    })
 
     provide(ShowScrollButtonKey, showScrollButton)
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
     return {
+      mainPageRef,
+      headerRef,
+
       isHeaderScrolled,
       isDesktopLayout,
       isSidebarVisible,
