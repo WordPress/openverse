@@ -164,7 +164,10 @@ def get(
             errors = cache.incr(key)
         except ValueError:  # Key does not exist.
             cache.set(key, 1)
-        if errors >= settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY:
+        if errors >= settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY and (
+            errors % settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_FOR_REPEATED_NOTIFICATIONS
+            == 0
+        ):
             sentry_sdk.capture_exception(exc)
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
     except requests.RequestException as exc:

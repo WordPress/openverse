@@ -14,19 +14,19 @@
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
       <template v-if="isSearchHeader">
-        <VHeaderDesktop v-if="isDesktopLayout" class="bg-white" />
-        <VHeaderMobile v-else class="bg-white" />
+        <VHeaderDesktop v-if="isDesktopLayout" class="h-20 bg-white" />
+        <VHeaderMobile v-else class="h-20 bg-white" />
       </template>
       <VHeaderInternal
         v-else
-        class="bg-white"
+        class="h-20 bg-white"
         :class="{ 'border-b-dark-charcoal-20': isHeaderScrolled }"
       />
     </div>
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar fixed end-0 z-10 mt-[81px] h-[calc(100dvh-81px)] h-[calc(100vh-81px)] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
+      class="sidebar fixed end-0 z-10 mt-[80px] h-[calc(100dvh-80px)] h-[calc(100vh-80px)] overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
     >
       <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
     </aside>

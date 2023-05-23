@@ -138,7 +138,7 @@ jobs:
               .parse('${{ needs.get-changes.outputs.changes }}')
               .filter(change => stacks.includes(change))
               .map(change => `🧱 stack: ${change.replace("_", " ")}`)
-            if (labels.len == 0) {
+            if (!labels.length) {
               labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
             }
             github.rest.issues.addLabels({

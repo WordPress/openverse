@@ -227,3 +227,27 @@ deploy:
     -git pull
     @just pull
     @just up
+
+#####################
+# Aliases/shortcuts #
+#####################
+
+alias b := build
+alias d := down
+alias l := logs
+
+# alias for `just api/up`
+a:
+    just api/up
+
+# alias for `just catalog/up`
+c:
+    just catalog/up
+
+# alias for `just ingestion_server/up`
+i:
+    just ingestion_server/up
+
+# alias for `just frontend/run: dev`
+f:
+    just frontend/run: dev
