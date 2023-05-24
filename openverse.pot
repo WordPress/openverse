@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-05-19T06:42:07+00:00\n"
+"POT-Creation-Date: 2023-05-24T09:18:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -64,19 +64,35 @@ msgid "search type"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VBanner/VTranslationStatusBanner.vue:13
+#: src/components/VBanner/VTranslationStatusBanner.vue:10
 msgctxt "notification.translation.text"
 msgid "The translation for ###locale### locale is incomplete. Help us get to 100 percent by ###link###."
 msgstr ""
 
-#: src/components/VBanner/VTranslationStatusBanner.vue:16
+#: src/components/VBanner/VTranslationStatusBanner.vue:13
 msgctxt "notification.translation.link"
 msgid "contributing a translation"
 msgstr ""
 
-#: src/components/VBanner/VTranslationStatusBanner.vue:6
+#: src/components/VBanner/VTranslationStatusBanner.vue:7
 msgctxt "notification.translation.close"
 msgid "Close the translation contribution help request banner"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VBanner/VAnalyticsNotice.vue:9
+msgctxt "notification.analytics.text"
+msgid "Openverse uses analytics to improve the quality of our service. Visit ###link### to learn more or opt out."
+msgstr ""
+
+#: src/components/VBanner/VAnalyticsNotice.vue:12
+msgctxt "notification.analytics.link"
+msgid "the privacy page"
+msgstr ""
+
+#: src/components/VBanner/VAnalyticsNotice.vue:6
+msgctxt "notification.analytics.close"
+msgid "Close the analytics notice banner."
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1184,8 +1200,8 @@ msgctxt "filter-list.hide"
 msgid "Hide filters"
 msgstr ""
 
-#: src/components/VFilters/VSearchGridFilter.vue:17
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:69
+#: src/components/VFilters/VSearchGridFilter.vue:18
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:70
 msgctxt "filter-list.clear"
 msgid "Clear filters"
 msgstr ""
@@ -2062,13 +2078,13 @@ msgid "Dropdown"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VBanner/VMigrationNotice.vue:9
+#: src/components/VBanner/VMigrationNotice.vue:10
 msgctxt "migration-notice.intro"
 msgid "###cc-search### is now called ###openverse### and joins ###wordpress### as an open source project."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VBanner/VMigrationNotice.vue:15
+#: src/components/VBanner/VMigrationNotice.vue:16
 msgctxt "migration-notice.more"
 msgid "###read-more### about this announcement."
 msgstr ""
@@ -2078,7 +2094,7 @@ msgctxt "migration-notice.read"
 msgid "Read more"
 msgstr ""
 
-#: src/components/VBanner/VMigrationNotice.vue:5
+#: src/components/VBanner/VMigrationNotice.vue:6
 msgctxt "migration-notice.close"
 msgid "Close the announcement"
 msgstr ""
@@ -2126,7 +2142,7 @@ msgctxt "modal.close-pages-menu"
 msgid "Close the pages menu"
 msgstr ""
 
-#: src/components/VBanner/VNotificationBanner.vue:14
+#: src/components/VBanner/VNotificationBanner.vue:21
 msgctxt "modal.close-banner"
 msgid "Close the banner"
 msgstr ""
@@ -2209,7 +2225,7 @@ msgctxt "search-type.select-label"
 msgid "Select a content type: ###type###"
 msgstr ""
 
-#: src/components/VSkipToContentContainer.vue:10
+#: src/components/VSkipToContentContainer.vue:11
 msgctxt "skip-to-content"
 msgid "Skip to content"
 msgstr ""
@@ -2302,27 +2318,27 @@ msgid "Language"
 msgstr ""
 
 #: src/components/VRecentSearches/VRecentSearches.vue:13
-#: src/components/VRecentSearches/VRecentSearches.vue:30
+#: src/components/VRecentSearches/VRecentSearches.vue:31
 msgctxt "recent-searches.heading"
 msgid "Recent searches"
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:22
+#: src/components/VRecentSearches/VRecentSearches.vue:23
 msgctxt "recent-searches.clear.text"
 msgid "Clear"
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:19
+#: src/components/VRecentSearches/VRecentSearches.vue:20
 msgctxt "recent-searches.clear.label"
 msgid "Clear recent searches"
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:49
+#: src/components/VRecentSearches/VRecentSearches.vue:50
 msgctxt "recent-searches.none"
 msgid "No recent searches to show."
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:53
+#: src/components/VRecentSearches/VRecentSearches.vue:54
 msgctxt "recent-searches.disclaimer"
 msgid "Openverse does not store your recent searches, this information is kept locally in your browser."
 msgstr ""
