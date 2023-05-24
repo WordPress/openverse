@@ -109,7 +109,7 @@ export default defineComponent({
 
 <style scoped>
 .app {
-  grid-template-areas: "header" "main";
+  grid-template-areas: "header" "main" "global-audio";
 }
 .header-el {
   grid-area: header;
