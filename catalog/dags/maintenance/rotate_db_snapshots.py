@@ -9,19 +9,16 @@ It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
 The DAG will automatically delete the oldest snapshots when more snaphots
 exist than it is configured to retain.
 
-Relies on three variables:
+Requires two variables:
 
-`CATALOG_RDS_DB_IDENTIFIER`: (Required) The "DBIdentifier" of the RDS DB instance.
-`CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: (Required) How many historical snapshots to retain.
-`CATALOG_RDS_REGION`: (Optional) The region of the RDS DB instance. Defaults to
-`us-east-1`.
+`CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
+`CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 """
 
 import logging
 from datetime import datetime
 
 from airflow.decorators import dag, task
-from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.operators.rds import RdsCreateDbSnapshotOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
@@ -33,22 +30,19 @@ logger = logging.getLogger(__name__)
 
 DAG_ID = "rotate_db_snapshots"
 MAX_ACTIVE = 1
-# This cannot be pulled in the DAG itself because ``hook_params``
-# on the operators provided by the amazon provider is not templated
-RDS_REGION = Variable.get("CATALOG_RDS_REGION", "us-east-1")
 
 
 AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX = "airflow-managed"
 
 
 @task()
-def delete_previous_snapshots(rds_arn: str, snapshots_to_retain: int, rds_region: str):
-    hook = RdsHook(aws_conn_id=AWS_RDS_CONN_ID, region_name=rds_region)
+def delete_previous_snapshots(db_identifier: str, snapshots_to_retain: int):
+    hook = RdsHook(aws_conn_id=AWS_RDS_CONN_ID)
 
     # Snapshot object documentation:
     # https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DBSnapshot.html
     snapshots = hook.conn.describe_db_snapshots(
-        DBInstanceIdentifier=rds_arn,
+        DBInstanceIdentifier=db_identifier,
         SnapshotType="manual",  # Automated backups cannot be manually managed
     )["DBSnapshots"]
 
@@ -97,14 +91,12 @@ def delete_previous_snapshots(rds_arn: str, snapshots_to_retain: int, rds_region
 def rotate_db_snapshots():
     snapshot_id = f"{AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX}-{{{{ ts_nodash }}}}"
     db_identifier = "{{ var.value.CATALOG_RDS_DB_IDENTIFIER }}"
-    hook_params = {"region_name": RDS_REGION}
 
     create_db_snapshot = RdsCreateDbSnapshotOperator(
         task_id="create_snapshot",
         db_type="instance",
         db_identifier=db_identifier,
         db_snapshot_identifier=snapshot_id,
-        hook_params=hook_params,
         aws_conn_id=AWS_RDS_CONN_ID,
         wait_for_completion=False,
     )
@@ -115,7 +107,6 @@ def rotate_db_snapshots():
         db_snapshot_identifier=snapshot_id,
         # This is the default for ``target_statuses`` but making it explicit is clearer
         target_statuses=["available"],
-        hook_params=hook_params,
         aws_conn_id=AWS_RDS_CONN_ID,
     )
 
@@ -123,9 +114,8 @@ def rotate_db_snapshots():
         create_db_snapshot
         >> wait_for_snapshot_availability
         >> delete_previous_snapshots(
-            rds_arn=db_identifier,
+            db_identifier=db_identifier,
             snapshots_to_retain="{{ var.json.CATALOG_RDS_SNAPSHOTS_TO_RETAIN }}",
-            rds_region=RDS_REGION,
         )
     )
 

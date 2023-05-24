@@ -55,7 +55,7 @@ def test_delete_previous_snapshots_no_snapshots_to_delete(
     snapshots, snapshots_to_retain, hook
 ):
     hook.conn.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
     hook.conn.delete_db_snapshot.assert_not_called()
 
 
@@ -65,7 +65,7 @@ def test_delete_previous_snapshots(hook):
     snapshots_to_delete = snapshots["DBSnapshots"][snapshots_to_retain:]
     hook.conn.describe_db_snapshots.return_value = snapshots
 
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
     hook.conn.delete_db_snapshot.assert_has_calls(
         [
             mock.call(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
@@ -83,7 +83,7 @@ def test_delete_previous_snapshots_ignores_non_airflow_managed_ones(hook):
 
     hook.conn.describe_db_snapshots.return_value = snapshots
 
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
     hook.conn.delete_db_snapshot.assert_has_calls(
         [mock.call(DBSnapshotIdentifier=snapshot_to_delete["DBSnapshotIdentifier"])]
     )
@@ -102,7 +102,7 @@ def test_sorts_snapshots(hook):
     random.shuffle(snapshots["DBSnapshots"])
 
     hook.conn.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
     hook.conn.delete_db_snapshot.assert_has_calls(
         [
             mock.call(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
@@ -111,9 +111,8 @@ def test_sorts_snapshots(hook):
     )
 
 
-def test_instantiates_rds_hook_with_region(rds_hook, hook):
+def test_instantiates_rds_hook_with_rds_connection_id(rds_hook, hook):
     hook.conn.describe_db_snapshots.return_value = _make_snapshots(0)
 
-    region = "fake_region"
-    delete_previous_snapshots.function("fake_arn", 0, region)
-    rds_hook.assert_called_once_with(region_name=region, aws_conn_id=AWS_RDS_CONN_ID)
+    delete_previous_snapshots.function("fake_db_identifier", 0)
+    rds_hook.assert_called_once_with(aws_conn_id=AWS_RDS_CONN_ID)

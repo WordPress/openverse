@@ -669,12 +669,10 @@ It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
 The DAG will automatically delete the oldest snapshots when more snaphots exist
 than it is configured to retain.
 
-Relies on three variables:
+Requires two variables:
 
-`CATALOG_RDS_DB_IDENTIFIER`: (Required) The "DBIdentifier" of the RDS DB
-instance. `CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: (Required) How many historical
-snapshots to retain. `CATALOG_RDS_REGION`: (Optional) The region of the RDS DB
-instance. Defaults to `us-east-1`.
+`CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
+`CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 
 ## `science_museum_workflow`
 
