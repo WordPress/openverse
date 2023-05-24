@@ -15,6 +15,7 @@ export const buttonVariants = [
   "filled-transparent",
   "bordered-white",
   "bordered-gray",
+  "transparent-tx",
   "transparent-gray",
   "transparent-dark",
 ] as const

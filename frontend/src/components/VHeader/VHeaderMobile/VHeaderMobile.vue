@@ -27,8 +27,6 @@
             <VLogoButton
               v-show="!searchBarIsActive"
               :is-fetching="isFetching"
-              :is-search-route="true"
-              class="w-12"
             />
             <VSearchBarButton
               v-show="searchBarIsActive"
