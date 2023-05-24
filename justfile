@@ -248,6 +248,6 @@ c:
 i:
     just ingestion_server/up
 
-# alias for `just frontend/run: dev`
+# alias for `just frontend/run dev`
 f:
-    just frontend/run: dev
+    just frontend/run dev
