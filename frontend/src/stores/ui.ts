@@ -116,6 +116,12 @@ export const useUiStore = defineStore("ui", {
         navigationStore.isReferredFromCc
       )
     },
+    /**
+     * The analytics banner is shown if the user hasn't dismissed it yet.
+     */
+    shouldShowAnalyticsBanner(): boolean {
+      return !this.dismissedBanners.includes("analytics")
+    },
   },
 
   actions: {

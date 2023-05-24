@@ -1,18 +1,15 @@
 <template>
   <VNotificationBanner
+    v-bind="$attrs"
     :id="bannerKey"
-    variant="informational"
+    nature="warning"
     data-testid="banner-translation"
     :close-button-label="$t('notification.translation.close')"
     @close="$emit('close')"
   >
-    {{
-      // eslint-disable-next-line @intlify/vue-i18n/no-raw-text
-      "⚠️"
-    }}
     <i18n path="notification.translation.text">
       <template #link>
-        <VLink :href="currentLocale.link" class="underline">{{
+        <VLink :href="currentLocale.link" class="text-curr underline">{{
           $t("notification.translation.link")
         }}</VLink>
       </template>
@@ -41,6 +38,7 @@ export default defineComponent({
     VLink,
     VNotificationBanner,
   },
+  inheritAttrs: false,
   props: {
     bannerKey: {
       type: String as PropType<BannerId>,

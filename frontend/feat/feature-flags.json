@@ -20,7 +20,7 @@
     },
     "analytics": {
       "status": "switchable",
-      "defaultState": "off",
+      "defaultState": "on",
       "description": "Record custom events and page views.",
       "storage": "cookie"
     },

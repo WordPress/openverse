@@ -1,7 +1,8 @@
 <template>
   <VNotificationBanner
+    v-bind="$attrs"
     id="cc-referral"
-    variant="announcement"
+    nature="info"
     :close-button-label="$t('migration-notice.close')"
     @close="$emit('close')"
   >
@@ -15,11 +16,10 @@
     <i18n tag="span" path="migration-notice.more">
       <template #read-more>
         <VLink
-          class="font-bold text-white underline"
+          class="text-curr underline"
           href="https://wordpress.org/news/2021/05/welcome-to-openverse/"
+          >{{ $t("migration-notice.read") }}</VLink
         >
-          {{ $t("migration-notice.read") }}
-        </VLink>
       </template>
     </i18n>
   </VNotificationBanner>
@@ -34,5 +34,6 @@ import VLink from "~/components/VLink.vue"
 export default defineComponent({
   name: "VMigrationNotice",
   components: { VLink, VNotificationBanner },
+  inheritAttrs: false,
 })
 </script>
