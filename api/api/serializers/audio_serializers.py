@@ -4,6 +4,7 @@ from elasticsearch_dsl.response import Hit
 
 from api.constants.field_order import field_position_map
 from api.constants.field_values import AUDIO_CATEGORIES, LENGTHS
+from api.constants.media_types import AUDIO_TYPE
 from api.models import Audio, AudioReport, AudioSet
 from api.serializers.fields import EnumCharField, SchemableHyperlinkedIdentityField
 from api.serializers.media_serializers import (
@@ -59,6 +60,14 @@ class AudioSearchRequestSerializer(
     @property
     def needs_db(self) -> bool:
         return super().needs_db or self.data["peaks"]
+
+    def validate_internal__index(self, value):
+        index = super().validate_internal__index(value)
+        if index is None:
+            return None
+        if not index.startswith(AUDIO_TYPE):
+            raise serializers.ValidationError(f"Invalid index name `{value}`.")
+        return index
 
 
 class AudioReportRequestSerializer(MediaReportRequestSerializer):
