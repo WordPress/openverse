@@ -252,7 +252,7 @@ standard HTML components.
 ## Analytics
 
 The proposal suggests
-[4 analytics events](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.md#id3)
+[4 analytics events](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.md#frontend-1)
 to help us understand the impact and utility of these safety features.
 
 The first two are sent by the respective toggle buttons in the search sidebar.
