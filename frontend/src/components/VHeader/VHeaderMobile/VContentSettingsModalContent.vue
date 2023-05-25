@@ -63,7 +63,7 @@
       <VButton
         v-show="showClearFiltersButton"
         variant="transparent-gray"
-        class="label-regular !text-pink disabled:!text-dark-charcoal-40"
+        class="label-bold !text-pink disabled:!text-dark-charcoal-40"
         :disabled="isClearButtonDisabled"
         size="large"
         @click="clearFilters"

@@ -12,7 +12,7 @@
         id="clear-filter-button"
         variant="transparent-gray"
         size="small"
-        class="label-bold absolute end-0 !text-pink hover:ring hover:ring-pink"
+        class="label-bold absolute end-0 !text-pink"
         @click="clearFilters"
       >
         {{ $t("filter-list.clear") }}

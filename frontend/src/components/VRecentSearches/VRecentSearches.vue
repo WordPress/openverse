@@ -15,7 +15,7 @@
       <VButton
         v-show="entries.length"
         variant="transparent-gray"
-        class="caption-bold"
+        class="label-bold"
         size="small"
         :aria-label="$t('recent-searches.clear.label').toString()"
         @click="handleClear"
