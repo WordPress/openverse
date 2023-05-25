@@ -2,6 +2,7 @@ import functools
 
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 
+from common.constants import AWS_RDS_CONN_ID
 from database.staging_database_restore import constants
 
 
@@ -14,9 +15,7 @@ def setup_rds_hook(func: callable) -> callable:
 
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
-        rds_hook = kwargs.pop("rds_hook", None) or RdsHook(
-            aws_conn_id=constants.AWS_RDS_CONN_ID
-        )
+        rds_hook = kwargs.pop("rds_hook", None) or RdsHook(aws_conn_id=AWS_RDS_CONN_ID)
         return func(*args, **kwargs, rds_hook=rds_hook)
 
     return wrapped
