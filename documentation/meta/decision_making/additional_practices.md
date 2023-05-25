@@ -13,10 +13,10 @@ should include the following text:
 ```md
 This discussion is following the Openverse decision-making process. Information
 about this process can be found
-[on the Openverse documentation site](https://docs.openverse.org/meta/decision_making/index.html).
-Requested reviewers or participants will be following this process. If you are
-being asked to give input on a specific detail, you do not need to familiarise
-yourself with the process and follow it.
+[on the Openverse documentation site](/meta/decision_making/index.md). Requested
+reviewers or participants will be following this process. If you are being asked
+to give input on a specific detail, you do not need to familiarise yourself with
+the process and follow it.
 
 ## Current round
 
