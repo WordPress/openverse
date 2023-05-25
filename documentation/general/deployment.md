@@ -157,7 +157,7 @@ When deploying code that depends on a new or updated environment variable, you
 must follow the process below _before_ that code is deployed. This is the only
 way to make the new or updated variable available for the code the depends on
 it. Please see the
-[zero-downtime deployments document's section on environment variables for an in-depth explanation of the rationale behind this process](https://docs.openverse.org/general/zero_downtime_database_management.html#environment-variables).
+[zero-downtime deployments document's section on environment variables for an in-depth explanation of the rationale behind this process](/general/zero_downtime_database_management.md#environment-variables).
 
 1. Update the template task definition for the service with the new or updated
    environment variable.
