@@ -95,16 +95,17 @@
           </slot>
         </form>
       </div>
-
-      <VRecentSearches
-        v-show="showRecentSearches"
-        :selected-idx="selectedIdx"
-        :entries="entries"
-        :bordered="false"
-        class="mt-4"
-        @select="handleSelect"
-        @clear="handleClear"
-      />
+      <ClientOnly>
+        <VRecentSearches
+          v-show="showRecentSearches"
+          :selected-idx="selectedIdx"
+          :entries="entries"
+          :bordered="false"
+          class="mt-4"
+          @select="handleSelect"
+          @clear="handleClear"
+        />
+      </ClientOnly>
     </VInputModal>
   </header>
 </template>
