@@ -9,7 +9,7 @@
   >
     <VTabs
       :selected-id="selectedTab"
-      tablist-style="ps-6 pe-2"
+      tablist-style="ps-4 pe-2"
       variant="plain"
       label="content-settings"
       class="flex min-h-0 flex-col"
@@ -58,12 +58,12 @@
     </VTabs>
     <footer
       v-if="showFilters"
-      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 px-6 py-4"
+      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 p-4"
     >
       <VButton
         v-show="showClearFiltersButton"
-        variant="text"
-        class="!font-normal"
+        variant="transparent-gray"
+        class="label-bold !text-pink disabled:!text-dark-charcoal-40"
         :disabled="isClearButtonDisabled"
         size="large"
         @click="clearFilters"

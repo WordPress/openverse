@@ -27,6 +27,7 @@ type CloseButtonVariant =
   | "filled-white"
   | "filled-white-light"
   | "filled-transparent"
+  | "transparent-gray"
   | "filled-dark"
   | "black"
   | "plain--avoid"
