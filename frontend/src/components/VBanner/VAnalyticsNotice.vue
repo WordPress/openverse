@@ -20,11 +20,12 @@
 import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
+import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
 export default defineComponent({
   name: "VAnalyticsNotice",
-  components: { VNotificationBanner },
+  components: { VLink, VNotificationBanner },
   inheritAttrs: false,
   setup() {
     const { app } = useContext()

@@ -3,7 +3,7 @@
     as="VLink"
     href="/"
     :aria-label="$t('header.home-link', { openverse: 'Openverse' }).toString()"
-    variant="plain"
+    variant="transparent-tx"
     size="disabled"
     class="h-12 w-12 text-dark-charcoal hover:bg-yellow"
   >

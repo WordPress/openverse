@@ -28,7 +28,7 @@
         as === 'VLink' && 'text-dark-charcoal',
         !contextProps.showCheck && 'px-2',
       ]"
-      variant="plain"
+      variant="transparent-tx"
       size="disabled"
       :pressed="selected"
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
