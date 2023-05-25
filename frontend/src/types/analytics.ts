@@ -14,6 +14,20 @@ import type { ReportReason } from "~/constants/content-report"
  */
 export type Events = {
   /**
+   * Description: A search performed by the user
+   * Questions:
+   *   - How many searches do we serve per day/month/year?
+   *   - What are the most popular searches in Openverse?
+   *   - Which media types are the most popular?
+   *   - Do most users search from the homepage, or internal searchbar?
+   */
+  SUBMIT_SEARCH: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The search term */
+    query: string
+  }
+  /**
    * Description: The user clicks on one of the images in the gallery on the homepage.
    * Questions:
    * - Do users know homepage images are links?

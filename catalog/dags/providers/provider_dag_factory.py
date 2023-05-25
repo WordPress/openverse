@@ -76,7 +76,9 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
+from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
+from common.constants import XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
@@ -90,8 +92,6 @@ from providers.provider_workflows import (
 logger = logging.getLogger(__name__)
 
 
-DB_CONN_ID = os.getenv("OPENLEDGER_CONN_ID", "postgres_openledger_testing")
-AWS_CONN_ID = os.getenv("AWS_CONN_ID", "no_aws_conn_id")
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 _DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(ds, -{} )"

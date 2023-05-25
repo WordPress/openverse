@@ -5,13 +5,13 @@ import pytest
 from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
 
+from common.constants import AWS_CONN_ID
 from common.loader import s3
 
 
 TEST_ID = "testing"
 TEST_MEDIA_PREFIX = "media"
 TEST_STAGING_PREFIX = "test_staging"
-AWS_CONN_ID = os.getenv("AWS_CONN_ID", "test_conn_id")
 S3_LOCAL_ENDPOINT = os.getenv("S3_LOCAL_ENDPOINT")
 S3_TEST_BUCKET = f"cccatalog-storage-{TEST_ID}"
 ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")

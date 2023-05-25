@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   dismissTranslationBanner,
+  dismissAnalyticsBanner,
   languageDirections,
   pathWithDir,
 } from "~~/test/playwright/utils/navigation"
@@ -27,7 +28,9 @@ for (const dir of languageDirections) {
     test.beforeEach(async ({ page }) => {
       await page.goto(path)
       await dismissTranslationBanner(page)
+      await dismissAnalyticsBanner(page)
       await cleanImageCarousel(page)
+      await page.mouse.move(0, 0)
     })
 
     breakpoints.describeEvery(({ expectSnapshot }) =>

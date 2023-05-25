@@ -19,10 +19,8 @@
       "storage": "cookie"
     },
     "analytics": {
-      "status": {
-        "staging": "switchable",
-        "production": "disabled"
-      },
+      "status": "switchable",
+      "defaultState": "on",
       "description": "Record custom events and page views.",
       "storage": "cookie"
     },

@@ -24,6 +24,16 @@ module.exports = {
       "trans-blue-action": "#5067e4",
       "dark-blue": "#23282d",
 
+      // Semantic
+      "info-soft": "#dbe2ff",
+      info: "#2349e7",
+      "warning-soft": "#fff1cc",
+      warning: "#9d650b",
+      "success-soft": "#dbf0d6",
+      success: "#3b772c",
+      "error-soft": "#ffe0d1",
+      error: "#b43e04",
+
       // Brand
       yellow: "#ffe033",
       pink: "#c52b9b",

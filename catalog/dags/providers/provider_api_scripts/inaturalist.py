@@ -33,7 +33,7 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import IMAGE, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
+from common.constants import AWS_CONN_ID, IMAGE, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
 from common.loader import provider_details, reporting, sql
 from common.sql import PGExecuteQueryOperator, PostgresHook
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -41,7 +41,6 @@ from providers.provider_api_scripts.provider_data_ingester import ProviderDataIn
 
 logger = logging.getLogger(__name__)
 
-AWS_CONN_ID = os.getenv("AWS_CONN_ID", "test_conn_id")
 SCRIPT_DIR = Path(__file__).parents[1] / "provider_csv_load_scripts/inaturalist"
 SOURCE_FILE_NAMES = ["photos", "observations", "taxa", "observers"]
 LOADER_ARGS = {

@@ -27,6 +27,11 @@
       link: "contributing a translation",
       close: "Close the translation contribution help request banner",
     },
+    analytics: {
+      text: "Openverse uses analytics to improve the quality of our service. Visit {link} to learn more or opt out.",
+      link: "the privacy page",
+      close: "Close the analytics notice banner.",
+    },
   },
   header: {
     "home-link": "{openverse} Home",
