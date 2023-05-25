@@ -1,4 +1,6 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import audio from "~~/test/playwright/utils/audio"
 
@@ -59,7 +61,7 @@ test.describe("all results grid keyboard accessibility test", () => {
     )
   })
 
-  test.only("should open audio results as links", async ({ page }) => {
+  test("should open audio results as links", async ({ page }) => {
     await walkToType("audio", page)
     await page.keyboard.press("Enter")
     await page.waitForURL(
@@ -76,15 +78,20 @@ test.describe("all results grid keyboard accessibility test", () => {
     )
   })
 
-  test("should allow toggling audio playback via play/pause click", async ({
+  test.only("should allow toggling audio playback via play/pause click", async ({
     page,
   }) => {
     await walkToType("audio", page)
     const focusedResult = await locateFocusedResult(page)
     const playButton = await audio.getInactive(focusedResult)
     await playButton.click()
+
+    // Get the path for comparison purposes
+    const url = new URL(page.url())
+    const path = url.pathname + url.search
+
     // should not navigate
-    expect(page.url()).toMatch(/\/search\?q=birds$/)
+    expect(path).toMatch(/\/search\/?\?q=birds$/)
 
     const pauseButton = await audio.getActive(focusedResult)
     pauseButton.click()

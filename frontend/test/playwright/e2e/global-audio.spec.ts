@@ -1,4 +1,6 @@
-import { expect, test } from "@playwright/test"
+import { expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import { sleep, t } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"

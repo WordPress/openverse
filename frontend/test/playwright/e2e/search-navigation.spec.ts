@@ -1,4 +1,6 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import {
   goToSearchTerm,
@@ -7,7 +9,7 @@ import {
   openFirstResult,
   t,
 } from "~~/test/playwright/utils/navigation"
-import { mockProviderApis } from "~~/test/playwright/utils/route"
+
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
@@ -21,10 +23,6 @@ const getContentLink = async (page: Page, mediaType: SupportedMediaType) => {
 
 test.describe("search history navigation", () => {
   breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
-      await mockProviderApis(context)
-    })
-
     test("should update search results when back navigation changes filters", async ({
       page,
     }) => {

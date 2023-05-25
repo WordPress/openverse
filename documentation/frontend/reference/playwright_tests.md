@@ -67,7 +67,7 @@ just frontend/run test:playwright visual-regression -u
 The above will run only test files with `visual-regression` in the path and will
 update any snapshot tests due to the `-u` flag.
 
-## Visual Regression tests
+## Writing Visual Regression tests
 
 When writing visual regression tests, it is good practice to write tests for
 each relevant breakpoint. There is a series of helpers in
