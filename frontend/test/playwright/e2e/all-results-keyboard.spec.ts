@@ -59,7 +59,7 @@ test.describe("all results grid keyboard accessibility test", () => {
     )
   })
 
-  test.only("should open audio results as links", async ({ page }) => {
+  test("should open audio results as links", async ({ page }) => {
     await walkToType("audio", page)
     await page.keyboard.press("Enter")
     await page.waitForURL(
