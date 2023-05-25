@@ -360,7 +360,7 @@ a.button {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
+  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:bg-opacity-10 disabled:text-dark-charcoal-40;
 }
 .transparent-dark {
   @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;

@@ -58,12 +58,12 @@
     </VTabs>
     <footer
       v-if="showFilters"
-      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 px-6 py-4"
+      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 p-4"
     >
       <VButton
         v-show="showClearFiltersButton"
         variant="transparent-gray"
-        class="label-regular !ps-0 !text-pink disabled:!text-dark-charcoal-40"
+        class="label-regular !text-pink disabled:!text-dark-charcoal-40"
         :disabled="isClearButtonDisabled"
         size="large"
         @click="clearFilters"
