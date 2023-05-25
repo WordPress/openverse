@@ -45,6 +45,7 @@ import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
 
 import VLink from "~/components/VLink.vue"
@@ -65,8 +66,13 @@ export default defineComponent({
     const searchStore = useSearchStore()
     const router = useRouter()
 
+    const { sendCustomEvent } = useAnalytics()
+
     const handleSearch = (searchTerm) => {
-      if (!searchTerm) return
+      sendCustomEvent("SUBMIT_SEARCH", {
+        searchType: ALL_MEDIA,
+        query: searchTerm,
+      })
 
       router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
     }
