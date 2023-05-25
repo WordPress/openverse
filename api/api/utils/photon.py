@@ -56,6 +56,7 @@ def check_image_type(image_url: str, media_obj) -> None:
     if not ext:
         # If the extension is not present in the URL, try to get it from the redis cache
         ext = cache.get(key)
+        ext = ext.decode("utf-8") if ext else None
 
     if not ext:
         # If the extension is still not present, try getting it from the content type
