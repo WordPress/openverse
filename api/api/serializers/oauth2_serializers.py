@@ -36,6 +36,14 @@ class OAuth2RegistrationSerializer(serializers.ModelSerializer):
         model = OAuth2Registration
         fields = ("name", "description", "email")
 
+    @staticmethod
+    def validate_name(value):
+        if OAuth2Registration.objects.filter(name=value).exists():
+            raise serializers.ValidationError(
+                "An application with this name already exists."
+            )
+        return value
+
 
 class OAuth2ApplicationSerializer(serializers.Serializer):
     client_id = serializers.CharField(
