@@ -35,7 +35,7 @@ traffic to the new task away from the old task. This is called _draining_. Once
 the old task is drained, it is spun down and the only task left running is the
 new one. The same process is followed when there are multiple tasks and each
 task is drained one at a time following our
-[zero-downtime approach to deployments](https://docs.openverse.org/general/zero_downtime_database_management.html).
+[zero-downtime approach to deployments](/general/zero_downtime_database_management.md).
 
 ```{note}
 The number of running tasks per active task definition may vary per
