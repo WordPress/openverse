@@ -98,12 +98,7 @@ services:
       # Buckets for testing provider data imported from s3 are subdirectories under
       # /tests/s3-data/
       - ./catalog/tests/s3-data:/data:rw
-      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro
-    # Loop through subdirectories mounted to the volume and load them to s3/minio.
-    # This takes care of filesystem delays on some local dev environments that may make
-    # minio miss files included directly in the minio volume.
-    # More info here: https://stackoverflow.com/questions/72867045
-    
+      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro
     entrypoint: /opt/minio/load_to_s3_entrypoint.sh
 
   # Dev changes for the scheduler
