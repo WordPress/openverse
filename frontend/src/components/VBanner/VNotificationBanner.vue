@@ -15,7 +15,7 @@
     <slot name="end">
       <VCloseButton
         class="flex-grow-0"
-        variant="plain--avoid"
+        variant="transparent-gray"
         size="tiny"
         icon-size="small"
         :label="closeButtonLabel || $t('modal.close-banner')"
