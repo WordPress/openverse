@@ -7,9 +7,12 @@
     "
   >
     <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
-      <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">
-        {{ searchTerm }}
-      </VSearchResultsTitle>
+      <VSearchResultsTitle :size="isAllView ? 'large' : 'default'"
+        ><span>{{ searchTerm }}</span
+        ><span class="sr-only">{{
+          searchResultsTitle
+        }}</span></VSearchResultsTitle
+      >
     </header>
 
     <slot name="media" />
@@ -24,7 +27,7 @@
   </section>
   <VErrorSection v-else class="w-full py-10">
     <template #image>
-      <VErrorImage error-code="NO_RESULT" />
+      <VErrorImage :error-code="NO_RESULT" />
     </template>
     <VNoResults
       :external-sources="externalSources"
@@ -35,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType, watch } from "vue"
 
 import {
   ALL_MEDIA,
@@ -49,6 +52,7 @@ import { defineEvent } from "~/types/emits"
 import type { FetchState } from "~/types/fetch-state"
 import type { ApiQueryParams } from "~/utils/search-query-transform"
 import { getAdditionalSources } from "~/utils/get-additional-sources"
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
@@ -92,6 +96,7 @@ export default defineComponent({
     tab: defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
+    const { getI18nResultsTitle } = useI18nResultsCount()
     const hasNoResults = computed(() => {
       // noResult is hard-coded for search types that are not currently
       // supported by Openverse built-in search
@@ -129,6 +134,21 @@ export default defineComponent({
 
     const searchTerm = computed(() => props.query.q || "")
 
+    const searchResultsTitle = computed(() => {
+      return props.fetchState.isFetching
+        ? undefined
+        : getI18nResultsTitle(
+            props.resultsCount,
+            searchTerm.value,
+            props.searchType
+          )
+    })
+    watch(searchResultsTitle, (title) => {
+      if (title) {
+        document.querySelector("h1").focus()
+      }
+    })
+
     return {
       hasNoResults,
       externalSourcesType,
@@ -136,6 +156,7 @@ export default defineComponent({
       NO_RESULT,
       externalSources,
       searchTerm,
+      searchResultsTitle,
     }
   },
 })

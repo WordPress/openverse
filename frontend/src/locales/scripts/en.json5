@@ -373,6 +373,23 @@
     categoryAria: "filters list for {categoryName} category",
   },
   browsePage: {
+    searchResultsTitle: {
+      image: {
+        zero: "No images found for {query}.",
+        count: "{localeCount} image found for {query}.|{localeCount} images found for {query}.",
+        countMore: "Over {localeCount} images found for {query}.",
+      },
+      audio: {
+        zero: "No audio found for {query}.",
+        count: "{localeCount} audio found for {query}.",
+        countMore: "Over {localeCount} audio found for {query}.",
+      },
+      all: {
+        zero: "No results found for {query}.",
+        count: "{localeCount} results found for {query}.",
+        countMore: "Over {localeCount} results found for {query}.",
+      },
+    },
     allNoResults: "No results",
     allResultCount: "{localeCount} result|{localeCount} results",
     allResultCountMore: "Over {localeCount} results",
