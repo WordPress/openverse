@@ -9,7 +9,7 @@
   >
     <VTabs
       :selected-id="selectedTab"
-      tablist-style="ps-6 pe-2"
+      tablist-style="ps-4 pe-2"
       variant="plain"
       label="content-settings"
       class="flex min-h-0 flex-col"
