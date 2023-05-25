@@ -108,6 +108,7 @@ def rotate_db_snapshots():
         # This is the default for ``target_statuses`` but making it explicit is clearer
         target_statuses=["available"],
         aws_conn_id=AWS_RDS_CONN_ID,
+        mode="reschedule",
     )
 
     (
