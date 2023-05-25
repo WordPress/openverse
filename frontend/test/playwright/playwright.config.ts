@@ -11,23 +11,24 @@ addAliases({
 
 const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
 
-/**
- * Enabling `FASTSTART` allows you to bypass running the nuxt build
- * when rapidly debugging tests locally within the container. If you
- * already have the Docker image, this is an easy way to iterate on
- * tests and do log-based debugging without needing to download the
- * enormous browser binaries (on top of the already huge Docker image
- * download).
- *
- * Note that visual-regression tests can be quite flaky when using
- * `FASTSTART`.
- */
-const pwCommand =
-  process.env.FASTSTART !== "false" ? "start:playwright" : "prod:playwright"
-
 const config: PlaywrightTestConfig = {
   webServer: {
-    command: `./node_modules/.bin/npm-run-all -p -r talkback ${pwCommand}`,
+    /**
+     * Note: You can speed up local testing by switching `prod` out for `start`
+     * to skip the build, but be aware that then talkback and the Nuxt server
+     * will be racing to warm up and the tests could start before talkback is
+     * ready to start serving API responses. Playwright only lets you specify
+     * one port to wait for a ready response from so there's no way around it.
+     * Normally the build introduces more than enough time for talkback to
+     * be ready by the time the Nuxt server is actually started.
+     *
+     * This doesn't mean _don't_ use `start`, it just means that once you've
+     * debugged everything else, make sure to inspect the trace output for any
+     * ConsoleMessage strings that refer to incorrect responses. Once you've
+     * verified that there is indeed a tape saved for the response in question,
+     * switch this back to `prod` and see if your tests pass.
+     */
+    command: "./node_modules/.bin/npm-run-all -p -r talkback prod:playwright",
     cwd: "/app",
     timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
     port: 8443,
