@@ -6,32 +6,6 @@ from api.models import OAuth2Registration
 
 
 class OAuth2RegistrationSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(
-        help_text=(
-            "A unique human-readable name for your application or project "
-            "requiring access to the Openverse API."
-        ),
-        required=True,
-        min_length=1,
-        max_length=150,
-    )
-    description = serializers.CharField(
-        help_text=(
-            "A description of what you are trying to achieve with your project "
-            "using the API. Please provide as much detail as possible!"
-        ),
-        min_length=1,
-        max_length=10000,
-    )
-    email = serializers.EmailField(
-        help_text=(
-            "A valid email that we can reach you at if we have any questions "
-            "about your use case or data consumption."
-        ),
-        min_length=1,
-        max_length=254,
-    )
-
     class Meta:
         model = OAuth2Registration
         fields = ("name", "description", "email")

@@ -2,26 +2,28 @@ import random
 from datetime import datetime, timedelta
 from unittest import mock
 
-import boto3
 import pytest
 
-from maintenance.rotate_db_snapshots import delete_previous_snapshots
+from common.constants import AWS_RDS_CONN_ID
+from maintenance.rotate_db_snapshots import (
+    AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX,
+    delete_previous_snapshots,
+)
 
 
 @pytest.fixture
-def boto_client(monkeypatch):
-    get_client = mock.MagicMock()
+def rds_hook(monkeypatch):
+    RdsHook = mock.MagicMock()
 
-    monkeypatch.setattr(boto3, "client", get_client)
-    return get_client
+    monkeypatch.setattr("maintenance.rotate_db_snapshots.RdsHook", RdsHook)
+    return RdsHook
 
 
 @pytest.fixture
-def rds_client(boto_client):
-    rds = mock.MagicMock()
-
-    boto_client.return_value = rds
-    return rds
+def hook(rds_hook):
+    hook_instance = mock.MagicMock()
+    rds_hook.return_value = hook_instance
+    return hook_instance
 
 
 def _make_snapshots(count: int, shuffle=False) -> dict:
@@ -31,8 +33,8 @@ def _make_snapshots(count: int, shuffle=False) -> dict:
         date = date - timedelta(days=1)
         snaps.append(
             {
-                "DBSnapshotIdentifier": _id,
-                "SnapshotCreateTime": date.isoformat(),
+                "DBSnapshotIdentifier": f"{AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX}-{_id}",
+                "SnapshotCreateTime": date,  # boto3 returns datetime objects
             }
         )
     return {"DBSnapshots": snaps}
@@ -41,7 +43,7 @@ def _make_snapshots(count: int, shuffle=False) -> dict:
 @pytest.mark.parametrize(
     ("snapshots", "snapshots_to_retain"),
     (
-        # Less than 7
+        # Less than the number we want to keep
         (_make_snapshots(1), 2),
         (_make_snapshots(1), 5),
         # Exactly the number we want to keep
@@ -50,21 +52,21 @@ def _make_snapshots(count: int, shuffle=False) -> dict:
     ),
 )
 def test_delete_previous_snapshots_no_snapshots_to_delete(
-    snapshots, snapshots_to_retain, rds_client
+    snapshots, snapshots_to_retain, hook
 ):
-    rds_client.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
-    rds_client.delete_db_snapshot.assert_not_called()
+    hook.conn.describe_db_snapshots.return_value = snapshots
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
+    hook.conn.delete_db_snapshot.assert_not_called()
 
 
-def test_delete_previous_snapshots(rds_client):
+def test_delete_previous_snapshots(hook):
     snapshots_to_retain = 6
     snapshots = _make_snapshots(10)
     snapshots_to_delete = snapshots["DBSnapshots"][snapshots_to_retain:]
-    rds_client.describe_db_snapshots.return_value = snapshots
+    hook.conn.describe_db_snapshots.return_value = snapshots
 
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
-    rds_client.delete_db_snapshot.assert_has_calls(
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
+    hook.conn.delete_db_snapshot.assert_has_calls(
         [
             mock.call(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
             for snapshot in snapshots_to_delete
@@ -72,7 +74,22 @@ def test_delete_previous_snapshots(rds_client):
     )
 
 
-def test_sorts_snapshots(rds_client):
+def test_delete_previous_snapshots_ignores_non_airflow_managed_ones(hook):
+    snapshots_to_retain = 2
+    snapshots = _make_snapshots(4)
+    # Set the last one to an unmanaged snapshot leaving 1 to delete
+    snapshots["DBSnapshots"][-1]["DBSnapshotIdentifier"] = "not-managed-by-airflow-123"
+    snapshot_to_delete = snapshots["DBSnapshots"][-2]
+
+    hook.conn.describe_db_snapshots.return_value = snapshots
+
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
+    hook.conn.delete_db_snapshot.assert_has_calls(
+        [mock.call(DBSnapshotIdentifier=snapshot_to_delete["DBSnapshotIdentifier"])]
+    )
+
+
+def test_sorts_snapshots(hook):
     """
     As far as we can tell the API does return them pre-sorted but it isn't documented
     so just to be sure we'll sort them anyway.
@@ -84,9 +101,9 @@ def test_sorts_snapshots(rds_client):
     # shuffle the snapshots to mimic an unstable API return order
     random.shuffle(snapshots["DBSnapshots"])
 
-    rds_client.describe_db_snapshots.return_value = snapshots
-    delete_previous_snapshots.function("fake_arn", snapshots_to_retain, "fake_region")
-    rds_client.delete_db_snapshot.assert_has_calls(
+    hook.conn.describe_db_snapshots.return_value = snapshots
+    delete_previous_snapshots.function("fake_db_identifier", snapshots_to_retain)
+    hook.conn.delete_db_snapshot.assert_has_calls(
         [
             mock.call(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
             for snapshot in snapshots_to_delete
@@ -94,9 +111,8 @@ def test_sorts_snapshots(rds_client):
     )
 
 
-def test_instantiates_rds_client_with_region(boto_client, rds_client):
-    rds_client.describe_db_snapshots.return_value = _make_snapshots(0)
+def test_instantiates_rds_hook_with_rds_connection_id(rds_hook, hook):
+    hook.conn.describe_db_snapshots.return_value = _make_snapshots(0)
 
-    region = "fake_region"
-    delete_previous_snapshots.function("fake_arn", 0, region)
-    boto_client.assert_called_once_with("rds", region_name=region)
+    delete_previous_snapshots.function("fake_db_identifier", 0)
+    rds_hook.assert_called_once_with(aws_conn_id=AWS_RDS_CONN_ID)

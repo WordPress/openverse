@@ -671,8 +671,8 @@ than it is configured to retain.
 
 Requires two variables:
 
-`AIRFLOW_RDS_ARN`: The ARN of the RDS DB instance that needs snapshots.
-`AIRFLOW_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
+`CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
+`CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 
 ## `science_museum_workflow`
 

@@ -24,7 +24,7 @@ from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperat
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import DAG_DEFAULT_ARGS
+from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
     get_latest_prod_snapshot,
@@ -66,7 +66,7 @@ def restore_staging_database():
         task_id="ensure_snapshot_ready",
         db_type="instance",
         db_snapshot_identifier=latest_snapshot,
-        aws_conn_id=constants.AWS_RDS_CONN_ID,
+        aws_conn_id=AWS_RDS_CONN_ID,
         mode="reschedule",
         timeout=60 * 60 * 4,  # 4 hours
     )
@@ -118,7 +118,7 @@ def restore_staging_database():
         task_id="delete_old",
         db_instance_identifier=constants.OLD_IDENTIFIER,
         rds_kwargs={"SkipFinalSnapshot": True, "DeleteAutomatedBackups": False},
-        aws_conn_id=constants.AWS_RDS_CONN_ID,
+        aws_conn_id=AWS_RDS_CONN_ID,
         wait_for_completion=True,
     )
 

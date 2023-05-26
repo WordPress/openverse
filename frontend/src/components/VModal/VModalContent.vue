@@ -35,7 +35,7 @@
             <VButton
               ref="closeButton"
               size="disabled"
-              variant="plain"
+              variant="transparent-tx"
               class="text-sr md:text-base md:text-white"
               @click="hide()"
             >

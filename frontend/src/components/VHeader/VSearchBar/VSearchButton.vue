@@ -2,7 +2,7 @@
   <VButton
     :aria-label="$t('search.search')"
     size="disabled"
-    :variant="route === 'home' ? 'filled-pink' : 'plain'"
+    :variant="route === 'home' ? 'filled-pink' : 'transparent-tx'"
     class="heading-6 h-full flex-shrink-0 rounded-s-none"
     :class="[
       route === 'home'
