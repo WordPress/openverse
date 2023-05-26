@@ -11,9 +11,11 @@ from airflow.utils.trigger_rule import TriggerRule
 
 from common import slack
 from common.constants import AWS_RDS_CONN_ID
+from common.github import GitHubAPI
 from database.staging_database_restore import constants
 from database.staging_database_restore.utils import (
     ensure_mutate_allowed,
+    setup_github,
     setup_rds_hook,
 )
 
@@ -207,3 +209,19 @@ def make_rename_task_group(
         rename >> await_rename
 
     return rename_group
+
+
+@task
+@setup_github
+def get_latest_api_package_version(github: GitHubAPI) -> str:
+    """Get the latest version of the API package from GitHub."""
+    versions = github.get_package_versions("openverse-api")
+    tags = set(versions[0]["metadata"]["container"]["tags"])
+    # There might actually be more than one tag here, but since they all point
+    # to the same build we don't care which is used.
+    latest_version = list(tags - {"latest"})[0]
+    log.info(f"Found latest version: {latest_version}")
+    if "latest" not in tags:
+        raise ValueError(f"Latest version is not marked as 'latest': {latest_version}")
+
+    return latest_version

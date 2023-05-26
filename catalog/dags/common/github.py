@@ -87,3 +87,9 @@ class GitHubAPI:
             "GET",
             f"repos/{owner}/{repo}/branches/{branch}/protection",
         )
+
+    def get_package_versions(self, package: str, owner: str = "WordPress"):
+        return self._make_request(
+            "GET",
+            f"orgs/{owner}/packages/container/{package}/versions",
+        )
