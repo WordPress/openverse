@@ -24,7 +24,9 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "text")
   })
 
-  xit("should allow changing the type", () => {
+  // @todo Create an issue to fix and re-enable this test or delete it if it can't be fixed
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip("should allow changing the type", () => {
     render(VInputField, {
       attrs: {
         placeholder: "Enter some number",

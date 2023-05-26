@@ -1,3 +1,5 @@
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["getByText", "getDmcaInput", "getMatureInput", "getOtherInput", "getCancelButton", "getReportButton", "getReportLink", "getDescriptionTextarea", "expect"] }] */
+
 import { fireEvent, screen } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
@@ -154,7 +156,9 @@ describe("VContentReportForm", () => {
     })
   })
 
-  it("should not send other report if description is short", async () => {
+  // @todo this test has no assertions, create an issue to fix it
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip("should not send other report if description is short", async () => {
     ReportService.sendReport = jest.fn()
 
     render(VContentReportForm, options)

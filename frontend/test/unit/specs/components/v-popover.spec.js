@@ -1,3 +1,5 @@
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["getPopover", "getTrigger", "getExternalArea", "expectOpen", "doOpen", "expectClosed"] } ] */
+
 import Vue from "vue"
 import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
@@ -64,7 +66,7 @@ const expectOpen = () => {
 
 const expectClosed = () => {
   return (
-    expect(queryPopover() === null) ||
+    expect(queryPopover()).toBeNull() ||
     expect(queryPopover().parentElement.parentElement.style.display).toEqual(
       "none"
     )

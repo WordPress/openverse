@@ -332,7 +332,9 @@ describe("Media Store", () => {
       })
     })
 
-    it("fetchSingleMediaType does not reset images if page is defined", async () => {
+    // @todo Create issue to fix this test: it has no assertions and I'm not sure what assertions it should have
+    // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+    it.skip("fetchSingleMediaType does not reset images if page is defined", async () => {
       const mediaStore = useMediaStore()
 
       const mediaType = IMAGE
