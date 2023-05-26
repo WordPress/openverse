@@ -10,6 +10,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import slack
+from common.constants import AWS_RDS_CONN_ID
 from database.staging_database_restore import constants
 from database.staging_database_restore.utils import (
     ensure_mutate_allowed,
@@ -170,7 +171,7 @@ def make_rds_sensor(task_id: str, db_identifier: str, retries: int = 0) -> RdsDb
         task_id=task_id,
         db_identifier=db_identifier,
         target_statuses=["available"],
-        aws_conn_id=constants.AWS_RDS_CONN_ID,
+        aws_conn_id=AWS_RDS_CONN_ID,
         mode="reschedule",
         timeout=60 * 60,  # 1 hour
         retries=retries,
