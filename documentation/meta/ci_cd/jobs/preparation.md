@@ -38,3 +38,18 @@ of the last commit.
   image_tag: string // the tag to use for the Docker images
 }
 ```
+
+## `lint`
+
+Runs the linting steps defined in the repository's
+[pre-commit configuration](https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml).
+This is executed via `just lint`.
+
+## `add-stack-label`
+
+_Note: Only runs on PRs._
+
+Use the outputs from the [`get-changes`](#get-changes) job to add an appropriate
+`stack` label to the PR. If a label cannot be determined from the changes, the
+`🚦 status: awaiting triage` and `🏷 status: label work required` labels are
+added instead.

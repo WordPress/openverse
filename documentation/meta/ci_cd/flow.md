@@ -50,15 +50,14 @@ stage depends.
 
 ## Preparation
 
-This is the stage of jobs which have no dependencies, so they get executed at
-the very start of the workflow. Since they are depended upon by other jobs, once
-this stage is complete, we can use their resulting state and outputs wherever
-needed.
+This is the stage of jobs get executed at the very start of the workflow. Since
+they are depended upon by other jobs, once this stage is complete, we can use
+their resulting state and outputs wherever needed.
 
 ```{mermaid}
 flowchart TD
   subgraph preparation[Preparation]
-    get-changes
+    get-changes --> add-stack-label
     get-image-tag
     lint
   end
@@ -68,7 +67,8 @@ flowchart TD
 
 - [`get-changes`](./jobs/preparation.md#get-changes)
 - [`get-image-tag`](./jobs/preparation.md#get-image-tag)
-- `lint`
+- [`lint`](./jobs/preparation.md#lint)
+- [`add-stack-label`](./jobs/preparation.md#add-stack-label)
 
 ## Documentation tests
 
