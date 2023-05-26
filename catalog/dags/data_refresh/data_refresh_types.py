@@ -38,6 +38,8 @@ class DataRefresh:
                                        may take
     create_materialized_view_timeout:  timedelta expressing amount of time the
                                        creation of the matview may take
+    api_healthcheck_timeout:           timedelta expressing amount of time it may take
+                                       to await healthy API results using the new index
     doc_md:                            str used for the DAG's documentation markdown
     """
 
@@ -52,6 +54,7 @@ class DataRefresh:
     create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
     create_materialized_view_timeout: timedelta = timedelta(hours=1)
     create_filtered_index_timeout: timedelta = timedelta(days=1)
+    api_healthcheck_timeout: timedelta = timedelta(days=1)
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
