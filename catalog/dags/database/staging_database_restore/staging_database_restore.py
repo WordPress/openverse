@@ -29,6 +29,15 @@ REQUIRED_DB_INFO = {
     "CopyTagsToSnapshot",
 }
 
+TABLES_TO_TRUNCATE = [
+    "api_throttledapplication",
+    "api_oauth2registration",
+    "api_oauth2verification",
+    "oauth2_provider_accesstoken",
+    "oauth2_provider_grant",
+    "oauth2_provider_idtoken",
+    "oauth2_provider_refreshtoken",
+]
 
 log = logging.getLogger(__name__)
 

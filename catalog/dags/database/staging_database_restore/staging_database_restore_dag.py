@@ -22,11 +22,18 @@ from datetime import datetime, timedelta
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import (
+    AWS_RDS_CONN_ID,
+    DAG_DEFAULT_ARGS,
+    POSTGRES_API_STAGING_CONN_ID,
+)
+from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
+    TABLES_TO_TRUNCATE,
     get_latest_prod_snapshot,
     get_staging_db_details,
     make_rds_sensor,
@@ -123,6 +130,17 @@ def restore_staging_database():
     )
 
     rename_temp_to_staging >> [notify_complete, delete_old]
+
+    with TaskGroup("truncate_tables") as truncate_tables:
+        for table in TABLES_TO_TRUNCATE:
+            PGExecuteQueryOperator(
+                task_id=f"truncate_{table}",
+                sql=f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;",
+                postgres_conn_id=POSTGRES_API_STAGING_CONN_ID,
+                execution_timeout=timedelta(minutes=5),
+            )
+
+    rename_temp_to_staging >> truncate_tables
 
 
 restore_staging_database()
