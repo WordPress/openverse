@@ -26,6 +26,7 @@ REQUIRED_DB_INFO = {
     "PubliclyAccessible",
     "DBInstanceClass",
     "AllocatedStorage",
+    "CopyTagsToSnapshot",
 }
 
 
