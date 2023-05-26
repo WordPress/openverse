@@ -8,13 +8,15 @@ from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
 
-from common.constants import XCOM_PULL_TEMPLATE
+from common.constants import API_CONN_ID, XCOM_PULL_TEMPLATE
 
 
 logger = logging.getLogger(__name__)
 
 
 POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15))
+# Minimum number of records we expect to get back from the API when querying an index.
+THRESHOLD_RESULT_COUNT = int(os.getenv("API_HEALTHCHECK_RECORD_COUNT", 10_000))
 
 
 def response_filter_stat(response: Response) -> str:
@@ -31,6 +33,7 @@ def response_filter_stat(response: Response) -> str:
     # Indices are named as '<media type>-<suffix>', so everything after the first
     # hyphen '-' is the suffix.
     _, index_suffix = index_name.split("-", maxsplit=1)
+    logger.info(index_suffix)
     return index_suffix
 
 
@@ -63,6 +66,19 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
     logger.info(f"Data refresh done with {data['progress']}% completed.")
     return True
+
+
+def response_check_api_health_check(response: Response) -> bool:
+    """
+    Handle the response for `api_health_check` Sensor.
+
+    Waits for an API query using the chosen index to return results.
+    """
+    data = response.json()
+
+    result_count = data.get("result_count", 0)
+    logger.info(f"Retrieved {result_count} records from the API using the new index.")
+    return result_count > THRESHOLD_RESULT_COUNT
 
 
 def get_current_index(target_alias: str) -> SimpleHttpOperator:
@@ -125,3 +141,34 @@ def trigger_and_wait_for_task(
     waiter = wait_for_task(action, trigger, timeout, poke_interval)
     trigger >> waiter
     return trigger, waiter
+
+
+def api_health_check(
+    media_type: str,
+    index_suffix: str,
+    timeout: timedelta,
+    poke_interval: int = POKE_INTERVAL,
+    retries: int = 8,
+) -> HttpSensor:
+    """
+    Poll the API for the given media endpoint, targeting the given index, and return
+    successfully when healthy results are returned.
+
+    If no results are returned, it will reschedule and poll again. If a 400 is received
+    because the API is not able to connect to the given index, the task will fail and
+    retry. The task is set to retry with exponential backoff, such that the retry delay
+    doubles between each attempt.
+    """
+    return HttpSensor(
+        task_id="api_health_check",
+        http_conn_id=API_CONN_ID,
+        endpoint=f"{media_type}/",
+        request_params={"internal__index": f"{media_type}-{index_suffix}"},
+        method="GET",
+        response_check=response_check_api_health_check,
+        mode="reschedule",
+        poke_interval=poke_interval,
+        timeout=timeout.total_seconds(),
+        retries=retries,
+        retry_exponential_backoff=True,
+    )
