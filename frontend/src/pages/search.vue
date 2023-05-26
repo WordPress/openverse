@@ -32,8 +32,8 @@
 
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
-import { computed, defineComponent, inject, ref } from "vue"
-import { useMeta } from "@nuxtjs/composition-api"
+import { computed, inject, ref } from "vue"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
