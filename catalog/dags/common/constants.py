@@ -34,5 +34,6 @@ OPENLEDGER_API_CONN_ID = os.getenv("OPENLEDGER_API_CONN_ID", "postgres_openledge
 POSTGRES_API_STAGING_CONN_ID = os.getenv(
     "POSTGRES_API_STAGING_CONN_ID", "postgres_openledger_api_staging"
 )
+API_CONN_ID = os.getenv("API_CONN_ID", "api")
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "aws_conn_id")
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
