@@ -22,7 +22,6 @@ from datetime import datetime, timedelta
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
-from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common.constants import (
@@ -33,7 +32,6 @@ from common.constants import (
 from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
-    TABLES_TO_TRUNCATE,
     get_latest_prod_snapshot,
     get_staging_db_details,
     make_rds_sensor,
@@ -131,14 +129,13 @@ def restore_staging_database():
 
     rename_temp_to_staging >> [notify_complete, delete_old]
 
-    with TaskGroup("truncate_tables") as truncate_tables:
-        for table in TABLES_TO_TRUNCATE:
-            PGExecuteQueryOperator(
-                task_id=f"truncate_{table}",
-                sql=f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE;",
-                postgres_conn_id=POSTGRES_API_STAGING_CONN_ID,
-                execution_timeout=timedelta(minutes=5),
-            )
+    # Truncate the oauth tables, the cascade ensures all related tables are truncated
+    truncate_tables = PGExecuteQueryOperator(
+        task_id="truncate_oauth_tables",
+        sql="TRUNCATE TABLE api_throttledapplication RESTART IDENTITY CASCADE;",
+        postgres_conn_id=POSTGRES_API_STAGING_CONN_ID,
+        execution_timeout=timedelta(minutes=5),
+    )
 
     rename_temp_to_staging >> truncate_tables
 
