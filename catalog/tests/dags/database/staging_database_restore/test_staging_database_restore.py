@@ -92,6 +92,7 @@ def test_get_staging_db_details(details, mock_rds_hook):
         "MultiAZ": False,
         "PubliclyAccessible": False,
         "VpcSecurityGroupIds": ["vpcsg1", "vpcsg2"],
+        "CopyTagsToSnapshot": True,
     }
 
 
