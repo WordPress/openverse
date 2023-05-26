@@ -47,7 +47,9 @@ This is executed via `just lint`.
 
 ## `add-stack-label`
 
-_Note: Only runs on PRs._
+```{note}
+This job only runs on PRs.
+```
 
 Use the outputs from the [`get-changes`](#get-changes) job to add an appropriate
 `stack` label to the PR. If a label cannot be determined from the changes, the
