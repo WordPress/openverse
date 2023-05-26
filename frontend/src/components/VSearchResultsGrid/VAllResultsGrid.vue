@@ -42,14 +42,14 @@
           :search-term="searchTerm"
           aspect-ratio="square"
         />
-        <li v-if="isDetail.audio(item)" :key="item.id">
-          <VAudioCell
-            :audio="item"
-            :search-term="searchTerm"
-            @interacted="hideSnackbar"
-            @focus.native="showSnackbar"
-          />
-        </li>
+        <VAudioCell
+          v-if="isDetail.audio(item)"
+          :key="item.id"
+          :audio="item"
+          :search-term="searchTerm"
+          @interacted="hideSnackbar"
+          @focus="showSnackbar"
+        />
       </template>
     </ol>
 

@@ -26,8 +26,8 @@
           layout="row"
           :search-term="searchTerm"
           @interacted="hideSnackbar"
-          @mousedown.native="handleMouseDown"
-          @focus.native="showSnackbar"
+          @mousedown="handleMouseDown"
+          @focus="showSnackbar"
         />
       </li>
     </ol>
