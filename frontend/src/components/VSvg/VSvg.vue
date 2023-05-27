@@ -8,7 +8,7 @@ import { defineComponent } from "vue"
  * Displays the given SVG image.
  */
 export default defineComponent({
-  name: "VIcon",
+  name: "VSvg",
   props: {
     /**
      * name of the SVG in `assets/svg/raw/images`
