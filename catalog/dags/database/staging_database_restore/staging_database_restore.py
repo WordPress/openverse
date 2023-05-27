@@ -225,3 +225,17 @@ def get_latest_api_package_version(github: GitHubAPI) -> str:
         raise ValueError(f"Latest version is not marked as 'latest': {latest_version}")
 
     return latest_version
+
+
+@task
+@setup_github
+def deploy_staging(latest_version: str, github: GitHubAPI) -> None:
+    """Deploy the latest version of the API package to staging."""
+    github.dispatch_workflow(
+        "openverse-infrastructure",
+        "deploy-staging-api.yml",
+        {
+            "tag": latest_version,
+            "run_name": f"staging database restore - {latest_version}",
+        },
+    )
