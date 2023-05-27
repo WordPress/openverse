@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 from pprint import pformat
 
-from airflow.decorators import task
+from airflow.decorators import task, task_group
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.sensors.rds import RdsDbSensor
@@ -213,7 +213,7 @@ def make_rename_task_group(
 
 @task
 @setup_github
-def get_latest_api_package_version(github: GitHubAPI) -> str:
+def get_latest_api_package_version(github: GitHubAPI = None) -> str:
     """Get the latest version of the API package from GitHub."""
     versions = github.get_package_versions("openverse-api")
     tags = set(versions[0]["metadata"]["container"]["tags"])
@@ -229,8 +229,8 @@ def get_latest_api_package_version(github: GitHubAPI) -> str:
 
 @task
 @setup_github
-def deploy_staging(latest_version: str, github: GitHubAPI) -> None:
-    """Deploy the latest version of the API package to staging."""
+def dispatch_deploy(latest_version: str, github: GitHubAPI = None) -> None:
+    """Dispatch the workflow for the staging API deployment."""
     github.dispatch_workflow(
         "openverse-infrastructure",
         "deploy-staging-api.yml",
@@ -239,3 +239,10 @@ def deploy_staging(latest_version: str, github: GitHubAPI) -> None:
             "run_name": f"staging database restore - {latest_version}",
         },
     )
+
+
+@task_group(group_id="deploy_staging")
+def deploy_staging() -> None:
+    """Deploy the latest version of the API package to staging."""
+    latest_version = get_latest_api_package_version()
+    dispatch_deploy(latest_version)
