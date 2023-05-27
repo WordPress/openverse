@@ -219,7 +219,7 @@ def get_latest_api_package_version(github: GitHubAPI = None) -> str:
     tags = set(versions[0]["metadata"]["container"]["tags"])
     # There might actually be more than one tag here, but since they all point
     # to the same build we don't care which is used.
-    latest_version = list(tags - {"latest"})[0]
+    latest_version = sorted(tags - {"latest"})[0]
     log.info(f"Found latest version: {latest_version}")
     if "latest" not in tags:
         raise ValueError(f"Latest version is not marked as 'latest': {latest_version}")
