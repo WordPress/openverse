@@ -34,7 +34,7 @@
       "
       :aria-label="$t('browse-page.aria.results', { query: searchTerm })"
     >
-      <li v-for="item in allMedia" :key="item.id">
+      <template v-for="item in allMedia">
         <VImageCell
           v-if="isDetail.image(item)"
           :key="item.id"
@@ -48,9 +48,9 @@
           :audio="item"
           :search-term="searchTerm"
           @interacted="hideSnackbar"
-          @focus.native="showSnackbar"
+          @focus="showSnackbar"
         />
-      </li>
+      </template>
     </ol>
 
     <VLoadMore class="mt-4" />
