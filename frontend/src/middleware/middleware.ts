@@ -33,9 +33,6 @@ const middleware: Middleware = async ({
 
   const navigationStore = useNavigationStore($pinia)
 
-  if ("embedded" in query) {
-    navigationStore.setIsEmbedded(query.embedded === "true")
-  }
   if (process.client) {
     sendWindowMessage({
       type: "urlChange",
