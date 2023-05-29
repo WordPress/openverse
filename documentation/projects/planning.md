@@ -239,7 +239,7 @@ them.
 
 ### Implementation Plans (`status: In RFC`)
 
-- [Implementation Plan Template](./templates/implementation-plan)
+- [Implementation Plan Template](./templates/implementation-plan.md)
 
 Implementation plans are the next type of RFC created for a project. The main
 goal of an implementation plan is to produce a discrete and ordered list of
