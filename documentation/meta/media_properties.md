@@ -74,3 +74,21 @@ materialized view.
 | `last_synced_with_source` | True        | timestamp with time zone        | [TimestampColumn](https://github.com/WordPress/openverse/blob/main/catalog/dags/common/storage/columns.py#L520-L547) (nullable=True, required=False, upsert_strategy=newest_non_null)                                                                                              |
 | `removed_from_source`     | False       | boolean                         | [BooleanColumn](https://github.com/WordPress/openverse/blob/main/catalog/dags/common/storage/columns.py#L340-L385) (nullable=False, required=True, upsert_strategy=false)                                                                                                          |
 | `standardized_popularity` | True        | double precision                | [CalculatedColumn](https://github.com/WordPress/openverse/blob/main/catalog/dags/common/storage/columns.py#L259-L337) (nullable=True, required=False, upsert_strategy=newest_non_null)                                                                                             |
+
+## Media Property Descriptions
+
+### identifier
+
+Media Types: image, audio
+
+#### Description
+
+The unique UUID identifier for the media item.
+
+#### Object Shape
+
+UUID
+
+#### Selection Criteria
+
+Created when the item is inserted into the main table.

@@ -14,6 +14,7 @@ logging.getLogger("common.storage.media").setLevel(logging.WARNING)
 
 # Constants
 DOC_MD_PATH = Path(__file__).parent / "media_properties.md"
+SOURCE_MD_PATH = Path(__file__).parent / "media_props.md"
 LOCAL_POSTGRES_FOLDER = Path(__file__).parents[3] / "docker" / "upstream_db"
 
 SQL_PATH = {
@@ -110,6 +111,34 @@ def add_column_props(media_props, python_columns):
     return media_props
 
 
+def parse_markdown() -> dict[str, str]:
+    """
+    Parse the markdown documentation file and return a dictionary with the
+    field name as key and the description as value.
+    """
+    with open(SOURCE_MD_PATH) as f:
+        contents = [line for line in f.readlines() if line.strip()]
+    current_field = ""
+    properties = {}
+    property = ""
+    value = {}
+    for i, line in enumerate(contents):
+        if line.startswith("# "):
+            if current_field and value:
+                properties[current_field] = value
+            current_field = line.replace("# ", "").strip()
+            value = {}
+            continue
+        elif line.startswith("## "):
+            property = line.replace("## ", "").strip()
+            value[property] = ""
+            continue
+        else:
+            value[property] += line
+
+    return properties
+
+
 def generate_media_props() -> dict:
     """
     Generate a dictionary with the media properties from the database,
@@ -117,6 +146,7 @@ def generate_media_props() -> dict:
     """
     media_props = {}
     python_columns = parse_python_columns()
+
     for media_type in ["image", "audio"]:
         media_props[media_type] = create_db_props_dict(media_type)
         media_props[media_type] = add_column_props(
@@ -148,7 +178,35 @@ def generate_media_props_table(media_properties) -> str:
     return table
 
 
-def generate_markdown_doc(media_properties: dict[str, dict]) -> str:
+def generate_media_props_doc(
+    markdown_descriptions: dict, media_properties: dict
+) -> str:
+    """Generate the long-form documentation for each media property."""
+    media_docs = ""
+    for prop, description in markdown_descriptions.items():
+        prop_heading = f"### {prop}\n\n"
+        media_types = []
+        for media_type, value in media_properties.items():
+            print(prop in value.keys())
+            if prop in value.keys():
+                media_types.append(media_type)
+
+        print(f"\nMedia Types: {', '.join(media_types)}\n")
+        prop_heading += f"Media Types: {', '.join(media_types)}\n\n"
+        prop_doc = ""
+        for name, value in description.items():
+            if value:
+                prop_doc += f"#### {name}\n\n"
+                prop_doc += f"{value}\n\n"
+        if prop_doc:
+            media_docs += prop_heading + prop_doc
+
+    return media_docs
+
+
+def generate_markdown_doc(
+    media_properties: dict[str, dict], markdown_descriptions: dict[str, dict]
+) -> str:
     """
     Generate the tables with media properties database column and
     Python objects characteristics.
@@ -162,13 +220,17 @@ def generate_markdown_doc(media_properties: dict[str, dict]) -> str:
     media_props_doc += f"""## Audio Properties\n
 {generate_media_props_table(media_properties["audio"])}
 """
+    media_props_doc += f"""## Media Property Descriptions\n
+{generate_media_props_doc(markdown_descriptions, media_properties)}
+    """
     return media_props_doc
 
 
 def write_media_props_doc(path: Path = DOC_MD_PATH) -> None:
     """Generate the DAG documentation and write it to a file."""
     media_properties = generate_media_props()
-    doc_text = generate_markdown_doc(media_properties)
+    markdown_descriptions = parse_markdown()
+    doc_text = generate_markdown_doc(media_properties, markdown_descriptions)
     log.info(f"Writing DAG doc to {path}")
     path.write_text(doc_text)
 
