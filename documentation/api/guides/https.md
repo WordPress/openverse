@@ -1,4 +1,4 @@
-# HTTPS
+# Local HTTPS testing
 
 To access the API over HTTPS, we need to proxy to it using NGINX. Note that this
 proxy is different from the API NGINX image that is specifically aimed at
