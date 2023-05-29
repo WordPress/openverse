@@ -13,7 +13,7 @@
       class="label-regular flex flex-row items-center gap-1"
     >
       <template #wordpress>
-        <WordPress />
+        <VSvg name="wordpress" class="h-6 w-6" width="24" height="24" />
       </template>
     </i18n>
   </VLink>
@@ -22,12 +22,11 @@
 import { PropType } from "vue"
 
 import VLink from "~/components/VLink.vue"
-
-import WordPress from "~/assets/wordpress.svg?inline"
+import VSvg from "~/components/VSvg/VSvg.vue"
 
 export default {
   name: "VWordPressLink",
-  components: { VLink, WordPress },
+  components: { VLink, VSvg },
   props: {
     mode: {
       type: String as PropType<"dark" | "light">,

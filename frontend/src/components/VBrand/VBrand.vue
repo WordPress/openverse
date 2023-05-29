@@ -3,8 +3,8 @@
   <div class="flex flex-row items-center">
     <!-- Using `flex` to place two SVGs side by side. -->
     <span class="inline-flex h-[1em] flex-row gap-[0.4em]" aria-hidden="true">
-      <OpenverseLogo class="h-full w-auto" />
-      <OpenverseBrand class="h-full w-auto" />
+      <VSvg class="h-full w-auto" viewBox="0 0 50 42" name="logo" />
+      <VSvg class="h-full w-auto" viewBox="0 0 215 42" name="brand" />
     </span>
     <span v-if="srText" class="sr-only">{{ srText }}</span>
   </div>
@@ -13,9 +13,7 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
-import OpenverseLogo from "~/assets/logo.svg?inline"
-import OpenverseBrand from "~/assets/brand.svg?inline"
-
+import VSvg from "~/components/VSvg/VSvg.vue"
 /**
  * Render the openverse logo and wordmark next to each other, while being
  * accessible to screen-readers.
@@ -23,8 +21,7 @@ import OpenverseBrand from "~/assets/brand.svg?inline"
 export default defineComponent({
   name: "VBrand",
   components: {
-    OpenverseLogo,
-    OpenverseBrand,
+    VSvg,
   },
   props: {
     /**
