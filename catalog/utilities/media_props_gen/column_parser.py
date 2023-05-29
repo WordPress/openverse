@@ -15,7 +15,7 @@ def format_python_column(
 ) -> str:
     col_type = python_column.pop("python_type")
     start, end = python_column_lines[col_type]
-    python_column_string = f"[{col_type}]({COLUMNS_URL}#L{start}-L{end})("
+    python_column_string = f"[{col_type}]({COLUMNS_URL}#L{start}-L{end}) ("
     col_name = python_column.pop("name")
     if col_name != column_db_name:
         python_column_string += f"name='{col_name}', "

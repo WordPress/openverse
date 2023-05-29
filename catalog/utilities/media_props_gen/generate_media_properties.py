@@ -140,7 +140,7 @@ def generate_media_props_table(media_properties) -> str:
             else f"{field_sql.datatype} {field_sql.constraint}"
         )
         table += (
-            f"| {field_name} | {field_sql.nullable} | "
+            f"| `{field_name}` | {field_sql.nullable} | "
             f"{field_db_type} | {field.get('python_column', '')} | "
             f"{media_docs.get(field_name) or ''}\n"
         )
