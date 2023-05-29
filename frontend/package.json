@@ -69,7 +69,6 @@
     "@nuxtjs/redirect-module": "^0.3.1",
     "@nuxtjs/sentry": "^7.1.4",
     "@nuxtjs/sitemap": "^2.4.0",
-    "@nuxtjs/svg": "^0.4.0",
     "@nuxtjs/svg-sprite": "0.5.2",
     "@pinia/nuxt": "0.2.1",
     "@popperjs/core": "^2.11.2",

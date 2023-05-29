@@ -60,6 +60,7 @@
     "src/components/VFilters/**.vue",
     "src/components/VHomeGallery/**.vue",
     "src/components/VIcon/**.vue",
+    "src/components/VSvg/**.vue",
     "src/components/VIconButton/**.vue",
     "src/components/VInputField/**.vue",
     "src/components/VItemGroup/**.vue",
