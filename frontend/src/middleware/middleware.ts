@@ -34,10 +34,6 @@ const middleware: Middleware = async ({
   const navigationStore = useNavigationStore($pinia)
 
   if (process.client) {
-    sendWindowMessage({
-      type: "urlChange",
-      value: { path: route.fullPath, title: document.title },
-    })
   }
 
   if (process.client && navigationStore.isReferredFromCc) {
