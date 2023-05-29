@@ -1,6 +1,6 @@
 <template>
   <button
-    :aria-label="$t('browse-page.aria.scroll')"
+    :aria-label="$t('browse-page.aria.scroll').toString()"
     type="button"
     class="scroll fixed bottom-4 mb-4 ms-auto h-14 w-14 rounded-full bg-pink text-center text-white transition-all duration-100 ease-linear hover:bg-dark-pink hover:shadow-md"
     :class="hClass"
@@ -45,12 +45,9 @@ export default defineComponent({
         : positionWithoutSidebar
     )
     const scrollToTop = (e: MouseEvent) => {
-      const mainPage = e.currentTarget?.closest("#main-page")
-      if (mainPage) {
-        mainPage.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-      } else {
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-      }
+      const element =
+        (e.currentTarget as HTMLElement)?.closest("#main-page") || window
+      element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
     }
     return { hClass, scrollToTop }
   },
