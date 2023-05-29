@@ -15,7 +15,7 @@
     <slot name="end">
       <VCloseButton
         :variant="variant === 'dark' ? 'black' : 'transparent-gray'"
-        size="small"
+        size="close"
         icon-size="small"
         :label="closeButtonLabel || $t('modal.close-banner')"
         @close="$emit('close')"

@@ -30,7 +30,8 @@ import type { TranslateResult } from "vue-i18n"
 
 const SIZE_MAP = Object.freeze({
   tiny: { icon: 6, button: "w-6 h-6" },
-  small: { icon: 6, button: "w-8 h-8" },
+  close: { icon: 6, button: "w-8 h-8" },
+  small: { icon: 6, button: "w-10 h-10" },
   medium: { icon: 6, button: "w-12 h-12" },
   large: { icon: 8, button: "w-14 h-14" },
   "extra-large": { icon: 12, button: "w-20 h-20" },

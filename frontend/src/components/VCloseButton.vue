@@ -62,7 +62,7 @@ export default defineComponent({
      * The size of the underlying VIconButton.
      */
     size: {
-      type: String as PropType<"tiny" | "small" | "medium" | "large">,
+      type: String as PropType<"close" | "small" | "medium" | "large">,
       default: "medium",
     },
     /**
