@@ -160,7 +160,7 @@ def api_health_check(
     retry. The task is set to retry with exponential backoff, such that the retry delay
     doubles between each attempt.
     """
-    access_token = Variable.get("API_ACCESS_TOKEN")
+    access_token = Variable.get("API_ACCESS_TOKEN", "not_set")
     return HttpSensor(
         task_id="api_health_check",
         http_conn_id=API_CONN_ID,
