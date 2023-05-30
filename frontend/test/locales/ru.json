@@ -7,7 +7,7 @@
       "placeholder": "Поиск содержимого"
     },
     "aria": {
-      "search-type": "Тип поиска",
+      "searchType": "Тип поиска",
       "search": "поиск"
     },
     "licenseFilter": {
@@ -174,7 +174,7 @@
     "clear": "Очистить фильтры",
     "hide": "Скрыть фильтры"
   },
-  "search-type": {
+  "searchType": {
     "heading": "Типы содержимого",
     "all": "Всё содержимое",
     "video": "Видео",
