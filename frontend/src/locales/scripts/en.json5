@@ -35,13 +35,6 @@
   },
   header: {
     homeLink: "{openverse} Home",
-    aboutNavItem: "Our Story",
-    sourceNavItem: "Sources",
-    searchGuideNavItem: "Search Guide",
-    externalSourcesNavItem: "External Sources",
-    privacyNavItem: "Privacy",
-    feedbackNavItem: "Feedback",
-    supportNavItem: "Support Us",
     placeholder: "Search all content",
     aria: {
       primary: "primary",
