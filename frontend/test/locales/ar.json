@@ -191,14 +191,14 @@
   "single-result": {
     "back": "رجوع إلى نتائج البحث"
   },
-  "media-details": {
-    "provider-label": "مزود",
-    "source-label": "مصدر",
+  "mediaDetails": {
+    "providerLabel": "مزود",
+    "sourceLabel": "مصدر",
     "loading": "جار التحميل...",
-    "related-error": "خطأ في جلب الوسائط ذات الصلة",
-    "image-info": "معلومات الصورة",
-    "audio-info": "معلومات صوتية",
-    "content-report": {
+    "relatedError": "خطأ في جلب الوسائط ذات الصلة",
+    "imageInfo": "معلومات الصورة",
+    "audioInfo": "معلومات صوتية",
+    "contentReport": {
       "short": "تقرير",
       "long": "الإبلاغ عن هذا المحتوى",
       "failure": {
@@ -217,12 +217,12 @@
         "other": {
           "option": "آخر",
           "note": "صف القضية.",
-          "sub-label": "مطلوب",
+          "subLabel": "مطلوب",
           "placeholder": "الرجاء إدخال 20 حرفًا على الأقل."
         },
         "mature": {
           "option": "هل يحتوي على محتويات للبالغين",
-          "sub-label": "اختياري",
+          "subLabel": "اختياري",
           "placeholder": "اختياريًا ، قدم وصفًا."
         },
         "dmca": {
@@ -234,7 +234,7 @@
       }
     },
     "aria": {
-      "creator-url": "اسم المؤلف}",
+      "creatorUrl": "اسم المؤلف}",
       "attribution": {
         "license": "اقرأ المزيد عن الترخيص",
         "tool": "اقرأ المزيد عن الأداة"
@@ -243,29 +243,29 @@
     "reuse": {
       "title": "كيف تستعمل",
       "description": "قم بزيارة موقع ويب {media} لتنزيله واستخدامه. تأكد من أن تنسب الفضل إلى المنشئ من خلال إظهار معلومات الإسناد حيث تشارك عملك.",
-      "license-header": "رخصة",
-      "tool-header": "المجال العام",
+      "licenseHeader": "رخصة",
+      "toolHeader": "المجال العام",
       "audio": "صوتي",
       "image": "صورة",
       "attribution": "تم تمييز هذه الصورة بترخيص {link}:",
-      "copy-license": {
+      "copyLicense": {
         "title": "انسب الفضل إلى المنشئ",
         "rich": "النص الغني",
         "html": "لغة البرمجة",
         "plain": "نص عادي",
-        "copy-text": "نسخ النص",
+        "copyText": "نسخ النص",
         "copied": "نسخ!"
       },
       "credit": {
-        "generic-title": "هذا العمل",
-        "actual-title": "\"{title}\"",
-        "text": "{title} {creator} {marked-licensed} {license}. {view-legal}",
-        "creator-text": "بواسطة {creator-name}",
+        "genericTitle": "هذا العمل",
+        "actualTitle": "\"{title}\"",
+        "text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
+        "creatorText": "بواسطة {creatorName}",
         "marked": "تم وضع علامة",
         "licensed": "مرخص بموجب",
-        "view-legal-text": "لعرض {terms-copy} ، قم بزيارة {url}.",
-        "terms-text": "الشروط",
-        "copy-text": "نسخة من هذا الترخيص"
+        "viewLegalText": "لعرض {termsCopy} ، قم بزيارة {url}.",
+        "termsText": "الشروط",
+        "copyText": "نسخة من هذا الترخيص"
       },
       "tool": {
         "content": "اقرأ المزيد عن الأداة {link}.",
