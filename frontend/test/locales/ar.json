@@ -156,27 +156,27 @@
       }
     }
   },
-  "audio-details": {
-    "genre-label": "النوع",
-    "related-audios": "الصوت ذو الصلة",
+  "audioDetails": {
+    "genreLabel": "النوع",
+    "relatedAudios": "الصوت ذو الصلة",
     "information": "معلومات صوتية",
     "weblink": "احصل على هذا الصوت",
     "table": {
       "album": "الألبوم",
       "category": "يكتب",
-      "sample-rate": "معدل العينة",
+      "sampleRate": "معدل العينة",
       "filetype": "شكل",
       "provider": "مزود",
       "source": "مصدر",
       "genre": "النوع"
     }
   },
-  "image-details": {
+  "imageDetails": {
     "creator": "بالاسم{name}",
     "weblink": "احصل على هذه الصورة",
-    "related-images": "الصور ذات الصلة",
+    "relatedImages": "الصور ذات الصلة",
     "aria": {
-      "creator-url": "المؤلف {creator}"
+      "creatorUrl": "المؤلف {creator}"
     },
     "information": {
       "title": "معلومات الصورة",
