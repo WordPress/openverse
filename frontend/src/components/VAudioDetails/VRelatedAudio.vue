@@ -1,12 +1,12 @@
 <template>
-  <aside :aria-label="$t('audio-details.related-audios')">
+  <aside :aria-label="$t('audioDetails.relatedAudios')">
     <h2 class="heading-6 lg:heading-6 mb-6">
-      {{ $t("audio-details.related-audios") }}
+      {{ $t("audioDetails.relatedAudios") }}
     </h2>
     <!-- Negative margin compensates for the `p-4` padding in row layout. -->
     <ol
       v-if="!fetchState.fetchingError"
-      :aria-label="$t('audio-details.related-audios')"
+      :aria-label="$t('audioDetails.relatedAudios')"
       class="-mx-2 mb-12 flex flex-col gap-4 md:-mx-4"
     >
       <li v-for="audio in media" :key="audio.id">
