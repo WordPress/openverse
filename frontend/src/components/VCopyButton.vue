@@ -8,10 +8,10 @@
     :data-clipboard-target="el"
   >
     <span v-if="!success">
-      {{ $t("media-details.reuse.copy-license.copy-text") }}
+      {{ $t("mediaDetails.reuse.copyLicense.copyText") }}
     </span>
     <span v-else>
-      {{ $t("media-details.reuse.copy-license.copied") }}
+      {{ $t("mediaDetails.reuse.copyLicense.copied") }}
     </span>
   </VButton>
 </template>
