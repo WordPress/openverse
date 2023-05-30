@@ -1,9 +1,9 @@
 <template>
   <label class="other-form block" for="description">
     <span class="flex flex-row items-center justify-between">
-      <span>{{ $t("mediaDetails.contentReport.form.other.note") }}</span>
+      <span>{{ $t("media-details.content-report.form.other.note") }}</span>
       <span>{{
-        $t(`mediaDetails.contentReport.form.${reason}.subLabel`)
+        $t(`media-details.content-report.form.${reason}.sub-label`)
       }}</span>
     </span>
     <textarea
@@ -11,7 +11,7 @@
       v-model="text"
       class="mt-2 h-20 w-full border border-dark-charcoal-20 p-2 placeholder-dark-charcoal-70"
       :placeholder="
-        $t(`mediaDetails.contentReport.form.${reason}.placeholder`).toString()
+        $t(`media-details.content-report.form.${reason}.placeholder`).toString()
       "
       :required="isRequired"
       :minlength="isRequired ? 20 : 0"

@@ -8,7 +8,7 @@
         :class="$style.skipButton"
         size="medium"
         @click="skipToContent"
-        >{{ $t("skip-to-content") }}</VButton
+        >{{ $t("skipToContent") }}</VButton
       >
     </VTeleport>
   </Component>

@@ -11,7 +11,7 @@
   >
     <VIcon :name="mediaType" />
     <p class="label-bold sm:description-bold mt-1 sm:mt-0">
-      {{ $t(`searchType.${mediaType}`) }}
+      {{ $t(`search-type.${mediaType}`) }}
     </p>
     <span
       class="label-regular sm:description-regular text-dark-charcoal-70 group-hover/button:text-dark-charcoal sm:ms-auto"

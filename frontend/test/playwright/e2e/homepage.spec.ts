@@ -32,7 +32,7 @@ const popoverIsVisible = async (page: Page) =>
 const popoverIsNotVisible = async (page: Page) =>
   await expect(page.locator(searchTypePopover)).not.toBeVisible()
 const clickPopoverButton = async (page: Page) =>
-  await page.getByRole("button", { name: t("searchType.all") }).click()
+  await page.getByRole("button", { name: t("search-type.all") }).click()
 
 test("can close the search type popover by clicking outside", async ({
   page,

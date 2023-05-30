@@ -6,7 +6,7 @@
 
     <template v-if="isLicense">
       <i18n
-        path="mediaDetails.reuse.attribution"
+        path="media-details.reuse.attribution"
         tag="span"
         class="mb-2 block text-sm md:mb-4 md:text-base"
       >
@@ -22,15 +22,15 @@
     <template v-else>
       <VLicenseElements :license="license" />
       <i18n
-        path="mediaDetails.reuse.tool.content"
+        path="media-details.reuse.tool.content"
         tag="span"
         class="description-bold"
       >
         <template #link>
           <VLink
-            :aria-label="$t('mediaDetails.aria.attribution.tool')"
+            :aria-label="$t('media-details.aria.attribution.tool')"
             :href="licenseUrl"
-            >{{ $t("mediaDetails.reuse.tool.link") }}</VLink
+            >{{ $t("media-details.reuse.tool.link") }}</VLink
           >
         </template>
       </i18n>
@@ -71,7 +71,7 @@ export default defineComponent({
     const isLicense = computed(() => isLicenseFn(props.license))
     const headerText = computed(() => {
       const licenseOrTool = isLicense.value ? "license" : "tool"
-      return i18n.t(`mediaDetails.reuse.${licenseOrTool}Header`)
+      return i18n.t(`media-details.reuse.${licenseOrTool}-header`)
     })
     const fullLicenseName = computed(() =>
       getFullLicenseName(props.license, props.licenseVersion, i18n)

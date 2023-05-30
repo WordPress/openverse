@@ -77,7 +77,7 @@ export default defineComponent({
   },
   setup(props) {
     const uiStore = useUiStore()
-    const { all: allPages, current: currentPage } = usePages()
+    const { all: allPages, current: currentPage } = usePages(true)
 
     const isContentMode = computed(() => props.mode === "content")
 

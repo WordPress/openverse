@@ -1,14 +1,14 @@
 <template>
   <section
-    :aria-label="$t('mediaDetails.reuse.title').toString()"
+    :aria-label="$t('media-details.reuse.title').toString()"
     class="media-reuse"
   >
     <h2 class="heading-6 md:heading-5 mb-4">
-      {{ $t("mediaDetails.reuse.title") }}
+      {{ $t("media-details.reuse.title") }}
     </h2>
     <p class="description-regular">
       {{
-        $t("mediaDetails.reuse.description", {
+        $t("media-details.reuse.description", {
           media: media.frontendMediaType,
         })
       }}

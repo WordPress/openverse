@@ -1,6 +1,6 @@
 {
   "404": {
-    "search-placeholder": "Buscar contenido para reutilizar",
+    "searchPlaceholder": "Buscar contenido para reutilizar",
     "main": "Ve a {link} o busca algo similar en el siguiente campo.",
     "title": "El contenido que estás buscando parece haber desaparecido."
   },
@@ -14,34 +14,34 @@
       "placeholder": "Buscar contenidos"
     },
     "aria": {
-      "searchType": "tipo de búsqueda",
+      "search-type": "tipo de búsqueda",
       "search": "buscar"
     },
-    "license-filter": {
+    "licenseFilter": {
       "label": "Quiero algo que pueda"
     }
   },
   "modal": {
-    "close-named": "Cerrar {name}",
+    "closeNamed": "Cerrar {name}",
     "close": "Cerrar"
   },
-  "sketchfab-iframe-title": "Visor {sketchfab}",
-  "mediaDetails": {
+  "sketchfabIframeTitle": "Visor {sketchfab}",
+  "media-details": {
     "reuse": {
       "credit": {
-        "actualTitle": "«{title}»",
-        "genericTitle": "Esta obra",
-        "text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
-        "copyText": "una copia de esta licencia",
-        "termsText": "los términos",
-        "viewLegalText": "Para ver los {termsCopy}, visita {url}.",
+        "actual-title": "«{title}»",
+        "generic-title": "Esta obra",
+        "text": "{title} {creator} {marked-licensed} {license}. {view-legal}",
+        "copy-text": "una copia de esta licencia",
+        "terms-text": "los términos",
+        "view-legal-text": "Para ver los {terms-copy}, visita {url}.",
         "licensed": "está bajo la licencia",
         "marked": "está marcado con",
-        "creatorText": "por {creatorName}"
+        "creator-text": "por {creator-name}"
       },
-      "copyLicense": {
+      "copy-license": {
         "copied": "¡Copiado!",
-        "copyText": "Copiar el texto",
+        "copy-text": "Copiar el texto",
         "title": "Reconocer al creador",
         "plain": "Texto sin formato",
         "html": "HTML",
@@ -55,10 +55,10 @@
       "audio": "Audio",
       "title": "Reutilizar el contenido",
       "attribution": "Esta imagen se ha marcado con una licencia {link}:",
-      "toolHeader": "Dominio público",
-      "licenseHeader": "Licencia"
+      "tool-header": "Dominio público",
+      "license-header": "Licencia"
     },
-    "contentReport": {
+    "content-report": {
       "short": "Informar",
       "form": {
         "dmca": {
@@ -69,12 +69,12 @@
         },
         "mature": {
           "placeholder": "Opcionalmente, proporciona una descripción.",
-          "subLabel": "Opcional",
+          "sub-label": "Opcional",
           "option": "Contiene contenido para adultos"
         },
         "other": {
           "placeholder": "Por favor, introduce al menos 20 caracteres.",
-          "subLabel": "Obligatorio",
+          "sub-label": "Obligatorio",
           "note": "Describe el problema.",
           "option": "Otra"
         },
@@ -94,18 +94,18 @@
       "long": "Informar de este contenido"
     },
     "aria": {
-      "creatorUrl": "autor {name}",
+      "creator-url": "autor {name}",
       "attribution": {
         "tool": "lee más sobre la herramienta",
         "license": "lee más sobre la licencia"
       }
     },
-    "audioInfo": "Información del audio",
-    "imageInfo": "Información de la imagen",
+    "audio-info": "Información del audio",
+    "image-info": "Información de la imagen",
     "loading": "Cargando...",
-    "relatedError": "Error al recuperar los medios relacionados",
-    "sourceLabel": "Fuente",
-    "providerLabel": "Proveedor"
+    "related-error": "Error al recuperar los medios relacionados",
+    "source-label": "Fuente",
+    "provider-label": "Proveedor"
   },
   "pref-page": {
     "non-switchable": {
@@ -155,9 +155,9 @@
     "single-name": "Fuente",
     "detail": "Hacer clic en una {single-name} te permite explorar y filtrar los elementos dentro de esa fuente."
   },
-  "audio-track": {
-    "aria-label-interactive": "{title} - Reproductor de audio - Pulsa la barra de espacio para reproducir y pausar una muestra del audio",
-    "aria-label": "{title} - Reproductor de audio",
+  "audioTrack": {
+    "ariaLabelInteractive": "{title} - Reproductor de audio - Pulsa la barra de espacio para reproducir y pausar una muestra del audio",
+    "ariaLabel": "{title} - Reproductor de audio",
     "messages": {
       "loading": "Cargando...",
       "err_unsupported": "Este formato de audio no es compatible con tu navegador.",
@@ -212,21 +212,21 @@
     "load": "Cargar más resultados",
     "all-result-count-more": "Más de {localeCount} resultado|Más de {localeCount} resultados"
   },
-  "searchType": {
+  "search-type": {
     "additional": "Fuentes adicionales",
     "model_3d": "Modelos 3D",
-    "statusBeta": "Beta",
+    "status-beta": "Beta",
     "heading": "Tipos de contenido",
     "label": "Tipo de contenido a buscar",
     "all": "Todo el contenido",
-    "seeAudio": "Ver todos los audios",
-    "seeImage": "Ver todas las imágenes",
+    "see-audio": "Ver todos los audios",
+    "see-image": "Ver todas las imágenes",
     "video": "Vídeos",
     "audio": "Audio",
     "image": "Imágenes"
   },
   "filters": {
-    "audio-categories": {
+    "audioCategories": {
       "sound_effect": "Efectos de sonido",
       "news": "Noticias",
       "audiobook": "Audiolibro",
@@ -236,60 +236,60 @@
       "sound": "Efectos de sonido",
       "music": "Música"
     },
-    "license-explanation": {
+    "licenseExplanation": {
       "more": {
-        "read-more": "Leer más",
-        "mark": "{read-more} sobre {mark}.",
-        "license": "{read-more} sobre esta licencia."
+        "readMore": "Leer más",
+        "mark": "{readMore} sobre {mark}.",
+        "license": "{readMore} sobre esta licencia."
       },
-      "mark-definition": "Definición de {mark}",
-      "license-definition": "Definición de la licencia"
+      "markDefinition": "Definición de {mark}",
+      "licenseDefinition": "Definición de la licencia"
     },
     "licenses": {
       "title": "Licencias",
-      "by-nc-nd": "BY-NC-ND",
-      "by-nc-sa": "BY-NC-SA",
-      "by-nd": "BY-ND",
-      "by-nc": "BY-NC",
-      "by-sa": "BY-SA",
+      "byNcNd": "BY-NC-ND",
+      "byNcSa": "BY-NC-SA",
+      "byNd": "BY-ND",
+      "byNc": "BY-NC",
+      "bySa": "BY-SA",
       "by": "BY",
       "pdm": "Marca de dominio público",
       "cc0": "CC0"
     },
     "aria": {
-      "remove-filter": "Eliminar el filtro {label}"
+      "removeFilter": "Eliminar el filtro {label}"
     },
-    "license-types": {
+    "licenseTypes": {
       "title": "Uso",
       "modification": "Modificar o adaptar",
       "commercial": "Usar comercialmente"
     },
-    "image-providers": {
+    "imageProviders": {
       "title": "Fuente"
     },
-    "audio-providers": {
+    "audioProviders": {
       "title": "Fuente"
     },
-    "image-categories": {
+    "imageCategories": {
       "title": "Tipo de imagen",
       "digitized_artwork": "Obras de arte digitalizadas",
       "illustration": "Ilustraciones",
       "photograph": "Fotografías"
     },
-    "audio-extensions": {
+    "audioExtensions": {
       "title": "Tipo de archivo",
       "flac": "FLAC",
       "ogg": "OGG",
       "mp3": "MP3"
     },
-    "image-extensions": {
+    "imageExtensions": {
       "title": "Tipo de archivo",
       "svg": "SVG",
       "gif": "GIF",
       "png": "PNG",
       "jpg": "JPEG"
     },
-    "aspect-ratios": {
+    "aspectRatios": {
       "title": "Relación de aspecto",
       "square": "Cuadrada",
       "wide": "Panorámica",
@@ -314,34 +314,34 @@
     "creator": {
       "title": "Buscar por creador"
     },
-    "search-by": {
+    "searchBy": {
       "creator": "Creador",
       "title": "Buscar por"
     },
     "title": "Filtros",
-    "filter-by": "Filtrar por"
+    "filterBy": "Filtrar por"
   },
-  "license-readable-names": {
-    "nc-sampling+": "Sampling Plus NoComercial",
+  "licenseReadableNames": {
+    "ncSampling+": "Sampling Plus NoComercial",
     "sampling+": "Sampling Plus",
-    "by-nc-nd": "Reconocimiento-NoComercial-SinObraDerivada",
-    "by-nc-sa": "Reconocimiento-NoComercial-CompartirIgual",
-    "by-nd": "Reconocimiento-SinObraDerivada",
-    "by-nc": "Reconocimiento-NoComercial",
-    "by-sa": "Reconocimiento-CompartirIgual",
+    "byNcNd": "Reconocimiento-NoComercial-SinObraDerivada",
+    "byNcSa": "Reconocimiento-NoComercial-CompartirIgual",
+    "byNd": "Reconocimiento-SinObraDerivada",
+    "byNc": "Reconocimiento-NoComercial",
+    "bySa": "Reconocimiento-CompartirIgual",
     "by": "Reconocimiento",
     "pdm": "Marca de dominio público",
     "cc0": "Cero"
   },
-  "error-images": {
-    "waiting-for-a-bite": "Tres chicos sentados en un tronco roto mientras dos de ellos pescan.",
-    "depressed-musician": "Un pianista deprimido descansa la cabeza en sus manos."
+  "errorImages": {
+    "waitingForABite": "Tres chicos sentados en un tronco roto mientras dos de ellos pescan.",
+    "depressedMusician": "Un pianista deprimido descansa la cabeza en sus manos."
   },
-  "no-results": {
+  "noResults": {
     "alternatives": "Intenta una consulta diferente o usa una de las fuentes adicionales para ampliar tu búsqueda.",
     "heading": "No hemos podido encontrar nada para «{query}»."
   },
-  "server-timeout": {
+  "serverTimeout": {
     "heading": "¡Vaya! Parece que esa petición tarda demasiado en completarse. Por favor, inténtalo de nuevo."
   },
   "about": {
@@ -368,27 +368,27 @@
       "content": "{openverse} es una herramienta que permite descubrir obras con licencia abierta y de dominio público y ser usadas por todos."
     }
   },
-  "migration-notice": {
-    "intro": "{cc-search} ahora se llama {openverse} y se une a {wordpress} como un proyecto de código abierto.",
+  "migrationNotice": {
+    "intro": "{ccSearch} ahora se llama {openverse} y se une a {wordpress} como un proyecto de código abierto.",
     "read": "Lee más",
-    "more": "{read-more} sobre este anuncio."
+    "more": "{readMore} sobre este anuncio."
   },
-  "audioDetails": {
+  "audio-details": {
     "information": "Información del audio",
     "table": {
       "source": "Fuente",
       "provider": "Proveedor",
       "genre": "Género",
       "filetype": "Formato",
-      "sampleRate": "Tasa de muestreo",
+      "sample-rate": "Tasa de muestreo",
       "category": "Tipo",
       "album": "Álbum"
     },
-    "relatedAudios": "Audios relacionados",
-    "genreLabel": "Género"
+    "related-audios": "Audios relacionados",
+    "genre-label": "Género"
   },
-  "skip-to-content": "Saltar al contenido",
-  "imageDetails": {
+  "skipToContent": "Saltar al contenido",
+  "image-details": {
     "information": {
       "unknown": "Desconocida",
       "title": "Información de la imagen",
@@ -400,20 +400,20 @@
     },
     "creator": "por {name}",
     "aria": {
-      "creatorUrl": "Autor {creator}"
+      "creator-url": "Autor {creator}"
     },
-    "relatedImages": "Imágenes relacionadas",
+    "related-images": "Imágenes relacionadas",
     "weblink": "Ir a la web de la imagen"
   },
   "header": {
-    "filter-button": {
-      "with-count": "{count} filtro|{count} filtros",
+    "filterButton": {
+      "withCount": "{count} filtro|{count} filtros",
       "simple": "Filtros"
     },
     "loading": "Cargando...",
     "aria": {
       "search": "buscar",
-      "sr-search": "botón de búsqueda",
+      "srSearch": "botón de búsqueda",
       "menu": "menú",
       "primary": "principal"
     },
@@ -423,12 +423,12 @@
       "dismiss": "Descartar",
       "text": "{example_notification_text}"
     },
-    "resources-tab": "Recursos",
-    "about-tab": "Acerca de"
+    "resourcesTab": "Recursos",
+    "aboutTab": "Acerca de"
   },
-  "filter-list": {
-    "filter-by": "Filtrar por",
-    "category-aria": "lista de filtros para la categoría {categoryName}",
+  "filterList": {
+    "filterBy": "Filtrar por",
+    "categoryAria": "lista de filtros para la categoría {categoryName}",
     "show": "Mostrar los resultados",
     "clear": "Vaciar los filtros",
     "hide": "Ocultar los filtros"
@@ -479,7 +479,7 @@
   "search": {
     "search": "Buscar"
   },
-  "play-pause": {
+  "playPause": {
     "replay": "Volver a reproducir",
     "pause": "Pausar",
     "play": "Reproducir"
@@ -587,7 +587,7 @@
       "intro": "Una extensión del navegador que te permite buscar y usar imágenes con licencia abierta y de dominio público."
     }
   },
-  "external-sources": {
+  "externalSources": {
     "card": {
       "checkboxes": {
         "commercial": "Uso para fines comerciales",
@@ -598,37 +598,37 @@
       "search": "¿No encuentras lo que buscas? Prueba fuentes adicionales."
     },
     "form": {
-      "no-results-title": "Ningún resultado de {type} para «{query}».",
+      "noResultsTitle": "Ningún resultado de {type} para «{query}».",
       "caption": "Haz clic en una fuente de abajo para buscar directamente otras colecciones de {type} con licencia CC. {break}Por favor, ten en cuenta que el uso de filtros no es compatible con {filter}.",
-      "supported-title": "¿No encuentras lo que buscas? Prueba fuentes adicionales de {type}.",
-      "unsupported-title": "{openverse} todavía no es compatible con la búsqueda integrada de {type}."
+      "supportedTitle": "¿No encuentras lo que buscas? Prueba fuentes adicionales de {type}.",
+      "unsupportedTitle": "{openverse} todavía no es compatible con la búsqueda integrada de {type}."
     },
     "caption": "{openverse} no indexa actualmente las fuentes listadas anteriormente, pero, a través de esta interfaz, ofrece un cómodo acceso a los servicios de búsqueda proporcionados por otras organizaciones independientes. {openverse} no tiene control sobre los resultados devueltos. No asumas que los resultados mostrados en este portal de búsqueda están bajo una licencia CC. Comprueba siempre que la obra está realmente bajo una licencia CC siguiendo el enlace. Si tienes dudas, debes contactar directamente con el titular del copyright o intentar contactar con el sitio donde has encontrado el contenido."
   },
   "waveform": {
     "label": "Barra de búsqueda de audio",
-    "current-time": "{time} segundo|{time} segundos"
+    "currentTime": "{time} segundo|{time} segundos"
   },
-  "audio-thumbnail": {
+  "audioThumbnail": {
     "alt": "Cubierta para «{title}» de {creator}"
   },
-  "download-button": {
+  "downloadButton": {
     "download": "Descargar",
     "aria": {
-      "dropdown-label": "Selecciona el formato de archivo para descargar"
+      "dropdownLabel": "Selecciona el formato de archivo para descargar"
     }
   },
   "interpunct": "•",
   "error": {
     "audio": "audio",
     "image": "imagen",
-    "media-not-found": "No se ha podido encontrar {mediaType} con ID {id}",
-    "image-not-found": "No se ha podido encontrar la imagen con ID {id}",
+    "mediaNotFound": "No se ha podido encontrar {mediaType} con ID {id}",
+    "imageNotFound": "No se ha podido encontrar la imagen con ID {id}",
     "occurred": "Ha ocurrido un error"
   },
-  "dropdown-button": {
+  "dropdownButton": {
     "aria": {
-      "arrow-label": "Desplegable"
+      "arrowLabel": "Desplegable"
     }
   },
   "browsers": {
@@ -637,7 +637,7 @@
     "firefox": "Firefox",
     "chrome": "Chrome"
   },
-  "single-result": {
+  "singleResult": {
     "back": "Volver a los resultados de búsqueda"
   }
 }

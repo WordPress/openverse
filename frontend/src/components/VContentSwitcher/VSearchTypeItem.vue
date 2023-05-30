@@ -9,9 +9,9 @@
     @click.native="$emit('click', item)"
   >
     <VIcon :name="icon" class="h-6 w-6" />
-    <span>{{ itemLabelKey }}</span>
+    <span>{{ $t(`search-type.${item}`) }}</span>
     <VPill v-if="isBeta" class="ms-auto">{{
-      $t("searchType.statusBeta")
+      $t("search-type.status-beta")
     }}</VPill>
   </VItem>
 </template>
@@ -21,7 +21,6 @@ import { computed, defineComponent, PropType } from "vue"
 
 import { BETA, contentStatus, SearchType } from "~/constants/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
-import useSearchType from "~/composables/use-search-type"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
@@ -77,9 +76,6 @@ export default defineComponent({
   },
   setup(props) {
     const searchStore = useSearchStore()
-    const { getSearchTypeProps } = useSearchType()
-
-    const itemLabelKey = computed(() => getSearchTypeProps(props.item).label)
 
     /**
      * Currently, there are no Beta search types, so TS raises an error saying
@@ -104,7 +100,6 @@ export default defineComponent({
       component,
       href,
       isBeta,
-      itemLabelKey,
     }
   },
 })

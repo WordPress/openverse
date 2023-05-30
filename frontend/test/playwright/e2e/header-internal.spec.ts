@@ -22,7 +22,7 @@ const clickMenuButton = async (page: Page) => {
 
 const closeMenu = async (page: Page, dir: LanguageDirection = "ltr") => {
   await page
-    .getByRole("button", { name: t("modal.close-pages-menu", dir) })
+    .getByRole("button", { name: t("modal.closePagesMenu", dir) })
     .click()
 }
 
@@ -97,7 +97,10 @@ test.describe("Header internal", () => {
       await page.getByRole("link", { name: t("navigation.about") }).click()
       // "Openverse Home" is hardcoded because our translation helper
       // doesn't support named interpolation.
-      await page.getByRole("link", { name: "Openverse Home" }).click()
+      await page
+        .getByRole("banner")
+        .getByRole("link", { name: "Openverse Home" })
+        .click()
       expect(page.url()).toBe(homeUrl)
     })
   })

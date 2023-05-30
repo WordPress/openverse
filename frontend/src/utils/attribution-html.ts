@@ -71,7 +71,7 @@ const fakeT = (
   }
 
   const segments = path.split(".")
-  let fraction: NestedRecord = enJson["mediaDetails"].reuse.credit
+  let fraction: NestedRecord = enJson["media-details"].reuse.credit
   let text: string | undefined = undefined
   segments.forEach((segment) => {
     const piece = fraction[segment]
@@ -154,7 +154,7 @@ export const getAttribution = (
 
   const isPd = isPublicDomain(mediaItem.license)
 
-  const i18nBase = "mediaDetails.reuse.credit"
+  const i18nBase = "media-details.reuse.credit"
   const tFn = i18n
     ? (key: string, values?: VueI18n.Values) =>
         i18n.t(`${i18nBase}.${key}`, values).toString()
@@ -162,10 +162,10 @@ export const getAttribution = (
 
   /* Title */
 
-  let title = mediaItem.originalTitle || tFn("genericTitle")
+  let title = mediaItem.originalTitle || tFn("generic-title")
   if (!isPlaintext && mediaItem.foreign_landing_url)
     title = extLink(mediaItem.foreign_landing_url, title)
-  if (mediaItem.originalTitle) title = tFn("actualTitle", { title })
+  if (mediaItem.originalTitle) title = tFn("actual-title", { title })
 
   /* License */
 
@@ -189,15 +189,15 @@ export const getAttribution = (
 
   const attributionParts: Record<string, string> = {
     title,
-    markedLicensed: tFn(isPd ? "marked" : "licensed"),
+    "marked-licensed": tFn(isPd ? "marked" : "licensed"),
     license: license,
-    viewLegal: "",
+    "view-legal": "",
     creator: "",
   }
 
   if (isPlaintext && mediaItem.license_url) {
-    attributionParts["viewLegal"] = tFn("viewLegalText", {
-      termsCopy: tFn(isPd ? "termsText" : "copyText"),
+    attributionParts["view-legal"] = tFn("view-legal-text", {
+      "terms-copy": tFn(isPd ? "terms-text" : "copy-text"),
       url: `${mediaItem.license_url}?ref=openverse`,
     })
   }
@@ -206,8 +206,8 @@ export const getAttribution = (
     let creator = mediaItem.creator
     if (!isPlaintext && mediaItem.creator_url)
       creator = extLink(mediaItem.creator_url, creator)
-    attributionParts.creator = tFn("creatorText", {
-      creatorName: creator,
+    attributionParts.creator = tFn("creator-text", {
+      "creator-name": creator,
     })
   }
 

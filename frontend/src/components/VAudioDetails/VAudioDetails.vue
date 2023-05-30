@@ -2,7 +2,7 @@
   <section class="audio-info">
     <header class="mb-6 flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
-        {{ $t("audioDetails.information") }}
+        {{ $t("audio-details.information") }}
       </h2>
       <VContentReportPopover :media="audio" />
     </header>
@@ -24,7 +24,7 @@
         </ul>
         <dl v-if="audio">
           <div v-if="audio.audio_set">
-            <dt>{{ $t("audioDetails.table.album") }}</dt>
+            <dt>{{ $t("audio-details.table.album") }}</dt>
             <dd>
               <VLink :href="audio.audio_set.foreign_landing_url">{{
                 audio.audio_set.title
@@ -32,14 +32,14 @@
             </dd>
           </div>
           <div v-if="audio.category">
-            <dt>{{ $t("audioDetails.table.category") }}</dt>
+            <dt>{{ $t("audio-details.table.category") }}</dt>
             <dd>
-              {{ $t(`filters.audio-categories.${audio.category}`) }}
+              {{ $t(`filters.audioCategories.${audio.category}`) }}
             </dd>
           </div>
           <div v-if="audio.sample_rate">
             <dt>
-              {{ $t("audioDetails.table.sampleRate") }}
+              {{ $t("audio-details.table.sample-rate") }}
             </dt>
             <dd>
               {{ audio.sample_rate }}
@@ -47,7 +47,7 @@
           </div>
           <div v-if="audio.filetype">
             <dt>
-              {{ $t("audioDetails.table.filetype") }}
+              {{ $t("audio-details.table.filetype") }}
             </dt>
             <dd>
               {{ audioFormats.toUpperCase() }}
@@ -55,7 +55,7 @@
           </div>
           <div>
             <dt>
-              {{ $t("audioDetails.table.provider") }}
+              {{ $t("audio-details.table.provider") }}
             </dt>
             <dd>
               <VLink :href="audio.foreign_landing_url">
@@ -65,7 +65,7 @@
           </div>
           <div v-if="audio.source && audio.sourceName !== audio.providerName">
             <dt>
-              {{ $t("audioDetails.table.source") }}
+              {{ $t("audio-details.table.source") }}
             </dt>
             <dd>
               {{ audio.sourceName }}
@@ -73,7 +73,7 @@
           </div>
           <div v-if="audio.genres && audio.genres.length > 0">
             <dt>
-              {{ $t("audioDetails.table.genre") }}
+              {{ $t("audio-details.table.genre") }}
             </dt>
             <dd>
               {{ audio.genres.join(", ") }}

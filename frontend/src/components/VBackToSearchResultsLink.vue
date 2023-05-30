@@ -11,7 +11,7 @@
     @mousedown="handleClick"
   >
     <VIcon name="chevron-left" :rtl-flip="true" />
-    {{ $t("single-result.back") }}
+    {{ $t("singleResult.back") }}
   </VButton>
 </template>
 

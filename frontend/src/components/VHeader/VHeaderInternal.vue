@@ -56,7 +56,7 @@
               <VCloseButton
                 variant="black"
                 icon-size="large"
-                :label="$t('modal.close-pages-menu')"
+                :label="$t('modal.closePagesMenu')"
                 @close="closePageMenu"
               />
             </div>
@@ -119,7 +119,7 @@ export default defineComponent({
 
     const route = useRoute()
 
-    const { all: allPages, current: currentPage } = usePages()
+    const { all: allPages, current: currentPage } = usePages(true)
 
     const isModalVisible = ref(false)
 

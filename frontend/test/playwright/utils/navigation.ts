@@ -73,18 +73,18 @@ export type CheckboxStatus = "checked" | "unchecked" | "disabled"
 
 export const searchTypeNames = {
   ltr: {
-    [ALL_MEDIA]: t("searchType.all", "ltr"),
-    [AUDIO]: t("searchType.audio", "ltr"),
-    [IMAGE]: t("searchType.image", "ltr"),
-    [VIDEO]: t("searchType.video", "ltr"),
-    [MODEL_3D]: t("searchType.model-3d", "ltr"),
+    [ALL_MEDIA]: t("search-type.all", "ltr"),
+    [AUDIO]: t("search-type.audio", "ltr"),
+    [IMAGE]: t("search-type.image", "ltr"),
+    [VIDEO]: t("search-type.video", "ltr"),
+    [MODEL_3D]: t("search-type.model-3d", "ltr"),
   },
   rtl: {
-    [ALL_MEDIA]: t("searchType.all", "rtl"),
-    [AUDIO]: t("searchType.audio", "rtl"),
-    [IMAGE]: t("searchType.image", "rtl"),
-    [VIDEO]: t("searchType.video", "rtl"),
-    [MODEL_3D]: t("searchType.model3d", "rtl"),
+    [ALL_MEDIA]: t("search-type.all", "rtl"),
+    [AUDIO]: t("search-type.audio", "rtl"),
+    [IMAGE]: t("search-type.image", "rtl"),
+    [VIDEO]: t("search-type.video", "rtl"),
+    [MODEL_3D]: t("search-type.model-3d", "rtl"),
   },
 }
 
@@ -97,7 +97,7 @@ export const openContentSettingsTab = async (
   tab: "searchTypes" | "filters" = "searchTypes",
   dir: LanguageDirection = "ltr"
 ) => {
-  const tabKey = tab === "searchTypes" ? "searchType.heading" : "filters.title"
+  const tabKey = tab === "searchTypes" ? "search-type.heading" : "filters.title"
 
   await page.getByRole("tab", { name: t(tabKey, dir) }).click()
 }
@@ -110,7 +110,7 @@ export const closeContentSettingsModal = async (
   dir: LanguageDirection = "ltr"
 ) => {
   return page
-    .getByRole("button", { name: t("modal.close-content-settings", dir) })
+    .getByRole("button", { name: t("modal.closeContentSettings", dir) })
     .click()
 }
 

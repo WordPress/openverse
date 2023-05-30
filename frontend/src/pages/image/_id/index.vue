@@ -39,18 +39,18 @@
         size="large"
         @click="sendGetMediaEvent"
       >
-        {{ $t("imageDetails.weblink") }}
+        {{ $t("image-details.weblink") }}
       </VButton>
       <div class="description-bold flex flex-1 flex-col justify-center">
         <h1 class="description-bold md:heading-5 line-clamp-2">
           {{ image.title }}
         </h1>
-        <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
+        <i18n v-if="image.creator" path="image-details.creator" tag="span">
           <template #name>
             <VLink
               v-if="image.creator_url"
               :aria-label="
-                $t('mediaDetails.aria.creatorUrl', {
+                $t('media-details.aria.creator-url', {
                   creator: image.creator,
                 })
               "

@@ -5,9 +5,11 @@
     has-icon-end
     class="label-bold"
   >
-    <span class="md:hidden">{{ $t("mediaDetails.contentReport.short") }}</span>
+    <span class="md:hidden">{{
+      $t("media-details.content-report.short")
+    }}</span>
     <span class="hidden md:inline">{{
-      $t("mediaDetails.contentReport.long")
+      $t("media-details.content-report.long")
     }}</span>
     <VIcon name="flag" />
   </VButton>

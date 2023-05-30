@@ -2,7 +2,7 @@
   <section class="w-full">
     <div class="mb-6 flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
-        {{ $t("imageDetails.information.title") }}
+        {{ $t("image-details.information.title") }}
       </h2>
       <VContentReportPopover :media="image" />
     </div>
@@ -16,15 +16,15 @@
     </ul>
     <dl>
       <div>
-        <dt>{{ $t("imageDetails.information.type") }}</dt>
+        <dt>{{ $t("image-details.information.type") }}</dt>
         <dd class="uppercase">{{ imgType }}</dd>
       </div>
       <div v-if="image.providerName !== image.sourceName">
-        <dt>{{ $t("imageDetails.information.provider") }}</dt>
+        <dt>{{ $t("image-details.information.provider") }}</dt>
         <dd>{{ image.providerName }}</dd>
       </div>
       <div>
-        <dt>{{ $t("imageDetails.information.source") }}</dt>
+        <dt>{{ $t("image-details.information.source") }}</dt>
         <dd>
           <VLink :href="image.foreign_landing_url" class="text-pink">{{
             image.sourceName
@@ -32,11 +32,11 @@
         </dd>
       </div>
       <div>
-        <dt>{{ $t("imageDetails.information.dimensions") }}</dt>
+        <dt>{{ $t("image-details.information.dimensions") }}</dt>
         <dd>
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ imageWidth }} &times; {{ imageHeight }}
-          {{ $t("imageDetails.information.pixels") }}
+          {{ $t("image-details.information.pixels") }}
         </dd>
       </div>
     </dl>
@@ -80,7 +80,7 @@ export default defineComponent({
         }
         return props.imageType
       }
-      return i18n.t("imageDetails.information.unknown")
+      return i18n.t("image-details.information.unknown")
     })
 
     return { imgType }

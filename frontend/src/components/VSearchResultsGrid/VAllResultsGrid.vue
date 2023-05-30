@@ -14,9 +14,9 @@
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="all-results.snackbar.text" tag="p">
+      <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
-          <kbd class="font-sans">{{ $t(`all-results.snackbar.spacebar`) }}</kbd>
+          <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
       </i18n>
     </VSnackbar>

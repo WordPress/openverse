@@ -7,36 +7,36 @@
       "placeholder": "Поиск содержимого"
     },
     "aria": {
-      "searchType": "Тип поиска",
+      "search-type": "Тип поиска",
       "search": "поиск"
     },
-    "license-filter": {
+    "licenseFilter": {
       "label": "Я хочу что-то, что можно"
     }
   },
-  "audioDetails": {
+  "audio-details": {
     "information": "Информация об аудио",
     "table": {
       "genre": "Жанр",
       "filetype": "Формат",
-      "sampleRate": "Частота дискретизации",
+      "sample-rate": "Частота дискретизации",
       "category": "Тип",
       "album": "Альбом"
     },
-    "relatedAudios": "Похожее аудио",
-    "genreLabel": "Жанр"
+    "related-audios": "Похожее аудио",
+    "genre-label": "Жанр"
   },
-  "mediaDetails": {
-    "contentReport": {
+  "media-details": {
+    "content-report": {
       "short": "Пожаловаться",
       "form": {
         "mature": {
-          "subLabel": "Необязательно",
+          "sub-label": "Необязательно",
           "option": "Содержимое для взрослой аудитории"
         },
         "other": {
           "placeholder": "Введите не менее 20 символов.",
-          "subLabel": "Обязательно",
+          "sub-label": "Обязательно",
           "note": "Опишите проблему.",
           "option": "Прочее"
         },
@@ -57,7 +57,7 @@
       "tool": {
         "content": "Узнайте больше про инструмент {link}"
       },
-      "copyLicense": {
+      "copy-license": {
         "title": "Поблагодарить автора",
         "html": "HTML"
       },
@@ -65,20 +65,20 @@
       "audio": "Звук",
       "title": "Повторно используемое содержимое",
       "attribution": "Это изображение отмечено как использующее лицензию {link}.",
-      "toolHeader": "Public Domain",
-      "licenseHeader": "Лицензия"
+      "tool-header": "Public Domain",
+      "license-header": "Лицензия"
     },
     "loading": "Загрузка...",
-    "sourceLabel": "Источник",
-    "providerLabel": "Поставщик"
+    "source-label": "Источник",
+    "provider-label": "Поставщик"
   },
   "header": {
-    "filter-button": {
-      "with-count": "{count} Фильтр|{count} Фильтра|{count} Фильтров"
+    "filterButton": {
+      "withCount": "{count} Фильтр|{count} Фильтра|{count} Фильтров"
     },
     "aria": {
       "search": "поиск",
-      "sr-search": "кнопка поиска",
+      "srSearch": "кнопка поиска",
       "menu": "меню",
       "primary": "основное"
     },
@@ -87,59 +87,59 @@
       "okay": "ОК",
       "dismiss": "Закрыть"
     },
-    "about-tab": "О нас"
+    "aboutTab": "О нас"
   },
   "filters": {
     "licenses": {
       "title": "Лицензии",
-      "by-nc-nd": "BY-NC-ND",
-      "by-nc-sa": "BY-NC-SA",
-      "by-nd": "BY-ND",
-      "by-nc": "BY-NC",
-      "by-sa": "BY-SA",
+      "byNcNd": "BY-NC-ND",
+      "byNcSa": "BY-NC-SA",
+      "byNd": "BY-ND",
+      "byNc": "BY-NC",
+      "bySa": "BY-SA",
       "by": "BY",
       "pdm": "Public Domain Mark",
       "cc0": "CC0"
     },
     "aria": {
-      "remove-filter": "Очистить фильтр {label}"
+      "removeFilter": "Очистить фильтр {label}"
     },
-    "license-types": {
+    "licenseTypes": {
       "title": "Использование",
       "modification": "Изменить или адаптировать",
       "commercial": "Использовать в коммерческих целях"
     },
-    "image-providers": {
+    "imageProviders": {
       "title": "Источник"
     },
-    "audio-providers": {
+    "audioProviders": {
       "title": "Источник"
     },
-    "audio-categories": {
+    "audioCategories": {
       "title": "Категория аудиозаписей",
       "podcast": "Подкасты",
       "sound": "Звуковые эффекты",
       "music": "Музыка"
     },
-    "image-categories": {
+    "imageCategories": {
       "title": "Тип изображения",
       "illustration": "Иллюстрации",
       "photograph": "Фотографии"
     },
-    "audio-extensions": {
+    "audioExtensions": {
       "title": "Тип файла",
       "flac": "FLAC",
       "ogg": "OGG",
       "mp3": "MP3"
     },
-    "image-extensions": {
+    "imageExtensions": {
       "title": "Тип файла",
       "svg": "SVG",
       "gif": "GIF",
       "png": "PNG",
       "jpg": "JPEG"
     },
-    "aspect-ratios": {
+    "aspectRatios": {
       "title": "Формат кадра",
       "square": "Квадрат",
       "wide": "Широкий",
@@ -165,16 +165,16 @@
       "title": "Поиск по автору"
     },
     "title": "Фильтры",
-    "filter-by": "Фильтровать по"
+    "filterBy": "Фильтровать по"
   },
-  "filter-list": {
-    "filter-by": "Фильтр по",
-    "category-aria": "Список фильтров для категории {categoryName}",
+  "filterList": {
+    "filterBy": "Фильтр по",
+    "categoryAria": "Список фильтров для категории {categoryName}",
     "show": "Показать результаты",
     "clear": "Очистить фильтры",
     "hide": "Скрыть фильтры"
   },
-  "searchType": {
+  "search-type": {
     "heading": "Типы содержимого",
     "all": "Всё содержимое",
     "video": "Видео",
@@ -184,7 +184,7 @@
   "modal": {
     "close": "Закрыть"
   },
-  "license-readable-names": {
+  "licenseReadableNames": {
     "pdm": "Знак общественного достояния"
   },
   "search": {
@@ -195,17 +195,17 @@
     "providers": {
       "source": "Источник"
     },
-    "issue-button": "Предложить новый источник",
-    "cc-content": {
+    "issueButton": "Предложить новый источник",
+    "ccContent": {
       "smithsonian": "Смитсоновский институт",
-      "europeana-api": "API Europeana"
+      "europeanaApi": "API Europeana"
     },
-    "single-name": "Источник"
+    "singleName": "Источник"
   },
-  "search-guide": {
+  "searchGuide": {
     "exact": {
-      "aria-label": "в кавычках, Клод Моне",
-      "claude-monet": "\"Клод Моне\""
+      "ariaLabel": "в кавычках, Клод Моне",
+      "claudeMonet": "\"Клод Моне\""
     }
   },
   "browse-page": {
@@ -239,7 +239,7 @@
     "load": "Загрузить ещё результаты",
     "all-result-count-more": "Более {localeCount} результата|Более {localeCount} результатов|Более {localeCount} результатов"
   },
-  "imageDetails": {
+  "image-details": {
     "information": {
       "source": "Источник",
       "provider": "Поставщик",
@@ -248,26 +248,26 @@
       "type": "Тип"
     },
     "aria": {
-      "creatorUrl": "Автор {creator}"
+      "creator-url": "Автор {creator}"
     },
-    "relatedImages": "Связанные изображения"
+    "related-images": "Связанные изображения"
   },
-  "external-sources": {
+  "externalSources": {
     "card": {
       "checkboxes": {
         "title": "Использование"
       }
     },
     "form": {
-      "no-results-title": "Не найдено {type} по запросу \"{query}\".",
+      "noResultsTitle": "Не найдено {type} по запросу \"{query}\".",
       "caption": "Нажмите на источники ниже для прямого поиска в других коллекциях {type} с лицензиями CC.{break}Использование фильтров не поддерживается в {filter}.",
-      "supported-title": "Не нашли то, что вы искали? Попробуйте дополнительные источники {type}."
+      "supportedTitle": "Не нашли то, что вы искали? Попробуйте дополнительные источники {type}."
     }
   },
-  "download-button": {
+  "downloadButton": {
     "download": "Скачать",
     "aria": {
-      "dropdown-label": "Выберите формат файла для скачивания"
+      "dropdownLabel": "Выберите формат файла для скачивания"
     }
   },
   "interpunct": "•",
@@ -276,19 +276,19 @@
     "image": "изображение",
     "occurred": "Произошла ошибка"
   },
-  "migration-notice": {
+  "migrationNotice": {
     "read": "Читать далее"
   },
-  "dropdown-button": {
+  "dropdownButton": {
     "aria": {
-      "arrow-label": "Выпадающий список"
+      "arrowLabel": "Выпадающий список"
     }
   },
-  "play-pause": {
+  "playPause": {
     "pause": "Приостановить",
     "play": "Воспроизвести"
   },
-  "audio-track": {
+  "audioTrack": {
     "messages": {
       "err_unsupported": "Этот формат аудио не поддерживается вашим браузером.",
       "err_decode": "Невозможно декодировать аудио.",
@@ -297,13 +297,13 @@
     }
   },
   "waveform": {
-    "current-time": "{time} секунда|{time} секунды|{time} секунд"
+    "currentTime": "{time} секунда|{time} секунды|{time} секунд"
   },
-  "external-sources-page": {
+  "externalSourcesPage": {
     "why": {
-      "feedback-suggestions": "Мы надеемся, что вам нравится. Если у вас есть предложения по улучшению, то есть {feedback}.",
-      "feedback-link": "отзыв",
-      "aria-label": "отзыв"
+      "feedbackSuggestions": "Мы надеемся, что вам нравится. Если у вас есть предложения по улучшению, то есть {feedback}.",
+      "feedbackLink": "отзыв",
+      "ariaLabel": "отзыв"
     },
     "new": {
       "email": "email"
@@ -316,7 +316,7 @@
     "firefox": "Firefox",
     "chrome": "Chrome"
   },
-  "single-result": {
+  "singleResult": {
     "back": "Назад к результатам поиска"
   },
   "about": {

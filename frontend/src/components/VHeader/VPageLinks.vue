@@ -98,7 +98,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const { all: allPages, current: currentPage } = usePages()
+    const { all: allPages, current: currentPage } = usePages(true)
 
     // The modal isn't closed if we click on the current page link,
     // so we need to close it manually.

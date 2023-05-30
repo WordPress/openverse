@@ -29,11 +29,11 @@ const icons = {
 } as const
 
 const labels = {
-  [ALL_MEDIA]: "searchType.all",
-  [IMAGE]: "searchType.image",
-  [AUDIO]: "searchType.audio",
-  [VIDEO]: "searchType.video",
-  [MODEL_3D]: "searchType.model3d",
+  [ALL_MEDIA]: "search-type.all",
+  [IMAGE]: "search-type.image",
+  [AUDIO]: "search-type.audio",
+  [VIDEO]: "search-type.video",
+  [MODEL_3D]: "search-type.model-3d",
 } as const
 
 export default function useSearchType() {

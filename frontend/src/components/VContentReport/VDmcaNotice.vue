@@ -1,16 +1,16 @@
 <template>
   <i18n
     class="dmca-notice"
-    path="mediaDetails.contentReport.form.dmca.note"
+    path="media-details.content-report.form.dmca.note"
     tag="p"
   >
     <template #form>
       <VLink
-        :aria-label="$t('mediaDetails.contentReport.form.dmca.form')"
+        :aria-label="$t('media-details.content-report.form.dmca.form')"
         :href="DMCA_FORM_URL"
         class="text-pink hover:underline"
         @click="$emit('click')"
-        >{{ $t("mediaDetails.contentReport.form.dmca.form") }}</VLink
+        >{{ $t("media-details.content-report.form.dmca.form") }}</VLink
       >
     </template>
     <template #source>
