@@ -273,26 +273,26 @@
       }
     }
   },
-  "browse-page": {
-    "all-no-results": "لا نتائج",
-    "all-result-count": "{localeCount} نتيجة | {localeCount} نتيجة",
-    "all-result-count-more": "أكثر من {localeCount} نتيجة | أكثر من {localeCount} نتيجة",
+  "browsePage": {
+    "allNoResults": "لا نتائج",
+    "allResultCount": "{localeCount} نتيجة | {localeCount} نتيجة",
+    "allResultCountMore": "أكثر من {localeCount} نتيجة | أكثر من {localeCount} نتيجة",
     "load": "تحميل المزيد من النتائج",
     "loading": "جار التحميل...",
-    "fetching-error": "خطأ في جلب {type}:",
+    "fetchingError": "خطأ في جلب {type}:",
     "aria": {
       "close": "أغلق",
       "scroll": "انتقل إلى أعلى",
       "search": "بحث",
-      "remove-filter": "إزالة عامل التصفية",
-      "license-explanation": "شرح الترخيص",
+      "removeFilter": "إزالة عامل التصفية",
+      "licenseExplanation": "شرح الترخيص",
       "creator": "البحث عن طريق المنشئ",
       "relevance": {
         "yes": "نتيجة ذات صلة؟ الجواب: نعم",
         "no": "نتيجة ذات صلة؟ الجواب: لا"
       }
     },
-    "license-description": {
+    "licenseDescription": {
       "title": "رخصة CC",
       "by": "ائتمن الخالق.",
       "nc": "الاستخدامات غير التجارية فقط.",
@@ -300,23 +300,23 @@
       "sa": "شارك التعديلات تحت نفس الشروط.",
       "zero": "تم وضع علامة على هذا العمل على أنه مخصص للملك العام.",
       "pd": "تم وضع علامة على هذا العمل على أنه في المجال العام.",
-      "sampling-plus": "العينات والمزج والتحولات الإبداعية مسموح بها."
+      "samplingPlus": "العينات والمزج والتحولات الإبداعية مسموح بها."
     },
-    "search-form": {
+    "searchForm": {
       "placeholder": "بحث في كل {type}",
       "image": "الصور",
       "audio": "صوتي",
       "video": "أشرطة فيديو",
-      "model-3d": "نماذج ثلاثية الأبعاد",
+      "model3d": "نماذج ثلاثية الأبعاد",
       "all": "المحتوى",
-      "collection-placeholder": "بحث في هذه المجموعة",
+      "collectionPlaceholder": "بحث في هذه المجموعة",
       "button": "يبحث"
     },
-    "search-rating": {
+    "searchRating": {
       "content": "هل هذه النتائج ذات صلة؟",
       "yes": "نعم",
       "no": "رقم",
-      "feedback-thanks": "شكرا لملاحظاتك!"
+      "feedbackThanks": "شكرا لملاحظاتك!"
     }
   },
   "filterList": {

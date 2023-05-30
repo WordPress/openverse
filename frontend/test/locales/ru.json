@@ -208,36 +208,36 @@
       "claudeMonet": "\"Клод Моне\""
     }
   },
-  "browse-page": {
-    "search-rating": {
+  "browsePage": {
+    "searchRating": {
       "content": "Эти результаты релевантны?",
-      "feedback-thanks": "Спасибо за ваш отзыв!",
+      "feedbackThanks": "Спасибо за ваш отзыв!",
       "no": "Нет",
       "yes": "Да"
     },
-    "search-form": {
+    "searchForm": {
       "button": "Поиск",
       "video": "видео",
-      "collection-placeholder": "Искать в этой коллекции"
+      "collectionPlaceholder": "Искать в этой коллекции"
     },
-    "all-result-count": "{localeCount} результат|{localeCount} результата|{localeCount} результатов",
-    "all-no-results": "Нет результатов",
+    "allResultCount": "{localeCount} результат|{localeCount} результата|{localeCount} результатов",
+    "allNoResults": "Нет результатов",
     "aria": {
       "relevance": {
         "no": "результат релевантен? ответ: нет",
         "yes": "результат релевантен? ответ: да"
       },
-      "remove-filter": "удалить фильтр",
+      "removeFilter": "удалить фильтр",
       "scroll": "прокрутить наверх"
     },
-    "fetching-error": "Ошибка при получении {type}:",
-    "license-description": {
+    "fetchingError": "Ошибка при получении {type}:",
+    "licenseDescription": {
       "sa": "Адаптации должны распространяться на тех же условиях.",
       "nd": "Адаптация или производные работы не разрешаются.",
       "nc": "Только для некоммерческого использования."
     },
     "load": "Загрузить ещё результаты",
-    "all-result-count-more": "Более {localeCount} результата|Более {localeCount} результатов|Более {localeCount} результатов"
+    "allResultCountMore": "Более {localeCount} результата|Более {localeCount} результатов|Более {localeCount} результатов"
   },
   "image-details": {
     "information": {

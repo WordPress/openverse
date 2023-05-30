@@ -167,8 +167,8 @@
     },
     "creator": "por {creator}"
   },
-  "browse-page": {
-    "search-form": {
+  "browsePage": {
+    "searchForm": {
       "model_3d": "Modelos 3D",
       "button": "Buscar",
       "all": "contenido",
@@ -176,10 +176,10 @@
       "audio": "audio",
       "image": "imágenes",
       "placeholder": "Buscar todo {type}",
-      "collection-placeholder": "Busca en esta colección"
+      "collectionPlaceholder": "Busca en esta colección"
     },
-    "license-description": {
-      "sampling-plus": "Se permiten muestras, integraciones y transformaciones creativas.",
+    "licenseDescription": {
+      "samplingPlus": "Se permiten muestras, integraciones y transformaciones creativas.",
       "pd": "Este trabajo está marcado como de dominio público.",
       "zero": "Este trabajo ha sido marcado como dedicado al dominio público.",
       "by": "Reconocer al creador.",
@@ -188,29 +188,29 @@
       "nd": "No se permiten derivados ni adaptaciones.",
       "nc": "Solo para uso no comercial."
     },
-    "search-rating": {
+    "searchRating": {
       "content": "¿Son relevantes estos resultados?",
-      "feedback-thanks": "¡Gracias por tu opinión!",
+      "feedbackThanks": "¡Gracias por tu opinión!",
       "no": "No",
       "yes": "Sí"
     },
     "aria": {
       "creator": "buscar por creador",
-      "license-explanation": "explicación de la licencia",
+      "licenseExplanation": "explicación de la licencia",
       "search": "buscar",
       "close": "cerrar",
       "relevance": {
         "no": "¿resultado relevante? respuesta: no",
         "yes": "¿resultado relevante? respuesta: sí"
       },
-      "remove-filter": "eliminar el filtro",
+      "removeFilter": "eliminar el filtro",
       "scroll": "scroll al inicio"
     },
-    "all-result-count": "{localeCount} resultado|{localeCount} resultados",
-    "all-no-results": "No hay resultados",
-    "fetching-error": "Error al recuperar {type}:",
+    "allResultCount": "{localeCount} resultado|{localeCount} resultados",
+    "allNoResults": "No hay resultados",
+    "fetchingError": "Error al recuperar {type}:",
     "load": "Cargar más resultados",
-    "all-result-count-more": "Más de {localeCount} resultado|Más de {localeCount} resultados"
+    "allResultCountMore": "Más de {localeCount} resultado|Más de {localeCount} resultados"
   },
   "search-type": {
     "additional": "Fuentes adicionales",

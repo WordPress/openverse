@@ -378,10 +378,10 @@
     show: "Show results",
     categoryAria: "filters list for {categoryName} category",
   },
-  "browse-page": {
-    "all-no-results": "No results",
-    "all-result-count": "{localeCount} result|{localeCount} results",
-    "all-result-count-more": "Over {localeCount} results",
+  browsePage: {
+    allNoResults: "No results",
+    allResultCount: "{localeCount} result|{localeCount} results",
+    allResultCountMore: "Over {localeCount} results",
     contentLink: {
       image: {
         zero: "No images found for {query}.",
@@ -396,25 +396,25 @@
     },
     load: "Load more results",
     loading: "Loading...",
-    "fetching-error": "Error fetching {type}:",
-    "search-rating": {
+    fetchingError: "Error fetching {type}:",
+    searchRating: {
       content: "Are these results relevant?",
       yes: "Yes",
       no: "No",
-      "feedback-thanks": "Thank you for the feedback!",
+      feedbackThanks: "Thank you for the feedback!",
     },
-    "search-form": {
+    searchForm: {
       placeholder: "Search all {type}",
       image: "images",
       audio: "audio",
       video: "videos",
-      "model-3d": "3D Models",
+      model3d: "3D Models",
       all: "content",
-      "collection-placeholder": "Search this collection",
+      collectionPlaceholder: "Search this collection",
       button: "Search",
       clear: "Clear",
     },
-    "license-description": {
+    licenseDescription: {
       title: "License CC",
       by: "Credit the creator.",
       nc: "Noncommercial uses only.",
@@ -422,7 +422,7 @@
       sa: "Share adaptations under the same terms.",
       zero: "This work has been marked as dedicated to the public domain.",
       pd: "This work is marked as being in the public domain.",
-      "sampling-plus": "Samples, mash-ups, creative transformations permitted.",
+      samplingPlus: "Samples, mash-ups, creative transformations permitted.",
     },
     aria: {
       close: "close",
@@ -432,11 +432,11 @@
         yes: "relevant result? answer: yes",
         no: "relevant result? answer: no",
       },
-      "remove-filter": "remove filter",
-      "license-explanation": "license explanation",
+      removeFilter: "remove filter",
+      licenseExplanation: "license explanation",
       creator: "search by creator",
-      "image-title": "Image: {title}",
-      "audio-title": "Audio: {title}",
+      imageTitle: "Image: {title}",
+      audioTitle: "Audio: {title}",
       results: "Search results for {query}.",
     },
   },

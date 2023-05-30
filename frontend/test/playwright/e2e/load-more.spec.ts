@@ -11,7 +11,7 @@ import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
-const loadMoreButton = `button:has-text("${t("browse-page.load", "ltr")}")`
+const loadMoreButton = `button:has-text("${t("browsePage.load", "ltr")}")`
 
 const openSingleMediaView = async (
   page: Page,

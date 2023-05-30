@@ -1,6 +1,6 @@
 <template>
   <button
-    :aria-label="$t('browse-page.aria.scroll')"
+    :aria-label="$t('browsePage.aria.scroll')"
     type="button"
     class="scroll sticky bottom-4 mb-4 ms-auto h-14 w-14 rounded-full bg-pink text-center text-white transition-all duration-100 ease-linear hover:bg-dark-pink hover:shadow-md"
     :class="hClass"
