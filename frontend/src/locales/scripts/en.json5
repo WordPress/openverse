@@ -35,13 +35,6 @@
   },
   header: {
     "home-link": "{openverse} Home",
-    "about-nav-item": "Our Story",
-    "source-nav-item": "Sources",
-    "search-guide-nav-item": "Search Guide",
-    "external-sources-nav-item": "External Sources",
-    "privacy-nav-item": "Privacy",
-    "feedback-nav-item": "Feedback",
-    "support-nav-item": "Support Us",
     placeholder: "Search all content",
     aria: {
       primary: "primary",
@@ -49,10 +42,8 @@
       search: "search",
       "sr-search": "search button",
     },
-    "licenses-nav-item": "The Licenses",
     "about-tab": "About",
     "resources-tab": "Resources",
-    "api-nav-item": "API",
     notification: {
       text: "{example_notification_text}",
       dismiss: "Dismiss",

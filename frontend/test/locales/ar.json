@@ -636,19 +636,9 @@
     }
   },
   "header": {
-    "about-nav-item": "قصتنا",
-    "source-nav-item": "مصادر",
-    "search-guide-nav-item": "دليل البحث",
-    "external-sources-nav-item": "بحث ميتا",
-    "privacy-nav-item": "خصوصية",
-    "feedback-nav-item": "استجابة",
-    "support-nav-item": "ادعمنا",
-    "extension-nav-item": "امتداد الويب",
     "placeholder": "البحث في كل المحتوى",
-    "licenses-nav-item": "التراخيص",
     "about-tab": "حول",
     "resources-tab": "موارد",
-    "api-nav-item": "API",
     "loading": "جار التحميل...",
     "filter-button": {
       "simple": "مرشحات",
