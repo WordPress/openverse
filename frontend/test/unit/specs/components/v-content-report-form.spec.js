@@ -156,15 +156,20 @@ describe("VContentReportForm", () => {
     })
   })
 
-  // https://github.com/WordPress/openverse/issues/2221
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip("should not send other report if description is short", async () => {
+  it("submit button on other form should only be enabled if input is longer than 20 characters", async () => {
     ReportService.sendReport = jest.fn()
 
     render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())
 
-    const description = "less than 20 chars"
+    // The minimum length for report description is 20 characters. This is invalid
+    const description = "1234567890123456789"
     await fireEvent.update(getDescriptionTextarea(), description)
+
+    // The button is not fully disabled, it uses `aria-disabled` attribute for a11y
+    expect(await getReportButton()).toHaveAttribute("aria-disabled", "true")
+
+    await fireEvent.update(getDescriptionTextarea(), description + "0") // Valid, 20 characters
+    expect(await getReportButton()).not.toHaveAttribute("aria-disabled")
   })
 })
