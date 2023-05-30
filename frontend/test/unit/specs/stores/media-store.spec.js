@@ -332,7 +332,7 @@ describe("Media Store", () => {
       })
     })
 
-    // @todo Create issue to fix this test: it has no assertions and I'm not sure what assertions it should have
+    // https://github.com/WordPress/openverse/issues/2223
     // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
     it.skip("fetchSingleMediaType does not reset images if page is defined", async () => {
       const mediaStore = useMediaStore()

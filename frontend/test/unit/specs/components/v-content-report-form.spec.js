@@ -156,7 +156,7 @@ describe("VContentReportForm", () => {
     })
   })
 
-  // @todo this test has no assertions, create an issue to fix it
+  // https://github.com/WordPress/openverse/issues/2221
   // eslint-disable-next-line jest/no-disabled-tests
   it.skip("should not send other report if description is short", async () => {
     ReportService.sendReport = jest.fn()

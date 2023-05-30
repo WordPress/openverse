@@ -24,7 +24,7 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "text")
   })
 
-  // @todo Create an issue to fix and re-enable this test or delete it if it can't be fixed
+  // https://github.com/WordPress/openverse/issues/2222
   // eslint-disable-next-line jest/no-disabled-tests
   it.skip("should allow changing the type", () => {
     render(VInputField, {
