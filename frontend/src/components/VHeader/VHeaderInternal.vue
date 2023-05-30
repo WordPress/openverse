@@ -119,7 +119,7 @@ export default defineComponent({
 
     const route = useRoute()
 
-    const { all: allPages, current: currentPage } = usePages(true)
+    const { all: allPages, current: currentPage } = usePages()
 
     const isModalVisible = ref(false)
 

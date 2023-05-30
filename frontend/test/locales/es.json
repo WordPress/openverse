@@ -410,7 +410,6 @@
       "with-count": "{count} filtro|{count} filtros",
       "simple": "Filtros"
     },
-    "privacy-nav-item": "Privacidad",
     "loading": "Cargando...",
     "aria": {
       "search": "buscar",
@@ -419,15 +418,6 @@
       "primary": "principal"
     },
     "placeholder": "Buscar todos los contenidos",
-    "api-nav-item": "API",
-    "licenses-nav-item": "Las licencias",
-    "extension-nav-item": "Extensión web",
-    "support-nav-item": "Apóyanos",
-    "feedback-nav-item": "Opinión",
-    "external-sources-nav-item": "Búsqueda meta",
-    "search-guide-nav-item": "Guía de búsqueda",
-    "source-nav-item": "Fuentes",
-    "about-nav-item": "Nuestra historia",
     "notification": {
       "okay": "Aceptar",
       "dismiss": "Descartar",

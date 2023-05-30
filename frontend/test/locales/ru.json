@@ -76,7 +76,6 @@
     "filter-button": {
       "with-count": "{count} Фильтр|{count} Фильтра|{count} Фильтров"
     },
-    "privacy-nav-item": "Конфиденциальность",
     "aria": {
       "search": "поиск",
       "sr-search": "кнопка поиска",
@@ -84,15 +83,6 @@
       "primary": "основное"
     },
     "placeholder": "Поиск по всему содержимому",
-    "api-nav-item": "API",
-    "licenses-nav-item": "Лицензии",
-    "extension-nav-item": "Веб-расширение",
-    "support-nav-item": "Поддержите нас",
-    "feedback-nav-item": "Обратная связь",
-    "external-sources-nav-item": "Мета поиск",
-    "search-guide-nav-item": "Руководство по поиску",
-    "source-nav-item": "Источники",
-    "about-nav-item": "Наша история",
     "notification": {
       "okay": "ОК",
       "dismiss": "Закрыть"
