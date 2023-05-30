@@ -14,29 +14,29 @@
       "label": "Я хочу что-то, что можно"
     }
   },
-  "audio-details": {
+  "audioDetails": {
     "information": "Информация об аудио",
     "table": {
       "genre": "Жанр",
       "filetype": "Формат",
-      "sample-rate": "Частота дискретизации",
+      "sampleRate": "Частота дискретизации",
       "category": "Тип",
       "album": "Альбом"
     },
-    "related-audios": "Похожее аудио",
-    "genre-label": "Жанр"
+    "relatedAudios": "Похожее аудио",
+    "genreLabel": "Жанр"
   },
-  "media-details": {
-    "content-report": {
+  "mediaDetails": {
+    "contentReport": {
       "short": "Пожаловаться",
       "form": {
         "mature": {
-          "sub-label": "Необязательно",
+          "subLabel": "Необязательно",
           "option": "Содержимое для взрослой аудитории"
         },
         "other": {
           "placeholder": "Введите не менее 20 символов.",
-          "sub-label": "Обязательно",
+          "subLabel": "Обязательно",
           "note": "Опишите проблему.",
           "option": "Прочее"
         },
@@ -57,7 +57,7 @@
       "tool": {
         "content": "Узнайте больше про инструмент {link}"
       },
-      "copy-license": {
+      "copyLicense": {
         "title": "Поблагодарить автора",
         "html": "HTML"
       },
@@ -65,12 +65,12 @@
       "audio": "Звук",
       "title": "Повторно используемое содержимое",
       "attribution": "Это изображение отмечено как использующее лицензию {link}.",
-      "tool-header": "Public Domain",
-      "license-header": "Лицензия"
+      "toolHeader": "Public Domain",
+      "licenseHeader": "Лицензия"
     },
     "loading": "Загрузка...",
-    "source-label": "Источник",
-    "provider-label": "Поставщик"
+    "sourceLabel": "Источник",
+    "providerLabel": "Поставщик"
   },
   "header": {
     "filterButton": {
@@ -239,7 +239,7 @@
     "load": "Загрузить ещё результаты",
     "all-result-count-more": "Более {localeCount} результата|Более {localeCount} результатов|Более {localeCount} результатов"
   },
-  "image-details": {
+  "imageDetails": {
     "information": {
       "source": "Источник",
       "provider": "Поставщик",
@@ -248,9 +248,9 @@
       "type": "Тип"
     },
     "aria": {
-      "creator-url": "Автор {creator}"
+      "creatorUrl": "Автор {creator}"
     },
-    "related-images": "Связанные изображения"
+    "relatedImages": "Связанные изображения"
   },
   "externalSources": {
     "card": {

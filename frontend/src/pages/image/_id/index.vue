@@ -50,7 +50,7 @@
             <VLink
               v-if="image.creator_url"
               :aria-label="
-                $t('media-details.aria.creator-url', {
+                $t('mediaDetails.aria.creatorUrl', {
                   creator: image.creator,
                 })
               "

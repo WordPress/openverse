@@ -440,12 +440,12 @@
       results: "Search results for {query}.",
     },
   },
-  "media-details": {
+  mediaDetails: {
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
-      "license-header": "License",
-      "tool-header": "Public Domain",
+      licenseHeader: "License",
+      toolHeader: "Public Domain",
       audio: "Audio",
       image: "Image",
       tool: {
@@ -453,40 +453,40 @@
         link: "here",
       },
       credit: {
-        "generic-title": "This work",
-        "actual-title": '"{title}"',
-        text: "{title} {creator} {marked-licensed} {license}. {view-legal}",
-        "creator-text": "by {creator-name}",
+        genericTitle: "This work",
+        actualTitle: '"{title}"',
+        text: "{title} {creator} {markedLicensed} {license}. {viewLegal}",
+        creatorText: "by {creatorName}",
         marked: "is marked with",
         licensed: "is licensed under",
-        "view-legal-text": "To view {terms-copy}, visit {url}.",
-        "terms-text": "the terms",
-        "copy-text": "a copy of this license",
+        viewLegalText: "To view {termsCopy}, visit {url}.",
+        termsText: "the terms",
+        copyText: "a copy of this license",
       },
-      "copy-license": {
+      copyLicense: {
         title: "Credit the creator",
         rich: "Rich Text",
         html: "HTML",
         plain: "Plain text",
-        "copy-text": "Copy text",
+        copyText: "Copy text",
         copied: "Copied!",
       },
       attribution: "This image was marked with a {link} license:",
     },
-    "provider-label": "Provider",
-    "source-label": "Source",
+    providerLabel: "Provider",
+    sourceLabel: "Source",
     loading: "Loading...",
-    "related-error": "Error fetching related media",
+    relatedError: "Error fetching related media",
     aria: {
       attribution: {
         license: "read more about the license",
         tool: "read more about the tool",
       },
-      "creator-url": "author {name}",
+      creatorUrl: "author {name}",
     },
-    "image-info": "Image information",
-    "audio-info": "Audio information",
-    "content-report": {
+    imageInfo: "Image information",
+    audioInfo: "Audio information",
+    contentReport: {
       short: "Report",
       long: "Report this content",
       form: {
@@ -500,13 +500,13 @@
         },
         mature: {
           option: "Contains mature content",
-          "sub-label": "Optional",
+          subLabel: "Optional",
           placeholder: "Optionally, provide a description.",
         },
         other: {
           option: "Other",
           note: "Describe the issue.",
-          "sub-label": "Required",
+          subLabel: "Required",
           placeholder: "Please enter at least 20 characters.",
         },
         submit: "Report",
