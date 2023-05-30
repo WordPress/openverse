@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:px-3 lg:py-4"
+    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:p-3"
     :class="classNames"
     :data-testid="`banner-${id}`"
   >
