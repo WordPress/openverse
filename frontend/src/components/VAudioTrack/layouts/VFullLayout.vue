@@ -61,7 +61,7 @@
         class="description-bold order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
         @click="sendGetMediaEvent"
       >
-        {{ $t("audio-details.weblink") }}
+        {{ $t("audioDetails.weblink") }}
       </VButton>
     </div>
   </div>
