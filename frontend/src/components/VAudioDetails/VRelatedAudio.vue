@@ -18,7 +18,7 @@
       v-show="fetchState.isFetching"
     />
     <p v-show="!!fetchState.fetchingError">
-      {{ $t("media-details.related-error") }}
+      {{ $t("mediaDetails.relatedError") }}
     </p>
   </aside>
 </template>

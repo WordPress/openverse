@@ -26,22 +26,22 @@
     "close": "Cerrar"
   },
   "sketchfab-iframe-title": "Visor {sketchfab}",
-  "media-details": {
+  "mediaDetails": {
     "reuse": {
       "credit": {
-        "actual-title": "«{title}»",
-        "generic-title": "Esta obra",
-        "text": "{title} {creator} {marked-licensed} {license}. {view-legal}",
-        "copy-text": "una copia de esta licencia",
-        "terms-text": "los términos",
-        "view-legal-text": "Para ver los {terms-copy}, visita {url}.",
+        "actualTitle": "«{title}»",
+        "genericTitle": "Esta obra",
+        "text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
+        "copyText": "una copia de esta licencia",
+        "termsText": "los términos",
+        "viewLegalText": "Para ver los {termsCopy}, visita {url}.",
         "licensed": "está bajo la licencia",
         "marked": "está marcado con",
-        "creator-text": "por {creator-name}"
+        "creatorText": "por {creatorName}"
       },
-      "copy-license": {
+      "copyLicense": {
         "copied": "¡Copiado!",
-        "copy-text": "Copiar el texto",
+        "copyText": "Copiar el texto",
         "title": "Reconocer al creador",
         "plain": "Texto sin formato",
         "html": "HTML",
@@ -55,10 +55,10 @@
       "audio": "Audio",
       "title": "Reutilizar el contenido",
       "attribution": "Esta imagen se ha marcado con una licencia {link}:",
-      "tool-header": "Dominio público",
-      "license-header": "Licencia"
+      "toolHeader": "Dominio público",
+      "licenseHeader": "Licencia"
     },
-    "content-report": {
+    "contentReport": {
       "short": "Informar",
       "form": {
         "dmca": {
@@ -69,12 +69,12 @@
         },
         "mature": {
           "placeholder": "Opcionalmente, proporciona una descripción.",
-          "sub-label": "Opcional",
+          "subLabel": "Opcional",
           "option": "Contiene contenido para adultos"
         },
         "other": {
           "placeholder": "Por favor, introduce al menos 20 caracteres.",
-          "sub-label": "Obligatorio",
+          "subLabel": "Obligatorio",
           "note": "Describe el problema.",
           "option": "Otra"
         },
@@ -94,18 +94,18 @@
       "long": "Informar de este contenido"
     },
     "aria": {
-      "creator-url": "autor {name}",
+      "creatorUrl": "autor {name}",
       "attribution": {
         "tool": "lee más sobre la herramienta",
         "license": "lee más sobre la licencia"
       }
     },
-    "audio-info": "Información del audio",
-    "image-info": "Información de la imagen",
+    "audioInfo": "Información del audio",
+    "imageInfo": "Información de la imagen",
     "loading": "Cargando...",
-    "related-error": "Error al recuperar los medios relacionados",
-    "source-label": "Fuente",
-    "provider-label": "Proveedor"
+    "relatedError": "Error al recuperar los medios relacionados",
+    "sourceLabel": "Fuente",
+    "providerLabel": "Proveedor"
   },
   "pref-page": {
     "non-switchable": {
