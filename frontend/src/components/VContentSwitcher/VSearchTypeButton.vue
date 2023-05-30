@@ -4,7 +4,7 @@
     :class="showLabel ? '!px-3' : 'w-12'"
     variant="bordered-white"
     size="large"
-    :aria-label="$t('search-type.select-label', { type: label })"
+    :aria-label="$t('searchType.selectLabel', { type: label })"
     v-bind="$attrs"
     @click="$emit('click')"
   >

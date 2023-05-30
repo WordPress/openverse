@@ -14,7 +14,7 @@
       "placeholder": "Buscar contenidos"
     },
     "aria": {
-      "search-type": "tipo de búsqueda",
+      "searchType": "tipo de búsqueda",
       "search": "buscar"
     },
     "license-filter": {
@@ -212,15 +212,15 @@
     "load": "Cargar más resultados",
     "all-result-count-more": "Más de {localeCount} resultado|Más de {localeCount} resultados"
   },
-  "search-type": {
+  "searchType": {
     "additional": "Fuentes adicionales",
     "model_3d": "Modelos 3D",
-    "status-beta": "Beta",
+    "statusBeta": "Beta",
     "heading": "Tipos de contenido",
     "label": "Tipo de contenido a buscar",
     "all": "Todo el contenido",
-    "see-audio": "Ver todos los audios",
-    "see-image": "Ver todas las imágenes",
+    "seeAudio": "Ver todos los audios",
+    "seeImage": "Ver todas las imágenes",
     "video": "Vídeos",
     "audio": "Audio",
     "image": "Imágenes"

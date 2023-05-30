@@ -18,7 +18,7 @@
     },
     aria: {
       search: "search",
-      "search-type": "search type",
+      searchType: "search type",
     },
   },
   notification: {
@@ -680,19 +680,19 @@
   "server-timeout": {
     heading: "Whoops, it looks like that request took too long to complete. Please try again.",
   },
-  "search-type": {
+  searchType: {
     image: "Images",
     audio: "Audio",
     all: "All content",
     video: "Videos",
-    "model-3d": "3D Models",
+    model3d: "3D Models",
     label: "Type of content to search",
     heading: "Content type",
     additional: "Coming soon",
-    "status-beta": "Beta",
-    "see-image": "See all images",
-    "see-audio": "See all audio",
-    "select-label": "Select a content type: {type}",
+    statusBeta: "Beta",
+    seeImage: "See all images",
+    seeAudio: "See all audio",
+    selectLabel: "Select a content type: {type}",
   },
   "skip-to-content": "Skip to content",
   "pref-page": {

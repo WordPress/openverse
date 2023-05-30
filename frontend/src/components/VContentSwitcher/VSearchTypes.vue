@@ -21,7 +21,7 @@
         :class="bordered ? 'ps-0' : 'ps-6'"
         class="category pb-4 pt-6"
       >
-        {{ $t(`search-type.${category.heading}`) }}
+        {{ $t(`searchType.${category.heading}`) }}
       </h4>
       <VSearchTypeItem
         v-for="(item, idx) in category.items"
