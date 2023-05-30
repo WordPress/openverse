@@ -1,6 +1,6 @@
 <template>
   <VContentPage>
-    <h1>{{ $t("pref-page.title") }}</h1>
+    <h1>{{ $t("prefPage.title") }}</h1>
 
     <!-- TODO: Extract this to preferences modal. -->
     <!--
@@ -13,11 +13,11 @@
       class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
-        {{ $t(`pref-page.groups.${group.title}.title`) }}
+        {{ $t(`prefPage.groups.${group.title}.title`) }}
       </h2>
       <p class="label-regular mb-4">
         {{
-          $t(`pref-page.groups.${group.title}.desc`, { openverse: "Openverse" })
+          $t(`prefPage.groups.${group.title}.desc`, { openverse: "Openverse" })
         }}
       </p>
       <ul>
@@ -33,7 +33,7 @@
             :checked="featureState(name) === ON"
             is-switch
             @change="handleChange"
-            >{{ $t(`pref-page.features.${name}`) }}</VCheckbox
+            >{{ $t(`prefPage.features.${name}`) }}</VCheckbox
           >
         </li>
       </ul>
@@ -45,10 +45,10 @@
       class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
-        {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.title`) }}
+        {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.title`) }}
       </h2>
       <p class="label-regular mb-4">
-        {{ $t(`pref-page.${isSwitchable ? "" : "non-"}switchable.desc`) }}
+        {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.desc`) }}
       </p>
       <ul>
         <template v-for="(feature, name) in flags">
@@ -76,7 +76,7 @@
       </ul>
     </div>
 
-    <h2>{{ $t("pref-page.store-state") }}</h2>
+    <h2>{{ $t("prefPage.store-state") }}</h2>
     <pre><code>{{ flags }}</code></pre>
   </VContentPage>
 </template>

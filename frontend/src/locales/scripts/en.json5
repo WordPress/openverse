@@ -85,7 +85,7 @@
       content: "{openverse} is a tool that allows openly licensed and public domain works to be discovered and used by everyone.",
     },
     collection: {
-      content: "{openverse} searches across more than 300 million images from open APIs and the {common-crawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+      content: "{openverse} searches across more than 300 million images from open APIs and the {commonCrawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
     },
     planning: {
       content: "Currently {openverse} only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source ({frontend}, {api}, {catalog}) and we {community}. You can see what {working}.",
@@ -96,7 +96,7 @@
       working: "we’re currently working on",
     },
     transfer: {
-      content: "{openverse} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creative-commons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media.",
+      content: "{openverse} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creativeCommons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media.",
     },
     declaration: {
       content: "Please note that {openverse} does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
@@ -105,30 +105,30 @@
   },
   sources: {
     title: "Sources",
-    detail: "Clicking on a {single-name} allows you to browse and filter items within that source.",
-    "single-name": "Source",
+    detail: "Clicking on a {singleName} allows you to browse and filter items within that source.",
+    singleName: "Source",
     providers: {
       source: "Source",
       domain: "Domain",
       item: "Total items",
     },
-    "cc-content": {
+    ccContent: {
       where: "Where does the content on {openverse} come from?",
       content: "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through {openverse}.",
       provider: "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections.",
-      europeana: "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources through a single integration with the {link-api}.",
-      "europeana-api": "Europeana API",
+      europeana: "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources through a single integration with the {linkApi}.",
+      europeanaApi: "Europeana API",
       smithsonian: "Smithsonian Institute",
     },
-    "new-content": {
+    newContent: {
       next: "How do we decide what sources to add next?",
       integrate: "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:",
       impact: " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?",
       reuse: "Is licensing and attribution information clearly displayed to enable confident reuse?",
-      "total-items": "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source.",
+      totalItems: "How many new total items or new types of items can we bring to our users through this integration? Some sources are direct integrations, while others may be a source within a source.",
     },
     suggestions: "We appreciate suggestions for new sources from our community of users.",
-    "issue-button": "Suggest a new source",
+    issueButton: "Suggest a new source",
     aria: {
       table: "sources table",
     },
@@ -137,7 +137,7 @@
       audio: "Audio Sources",
     },
   },
-  "external-sources-page": {
+  externalSourcesPage: {
     title: "External Sources",
     intro: "{openverse} is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
     link: "sources here",
@@ -153,9 +153,9 @@
       content: "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at {old}.",
       old: "oldsearch.creativecommons.org",
       new: 'For users of the legacy CC Meta Search site, the "External Sources" feature on {openverse} will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the "External Sources" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future, as we expand.',
-      "aria-label": "feedback",
-      "feedback-suggestions": "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
-      "feedback-link": "feedback",
+      ariaLabel: "feedback",
+      feedbackSuggestions: "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
+      feedbackLink: "feedback",
     },
     relationships: "This functionality also allows us to start conversations and build relationships with sources that may like to be included in {openverse} in the future. Finally, we can also offer external sources of media types we do not include in {openverse} yet, but plan to.",
     explanation: "You can find links to external sources at the bottom of every {openverse} search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to.",
@@ -177,13 +177,13 @@
       chat: "Making WordPress Chat",
     },
   },
-  "search-guide": {
+  searchGuide: {
     title: "{openverse} Syntax Guide",
     intro: "When you search, you can enter special symbols or words to your search term to make your search results more precise.",
     exact: {
       title: "Search for an exact match",
-      "aria-label": "quote unquote Claude Monet",
-      "claude-monet": '"Claude Monet"',
+      ariaLabel: "quote unquote Claude Monet",
+      claudeMonet: '"Claude Monet"',
       content: "Put a word or phrase inside quotes. For example, {link}.",
     },
     combine: {
@@ -195,7 +195,7 @@
       prefix: "{symbol} at the end of a term signifies a prefix query",
       precedence: "{symbol} signify precedence",
       fuzziness: "{symbol} after a word signifies edit distance (fuzziness)",
-      "aria-labels": {
+      ariaLabels: {
         fuzziness: "tilde N",
         open: "open parenthesis",
         close: "close parenthesis",
@@ -204,46 +204,46 @@
         and: "plus symbol",
         or: "vertical bar symbol",
         prefix: "asterisk symbol",
-        "vertical-bar": "vertical bar symbol",
+        verticalBar: "vertical bar symbol",
       },
     },
     example: {
       and: {
         description: "Example: {link}{br} This will search for images related to both dog and cat.",
-        "aria-label": "dog plus cat",
+        ariaLabel: "dog plus cat",
         example: "dog+cat",
       },
       or: {
         description: "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
-        "aria-label": "dog vertical bar cat",
+        ariaLabel: "dog vertical bar cat",
         example: "dog|cat",
       },
       negate: {
         description: "You can use the {operator} to exclude a search term from the results.",
-        "operator-name": "operator (signifies NOT)",
-        "operator-aria-label": "minus operator (signifies NOT)",
-        "aria-label": "dog minus pug",
+        operatorName: "operator (signifies NOT)",
+        operatorAriaLabel: "minus operator (signifies NOT)",
+        ariaLabel: "dog minus pug",
         example: "dog -pug",
         content: "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'",
       },
       prefix: {
-        description: "You can use the {operator-name} to mark a prefix term. This will match anything after the *.",
-        "operator-name": "operator (wildcard)",
-        "operator-aria-label": "star operator (wildcard)",
-        "aria-label": "net star symbol",
+        description: "You can use the {operatorName} to mark a prefix term. This will match anything after the *.",
+        operatorName: "operator (wildcard)",
+        operatorAriaLabel: "star operator (wildcard)",
+        ariaLabel: "net star symbol",
         example: "net*",
         content: "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.",
       },
       precedence: {
         description: "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries.",
-        "aria-label": "dogs plus open parenthesis corgis vertical bar labrador close parenthesis",
+        ariaLabel: "dogs plus open parenthesis corgis vertical bar labrador close parenthesis",
         example: "dogs + (corgis | labrador)",
         content: "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador.",
       },
       fuzziness: {
         description: "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string.",
-        "link-text": "Levenshtein Edit Distance",
-        "aria-label": "theatre tilde 1",
+        linkText: "Levenshtein Edit Distance",
+        ariaLabel: "theatre tilde 1",
         example: "theatre~1",
         content: "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'.",
       },
@@ -251,12 +251,12 @@
   },
   feedback: {
     title: "Feedback",
-    intro: "Thank you for using {openverse}! We welcome your ideas for improving the tool below. To provide regular feedback, join the {slack} channel in the {making-wordpress} Slack workspace.",
+    intro: "Thank you for using {openverse}! We welcome your ideas for improving the tool below. To provide regular feedback, join the {slack} channel in the {makingWordpress} Slack workspace.",
     improve: "Help us Improve",
     report: "Report a Bug",
     loading: "Loading...",
     aria: {
-      "cc-usability": "slack cc-usability channel",
+      ccUsability: "slack cc-usability channel",
       improve: "help us improve form",
       report: "report a bug form",
     },
@@ -712,7 +712,7 @@
     features: {
       analytics: "Record custom events and page views for analytics.",
     },
-    "non-switchable": {
+    nonSwitchable: {
       title: "Non-switchable features",
       desc: "You cannot modify the status of these features.",
     },
@@ -720,12 +720,12 @@
       title: "Switchable features",
       desc: "You can toggle these features on or off as you like and your preferences will be saved in a cookie.",
     },
-    "store-state": "Store state",
-    "content-filtering": "Content filtering",
-    explanation: "Shown because {feat-name} is {feat-state}",
+    storeState: "Store state",
+    contentFiltering: "Content filtering",
+    explanation: "Shown because {featName} is {featState}",
   },
   sketchfabIframeTitle: "{sketchfab} viewer",
-  "flag-status": {
+  flagStatus: {
     nonexistent: "Nonexistent",
     on: "On",
     off: "Off",
