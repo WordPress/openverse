@@ -12,6 +12,12 @@ def get_weekly_timestamp() -> str:
     return monday.strftime("%Y-%m-%d")
 
 
+def get_monthly_timestamp() -> str:
+    """Get a timestamp for the month."""
+    now = datetime.now()
+    return now.strftime("%Y-%m")
+
+
 def count_provider_occurrences(results: list[dict], index: str) -> None:
     # Use ``get_redis_connection`` rather than Django's caches
     # so that we can open a pipeline rather than sending off ``n``

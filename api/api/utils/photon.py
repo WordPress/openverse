@@ -11,7 +11,7 @@ import django_redis
 import requests
 import sentry_sdk
 
-from api.utils.tallies import get_weekly_timestamp
+from api.utils.tallies import get_monthly_timestamp
 
 
 parent_logger = logging.getLogger(__name__)
@@ -122,7 +122,7 @@ def get(
 ) -> HttpResponse:
     logger = parent_logger.getChild("get")
     cache = django_redis.get_redis_connection("default")
-    week = get_weekly_timestamp()
+    month = get_monthly_timestamp()
 
     params, parsed_image_url = _get_photon_params(
         image_url, is_full_size, is_compressed
@@ -150,7 +150,7 @@ def get(
         upstream_response.raise_for_status()
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
-        key = f"thumbnail_error:{exception_name}:{domain}:{week}"
+        key = f"thumbnail_error:{exception_name}:{domain}:{month}"
         count = cache.incr(key)
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
             count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_THRESHOLD == 0
@@ -158,17 +158,17 @@ def get(
             sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):
             cache.incr(
-                f"thumbnail_http_error:{domain}:{week}:{exc.response.status_code}:{exc.response.text}"
+                f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
     finally:
         if upstream_response and upstream_response.status_code:
             cache.incr(
-                f"thumbnail_response_code:{week}:{upstream_response.status_code}"
+                f"thumbnail_response_code:{month}:{upstream_response.status_code}"
             )
             cache.incr(
                 f"thumbnail_response_code_by_domain:{domain}:"
-                f"{week}:{upstream_response.status_code}"
+                f"{month}:{upstream_response.status_code}"
             )
 
     res_status = upstream_response.status_code
