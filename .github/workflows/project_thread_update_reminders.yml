@@ -20,12 +20,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
+          # Ensure that it matches `engines` field in the following files:
+          # - `package.json`
           node-version: "16"
+          cache: pnpm
+          cache-dependency-path: |
+            **/pnpm-lock.yaml
+            **/.npmrc
 
+      # Install dependencies
       - name: Install JS dependencies
+        shell: bash
         run: pnpm install
 
       - name: Run project thread check
