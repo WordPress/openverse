@@ -52,7 +52,7 @@ const GET_PROJECT_CARDS = `
 async function run() {
   try {
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
-    const isDryRun = core.getBooleanInput('dry_run') ?? false
+    const isDryRun = process.env.DRY_RUN ?? true
 
     // Fetch project cards with their associated issue data
     const { data: result } = await octokit.graphql(GET_PROJECT_CARDS)
