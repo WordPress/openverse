@@ -1,5 +1,6 @@
 from test.factory.models.image import ImageFactory
 from unittest import mock
+from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -16,6 +17,7 @@ from api.utils.photon import (
     check_image_type,
 )
 from api.utils.photon import get as photon_get
+from api.utils.tallies import get_monthly_timestamp
 
 
 PHOTON_URL_FOR_TEST_IMAGE = f"{settings.PHOTON_ENDPOINT}subdomain.example.com/path_part1/part2/image_dot_jpg.jpg"
@@ -216,76 +218,133 @@ def setup_requests_get_exception(monkeypatch):
     yield do
 
 
-def test_get_timeout_no_existing_cache_key(
-    capture_exception, setup_requests_get_exception, redis
+@pook.on
+def test_get_successful_records_response_code(mock_image_data, redis):
+    (
+        pook.get(PHOTON_URL_FOR_TEST_IMAGE)
+        .params(
+            {
+                "w": settings.THUMBNAIL_WIDTH_PX,
+                "quality": settings.THUMBNAIL_QUALITY,
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+        .mock
+    )
+
+    photon_get(TEST_IMAGE_URL)
+    month = get_monthly_timestamp()
+    assert redis.get(f"thumbnail_response_code:{month}:200") == b"1"
+    assert (
+        redis.get(
+            f"thumbnail_response_code_by_domain:subdomain.example.com:{month}:200"
+        )
+        == b"1"
+    )
+
+
+alert_count_params = pytest.mark.parametrize(
+    "count_start, should_alert",
+    [
+        (0, True),
+        (1, True),
+        (99, True),
+        (100, False),
+        (999, True),
+        (1000, False),
+    ],
+)
+
+
+@pytest.mark.parametrize(
+    "exc, exc_name",
+    [
+        (ValueError("whoops"), "builtins.ValueError"),
+        (requests.ConnectionError("whoops"), "requests.exceptions.ConnectionError"),
+        (requests.ConnectTimeout("whoops"), "requests.exceptions.ConnectTimeout"),
+        (requests.ReadTimeout("whoops"), "requests.exceptions.ReadTimeout"),
+        (requests.Timeout("whoops"), "requests.exceptions.Timeout"),
+        (requests.exceptions.SSLError("whoops"), "requests.exceptions.SSLError"),
+        (OSError("whoops"), "builtins.OSError"),
+    ],
+)
+@alert_count_params
+def test_get_exception_handles_error(
+    exc,
+    exc_name,
+    count_start,
+    should_alert,
+    capture_exception,
+    setup_requests_get_exception,
+    redis,
 ):
-    exc = requests.ReadTimeout()
     setup_requests_get_exception(exc)
+    month = get_monthly_timestamp()
+    key = f"thumbnail_error:{exc_name}:subdomain.example.com:{month}"
+    redis.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
         photon_get(TEST_IMAGE_URL)
 
-    capture_exception.assert_called_once_with(exc)
-
-    key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}subdomain.example.com"
-    assert redis.get(key) == b"1"
-
-
-def test_get_timeout_existing_cache_key(
-    capture_exception, setup_requests_get_exception, redis
-):
-    exc = requests.ReadTimeout()
-    setup_requests_get_exception(exc)
-    key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}subdomain.example.com"
-    redis.set(key, 5)
-
-    with pytest.raises(UpstreamThumbnailException, match=r"due to timeout"):
-        photon_get(TEST_IMAGE_URL)
-
-    capture_exception.assert_called_once_with(exc)
-
-    assert redis.get(key) == b"6"
+    assert_func = (
+        capture_exception.assert_called_once
+        if should_alert
+        else capture_exception.assert_not_called
+    )
+    assert_func()
+    assert redis.get(key) == str(count_start + 1).encode()
 
 
-def test_get_http_error_pass_threshold(
-    capture_exception, setup_requests_get_exception, redis
-):
-    exc = requests.HTTPError()
-    setup_requests_get_exception(exc)
-    key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}subdomain.example.com"
-    redis.set(key, settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY - 1)
-
-    # Call several times
-    for _ in range(3):
-        with pytest.raises(
-            UpstreamThumbnailException, match=r"Failed to render thumbnail."
-        ):
-            photon_get(TEST_IMAGE_URL)
-
-    capture_exception.assert_called_once_with(exc)
-
-    assert redis.get(key) == b"1002"
-
-
+@alert_count_params
 @pytest.mark.parametrize(
-    "exception, expected_message",
+    "status_code, text",
     [
-        (  # Includes HTTP response errors
-            requests.RequestException(),
-            r"Failed to render thumbnail.",
-        ),
-        (ValueError(), r"due to unidentified exception."),
+        (400, "Bad Request"),
+        (401, "Unauthorized"),
+        (403, "Forbidden"),
+        (500, "Internal Server Error"),
     ],
 )
-def test_get_raise_exception_msg(
-    capture_exception, setup_requests_get_exception, exception, expected_message
+def test_get_http_exception_handles_error(
+    status_code,
+    text,
+    count_start,
+    should_alert,
+    capture_exception,
+    setup_requests_get_exception,
+    redis,
 ):
-    setup_requests_get_exception(exception)
+    mock_response = MagicMock(spec=requests.Response)
+    mock_response.status_code = status_code
+    mock_response.text = text
+    exc = requests.HTTPError(response=mock_response)
+    setup_requests_get_exception(exc)
 
-    with pytest.raises(UpstreamThumbnailException, match=expected_message):
+    month = get_monthly_timestamp()
+    key = f"thumbnail_error:requests.exceptions.HTTPError:subdomain.example.com:{month}"
+    redis.set(key, count_start)
+
+    with pytest.raises(UpstreamThumbnailException):
         photon_get(TEST_IMAGE_URL)
 
-    capture_exception.assert_called_once_with(exception)
+    assert_func = (
+        capture_exception.assert_called_once
+        if should_alert
+        else capture_exception.assert_not_called
+    )
+    assert_func()
+    assert redis.get(key) == str(count_start + 1).encode()
+
+    # Assertions about the HTTP error specific message
+    assert (
+        redis.get(
+            f"thumbnail_http_error:subdomain.example.com:{month}:{status_code}:{text}"
+        )
+        == b"1"
+    )
 
 
 @pook.on
