@@ -1,0 +1,32 @@
+# This workflow is currently a stub to allow for testing the
+# project thread update action manually in the GitHub UI.
+# Actions must be present in the main branch to appear there.
+name: Project Thread Update Reminders
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: "Dry run"
+        required: true
+        default: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Run project thread check
+        run: node ./src/project_thread_updates.js
+        working-directory: ./automations/js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
