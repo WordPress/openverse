@@ -3,7 +3,7 @@ const core = require('@actions/core')
 
 const githubMeta = {
   projectBoardID: 70,
-  projectStatusColumnName: 'status',
+  projectStatusColumnName: 'Status',
   repoOwner: 'wordpress',
   repo: 'openverse',
 }
@@ -59,7 +59,7 @@ async function run() {
 
     const currentDate = new Date()
 
-    core.info(result)
+    core.info(JSON.stringify(result))
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
