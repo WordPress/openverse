@@ -26,7 +26,7 @@ jobs:
           node-version: "16"
 
       - name: Install JS dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run project thread check
         run: node ./src/project_thread_updates.js
