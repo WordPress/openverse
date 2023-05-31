@@ -59,6 +59,8 @@ async function run() {
 
     const currentDate = new Date()
 
+    core.info(result)
+
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
       if (issue.__typename !== 'Issue') continue
@@ -85,13 +87,13 @@ async function run() {
         const body = `Hi @${recipient}, this project has not received an update comment in 14 days. Please leave an update comment as soon as you can. See the [documentation on project updates](https://docs.openverse.org/projects/planning.html#providing-project-updates) for more information.`
 
         if (isDryRun) {
-          console.info(`Would have commented on issue ${issue.url}: ${body}`)
+          core.info(`Would have commented on issue ${issue.url}: ${body}`)
         } else {
           // Extract the owner, repo, and issue number from the issue URL
           // const [, , , owner, repo, , issue_number] = issue.url.split('/')
 
-          console.info('Not a dry run!')
-          console.info(`Would have commented on issue ${issue.url}: ${body}`)
+          core.info('Not a dry run!')
+          core.info(`Would have commented on issue ${issue.url}: ${body}`)
           // await octokit.rest.issues.createComment({
           //   owner,
           //   repo,
