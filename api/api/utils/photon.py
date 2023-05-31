@@ -138,14 +138,17 @@ def get(
     if settings.PHOTON_AUTH_KEY:
         headers["X-Photon-Authentication"] = settings.PHOTON_AUTH_KEY
 
-    upstream_response = None
-
     try:
         upstream_response = requests.get(
             upstream_url,
             timeout=15,
             params=params,
             headers=headers,
+        )
+        cache.incr(f"thumbnail_response_code:{month}:{upstream_response.status_code}")
+        cache.incr(
+            f"thumbnail_response_code_by_domain:{domain}:"
+            f"{month}:{upstream_response.status_code}"
         )
         upstream_response.raise_for_status()
     except Exception as exc:
@@ -161,15 +164,6 @@ def get(
                 f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
-    finally:
-        if upstream_response and upstream_response.status_code:
-            cache.incr(
-                f"thumbnail_response_code:{month}:{upstream_response.status_code}"
-            )
-            cache.incr(
-                f"thumbnail_response_code_by_domain:{domain}:"
-                f"{month}:{upstream_response.status_code}"
-            )
 
     res_status = upstream_response.status_code
     content_type = upstream_response.headers.get("Content-Type")
