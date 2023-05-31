@@ -186,17 +186,19 @@ breakpoints.describeMobileAndDesktop(() => {
     await filters.open(page)
 
     await assertCheckboxStatus(page, "cc0", "unchecked")
-
-    const [response] = await Promise.all([
-      page.waitForResponse((response) => response.url().includes("cc0")),
-      page.click('label:has-text("CC0")'),
-    ])
+    let requestQuery = ""
+    page.on("request", (request) => {
+      if (request.url().includes("/images/?q")) {
+        requestQuery = request.url().split("/images/")[1]
+      }
+    })
+    await page.click('label:has-text("CC0")')
+    await page.waitForURL(/search\/image\?q=cat&license=cc0/)
 
     await assertCheckboxStatus(page, "cc0")
     // Remove the host url and path because when proxied, the 'http://localhost:49153' is used instead of the
     // real API url
-    const queryString = response.url().split("/images/")[1]
-    expect(queryString).toEqual("?q=cat&license=cc0")
+    expect(requestQuery).toEqual("?q=cat&license=cc0")
   })
 
   for (const [searchType, source] of [
