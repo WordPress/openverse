@@ -359,7 +359,7 @@ export default defineComponent({
             $sentry.captureException(err)
         }
         console.log("Error playing audio:", err, errorMsg)
-        errorMsg = i18n.t(`audio-track.messages.${errorMsg}`).toString()
+        errorMsg = i18n.t(`audioTrack.messages.${errorMsg}`).toString()
         console.log("Setting message in active media store: ", errorMsg)
         activeMediaStore.setMessage({ message: errorMsg })
         localAudio?.pause()
@@ -476,10 +476,10 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t("audio-track.aria-label-interactive-seekable", {
+        ? i18n.t("audioTrack.ariaLabelInteractiveSeekable", {
             title: props.audio.title,
           })
-        : i18n.t("audio-track.aria-label", { title: props.audio.title })
+        : i18n.t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
     const togglePlayback = () => {

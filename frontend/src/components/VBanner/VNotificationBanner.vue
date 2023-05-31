@@ -17,7 +17,7 @@
         :variant="variant === 'dark' ? 'black' : 'transparent-gray'"
         size="close"
         icon-size="small"
-        :label="closeButtonLabel || $t('modal.close-banner')"
+        :label="closeButtonLabel || $t('modal.closeBanner')"
         @close="$emit('close')"
       />
     </slot>

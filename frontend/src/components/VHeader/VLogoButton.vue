@@ -2,7 +2,7 @@
   <VButton
     as="VLink"
     href="/"
-    :aria-label="$t('header.home-link', { openverse: 'Openverse' }).toString()"
+    :aria-label="$t('header.homeLink', { openverse: 'Openverse' }).toString()"
     variant="transparent-tx"
     size="disabled"
     class="h-12 w-12 text-dark-charcoal hover:bg-yellow"

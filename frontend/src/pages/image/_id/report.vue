@@ -26,7 +26,7 @@
         size="medium"
         class="label-bold"
       >
-        {{ $t("report.image-details") }}
+        {{ $t("report.imageDetails") }}
       </VButton>
     </figure>
 

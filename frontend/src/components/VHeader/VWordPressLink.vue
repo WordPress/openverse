@@ -2,14 +2,14 @@
   <VLink
     href="https://wordpress.org"
     :aria-label="
-      $t('footer.wordpress-affiliation', { wordpress: 'WordPress' }).toString()
+      $t('footer.wordpressAffiliation', { wordpress: 'WordPress' }).toString()
     "
     :class="mode === 'light' ? 'text-dark-charcoal' : 'text-white'"
     class="hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
   >
     <i18n
       tag="p"
-      path="footer.wordpress-affiliation"
+      path="footer.wordpressAffiliation"
       class="label-regular flex flex-row items-center gap-1"
     >
       <template #wordpress>

@@ -2,13 +2,13 @@
   <!-- Negative margin compensates for the `p-4` padding in row layout. -->
   <section class="-mx-2 md:-mx-4">
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="audio-results.snackbar.text" tag="p">
+      <i18n path="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
           #[keyboardKey]
         >
           <kbd :key="keyboardKey" class="font-sans">{{
-            $t(`audio-results.snackbar.${keyboardKey}`)
+            $t(`audioResults.snackbar.${keyboardKey}`)
           }}</kbd>
         </template>
       </i18n>

@@ -128,7 +128,7 @@ export default defineComponent({
       const descriptions = elements
         .map((element) => i18n.t(`browse-page.license-description.${element}`))
         .join(" ")
-      const close = i18n.t("modal.close-named", {
+      const close = i18n.t("modal.closeNamed", {
         name: i18n.t("browse-page.aria.license-explanation"),
       })
       return `${descriptions} - ${close}`

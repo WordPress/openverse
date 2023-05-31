@@ -10,17 +10,17 @@
     >
       <!-- Left margin to align with the text of recent searches. -->
       <span class="category mx-2 my-1">
-        {{ $t("recent-searches.heading") }}
+        {{ $t("recentSearches.heading") }}
       </span>
       <VButton
         v-show="entries.length"
         variant="transparent-gray"
         class="label-bold"
         size="small"
-        :aria-label="$t('recent-searches.clear.label').toString()"
+        :aria-label="$t('recentSearches.clear.label').toString()"
         @click="handleClear"
       >
-        {{ $t("recent-searches.clear.text") }}
+        {{ $t("recentSearches.clear.text") }}
       </VButton>
     </div>
 
@@ -28,7 +28,7 @@
       v-if="entries.length"
       id="recent-searches-list"
       role="listbox"
-      :aria-label="$t('recent-searches.heading').toString()"
+      :aria-label="$t('recentSearches.heading').toString()"
     >
       <!-- eslint-disable vuejs-accessibility/interactive-supports-focus Combobox descendants only have visual focus. -->
       <!-- eslint-disable vuejs-accessibility/click-events-have-key-events Key events handled by input field of combobox. -->
@@ -47,11 +47,11 @@
       <!-- eslint-enable -->
     </ul>
     <span v-else class="description-regular mx-2 my-3">
-      {{ $t("recent-searches.none") }}
+      {{ $t("recentSearches.none") }}
     </span>
 
     <span class="caption-regular mx-2 my-3 text-dark-charcoal-70">
-      {{ $t("recent-searches.disclaimer") }}
+      {{ $t("recentSearches.disclaimer") }}
     </span>
   </div>
 </template>

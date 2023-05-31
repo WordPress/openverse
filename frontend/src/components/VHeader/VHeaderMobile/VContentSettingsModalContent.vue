@@ -36,7 +36,7 @@
           :applied-filter-count="appliedFilterCount"
         />
         <VCloseButton
-          :label="$t('modal.close-content-settings')"
+          :label="$t('modal.closeContentSettings')"
           variant="filled-white"
           class="ms-auto self-center"
           @close="close"
@@ -67,7 +67,7 @@
         :disabled="isClearButtonDisabled"
         size="large"
         @click="clearFilters"
-        >{{ $t("filter-list.clear") }}
+        >{{ $t("filterList.clear") }}
       </VButton>
       <VShowResultsButton :is-fetching="isFetching" @click="close" />
     </footer>

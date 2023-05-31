@@ -110,7 +110,7 @@ export const closeContentSettingsModal = async (
   dir: LanguageDirection = "ltr"
 ) => {
   return page
-    .getByRole("button", { name: t("modal.close-content-settings", dir) })
+    .getByRole("button", { name: t("modal.closeContentSettings", dir) })
     .click()
 }
 
