@@ -59,15 +59,13 @@ async function run() {
 
     const currentDate = new Date()
 
-    core.info(JSON.stringify(result))
-
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
       if (issue.__typename !== 'Issue') continue
 
       // Check the status of the card
       const status = node.fieldValueByName.name
-      if (!allowedStatuses.includes(status)) continue
+      if (allowedStatuses.includes(status)) continue
 
       const comments = issue.comments.nodes
       const fourteenDaysAgo = new Date(
@@ -93,7 +91,7 @@ async function run() {
           // const [, , , owner, repo, , issue_number] = issue.url.split('/')
 
           core.info('Not a dry run!')
-          core.info(`Would have commented on issue ${issue.url}: ${body}`)
+          core.info(`Would have commented on issue ${issue.url} ${body}`)
           // await octokit.rest.issues.createComment({
           //   owner,
           //   repo,
