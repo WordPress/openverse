@@ -44,4 +44,4 @@ jobs:
         working-directory: ./automations/js
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          DRY_RUN: ${{ inputs.dry_run }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
