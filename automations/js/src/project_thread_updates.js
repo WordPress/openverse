@@ -27,6 +27,7 @@ const GET_PROJECT_CARDS = `
               ...on Issue {
                 id
                 url
+                state
                 assignees(first:10) {
                   nodes {
                     login
@@ -61,9 +62,10 @@ async function run() {
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
-      if (issue.__typename !== 'Issue') continue
+      // If we're not looking at an open issue, move along
+      if (issue.__typename !== 'Issue' || issue.state !== 'OPEN') continue
 
-      // Check the status of the card
+      // Check the status of the card to make sure the project is in active development
       const status = node.fieldValueByName.name
       if (allowedStatuses.includes(status)) continue
 
