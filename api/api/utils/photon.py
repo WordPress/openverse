@@ -168,7 +168,7 @@ def get(
     res_status = upstream_response.status_code
     content_type = upstream_response.headers.get("Content-Type")
     logger.debug(
-        "Image proxy response " f"status: {res_status}, content-type: {content_type}"
+        f"Image proxy response status: {res_status}, content-type: {content_type}"
     )
 
     return HttpResponse(
