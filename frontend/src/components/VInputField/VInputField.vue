@@ -35,10 +35,7 @@ import { ref, computed, defineComponent, PropType } from "vue"
 import { defineEvent } from "~/types/emits"
 
 export const FIELD_SIZES = {
-  small: "h-10 text-md",
   medium: "h-12",
-  large: "h-14",
-  standalone: "h-full",
 } as const
 export type FieldSize = keyof typeof FIELD_SIZES
 
@@ -86,10 +83,8 @@ export default defineComponent({
         v.every((item) => ["start", "end"].includes(item)),
     },
     /**
-     *  Small size is for mobile header/scrolled
      *  Medium size is for desktop header
-     *  Large size is for mobile header/non-scrolled
-     *  Standalone size is for homepage
+     *  Large size is for mobile header
      */
     size: {
       type: String as PropType<keyof typeof FIELD_SIZES>,

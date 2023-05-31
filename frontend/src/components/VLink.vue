@@ -7,6 +7,9 @@
     v-on="$listeners"
     @mousedown.native="$emit('mousedown', $event)"
     @click.native="$emit('click', $event)"
+    @blur.native="$emit('blur', $event)"
+    @focus.native="$emit('focus', $event)"
+    @keydown.native="$emit('keydown', $event)"
   >
     <slot />
   </NuxtLink>

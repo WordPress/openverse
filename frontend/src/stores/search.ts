@@ -208,11 +208,11 @@ export const useSearchStore = defineStore("search", {
     setSearchType(type: SearchType) {
       const featureFlagStore = useFeatureFlagStore()
       if (
-        !featureFlagStore.isOn("external_sources") &&
+        !featureFlagStore.isOn("additional_search_types") &&
         isAdditionalSearchType(type)
       ) {
         throw new Error(
-          `Please enable the 'external_sources' flag to use the ${type}`
+          `Please enable the 'additional_search_types' flag to use the ${type}`
         )
       }
 

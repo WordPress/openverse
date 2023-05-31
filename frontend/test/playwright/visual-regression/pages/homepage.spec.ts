@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   dismissTranslationBanner,
+  dismissAnalyticsBanner,
   languageDirections,
   pathWithDir,
 } from "~~/test/playwright/utils/navigation"
@@ -27,7 +28,9 @@ for (const dir of languageDirections) {
     test.beforeEach(async ({ page }) => {
       await page.goto(path)
       await dismissTranslationBanner(page)
+      await dismissAnalyticsBanner(page)
       await cleanImageCarousel(page)
+      await page.mouse.move(0, 0)
     })
 
     breakpoints.describeEvery(({ expectSnapshot }) =>
@@ -63,7 +66,7 @@ for (const dir of languageDirections) {
         test("content switcher with external sources open", async ({
           page,
         }) => {
-          await page.goto(pathWithDir("/?ff_external_sources=on", dir))
+          await page.goto(pathWithDir("/?ff_additional_search_types=on", dir))
           await cleanImageCarousel(page)
 
           await page.locator("#search-type-button").click()

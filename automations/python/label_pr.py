@@ -197,7 +197,10 @@ def main():
     pr = get_pull_request(gh, args.pr_url)
     log.info(f"Found PR: {pr.title}")
 
-    if pr.labels:
+    # Skip a PR if it already has labels, as long as it has labels that are NOT a stack
+    # label. Stack labels are applied automatically in another part of the CI/CD.
+    # If all of its labels are stack labels, apply the new labels too.
+    if pr.labels and not all(["stack" in label.name for label in pr.labels]):
         log.info("PR already labelled")
         return
 
@@ -220,11 +223,13 @@ def main():
                 labels_to_add.append(label)
 
         if labels_to_add:
-            pr.set_labels(*labels_to_add)
+            pr.set_labels(*labels_to_add, *pr.labels)
             # Only break when all labels are applied, if we're missing any
             # then continue to the else to apply the awaiting triage label.
-            # Stack can have more than one label so this is not an exact check
-            if len(labels_to_add) >= len(required_label_categories):
+            # Stack can have more than one label and on most PRs the CI/CD workflow
+            # will already have added a stack label by the time this step runs,
+            # so remove it from the total count of labels to add.
+            if len(labels_to_add) >= len(required_label_categories) - 1:
                 break
     else:
         log.info("Could not find properly labelled issue")

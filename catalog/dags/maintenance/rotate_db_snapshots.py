@@ -11,17 +11,19 @@ exist than it is configured to retain.
 
 Requires two variables:
 
-`AIRFLOW_RDS_ARN`: The ARN of the RDS DB instance that needs snapshots.
-`AIRFLOW_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
+`CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
+`CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 """
 
 import logging
 from datetime import datetime
 
-import boto3
 from airflow.decorators import dag, task
+from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.operators.rds import RdsCreateDbSnapshotOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+
+from common.constants import AWS_RDS_CONN_ID
 
 
 logger = logging.getLogger(__name__)
@@ -30,17 +32,33 @@ DAG_ID = "rotate_db_snapshots"
 MAX_ACTIVE = 1
 
 
+AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX = "airflow-managed"
+
+
 @task()
-def delete_previous_snapshots(rds_arn: str, snapshots_to_retain: int, rds_region: str):
-    rds = boto3.client("rds", region_name=rds_region)
+def delete_previous_snapshots(db_identifier: str, snapshots_to_retain: int):
+    hook = RdsHook(aws_conn_id=AWS_RDS_CONN_ID)
+
     # Snapshot object documentation:
     # https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_DBSnapshot.html
-    snapshots = rds.describe_db_snapshots(
-        DBInstanceIdentifier=rds_arn,
+    snapshots = hook.conn.describe_db_snapshots(
+        DBInstanceIdentifier=db_identifier,
+        SnapshotType="manual",  # Automated backups cannot be manually managed
     )["DBSnapshots"]
 
+    # Other manual snapshots may exist; we only want to automatically manage
+    # ones this DAG created
+    snapshots = [
+        snapshot
+        for snapshot in snapshots
+        if snapshot["DBSnapshotIdentifier"].startswith(
+            AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX
+        )
+    ]
+
     snapshots.sort(
-        key=lambda x: datetime.fromisoformat(x["SnapshotCreateTime"]), reverse=True
+        key=lambda x: x["SnapshotCreateTime"],  # boto3 casts this to datetime
+        reverse=True,
     )
 
     if len(snapshots) <= snapshots_to_retain or not (
@@ -52,7 +70,9 @@ def delete_previous_snapshots(rds_arn: str, snapshots_to_retain: int, rds_region
     logger.info(f"Deleting {len(snapshots_to_delete)} snapshots.")
     for snapshot in snapshots_to_delete:
         logger.info(f"Deleting {snapshot['DBSnapshotIdentifier']}.")
-        rds.delete_db_snapshot(DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"])
+        hook.conn.delete_db_snapshot(
+            DBSnapshotIdentifier=snapshot["DBSnapshotIdentifier"]
+        )
 
 
 @dag(
@@ -69,16 +89,16 @@ def delete_previous_snapshots(rds_arn: str, snapshots_to_retain: int, rds_region
     render_template_as_native_obj=True,
 )
 def rotate_db_snapshots():
-    snapshot_id = "airflow-{{ ds }}"
-    db_identifier_template = "{{ var.value.AIRFLOW_RDS_ARN }}"
-    hook_params = {"region_name": "{{ var.value.AIRFLOW_RDS_REGION }}"}
+    snapshot_id = f"{AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX}-{{{{ ts_nodash }}}}"
+    db_identifier = "{{ var.value.CATALOG_RDS_DB_IDENTIFIER }}"
 
     create_db_snapshot = RdsCreateDbSnapshotOperator(
         task_id="create_snapshot",
         db_type="instance",
-        db_identifier=db_identifier_template,
+        db_identifier=db_identifier,
         db_snapshot_identifier=snapshot_id,
-        hook_params=hook_params,
+        aws_conn_id=AWS_RDS_CONN_ID,
+        wait_for_completion=False,
     )
 
     wait_for_snapshot_availability = RdsSnapshotExistenceSensor(
@@ -87,16 +107,16 @@ def rotate_db_snapshots():
         db_snapshot_identifier=snapshot_id,
         # This is the default for ``target_statuses`` but making it explicit is clearer
         target_statuses=["available"],
-        hook_params=hook_params,
+        aws_conn_id=AWS_RDS_CONN_ID,
+        mode="reschedule",
     )
 
     (
         create_db_snapshot
         >> wait_for_snapshot_availability
         >> delete_previous_snapshots(
-            rds_arn=db_identifier_template,
-            snapshots_to_retain="{{ var.json.AIRFLOW_RDS_SNAPSHOTS_TO_RETAIN }}",
-            rds_region=hook_params["region_name"],
+            db_identifier=db_identifier,
+            snapshots_to_retain="{{ var.json.CATALOG_RDS_SNAPSHOTS_TO_RETAIN }}",
         )
     )
 

@@ -1,27 +1,40 @@
 <template>
-  <VLink
+  <VButton
+    as="VLink"
     href="/"
-    class="flex items-stretch rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
-    :class="variant === 'dark' ? 'text-dark-charcoal' : 'text-white'"
+    :aria-label="$t('header.homeLink', { openverse: 'Openverse' }).toString()"
+    variant="transparent-tx"
+    size="disabled"
+    :class="
+      variant === 'dark'
+        ? 'text-dark-charcoal hover:bg-yellow'
+        : 'text-white focus-slim-tx-yellow'
+    "
+    class="h-12 px-4 text-[1.125rem]"
   >
-    <VBrand
-      :is-fetching="false"
-      :sr-text="$t('header.home-link', { openverse: 'Openverse' }).toString()"
+    <VSvg
+      name="logo_and_wordmark"
+      class="h-[1em] w-auto"
+      viewBox="0 0 226 34"
     />
-  </VLink>
+  </VButton>
 </template>
 
 <script lang="ts">
 import { type PropType, defineComponent } from "vue"
 
-import VBrand from "~/components/VBrand/VBrand.vue"
-import VLink from "~/components/VLink.vue"
+import VButton from "~/components/VButton.vue"
+import VSvg from "~/components/VSvg/VSvg.vue"
 
+/**
+ * The home link for the internal header. Shows the Openverse logo and wordmark,
+ * and does not have a loading state.
+ */
 export default defineComponent({
   name: "VHomeLink",
   components: {
-    VBrand,
-    VLink,
+    VButton,
+    VSvg,
   },
   props: {
     /**

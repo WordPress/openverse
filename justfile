@@ -96,7 +96,7 @@ lint hook="" *files="": precommit
 ########
 
 # Create .env files from templates
-env:
+@env:
     # Root
     ([ ! -f .env ] && cp env.template .env) || true
     # Docker
@@ -156,7 +156,7 @@ build *args:
 
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
-up *flags: && ps
+up *flags: env && ps
     #!/usr/bin/env bash
     set -eo pipefail
     while true; do
@@ -248,6 +248,6 @@ c:
 i:
     just ingestion_server/up
 
-# alias for `just frontend/run: dev`
+# alias for `just frontend/run dev`
 f:
-    just frontend/run: dev
+    just frontend/run dev

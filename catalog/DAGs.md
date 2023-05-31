@@ -44,6 +44,7 @@ The following are DAGs grouped by their primary tag:
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
+| [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
 
 ## Maintenance
 
@@ -133,6 +134,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`science_museum_workflow`](#science_museum_workflow)
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
+1.  [`staging_database_restore`](#staging_database_restore)
 1.  [`stocksnap_workflow`](#stocksnap_workflow)
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
@@ -669,8 +671,8 @@ than it is configured to retain.
 
 Requires two variables:
 
-`AIRFLOW_RDS_ARN`: The ARN of the RDS DB instance that needs snapshots.
-`AIRFLOW_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
+`CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
+`CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 
 ## `science_museum_workflow`
 
@@ -703,6 +705,25 @@ ETL Process: Use the API to identify all openly licensed media.
 Output: TSV file containing the media metadata.
 
 Notes: https://www.smk.dk/en/article/smk-api/
+
+## `staging_database_restore`
+
+### Update the staging database
+
+This DAG is responsible for updating the staging database using the most recent
+snapshot of the production database.
+
+For a full explanation of the DAG, see the implementation plan description:
+https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag
+
+This DAG will default to using the standard AWS connection ID for the RDS
+operations. For local testing, you can set up two environment variables to have
+the RDS operations run using a different hook:
+
+- `AWS_RDS_CONN_ID`: The Airflow connection ID to use for RDS operations (e.g.
+  `aws_rds`)
+- `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the
+  above example, it might be `AIRFLOW_CONN_AWS_RDS`)
 
 ## `stocksnap_workflow`
 

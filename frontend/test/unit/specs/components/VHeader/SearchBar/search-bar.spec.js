@@ -5,27 +5,21 @@ import { render } from "~~/test/unit/test-utils/render"
 import { useMatchHomeRoute } from "~/composables/use-match-routes"
 
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
+import { FIELD_SIZES } from "~/components/VInputField/VInputField.vue"
 
 jest.mock("~/composables/use-match-routes", () => ({
   useMatchHomeRoute: jest.fn(),
 }))
 
-const sizes = ["small", "medium", "large", "standalone"]
+const sizes = Object.keys(FIELD_SIZES)
 const defaultPlaceholder = "Enter search query"
 
 describe("VSearchBar", () => {
   let options
   beforeEach(() => {
     options = {
-      props: { placeholder: defaultPlaceholder, size: "standalone" },
+      props: { placeholder: defaultPlaceholder, size: "medium" },
       stubs: { ClientOnly: true },
-      mocks: {
-        $nuxt: {
-          context: {
-            app: { $ua: {} },
-          },
-        },
-      },
     }
   })
 

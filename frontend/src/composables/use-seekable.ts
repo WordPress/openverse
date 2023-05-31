@@ -27,7 +27,7 @@ export const useSeekable = ({
     "aria-valuemax": duration.value,
     "aria-valuenow": currentTime.value,
     "aria-valuetext": i18n
-      .tc("waveform.current-time", currentTime.value, {
+      .tc("waveform.currentTime", currentTime.value, {
         time: currentTime.value,
       })
       .toString(),
