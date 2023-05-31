@@ -88,16 +88,14 @@ async function run() {
           core.info(`Would have commented on issue ${issue.url}: ${body}`)
         } else {
           // Extract the owner, repo, and issue number from the issue URL
-          // const [, , , owner, repo, , issue_number] = issue.url.split('/')
+          const [, , , owner, repo, , issue_number] = issue.url.split('/')
 
-          core.info('Not a dry run!')
-          core.info(`Would have commented on issue ${issue.url} ${body}`)
-          // await octokit.rest.issues.createComment({
-          //   owner,
-          //   repo,
-          //   issue_number,
-          //   body,
-          // })
+          await octokit.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body,
+          })
         }
       }
     }
