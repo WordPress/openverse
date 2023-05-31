@@ -156,7 +156,7 @@ def get(
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
         count = cache.incr(key)
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
-            count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_THRESHOLD == 0
+            count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
             sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):

@@ -251,10 +251,13 @@ alert_count_params = pytest.mark.parametrize(
     [
         (0, True),
         (1, True),
+        (50, True),
         (99, True),
         (100, False),
         (999, True),
         (1000, False),
+        (1500, False),
+        (1999, True),
     ],
 )
 
