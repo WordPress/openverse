@@ -34,7 +34,7 @@ def _get_file_extension_from_url(image_url: str) -> str:
     """Return the image extension if present in the URL."""
     parsed = urlparse(image_url)
     _, ext = splitext(parsed.path)
-    return ext[1:]  # remove the leading dot
+    return ext[1:].lower()  # remove the leading dot
 
 
 def _get_file_extension_from_content_type(content_type: str) -> str | None:
@@ -56,6 +56,7 @@ def check_image_type(image_url: str, media_obj) -> None:
     if not ext:
         # If the extension is not present in the URL, try to get it from the redis cache
         ext = cache.get(key)
+        ext = ext.decode("utf-8") if ext else None
 
     if not ext:
         # If the extension is still not present, try getting it from the content type

@@ -29,11 +29,10 @@
         <template #trigger="{ a11yProps }">
           <VButton
             v-bind="a11yProps"
-            variant="plain"
+            variant="transparent-tx"
             size="disabled"
             :aria-label="$t('browse-page.aria.license-explanation')"
-            class="text-dark-charcoal-70"
-            type="button"
+            class="h-6 w-6"
           >
             <VIcon name="help" />
           </VButton>
@@ -43,7 +42,7 @@
             <VCloseButton
               :label="getLicenseExplanationCloseAria(item.code)"
               class="!absolute end-0 top-0"
-              @click="close"
+              @close="close"
             />
             <VLicenseExplanation :license="item.code" />
           </div>
@@ -129,7 +128,7 @@ export default defineComponent({
       const descriptions = elements
         .map((element) => i18n.t(`browse-page.license-description.${element}`))
         .join(" ")
-      const close = i18n.t("modal.close-named", {
+      const close = i18n.t("modal.closeNamed", {
         name: i18n.t("browse-page.aria.license-explanation"),
       })
       return `${descriptions} - ${close}`

@@ -1,13 +1,12 @@
 <template>
-  <VLink
-    itemprop="contentUrl"
-    :title="contextSensitiveTitle"
-    :href="imageLink"
-    class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
-    :aria-label="contextSensitiveTitle"
-    :style="styles.container"
-  >
-    <Component :is="as">
+  <li :style="styles.container">
+    <VLink
+      itemprop="contentUrl"
+      :title="contextSensitiveTitle"
+      :href="imageLink"
+      class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
+      :aria-label="contextSensitiveTitle"
+    >
       <figure
         itemprop="image"
         itemscope
@@ -36,9 +35,9 @@
           <VLicense :license="image.license" :hide-name="true" />
         </figcaption>
       </figure>
-    </Component>
-    <i v-if="!isSquare" :style="styles.iPadding" class="block" aria-hidden />
-  </VLink>
+      <i v-if="!isSquare" :style="styles.iPadding" class="block" aria-hidden />
+    </VLink>
+  </li>
 </template>
 
 <script lang="ts">
@@ -82,10 +81,6 @@ export default defineComponent({
     aspectRatio: {
       type: String as PropType<AspectRatio>,
       default: "square",
-    },
-    as: {
-      type: String as PropType<"li" | "div">,
-      default: "li",
     },
   },
   setup(props) {

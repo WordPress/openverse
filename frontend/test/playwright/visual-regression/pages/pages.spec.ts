@@ -55,6 +55,10 @@ const cleanImageResults = async (page: Page) => {
 
 test.describe("Layout color is set correctly", () => {
   breakpoints.describeLg(() => {
+    test.beforeEach(async ({ page }) => {
+      await dismissBannersUsingCookies(page)
+    })
+
     test("Change language on homepage and search", async ({ page }) => {
       await page.goto("/")
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")

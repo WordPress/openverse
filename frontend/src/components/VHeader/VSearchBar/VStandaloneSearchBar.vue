@@ -8,7 +8,7 @@
     <div
       class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
       :class="[
-        isHomeRoute ? 'border-tx' : 'border-black',
+        route === 'home' ? 'border-tx' : 'border-black',
         hasPopover ? 'focus-within:border-tx' : 'focus-within:border-pink',
       ]"
     >
@@ -20,7 +20,7 @@
         :placeholder="$t('hero.search.placeholder').toString()"
         class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 focus:outline-none"
         :aria-label="
-          $t('search.search-bar-label', {
+          $t('search.searchBarLabel', {
             openverse: 'Openverse',
           }).toString()
         "
@@ -28,29 +28,16 @@
       <!-- @slot Extra information goes here -->
       <slot />
     </div>
-    <VButton
-      type="submit"
-      :aria-label="$t('search.search').toString()"
-      size="disabled"
-      :variant="isHomeRoute ? 'filled-pink' : 'plain'"
-      class="h-full w-14 flex-shrink-0 rounded-s-none sm:w-16"
-      :class="{
-        'search-button border !border-black p-0.5px ps-1.5px hover:bg-pink hover:text-white focus:!border-tx focus-visible:bg-pink focus-visible:text-white group-focus-within:!border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:!border-tx group-hover:bg-pink group-hover:text-white group-focus:!border-tx':
-          !isHomeRoute,
-      }"
-    >
-      <VIcon name="search" />
-    </VButton>
+    <VSearchButton :route="route" />
   </form>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
+import { defineComponent, PropType, ref } from "vue"
 
 import { defineEvent } from "~/types/emits"
 
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
+import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
 
 /**
  * Displays a search input for a search query and is attached to an action button
@@ -61,7 +48,7 @@ import VIcon from "~/components/VIcon/VIcon.vue"
  */
 export default defineComponent({
   name: "VStandaloneSearchBar",
-  components: { VButton, VIcon },
+  components: { VSearchButton },
   props: {
     route: {
       type: String as PropType<"home" | "404">,
@@ -78,7 +65,7 @@ export default defineComponent({
   emits: {
     submit: defineEvent<[string]>(),
   },
-  setup(props, { emit }) {
+  setup(_, { emit }) {
     const inputRef = ref<HTMLInputElement | null>(null)
 
     // Only emit `submit` if the input value is not blank
@@ -89,22 +76,10 @@ export default defineComponent({
       }
     }
 
-    const isHomeRoute = computed(() => props.route === "home")
-
     return {
       inputRef,
       handleSearch,
-      isHomeRoute,
     }
   },
 })
 </script>
-<style scoped>
-.input-field {
-  border-inline-end-width: 0;
-}
-
-.search-button {
-  border-inline-start-width: 0;
-}
-</style>

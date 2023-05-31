@@ -1,5 +1,3 @@
-import { kebab } from "case"
-
 import { ALL_MEDIA, AUDIO, IMAGE, VIDEO, MODEL_3D } from "~/constants/media"
 import { ACTIVE_LICENSES } from "~/constants/license"
 import { deepFreeze } from "~/utils/deep-freeze"
@@ -126,7 +124,7 @@ export const initFilters = () =>
       ...acc,
       [filterType]: filters.map((item) => ({
         code: item,
-        name: `filters.${kebab(filterType)}.${item}`,
+        name: `filters.${filterType}.${item}`,
         checked: false,
       })),
     }),

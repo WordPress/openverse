@@ -4,8 +4,8 @@
     icon="source"
     :label="
       appliedFilterCount
-        ? $tc('header.content-settings-button.with-count', appliedFilterCount)
-        : $t('header.content-settings-button.simple')
+        ? $tc('header.contentSettingsButton.withCount', appliedFilterCount)
+        : $t('header.contentSettingsButton.simple')
     "
     aria-haspopup="dialog"
     :aria-expanded="isPressed"

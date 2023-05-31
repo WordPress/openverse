@@ -33,9 +33,9 @@ extensions = [
     "link_issues",
     "link_usernames",
     "sphinx_copybutton",
+    "notfound.extension",
 ]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
-myst_enable_extensions = ["fieldlist"]  # Required for specifying :orphan: pages
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
@@ -77,3 +77,8 @@ html_show_copyright = False
 
 issuetracker = "github"
 issuetracker_project = "WordPress/openverse"
+
+# The default for this is a sensible one for ReadTheDocs but
+# our site is served directly at the root docs.openverse.org URL
+# so the prefix should be the root
+notfound_urls_prefix = "/"

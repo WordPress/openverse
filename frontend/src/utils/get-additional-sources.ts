@@ -1,11 +1,7 @@
-import buildUrl from "build-url"
-
 import type { MediaType } from "~/constants/media"
 import type { ApiQueryParams } from "~/utils/search-query-transform"
 
 import { MODEL_3D } from "~/constants/media"
-
-import type { BuildUrlOptions } from "build-url"
 
 /**
  * Describes the query format used by the URL builder functions of additional
@@ -29,9 +25,10 @@ const transformSearchQuery = (
 })
 
 type SearchFunctions = {
-  [k in MediaType]?: (
-    search: AdditionalSearchQuery
-  ) => BuildUrlOptions & { url: string }
+  [k in MediaType]?: (search: AdditionalSearchQuery) => {
+    queryParams: Record<string, string | string[]>
+    url: string
+  }
 }
 
 /**
@@ -223,7 +220,6 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
           q: search.q,
           licenses: licenseCodes,
         },
-        disableCSV: true,
       }
     },
   },
@@ -263,15 +259,29 @@ export const getAdditionalSourceBuilders = (
 export const getAdditionalSources = (
   mediaType: MediaType,
   query: ApiQueryParams
-) =>
+): AdditionalSource[] =>
   getAdditionalSourceBuilders(mediaType).map((source) => {
     const urlFunc = source[mediaType]
-
-    if (!urlFunc) return undefined // type-guard, never occurs
+    // type-guard, never occurs
+    if (!urlFunc) {
+      throw new Error(
+        `Invalid media type ${mediaType} for additional source ${source.name}`
+      )
+    }
 
     const urlInfo = urlFunc(transformSearchQuery(query))
+    const sourceUrl = new URL(urlInfo.url)
+    for (const [key, value] of Object.entries(urlInfo.queryParams)) {
+      if (Array.isArray(value)) {
+        for (const v of value) {
+          sourceUrl.searchParams.append(key, v)
+        }
+      } else {
+        sourceUrl.searchParams.set(key, value)
+      }
+    }
     return {
-      url: buildUrl(urlInfo.url, urlInfo),
+      url: sourceUrl.href,
       name: source.name,
     }
-  }) as AdditionalSource[]
+  })

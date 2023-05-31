@@ -41,7 +41,7 @@ export const Template = (args) => ({
   components: { VSearchTypeButton },
   setup() {
     const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature("external_sources", "on")
+    featureFlagStore.toggleFeature("additional_search_types", "on")
     const st = useSearchType()
     st.setActiveType(args.searchType)
     args["aria-haspopup"] = "dialog"

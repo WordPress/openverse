@@ -27,8 +27,7 @@
         "consola"
       ],
       "allowedVersions": {
-        "babel-core": "7.0.0-bridge.0",
-        "postcss": "5.2.18"
+        "babel-core": "7.0.0-bridge.0"
       }
     }
   }

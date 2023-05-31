@@ -57,7 +57,9 @@ from airflow import DAG
 from airflow.decorators import task
 from airflow.exceptions import AirflowSensorTimeout
 from airflow.models.param import Param
+from airflow.operators.empty import EmptyOperator
 from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
 from common.constants import DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
@@ -197,9 +199,9 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             "{{ params.destination_index_suffix }}"
         )
 
-        get_current_index = ingestion_server.get_current_index(target_alias)
+        get_current_index_if_exists = ingestion_server.get_current_index(target_alias)
 
-        do_create = create_and_populate_filtered_index(
+        do_create, await_create = create_and_populate_filtered_index(
             origin_index_suffix="{{ params.origin_index_suffix }}",
             destination_index_suffix=destination_index_suffix,
         )
@@ -211,19 +213,31 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             model=data_refresh.media_type,
             data={
                 "index_suffix": XCOM_PULL_TEMPLATE.format(
-                    get_current_index.task_id, "return_value"
+                    get_current_index_if_exists.task_id, "return_value"
                 ),
             },
         )
 
-        (
-            prevent_concurrency
-            >> destination_index_suffix
-            >> get_current_index
-            >> do_create
-            >> do_point_alias
-            >> delete_old_index
+        # Once concurrency has been checked against, determine the destination index
+        # suffix and get the current index. The current index retrieval has to happen
+        # prior to any of the index creation steps to ensure the appropriate index
+        # information is retrieved.
+        prevent_concurrency >> [get_current_index_if_exists, destination_index_suffix]
+
+        # The current index retrieval step can be skipped if the index does not
+        # currently exist. The empty operator below works as a control flow management
+        # step to ensure the create step runs even if the current index retrieval step
+        # is skipped (the trigger rule would be tedious to percolate through all the
+        # helper functions to the index creation step itself).
+        continue_if_no_current_index = EmptyOperator(
+            task_id="continue_if_no_current_index",
+            trigger_rule=TriggerRule.NONE_FAILED,
         )
+
+        get_current_index_if_exists >> continue_if_no_current_index >> do_create
+        await_create >> do_point_alias
+
+        [get_current_index_if_exists, do_point_alias] >> delete_old_index
 
     return dag
 

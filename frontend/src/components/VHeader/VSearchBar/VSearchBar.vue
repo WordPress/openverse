@@ -13,7 +13,7 @@
         :placeholder="placeholder || $t('hero.search.placeholder')"
         class="search-field flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white focus:border-pink group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white"
         :label-text="
-          $t('search.search-bar-label', { openverse: 'Openverse' }).toString()
+          $t('search.searchBarLabel', { openverse: 'Openverse' }).toString()
         "
         :connection-sides="['end']"
         :size="size"
@@ -36,7 +36,6 @@
       </VInputField>
       <VSearchButton
         type="submit"
-        :size="size"
         route="search"
         @keydown.tab="handleSearchBlur"
       />
@@ -129,10 +128,7 @@ export default defineComponent({
     const recentClasses = computed(() => {
       // Calculated by adding 8px to all heights defined in `VInputField.vue`.
       const FIELD_OFFSETS = {
-        small: "top-12",
         medium: "top-14",
-        large: "top-16",
-        standalone: "top-[65px] md:top-[77px]",
       } as const
       return FIELD_OFFSETS[props.size]
     })

@@ -9,16 +9,9 @@ const wrapperLocator = "#wrapper"
 
 test.describe.configure({ mode: "parallel" })
 
-const newButtonVariants = buttonVariants.filter(
-  (name) =>
-    name.startsWith("filled-") ||
-    name.startsWith("bordered-") ||
-    name.startsWith("transparent-")
-)
-
 test.describe("VButton", () => {
   const gotoWithArgs = makeGotoWithArgs("components-vbutton--v-button")
-  const nonPressedVariants = newButtonVariants.filter(
+  const nonPressedVariants = buttonVariants.filter(
     (name) => !name.endsWith("pressed")
   )
   for (const variant of nonPressedVariants) {

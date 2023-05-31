@@ -297,6 +297,7 @@ def _resolve_index(
 def search(
     search_params: media_serializers.MediaSearchRequestSerializer,
     index: Literal["image", "audio"],
+    exact_index: bool,
     page_size: int,
     ip: int,
     request: Request,
@@ -309,6 +310,7 @@ def search(
     :param search_params: Search parameters. See
      :class: `ImageSearchQueryStringSerializer`.
     :param index: The Elasticsearch index to search (e.g. 'image')
+    :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
     :param ip: The user's hashed IP. Hashed IPs are used to anonymously but
     uniquely identify users exclusively for ensuring query consistency across
@@ -319,7 +321,8 @@ def search(
     :return: Tuple with a List of Hits from elasticsearch, the total count of
     pages, and number of results.
     """
-    index = _resolve_index(index, search_params)
+    if not exact_index:
+        index = _resolve_index(index, search_params)
 
     search_client = Search(index=index)
 
@@ -429,7 +432,7 @@ def search(
 
         if settings.VERBOSE_ES_RESPONSE:
             log.info(pprint.pprint(search_response.to_dict()))
-    except RequestError as e:
+    except (RequestError, NotFoundError) as e:
         raise ValueError(e)
 
     results = _post_process_results(

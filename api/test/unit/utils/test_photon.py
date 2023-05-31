@@ -329,8 +329,9 @@ def test_get_unsuccessful_request_raises_custom_exception():
 @pytest.mark.parametrize(
     "image_url, expected_ext",
     [
-        ("www.example.com/image.jpg", "jpg"),
-        ("https://example.com/image.jpeg", "jpeg"),
+        ("example.com/image.jpg", "jpg"),
+        ("www.example.com/image.JPG", "jpg"),
+        ("http://example.com/image.jpeg", "jpeg"),
         ("https://subdomain.example.com/image.svg", "svg"),
         ("https://example.com/image.png?foo=1&bar=2#fragment", "png"),
         ("https://example.com/possibleimagewithoutext", ""),

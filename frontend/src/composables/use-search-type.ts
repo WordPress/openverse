@@ -48,7 +48,9 @@ export default function useSearchType() {
   const featureFlagStore = useFeatureFlagStore()
 
   const additionalTypes = computed(() =>
-    featureFlagStore.isOn("external_sources") ? additionalSearchTypes : []
+    featureFlagStore.isOn("additional_search_types")
+      ? additionalSearchTypes
+      : []
   )
   const searchTypes = [...supportedSearchTypes]
 

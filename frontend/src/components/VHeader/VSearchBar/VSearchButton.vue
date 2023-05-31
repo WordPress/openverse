@@ -1,84 +1,41 @@
 <template>
   <VButton
-    :aria-label="$t('search.search')"
+    type="submit"
+    :aria-label="$t('search.search').toString()"
     size="disabled"
-    :variant="route === 'home' ? 'filled-pink' : 'plain'"
-    class="heading-6 h-full flex-shrink-0 rounded-s-none"
+    variant="plain"
     :class="[
-      route === 'home'
-        ? 'w-[57px] whitespace-nowrap md:w-auto md:px-10 md:py-6'
-        : 'search-button p-0.5px ps-1.5px hover:bg-pink hover:text-white focus-visible:bg-pink focus-visible:text-white group-focus-within:border-pink group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-pink group-hover:bg-pink group-hover:text-white',
+      'h-full flex-shrink-0 rounded-s-none border-s-0 p-0.5px ps-1.5px focus-slim-filled hover:text-white focus-visible:border-s group-focus-within:border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-tx group-hover:bg-pink group-hover:text-white',
+      route === 'search' ? 'w-12' : 'w-14 sm:w-16',
       {
-        'w-10 bg-dark-charcoal-10 md:w-12': route === 'search',
-        'border-black focus:border-tx group-focus-within:border-tx group-hover:border-tx group-focus:border-tx':
-          route === '404',
+        'border-tx bg-dark-charcoal-10 hover:bg-pink ': route === 'search',
+        'border-tx bg-pink text-white hover:!bg-dark-pink': route === 'home',
       },
-      sizeClasses,
     ]"
   >
-    <VIcon v-show="isIcon" name="search" />
-    <span v-show="!isIcon">{{ $t("search.search") }}</span>
+    <VIcon name="search" />
   </VButton>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from "vue"
-
-import { useUiStore } from "~/stores/ui"
+import { defineComponent, PropType } from "vue"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
-import type { FieldSize } from "~/components/VInputField/VInputField.vue"
 /**
- * The search button used in the search bar on the homepage and on the 404 page,
- * and on the search page.
+ * The search button used in the search bar on the home, 404 and search pages.
  */
 export default defineComponent({
   name: "VSearchButton",
   components: { VIcon, VButton },
   props: {
-    size: {
-      type: String as PropType<FieldSize>,
-      required: true,
-    },
+    /**
+     * The current route determines the size and the style of the button.
+     */
     route: {
       type: String as PropType<"home" | "404" | "search">,
-      validator: (v: string) => ["home", "404", "search"].includes(v),
+      required: true,
     },
-  },
-  setup(props) {
-    const uiStore = useUiStore()
-
-    /**
-     * The search button has a text label on the homepage with a desktop layout,
-     * everywhere else it has an icon.
-     */
-    const isIcon = computed(() => {
-      if (props.route !== "home") {
-        return true
-      } else {
-        return !uiStore.isDesktopLayout
-      }
-    })
-
-    const sizeClasses = computed(() =>
-      isIcon.value
-        ? {
-            small: "w-10 md:w-12",
-            medium: "w-12",
-            large: "w-14",
-            standalone: "w-[57px] md:w-[69px]",
-          }[props.size]
-        : undefined
-    )
-
-    return { sizeClasses, isIcon }
   },
 })
 </script>
-
-<style scoped>
-.search-button {
-  border-inline-start-width: 0;
-}
-</style>
