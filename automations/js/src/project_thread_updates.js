@@ -55,11 +55,11 @@ async function run() {
     const isDryRun = process.env.DRY_RUN ?? true
 
     // Fetch project cards with their associated issue data
-    const { data: result } = await octokit.graphql(GET_PROJECT_CARDS)
+    const result = await octokit.graphql(GET_PROJECT_CARDS)
 
     const currentDate = new Date()
 
-    core.info(result)
+    core.log(result)
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
