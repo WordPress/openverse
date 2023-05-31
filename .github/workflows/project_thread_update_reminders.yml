@@ -1,10 +1,9 @@
+# This workflow is currently a stub to allow for testing the
+# project thread update action manually in the GitHub UI.
+# Actions must be present in the main branch to appear there.
 name: Project Thread Update Reminders
 
 on:
-  schedule:
-    # Run every day at 00:00 UTC
-    - cron: "0 0 * * *"
-  # To allow for manual testing
   workflow_dispatch:
     inputs:
       dry_run:
