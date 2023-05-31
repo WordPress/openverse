@@ -5,6 +5,12 @@ import { render } from "~~/test/unit/test-utils/render"
 
 import VLink from "~/components/VLink.vue"
 
+jest.mock("~/composables/use-analytics", () => ({
+  useAnalytics: () => ({
+    sendCustomEvent: jest.fn(),
+  }),
+}))
+
 describe("VLink", () => {
   it.each`
     href                        | target      | rel

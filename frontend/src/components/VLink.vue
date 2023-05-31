@@ -78,6 +78,7 @@ export default defineComponent({
     },
     /**
      * Whether the generic EXTERNAL_LINK_CLICK event should be sent on click.
+     * Set to `false` if the link click is tracked by another analytics event.
      */
     sendExternalLinkClickEvent: {
       type: Boolean,
