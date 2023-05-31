@@ -107,8 +107,8 @@
     "source-label": "Fuente",
     "provider-label": "Proveedor"
   },
-  "pref-page": {
-    "non-switchable": {
+  "prefPage": {
+    "nonSwitchable": {
       "desc": "No puedes modificar el estado de estas características.",
       "title": "Características que no se pueden cambiar."
     },
@@ -118,7 +118,7 @@
     },
     "explanation": "Mostrado porque {feat-name} es {feat-state}",
     "content-filtering": "Filtrado de contenido",
-    "store-state": "Provincia de la tienda",
+    "storeState": "Provincia de la tienda",
     "title": "Preferencias"
   },
   "sources": {
