@@ -55,10 +55,15 @@ async function run() {
     const octokit = github.getOctokit(process.env.ACCESS_TOKEN)
     const isDryRun = process.env.DRY_RUN === 'true' ?? true
 
+    const currentDate = new Date()
+    const fourteenDaysAgo = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() - 14
+    )
+
     // Fetch project cards with their associated issue data
     const result = await octokit.graphql(GET_PROJECT_CARDS)
-
-    const currentDate = new Date()
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
@@ -70,9 +75,6 @@ async function run() {
       if (!allowedStatuses.includes(status)) continue
 
       const comments = issue.comments.nodes
-      const fourteenDaysAgo = new Date(
-        currentDate.setDate(currentDate.getDate() - 14)
-      )
 
       if (
         // Check if the issue has been commented on in the last 14 days
