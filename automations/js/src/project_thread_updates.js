@@ -59,7 +59,7 @@ async function run() {
 
     const currentDate = new Date()
 
-    core.log(result)
+    console.info(result)
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
