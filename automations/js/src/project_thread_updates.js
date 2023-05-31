@@ -67,7 +67,7 @@ async function run() {
 
       // Check the status of the card to make sure the project is in active development
       const status = node.fieldValueByName.name
-      if (allowedStatuses.includes(status)) continue
+      if (!allowedStatuses.includes(status)) continue
 
       const comments = issue.comments.nodes
       const fourteenDaysAgo = new Date(
