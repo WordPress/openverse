@@ -14,7 +14,7 @@ on:
         default: true
 
 jobs:
-  check:
+  send-reminders:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
