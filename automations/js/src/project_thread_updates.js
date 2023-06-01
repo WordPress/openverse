@@ -49,7 +49,6 @@ const GET_PROJECT_CARDS = `
 
 module.exports = async ({ github, core }) => {
   try {
-    const octokit = github.getOctokit(process.env.ACCESS_TOKEN)
     const isDryRun = process.env.DRY_RUN === 'true' ?? true
 
     const currentDate = new Date()
@@ -60,7 +59,7 @@ module.exports = async ({ github, core }) => {
     )
 
     // Fetch project cards with their associated issue data
-    const result = await octokit.graphql(GET_PROJECT_CARDS)
+    const result = await github.graphql(GET_PROJECT_CARDS)
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
@@ -91,7 +90,7 @@ module.exports = async ({ github, core }) => {
           // Extract the owner, repo, and issue number from the issue URL
           const [, , , owner, repo, , issue_number] = issue.url.split('/')
 
-          await octokit.rest.issues.createComment({
+          await github.rest.issues.createComment({
             owner,
             repo,
             issue_number,
