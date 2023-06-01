@@ -30,7 +30,7 @@ services:
     profiles:
       - ingestion_server
       - api
-    image: postgres:13.2-alpine
+    image: postgres:13.7-alpine
     ports:
       - "50254:5432"
     volumes:
@@ -157,7 +157,7 @@ services:
   plausible_db:
     profiles:
       - frontend
-    image: postgres:13.2-alpine
+    image: postgres:13.7-alpine
     expose:
       - "5432"
     volumes:
