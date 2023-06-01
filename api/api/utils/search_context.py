@@ -50,4 +50,10 @@ class SearchContext:
         )
 
     def asdict(self):
+        """
+        Cast the object to a dict.
+
+        This is a convenience method to avoid leaking dataclass
+        implementation details elsewhere in the code.
+        """
         return asdict(self)
