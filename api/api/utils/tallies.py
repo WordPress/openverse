@@ -5,11 +5,17 @@ import django_redis
 from django_redis.client.default import Redis
 
 
-def _get_weekly_timestamp() -> str:
+def get_weekly_timestamp() -> str:
     """Get a timestamp for the Monday of any given week."""
     now = datetime.now()
     monday = now - timedelta(days=now.weekday())
     return monday.strftime("%Y-%m-%d")
+
+
+def get_monthly_timestamp() -> str:
+    """Get a timestamp for the month."""
+    now = datetime.now()
+    return now.strftime("%Y-%m")
 
 
 def count_provider_occurrences(results: list[dict], index: str) -> None:
@@ -26,7 +32,7 @@ def count_provider_occurrences(results: list[dict], index: str) -> None:
     for result in results:
         provider_occurrences[result["provider"]] += 1
 
-    week = _get_weekly_timestamp()
+    week = get_weekly_timestamp()
     with tallies.pipeline() as pipe:
         for provider, occurrences in provider_occurrences.items():
             pipe.incr(f"provider_occurrences:{index}:{week}:{provider}", occurrences)

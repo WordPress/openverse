@@ -11,6 +11,8 @@ import django_redis
 import requests
 import sentry_sdk
 
+from api.utils.tallies import get_monthly_timestamp
+
 
 parent_logger = logging.getLogger(__name__)
 
@@ -119,7 +121,8 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     logger = parent_logger.getChild("get")
-    cache = django_redis.get_redis_connection("default")
+    tallies = django_redis.get_redis_connection("tallies")
+    month = get_monthly_timestamp()
 
     params, parsed_image_url = _get_photon_params(
         image_url, is_full_size, is_compressed
@@ -142,53 +145,34 @@ def get(
             params=params,
             headers=headers,
         )
-        upstream_response.raise_for_status()
-    except requests.ReadTimeout as exc:
-        # Count the incident so that we can identify providers with most timeouts.
-        key = f"{settings.THUMBNAIL_TIMEOUT_PREFIX}{domain}"
-        try:
-            cache.incr(key)
-        except ValueError:  # Key does not exist.
-            cache.set(key, 1)
-
-        sentry_sdk.capture_exception(exc)
-        raise UpstreamThumbnailException(
-            f"Failed to render thumbnail due to timeout: {exc}"
+        tallies.incr(f"thumbnail_response_code:{month}:{upstream_response.status_code}")
+        tallies.incr(
+            f"thumbnail_response_code_by_domain:{domain}:"
+            f"{month}:{upstream_response.status_code}"
         )
-    except requests.HTTPError as exc:
-        # Save number of occurrences to redis. Only raise a Sentry error when
-        # the number of occurrences reaches the configured threshold, to
-        # prevent provider API downtime from causing excessive Sentry events.
-        key = f"{settings.THUMBNAIL_HTTP_ERROR_PREFIX}{domain}"
-        errors = 1
-        try:
-            errors = cache.incr(key)
-        except ValueError:  # Key does not exist.
-            cache.set(key, 1)
-        if errors >= settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_TO_NOTIFY and (
-            errors % settings.THUMBNAIL_HTTP_ERROR_THRESHOLD_FOR_REPEATED_NOTIFICATIONS
-            == 0
+        upstream_response.raise_for_status()
+    except Exception as exc:
+        exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
+        key = f"thumbnail_error:{exception_name}:{domain}:{month}"
+        count = tallies.incr(key)
+        if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
+            count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
             sentry_sdk.capture_exception(exc)
+        if isinstance(exc, requests.exceptions.HTTPError):
+            tallies.incr(
+                f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
+            )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
-    except requests.RequestException as exc:
-        sentry_sdk.capture_exception(exc)
-        raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
-    except Exception as exc:
-        sentry_sdk.capture_exception(exc)
-        raise UpstreamThumbnailException(
-            f"Failed to render thumbnail due to unidentified exception. {exc}"
-        )
-    else:
-        res_status = upstream_response.status_code
-        content_type = upstream_response.headers.get("Content-Type")
-        logger.debug(
-            "Image proxy response "
-            f"status: {res_status}, content-type: {content_type}"
-        )
 
-        return HttpResponse(
-            upstream_response.content,
-            status=res_status,
-            content_type=content_type,
-        )
+    res_status = upstream_response.status_code
+    content_type = upstream_response.headers.get("Content-Type")
+    logger.debug(
+        f"Image proxy response status: {res_status}, content-type: {content_type}"
+    )
+
+    return HttpResponse(
+        upstream_response.content,
+        status=res_status,
+        content_type=content_type,
+    )
