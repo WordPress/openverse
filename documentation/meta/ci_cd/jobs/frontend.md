@@ -15,14 +15,6 @@ are
 - [`build-docs`](/meta/ci_cd/jobs/documentation.md#build-docs) for the
   documentation
 
-```{note}
-This job is treated as the proof of functionality for publishing Docker images
-for the frontend.
-
-This job, combined with the [`playwright` job](#playwright), is treated as the
-proof of functionality for deploying frontend to staging.
-```
-
 ## `nuxt-checks`
 
 Runs a matrix for various Nuxt checks for the frontend using the following
@@ -53,8 +45,8 @@ Node.js scripts.
 This job is skipped if the frontend codebase has not changed.
 
 ```{note}
-This job, combined with the [`nuxt-build` job](/meta/ci_cd/jobs/frontend.md#nuxt-build), is treated as the
-proof of functionality for deploying frontend to staging.
+This job is treated as the proof of functionality for publishing Docker images
+for the frontend and deploying the image to staging.
 ```
 
 Since this is a required check for a matrix job, it has a bypass counterpart.
