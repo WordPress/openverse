@@ -5,7 +5,12 @@ const githubMeta = {
   repo: 'openverse',
 }
 
-const allowedStatuses = ['In Kickoff', 'In RFC', 'In Progress', 'Shipped']
+const activeDevelopmentStatuses = [
+  'In Kickoff',
+  'In RFC',
+  'In Progress',
+  'Shipped',
+]
 
 const GET_PROJECT_CARDS = `
   query {
@@ -68,7 +73,7 @@ module.exports = async ({ github, core }) => {
 
       // Check the status of the card to make sure the project is in active development
       const status = node.fieldValueByName.name
-      if (!allowedStatuses.includes(status)) continue
+      if (!activeDevelopmentStatuses.includes(status)) continue
 
       const comments = issue.comments.nodes
 
