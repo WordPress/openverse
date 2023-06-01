@@ -20,9 +20,9 @@ class Service:
         print(f"\033[1m{self.name} ({self.image}):\033[0m")
         for host_port, container_port in self.bindings:
             proto = "http"
-            if self.name == "proxy" and container_port == 9443:
+            if self.name == "proxy" and container_port == "9443":
                 proto = "https"
-            print(f"- {proto:>5}://0.0.0.0:{host_port} (→ {container_port})")
+            print(f"- {proto:>5}://0.0.0.0:{host_port:<5} (→ {container_port})")
 
 
 def get_ps() -> list[str]:
