@@ -1,6 +1,3 @@
-const github = require('@actions/github')
-const core = require('@actions/core')
-
 const githubMeta = {
   projectBoardID: 70,
   projectStatusColumnName: 'Status',
@@ -50,7 +47,7 @@ const GET_PROJECT_CARDS = `
   }
 `
 
-async function run() {
+module.exports = async ({ github, core }) => {
   try {
     const octokit = github.getOctokit(process.env.ACCESS_TOKEN)
     const isDryRun = process.env.DRY_RUN === 'true' ?? true
@@ -107,5 +104,3 @@ async function run() {
     core.setFailed(error.message)
   }
 }
-
-run()

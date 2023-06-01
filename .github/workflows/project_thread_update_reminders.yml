@@ -17,31 +17,12 @@ jobs:
   send-reminders:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          # Ensure that it matches `engines` field in the following files:
-          # - `package.json`
-          node-version: "16"
-          cache: pnpm
-          cache-dependency-path: |
-            **/pnpm-lock.yaml
-            **/.npmrc
-
-      # Install dependencies
-      - name: Install JS dependencies
-        shell: bash
-        run: pnpm install
-
-      - name: Run project thread check
-        run: node ./src/project_thread_updates.js
-        working-directory: ./automations/js
+      - uses: actions/checkout@v3
+      - uses: actions/github-script@v6
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           DRY_RUN: ${{ github.event.inputs.dry_run }}
+        with:
+          script: |
+            const script = require('./automations/js/src/project_thread_updates.js')
+            await script({github, core})
