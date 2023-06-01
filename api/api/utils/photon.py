@@ -121,7 +121,7 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     logger = parent_logger.getChild("get")
-    cache = django_redis.get_redis_connection("default")
+    tallies = django_redis.get_redis_connection("tallies")
     month = get_monthly_timestamp()
 
     params, parsed_image_url = _get_photon_params(
@@ -145,8 +145,8 @@ def get(
             params=params,
             headers=headers,
         )
-        cache.incr(f"thumbnail_response_code:{month}:{upstream_response.status_code}")
-        cache.incr(
+        tallies.incr(f"thumbnail_response_code:{month}:{upstream_response.status_code}")
+        tallies.incr(
             f"thumbnail_response_code_by_domain:{domain}:"
             f"{month}:{upstream_response.status_code}"
         )
@@ -154,13 +154,13 @@ def get(
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
-        count = cache.incr(key)
+        count = tallies.incr(key)
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
             count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
             sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):
-            cache.incr(
+            tallies.incr(
                 f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
