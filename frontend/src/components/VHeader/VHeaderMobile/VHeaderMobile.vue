@@ -68,7 +68,7 @@
             <VSearchBarButton
               v-show="searchBarIsActive && searchTerm"
               icon="close-small"
-              :label="$t('browse-page.search-form.clear')"
+              :label="$t('browsePage.searchForm.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
             />

@@ -32,7 +32,7 @@
           ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
           : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
       "
-      :aria-label="$t('browse-page.aria.results', { query: searchTerm })"
+      :aria-label="$t('browsePage.aria.results', { query: searchTerm })"
     >
       <template v-for="item in allMedia">
         <VImageCell
@@ -108,8 +108,8 @@ export default defineComponent({
     const fetchState = computed(() => mediaStore.fetchState)
 
     const errorHeader = computed(() => {
-      const type = i18n.t("browse-page.search-form.audio")
-      return i18n.t("browse-page.fetching-error", { type })
+      const type = i18n.t("browsePage.searchForm.audio")
+      return i18n.t("browsePage.fetchingError", { type })
     })
 
     const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)

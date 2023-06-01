@@ -5,48 +5,48 @@
     </h1>
 
     <h2>
-      {{ $t("sources.cc-content.where", { openverse: "Openverse" }) }}
+      {{ $t("sources.ccContent.where", { openverse: "Openverse" }) }}
     </h2>
     <p>
-      {{ $t("sources.cc-content.content", { openverse: "Openverse" }) }}
+      {{ $t("sources.ccContent.content", { openverse: "Openverse" }) }}
     </p>
-    <i18n path="sources.cc-content.provider" tag="p">
+    <i18n path="sources.ccContent.provider" tag="p">
       <template #flickr>
         <VLink href="https://www.flickr.com/">Flickr</VLink>
       </template>
       <template #smithsonian>
         <VLink href="https://www.si.edu/">{{
-          $t("sources.cc-content.smithsonian")
+          $t("sources.ccContent.smithsonian")
         }}</VLink>
       </template>
     </i18n>
-    <i18n path="sources.cc-content.europeana" tag="p">
+    <i18n path="sources.ccContent.europeana" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
       </template>
-      <template #link-api>
+      <template #linkApi>
         <VLink href="https://pro.europeana.eu/page/apis">{{
-          $t("sources.cc-content.europeana-api")
+          $t("sources.ccContent.europeanaApi")
         }}</VLink>
       </template>
     </i18n>
 
     <h2>
-      {{ $t("sources.new-content.next") }}
+      {{ $t("sources.newContent.next") }}
     </h2>
     <p>
-      {{ $t("sources.new-content.integrate") }}
+      {{ $t("sources.newContent.integrate") }}
     </p>
     <ul>
       <li>
-        {{ $t("sources.new-content.impact") }}
+        {{ $t("sources.newContent.impact") }}
       </li>
       <li>
-        {{ $t("sources.new-content.reuse") }}
+        {{ $t("sources.newContent.reuse") }}
       </li>
       <li>
-        {{ $t("sources.new-content.total-items") }}
+        {{ $t("sources.newContent.totalItems") }}
       </li>
     </ul>
 
@@ -65,14 +65,14 @@
         has-icon-end
         href="https://github.com/WordPress/openverse/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C+%F0%9F%A7%B9+status%3A+ticket+work+required%2C+%E2%98%81%EF%B8%8F+provider%3A+any&template=new-source-suggestion.md&title=[Source+Suggestion]+Insert+source+name+here"
       >
-        {{ $t("sources.issue-button") }}
+        {{ $t("sources.issueButton") }}
       </VButton>
     </p>
 
     <i18n path="sources.detail" tag="p">
-      <template #single-name>
+      <template #singleName>
         <strong>
-          {{ $t("sources.single-name") }}
+          {{ $t("sources.singleName") }}
         </strong>
       </template>
     </i18n>

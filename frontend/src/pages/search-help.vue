@@ -1,34 +1,34 @@
 <template>
   <VContentPage>
-    <h1>{{ $t("search-guide.title", { openverse: "Openverse" }) }}</h1>
-    <p>{{ $t("search-guide.intro") }}</p>
+    <h1>{{ $t("searchGuide.title", { openverse: "Openverse" }) }}</h1>
+    <p>{{ $t("searchGuide.intro") }}</p>
 
-    <h2>{{ $t("search-guide.exact.title") }}</h2>
-    <i18n path="search-guide.exact.content" tag="p">
+    <h2>{{ $t("searchGuide.exact.title") }}</h2>
+    <i18n path="searchGuide.exact.content" tag="p">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.exact.aria-label')"
+          :aria-label="$t('searchGuide.exact.ariaLabel')"
           :href="pathFromQuery('&quot;Claude Monet&quot;')"
         >
-          <em>{{ $t("search-guide.exact.claude-monet") }}</em>
+          <em>{{ $t("searchGuide.exact.claudeMonet") }}</em>
         </VLink>
       </template>
     </i18n>
 
-    <h2>{{ $t("search-guide.combine.title") }}</h2>
+    <h2>{{ $t("searchGuide.combine.title") }}</h2>
 
-    <p>{{ $t("search-guide.combine.description") }}</p>
+    <p>{{ $t("searchGuide.combine.description") }}</p>
     <ul class="not-prose marker:text-dark-charcoal-20">
       <i18n
         v-for="[name, operator] in Object.entries(operators)"
         :key="name"
-        :path="`search-guide.combine.${name}`"
+        :path="`searchGuide.combine.${name}`"
         tag="li"
       >
         <template #symbol>
           <code
             :aria-label="
-              $t(`search-guide.combine.aria-labels.${name}`).toString()
+              $t(`searchGuide.combine.ariaLabels.${name}`).toString()
             "
             >{{ operator.symbol }}</code
           >
@@ -36,25 +36,25 @@
       </i18n>
     </ul>
     <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-    <i18n path="search-guide.example.and.description" tag="p">
+    <i18n path="searchGuide.example.and.description" tag="p">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.and.aria-label').toString()"
+          :aria-label="$t('searchGuide.example.and.ariaLabel').toString()"
           :href="pathFromQuery('dog+cat')"
         >
-          <em>{{ $t("search-guide.example.and.example") }}</em>
+          <em>{{ $t("searchGuide.example.and.example") }}</em>
         </VLink>
       </template>
       <template #br><br /></template>
     </i18n>
 
-    <i18n path="search-guide.example.or.description" tag="p">
+    <i18n path="searchGuide.example.or.description" tag="p">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.or.aria-label')"
+          :aria-label="$t('searchGuide.example.or.ariaLabel')"
           :href="pathFromQuery('dog|cat')"
         >
-          <em>{{ $t("search-guide.example.or.example").toString() }}</em>
+          <em>{{ $t("searchGuide.example.or.example").toString() }}</em>
         </VLink>
       </template>
       <template #br>
@@ -62,25 +62,24 @@
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.negate.description" tag="p" class="mt-4">
+    <i18n path="searchGuide.example.negate.description" tag="p" class="mt-4">
       <template #operator>
         <em
           :aria-label="
-            $t('search-guide.example.negate.operator-aria-label').toString()
+            $t('searchGuide.example.negate.operatorAriaLabel').toString()
           "
-          >-
-          {{ $t("search-guide.example.negate.operator-name").toString() }}</em
+          >- {{ $t("searchGuide.example.negate.operatorName").toString() }}</em
         >
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.negate.content" tag="p" class="mb-4">
+    <i18n path="searchGuide.example.negate.content" tag="p" class="mb-4">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.negate.aria-label')"
+          :aria-label="$t('searchGuide.example.negate.ariaLabel')"
           :href="pathFromQuery('dog -pug')"
         >
-          <em>{{ $t("search-guide.example.negate.example") }}</em>
+          <em>{{ $t("searchGuide.example.negate.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -88,23 +87,21 @@
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.prefix.description" tag="p" class="mt-4">
+    <i18n path="searchGuide.example.prefix.description" tag="p" class="mt-4">
       <template #operator>
-        <em
-          :aria-label="$t('search-guide.example.prefix.aria-label').toString()"
-          >*
-          {{ $t("search-guide.example.prefix.operator-name").toString() }}</em
+        <em :aria-label="$t('searchGuide.example.prefix.ariaLabel').toString()"
+          >* {{ $t("searchGuide.example.prefix.operatorName").toString() }}</em
         >
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.prefix.content" tag="p" class="mb-4">
+    <i18n path="searchGuide.example.prefix.content" tag="p" class="mb-4">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.prefix.aria-label')"
+          :aria-label="$t('searchGuide.example.prefix.ariaLabel')"
           :href="pathFromQuery('net*')"
         >
-          <em>{{ $t("search-guide.example.prefix.example") }}</em>
+          <em>{{ $t("searchGuide.example.prefix.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -112,19 +109,19 @@
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.precedence.description" tag="p">
+    <i18n path="searchGuide.example.precedence.description" tag="p">
       <template #highlight>
         <em>( and )</em>
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.precedence.content" tag="p" class="mb-4">
+    <i18n path="searchGuide.example.precedence.content" tag="p" class="mb-4">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.precedence.aria-label')"
+          :aria-label="$t('searchGuide.example.precedence.ariaLabel')"
           :href="pathFromQuery('dog (corgis | labrador)')"
         >
-          <em>{{ $t("search-guide.example.precedence.example") }}</em>
+          <em>{{ $t("searchGuide.example.precedence.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -132,24 +129,24 @@
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.fuzziness.description" tag="p">
+    <i18n path="searchGuide.example.fuzziness.description" tag="p">
       <template #highlight>
         <em aria-label="tilde N">~N</em>
       </template>
       <template #link>
         <VLink href="https://en.wikipedia.org/wiki/Levenshtein_distance">
-          {{ $t("search-guide.example.fuzziness.link-text") }}
+          {{ $t("searchGuide.example.fuzziness.linkText") }}
         </VLink>
       </template>
     </i18n>
 
-    <i18n path="search-guide.example.fuzziness.content" tag="p">
+    <i18n path="searchGuide.example.fuzziness.content" tag="p">
       <template #link>
         <VLink
-          :aria-label="$t('search-guide.example.fuzziness.aria-label')"
+          :aria-label="$t('searchGuide.example.fuzziness.ariaLabel')"
           :href="pathFromQuery('theatre~1')"
         >
-          <em>{{ $t("search-guide.example.fuzziness.example") }}</em>
+          <em>{{ $t("searchGuide.example.fuzziness.example") }}</em>
         </VLink>
       </template>
       <template #br>
@@ -192,7 +189,7 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     useMeta({
-      title: `${i18n.t("search-guide.title", {
+      title: `${i18n.t("searchGuide.title", {
         openverse: "Openverse",
       })} | Openverse`,
       meta: [{ hid: "robots", name: "robots", content: "all" }],

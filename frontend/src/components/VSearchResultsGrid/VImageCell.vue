@@ -134,7 +134,7 @@ export default defineComponent({
     }
 
     const contextSensitiveTitle = computed(() => {
-      return i18n.t("browse-page.aria.image-title", {
+      return i18n.t("browsePage.aria.imageTitle", {
         title: props.image.title,
       })
     })
