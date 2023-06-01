@@ -221,8 +221,11 @@ def get_latest_api_package_version(github: GitHubAPI = None) -> str:
     # to the same build we don't care which is used.
     latest_version = sorted(tags - {"latest"})[0]
     log.info(f"Found latest version: {latest_version}")
-    if "latest" not in tags:
-        raise ValueError(f"Latest version is not marked as 'latest': {latest_version}")
+    if not ("latest" in tags or latest_version.startswith("rel-")):
+        raise ValueError(
+            f"Latest version is not a release and not marked with 'latest': "
+            f"{latest_version}"
+        )
 
     return latest_version
 
