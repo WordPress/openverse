@@ -10,18 +10,9 @@ from rest_framework.views import APIView
 
 import pytest
 
-<<<<<<< HEAD
-from api.serializers.audio_serializers import (
-    AudioSearchRequestSerializer,
-    AudioSerializer,
-)
-from api.serializers.image_serializers import (
-    ImageSearchRequestSerializer,
-    ImageSerializer,
-)
-=======
 from api.constants import sensitivity
->>>>>>> 9274ff532 (Remove provider-supplied sensitivity handling)
+from api.serializers.audio_serializers import AudioSearchRequestSerializer
+from api.serializers.image_serializers import ImageSearchRequestSerializer
 from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 
