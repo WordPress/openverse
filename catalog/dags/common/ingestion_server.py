@@ -164,7 +164,9 @@ def api_health_check(
         http_conn_id=API_CONN_ID,
         endpoint=f"{media_type}",
         request_params={"internal__index": f"{media_type}-{index_suffix}"},
-        headers={"Authorization": "Bearer {{ var.value.API_ACCESS_TOKEN }}"},
+        headers={
+            "Authorization": "Bearer {{ var.value.get('API_ACCESS_TOKEN', 'not_set') }}"
+        },
         method="GET",
         response_check=response_check_api_health_check,
         mode="reschedule",
