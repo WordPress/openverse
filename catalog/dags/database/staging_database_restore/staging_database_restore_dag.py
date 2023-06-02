@@ -18,6 +18,7 @@ run using a different hook:
 
 import logging
 from datetime import datetime, timedelta
+from textwrap import dedent as d
 
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
@@ -132,7 +133,12 @@ def restore_staging_database():
     # Truncate the oauth tables, the cascade ensures all related tables are truncated
     truncate_tables = PGExecuteQueryOperator(
         task_id="truncate_oauth_tables",
-        sql="TRUNCATE TABLE api_throttledapplication RESTART IDENTITY CASCADE;",
+        sql=d(
+            """
+            TRUNCATE TABLE api_throttledapplication RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE api_oauth2registration RESTART IDENTITY CASCADE;
+            """
+        ),
         postgres_conn_id=POSTGRES_API_STAGING_CONN_ID,
         execution_timeout=timedelta(minutes=5),
     )
