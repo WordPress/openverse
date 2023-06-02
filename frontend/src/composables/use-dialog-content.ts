@@ -58,6 +58,7 @@ export function useDialogContent({
 
     autoFocusOnShowRef,
     trapFocusRef,
+    hideOnClickOutsideRef,
   })
   useFocusOnHide({
     dialogRef,

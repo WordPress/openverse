@@ -244,6 +244,10 @@ a:
 c:
     just catalog/up
 
+# alias for `just documentation/live`, 's' for Sphinx
+s:
+    just documentation/live
+
 # alias for `just ingestion_server/up`
 i:
     just ingestion_server/up

@@ -28,9 +28,11 @@ This job exports the [`api_logs` artifact](/meta/ci_cd/artifacts.md#logs).
 
 ```{note}
 This job is treated as the proof of functionality for publishing Docker images
-for the API. Since the job also initialises the API, it provides a basic
-verification of the ingestion server's core functionality of populating the API
-database and Elasticsearch.
+for the API and deploying the image to staging.
+
+Since the job also initialises the API, it provides a basic verification of the
+ingestion server's core functionality of populating the API database and
+Elasticsearch.
 ```
 
 ## `django-checks`

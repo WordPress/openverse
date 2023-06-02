@@ -18,6 +18,7 @@ type Props = {
   visibleRef: Ref<boolean>
   autoFocusOnShowRef: Ref<boolean>
   trapFocusRef: Ref<boolean>
+  hideOnClickOutsideRef: Ref<boolean>
   initialFocusElementRef: Ref<HTMLElement | null>
 }
 
@@ -29,6 +30,7 @@ export const useFocusOnShow = ({
   visibleRef,
   autoFocusOnShowRef,
   trapFocusRef,
+  hideOnClickOutsideRef,
   initialFocusElementRef,
 }: Props) => {
   let activateFocusTrap = () => {
@@ -48,7 +50,9 @@ export const useFocusOnShow = ({
       // We already do that in a more flexible, adaptive way in our Dialog composables.
       initialFocus: false,
       // if set to true, focus-trap prevents the default for the keyboard event, and we cannot handle it in our composables.
-      escapeDeactivates: false, // Even though we pass `initialFocus` as `false` above, `focus-trap` still
+      escapeDeactivates: false,
+      clickOutsideDeactivates: () => hideOnClickOutsideRef.value,
+      // Even though we pass `initialFocus` as `false` above, `focus-trap` still
       // checks if the container has at least one tabbable element. Because it sometimes
       // doesn't play nicely with Vue's rendering life-cycle, we need to get it a
       // dynamic way to retrieve the fallback node.
