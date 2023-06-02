@@ -45,8 +45,6 @@ The following are prerequisites for the DAG:
 - Installation of the
   [`elasticsearch` Airflow provider package](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/)
 - Airflow Connections for each Elasticsearch cluster
-- Sharing of the
-  [`es_mappings.py` configuration](https://github.com/WordPress/openverse/blob/0a5f4ab2ce5d80a48bd1c57d2a2dbcca14fcbedc/ingestion_server/ingestion_server/es_mapping.py)
 
 ### Elasticsearch provider
 
@@ -70,26 +68,6 @@ named `elasticsearch_production` and `elasticsearch_staging` and reference each
 respective environment. These will be created by hand in the Airflow UI. For
 local development, defaults will be added to the
 [`env.template` file](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/catalog/env.template).
-
-### Sharing `es_mappings.py`
-
-The
-[`es_mappings.py` configuration](https://github.com/WordPress/openverse/blob/0a5f4ab2ce5d80a48bd1c57d2a2dbcca14fcbedc/ingestion_server/ingestion_server/es_mapping.py)
-in the `ingestion_server` module defines, in python, the default index
-configuration we use for all media types. This configuration does not require
-any additional Python dependencies, but does not exist in a form that can be
-imported by the DAG. To make this configuration available to the DAG, we will
-add the `es_mapping.py` file to the
-[`sync.yml` workflow configuration](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/.github/sync.yml)
-to keep the file up-to-date across both services. The destination for this sync
-could be `catalog/dags/common/elasticsearch/es_mapping.py`.
-
-It would be trivial for local development to use a symlink, but all of our
-services run within Docker containers. Unfortunately, symlinks are generally
-difficult (or impractical) to set up within Docker[^1].
-
-[^1]:
-    [Stack Overflow: Mount host directory with a symbolic link inside in docker container](https://stackoverflow.com/a/40322275/3277713)
 
 ### Infrastructure
 
@@ -154,15 +132,58 @@ Once the parameters are provided, the DAG will execute the following steps:
 
 1. Create the index configuration. If `override_config` is supplied, the
    `index_config` parameter will be used as the entire configuration. If not,
-   the `index_config` parameter will be merged with the configuration generated
-   by `es_mapping::index_settings`. See [Merging policy](#merging-policy) for
-   how this merge will be performed.
+   the `index_config` parameter will be merged with the existing index settings.
+   See [Merging policy](#merging-policy) for how this merge will be performed.
+   Below are the steps for gathering the current index settings:
+   1. Get the current index information. This will be done using the
+      [`ElasticsearchPythonHook`](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_api/airflow/providers/elasticsearch/hooks/elasticsearch/index.html#airflow.providers.elasticsearch.hooks.elasticsearch.ElasticsearchPythonHook),
+      specifically the
+      [`index.get` function](https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.get).
+   2. Extract the relevant settings from the response. They come back in a form
+      that differs from what is rendered by the
+      [`es_mapping.py`](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py)
+      file which generates the index settings on the ingestion server.
+      `es_mapping::index_settings` returns data of the form:
+      ```json
+      {
+        "settings": {
+          "index": {
+            "number_of_shards": 18,
+            "number_of_replicas": 0,
+            "refresh_interval": "-1"
+          },
+          "analysis": {...},
+        },
+        "mapping": {...}
+      }
+      ```
+      However, the `index.get` function returns data of the form:
+      ```json
+      {
+        "<index-name>": {
+          "settings": {
+            "index": {
+              "number_of_shards": "18",
+              "number_of_replicas": 0,
+              "refresh_interval": "-1",
+              ...
+              "analysis": {
+                ...
+              }
+            }
+          },
+          "mappings": {...}
+        }
+      }
+      ```
+      The returned information will need to be extracted and converted into the
+      form returned by `es_mapping::index_settings` before it is merged with the
+      new configuration.
 2. Create the new index with the configuration generated in step 1. The index
    name will either be a combination of the `media_type` and `index_suffix`
    parameters (`{media_type}-{index_suffix}`, e.g. `image-my-special-suffix`),
    or the `media_type` and a timestamp (`{media_type}-{timestamp}`, e.g.
-   `image-20200102030405`). This will be done using the
-   [`ElasticsearchPythonHook`](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_api/airflow/providers/elasticsearch/hooks/elasticsearch/index.html#airflow.providers.elasticsearch.hooks.elasticsearch.ElasticsearchPythonHook)
+   `image-20200102030405`).
    ([example from the existing ingestion server code](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L518-L521)).
 3. Initiate a reindex using the `source_index` as the source
    ([example from the ingestion server](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L525-L547)).
@@ -308,8 +329,7 @@ No new design work is required for this plan.
 <!-- What, if any, work within this plan can be parallelized? -->
 
 The addition of the Elasticsearch provider is a blocker for the rest of the work
-described here, sans the `es_mapping.py` sync. The sync change can occur at any
-time, all other work must be done serially.
+described here; all work must be done serially.
 
 ## Blockers
 
