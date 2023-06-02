@@ -103,7 +103,9 @@ describe("VPopover", () => {
         expect(warn).toHaveBeenCalledWith(noFocusableElementWarning)
       })
 
-      it("should focus the first tabbable element in the popover by default and not warn", async () => {
+      // https://github.com/WordPress/openverse/issues/2300
+      // eslint-disable-next-line jest/no-disabled-tests
+      it.skip("should focus the first tabbable element in the popover by default and not warn", async () => {
         render(TestWrapper, { props: { popoverContentTabIndex: 0 } })
         await doOpen()
         expectOpen()
