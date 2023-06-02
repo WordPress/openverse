@@ -223,7 +223,7 @@ def get_latest_api_package_version(github: GitHubAPI = None) -> str:
     log.info(f"Found latest version: {latest_version}")
     if not ("latest" in tags or latest_version.startswith("rel-")):
         raise ValueError(
-            f"Latest version is not a release and not marked with 'latest': "
+            f"Latest version is not a release or not marked with 'latest': "
             f"{latest_version}"
         )
 
