@@ -54,6 +54,7 @@ base_audio = {
     "detail_url": f"{origin}/v1/audio/{identifier}/",
     "related_url": f"{origin}/v1/audio/{identifier}/related/",
     "waveform": f"{origin}/v1/audio/{identifier}/waveform/",
+    "unstable__sensitivity": [],
 }
 
 audio_search_200_example = {
