@@ -1,0 +1,43 @@
+name: PR Limit Reminders
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  analyze-user-prs:
+    runs-on: ubuntu-latest
+    outputs:
+      pr_count: ${{ steps.count-prs.outputs.pr_count }}
+      slack_username: ${{ steps.count-prs.outputs.slack_username }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/github-script@v6
+        id: count-prs
+        env:
+          GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const script = require('./automations/js/src/count_user_open_prs.js')
+            await script({github,context,core})
+
+  send_message:
+    needs: analyze-user-prs
+    name: Send Slack message
+    if: ${{ needs.analyze-user-prs.outputs.pr_count >= 3 }}
+    runs-on: ubuntu-latest
+    env:
+      slack_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      pr_count: ${{ needs.analyze-user-prs.outputs.pr_count }}
+      slack_username: ${{ needs.analyze-user-prs.outputs.slack_username }}
+    steps:
+      - name: Send notification
+        run: |
+          msg="Howdy $slack_username! \nYou currently have $pr_count number of PRs open with requested reviews (totalling $((pr_count * 2)) required reviews). To help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing [this list of alternative project tasks](https://docs.openverse.org) instead of working on new code contributions."
+
+          curl \
+            "$slack_url" \
+            -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{"text":"'"$msg"'"}'
