@@ -74,7 +74,8 @@ local development, defaults will be added to the
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
 No infrastructure changes should be necessary for this implementation, beyond
-that described above.
+the addition of the `elasticsearch` provider package and the Airflow connections
+described above.
 
 ### Other projects or work
 
@@ -92,7 +93,8 @@ discussed in [issue #2070](https://github.com/WordPress/openverse/issues/2070).
 Once the prerequisites above have been filled, the DAG can be created. This DAG
 will be named `create_new_es_index`, and will have the parameters and steps
 described below. It will have a schedule of `None` so that it is only run when
-triggered.
+triggered. It should also have `max_active_runs` set to `1` so that only one
+instance of the DAG can be running at a time.
 
 ### Parameters
 
@@ -127,6 +129,9 @@ triggered.
    for an example of how this is used.
 
 ### DAG
+
+**Note**: Use prevent concurrency in DAG definition:
+https://github.com/WordPress/openverse/blob/ce0b5c11149c711a36d69c3ab872ea097c04baf4/catalog/dags/data_refresh/create_filtered_index_dag.py#L86
 
 Once the parameters are provided, the DAG will execute the following steps:
 
