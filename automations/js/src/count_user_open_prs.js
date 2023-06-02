@@ -30,6 +30,7 @@ module.exports = async ({ github, context, core }) => {
         }
       }
     `
+
   try {
     const result = await github.graphql(GET_PULL_REQUESTS, {
       author: context.actor,
