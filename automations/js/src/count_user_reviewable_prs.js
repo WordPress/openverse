@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * Checks the open PR count for the current Github actor.
+ * Checks the reviewable PR count for the current Github actor.
  * Return their Slack username and PR count, if found.
  *
  * @param {Object} options
@@ -20,9 +20,9 @@ module.exports = async ({ github, context, core }) => {
   const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
 
   const GET_PULL_REQUESTS = `
-      query ($repoOwner: String!, $repo: String!) {
+      query ($repoOwner: String!, $repo: String!, $cursor: String) {
         repository(name:$repo, owner:$repoOwner) {
-          pullRequests(states:OPEN, first:100) {
+          pullRequests(states:OPEN, first:100, after: $cursor) {
             nodes {
               author {
                 login
@@ -35,13 +35,28 @@ module.exports = async ({ github, context, core }) => {
     `
 
   try {
-    const result = await github.graphql(GET_PULL_REQUESTS, {
-      author: context.actor,
-      repoOwner: owner,
-      repo: repo,
-    })
+    let hasNextPage = true
+    let cursor = null
+    let reviewablePRs = []
 
-    const reviewablePRs = result.repository.pullRequests.nodes.filter(
+    while (hasNextPage) {
+      const result = await github.graphql(GET_PULL_REQUESTS, {
+        repoOwner: owner,
+        repo: repo,
+        cursor: cursor,
+      })
+
+      const { nodes, pageInfo } = result.repository.pullRequests
+      reviewablePRs.push(...nodes)
+
+      if (pageInfo.hasNextPage) {
+        cursor = pageInfo.endCursor
+      } else {
+        hasNextPage = false
+      }
+    }
+
+    reviewablePRs = reviewablePRs.filter(
       (pr) => pr.author.login === context.actor && !pr.isDraft
     )
 

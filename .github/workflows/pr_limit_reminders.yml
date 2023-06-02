@@ -19,7 +19,7 @@ jobs:
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
-            const script = require('./automations/js/src/count_user_open_prs.js')
+            const script = require('./automations/js/src/count_user_reviewable_prs.js')
             await script({github,context,core})
 
   send_message:
