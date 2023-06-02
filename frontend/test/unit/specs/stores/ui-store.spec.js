@@ -102,7 +102,7 @@ describe("Ui Store", () => {
         // isMobileUa is set to true only if we explicitly get a mobile UA
         // from cookie or the browser request
         const exepectedStoreValue =
-          key === "isMobileUi" ? false : initialState[key]
+          key === "isMobileUa" ? false : initialState[key]
         expect(uiStore[key]).toEqual(exepectedStoreValue)
       }
     })
