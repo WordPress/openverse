@@ -4,7 +4,6 @@ from datetime import timedelta
 from urllib.parse import urlparse
 
 from airflow.exceptions import AirflowSkipException
-from airflow.models import Variable
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
@@ -160,13 +159,12 @@ def api_health_check(
     retry. The task is set to retry with exponential backoff, such that the retry delay
     doubles between each attempt.
     """
-    access_token = Variable.get("API_ACCESS_TOKEN", "not_set")
     return HttpSensor(
         task_id="api_health_check",
         http_conn_id=API_CONN_ID,
         endpoint=f"{media_type}",
         request_params={"internal__index": f"{media_type}-{index_suffix}"},
-        headers={"Authorization": f"Bearer {access_token}"},
+        headers={"Authorization": "Bearer {{ var.value.API_ACCESS_TOKEN }}"},
         method="GET",
         response_check=response_check_api_health_check,
         mode="reschedule",

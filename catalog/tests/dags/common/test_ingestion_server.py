@@ -33,12 +33,10 @@ def clean_db():
 
 @pytest.fixture()
 def healthcheck_dag():
-    index_suffix = "my-test-suffix"
-
     # Create a DAG that just has an api_health_check task
     with DAG(dag_id=TEST_DAG_ID, schedule=None, start_date=TEST_START_DATE) as dag:
         ingestion_server.api_health_check(
-            media_type="image", index_suffix=index_suffix, timeout=timedelta(days=1)
+            media_type="image", index_suffix="my_test_suffix", timeout=timedelta(days=1)
         )
 
     return dag
