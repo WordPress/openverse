@@ -3,22 +3,22 @@
     v-bind="$attrs"
     id="cc-referral"
     nature="info"
-    :close-button-label="$t('migration-notice.close')"
+    :close-button-label="$t('migrationNotice.close')"
     @close="$emit('close')"
   >
     {{
-      $t("migration-notice.intro", {
-        "cc-search": "CC Search",
+      $t("migrationNotice.intro", {
+        ccSearch: "CC Search",
         openverse: "Openverse",
         wordpress: "WordPress",
       })
     }}
-    <i18n tag="span" path="migration-notice.more">
-      <template #read-more>
+    <i18n tag="span" path="migrationNotice.more">
+      <template #readMore>
         <VLink
           class="text-curr underline"
           href="https://wordpress.org/news/2021/05/welcome-to-openverse/"
-          >{{ $t("migration-notice.read") }}</VLink
+          >{{ $t("migrationNotice.read") }}</VLink
         >
       </template>
     </i18n>

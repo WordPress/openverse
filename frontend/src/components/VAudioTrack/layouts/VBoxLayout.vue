@@ -75,7 +75,7 @@ export default defineComponent({
       return props.size ? `${magnitudes[props.size]}rem` : undefined
     })
     const categoryLabel = computed(() =>
-      i18n.t(`filters.audio-categories.${props.audio.category}`).toString()
+      i18n.t(`filters.audioCategories.${props.audio.category}`).toString()
     )
 
     return {

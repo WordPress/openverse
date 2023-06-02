@@ -37,7 +37,7 @@ export const Template = (args) => ({
   setup() {
     const featureFlagStore = useFeatureFlagStore()
     featureFlagStore.toggleFeature(
-      "external_sources",
+      "additional_search_types",
       args.additionalTypes ? "on" : "off"
     )
     return { args }

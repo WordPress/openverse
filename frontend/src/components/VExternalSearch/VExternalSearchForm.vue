@@ -7,28 +7,28 @@
   >
     <i18n
       v-if="!hasNoResults && isSupported"
-      path="external-sources.form.supported-title"
+      path="externalSources.form.supportedTitle"
       tag="p"
       class="description-regular"
     />
 
     <i18n
       v-else-if="!hasNoResults && !isSupported"
-      path="external-sources.form.unsupported-title"
+      path="externalSources.form.unsupportedTitle"
       tag="p"
       class="description-regular"
     >
       <template #openverse>Openverse</template>
-      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
     </i18n>
 
     <i18n
       v-else
-      path="external-sources.form.no-results-title"
+      path="externalSources.form.noResultsTitle"
       tag="p"
       class="description-regular"
     >
-      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
       <template #query>{{ searchTerm }}</template>
     </i18n>
 
@@ -44,7 +44,7 @@
       size="disabled"
       class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
       @click="onTriggerClick"
-      >{{ $t("external-sources.button").toString()
+      >{{ $t("externalSources.button").toString()
       }}<VIcon
         class="text-dark-charcoal-40"
         :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"

@@ -53,9 +53,9 @@ export default defineComponent({
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
 
-    const textLabel = computed(() => i18n.t("header.filter-button.simple"))
+    const textLabel = computed(() => i18n.t("header.filterButton.simple"))
     const ariaLabel = computed(() =>
-      i18n.tc("header.filter-button.with-count", filterCount.value)
+      i18n.tc("header.filterButton.withCount", filterCount.value)
     )
 
     return {

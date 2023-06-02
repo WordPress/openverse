@@ -35,7 +35,7 @@ traffic to the new task away from the old task. This is called _draining_. Once
 the old task is drained, it is spun down and the only task left running is the
 new one. The same process is followed when there are multiple tasks and each
 task is drained one at a time following our
-[zero-downtime approach to deployments](https://docs.openverse.org/guides/zero-downtime-database-management.html).
+[zero-downtime approach to deployments](/general/zero_downtime_database_management.md).
 
 ```{note}
 The number of running tasks per active task definition may vary per
@@ -157,7 +157,7 @@ When deploying code that depends on a new or updated environment variable, you
 must follow the process below _before_ that code is deployed. This is the only
 way to make the new or updated variable available for the code the depends on
 it. Please see the
-[zero-downtime deployments document's section on environment variables for an in-depth explanation of the rationale behind this process](https://docs.openverse.org/guides/zero-downtime-database-management.html#environment-variables).
+[zero-downtime deployments document's section on environment variables for an in-depth explanation of the rationale behind this process](/general/zero_downtime_database_management.md#environment-variables).
 
 1. Update the template task definition for the service with the new or updated
    environment variable.

@@ -3,7 +3,7 @@
     {
       "error": "NO_RESULT",
       "image": {
-        "id": "depressed-musician",
+        "id": "depressedMusician",
         "file": "depressed_musician",
         "title": "Depressed musician vintage drawing",
         "foreign_landing_url": "https://www.rawpixel.com/image/573060/depressed-musician-vintage-drawing",
@@ -16,7 +16,7 @@
     {
       "error": "SERVER_TIMEOUT",
       "image": {
-        "id": "waiting-for-a-bite",
+        "id": "waitingForABite",
         "file": "waiting_for_a_bite",
         "title": "Waiting for a Bite, from Harper's Weekly, August 22, 1874, p. 693",
         "foreign_landing_url": "https://collection.cooperhewitt.org/view/objects/asitem/id/105053",

@@ -1,7 +1,7 @@
 <template>
   <div class="relative max-w-[280px]" data-testid="source-list-popover">
     <h2 class="description-bold mb-2 px-4 pt-5 text-start">
-      {{ $t("external-sources.title") }}
+      {{ $t("externalSources.title") }}
     </h2>
     <VCloseButton
       :label="$t('modal.close')"
@@ -9,7 +9,7 @@
       @close="$emit('close')"
     />
     <p class="caption-regular mb-4 px-4 text-start">
-      {{ $t("external-sources.caption", { openverse: "Openverse" }) }}
+      {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton
       v-for="source in externalSources"

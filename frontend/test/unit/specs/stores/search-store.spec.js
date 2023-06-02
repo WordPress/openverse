@@ -107,7 +107,7 @@ describe("Search Store", () => {
       "mediaFiltersForDisplay returns $filterTypeCount filters for $searchType",
       ({ searchType, filterTypeCount }) => {
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("external_sources", "on")
+        featureFlagStore.toggleFeature("additional_search_types", "on")
 
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
@@ -425,7 +425,7 @@ describe("Search Store", () => {
         searchStore.setSearchType(searchType)
 
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("external_sources", "on")
+        featureFlagStore.toggleFeature("additional_search_types", "on")
 
         // Set all filters to checked
         for (let ft in searchStore.filters) {
@@ -448,7 +448,7 @@ describe("Search Store", () => {
     it("Does not set filter or count filter as applied, and does not raise error for unsupported search types", () => {
       const searchStore = useSearchStore()
       const featureFlagStore = useFeatureFlagStore()
-      featureFlagStore.toggleFeature("external_sources", "on")
+      featureFlagStore.toggleFeature("additional_search_types", "on")
       searchStore.toggleFilter({
         filterType: "licenseTypes",
         code: "commercial",

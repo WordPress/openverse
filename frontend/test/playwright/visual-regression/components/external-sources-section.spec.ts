@@ -21,7 +21,7 @@ for (const dir of languageDirections) {
         await goToSearchTerm(page, "birds", { searchType, dir })
 
         const externalSourcesButton = page.getByRole("button", {
-          name: t("external-sources.button", dir),
+          name: t("externalSources.button", dir),
         })
 
         await externalSourcesButton.click()
