@@ -170,6 +170,6 @@ describe("VContentReportForm", () => {
     expect(await getReportButton()).toHaveAttribute("aria-disabled", "true")
 
     await fireEvent.update(getDescriptionTextarea(), description + "0") // Valid, 20 characters
-    expect(getReportButton()).toBeEnabled()
+    expect(getReportButton()).not.toHaveAttribute("aria-disabled")
   })
 })
