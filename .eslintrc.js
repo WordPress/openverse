@@ -35,6 +35,7 @@ module.exports = {
     "vue",
     "vuejs-accessibility",
     "unicorn",
+    "json5",
   ],
   rules: {
     semi: [2, "never"],
@@ -249,6 +250,12 @@ module.exports = {
             ignore: [".eslintrc.js", ".*\\..*\\.js"],
           },
         ],
+      },
+    },
+    {
+      files: ["**/*.json5", "test/**/*.json"],
+      rules: {
+        "camelcase/properties": "error",
       },
     },
   ],

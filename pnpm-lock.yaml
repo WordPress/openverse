@@ -126,6 +126,7 @@ importers:
       cookie-universal-nuxt: ^2.1.5
       core-js: ^3.27.2
       css-loader: ^5.2.7
+      eslint-plugin-json5: ^0.1.4
       express-prom-bundle: ^6.4.1
       express-useragent: ^1.0.15
       focus-trap: ^7.1.0
@@ -186,6 +187,7 @@ importers:
       clipboard: 2.0.8
       cookie-universal-nuxt: 2.1.5
       core-js: 3.27.2
+      eslint-plugin-json5: 0.1.4
       express-prom-bundle: 6.4.1_prom-client@14.0.1
       express-useragent: 1.0.15
       focus-trap: 7.1.0
@@ -9940,6 +9942,16 @@ packages:
       - supports-color
       - typescript
     dev: true
+
+  /eslint-plugin-json5/0.1.4:
+    resolution: {integrity: sha512-odAznnygrNbyW0aRsMBZ6GpO9wwD8qlQMbh1ILtKlFLKDX6CrtIs18g5rgb50/VyabmcBPpFOaVW0C10c5gNZw==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+    dev: false
 
   /eslint-plugin-prettier/4.2.1_kuab6g4o5cytp2fsnrjqsidrgq:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
