@@ -125,6 +125,8 @@ at a time.
    [Elasticsearch query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
    to use to filter the documents to be copied to the new index. If not
    provided, all documents will be copied. See
+   [the reindex API endpoint for the request body](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/docs-reindex.html#docs-reindex-api-request-body)
+   and
    [`create_and_populate_filtered_index` on the ingestion server](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L529)
    for an example of how this is used.
 
