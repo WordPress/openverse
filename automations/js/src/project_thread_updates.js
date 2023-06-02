@@ -1,3 +1,4 @@
+// @ts-check
 const githubMeta = {
   projectBoardID: 70,
   projectStatusColumnName: 'Status',
@@ -52,6 +53,15 @@ const GET_PROJECT_CARDS = `
   }
 `
 
+/**
+ * Check our GitHub project board cards for attached "project thread" issues.
+ * Check the issues to see if they've been commented on in the correct timeframe;
+ * if not notify the project lead.
+ *
+ * @param {Object} options
+ * @param {import('@octokit/rest').Octokit} options.github
+ * @param {import('@actions/core')} options.core
+ */
 module.exports = async ({ github, core }) => {
   try {
     const isDryRun = process.env.DRY_RUN === 'true' ?? false
