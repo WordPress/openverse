@@ -1,10 +1,4 @@
 // @ts-check
-const githubMeta = {
-  projectBoardID: 70,
-  projectStatusColumnName: 'Status',
-  repoOwner: 'wordpress',
-  repo: 'openverse',
-}
 
 const activeDevelopmentStatuses = [
   'In Kickoff',
@@ -14,24 +8,24 @@ const activeDevelopmentStatuses = [
 ]
 
 const GET_PROJECT_CARDS = `
-  query {
-    repository(name:"${githubMeta.repo}", owner:"${githubMeta.repoOwner}") {
-      projectV2(number: ${githubMeta.projectBoardID}) {
+  query($repo: String!, $repoOwner: String!, $projectBoardID: Int!, $projectStatusColumnName: String!) {
+    repository(name: $repo, owner: $repoOwner) {
+      projectV2(number: $projectBoardID) {
         items(last: 100) {
           nodes {
             id
-            fieldValueByName(name: "${githubMeta.projectStatusColumnName}") {
-              ...on ProjectV2ItemFieldSingleSelectValue {
+            fieldValueByName(name: $projectStatusColumnName) {
+              ... on ProjectV2ItemFieldSingleSelectValue {
                 name
               }
             }
             content {
               __typename
-              ...on Issue {
+              ... on Issue {
                 id
                 url
                 state
-                assignees(first:10) {
+                assignees(first: 10) {
                   nodes {
                     login
                   }
@@ -39,7 +33,7 @@ const GET_PROJECT_CARDS = `
                 author {
                   login
                 }
-                comments(last:100) {
+                comments(last: 100) {
                   nodes {
                     createdAt
                   }
@@ -74,7 +68,12 @@ module.exports = async ({ github, core }) => {
     )
 
     // Fetch project cards with their associated issue data
-    const result = await github.graphql(GET_PROJECT_CARDS)
+    const result = await github.graphql(GET_PROJECT_CARDS, {
+      projectBoardID: 70,
+      projectStatusColumnName: 'Status',
+      repoOwner: 'wordpress',
+      repo: 'openverse',
+    })
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
