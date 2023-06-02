@@ -1,6 +1,4 @@
-import { expect, Page } from "@playwright/test"
-
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test, expect, Page } from "@playwright/test"
 
 import audio from "~~/test/playwright/utils/audio"
 
@@ -78,7 +76,7 @@ test.describe("all results grid keyboard accessibility test", () => {
     )
   })
 
-  test.only("should allow toggling audio playback via play/pause click", async ({
+  test("should allow toggling audio playback via play/pause click", async ({
     page,
   }) => {
     await walkToType("audio", page)
