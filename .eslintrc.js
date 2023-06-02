@@ -208,6 +208,12 @@ module.exports = {
             message:
               "Do not use @vue/test-utils' `shallowMount`. Use `~~/test/unit/test-utils/render` instead which includes helpful context setup or @testing-library/vue's `render` directly.",
           },
+          {
+            selector:
+              "ImportDeclaration[source.value='@playwright/test']:has(ImportSpecifier[local.name='test'])",
+            message:
+              "Do not import 'test' from '@playwright/test'. Use 'import { test } from '~~/test/playwright/utils/test-fixture' instead.",
+          },
         ],
       },
     },
