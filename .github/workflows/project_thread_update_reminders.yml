@@ -4,14 +4,6 @@ on:
   schedule:
     # Run every day at 00:00 UTC
     - cron: "0 0 * * *"
-  # To allow for manual testing
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        type: boolean
-        description: "Dry run"
-        required: true
-        default: true
 
 jobs:
   send-reminders:
@@ -19,8 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/github-script@v6
-        env:
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |

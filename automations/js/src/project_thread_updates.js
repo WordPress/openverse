@@ -54,7 +54,7 @@ const GET_PROJECT_CARDS = `
 
 module.exports = async ({ github, core }) => {
   try {
-    const isDryRun = process.env.DRY_RUN === 'true' ?? true
+    const isDryRun = process.env.DRY_RUN === 'true' ?? false
 
     const currentDate = new Date()
     const fourteenDaysAgo = new Date(
@@ -87,6 +87,7 @@ module.exports = async ({ github, core }) => {
         const recipient = issue.assignees.nodes[0]
           ? issue.assignees.nodes[0].login
           : issue.author.login
+
         const body = `Hi @${recipient}, this project has not received an update comment in 14 days. Please leave an update comment as soon as you can. See the [documentation on project updates](https://docs.openverse.org/projects/planning.html#providing-project-updates) for more information.`
 
         if (isDryRun) {
