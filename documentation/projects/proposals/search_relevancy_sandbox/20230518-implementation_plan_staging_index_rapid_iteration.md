@@ -82,46 +82,46 @@ described above.
 <!-- Note any projects this plan is dependent on. -->
 
 This work does not depend on any other projects and can be implemented at any
-time. In order to be utilized however, the API will need a mechanism for
-specifying which index to use for a given query. This is currently being
-discussed in [issue #2070](https://github.com/WordPress/openverse/issues/2070).
+time. In order to be utilized however, a query parameter on the API will need to
+be used for determining which index to query. This has been implemented in
+specifying which index to use for a given query. This has been implemented in
+#2073.
 
 ## Outlined Steps
 
 <!-- Describe the implementation step necessary for completion. -->
 
-Once the prerequisites above have been filled, the DAG can be created. This DAG
-will be named `create_new_es_index`, and will have the parameters and steps
-described below. It will have a schedule of `None` so that it is only run when
-triggered. It should also have `max_active_runs` set to `1` so that only one
-instance of the DAG can be running at a time.
+Once the prerequisites above have been filled, the DAGs can be created. The DAGs
+will be named `create_new_es_index_{environment}`, and will have the parameters
+and steps described below. A dynamic DAG generation function will be used to
+create one DAG per environment (`staging` and `production`). It will have a
+schedule of `None` so that it is only run when triggered. It should also have
+`max_active_runs` set to `1` so that only one instance of the DAG can be running
+at a time.
 
 ### Parameters
 
 1. `media_type`: The media type for which the index is being created. Presently
    this would only be `image` or `audio`.
-2. `environment`: The Elasticsearch environment to operate against. Options are
-   `production` and `staging` (and will be mapped to the appropriate
-   Elasticsearch connection).
-3. `index_config`: A JSON object containing the configuration for the new index.
+2. `index_config`: A JSON object containing the configuration for the new index.
    The values in this object will be merged with the existing configuration,
    where the value specified at a leaf key in the object will override the
    existing value (see [Merging policy](#merging-policy) below). This can also
    be the entire index configuration, in which case the existing configuration
    will be replaced entirely (see `override_config` parameter below).
-4. `index_suffix`: (Optional) The name suffix of the new index to create. This
+3. `index_suffix`: (Optional) The name suffix of the new index to create. This
    will be a string, and will be used to name the index in Elasticsearch of the
    form `{media_type}-{index_suffix}`. If not provided, the suffix will be a
    timestamp of the form `YYYYMMDDHHMMSS`.
-5. `source_index`: (Optional) The existing index on Elasticsearch to use as the
+4. `source_index`: (Optional) The existing index on Elasticsearch to use as the
    basis for the new index. If not provided, the index aliased to `media_type`
    will be used (e.g. `image` for the `image` media type).
-6. `override_config`: (Optional) A boolean value which can be toggled to replace
+5. `override_config`: (Optional) A boolean value which can be toggled to replace
    the existing index configuration entirely with the new configuration. If
    `True`, the `index_config` parameter will be used as the entire
    configuration. If `False`, the `index_config` parameter will be merged with
    the existing configuration. Defaults to `False`.
-7. `query`: (Optional) An
+6. `query`: (Optional) An
    [Elasticsearch query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
    to use to filter the documents to be copied to the new index. If not
    provided, all documents will be copied. See
@@ -130,12 +130,14 @@ instance of the DAG can be running at a time.
 
 ### DAG
 
-**Note**: Use prevent concurrency in DAG definition:
-https://github.com/WordPress/openverse/blob/ce0b5c11149c711a36d69c3ab872ea097c04baf4/catalog/dags/data_refresh/create_filtered_index_dag.py#L86
-
 Once the parameters are provided, the DAG will execute the following steps:
 
-1. Create the index configuration. If `override_config` is supplied, the
+1. (For `production` only) Check that there are no other reindexing jobs
+   currently underway. This can be done by checking whether the
+   `{media_type}_data_refresh` and `create_filtered_{media_type}_index` DAGs are
+   currently running. If either of them are, this DAG should fail immediately
+   with an appropriate error message.
+2. Create the index configuration. If `override_config` is supplied, the
    `index_config` parameter will be used as the entire configuration. If not,
    the `index_config` parameter will be merged with the existing index settings.
    See [Merging policy](#merging-policy) for how this merge will be performed.
@@ -184,31 +186,33 @@ Once the parameters are provided, the DAG will execute the following steps:
       The returned information will need to be extracted and converted into the
       form returned by `es_mapping::index_settings` before it is merged with the
       new configuration.
-2. Create the new index with the configuration generated in step 1. The index
+3. Create the new index with the configuration generated in step 1. The index
    name will either be a combination of the `media_type` and `index_suffix`
    parameters (`{media_type}-{index_suffix}`, e.g. `image-my-special-suffix`),
    or the `media_type` and a timestamp (`{media_type}-{timestamp}`, e.g.
    `image-20200102030405`).
    ([example from the existing ingestion server code](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L518-L521)).
-3. Initiate a reindex using the `source_index` as the source
+4. Initiate a reindex using the `source_index` as the source
    ([example from the ingestion server](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L525-L547)).
-   Rather than setting `wait_for_completion=True` and having this step halt
-   until the reindex is complete, this step will set `wait_for_completion=False`
-   and continue to the next step. The
+   Rather than setting `wait_for_completion=True` on the ES reindex call and
+   having this step halt until the reindex is complete, this step will set
+   `wait_for_completion=False` and continue to the next step. The
    [task ID returned from Elasticsearch for the reindex operation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html#docs-reindex-task-api)
    will be stored in an XCom variable. This step will have `refresh=True` on the
    request to ensure the reindex will immediately refresh after completion to
-   make the data available to searches.
-4. Use a sensor and the previously emitted task ID to wait for the reindex to
+   make the data available to searches. It will also need `slices=auto` so the
+   indexing is parallelized.
+5. Use a sensor and the previously emitted task ID to wait for the reindex to
    complete. This will check the task using the
    [Task API](https://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html).
-   This could be done either using a subsequent `wait_for_completion` call with
-   a low timeout which is polled repeatedly, or by using the `status` value of
-   the response to determine if polling should continue. Elasticsearch
-   documentation notes that
+   This could be done either using a subsequent `wait_for_completion` call
+   within a simple `PythonSensor` using the Elasticsearch hook with a low
+   timeout which is polled repeatedly, or by using the `status` value of the
+   response to determine if polling should continue. Elasticsearch documentation
+   notes that
    [`status` may not always be available](https://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html#_get_more_information_about_tasks),
    so we'd need to determine if the reindex task returns a `status` field first.
-5. Once the reindex & refresh are complete, report that the new index is ready
+6. Once the reindex & refresh are complete, report that the new index is ready
    via Slack. This message should include both the index name and the
    Elasticsearch environment.
 
@@ -304,16 +308,6 @@ extra dependency for this step is possible.
 
 <!-- Describe any alternatives considered and why they were not chosen or recommended. -->
 
-### Sharing `es_mapping.py`
-
-Instead of using a self-referential sync operation, we could read or pull the
-`es_mapping.py` file directly from GitHub (e.g.
-[https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py)).
-This would require that GitHub be available, and (in order to ensure the most
-up-to-date version is being used) could cause issues if the file is moved to a
-different location. Since this would create unnecessary dependencies on an
-external service, I opted not to suggest this approach.
-
 ### Using the ingestion server
 
 The first idea for this approach was to use the ingestion server directly, and
@@ -358,9 +352,9 @@ No accessibility concerns are expected.
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-Rollback would likely involve deleting the DAG. The `es_mapping.py`, provider
-dependency, and Elasticsearch connections are all likely to be useful in the
-future, so it may behoove us to keep them even if the DAG is deleted.
+Rollback would likely involve deleting the DAG. The provider dependency and
+Elasticsearch connections are likely to be useful in the future, so it may
+behoove us to keep them even if the DAG is deleted.
 
 ## Risks
 
@@ -369,7 +363,9 @@ future, so it may behoove us to keep them even if the DAG is deleted.
 This approach does allow for maintainers to affect production resources, so the
 same care should be taken when triggering this DAG as with triggering a
 deployment. The described DAG will only ever create new indices, and so there is
-no risk losing or affecting the production indices.
+no risk losing or affecting the production indices. The DAG will also fail if
+any other DAGs which perform a reindex are running, which will prevent
+saturating Elasticsearch resources in production.
 
 ## Prior art
 
