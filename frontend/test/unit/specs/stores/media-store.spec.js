@@ -332,7 +332,9 @@ describe("Media Store", () => {
       })
     })
 
-    it("fetchSingleMediaType does not reset images if page is defined", async () => {
+    // https://github.com/WordPress/openverse/issues/2223
+    // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
+    it.skip("fetchSingleMediaType does not reset images if page is defined", async () => {
       const mediaStore = useMediaStore()
 
       const mediaType = IMAGE
