@@ -1,10 +1,13 @@
 <template>
-  <VAudioTrack
-    :audio="audio"
-    layout="box"
-    :search-term="searchTerm"
-    v-on="$listeners"
-  />
+  <li>
+    <VAudioTrack
+      :audio="audio"
+      layout="box"
+      :search-term="searchTerm"
+      v-bind="$attrs"
+      v-on="$listeners"
+    />
+  </li>
 </template>
 
 <script lang="ts">
@@ -16,6 +19,7 @@ import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
 export default defineComponent({
   components: { VAudioTrack },
+  inheritAttrs: false,
   props: {
     audio: {
       type: Object as PropType<AudioDetail>,

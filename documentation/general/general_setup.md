@@ -74,7 +74,7 @@ our backend services or linting the codebase.
 
 `just` can be [installed](https://github.com/casey/just#installation) for a host
 of operating systems via their respective
-[pacakge managers](https://github.com/casey/just#packages) or using
+[package managers](https://github.com/casey/just#packages) or using
 [pre-built binaries](https://github.com/casey/just#pre-built-binaries) available
 for some operating systems.
 

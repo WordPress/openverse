@@ -1,10 +1,10 @@
 <template>
   <div class="no-results text-center md:text-left">
     <h1 class="heading-4 md:heading-2 break-words">
-      {{ $t("no-results.heading", { query: searchTerm }) }}
+      {{ $t("noResults.heading", { query: searchTerm }) }}
     </h1>
     <h2 class="description-regular md:heading-5 mt-4">
-      {{ $t("no-results.alternatives") }}
+      {{ $t("noResults.alternatives") }}
     </h2>
 
     <div class="mt-10 flex flex-col flex-wrap gap-4 sm:flex-row">

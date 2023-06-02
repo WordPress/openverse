@@ -24,7 +24,7 @@ const walkToFilterButton = async (page: Page) => {
 
 const firstFilterCheckbox = (page: Page, dir: LanguageDirection) => {
   return page
-    .getByRole("region", { name: t("filters.filter-by", dir) })
+    .getByRole("region", { name: t("filters.filterBy", dir) })
     .getByRole("checkbox")
     .first()
 }

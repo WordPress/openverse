@@ -19,6 +19,8 @@ jest.mock("~/utils/console", () => ({
   },
 }))
 
+// Need to export this for TS to be happy
+// eslint-disable-next-line jest/no-export
 export declare let process: NodeJS.Process & Process
 
 const matchTokenDataRequest = /auth_tokens\/token/

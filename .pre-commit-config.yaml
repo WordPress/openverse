@@ -110,6 +110,7 @@ repos:
           - eslint-plugin-unicorn@42.0.0
           - eslint-plugin-vue@9.9.0
           - eslint-plugin-vuejs-accessibility@1.1.1
+          - eslint-plugin-jest@27.2.1
 
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier

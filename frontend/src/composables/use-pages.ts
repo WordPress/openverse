@@ -23,12 +23,12 @@ export default function usePages(isNew = false) {
         },
         {
           id: "search-help",
-          name: "navigation.search-help",
+          name: "navigation.searchHelp",
           link: app.localePath("/search-help"),
         },
         {
           id: "get-involved",
-          name: "navigation.get-involved",
+          name: "navigation.getInvolved",
           link: "https://make.wordpress.org/openverse/handbook/",
         },
         {

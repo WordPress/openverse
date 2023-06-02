@@ -42,12 +42,14 @@ import {
   IMAGE,
   SearchType,
   isSupportedMediaType,
+  isAdditionalSearchType,
 } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { defineEvent } from "~/types/emits"
 import type { FetchState } from "~/types/fetch-state"
 import type { ApiQueryParams } from "~/utils/search-query-transform"
 import { getAdditionalSources } from "~/utils/get-additional-sources"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
@@ -106,7 +108,14 @@ export default defineComponent({
      * External sources search form shows the external sources for current search type, or for images if the search type is 'All Content'.
      */
     const externalSourcesType = computed(() => {
+      const featureFlagStore = useFeatureFlagStore()
       if (isSupportedMediaType(props.searchType)) {
+        return props.searchType
+      }
+      if (
+        featureFlagStore.isOn("additional_search_types") &&
+        isAdditionalSearchType(props.searchType)
+      ) {
         return props.searchType
       }
       return IMAGE

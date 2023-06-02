@@ -10,7 +10,7 @@ from airflow.utils.types import DagRunType
 
 from data_refresh import dag_factory
 from data_refresh.dag_factory import (
-    REFRESH_MATERIALIZED_VIEW_TASK_ID,
+    RECREATE_MATERIALIZED_VIEW_TASK_ID,
     REFRESH_POPULARITY_METRICS_TASK_ID,
 )
 
@@ -44,7 +44,7 @@ def _create_dagrun(start_date, dag_state, conf={}):
             None,
             datetime(2022, 3, 1, 0, 0, 0),
             datetime(2022, 3, 2, 0, 0, 0),
-            REFRESH_MATERIALIZED_VIEW_TASK_ID,
+            RECREATE_MATERIALIZED_VIEW_TASK_ID,
         ),
         # Last dagrun was in the same month, different year
         (
@@ -81,14 +81,14 @@ def _create_dagrun(start_date, dag_state, conf={}):
             False,
             datetime(2022, 3, 1, 0, 0, 0),
             datetime(2022, 3, 2, 0, 0, 0),
-            REFRESH_MATERIALIZED_VIEW_TASK_ID,
+            RECREATE_MATERIALIZED_VIEW_TASK_ID,
         ),
         # Last dagrun was in a previous month
         (
             False,
             datetime(2022, 2, 1, 0, 0, 0),
             datetime(2022, 3, 2, 0, 0, 0),
-            REFRESH_MATERIALIZED_VIEW_TASK_ID,
+            RECREATE_MATERIALIZED_VIEW_TASK_ID,
         ),
     ],
 )
@@ -126,7 +126,7 @@ def test_month_check_ignores_failed_dagruns():
     "task_id, expected_message",
     [
         (REFRESH_POPULARITY_METRICS_TASK_ID, "update popularity metrics"),
-        (REFRESH_MATERIALIZED_VIEW_TASK_ID, "refresh matview"),
+        (RECREATE_MATERIALIZED_VIEW_TASK_ID, "recreate matview"),
         ("Some other task ID", "unable to determine next step"),
     ],
 )

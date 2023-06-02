@@ -14,9 +14,9 @@
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="all-results.snackbar.text" tag="p">
+      <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
-          <kbd class="font-sans">{{ $t(`all-results.snackbar.spacebar`) }}</kbd>
+          <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
       </i18n>
     </VSnackbar>
@@ -34,7 +34,7 @@
       "
       :aria-label="$t('browse-page.aria.results', { query: searchTerm })"
     >
-      <li v-for="item in allMedia" :key="item.id">
+      <template v-for="item in allMedia">
         <VImageCell
           v-if="isDetail.image(item)"
           :key="item.id"
@@ -48,9 +48,9 @@
           :audio="item"
           :search-term="searchTerm"
           @interacted="hideSnackbar"
-          @focus.native="showSnackbar"
+          @focus="showSnackbar"
         />
-      </li>
+      </template>
     </ol>
 
     <VLoadMore class="mt-4" />

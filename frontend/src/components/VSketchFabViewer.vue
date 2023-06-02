@@ -47,7 +47,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const i18n = useI18n()
     const label = i18n
-      .t("sketchfab-iframe-title", { sketchfab: "Sketchfab" })
+      .t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
       .toString()
     const node = ref<Element | undefined>()
     const { $sentry } = useContext()

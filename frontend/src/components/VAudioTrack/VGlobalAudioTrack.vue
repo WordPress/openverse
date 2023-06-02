@@ -68,7 +68,7 @@ export default defineComponent({
     const activeAudio = useActiveAudio()
 
     const ariaLabel = computed(() =>
-      i18n.t("audio-track.aria-label", { title: props.audio.title }).toString()
+      i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
     )
 
     const status = ref<AudioStatus>("paused")
@@ -184,10 +184,8 @@ export default defineComponent({
     const pause = () => activeAudio.obj.value?.pause()
 
     /* Timekeeping */
-    const message = computed<string | undefined>(() =>
-      activeMediaStore.message
-        ? i18n.t(`audio-track.messages.${activeMediaStore.message}`).toString()
-        : undefined
+    const message = computed<string | undefined>(
+      () => activeMediaStore.message ?? undefined
     )
 
     /* Interface with VPlayPause */

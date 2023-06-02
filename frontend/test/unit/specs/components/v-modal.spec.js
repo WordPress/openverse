@@ -39,7 +39,7 @@ const TestWrapper = Vue.component("TestWrapper", {
 const nextTick = async () =>
   await new Promise((resolve) => setTimeout(resolve, 1))
 
-const getCloseButton = () => screen.getByText(/close/i)
+const getCloseButton = () => screen.getByRole("button", { name: /close/i })
 const getDialog = () => screen.getByRole("dialog")
 const queryDialog = () => screen.queryByRole("dialog")
 const getTrigger = () => screen.getByRole("button")
@@ -91,7 +91,7 @@ describe("VModal", () => {
     expect(container.ownerDocument.body.style.position).toBe("fixed")
     expect(container.ownerDocument.body.style.top).toBe(`-${scrollY}px`)
 
-    await userEvent.click(screen.getByText(/close/i))
+    await userEvent.click(getCloseButton())
     await nextTick()
 
     expect(window.scrollTo).toHaveBeenCalledWith(0, scrollY)
@@ -112,7 +112,7 @@ describe("VModal", () => {
     await doOpen()
 
     expect(getDialog()).toBeVisible()
-    expect(screen.getByText(/custom initial focus/i))
+    expect(() => screen.getByText(/custom initial focus/i)).not.toThrow()
   })
 
   it("should hide the modal on escape", async () => {

@@ -2,26 +2,26 @@
   "404": {
     "title": "يبدو أن المحتوى الذي تبحث عنه قد اختفى.",
     "main": "انتقل إلى {link} أو ابحث عن شيء مشابه من الحقل أدناه.",
-    "search-placeholder": "البحث عن محتوى لإعادة استخدامه"
+    "searchPlaceholder": "البحث عن محتوى لإعادة استخدامه"
   },
   "interpunct": "•",
-  "skip-to-content": "تخطى الى المحتوى",
-  "sketchfab-iframe-title": "عارض {sketchfab}",
-  "flag-status": {
+  "skipToContent": "تخطى الى المحتوى",
+  "sketchfabIframeTitle": "عارض {sketchfab}",
+  "flagStatus": {
     "nonexistent": "غير موجود",
     "on": "على",
     "off": "عن"
   },
-  "pref-page": {
+  "prefPage": {
     "title": "التفضيلات",
-    "store-state": "حالة المتجر",
-    "content-filtering": "تصفية المحتوى",
-    "explanation": "يظهر لأن {feat-name} هي {feat-state}",
+    "storeState": "حالة المتجر",
+    "contentFiltering": "تصفية المحتوى",
+    "explanation": "يظهر لأن {featName} هي {featState}",
     "switchable": {
       "title": "ميزات قابلة للتبديل",
       "desc": "يمكنك تشغيل هذه الميزات أو إيقاف تشغيلها كما تريد وسيتم حفظ تفضيلاتك في ملف تعريف ارتباط."
     },
-    "non-switchable": {
+    "nonSwitchable": {
       "title": "ميزات غير قابلة للتحويل",
       "desc": "لا يمكنك تعديل حالة هذه الميزات."
     },
@@ -49,63 +49,63 @@
     "see-audio": "مشاهدة كل الملفات الصوتية",
     "select-label": "حدد نوع المحتوى: {type}"
   },
-  "server-timeout": {
+  "serverTimeout": {
     "heading": "عفوًا ، يبدو أن هذا الطلب استغرق وقتًا طويلاً لإكماله. حاول مرة اخرى."
   },
-  "no-results": {
+  "noResults": {
     "heading": "لم نتمكن من العثور على أي شيء لـ \"{query}\".",
     "alternatives": "جرب استعلامًا مختلفًا أو استخدم أحد المصادر الخارجية لتوسيع نطاق البحث."
   },
-  "error-images": {
-    "depressed-musician": "عازف البيانو المكتئب يضع رأسه في أيديهم.",
-    "waiting-for-a-bite": "يجلس ثلاثة أولاد على جذع شجرة مكسور بينما يصطاد اثنان منهم."
+  "errorImages": {
+    "depressedMusician": "عازف البيانو المكتئب يضع رأسه في أيديهم.",
+    "waitingForABite": "يجلس ثلاثة أولاد على جذع شجرة مكسور بينما يصطاد اثنان منهم."
   },
   "modal": {
     "close": "قريب",
-    "aria-close": "أغلق النموذج",
-    "close-named": "إغلاق {name}"
+    "ariaClose": "أغلق النموذج",
+    "closeNamed": "إغلاق {name}"
   },
-  "download-button": {
+  "downloadButton": {
     "download": "تحميل",
     "aria": {
-      "dropdown-label": "حدد تنسيق ملف التنزيل"
+      "dropdownLabel": "حدد تنسيق ملف التنزيل"
     }
   },
-  "migration-notice": {
-    "intro": "{cc-search} يسمى الآن {openverse} وينضم إلى {wordpress} كمشروع مفتوح المصدر.",
-    "more": "{read-more} حول هذا الإعلان.",
+  "migrationNotice": {
+    "intro": "{ccSearch} يسمى الآن {openverse} وينضم إلى {wordpress} كمشروع مفتوح المصدر.",
+    "more": "{readMore} حول هذا الإعلان.",
     "read": "اقرأ أكثر"
   },
-  "dropdown-button": {
+  "dropdownButton": {
     "aria": {
-      "arrow-label": "اسقاط"
+      "arrowLabel": "اسقاط"
     }
   },
-  "license-readable-names": {
+  "licenseReadableNames": {
     "cc0": "صفر",
     "pdm": "علامة المجال العام",
     "by": "الإسناد",
-    "by-sa": "نَسب المُصنَّف - شارك - على حدٍ سواء",
-    "by-nc": "نَسب المُصنَّف - غير تجاري",
-    "by-nd": "Attribution-NoDerivatives",
-    "by-nc-sa": "Attribution-NonCommercial-Share-Alike",
-    "by-nc-nd": "نسب المصنف غير التجاري لا المشتقات",
+    "bySa": "نَسب المُصنَّف - شارك - على حدٍ سواء",
+    "byNc": "نَسب المُصنَّف - غير تجاري",
+    "byNd": "Attribution-NoDerivatives",
+    "byNcSa": "Attribution-NonCommercial-Share-Alike",
+    "byNcNd": "نسب المصنف غير التجاري لا المشتقات",
     "sampling+": "سامبلينغ بلس",
-    "nc-sampling+": "أخذ العينات غير التجارية زائد"
+    "ncSampling+": "أخذ العينات غير التجارية زائد"
   },
   "search": {
     "search": "يبحث",
-    "search-bar-label": "البحث عن محتوى في {openverse}"
+    "searchBarLabel": "البحث عن محتوى في {openverse}"
   },
-  "play-pause": {
+  "playPause": {
     "play": "لعب",
     "pause": "يوقف",
     "replay": "إعادة",
     "loading": "جار التحميل"
   },
-  "audio-track": {
-    "aria-label": "{title} - مشغل الصوت",
-    "aria-label-interactive": "{title} - مشغل الصوت - اضغط على مفتاح المسافة لتشغيل معاينة الصوت وإيقافها مؤقتًا",
+  "audioTrack": {
+    "ariaLabel": "{title} - مشغل الصوت",
+    "ariaLabelInteractive": "{title} - مشغل الصوت - اضغط على مفتاح المسافة لتشغيل معاينة الصوت وإيقافها مؤقتًا",
     "creator": "بواسطة {creator}",
     "messages": {
       "err_aborted": "لقد أجهضت التشغيل.",
@@ -116,12 +116,12 @@
     },
     "close": "أغلق مشغل الصوت"
   },
-  "audio-thumbnail": {
+  "audioThumbnail": {
     "alt": "صورة الغلاف لـ \"{title}\" بواسطة {creator}"
   },
   "waveform": {
     "label": "شريط البحث عن الصوت",
-    "current-time": "{time} ثانية | {time} ثانية"
+    "currentTime": "{time} ثانية | {time} ثانية"
   },
   "browsers": {
     "chrome": "كروم",
@@ -129,7 +129,7 @@
     "opera": "Opera",
     "edge": "حافة"
   },
-  "external-sources": {
+  "externalSources": {
     "caption": "{openverse} لا يتحكم في النتائج ، تحقق دائمًا من أن العمل في الواقع خاضع لترخيص CC.",
     "button": "قائمة مصدر",
     "title": "مصادر خارجية",
@@ -138,21 +138,21 @@
       "caption": "انقر فوق أحد المصادر أدناه للبحث مباشرة في مجموعات أخرى من الصور المرخصة CC. {break} يرجى ملاحظة أن استخدام المرشحات غير مدعوم لمكتبة Open Clip Art Library أو Nappy."
     },
     "form": {
-      "unsupported-title": "{openverse} لا يدعم حتى الآن البحث المضمن {type}.",
-      "supported-title": "لا تجد ما تبحث عنه؟ جرب مصدر خارجي:",
-      "no-results-title": "لا توجد نتائج {type} لـ \"{query}\".",
+      "unsupportedTitle": "{openverse} لا يدعم حتى الآن البحث المضمن {type}.",
+      "supportedTitle": "لا تجد ما تبحث عنه؟ جرب مصدر خارجي:",
+      "noResultsTitle": "لا توجد نتائج {type} لـ \"{query}\".",
       "caption": "انقر فوق أحد المصادر أدناه للبحث مباشرة في مجموعات أخرى من {type} المرخصة CC.",
-      "types-plural": {
+      "typesPlural": {
         "image": "الصور",
         "audio": "صوتيات",
         "video": "أشرطة فيديو",
-        "model-3d": "نماذج ثلاثية الأبعاد"
+        "model3d": "نماذج ثلاثية الأبعاد"
       },
       "types": {
         "image": "صورة",
         "audio": "صوتي",
         "video": "فيديو",
-        "model-3d": "نموذج 3D"
+        "model3d": "نموذج 3D"
       }
     }
   },
@@ -188,7 +188,7 @@
       "unknown": "مجهول"
     }
   },
-  "single-result": {
+  "singleResult": {
     "back": "رجوع إلى نتائج البحث"
   },
   "media-details": {
@@ -319,29 +319,29 @@
       "feedback-thanks": "شكرا لملاحظاتك!"
     }
   },
-  "filter-list": {
-    "filter-by": "مصنف بواسطة",
+  "filterList": {
+    "filterBy": "مصنف بواسطة",
     "hide": "إخفاء عوامل التصفية",
     "clear": "مسح عوامل التصفية",
     "show": "أظهر النتائج",
-    "category-aria": "قائمة عوامل التصفية لفئة {categoryName}"
+    "categoryAria": "قائمة عوامل التصفية لفئة {categoryName}"
   },
   "filters": {
     "title": "مرشحات",
-    "filter-by": "مصنف بواسطة",
+    "filterBy": "مصنف بواسطة",
     "aria": {
-      "remove-filter": "إزالة مرشح {label}"
+      "removeFilter": "إزالة مرشح {label}"
     },
-    "license-explanation": {
-      "license-definition": "تعريف الترخيص",
-      "mark-definition": "تعريف {mark}",
+    "licenseExplanation": {
+      "licenseDefinition": "تعريف الترخيص",
+      "markDefinition": "تعريف {mark}",
       "more": {
-        "license": "{read-more} حول هذا الترخيص.",
-        "mark": "{read-more} حول {mark}.",
-        "read-more": "اقرأ أكثر"
+        "license": "{readMore} حول هذا الترخيص.",
+        "mark": "{readMore} حول {mark}.",
+        "readMore": "اقرأ أكثر"
       }
     },
-    "search-by": {
+    "searchBy": {
       "title": "البحث عن طريق",
       "creator": "المنشئ"
     },
@@ -365,20 +365,20 @@
       "medium": "متوسط",
       "large": "كبير"
     },
-    "aspect-ratios": {
+    "aspectRatios": {
       "title": "ابعاد متزنة",
       "tall": "طويل",
       "wide": "واسع",
       "square": "ميدان"
     },
-    "image-extensions": {
+    "imageExtensions": {
       "title": "امتداد",
       "jpg": "JPEG",
       "png": "بي إن جي",
       "gif": "GIF",
       "svg": "SVG"
     },
-    "audio-extensions": {
+    "audioExtensions": {
       "title": "امتداد",
       "flac": "FLAC",
       "mid": "منتصف",
@@ -389,13 +389,13 @@
       "wav": "WAV",
       "webm": "WEBM"
     },
-    "image-categories": {
+    "imageCategories": {
       "title": "نوع الصورة",
       "photograph": "الصور",
       "illustration": "الرسوم التوضيحية",
       "digitized_artwork": "الأعمال الفنية الرقمية"
     },
-    "audio-categories": {
+    "audioCategories": {
       "title": "فئة الصوت",
       "audiobook": "كتاب مسموع",
       "music": "موسيقى",
@@ -405,13 +405,13 @@
       "sound_effect": "مؤثرات صوتية",
       "sound": "مؤثرات صوتية"
     },
-    "audio-providers": {
+    "audioProviders": {
       "title": "مصدر"
     },
-    "image-providers": {
+    "imageProviders": {
       "title": "مصدر"
     },
-    "license-types": {
+    "licenseTypes": {
       "title": "يستخدم",
       "commercial": "استخدام تجاريًا",
       "modification": "تعديل أو تكييف"
@@ -421,17 +421,17 @@
       "cc0": "CC0",
       "pdm": "علامة المجال العام",
       "by": "بواسطة",
-      "by-sa": "BY-SA",
-      "by-nc": "BY-NC",
-      "by-nd": "BY-ND",
-      "by-nc-sa": "BY-NC-SA",
-      "by-nc-nd": "BY-NC-ND"
+      "bySa": "BY-SA",
+      "byNc": "BY-NC",
+      "byNd": "BY-ND",
+      "byNcSa": "BY-NC-SA",
+      "byNcNd": "BY-NC-ND"
     }
   },
   "error": {
     "occurred": "حدث خطأ",
-    "image-not-found": "تعذر العثور على الصورة بالمعرف {id}",
-    "media-not-found": "تعذر العثور على {mediaType} بالمعرف {id}",
+    "imageNotFound": "تعذر العثور على الصورة بالمعرف {id}",
+    "mediaNotFound": "تعذر العثور على {mediaType} بالمعرف {id}",
     "image": "صورة",
     "audio": "صوتي"
   },
@@ -636,23 +636,13 @@
     }
   },
   "header": {
-    "about-nav-item": "قصتنا",
-    "source-nav-item": "مصادر",
-    "search-guide-nav-item": "دليل البحث",
-    "external-sources-nav-item": "بحث ميتا",
-    "privacy-nav-item": "خصوصية",
-    "feedback-nav-item": "استجابة",
-    "support-nav-item": "ادعمنا",
-    "extension-nav-item": "امتداد الويب",
     "placeholder": "البحث في كل المحتوى",
-    "licenses-nav-item": "التراخيص",
-    "about-tab": "حول",
-    "resources-tab": "موارد",
-    "api-nav-item": "API",
+    "aboutTab": "حول",
+    "resourcesTab": "موارد",
     "loading": "جار التحميل...",
-    "filter-button": {
+    "filterButton": {
       "simple": "مرشحات",
-      "with-count": "{count} عامل التصفية | {count} عوامل التصفية"
+      "withCount": "{count} عامل التصفية | {count} عوامل التصفية"
     },
     "notification": {
       "text": "{example_notification_text}",
@@ -663,7 +653,7 @@
       "primary": "الأولية",
       "menu": "قائمة",
       "search": "بحث",
-      "sr-search": "زر البحث"
+      "srSearch": "زر البحث"
     }
   },
   "notification": {
@@ -677,9 +667,9 @@
     "description": "مكتبة واسعة من الصور المجانية ، والصور ، والصوت ، متاحة للاستخدام المجاني.",
     "aria": {
       "search": "بحث",
-      "search-type": "نوع البحث"
+      "searchType": "نوع البحث"
     },
-    "license-filter": {
+    "licenseFilter": {
       "label": "أريد شيئًا أستطيعه"
     },
     "disclaimer": {
@@ -693,22 +683,22 @@
   "navigation": {
     "about": "حول",
     "licenses": "التراخيص",
-    "get-involved": "شارك",
+    "getInvolved": "شارك",
     "api": "API",
     "privacy": "خصوصية",
     "feedback": "استجابة",
     "sources": "مصادر",
-    "external-sources": "مصادر خارجية",
-    "search-help": "بحث في المساعدة"
+    "externalSources": "مصادر خارجية",
+    "searchHelp": "بحث في المساعدة"
   },
   "footer": {
-    "wordpress-affiliation": "جزء من مشروع {wordpress}",
-    "wip": "\uD83D\uDEA7"
+    "wordpressAffiliation": "جزء من مشروع {wordpress}",
+    "wip": "🚧"
   },
   "language": {
     "language": "لغة"
   },
-  "recent-searches": {
+  "recentSearches": {
     "heading": "عمليات البحث الأخيرة",
     "clear": {
       "text": "مسح",

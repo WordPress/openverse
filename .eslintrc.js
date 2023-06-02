@@ -95,16 +95,7 @@ module.exports = {
         message: "Use the <VLink> component instead of <RouterLink>.",
       },
     ],
-    "no-restricted-syntax": [
-      "error",
-      ...i18nDestructureRules,
-      {
-        selector:
-          "ImportDeclaration[source.value='@vue/test-utils']:has(ImportSpecifier[local.name='shallowMount'])",
-        message:
-          "Do not use @vue/test-utils' `shallowMount`. Use @testing-library/vue's `render` instead.",
-      },
-    ],
+    "no-restricted-syntax": ["error", ...i18nDestructureRules],
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
     "@typescript-eslint/no-var-requires": ["off"],
     "import/no-unresolved": [
@@ -194,9 +185,30 @@ module.exports = {
       },
     },
     {
-      files: ["*.spec.js"],
+      env: { jest: true },
+      files: ["frontend/test/unit/**"],
+      plugins: ["jest"],
+      extends: ["plugin:jest/recommended"],
       rules: {
+        "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
+        "no-restricted-imports": [
+          "error",
+          {
+            name: "pinia",
+            message:
+              "Please import pinia test utils from `~~/test/unit/test-utils/pinia`. The test-utils version ensures proper setup of universally necessary Nuxt context mocks.",
+          },
+        ],
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector:
+              "ImportDeclaration[source.value='@vue/test-utils']:has(ImportSpecifier[local.name='shallowMount'])",
+            message:
+              "Do not use @vue/test-utils' `shallowMount`. Use `~~/test/unit/test-utils/render` instead which includes helpful context setup or @testing-library/vue's `render` directly.",
+          },
+        ],
       },
     },
   ],

@@ -29,7 +29,7 @@
         <div
           class="subtitle mt-1 flex flex-col gap-2 text-base leading-snug lg:flex-row lg:items-center"
         >
-          <i18n as="span" path="audio-track.creator" class="font-semibold">
+          <i18n as="span" path="audioTrack.creator" class="font-semibold">
             <template #creator>
               <VLink
                 class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"

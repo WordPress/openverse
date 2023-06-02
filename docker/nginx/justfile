@@ -12,8 +12,8 @@ NO_COLOR := "\\033[0m"
 
 # Make locally trusted certificates (requires mkcert installed)
 cert:
-    mkdir -p nginx/certs/
+    mkdir -p certs/
     mkcert \
-      -cert-file nginx/certs/openverse.crt \
-      -key-file nginx/certs/openverse.key \
+      -cert-file certs/openverse.crt \
+      -key-file certs/openverse.key \
       dev.openverse.test localhost 127.0.0.1 ::1
