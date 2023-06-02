@@ -120,9 +120,9 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         for start_ts, end_ts in self.large_batches:
             # For each large batch, ingest records for that interval one license
             # type at a time.
-            for license in LICENSE_INFO.keys():
+            for license_ in LICENSE_INFO.keys():
                 super().ingest_records_for_timestamp_pair(
-                    start_ts=start_ts, end_ts=end_ts, license=license
+                    start_ts=start_ts, end_ts=end_ts, license=license_
                 )
         logger.info("Completed large batch processing by license type.")
 
@@ -139,14 +139,14 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
 
             # license will be available in the params if we're dealing
             # with a large batch. If not, fall back to all licenses
-            license = kwargs.get("license", self.default_license_param)
+            license_ = kwargs.get("license", self.default_license_param)
 
             return {
                 "min_upload_date": start_timestamp,
                 "max_upload_date": end_timestamp,
                 "page": 0,
                 "api_key": self.api_key,
-                "license": license,
+                "license": license_,
                 "per_page": self.batch_limit,
                 "method": "flickr.photos.search",
                 "media": "photos",
