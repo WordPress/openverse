@@ -20,10 +20,13 @@ module.exports = async ({ github, context, core }) => {
   const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
 
   const GET_PULL_REQUESTS = `
-      query ($author: String!, $repoOwner: String!, $repo: String!) {
+      query ($repoOwner: String!, $repo: String!) {
         repository(name:$repo, owner:$repoOwner) {
-          pullRequests(states:OPEN, first:100, author:$author) {
+          pullRequests(states:OPEN, first:100) {
             nodes {
+              author {
+                login
+              }
               isDraft
             }
           }
@@ -39,7 +42,7 @@ module.exports = async ({ github, context, core }) => {
     })
 
     const reviewablePRs = result.repository.pullRequests.nodes.filter(
-      (pr) => !pr.isDraft
+      (pr) => pr.author.login === context.actor && !pr.isDraft
     )
 
     if (slackUsername) {
