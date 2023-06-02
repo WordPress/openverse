@@ -64,11 +64,11 @@ describe("getAttribution", () => {
 
   it("does not use anchors in plain-text mode", () => {
     document.body.innerHTML = getAttribution(mediaItem, i18n)
-    expect(document.getElementsByTagName("a").length !== 0)
+    expect(document.getElementsByTagName("a")).not.toHaveLength(0)
     document.body.innerHTML = getAttribution(mediaItem, i18n, {
       isPlaintext: true,
     })
-    expect(document.getElementsByTagName("a").length === 0)
+    expect(document.getElementsByTagName("a")).toHaveLength(0)
   })
 
   it("renders the correct text in plain-text mode", () => {
@@ -89,10 +89,10 @@ describe("getAttribution", () => {
 
   it("does not add license element icons in no-icons mode", () => {
     document.body.innerHTML = getAttribution(mediaItem, i18n)
-    expect(document.getElementsByTagName("img").length !== 0)
+    expect(document.getElementsByTagName("img")).not.toHaveLength(0)
     document.body.innerHTML = getAttribution(mediaItem, i18n, {
       includeIcons: false,
     })
-    expect(document.getElementsByTagName("img").length === 0)
+    expect(document.getElementsByTagName("img")).toHaveLength(0)
   })
 })

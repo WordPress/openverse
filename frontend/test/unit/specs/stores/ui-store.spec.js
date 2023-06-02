@@ -101,11 +101,9 @@ describe("Ui Store", () => {
       for (const key of Object.keys(initialState)) {
         // isMobileUa is set to true only if we explicitly get a mobile UA
         // from cookie or the browser request
-        if (key === "isMobileUa") {
-          expect(uiStore[key]).toEqual(false)
-        } else {
-          expect(uiStore[key]).toEqual(initialState[key])
-        }
+        const exepectedStoreValue =
+          key === "isMobileUa" ? false : initialState[key]
+        expect(uiStore[key]).toEqual(exepectedStoreValue)
       }
     })
 
@@ -271,6 +269,7 @@ describe("Ui Store", () => {
 
       expect(uiStore.dismissedBanners).toEqual(expectedState)
       if (areCookiesSet) {
+        // eslint-disable-next-line jest/no-conditional-expect
         expect(uiStore.$nuxt.$cookies.set).toHaveBeenCalledWith(
           "uiDismissedBanners",
           expectedState,
