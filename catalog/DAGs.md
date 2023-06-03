@@ -716,6 +716,11 @@ snapshot of the production database.
 For a full explanation of the DAG, see the implementation plan description:
 https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag
 
+This DAG can be skipped by setting the `SKIP_STAGING_DATABASE_RESTORE` Airflow
+Variable to `true`. To change this variable, navigate to Admin > Variables in
+the Airflow UI, then click the "edit" button next to the variable and set the
+value to either `true` or `false`.
+
 This DAG will default to using the standard AWS connection ID for the RDS
 operations. For local testing, you can set up two environment variables to have
 the RDS operations run using a different hook:
