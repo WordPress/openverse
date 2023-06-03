@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+
+{% block messages %}
+    <script>
+        function calculateDaysLeft() {
+            let dateToday = new Date();
+            let lastDayOfMonth = new Date(dateToday.getFullYear(), dateToday.getMonth()+1, 0).getDate();
+            let daysUntilEndOfMonth = lastDayOfMonth - dateToday.getDate();
+            document.getElementById("staging-db-refresh-days").innerText = daysUntilEndOfMonth;
+        }
+        document.addEventListener("DOMContentLoaded", calculateDaysLeft);
+    </script>
+    <ul class="messagelist">{% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+    {% endfor %}
+        <li class="warning">Next staging database restore will occur in <span id="staging-db-refresh-days"></span> days.
+            <a href="https://airflow.openverse.engineering/dags/staging_database_restore/grid">View the DAG for information on how to skip this process</a>
+        </li>
+    </ul>
+{% endblock %}
