@@ -28,7 +28,16 @@ class SearchContext:
 
         filtered_index_search = Search(index=f"{origin_index}-filtered")
         filtered_index_search = filtered_index_search.query(
-            Q("terms", id=[result.id for result in results])
+            # Use `identifier` rather than the document `id` due to
+            # `id` instability between refreshes:
+            # https://github.com/WordPress/openverse/issues/2306
+            # `identifier` is mapped as `text` which will match fuzzily.
+            # Use `identifier.keyword` to match _exactly_
+            # cf: https://github.com/WordPress/openverse/issues/2154
+            Q(
+                "terms",
+                **{"identifier.keyword": [result.identifier for result in results]},
+            )
         )
 
         # The default query size is 10, so we need to slice the query
