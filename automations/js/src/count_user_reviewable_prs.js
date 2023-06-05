@@ -19,25 +19,42 @@ module.exports = async ({ github, context, core }) => {
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
   const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
 
+  // Return early if no Slack username
+  if (!slackUsername) {
+    core.warning(`Slack username not found for ${context.actor}.`)
+    return {}
+  }
+
   const GET_PULL_REQUESTS = `
-      query ($repoOwner: String!, $repo: String!, $cursor: String) {
-        repository(name:$repo, owner:$repoOwner) {
-          pullRequests(states:OPEN, first:100, after: $cursor) {
-            nodes {
-              author {
-                login
-              }
-              isDraft
+    query ($repoOwner: String!, $repo: String!, $cursor: String) {
+      repository(name:$repo, owner:$repoOwner) {
+        pullRequests(states:OPEN, first:100, after: $cursor) {
+          nodes {
+            author {
+              login
             }
+            labels(first: 100) {
+              nodes {
+                name
+              }
+            }
+            isDraft
           }
         }
       }
-    `
+    }
+  `
 
   try {
     let hasNextPage = true
     let cursor = null
     let reviewablePRs = []
+
+    const ignoredLabels = [
+      '🤖 aspect: text',
+      '🧱 stack: documentation',
+      'priority: critical',
+    ]
 
     while (hasNextPage) {
       const result = await github.graphql(GET_PULL_REQUESTS, {
@@ -57,17 +74,15 @@ module.exports = async ({ github, context, core }) => {
     }
 
     reviewablePRs = reviewablePRs.filter(
-      (pr) => pr.author.login === context.actor && !pr.isDraft
+      (pr) =>
+        pr.author.login === context.actor &&
+        !pr.isDraft &&
+        !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
     )
 
-    if (slackUsername) {
-      return {
-        pr_count: reviewablePRs.length,
-        slack_username: slackUsername,
-      }
-    } else {
-      core.warning(`Slack username not found for ${context.actor}.`)
-      return {}
+    return {
+      pr_count: reviewablePRs.length,
+      slack_username: slackUsername,
     }
   } catch (error) {
     core.setFailed(`Error fetching pull requests: ${error.message}`)
