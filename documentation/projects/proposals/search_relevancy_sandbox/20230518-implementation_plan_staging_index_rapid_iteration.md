@@ -84,7 +84,6 @@ described above.
 This work does not depend on any other projects and can be implemented at any
 time. In order to be utilized however, a query parameter on the API will need to
 be used for determining which index to query. This has been implemented in
-specifying which index to use for a given query. This has been implemented in
 #2073.
 
 ## Outlined Steps
