@@ -43,21 +43,25 @@ def flickr_thumbnails_removal():
 
     @task()
     def delete(num_thumbs):
+        log_sql = True
         if num_thumbs == 0:
             logger.info("No Flickr thumbnails found.")
 
         while num_thumbs > 0:
             query = dedent(
                 f"""
-                UPDATE image SET thumbnail = NULL WHERE identifier IN
-                (SELECT identifier {select_conditions} FETCH FIRST 10000 ROWS ONLY FOR UPDATE SKIP LOCKED)
+                UPDATE image SET thumbnail = NULL WHERE identifier IN (
+                    SELECT identifier {select_conditions}
+                    FETCH FIRST 10000 ROWS ONLY FOR UPDATE SKIP LOCKED
+                )
                 """
             )
-            pg.run(query)
+            pg.run(query, log_sql=log_sql)
             num_thumbs -= 10000
             logger.info(
                 f"Flickr thumbnails left: {num_thumbs if num_thumbs > 0 else 0}."
             )
+            log_sql = False
 
     @task()
     def report():
