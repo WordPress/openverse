@@ -54,7 +54,7 @@ will need to be added to the list of dependencies for our catalog Docker image.
 This will be done first and deployed on its own, as the connections will be
 needed for the rest of the work.
 
-The
+In order to add this provider, the
 [production requirements](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/catalog/requirements_prod.txt#L5)
 will need to be changed from `apache-airflow[amazon,postgres,http]` to
 `apache-airflow[amazon,postgres,http,elasticsearch]`.
@@ -114,7 +114,10 @@ at a time.
    timestamp of the form `YYYYMMDDHHMMSS`.
 4. `source_index`: (Optional) The existing index on Elasticsearch to use as the
    basis for the new index. If not provided, the index aliased to `media_type`
-   will be used (e.g. `image` for the `image` media type).
+   will be used (e.g. `image` for the `image` media type). In production, the
+   data refresh process creates the index and aliases it to the media type. In
+   staging, the process for creating the indices which can be iterated on here
+   will be defined in a follow-up IP, #1987.
 5. `override_config`: (Optional) A boolean value which can be toggled to replace
    the existing index configuration entirely with the new configuration. If
    `True`, the `index_config` parameter will be used as the entire
@@ -146,26 +149,12 @@ Once the parameters are provided, the DAG will execute the following steps:
    1. Get the current index information. This will be done using the
       [`ElasticsearchPythonHook`](https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_api/airflow/providers/elasticsearch/hooks/elasticsearch/index.html#airflow.providers.elasticsearch.hooks.elasticsearch.ElasticsearchPythonHook),
       specifically the
-      [`index.get` function](https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.get).
+      [`indices.get` function](https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.get).
    2. Extract the relevant settings from the response. They come back in a form
-      that differs from what is rendered by the
-      [`es_mapping.py`](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py)
-      file which generates the index settings on the ingestion server.
-      `es_mapping::index_settings` returns data of the form:
-      ```json
-      {
-        "settings": {
-          "index": {
-            "number_of_shards": 18,
-            "number_of_replicas": 0,
-            "refresh_interval": "-1"
-          },
-          "analysis": {...},
-        },
-        "mapping": {...}
-      }
-      ```
-      However, the `index.get` function returns data of the form:
+      that differs from what is required by the
+      [`indices.create`](https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.create)
+      function of the Elasticsearch Python API. The `indices.get` function
+      returns data of the form:
       ```json
       {
         "<index-name>": {
@@ -184,25 +173,47 @@ Once the parameters are provided, the DAG will execute the following steps:
         }
       }
       ```
-      The returned information will need to be extracted and converted into the
-      form returned by `es_mapping::index_settings` before it is merged with the
-      new configuration.
-3. Create the new index with the configuration generated in step 1. The index
-   name will either be a combination of the `media_type` and `index_suffix`
-   parameters (`{media_type}-{index_suffix}`, e.g. `image-my-special-suffix`),
-   or the `media_type` and a timestamp (`{media_type}-{timestamp}`, e.g.
-   `image-20200102030405`).
+      However, the `indices.create` function expects data of the form:
+      ```json
+      {
+        "settings": {
+          "index": {
+            "number_of_shards": 18,
+            "number_of_replicas": 0,
+            "refresh_interval": "-1"
+          },
+          "analysis": {...},
+        },
+        "mapping": {...}
+      }
+      ```
+      Specifically note that the returned `settings.index.analysis`
+      configuration section needs to be moved to `settings.analysis` instead,
+      and that most of the other index settings (besides those denoted
+      explicitly here, e.g. `number_of_shards`, `number_of_replicas`, and
+      `refresh_interval`) can be discarded. The returned information will need
+      to be extracted and converted into the form expected by `indices.create`
+      before it is merged with the new configuration.
+3. Create the new index with the configuration generated in step 1 using the
+   `ElasticsearchPythonHook`'s
+   [`indices.create`](https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.create)
+   function. The index name will either be a combination of the `media_type` and
+   `index_suffix` parameters (`{media_type}-{index_suffix}`, e.g.
+   `image-my-special-suffix`), or the `media_type` and a timestamp
+   (`{media_type}-{timestamp}`, e.g. `image-20200102030405`).
    ([example from the existing ingestion server code](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L518-L521)).
-4. Initiate a reindex using the `source_index` as the source
+4. Initiate a reindex using the `source_index` as the source and the
+   [`reindex`](https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.Elasticsearch.reindex)
+   function of the Elasticsearch Python API
    ([example from the ingestion server](https://github.com/WordPress/openverse/blob/3fcce5ade2165955db5bbcb4f679257b3260547b/ingestion_server/ingestion_server/indexer.py#L525-L547)).
-   Rather than setting `wait_for_completion=True` on the ES reindex call and
-   having this step halt until the reindex is complete, this step will set
-   `wait_for_completion=False` and continue to the next step. The
+   Rather than setting `wait_for_completion=True` on the ES Python API reindex
+   call and having this step halt until the reindex is complete, this step will
+   set `wait_for_completion=False` and continue to the next step. The
    [task ID returned from Elasticsearch for the reindex operation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html#docs-reindex-task-api)
    will be stored in an XCom variable. This step will have `refresh=True` on the
-   request to ensure the reindex will immediately refresh after completion to
-   make the data available to searches. It will also need `slices=auto` so the
-   indexing is parallelized.
+   function call to ensure the reindex will immediately refresh after completion
+   to make the data available to searches. It will also need `slices='auto'` so
+   the indexing is parallelized.
 5. Use a sensor and the previously emitted task ID to wait for the reindex to
    complete. This will check the task using the
    [Task API](https://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html).
