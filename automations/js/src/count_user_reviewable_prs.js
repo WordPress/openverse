@@ -1,5 +1,4 @@
 // @ts-check
-
 /**
  * Checks the reviewable PR count for the current Github actor.
  * Return their Slack username and PR count, if found.
@@ -18,13 +17,6 @@ module.exports = async ({ github, context, core }) => {
 
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
   const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
-
-  // Return early if no Slack username
-  if (!slackUsername) {
-    core.warning(`Slack username not found for ${context.actor}.`)
-    return {}
-  }
-
   const GET_PULL_REQUESTS = `
     query ($repoOwner: String!, $repo: String!, $cursor: String) {
       repository(name:$repo, owner:$repoOwner) {
@@ -44,17 +36,22 @@ module.exports = async ({ github, context, core }) => {
       }
     }
   `
+  const ignoredLabels = [
+    '🤖 aspect: text',
+    '🧱 stack: documentation',
+    'priority: critical',
+  ]
+
+  // Return early if no Slack username
+  if (!slackUsername) {
+    core.warning(`Slack username not found for ${context.actor}.`)
+    return {}
+  }
 
   try {
     let hasNextPage = true
     let cursor = null
     let reviewablePRs = []
-
-    const ignoredLabels = [
-      '🤖 aspect: text',
-      '🧱 stack: documentation',
-      'priority: critical',
-    ]
 
     while (hasNextPage) {
       const result = await github.graphql(GET_PULL_REQUESTS, {
@@ -64,7 +61,13 @@ module.exports = async ({ github, context, core }) => {
       })
 
       const { nodes, pageInfo } = result.repository.pullRequests
-      reviewablePRs.push(...nodes)
+      const validPRs = nodes.filter(
+        (pr) =>
+          pr.author.login === context.actor &&
+          !pr.isDraft &&
+          !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
+      )
+      reviewablePRs.push(...validPRs)
 
       if (pageInfo.hasNextPage) {
         cursor = pageInfo.endCursor
@@ -72,13 +75,6 @@ module.exports = async ({ github, context, core }) => {
         hasNextPage = false
       }
     }
-
-    reviewablePRs = reviewablePRs.filter(
-      (pr) =>
-        pr.author.login === context.actor &&
-        !pr.isDraft &&
-        !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
-    )
 
     return {
       pr_count: reviewablePRs.length,
