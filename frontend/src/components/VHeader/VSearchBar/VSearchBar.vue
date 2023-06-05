@@ -45,7 +45,7 @@
         v-show="isRecentVisible"
         :selected-idx="selectedIdx"
         :entries="entries"
-        class="absolute inset-x-0 lg:flex"
+        class="absolute inset-x-0 z-popover lg:flex"
         :class="recentClasses"
         @select="handleSelect"
         @clear="handleClear"

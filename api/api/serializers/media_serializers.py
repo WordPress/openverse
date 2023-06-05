@@ -58,7 +58,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "filter_dead",
         "extension",
         "mature",
-        "qa",
         # Excluded unstable fields, also see `exclude_fields` above.
         # "unstable__sort_by",
         # "unstable__sort_dir",
@@ -124,13 +123,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         default=False,
         required=False,
         help_text="Whether to include content for mature audiences.",
-    )
-    qa = serializers.BooleanField(
-        label="quality_assurance",
-        help_text="If enabled, searches are performed against the quality"
-        " assurance index instead of production.",
-        required=False,
-        default=False,
     )
 
     # The ``unstable__`` prefix is used in the query params.
@@ -335,11 +327,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         if errors:
             raise serializers.ValidationError(errors)
 
-        if "qa" in self.initial_data and "internal__index" in self.initial_data:
-            raise serializers.ValidationError(
-                "Cannot set both 'qa' and 'internal__index'. "
-                "Use exactly one of these."
-            )
         return data
 
     @property

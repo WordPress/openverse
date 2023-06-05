@@ -183,30 +183,6 @@ def test_search_request_serializer_include_sensitive_results_malformed_request(d
 @pytest.mark.django_db
 @patch("django.conf.settings.ES")
 @pytest.mark.parametrize(
-    "data",
-    (
-        {"qa": True, "internal__index": "some-index"},
-        {"qa": False, "internal__index": "some-index"},
-    ),
-)
-def test_search_request_serializer_fails_contradictory_params(
-    mock_es, data, authed_request
-):
-    mock_es.indices.exists.return_value = True
-
-    serializer = MediaSearchRequestSerializer(
-        data=data, context={"request": authed_request}
-    )
-    assert not serializer.is_valid()
-    assert (
-        "Cannot set both 'qa' and 'internal__index'."
-        in serializer.errors["non_field_errors"][0]
-    )
-
-
-@pytest.mark.django_db
-@patch("django.conf.settings.ES")
-@pytest.mark.parametrize(
     "authenticated",
     (
         True,
