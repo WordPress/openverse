@@ -1,6 +1,7 @@
 {% extends "admin/base_site.html" %}
 
 {% block messages %}
+    {% if ENVIRONMENT != 'production' %}
     <script>
         function calculateDaysLeft() {
             let dateToday = new Date();
@@ -17,4 +18,5 @@
             <a href="https://airflow.openverse.engineering/dags/staging_database_restore/grid">View the DAG for information on how to skip this process</a>
         </li>
     </ul>
+    {% else %}{{ block.super }}{% endif %}
 {% endblock %}
