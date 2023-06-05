@@ -27,9 +27,13 @@ This implementation plan concerns the copy changes necessary for updating
 references of `mature` content to `sensitive` content. These changes will be
 made to the frontend and Django API, both in code and in web-facing copy. There
 should be no design changes or new features as part of this plan, only changes
-to copy/text itself. Field and model names for the API should also be updated
-when possible, but without the need for database migrations (i.e., using
+to copy/text itself. The initial approach for this effort was to only update
+field and model names for the API without the need for database migrations
+(i.e., using
 [Django's built-in tools for specifying different underlying names for fields and tables](https://docs.djangoproject.com/en/4.2/ref/models/options/#table-names)).
+After some discussion however, we decided that now would be an ideal time to
+perform the migrations since the process will only become more difficult and
+take longer as the tables/columns grow.
 
 ## Expected Outcomes
 
@@ -52,9 +56,7 @@ are broken into two aspects (code and copy).
 
 #### Code
 
-The following models will need to be updated. Since we want to avoid a migration
-with this work, they will need to
-[explicitly reference the old table names using `Meta::db_table`](https://docs.djangoproject.com/en/4.2/ref/models/options/#table-names).
+The following model names will need to be updated:
 
 - [`AbstractMatureMedia`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L334-L333)
 - [`MatureImage`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/image.py#L83)
@@ -65,9 +67,52 @@ The
 (and
 [`mature_filtered`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L18-L17)
 value) in `AbstractMediaReport` definition will also need to be changed to
-`sensitive` and `sensitive_filtered` respectively. In order to remain backwards
-compatible with the frontend, incoming references on reports for `mature` will
-need to be mapped to the new value.
+`sensitive` and `sensitive_filtered` respectively. The migration necessary for
+changing the data is described below, however the API will need to continue to
+accept `mature` as a report reason and convert it internally to `sensitive` (at
+least until we decide to make a version change to the API). The media report
+tables already use table aliases as well
+([`ImageReport`](https://github.com/WordPress/openverse/blob/7b95a4c8eaa9804f53b4be7ac969e04ca437695a/api/api/models/image.py#L121-L122)
+and
+[`AudioReport`](https://github.com/WordPress/openverse/blob/7b95a4c8eaa9804f53b4be7ac969e04ca437695a/api/api/models/audio.py#L304-L305)) -
+since we're already performing table renames as part of this IP, it makes sense
+to rename these tables for the same reason.
+
+In order to perform both of these changes in a
+[zero-downtime manner](https://docs.openverse.org/general/zero_downtime_database_management.html),
+the following steps will need to be taken:
+
+1. Add new models with updated names and fields for `SensitiveImage` and
+   `SensitiveAudio`. Also add new models for `ImageReport` and `AudioReport`.
+   This will require renaming code references from the existing `ImageReport`
+   and `AudioReport` models to `NsfwReport` and `NsfwReportAudio` temporarily
+   while maintaining the reference to the existing table name. Said another way:
+   - `ImageReport` -> `NsfwReport` _(code only, `db_table` should remain the
+     same)_
+   - `AudioReport` -> `NsfwReportAudio` _(code only, `db_table` should remain
+     the same)_
+   - Add `ImageReport` _(new model, `db_table` will not need to be overridden)_
+   - Add `AudioReport` _(new model, `db_table` will not need to be overridden)_
+2. Modify the API to write to both the old and new tables for each of the above
+   instances. On the new report tables, the `mature_filtered` reason should be
+   written as `sensitive_filtered`. Data should continue to be read from the
+   original tables during this time.
+3. Deploy this version of the API.
+4. Create a
+   [data management command](https://docs.openverse.org/general/zero_downtime_database_management.html#django-management-command-based-data-transformations)
+   which copies all data from the original tables to the new tables. The
+   `identifier` field can be used for determining which rows have already been
+   copied.
+5. Deploy this version of the API and run the data management command until no
+   more rows need to be copied for each of the columns.
+6. Remove all code references to the old model from the API, but leave the
+   models in place for the time being. Data should now only be written to and
+   read from the new tables.
+7. Deploy this version of the API so that the only versions currently deployed
+   are writing to the new tables.
+8. Remove the old models (`MatureImage`, `MatureAudio`, `NsfwReport`,
+   `NsfwReportAudio`) from the API codebase and deploy this version of the API.
+   This will remove the old tables from the database.
 
 Per the
 [detecting sensitive textual content project plan](https://docs.openverse.org/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html#designation-of-results-with-sensitive-terms),
@@ -78,7 +123,7 @@ purview of this IP.
 
 The Elasticsearch model property
 [`mature`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/ingestion_server/ingestion_server/elasticsearch_models.py#L118)
-will also not be affected.
+will also not be affected as part of this effort.
 
 #### Copy
 
@@ -92,6 +137,8 @@ updated are the `help_text` values in the following places:
 - [`AbstractMatureMedia::media_obj`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L356)
 - [`MediaSerializer::mature`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/serializers/media_serializers.py#L433)
 - [`MediaSearchRequestSerializer::mature`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/serializers/media_serializers.py#L122)
+
+Changes to `help_text` will produce no-op migrations within Django.
 
 ### Frontend
 
@@ -147,7 +194,7 @@ parameter will be changed to `include_sensitive_results` in the API
 #### Copy
 
 Almost all copy changes necessary can be made in the
-[`en.json5` base translations file](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/frontend/src/locales/scripts/en.json5#L1-L0).
+[`en.json5` base translations file](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/frontend/src/locales/scripts/en.json5).
 The `filters.mature` key can be removed entirely, as it references a filter
 which no longer exists.
 
@@ -157,8 +204,9 @@ which no longer exists.
 
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
-No infrastructure changes are necessary for this copy change. A migration may be
-generated, but it should be a no-op.
+This work will include several migrations for the API, which will need to be
+deployed one after another in production as described in
+[the API section](#api).
 
 ### Tools & packages
 
@@ -215,9 +263,12 @@ No accessibility changes should be necessary, as this should only affect copy.
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
 In the case that we needed to roll back, the code and copy changes could be
-easily undone. Since we're not changing the underlying table names, a rollback
-should similarly not necessitate a migration (or at least one with SQL
-operations associated with it).
+easily undone.
+
+The API changes would be more difficult to roll back, as they would require the
+reverse of the multi-step migrations described in [the API section](#api). This
+would still be feasible, but we should be clear before moving forward that the
+changes to the table names are ones we wish to make at this juncture.
 
 ## Localization
 
