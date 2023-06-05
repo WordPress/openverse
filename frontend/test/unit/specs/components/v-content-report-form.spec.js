@@ -166,7 +166,8 @@ describe("VContentReportForm", () => {
     const description = "1234567890123456789"
     await fireEvent.update(getDescriptionTextarea(), description)
 
-    // The button is not fully disabled, it uses `aria-disabled` attribute for a11y
+    // The button is not fully disabled, it uses `aria-disabled` attribute so that
+    // it remains focusable for screen readers to access the context.
     expect(await getReportButton()).toHaveAttribute("aria-disabled", "true")
 
     await fireEvent.update(getDescriptionTextarea(), description + "0") // Valid, 20 characters
