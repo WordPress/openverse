@@ -212,7 +212,7 @@ module.exports = {
             selector:
               "ImportDeclaration[source.value='@playwright/test']:has(ImportSpecifier[local.name='test'])",
             message:
-              "Do not import 'test' from '@playwright/test'. Use 'import { test } from '~~/test/playwright/utils/test-fixture' instead.",
+              "Do not import 'test' from '@playwright/test'. Use 'import { test } from '~~/test/playwright/utils/test-fixture' instead, which mocks Openverse provider APIs and the analytics server.",
           },
         ],
       },
