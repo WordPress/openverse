@@ -29,10 +29,16 @@ if they already have several PRs with reviews requested.
 
 ## Sentry review
 
-While the Openverse Mini-Support Rotation covers recording and triaging _new_
-Sentry issues, it does not include regularly checking the frequency of existing
-issues. You can review Sentry issues by frequency by visiting the following
-links:
+While the Openverse Mini-Support Rotation[^msr] covers recording and triaging
+_new_ Sentry issues, it does not include regularly checking the frequency of
+existing issues. You can review Sentry issues by frequency by visiting the
+following links:
+
+[^msr]:
+    The Openverse Mini-Support Rotation is managed by the core maintainers. Each
+    week, one of the maintainers takes on several responsibilities for regular
+    maintenance tasks, one of which is to check Sentry for new events that need
+    to be converted into GitHub issues.
 
 - [Django API](https://openverse.sentry.io/issues/?project=6107216&query=is%3Aunresolved&referrer=issue-list&sort=freq&statsPeriod=30d)
 - [Frontend](https://openverse.sentry.io/issues/?project=5799642&query=is%3Aunresolved&referrer=issue-list&sort=freq&statsPeriod=30d)

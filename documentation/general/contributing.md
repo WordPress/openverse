@@ -191,11 +191,11 @@ for a variety of reasons. For example, they can:
 - require additional context before they can be worked on
 - refer to implementation details that are no longer relevant due to
   infrastructural or design changes
-- the prioritisation of an issue could need changing
+- require changes in prioritisation
 
 These conditions cannot be easily identified automatically and require regular,
 ongoing work from contributors. Additionally, important issues can be
-accidentally ignored dur to the breadth of our backlog and it is critical for
+accidentally ignored due to the breadth of our backlog and it is critical for
 maintainers to dig through the oldest issues to ensure that issue prioritisation
 still makes sense.
 
@@ -218,9 +218,8 @@ and someone will help clear up any doubts.
 
 Issues may not have all the context required for them to be worked on. This can
 be caused by someone opening issues in a hurry, by the context around an issue
-changing over time, by links meant to clarify the context rotting, or other
-myriad reasons. If you identify an issue that needs more context, there are two
-options:
+changing over time, by outdated or broken links, and other myriad reasons. If
+you identify an issue that needs more context, there are two options:
 
 1. You can research and add the context yourself. In this case, it is a good
    idea to ping the person who originally opened the issue or other folks
@@ -237,6 +236,12 @@ identifies issues that require research or explanation before they can be worked
 on. If you are able to clarify any of these issues, please do so and ping a
 relevant maintainer to confirm the changes and remove the ticket work required
 label.
+
+Additionally, if you find issues that you're able to contribute context towards
+such that they would be good candidates for "good first issue" or "help wanted",
+please add those labels as well after you make your changes. This especially
+helps the new contributor experience as issues with clear instructions and good
+context are the most pleasant to work on when you first contribute to a project.
 
 In the course of this work, you may find issues that should be
 [closed because they are no longer valid](#closing-no-longer-valid-issues).
