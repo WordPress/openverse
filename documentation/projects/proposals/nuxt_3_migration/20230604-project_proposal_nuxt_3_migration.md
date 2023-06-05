@@ -30,7 +30,10 @@ Developer experience
 - All the current functionality should work as expected.
 - All the dependencies should be either updated to latest versions that support
   Nuxt 3 or replaced with the ones that support Nuxt 3.
-- (Optional) Nuxt app should use node version 20, and pnpm version 8.
+
+- Nuxt app should migrate from node version 16 to the active LTS version 18 (or
+  the current version 20, which will become active LTS on 2023-10-24).
+- (Optional) Nuxt app should migrate to pnpm version 8
 
 ## Success
 
