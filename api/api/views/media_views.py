@@ -29,7 +29,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
     model_class = None
     query_serializer_class = None
     default_index = None
-    qa_index = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,7 +36,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
             self.model_class,
             self.query_serializer_class,
             self.default_index,
-            self.qa_index,
         ]
         if any(val is None for val in required_fields):
             msg = "Viewset fields are not completely populated."
@@ -82,14 +80,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         page = self.paginator.page = params.data["page"]
 
         hashed_ip = hash(self._get_user_ip(request))
-        qa = params.validated_data["qa"]
         filter_dead = params.validated_data["filter_dead"]
 
-        if qa:
-            logger.info("Using QA index for media.")
-            search_index = self.qa_index
-            exact_index = False
-        elif pref_index := params.validated_data.get("index"):
+        if pref_index := params.validated_data.get("index"):
             logger.info(f"Using preferred index {pref_index} for media.")
             search_index = pref_index
             exact_index = True

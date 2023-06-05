@@ -40,7 +40,6 @@ class AudioViewSet(MediaViewSet):
     model_class = Audio
     query_serializer_class = AudioSearchRequestSerializer
     default_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
-    qa_index = "search-qa-audio"
 
     serializer_class = AudioSerializer
 

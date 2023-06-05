@@ -36,7 +36,6 @@ from ingestion_server.distributed_reindex_scheduler import schedule_distributed_
 from ingestion_server.elasticsearch_models import media_type_to_elasticsearch_model
 from ingestion_server.es_helpers import get_stat
 from ingestion_server.es_mapping import index_settings
-from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
 from ingestion_server.utils.sensitive_terms import get_sensitive_terms
 
@@ -337,17 +336,6 @@ class TableIndexer:
         self.replicate(model_name, model_name, destination_index, query)
         self.refresh(destination_index)
         self.ping_callback()
-
-    def load_test_data(self, model_name: str, **_):
-        """
-        Create test indices in Elasticsearch for QA.
-
-        :param model_name: the name of the media type
-        """
-
-        create_search_qa_index(model_name)
-        if self.progress is not None:
-            self.progress.value = 100  # mark job as completed
 
     def point_alias(self, model_name: str, index_suffix: str, alias: str, **_):
         """
