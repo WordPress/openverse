@@ -37,7 +37,7 @@ import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { IsSidebarVisibleKey } from "~/types/provides"
+import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
 import VSearchGrid from "~/components/VSearchGrid.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
@@ -64,7 +64,7 @@ export default defineComponent({
     }
     next()
   },
-  layout: "content-layout",
+  layout: "search-layout",
   middleware({ route, redirect }) {
     /**
      * This anonymous middleware redirects any search without a query to the homepage.
@@ -78,7 +78,7 @@ export default defineComponent({
   setup() {
     const searchGridRef = ref<InstanceType<typeof VSearchGrid> | null>(null)
 
-    const showScrollButton = inject("showScrollButton")
+    const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
