@@ -1,9 +1,8 @@
-# Trust and Safety
+# Nuxt 3 Migration
 
 ```{toctree}
 :titlesonly:
 :glob:
 
 *
-*/index
 ```
