@@ -50,7 +50,7 @@ def flickr_thumbnails_removal():
             query = dedent(
                 f"""
                 UPDATE image SET thumbnail = NULL WHERE identifier IN
-                (SELECT identifier {select_conditions} FETCH FIRST 10000 ROWS ONLY)
+                (SELECT identifier {select_conditions} FETCH FIRST 10000 ROWS ONLY FOR UPDATE SKIP LOCKED)
                 """
             )
             pg.run(query)
