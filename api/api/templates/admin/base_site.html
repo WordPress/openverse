@@ -4,9 +4,9 @@
     {% if ENVIRONMENT != 'production' %}
     <script>
         function calculateDaysLeft() {
-            let dateToday = new Date();
-            let lastDayOfMonth = new Date(dateToday.getFullYear(), dateToday.getMonth()+1, 0).getDate();
-            let daysUntilEndOfMonth = lastDayOfMonth - dateToday.getDate();
+            let dateToday = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate()));
+            let lastDayOfMonth = new Date(Date.UTC(dateToday.getUTCFullYear(), dateToday.getUTCMonth() + 1, 0)).getUTCDate();
+            let daysUntilEndOfMonth = lastDayOfMonth - dateToday.getUTCDate();
             document.getElementById("staging-db-refresh-days").innerText = daysUntilEndOfMonth;
         }
         document.addEventListener("DOMContentLoaded", calculateDaysLeft);
