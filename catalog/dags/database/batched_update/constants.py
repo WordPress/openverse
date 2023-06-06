@@ -6,7 +6,7 @@ START_DATE = datetime(2023, 5, 1)
 SLACK_USERNAME = "Upstream Batched Update"
 SLACK_ICON = ":database:"
 
-DEFAULT_BATCH_SIZE = 100  # 10_000
+DEFAULT_BATCH_SIZE = 10_000
 DAGRUN_TIMEOUT = timedelta(days=31 * 3)
 SELECT_TIMEOUT = timedelta(hours=24)
 UPDATE_TIMEOUT = timedelta(days=30 * 3)  # 3 months
