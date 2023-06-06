@@ -157,8 +157,7 @@ def batched_update():
     perform_batched_update = update_batches.override(
         execution_timeout=constants.UPDATE_TIMEOUT
     )(
-        sql_template=constants.UPDATE_BATCH_QUERY,
-        total=select_rows_to_update,
+        expected_row_count=select_rows_to_update,
         batch_size="{{ params.batch_size }}",
         dry_run="{{ params.dry_run }}",
         table_name="{{ params.table_name }}",

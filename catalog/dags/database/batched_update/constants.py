@@ -19,8 +19,7 @@ CREATE_TEMP_TABLE_QUERY = """
     CREATE TABLE {temp_table_name} AS
     SELECT ROW_NUMBER() OVER() row_id, identifier
     FROM {table_name}
-    {select_query}
-    AND updated_on < NOW();
+    {select_query};
     """
 CREATE_TEMP_TABLE_INDEX_QUERY = "CREATE INDEX ON {temp_table_name}(row_id)"
 UPDATE_BATCH_QUERY = """

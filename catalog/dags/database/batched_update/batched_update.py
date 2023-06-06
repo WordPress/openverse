@@ -40,10 +40,10 @@ def run_sql(
             " rerun the DAG with the conf option `'dry_run': false`."
         )
         logger.info(query)
-        return
+        return 0
 
     postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id,
+        postgres_conn_id=POSTGRES_CONN_ID,
         default_statement_timeout=(
             timeout if timeout else PostgresHook.get_execution_timeout(task)
         ),
@@ -55,8 +55,7 @@ def run_sql(
 
 @task
 def update_batches(
-    sql_template: str,
-    total: int,
+    expected_row_count: int,
     batch_size: int,
     dry_run: bool,
     table_name: str,
@@ -67,17 +66,11 @@ def update_batches(
     task: AbstractOperator = None,
     **kwargs,
 ):
-    PostgresHook(
-        postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
-        log_sql=False,
-    )
-
     # We iterate over row_index, which is 1-indexed
     batch_start = 1
     total_count = 0
 
-    while batch_start <= total:
+    while batch_start <= expected_row_count:
         batch_end = batch_start + batch_size
 
         logger.info(f"Updating rows with id {batch_start} through {batch_end}.")
@@ -93,12 +86,14 @@ def update_batches(
             update_query=update_query,
             batch_start=batch_start,
             batch_end=batch_end,
+            postgres_conn_id=postgres_conn_id,
         )
 
         total_count += count
         batch_start = batch_end
-
-        logger.info(f"Updated {total_count} rows. {total - total_count} remaining.")
+        logger.info(
+            f"Updated {total_count} rows. {expected_row_count - total_count} remaining."
+        )
 
     return total_count
 
