@@ -210,7 +210,6 @@ module.exports = {
               "Do not use @vue/test-utils' `shallowMount`. Use `~~/test/unit/test-utils/render` instead which includes helpful context setup or @testing-library/vue's `render` directly.",
           },
         ],
-        "@intlify/vue-i18n/no-raw-text": "off",
       },
     },
     {
