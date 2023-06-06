@@ -207,7 +207,7 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleRightClick = (image: { id: string, originalTitle: string }) => {
+    const handleRightClick = (image: { id: string }) => {
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
         set: image.originalTitle,
         identifier: image.id,
