@@ -104,7 +104,7 @@ import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
-import { useAnalytics } from "../../../composables/use-analytics"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
