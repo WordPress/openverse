@@ -24,9 +24,7 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "text")
   })
 
-  // https://github.com/WordPress/openverse/issues/2222
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip("should allow changing the type", () => {
+  it("should allow changing the type", () => {
     render(VInputField, {
       attrs: {
         placeholder: "Enter some number",
@@ -34,7 +32,6 @@ describe("VInputField", () => {
       },
       propsData: props,
     })
-
     const element = screen.getByPlaceholderText("Enter some number")
 
     expect(element).toHaveAttribute("type", "number")
