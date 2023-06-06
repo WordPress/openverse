@@ -29,7 +29,7 @@
             :class="idx >= imageCount ? 'hidden' : 'block'"
             :style="{ '--delay': `${idx * 0.05}s` }"
             :href="image.url"
-            @click="handleClick(image)"
+            @click="handleClick(image.identifier)"
           >
             <img
               :height="dimens"
