@@ -19,8 +19,26 @@ Once you've made some changes to the codebase, it is important to run tests.
    about the [OpenSSL prerequisite](/general/general_setup.md#openssl).
    ```
 
-3. Run the tests.
+3. Run the integration tests.
 
    ```console
    $ just ingestion_server/test-local
    ```
+Note that if an `.env` file exists in the folder you're running `just` from, it may
+interfere with the integration test variables and cause unexpected failures.
+
+## Making requests
+
+To make cURL requests to the server
+
+```bash
+pipenv run \
+  curl \
+    --XPOST localhost:8001/task \
+    -H "Content-Type: application/json" \
+    -d '{"model": <model>, "action": <action>}'
+```
+
+Replace `<model>` and `<action>` with the correct values. For example, to
+download and index all new images, `<model>` will be `"image"` and `<action>`
+will be `"INGEST_UPSTREAM"`.
