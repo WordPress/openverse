@@ -40,6 +40,12 @@ export type Events = {
     /** the identifier of the image */
     identifier: string
   },
+  /**
+   * Description: The user right clicks a single image result, most likely to download it.
+   * Questions:
+   *   - Do users right-click images often? Does this suggest downloading them directly,
+   *     when not paired with a `GET_MEDIA` event?
+   */
   RIGHT_CLICK_IMAGE: {
     set: string,
     identifier: string
