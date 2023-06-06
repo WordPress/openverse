@@ -1,4 +1,4 @@
-from conf.settings.sentry import ENVIRONMENT
+from conf.settings.base import ENVIRONMENT
 
 
 def export_environment(request):
