@@ -39,7 +39,7 @@ export type Events = {
     set: string
     /** the identifier of the image */
     identifier: string
-  },
+  }
   /**
    * Description: The user right clicks a single image result, most likely to download it.
    * Questions:
