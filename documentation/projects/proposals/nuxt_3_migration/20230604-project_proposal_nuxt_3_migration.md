@@ -6,8 +6,8 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] @zackkrida - for previous experience of migrating the project to Nuxt
-- [ ] @sarayourfriend - for extensive experience on the frontend
+- [x] @zackkrida - for previous experience of migrating the project to Nuxt
+- [x] @sarayourfriend - for extensive experience on the frontend
 
 ## Project summary
 
