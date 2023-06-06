@@ -15,6 +15,7 @@
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
+        @contextmenu="handleRightClick(image.identifier)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -204,6 +205,12 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
+    const handleRightClick = (identifier: string) => {
+      sendCustomEvent("RIGHT_CLICK_IMAGE", {
+        identifier,
+      })
+    }
+
     const sendGetMediaEvent = () => {
       if (!image.value) {
         return
@@ -228,6 +235,7 @@ export default defineComponent({
       sketchFabUid,
       onImageLoaded,
       onImageError,
+      handleRightClick,
       backToSearchPath,
 
       sendGetMediaEvent,
