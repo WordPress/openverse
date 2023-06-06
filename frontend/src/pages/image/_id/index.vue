@@ -209,7 +209,6 @@ export default defineComponent({
 
     const handleRightClick = (image: { id: string }) => {
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
-        set: image.originalTitle,
         identifier: image.id,
 
     const sendGetMediaEvent = () => {
