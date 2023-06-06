@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Send notification
         run: |
-          msg="Howdy $slack_username! \nYou currently have $pr_count number of PRs open with requested reviews (totalling $((pr_count * 2)) required reviews). To help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing [this list of ways to contribute](https://docs.openverse.org/general/contributing.html#non-code-contributions) instead of working on new code contributions."
+          msg="Howdy $slack_username! \nYou currently have $pr_count number of PRs open with requested reviews (totalling $((pr_count * 2)) required reviews). To help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing [this list of ways to contribute](https://docs.openverse.org/meta/maintainer_tasks.html) instead of working on new code contributions."
 
           curl \
             "$slack_url" \
