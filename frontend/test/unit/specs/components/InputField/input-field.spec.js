@@ -32,6 +32,7 @@ describe("VInputField", () => {
       },
       propsData: props,
     })
+
     const element = screen.getByPlaceholderText("Enter some number")
 
     expect(element).toHaveAttribute("type", "number")
