@@ -79,13 +79,13 @@ def update_batches(
             query_id=query_id,
             # Only log the query the first time, so as not to spam the logs
             log_sql=batch_start == 1,
-            timeout=update_timeout,
+            postgres_conn_id=postgres_conn_id,
             task=task,
+            timeout=update_timeout,
             table_name=table_name,
             update_query=update_query,
             batch_start=batch_start,
             batch_end=batch_end,
-            postgres_conn_id=postgres_conn_id,
         )
 
         updated_count += count
