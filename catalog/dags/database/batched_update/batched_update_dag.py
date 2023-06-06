@@ -67,11 +67,12 @@ logger = logging.getLogger(__name__)
     schedule=None,
     start_date=constants.START_DATE,
     tags=["database"],
-    max_active_runs=10,  # TODO make this a larger number?
+    # This allows for multiple concurrent batched updates to run, for example popularity
+    # refreshes for each provider
+    max_active_runs=10,
     dagrun_timeout=constants.DAGRUN_TIMEOUT,
     doc_md=__doc__,
     default_args={
-        # TODO: default task timeouts
         **DAG_DEFAULT_ARGS,
         "retries": 0,
     },
