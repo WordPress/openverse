@@ -122,7 +122,7 @@ repos:
         "types": [file] # ESLint only accepts [javascript] by default.
         language: system
         pass_filenames: false
-        entry: bash -c 'pnpm exec eslint --ext .js,.ts,.vue --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js'
+        entry: bash -c 'pnpm exec eslint --fix --ext .js,.ts,.vue --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js .pnpmfile.cjs .eslintrc.js prettier.config.js'
       - id: test:unit
         name: test:unit
         files: ^frontend/.*$

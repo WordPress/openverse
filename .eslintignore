@@ -6,3 +6,5 @@ frontend/nuxt-template-overrides
 frontend/storybook-static
 # ESLint ignores hidden by default, so this must be explicity un-ignored
 !frontend/.storybook
+
+!.pnpmfile.cjs
