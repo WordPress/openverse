@@ -27,7 +27,7 @@ Required Dagrun Configuration parameters:
 
 Optional Arguments:
 
-* dry_run: bool, whether to actually run the generated SQL. False by default.
+* dry_run: bool, whether to actually run the generated SQL. True by default.
 * batch_size: int number of records to process in each batch. By default, 10_000
 * update_timeout: int number of seconds to run an individual batch update before timing
                   out. By default, 3600 (or one hour)

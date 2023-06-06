@@ -42,6 +42,7 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
+| [`batched_update`](#batched_update)                                               | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
@@ -112,6 +113,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
 1.  [`audio_data_refresh`](#audio_data_refresh)
+1.  [`batched_update`](#batched_update)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
@@ -218,6 +220,56 @@ and related PRs:
 
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
+
+## `batched_update`
+
+Batched Update DAG
+
+This DAG is used to run a batched SQL update on a media table in the Catalog
+database. It is automatically triggered by the `popularity_refresh` DAGs to
+refresh popularity data using newly calculated constants, but can also be
+triggered manually with custom SQL operations.
+
+The DAG must be run with a valid dag_run configuration specifying the SQL
+commands to be run. The DAG will then split the rows to be updated into batches,
+and report to Slack when all batches have been updated. It handles all
+deadlocking and timeout concerns, ensuring that the provided SQL is run without
+interfering with ingestion. For more information, see the implementation plan:
+https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html#special-considerations-avoiding-deadlocks-and-timeouts
+
+By default the DAG will run as a dry_run, logging the generated SQL but not
+actually running it. To actually perform the update, the `dry_run` parameter
+must be explicitly set to `false` in the configuration.
+
+Required Dagrun Configuration parameters:
+
+- query_id: a string identifier which will be appended to temporary table used
+  in the update
+- table_name: the name of the table to update. Must be a valid media table
+- select_query: a SQL `WHERE` clause used to select the rows that will be
+  updated
+- update_query: the SQL `UPDATE` expression to be run on all selected rows
+
+Optional Arguments:
+
+- dry_run: bool, whether to actually run the generated SQL. True by default.
+- batch_size: int number of records to process in each batch. By default, 10_000
+- update_timeout: int number of seconds to run an individual batch update before
+  timing out. By default, 3600 (or one hour)
+
+An example dag_run configuration used to set the thumbnails of all Flickr images
+to null would look like this:
+
+```
+{
+    "query_id": "my_flickr_query",
+    "table_name": "image",
+    "select_query": "WHERE provider='flickr'",
+    "update_query": "SET thumbnail=null",
+    "batch_size": 10,
+    "dry_run": false
+}
+```
 
 ## `check_silenced_dags`
 
