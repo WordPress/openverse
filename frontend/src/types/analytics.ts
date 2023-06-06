@@ -47,7 +47,6 @@ export type Events = {
    *     when not paired with a `GET_MEDIA` event?
    */
   RIGHT_CLICK_IMAGE: {
-    set: string,
     identifier: string
   }
   /**
