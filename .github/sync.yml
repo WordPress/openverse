@@ -3,11 +3,14 @@
 # Workflow: Meta file sync
 
 group:
-  # Openverse
   - repos: |
-      WordPress/openverse-catalog
       WordPress/openverse-infrastructure
     files:
+      # Dependencies for some workflows
+      - source: automations/python/
+        dest: automations/python/
+      - source: automations/data/
+        dest: automations/data/
       # Synced workflows
       - source: .github/workflows/new_issues.yml
         dest: .github/workflows/new_issues.yml
@@ -27,58 +30,14 @@ group:
         dest: .github/workflows/subscribe_to_label.yml
       - source: .github/subscribe-to-label.json
         dest: .github/subscribe-to-label.json
-      # Downstream workflows
-      - source: .github/workflows_downstream/draft_release.yml
-        dest: .github/workflows/draft_release.yml
       # Templates
-      - source: .github/release_drafter.yml
-        dest: .github/release_drafter.yml
-      - source: .github/ISSUE_TEMPLATE/
-        dest: .github/ISSUE_TEMPLATE/
-        exclude: |
-          component_spec.md
-          design_changes.md
-          project_thread.md
-
-  # prettier.config.js
-  - repos: |
-      WordPress/openverse
-    files:
-      - source: templates/prettier.config.local.js.jinja
-        dest: prettier.config.js
-        template: true
-  - repos: |
-      WordPress/openverse-catalog
-    files:
-      - source: templates/prettier.config.js.jinja
-        dest: prettier.config.js
-        template: true
-
-  # .pre-commit-config.yaml
-  - repos: |
-      WordPress/openverse
-    files:
-      - source: templates/.pre-commit-config.local.yaml.jinja
-        dest: .pre-commit-config.yaml
-        template: true
-  - repos: |
-      WordPress/openverse-catalog
-    files:
-      - source: templates/.pre-commit-config.yaml.jinja
-        dest: .pre-commit-config.yaml
-        template:
-          contains_js_code: false
-
-  # pull_request_template.md
-  - repos: |
-      WordPress/openverse
-    files:
-      - source: templates/pull_request_template.md.jinja
-        dest: .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
-        template: true
-  - repos: |
-      WordPress/openverse-catalog
-    files:
-      - source: templates/pull_request_template.catalog.md.jinja
-        dest: .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
-        template: true
+      - source: .github/ISSUE_TEMPLATE/bug_report.md
+        dest: .github/ISSUE_TEMPLATE/bug_report.md
+      - source: .github/ISSUE_TEMPLATE/config.yml
+        dest: .github/ISSUE_TEMPLATE/config.yml
+      - source: .github/ISSUE_TEMPLATE/discussion.md
+        dest: .github/ISSUE_TEMPLATE/discussion.md
+      - source: .github/ISSUE_TEMPLATE/feature_request.md
+        dest: .github/ISSUE_TEMPLATE/feature_request.md
+      - source: .github/ISSUE_TEMPLATE/sentry_bug.md
+        dest: .github/ISSUE_TEMPLATE/sentry_bug.md

@@ -13,7 +13,7 @@
       content: "All {openverse} content is under a {license} or is in the public domain.",
       license: "Creative Commons license",
     },
-    "license-filter": {
+    licenseFilter: {
       label: "I want something I can",
     },
     aria: {
@@ -27,54 +27,57 @@
       link: "contributing a translation",
       close: "Close the translation contribution help request banner",
     },
+    analytics: {
+      text: "Openverse uses analytics to improve the quality of our service. Visit {link} to learn more or opt out.",
+      link: "the privacy page",
+      close: "Close the analytics notice banner.",
+    },
   },
   header: {
-    "home-link": "{openverse} Home",
-    "about-nav-item": "Our Story",
-    "source-nav-item": "Sources",
-    "search-guide-nav-item": "Search Guide",
-    "external-sources-nav-item": "External Sources",
-    "privacy-nav-item": "Privacy",
-    "feedback-nav-item": "Feedback",
-    "support-nav-item": "Support Us",
+    homeLink: "{openverse} Home",
+    aboutNavItem: "Our Story",
+    sourceNavItem: "Sources",
+    searchGuideNavItem: "Search Guide",
+    externalSourcesNavItem: "External Sources",
+    privacyNavItem: "Privacy",
+    feedbackNavItem: "Feedback",
+    supportNavItem: "Support Us",
     placeholder: "Search all content",
     aria: {
       primary: "primary",
       menu: "menu",
       search: "search",
-      "sr-search": "search button",
+      srSearch: "search button",
     },
-    "licenses-nav-item": "The Licenses",
-    "about-tab": "About",
-    "resources-tab": "Resources",
-    "api-nav-item": "API",
+    aboutTab: "About",
+    resourcesTab: "Resources",
     notification: {
       text: "{example_notification_text}",
       dismiss: "Dismiss",
       okay: "OK",
     },
     loading: "Loading...",
-    "filter-button": {
+    filterButton: {
       simple: "Filters",
-      "with-count": "{count} Filter|{count} Filters",
+      withCount: "{count} Filter|{count} Filters",
     },
-    "see-results": "See results",
-    "back-button": "Go back",
-    "content-settings-button": {
+    seeResults: "See results",
+    backButton: "Go back",
+    contentSettingsButton: {
       simple: "Menu",
-      "with-count": "Menu. {count} filter applied|Menu. {count} filters applied",
+      withCount: "Menu. {count} filter applied|Menu. {count} filters applied",
     },
   },
   navigation: {
     about: "About",
     licenses: "Licenses",
-    "get-involved": "Get involved",
+    getInvolved: "Get involved",
     api: "API",
     privacy: "Privacy",
     feedback: "Feedback",
     sources: "Sources",
-    "external-sources": "External sources",
-    "search-help": "Search help",
+    externalSources: "External sources",
+    searchHelp: "Search help",
   },
   about: {
     title: "About {openverse}",
@@ -229,7 +232,6 @@
         "operator-aria-label": "star operator (wildcard)",
         "aria-label": "net star symbol",
         example: "net*",
-        // Do not translate 'network', 'Netflix' and 'Netherlands' are they are examples of words starting with 'net'.
         content: "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.",
       },
       precedence: {
@@ -261,37 +263,37 @@
   },
   error: {
     occurred: "An error occurred",
-    "image-not-found": "Couldn't find image with id {id}",
-    "media-not-found": "Couldn't find {mediaType} with id {id}",
+    imageNotFound: "Couldn't find image with id {id}",
+    mediaNotFound: "Couldn't find {mediaType} with id {id}",
     image: "image",
     audio: "audio",
   },
   filters: {
     title: "Filters",
-    "filter-by": "Filter By",
+    filterBy: "Filter By",
     licenses: {
       title: "Licenses",
       cc0: "CC0",
       pdm: "Public Domain Mark",
       by: "BY",
-      "by-sa": "BY-SA",
-      "by-nc": "BY-NC",
-      "by-nd": "BY-ND",
-      "by-nc-sa": "BY-NC-SA",
-      "by-nc-nd": "BY-NC-ND",
+      bySa: "BY-SA",
+      byNc: "BY-NC",
+      byNd: "BY-ND",
+      byNcSa: "BY-NC-SA",
+      byNcNd: "BY-NC-ND",
     },
-    "license-types": {
+    licenseTypes: {
       title: "Use",
       commercial: "Use commercially",
       modification: "Modify or adapt",
     },
-    "image-providers": {
+    imageProviders: {
       title: "Source",
     },
-    "audio-providers": {
+    audioProviders: {
       title: "Source",
     },
-    "audio-categories": {
+    audioCategories: {
       title: "Audio category",
       audiobook: "Audiobook",
       music: "Music",
@@ -301,13 +303,13 @@
       sound_effect: "Sound effects",
       sound: "Sound effects",
     },
-    "image-categories": {
+    imageCategories: {
       title: "Image type",
       photograph: "Photographs",
       illustration: "Illustrations",
       digitized_artwork: "Digitized Artworks",
     },
-    "audio-extensions": {
+    audioExtensions: {
       title: "Extension",
       flac: "FLAC",
       mid: "MID",
@@ -318,14 +320,14 @@
       wav: "WAV",
       webm: "WEBM",
     },
-    "image-extensions": {
+    imageExtensions: {
       title: "Extension",
       jpg: "JPEG",
       png: "PNG",
       gif: "GIF",
       svg: "SVG",
     },
-    "aspect-ratios": {
+    aspectRatios: {
       title: "Aspect ratio",
       tall: "Tall",
       wide: "Wide",
@@ -351,35 +353,47 @@
     creator: {
       title: "Search by Creator",
     },
-    "search-by": {
+    searchBy: {
       title: "Search By",
       creator: "Creator",
     },
-    "license-explanation": {
-      "license-definition": "License definition",
-      "mark-definition": "{mark} definition",
+    licenseExplanation: {
+      licenseDefinition: "License definition",
+      markDefinition: "{mark} definition",
       more: {
-        license: "{read-more} about this license.",
-        mark: "{read-more} about {mark}.",
-        "read-more": "Read more",
+        license: "{readMore} about this license.",
+        mark: "{readMore} about {mark}.",
+        readMore: "Read more",
       },
     },
     aria: {
-      "remove-filter": "Remove {label} filter",
+      removeFilter: "Remove {label} filter",
     },
   },
-  "filter-list": {
-    "filter-by": "Filter by",
+  filterList: {
+    filterBy: "Filter by",
     hide: "Hide filters",
     clear: "Clear filters",
-    "clear-numbered": "Clear filters ({number})",
+    clearNumbered: "Clear filters ({number})",
     show: "Show results",
-    "category-aria": "filters list for {categoryName} category",
+    categoryAria: "filters list for {categoryName} category",
   },
   "browse-page": {
     "all-no-results": "No results",
     "all-result-count": "{localeCount} result|{localeCount} results",
-    "all-result-count-more": "Over {localeCount} result|Over {localeCount} results",
+    "all-result-count-more": "Over {localeCount} results",
+    contentLink: {
+      image: {
+        zero: "No images found for {query}.",
+        count: "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
+        countMore: "See over {localeCount} images found for {query}.",
+      },
+      audio: {
+        zero: "No audio found for {query}.",
+        count: "See {localeCount} audio found for {query}.",
+        countMore: "See over {localeCount} audio found for {query}.",
+      },
+    },
     load: "Load more results",
     loading: "Loading...",
     "fetching-error": "Error fetching {type}:",
@@ -421,6 +435,9 @@
       "remove-filter": "remove filter",
       "license-explanation": "license explanation",
       creator: "search by creator",
+      "image-title": "Image: {title}",
+      "audio-title": "Audio: {title}",
+      results: "Search results for {query}.",
     },
   },
   "media-details": {
@@ -505,7 +522,7 @@
       },
     },
   },
-  "single-result": {
+  singleResult: {
     back: "Back to results",
   },
   "image-details": {
@@ -540,13 +557,13 @@
     information: "Audio information",
     weblink: "Get this audio",
   },
-  "all-results": {
+  allResults: {
     snackbar: {
       text: "Press {spacebar} to play or pause the track.",
       spacebar: "Spacebar",
     },
   },
-  "audio-results": {
+  audioResults: {
     snackbar: {
       text: "Press {spacebar} to play or pause, and {left} & {right} to seek through the track.",
       spacebar: "Spacebar",
@@ -554,7 +571,7 @@
       right: "→",
     },
   },
-  "external-sources": {
+  externalSources: {
     caption: "{openverse} can not guarantee the accuracy of license information. Always verify that the work is actually under a CC license.",
     button: "Source list",
     title: "External sources",
@@ -563,21 +580,21 @@
       caption: "Click on a source below to directly search other collections of CC-licensed images.{break}Please note that Use filters are not supported for Open Clip Art Library or Nappy.",
     },
     form: {
-      "unsupported-title": "{openverse} does not yet support built-in {type} search.",
-      "supported-title": "Not finding what you're looking for? Try an external source:",
-      "no-results-title": 'No {type} results for "{query}".',
+      unsupportedTitle: "{openverse} does not yet support built-in {type} search.",
+      supportedTitle: "Not finding what you're looking for? Try an external source:",
+      noResultsTitle: 'No {type} results for "{query}".',
       caption: "Click on a source below to directly search other collections of CC-licensed {type}.",
       types: {
         image: "image",
         audio: "audio",
         video: "video",
-        "model-3d": "3D model",
+        model3d: "3D model",
       },
-      "types-plural": {
+      typesPlural: {
         image: "images",
         audio: "audios",
         video: "videos",
-        "model-3d": "3D models",
+        model3d: "3D models",
       },
     },
   },
@@ -589,15 +606,15 @@
   },
   waveform: {
     label: "Audio seek bar",
-    "current-time": "{time} second|{time} seconds",
+    currentTime: "{time} second|{time} seconds",
   },
-  "audio-thumbnail": {
+  audioThumbnail: {
     alt: 'Cover art for "{title}" by {creator}',
   },
-  "audio-track": {
-    "aria-label": "{title} - Audio Player",
-    "aria-label-interactive": "{title} - audio player - press the spacebar to play and pause a preview of the audio",
-    "aria-label-interactive-seekable": "{title} - audio player - press the spacebar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track.",
+  audioTrack: {
+    ariaLabel: "Audio: {title}",
+    ariaLabelInteractive: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio",
+    ariaLabelInteractiveSeekable: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track.",
     messages: {
       err_aborted: "You aborted playback.",
       err_network: "A network error occurred.",
@@ -610,7 +627,7 @@
     creator: "by {creator}",
     close: "Close the audio player",
   },
-  "play-pause": {
+  playPause: {
     play: "Play",
     pause: "Pause",
     replay: "Replay",
@@ -618,55 +635,55 @@
   },
   search: {
     search: "Search",
-    "search-bar-label": "Search for content in {openverse}",
+    searchBarLabel: "Search for content in {openverse}",
   },
-  "license-readable-names": {
+  licenseReadableNames: {
     cc0: "Zero",
     pdm: "Public Domain Mark",
     by: "Attribution",
-    "by-sa": "Attribution-Share-Alike",
-    "by-nc": "Attribution-NonCommercial",
-    "by-nd": "Attribution-NoDerivatives",
-    "by-nc-sa": "Attribution-NonCommercial-Share-Alike",
-    "by-nc-nd": "Attribution-NonCommercial-NoDerivatives",
+    bySa: "Attribution-Share-Alike",
+    byNc: "Attribution-NonCommercial",
+    byNd: "Attribution-NoDerivatives",
+    byNcSa: "Attribution-NonCommercial-Share-Alike",
+    byNcNd: "Attribution-NonCommercial-NoDerivatives",
     "sampling+": "Sampling Plus",
-    "nc-sampling+": "NonCommercial Sampling Plus",
+    "ncSampling+": "NonCommercial Sampling Plus",
   },
-  "dropdown-button": {
+  dropdownButton: {
     aria: {
-      "arrow-label": "Dropdown",
+      arrowLabel: "Dropdown",
     },
   },
-  "migration-notice": {
-    intro: "{cc-search} is now called {openverse} and joins {wordpress} as an open source project.",
-    more: "{read-more} about this announcement.",
+  migrationNotice: {
+    intro: "{ccSearch} is now called {openverse} and joins {wordpress} as an open source project.",
+    more: "{readMore} about this announcement.",
     read: "Read more",
     close: "Close the announcement",
   },
-  "download-button": {
+  downloadButton: {
     aria: {
-      "dropdown-label": "Select the download file format",
+      dropdownLabel: "Select the download file format",
     },
     download: "Download",
   },
   interpunct: "•",
   modal: {
     close: "Close",
-    "aria-close": "Close the modal",
-    "close-named": "Close {name}",
-    "close-content-settings": "Close the content settings menu",
-    "close-pages-menu": "Close the pages menu",
-    "close-banner": "Close the banner",
+    ariaClose: "Close the modal",
+    closeNamed: "Close {name}",
+    closeContentSettings: "Close the content settings menu",
+    closePagesMenu: "Close the pages menu",
+    closeBanner: "Close the banner",
   },
-  "error-images": {
-    "depressed-musician": "A depressed pianist rests their head in their hands.",
-    "waiting-for-a-bite": "Three boys sit on a broken log while two of them fish.",
+  errorImages: {
+    depressedMusician: "A depressed pianist rests their head in their hands.",
+    waitingForABite: "Three boys sit on a broken log while two of them fish.",
   },
-  "no-results": {
+  noResults: {
     heading: 'We couldn\'t find anything for "{query}".',
     alternatives: "Try a different query or use one of the external sources to expand your search.",
   },
-  "server-timeout": {
+  serverTimeout: {
     heading: "Whoops, it looks like that request took too long to complete. Please try again.",
   },
   "search-type": {
@@ -683,17 +700,17 @@
     "see-audio": "See all audio",
     "select-label": "Select a content type: {type}",
   },
-  "skip-to-content": "Skip to content",
-  "pref-page": {
+  skipToContent: "Skip to content",
+  prefPage: {
     title: "Preferences",
     groups: {
       analytics: {
         title: "Analytics",
-        desc: "Participate in anonymous analytics to improve user experience.",
+        desc: "{openverse} uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here.",
       },
     },
     features: {
-      analytics: "Record custom events and page views.",
+      analytics: "Record custom events and page views for analytics.",
     },
     "non-switchable": {
       title: "Non-switchable features",
@@ -707,21 +724,20 @@
     "content-filtering": "Content filtering",
     explanation: "Shown because {feat-name} is {feat-state}",
   },
-  "sketchfab-iframe-title": "{sketchfab} viewer",
+  sketchfabIframeTitle: "{sketchfab} viewer",
   "flag-status": {
     nonexistent: "Nonexistent",
     on: "On",
     off: "Off",
   },
   footer: {
-    // Link back to WordPress, the word is replaced by the logo
-    "wordpress-affiliation": "Part of the {wordpress} project",
-    wip: "\uD83D\uDEA7",
+    wordpressAffiliation: "Part of the {wordpress} project",
+    wip: "🚧",
   },
   language: {
     language: "Language",
   },
-  "recent-searches": {
+  recentSearches: {
     heading: "Recent searches",
     clear: {
       text: "Clear",
@@ -731,6 +747,6 @@
     disclaimer: "Openverse does not store your recent searches, this information is kept locally in your browser.",
   },
   report: {
-    "image-details": "See image details",
+    imageDetails: "See image details",
   },
 }

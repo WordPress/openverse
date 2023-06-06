@@ -6,22 +6,39 @@
         "production": "disabled"
       },
       "description": "Mark 50% of results as mature to test content safety.",
-      "defaultState": "off"
+      "defaultState": "off",
+      "storage": "cookie"
     },
-    "external_sources": {
+    "additional_search_types": {
       "status": {
         "staging": "switchable",
         "production": "disabled"
       },
-      "description": "Toggle the external sources in the header's search type switcher.",
-      "defaultState": "off"
+      "description": "Toggle additional search types in the content switcher.",
+      "defaultState": "off",
+      "storage": "cookie"
     },
     "analytics": {
+      "status": "switchable",
+      "defaultState": "on",
+      "description": "Record custom events and page views.",
+      "storage": "cookie"
+    },
+    "sensitive_content": {
       "status": {
         "staging": "switchable",
         "production": "disabled"
       },
-      "description": "Record custom events and page views."
+      "description": "Turn on sensitive content fetching and blurring.",
+      "defaultState": "off",
+      "storage": "cookie"
+    },
+    "fetch_sensitive": {
+      "status": "switchable",
+      "defaultState": "off",
+      "description": "Show results marked as sensitive in the results area.",
+      "supportsQuery": false,
+      "storage": "session"
     }
   },
   "groups": [

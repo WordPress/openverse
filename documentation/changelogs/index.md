@@ -9,10 +9,9 @@ type of change. The documents are generated using the
 workflow.
 
 ```{toctree}
-:maxdepth: 1
+:titlesonly:
+:maxdepth: 2
 :glob:
 
-api/index
-frontend/index
-ingestion_server/index
+*/index
 ```

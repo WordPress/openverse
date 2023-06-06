@@ -1,17 +1,23 @@
 <template>
   <section
-    class="flex items-center justify-between gap-x-2 px-4 py-2 md:px-7"
-    :class="$style[variant]"
+    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:p-3"
+    :class="classNames"
     :data-testid="`banner-${id}`"
   >
-    <p class="caption-regular md:description-regular text-left">
-      <slot name="default" />
+    <slot name="start">
+      <VIcon :name="nature" :class="iconClassNames" />
+    </slot>
+
+    <p class="caption-regular lg:paragraph-small flex-grow">
+      <slot />
     </p>
-    <slot name="buttons">
+
+    <slot name="end">
       <VCloseButton
-        variant="filled-transparent"
-        icon-size="large"
-        :label="closeButtonLabel || $t('modal.close-banner')"
+        :variant="variant === 'dark' ? 'black' : 'transparent-gray'"
+        size="close"
+        icon-size="small"
+        :label="closeButtonLabel || $t('modal.closeBanner')"
         @close="$emit('close')"
       />
     </slot>
@@ -19,30 +25,54 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent, PropType, computed } from "vue"
 
 import { defineEvent } from "~/types/emits"
 
 import type { BannerId } from "~/types/banners"
 
+import VIcon from "~/components/VIcon/VIcon.vue"
 import VCloseButton from "~/components/VCloseButton.vue"
 
 import type { TranslateResult } from "vue-i18n"
 
+/**
+ * Display a banner that can indicate one of four semantics in one of two color
+ * variants.
+ */
 export default defineComponent({
   name: "VNotificationBanner",
   components: {
+    VIcon,
     VCloseButton,
   },
   props: {
-    variant: {
-      type: String as PropType<"announcement" | "informational">,
-      required: true,
+    /**
+     * the semantic meaning of the banner; This can carry a positive, neutral
+     * or negative connotation.
+     */
+    nature: {
+      type: String as PropType<"info" | "warning" | "success" | "error">,
+      default: "info",
     },
+    /**
+     * the color variant of the banner; The dark variant is intended for use on
+     * yellow pages.
+     */
+    variant: {
+      type: String as PropType<"regular" | "dark">,
+      default: "regular",
+    },
+    /**
+     * the unique ID of the banner
+     */
     id: {
       type: String as PropType<BannerId>,
       required: true,
     },
+    /**
+     * the label to apply to the close button
+     */
     closeButtonLabel: {
       type: [String, Object] as PropType<string | TranslateResult>,
     },
@@ -50,18 +80,32 @@ export default defineComponent({
   emits: {
     close: defineEvent(),
   },
+  setup(props) {
+    const classNames = computed(() =>
+      props.variant === "dark"
+        ? "bg-dark-charcoal text-white"
+        : {
+            info: "bg-info-soft",
+            warning: "bg-warning-soft",
+            success: "bg-success-soft",
+            error: "bg-error-soft",
+          }[props.nature]
+    )
+    const iconClassNames = computed(() =>
+      props.variant === "dark"
+        ? ""
+        : {
+            info: "text-info",
+            warning: "text-warning",
+            success: "text-success",
+            error: "text-error",
+          }[props.nature]
+    )
+
+    return {
+      classNames,
+      iconClassNames,
+    }
+  },
 })
 </script>
-
-<style module>
-/* Styles from learn.wordpress.org */
-.informational {
-  background-color: #fff8e5;
-  border-left: 0.25rem solid #ffb900;
-}
-
-.announcement {
-  @apply bg-trans-blue text-white;
-  border-left: 0.25rem solid transparent;
-}
-</style>

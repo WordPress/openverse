@@ -29,7 +29,7 @@
         <div
           class="subtitle mt-1 flex flex-col gap-2 text-base leading-snug lg:flex-row lg:items-center"
         >
-          <i18n as="span" path="audio-track.creator" class="font-semibold">
+          <i18n as="span" path="audioTrack.creator" class="font-semibold">
             <template #creator>
               <VLink
                 class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"
@@ -59,6 +59,7 @@
         show-external-icon
         :external-icon-size="6"
         class="description-bold order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
+        @click="sendGetMediaEvent"
       >
         {{ $t("audio-details.weblink") }}
       </VButton>
@@ -72,6 +73,8 @@ import { computed, defineComponent, PropType } from "vue"
 import type { AudioDetail } from "~/types/media"
 import { timeFmt } from "~/utils/time-fmt"
 import { AudioSize, AudioStatus, audioFeatures } from "~/constants/audio"
+import { AUDIO } from "~/constants/media"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
@@ -96,13 +99,25 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { sendCustomEvent } = useAnalytics()
+
     const isSmall = computed(() => props.size === "s")
+
+    const sendGetMediaEvent = () => {
+      sendCustomEvent("GET_MEDIA", {
+        id: props.audio.id,
+        provider: props.audio.provider,
+        mediaType: AUDIO,
+      })
+    }
 
     return {
       timeFmt,
 
       isSmall,
       audioFeatures,
+
+      sendGetMediaEvent,
     }
   },
 })

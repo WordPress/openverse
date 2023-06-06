@@ -1,0 +1,992 @@
+{
+  "continue": {
+    "continue": "||imageinfo",
+    "gucontinue": "Niedercunnersdorf_Gartenweg_12.JPG|dewiki|9849507"
+  },
+  "query": {
+    "pages": {
+      "18263872": {
+        "globalusage": [
+          {
+            "title": "Michinmahuida",
+            "url": "https://it.wikipedia.org/wiki/Michinmahuida",
+            "wiki": "it.wikipedia.org"
+          }
+        ],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=18263872",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Minchinmavida_Volcano.jpg",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "The original uploader was <a href=\"https://en.wikipedia.org/wiki/it:User:Elvezio\" class=\"extiw\" title=\"w:it:User:Elvezio\">Elvezio</a> at <a href=\"https://en.wikipedia.org/wiki/it:\" class=\"extiw\" title=\"w:it:\">Italian Wikipedia</a>."
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "false"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "2009 Chait\u00e9n eruptions|Ash fall on glaciers|Lahars in Chile|Michinmahuida|PD NASA|Satellite pictures of volcanoes in Chile|Sediment input|Volcanic ash in Chile"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "False"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Transferred from <span class=\"plainlinks\"><a class=\"external text\" href=\"https://it.wikipedia.org\">it.wikipedia</a></span> to Commons by <a href=\"//commons.wikimedia.org/wiki/User:Baroc\" title=\"User:Baroc\">Baroc</a> using <a href=\"https://tools.wmflabs.org/commonshelper/\" class=\"extiw\" title=\"toollabs:commonshelper/\">CommonsHelper</a>."
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:49"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2009-03-17"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"https://it.wikipedia.org/wiki/Vulcano_Minchinmavida\" class=\"extiw\" title=\"it:Vulcano Minchinmavida\">Vulcano Minchinmavida</a> <a href=\"https://it.wikipedia.org/wiki/Cile\" class=\"extiw\" title=\"it:Cile\">Cile</a>"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "pd"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Public domain"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "Minchinmavida Volcano"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Public domain"
+              }
+            },
+            "height": 1440,
+            "size": 1117410,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Minchinmavida_Volcano.jpg",
+            "user": "SteinsplitterBot",
+            "width": 1440
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 18263872,
+        "title": "File:Minchinmavida Volcano.jpg"
+      },
+      "44672185": {
+        "globalusage": [
+          {
+            "title": "Heydelberq",
+            "url": "https://az.wikipedia.org/wiki/Heydelberq",
+            "wiki": "az.wikipedia.org"
+          },
+          {
+            "title": "Heidelberg",
+            "url": "https://en.wikipedia.org/wiki/Heidelberg",
+            "wiki": "en.wikipedia.org"
+          },
+          {
+            "title": "Heidelberg",
+            "url": "https://vi.wikipedia.org/wiki/Heidelberg",
+            "wiki": "vi.wikipedia.org"
+          }
+        ],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672185",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:2002-04-02_Hauptstra%C3%9Fe,_Heidelberg_IMG_0404.jpg",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:Hasenl%C3%A4ufer\" title=\"User:Hasenl\u00e4ufer\">Eckhard Henkel</a>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "Attribution": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Photo: Eckhard Henkel / <a rel=\"nofollow\" class=\"external text\" href=\"http:////commons.wikimedia.org/wiki/File:2002-04-02_Hauptstra%C3%9Fe,_Heidelberg_IMG_0404.jpg\">Wikimedia Commons</a> / <a rel=\"nofollow\" class=\"external text\" href=\"https://creativecommons.org/licenses/by-sa/3.0/de/deed.en\">CC BY-SA 3.0 DE</a>"
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "true"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "Files by Hasenl\u00e4ufer|Hauptstra\u00dfe (Heidelberg)|Media with locations|Pages with maps|Photographs taken on 2002-04-02"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "True"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:22"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2002-04-02"
+              },
+              "GPSLatitude": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "49.411580"
+              },
+              "GPSLongitude": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "8.705512"
+              },
+              "GPSMapDatum": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "WGS-84"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "Blick in die <a href=\"https://de.wikipedia.org/wiki/Hauptstra%C3%9Fe_(Heidelberg)\" class=\"extiw\" title=\"de:Hauptstra\u00dfe (Heidelberg)\">Hauptstra\u00dfe</a> in Richtung Westen, etwas westlich des Universit\u00e4tsplatzes, <a href=\"https://de.wikipedia.org/wiki/Heidelberg\" class=\"extiw\" title=\"de:Heidelberg\">Heidelberg</a>"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "cc-by-sa-3.0-de"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "CC BY-SA 3.0 de"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2002-04-02 Hauptstra\u00dfe, Heidelberg IMG 0404"
+              },
+              "Permission": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "This image is <b>not <a href=\"https://en.wikipedia.org/wiki/Public_domain\" class=\"extiw\" title=\"en:Public domain\">public domain</a></b>. Please respect the copyright protection. It may only be used according to the rules mentioned here. This specifically <b>excludes use in social media</b>, if applicable terms of the licenses listed here not appropriate."
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Creative Commons Attribution-Share Alike 3.0 de"
+              }
+            },
+            "height": 1172,
+            "size": 816636,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/2002-04-02_Hauptstra%C3%9Fe%2C_Heidelberg_IMG_0404.jpg",
+            "user": "Hasenl\u00e4ufer",
+            "width": 1563
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672185,
+        "title": "File:2002-04-02 Hauptstra\u00dfe, Heidelberg IMG 0404.jpg"
+      },
+      "44672190": {
+        "globalusage": [],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672190",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Niedercunnersdorf_M%C3%BChlgrabenweg_5_(1).JPG",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:BTLmovies\" title=\"User:BTLmovies\">Pascal Seibt</a>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "true"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "Niedercunnersdorf M\u00fchlgrabenweg 5|Self-published work|Supported by Wikimedia Deutschland|Umgebinde Online 2015"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "True"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:32"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2015-09-12 13:51:49"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "Niedercunnersdorf M\u00fchlgrabenweg 5"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "cc-by-sa-4.0"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "CC BY-SA 4.0"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "Niedercunnersdorf M\u00fchlgrabenweg 5 (1)"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Creative Commons Attribution-Share Alike 4.0"
+              }
+            },
+            "height": 3864,
+            "size": 7938894,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/8/80/Niedercunnersdorf_M%C3%BChlgrabenweg_5_%281%29.JPG",
+            "user": "BTLmovies",
+            "width": 5152
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672190,
+        "title": "File:Niedercunnersdorf M\u00fchlgrabenweg 5 (1).JPG"
+      },
+      "44672194": {
+        "globalusage": [],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672194",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Niedercunnersdorf_Gartenweg_12.JPG",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:BTLmovies\" title=\"User:BTLmovies\">Pascal Seibt</a>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "true"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "Cultural heritage monuments in Kottmar|Self-published work|Supported by Wikimedia Deutschland|Umgebinde Online 2015|Umgebinde in Niedercunnersdorf"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "True"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:35"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2015-09-12 11:42:12"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "Niedercunnersdorf Gartenweg 12"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "cc-by-sa-4.0"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "CC BY-SA 4.0"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "Niedercunnersdorf Gartenweg 12"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Creative Commons Attribution-Share Alike 4.0"
+              }
+            },
+            "height": 3000,
+            "size": 5815855,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/3/37/Niedercunnersdorf_Gartenweg_12.JPG",
+            "user": "BTLmovies",
+            "width": 4000
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672194,
+        "title": "File:Niedercunnersdorf Gartenweg 12.JPG"
+      },
+      "44672195": {
+        "globalusage": [],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672195",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Niedercunnersdorf_Gartenweg_25.JPG",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:BTLmovies\" title=\"User:BTLmovies\">Pascal Seibt</a>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "true"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "Cultural heritage monuments in Kottmar|Self-published work|Supported by Wikimedia Deutschland|Umgebinde Online 2015|Umgebinde in Niedercunnersdorf"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "True"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:35"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2015-09-12 10:14:54"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "Niedercunnersdorf Gartenweg 25"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "cc-by-sa-4.0"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "CC BY-SA 4.0"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "Niedercunnersdorf Gartenweg 25"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Creative Commons Attribution-Share Alike 4.0"
+              }
+            },
+            "height": 3000,
+            "size": 5941935,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/1/19/Niedercunnersdorf_Gartenweg_25.JPG",
+            "user": "BTLmovies",
+            "width": 4000
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672195,
+        "title": "File:Niedercunnersdorf Gartenweg 25.JPG"
+      },
+      "44672196": {
+        "globalusage": [],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672196",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Niedercunnersdorf_NiedereHauptstra%C3%9Fe_66.JPG",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:BTLmovies\" title=\"User:BTLmovies\">Pascal Seibt</a>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "true"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "Cultural heritage monuments in Kottmar|Self-published work|Supported by Wikimedia Deutschland|Umgebinde Online 2015|Umgebinde in Niedercunnersdorf"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "True"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:36"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2015-09-12 11:11:40"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "Niedercunnersdorf NiedereHauptstra\u00dfe 66"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "cc-by-sa-4.0"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "CC BY-SA 4.0"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "Niedercunnersdorf NiedereHauptstra\u00dfe 66"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Creative Commons Attribution-Share Alike 4.0"
+              }
+            },
+            "height": 3000,
+            "size": 5800771,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Niedercunnersdorf_NiedereHauptstra%C3%9Fe_66.JPG",
+            "user": "BTLmovies",
+            "width": 4000
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672196,
+        "title": "File:Niedercunnersdorf NiedereHauptstra\u00dfe 66.JPG"
+      },
+      "44672207": {
+        "globalusage": [],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672207",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Niedercunnersdorf_WillhelmTempelPlatz_11.JPG",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<a href=\"//commons.wikimedia.org/wiki/User:BTLmovies\" title=\"User:BTLmovies\">Pascal Seibt</a>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "true"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "Cultural heritage monuments in Kottmar|Self-published work|Supported by Wikimedia Deutschland|Umgebinde Online 2015|Umgebinde in Niedercunnersdorf"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "True"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:40"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "2015-09-12 10:59:25"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "Niedercunnersdorf WillhelmTempelPlatz 11"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "cc-by-sa-4.0"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "CC BY-SA 4.0"
+              },
+              "LicenseUrl": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "https://creativecommons.org/licenses/by-sa/4.0"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "Niedercunnersdorf WillhelmTempelPlatz 11"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Creative Commons Attribution-Share Alike 4.0"
+              }
+            },
+            "height": 3000,
+            "size": 5421958,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Niedercunnersdorf_WillhelmTempelPlatz_11.JPG",
+            "user": "BTLmovies",
+            "width": 4000
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672207,
+        "title": "File:Niedercunnersdorf WillhelmTempelPlatz 11.JPG"
+      },
+      "44672210": {
+        "globalusage": [],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672210",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:A_catalogue_of_the_recent_sea-urchins_(Echinoidea)_in_the_collection_of_the_British_Museum_(Natural_History)_BHL8403911.jpg",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "British Museum (Natural History).; Clark, Hubert Lyman"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "false"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History)|CC-PD-Mark|Files from the Biodiversity Heritage Library|Images uploaded by F\u00e6|PD-old-70-expired|PD-scan (PD-old-70-expired)"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "False"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.biodiversitylibrary.org/pageimage/8403911\">https://www.biodiversitylibrary.org/pageimage/8403911</a>"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:44"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "1925"
+              },
+              "ImageDescription": {
+                "source": "commons-desc-page",
+                "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) /  by Hubert Lyman Clark  ; [with a preface by C. Tate Regan]."
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "pd"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Public domain"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Public domain"
+              }
+            },
+            "height": 2766,
+            "size": 287144,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/A_catalogue_of_the_recent_sea-urchins_%28Echinoidea%29_in_the_collection_of_the_British_Museum_%28Natural_History%29_BHL8403911.jpg",
+            "user": "F\u00e6",
+            "width": 1670
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672210,
+        "title": "File:A catalogue of the recent sea-urchins (Echinoidea) in the collection of the British Museum (Natural History) BHL8403911.jpg"
+      },
+      "44672212": {
+        "globalusage": [
+          {
+            "title": "V\u00e6rker_af_Edvard_Munch",
+            "url": "https://da.wikipedia.org/wiki/V%C3%A6rker_af_Edvard_Munch",
+            "wiki": "da.wikipedia.org"
+          },
+          {
+            "title": "Liste_der_Gem\u00e4lde_von_Edvard_Munch",
+            "url": "https://de.wikipedia.org/wiki/Liste_der_Gem%C3%A4lde_von_Edvard_Munch",
+            "wiki": "de.wikipedia.org"
+          },
+          {
+            "title": "Benutzer:Magnus_Manske/listeria_test2",
+            "url": "https://de.wikipedia.org/wiki/Benutzer:Magnus_Manske/listeria_test2",
+            "wiki": "de.wikipedia.org"
+          },
+          {
+            "title": "List_of_paintings_by_Edvard_Munch",
+            "url": "https://en.wikipedia.org/wiki/List_of_paintings_by_Edvard_Munch",
+            "wiki": "en.wikipedia.org"
+          },
+          {
+            "title": "Liste_des_tableaux_d'Edvard_Munch",
+            "url": "https://fr.wikipedia.org/wiki/Liste_des_tableaux_d%27Edvard_Munch",
+            "wiki": "fr.wikipedia.org"
+          },
+          {
+            "title": "\u0537\u0564\u057e\u0561\u0580\u0564_\u0544\u0578\u0582\u0576\u056f\u056b_\u0576\u056f\u0561\u0580\u0576\u0565\u0580\u056b_\u0581\u0561\u0576\u056f",
+            "url": "https://hy.wikipedia.org/wiki/%D4%B7%D5%A4%D5%BE%D5%A1%D6%80%D5%A4_%D5%84%D5%B8%D6%82%D5%B6%D5%AF%D5%AB_%D5%B6%D5%AF%D5%A1%D6%80%D5%B6%D5%A5%D6%80%D5%AB_%D6%81%D5%A1%D5%B6%D5%AF",
+            "wiki": "hy.wikipedia.org"
+          },
+          {
+            "title": "\u30a8\u30c9\u30f4\u30a1\u30eb\u30c9\u30fb\u30e0\u30f3\u30af",
+            "url": "https://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%89%E3%83%B4%E3%82%A1%E3%83%AB%E3%83%89%E3%83%BB%E3%83%A0%E3%83%B3%E3%82%AF",
+            "wiki": "ja.wikipedia.org"
+          },
+          {
+            "title": "Liste_over_Edvard_Munchs_malerier",
+            "url": "https://no.wikipedia.org/wiki/Liste_over_Edvard_Munchs_malerier",
+            "wiki": "no.wikipedia.org"
+          },
+          {
+            "title": "Diskusjon:Liste_over_Edvard_Munchs_malerier/Wikidata-test",
+            "url": "https://no.wikipedia.org/wiki/Diskusjon:Liste_over_Edvard_Munchs_malerier/Wikidata-test",
+            "wiki": "no.wikipedia.org"
+          },
+          {
+            "title": "Wikipedia:Underprosjekter/Kunst/Nasjonalmuseet/19._\u00e5rhundre",
+            "url": "https://no.wikipedia.org/wiki/Wikipedia:Underprosjekter/Kunst/Nasjonalmuseet/19._%C3%A5rhundre",
+            "wiki": "no.wikipedia.org"
+          },
+          {
+            "title": "List_of_paintings_by_Edvard_Munch",
+            "url": "https://simple.wikipedia.org/wiki/List_of_paintings_by_Edvard_Munch",
+            "wiki": "simple.wikipedia.org"
+          },
+          {
+            "title": "Q18890585",
+            "url": "https://www.wikidata.org/wiki/Q18890585",
+            "wiki": "www.wikidata.org"
+          },
+          {
+            "title": "User:Danmichaelo/Munch",
+            "url": "https://www.wikidata.org/wiki/User:Danmichaelo/Munch",
+            "wiki": "www.wikidata.org"
+          },
+          {
+            "title": "Wikidata:WikiProject_sum_of_all_paintings/Creator/Edvard_Munch",
+            "url": "https://www.wikidata.org/wiki/Wikidata:WikiProject_sum_of_all_paintings/Creator/Edvard_Munch",
+            "wiki": "www.wikidata.org"
+          },
+          {
+            "title": "Wikidata:WikiProject_sum_of_all_paintings/Catalog/Edvard_Munch:_Complete_Paintings:_Catalogue_Raisonn\u00e9",
+            "url": "https://www.wikidata.org/wiki/Wikidata:WikiProject_sum_of_all_paintings/Catalog/Edvard_Munch:_Complete_Paintings:_Catalogue_Raisonn%C3%A9",
+            "wiki": "www.wikidata.org"
+          },
+          {
+            "title": "Wikidata:WikiProject_sum_of_all_paintings/Collection/National_Museum_of_Art,_Architecture_and_Design/19th_Century",
+            "url": "https://www.wikidata.org/wiki/Wikidata:WikiProject_sum_of_all_paintings/Collection/National_Museum_of_Art,_Architecture_and_Design/19th_Century",
+            "wiki": "www.wikidata.org"
+          }
+        ],
+        "imageinfo": [
+          {
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=44672212",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Edvard_Munch_-_Night_in_Nice_(1891).jpg",
+            "extmetadata": {
+              "Artist": {
+                "source": "commons-desc-page",
+                "value": "<bdi><a href=\"https://en.wikipedia.org/wiki/en:Edvard_Munch\" class=\"extiw\" title=\"w:en:Edvard Munch\">Edvard Munch</a>\n</bdi>"
+              },
+              "Assessments": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": ""
+              },
+              "AttributionRequired": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "false"
+              },
+              "Categories": {
+                "hidden": "",
+                "source": "commons-categories",
+                "value": "1890s paintings by Edvard Munch|1891 paintings from France|1891 paintings in Norway|Artworks with Wikidata item|Artworks with known accession number|CC-PD-Mark|Nice in art|PD-Art (PD-old-auto-expired)|PD-old-75-expired|Paintings by Edvard Munch in the Nasjonalmuseet for kunst, arkitektur og design"
+              },
+              "CommonsMetadataExtension": {
+                "hidden": "",
+                "source": "extension",
+                "value": 1.2
+              },
+              "Copyrighted": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "False"
+              },
+              "Credit": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<a rel=\"nofollow\" class=\"external free\" href=\"http://samling.nasjonalmuseet.no/no/object/NG.M.00394\">http://samling.nasjonalmuseet.no/no/object/NG.M.00394</a> Nasjonalmuseet"
+              },
+              "DateTime": {
+                "hidden": "",
+                "source": "mediawiki-metadata",
+                "value": "2015-10-31 23:00:53"
+              },
+              "DateTimeOriginal": {
+                "source": "commons-desc-page",
+                "value": "1891<div style=\"display: none;\">date QS:P,+1891-00-00T00:00:00Z/9</div>"
+              },
+              "License": {
+                "hidden": "",
+                "source": "commons-templates",
+                "value": "pd"
+              },
+              "LicenseShortName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Public domain"
+              },
+              "ObjectName": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "<div class=\"fn\">\n<span style=\"font-weight:bold\"><span dir=\"ltr\" lang=\"en\"><i>Night in Nice</i></span></span><div style=\"display: none;\">label QS:Len,\"Night in Nice\"</div>\n</div>"
+              },
+              "Restrictions": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": ""
+              },
+              "UsageTerms": {
+                "hidden": "",
+                "source": "commons-desc-page",
+                "value": "Public domain"
+              }
+            },
+            "height": 714,
+            "size": 171366,
+            "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Edvard_Munch_-_Night_in_Nice_%281891%29.jpg",
+            "user": "4ing",
+            "width": 803
+          }
+        ],
+        "imagerepository": "local",
+        "ns": 6,
+        "pageid": 44672212,
+        "title": "File:Edvard Munch - Night in Nice (1891).jpg"
+      }
+    }
+  }
+}

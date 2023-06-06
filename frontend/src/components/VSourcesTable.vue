@@ -68,8 +68,6 @@ import type { MediaProvider } from "~/types/media-provider"
 import TableSortIcon from "~/components/TableSortIcon.vue"
 import VLink from "~/components/VLink.vue"
 
-import externalLinkIcon from "~/assets/icons/external-link.svg"
-
 export default defineComponent({
   name: "VSourcesTable",
   components: {
@@ -130,7 +128,6 @@ export default defineComponent({
 
     return {
       getLocaleFormattedNumber,
-      externalLinkIcon,
       sortedProviders,
       sorting,
       sortTable,

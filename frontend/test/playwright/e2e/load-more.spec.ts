@@ -17,12 +17,10 @@ const openSingleMediaView = async (
   page: Page,
   mediaType: SupportedMediaType
 ) => {
-  const contentLinkSelector =
-    mediaType === IMAGE ? "See all images" : "See all audio"
-  return await Promise.all([
-    page.waitForNavigation(),
-    page.click(`text=${contentLinkSelector}`),
-  ])
+  await page
+    .getByRole("link", { name: new RegExp(`See .+ ${mediaType}.+found for`) })
+    .click()
+  await page.waitForURL(/search\/(audio|image)/)
 }
 /**
  * Cases, check both SSR and CSR:

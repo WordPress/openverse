@@ -9,6 +9,7 @@ on:
           - api
           - ingestion_server
           - frontend
+          - catalog
         required: true
         description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
       image-sha:
@@ -109,12 +110,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add new changelog file to documentation
-        run: |
-          cat << EOF > documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
-          # ${{ steps.tag.outputs.date }}
-
-          ${{ steps.release-drafter.outputs.body }}
-          EOF
+        env:
+          APP: ${{ inputs.app }}
+          DATE: ${{ steps.tag.outputs.date }}
+          RELEASE_BODY: ${{ steps.release-drafter.outputs.body }}
+        working-directory: automations/python/workflows
+        run: python write_changelog.py
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -132,11 +133,14 @@ jobs:
 
       - name: Lint the changelog file so that it passes CI
         run: |
+          # Add the new changelog file to git so that pre-commit can lint it.
+          git add documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
           just precommit
-          just lint
+          # Ensure this step passes even if linting has made changes so the workflow can continue
+          just lint || true
 
       - name: Open changelog PR
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           # Access token necessary for PRs to run with CI
           token: ${{ secrets.ACCESS_TOKEN }}
@@ -150,25 +154,28 @@ jobs:
             🌟 goal: addition
             📄 aspect: text
             🟩 priority: low
+            skip-changelog
           body: |
             This changelog PR was automatically generated for @${{ github.actor }} as a result of the ${{ github.workflow }} workflow.
 
-      - name: Deploy production api
-        if: inputs.app == 'api'
-        run: |
-          gh workflow run \
-            -f tag=${{ steps.tag.outputs.image-tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - production-api"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: Deploy production frontend
-        if: inputs.app == 'frontend'
-        run: |
-          gh workflow run \
-            -f tag=${{ steps.tag.outputs.image-tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - production-nuxt"
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Deploy production application
+        if: inputs.app == 'frontend' || inputs.app == 'api'
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_production_${{ inputs.app == 'frontend' && 'nuxt' || inputs.app }}
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ steps.tag.outputs.image-tag }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
+          # max_time can't easily be configured per application
+          # without duplicating information between our infrastructure
+          # and this workflow. The upstream workflows already have
+          # timeouts appropriately configured and will all fail before 30
+          # minutes is reached. On the other hand, we do want to wait
+          # so that there is a record of the successful deployment.

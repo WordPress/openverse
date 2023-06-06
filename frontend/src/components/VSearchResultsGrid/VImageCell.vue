@@ -1,42 +1,43 @@
 <template>
-  <VLink
-    itemprop="contentUrl"
-    :title="image.title"
-    :href="imageLink"
-    class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
-    :aria-label="image.title"
-    :style="styles.container"
-  >
-    <figure
-      itemprop="image"
-      itemscope
-      itemtype="https://schema.org/ImageObject"
-      class="absolute w-full rounded-sm"
-      :class="{ 'relative aspect-square': isSquare }"
-      :style="styles.figure"
+  <li :style="styles.container">
+    <VLink
+      itemprop="contentUrl"
+      :title="contextSensitiveTitle"
+      :href="imageLink"
+      class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
+      :aria-label="contextSensitiveTitle"
     >
-      <img
-        ref="img"
-        loading="lazy"
-        class="block w-full rounded-sm object-cover"
-        :class="isSquare ? 'h-full' : 'margin-auto'"
-        :alt="image.title"
-        :src="imageUrl"
-        :width="imgWidth"
-        :height="imgHeight"
-        itemprop="thumbnailUrl"
-        @load="getImgDimension"
-        @error="onImageLoadError($event)"
-      />
-      <figcaption
-        class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
+      <figure
+        itemprop="image"
+        itemscope
+        itemtype="https://schema.org/ImageObject"
+        class="absolute w-full rounded-sm"
+        :class="{ 'relative aspect-square': isSquare }"
+        :style="styles.figure"
       >
-        <span class="sr-only">{{ image.title }}</span>
-        <VLicense :license="image.license" :hide-name="true" />
-      </figcaption>
-    </figure>
-    <i v-if="!isSquare" :style="styles.iPadding" class="block" aria-hidden />
-  </VLink>
+        <img
+          ref="img"
+          loading="lazy"
+          class="block w-full rounded-sm object-cover"
+          :class="isSquare ? 'h-full' : 'margin-auto'"
+          :alt="image.title"
+          :src="imageUrl"
+          :width="imgWidth"
+          :height="imgHeight"
+          itemprop="thumbnailUrl"
+          @load="getImgDimension"
+          @error="onImageLoadError($event)"
+        />
+        <figcaption
+          class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
+        >
+          <h2 class="sr-only">{{ image.title }}</h2>
+          <VLicense :license="image.license" :hide-name="true" />
+        </figcaption>
+      </figure>
+      <i v-if="!isSquare" :style="styles.iPadding" class="block" aria-hidden />
+    </VLink>
+  </li>
 </template>
 
 <script lang="ts">
@@ -44,6 +45,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
+import { useI18n } from "~/composables/use-i18n"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
@@ -87,6 +89,7 @@ export default defineComponent({
       imageSize: { width: props.image.width, height: props.image.height },
       isSquare,
     })
+    const i18n = useI18n()
 
     const imageUrl = computed(() => {
       // TODO: check if we have blurry panorama thumbnails
@@ -130,12 +133,19 @@ export default defineComponent({
       imgWidth.value = element.naturalWidth
     }
 
+    const contextSensitiveTitle = computed(() => {
+      return i18n.t("browse-page.aria.image-title", {
+        title: props.image.title,
+      })
+    })
+
     return {
       styles,
       imgWidth,
       imgHeight,
       imageUrl,
       imageLink,
+      contextSensitiveTitle,
 
       getImageForeignUrl,
       onImageLoadError,

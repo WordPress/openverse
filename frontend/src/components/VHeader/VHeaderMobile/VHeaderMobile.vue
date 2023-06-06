@@ -27,14 +27,12 @@
             <VLogoButton
               v-show="!searchBarIsActive"
               :is-fetching="isFetching"
-              :is-search-route="true"
-              class="w-12"
             />
             <VSearchBarButton
               v-show="searchBarIsActive"
-              :icon-path="chevronLeftIcon"
+              icon="chevron-left"
               :inner-size="8"
-              :label="$t('header.back-button')"
+              :label="$t('header.backButton')"
               :rtl-flip="true"
               inner-area-classes="bg-dark-charcoal-10 hover:bg-dark-charcoal hover:text-white"
               @click="handleBack"
@@ -50,7 +48,7 @@
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
             :value="searchTerm"
             :aria-label="
-              $t('search.search-bar-label', {
+              $t('search.searchBarLabel', {
                 openverse: 'Openverse',
               }).toString()
             "
@@ -69,7 +67,7 @@
           <slot>
             <VSearchBarButton
               v-show="searchBarIsActive && searchTerm"
-              :icon-path="closeIcon"
+              icon="close-small"
               :label="$t('browse-page.search-form.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
@@ -97,16 +95,17 @@
           </slot>
         </form>
       </div>
-
-      <VRecentSearches
-        v-show="showRecentSearches"
-        :selected-idx="selectedIdx"
-        :entries="entries"
-        :bordered="false"
-        class="mt-4"
-        @select="handleSelect"
-        @clear="handleClear"
-      />
+      <ClientOnly>
+        <VRecentSearches
+          v-show="showRecentSearches"
+          :selected-idx="selectedIdx"
+          :entries="entries"
+          :bordered="false"
+          class="mt-4"
+          @select="handleSelect"
+          @clear="handleClear"
+        />
+      </ClientOnly>
     </VInputModal>
   </header>
 </template>
@@ -121,6 +120,7 @@ import { keycodes } from "~/constants/key-codes"
 
 import { IsHeaderScrolledKey } from "~/types/provides"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useSearch } from "~/composables/use-search"
 
@@ -133,9 +133,6 @@ import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VCo
 import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
-
-import closeIcon from "~/assets/icons/close-small.svg"
-import chevronLeftIcon from "~/assets/icons/chevron-left.svg"
 
 /**
  * Displays a text field for a search query and is attached to an action button
@@ -166,7 +163,10 @@ export default defineComponent({
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { updateSearchState, searchTerm, searchStatus } = useSearch()
+    const { sendCustomEvent } = useAnalytics()
+
+    const { updateSearchState, searchTerm, searchStatus } =
+      useSearch(sendCustomEvent)
 
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
@@ -292,8 +292,6 @@ export default defineComponent({
     })
 
     return {
-      chevronLeftIcon: chevronLeftIcon as unknown as string,
-      closeIcon: closeIcon as unknown as string,
       searchInputRef,
       headerRef,
 

@@ -1,0 +1,4 @@
+# Files and directories to be ignored when creating the Docker build context
+tests
+*.md
+DAGs.md

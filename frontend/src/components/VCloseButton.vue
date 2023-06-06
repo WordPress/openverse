@@ -1,18 +1,11 @@
 <template>
   <VIconButton
-    :button-props="{
-      variant:
-        variant === 'black'
-          ? 'plain--avoid'
-          : variant === 'filled-white-light'
-          ? 'filled-white'
-          : variant,
-    }"
-    :icon-props="{ iconPath }"
+    :button-props="buttonProps"
+    :icon-props="iconProps"
     :borderless="true"
     :size="size"
     :class="{
-      'bg-black text-white ring-offset-black focus-slim-tx-yellow hover:border hover:border-white':
+      'bg-tx text-white ring-offset-tx focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10':
         variant === 'black',
       '!text-dark-charcoal-70 hover:!text-white':
         variant === 'filled-white-light',
@@ -24,12 +17,20 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
+import type { ButtonVariant } from "~/types/button"
+
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 import type { TranslateResult } from "vue-i18n"
 
-import closeIcon from "~/assets/icons/close.svg"
-import closeIconSmall from "~/assets/icons/close-small.svg"
+type CloseButtonVariant =
+  | "filled-white"
+  | "filled-white-light"
+  | "filled-transparent"
+  | "transparent-gray"
+  | "filled-dark"
+  | "black"
+  | "plain--avoid"
 
 /**
  * The square icon button with a cross in it. Used to close popovers,
@@ -54,20 +55,14 @@ export default defineComponent({
      * @default "filled-white-light"
      */
     variant: {
-      type: String as PropType<
-        | "filled-white"
-        | "filled-white-light"
-        | "filled-transparent"
-        | "filled-dark"
-        | "black"
-      >,
+      type: String as PropType<CloseButtonVariant>,
       default: "filled-white-light",
     },
     /**
      * The size of the underlying VIconButton.
      */
     size: {
-      type: String as PropType<"small" | "medium" | "large">,
+      type: String as PropType<"close" | "small" | "medium" | "large">,
       default: "medium",
     },
     /**
@@ -81,12 +76,23 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const iconPath = computed<string>(() => {
-      return props.iconSize === "small" ? closeIconSmall : closeIcon
+    const iconProps = computed(() => {
+      return { name: props.iconSize === "small" ? "close-small" : "close" }
+    })
+
+    const buttonProps = computed<{ variant: ButtonVariant }>(() => {
+      const variant =
+        props.variant === "black"
+          ? "plain--avoid"
+          : props.variant === "filled-white-light"
+          ? "filled-white"
+          : props.variant
+      return { variant }
     })
 
     return {
-      iconPath,
+      buttonProps,
+      iconProps,
     }
   },
 })

@@ -1,29 +1,17 @@
-import { fireEvent, render } from "@testing-library/vue"
-import Vuei18n from "vue-i18n"
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "getByText"] }] */
 
-import {
-  setActivePinia,
-  createPinia,
-  PiniaVuePlugin,
-} from "~~/test/unit/test-utils/pinia"
+import { fireEvent } from "@testing-library/vue"
 
+import { render } from "~~/test/unit/test-utils/render"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
-const enMessages = require("~/locales/en.json")
-
 window.HTMLMediaElement.prototype.play = () => {
   /* mock */
 }
-
-const mockI18n = new Vuei18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: enMessages },
-})
 
 jest.mock("~/composables/use-match-routes", () => ({
   // mocking `Ref<boolean>` as `{ value: boolean }`
@@ -35,70 +23,38 @@ jest.mock("~/composables/use-browser-detection", () => ({
   useBrowserIsBlink: jest.fn(() => false),
 }))
 
-jest.mock("~/composables/use-i18n", () => ({
-  useI18n: jest.fn(() => ({
-    t: jest.fn((val) => val),
-    tc: jest.fn((val) => val),
-  })),
-}))
-
-const useVueI18n = (vue) => {
-  vue.use(Vuei18n)
-
-  return {
-    i18n: mockI18n,
-  }
-}
-const useStore = (vue) => {
-  vue.use(PiniaVuePlugin)
-  const pinia = createPinia()
-  const activeMediaStore = useActiveMediaStore(pinia)
-  activeMediaStore.$patch({
-    state: {
-      type: "audio",
-      id: "e19345b8-6937-49f7-a0fd-03bf057efc28",
-      message: null,
-      state: "paused",
-    },
-  })
-
-  return {
-    pinia,
-  }
-}
-
-const configureVue = (vue) => {
-  const { i18n } = useVueI18n(vue)
-  const { pinia } = useStore(vue)
-
-  return {
-    i18n,
-    pinia,
-    /** @todo Create a better mock that can be configured to test this behavior.  */
-  }
-}
-
 const stubs = {
   VPlayPause: true,
   VLicense: true,
   VWaveform: true,
+  VAudioThumbnail: true,
 }
 
 describe("AudioTrack", () => {
   let options = null
   let props = null
+  let configureVue = null
 
   beforeEach(() => {
     props = {
       audio: getAudioObj(),
+    }
+    configureVue = (localVue, options) => {
+      const activeMediaStore = useActiveMediaStore(options.pinia)
+      activeMediaStore.$patch({
+        state: {
+          type: "audio",
+          id: "e19345b8-6937-49f7-a0fd-03bf057efc28",
+          message: null,
+          state: "paused",
+        },
+      })
     }
 
     options = {
       propsData: props,
       stubs,
     }
-
-    setActivePinia(createPinia())
   })
 
   it("should render the full audio track component even without duration", () => {
@@ -144,9 +100,9 @@ describe("AudioTrack", () => {
     const { getByRole, getByText } = render(VAudioTrack, options, configureVue)
 
     await fireEvent.click(getByRole("button"))
-    await expect(playStub).toHaveBeenCalledTimes(1)
-    await expect(pauseStub).toHaveBeenCalledTimes(1)
-    await expect(getByText("audio-track.messages.err_unallowed")).toBeVisible()
+    expect(playStub).toHaveBeenCalledTimes(1)
+    expect(pauseStub).toHaveBeenCalledTimes(1)
+    expect(getByText(/Reproduction not allowed./i)).toBeVisible()
     // It's not possible to get the vm to test that Sentry has been called
   })
 })

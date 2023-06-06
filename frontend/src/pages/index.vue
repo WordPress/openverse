@@ -16,26 +16,30 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, defineComponent, onMounted, ref } from "vue"
 
-import { defineComponent, useMeta, useRouter } from "@nuxtjs/composition-api"
+import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
   SupportedSearchType,
   supportedSearchTypes,
 } from "~/constants/media"
+import { useAnalytics } from "~/composables/use-analytics"
 import { useLayout } from "~/composables/use-layout"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
+import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
+import VHomepageContent from "~/components/VHomepageContent.vue"
+
 export default defineComponent({
   name: "HomePage",
   components: {
-    VHomeGallery: () => import("~/components/VHomeGallery/VHomeGallery.vue"),
-    VHomepageContent: () => import("~/components/VHomepageContent.vue"),
+    VHomeGallery,
+    VHomepageContent,
   },
   setup() {
     const router = useRouter()
@@ -43,6 +47,8 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const uiStore = useUiStore()
+
+    const { sendCustomEvent } = useAnalytics()
 
     useMeta({
       meta: [
@@ -73,7 +79,10 @@ export default defineComponent({
     }
 
     const handleSearch = (searchTerm: string) => {
-      if (!searchTerm) return
+      sendCustomEvent("SUBMIT_SEARCH", {
+        searchType: searchType.value,
+        query: searchTerm,
+      })
 
       router.push(
         searchStore.updateSearchPath({

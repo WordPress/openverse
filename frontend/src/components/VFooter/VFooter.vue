@@ -61,9 +61,10 @@ export default defineComponent({
   },
   props: {
     /**
-     * whether the footer is being rendered on a content page or an internal
-     * page; This determines whether the Openverse logo and other links are
-     * displayed.
+     * whether the footer is being rendered on a search page or an internal
+     * page (about, feedback, etc.); This determines whether the Openverse
+     * logo and other links are displayed.
+     * Search pages use "content" footer.
      */
     mode: {
       type: String as PropType<"internal" | "content">,

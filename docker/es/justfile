@@ -26,19 +26,19 @@ NO_COLOR := "\\033[0m"
     '"$(just docker/es/health {{ host }})" != "200"' \
     "Waiting for Elasticsearch to be healthy..."
 
-@check-index index="image":
+@check-index index="image" dest="":
     -curl \
       -s \
       -H 'Accept: application/json' \
       'http://localhost:50292/_cat/indices/{{ index }}' \
-    | grep -o "{{ index }}" \
+    | grep -o "{{ (if dest == "" { index } else { dest }) }}" \
     | wc -l \
     | xargs
 
 # Wait for the media to be indexed in Elasticsearch
-@wait-for-index index="image":
+@wait-for-index index="image" dest="":
     # The just command on the second line is executed in the context of the
     # root directory and so must be prefixed with `docker/es/`.
     just ../../_loop \
-    '"$(just docker/es/check-index {{ index }})" != "1"' \
+    '"$(just docker/es/check-index {{ index }} {{ dest }})" != "1"' \
     "Waiting for index '{{ index }}' to be ready..."

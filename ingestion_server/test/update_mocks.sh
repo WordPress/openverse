@@ -5,9 +5,9 @@
 
 # Fetch the schema for image and audio tables from the running DB host
 docker run \
-	--rm -i --network='host' --volume="$(pwd)/mock_schemas:/mock_schemas" \
-	postgres \
-	/bin/bash <<-EOF
+  --rm -i --network='host' --volume="$(pwd)/mock_schemas:/mock_schemas" \
+  postgres \
+  /bin/bash <<-EOF
 		export PGPASSWORD=deploy
 		pg_dump -s -t image            -U deploy -d openledger -h localhost         > /mock_schemas/image.sql
 		pg_dump -s -t api_deletedimage -U deploy -d openledger -h localhost         > /mock_schemas/api_deletedimage.sql
@@ -31,9 +31,9 @@ sed -i "" '/search_path/d' mock_schemas/audioset_view.sql
 
 # Select some media samples and export them to CSV
 docker run \
-	--rm --network='host' --volume="$(pwd)/mock_data:/mock_data" \
-	postgres \
-	/bin/bash -c "PGPASSWORD=deploy psql -U deploy -d openledger -h localhost -p 5433 <<-EOF
+  --rm --network='host' --volume="$(pwd)/mock_data:/mock_data" \
+  postgres \
+  /bin/bash -c "PGPASSWORD=deploy psql -U deploy -d openledger -h localhost -p 5433 <<-EOF
 		\copy (SELECT * FROM image_view) to '/mock_data/mocked_image_view.csv' with (FORMAT csv, HEADER true);
 		\copy (SELECT * FROM audio_view) to '/mock_data/mocked_audio_view.csv' with (FORMAT csv, HEADER true);
 		EOF"

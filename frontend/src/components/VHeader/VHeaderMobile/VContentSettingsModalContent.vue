@@ -9,7 +9,7 @@
   >
     <VTabs
       :selected-id="selectedTab"
-      tablist-style="ps-6 pe-2"
+      tablist-style="ps-4 pe-2"
       variant="plain"
       label="content-settings"
       class="flex min-h-0 flex-col"
@@ -21,14 +21,14 @@
           id="content-settings"
           size="medium"
           class="me-4 gap-x-2"
-          ><VIcon :icon-path="searchType.icon" />
+          ><VIcon :name="searchType.searchType" />
           <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
         >
         <h2
           v-else
           class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal"
         >
-          <VIcon :icon-path="searchType.icon" />
+          <VIcon :name="searchType.searchType" />
           {{ $t("search-type.heading") }}
         </h2>
         <VFilterTab
@@ -36,7 +36,7 @@
           :applied-filter-count="appliedFilterCount"
         />
         <VCloseButton
-          :label="$t('modal.close-content-settings')"
+          :label="$t('modal.closeContentSettings')"
           variant="filled-white"
           class="ms-auto self-center"
           @close="close"
@@ -58,15 +58,16 @@
     </VTabs>
     <footer
       v-if="showFilters"
-      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 px-6 py-4"
+      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 p-4"
     >
       <VButton
         v-show="showClearFiltersButton"
-        variant="text"
-        class="!font-normal"
+        variant="transparent-gray"
+        class="label-bold !text-pink disabled:!text-dark-charcoal-40"
         :disabled="isClearButtonDisabled"
+        size="large"
         @click="clearFilters"
-        >{{ $t("filter-list.clear") }}
+        >{{ $t("filterList.clear") }}
       </VButton>
       <VShowResultsButton :is-fetching="isFetching" @click="close" />
     </footer>

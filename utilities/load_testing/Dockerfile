@@ -1,4 +1,6 @@
-FROM python:3.10-slim
+# syntax=docker/dockerfile:1
+
+FROM python:3.11-slim
 
 # See https://github.com/grafana/k6#linux
 RUN apt-get update && \

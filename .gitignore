@@ -7,6 +7,9 @@
 .vscode/
 .swp
 
+# General detritus
+logs/
+
 # Environment
 .env
 
@@ -24,9 +27,14 @@ __pycache__/
 node_modules/
 npm-debug.log*
 .pnpm-debug.log
+.pnpm-store/
 
 # Nuxt
 .nuxt
+
+# Airflow
+airflow.cfg
+airflow.db
 
 # Local certificates
 *.pem
@@ -35,6 +43,9 @@ npm-debug.log*
 
 # pre-commit
 pre-commit.pyz
+
+# Ruff
+.ruff_cache
 
 # ESLint
 .eslintcache

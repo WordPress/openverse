@@ -10,6 +10,20 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
+###########
+# Version #
+###########
+
+export INGESTION_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
+
+# Print the Python version specified in the `Pipfile`
+@py-version:
+    echo $INGESTION_PY_VERSION
+
+###########
+# Install #
+###########
+
 # Install dependencies
 install *args="--dev":
     pipenv install {{ args }}
@@ -71,10 +85,20 @@ promote model="image" suffix="init" alias="image":
 delete model="image" suffix="init" alias="image":
     just _curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
 
+point-alias model suffix alias:
+    just _curl-post '{"model": "{{ model }}", "action": "POINT_ALIAS", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+
+create-and-populate-filtered-index model="image" destination_suffix="init":
+    just _curl-post '{"model": "{{ model }}", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "{{ destination_suffix }}"}'
+
 #########
 # Tests #
 #########
 
 # Run ingestion-server tests locally
 test-local *args:
-    pipenv run ./test/run_test.sh {{ args }}
+    pipenv run pytest {{ args }}
+
+# Clean integration test docker-compose stack. Useful if test tear down does not run due to catastrophic test failure.
+test-clean-dc:
+    docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml down -v

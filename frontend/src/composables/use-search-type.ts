@@ -16,18 +16,16 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useI18n } from "~/composables/use-i18n"
 
-import allIcon from "~/assets/icons/all-content.svg"
-import audioIcon from "~/assets/icons/audio-content.svg"
-import imageIcon from "~/assets/icons/image-content.svg"
-import videoIcon from "~/assets/icons/video-content.svg"
-import model3dIcon from "~/assets/icons/model-3d.svg"
+import { useAnalytics } from "~/composables/use-analytics"
+
+import { useComponentName } from "./use-component-name"
 
 const icons = {
-  [ALL_MEDIA]: allIcon,
-  [AUDIO]: audioIcon,
-  [IMAGE]: imageIcon,
-  [VIDEO]: videoIcon,
-  [MODEL_3D]: model3dIcon,
+  [ALL_MEDIA]: "all",
+  [AUDIO]: "audio",
+  [IMAGE]: "image",
+  [VIDEO]: "video",
+  [MODEL_3D]: "model-3d",
 } as const
 
 const labels = {
@@ -40,6 +38,9 @@ const labels = {
 
 export default function useSearchType() {
   const i18n = useI18n()
+  const componentName = useComponentName()
+  const analytics = useAnalytics()
+
   const activeType = computed(() => useSearchStore().searchType)
 
   const previousSearchType = ref(activeType.value)
@@ -47,12 +48,20 @@ export default function useSearchType() {
   const featureFlagStore = useFeatureFlagStore()
 
   const additionalTypes = computed(() =>
-    featureFlagStore.isOn("external_sources") ? additionalSearchTypes : []
+    featureFlagStore.isOn("additional_search_types")
+      ? additionalSearchTypes
+      : []
   )
   const searchTypes = [...supportedSearchTypes]
 
   const setActiveType = (searchType: SearchType) => {
     if (previousSearchType.value === searchType) return
+
+    analytics.sendCustomEvent("CHANGE_CONTENT_TYPE", {
+      previous: previousSearchType.value,
+      next: searchType,
+      component: componentName,
+    })
     useSearchStore().setSearchType(searchType)
     previousSearchType.value = searchType
   }

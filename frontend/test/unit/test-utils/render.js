@@ -1,26 +1,28 @@
 import VueI18n from "vue-i18n"
-import { shallowMount, createLocalVue } from "@vue/test-utils"
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
+import { render as testingLibraryRender } from "@testing-library/vue"
 
-const messages = require("../../../src/locales/en.json")
+import { createPinia, PiniaVuePlugin } from "~~/test/unit/test-utils/pinia"
+import { i18n } from "~~/test/unit/test-utils/i18n"
 
-const i18n = new VueI18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages,
-})
-
-const render = (
-  Component,
-  options = { localVue, i18n },
-  renderer = shallowMount
-) => {
-  if (!options.i18n) {
+/**
+ * @returns {ReturnType<typeof testingLibraryRender>}
+ */
+export const render = (Component, options = {}, configureCb = null) => {
+  if (!options?.i18n) {
     options.i18n = i18n
   }
-  return renderer(Component, options)
-}
+  if (!options?.pinia) {
+    options.pinia = createPinia()
+  }
 
-export default render
+  return testingLibraryRender(Component, options, (localVue) => {
+    localVue.use(VueI18n)
+    localVue.use(PiniaVuePlugin)
+
+    // This callback can be used to set up the store
+    if (configureCb) {
+      configureCb(localVue, options)
+    }
+  })
+}

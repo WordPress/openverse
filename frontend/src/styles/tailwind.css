@@ -108,7 +108,7 @@ Time                - 11px - xs semibold (default leading-tight)
   }
 
   .label-regular {
-    @apply text-sm;
+    @apply text-sm font-normal;
   }
 
   .caption-regular {
@@ -140,7 +140,7 @@ Time                - 11px - xs semibold (default leading-tight)
    *
    * There is no bold-transparent variant.
    *
-   * The color of the ring is set by a plugin defined in `tailwind.config.js`.
+   * The color of the ring (or outline for `focus-slim-filled`) is set by a plugin defined in `tailwind.config.js`.
    */
 
   [class*="focus-slim-offset"] {
@@ -158,7 +158,7 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:hover:border-tx; /* focus prevails over hover */
   }
 
-  [class*="focus-slim-filled"],
+  [class*="focus-slim-borderless-filled"],
   [class*="focus-bold-filled"] {
     @apply relative;
     @apply after:pointer-events-none after:absolute after:inset-0 after:-z-10 after:rounded-inherit;
@@ -166,10 +166,22 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:outline-none; /* UA styles: none */
     @apply focus-visible:after:z-10; /* inner-stroke: pseudo-element */
   }
-
-  [class*="focus-slim-filled"] {
+  [class*="focus-slim-borderless-filled"] {
     @apply focus-visible:after:shadow-slim-filled;
     @apply focus-visible:ring; /* outer-stroke: box-shadow */
+  }
+  [class*="focus-slim-filled"] {
+    @apply focus-visible:relative focus-visible:after:pointer-events-none;
+    /* colored outline */
+    @apply focus-visible:outline focus-visible:outline-1.5 focus-visible:outline-offset-0;
+    /* absolutely positioned overlapping pseudo element with a 1.5px border */
+    @apply focus-visible:after:absolute focus-visible:after:z-10 focus-visible:after:rounded-inherit;
+    @apply focus-visible:after:border-1.5 focus-visible:after:border-white;
+    @apply focus-visible:after:h-full-with-border focus-visible:after:w-full-with-border;
+    @apply focus-visible:after:-left-px focus-visible:after:-top-px;
+  }
+  [class*="focus-slim-filled"]:focus-visible {
+    outline-color: var(--tw-outline-color);
   }
 
   [class*="focus-bold-filled"] {

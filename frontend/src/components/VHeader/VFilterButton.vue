@@ -1,14 +1,9 @@
 <template>
   <VButton
     id="filter-button"
-    variant="plain"
+    :variant="pressed ? 'filled-dark' : 'bordered-white'"
     size="disabled"
-    class="align-center label-regular h-12 w-12 gap-2 self-center border-tx xl:w-auto xl:pe-4 xl:ps-3"
-    :class="
-      pressed
-        ? 'bg-dark-charcoal text-white hover:bg-dark-charcoal-90'
-        : 'bg-white hover:border-dark-charcoal-20'
-    "
+    class="label-regular h-12 w-12 gap-x-2 self-center xl:w-auto xl:pe-4 xl:ps-3"
     :pressed="pressed"
     :disabled="disabled"
     aria-controls="filters"
@@ -58,9 +53,9 @@ export default defineComponent({
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
 
-    const textLabel = computed(() => i18n.t("header.filter-button.simple"))
+    const textLabel = computed(() => i18n.t("header.filterButton.simple"))
     const ariaLabel = computed(() =>
-      i18n.tc("header.filter-button.with-count", filterCount.value)
+      i18n.tc("header.filterButton.withCount", filterCount.value)
     )
 
     return {

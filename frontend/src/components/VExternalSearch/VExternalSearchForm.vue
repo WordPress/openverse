@@ -7,28 +7,28 @@
   >
     <i18n
       v-if="!hasNoResults && isSupported"
-      path="external-sources.form.supported-title"
+      path="externalSources.form.supportedTitle"
       tag="p"
       class="description-regular"
     />
 
     <i18n
       v-else-if="!hasNoResults && !isSupported"
-      path="external-sources.form.unsupported-title"
+      path="externalSources.form.unsupportedTitle"
       tag="p"
       class="description-regular"
     >
       <template #openverse>Openverse</template>
-      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
     </i18n>
 
     <i18n
       v-else
-      path="external-sources.form.no-results-title"
+      path="externalSources.form.noResultsTitle"
       tag="p"
       class="description-regular"
     >
-      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
       <template #query>{{ searchTerm }}</template>
     </i18n>
 
@@ -44,43 +44,32 @@
       size="disabled"
       class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
       @click="onTriggerClick"
-      >{{ $t("external-sources.button").toString()
+      >{{ $t("externalSources.button").toString()
       }}<VIcon
         class="text-dark-charcoal-40"
         :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
-        :icon-path="caretDownIcon"
+        name="caret-down"
       />
     </VButton>
     <template v-if="triggerElement">
-      <VPopoverContent
-        v-if="isMd"
-        id="external-sources-popover"
-        aria-labelledby="external-sources-button"
+      <Component
+        :is="isMd ? 'VPopoverContent' : 'VModalContent'"
+        :id="isMd ? 'external-sources-popover' : 'external-sources-modal'"
+        :aria-labelledby="'external-sources-button'"
         :hide="closeDialog"
         :trigger-element="triggerElement"
         :visible="isVisible"
-        z-index="popover"
+        :z-index="isMd ? 'popover' : 'modal'"
+        :variant="isMd ? undefined : 'centered'"
       >
         <VExternalSourceList
           class="flex flex-col"
           :external-sources="externalSources"
-          @close="closeDialog"
-      /></VPopoverContent>
-      <VModalContent
-        v-else
-        id="external-sources-modal"
-        aria-labelledby="external-sources-button"
-        :trigger-element="triggerElement"
-        :hide="closeDialog"
-        :visible="isVisible"
-        variant="centered"
-      >
-        <VExternalSourceList
-          class="flex-col justify-center"
-          :external-sources="externalSources"
+          :media-type="type"
+          :search-term="searchTerm"
           @close="closeDialog"
         />
-      </VModalContent>
+      </Component>
     </template>
   </section>
 </template>
@@ -102,8 +91,6 @@ import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
-
-import caretDownIcon from "~/assets/icons/caret-down.svg"
 
 export default defineComponent({
   name: "VExternalSearchForm",
@@ -176,8 +163,6 @@ export default defineComponent({
       triggerA11yProps,
 
       isVisible,
-
-      caretDownIcon,
     }
   },
 })

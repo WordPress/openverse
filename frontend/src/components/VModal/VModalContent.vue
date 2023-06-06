@@ -32,16 +32,12 @@
             class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
           >
-            <VButton
+            <VCloseButton
               ref="closeButton"
-              size="disabled"
-              variant="plain"
-              class="text-sr md:text-base md:text-white"
-              @click="hide()"
-            >
-              {{ $t("modal.close") }}
-              <VIcon :icon-path="closeIcon" class="ms-2" :size="5" />
-            </VButton>
+              :label="$t('modal.ariaClose')"
+              variant="filled-white"
+              @close="hide()"
+            />
           </div>
         </slot>
 
@@ -68,17 +64,14 @@ import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-
-import closeIcon from "~/assets/icons/close.svg"
+import VCloseButton from "~/components/VCloseButton.vue"
 
 /**
  * Renders the inner content of a modal and manages focus.
  */
 export default defineComponent({
   name: "VModalContent",
-  components: { VTeleport, VButton, VIcon },
+  components: { VCloseButton, VTeleport },
   inheritAttrs: false,
   props: {
     visible: {
@@ -136,7 +129,7 @@ export default defineComponent({
   },
   setup(props, { emit, attrs }) {
     const propsRefs = toRefs(props)
-    const closeButton = ref<InstanceType<typeof VButton> | null>(null)
+    const closeButton = ref<InstanceType<typeof VCloseButton> | null>(null)
     const initialFocusElement = computed(
       () => props.initialFocusElement || closeButton.value?.$el
     )
@@ -164,7 +157,6 @@ export default defineComponent({
       dialogRef,
       onKeyDown,
       onBlur,
-      closeIcon,
       closeButton,
       deactivateFocusTrap,
     }
@@ -183,8 +175,7 @@ export default defineComponent({
   @apply bg-tx;
 }
 .modal-backdrop {
-  /* linting plugin changes the order if we use non-custom value of h-screen for 100vh */
-  @apply h-[100dvh] h-[100vh];
+  @apply h-[100dvh] max-h-[100dvh];
 }
 .modal-backdrop-fit-content,
 .modal-backdrop-two-thirds {
@@ -201,7 +192,7 @@ export default defineComponent({
   @apply w-full;
 }
 .modal-two-thirds {
-  @apply mt-auto h-2/3 w-full  rounded-se-lg rounded-ss-lg bg-white;
+  @apply mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white;
 }
 
 .modal-dark {

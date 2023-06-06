@@ -24,8 +24,8 @@ more. Openverse is live at [openverse.org](https://openverse.org).
 This repository contains most of the codebase, except for the Openverse catalog.
 Eventually the catalog will be merged into this repository as well.
 
-- [Catalog](https://github.com/wordpress/openverse-catalog) | The Apache
-  Airflow-powered system for downloading and storing Openverse's metadata
+- [Catalog](catalog/) | The Apache Airflow-powered system for downloading and
+  storing Openverse's metadata
 - [Ingestion server](ingestion_server/) | The mechanism for refreshing the data
   from the catalog to the API
 - [API](api/) | The Django REST API for querying the database, used by the
@@ -41,8 +41,8 @@ This repository also contains the following directories.
 
 - [Brand](brand/) | Brand assets for Openverse such as logo and icon and
   guidelines for using these assets
-- [Templates](templates/) | Common scaffolding code that is rendered and synced
-  to the catalog repo
+- [Templates](templates/) | Jinja templates that can be rendered into common
+  scaffolding code for the project
 
 ## Keep in touch
 
@@ -78,7 +78,9 @@ You are welcome to take any open issue in the tracker labelled
 contribution as well, but may be less accessible or well-defined in comparison
 to those that are explicitly labelled.
 
-See the [`CONTRIBUTING.md`](CONTRIBUTING.md) file for details.
+See the
+[contribution guide](https://docs.openverse.org/general/contributing.html) for
+details.
 
 ## Acknowledgments
 

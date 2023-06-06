@@ -3,6 +3,7 @@
     :images="results"
     :is-single-page="false"
     :fetch-state="fetchState"
+    :image-grid-label="$t('browse-page.aria.results', { query: searchTerm })"
   />
 </template>
 

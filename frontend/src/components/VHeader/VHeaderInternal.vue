@@ -3,7 +3,7 @@
     ref="nodeRef"
     class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 pe-3 ps-2 md:py-4 lg:pe-10 lg:ps-6"
   >
-    <VHomeLink variant="dark" class="px-4 hover:bg-yellow" />
+    <VHomeLink variant="dark" />
     <nav class="hidden lg:flex">
       <VPageLinks
         mode="light"
@@ -15,7 +15,7 @@
       <VIconButton
         id="menu-button"
         ref="menuButtonRef"
-        :icon-props="{ iconPath: menuIcon }"
+        :icon-props="{ name: 'menu' }"
         :label="$t('header.aria.menu')"
         v-bind="triggerA11yProps"
         class="border-tx hover:bg-dark-charcoal hover:text-white"
@@ -29,6 +29,7 @@
           :hide="closePageMenu"
           :visible="isModalVisible"
           :trigger-element="triggerElement"
+          :trap-focus="false"
           aria-labelledby="menu-button"
         >
           <VPageLinks
@@ -50,15 +51,12 @@
           @open="openPageMenu"
         >
           <template #top-bar>
-            <div class="flex h-20 w-full justify-between py-4 pe-3 ps-6">
-              <VHomeLink
-                variant="light"
-                class="focus-visible:ring-yellow focus-visible:ring-offset-0"
-              />
+            <div class="flex h-20 w-full justify-between py-4 pe-3 ps-2">
+              <VHomeLink variant="light" />
               <VCloseButton
                 variant="black"
                 icon-size="large"
-                :label="$t('modal.close-pages-menu')"
+                :label="$t('modal.closePagesMenu')"
                 @close="closePageMenu"
               />
             </div>
@@ -100,8 +98,6 @@ import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
-
-import menuIcon from "~/assets/icons/menu.svg"
 
 export default defineComponent({
   name: "VHeaderInternal",
@@ -163,8 +159,6 @@ export default defineComponent({
       menuButtonRef,
       modalContentRef,
       nodeRef,
-
-      menuIcon,
 
       allPages,
       currentPage,

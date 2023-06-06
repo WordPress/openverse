@@ -1,4 +1,6 @@
-# Project Proposal - 2022-03-09
+# 2022-03-09 Project Proposal: Feature flags
+
+**Author**: @dhruvkb
 
 ## Reviewers
 
@@ -109,7 +111,7 @@ The feature flag state is determined in two steps.
 Conf files are JSON files that define the feature flags. Here is a sample of
 what the schema of this file looks like:
 
-```json5
+```js
 {
   features: {
     feature_name_1: {
@@ -140,7 +142,7 @@ For flags that are set to switchable in the conf files, we use the state in the
 cookie to determine whether the flag is set to on or off. This cookie has the
 following schema.
 
-```json5
+```js
 {
   features: {
     feature_name_1: "on",

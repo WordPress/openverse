@@ -1,5 +1,7 @@
 import Vue from "vue"
-import { fireEvent, render, screen } from "@testing-library/vue"
+import { fireEvent, screen } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 

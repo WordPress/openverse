@@ -7,7 +7,7 @@
         : 'border-white'
     "
   >
-    <VLogoButton :is-fetching="isFetching" class="h-12" />
+    <VLogoButton :is-fetching="isFetching" />
 
     <VSearchBar
       ref="searchBarRef"
@@ -18,7 +18,7 @@
     >
       <VSearchBarButton
         v-show="searchTerm !== ''"
-        :icon-path="closeIcon"
+        icon="close-small"
         :label="$t('browse-page.search-form.clear')"
         inner-area-classes="bg-white hover:bg-dark-charcoal-10"
         class="hidden group-focus-within:flex"
@@ -54,6 +54,7 @@ import { useUiStore } from "~/stores/ui"
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useSearch } from "~/composables/use-search"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -63,8 +64,6 @@ import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
-
-import closeIcon from "~/assets/icons/close-small.svg"
 
 /**
  * The desktop search header.
@@ -91,7 +90,10 @@ export default defineComponent({
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { updateSearchState, searchTerm, searchStatus } = useSearch()
+    const { sendCustomEvent } = useAnalytics()
+
+    const { updateSearchState, searchTerm, searchStatus } =
+      useSearch(sendCustomEvent)
 
     const clearSearchTerm = () => {
       searchTerm.value = ""
@@ -113,7 +115,6 @@ export default defineComponent({
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
     return {
-      closeIcon,
       filterButtonRef,
       searchBarRef,
       isFetching,

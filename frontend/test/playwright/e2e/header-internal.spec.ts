@@ -1,22 +1,30 @@
 import { test, expect, Page } from "@playwright/test"
 
 import {
-  isMobileMenuOpen,
+  isDialogOpen,
+  LanguageDirection,
   scrollToBottom,
-  setCookies,
+  setBreakpointCookie,
   t,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-const modalCloseButton = `div[role="dialog"] >> [aria-label="${t(
-  "modal.close-pages-menu"
-)}"]`
 const currentPageLink = 'div[role="dialog"] >> [aria-current="page"]'
 const currentPageLinkInPopover = '.popover-content >> [aria-current="page"]'
-const menuButton = `[aria-label="${t("header.aria.menu")}"]`
 
-const clickMenuButton = async (page: Page) => await page.click(menuButton)
-const closeMenu = async (page: Page) => await page.click(modalCloseButton)
+const getMenuButton = async (page: Page) => {
+  return page.getByRole("button", { name: t("header.aria.menu") })
+}
+
+const clickMenuButton = async (page: Page) => {
+  return (await getMenuButton(page)).click()
+}
+
+const closeMenu = async (page: Page, dir: LanguageDirection = "ltr") => {
+  await page
+    .getByRole("button", { name: t("modal.closePagesMenu", dir) })
+    .click()
+}
 
 const isPagesPopoverOpen = async (page: Page) =>
   page.locator(".popover-content").isVisible({ timeout: 100 })
@@ -25,20 +33,20 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("Header internal", () => {
   breakpoints.describeXs(() => {
-    test.beforeEach(async ({ context }) => {
-      await setCookies(context, { uiBreakpoint: "xs" })
+    test.beforeEach(async ({ page }) => {
+      await setBreakpointCookie(page, "xs")
     })
 
     test("can open and close the modal on xs breakpoint", async ({ page }) => {
       await page.goto("/about")
       await clickMenuButton(page)
-      expect(await isMobileMenuOpen(page)).toBe(true)
+      expect(await isDialogOpen(page)).toBe(true)
       await expect(page.locator(currentPageLink)).toBeVisible()
       await expect(page.locator(currentPageLink)).toHaveText("About")
 
       await closeMenu(page)
-      expect(await isMobileMenuOpen(page)).toBe(false)
-      await expect(page.locator(menuButton)).toBeVisible()
+      expect(await isDialogOpen(page)).toBe(false)
+      await expect(await getMenuButton(page)).toBeVisible()
     })
 
     test("the modal locks the scroll on xs breakpoint", async ({ page }) => {
@@ -67,7 +75,7 @@ test.describe("Header internal", () => {
       await popup.close()
       // If we want the modal to stay open, we'll need to change this to `true`,
       // and implement the change
-      expect(await isMobileMenuOpen(page)).toBe(false)
+      expect(await isDialogOpen(page)).toBe(false)
     })
 
     test("content page opened from home should be scrollable", async ({
@@ -76,6 +84,7 @@ test.describe("Header internal", () => {
       await page.goto("/")
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
+      await page.waitForURL("/about")
       await scrollToBottom(page)
       const scrollPosition = await page.evaluate(() => window.scrollY)
       expect(scrollPosition).toBeGreaterThan(100)
@@ -88,17 +97,19 @@ test.describe("Header internal", () => {
       await page.getByRole("link", { name: t("navigation.about") }).click()
       // "Openverse Home" is hardcoded because our translation helper
       // doesn't support named interpolation.
-      await page.getByRole("link", { name: "Openverse Home" }).click()
+      await page
+        .getByRole("banner")
+        .getByRole("link", { name: "Openverse Home" })
+        .click()
       expect(page.url()).toBe(homeUrl)
     })
   })
 
   breakpoints.describeMd(() => {
     test("can open and close the popover on sm breakpoint", async ({
-      context,
       page,
     }) => {
-      await setCookies(context, { breakpoint: "sm" })
+      await setBreakpointCookie(page, "sm")
       await page.goto("/about")
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(true)
@@ -107,7 +118,7 @@ test.describe("Header internal", () => {
 
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(false)
-      await expect(page.locator(menuButton)).toBeVisible()
+      await expect(await getMenuButton(page)).toBeVisible()
     })
   })
 })

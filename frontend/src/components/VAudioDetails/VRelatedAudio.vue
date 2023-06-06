@@ -4,19 +4,19 @@
       {{ $t("audio-details.related-audios") }}
     </h2>
     <!-- Negative margin compensates for the `p-4` padding in row layout. -->
-    <div
+    <ol
       v-if="!fetchState.fetchingError"
+      :aria-label="$t('audio-details.related-audios')"
       class="-mx-2 mb-12 flex flex-col gap-4 md:-mx-4"
     >
-      <VAudioTrack
-        v-for="audio in media"
-        :key="audio.id"
-        :audio="audio"
-        layout="row"
-        :size="audioTrackSize"
-      />
-      <LoadingIcon v-show="fetchState.isFetching" />
-    </div>
+      <li v-for="audio in media" :key="audio.id">
+        <VAudioTrack :audio="audio" layout="row" :size="audioTrackSize" />
+      </li>
+    </ol>
+    <LoadingIcon
+      v-if="!fetchState.fetchingError"
+      v-show="fetchState.isFetching"
+    />
     <p v-show="!!fetchState.fetchingError">
       {{ $t("media-details.related-error") }}
     </p>

@@ -1,15 +1,17 @@
 <template>
   <div
-    class="app flex h-[100dvh] h-screen flex-col bg-yellow"
+    class="app grid h-[100dvh] h-screen grid-cols-1 grid-rows-[auto,1fr] flex-col bg-yellow"
     :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
   >
-    <div class="sticky top-0 z-40 block">
+    <div class="header-el">
       <VTeleportTarget name="skip-to-content" :force-destroy="true" />
       <VBanners />
       <VHeaderInternal class="bg-yellow" />
     </div>
-    <Nuxt class="flex-grow" />
-    <VFooter mode="search" class="bg-yellow" />
+    <div class="main-content flex flex-grow flex-col overflow-y-scroll">
+      <Nuxt class="flex-grow" />
+      <VFooter mode="internal" class="bg-yellow" />
+    </div>
 
     <VModalTarget class="modal" />
     <VGlobalAudioSection />
@@ -22,6 +24,7 @@ import { PortalTarget as VTeleportTarget } from "portal-vue"
 import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
@@ -44,6 +47,11 @@ export default defineComponent({
   },
   setup() {
     const uiStore = useUiStore()
+
+    const featureStore = useFeatureFlagStore()
+    onMounted(() => {
+      featureStore.initFromSession()
+    })
 
     const { updateBreakpoint } = useLayout()
 
@@ -72,3 +80,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.app {
+  grid-template-areas: "header" "main";
+}
+.header-el {
+  grid-area: header;
+}
+.main-content {
+  grid-area: main;
+}
+</style>

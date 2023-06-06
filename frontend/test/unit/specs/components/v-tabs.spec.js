@@ -1,8 +1,10 @@
-import { render } from "@testing-library/vue"
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expectVisibility"] }] */
 
 import Vue from "vue"
 
 import userEvent from "@testing-library/user-event"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VTab from "~/components/VTabs/VTab.vue"
@@ -15,7 +17,7 @@ import VTabPanel from "~/components/VTabs/VTabPanel.vue"
  * @param {string} text
  * @param {boolean?} visibility
  */
-const expectVisibitility = (screen, text, visibility = true) => {
+const expectVisibility = (screen, text, visibility = true) => {
   const classes = screen.getByText(text).getAttribute("class")
   return visibility
     ? expect(classes).not.toContain("hidden")
@@ -52,9 +54,9 @@ describe("VTabs", () => {
      * for the rendering using `nextTick`.
      */
     await Vue.nextTick()
-    expectVisibitility(screen, "Panel 1 content")
-    expectVisibitility(screen, "Panel 2 content", false)
-    expectVisibitility(screen, "Panel 3 content", false)
+    expectVisibility(screen, "Panel 1 content")
+    expectVisibility(screen, "Panel 2 content", false)
+    expectVisibility(screen, "Panel 3 content", false)
   })
 
   it("should change tabs on Right arrow press", async () => {
@@ -63,8 +65,8 @@ describe("VTabs", () => {
     await userEvent.click(screen.queryByText("Tab1"))
     await userEvent.keyboard("{ArrowRight}")
 
-    expectVisibitility(screen, "Panel 1 content", false)
-    expectVisibitility(screen, "Panel 2 content")
+    expectVisibility(screen, "Panel 1 content", false)
+    expectVisibility(screen, "Panel 2 content")
   })
 
   it("should change tabs on Right arrow and Enter press on manual activation", async () => {
@@ -73,12 +75,12 @@ describe("VTabs", () => {
     await userEvent.click(screen.queryByText("Tab1"))
     await userEvent.keyboard("{ArrowRight}")
 
-    expectVisibitility(screen, "Panel 1 content")
-    expectVisibitility(screen, "Panel 2 content", false)
+    expectVisibility(screen, "Panel 1 content")
+    expectVisibility(screen, "Panel 2 content", false)
 
     await userEvent.keyboard("{Enter}")
 
-    expectVisibitility(screen, "Panel 1 content", false)
-    expectVisibitility(screen, "Panel 2 content")
+    expectVisibility(screen, "Panel 1 content", false)
+    expectVisibility(screen, "Panel 2 content")
   })
 })

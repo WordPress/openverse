@@ -2,4 +2,4 @@
 "*test*" = ["E501"]
 "*__init__*" = ["F401"]
 "*wsgi.py" = ["E402"]
-"*settings.py" = ["F401"]
+"*settings/__init__.py" = ["F403"]

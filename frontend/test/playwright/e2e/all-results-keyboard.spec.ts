@@ -7,13 +7,12 @@ import { keycodes } from "~/constants/key-codes"
 const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
   const isActiveElementOfType = () => {
     return page.evaluate(
-      ([contextType]) =>
-        new RegExp(
-          `/${contextType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-          "i"
-        ).test(
-          (document.activeElement as HTMLAnchorElement | null)?.href ?? ""
-        ),
+      ([contextType]) => {
+        const regex = new RegExp(`^${contextType}:`, "i")
+        const element = document.activeElement as HTMLAnchorElement | null
+        const toTest = element?.title || element?.ariaLabel || ""
+        return regex.test(toTest)
+      },
       [type]
     )
   }
@@ -46,7 +45,7 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("all results grid keyboard accessibility test", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/search?q=birds")
+    await page.goto("/search/?q=birds")
   })
 
   test("should open image results as links", async ({ page }) => {
@@ -84,8 +83,13 @@ test.describe("all results grid keyboard accessibility test", () => {
     const focusedResult = await locateFocusedResult(page)
     const playButton = await audio.getInactive(focusedResult)
     await playButton.click()
+
+    // Get the path for comparison purposes
+    const url = new URL(page.url())
+    const path = url.pathname + url.search
+
     // should not navigate
-    expect(page.url()).toMatch(/\/search\?q=birds$/)
+    expect(path).toMatch(/\/search\/?\?q=birds$/)
 
     const pauseButton = await audio.getActive(focusedResult)
     pauseButton.click()

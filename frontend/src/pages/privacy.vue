@@ -41,23 +41,46 @@
         >
       </template>
     </i18n>
+
+    <h2>{{ $t("prefPage.groups.analytics.title") }}</h2>
+
+    <p>
+      {{ $t("prefPage.groups.analytics.desc", { openverse: "Openverse" }) }}
+    </p>
+
+    <VCheckbox
+      id="analytics"
+      class="flex-row items-center"
+      :checked="isChecked"
+      is-switch
+      @change="handleChange"
+    >
+      <div>
+        {{ $t("prefPage.features.analytics") }}
+      </div>
+    </VCheckbox>
   </VContentPage>
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { ON, OFF } from "~/constants/feature-flag"
 
 import VLink from "~/components/VLink.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
 export default defineComponent({
   name: "VPrivacyPage",
-  components: { VLink, VContentPage },
+  components: { VLink, VCheckbox, VContentPage },
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
+    const featureFlagStore = useFeatureFlagStore()
 
     useMeta({
       title: `${i18n.t("privacy.title", {
@@ -65,6 +88,19 @@ export default defineComponent({
       })} | Openverse`,
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
+
+    const isChecked = computed(
+      () => featureFlagStore.featureState("analytics") === ON
+    )
+
+    const handleChange = ({ checked }: { checked: boolean }) => {
+      featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
+    }
+
+    return {
+      isChecked,
+      handleChange,
+    }
   },
   head: {},
 })

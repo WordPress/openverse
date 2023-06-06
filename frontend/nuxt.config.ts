@@ -104,6 +104,7 @@ const openverseLocales = [
 ].filter((l) => Boolean(l.iso)) as LocaleObject[]
 
 const port = process.env.PORT || 8443
+const isProdNotPlaywright = isProd && !(process.env.PW === "true")
 
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
@@ -134,7 +135,6 @@ const config: NuxtConfig = {
     { path: "~/components", extensions: ["vue"], pathPrefix: false },
   ],
   plugins: [
-    "~/plugins/url-change.ts",
     "~/plugins/migration-notice.ts",
     "~/plugins/ua-parse.ts",
     "~/plugins/focus-visible.client.ts",
@@ -152,8 +152,7 @@ const config: NuxtConfig = {
   buildModules: [
     "@nuxt/typescript-build",
     "@nuxtjs/composition-api/module",
-    "@nuxtjs/style-resources",
-    "@nuxtjs/svg",
+    "@nuxtjs/svg-sprite",
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",
   ],
@@ -173,6 +172,10 @@ const config: NuxtConfig = {
     { path: "/healthcheck", handler: "~/server-middleware/healthcheck.js" },
     { path: "/robots.txt", handler: "~/server-middleware/robots.js" },
   ],
+  svgSprite: {
+    input: "~/assets/svg/raw",
+    output: "~/assets/svg/sprite",
+  },
   i18n: {
     baseUrl: "https://openverse.org",
     locales: openverseLocales,
@@ -292,21 +295,23 @@ const config: NuxtConfig = {
   proxy: {
     // The key is appended to the address in the value.
     "/api/event":
-      process.env.PLAUSIBLE_ORIGIN ?? isProd
-        ? "https://plausible.io"
-        : "http://localhost:50288",
+      process.env.PLAUSIBLE_ORIGIN ??
+      (isProdNotPlaywright ? "https://plausible.io" : "http://localhost:50288"),
   },
   plausible: {
-    trackLocalhost: !isProd,
+    trackLocalhost: !isProdNotPlaywright,
   },
   publicRuntimeConfig: {
     plausible: {
       // This is the current domain of the site.
-      domain: process.env.SITE_DOMAIN ?? isProd ? "openverse.org" : "localhost",
+      domain:
+        process.env.SITE_DOMAIN ??
+        (isProdNotPlaywright ? "openverse.org" : "localhost"),
       apiHost:
-        process.env.SITE_DOMAIN ?? isProd
+        process.env.SITE_DOMAIN ??
+        (isProdNotPlaywright
           ? "https://openverse.org"
-          : `http://localhost:${port}`,
+          : `http://localhost:${port}`),
     },
   },
 }

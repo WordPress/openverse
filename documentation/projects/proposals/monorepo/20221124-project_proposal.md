@@ -1,9 +1,11 @@
-# Project Proposal - 2022-11-24
+# 2022-11-24 Project Proposal: Monorepo
+
+**Author**: @dhruvkb
 
 ## Reviewers
 
-- [ ] @zackkrida
-- [ ] @sarayourfriend
+- [x] @zackkrida
+- [x] @AetherUnbound
 
 ## Rationale
 
@@ -93,10 +95,6 @@ improvement to convince everyone to migrate.
 The overarching theme is that there are workarounds for everything. We have been
 working with split repos quite productively for over a year. My proposition is
 the the monorepo solutions are better than workarounds.
-
-The [integration](#step-4-integration) section in the latter part of the
-document describes more interesting outcomes made possible by the monorepo. They
-may or may not be exclusive to monorepos but they're surely made easier by it.
 
 ## Migration path
 

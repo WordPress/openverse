@@ -1,0 +1,172 @@
+{
+  "content": {
+    "descriptiveNonRepeating": {
+      "data_source": "NMNH - Vertebrate Zoology - Birds Division",
+      "guid": "http://n2t.net/ark:/65665/34857ca78-9195-4156-849b-1ec47f7cd1ce",
+      "metadata_usage": {
+        "access": "CC0"
+      },
+      "online_media": {
+        "media": [
+          {
+            "content": "https://collections.nmnh.si.edu/media/?irn=15814382",
+            "guid": "http://n2t.net/ark:/65665/m36e850c7c-c23c-442a-a13d-6a9c4fc3da31",
+            "idsId": "https://collections.nmnh.si.edu/media/?irn=15814382",
+            "thumbnail": "https://collections.nmnh.si.edu/media/?irn=15814382&thumb=yes",
+            "type": "Images",
+            "usage": {
+              "access": "CC0"
+            }
+          }
+        ],
+        "mediaCount": 1
+      },
+      "record_ID": "nmnhvz_14800560",
+      "record_link": "http://n2t.net/ark:/65665/34857ca78-9195-4156-849b-1ec47f7cd1ce",
+      "title": {
+        "content": "Passerculus sandwichensis nevadensis",
+        "label": "title"
+      },
+      "title_sort": "PASSERCULUS SANDWICHENSIS NEVADENSIS",
+      "unit_code": "NMNHBIRDS"
+    },
+    "freetext": {
+      "dataSource": [
+        {
+          "content": "NMNH - Vertebrate Zoology - Birds Division",
+          "label": "Data Source"
+        }
+      ],
+      "date": [
+        {
+          "content": "22 Apr 1958",
+          "label": "Collection Date"
+        }
+      ],
+      "identifier": [
+        {
+          "content": "000000",
+          "label": "Accession Number"
+        },
+        {
+          "content": "Field Number : 795",
+          "label": "Other Numbers"
+        },
+        {
+          "content": "466243",
+          "label": "USNM Number"
+        }
+      ],
+      "name": [
+        {
+          "content": "Seymour H. Levy",
+          "label": "Collector"
+        }
+      ],
+      "notes": [
+        {
+          "content": "30 Mar 2022",
+          "label": "Record Last Modified"
+        },
+        {
+          "content": "1",
+          "label": "Specimen Count"
+        }
+      ],
+      "physicalDescription": [
+        {
+          "content": "Skin: Whole",
+          "label": "Preparation"
+        },
+        {
+          "content": "Female",
+          "label": "Sex"
+        }
+      ],
+      "place": [
+        {
+          "content": "Picacho Reservation, Pinal, Arizona, United States, North America",
+          "label": "Place"
+        }
+      ],
+      "publisher": [
+        {
+          "content": "Passerculus sandwichensis nevadensis",
+          "label": "Published Name"
+        }
+      ],
+      "setName": [
+        {
+          "content": "Vertebrate Zoology",
+          "label": "See more items in"
+        },
+        {
+          "content": "Birds",
+          "label": "See more items in"
+        }
+      ],
+      "taxonomicName": [
+        {
+          "content": "Savannah Sparrow",
+          "label": "Common name"
+        },
+        {
+          "content": "Savannah Sparrow (Ipswich)",
+          "label": "Common name"
+        },
+        {
+          "content": "Animalia, Chordata, Vertebrata, Aves, Passeriformes, Emberizidae, Emberizinae",
+          "label": "Taxonomy"
+        }
+      ]
+    },
+    "indexedStructured": {
+      "common_name": ["Savannah Sparrow", "Savannah Sparrow (Ipswich)"],
+      "date": ["1950s"],
+      "geoLocation": [
+        {
+          "L1": {
+            "content": "North America",
+            "type": "Continent"
+          },
+          "L2": {
+            "content": "United States",
+            "type": "Country"
+          },
+          "L3": {
+            "content": "Arizona",
+            "type": "State"
+          },
+          "L4": {
+            "content": "Pinal",
+            "type": "County"
+          },
+          "Other": {
+            "content": "Picacho Reservation",
+            "type": "Locality"
+          }
+        }
+      ],
+      "name": ["Levy, S. H."],
+      "online_media_type": ["Images"],
+      "place": ["United States", "Pinal", "North America", "Arizona"],
+      "scientific_name": ["Passerculus sandwichensis nevadensis"],
+      "tax_class": ["Aves"],
+      "tax_family": ["Emberizidae"],
+      "tax_kingdom": ["Animalia"],
+      "tax_order": ["Passeriformes"],
+      "tax_phylum": ["Chordata"],
+      "topic": ["Animals", "Birds"]
+    }
+  },
+  "docSignature": "860718e6b8703c3c798bb9b800842061",
+  "hash": "0106b9f4bbe0ea07807a6ab275d6fc83dd90092f",
+  "id": "ld1-1643414028222-1643414062574-0",
+  "lastTimeUpdated": "1653672694",
+  "timestamp": "1653672694",
+  "title": "Passerculus sandwichensis nevadensis",
+  "type": "edanmdm",
+  "unitCode": "NMNHBIRDS",
+  "url": "edanmdm:nmnhvz_14800560",
+  "version": ""
+}

@@ -52,7 +52,7 @@ export default defineComponent({
           ...image,
           originalTitle: image.title,
           src: require(`~/assets/error_images/${image.file}.jpg`),
-          alt: `error-images.${image.id}`,
+          alt: `errorImages.${image.id}`,
           license: image.license as License,
           license_version: image.license_version as LicenseVersion,
         }

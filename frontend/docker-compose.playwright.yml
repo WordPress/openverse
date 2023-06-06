@@ -18,4 +18,5 @@ services:
       - DEBUG=pw:webserver
       - DISABLE_SENTRY=true
       - UPDATE_TAPES=${UPDATE_TAPES:-false}
+      - FASTSTART=${FASTSTART:-false}
     cpus: 0.000

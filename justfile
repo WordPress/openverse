@@ -4,15 +4,19 @@ set dotenv-load := false
 # @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
 # _ - Private recipes (https://github.com/casey/just#private-recipes)
 
-IS_PROD := env_var_or_default("PROD", "")
+IS_PROD := env_var_or_default("PROD", env_var_or_default("IS_PROD", ""))
+# `PROD_ENV` can be "ingestion_server" or "catalog"
+PROD_ENV := env_var_or_default("PROD_ENV", "")
 IS_CI := env_var_or_default("CI", "")
 DC_USER := env_var_or_default("DC_USER", "opener")
+ENABLE_DC_OVERRIDES := env_var_or_default("OPENVERSE_ENABLE_DC_OVERRIDES", "true")
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
     just --list --unsorted
     cd docker/nginx && just
     cd docker/es && just
+    cd catalog && just
     cd api && just
     cd ingestion_server && just
     cd frontend && just
@@ -92,31 +96,67 @@ lint hook="" *files="": precommit
 ########
 
 # Create .env files from templates
-env:
-    cp api/env.template api/.env
-    cp ingestion_server/env.template ingestion_server/.env
+@env:
+    # Root
+    ([ ! -f .env ] && cp env.template .env) || true
+    # Docker
+    ([ ! -f docker/minio/.env ] && cp docker/minio/env.template docker/minio/.env) || true
+    # First-party services
+    ([ ! -f catalog/.env ] && cp catalog/env.template catalog/.env) || true
+    ([ ! -f ingestion_server/.env ] && cp ingestion_server/env.template ingestion_server/.env) || true
+    ([ ! -f api/.env ] && cp api/env.template api/.env) || true
 
 ##########
 # Docker #
 ##########
 
 DOCKER_FILE := "-f " + (
-    if IS_PROD == "true" { "ingestion_server/docker-compose.yml" }
+    if IS_PROD == "true" {
+        if PROD_ENV == "ingestion_server" { "ingestion_server/docker-compose.yml" }
+        else if PROD_ENV == "catalog" { "catalog/docker-compose.yml" }
+        else { "docker-compose.yml" }
+    }
     else { "docker-compose.yml" }
+) + (
+    if ENABLE_DC_OVERRIDES == "true" { " -f docker-compose.overrides.yml" }
+    else { "" }
 )
+EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
+
+export CATALOG_PY_VERSION := `just catalog/py-version`
+export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
+export API_PY_VERSION := `just api/py-version`
+export INGESTION_PY_VERSION := `just ingestion_server/py-version`
+
+versions:
+    #!/usr/bin/env bash
+    cat <<EOF
+    catalog_py_version=$(just catalog/py-version)
+    catalog_airflow_version=$(just catalog/airflow-version)
+    api_py_version=$(just api/py-version)
+    ingestion_py_version=$(just ingestion_server/py-version)
+    frontend_node_version=$(just frontend/node-version)
+    frontend_pnpm_version=$(just frontend/pnpm-version)
+    EOF
 
 # Run `docker-compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:
     just dc build {{ args }}
 
+# List all services and their URLs and ports
+@ps:
+    # ps is a helper command & intermediate dependency, so it should not fail the whole
+    # command if it fails
+    python3 utilities/ps.py || true
+
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
-up *flags:
+up *flags: env && ps
     #!/usr/bin/env bash
     set -eo pipefail
     while true; do
@@ -126,6 +166,7 @@ up *flags:
       ((c++)) && ((c==3)) && break
       sleep 5
     done
+    echo && sleep 1
 
 # Also see `wait-up` recipe in sub-justfiles
 # Wait for all services to be up
@@ -133,6 +174,7 @@ wait-up: up
     just ingestion_server/wait-up
     just api/wait-up
     just frontend/wait-up
+    just catalog/wait-up
 
 # Also see `init` recipe in sub-justfiles
 # Load sample data into the Docker Compose services
@@ -150,16 +192,66 @@ recreate:
     just up "--force-recreate --build"
     just init
 
+# Bust pnpm cache and reinstall Node.js dependencies
+node-recreate:
+    find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+    rm -rf $(pnpm store path)
+    pnpm install
+
 # Show logs of all, or named, Docker services
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     just dc logs {{ args }} {{ services }}
 
-# Attach to the specificed `service`. Enables interacting with the TTY of the running service.
+# Attach to the specificed service to interacting with its TTY
 attach service:
-    docker attach $(docker-compose ps | grep {{ service }} | awk '{print $1}')
-
-EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
+    docker attach $(just dc ps | awk '{print $1}' | grep {{ service }})
 
 # Execute statement in service containers using Docker Compose
 exec +args:
-    just dc exec -u {{ DC_USER }} {{ EXEC_DEFAULTS }} {{ args }}
+    just dc exec -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} {{ args }}
+
+# Execute statement in a new service container using Docker Compose
+run +args:
+    just dc run -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
+
+# Execute pgcli against one of the database instances
+_pgcli container db_user_pass db_name db_host db_port="5432":
+    just exec {{ container }} pgcli postgresql://{{ db_user_pass }}:{{ db_user_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+
+########
+# Misc #
+########
+
+# Pull, build, and deploy all services
+deploy:
+    -git pull
+    @just pull
+    @just up
+
+#####################
+# Aliases/shortcuts #
+#####################
+
+alias b := build
+alias d := down
+alias l := logs
+
+# alias for `just api/up`
+a:
+    just api/up
+
+# alias for `just catalog/up`
+c:
+    just catalog/up
+
+# alias for `just documentation/live`, 's' for Sphinx
+s:
+    just documentation/live
+
+# alias for `just ingestion_server/up`
+i:
+    just ingestion_server/up
+
+# alias for `just frontend/run dev`
+f:
+    just frontend/run dev

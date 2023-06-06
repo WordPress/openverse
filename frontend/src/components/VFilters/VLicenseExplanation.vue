@@ -2,10 +2,10 @@
   <div class="license-explanation w-70 max-w-xs p-6">
     <h5 class="text-base font-semibold">
       <template v-if="isLicense(license)">{{
-        $t("filters.license-explanation.license-definition")
+        $t("filters.licenseExplanation.licenseDefinition")
       }}</template>
       <template v-else>{{
-        $t("filters.license-explanation.mark-definition", {
+        $t("filters.licenseExplanation.markDefinition", {
           mark: license.toUpperCase(),
         })
       }}</template>
@@ -19,15 +19,15 @@
     />
 
     <i18n
-      :path="`filters.license-explanation.more.${
+      :path="`filters.licenseExplanation.more.${
         isLicense(license) ? 'license' : 'mark'
       }`"
       tag="p"
       class="text-sm"
     >
-      <template #read-more>
+      <template #readMore>
         <VLink :href="`${getLicenseUrl(license)}`">{{
-          $t("filters.license-explanation.more.read-more")
+          $t("filters.licenseExplanation.more.readMore")
         }}</VLink>
       </template>
       <template #mark>{{ license.toUpperCase() }}</template>

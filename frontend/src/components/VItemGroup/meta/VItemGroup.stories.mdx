@@ -13,10 +13,6 @@ import VItem from "~/components/VItemGroup/VItem.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VButton from "~/components/VButton.vue"
-import replay from "~/assets/icons/replay.svg"
-import pause from "~/assets/icons/pause.svg"
-import play from "~/assets/icons/play.svg"
-import close from "~/assets/icons/close.svg"
 
 <Meta
   title="Components/VItemGroup"
@@ -43,7 +39,7 @@ export const DefaultStory = (args) => ({
             @click="selectedItem = item"
             size="medium"
           >
-            <VIcon :icon-path="item.icon" /> {{ item.label }}
+            <VIcon :name="item.icon" /> {{ item.label }}
           </VItem>
         </VItemGroup>
       </div>
@@ -51,7 +47,7 @@ export const DefaultStory = (args) => ({
   `,
   components: { VItemGroup, VItem, VIcon },
   setup() {
-    const icons = [close, pause, play, replay]
+    const icons = ["close", "pause", "play", "replay"]
     const items = new Array(icons.length).fill(null).map((_, i) => ({
       id: i,
       label: `Item ${i}`,
@@ -78,7 +74,7 @@ export const MenuStory = (args) => ({
             @click="toggleItem(item)"
             size="medium"
           >
-            <VIcon :icon-path="item.icon" /> {{ item.label }}
+            <VIcon :name="item.icon" /> {{ item.label }}
           </VItem>
         </VItemGroup>
       </div>
@@ -86,7 +82,7 @@ export const MenuStory = (args) => ({
   `,
   components: { VItemGroup, VItem, VIcon },
   setup() {
-    const icons = [close, pause, play, replay]
+    const icons = ["close", "pause", "play", "replay"]
     const items = new Array(icons.length).fill(null).map((_, i) => ({
       id: i,
       label: `Item ${i}`,
@@ -119,14 +115,14 @@ export const PopoverStory = (args) => ({
           @click="toggleItem(item)"
           size="medium"
         >
-          <VIcon :icon-path="item.icon" /><span :class="{ 'pe-2': args.direction === 'vertical' }">{{ item.label }}</span>
+          <VIcon :name="item.icon" /><span :class="{ 'pe-2': args.direction === 'vertical' }">{{ item.label }}</span>
         </VItem>
         </VItemGroup>
     </VPopover>
   `,
   components: { VButton, VPopover, VItem, VItemGroup, VIcon },
   setup() {
-    const icons = [close, pause, play, replay]
+    const icons = ["close", "pause", "play", "replay"]
     const items = new Array(icons.length).fill(null).map((_, i) => ({
       id: i,
       label: `Item ${i}`,

@@ -6,6 +6,7 @@ import sys
 import time
 import uuid
 from multiprocessing import Process, Value
+from pathlib import Path
 from urllib.parse import urlparse
 
 import falcon
@@ -90,6 +91,8 @@ class TaskResource(BaseTaskResource):
                 "index_suffix": {"type": "string"},
                 "alias": {"type": "string"},
                 "force_delete": {"type": "boolean"},
+                "origin_index_suffix": {"type": "string"},
+                "destination_index_suffix": {"type": "string"},
             },
             "required": ["model", "action"],
             "allOf": [
@@ -146,6 +149,8 @@ class TaskResource(BaseTaskResource):
         callback_url = body.get("callback_url")
         since_date = body.get("since_date")
         index_suffix = body.get("index_suffix", task_id)
+        origin_index_suffix = body.get("origin_index_suffix")
+        destination_index_suffix = body.get("destination_index_suffix")
         alias = body.get("alias")
         force_delete = body.get("force_delete", False)
 
@@ -169,6 +174,8 @@ class TaskResource(BaseTaskResource):
                 # Task-specific keyword arguments
                 "since_date": since_date,
                 "index_suffix": index_suffix,
+                "origin_index_suffix": origin_index_suffix,
+                "destination_index_suffix": destination_index_suffix,
                 "alias": alias,
                 "force_delete": force_delete,
             },
@@ -338,6 +345,7 @@ def create_api(log=True):
     _api.add_route("/task/{task_id}", TaskStatus(task_tracker))
     _api.add_route("/worker_finished", WorkerFinishedResource(task_tracker))
     _api.add_route("/state", StateResource())
+    _api.add_static_route("/static", (Path(".") / "static").absolute())
 
     return _api
 

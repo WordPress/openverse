@@ -2,21 +2,21 @@
   <div>
     <div
       v-if="!noResults"
-      class="results-grid mb-4 grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
+      class="results-grid mb-4 mt-2 grid grid-cols-2 gap-4 md:mt-0"
     >
       <VContentLink
         v-for="[mediaType, count] in resultCounts"
         :key="mediaType"
         :media-type="mediaType"
+        :search-term="searchTerm"
         :results-count="count"
         :to="contentLinkPath(mediaType)"
-        class="lg:col-span-2"
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="all-results.snackbar.text" tag="p">
+      <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
-          <kbd class="font-sans">{{ $t(`all-results.snackbar.spacebar`) }}</kbd>
+          <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
       </i18n>
     </VSnackbar>
@@ -24,28 +24,34 @@
       v-if="resultsLoading && allMedia.length === 0"
       is-for-tab="all"
     />
-    <div
+    <ol
       v-else
-      class="results-grid grid grid-cols-2 gap-4 lg:grid-cols-5 2xl:grid-cols-6"
+      class="results-grid grid grid-cols-2 gap-4"
+      :class="
+        isSidebarVisible
+          ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+          : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+      "
+      :aria-label="$t('browse-page.aria.results', { query: searchTerm })"
     >
-      <div v-for="item in allMedia" :key="item.id">
+      <template v-for="item in allMedia">
         <VImageCell
-          v-if="item.frontendMediaType === 'image'"
+          v-if="isDetail.image(item)"
           :key="item.id"
           :image="item"
           :search-term="searchTerm"
           aspect-ratio="square"
         />
         <VAudioCell
-          v-if="item.frontendMediaType === 'audio'"
+          v-if="isDetail.audio(item)"
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
           @interacted="hideSnackbar"
-          @focus.native="showSnackbar"
+          @focus="showSnackbar"
         />
-      </div>
-    </div>
+      </template>
+    </ol>
 
     <VLoadMore class="mt-4" />
   </div>
@@ -57,6 +63,8 @@ import { computed, defineComponent } from "vue"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
+
+import { isDetail } from "~/types/media"
 
 import { useI18n } from "~/composables/use-i18n"
 
@@ -119,6 +127,8 @@ export default defineComponent({
       uiStore.hideInstructionsSnackbar()
     }
 
+    const isSidebarVisible = computed(() => uiStore.isFilterVisible)
+
     return {
       searchTerm,
       isError,
@@ -131,9 +141,13 @@ export default defineComponent({
 
       contentLinkPath,
 
+      isSidebarVisible,
+
       isSnackbarVisible,
       showSnackbar,
       hideSnackbar,
+
+      isDetail,
     }
   },
 })

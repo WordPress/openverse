@@ -1,11 +1,13 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VInputField from "~/components/VInputField/VInputField.vue"
 
 const props = {
   fieldId: "input-id",
   labelText: "Label",
-  size: "small",
+  size: "medium",
 }
 
 describe("VInputField", () => {
@@ -22,7 +24,9 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "text")
   })
 
-  xit("should allow changing the type", () => {
+  // https://github.com/WordPress/openverse/issues/2222
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip("should allow changing the type", () => {
     render(VInputField, {
       attrs: {
         placeholder: "Enter some number",

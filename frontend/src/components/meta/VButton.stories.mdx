@@ -5,46 +5,24 @@ import {
   Meta,
   Story,
 } from "@storybook/addon-docs"
-import {
-  buttonForms,
-  buttonSizes as allButtonSizes,
-  buttonVariants as allButtonVariants,
-} from "~/types/button"
+import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import { capital } from "case"
 
-import replayIcon from "~/assets/icons/replay.svg"
-import externalLinkIcon from "~/assets/icons/external-link.svg"
-
 <Meta title="Components/VButton" components={VButton} />
-
-export const buttonVariants = allButtonVariants.filter(
-  (variant) =>
-    variant.startsWith("filled-") ||
-    variant.startsWith("bordered-") ||
-    variant.startsWith("transparent-")
-)
-export const buttonSizes = allButtonSizes.filter(
-  (size) => !size.endsWith("-old")
-)
 
 export const Template = (args) => ({
   template: `
-    <div id="wrapper"
-        class="w-40 h-16 flex items-center justify-center"
+    <div class="flex"><div id="wrapper"
+        class="px-4 h-16 flex items-center justify-center"
         :class="args?.variant.startsWith('transparent') ? 'bg-dark-charcoal-06': 'bg-white'">
-    <VButton v-bind="args" class="description-bold" @click="onClick" href="/">
+    <VButton v-bind="args" class="description-bold" v-on="args" href="/">
       Code is Poetry
     </VButton>
-    </div>
+    </div></div>
   `,
   components: { VButton },
-  methods: {
-    onClick() {
-      window.alert("hello!")
-    },
-  },
   setup() {
     return { args }
   },
@@ -54,18 +32,18 @@ export const TemplateWithIcons = (args) => ({
   template: `
 <div class="flex flex-col items-center gap-4 flex-wrap">
   <VButton :variant="args.variant" :size="args.size" :has-icon-start="true">
-    <VIcon :icon-path="replayIcon" />Button
+    <VIcon name="replay" />Button
   </VButton>
   <VButton :variant="args.variant" :size="args.size" has-icon-end>
-    Button<VIcon :icon-path="externalLinkIcon" />
+    Button<VIcon name="external-link" />
   </VButton>
   <VButton :variant="args.variant" :size="args.size" has-icon-start has-icon-end>
-    <VIcon :icon-path="replayIcon" />Button<VIcon :icon-path="externalLinkIcon" />
+    <VIcon name="replay" />Button<VIcon name="external-link" />
   </VButton>
 </div>`,
   components: { VButton, VIcon },
   setup() {
-    return { args, replayIcon, externalLinkIcon }
+    return { args }
   },
 })
 
@@ -81,6 +59,10 @@ export const TemplateWithIcons = (args) => ({
     parameters={{
       viewport: { defaultViewport: "sm" },
     }}
+    args={{
+      size: "medium",
+      variant: "filled-primary",
+    }}
     argTypes={{
       as: {
         options: buttonForms,
@@ -89,17 +71,16 @@ export const TemplateWithIcons = (args) => ({
       variant: {
         options: buttonVariants,
         control: { type: "select" },
-        defaultValue: "filled-pink",
       },
       pressed: { control: "boolean" },
       size: {
         options: buttonSizes,
         control: { type: "radio" },
-        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
       focusableWhenDisabled: { control: "boolean" },
       type: { control: "text" },
+      click: { action: "click" },
     }}
   >
     {Template.bind({})}
@@ -141,13 +122,13 @@ These buttons have a solid background color and no border.
       variants: buttonVariants.filter((variant) =>
         variant.startsWith("filled-")
       ),
+      size: "medium",
     }}
     argTypes={{
       pressed: { control: "boolean" },
       size: {
         options: buttonSizes,
         control: { type: "radio" },
-        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
     }}
@@ -167,13 +148,13 @@ These buttons have a white background and a border.
       variants: buttonVariants.filter((variant) =>
         variant.startsWith("bordered-")
       ),
+      size: "medium",
     }}
     argTypes={{
       pressed: { control: "boolean" },
       size: {
         options: buttonSizes,
         control: { type: "radio" },
-        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
     }}
@@ -193,13 +174,13 @@ These buttons are transparent and don't have a border in resting state.
       variants: buttonVariants.filter((variant) =>
         variant.startsWith("transparent-")
       ),
+      size: "medium",
     }}
     argTypes={{
       pressed: { control: "boolean" },
       size: {
         options: buttonSizes,
         control: { type: "radio" },
-        defaultValue: "medium",
       },
       disabled: { control: "boolean" },
     }}
@@ -213,17 +194,19 @@ These buttons are transparent and don't have a border in resting state.
 <Canvas>
   <Story
     name="icons"
+    args={{
+      size: "medium",
+      variant: "bordered-dark",
+    }}
     argTypes={{
       pressed: { control: "boolean" },
       size: {
         options: buttonSizes,
         control: { type: "radio" },
-        defaultValue: "medium",
       },
       variant: {
         options: buttonVariants,
         control: { type: "select" },
-        defaultValue: "bordered-dark",
       },
       disabled: { control: "boolean" },
     }}

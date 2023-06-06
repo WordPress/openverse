@@ -5,16 +5,17 @@
       class="relative mb-6 flex items-center justify-between"
     >
       <h4 id="filters-heading" class="caption-bold uppercase">
-        {{ $t("filter-list.filter-by") }}
+        {{ $t("filterList.filterBy") }}
       </h4>
       <VButton
         v-show="isAnyFilterApplied"
         id="clear-filter-button"
-        variant="plain"
-        class="label-bold absolute end-0 px-4 py-1 text-pink hover:ring hover:ring-pink"
+        variant="transparent-gray"
+        size="small"
+        class="label-bold absolute end-0 !text-pink"
         @click="clearFilters"
       >
-        {{ $t("filter-list.clear") }}
+        {{ $t("filterList.clear") }}
       </VButton>
     </header>
     <form ref="filtersFormRef" class="filters-form">
@@ -22,27 +23,18 @@
         v-for="filterType in filterTypes"
         :key="filterType"
         :options="filters[filterType]"
-        :title="filterTypeTitle(filterType).toString()"
+        :title="filterTypeTitle(filterType)"
         :filter-type="filterType"
         @toggle-filter="toggleFilter"
       />
     </form>
-    <footer
-      v-if="showFilterHeader && isAnyFilterApplied"
-      class="flex justify-between md:hidden"
-    >
-      <VButton variant="primary" @click="$emit('close')">
-        {{ $t("filter-list.show") }}
-      </VButton>
-    </footer>
   </section>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue"
 
-import { useContext, useRouter } from "@nuxtjs/composition-api"
-import { kebab } from "case"
+import { useRouter } from "@nuxtjs/composition-api"
 
 import { watchDebounced } from "@vueuse/core"
 
@@ -50,6 +42,7 @@ import { useSearchStore } from "~/stores/search"
 import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
 import type { NonMatureFilterCategory } from "~/constants/filters"
 import { defineEvent } from "~/types/emits"
+import { useI18n } from "~/composables/use-i18n"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
 import VButton from "~/components/VButton.vue"
@@ -85,7 +78,7 @@ export default defineComponent({
   setup() {
     const searchStore = useSearchStore()
 
-    const { i18n } = useContext()
+    const i18n = useI18n()
     const router = useRouter()
 
     const filtersFormRef = ref<HTMLFormElement | null>(null)
@@ -95,8 +88,9 @@ export default defineComponent({
     const filterTypes = computed(
       () => Object.keys(filters.value) as NonMatureFilterCategory[]
     )
-    const filterTypeTitle = (filterType: string) =>
-      i18n.t(`filters.${kebab(filterType)}.title`)
+    const filterTypeTitle = (filterType: string) => {
+      return i18n.t(`filters.${filterType}.title`).toString()
+    }
 
     /**
      * This watcher fires even when the queries are equal. We update the path only

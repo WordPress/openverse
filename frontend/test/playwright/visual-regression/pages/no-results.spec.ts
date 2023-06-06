@@ -1,9 +1,11 @@
 import { test } from "@playwright/test"
 
 import {
+  closeFiltersUsingCookies,
+  dismissBannersUsingCookies,
   goToSearchTerm,
   languageDirections,
-  setCookies,
+  setBreakpointCookie,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -18,16 +20,35 @@ for (const searchType of supportedSearchTypes) {
       test(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
-        await setCookies(page.context(), {
-          uiBreakpoint: breakpoint as string,
-          uiIsFilterDismissed: true,
-          uiDismissedBanners: ["translation-ar"],
-        })
+        await dismissBannersUsingCookies(page)
+        await closeFiltersUsingCookies(page)
+        await setBreakpointCookie(page, breakpoint)
+
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
 
-        await expectSnapshot(`no-results-${searchType}-${dir}`, page, {
-          fullPage: true,
+        // Because of the overflow scroll, we cannot use `fullPage` screenshots.
+        // Instead, we set the viewport to the full height of the page content.
+        const viewportHeight = await page.evaluate(() => {
+          const headerElHeight =
+            document.querySelector(".header-el")?.clientHeight ?? 0
+
+          // Get the height of the children of the "#main-page" element
+          const mainPageChildren =
+            document.getElementById("main-page")?.children ?? []
+          const childHeight = Array.from(mainPageChildren).reduce(
+            (acc, child) => acc + child.clientHeight,
+            0
+          )
+          return childHeight + headerElHeight
         })
+
+        const viewportWidth = (await page.viewportSize()?.width) ?? 0
+        await page.setViewportSize({
+          width: viewportWidth,
+          height: viewportHeight + 1,
+        })
+
+        await expectSnapshot(`no-results-${searchType}-${dir}`, page)
       })
     })
   }

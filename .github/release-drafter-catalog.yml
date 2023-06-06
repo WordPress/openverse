@@ -1,0 +1,22 @@
+# This file is generated from templates/release-drafter.yml.jinja
+# Changes to this file must be made in the template first
+
+tag-prefix: catalog-
+categories:
+  - title: New Features
+    label: "🌟 goal: addition"
+  - title: Improvements
+    label: "✨ goal: improvement"
+  - title: Internal Improvements
+    labels:
+      - "🤖 aspect: dx"
+      - "🧰 goal: internal improvement"
+  - title: Bug Fixes
+    label: "🛠 goal: fix"
+# Identical to the default except it uses `-` instead of `*` to match our Markdown linter
+change-template: "- $TITLE ([#$NUMBER](https://github.com/WordPress/openverse/pull/$NUMBER)) by @$AUTHOR"
+exclude-labels:
+  - "skip-changelog"
+include-labels:
+  - "🧱 stack: catalog"
+template: $CHANGES

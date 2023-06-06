@@ -10,6 +10,7 @@ addAliases({
 })
 
 const config: PlaywrightTestConfig = {
+  forbidOnly: !!process.env.CI,
   webServer: {
     command: "pnpm storybook",
     timeout: 60_000 * 5, // 5 minutes

@@ -1,25 +1,31 @@
+# syntax=docker/dockerfile:1
+
+# Automatically build image using Node.js version specified in `package.json`.
+ARG FRONTEND_NODE_VERSION
+
 ###################
 # Node.js builder #
 ###################
 
-FROM node:16-alpine as builder
+FROM node:${FRONTEND_NODE_VERSION}-alpine as builder
+
+# Automatically use the right version of pnpm.
+ARG FRONTEND_PNPM_VERSION
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-  && npm install -g pnpm@7.17.1
+  && npm install -g pnpm@${FRONTEND_PNPM_VERSION}
 
 USER node
 
 WORKDIR /home/node/
 
 # Copy monorepo mocking files into `/home/node`, which pretends to be the monorepo root.
-COPY --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
+COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
 RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
-# Remove the files copied into `frontend/` by `.github/workflows/ci_cd.yml`.
-RUN rm ./frontend/.npmrc ./frontend/.pnpmfile.cjs ./frontend/pnpm-lock.yaml
 
 # Fetch dependencies, including local development tools, to the virtual store.
 RUN pnpm fetch
@@ -40,9 +46,9 @@ ENV NUXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 ARG API_URL
-ARG RELEASE
+ARG SEMANTIC_VERSION
 
-RUN echo "{\"release\":\"${RELEASE}\"}" > /home/node/frontend/src/static/version.json
+RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /home/node/frontend/src/static/version.json
 
 RUN pnpm build:only
 

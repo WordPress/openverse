@@ -1,6 +1,6 @@
-import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
+import { render } from "~~/test/unit/test-utils/render"
 
-import render from "../../../test-utils/render"
+import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
 
 describe("VCopyLicense", () => {
   let options = null
@@ -9,7 +9,7 @@ describe("VCopyLicense", () => {
   beforeEach(() => {
     props = {
       media: {
-        id: 0,
+        id: "0",
         title: "foo",
         provider: "flickr",
         url: "foo.bar",
@@ -20,6 +20,7 @@ describe("VCopyLicense", () => {
         license_url: "http://license.com",
         creator: "John",
         creator_url: "http://creator.com",
+        frontendMediaType: "image",
       },
       fullLicenseName: "LICENSE",
     }
@@ -29,7 +30,7 @@ describe("VCopyLicense", () => {
   })
 
   it("should contain the correct contents", () => {
-    const wrapper = render(VCopyLicense, options)
-    expect(wrapper.find(".copy-license")).toBeDefined()
+    const { queryAllByText } = render(VCopyLicense, options)
+    expect(queryAllByText(/Copy text/i)).toHaveLength(3)
   })
 })

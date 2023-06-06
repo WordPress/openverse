@@ -17,10 +17,10 @@
         'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
         // Custom tailwind classes don't work with CSS modules in Vue, so they are
         // written here explicitly instead of accessed off of `$style`.
-        'focus-slim-filled': isFilled,
-        'focus-slim-tx': isBordered || isTransparent,
-        'border border-tx ring-offset-1 focus:outline-none focus-visible:ring focus-visible:ring-pink':
-          !isPlainDangerous && !isNewVariant,
+        'focus-slim-filled': isFocusSlimFilled,
+        'focus-slim-tx': isFocusSlimTx,
+        'focus-bold-filled ': variant === 'dropdown-label-pressed',
+        border: !isPlainDangerous,
       },
     ]"
     :aria-pressed="pressed"
@@ -94,14 +94,13 @@ const VButton = defineComponent({
     /**
      * The variant of the button.
      *
-     * Plain removes all styles except the focus ring.
+     * Plain removes all styles except the focus ring. The button
+     * should set a border color, otherwise the browser default is used.
      * Plain--avoid removes _all_ styles including the focus ring.
-     *
-     * @default 'primary'
      */
     variant: {
       type: String as PropType<ButtonVariant>,
-      default: "primary",
+      required: true,
     },
     /**
      * Allows for programmatically setting the pressed state of a button,
@@ -121,7 +120,7 @@ const VButton = defineComponent({
      */
     size: {
       type: String as PropType<ButtonSize>,
-      default: "medium-old",
+      required: true,
     },
     /**
      * Whether the button is disabled. Used alone this will only
@@ -209,14 +208,15 @@ const VButton = defineComponent({
     const isPlainDangerous = computed(() => {
       return propsRef.variant.value === "plain--avoid"
     })
-    const isFilled = computed(() => {
+    const isFocusSlimFilled = computed(() => {
       return props.variant.startsWith("filled-")
     })
-    const isBordered = computed(() => {
-      return props.variant.startsWith("bordered-")
-    })
-    const isTransparent = computed(() => {
-      return props.variant.startsWith("transparent-")
+    const isFocusSlimTx = computed(() => {
+      return (
+        props.variant.startsWith("bordered-") ||
+        props.variant.startsWith("transparent-") ||
+        ["dropdown-label", "plain"].includes(props.variant)
+      )
     })
 
     watch(
@@ -259,15 +259,6 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
-    // TODO: remove after the Core UI improvements are done
-    const isNewVariant = computed(() => {
-      return (
-        props.variant.startsWith("filled-") ||
-        props.variant.startsWith("bordered-") ||
-        props.variant.startsWith("transparent-")
-      )
-    })
-
     return {
       disabledAttributeRef,
       ariaDisabledRef,
@@ -275,10 +266,8 @@ const VButton = defineComponent({
       isActive,
       isConnected,
       isPlainDangerous,
-      isNewVariant,
-      isFilled,
-      isBordered,
-      isTransparent,
+      isFocusSlimFilled,
+      isFocusSlimTx,
     }
   },
 })
@@ -290,10 +279,6 @@ export default VButton
 .button[disabled="disabled"],
 .button[aria-disabled="true"] {
   @apply cursor-not-allowed;
-}
-
-.size-medium-old {
-  @apply px-4 py-2;
 }
 
 .size-small {
@@ -331,145 +316,51 @@ a.button {
 }
 
 .filled-pink {
-  @apply bg-pink text-white hover:bg-dark-pink hover:text-white;
+  @apply border-tx bg-pink text-white hover:bg-dark-pink hover:text-white;
 }
 
 .filled-dark {
-  @apply bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white;
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white;
 }
 
 .filled-gray {
-  @apply bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .filled-white {
-  @apply bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .filled-transparent {
-  @apply bg-tx text-curr hover:bg-dark-charcoal hover:text-white;
+  @apply border-tx bg-tx text-curr hover:bg-dark-charcoal hover:text-white;
 }
 
 .bordered-white {
-  @apply border border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+}
+.bordered-white-pressed {
+  @apply border border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90;
 }
 
 .bordered-gray {
-  @apply border border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
+}
+
+.transparent-tx {
+  @apply border-tx;
 }
 .transparent-gray {
-  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal-10;
+  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:bg-opacity-10 disabled:text-dark-charcoal-40;
 }
 .transparent-dark {
-  @apply bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
-}
-
-.primary {
-  @apply border-tx bg-pink text-white hover:border-tx hover:bg-dark-pink hover:text-white;
-}
-.primary-pressed {
-  @apply bg-dark-pink;
-}
-
-.secondary {
-  @apply border-tx bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:ring focus-visible:ring-pink;
-}
-.secondary-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
-}
-.secondary[disabled="disabled"],
-.secondary[aria-disabled="true"] {
-  @apply border-tx bg-tx text-dark-charcoal-40;
-}
-
-.secondary-filled {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-80 hover:text-white focus-visible:ring focus-visible:ring-pink disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
-}
-
-.secondary-bordered {
-  @apply border-dark-charcoal bg-tx hover:bg-dark-charcoal hover:text-white focus-visible:border-tx disabled:bg-dark-charcoal-10 disabled:text-dark-charcoal-40;
-}
-.secondary-bordered-pressed {
-  @apply bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90 focus-visible:bg-dark-charcoal-90;
-}
-.secondary-filled[disabled="disabled"],
-.secondary-bordered[disabled="disabled"],
-.secondary-filled[aria-disabled="true"],
-.secondary-bordered[aria-disabled="true"] {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal-40;
-}
-
-.text {
-  @apply border-tx bg-tx px-0 text-sm font-semibold text-pink hover:underline focus-visible:ring focus-visible:ring-pink;
-}
-
-.text[disabled="disabled"],
-.text[aria-disabled="true"] {
-  @apply border-tx bg-tx text-dark-charcoal-40;
-}
-
-.menu {
-  @apply border-tx bg-white text-dark-charcoal ring-offset-0;
-}
-.menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
-}
-
-.action-menu {
-  @apply border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20 group-focus-within:hover:border-tx;
-}
-.action-menu-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
-}
-
-/**
-Similar to `action-menu`, but always has a border, not only on hover.
-https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=1684%3A3678
- */
-.action-menu-bordered {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal focus-visible:border-tx;
-}
-.action-menu-bordered-pressed {
-  @apply border-dark-charcoal bg-dark-charcoal text-white hover:bg-dark-charcoal-90;
-}
-
-.action-menu-muted {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:border-dark-charcoal-20;
-}
-.action-menu-muted-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-tx hover:bg-dark-charcoal-90;
-}
-
-.action-menu[disabled="disabled"],
-.action-menu[aria-disabled="true"],
-.action-menu-muted[disabled="disabled"],
-.action-menu-muted[aria-disabled="true"],
-.action-menu-bordered[disabled="disabled"],
-.action-menu-bordered[aria-disabled="true"] {
-  @apply border-dark-charcoal-10 bg-dark-charcoal-10 text-dark-charcoal-40;
-}
-
-.action-menu-secondary {
-  @apply border border-tx bg-white text-dark-charcoal hover:border-dark-charcoal-20;
-}
-
-.action-menu-secondary-pressed {
-  @apply border-tx bg-dark-charcoal text-white;
-}
-
-.full {
-  @apply w-full bg-dark-charcoal-06 font-semibold hover:bg-dark-charcoal-40 hover:text-white;
-}
-
-.full-pressed {
-  @apply w-full bg-dark-charcoal-06 font-semibold text-dark-charcoal;
+  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
 
 .dropdown-label {
-  @apply border border-dark-charcoal-20 text-dark-charcoal focus-slim-tx hover:border-tx hover:bg-dark-charcoal hover:text-white;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
 }
 .dropdown-label-pressed {
-  @apply border-tx bg-dark-charcoal text-white focus-bold-filled active:hover:border-white;
+  @apply border-tx bg-dark-charcoal text-white active:hover:border-white;
 }
 
 .connection-start {

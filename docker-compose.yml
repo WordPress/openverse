@@ -1,10 +1,36 @@
 version: "2.4"
+
+# Common build configuration for Airflow
+# Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
+x-airflow-common: &airflow-common
+  profiles:
+    - catalog
+  restart: on-failure
+  depends_on:
+    - postgres
+    - s3
+  image: openverse_catalog
+  env_file:
+    - .env
+    - catalog/.env
+  build:
+    context: ./catalog/
+    target: cat
+    args: # Automatically inferred from env vars, unless specified
+      - REQUIREMENTS_FILE=requirements_dev.txt
+      - CATALOG_PY_VERSION
+      - CATALOG_AIRFLOW_VERSION
+  volumes:
+    - ./catalog:/opt/airflow/catalog
+    - catalog-cache:/home/airflow/.cache
+
 services:
+  # Database used by the API
   db:
     profiles:
       - ingestion_server
       - api
-    image: postgres:13.2-alpine
+    image: postgres:13.7-alpine
     ports:
       - "50254:5432"
     volumes:
@@ -14,11 +40,16 @@ services:
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
+  # Database used by the catalog
   upstream_db:
     profiles:
+      - catalog
+      - catalog_dependencies
       - ingestion_server
       - api
-    build: ./docker/upstream_db/
+    build:
+      context: ./docker/upstream_db/
+      target: db
     image: openverse-upstream_db
     expose:
       - "5432"
@@ -30,10 +61,103 @@ services:
     healthcheck:
       test: "pg_isready -U deploy -d openledger"
 
+  s3:
+    profiles:
+      - catalog_dependencies
+      - catalog
+    image: minio/minio:latest
+    ports:
+      - "5010:5000"
+      - "5011:5001"
+    env_file:
+      - .env
+      - docker/minio/.env
+    # Create empty buckets on every container startup
+    # Note: $0 is included in the exec because "/bin/bash -c" swallows the first
+    # argument, so it must be re-added at the beginning of the exec call
+    entrypoint: >-
+      /bin/bash -c
+      "for b in $${BUCKETS_TO_CREATE//,/ }; do
+        echo \"Making bucket $$b\" && mkdir -p /data/$$b;
+      done &&
+      exec $$0 \"$$@\""
+    command: minio server /data --address :5000 --console-address :5001
+    volumes:
+      - minio:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  load_to_s3:
+    profiles:
+      - catalog_dependencies
+      - catalog
+    image: minio/mc:latest
+    env_file:
+      - .env
+      - docker/minio/.env
+    depends_on:
+      - s3
+    volumes:
+      # Buckets for testing provider data imported from s3 are subdirectories under
+      # /tests/s3-data/
+      - ./catalog/tests/s3-data:/data:rw
+    # Loop through subdirectories mounted to the volume and load them to s3/minio.
+    # This takes care of filesystem delays on some local dev environments that may make
+    # minio miss files included directly in the minio volume.
+    # More info here: https://stackoverflow.com/questions/72867045
+    # This does *not* allow for testing permissions issues that may come up in real AWS.
+    # And, if you remove files from /tests/s3-data, you will need to use `just down -v`
+    # and `just up` or `just recreate` to see the minio bucket without those files.
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add s3 http://s3:5000 $${AWS_ACCESS_KEY} $${AWS_SECRET_KEY};
+      cd /data;
+      for b in */ ; do
+        echo \"Loading bucket $$b\"
+        /usr/bin/mc mb --ignore-existing s3/$$b
+        /usr/bin/mc cp --r $$b s3/$$b
+        /usr/bin/mc ls s3/$$b;
+      done ;
+      exit 0;
+      "
+
+  # Dev changes for the scheduler
+  scheduler:
+    <<: *airflow-common
+    depends_on:
+      - upstream_db
+      - s3
+    command: scheduler
+    expose:
+      - "8793" # Used for fetching logs
+    environment:
+      # Upgrade the DB on startup
+      _AIRFLOW_DB_UPGRADE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      _AIRFLOW_WWW_USER_FIRSTNAME: Air
+      _AIRFLOW_WWW_USER_LASTNAME: Flow
+      _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
+
+  # Dev changes for the webserver container
+  webserver:
+    <<: *airflow-common
+    depends_on:
+      - upstream_db
+      - s3
+      - scheduler
+    command: webserver
+    ports:
+      - "${AIRFLOW_PORT}:8080"
+
   plausible_db:
     profiles:
       - frontend
-    image: postgres:13.2-alpine
+    image: postgres:13.7-alpine
     expose:
       - "5432"
     volumes:
@@ -46,7 +170,7 @@ services:
   plausible_ch:
     profiles:
       - frontend
-    image: clickhouse/clickhouse-server:22.6-alpine
+    image: clickhouse/clickhouse-server:23.4-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
       - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
@@ -98,10 +222,6 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    # Memory limit for ES, as it tends to be a memory hoarder
-    # Set this value to an empty string to remove the limit
-    # https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources
-    mem_limit: ${ES_MEM_LIMIT:-4294967296} # 4 GiB in bytes
     volumes:
       - es-data:/usr/share/elasticsearch/data
 
@@ -111,8 +231,9 @@ services:
     build:
       context: ./api/
       target: api
-      args:
-        SEMANTIC_VERSION: ${SEMANTIC_VERSION:-v1.0.0}
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - API_PY_VERSION
     image: openverse-api
     volumes:
       - ./api:/api
@@ -136,7 +257,11 @@ services:
     profiles:
       - ingestion_server
       - api
-    build: ./ingestion_server/
+    build:
+      context: ./ingestion_server/
+      target: ing
+      args: # Automatically inferred from env vars, unless specified
+        - INGESTION_PY_VERSION
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn.conf.py
     ports:
@@ -158,7 +283,11 @@ services:
     profiles:
       - ingestion_server
       - api
-    build: ./ingestion_server/
+    build:
+      context: ./ingestion_server/
+      target: ing
+      args: # Automatically inferred from env vars, unless specified
+        - INGESTION_PY_VERSION
     image: openverse-ingestion_server
     command: gunicorn -c ./gunicorn_worker.conf.py
     expose:
@@ -195,3 +324,5 @@ volumes:
   plausible-postgres:
   plausible-clickhouse:
   es-data:
+  minio:
+  catalog-cache:

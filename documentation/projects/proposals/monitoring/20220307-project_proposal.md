@@ -1,4 +1,6 @@
-# Project Proposal - 2022-03-07
+# 2022-03-07 Project Proposal: Monitoring
+
+**Author**: @sarayourfriend
 
 Note: Because I had to spend a good deal of time sketching out how this stuff
 works, I wrote a good deal of preliminary code. It's probably not perfect so

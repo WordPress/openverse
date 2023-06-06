@@ -36,8 +36,8 @@ from ingestion_server.distributed_reindex_scheduler import schedule_distributed_
 from ingestion_server.elasticsearch_models import media_type_to_elasticsearch_model
 from ingestion_server.es_helpers import get_stat
 from ingestion_server.es_mapping import index_settings
-from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
+from ingestion_server.utils.sensitive_terms import get_sensitive_terms
 
 
 DATABASE_HOST = config("DATABASE_HOST", default="localhost")
@@ -337,17 +337,6 @@ class TableIndexer:
         self.refresh(destination_index)
         self.ping_callback()
 
-    def load_test_data(self, model_name: str, **_):
-        """
-        Create test indices in Elasticsearch for QA.
-
-        :param model_name: the name of the media type
-        """
-
-        create_search_qa_index(model_name)
-        if self.progress is not None:
-            self.progress.value = 100  # mark job as completed
-
     def point_alias(self, model_name: str, index_suffix: str, alias: str, **_):
         """
         Map the given index to the given alias.
@@ -478,4 +467,75 @@ class TableIndexer:
 
         if self.progress is not None:
             self.progress.value = 100
+        self.ping_callback()
+
+    def create_and_populate_filtered_index(
+        self,
+        model_name: str,
+        origin_index_suffix: str | None = None,
+        destination_index_suffix: str | None = None,
+        **_,
+    ):
+        """
+        Create and populate a filtered index without documents with sensitive terms.
+
+        :param model_name: The model/media type the filtered index is for.
+        :param origin_index_suffix: The suffix of the origin index on which the
+        filtered index should be based. If not supplied, the filtered index will be
+        based upon the index aliased to ``model_name`` at the time of execution.
+        :param destination_index_suffix: The suffix to use for the destination index.
+        This can be configured independently of the origin index suffix to allow for
+        multiple filtered index creations to occur against the same origin index, i.e.,
+        in the case where sensitive terms change before a data refresh creates a new
+        origin index and we wish to update the filtered index immediately. If not
+        supplied, a UUID based suffix will be generated. This does not affect the
+        final alias used.
+        """
+        # Allow relying on the model-name-based alias by
+        # not suppliying `origin_index_suffix`
+        source_index = (
+            f"{model_name}-{origin_index_suffix}" if origin_index_suffix else model_name
+        )
+
+        # Destination and origin index suffixes must be possible to separate
+        # to allow for re-runs of filtered index creation based on the same
+        # origin index.
+        destination_index_suffix = destination_index_suffix or uuid.uuid4().hex
+        destination_index = f"{model_name}-{destination_index_suffix}-filtered"
+
+        self.es.indices.create(
+            index=destination_index,
+            body=index_settings(model_name),
+        )
+
+        sensitive_terms = get_sensitive_terms()
+
+        self.es.reindex(
+            body={
+                "source": {
+                    "index": source_index,
+                    "query": {
+                        "bool": {
+                            "must_not": [
+                                {
+                                    "multi_match": {
+                                        "query": f'"{term}"',
+                                        "fields": ["tags.name", "title", "description"],
+                                    }
+                                }
+                                for term in sensitive_terms
+                            ]
+                        }
+                    },
+                },
+                "dest": {"index": destination_index},
+            },
+            slices="auto",
+            wait_for_completion=True,
+        )
+
+        self.refresh(index_name=destination_index, change_settings=True)
+
+        if self.progress is not None:
+            self.progress.value = 100  # mark job as completed
         self.ping_callback()

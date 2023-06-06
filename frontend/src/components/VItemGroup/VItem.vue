@@ -28,7 +28,7 @@
         as === 'VLink' && 'text-dark-charcoal',
         !contextProps.showCheck && 'px-2',
       ]"
-      variant="plain"
+      variant="transparent-tx"
       size="disabled"
       :pressed="selected"
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
@@ -56,7 +56,7 @@
         "
         class="absolute"
         :class="contextProps.size === 'small' ? 'end-3' : 'end-5'"
-        :icon-path="itemIndicator"
+        name="item-indicator"
       />
     </VButton>
   </div>
@@ -75,8 +75,6 @@ import {
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import { VPopoverContentContextKey } from "~/components/VPopover/VPopoverContent.vue"
-
-import itemIndicator from "~/assets/icons/item-indicator.svg"
 
 export default defineComponent({
   name: "VItem",
@@ -159,7 +157,6 @@ export default defineComponent({
     })
 
     return {
-      itemIndicator,
       contextProps,
       isInPopover,
       isFocused,

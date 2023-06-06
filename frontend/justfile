@@ -10,6 +10,45 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
+###########
+# Version #
+###########
+
+export FRONTEND_NODE_VERSION := `grep "volta" -A 1 ../package.json | tail -n 1 | awk -F'[:"]' '{print $5}' | cut -d. -f1`
+export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'@' '{print $2}' | sed 's/",//g'`
+
+# Print the Node.js version specified in `package.json`
+@node-version:
+    echo $FRONTEND_NODE_VERSION
+
+# Print the pnpm version specified in `package.json`
+@pnpm-version:
+    echo $FRONTEND_PNPM_VERSION
+
+##########
+# Docker #
+##########
+
+# This section exists because the frontend is not a part of the Docker-based setup
+# and cannot be built easily like `just dc build <service>`.
+
+# Build the frontend Docker image
+build-img tag="openverse-frontend:local" target="app":
+    docker build \
+      --target {{ target }} \
+      --build-context 'repo_root=..' \
+      --build-arg FRONTEND_NODE_VERSION=$(just node-version) \
+      --build-arg FRONTEND_PNPM_VERSION=$(just pnpm-version) \
+      --tag {{ tag }} \
+      .
+
+# Run the frontend Docker image
+run-img tag="openverse-frontend:local":
+    docker run \
+      --rm \
+      --publish 8443:8443 \
+      {{ tag }}
+
 ######
 # Up #
 ######

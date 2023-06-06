@@ -3,14 +3,15 @@ import { test, expect } from "@playwright/test"
 import {
   assertCheckboxStatus,
   currentContentType,
+  filters,
   goToSearchTerm,
-  openFilters,
+  searchTypeNames,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import { AUDIO, IMAGE } from "~/constants/media"
+import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 
 /**
  * URL is correctly converted into search state:
@@ -49,16 +50,17 @@ test.describe("search query on SSR", () => {
       await page.goto("/search/?q=cat")
 
       const contentType = await currentContentType(page)
-      expect(contentType?.trim()).toEqual("All content")
+      expect(contentType).toEqual(searchTypeNames.ltr[ALL_MEDIA])
     })
 
     test("url path /search/audio is used to select `audio` search tab", async ({
       page,
     }) => {
-      await goToSearchTerm(page, "cat", { searchType: AUDIO })
+      const searchType = AUDIO
+      await goToSearchTerm(page, "cat", { searchType })
 
       const contentType = await currentContentType(page)
-      expect(contentType?.trim()).toEqual("Audio")
+      expect(contentType).toEqual(searchTypeNames.ltr[searchType])
     })
 
     test("url query to filter, all tab, one parameter per filter type", async ({
@@ -68,7 +70,7 @@ test.describe("search query on SSR", () => {
         query: "license=cc0&license_type=commercial&searchBy=creator",
       })
 
-      await openFilters(page)
+      await filters.open(page)
       // Creator filter was removed from the UI
       for (const checkbox of ["cc0", "commercial"]) {
         await assertCheckboxStatus(page, checkbox)
@@ -82,11 +84,10 @@ test.describe("search query on SSR", () => {
         searchType: IMAGE,
         query: "searchBy=creator&extension=jpg,png,gif,svg",
       })
-      await openFilters(page)
-      const checkboxes = ["jpeg", "png", "gif", "svg"]
+      await filters.open(page)
+      const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]
       for (const checkbox of checkboxes) {
-        const forValue = checkbox === "jpeg" ? "jpg" : checkbox
-        await assertCheckboxStatus(page, checkbox, forValue)
+        await assertCheckboxStatus(page, checkbox)
       }
     })
 

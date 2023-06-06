@@ -8,6 +8,7 @@
       :images="media"
       :is-single-page="true"
       :fetch-state="fetchState"
+      :image-grid-label="$t('image-details.related-images').toString()"
     />
   </aside>
 </template>

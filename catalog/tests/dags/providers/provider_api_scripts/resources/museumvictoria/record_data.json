@@ -1,0 +1,339 @@
+{
+  "acknowledgement": null,
+  "acquisitionInformation": "Donation from Mrs Margaret Wood, 21/08/2003",
+  "archeologyActivity": null,
+  "archeologyColour": null,
+  "archeologyContextNumber": null,
+  "archeologyDecoration": null,
+  "archeologyDescription": null,
+  "archeologyDistinguishingMarks": null,
+  "archeologyForm": null,
+  "archeologyManufactureDate": null,
+  "archeologyManufactureName": null,
+  "archeologyMoulding": null,
+  "archeologyPattern": null,
+  "archeologyPlacement": null,
+  "archeologyProvenance": null,
+  "archeologyShape": null,
+  "archeologySite": null,
+  "archeologySpecificActivity": null,
+  "archeologyTechnique": null,
+  "artworkDrawingNumber": null,
+  "artworkMedium": null,
+  "artworkPlateNumber": null,
+  "artworkPrimaryInscriptions": null,
+  "artworkPublisher": null,
+  "artworkSecondaryInscriptions": null,
+  "artworkState": null,
+  "artworkSupport": null,
+  "artworkTechnique": null,
+  "artworkTertiaryInscriptions": null,
+  "associations": [
+    {
+      "comments": null,
+      "country": "Switzerland",
+      "date": "Mar 1957",
+      "locality": "Geneva",
+      "name": "Intergovernmental Committee for European Migration",
+      "region": null,
+      "state": null,
+      "streetAddress": null,
+      "type": "Manufactured For"
+    },
+    {
+      "comments": null,
+      "country": null,
+      "date": "15 Mar 1957",
+      "locality": null,
+      "name": "Mr Emil Haraszt",
+      "region": null,
+      "state": null,
+      "streetAddress": null,
+      "type": "User"
+    },
+    {
+      "comments": null,
+      "country": "Australia",
+      "date": "circa 1957",
+      "locality": "Port Melbourne",
+      "name": "Mrs Margaret Wood",
+      "region": "Greater Melbourne",
+      "state": "Victoria",
+      "streetAddress": "Station Pier",
+      "type": "User"
+    }
+  ],
+  "audioVisualContentSummaries": [],
+  "audioVisualRecordingDetails": null,
+  "bibliographies": [],
+  "brands": [],
+  "category": "History & Technology",
+  "classifications": [
+    "Migration",
+    "Processing - planning & departure",
+    "Luggage handling"
+  ],
+  "collectingAreas": ["Migration & Cultural Diversity", "Transport"],
+  "collectionNames": [
+    "Margaret Wood Immigration & Shipping Collection",
+    "Immigration Shipping Collection"
+  ],
+  "comments": [],
+  "dateIdentified": null,
+  "dateModified": "2017-12-12T05:56:00Z",
+  "dimensions": [
+    {
+      "comments": null,
+      "configuration": "Overall Dimensions",
+      "dimensions": "13.4 cm (Length), 7.5 cm (Width)"
+    }
+  ],
+  "discipline": "History",
+  "displayTitle": "Baggage Label - ICEM, Sailing Details, 15 Mar 1957",
+  "id": "items/415715",
+  "identifiedBy": null,
+  "indigenousCulturesAuthor": null,
+  "indigenousCulturesCollector": null,
+  "indigenousCulturesCulturalGroups": [],
+  "indigenousCulturesDate": null,
+  "indigenousCulturesDateCollected": null,
+  "indigenousCulturesDescription": null,
+  "indigenousCulturesIllustrator": null,
+  "indigenousCulturesIndividualsIdentified": null,
+  "indigenousCulturesLetterFrom": null,
+  "indigenousCulturesLetterTo": null,
+  "indigenousCulturesLocalName": null,
+  "indigenousCulturesLocalities": [],
+  "indigenousCulturesMaker": null,
+  "indigenousCulturesMedium": null,
+  "indigenousCulturesPages": null,
+  "indigenousCulturesPhotographer": null,
+  "indigenousCulturesSheets": null,
+  "indigenousCulturesTitle": null,
+  "inscription": "Text, front: ICEM.\nText, reverse: ICEM/MIGRATION COMMITTEE/NAME EMIL HARASZTI/S.S./SAILING DATE 15.3.1957/NOM. ROLL NO. 34/TO Sydney Australia/PORT OF LANDING.",
+  "isdDescriptionOfContent": null,
+  "isdFormat": null,
+  "isdLanguage": null,
+  "isdPeopleDepicted": null,
+  "keywords": [
+    "Immigrant Shipping",
+    "Immigrant Voyages",
+    "Immigration",
+    "Shipping",
+    "Station Pier",
+    "Women's Work"
+  ],
+  "licence": {
+    "name": "Attribution 4.0 International",
+    "shortName": "CC BY",
+    "uri": "https://creativecommons.org/licenses/by/4.0"
+  },
+  "media": [
+    {
+      "alternativeText": "Baggage Label",
+      "caption": "Baggage Label - ICEM, Sailing Details",
+      "creators": [],
+      "credit": null,
+      "dateModified": "2018-02-08T04:55:00Z",
+      "id": "media/488013",
+      "large": {
+        "height": 1753,
+        "size": 668333,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/13/488013-large.jpg",
+        "width": 3000
+      },
+      "licence": {
+        "name": "Attribution 4.0 International",
+        "shortName": "CC BY",
+        "uri": "https://creativecommons.org/licenses/by/4.0"
+      },
+      "medium": {
+        "height": 877,
+        "size": 121664,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/13/488013-medium.jpg",
+        "width": 1500
+      },
+      "rightsStatement": "Copyright Museums Victoria / CC BY",
+      "small": {
+        "height": 500,
+        "size": 40208,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/13/488013-small.jpg",
+        "width": 855
+      },
+      "sources": ["Museums Victoria"],
+      "thumbnail": {
+        "height": 250,
+        "size": 8158,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/13/488013-thumbnail.jpg",
+        "width": 250
+      },
+      "type": "image"
+    },
+    {
+      "alternativeText": null,
+      "caption": "Baggage Label - ICEM, Sailing Details",
+      "creators": [],
+      "credit": null,
+      "dateModified": "2018-02-08T04:55:00Z",
+      "id": "media/488014",
+      "large": {
+        "height": 1753,
+        "size": 716239,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/14/488014-large.jpg",
+        "width": 3000
+      },
+      "licence": {
+        "name": "Attribution 4.0 International",
+        "shortName": "CC BY",
+        "uri": "https://creativecommons.org/licenses/by/4.0"
+      },
+      "medium": {
+        "height": 877,
+        "size": 142490,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/14/488014-medium.jpg",
+        "width": 1500
+      },
+      "rightsStatement": "Copyright Museums Victoria / CC BY",
+      "small": {
+        "height": 500,
+        "size": 51711,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/14/488014-small.jpg",
+        "width": 855
+      },
+      "sources": ["Museums Victoria"],
+      "thumbnail": {
+        "height": 250,
+        "size": 11400,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/14/488014-thumbnail.jpg",
+        "width": 250
+      },
+      "type": "image"
+    },
+    {
+      "alternativeText": null,
+      "caption": "Baggage Label - ICEM, Sailing Details, 15 Mar 1957",
+      "creators": [],
+      "credit": null,
+      "dateModified": "2016-11-09T05:41:00Z",
+      "id": "media/372501",
+      "large": {
+        "height": 1753,
+        "size": 822481,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/1/372501-large.jpg",
+        "width": 3000
+      },
+      "licence": {
+        "name": "All Rights Reserved",
+        "shortName": "All Rights Reserved",
+        "uri": ""
+      },
+      "medium": {
+        "height": 877,
+        "size": 165386,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/1/372501-medium.jpg",
+        "width": 1500
+      },
+      "rightsStatement": "In Copyright / All Rights Reserved",
+      "small": {
+        "height": 500,
+        "size": 61354,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/1/372501-small.jpg",
+        "width": 855
+      },
+      "sources": ["Museums Victoria"],
+      "thumbnail": {
+        "height": 250,
+        "size": 13892,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/1/372501-thumbnail.jpg",
+        "width": 250
+      },
+      "type": "image"
+    },
+    {
+      "alternativeText": null,
+      "caption": "Baggage Label - ICEM, Sailing Details, 15 Mar 1957",
+      "creators": [],
+      "credit": null,
+      "dateModified": "2016-11-09T05:41:00Z",
+      "id": "media/372500",
+      "large": {
+        "height": 1753,
+        "size": 780838,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/0/372500-large.jpg",
+        "width": 3000
+      },
+      "licence": {
+        "name": "All Rights Reserved",
+        "shortName": "All Rights Reserved",
+        "uri": ""
+      },
+      "medium": {
+        "height": 877,
+        "size": 143189,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/0/372500-medium.jpg",
+        "width": 1500
+      },
+      "rightsStatement": "In Copyright / All Rights Reserved",
+      "small": {
+        "height": 500,
+        "size": 48836,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/0/372500-small.jpg",
+        "width": 855
+      },
+      "sources": ["Museums Victoria"],
+      "thumbnail": {
+        "height": 250,
+        "size": 10149,
+        "uri": "https://collections.museumsvictoria.com.au/content/media/0/372500-thumbnail.jpg",
+        "width": 250
+      },
+      "type": "image"
+    }
+  ],
+  "modelNames": [],
+  "modelScale": null,
+  "museumLocation": null,
+  "numismaticsAxis": null,
+  "numismaticsDateIssued": null,
+  "numismaticsDenomination": null,
+  "numismaticsEdgeDescription": null,
+  "numismaticsMaterial": null,
+  "numismaticsObverseDescription": null,
+  "numismaticsReverseDescription": null,
+  "numismaticsSeries": null,
+  "objectName": "Baggage Label - ICEM, Sailing Details, 15 Mar 1957",
+  "objectSummary": "Baggage label from the Intergovernmental Committee for European Migration (ICEM). It was used by migrant Emil Haraszt who migrated to Australia in March 1957. It is part of a collection of shipboard souvenirs collected by Margaret Wood an officer in the Department of Immigration from 1951-1960. As part of her role Margaret met migrant ships arriving at Station Pier in Melbourne and she often received gifts from ship staff \n\nMargaret first worked in the Department of Alien Assimilation which focused on migrants post arrival, before moving to the Assisted Division which handled the reception of assisted European migrants arriving in Melbourne. Her final position was working for the General Assisted Passage Scheme, assisting migrants from the US, Scandinavia and Switzerland who came individually on general ships as opposed to migrant ships. She recalls her time with the Department with great pleasure. She was a young single woman and had just finished an Arts degree at Melbourne University. When she applied to the Public Service, she was placed with the Department of Immigration, as she spoke German. She left when she married in 1961 as per the policy at that time.\n\nThe ICEM was established in 1951 to help resettle people displaced by World War II. ICEM arranged the processing and emigration of over 406,000 refugees, displaced persons and economic migrants from Europe to overseas countries during the early 1950s. Between 1956 and 1957 they also assumed responsibility for the resettlement of some 180,000 Hungarian refugees who had fled to Austria and Yugoslavia. By 1960 one million migrants had been directly assisted by ICEM.",
+  "philatelyColour": null,
+  "philatelyDateIssued": null,
+  "philatelyDenomination": null,
+  "philatelyForm": null,
+  "philatelyGibbonsNumber": null,
+  "philatelyImprint": null,
+  "philatelyIssue": null,
+  "philatelyOverprint": null,
+  "physicalDescription": "Rectangular white blue and grey cardboard baggage label.",
+  "qualifier": null,
+  "qualifierRank": "None",
+  "recordType": "item",
+  "references": null,
+  "registrationNumber": "HT 1447",
+  "relatedArticleIds": ["articles/3438", "articles/3437"],
+  "relatedItemIds": [],
+  "relatedSpeciesIds": [],
+  "relatedSpecimenIds": [],
+  "shape": null,
+  "significance": null,
+  "taxonomy": null,
+  "tradeLiteratureCoverTitle": null,
+  "tradeLiteratureIllustrationTypes": null,
+  "tradeLiteratureNumberofPages": null,
+  "tradeLiteraturePageSizeFormat": null,
+  "tradeLiteraturePrimaryName": null,
+  "tradeLiteraturePrimaryRole": null,
+  "tradeLiteraturePrimarySubject": null,
+  "tradeLiteraturePrintingTypes": null,
+  "tradeLiteraturePublicationDate": null,
+  "tradeLiteraturePublicationTypes": [],
+  "type": "Document",
+  "typeStatus": null
+}

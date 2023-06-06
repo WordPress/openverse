@@ -17,8 +17,8 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      frontend: ${{ steps.paths-filter.outputs.frontend }}
-      lint: ${{ steps.paths-filter.outputs.lint }}
+      frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
+      lint: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'lint') }}
 
     steps:
       - name: Checkout repository

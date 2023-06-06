@@ -8,10 +8,12 @@ import pytest
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
-from catalog.api.controllers import search_controller
-from catalog.api.serializers.media_serializers import MediaSearchRequestSerializer
-from catalog.api.utils import tallies
-from catalog.api.utils.dead_link_mask import get_query_hash, save_query_mask
+from api.controllers import search_controller
+from api.utils import tallies
+from api.utils.dead_link_mask import get_query_hash, save_query_mask
+
+
+pytestmark = pytest.mark.django_db
 
 
 @pytest.mark.parametrize(
@@ -382,13 +384,6 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
 
 
 @pytest.mark.parametrize(
-    "index",
-    (
-        "image",
-        "audio",
-    ),
-)
-@pytest.mark.parametrize(
     ("page", "page_size", "does_tally", "number_of_results_passed"),
     (
         (1, 20, True, 20),
@@ -420,13 +415,13 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
         (8, 12, False, 0),
     ),
 )
+@pytest.mark.parametrize("include_sensitive_results", (True, False))
 @mock.patch.object(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
 @mock.patch(
-    "catalog.api.controllers.search_controller._post_process_results",
+    "api.controllers.search_controller._post_process_results",
 )
-@pytest.mark.django_db
 def test_search_tallies_pages_less_than_5(
     mock_post_process_results,
     count_provider_occurrences_mock: mock.MagicMock,
@@ -434,30 +429,39 @@ def test_search_tallies_pages_less_than_5(
     page_size,
     does_tally,
     number_of_results_passed,
-    index,
-    request_factory,
+    media_type_config,
+    include_sensitive_results,
+    settings,
 ):
-    mock_post_process_results.return_value = [
-        {"provider": "a provider", "identifier": i} for i in range(page_size)
-    ]
+    media_with_hits = media_type_config.model_factory.create_batch(
+        size=page_size, with_hit=True
+    )
+    mock_post_process_results.return_value = [hit for _, hit in media_with_hits]
 
-    serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
+    serializer = media_type_config.search_request_serializer(
+        data={
+            "q": "dogs",
+            "unstable__include_sensitive_results": include_sensitive_results,
+        }
+    )
     serializer.is_valid()
 
     search_controller.search(
         search_params=serializer,
         ip=0,
-        index=index,
+        origin_index=media_type_config.origin_index,
+        exact_index=False,
         page=page,
         page_size=page_size,
-        request=request_factory.get("/"),
         filter_dead=False,
     )
 
     if does_tally:
         count_provider_occurrences_mock.assert_called_once_with(
             mock.ANY,
-            index,
+            media_type_config.origin_index
+            if include_sensitive_results
+            else media_type_config.filtered_index,
         )
         passed_results = count_provider_occurrences_mock.call_args_list[0][0][0]
         assert len(passed_results) == number_of_results_passed
@@ -465,41 +469,73 @@ def test_search_tallies_pages_less_than_5(
         count_provider_occurrences_mock.assert_not_called()
 
 
-@pytest.mark.parametrize(
-    "index",
-    (
-        "image",
-        "audio",
-    ),
-)
 @mock.patch.object(
     tallies, "count_provider_occurrences", wraps=tallies.count_provider_occurrences
 )
 @mock.patch(
-    "catalog.api.controllers.search_controller._post_process_results",
+    "api.controllers.search_controller._post_process_results",
 )
-@pytest.mark.django_db
 def test_search_tallies_handles_empty_page(
     mock_post_process_results,
     count_provider_occurrences_mock: mock.MagicMock,
-    index,
-    request_factory,
+    media_type_config,
 ):
     mock_post_process_results.return_value = None
 
-    serializer = MediaSearchRequestSerializer(data={"q": "dogs"})
+    serializer = media_type_config.search_request_serializer(data={"q": "dogs"})
     serializer.is_valid()
 
     search_controller.search(
         search_params=serializer,
         ip=0,
-        index=index,
+        origin_index=media_type_config.origin_index,
+        exact_index=False,
         # Force calculated result depth length to include results within 80th position and above
         # to force edge case where retrieved results are only partially tallied.
         page=1,
         page_size=100,
-        request=request_factory.get("/"),
         filter_dead=True,
     )
 
     count_provider_occurrences_mock.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    ("feature_enabled", "include_sensitive_results", "index_suffix"),
+    (
+        (True, True, ""),
+        (True, False, "-filtered"),
+        (False, True, ""),
+        (False, False, ""),
+    ),
+)
+@mock.patch("api.controllers.search_controller.Search", wraps=Search)
+def test_resolves_index(
+    search_class,
+    media_type_config,
+    feature_enabled,
+    include_sensitive_results,
+    index_suffix,
+    settings,
+):
+    origin_index = media_type_config.origin_index
+    searched_index = f"{origin_index}{index_suffix}"
+
+    settings.ENABLE_FILTERED_INDEX_QUERIES = feature_enabled
+
+    serializer = media_type_config.search_request_serializer(
+        data={"unstable__include_sensitive_results": include_sensitive_results}
+    )
+    serializer.is_valid()
+
+    search_controller.search(
+        search_params=serializer,
+        ip=0,
+        origin_index=origin_index,
+        exact_index=False,
+        page=1,
+        page_size=20,
+        filter_dead=False,
+    )
+
+    search_class.assert_called_once_with(index=searched_index)

@@ -2,13 +2,13 @@
   <!-- Negative margin compensates for the `p-4` padding in row layout. -->
   <section class="-mx-2 md:-mx-4">
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="audio-results.snackbar.text" tag="p">
+      <i18n path="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
           #[keyboardKey]
         >
           <kbd :key="keyboardKey" class="font-sans">{{
-            $t(`audio-results.snackbar.${keyboardKey}`)
+            $t(`audioResults.snackbar.${keyboardKey}`)
           }}</kbd>
         </template>
       </i18n>
@@ -17,18 +17,20 @@
       v-if="results.length === 0 && !fetchState.isFinished"
       is-for-tab="audio"
     />
-    <VAudioTrack
-      v-for="audio in results"
-      :key="audio.id"
-      class="mb-2 md:mb-1"
-      :audio="audio"
-      :size="audioTrackSize"
-      layout="row"
-      :search-term="searchTerm"
-      @interacted="hideSnackbar"
-      @mousedown.native="handleMouseDown"
-      @focus.native="showSnackbar"
-    />
+    <ol :aria-label="$t('browse-page.aria.results', { query: searchTerm })">
+      <li v-for="audio in results" :key="audio.id">
+        <VAudioTrack
+          class="mb-2 md:mb-1"
+          :audio="audio"
+          :size="audioTrackSize"
+          layout="row"
+          :search-term="searchTerm"
+          @interacted="hideSnackbar"
+          @mousedown="handleMouseDown"
+          @focus="showSnackbar"
+        />
+      </li>
+    </ol>
     <VLoadMore />
   </section>
 </template>

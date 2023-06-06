@@ -1,0 +1,388 @@
+{
+  "accession_date": "2002-04-18 00:00:00",
+  "accession_number": "2002.6",
+  "approvals_mask": 16351,
+  "artists": [
+    {
+      "date_added": "2008-06-25",
+      "dates": "",
+      "end_year": null,
+      "id": 10785,
+      "name": "Abbas Al-Musavi",
+      "nationality": "",
+      "prefix": "",
+      "rank": 1,
+      "role": "Artist",
+      "start_year": null,
+      "suffix": ""
+    }
+  ],
+  "classification": "Painting",
+  "collections": [
+    {
+      "folder": "arts_of_the_islamic_world",
+      "id": 20,
+      "name": "Arts of the Islamic World",
+      "rank": 0
+    }
+  ],
+  "completeness": {
+    "description": "All data has been vetted. Objects generally have quality photos and descriptions.",
+    "name": "Best",
+    "percentage": 95
+  },
+  "copyright": null,
+  "copyright_restricted": 0,
+  "credit_line": "Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan",
+  "date_added": "2008-06-25",
+  "description": "Ghahvehkhaneh or \"coffeehouse\" painting genre.\r\n\r\nReligious narrative painting depicting scenes from the Battle of Karbala which commemorates the martyrdom of Imam Husayn. This tragedy, which is at the core of Shi'ite belief, occurred on the tenth of the month of Muharram, A.H. 61 (October 10, A.D. 680) when Imam Husayn was killed by the Sunni caliph Yazid in the Karbala desert (70 miles from Kufa, Iraq). In the painting, the individual scenes from the battle and the life of Imam Husayn are presented from left to right, but without logical progression. The central figure of the painting is 'Abbas (Husayn's half brother and standard bearer), mounted on a white horse stabbing a member of Yazid's army. Depicted on the left are scenes from the battle showing the agonies of Husayn and his followers. On the right are scenes from Paradise including Husayn and his followers above corresponding scenes from the underworld populated by Yazid and his supporters. The expressive, charged scenes depicted in gory details with vibrant colors seek an emotional response from an audience at a ta\u2018zieh theatrical performance, where paintings such as this one served as pardeh (curtains or portable backdrop paintings) for a reenactment of the Karbala tragedy.  \r\n\r\nThe name of the patron and city of production (Darvish 'Abbas Uvaysi, Isfahan) as well as the artist's name ('Abbas al-Musavi) are found in two important inscriptions in the painting.\r\n\t",
+  "dimensions": "68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg)",
+  "dynasty": "Qajar",
+  "edition": null,
+  "exhibitions": [
+    {
+      "id": 3314,
+      "title": "Diverse Works: Director's Choice, 1997-2015"
+    }
+  ],
+  "geographical_locations": [
+    {
+      "id": 5174,
+      "name": "Isfahan, Iran",
+      "type": "Place made"
+    }
+  ],
+  "highlight": 0,
+  "id": 3054,
+  "images": [
+    {
+      "caption": "Abbas Al-Musavi. <em>Battle of Karbala</em>, late 19th-early 20th century. Oil on canvas, 68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg). Brooklyn Museum, Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan, 2002.6 (Photo: Brooklyn Museum, 2002.6_PS2.jpg)",
+      "copyright_restricted": 0,
+      "credit": "Brooklyn Museum photograph",
+      "date": "2010",
+      "date_added": "2010-06-08",
+      "derivatives": [
+        {
+          "height": 51,
+          "size": "0",
+          "width": 96
+        },
+        {
+          "height": 103,
+          "size": "1",
+          "width": 192
+        },
+        {
+          "height": 206,
+          "size": "2",
+          "width": 384
+        },
+        {
+          "height": 413,
+          "size": "3",
+          "width": 768
+        },
+        {
+          "height": 826,
+          "size": "4",
+          "width": 1536
+        }
+      ],
+      "description": null,
+      "filename": "2002.6_PS2.jpg",
+      "id": 49113,
+      "is_color": 1,
+      "largest_derivative": "4",
+      "largest_derivative_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/2002.6_PS2.jpg",
+      "load_date": "2016-11-09",
+      "object_id": 3054,
+      "rank": 1,
+      "short_caption": "overall, 2002.6_PS2.jpg. Brooklyn Museum photograph, 2010",
+      "standard_size_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size2/2002.6_PS2.jpg",
+      "status": "active",
+      "thumbnail_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/2002.6_PS2.jpg",
+      "view": "overall"
+    },
+    {
+      "caption": "Abbas Al-Musavi. <em>Battle of Karbala</em>, late 19th-early 20th century. Oil on canvas, 68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg). Brooklyn Museum, Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan, 2002.6 (Photo: Brooklyn Museum, CONS.2002.6_xrs_detail01.jpg)",
+      "copyright_restricted": 0,
+      "credit": "Brooklyn Museum photograph",
+      "date": null,
+      "date_added": "2009-10-31",
+      "derivatives": [
+        {
+          "height": 96,
+          "size": "0",
+          "width": 79
+        },
+        {
+          "height": 192,
+          "size": "1",
+          "width": 158
+        },
+        {
+          "height": 384,
+          "size": "2",
+          "width": 316
+        },
+        {
+          "height": 768,
+          "size": "3",
+          "width": 633
+        },
+        {
+          "height": 1536,
+          "size": "4",
+          "width": 1266
+        }
+      ],
+      "description": "detail",
+      "filename": "CONS.2002.6_xrs_detail01.jpg",
+      "id": 15311,
+      "is_color": 1,
+      "largest_derivative": "4",
+      "largest_derivative_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CONS.2002.6_xrs_detail01.jpg",
+      "load_date": "2016-12-06",
+      "object_id": 3054,
+      "rank": 2,
+      "short_caption": "xray, detail, CONS.2002.6_xrs_detail01.jpg. Brooklyn Museum photograph",
+      "standard_size_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size2/CONS.2002.6_xrs_detail01.jpg",
+      "status": "active",
+      "thumbnail_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/CONS.2002.6_xrs_detail01.jpg",
+      "view": "xray"
+    },
+    {
+      "caption": "Abbas Al-Musavi. <em>Battle of Karbala</em>, late 19th-early 20th century. Oil on canvas, 68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg). Brooklyn Museum, Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan, 2002.6 (Photo: Brooklyn Museum, CONS.2002.6_xrs_detail02.jpg)",
+      "copyright_restricted": 0,
+      "credit": "Brooklyn Museum photograph",
+      "date": null,
+      "date_added": "2009-10-31",
+      "derivatives": [
+        {
+          "height": 96,
+          "size": "0",
+          "width": 79
+        },
+        {
+          "height": 192,
+          "size": "1",
+          "width": 158
+        },
+        {
+          "height": 384,
+          "size": "2",
+          "width": 316
+        },
+        {
+          "height": 768,
+          "size": "3",
+          "width": 633
+        },
+        {
+          "height": 1536,
+          "size": "4",
+          "width": 1266
+        }
+      ],
+      "description": "detail",
+      "filename": "CONS.2002.6_xrs_detail02.jpg",
+      "id": 15312,
+      "is_color": 1,
+      "largest_derivative": "4",
+      "largest_derivative_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CONS.2002.6_xrs_detail02.jpg",
+      "load_date": "2016-12-06",
+      "object_id": 3054,
+      "rank": 2,
+      "short_caption": "xray, detail, CONS.2002.6_xrs_detail02.jpg. Brooklyn Museum photograph",
+      "standard_size_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size2/CONS.2002.6_xrs_detail02.jpg",
+      "status": "active",
+      "thumbnail_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/CONS.2002.6_xrs_detail02.jpg",
+      "view": "xray"
+    },
+    {
+      "caption": "Abbas Al-Musavi. <em>Battle of Karbala</em>, late 19th-early 20th century. Oil on canvas, 68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg). Brooklyn Museum, Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan, 2002.6 (Photo: Brooklyn Museum, CONS.2002.6_xrs_detail03.jpg)",
+      "copyright_restricted": 0,
+      "credit": "Brooklyn Museum photograph",
+      "date": null,
+      "date_added": "2009-10-31",
+      "derivatives": [
+        {
+          "height": 96,
+          "size": "0",
+          "width": 79
+        },
+        {
+          "height": 192,
+          "size": "1",
+          "width": 158
+        },
+        {
+          "height": 384,
+          "size": "2",
+          "width": 316
+        },
+        {
+          "height": 768,
+          "size": "3",
+          "width": 633
+        },
+        {
+          "height": 1536,
+          "size": "4",
+          "width": 1266
+        }
+      ],
+      "description": "detail",
+      "filename": "CONS.2002.6_xrs_detail03.jpg",
+      "id": 15313,
+      "is_color": 1,
+      "largest_derivative": "4",
+      "largest_derivative_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CONS.2002.6_xrs_detail03.jpg",
+      "load_date": "2016-12-06",
+      "object_id": 3054,
+      "rank": 2,
+      "short_caption": "xray, detail, CONS.2002.6_xrs_detail03.jpg. Brooklyn Museum photograph",
+      "standard_size_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size2/CONS.2002.6_xrs_detail03.jpg",
+      "status": "active",
+      "thumbnail_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/CONS.2002.6_xrs_detail03.jpg",
+      "view": "xray"
+    },
+    {
+      "caption": "Abbas Al-Musavi. <em>Battle of Karbala</em>, late 19th-early 20th century. Oil on canvas, 68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg). Brooklyn Museum, Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan, 2002.6 (Photo: Brooklyn Museum, CONS.2002.6_xrs_detail04.jpg)",
+      "copyright_restricted": 0,
+      "credit": "Brooklyn Museum photograph",
+      "date": null,
+      "date_added": "2009-10-31",
+      "derivatives": [
+        {
+          "height": 79,
+          "size": "0",
+          "width": 96
+        },
+        {
+          "height": 158,
+          "size": "1",
+          "width": 192
+        },
+        {
+          "height": 316,
+          "size": "2",
+          "width": 384
+        },
+        {
+          "height": 633,
+          "size": "3",
+          "width": 768
+        },
+        {
+          "height": 1266,
+          "size": "4",
+          "width": 1536
+        }
+      ],
+      "description": "detail",
+      "filename": "CONS.2002.6_xrs_detail04.jpg",
+      "id": 15314,
+      "is_color": 1,
+      "largest_derivative": "4",
+      "largest_derivative_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/CONS.2002.6_xrs_detail04.jpg",
+      "load_date": "2016-12-06",
+      "object_id": 3054,
+      "rank": 2,
+      "short_caption": "xray, detail, CONS.2002.6_xrs_detail04.jpg. Brooklyn Museum photograph",
+      "standard_size_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size2/CONS.2002.6_xrs_detail04.jpg",
+      "status": "active",
+      "thumbnail_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/CONS.2002.6_xrs_detail04.jpg",
+      "view": "xray"
+    },
+    {
+      "caption": "Abbas Al-Musavi. <em>Battle of Karbala</em>, late 19th-early 20th century. Oil on canvas, 68 1/2 \u00d7 133 in., 104 lb. (174 \u00d7 337.8 cm, 47.17kg). Brooklyn Museum, Gift of K. Thomas Elghanayan in honor of Nourollah Elghanayan, 2002.6 (Photo: Brooklyn Museum, 2002.6_bw.jpg)",
+      "copyright_restricted": 0,
+      "credit": "Brooklyn Museum photograph",
+      "date": null,
+      "date_added": "2008-07-07",
+      "derivatives": [
+        {
+          "height": 51,
+          "size": "0",
+          "width": 96
+        },
+        {
+          "height": 102,
+          "size": "1",
+          "width": 192
+        },
+        {
+          "height": 204,
+          "size": "2",
+          "width": 384
+        },
+        {
+          "height": 408,
+          "size": "3",
+          "width": 768
+        },
+        {
+          "height": 817,
+          "size": "4",
+          "width": 1536
+        }
+      ],
+      "description": null,
+      "filename": "2002.6_bw.jpg",
+      "id": 7977,
+      "is_color": 0,
+      "largest_derivative": "4",
+      "largest_derivative_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size4/2002.6_bw.jpg",
+      "load_date": "2016-11-09",
+      "object_id": 3054,
+      "rank": 3,
+      "short_caption": "overall, 2002.6_bw.jpg. Brooklyn Museum photograph",
+      "standard_size_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size2/2002.6_bw.jpg",
+      "status": "active",
+      "thumbnail_url": "d1lfxha3ugu3d4.cloudfront.net/images/opencollection/objects/size0_sq/2002.6_bw.jpg",
+      "view": "overall"
+    }
+  ],
+  "inscribed": "The name of the patron and city of production (Darvish 'Abbas Uvaysi, Isfahan) as well as the artist's name ('Abbas al-Musavi) are found in two important Persian inscriptions in the painting.",
+  "labels": [
+    {
+      "approved_for_web": 1,
+      "content": "This painting commemorates the martyrdom of Imam Husayn, the grandson of the prophet Muhammad and the third <i>imam</i>, or leader, of the Shi<span style=\\\"font-size: smaller;\\\"><sup>c</sup></span>a Muslims. Husayn was killed by the forces of the Umayyad caliph Yazid I (r. 680&ndash;683) in the desert of Karbala in central Iraq in 680 c.e. This battle emphasizes the divide between the Sunni and Shi<span style=\\\"font-size: smaller;\\\"><sup>c</sup></span>a branches of Islam; Husayn led a resistance against what the Shi<span style=\\\"font-size: smaller;\\\"><sup>c</sup></span>a Muslims believed was the Umayyads&rsquo; illegitimate rule. The focus of this painting is Husayn&rsquo;s half brother, <span style=\\\"font-size: smaller;\\\"><sup>c</sup></span>Abbas, mounted on a white horse as he stabs a member of Yazid&rsquo;s army. Individual episodes related to the agonies suffered by Husayn and his companions leading up to and during the battle are illustrated in smaller-scale vignettes on the left. The hereafter is shown at the right, with Husayn and his companions in heaven above and their opponents in hell below.<br />\r\n<br />\r\n&ldquo;Coffeehouse&rdquo; Paintings <br />\r\n<br />\r\nPaintings such as <i>The Battle of Karbala</i> show how the monumental genre, developed for the Zand and Qajar courts (see paintings displayed nearby), was reinterpreted for popular audiences during the late nineteenth and early twentieth centuries. This account of Husayn&rsquo;s martyrdom inspired annual reenactments through ceremonial processions and the <i>ta<span style=\\\"font-size: smaller;\\\"><sup>c</sup></span>ziya</i>, the ritual theater of Iran. Narrative paintings served as portable backdrops, or <i>pardas</i> (curtains), that could be rolled up and transported from location to location, where a reciter (<i>pardadar</i>) would point to images as he recounted the story. As they were also presented in coffeehouses, such canvases are commonly referred to as <i>qahvakhana</i>, or &ldquo;coffeehouse,&rdquo; paintings.<br />",
+      "date_added": "2009-08-03 14:07:22",
+      "id": 4074,
+      "label_date": "2009-08-03",
+      "rank": 0,
+      "summary": "",
+      "title": "2002.6"
+    }
+  ],
+  "markings": null,
+  "medium": "Oil on canvas",
+  "museum_location": {
+    "id": null,
+    "is_floor": false,
+    "is_public": 0,
+    "name": "This item is not on view",
+    "parent_location_id": null
+  },
+  "object_date": "late 19th-early 20th century",
+  "object_date_begin": 1868,
+  "object_date_end": 1933,
+  "period": "Qajar Period",
+  "portfolio": null,
+  "primary_image": "2002.6_PS2.jpg",
+  "public_access": 1,
+  "related_items": [],
+  "rights_type": {
+    "description": "This work may be in the public domain in the United States. Works created by United States and non-United States nationals published prior to 1923 are in the public domain, subject to the terms of any applicable treaty or agreement.\n          You may download and use Brooklyn Museum images of this work. Please include caption information from this page and credit the Brooklyn Museum. If you need a high resolution file, please fill out our online <a href=\"https://brooklynmuseum.wufoo.com/forms/brooklyn-museum-image-request/\" target=\"_blank\">application form</a> (charges apply).\n          The Museum does not warrant that the use of this work will not infringe on the rights of third parties, such as artists or artists' heirs holding the rights to the work. It is your responsibility to determine and satisfy copyright or other use restrictions before copying, transmitting, or making other use of protected items beyond that allowed by \"fair use,\" as such term is understood under the United States Copyright Act.\n          The Brooklyn Museum makes no representations or warranties with respect to the application or terms of any international agreement governing copyright protection in the United States for works created by foreign nationals.\nFor further information about copyright, we recommend resources at the <a href=\"https://www.copyright.gov/\" target=\"_blank\">United States Library of Congress</a>, <a href=\"https://copyright.cornell.edu/resources\" target=\"_blank\">Cornell University</a>, <em><a href=\"https://hdl.handle.net/1813/14142\" target=\"_blank\">Copyright and Cultural Institutions: Guidelines for U.S. Libraries, Archives, and Museums</a></em>, and <a href=\"https://www.copyright-watch.org/\" target=\"_blank\">Copyright Watch</a>.\nFor more information about the Museum's rights project, including how rights types are assigned, please see our <a href=\"https://www.brooklynmuseum.org/community/blogosphere/bloggers/tag/copyright\" target=\"_blank\">blog posts on copyright</a>.\nIf you have any information regarding this work and rights to it, please contact <a href=\"mailto:copyright@brooklynmuseum.org\">copyright@brooklynmuseum.org</a>.",
+    "name": "no known copyright restrictions",
+    "public_name": "No known copyright restrictions"
+  },
+  "section": "",
+  "signed": "In Persian: \"Darvish Abbas Uvaysi, Isfahan\"",
+  "state": null,
+  "title": "Battle of Karbala",
+  "videos": [],
+  "visible": 1
+}

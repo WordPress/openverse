@@ -21,7 +21,7 @@ import {
 import {
   ApiQueryParams,
   filtersToQueryData,
-  qToSearchTerm,
+  queryDictionaryToQueryParams,
   queryStringToSearchType,
   queryToFilterData,
 } from "~/utils/search-query-transform"
@@ -52,6 +52,7 @@ export const isSearchTypeSupported = (
 export interface SearchState {
   searchType: SearchType
   recentSearches: Ref<string[]>
+  backToSearchPath: string
   searchTerm: string
   localSearchTerm: string
   filters: Filters
@@ -82,6 +83,7 @@ export const useSearchStore = defineStore("search", {
   state: (): SearchState => ({
     searchType: ALL_MEDIA,
     searchTerm: "",
+    backToSearchPath: "",
     localSearchTerm: "",
     recentSearches: useStorage<string[]>("recent-searches", []),
     filters: deepClone(filterData as DeepWriteable<typeof filterData>),
@@ -161,6 +163,9 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
+    setBackToSearchPath(path: string) {
+      this.backToSearchPath = path
+    },
     /**
      * Updates the search type and search term, and returns the
      * updated localized search path.
@@ -189,7 +194,16 @@ export const useSearchStore = defineStore("search", {
       query,
     }: { type?: SearchType; query?: ApiQueryParams } = {}): string {
       const searchType = type || this.searchType
-      const queryParams = query || this.searchQueryParams
+      let queryParams
+      if (!query) {
+        if (type && isSearchTypeSupported(type)) {
+          queryParams = computeQueryParams(type, this.filters, this.searchTerm)
+        } else {
+          queryParams = this.searchQueryParams
+        }
+      } else {
+        queryParams = query
+      }
 
       return this.$nuxt.localePath({
         path: searchPath(searchType),
@@ -199,11 +213,11 @@ export const useSearchStore = defineStore("search", {
     setSearchType(type: SearchType) {
       const featureFlagStore = useFeatureFlagStore()
       if (
-        !featureFlagStore.isOn("external_sources") &&
+        !featureFlagStore.isOn("additional_search_types") &&
         isAdditionalSearchType(type)
       ) {
         throw new Error(
-          `Please enable the 'external_sources' flag to use the ${type}`
+          `Please enable the 'additional_search_types' flag to use the ${type}`
         )
       }
 
@@ -215,8 +229,8 @@ export const useSearchStore = defineStore("search", {
      * use the first one.
      * @param q - The URL `q` query parameter
      */
-    setSearchTerm(q: string | (null | string)[] | null) {
-      const formattedTerm = qToSearchTerm(q)
+    setSearchTerm(q: string | undefined | null) {
+      const formattedTerm = q ? q.trim() : ""
       if (this.searchTerm === formattedTerm) return
       this.searchTerm = formattedTerm
       this.localSearchTerm = formattedTerm
@@ -392,12 +406,13 @@ export const useSearchStore = defineStore("search", {
       path: string
       urlQuery: Context["query"]
     }) {
-      this.setSearchTerm(urlQuery.q)
+      const query = queryDictionaryToQueryParams(urlQuery)
+      this.setSearchTerm(query.q)
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
+
       // When setting filters from URL query, 'mature' has a value of 'true',
       // but we need the 'mature' code. Creating a local shallow copy to prevent mutation.
-      const query: Record<string, string> = { ...urlQuery, q: this.searchTerm }
       if (query.mature === "true") {
         query.mature = "mature"
       } else {

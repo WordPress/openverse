@@ -9,16 +9,9 @@ const wrapperLocator = "#wrapper"
 
 test.describe.configure({ mode: "parallel" })
 
-const newButtonVariants = buttonVariants.filter(
-  (name) =>
-    name.startsWith("filled-") ||
-    name.startsWith("bordered-") ||
-    name.startsWith("transparent-")
-)
-
 test.describe("VButton", () => {
   const gotoWithArgs = makeGotoWithArgs("components-vbutton--v-button")
-  const nonPressedVariants = newButtonVariants.filter(
+  const nonPressedVariants = buttonVariants.filter(
     (name) => !name.endsWith("pressed")
   )
   for (const variant of nonPressedVariants) {
@@ -42,6 +35,15 @@ test.describe("VButton", () => {
       await page.focus(buttonLocator)
       expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
         name: `${variant}-focused.png`,
+      })
+    })
+
+    test(`${variant} focused hovered`, async ({ page }) => {
+      await gotoWithArgs(page, { variant })
+      await page.focus(buttonLocator)
+      await page.hover(buttonLocator)
+      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
+        name: `${variant}-focused-hovered.png`,
       })
     })
   }

@@ -8,7 +8,7 @@
     v-bind="{ href }"
     @click.native="$emit('click', item)"
   >
-    <VIcon :icon-path="icon" />
+    <VIcon :name="icon" class="h-6 w-6" />
     <span>{{ $t(`search-type.${item}`) }}</span>
     <VPill v-if="isBeta" class="ms-auto">{{
       $t("search-type.status-beta")

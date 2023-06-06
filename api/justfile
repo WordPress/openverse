@@ -10,6 +10,20 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 
+###########
+# Version #
+###########
+
+export API_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
+
+# Print the Python version specified in the `Pipfile`
+@py-version:
+    echo $API_PY_VERSION
+
+###########
+# Install #
+###########
+
 # Install dependencies
 install *args="--dev":
     pipenv install {{ args }}
@@ -57,16 +71,16 @@ recreate:
 ########
 
 # Make a cURL GET request to service at the given path
-_curl-get path host="localhost:50280":
-    curl "http://{{ host }}/v1/{{ path }}"
+_curl-get path origin="http://localhost:50280":
+    curl "{{ origin }}/v1/{{ path }}"
 
 # Make a test cURL GET request to the API
-stats media="images" host="localhost:50280":
-    just _curl-get "{{ media }}/stats/" {{ host }}
+stats media="images" origin="http://localhost:50280":
+    just _curl-get "{{ media }}/stats/" {{ origin }}
 
-# Launch a `pgcli` shell in the web container (requires typing credentials)
-pgcli db_host="db" db_name="openledger" db_user="deploy":
-    just ../exec web pgcli -h {{ db_host }} openledger
+# Launch a `pgcli` shell in the web container
+pgcli db_user_pass="deploy" db_name="openledger": up
+    env DC_USER="opener" just ../_pgcli web {{ db_user_pass }} {{ db_name }} db
 
 #########################
 # Django administration #
@@ -78,7 +92,7 @@ dj-local +args="":
 
 # Run Django administrative commands inside the Docker container
 dj +args="": wait-up
-    just ../exec web python manage.py {{ args }}
+    env DC_USER="{{ env_var_or_default("DC_USER", "opener") }}" just ../exec web python manage.py {{ args }}
 
 # Get IPython shell inside the Docker container
 ipython:
@@ -94,15 +108,18 @@ dbshell:
 
 # Run API tests inside the Docker container
 test *args: wait-up
-    just ../exec web ./test/run_test.sh {{ args }}
+    env DC_USER="opener" just ../exec web pytest {{ args }}
 
 # Run API tests locally
 test-local *args:
-    pipenv run ./test/run_test.sh {{ args }}
+    pipenv run pytest {{ args }}
 
 # Run smoke test for the API docs
 doc-test: wait-up
-    curl --fail 'http://localhost:50280/v1/?format=openapi'
+    curl \
+      -H 'Accept: application/vnd.oai.openapi+json' \
+      --fail \
+      'http://localhost:50280/v1/schema/' > openapi.json
 
 #########
 # NGINX #

@@ -1,16 +1,23 @@
-import { expect, test } from "@playwright/test"
+import { expect, Page, test } from "@playwright/test"
 
 import {
   goToSearchTerm,
-  openFilters,
+  filters,
   searchFromHeader,
-  t,
   openFirstResult,
+  t,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
+
 test.describe.configure({ mode: "parallel" })
+
+const getContentLink = async (page: Page, mediaType: SupportedMediaType) => {
+  const linkName = new RegExp(`See .+${mediaType}.+found for`)
+  return page.getByRole("link", { name: linkName })
+}
 
 test.describe("search history navigation", () => {
   breakpoints.describeMobileAndDesktop(() => {
@@ -23,19 +30,18 @@ test.describe("search history navigation", () => {
     }) => {
       await goToSearchTerm(page, "galah")
       // Open filter sidebar
-      await openFilters(page)
+      await filters.open(page)
 
       // Apply a filter
       await page.click("#modification")
       // There is a debounce when choosing a filter.
       // we need to wait for the page to reload before running the test
-      await page.waitForNavigation()
+      await page.waitForURL(/license_type=modification/)
 
       // Verify the filter is applied to the URL and the checkbox is checked
       // Note: Need to add that a search was actually executed with the new
       // filters and that the page results have been updated for the new filters
       // @todo(sarayourfriend): ^?
-      expect(page.url()).toContain("license_type=modification")
       expect(await page.isChecked("#modification")).toBe(true)
 
       // Navigate backwards and verify URL is updated and the filter is unapplied
@@ -50,20 +56,18 @@ test.describe("search history navigation", () => {
       page,
     }) => {
       await goToSearchTerm(page, "galah")
-      await page.click('a:has-text("See all images")')
+      await page
+        .getByRole("link", { name: /See.*images found for .*/i })
+        .click()
 
-      await page.waitForSelector('p:has-text("See all images")', {
-        state: "hidden",
-      })
       expect(page.url()).toContain("/search/image")
-      await page.goBack()
-      await page.waitForSelector('a:has-text("See all images")')
-      expect(
-        await page.locator('a:has-text("See all images")').isVisible()
-      ).toBe(true)
-      expect(
-        await page.locator('a:has-text("See all audio")').isVisible()
-      ).toBe(true)
+      // There are no content links on single media type search pages
+      await expect(await getContentLink(page, IMAGE)).not.toBeVisible()
+
+      await page.goBack({ waitUntil: "networkidle" })
+
+      await expect(await getContentLink(page, IMAGE)).toBeVisible()
+      await expect(await getContentLink(page, AUDIO)).toBeVisible()
     })
 
     test("should update search term when back button is clicked", async ({
@@ -75,7 +79,9 @@ test.describe("search history navigation", () => {
       expect(await page.locator('input[name="q"]').inputValue()).toBe("cat")
 
       await page.goBack()
-      await page.waitForSelector('a:has-text("See all images")')
+
+      await expect(await getContentLink(page, IMAGE)).toBeVisible()
+
       expect(await page.locator('input[name="q"]').inputValue()).toBe("galah")
     })
 
@@ -99,7 +105,7 @@ test.describe("search history navigation", () => {
         const url = "/search/?q=galah"
         await page.goto(url)
         await page.locator('a[href^="/image"]').first().click()
-        const link = page.locator(`text="${t("single-result.back")}"`)
+        const link = page.locator(`text="${t("singleResult.back")}"`)
         await expect(link).toBeVisible()
         await link.click()
         await expect(page).toHaveURL(url)

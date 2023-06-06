@@ -1,5 +1,6 @@
 # Markdown
 .github/**/*.md
+.github/CODEOWNERS
 
 # Frontend
 frontend/test/unit/coverage

@@ -1,0 +1,1860 @@
+[
+  {
+    "acknowledgement": null,
+    "acquisitionInformation": "Donation & Subsequent Transfer from Victorian Branch, Returned & Services League of Australia Limited (RSL), Mrs Ethel C. Siddeley, Oct 1984",
+    "archeologyActivity": null,
+    "archeologyColour": null,
+    "archeologyContextNumber": null,
+    "archeologyDecoration": null,
+    "archeologyDescription": null,
+    "archeologyDistinguishingMarks": null,
+    "archeologyForm": null,
+    "archeologyManufactureDate": null,
+    "archeologyManufactureName": null,
+    "archeologyMoulding": null,
+    "archeologyPattern": null,
+    "archeologyPlacement": null,
+    "archeologyProvenance": null,
+    "archeologyShape": null,
+    "archeologySite": null,
+    "archeologySpecificActivity": null,
+    "archeologyTechnique": null,
+    "artworkDrawingNumber": null,
+    "artworkMedium": null,
+    "artworkPlateNumber": null,
+    "artworkPrimaryInscriptions": null,
+    "artworkPublisher": null,
+    "artworkSecondaryInscriptions": null,
+    "artworkState": null,
+    "artworkSupport": null,
+    "artworkTechnique": null,
+    "artworkTertiaryInscriptions": null,
+    "associations": [
+      {
+        "comments": null,
+        "country": "Turkey",
+        "date": "1915",
+        "locality": "Gallipoli Peninsula",
+        "name": "Corporal S. W. Siddeley - Australian Imperial Force (AIF)",
+        "region": "Dardanelles",
+        "state": null,
+        "streetAddress": null,
+        "type": "Author"
+      }
+    ],
+    "audioVisualContentSummaries": [],
+    "audioVisualRecordingDetails": null,
+    "bibliographies": [],
+    "brands": [],
+    "category": "History & Technology",
+    "classifications": ["Military history", "Personal effects", "Diaries"],
+    "collectingAreas": [
+      "Home & Community",
+      "Medicine & Health",
+      "Public Life & Institutions"
+    ],
+    "collectionNames": [
+      "Military Memorabilia Collection",
+      "Returned and Services League (RSL) Collection"
+    ],
+    "comments": [
+      {
+        "author": "Patrick Gavan",
+        "content": "Summary says that ANZACS were met by 000's of TANKS at Gallipoli Landings. Not many tanks around in 1915, particularly in hilly terrain. \"TURKS\" perhaps?",
+        "created": "2011-07-11T10:25:00Z"
+      },
+      {
+        "author": "Discovery Centre",
+        "content": "Hi Patrick, thank you for your feedback.  It was passed onto the History and Technology Curatorial staff and we have updated the transcript.",
+        "created": "2011-12-02T01:13:30Z"
+      }
+    ],
+    "dateIdentified": null,
+    "dateModified": "2019-10-08T00:28:00Z",
+    "dimensions": [
+      {
+        "comments": null,
+        "configuration": "Overall Dimensions - Open",
+        "dimensions": "180 mm (Width), 136 mm (Height)"
+      },
+      {
+        "comments": null,
+        "configuration": "Overall Dimensions - Closed",
+        "dimensions": "92 mm (Width), 9 mm (Depth), 136 mm (Height)"
+      }
+    ],
+    "discipline": "Technology",
+    "displayTitle": "Diary - Corporal S.W. Siddeley, Egypt & Gallipoli, Vol. 2, World War I, 4 Apr 1915-11 May 1915",
+    "id": "items/826303",
+    "identifiedBy": null,
+    "indigenousCulturesAuthor": null,
+    "indigenousCulturesCollector": null,
+    "indigenousCulturesCulturalGroups": [],
+    "indigenousCulturesDate": null,
+    "indigenousCulturesDateCollected": null,
+    "indigenousCulturesDescription": null,
+    "indigenousCulturesIllustrator": null,
+    "indigenousCulturesIndividualsIdentified": null,
+    "indigenousCulturesLetterFrom": null,
+    "indigenousCulturesLetterTo": null,
+    "indigenousCulturesLocalName": null,
+    "indigenousCulturesLocalities": [],
+    "indigenousCulturesMaker": null,
+    "indigenousCulturesMedium": null,
+    "indigenousCulturesPages": null,
+    "indigenousCulturesPhotographer": null,
+    "indigenousCulturesSheets": null,
+    "indigenousCulturesTitle": null,
+    "inscription": "[Extensive hand-written text]",
+    "isdDescriptionOfContent": null,
+    "isdFormat": null,
+    "isdLanguage": null,
+    "isdPeopleDepicted": null,
+    "keywords": [
+      "Psychiatric Patients",
+      "Wars & Conflicts",
+      "World War I, 1914-1918",
+      "Making History - War Diaries and Correspondence"
+    ],
+    "licence": {
+      "name": "Attribution 4.0 International",
+      "shortName": "CC BY",
+      "uri": "https://creativecommons.org/licenses/by/4.0"
+    },
+    "media": [
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440365",
+        "large": {
+          "height": 1655,
+          "size": 1056345,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/15/440365-large.jpg",
+          "width": 2140
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1160,
+          "size": 322741,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/15/440365-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 61507,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/15/440365-small.jpg",
+          "width": 647
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 12630,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/15/440365-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440377",
+        "large": {
+          "height": 1649,
+          "size": 1000607,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/27/440377-large.jpg",
+          "width": 2143
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1154,
+          "size": 332501,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/27/440377-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 77043,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/27/440377-small.jpg",
+          "width": 650
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 17711,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/27/440377-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440388",
+        "large": {
+          "height": 1630,
+          "size": 1004539,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/38/440388-large.jpg",
+          "width": 2157
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1134,
+          "size": 303146,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/38/440388-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 66768,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/38/440388-small.jpg",
+          "width": 662
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 13813,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/38/440388-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440400",
+        "large": {
+          "height": 1639,
+          "size": 1162731,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/440400-large.jpg",
+          "width": 2135
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1152,
+          "size": 396727,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/440400-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 93991,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/440400-small.jpg",
+          "width": 651
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 20268,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/440400-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440403",
+        "large": {
+          "height": 1624,
+          "size": 1117052,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/3/440403-large.jpg",
+          "width": 2143
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1137,
+          "size": 372747,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/3/440403-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 91579,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/3/440403-small.jpg",
+          "width": 660
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19083,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/3/440403-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440404",
+        "large": {
+          "height": 1620,
+          "size": 1126444,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/4/440404-large.jpg",
+          "width": 2141
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1135,
+          "size": 374898,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/4/440404-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 92893,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/4/440404-small.jpg",
+          "width": 661
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19864,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/4/440404-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440405",
+        "large": {
+          "height": 1618,
+          "size": 1113269,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/5/440405-large.jpg",
+          "width": 2130
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1139,
+          "size": 374953,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/5/440405-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 92050,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/5/440405-small.jpg",
+          "width": 658
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19316,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/5/440405-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440407",
+        "large": {
+          "height": 1622,
+          "size": 1139979,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/7/440407-large.jpg",
+          "width": 2149
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1132,
+          "size": 381447,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/7/440407-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 94840,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/7/440407-small.jpg",
+          "width": 662
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19561,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/7/440407-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440408",
+        "large": {
+          "height": 1641,
+          "size": 1168981,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/8/440408-large.jpg",
+          "width": 2167
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1136,
+          "size": 382566,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/8/440408-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 93824,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/8/440408-small.jpg",
+          "width": 660
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19877,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/8/440408-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440366",
+        "large": {
+          "height": 1639,
+          "size": 979329,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/16/440366-large.jpg",
+          "width": 2185
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1125,
+          "size": 343266,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/16/440366-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 90220,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/16/440366-small.jpg",
+          "width": 667
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 18745,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/16/440366-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440367",
+        "large": {
+          "height": 1625,
+          "size": 924094,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/17/440367-large.jpg",
+          "width": 2158
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1130,
+          "size": 327980,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/17/440367-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 85379,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/17/440367-small.jpg",
+          "width": 664
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 18774,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/17/440367-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440368",
+        "large": {
+          "height": 1607,
+          "size": 925607,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/18/440368-large.jpg",
+          "width": 2130
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1132,
+          "size": 337947,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/18/440368-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 88934,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/18/440368-small.jpg",
+          "width": 663
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 18249,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/18/440368-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440369",
+        "large": {
+          "height": 1644,
+          "size": 943560,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/19/440369-large.jpg",
+          "width": 2159
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1142,
+          "size": 338668,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/19/440369-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 88409,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/19/440369-small.jpg",
+          "width": 657
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 18323,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/19/440369-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440370",
+        "large": {
+          "height": 1618,
+          "size": 944932,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/20/440370-large.jpg",
+          "width": 2171
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1118,
+          "size": 331606,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/20/440370-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 87121,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/20/440370-small.jpg",
+          "width": 671
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 17895,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/20/440370-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440371",
+        "large": {
+          "height": 1645,
+          "size": 1100233,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/21/440371-large.jpg",
+          "width": 2137
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1155,
+          "size": 365805,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/21/440371-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 86334,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/21/440371-small.jpg",
+          "width": 650
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 17759,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/21/440371-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440372",
+        "large": {
+          "height": 1624,
+          "size": 1070361,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/22/440372-large.jpg",
+          "width": 2172
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1122,
+          "size": 337351,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/22/440372-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 81090,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/22/440372-small.jpg",
+          "width": 669
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 17655,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/22/440372-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440373",
+        "large": {
+          "height": 1610,
+          "size": 925731,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/23/440373-large.jpg",
+          "width": 2142
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1127,
+          "size": 335734,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/23/440373-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 87878,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/23/440373-small.jpg",
+          "width": 665
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19255,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/23/440373-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440374",
+        "large": {
+          "height": 1625,
+          "size": 931801,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/24/440374-large.jpg",
+          "width": 2151
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1133,
+          "size": 334424,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/24/440374-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 85497,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/24/440374-small.jpg",
+          "width": 662
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19143,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/24/440374-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: Corporal S.W. Siddeley"],
+        "credit": null,
+        "dateModified": "2020-03-16T04:40:00Z",
+        "id": "media/440376",
+        "large": {
+          "height": 1633,
+          "size": 950550,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/26/440376-large.jpg",
+          "width": 2147
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1141,
+          "size": 344793,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/26/440376-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright unknown / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 87648,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/26/440376-small.jpg",
+          "width": 657
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 19708,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/26/440376-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: Corporal S.W. Siddeley"],
+        "credit": null,
+        "dateModified": "2020-03-16T04:40:00Z",
+        "id": "media/440378",
+        "large": {
+          "height": 1614,
+          "size": 1095851,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/28/440378-large.jpg",
+          "width": 2160
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1121,
+          "size": 356937,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/28/440378-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright unknown / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 87647,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/28/440378-small.jpg",
+          "width": 669
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 18802,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/28/440378-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440379",
+        "large": {
+          "height": 1618,
+          "size": 1058858,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/29/440379-large.jpg",
+          "width": 2156
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1126,
+          "size": 328954,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/29/440379-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 77104,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/29/440379-small.jpg",
+          "width": 666
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16388,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/29/440379-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440380",
+        "large": {
+          "height": 1626,
+          "size": 1043746,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/30/440380-large.jpg",
+          "width": 2161
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1129,
+          "size": 317317,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/30/440380-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 72266,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/30/440380-small.jpg",
+          "width": 665
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 15568,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/30/440380-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440381",
+        "large": {
+          "height": 1626,
+          "size": 1046956,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/31/440381-large.jpg",
+          "width": 2153
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1133,
+          "size": 324932,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/31/440381-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 75305,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/31/440381-small.jpg",
+          "width": 662
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16706,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/31/440381-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440382",
+        "large": {
+          "height": 1637,
+          "size": 1048180,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/32/440382-large.jpg",
+          "width": 2174
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1129,
+          "size": 321307,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/32/440382-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 73436,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/32/440382-small.jpg",
+          "width": 664
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16198,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/32/440382-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440383",
+        "large": {
+          "height": 1632,
+          "size": 1057793,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/33/440383-large.jpg",
+          "width": 2186
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1120,
+          "size": 321818,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/33/440383-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 74760,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/33/440383-small.jpg",
+          "width": 670
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16449,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/33/440383-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440384",
+        "large": {
+          "height": 1624,
+          "size": 1038739,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/34/440384-large.jpg",
+          "width": 2186
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1114,
+          "size": 316946,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/34/440384-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 75427,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/34/440384-small.jpg",
+          "width": 673
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16605,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/34/440384-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440385",
+        "large": {
+          "height": 1620,
+          "size": 1058489,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/35/440385-large.jpg",
+          "width": 2186
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1112,
+          "size": 322051,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/35/440385-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 77642,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/35/440385-small.jpg",
+          "width": 675
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16832,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/35/440385-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440386",
+        "large": {
+          "height": 1628,
+          "size": 1071799,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/36/440386-large.jpg",
+          "width": 2187
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1117,
+          "size": 321778,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/36/440386-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 75651,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/36/440386-small.jpg",
+          "width": 672
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16763,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/36/440386-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440387",
+        "large": {
+          "height": 1618,
+          "size": 1035181,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/37/440387-large.jpg",
+          "width": 2187
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1110,
+          "size": 312580,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/37/440387-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 74359,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/37/440387-small.jpg",
+          "width": 676
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16667,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/37/440387-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440389",
+        "large": {
+          "height": 1620,
+          "size": 1049018,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/39/440389-large.jpg",
+          "width": 2186
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1112,
+          "size": 315080,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/39/440389-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 74266,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/39/440389-small.jpg",
+          "width": 675
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 16218,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/39/440389-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440390",
+        "large": {
+          "height": 1630,
+          "size": 1016558,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/40/440390-large.jpg",
+          "width": 2165
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1129,
+          "size": 312711,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/40/440390-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 71900,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/40/440390-small.jpg",
+          "width": 664
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 15748,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/40/440390-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440392",
+        "large": {
+          "height": 1618,
+          "size": 984794,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/42/440392-large.jpg",
+          "width": 2186
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1110,
+          "size": 271999,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/42/440392-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 62350,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/42/440392-small.jpg",
+          "width": 676
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 11725,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/42/440392-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440393",
+        "large": {
+          "height": 1616,
+          "size": 931997,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/43/440393-large.jpg",
+          "width": 2178
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1113,
+          "size": 258059,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/43/440393-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 56806,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/43/440393-small.jpg",
+          "width": 674
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 10527,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/43/440393-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440394",
+        "large": {
+          "height": 1614,
+          "size": 787752,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/44/440394-large.jpg",
+          "width": 2187
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1107,
+          "size": 193843,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/44/440394-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 34609,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/44/440394-small.jpg",
+          "width": 678
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 5192,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/44/440394-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440395",
+        "large": {
+          "height": 1632,
+          "size": 804195,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/440395-large.jpg",
+          "width": 2157
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1135,
+          "size": 207975,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/440395-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 37259,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/440395-small.jpg",
+          "width": 661
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 6008,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/440395-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440396",
+        "large": {
+          "height": 1639,
+          "size": 910307,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/46/440396-large.jpg",
+          "width": 2157
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1140,
+          "size": 259738,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/46/440396-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 54008,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/46/440396-small.jpg",
+          "width": 658
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 11578,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/46/440396-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440397",
+        "large": {
+          "height": 1610,
+          "size": 927281,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/47/440397-large.jpg",
+          "width": 2157
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1120,
+          "size": 260217,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/47/440397-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 54043,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/47/440397-small.jpg",
+          "width": 670
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 10944,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/47/440397-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2017-10-10T20:33:00Z",
+        "id": "media/440398",
+        "large": {
+          "height": 1612,
+          "size": 904496,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/48/440398-large.jpg",
+          "width": 2143
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1128,
+          "size": 267488,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/48/440398-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 58209,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/48/440398-small.jpg",
+          "width": 665
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 11250,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/48/440398-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "id": "media/440399",
+        "large": {
+          "height": 1612,
+          "size": 877478,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/49/440399-large.jpg",
+          "width": 2147
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1126,
+          "size": 247962,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/49/440399-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "small": {
+          "height": 500,
+          "size": 52110,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/49/440399-small.jpg",
+          "width": 666
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 10527,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/49/440399-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr - 11 May 1915",
+        "creators": ["Photographer: Deborah Tout-Smith"],
+        "credit": null,
+        "dateModified": "2020-07-01T00:15:00Z",
+        "id": "media/329745",
+        "large": {
+          "height": 2581,
+          "size": 890933,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-large.jpg",
+          "width": 2785
+        },
+        "licence": {
+          "name": "Attribution 4.0 International",
+          "shortName": "CC BY",
+          "uri": "https://creativecommons.org/licenses/by/4.0"
+        },
+        "medium": {
+          "height": 1390,
+          "size": 170943,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Museums Victoria / CC BY",
+        "small": {
+          "height": 500,
+          "size": 20109,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-small.jpg",
+          "width": 540
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 5282,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/45/329745-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "alternativeText": null,
+        "caption": "Diary - World War I, Corporal S.W. Siddeley, 4 Apr - 11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2020-03-16T04:40:00Z",
+        "id": "media/329750",
+        "large": {
+          "height": 2350,
+          "size": 1097956,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/329750-large.jpg",
+          "width": 3000
+        },
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "medium": {
+          "height": 1175,
+          "size": 209941,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/329750-medium.jpg",
+          "width": 1500
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / Orphan Work",
+        "small": {
+          "height": 500,
+          "size": 45338,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/329750-small.jpg",
+          "width": 638
+        },
+        "sources": ["Museums Victoria"],
+        "thumbnail": {
+          "height": 250,
+          "size": 9515,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/0/329750-thumbnail.jpg",
+          "width": 250
+        },
+        "type": "image"
+      },
+      {
+        "caption": "Transcription of Corporal S.W. Siddeley's Diary, Vol 2, Egypt & Gallipoli, World War I, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley", "Transcriber: Nina Buchan"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "file": {
+          "size": 193415,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/2/517752.pdf"
+        },
+        "id": "media/517752",
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "sources": ["Museums Victoria"],
+        "type": "file"
+      },
+      {
+        "caption": "Diary of Corporal S.W. Siddeley, Vol 2, Egypt & Gallipoli, World War I, 4 Apr 1915-11 May 1915",
+        "creators": ["Author: S W Siddeley"],
+        "credit": null,
+        "dateModified": "2016-11-09T05:47:00Z",
+        "file": {
+          "size": 13414647,
+          "uri": "https://collections.museumsvictoria.com.au/content/media/15/566065.pdf"
+        },
+        "id": "media/566065",
+        "licence": {
+          "name": "All Rights Reserved",
+          "shortName": "All Rights Reserved",
+          "uri": ""
+        },
+        "rightsStatement": "Copyright Estate of S W Siddeley / All Rights Reserved",
+        "sources": ["Museums Victoria"],
+        "type": "file"
+      }
+    ],
+    "modelNames": [],
+    "modelScale": null,
+    "museumLocation": null,
+    "numismaticsAxis": null,
+    "numismaticsDateIssued": null,
+    "numismaticsDenomination": null,
+    "numismaticsEdgeDescription": null,
+    "numismaticsMaterial": null,
+    "numismaticsObverseDescription": null,
+    "numismaticsReverseDescription": null,
+    "numismaticsSeries": null,
+    "objectName": "Diary - Corporal S.W. Siddeley, Egypt & Gallipoli, Vol. 2, World War I, 4 Apr 1915-11 May 1915",
+    "objectSummary": "Leather-bound second volume of a diary written by Corporal S.W. Siddeley 4 April - 11 May 1915. The diary consists of three notebooks, written between October 1914 and September 1915. It covers the first convoy, the landing of the Anzacs at Gallipoli and the campaign there. The diary contains graphic details of the landing at Gallipoli and the wounds of many, and Siddeley's work in a field hospital on the peninsula. \n\nThis volume covers the period from 4 April 1915 at Mena Camp, Cairo, through to the Anzac landing at Gallipoli, and Siddeley's service on the peninsula until 11 May 1915. A week later, on the 18 May 1915, Siddeley would suffer a concussion after being hit with shrapnel, resulting in defective eyesight and a gap in entries for many weeks; and the incident itself is not mentioned in his diary. Siddeley returned to Cairo to recover in September 1915. The latest entry in this volume is dated 4 September 11, but is only two brief lines in illegible shorthand script. It appears to be a running tab for a game, or money.\n\nThe entries in this volume point to the horrific nature of Siddeley's service in the Gallipoli campaign, the intensive losses and poor conditions described in a matter-of-fact tone, but none the less having a strong negative impact on Siddeley, as the following extract describes: 'The position of our dressing station enabled us to get a perfect view of the bombardment from the enemy and the landing of our re-enforcements. 7.30 pm. Up to the present we have not seen the sight of a stretcher bearer and had 8 seriously wounded men, shot through the abdomen, chest, head etc. I gave them Morphia [morphine] and made them as comfortable as was possible. I now had a minute to myself and when I began to think, it seemed to me a nightmare and I cried to think what had caused it' ( p.6.)\n\nThis volume also includes an incident which leads to Siddeley's temporary promotion, to Senior Medical Officer, in charge of the Brigade Medical Staff, having 120 men and 14 dressing stations in his charge. Unfortunately, this incident was the death of his superior and good friend Captain Matheson, to sniper fire, on the 11 May 1915 (p.32.)\n\nThe difficulty of the fighting conditions amongst snipers, trenches, and inhospitable terrain are highlighted in several pages of entries for the 25 April 1915 (Anzac Day). The heavy loses sustained by the A.I.F. can also be seen progressing  through his time there, with 'about 7000' Australian casualties on 27 April 1915, (p.10.), to 'barely 300 out of 4,000 left' from his 5th Battalion, on 11 May 1915 (p. 32.)\n\nOther important entries include meeting the offical jounalist Charles Bean, who Siddeley was not impressed by, on 8 May 1915, (p.23.), the Charge of the 2nd Brigade at Krithia, 8 May 1915, (p. 19), and encountering John Simpson Kirkpatrick and the 3rd field Ambulance, on 4 May 1915, (pg. 13.), where Siddeley reports he is '..glad to say he was recommended for the Victoria Cross.'  \n\nExtracts from the diary describing landings at Gallipoli are attached. Siddeley writes: 'Arrived in sight of land at 5.30 AM and could hear rifle machine gun and shrapnel fire some of which stuck to the ship at intervals. The third brigade were the first to land and were met by 1000's of Turks who were driven by the Australians a mile or more back from the beach. Our boys before landing lit cigarettes and rifles and some singing ragtime songs but several of the glory boys were killed...I think that I am quite correct in saying we all were fairly shy of shrapnel. It came down worse than a hailstorm. It was a terrible position to be in no cover and no chance of retaliating. I felt sad thinking we would all be killed before having a shot at the enemy.  When we were about \u00bd a mile from shore, we saw two boat loads of Australians total about 76 who were all killed. Poor fellows when we got within 15 yards from shore we had to jump, we landed in all directions, some were drowned or rather very near.' (p.5.)",
+    "philatelyColour": null,
+    "philatelyDateIssued": null,
+    "philatelyDenomination": null,
+    "philatelyForm": null,
+    "philatelyGibbonsNumber": null,
+    "philatelyImprint": null,
+    "philatelyIssue": null,
+    "philatelyOverprint": null,
+    "physicalDescription": "Hand-written diary bound in black leather, with elastic strap to secure closed (now very stretched and ineffectual). Printed with vertial and horizontal lines. Inside covers is decorative lining of purple pattern. Writing is principally in ink, with some pencil inscriptions. Includes sketches of battlefields. Part of the front page has been torn off and is missing.",
+    "qualifier": null,
+    "qualifierRank": "None",
+    "recordType": "item",
+    "references": "National Archives of Australia hold enlistment and other papers relating to Siddeley - Series number B2455, Barcode 8083551.\n\nFurther information on Siddeley's diary is available on Museum Victoria's Imagining Australia 1914-1918 web site at http://museumvictoria.com.au/edu_ww1/itwashell.html\n\nNational Archives of Australia also hold Department of Veteran's Affairs Repatriation Department Medical files and Hospital files on Siddeley, post-war, Series number B73/51, Barcode 12848064, and B73, 12848204.\n\nDepartment of Births, Deaths and Marriages Victoria: https://online.justice.vic.gov.au/bdm/index-search?action=getHistIdxPage&queryIdParam=10651407&pageNoParam=1",
+    "registrationNumber": "ST 36537.2",
+    "relatedArticleIds": ["articles/10718"],
+    "relatedItemIds": [
+      "items/391081",
+      "items/826303",
+      "items/826302",
+      "items/826304",
+      "items/391096",
+      "items/391095",
+      "items/1233365",
+      "items/1560879"
+    ],
+    "relatedSpeciesIds": [],
+    "relatedSpecimenIds": [],
+    "shape": null,
+    "significance": "Personal diaries provide a valuable insight into the daily life in the Australian armed forces. Some diarists record the mundane routines of daily life in military camps, or ports visited during voyages on transport ships; others provide graphic details of battles and medical treatments. Welcome letters and parcels from home are described, and friendships are recorded. Many soldiers complain about the food, or record welcome or festive meals such as Christmas. The diaries show many of the ways servicemen and women coped with the discipline, stress and tragedy of war.",
+    "taxonomy": null,
+    "tradeLiteratureCoverTitle": null,
+    "tradeLiteratureIllustrationTypes": null,
+    "tradeLiteratureNumberofPages": null,
+    "tradeLiteraturePageSizeFormat": null,
+    "tradeLiteraturePrimaryName": null,
+    "tradeLiteraturePrimaryRole": null,
+    "tradeLiteraturePrimarySubject": null,
+    "tradeLiteraturePrintingTypes": null,
+    "tradeLiteraturePublicationDate": null,
+    "tradeLiteraturePublicationTypes": [],
+    "type": "Document",
+    "typeStatus": null
+  }
+]

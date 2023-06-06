@@ -1,12 +1,22 @@
 from test.factory.faker import Faker
 from test.factory.models.media import IdentifierFactory, MediaFactory
 
+import factory
 from factory.django import DjangoModelFactory
 
-from catalog.api.models.audio import Audio, AudioAddOn
+from api.models.audio import Audio, AudioAddOn, MatureAudio
+
+
+class MatureAudioFactory(DjangoModelFactory):
+    class Meta:
+        model = MatureAudio
+
+    media_obj = factory.SubFactory("test.factory.models.audio.AudioFactory")
 
 
 class AudioFactory(MediaFactory):
+    _mature_factory = MatureAudioFactory
+
     class Meta:
         model = Audio
 

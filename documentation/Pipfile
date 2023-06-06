@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sphinxcontrib-mermaid = "*"
+sphinx-notfound-page = "*"
 
 [dev-packages]
 sphinx = "*"
@@ -15,4 +15,4 @@ myst-parser = "*"
 sphinxcontrib-mermaid = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"

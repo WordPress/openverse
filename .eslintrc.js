@@ -9,6 +9,7 @@ const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(
   })
 )
 
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
   env: {
@@ -185,9 +186,69 @@ module.exports = {
       },
     },
     {
-      files: ["*.spec.js"],
+      env: { jest: true },
+      files: ["frontend/test/unit/**"],
+      plugins: ["jest"],
+      extends: ["plugin:jest/recommended"],
       rules: {
+        "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
+        "no-restricted-imports": [
+          "error",
+          {
+            name: "pinia",
+            message:
+              "Please import pinia test utils from `~~/test/unit/test-utils/pinia`. The test-utils version ensures proper setup of universally necessary Nuxt context mocks.",
+          },
+        ],
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector:
+              "ImportDeclaration[source.value='@vue/test-utils']:has(ImportSpecifier[local.name='shallowMount'])",
+            message:
+              "Do not use @vue/test-utils' `shallowMount`. Use `~~/test/unit/test-utils/render` instead which includes helpful context setup or @testing-library/vue's `render` directly.",
+          },
+        ],
+      },
+    },
+    {
+      files: ["automations/js/src/**"],
+      rules: {
+        "unicorn/filename-case": "off",
+      },
+    },
+    {
+      files: ["frontend/.storybook/**"],
+      rules: {
+        /**
+         * `.nuxt-storybook` doesn't exist in the CI when it
+         * lints files unless we ran the storybook build before linting,
+         * meaning that the imports used in the modules in this directory
+         * are mostly unavailable.
+         *
+         * To avoid turning these rules off we'd have to run the storybook
+         * build in CI before linting (or even instruct people to run
+         * storybook build locally before trying to lint) and that's just too
+         * heavy a lift when we can instead disable the rules for just this
+         * directory.
+         */
+        "import/extensions": "off",
+        "import/export": "off",
+        "import/no-unresolved": "off",
+      },
+    },
+    {
+      files: ["frontend/src/components/**"],
+      rules: {
+        "unicorn/filename-case": [
+          "error",
+          // Allow things like `Component.stories.js` and `Component.types.js`
+          {
+            case: "pascalCase",
+            ignore: [".eslintrc.js", ".*\\..*\\.js"],
+          },
+        ],
       },
     },
   ],

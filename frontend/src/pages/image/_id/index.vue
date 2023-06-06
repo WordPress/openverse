@@ -1,7 +1,7 @@
 <template>
   <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink :href="backToSearchPath" />
+      <VBackToSearchResultsLink :id="image.id" :href="backToSearchPath" />
     </div>
 
     <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">
@@ -38,6 +38,7 @@
         :external-icon-size="6"
         has-icon-end
         size="large"
+        @click="sendGetMediaEvent"
       >
         {{ $t("image-details.weblink") }}
       </VButton>
@@ -82,14 +83,17 @@
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { defineComponent, useRoute } from "@nuxtjs/composition-api"
+import { defineComponent } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
+import { useAnalytics } from "~/composables/use-analytics"
+
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
+import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VButton from "~/components/VButton.vue"
@@ -103,7 +107,6 @@ import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import {useAnalytics} from "../../../composables/use-analytics"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
-import externalIcon from "~/assets/icons/external-link.svg"
 
 export default defineComponent({
   name: "VImageDetailsPage",
@@ -117,28 +120,20 @@ export default defineComponent({
     VSketchFabViewer,
     VSkipToContentContainer,
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path.includes("/search/")) {
-      to.meta.backToSearchPath = from.fullPath
-    }
-    if (from.path.includes("/search/") && to.query.q) {
-      useSearchStore().setSearchTerm(to.query.q)
-    }
-    next()
-  },
   layout: "content-layout",
+  middleware: singleResultMiddleware,
   setup() {
-    const route = useRoute()
-
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
+    const searchStore = useSearchStore()
+
     const image = computed(() =>
       singleResultStore.mediaType === IMAGE
         ? (singleResultStore.mediaItem as ImageDetail)
         : null
     )
 
-    const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
+    const backToSearchPath = computed(() => searchStore.backToSearchPath)
     const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
@@ -211,10 +206,20 @@ export default defineComponent({
     }
 
     const { sendCustomEvent } = useAnalytics()
+
     const handleRightClick = (image: { id: string, originalTitle: string }) => {
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
         set: image.originalTitle,
         identifier: image.id,
+
+    const sendGetMediaEvent = () => {
+      if (!image.value) {
+        return
+      }
+      sendCustomEvent("GET_MEDIA", {
+        id: image.value.id,
+        provider: image.value.provider,
+        mediaType: IMAGE,
       })
     }
 
@@ -233,7 +238,8 @@ export default defineComponent({
       onImageError,
       handleRightClick,
       backToSearchPath,
-      externalIcon,
+
+      sendGetMediaEvent,
     }
   },
   async asyncData({ app, error, route, $pinia }) {

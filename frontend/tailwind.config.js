@@ -24,6 +24,16 @@ module.exports = {
       "trans-blue-action": "#5067e4",
       "dark-blue": "#23282d",
 
+      // Semantic
+      "info-soft": "#dbe2ff",
+      info: "#2349e7",
+      "warning-soft": "#fff1cc",
+      warning: "#9d650b",
+      "success-soft": "#dbf0d6",
+      success: "#3b772c",
+      "error-soft": "#ffe0d1",
+      error: "#b43e04",
+
       // Brand
       yellow: "#ffe033",
       pink: "#c52b9b",
@@ -69,6 +79,7 @@ module.exports = {
       ex: "1ex",
       half: "50%",
       full: "100%",
+      "full-with-border": "calc(100% + 2px)",
 
       // Indexed by multiples of baseline (~ `0.25rem`)
       0: "0",
@@ -89,6 +100,7 @@ module.exports = {
       14: "3.50rem",
       15: "3.75rem",
       16: "4.00rem",
+      18: "4.50rem",
       20: "5.00rem",
       24: "6.00rem",
       26: "6.50rem",
@@ -208,6 +220,9 @@ module.exports = {
       borderRadius: {
         inherit: "inherit",
       },
+      outlineWidth: {
+        1.5: "1.5px",
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
@@ -237,7 +252,14 @@ module.exports = {
             "focus-slim-tx",
             "focus-slim-filled",
             "focus-bold-filled",
-          ].map((item) => [item, (value) => ({ "--tw-ring-color": value })])
+            "focus-slim-borderless-filled",
+          ].map((item) => [
+            item,
+            (value) => ({
+              "--tw-ring-color": value,
+              "--tw-outline-color": value,
+            }),
+          ])
         ),
         { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
       )

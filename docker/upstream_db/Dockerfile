@@ -1,4 +1,6 @@
-FROM postgres:13.6
+# syntax=docker/dockerfile:1
+
+FROM postgres:13.7 as db
 
 ARG PGCLI_VERSION=3.2.0
 
@@ -6,6 +8,11 @@ ARG PGCLI_VERSION=3.2.0
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
+
+# Enable stop-on-error
+# https://www.postgresql.org/docs/current/app-psql.html
+#ENV PGOPTIONS="-c on_error_stop=on"
+RUN echo "\set ON_ERROR_STOP on" >> /root/.psqlrc
 
 RUN apt-get update \
     && apt-get -yqq install \

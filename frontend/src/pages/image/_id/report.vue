@@ -20,13 +20,13 @@
       />
       <!-- eslint-enable vue/no-v-html -->
       <VButton
-        variant="secondary-bordered"
+        variant="bordered-gray"
         :href="`/image/${image.id}`"
         as="VLink"
-        size="disabled"
-        class="p-2 text-sr text-dark-charcoal"
+        size="medium"
+        class="label-bold"
       >
-        {{ $t("report.image-details") }}
+        {{ $t("report.imageDetails") }}
       </VButton>
     </figure>
 

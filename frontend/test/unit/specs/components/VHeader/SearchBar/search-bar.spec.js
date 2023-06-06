@@ -1,38 +1,25 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
-import { createPinia, PiniaVuePlugin } from "~~/test/unit/test-utils/pinia"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useMatchHomeRoute } from "~/composables/use-match-routes"
 
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
+import { FIELD_SIZES } from "~/components/VInputField/VInputField.vue"
 
 jest.mock("~/composables/use-match-routes", () => ({
   useMatchHomeRoute: jest.fn(),
 }))
 
-const sizes = ["small", "medium", "large", "standalone"]
+const sizes = Object.keys(FIELD_SIZES)
 const defaultPlaceholder = "Enter search query"
-
-const configureVue = (vue) => {
-  vue.use(PiniaVuePlugin)
-  return {
-    pinia: createPinia(),
-  }
-}
 
 describe("VSearchBar", () => {
   let options
   beforeEach(() => {
     options = {
-      props: { placeholder: defaultPlaceholder, size: "standalone" },
+      props: { placeholder: defaultPlaceholder, size: "medium" },
       stubs: { ClientOnly: true },
-      mocks: {
-        $nuxt: {
-          context: {
-            app: { $ua: {} },
-          },
-        },
-      },
     }
   })
 
@@ -41,7 +28,7 @@ describe("VSearchBar", () => {
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
       options.props.size = size
-      render(VSearchBar, options, configureVue)
+      render(VSearchBar, options)
 
       const inputElement = screen.getByPlaceholderText(defaultPlaceholder)
 
@@ -56,13 +43,13 @@ describe("VSearchBar", () => {
     (size) => {
       useMatchHomeRoute.mockImplementation(() => false)
       options.props.size = size
-      render(VSearchBar, options, configureVue)
+      render(VSearchBar, options)
 
-      const btnElement = screen.getByLabelText("search.search")
+      const btnElement = screen.getByRole("button", { name: /search/i })
 
       expect(btnElement.tagName).toBe("BUTTON")
       expect(btnElement).toHaveAttribute("type", "submit")
-      expect(btnElement).toHaveAttribute("aria-label", "search.search")
+      expect(btnElement).toHaveAttribute("aria-label", "Search")
     }
   )
 
@@ -70,16 +57,16 @@ describe("VSearchBar", () => {
     it("should default to hero.search.placeholder", () => {
       delete options.props.placeholder
 
-      render(VSearchBar, options, configureVue)
+      render(VSearchBar, options)
       expect(
-        screen.queryByPlaceholderText("hero.search.placeholder")
+        screen.queryByPlaceholderText(/Search for content/i)
       ).not.toBeNull()
     })
 
     it("should use the prop when provided", () => {
       const placeholder = "This is a different placeholder from the default"
       options.props.placeholder = placeholder
-      render(VSearchBar, options, configureVue)
+      render(VSearchBar, options)
       expect(screen.queryByPlaceholderText(placeholder)).not.toBeNull()
     })
   })

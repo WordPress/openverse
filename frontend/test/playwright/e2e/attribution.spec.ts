@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test"
 
+import { turnOnAnalytics } from "~~/test/playwright/utils/navigation"
+
 test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ context }) => {
@@ -43,4 +45,32 @@ test("can copy plain text attribution", async ({ page }) => {
   })
   // Only the plain-text license contains the "To view" bit.
   expect(clippedText).toContain("To view a copy of this license")
+})
+
+test("sends analytics event on copy", async ({ page }) => {
+  let copyAttributionEventData: {
+    id: string
+    format: string
+    mediaType: string
+  } = { id: "", format: "", mediaType: "" }
+  page.on("request", (req) => {
+    if (req.method() === "POST") {
+      const requestData = req.postDataJSON()
+      if (requestData?.n == "COPY_ATTRIBUTION") {
+        copyAttributionEventData = JSON.parse(requestData?.p)
+      }
+    }
+  })
+  const mediaType = "image"
+  const id = "e9d97a98-621b-4ec2-bf70-f47a74380452"
+  const format = "rich"
+
+  await turnOnAnalytics(page)
+
+  await page.goto(`${mediaType}/${id}?ff_analytics=on`)
+  await page.click(`[id="copyattr-${format}"]`)
+
+  expect(copyAttributionEventData.id).toEqual(id)
+  expect(copyAttributionEventData.format).toEqual(format)
+  expect(copyAttributionEventData.mediaType).toEqual(mediaType)
 })

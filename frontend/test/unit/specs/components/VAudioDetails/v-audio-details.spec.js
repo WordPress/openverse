@@ -1,6 +1,9 @@
-import { render, screen } from "@testing-library/vue"
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "screen.getByText"] }] */
+
+import { screen } from "@testing-library/vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
 
@@ -30,7 +33,7 @@ describe("VAudioDetails", () => {
 
   it("renders the album title", () => {
     render(VAudioDetails, options)
-    screen.getByText("audio-details.table.album")
+    screen.getByText(/Test Album/i)
     const album = screen.getByText(overrides.audio_set.title)
     expect(album).toHaveAttribute(
       "href",
@@ -46,7 +49,7 @@ describe("VAudioDetails", () => {
 
   it("displays the main filetype when no alternative files are available", () => {
     render(VAudioDetails, options)
-    screen.getByText("MP32") // throw if not found
+    screen.getByText("MP32") // throws if not found
   })
 
   it("displays multiple filetypes when they are available in alt_files", () => {
@@ -55,7 +58,7 @@ describe("VAudioDetails", () => {
       { filetype: "ogg" },
     ]
     render(VAudioDetails, options)
-    screen.getByText("MP32, WAV, OGG")
+    screen.getByText("MP32, WAV, OGG") // throws if not found
   })
 
   it("displays only distinct filetypes", () => {
@@ -64,6 +67,6 @@ describe("VAudioDetails", () => {
       { filetype: "ogg" },
     ]
     render(VAudioDetails, options)
-    screen.getByText("MP32, OGG")
+    screen.getByText("MP32, OGG") // throws if not found
   })
 })

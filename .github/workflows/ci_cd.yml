@@ -30,11 +30,13 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      api: ${{ steps.paths-filter.outputs.api }}
-      ingestion_server: ${{ steps.paths-filter.outputs.ingestion_server }}
-      frontend: ${{ steps.paths-filter.outputs.frontend }}
-      documentation: ${{ steps.paths-filter.outputs.documentation }}
       changes: ${{ steps.paths-filter.outputs.changes }}
+      catalog: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'catalog') }}
+      ingestion_server: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ingestion_server') }}
+      api: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'api') }}
+      frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
+      documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
+      ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -71,48 +73,16 @@ jobs:
       - get-changes
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set matrix images
         id: set-matrix
         env:
           CHANGES: ${{ needs.get-changes.outputs.changes }}
-        shell: python
-        run: |
-          import json
-          import os
-          import sys
-
-          changes = json.loads(os.environ.get('CHANGES'))
-
-          build_matrix = {"image": [], "include": []}
-          publish_matrix = {"image": []}
-
-          if "frontend" in changes:
-              build_matrix["image"].append("frontend")
-              build_matrix["include"].append({"image": "frontend", "context": "frontend", "target": "app"})
-              publish_matrix["image"].append("frontend")
-          if "api" in changes or "ingestion_server" in changes:
-              # Always build the ingestion server and API images for either changeset
-              build_matrix["image"] += ["api", "ingestion_server"]
-              build_matrix["include"] += [
-                {"image": "ingestion_server", "context": "ingestion_server", "target": "ing"},
-                {"image": "api", "context": "api", "target": "api"},
-              ]
-              if "api" in changes:
-                  build_matrix["image"].append("api_nginx")
-                  build_matrix["include"].append({"image": "api_nginx", "context": "api", "target": "nginx"})
-                  publish_matrix["image"] += ["api", "api_nginx"]
-              if "ingestion_server" in changes:
-                  publish_matrix["image"].append("ingestion_server")
-
-          do_build = 'true' if len(build_matrix["image"]) else 'false'
-          do_publish = 'true' if len(publish_matrix["image"]) else 'false'
-
-          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-              for dest in [sys.stdout, gh_out]:
-                  print(f"do_build={do_build}", file=dest)
-                  print(f"build_matrix={json.dumps(build_matrix)}", file=dest)
-                  print(f"do_publish={do_publish}", file=dest)
-                  print(f"publish_matrix={json.dumps(publish_matrix)}", file=dest)
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python set_matrix_images.py
 
   #############
   # Universal #
@@ -129,7 +99,7 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
-          # Python is not needed to run pre-commit.
+          # No Python setup is needed, the built-in Python runtime is okay.
           setup_python: false
           # Node.js is needed by lint actions.
           install_recipe: "node-install"
@@ -147,32 +117,36 @@ jobs:
 
   add-stack-label:
     name: Add stack label
-    if: github.event_name == 'pull_request' && github.repository == 'WordPress/openverse'
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.owner.login == 'WordPress' &&
+      github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     needs:
       - get-changes
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Add API stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.api == 'true' }}
+      - name: Apply stack labels
+        uses: actions/github-script@v6
         with:
-          labels: "🧱 stack: api"
-
-      - name: Add ingestion server stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.ingestion_server == 'true' }}
-        with:
-          labels: "🧱 stack: ingestion server"
-
-      - name: Add frontend stack label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ needs.get-changes.outputs.frontend == 'true' }}
-        with:
-          labels: "🧱 stack: frontend"
+          # Also see
+          # - list of stack filters: `.github/filters.yml`
+          # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
+          script: |
+            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
+            const labels = JSON
+              .parse('${{ needs.get-changes.outputs.changes }}')
+              .filter(change => stacks.includes(change))
+              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
+            if (!labels.length) {
+              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+            }
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels,
+            })
 
   build-images:
     name: Build Docker images
@@ -190,29 +164,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # ℹ️Step only applies for frontend image.
+      # Sets up `just` and Node.js.
+      # Node.js is needed for the frontend to download translations.
+      # `just` is needed to run the recipes and set build args.
       - name: Setup CI env
-        if: matrix.image == 'frontend'
         uses: ./.github/actions/setup-env
         with:
           setup_python: false
-          # Python is not needed to build the image.
-          install_recipe: node-install
+          setup_nodejs: ${{ matrix.image == 'frontend' && 'true' || 'false' }}
+          install_recipe: ${{ matrix.image == 'frontend' && 'node-install' || '' }}
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions
+          just versions >> "$GITHUB_OUTPUT"
 
       # ℹ️Step only applies for frontend image.
       # This step
       # - downloads translation strings from GlotPress so that they can be
       #   bundled inside the Docker image
-      # - copies pnpm config files from the root to the `frontend/` directory
-      #   so that they can be used to mock a workspace inside the Docker image
       - name: Prepare frontend for building
         if: matrix.image == 'frontend'
         run: |
           just frontend/run i18n
-          cp .npmrc .pnpmfile.cjs pnpm-lock.yaml frontend/
-        env:
-          GLOTPRESS_USERNAME: ${{ secrets.MAKE_USERNAME }}
-          GLOTPRESS_PASSWORD: ${{ secrets.MAKE_LOGIN_PASSWORD }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -222,15 +198,22 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.context }}
+          context: ${{ matrix.context || matrix.image }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
+          build-contexts: ${{ matrix.build-contexts || '' }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
+            CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
+            CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
+            API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
+            INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
+            FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
+            FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3
@@ -238,13 +221,83 @@ jobs:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
 
+  ###########
+  # Catalog #
+  ###########
+
+  test-cat:
+    name: Run tests for the catalog
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - get-changes
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run the tests.
+          install_recipe: ""
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+        with:
+          setup_images: upstream_db catalog
+
+      - name: Run tests
+        run: |
+          just catalog/test --extended
+
+  catalog-checks:
+    name: Run catalog checks
+    if: |
+      needs.get-changes.outputs.catalog == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          # Python is not needed to run the tests.
+          setup_python: false
+          # Node.js is needed by lint actions.
+          install_recipe: "node-install"
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+        with:
+          setup_images: upstream_db catalog
+
+      - name: Check DAG documentation
+        run: |
+          just catalog/generate-dag-docs true
+
   ####################
   # Ingestion server #
   ####################
 
   test-ing:
     name: Run tests for ingestion-server
-    if: needs.get-changes.outputs.ingestion_server == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -266,7 +319,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
-          setup_api: false
+          setup_images: upstream_db ingestion_server
 
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
@@ -288,7 +341,10 @@ jobs:
 
   test-api:
     name: Run tests for the API
-    if: needs.get-changes.outputs.ingestion_server == 'true' || needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.ingestion_server == 'true' ||
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -310,6 +366,8 @@ jobs:
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
+        with:
+          setup_images: upstream_db ingestion_server api
 
       - name: Start API, ingest and index test data
         run: just api/init
@@ -332,7 +390,9 @@ jobs:
 
   django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api == 'true'
+    if: |
+      needs.get-changes.outputs.api == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -340,11 +400,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
+        include:
+          - name: check_django
+            recipe: api/dj check
+          - name: validate_openapi
+            recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
+          - name: check_migrations
+            recipe: api/dj makemigrations --check --noinput --merge
+          - name: test_doc
+            recipe: api/doc-test
 
     steps:
       - name: Checkout repository
@@ -361,34 +430,38 @@ jobs:
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
+        with:
+          setup_images: upstream_db ingestion_server api
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
         env:
           DC_USER: root
 
-      - name: Upload schema on failure
-        if: failure() && contains(matrix.recipe, 'validateopenapischema')
+      - name: Upload schema
+        if: matrix.name == 'test_doc'
         uses: actions/upload-artifact@v3
         with:
-          name: openverse-api-openapi-schema.yaml
-          path: ./api/openapi.yaml
+          name: openapi.json
+          path: ./api/openapi.json
 
   # This job runs when `django-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
   bypass-django-checks:
     name: Run Django checks
-    if: needs.get-changes.outputs.api != 'true'
+    if: |
+      !cancelled() &&
+      needs.django-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - django-checks
     strategy:
       matrix:
-        recipe:
-          - "api/dj check"
-          - "api/dj validateopenapischema"
-          - "api/dj makemigrations --check --noinput --merge"
-          - "api/doc-test"
+        name:
+          - check_django
+          - validate_openapi
+          - check_migrations
+          - test_doc
 
     steps:
       - name: Pass
@@ -398,51 +471,11 @@ jobs:
   # Frontend #
   ############
 
-  frontend-unit:
-    name: Run frontend unit tests
-    if: needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - lint
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          setup_python: false
-          install_recipe: node-install
-
-      - name: Run unit tests
-        run: just frontend/run test:unit
-
-  storybook-smoke:
-    name: Check Storybook smoke test
-    if: needs.get-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-      - lint
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          setup_python: false
-          install_recipe: node-install
-
-      - name: Run Storybook smoke-test
-        run: just frontend/run storybook:smoke
-
   nuxt-build:
     name: Check Nuxt build
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -461,9 +494,66 @@ jobs:
       - name: Run build
         run: just frontend/run build
 
+  nuxt-checks:
+    name: Run Nuxt checks
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - unit_test
+          - storybook_smoke_test
+        include:
+          - name: unit_test
+            script: "test:unit"
+          - name: storybook_smoke_test
+            script: "storybook:smoke"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Run Nuxt checks
+        run: just frontend/run ${{ matrix.script }}
+
+  # This job runs when `nuxt-checks` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-nuxt-checks:
+    name: Run Nuxt checks
+    if: |
+      !cancelled() &&
+      needs.nuxt-checks.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - nuxt-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - unit_test
+          - storybook_smoke_test
+
+    steps:
+      - name: Pass
+        run: echo 'Playwright tests are skipped because frontend is unchanged.'
+
   playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend == 'true'
+    if: |
+      needs.get-changes.outputs.frontend == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     needs:
@@ -508,10 +598,12 @@ jobs:
   # PRs to meet the required checks criteria and be merged.
   bypass-playwright:
     name: Run Playwright tests
-    if: needs.get-changes.outputs.frontend != 'true'
+    if: |
+      !cancelled() &&
+      needs.playwright.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - get-changes
+      - playwright
     strategy:
       matrix:
         name:
@@ -528,10 +620,9 @@ jobs:
     if: |
       !cancelled() &&
       github.event_name == 'pull_request' &&
-      needs.get-changes.outputs.frontend == 'true'
+      needs.playwright.result != ''
     runs-on: ubuntu-latest
     needs:
-      - get-changes
       - playwright
 
     steps:
@@ -563,14 +654,16 @@ jobs:
 
           It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
 
-          You can read the [docs on how to use this artifact](https://github.com/${{ github.repository }}/blob/main/frontend/test/playwright/README.md#debugging).
+          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/playwright_tests.html#debugging).
+
+          If the test is flaky, follow the [flaky test triage procedure](https://docs.openverse.org/general/test.html#flaky-tests).
           $EOF
           HEREDOC
           )
           echo "$MESSAGE"
           echo "$MESSAGE" >> "$GITHUB_OUTPUT"
 
-      - uses: peter-evans/create-or-update-comment@v2
+      - uses: peter-evans/create-or-update-comment@v3
         id: create-comment
         # Do not leave a comment on forks
         if: |
@@ -588,6 +681,35 @@ jobs:
   # Documentation #
   #################
 
+  build-docs:
+    name: Build full-stack docs
+    if: |
+      needs.get-changes.outputs.documentation == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+
+      - name: Compile documentation
+        uses: ./.github/actions/build-docs
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        # Docs will be located at `/tmp/docs`.
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: /tmp/docs/
+
   emit-docs:
     name: Emit full-stack docs
     # https://github.com/actions/runner/issues/491#issuecomment-850884422
@@ -604,30 +726,27 @@ jobs:
           github.actor != 'dependabot[bot]'
         )
       ) &&
-      (needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') &&
+      needs.get-changes.outputs.documentation == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
+      (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
+      (needs.playwright.result == 'success' || needs.playwright.result == 'skipped') &&
+      needs.build-docs.result == 'success'
     runs-on: ubuntu-latest
     needs:
       - get-changes
+      - test-cat
       - test-ing
       - test-api
-      - nuxt-build
+      - playwright
+      - build-docs
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-
-      - name: Compile documentation
-        uses: ./.github/actions/build-docs
+      - name: Download documentation
+        uses: actions/download-artifact@v3
         with:
-          glotpress_username: ${{ secrets.MAKE_USERNAME }}
-          glotpress_password: ${{ secrets.MAKE_LOGIN_PASSWORD }}
-        # Docs will be located at `/tmp/docs`.
+          name: documentation
+          path: /tmp/docs
 
       - name: Recreate working directory # to avoid superfluous files from getting tracked automatically
         run: |
@@ -668,7 +787,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Full-stack documentation
 
-      - uses: peter-evans/create-or-update-comment@v2
+      - uses: peter-evans/create-or-update-comment@v3
         if: github.event_name == 'pull_request'
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -700,14 +819,16 @@ jobs:
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
-      (needs.nuxt-build.result == 'success' || needs.nuxt-build.result == 'skipped')
+      (needs.test-cat.result == 'success' || needs.test-cat.result == 'skipped') &&
+      (needs.playwright.result == 'success' || needs.playwright.result == 'skipped')
     needs:
       - determine-images
       - get-image-tag
       - build-images
       - test-ing # test for ingestion server
       - test-api # test for API
-      - nuxt-build # test for frontend
+      - test-cat # test for catalog
+      - playwright # test for frontend
     permissions:
       packages: write
       contents: read
@@ -716,6 +837,9 @@ jobs:
       matrix: ${{ fromJson(needs.determine-images.outputs.publish_matrix) }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v2
         with:
@@ -723,15 +847,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download image `${{ matrix.image }}`
-        uses: actions/download-artifact@v3
+      - name: Load Docker image `${{ matrix.image }}`
+        uses: ./.github/actions/load-img
         with:
-          name: ${{ matrix.image }}
-          path: /tmp
+          setup_images: ${{ matrix.image }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
         run: |
-          docker load --input /tmp/${{ matrix.image }}.tar
           docker tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
           docker tag openverse-${{ matrix.image }} \
@@ -763,14 +885,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Dispatch workflow
-        run: |
-          gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - staging-nuxt"
+      - name: Get commit message
+        id: commit
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
+      - name: Deploy staging frontend
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_nuxt
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
 
   deploy-api:
     name: Deploy staging API
@@ -788,20 +925,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Dispatch workflow
-        run: |
-          gh workflow run \
-            -f tag=${{ needs.get-image-tag.outputs.image_tag }} \
-            -f actor=${{ github.actor }} \
-            "Deployment - staging-api"
+      - name: Get commit message
+        id: commit
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
+      - name: Deploy staging API
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_api
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
 
   ################
   # Notification #
   ################
 
-  send_report:
+  send-report:
     name: Send Slack report
     runs-on: ubuntu-latest
     if: |
@@ -809,7 +961,7 @@ jobs:
       github.event_name == 'push' &&
       github.repository == 'WordPress/openverse' &&
       (
-        ((needs.get-changes.outputs.frontend == 'true' || needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
+        (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
@@ -823,9 +975,11 @@ jobs:
       - deploy-api
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Generate report
         id: report
-        shell: python
         env:
           EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
           PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
@@ -834,55 +988,12 @@ jobs:
           SERVER_URL: ${{ github.server_url }}
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-        run: |
-          import json
-          import os
-          import sys
-          from collections import defaultdict
-
-          server_url = os.environ.get("SERVER_URL")
-          repository = os.environ.get("REPOSITORY")
-          run_id = os.environ.get("RUN_ID")
-
-          jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
-
-          results = {}
-          counts = defaultdict(lambda: 0)
-
-          for job_name in jobs:
-              result = os.environ.get(f"{job_name.replace('-', '_')}_result".upper())
-              results[job_name] = result
-              counts[result] += 1
-
-          payload = {
-              "text": ", ".join(f"{count} {result}" for result, count in counts.items()),
-              "blocks": [
-                  {
-                      "type": "section",
-                      "text": {
-                          "type": "mrkdwn",
-                          "text": f"<{server_url}/{repository}/actions/runs/{run_id}|Click here to review the completed CI + CD workflow>.",
-                      },
-                  },
-                  {
-                      "type": "section",
-                      "fields": [
-                          {
-                              "type": "mrkdwn",
-                              "text": f"*{job_name}:*\n:workflow-{result}: {result}",
-                          }
-                          for job_name, result in results.items()
-                      ],
-                  },
-              ],
-          }
-
-          with open(os.environ.get("GITHUB_OUTPUT"), "a") as gh_out:
-              for dest in [sys.stdout, gh_out]:
-                  print(f"payload={json.dumps(payload)}", file=dest)
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python generate_report.py
 
       - name: Send report
-        uses: slackapi/slack-github-action@v1.23.0
+        uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: ${{ steps.report.outputs.payload }}
         env:
