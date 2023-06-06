@@ -66,9 +66,8 @@ def update_batches(
     task: AbstractOperator = None,
     **kwargs,
 ):
-    # We iterate over row_index, which is 1-indexed
-    batch_start = 1
-    total_count = 0
+    batch_start = 0
+    updated_count = 0
 
     while batch_start <= expected_row_count:
         batch_end = batch_start + batch_size
@@ -89,20 +88,24 @@ def update_batches(
             postgres_conn_id=postgres_conn_id,
         )
 
-        total_count += count
+        updated_count += count
         batch_start = batch_end
         logger.info(
-            f"Updated {total_count} rows. {expected_row_count - total_count} remaining."
+            f"Updated {updated_count} rows. {expected_row_count - updated_count}"
+            " remaining."
         )
 
-    return total_count
+    return updated_count
 
 
 @task
-def notify_slack(text: str) -> None:
-    slack.send_message(
-        text,
-        username=SLACK_USERNAME,
-        icon_emoji=SLACK_ICON,
-        dag_id=DAG_ID,
-    )
+def notify_slack(text: str, dry_run: bool) -> None:
+    if not dry_run:
+        slack.send_message(
+            text,
+            username=SLACK_USERNAME,
+            icon_emoji=SLACK_ICON,
+            dag_id=DAG_ID,
+        )
+    else:
+        logger.info(text)

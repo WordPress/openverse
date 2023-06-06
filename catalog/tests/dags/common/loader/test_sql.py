@@ -34,7 +34,7 @@ def table_info(
     image_table,
     identifier,
 ) -> TableInfo:
-    return utils.TableInfo(
+    return TableInfo(
         image=image_table,
         image_view=f"image_view_{identifier}",
         constants=f"image_popularity_constants_{identifier}",

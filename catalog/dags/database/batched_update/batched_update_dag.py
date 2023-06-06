@@ -149,7 +149,9 @@ def batched_update():
     )
 
     notify_before_update = notify_slack.override(task_id="notify_before_update")(
-        f"Preparing to update {select_rows_to_update} rows."
+        text=f"Preparing to update {select_rows_to_update} rows for update:"
+        " {{ params.query_id }}",
+        dry_run="{{ params.dry_run}}",
     )
 
     select_rows_to_update >> [create_index, notify_before_update]
@@ -169,7 +171,9 @@ def batched_update():
     create_index >> perform_batched_update
 
     notify_updated_count = notify_slack.override(task_id="notify_updated_count")(
-        f"Updated {update_batches} records."
+        text=f"Updated {perform_batched_update} records for update:"
+        " {{ params.query_id }}",
+        dry_run="{{ params.dry_run}}",
     )
 
     # The temporary table is only dropped if all updates were successful; this
@@ -187,7 +191,11 @@ def batched_update():
     # dropped manually or the DAG retried.
     notify_failure = notify_slack.override(
         task_id="notify_failure", trigger_rule=TriggerRule.ONE_FAILED
-    )("Update failed: retry the DAG or manually drop the temp table.")
+    )(
+        text="Update {{ params.query_id }} failed: retry the DAG or manually drop the"
+        " temp table.",
+        dry_run="{{ params.dry_run}}",
+    )
 
     perform_batched_update >> [
         notify_updated_count,

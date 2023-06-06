@@ -27,7 +27,7 @@ UPDATE_BATCH_QUERY = """
     {update_query}
     WHERE identifier in (
         SELECT identifier FROM {temp_table_name}
-        WHERE row_id >= {batch_start} AND row_id < {batch_end}
+        WHERE row_id > {batch_start} AND row_id <= {batch_end}
         FOR UPDATE SKIP LOCKED
     );
     """
