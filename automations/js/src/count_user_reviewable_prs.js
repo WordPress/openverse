@@ -10,13 +10,13 @@
  */
 module.exports = async ({ github, context, core }) => {
   const { GITHUB_REPOSITORY, GH_SLACK_USERNAME_MAP } = process.env
-  const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
+  const slackID = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
 
   if (!GITHUB_REPOSITORY || !GH_SLACK_USERNAME_MAP) {
     core.setFailed('Required dependencies were not supplied')
   }
 
-  if (!slackUsername) {
+  if (!slackID) {
     core.warning(`Slack username not found for ${context.actor}.`)
     return {}
   }
@@ -75,10 +75,13 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       }
     }
 
-    return {
+    const result = {
       pr_count: reviewablePRs.length,
-      slack_username: slackUsername,
+      slack_id: slackID,
     }
+
+    core.info('Found user', JSON.stringify(result))
+    return result
   } catch (error) {
     core.setFailed(`Error fetching pull requests: ${error.message}`)
   }
