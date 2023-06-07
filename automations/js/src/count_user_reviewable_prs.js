@@ -10,43 +10,42 @@
  */
 module.exports = async ({ github, context, core }) => {
   const { GITHUB_REPOSITORY, GH_SLACK_USERNAME_MAP } = process.env
+  const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
 
   if (!GITHUB_REPOSITORY || !GH_SLACK_USERNAME_MAP) {
     core.setFailed('Required dependencies were not supplied')
   }
 
-  const [owner, repo] = GITHUB_REPOSITORY.split('/')
-  const slackUsername = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
+  if (!slackUsername) {
+    core.warning(`Slack username not found for ${context.actor}.`)
+    return {}
+  }
+
   const GET_PULL_REQUESTS = `
-    query ($repoOwner: String!, $repo: String!, $cursor: String) {
-      repository(name:$repo, owner:$repoOwner) {
-        pullRequests(states:OPEN, first:100, after: $cursor) {
+query ($repoOwner: String!, $repo: String!, $cursor: String) {
+  repository(name:$repo, owner:$repoOwner) {
+    pullRequests(states:OPEN, first:100, after: $cursor) {
+      nodes {
+        author {
+          login
+        }
+        labels(first: 100) {
           nodes {
-            author {
-              login
-            }
-            labels(first: 100) {
-              nodes {
-                name
-              }
-            }
-            isDraft
+            name
           }
         }
+        isDraft
       }
     }
-  `
+  }
+}
+`
   const ignoredLabels = [
     '🤖 aspect: text',
     '🧱 stack: documentation',
     'priority: critical',
   ]
-
-  // Return early if no Slack username
-  if (!slackUsername) {
-    core.warning(`Slack username not found for ${context.actor}.`)
-    return {}
-  }
+  const [owner, repo] = GITHUB_REPOSITORY.split('/')
 
   try {
     let hasNextPage = true
