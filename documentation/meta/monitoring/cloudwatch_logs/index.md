@@ -13,14 +13,16 @@ following explicit questions answered:
   logs for statistical data?
 
 The primary use case for the information in this document is incident
-investigation. As of writing, **Openverse does not rely on Logs Insights for
+investigation. The audience of this document is Openverse core maintainers and
+as such necessarily assumes access to the Openverse AWS Console and other core
+infrastructure. As of writing, **Openverse does not rely on Logs Insights for
 metric generation**. Work is planned to leverage Prometheus, Grafana, and other
 tools for long term metrics monitoring[^monitoring-ip].
 
 [^monitoring-ip]:
     An
     [old implementation plan exists for this](/projects/proposals/monitoring/20220307-project_proposal.md)
-    but was only half implemented. For now we will continue to leverage
+    but was only half implemented. For now, we will continue to leverage
     CloudWatch to the best of our ability.
 
 ```{note}
@@ -42,9 +44,9 @@ duplication.
 - "Logs Insights": A tool for querying logs using a SQL-like syntax that is
   capable of building charts and graphs and parsing unstructured log data
   on-the-fly
-- "Structured logs": Logs in a structured, machine readable format, like JSON;
+- "Structured logs": Logs in a structured, machine-readable format, like JSON;
   cf "unstructured logs"
-- "Unstructured logs": Logs in an unstructured format, like raw stacktraces; cf
+- "Unstructured logs": Logs in an unstructured format, like raw stack traces; cf
   "structured logs"
 
 ## External documentation links
@@ -68,7 +70,7 @@ advice online as well if you get stuck trying to query in a specific way.
 
 ## Where to find logs
 
-There are two entrypoints for CloudWatch logs:
+There are two entry points for CloudWatch logs:
 
 - [Log groups](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups)
 - [Logs Insights](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:logs-insights)
@@ -77,11 +79,11 @@ There are two entrypoints for CloudWatch logs:
 
 Each Openverse application has its own log group that includes the application
 name and the environment. For example, the `/ecs/production/api` log group
-houses all of the log streams for every Django API task's logs. Within the
-group, each application instance has its own log streams. For ECS these
-correspond to the tasks running in the service. For EC2, these correspond to the
-EC2 instance. In both cases, the log streams include the identifier for the task
-or instance. For ECS, the streams have the following pattern:
+houses all the log streams for every Django API task's logs. Within the group,
+each application instance has its own log streams. For ECS these correspond to
+the tasks running in the service. For EC2, these correspond to the EC2 instance.
+In both cases, the log streams include the identifier for the task or instance.
+For ECS, the streams have the following pattern:
 
 ```
 ecs/<container name>/<task id>
@@ -103,7 +105,7 @@ single query.** You will need to separately query both the ingestion server and
 work log groups for the environment.
 
 To query all logs for a log group, go to the log group page and click the orange
-"Search log group" button in the upper right hand corner.
+"Search log group" button in the upper right-hand corner.
 
 ![Search log group button in CloudWatch](/meta/monitoring/cloudwatch_logs/search_log_group.png)
 
@@ -122,7 +124,7 @@ syntax,
 [the documentation for which](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html)
 should be the read before attempting to use Logs Insights for anything serious.
 
-The Logs Insights tutorials present sufficent examples for different types of
+The Logs Insights tutorials present sufficient examples for different types of
 queries that you may need to do. A good tip is to think of the Logs Insights
 query as a multi-step extract, transform, and load/aggregate tool. First,
 extract the specific log events that concern you. If you're querying to find the
@@ -132,8 +134,12 @@ extract the relevant information from the unstructured logs. Finally, use
 `stats` to aggregate the data and find the statistical information relevant to
 you. The following are two simple examples that can serve as starting points for
 querying structured and unstructured log data in Logs Insights for our
-application. Please note that logs insights queries are **not free**.
+application.
+
+```{caution}
+Please note that logs insights queries are **not free**.
 [See the advice below on how to minimise costs](#logs-insights-queries-are-not-free).
+```
 
 **Query for number of failed thumbnail requests per media type in the query
 period (parse unstructured logs)**:
@@ -161,14 +167,13 @@ filter @logStream like 'ecs/nginx' and request like "search"
 | stats avg(request_time) by bin(10m) as averageSearchTime
 ```
 
-In this example, `request` and `request_time` come directly the the structured
+In this example, `request` and `request_time` come directly from the structured
 JSON logs that our API Nginx container outputs. You can find the list of
 available fields in the
 [Nginx configuration](https://github.com//WordPress/openverse/blob/HEAD/api/nginx.conf.template#L10-L24).
 
-If you have access to Openverse's incident investigation reports, you will also
-find additional real-world queries there to use as examples for building your
-own queries.
+You will also find additional real-world queries in Openverse's incident
+investigation reports to use as examples for building your own queries.
 
 ## Things to keep in mind
 
@@ -176,7 +181,7 @@ own queries.
 
 Unstructured logs are split line-by-line. Because of the way the API currently
 outputs stack traces, for example, this means that stack traces will be split
-across multiple lines. Take the following, real strack trace:
+across multiple lines. Take the following, real stack trace:
 
 ```
 2023-06-04T00:32:12.485Z	2023-06-04 00:32:12,485 ERROR tasks.py:220 - Error processing task `CREATE_AND_POPULATE_FILTERED_INDEX` for `audio`: RequestError(400, 'search_phase_execution_exception', 'too_many_clauses: maxClauseCount is set to 1024')
@@ -228,7 +233,7 @@ time they are executed. You can minimise costs in the following ways:
   investigating an incident with a known beginning and end, narrow the query to
   that time period via the date range selector at the top. If there are multiple
   periods with lulls in between, consider performing multiple queries and
-  aggregating them manually outside of Logs Insights.
+  aggregating them manually outside Logs Insights.
 - Develop queries against the minimum required number. While you're still
   building a query to find specific data, narrow the time range or use `limit`
   to reduce the number of log lines processed during each iteration. Avoid
