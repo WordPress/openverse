@@ -100,7 +100,7 @@ do not know the task or EC2 instance identifier and therefore which specific log
 stream to query. Because the ingestion server splits its logs in two separate
 groups, **it is not possible to query all logs for the ingestion server in a
 single query.** You will need to separately query both the ingestion server and
-work log groups for the environemnt.
+work log groups for the environment.
 
 To query all logs for a log group, go to the log group page and click the orange
 "Search log group" button in the upper right hand corner.
