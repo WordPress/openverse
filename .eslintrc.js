@@ -184,6 +184,7 @@ module.exports = {
         "tsdoc/syntax": "error",
       },
     },
+    // Overrides for unit tests
     {
       env: { jest: true },
       files: ["frontend/test/unit/**"],
@@ -208,6 +209,21 @@ module.exports = {
             message:
               "Do not use @vue/test-utils' `shallowMount`. Use `~~/test/unit/test-utils/render` instead which includes helpful context setup or @testing-library/vue's `render` directly.",
           },
+          {
+            selector:
+              "ImportDeclaration[source.value='@playwright/test']:has(ImportSpecifier[local.name='test'])",
+            message:
+              "Do not import 'test' from '@playwright/test'. Use 'import { test } from '~~/test/playwright/utils/test-fixture' instead, which mocks Openverse provider APIs and the analytics server.",
+          },
+        ],
+      },
+    },
+    // Overrides for Playwright tests
+    {
+      files: ["frontend/test/{playwright,storybook}/**/*.spec.{ts,js}"],
+      rules: {
+        "no-restricted-syntax": [
+          "error",
           {
             selector:
               "ImportDeclaration[source.value='@playwright/test']:has(ImportSpecifier[local.name='test'])",
