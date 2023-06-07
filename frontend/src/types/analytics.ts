@@ -41,6 +41,15 @@ export type Events = {
     identifier: string
   }
   /**
+   * Description: The user right clicks a single image result, most likely to download it.
+   * Questions:
+   *   - Do users right-click images often? Does this suggest downloading them directly,
+   *     when not paired with a `GET_MEDIA` event?
+   */
+  RIGHT_CLICK_IMAGE: {
+    identifier: string
+  }
+  /**
    * Click on the 'back to search' link on a single result
    *
    * - Are these links used much? Are they necessary?

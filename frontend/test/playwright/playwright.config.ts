@@ -26,6 +26,7 @@ const pwCommand =
   process.env.FASTSTART !== "false" ? "start:playwright" : "prod:playwright"
 
 const config: PlaywrightTestConfig = {
+  forbidOnly: !!process.env.CI,
   webServer: {
     command: `./node_modules/.bin/npm-run-all -p -r talkback ${pwCommand}`,
     cwd: "/app",

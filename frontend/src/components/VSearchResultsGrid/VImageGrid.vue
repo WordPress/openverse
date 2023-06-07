@@ -8,7 +8,6 @@
       <VImageCell
         v-for="image in images"
         :key="image.id"
-        as="li"
         :image="image"
         :search-term="searchTerm"
         aspect-ratio="intrinsic"

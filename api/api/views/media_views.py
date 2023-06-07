@@ -29,7 +29,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
     model_class = None
     query_serializer_class = None
     default_index = None
-    qa_index = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,7 +36,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
             self.model_class,
             self.query_serializer_class,
             self.default_index,
-            self.qa_index,
         ]
         if any(val is None for val in required_fields):
             msg = "Viewset fields are not completely populated."
@@ -82,14 +80,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         page = self.paginator.page = params.data["page"]
 
         hashed_ip = hash(self._get_user_ip(request))
-        qa = params.validated_data["qa"]
         filter_dead = params.validated_data["filter_dead"]
 
-        if qa:
-            logger.info("Using QA index for media.")
-            search_index = self.qa_index
-            exact_index = False
-        elif pref_index := params.validated_data.get("index"):
+        if pref_index := params.validated_data.get("index"):
             logger.info(f"Using preferred index {pref_index} for media.")
             search_index = pref_index
             exact_index = True
@@ -99,13 +92,12 @@ class MediaViewSet(ReadOnlyModelViewSet):
             exact_index = False
 
         try:
-            results, num_pages, num_results = search_controller.search(
+            results, num_pages, num_results, search_context = search_controller.search(
                 params,
                 search_index,
                 exact_index,
                 page_size,
                 hashed_ip,
-                request,
                 filter_dead,
                 page,
             )
@@ -114,11 +106,13 @@ class MediaViewSet(ReadOnlyModelViewSet):
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
 
+        serializer_context = search_context | self.get_serializer_context()
+
         serializer_class = self.get_serializer()
         if params.needs_db or serializer_class.needs_db:
             results = self.get_db_results(results)
 
-        serializer = self.get_serializer(results, many=True)
+        serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
 
     # Extra actions
@@ -139,10 +133,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            results, num_results = search_controller.related_media(
+            results, num_results, search_context = search_controller.related_media(
                 uuid=identifier,
                 index=self.default_index,
-                request=request,
                 filter_dead=True,
             )
             self.paginator.result_count = num_results
@@ -155,7 +148,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         except IndexError:
             raise APIException("Could not find items.", 404)
 
-        serializer = self.get_serializer(results, many=True)
+        serializer_context = search_context | self.get_serializer_context()
+
+        serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
 
     def report(self, request, identifier):

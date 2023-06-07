@@ -30,7 +30,7 @@ services:
     profiles:
       - ingestion_server
       - api
-    image: postgres:13.2-alpine
+    image: postgres:13.7-alpine
     ports:
       - "50254:5432"
     volumes:
@@ -51,8 +51,8 @@ services:
       context: ./docker/upstream_db/
       target: db
     image: openverse-upstream_db
-    expose:
-      - "5432"
+    ports:
+      - "50255:5432"
     volumes:
       - catalog-postgres:/var/lib/postgresql/data
       - ./sample_data:/sample_data
@@ -134,7 +134,7 @@ services:
   plausible_db:
     profiles:
       - frontend
-    image: postgres:13.2-alpine
+    image: postgres:13.7-alpine
     expose:
       - "5432"
     volumes:
@@ -147,7 +147,7 @@ services:
   plausible_ch:
     profiles:
       - frontend
-    image: clickhouse/clickhouse-server:22.12-alpine
+    image: clickhouse/clickhouse-server:23.4-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
       - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro

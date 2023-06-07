@@ -75,9 +75,7 @@ const getNthAudioRow = async (page: Page, num: number) => {
   return nthAudioRow
 }
 const play = async (audioRow: Locator, dir: LanguageDirection = "ltr") => {
-  await audioRow
-    .getByRole("button", { name: t("play-pause.play", dir) })
-    .click()
+  await audioRow.getByRole("button", { name: t("playPause.play", dir) }).click()
   await expect(audioRow.locator("article")).toHaveAttribute(
     "status",
     /(loading|playing|played)/
@@ -86,7 +84,7 @@ const play = async (audioRow: Locator, dir: LanguageDirection = "ltr") => {
 
 const pause = async (audioRow: Locator, dir: LanguageDirection = "ltr") => {
   await audioRow
-    .getByRole("button", { name: t("play-pause.pause", dir) })
+    .getByRole("button", { name: t("playPause.pause", dir) })
     .click()
 }
 export default {

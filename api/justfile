@@ -71,12 +71,12 @@ recreate:
 ########
 
 # Make a cURL GET request to service at the given path
-_curl-get path host="localhost:50280":
-    curl "http://{{ host }}/v1/{{ path }}"
+_curl-get path origin="http://localhost:50280":
+    curl "{{ origin }}/v1/{{ path }}"
 
 # Make a test cURL GET request to the API
-stats media="images" host="localhost:50280":
-    just _curl-get "{{ media }}/stats/" {{ host }}
+stats media="images" origin="http://localhost:50280":
+    just _curl-get "{{ media }}/stats/" {{ origin }}
 
 # Launch a `pgcli` shell in the web container
 pgcli db_user_pass="deploy" db_name="openledger": up

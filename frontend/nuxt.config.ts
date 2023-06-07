@@ -135,7 +135,6 @@ const config: NuxtConfig = {
     { path: "~/components", extensions: ["vue"], pathPrefix: false },
   ],
   plugins: [
-    "~/plugins/url-change.ts",
     "~/plugins/migration-notice.ts",
     "~/plugins/ua-parse.ts",
     "~/plugins/focus-visible.client.ts",
@@ -153,8 +152,6 @@ const config: NuxtConfig = {
   buildModules: [
     "@nuxt/typescript-build",
     "@nuxtjs/composition-api/module",
-    "@nuxtjs/style-resources",
-    "@nuxtjs/svg",
     "@nuxtjs/svg-sprite",
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",

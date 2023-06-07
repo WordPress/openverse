@@ -52,6 +52,7 @@
     "src/components/TableSortIcon.vue",
     "src/components/VCopyButton.vue",
     "src/components/VSketchFabViewer.vue",
+    "src/components/VScrollButton.vue",
 
     "src/components/VAudioThumbnail/**.vue",
     "src/components/VAudioTrack/layouts/**.vue",
@@ -60,6 +61,7 @@
     "src/components/VFilters/**.vue",
     "src/components/VHomeGallery/**.vue",
     "src/components/VIcon/**.vue",
+    "src/components/VSvg/**.vue",
     "src/components/VIconButton/**.vue",
     "src/components/VInputField/**.vue",
     "src/components/VItemGroup/**.vue",

@@ -42,7 +42,7 @@
           }"
         >
           <div class="part-a">
-            <i18n tag="span" path="audio-track.creator">
+            <i18n tag="span" path="audioTrack.creator">
               <template #creator>{{ audio.creator }}</template> </i18n
             ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
               $t("interpunct")
@@ -60,7 +60,7 @@
             </span>
 
             <span v-if="audio.category">
-              <span>{{ $t(`filters.audio-categories.${audio.category}`) }}</span
+              <span>{{ $t(`filters.audioCategories.${audio.category}`) }}</span
               ><span class="mx-2" aria-hidden="true">{{
                 $t("interpunct")
               }}</span>

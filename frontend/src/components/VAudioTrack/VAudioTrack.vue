@@ -7,8 +7,10 @@
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
-    @keydown.native="handleKeydown"
-    @blur.native="handleBlur"
+    @keydown="handleKeydown"
+    @blur="handleBlur"
+    @mousedown="$emit('mousedown', $event)"
+    @focus="$emit('focus', $event)"
   >
     <Component
       :is="layoutComponent"
@@ -247,6 +249,7 @@ export default defineComponent({
         type: "audio",
         id: props.audio.id,
       })
+      activeMediaStore.setMessage({ message: null })
       updateTimeLoop()
     }
     const setPaused = () => {
@@ -355,10 +358,13 @@ export default defineComponent({
             errorMsg = "err_unknown"
             $sentry.captureException(err)
         }
-        errorMsg = i18n.t(`audio-track.messages.${errorMsg}`).toString()
+        console.log("Error playing audio:", err, errorMsg)
+        errorMsg = i18n.t(`audioTrack.messages.${errorMsg}`).toString()
+        console.log("Setting message in active media store: ", errorMsg)
         activeMediaStore.setMessage({ message: errorMsg })
         localAudio?.pause()
       })
+      console.log("Playing audio:", localAudio?.src)
     }
     const pause = () => localAudio?.pause()
 
@@ -470,10 +476,10 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t("audio-track.aria-label-interactive-seekable", {
+        ? i18n.t("audioTrack.ariaLabelInteractiveSeekable", {
             title: props.audio.title,
           })
-        : i18n.t("audio-track.aria-label", { title: props.audio.title })
+        : i18n.t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
     const togglePlayback = () => {

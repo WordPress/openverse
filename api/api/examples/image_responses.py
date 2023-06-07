@@ -56,6 +56,7 @@ base_image = {
     "thumbnail": f"{origin}/v1/images/{identifier}/thumb/",
     "detail_url": f"{origin}/v1/images/{identifier}/",
     "related_url": f"{origin}/v1/images/{identifier}/related/",
+    "unstable__sensitivity": [],
 }
 
 detailed_image = base_image | {
