@@ -1,6 +1,9 @@
 name: PR Limit Reminders
 
 on:
+  push:
+    branches:
+      - "pr-count-prompt"
   pull_request:
     types: [opened, reopened]
 
