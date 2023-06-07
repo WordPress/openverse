@@ -250,12 +250,17 @@ Required Dagrun Configuration parameters:
   updated
 - update_query: the SQL `UPDATE` expression to be run on all selected rows
 
-Optional Arguments:
+Optional params:
 
 - dry_run: bool, whether to actually run the generated SQL. True by default.
 - batch_size: int number of records to process in each batch. By default, 10_000
 - update_timeout: int number of seconds to run an individual batch update before
   timing out. By default, 3600 (or one hour)
+- batch_start: int index into the temp table at which to start the update. By
+  default, this is 0 and all rows in the temp table are updated.
+- resume_update: boolean indicating whether to attempt to resume an update using
+  an existing temp table matching the `query_id`. When True, a new temp table is
+  not created.
 
 An example dag_run configuration used to set the thumbnails of all Flickr images
 to null would look like this:
@@ -267,6 +272,25 @@ to null would look like this:
     "select_query": "WHERE provider='flickr'",
     "update_query": "SET thumbnail=null",
     "batch_size": 10,
+    "dry_run": false
+}
+```
+
+It is possible to resume an update from an arbitrary starting point on an
+existing temp table, for example if a DAG succeeds in creating the temp table
+but fails midway through the update. To do so, set the `resume_update` param to
+True and select your desired `batch_start`. For instance, if the example DAG
+given above failed after processing the first 50_000 records, you might run:
+
+```
+{
+    "query_id": "my_flickr_query",
+    "table_name": "image",
+    "select_query": "WHERE provider='flickr'",
+    "update_query": "SET thumbnail=null",
+    "batch_size": 10,
+    "batch_start": 50000,
+    "resume_update": true,
     "dry_run": false
 }
 ```
