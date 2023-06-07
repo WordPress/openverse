@@ -8,10 +8,23 @@ from catalog.tests.test_utils import sql
 from common.storage import columns as col
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 from database.batched_update import constants
-from database.batched_update.batched_update import update_batches
+from database.batched_update.batched_update import (
+    get_expected_update_count,
+    update_batches,
+)
 
 
 logger = logging.getLogger(__name__)
+
+
+FID_A = "a"
+FID_B = "b"
+FID_C = "c"
+MATCHING_PROVIDER = "foo"
+NOT_MATCHING_PROVIDER = "bar"
+OLD_TITLE = "old title"
+NEW_TITLE = "new title"
+LICENSE = "by"
 
 
 @pytest.fixture
@@ -62,70 +75,97 @@ def _get_insert_query(image_table, values: dict):
     return f"INSERT INTO {image_table} VALUES({query_values});"
 
 
-@pytest.mark.parametrize("dry_run, should_run", [(True, False), (False, True)])
+def _load_sample_data_into_image_table(image_table, postgres):
+    DEFAULT_COLS = {
+        col.LICENSE.db_name: LICENSE,
+        col.UPDATED_ON.db_name: "NOW()",
+        col.CREATED_ON.db_name: "NOW()",
+        col.TITLE.db_name: OLD_TITLE,
+    }
+
+    # Load sample data into the image table
+    sample_records = [
+        {
+            col.FOREIGN_ID.db_name: FID_A,
+            col.DIRECT_URL.db_name: f"https://images.com/{FID_A}/img.jpg",
+            col.PROVIDER.db_name: MATCHING_PROVIDER,
+        },
+        {
+            col.FOREIGN_ID.db_name: FID_B,
+            col.DIRECT_URL.db_name: f"https://images.com/{FID_B}/img.jpg",
+            col.PROVIDER.db_name: MATCHING_PROVIDER,
+        },
+        {
+            col.FOREIGN_ID.db_name: FID_C,
+            col.DIRECT_URL.db_name: f"https://images.com/{FID_C}/img.jpg",
+            col.PROVIDER.db_name: NOT_MATCHING_PROVIDER,
+        },
+    ]
+
+    for record in sample_records:
+        load_data_query = _get_insert_query(
+            image_table,
+            {
+                **record,
+                **DEFAULT_COLS,
+            },
+        )
+        postgres.cursor.execute(load_data_query)
+
+    postgres.connection.commit()
+
+
+@pytest.mark.parametrize(
+    "batch_start, expected_count",
+    [
+        (None, 3),
+        (0, 3),
+        (1, 2),
+        (2, 1),
+        # Batch start greater than the total number of records
+        (4, 0),
+    ],
+)
+def test_get_expected_update_count(
+    postgres_with_image_and_temp_table,
+    image_table,
+    temp_table,
+    identifier,
+    batch_start,
+    expected_count,
+):
+    # Load sample data into the image table
+    _load_sample_data_into_image_table(
+        image_table,
+        postgres_with_image_and_temp_table,
+    )
+
+    # Create the temp table with a query that will select all records
+    select_query = f"WHERE title='{OLD_TITLE}'"
+    create_temp_table_query = constants.CREATE_TEMP_TABLE_QUERY.format(
+        temp_table_name=temp_table, table_name=image_table, select_query=select_query
+    )
+    postgres_with_image_and_temp_table.cursor.execute(create_temp_table_query)
+    postgres_with_image_and_temp_table.connection.commit()
+
+    total_count = get_expected_update_count.function(
+        query_id=f"test_{identifier}", batch_start=batch_start
+    )
+
+    assert total_count == expected_count
+
+
 def test_update_batches(
     postgres_with_image_and_temp_table,
     image_table,
     temp_table,
     identifier,
-    dry_run,
-    should_run,
 ):
-    MATCHING_PROVIDER = "foo"
-    NOT_MATCHING_PROVIDER = "bar"
-    LICENSE = "by"
-
-    OLD_TITLE = "old title"
-    NEW_TITLE = "new title"
-
-    FID_A = "a"
-    FID_B = "b"
-    FID_C = "c"
-
-    DEFAULT_COLS = {
-        col.LICENSE.db_name: LICENSE,
-        col.TITLE.db_name: OLD_TITLE,
-        col.UPDATED_ON.db_name: "NOW()",
-        col.CREATED_ON.db_name: "NOW()",
-    }
-    # Create some records in the image table
-    # A and B are records that will match our SELECT, C will not.
-    load_data_query_a = _get_insert_query(
+    # Load sample data into the image table
+    _load_sample_data_into_image_table(
         image_table,
-        {
-            col.FOREIGN_ID.db_name: FID_A,
-            col.DIRECT_URL.db_name: f"https://images.com/{FID_A}/img.jpg",
-            col.PROVIDER.db_name: MATCHING_PROVIDER,
-            **DEFAULT_COLS,
-        },
+        postgres_with_image_and_temp_table,
     )
-
-    load_data_query_b = _get_insert_query(
-        image_table,
-        {
-            col.FOREIGN_ID.db_name: FID_B,
-            col.DIRECT_URL.db_name: f"https://images.com/{FID_B}/img.jpg",
-            col.PROVIDER.db_name: MATCHING_PROVIDER,
-            **DEFAULT_COLS,
-        },
-    )
-
-    # C is not a duplicate of anything, just a normal image
-    load_data_query_c = _get_insert_query(
-        image_table,
-        {
-            col.FOREIGN_ID.db_name: FID_C,
-            col.DIRECT_URL.db_name: f"https://images.com/{FID_C}/img.jpg",
-            col.PROVIDER.db_name: NOT_MATCHING_PROVIDER,
-            **DEFAULT_COLS,
-        },
-    )
-
-    # Load the records into the image table
-    postgres_with_image_and_temp_table.cursor.execute(load_data_query_c)
-    postgres_with_image_and_temp_table.cursor.execute(load_data_query_a)
-    postgres_with_image_and_temp_table.cursor.execute(load_data_query_b)
-    postgres_with_image_and_temp_table.connection.commit()
 
     # Create the temp table with a query that will select records A and B
     select_query = f"WHERE provider='{MATCHING_PROVIDER}'"
@@ -138,7 +178,7 @@ def test_update_batches(
     # Test update query
     update_query = f"SET title='{NEW_TITLE}'"
     updated_count = update_batches.function(
-        dry_run=dry_run,
+        dry_run=False,
         query_id=f"test_{identifier}",
         table_name=image_table,
         expected_row_count=2,
@@ -148,12 +188,8 @@ def test_update_batches(
         postgres_conn_id=sql.POSTGRES_CONN_ID,
     )
 
-    # Both records A and C should be updated if this is not a dry_run;
-    # otherwise, neither should be updated
-    expected_updated_count = 2 if should_run else 0
-    expected_title = NEW_TITLE if should_run else OLD_TITLE
-
-    assert updated_count == expected_updated_count
+    # Both records A and C should be updated
+    assert updated_count == 2
 
     postgres_with_image_and_temp_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_image_and_temp_table.cursor.fetchall()
@@ -166,6 +202,102 @@ def test_update_batches(
 
     # These are the updated rows
     assert actual_rows[1][sql.fid_idx] == FID_A
-    assert actual_rows[1][sql.title_idx] == expected_title
+    assert actual_rows[1][sql.title_idx] == NEW_TITLE
     assert actual_rows[2][sql.fid_idx] == FID_B
-    assert actual_rows[2][sql.title_idx] == expected_title
+    assert actual_rows[2][sql.title_idx] == NEW_TITLE
+
+
+def test_update_batches_dry_run(
+    postgres_with_image_and_temp_table,
+    image_table,
+    temp_table,
+    identifier,
+):
+    # Load sample data into the image table
+    _load_sample_data_into_image_table(
+        image_table,
+        postgres_with_image_and_temp_table,
+    )
+
+    # Create the temp table with a query that will select records A and B
+    select_query = f"WHERE provider='{MATCHING_PROVIDER}'"
+    create_temp_table_query = constants.CREATE_TEMP_TABLE_QUERY.format(
+        temp_table_name=temp_table, table_name=image_table, select_query=select_query
+    )
+    postgres_with_image_and_temp_table.cursor.execute(create_temp_table_query)
+    postgres_with_image_and_temp_table.connection.commit()
+
+    # Test update query
+    update_query = f"SET title='{NEW_TITLE}'"
+    updated_count = update_batches.function(
+        dry_run=True,
+        query_id=f"test_{identifier}",
+        table_name=image_table,
+        expected_row_count=2,
+        batch_size=1,
+        update_query=update_query,
+        update_timeout=3600,
+        postgres_conn_id=sql.POSTGRES_CONN_ID,
+    )
+
+    # No records should be updated
+    assert updated_count == 0
+
+    postgres_with_image_and_temp_table.cursor.execute(f"SELECT * FROM {image_table};")
+    actual_rows = postgres_with_image_and_temp_table.cursor.fetchall()
+
+    assert len(actual_rows) == 3
+    for row in actual_rows:
+        assert row[sql.title_idx] == OLD_TITLE
+
+
+def test_update_batches_from_batch_start(
+    postgres_with_image_and_temp_table,
+    image_table,
+    temp_table,
+    identifier,
+):
+    # Load sample data into the image table
+    _load_sample_data_into_image_table(
+        image_table,
+        postgres_with_image_and_temp_table,
+    )
+
+    # Create the temp table with a query that will select all three records
+    select_query = f"WHERE title='{OLD_TITLE}'"
+    create_temp_table_query = constants.CREATE_TEMP_TABLE_QUERY.format(
+        temp_table_name=temp_table, table_name=image_table, select_query=select_query
+    )
+    postgres_with_image_and_temp_table.cursor.execute(create_temp_table_query)
+    postgres_with_image_and_temp_table.connection.commit()
+
+    # Test update query, setting batch_start to 1
+    update_query = f"SET title='{NEW_TITLE}'"
+    updated_count = update_batches.function(
+        dry_run=False,
+        query_id=f"test_{identifier}",
+        table_name=image_table,
+        expected_row_count=2,
+        batch_size=1,
+        batch_start=1,
+        update_query=update_query,
+        update_timeout=3600,
+        postgres_conn_id=sql.POSTGRES_CONN_ID,
+    )
+
+    # Only records B and C should have been updated
+    assert updated_count == 2
+
+    postgres_with_image_and_temp_table.cursor.execute(f"SELECT * FROM {image_table};")
+    actual_rows = postgres_with_image_and_temp_table.cursor.fetchall()
+
+    assert len(actual_rows) == 3
+    # This is the first row, that was skipped by setting the batch_start to 1
+    assert actual_rows[0][sql.fid_idx] == FID_A
+    assert actual_rows[0][sql.title_idx] == OLD_TITLE
+
+    # These are the updated rows
+    assert actual_rows[1][sql.fid_idx] == FID_B
+    assert actual_rows[1][sql.title_idx] == NEW_TITLE
+    assert actual_rows[2][sql.fid_idx] == FID_C
+    assert actual_rows[2][sql.title_idx] == NEW_TITLE

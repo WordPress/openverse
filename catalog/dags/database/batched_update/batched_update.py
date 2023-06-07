@@ -7,17 +7,52 @@ from airflow.models.abstractoperator import AbstractOperator
 from common import slack
 from common.constants import POSTGRES_CONN_ID
 from common.sql import PostgresHook
-from database.batched_update.constants import (
-    DAG_ID,
-    RETURN_ROW_COUNT,
-    SLACK_ICON,
-    SLACK_USERNAME,
-    TEMP_TABLE_NAME,
-    UPDATE_BATCH_QUERY,
-)
+from database.batched_update import constants
 
 
 logger = logging.getLogger(__name__)
+
+
+def _single_value(cursor):
+    try:
+        row = cursor.fetchone()
+        return row[0]
+    except Exception as e:
+        raise ValueError("Unable to extract expected row data from cursor") from e
+
+
+@task.branch
+def resume_update(
+    resume_update: bool,
+):
+    """
+    Return True to short circuit temp table creation if this DagRun is
+    resuming from an existing temp table.
+
+    A DAG can be resumed only if `
+    """
+    if resume_update:
+        # Skip table creation and indexing
+        return constants.GET_EXPECTED_COUNT_TASK_ID
+    return constants.CREATE_TEMP_TABLE_TASK_ID
+
+
+@task
+def get_expected_update_count(query_id: str, batch_start: int | None):
+    """
+    Get the number of records left to update, when resuming an update
+    on an existing temp table.
+    """
+    total_count = run_sql.function(
+        dry_run=False,
+        sql_template=constants.SELECT_TEMP_TABLE_QUERY,
+        query_id=query_id,
+        handler=_single_value,
+    )
+
+    if batch_start:
+        total_count -= batch_start
+    return max(total_count, 0)
 
 
 @task
@@ -29,10 +64,11 @@ def run_sql(
     postgres_conn_id: str = POSTGRES_CONN_ID,
     task: AbstractOperator = None,
     timeout: timedelta = None,
+    handler: callable = constants.RETURN_ROW_COUNT,
     **kwargs,
 ):
     query = sql_template.format(
-        temp_table_name=TEMP_TABLE_NAME.format(query_id=query_id), **kwargs
+        temp_table_name=constants.TEMP_TABLE_NAME.format(query_id=query_id), **kwargs
     )
     if dry_run:
         logger.info(
@@ -50,7 +86,7 @@ def run_sql(
         log_sql=log_sql,
     )
 
-    return postgres.run(query, handler=RETURN_ROW_COUNT)
+    return postgres.run(query, handler=handler)
 
 
 @task
@@ -62,11 +98,11 @@ def update_batches(
     query_id: str,
     update_query: str,
     update_timeout: int,
-    postgres_conn_id=POSTGRES_CONN_ID,
+    batch_start: int = 0,
+    postgres_conn_id: str = POSTGRES_CONN_ID,
     task: AbstractOperator = None,
     **kwargs,
 ):
-    batch_start = 0
     updated_count = 0
 
     while batch_start <= expected_row_count:
@@ -75,7 +111,7 @@ def update_batches(
         logger.info(f"Updating rows with id {batch_start} through {batch_end}.")
         count = run_sql.function(
             dry_run=dry_run,
-            sql_template=UPDATE_BATCH_QUERY,
+            sql_template=constants.UPDATE_BATCH_QUERY,
             query_id=query_id,
             # Only log the query the first time, so as not to spam the logs
             log_sql=batch_start == 1,
@@ -103,9 +139,9 @@ def notify_slack(text: str, dry_run: bool) -> None:
     if not dry_run:
         slack.send_message(
             text,
-            username=SLACK_USERNAME,
-            icon_emoji=SLACK_ICON,
-            dag_id=DAG_ID,
+            username=constants.SLACK_USERNAME,
+            icon_emoji=constants.SLACK_ICON,
+            dag_id=constants.DAG_ID,
         )
     else:
         logger.info(text)

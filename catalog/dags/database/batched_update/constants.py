@@ -11,6 +11,10 @@ DAGRUN_TIMEOUT = timedelta(days=31 * 3)
 SELECT_TIMEOUT = timedelta(hours=24)
 UPDATE_TIMEOUT = timedelta(days=30 * 3)  # 3 months
 
+# Task IDs used for branching operator
+GET_EXPECTED_COUNT_TASK_ID = "get_expected_update_count"
+CREATE_TEMP_TABLE_TASK_ID = "select_rows_to_update"
+
 # Timeout for an individual batch, given in seconds
 DEFAULT_UPDATE_BATCH_TIMEOUT = 60 * 60  # 1 hour
 
@@ -22,6 +26,10 @@ CREATE_TEMP_TABLE_QUERY = """
     {select_query};
     """
 CREATE_TEMP_TABLE_INDEX_QUERY = "CREATE INDEX ON {temp_table_name}(row_id)"
+SELECT_TEMP_TABLE_QUERY = """
+    SELECT COUNT(*)
+    FROM {temp_table_name};
+    """
 UPDATE_BATCH_QUERY = """
     UPDATE {table_name}
     {update_query}
