@@ -149,7 +149,7 @@ def test_get_expected_update_count(
     postgres_with_image_and_temp_table.connection.commit()
 
     total_count = get_expected_update_count.function(
-        query_id=f"test_{identifier}", batch_start=batch_start
+        query_id=f"test_{identifier}", batch_start=batch_start, dry_run=False
     )
 
     assert total_count == expected_count
