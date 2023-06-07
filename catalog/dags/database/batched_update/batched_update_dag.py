@@ -206,7 +206,11 @@ def batched_update():
     expected_count = get_expected_update_count.override(
         task_id=constants.GET_EXPECTED_COUNT_TASK_ID,
         trigger_rule=TriggerRule.NONE_FAILED,
-    )(query_id="{{ params.query_id }}", batch_start="{{ params.batch_start }}")
+    )(
+        query_id="{{ params.query_id }}",
+        batch_start="{{ params.batch_start }}",
+        dry_run="{{ params.dry_run }}",
+    )
 
     check_for_resume_update >> [select_rows_to_update, expected_count]
     select_rows_to_update >> create_index >> expected_count

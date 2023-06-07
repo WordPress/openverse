@@ -38,13 +38,13 @@ def resume_update(
 
 
 @task
-def get_expected_update_count(query_id: str, batch_start: int | None):
+def get_expected_update_count(query_id: str, batch_start: int | None, dry_run: bool):
     """
     Get the number of records left to update, when resuming an update
     on an existing temp table.
     """
     total_count = run_sql.function(
-        dry_run=False,
+        dry_run=dry_run,
         sql_template=constants.SELECT_TEMP_TABLE_QUERY,
         query_id=query_id,
         handler=_single_value,
