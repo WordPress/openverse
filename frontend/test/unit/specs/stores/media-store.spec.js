@@ -332,19 +332,39 @@ describe("Media Store", () => {
       })
     })
 
-    // https://github.com/WordPress/openverse/issues/2223
-    // eslint-disable-next-line jest/no-disabled-tests, jest/expect-expect
-    it.skip("fetchSingleMediaType does not reset images if page is defined", async () => {
+    it("fetchSingleMediaType does not reset images if shouldPersistMedia is true", async () => {
       const mediaStore = useMediaStore()
+      const img1 = {
+        id: "123",
+        frontendMediaType: "image",
+        title: "Foo",
+        creator: "bar",
+        tags: [],
+      }
+      mediaStore.$patch({
+        results: {
+          image: {
+            page: 1,
+            count: 1,
+            pageCount: 10,
+          },
+        },
+      })
+      mediaStore.$patch((state) => {
+        state.results.image.items = { 123: img1 }
+      })
 
       const mediaType = IMAGE
       const params = {
         q: "foo",
         page: 1,
-        shouldPersistMedia: false,
+        shouldPersistMedia: true,
         mediaType,
       }
       await mediaStore.fetchSingleMediaType(params)
+      const results = mediaStore.results[mediaType]
+      expect(results.items["123"]).toEqual(img1)
+      expect(results.page).toBe(2)
     })
 
     it("clearMedia resets the results", () => {
