@@ -21,10 +21,11 @@
 
 <script lang="ts">
 import { computed } from "vue"
-import { defineComponent, useRoute } from "@nuxtjs/composition-api"
+import { defineComponent } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import type { AudioDetail } from "~/types/media"
+import { singleResultMiddleware } from "~/middleware/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
@@ -47,20 +48,12 @@ export default defineComponent({
     VRelatedAudio,
     VSkipToContentContainer,
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path.includes("/search/")) {
-      to.meta.backToSearchPath = from.fullPath
-    }
-    if (from.path.includes("/search/") && to.query.q) {
-      useSearchStore().setSearchTerm(to.query.q)
-    }
-    next()
-  },
   layout: "content-layout",
+  middleware: singleResultMiddleware,
   setup() {
-    const route = useRoute()
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
+    const searchStore = useSearchStore()
 
     const audio = computed(() =>
       singleResultStore.mediaType === AUDIO
@@ -69,7 +62,7 @@ export default defineComponent({
     )
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
-    const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
+    const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
     return {
       audio,
