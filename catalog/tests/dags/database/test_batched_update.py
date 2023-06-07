@@ -232,6 +232,7 @@ def test_update_batches_dry_run(
     updated_count = update_batches.function(
         dry_run=True,
         query_id=f"test_{identifier}",
+        batch_start=None,
         table_name=image_table,
         expected_row_count=2,
         batch_size=1,

@@ -104,6 +104,8 @@ def update_batches(
     **kwargs,
 ):
     updated_count = 0
+    if batch_start is None:
+        batch_start = 0
 
     while batch_start <= expected_row_count:
         batch_end = batch_start + batch_size
