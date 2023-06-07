@@ -1,4 +1,6 @@
-import { test, expect, Page, Locator } from "@playwright/test"
+import { expect, Page, Locator } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 const goTo = async (page: Page, slug: string) => {
   await page.goto(`/iframe.html?id=meta-focus--${slug}`)
