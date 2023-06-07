@@ -3,12 +3,12 @@ from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import ignore_logger
 
+from conf.settings.base import ENVIRONMENT
+
 
 SENTRY_DSN = config("SENTRY_DSN", default="")
 
 SENTRY_SAMPLE_RATE = config("SENTRY_SAMPLE_RATE", default=1.0, cast=float)
-
-ENVIRONMENT = config("ENVIRONMENT", default="local")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)

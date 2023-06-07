@@ -1,3 +1,10 @@
+from decouple import config
+
+from conf.settings import BASE_DIR
+
+
+ENVIRONMENT = config("ENVIRONMENT", default="local")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -36,7 +43,9 @@ ROOT_URLCONF = "conf.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "api" / "templates",
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -44,6 +53,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Make the ENVIRONMENT env var available for all contexts
+                "conf.context_processors.export_environment",
             ],
         },
     },

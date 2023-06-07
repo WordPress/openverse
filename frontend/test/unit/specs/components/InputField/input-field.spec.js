@@ -24,7 +24,7 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "text")
   })
 
-  xit("should allow changing the type", () => {
+  it("should allow changing the type", () => {
     render(VInputField, {
       attrs: {
         placeholder: "Enter some number",

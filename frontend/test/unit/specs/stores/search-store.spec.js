@@ -249,14 +249,14 @@ describe("Search Store", () => {
           },
         })
         if (supportedSearchTypes.includes(searchType)) {
+          // eslint-disable-next-line jest/no-conditional-expect
           expect(searchStore.query).not.toEqual(expectedQueryParams)
         }
         searchStore.clearFilters()
         expect(searchStore.searchQueryParams).toEqual(expectedQueryParams)
       }
     )
-  })
-  describe("actions", () => {
+
     it.each`
       filterType           | codeIdx
       ${"licenses"}        | ${0}

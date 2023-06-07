@@ -24,6 +24,10 @@ for (const dir of languageDirections) {
           name: t("externalSources.button", dir),
         })
 
+        await page
+          .getByRole("contentinfo")
+          .getByRole("link", { name: "Openverse" })
+          .hover()
         await externalSourcesButton.click()
 
         await expectSnapshot(

@@ -35,9 +35,10 @@ import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref } from "vue"
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
+import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { IsSidebarVisibleKey } from "~/types/provides"
+import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
 import VSearchGrid from "~/components/VSearchGrid.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
@@ -52,33 +53,13 @@ export default defineComponent({
     VSearchGrid,
     VSkipToContentContainer,
   },
-  beforeRouteEnter(to, from, next) {
-    /**
-     * The order in which beforeRouteEnter and middleware are called is indeterminate.
-     * We need to make sure that query `q` exists before checking if it matches
-     * the store searchTerm.
-     */
-    const searchStore = useSearchStore()
-    if (to.query.q && to.query.q !== searchStore.searchTerm) {
-      searchStore.setSearchTerm(to.query.q)
-    }
-    next()
-  },
-  layout: "content-layout",
-  middleware({ route, redirect }) {
-    /**
-     * This anonymous middleware redirects any search without a query to the homepage.
-     * This is meant to block direct access to /search and all sub-routes, with
-     * an exception for the 'creator' filter. The creator filter doesn't send
-     * the search query to the API.
-     */
-    if (!route.query.q && !route.query.searchBy) return redirect("/")
-  },
+  layout: "search-layout",
+  middleware: searchMiddleware,
   scrollToTop: false,
   setup() {
     const searchGridRef = ref<InstanceType<typeof VSearchGrid> | null>(null)
 
-    const showScrollButton = inject("showScrollButton")
+    const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
