@@ -72,7 +72,7 @@ services:
     env_file:
       - .env
       - docker/minio/.env
-    
+
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
