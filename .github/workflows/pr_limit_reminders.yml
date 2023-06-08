@@ -9,6 +9,7 @@ on:
 
 jobs:
   analyze-user-prs:
+    name: Count user's open pull requests
     runs-on: ubuntu-latest
     outputs:
       pr_count: ${{ steps.count-prs.outputs.pr_count }}
