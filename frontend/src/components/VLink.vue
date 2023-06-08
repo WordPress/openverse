@@ -21,6 +21,7 @@
     :role="href ? undefined : 'link'"
     :aria-disabled="!href"
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
+    @click="handleExternalClick"
     v-on="$listeners"
   >
     <slot /><VIcon
@@ -45,6 +46,8 @@
  */
 import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
+
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
@@ -73,6 +76,14 @@ export default defineComponent({
       type: Number,
       default: 4,
     },
+    /**
+     * Whether the generic EXTERNAL_LINK_CLICK event should be sent on click.
+     * Set to `false` if the link click is tracked by another analytics event.
+     */
+    sendExternalLinkClickEvent: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props) {
     const { app } = useContext()
@@ -80,6 +91,7 @@ export default defineComponent({
       href: string
       showExternalIcon: boolean
       externalIconSize: number
+      sendExternalLinkClickEvent: boolean
     } {
       return typeof p.href === "string" && !["", "#"].includes(p.href)
     }
@@ -96,10 +108,21 @@ export default defineComponent({
         : null
     )
 
+    const { sendCustomEvent } = useAnalytics()
+
+    const handleExternalClick = () => {
+      if (!checkHref(props) || !props.sendExternalLinkClickEvent) return
+      sendCustomEvent("EXTERNAL_LINK_CLICK", {
+        url: props.href,
+      })
+    }
+
     return {
       linkTo,
       isNuxtLink,
       isInternal,
+
+      handleExternalClick,
     }
   },
 })
