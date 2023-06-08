@@ -65,7 +65,7 @@ from data_refresh.data_refresh_types import DataRefresh
 logger = logging.getLogger(__name__)
 
 
-DATA_REFRESH_POOL = "data_refresh"
+DATA_REFRESH_POOL = os.getenv("DATA_REFRESH_POOL", "data_refresh")
 
 
 def create_data_refresh_task_group(
