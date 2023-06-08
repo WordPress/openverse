@@ -184,12 +184,13 @@ topics and subscription should also be moved into the singleton module.
 ### Stable vs Unstable Alarms and their Responses
 
 As this project will add several new alarms, it is critical to understand the
-distinction between stable and unstable ones. In particular, all maintainers
-interacting with the new tools must understand what response and urgency is
-appropriate for each instance. Stability is relevant for individual alarms and
-must be considered in context of how they relate to alerts. Alarms that comprise
-a composite alarm, for example, may require a different approach to stability
-and accuracy if the resulting composite alarm is itself sufficiently accurate.
+distinction between stable and unstable alarms. In particular, all maintainers
+interacting with the new tools must understand how to respond and determine
+urgency for all alerts. Stability also refers to individual alarms and must be
+considered in context of how they relate to the alerts that depend on them.
+Alarms that comprise a composite alarm, for example, may require a different
+approach to stability and accuracy if the resulting composite alarm is itself
+sufficiently accurate.
 
 Alarms should be considered unstable if they regularly produce false positives.
 That is to say, if we incorrectly send an alert, and this happens on a regular
@@ -197,7 +198,7 @@ basis, then the alarm is unstable. Stable alarms, on the other hand, should have
 virtually no incidents of false positives. If an alarm sends alerts to the
 stable notification channel, it should be assumed that something is wrong that
 needs to be addressed. In either case, the
-[alerts corresponding run book](#run-books) should guide maintainers in
+[alert's corresponding run book](#run-books) should guide maintainers in
 identifying severity so that they can complete the rest of the triaging process
 outlined in the general incident response guide. It is important to note that
 unstable alarms may produce a high number of false positives but should not be
@@ -214,23 +215,25 @@ process outlined below for "unstable alarm response".
 ### Stabilising Alarms
 
 All unstable alarm should eventually be stabilised or deleted. No alarm should
-indefinitely stay in the "unstable" category. Each alarm will be assigned to a
-maintainer who will be responsible for investigating false positive alerts that
-come from alarm. The maintainer assigned to stabilise the alarm should not be
-solely responsible for identifying areas of stability improvement. The
-development of automated monitoring tools is a collaborative effort. However, by
-assigning each alarm to an individual maintainer, we can increase accountability
-for particular alarms, ensuring that none of them fall to the wayside. It also
-ensures that each alarm has someone who understands the long-term context of the
-alarm, is aware of all of its previous behaviour, and has paid consistent
-attention to it. Consider the maintainer assigned to the alarm to have the same
-role as project leads do for projects. A project lead is to a project as an
-alarm maintainer is to an unstable alarm. The maintainer will create issues to
-iterate on the alarm and its run book. Once the alarm is stabilised, there will
-no longer be a single person assigned to it. Once maintainers reach a high level
-of confidence that the alarm will not regularly cause false positives, the alarm
-should be stabilised and relevant run books updated to reflect that. To
-summarise the overall process:
+indefinitely stay in the "unstable" category. In order to increase and
+distribute accountability for alarm stabilisation, each alarm will be assigned
+to a maintainer who will be responsible for investigating false positive alerts
+that come from alarm. Ideally, most of the Openverse maintainers will be
+assigned at least one alarm from this implementation plan to shepherd into
+stability. The maintainer assigned to stabilise the alarm is not solely
+responsible for identifying areas of stability improvement. The development of
+automated monitoring tools is still a collaborative effort. However, in addition
+to ensuring no alarm falls to the wayside, assigning a maintainer also ensures
+that each alarm has someone who understands the long-term context of the alarm,
+is aware of all of its previous behaviour, and has paid consistent attention to
+it. Alarm maintainers should have a similar relationship to their assigned
+alarms as project leads do for projects. The maintainer will create issues to
+iterate on the alarm and its run book but is not necessarily the person who will
+implement those issues. Once the alarm is stabilised, there will no longer be a
+single person assigned to it. Once maintainers reach a high level of confidence
+that the alarm will not regularly cause false positives, the alarm should be
+stabilised, with relevant run books updated to reflect that. To summarise the
+overall process:
 
 1. Propose a new alarm based on metric observation
 2. Implement the unstable version of the alarm and create the initial run book
@@ -238,7 +241,8 @@ summarise the overall process:
 3. Evaluate the new alarm over time to ensure correctness
 4. Iterate on the severity identification guide for alerts from the alarm based
    on experience evaluating the unstable alarm
-5. Stabilise the alarm and change its notification channel
+5. Stabilise the alarm by updating the run book and sending alerts to the stable
+   channel
 
 ### Run Books
 
@@ -246,30 +250,27 @@ Alert run books document the process for understanding a particular alert from
 one or many alarms. Alert run books are not replacements for the general
 incident response plan and maintainers must defer to the general process for
 incidence response. The primary responsibility of the run book is to help
-maintainers identify the severity of an issue. While an alarm is still unstable,
-the run book also serves to document historical information relevant to
-identifying false positives and potential changes to the alarm configuration
-that may help the alarm reach stability. Alert run books should also document
-downtime.
+maintainers identify the severity of an issue and identify false positives.
+While an alarm is still unstable, the run book also serves to document
+historical information relevant to false positive identification and potential
+changes to the alarm configuration that may help the alarm reach stability.
+Alert run books should also document downtime.
 
 Every notification sent by an alarm must include a link to a run book.
 
 Run books are critical to alarm development because they document and share the
-knowledge of metric interpretation with everyone responding to alerts. While
-some aspects of this process may be shared in common, details for specific
-alarms are still necessary. Every run book should give guidelines for how to
-evaluate the severity of the issue and how to identify false positives. Some
-alarms may share similar or exactly the same steps for these. In those cases, we
-can develop documents that are linked to from individual alert run books. Even
-if every detail is shared between two separate alarms, each alarm must have its
-own run book to serve as a space to encourage alarm-specific documentation. It's
-likely that an alarm will have few details in its run book to begin with, but
-these should develop over time and as maintainers experience with each alarm
+knowledge of metric interpretation with everyone responding to alerts. Some
+alarms may share similar or exactly the same details or instructions. In those
+cases, we can develop documents that are linked to from individual alert run
+books. Even if every detail is shared between two separate alarms, each alarm
+must still have its own run book to serve as a space to encourage alarm-specific
+documentation. An alarm will naturally have few details in its run book to begin
+with, but it should expand over time as maintainers' experience with each alarm
 grows.
 
-To clarify: alert run books should help identify severity and optionally
-document remediation avenues but should never supersede the general incidence
-response plan.
+To clarify: alert run books must help identify severity and false positives and
+may document remediation avenues but should never supersede the general
+incidence response plan.
 
 ```{tip}
 Run books are for _alerts_, not alarms. Alerts inform us of relevant alarm
@@ -298,53 +299,46 @@ look like:
 run_book_samples/*
 ```
 
-As demonstrated books do not need to include anything about the general process
+As demonstrated, run books should not include anything about the general process
 of responding to incidents. For example, they do not need to include how to
 triage the issue once you understand the severity nor who will be responsible
 for responding to the incident. To reiterate a final time, the run book is a
-supplement to the general incident response plan and should not seek to replace
-it.
+supplement, not a replacement, to the general incident response plan.
 
 #### Strategies for Stabilisation
 
 - Identify downtime periods
-- Use a more flexible/broader period of time before the alarm goes off
+- Use a more flexible/broader evaluation period for the metric query
 - Use a composite alarm to compare the state of related alarms and only send an
-  alert when a particular alarm configuration is present (e.g., don't alert if
-  some other alarm is already sending alerts, etc.)
+  alert when a particular alarm configuration is present (e.g., only go off if a
+  related alarm is not in alarm, etc.)
 
-### Uncertain Terms
+### Determining Alarm Accuracy
 
-Throughout the description above of the alarm creation process, I've mentioned a
-handful of "uncertain" or "vague" terms. Specifically:
+Throughout the description above of the alarm creation process, I've mentioned
+the idea of alarm "accuracy". This refers primarily to an alarms rate of false
+positives and false negatives. The ideal alarm never experiences either state,
+but it's nearly impossible to achieve that level of perfection in the face of
+changing user behaviour, new features, etc. Additionally, there is no universal
+metric we can use to evaluate whether an alarm is "accurate". Each alarm must
+define its own acceptable level of false alarms. Certainly there are general
+thresholds and expectations we can hold ourselves to: we should not accept daily
+false alarms from a stable alarm, for example. If such an alarm existed, it
+would need to be radically re-written to solve this. While certain false alarms
+may be unavoidable, it is still best to weed out and prevent them, not least
+because it makes it easier to identify the real incidents, but also because it
+makes it much less stressful for folks triaging issues.
 
-- "confidence" and "scepticism" towards/about an alarm
-- a "regular", "frequent", or "infrequent" false positive frequency from an
-  alarm
-- "reliable" alarms
+Keep in mind that false negatives can be harder to identify, particularly
+because you are rarely forced to confront a false negative. While false
+negatives are not noisy, and an alarm that does not have false positives and
+still catches _some_ problems is better than nothing, we should also consider
+false negatives when determining an alarm;s accuracy.
 
-All of these generally refer to the same concept, which is that we need to reach
-a level of confidence in any given alarm that when it sends a notification,
-there truly is something to investigate. However, in a broad sense, these
-concepts are impossible to define with specificity. That is, there is no
-universal metric we can use to evaluate whether an alarm is "reliable". Each
-alarm must have its own definitions of what an acceptable level of false
-positives is. Certainly there are general thresholds and expectations we can
-hold ourselves to. We should not accept daily false positives from an alarm, for
-example. If such an alarm existed, it would need to be radically re-written to
-solve this. While certain false positives may be unavoidable, it is still best
-to weed out and prevent them, not least because it makes it easier to identify
-the real incidents, but also because it makes it much less stressful for folks
-triaging issues.
-
-We must also keep in mind that inaccurate alarms may be _too quiet_ and not
-alert when we want them to and that this can also introduce ambiguity,
-especially if when it does alarm it does so with sporadic accuracy.
-
-The long and short of it is, each alarm needs time, attention, and experience
-from one or a handful of focused people for it to reach a state where we can be
-sure that when it sends a notification, the vast majority of the time, it is
-doing so for a good reason.
+In summary, each alarm needs time, attention, and experience from one or a
+handful of maintainers for it to reach a state where we can be sure that when it
+sends a notification, the vast majority of the time, it is doing so for a good
+reason, and that it doesn't keep quiet when a real issue is happening.
 
 ### Summary of new alarms
 
@@ -410,22 +404,38 @@ for these metrics.
 All of these should alarm on "no data" except for 5xx response count which may
 reach 0 without being an issue. If a service entirely stops responding then the
 no data alarm condition on the total response count will be sufficient to
-capture the event.
+capture the event. All "no data" alarms for these specific alarms must be
+identified in the run books as the highest severity. No data either corresponds
+to a full outage or broken metrics configurations. In the former case, the issue
+must be resolved immediately. The latter is slightly lower priority (don't eat
+dinner at your desk to fix it) but is still very high priority: if our services
+fail while our monitoring is broken we won't know until users tell us about it
+or we happen to notice on our own by chance.
 
-The anomaly-based alerts will almost certainly need downtime. In my experience,
-anomaly detection is generally pretty flaky when services have significant
-periods of low activity, which all of ours do. We should start without downtime
-but anticipate the need for those alerts. Refer to
+The anomaly-based alerts will probably need downtime during low traffic periods.
+In my experience, anomaly detection is generally pretty flaky when services have
+significant periods of low activity, which all of ours do. We should start
+without downtime but anticipate the need for those alerts. Refer to
 [CloudWatch documentation regarding "metric math functions" for examples of how to combine expressions based on date metrics to configure downtime for specific periods of time](https://aws.amazon.com/blogs/mt/enhance-cloudwatch-metrics-with-metric-math-functions/).
 
 The response time anomaly should be configured only to alert when the response
-time is outside the upper range of the anomaly, not below. Request count anomaly
-should be configured to alert on both sides.
+time is outside the upper range of the anomaly, not below (it's fine if things
+are "too fast")[^too-fast]. Request count anomaly should be configured to alert
+on both sides.
+
+[^too-fast]:
+    It does occur to me that response time could abnormally drop due to, for
+    example, a general decrease in results from Elasticsearch that made the
+    search route have mostly 0 work to do. However, I don't think response time
+    is going to be an accurate way to catch that. It would be better to consider
+    future
+    [logs insights based metric alarms](#logs-insights-metrics-based-alarms) for
+    such things.
 
 This list is not an exhaustive list of all possible useful alarms. It is a
 starting point. We should and will add and remove
 
-#### Route-specific alarms
+#### Logs Insights metrics based alarms
 
 I considered proposing that we start using Logs Insights to generate per-route
 metrics for response time and status count. While I think this might be a good
@@ -581,4 +591,5 @@ N/A
 <!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
 
 The biggest risk is noisy, inaccurate alarms that cause more headaches than
-solve problems.
+solve problems. The implementation plan presents strategies to avoid this
+becoming a long-term issue, if it happens at all.
