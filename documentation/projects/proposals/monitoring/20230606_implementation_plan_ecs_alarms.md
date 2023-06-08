@@ -2,7 +2,21 @@
 
 **Author**: @sarayourfriend
 
-```{note}
+## Reviewers
+
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+
+- [ ] @krysal
+- [ ] @AetherUnbound
+
+## Project links
+
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+
+- [Project Thread](https://github.com/WordPress/openverse/issues/2344)
+- [Milestone](https://github.com/WordPress/openverse/milestone/15)
+
+```{admonition} Where's the project plan?
 This implementation plan is not associated with a specific project plan.
 It was requested as a result of various discussions between maintainers
 reflecting on recent incidents. While there were some open issues to add
@@ -12,29 +26,20 @@ wayside. We need to establish a general approach for the initial set of
 monitors and alarms that can be built and iterated upon as the project evolves.
 ```
 
-## Reviewers
-
-<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
-
-- [ ] TBD
-- [ ] TBD
-
-## Project links
-
-<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
-
-- Milestone (TBD)
-
 ## Expected Outcomes
 
 <!-- List any succinct expected products from this implementation plan. -->
 
-The Django API and Nuxt frontend have a reasonable set of baseline alarms. The
-specific outcome should be a set of unstable alerts that can be iterated on and
-later stabilised, once we have had time to tweak the specific settings. We
-should not expect that the initial implementation of alarms will be sufficient.
-We will need to iterate on the settings over time for them to become stable,
-reliable alarms.
+The Django API and Nuxt frontend will have a reasonable set of baseline alarms.
+Each service will have a specific set of unstable alarms monitoring the
+production environment that can be iterated on and later stabilised, once we
+have had time to tweak the specific settings. **The initial implementation of
+alarms will be a starting point.** The initial configuration cannot be treated
+as final or sufficient and must be iterated on until the alarms can be
+stabilised.
+
+This implementation plan outlines the alarms themselves as well as a process for
+stabilisation.
 
 ## Goals
 
@@ -46,8 +51,8 @@ This implementation plan has the following goals:
    alarms through Terraform.
 2. Propose an initial set of unstable alerts for our ECS services and describe
    their implementation details.
-3. Describe a plan for stabilising new alarms that includes creating and
-   iterating on run books for each alarm.
+3. Describe a plan for stabilising new alarms that includes the creation and
+   iteration of run books for each alarm.
 
 ## Prior Art
 
@@ -64,22 +69,38 @@ infrastructure, we will need to accept our reliance on AWS tools.
 - [AWS CloudWatch Alarms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html)
 - [AWS Simple Notification Service (SNS)](https://docs.aws.amazon.com/sns/?id=docs_gateway/)
 
-We will continue to use the SNS Email alerts tool. This is a cheap and easy way
-to send alerts to our notification channels.
+We will continue to use the SNS Email alerts tool. This is an inexpensive and
+easy way to send alerts to our notification channels.
 
-We've discussed using EventBridge to identify unhealthy task instances, but the
-ELB "UnHealthyHostCount" metric should be sufficient for our initial
-implementation. Working with EventBridge is sufficiently different from
-CloudWatch metrics such that it would significantly increase the complexity of
-this implementation plan.
+We had discussed using EventBridge to identify unhealthy task instances, but the
+Elastic Load Balancer (ELB) `UnHealthyHostCount` metric should be sufficient for
+our initial implementation. Working with EventBridge is sufficiently different
+from CloudWatch metrics such that it would significantly increase the complexity
+of this implementation plan.
 
 ## Terms
 
 This list of terms attempts to match AWS's own terminology. Personally I find
-some of these confusing, but in the interest of reducing the cognitive overhead
-of switching between our documentation and CloudWatch, I've chosen to use these
-terms anyway. Others (like an alarm "going off") may be somewhat colloquial or
-casual jargon, but they are commonly used in the field.
+some of these confusing[^alarms-in-alarm], but in the interest of reducing the
+cognitive overhead of switching between our documentation and CloudWatch, I've
+chosen to use these terms anyway. Others may be somewhat colloquial or casual
+jargon[^going-off], but they are commonly used in the field and other turns of
+phrase are much clumsier, so I've opted to use them as well.
+
+[^alarms-in-alarm]:
+    "Alarms in alarm" baffles me. I've made several editorial passes to this
+    entire document to find the clearest way to describe this. Unfortunately,
+    without completely deviating from CloudWatch's terminology, it's impossible
+    to do so elegantly. I've tried to make the distinction by using the word
+    "alert", but keep in mind that CloudWatch alarms can trigger actions other
+    than alerts, so it is not a necessary relationship. We don't take advantage
+    of that feature in this implementation plan, however, so it didn't feel
+    worth further complication to accommodate.
+
+[^going-off]:
+    "Going off" may be colloquial, but in my experience it is extensively used
+    in actual monitoring and observability practice when discussing monitors
+    that are in "the bad state".
 
 - "Alarm": Something that actively monitors a metric or set of metrics. Alarms
   have explicit conditions that codify when the relevant metrics are not in an
@@ -95,15 +116,25 @@ casual jargon, but they are commonly used in the field.
 - "Run book": Documentation describing a set of steps followed to respond to an
   alert. Run book details may be general (shared between all alerts) or specific
   to the alert in question. All possible alerts have run books.
+- "Notification channel": A place where alarms send alerts. e.g., a Slack or
+  Matrix channel, an email address, or a tool like
+  PagerDuty[^notification-channels]. These are configured via SNS.
+
+[^notification-channels]:
+    I am intentionally vague in this implementation plan about specific
+    notification channels we use. Our current approach relies on tools to which
+    access cannot be shared with anyone other than core maintainers due to
+    limitations of the tools themselves. Future work might change this, as
+    suggested in the
+    [previous project proposal](/projects/proposals/monitoring/20220307-project_proposal.md),
+    but for now we should continue to use the approach that works and is least
+    expensive, both in terms of real dollar cost and in terms of work hours we
+    need to put towards it.
 
 ```{note}
 I use "alarm" throughout this document as a synonym for "alarms that send alerts".
 This nuance is necessary because not all alarms individually send alerts, as
 composite alarms may group multiple individual alarms to reduce noise or duplication.
-
-Alarms can also be used to trigger actions other than alerts. While this isn't something
-we take advantage of in this implementation plan, it is important to keep in mind, especially
-with respect to the focus of run books and stabilisation (all covered in detail here).
 ```
 
 ## Overview
@@ -115,10 +146,10 @@ that alarm configuration can be shared between environments or services. Even if
 it were possible, it would be undesirable as it would reduce flexibility in the
 face of future changes to metric characteristics. In light of this, alarms will
 be configured in a new monitoring namespace in the `next/modules` directory
-within the concrete modules for services as internal submodules. For example,
-Django API monitoring configuration would go in
-`/modules/monitoring/production-api` and be instantiated in the production root
-module in `api.tf`:
+within the concrete modules for services as internal submodules and will be
+named after the service and environment they monitor. For example, Django API
+monitoring configuration would go in `/modules/monitoring/production-api` and be
+instantiated in the production root module in `api.tf`:
 
 ```terraform
 module "api-monitoring" {
@@ -127,7 +158,19 @@ module "api-monitoring" {
 ```
 
 New modules for each service/environment help to prevent an increase in root
-module complexity.
+module complexity. In order to consolidate monitoring configuration, the
+existing `service-monitors` instances, which configure UptimeRobot for our
+services, will be moved into these new monitoring modules. Likewise, existing
+RDS and Elasticsearch monitors, if present in the `next` root modules, should
+also be moved.
+
+```{note}
+The CloudWatch Dashboards that collect all metrics for `next` root module services
+will not be moved into these new modules. The dashboards include all services defined
+in the root module and keeping it in the root module level allows us to easily share
+documentation relevant for all services and simplify the configuration as proposed
+in [WordPress/openverse-infrastructure #472](https://github.com/WordPress/openverse-infrastructure/issues/472).
+```
 
 I also considered using nested internal modules. In that form, production Django
 API alarms would be configured in
@@ -156,127 +199,136 @@ monitoring configuration for the module, which may in the end be more confusing
 for maintainers.
 
 We will need at least one new SNS topic for unstable alarms to send
-notifications to a channel specific for unstable alarms. This helps maintainers
-distinguish between the type of alerts they might be responding to. This should
-be created in the `singleton` module and follow the existing pattern of
-deferring management to the production environment by using a data resource in
-staging.
+notifications to a channel specific for unstable alarms. Separate notification
+channels for unstable and stable alerts helps maintainers quickly distinguish
+between the types of alerts they respond to. The new topic should be created in
+the `singleton` module and follow the existing pattern of deferring management
+to the production environment by using a data resource in staging. The existing
+topics and subscription should also be moved into the singleton module.
 
-```{note}
-While this section mentions and creates guidelines for dealing with the fact that
-monitoring configuration must be distinct per environment, this implementation plan
-makes no proposals to monitor staging.
-```
-
-### Stable vs unstable alarms
+### Stable vs Unstable Alarms and their Responses
 
 As this project will add several new alarms, it is critical to understand the
 distinction between stable and unstable ones. In particular, all maintainers
 interacting with the new tools must understand what response and urgency is
-appropriate for each instance. In this and other sections that discuss stable
-and unstable alarms, I focus primarily on the alarms that send alerts aspect.
-However, for composite alarms, the accuracy of the notifications is causes is
-contingent on the alarms it responds to.
+appropriate for each instance. Stability is relevant for individual alarms and
+must be considered in context of how they relate to alerts. Alarms that comprise
+a composite alarm, for example, may require a different approach to stability
+and accuracy if the resulting composite alarm is itself sufficiently accurate.
 
 Alarms should be considered unstable if they regularly produce false positives.
 That is to say, if we incorrectly send an alert, and this happens on a regular
 basis, then the alarm is unstable. Stable alarms, on the other hand, should have
-virtually no incidents of false positives. If an alarm configuration is stable,
-when the alert is sent, it should be assumed that something is wrong that needs
-to be addressed[^something-is-wrong]. If an alarm that is currently considered
-unstable goes off, it should be investigated with urgency relative to the data
-codified in the alarm's run book and the judgement of the person responding to
-the alert.
+virtually no incidents of false positives. If an alarm sends alerts to the
+stable notification channel, it should be assumed that something is wrong that
+needs to be addressed. In either case, the
+[alerts corresponding run book](#run-books) should guide maintainers in
+identifying severity so that they can complete the rest of the triaging process
+outlined in the general incident response guide. It is important to note that
+unstable alarms may produce a high number of false positives but should not be
+treated with the blanket assumption that they are entirely inaccurate. As
+described below, **run books must assist maintainers in quickly identifying
+false positives**.
 
-[^something-is-wrong]:
-    This says nothing to the severity of the issue, however, which may or may
-    not be codified in alarms and alert configuration but is always up to the
-    person responding to the alert to decide.
-
-In our case, because all the alarms proposed in this plan are new and for
-services that have never had alarms of this nature, all of them will begin their
-life as unstable alarms. For each alarm, until it is deemed stable (after we
-have observed for a sufficient period of time that it does not create false
-positives), alarms will follow the process outlined below for "unstable alarm
-response".
-
-### Run books
-
-Alert run books document the process for understanding a particular alert from
-one or many alarms. Alert run books are not replacements for the general
-incident response plan and maintainers must defer to the general process for
-incidence response. Alert run books help maintainers identify the severity of an
-issue. While an alarm is still unstable, the run book also serves to document
-historical information relevant to identifying false positives or potential
-tweaks to the underlying alarms that may help the alarm reach stability. Alert
-run books should also document downtime.
-
-Run books are critical to alarm development because they codify the general set
-of steps to be taken in response to a particular alert. While some steps are
-shared in common, details for specific alarms are still necessary. Every run
-book should give guidelines for how to evaluate the severity of the issue and
-how to identify false positives. Some alarms may share similar or exactly the
-same steps for these. In those cases, we can develop documents that are linked
-to from individual alert run books.
-
-These run books must explicitly defer to the general incident response plan and
-should complement it. Alert run books should describe how to follow the general
-incident response plan for the specific alert in question.
-
-```{note}
-Run books are for _alerts_, not alarms. Alerts inform us of relevant alarm
-states. Some alarms may go off for multiple states. For example, anomaly detection may use the same alarm to notify when a metric is too high or too low. Each is a separate "alert" and may require separate information to identify severity. Additional consideration may be necessary for alerts from composite alarms. These may require manually checking multiple alarms to help identify severity. It is
-important to keep this in mind as it helps us focus each run book as much as possible so that responders know exactly where to look for any given alert.
-```
-
-Run books must include the following:
-
-- Stability: whether the alert is considered stable or unstable
-- Maintainer, if the alert is unstable
-- Confidence, if the alert is unstable; notes to help communicate to anyone
-  triaging the alert how to evaluate the accuracy of a specific notification
-  - Collaborative but ultimately the responsibility of the unstable alert
-    maintainer to update
-- Instructions/guidelines to help identify the severity of the issue
-
-Run books do not need to include anything about the general process of
-responding to incidents. For example, they do not need to include how to triage
-the issue once you understand the severity nor who will be responsible for
-responding to the incident. As above, the run book is a supplement to the
-general incident response plan and should not seek to replace it.
-
-Every notification must include a link to the relevant run book.
+Because all the alarms proposed in this plan are new and for services that have
+never had alarms of this nature, all of them will begin as unstable alarms. For
+each alarm, until it is deemed stable (after we have observed for a sufficient
+period of time that it does not create false positives), alarms will follow the
+process outlined below for "unstable alarm response".
 
 ### Stabilising Alarms
 
 All unstable alarm should eventually be stabilised or deleted. No alarm should
 indefinitely stay in the "unstable" category. Each alarm will be assigned to a
-maintainer who will be responsible for investigating alarms that come from alarm
-while it is unstable at a medium/high priority, depending on the context and
-relative scepticism of the particular alarm. The maintainer assigned to
-stabilise the alarm should not be solely responsible for identifying areas of
-stability improvement. The development of automated monitoring tools is a
-collaborative effort. However, by assigning each alarm to an individual
-maintainer, we can increase accountability for particular alarms, ensuring that
-none of them fall to the wayside. It also ensures that each alarm has someone
-who understands the long-term context of the alarm, is aware of all of its
-previous behaviour, and has paid consistent attention to it. Consider the
-maintainer assigned to the alarm to have the same role as project leads do for
-projects. A project lead is to a project as an alarm maintainer is to an
-unstable alarm. The maintainer will create issues to iterate on the alarm and
-its run book. Once the alarm is stabilised, there will no longer be a single
-person assigned to it. Once the person responsible for stabilising the alarm has
-reached a high level of confidence that the alarm will not regularly cause false
-positives, the alarm should be stabilised and a run book should be added to the
-documentation site for the alarm. To summarise the overall process:
+maintainer who will be responsible for investigating false positive alerts that
+come from alarm. The maintainer assigned to stabilise the alarm should not be
+solely responsible for identifying areas of stability improvement. The
+development of automated monitoring tools is a collaborative effort. However, by
+assigning each alarm to an individual maintainer, we can increase accountability
+for particular alarms, ensuring that none of them fall to the wayside. It also
+ensures that each alarm has someone who understands the long-term context of the
+alarm, is aware of all of its previous behaviour, and has paid consistent
+attention to it. Consider the maintainer assigned to the alarm to have the same
+role as project leads do for projects. A project lead is to a project as an
+alarm maintainer is to an unstable alarm. The maintainer will create issues to
+iterate on the alarm and its run book. Once the alarm is stabilised, there will
+no longer be a single person assigned to it. Once maintainers reach a high level
+of confidence that the alarm will not regularly cause false positives, the alarm
+should be stabilised and relevant run books updated to reflect that. To
+summarise the overall process:
 
-1. Propose a new alarm
-2. Implement the unstable version of the alarm required and create the initial
-   run book and link it from the notification for the alarm
+1. Propose a new alarm based on metric observation
+2. Implement the unstable version of the alarm and create the initial run book
+   and link it from the notification for the alarm
 3. Evaluate the new alarm over time to ensure correctness
 4. Iterate on the severity identification guide for alerts from the alarm based
    on experience evaluating the unstable alarm
 5. Stabilise the alarm and change its notification channel
+
+### Run Books
+
+Alert run books document the process for understanding a particular alert from
+one or many alarms. Alert run books are not replacements for the general
+incident response plan and maintainers must defer to the general process for
+incidence response. The primary responsibility of the run book is to help
+maintainers identify the severity of an issue. While an alarm is still unstable,
+the run book also serves to document historical information relevant to
+identifying false positives and potential changes to the alarm configuration
+that may help the alarm reach stability. Alert run books should also document
+downtime.
+
+Every notification sent by an alarm must include a link to a run book.
+
+Run books are critical to alarm development because they document and share the
+knowledge of metric interpretation with everyone responding to alerts. While
+some aspects of this process may be shared in common, details for specific
+alarms are still necessary. Every run book should give guidelines for how to
+evaluate the severity of the issue and how to identify false positives. Some
+alarms may share similar or exactly the same steps for these. In those cases, we
+can develop documents that are linked to from individual alert run books. Even
+if every detail is shared between two separate alarms, each alarm must have its
+own run book to serve as a space to encourage alarm-specific documentation. It's
+likely that an alarm will have few details in its run book to begin with, but
+these should develop over time and as maintainers experience with each alarm
+grows.
+
+To clarify: alert run books should help identify severity and optionally
+document remediation avenues but should never supersede the general incidence
+response plan.
+
+```{tip}
+Run books are for _alerts_, not alarms. Alerts inform us of relevant alarm
+states. Some alarms may go off for multiple states. For example, anomaly detection may use the same alarm to notify when a metric is too high or too low. Each is a separate "alert" and may require separate information to identify severity. Additional consideration may be necessary for alerts from composite alarms. These may require manually checking multiple alarms to help identify severity. Keeping this in mind helps us focus each run book as much as possible so that responders have the most accessible information at any time.
+```
+
+Run books must include the following:
+
+- Stability: whether the alert is considered stable or unstable
+- The run book maintainer's GitHub handle, if the alert is unstable
+- Configured downtime
+- A link to the alarm configuration and relevant metrics
+- Instructions/guidelines to help identify the severity of the issue
+- Additional helpful information for diagnosing particular problems beyond
+  severity identification
+
+#### Example Run Books
+
+The following run book examples aim to give a concrete idea of what this will
+look like:
+
+```{toctree}
+:titlesonly:
+:glob:
+
+run_book_samples/*
+```
+
+As demonstrated books do not need to include anything about the general process
+of responding to incidents. For example, they do not need to include how to
+triage the issue once you understand the severity nor who will be responsible
+for responding to the incident. To reiterate a final time, the run book is a
+supplement to the general incident response plan and should not seek to replace
+it.
 
 #### Strategies for Stabilisation
 
@@ -285,41 +337,6 @@ documentation site for the alarm. To summarise the overall process:
 - Use a composite alarm to compare the state of related alarms and only send an
   alert when a particular alarm configuration is present (e.g., don't alert if
   some other alarm is already sending alerts, etc.)
-
-### Alarm Response Guidelines
-
-#### Unstable Alarm Response
-
-Unstable alarm response follows a gradient of urgency that depends on the level
-of scepticism/confidence we have in the alarm so far. This information must be
-recorded in the run book in the notification. Generally speaking, however,
-alerts from unstable alarms should not immediately trigger urgent investigation.
-The alarms should be triaged, reviewed by whomever notices them according to the
-run book, and then assigned to whomever is the person in charge of stabilising
-the alarm over time unless the person triaging notices that the outage severity
-warrants immediate response. Unstable alarm are not _necessarily_ inaccurate.
-They can and probably will send valid alerts, whether only occasionally or more
-reliably. However, whether an unstable alarm should be treated with critical
-urgency depends explicitly on the documented status of the alarm.
-
-To say this another way and more explicitly: unstable alarm response requires a
-nuanced and thoughtful approach to determine whether any given event is valid or
-a false positive. In either instance, it must be documented and triaged to the
-appropriate person according to the general incident response plan.
-
-#### Stable Alarm Response
-
-A stable alarm must be treated with critical urgency until severity is
-determined. Because the goal of the general incident response plan is first and
-foremost to stabilise the service and not to fix the problem, the run book
-should draw a careful distinction between any advice it might contain for
-stabilising the service in light of the alarm vs fixing the service. While some
-alarms may point to issues with likely fixes, the primary focus should be to
-give advice for stabilising the service. The incidence response afterwards will
-focus on identifying the root cause and/or potential fixes. If it makes sense
-for a run book to give advice for this, that's fine, but it should be clear
-whether that advice is relevant for the initial response intended to stabilise
-rather than fix.
 
 ### Uncertain Terms
 
@@ -387,6 +404,16 @@ Each service should have a CloudWatch alarm that alerts if the Target Group
 }
 ```
 
+```{important}
+The `UnHealthyHostCount` alarm is the only alarm in this implementation plan
+that should be implemented for staging. The reason we _can_ implement this for
+staging and the others not is because this is the only metric that does not
+rely on real user behaviour to create usable numbers we can depend on for
+alert thresholds. All the other metrics used for alarms in this implementation
+plan rely on having consistent historical and ongoing data that is generated
+almost exclusively from real user interactions with our services.
+```
+
 The following alerts will each require individual tuning and research to
 determine appropriate thresholds, downtime, evaluation time periods, and
 time-to-alarm.
@@ -439,14 +466,19 @@ glance, I don't think the cost would be tremendous for the metric as our log
 data each month is relatively low (<10 GB per month).
 
 As I said, if reviewers think we should go ahead with this, I can develop the
-query and add it to this implementation plan.
+query and add it to this implementation plan. However, I think it's best to
+start with this initial set of alarms and explore Logs Insights-based metric
+alarms at a later date. We have heaps of metrics aside from route specific
+timings I would love to even just have dashboard widgets for, like ES response
+time, ES query counts, average pagination query counts, dead link query time,
+etc.
 
 ### Composite Alarms
 
-Some of the alarms described above are likely to go off at the same time due to
-their interrelated nature, like p99 and average response time anomalies for a
-given route. This can be distressing. To prevent multiple, duplicative alarms
-(without reducing alarm accuracy), we can use a
+Some alarms described above are likely to go off at the same time due to their
+interrelated nature, like p99 and average response time anomalies for a given
+route. This can be distressing. To prevent multiple, duplicative alarms (without
+reducing alarm accuracy), we can use a
 [composite alarm](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html)
 to send an alert when any of the relevant alarms go off without sending multiple
 if those related alarms go off in the same time period. If a composite alarm is
@@ -457,6 +489,11 @@ relevant alarms going into the alarm state or only if a particular alarm is
 alarming on its own (i.e., only if some other relevant alarm _isn't_ alarming).
 Composite alarms allow us flexibility to decide when precisely we need to send a
 new alert so that we can reduce noise.
+
+I haven't made a specific recommendation to use composite alarms anywhere in
+this implementation plan because it will be dependent on the observed behaviour
+of the alarm over time. I want to avoid applying complicated conditions too
+eagerly to the alarms if we can avoid it.
 
 ## Outlined Steps
 
@@ -469,11 +506,16 @@ new alert so that we can reduce noise.
    - Also create the new SNS topic for the unstable alerts' notification channel
    - Create the unhealthy host count alarm for API and frontend services
      - This serves as a proof of functionality for any infrastructure changes
-       from the first step
+       from this first step
 1. Create each of the rest of the alarms. Each service will have distinct issues
    for response time alarms and response count alarms. This allows the chance
    for multiple people to work on alarm development and prevents alarms of
    potentially differing complexity to block each other.
+
+A note should be added to all issues created for this implementation plan that
+it is probably easier to develop the metric queries and alarm configurations in
+the AWS Dashboard and then export them into our Terraform configuration after
+the initial iteration.
 
 ## Parallelizable streams
 
