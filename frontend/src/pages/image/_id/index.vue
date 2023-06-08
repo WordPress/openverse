@@ -15,6 +15,7 @@
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
+        @contextmenu="handleRightClick(image.identifier)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -82,7 +83,7 @@
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { defineComponent, useRoute } from "@nuxtjs/composition-api"
+import { defineComponent } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
@@ -92,6 +93,7 @@ import { useSingleResultStore } from "~/stores/media/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
+import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VButton from "~/components/VButton.vue"
@@ -116,28 +118,20 @@ export default defineComponent({
     VSketchFabViewer,
     VSkipToContentContainer,
   },
-  beforeRouteEnter(to, from, next) {
-    if (from.path.includes("/search/")) {
-      to.meta.backToSearchPath = from.fullPath
-    }
-    if (from.path.includes("/search/") && to.query.q) {
-      useSearchStore().setSearchTerm(to.query.q)
-    }
-    next()
-  },
   layout: "content-layout",
+  middleware: singleResultMiddleware,
   setup() {
-    const route = useRoute()
-
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
+    const searchStore = useSearchStore()
+
     const image = computed(() =>
       singleResultStore.mediaType === IMAGE
         ? (singleResultStore.mediaItem as ImageDetail)
         : null
     )
 
-    const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
+    const backToSearchPath = computed(() => searchStore.backToSearchPath)
     const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
     const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
@@ -211,6 +205,12 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
+    const handleRightClick = (identifier: string) => {
+      sendCustomEvent("RIGHT_CLICK_IMAGE", {
+        identifier,
+      })
+    }
+
     const sendGetMediaEvent = () => {
       if (!image.value) {
         return
@@ -235,6 +235,7 @@ export default defineComponent({
       sketchFabUid,
       onImageLoaded,
       onImageError,
+      handleRightClick,
       backToSearchPath,
 
       sendGetMediaEvent,
