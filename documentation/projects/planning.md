@@ -75,8 +75,7 @@ For all active projects (anything that isn't in the `Not Started`, `Completed`,
 and `On Hold` statuses), fortnightly public updates are the best way for
 Openverse contributors and maintainers to understand the health of a project.
 Importantly, these updates allow us to allocate more time or material resources
-to projects that need them before work stalls completely. They also allow for
-identifying projects that have stalled and may need special attention, if they
+to projects that need them before work stalls completely. They also help identify projects that have stalled and may need special attention, if they
 haven't seen an update in some time.
 
 Project updates should be left as comments in the project threads by the project
