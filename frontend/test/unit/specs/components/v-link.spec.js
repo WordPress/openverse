@@ -79,6 +79,7 @@ describe("VLink custom events", () => {
   afterEach(() => {
     sendCustomEventMock.mockReset()
   })
+
   it("External link sends a custom event", async () => {
     render(VLink, {
       props: { href },
