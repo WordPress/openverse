@@ -22,7 +22,7 @@ from warcio.archiveiterator import ArchiveIterator
 
 
 BUCKET = os.environ.get("COMMONCRAWL_BUCKET", "not_set")
-COMMONSMAPPER_BUCKET = os.environ.get("COMMONSMAPPER_BUCKET", "ov-commonsmapper")
+COMMONSMAPPER_BUCKET = os.environ.get("COMMONSMAPPER_BUCKET", "not_set")
 
 class CCLinks:
     def __init__(self, _index, _ptn=2500):
