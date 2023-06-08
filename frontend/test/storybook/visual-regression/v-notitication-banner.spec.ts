@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 test.describe.configure({ mode: "parallel" })
 

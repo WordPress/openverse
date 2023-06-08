@@ -43,7 +43,7 @@ const config: PlaywrightTestConfig = {
     baseURL: "http://localhost:8443",
     trace: "retain-on-failure",
   },
-  timeout: 60 * 1e3,
+  timeout: 60 * 1e3, // 1 minute
   /**
    * When updating or recreating tapes, if we have more than one worker running
    * then Talkback is liable to see multiple requests at the same time that would

@@ -1,11 +1,12 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import {
   goToSearchTerm,
   renderModes,
   t,
 } from "~~/test/playwright/utils/navigation"
-import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
@@ -39,10 +40,6 @@ const openSingleMediaView = async (
  */
 
 test.describe("Load more button", () => {
-  test.beforeEach(async ({ context }) => {
-    await mockProviderApis(context)
-  })
-
   test("Clicking sends 2 requests on All view with enough results", async ({
     page,
   }) => {

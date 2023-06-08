@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { languageDirections, t } from "~~/test/playwright/utils/navigation"
