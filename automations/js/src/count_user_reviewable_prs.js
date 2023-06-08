@@ -25,6 +25,9 @@ module.exports = async ({ github, context, core }) => {
 query ($repoOwner: String!, $repo: String!, $cursor: String) {
   repository(name:$repo, owner:$repoOwner) {
     pullRequests(states:OPEN, first:100, after: $cursor) {
+      pageInfo {
+        endCursor
+      }
       nodes {
         author {
           login
