@@ -358,6 +358,12 @@ technicalities of the project. The issue description should contain all
 necessary information to complete the issue. This can include linking to
 specific relevant sections of the existing implementation plan(s).
 
+These issues are also an excellent place for contributors to share experiments,
+theories, and examples of potential implementations. These can come from any
+contributors and should be considered by implementation authors prior to writing
+the implementation plan. The more resources available to implementation plan
+authors before they begin work, the better the quality of our final plans.
+
 ### Implementation (`status: In Progress`)
 
 In the implementation phase, contributors begin work on the project. At this
