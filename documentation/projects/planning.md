@@ -97,8 +97,7 @@ Here are some real-life examples of useful project updates:
 
 There are automated reminders configured for these updates via a
 [daily GitHub action](https://github.com/WordPress/openverse/blob/main/.github/workflows/project_thread_update_reminders.yml)
-which comments on the project thread. The project lead is reminded (via a bot
-comment on the project) to provide an update.
+that comments on the project thread, prompting the project lead to provide an update.
 
 ## Project Lifecycle
 
