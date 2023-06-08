@@ -1,4 +1,4 @@
-# 2023-06-08 Implementation Plan: Staging Elasticsearch Reindexing DAGs
+# 2023-06-08 Implementation Plan: Staging Elasticsearch Reindex DAGs
 
 **Author**: @krysal
 
@@ -14,10 +14,11 @@
 
 ## Overview
 
-This document describes the addition of two DAGs for Elasticsearch index
+This document describes the addition of two DAGs for Elasticsearch (ES) index
 creation ––full and proportional-by-provider–– which will allow us to decouple
-the process from the extended Ingestion server's data refresh process and
-iterate faster experimenting with smaller indices.
+the process from the long Ingestion server's data refresh process and experiment
+with smaller indices. Also includes the adoption of two new index aliases for
+ease of handling the new index types.
 
 ## Expected Outcomes
 
@@ -31,10 +32,13 @@ iterate faster experimenting with smaller indices.
 Same as for
 [Implementation Plan: Update Staging Database](./20230406-implementation_plan_update_staging_database.md).
 
-This work does not depend on any other projects and can be implemented at any
-time.
+This work is related to the
+[Staging database recreation DAG](staging_db_recreation) plan for having
+production volumes in the staging DB, which is expected to finish soon.
 
-## Outlined Steps
+[staging_db_recreation]: https://github.com/WordPress/openverse/issues/1989
+
+## DAGs
 
 ### `recreate_full_<media>_index` DAG
 
@@ -49,9 +53,9 @@ time.
    index pointed by the `<media>` alias should be deleted after replacement.
    Defaults to `False`.
 
-#### Description
+#### Outlined Steps
 
-This DAG will leverage the Ingestion server's API and use the existing
+This DAG will leverage the **Ingestion server's API** and use the existing
 [`REINDEX` task](REINDEX), which is the same used by the data refresh process to
 create the index.
 
@@ -71,33 +75,93 @@ create the index.
 [delete_index]:
   https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/catalog/dags/data_refresh/data_refresh_task_factory.py#L222-L239
 
+<!--------------------------------------------------------------------------->
+
 ### `create_proportional_by_provider_<media>_index` DAG
 
+This DAG is intented to be used most likely with the index resulting from the
+previous DAG or from the data refresh process, that is, an index with the
+database fully indexed, as the `source_index` for the ES
+[Reindex](es_reindex_api) API.
+
+[es_reindex_api]:
+  https://www.elastic.co/guide/en/elasticsearch/reference/7.12/docs-reindex.html
+
 #### Parameters
+
+1. `media_type`: The media type for which the index is being created. Presently
+   this would only be `image` or `audio`.
+2. `source_index`: (Optional) The existing index on Elasticsearch to use as the
+   basis for the new index. If not provided, the index aliased to
+   `<media_type>-full` will be used.
+3. `percentage_of_production`: The proportion of items to take from each
+   provider from the total amount existing in production.
+
+#### Outlined Steps
+
+1. Get the list of media count by sources from the production Openverse API
+   [`https://api.openverse.engineering/v1/<media>/stats/`](https://api.openverse.engineering/v1/<media>/stats/)
+2. Calculate the total media adding up all the counts by provider
+3. Calculate the name of the new index with the following format:
+
+```python
+ f"{media_type}-{percentage_of_production}-percent-of-providers-{current_datetime}"
+```
+
+4. Make a dictionary mapping all the providers with the required amount of items
+   for the new index based on the provided `percentage_of_production` param.
+5. Iterate over the items of the resulting dictionary to index the subset of
+   each provider.
+
+```json
+POST _reindex?wait_for_completion=false
+{
+  "max_docs": num_items,
+  "source": {
+    "index": "image-full",
+    "query": {
+      "term": {
+        "source.keyword": "stocksnap"
+      }
+    }
+  },
+  "dest": {
+    "index": "image-50-percent-of-providers-20230608183000"
+  }
+}
+```
+
+6. Make the alias `<media>-subset-by-provider` point to the new index.
+7. Optionally. Query the stats of the resulting infex and print the results.
+
+```
+GET /image-reindexed-by-provider/_stats
+```
 
 ## Alternatives
 
 <!-- Describe any alternatives considered and why they were not chosen or recommended. -->
 
-## Parallelizable streams
+💭
 
-<!-- What, if any, work within this plan can be parallelized? -->
+## Parallelizable streams
 
 Both DAGs can be developed in parallel.
 
 ## Blockers
 
-<!-- What hard blockers exist which might prevent further work on this project? -->
-
 There is nothing currently blocking the implementation of this proposal.
 
+<!--
 ## Accessibility
 
-<!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+ Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
 
 ## Rollback
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
+
+🤔
 
 ## Risks
 
@@ -111,3 +175,5 @@ where this impact the cluster performance.
 ## Prior art
 
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+
+- [Script which added 100 records per provider into the testing ECS database](https://github.com/WordPress/openverse-infrastructure/pull/314)
