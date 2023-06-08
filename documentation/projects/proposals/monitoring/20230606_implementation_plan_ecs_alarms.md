@@ -84,8 +84,8 @@ This list of terms attempts to match AWS's own terminology. Personally I find
 some of these confusing[^alarms-in-alarm], but in the interest of reducing the
 cognitive overhead of switching between our documentation and CloudWatch, I've
 chosen to use these terms anyway. Others may be somewhat colloquial or casual
-jargon[^going-off], but they are commonly used in the field and other turns of
-phrase are much clumsier, so I've opted to use them as well.
+jargon[^going-off], but I've opted to use them as well because they are commonly
+used in the field and alternative turns of phrase are much clumsier.
 
 [^alarms-in-alarm]:
     "Alarms in alarm" baffles me. I've made several editorial passes to this
@@ -133,36 +133,37 @@ phrase are much clumsier, so I've opted to use them as well.
 
 ```{note}
 I use "alarm" throughout this document as a synonym for "alarms that send alerts".
-This nuance is necessary because not all alarms individually send alerts, as
-composite alarms may group multiple individual alarms to reduce noise or duplication.
+For the purposes of this implementation plan, all alarms either trigger alert actions
+themselves or are constiuents in composite alarms that in turn trigger alert actions.
+Where relevant, I have tried to clarify which alarms should trigger the alert actions.
 ```
 
 ## Overview
 
 ### Terraform Configuration
 
-Alarms must be considered per-environment and per-service. It is highly unlikely
-that alarm configuration can be shared between environments or services. Even if
-it were possible, it would be undesirable as it would reduce flexibility in the
-face of future changes to metric characteristics. In light of this, alarms will
-be configured in a new monitoring namespace in the `next/modules` directory
-within the concrete modules for services as internal submodules and will be
-named after the service and environment they monitor. For example, Django API
-monitoring configuration would go in `/modules/monitoring/production-api` and be
-instantiated in the production root module in `api.tf`:
+Alarms must be considered per-environment and per-service. With few exceptions,
+it is highly unlikely that alarm configuration can be shared between
+environments or services. In light of this, alarms will be configured in a new
+monitoring namespace in the `next/modules` directory within the concrete modules
+for services as internal submodules and will be named after the service and
+environment they monitor. For example, Django API monitoring configuration would
+go in `/modules/monitoring/production-api` and be instantiated in the production
+root module in `api.tf`:
 
 ```terraform
 module "api-monitoring" {
    source = "../modules/monitoring/production-api"
+
+   # ... relevant inputs
 }
 ```
 
 New modules for each service/environment help to prevent an increase in root
 module complexity. In order to consolidate monitoring configuration, the
-existing `service-monitors` instances, which configure UptimeRobot for our
-services, will be moved into these new monitoring modules. Likewise, existing
-RDS and Elasticsearch monitors, if present in the `next` root modules, should
-also be moved.
+existing `service-monitors` instances, which configure UptimeRobot, will be
+moved into these new monitoring modules. Likewise, existing RDS and
+Elasticsearch monitors present in the `next` root modules should be moved.
 
 ```{note}
 The CloudWatch Dashboards that collect all metrics for `next` root module services
@@ -171,32 +172,6 @@ in the root module and keeping it in the root module level allows us to easily s
 documentation relevant for all services and simplify the configuration as proposed
 in [WordPress/openverse-infrastructure #472](https://github.com/WordPress/openverse-infrastructure/issues/472).
 ```
-
-I also considered using nested internal modules. In that form, production Django
-API alarms would be configured in
-`/modules/concrete/api/modules/production-monitoring/main.tf`. The concrete
-service modules would use `count` on the module block (a recently available
-Terraform feature) to instantiate the correct monitoring block for the
-environment:
-
-```terraform
-// /modules/concrete/<service>/main.tf
-
-module "production-monitoring" {
-   source = "./modules/production-monitoring"
-   count = var.environment == "production" ? 1 : 0
-}
-
-module "staging-monitoring" {
-   source = "./modules/staging-monitoring"
-   count = var.environment == "staging" ? 1 : 0
-}
-```
-
-Nesting the configuration in the concrete service module helps to further reduce
-the complexity of the root modules. However, it may also inadvertently hide the
-monitoring configuration for the module, which may in the end be more confusing
-for maintainers.
 
 We will need at least one new SNS topic for unstable alarms to send
 notifications to a channel specific for unstable alarms. Separate notification
