@@ -79,8 +79,7 @@ to projects that need them before work stalls completely. They also help identif
 haven't seen an update in some time.
 
 Project updates should be left as comments in the project threads by the project
-lead or anyone working on a project. If you merge or a significant update to a
-project, or identify a bug that impacts an open project, please leave an update!
+lead or anyone working on a project. If you merge a significant PR related to the project or identify a bug that impacts an open project, please leave an update!
 Even if the update is "the project is blocked." or "No developments this week.",
 the updates should still be posted. This removes ambiguity for folks visiting
 the project, avoiding questions like "I don't see an update this week; is it
