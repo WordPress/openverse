@@ -75,15 +75,17 @@ For all active projects (anything that isn't in the `Not Started`, `Completed`,
 and `On Hold` statuses), fortnightly public updates are the best way for
 Openverse contributors and maintainers to understand the health of a project.
 Importantly, these updates allow us to allocate more time or material resources
-to projects that need them before work stalls completely. They also help identify projects that have stalled and may need special attention, if they
+to projects that need them before work stalls completely. They also help
+identify projects that have stalled and may need special attention, if they
 haven't seen an update in some time.
 
 Project updates should be left as comments in the project threads by the project
-lead or anyone working on a project. If you merge a significant PR related to the project or identify a bug that impacts an open project, please leave an update!
-Even if the update is "the project is blocked." or "No developments this week.",
-the updates should still be posted. This removes ambiguity for folks visiting
-the project, avoiding questions like "I don't see an update this week; is it
-being worked on or not?"
+lead or anyone working on a project. If you merge a significant PR related to
+the project or identify a bug that impacts an open project, please leave an
+update! Even if the update is "the project is blocked." or "No developments this
+week.", the updates should still be posted. This removes ambiguity for folks
+visiting the project, avoiding questions like "I don't see an update this week;
+is it being worked on or not?"
 
 These updates are useful for folks checking in on a project but also for the
 project lead. It's an opportunity to _reflect on_ the status of the project and
@@ -97,7 +99,8 @@ Here are some real-life examples of useful project updates:
 
 There are automated reminders configured for these updates via a
 [daily GitHub action](https://github.com/WordPress/openverse/blob/main/.github/workflows/project_thread_update_reminders.yml)
-that comments on the project thread, prompting the project lead to provide an update.
+that comments on the project thread, prompting the project lead to provide an
+update.
 
 ## Project Lifecycle
 
