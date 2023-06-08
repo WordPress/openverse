@@ -47,7 +47,7 @@ export type Events = {
    *     when not paired with a `GET_MEDIA` event?
    */
   RIGHT_CLICK_IMAGE: {
-    identifier: string
+    id: string
   }
   /**
    * Click on the 'back to search' link on a single result
