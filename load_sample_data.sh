@@ -62,13 +62,6 @@ docker-compose exec -T "$DB_SERVICE_NAME" bash -c "psql <<-EOF
 # Ingestion #
 #############
 
-# Load search quality assurance data.
-just ingestion_server/load-test-data "audio"
-sleep 2
-
-just ingestion_server/load-test-data "image"
-sleep 2
-
 # Ingest and index the data
 just ingestion_server/ingest-upstream "audio" "init"
 just docker/es/wait-for-index "audio-init"
