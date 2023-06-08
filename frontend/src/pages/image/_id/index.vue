@@ -15,7 +15,7 @@
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
-        @contextmenu="handleRightClick(image.identifier)"
+        @contextmenu="handleRightClick(image.id)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -38,6 +38,7 @@
         :external-icon-size="6"
         has-icon-end
         size="large"
+        :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
         {{ $t("image-details.weblink") }}
@@ -56,6 +57,8 @@
                 })
               "
               :href="image.creator_url"
+              :send-external-link-click-event="false"
+              @click="sendVisitCreatorLinkEvent"
               >{{ image.creator }}</VLink
             >
             <span v-else>{{ image.creator }}</span>
@@ -205,9 +208,9 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleRightClick = (identifier: string) => {
+    const handleRightClick = (id: string) => {
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
-        identifier,
+        id,
       })
     }
 
@@ -219,6 +222,16 @@ export default defineComponent({
         id: image.value.id,
         provider: image.value.provider,
         mediaType: IMAGE,
+      })
+    }
+
+    const sendVisitCreatorLinkEvent = () => {
+      if (!image.value) {
+        return
+      }
+      sendCustomEvent("VISIT_CREATOR_LINK", {
+        id: image.value.id,
+        url: image.value.creator_url,
       })
     }
 
@@ -239,6 +252,7 @@ export default defineComponent({
       backToSearchPath,
 
       sendGetMediaEvent,
+      sendVisitCreatorLinkEvent,
     }
   },
   async asyncData({ app, error, route, $pinia }) {
