@@ -82,10 +82,9 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       pr_count: reviewablePRs.length,
       slack_id: slackID,
     }
-
-    core.info('Found user')
     core.info(JSON.stringify(result))
-    return result
+    core.setOutput('pr_count', result.pr_count)
+    core.setOutput('slack_id', result.slack_id)
   } catch (error) {
     core.setFailed(`Error fetching pull requests: ${error.message}`)
   }
