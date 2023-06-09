@@ -1,4 +1,6 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import {
   assertCheckboxStatus,
@@ -7,8 +9,6 @@ import {
   isPageDesktop,
   filters,
 } from "~~/test/playwright/utils/navigation"
-
-import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -42,9 +42,6 @@ const FILTER_COUNTS = {
 }
 
 breakpoints.describeMobileAndDesktop(() => {
-  test.beforeEach(async ({ context }) => {
-    await mockProviderApis(context)
-  })
   for (const searchType of supportedSearchTypes) {
     test(`correct total number of filters is displayed for ${searchType}`, async ({
       page,

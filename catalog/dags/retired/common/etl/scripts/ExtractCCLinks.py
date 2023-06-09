@@ -22,7 +22,7 @@ from warcio.archiveiterator import ArchiveIterator
 
 
 BUCKET = os.environ.get("COMMONCRAWL_BUCKET", "not_set")
-
+COMMONSMAPPER_BUCKET = os.environ.get("COMMONSMAPPER_BUCKET", "not_set")
 
 class CCLinks:
     def __init__(self, _index, _ptn=2500):
@@ -56,7 +56,7 @@ class CCLinks:
         self.url = "https://{}.s3.amazonaws.com/crawl-data/{}/wat.paths.gz".format(
             BUCKET, self.crawlIndex
         )
-        self.output = f"s3://commonsmapper-v2/output/{self.crawlIndex}"
+        self.output = f"s3://{COMMONSMAPPER_BUCKET}/output/{self.crawlIndex}"
 
     def loadWATFile(self):
         # load the WAT file paths

@@ -23,15 +23,22 @@ run using a different hook:
 
 import logging
 from datetime import datetime, timedelta
+from textwrap import dedent as d
 
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import (
+    AWS_RDS_CONN_ID,
+    DAG_DEFAULT_ARGS,
+    POSTGRES_API_STAGING_CONN_ID,
+)
+from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
+    deploy_staging,
     get_latest_prod_snapshot,
     get_staging_db_details,
     make_rds_sensor,
@@ -114,11 +121,6 @@ def restore_staging_database():
         "now be available. Please investigate the cause of the failure."
     )
     rename_temp_to_staging >> rename_old_to_staging >> notify_failed_but_back
-
-    notify_complete = notify_slack.override(task_id="notify_complete")(
-        ":info: Staging database restore complete, staging should now be available.",
-    )
-
     delete_old = RdsDeleteDbInstanceOperator(
         task_id="delete_old",
         db_instance_identifier=constants.OLD_IDENTIFIER,
@@ -127,7 +129,29 @@ def restore_staging_database():
         wait_for_completion=True,
     )
 
-    rename_temp_to_staging >> [notify_complete, delete_old]
+    rename_temp_to_staging >> delete_old
+
+    notify_complete = notify_slack.override(task_id="notify_complete")(
+        ":info: Staging database restore complete, staging should now be available.",
+    )
+
+    # Truncate the oauth tables, the cascade ensures all related tables are truncated
+    truncate_tables = PGExecuteQueryOperator(
+        task_id="truncate_oauth_tables",
+        sql=d(
+            """
+            TRUNCATE TABLE api_throttledapplication RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE api_oauth2registration RESTART IDENTITY CASCADE;
+            """
+        ),
+        postgres_conn_id=POSTGRES_API_STAGING_CONN_ID,
+        execution_timeout=timedelta(minutes=5),
+    )
+
+    # Deploy the latest API package to staging
+    execute_deploy = deploy_staging()
+
+    rename_temp_to_staging >> [truncate_tables, execute_deploy] >> notify_complete
 
 
 restore_staging_database()

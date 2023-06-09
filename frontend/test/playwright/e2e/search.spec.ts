@@ -6,9 +6,10 @@
  * When pending: does not show 'No images', Safer Browsing, search rating or error message
  * On error: shows error message
  */
-import { expect, test } from "@playwright/test"
+import { expect } from "@playwright/test"
 
-import { mockProviderApis } from "~~/test/playwright/utils/route"
+import { test } from "~~/test/playwright/utils/test-fixture"
+
 import {
   goToSearchTerm,
   scrollToBottom,
@@ -16,10 +17,6 @@ import {
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
-
-test.beforeEach(async ({ context }) => {
-  await mockProviderApis(context)
-})
 
 test("shows no results page when no results", async ({ page }) => {
   await page.goto("/search/image?q=243f6a8885a308d3")

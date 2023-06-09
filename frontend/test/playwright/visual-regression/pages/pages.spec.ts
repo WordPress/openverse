@@ -1,4 +1,6 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { removeHiddenOverflow } from "~~/test/playwright/utils/page"

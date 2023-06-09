@@ -69,10 +69,6 @@ _curl-post data host="localhost:50281":
       -w "\n" \
       'http://{{ host }}/task'
 
-# Load QA data into QA indices in Elasticsearch
-load-test-data model="image":
-    just _curl-post '{"model": "{{ model }}", "action": "LOAD_TEST_DATA"}'
-
 # Load sample data into temp table in API and new index in Elasticsearch
 ingest-upstream model="image" suffix="init":
     just _curl-post '{"model": "{{ model }}", "action": "INGEST_UPSTREAM", "index_suffix": "{{ suffix }}"}'
