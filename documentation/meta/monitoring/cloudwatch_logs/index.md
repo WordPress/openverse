@@ -239,7 +239,7 @@ time they are executed. You can minimise costs in the following ways:
   to reduce the number of log lines processed during each iteration. Avoid
   searching the full relevant data set until you're confident that the query
   works and extracts the data you expect.
-- When trying to find examples of specific queries, use `limit` with a very low
+- When trying to find examples of specific logs, use `limit` with a very low
   number. If you just need one example, use `limit 1`. If you need multiple, try
   to keep the number low. This is especially useful when developing `parse`
   statements.
