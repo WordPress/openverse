@@ -140,7 +140,11 @@ Once the parameters are provided, the DAG will execute the following steps:
    currently underway. This can be done by checking whether the
    `{media_type}_data_refresh` and `create_filtered_{media_type}_index` DAGs are
    currently running. If either of them are, this DAG should fail immediately
-   with an appropriate error message.
+   with an appropriate error message. **Note**: We will also need to add the
+   `create_new_es_index_production` DAG to the checks prior to running the data
+   refresh (where `create_filtered_{media_type}_index` is currently checked) in
+   the `image_data_refresh` and `audio_data_refresh` DAGs. This will prevent the
+   data refresh from running concurrently while the new index is being created.
 2. Create the index configuration. If `override_config` is supplied, the
    `index_config` parameter will be used as the entire configuration. If not,
    the `index_config` parameter will be merged with the existing index settings.
