@@ -66,7 +66,8 @@ for (const dir of languageDirections) {
         )
       })
 
-      test("searchbar active", async ({ page }) => {
+      // Skipping flaky test: https://github.com/WordPress/openverse/issues/2357
+      test.skip("searchbar active", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
           await filters.close(page)
         }
