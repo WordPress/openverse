@@ -46,7 +46,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
   const ignoredLabels = [
     '🤖 aspect: text',
     '🧱 stack: documentation',
-    'priority: critical',
+    '🟥 priority: critical',
   ]
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
 
