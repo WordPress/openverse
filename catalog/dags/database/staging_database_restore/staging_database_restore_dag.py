@@ -23,13 +23,19 @@ run using a different hook:
 
 import logging
 from datetime import datetime, timedelta
+from textwrap import dedent as d
 
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import (
+    AWS_RDS_CONN_ID,
+    DAG_DEFAULT_ARGS,
+    POSTGRES_API_STAGING_CONN_ID,
+)
+from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
     get_latest_prod_snapshot,
@@ -128,6 +134,21 @@ def restore_staging_database():
     )
 
     rename_temp_to_staging >> [notify_complete, delete_old]
+
+    # Truncate the oauth tables, the cascade ensures all related tables are truncated
+    truncate_tables = PGExecuteQueryOperator(
+        task_id="truncate_oauth_tables",
+        sql=d(
+            """
+            TRUNCATE TABLE api_throttledapplication RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE api_oauth2registration RESTART IDENTITY CASCADE;
+            """
+        ),
+        postgres_conn_id=POSTGRES_API_STAGING_CONN_ID,
+        execution_timeout=timedelta(minutes=5),
+    )
+
+    rename_temp_to_staging >> truncate_tables
 
 
 restore_staging_database()

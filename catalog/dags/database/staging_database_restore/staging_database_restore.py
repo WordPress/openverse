@@ -26,8 +26,8 @@ REQUIRED_DB_INFO = {
     "PubliclyAccessible",
     "DBInstanceClass",
     "AllocatedStorage",
+    "CopyTagsToSnapshot",
 }
-
 
 log = logging.getLogger(__name__)
 
