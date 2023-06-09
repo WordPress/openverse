@@ -82,7 +82,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       pr_count: reviewablePRs.length,
       slack_id: slackID,
     }
-    core.info(JSON.stringify(result))
+    core.info(`Current user has ${result.pr_count} PR(s).`)
     core.setOutput('pr_count', result.pr_count)
     core.setOutput('slack_id', result.slack_id)
   } catch (error) {
