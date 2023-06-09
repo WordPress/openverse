@@ -3,6 +3,8 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { warn } from "~/utils/console"
 import { AUDIO, IMAGE } from "~/constants/media"
 
+import { userAgent } from "~/utils/user-agent"
+
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
 /**
@@ -90,10 +92,15 @@ export const createApiService = ({
   const axiosParams: AxiosRequestConfig = {
     baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
+    headers: { "User-Agent": userAgent },
   }
+
   if (accessToken) {
-    axiosParams.headers = { Authorization: `Bearer ${accessToken}` }
+    if (axiosParams.headers) {
+      axiosParams.headers["Authorization"] = `Bearer ${accessToken}`
+    }
   }
+
   const client = axios.create(axiosParams)
   client.interceptors.request.use(function (config) {
     validateRequest(

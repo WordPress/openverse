@@ -101,6 +101,7 @@
      */
     "src/constants/**/*",
     "src/server-middleware/healthcheck.js",
+    "src/utils/user-agent.js",
     /** End of non TypeScript files section */
     "**/*.json"
   ],
