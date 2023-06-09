@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 from pprint import pformat
 
-from airflow.decorators import task
+from airflow.decorators import task, task_group
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.sensors.rds import RdsDbSensor
@@ -11,9 +11,11 @@ from airflow.utils.trigger_rule import TriggerRule
 
 from common import slack
 from common.constants import AWS_RDS_CONN_ID
+from common.github import GitHubAPI
 from database.staging_database_restore import constants
 from database.staging_database_restore.utils import (
     ensure_mutate_allowed,
+    setup_github,
     setup_rds_hook,
 )
 
@@ -207,3 +209,43 @@ def make_rename_task_group(
         rename >> await_rename
 
     return rename_group
+
+
+@task
+@setup_github
+def get_latest_api_package_version(github: GitHubAPI = None) -> str:
+    """Get the latest version of the API package from GitHub."""
+    versions = github.get_package_versions("openverse-api")
+    tags = set(versions[0]["metadata"]["container"]["tags"])
+    # There might actually be more than one tag here, but since they all point
+    # to the same build we don't care which is used.
+    latest_version = sorted(tags - {"latest"})[0]
+    log.info(f"Found latest version: {latest_version}")
+    if not ("latest" in tags or latest_version.startswith("rel-")):
+        raise ValueError(
+            f"Latest version is not a release or not marked with 'latest': "
+            f"{latest_version}"
+        )
+
+    return latest_version
+
+
+@task
+@setup_github
+def dispatch_deploy(latest_version: str, github: GitHubAPI = None) -> None:
+    """Dispatch the workflow for the staging API deployment."""
+    github.dispatch_workflow(
+        "openverse-infrastructure",
+        "deploy-staging-api.yml",
+        {
+            "tag": latest_version,
+            "run_name": f"staging database restore - {latest_version}",
+        },
+    )
+
+
+@task_group(group_id="deploy_staging")
+def deploy_staging() -> None:
+    """Deploy the latest version of the API package to staging."""
+    latest_version = get_latest_api_package_version()
+    dispatch_deploy(latest_version)

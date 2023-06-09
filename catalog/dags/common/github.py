@@ -87,3 +87,23 @@ class GitHubAPI:
             "GET",
             f"repos/{owner}/{repo}/branches/{branch}/protection",
         )
+
+    def get_package_versions(self, package: str, owner: str = "WordPress"):
+        return self._make_request(
+            "GET",
+            f"orgs/{owner}/packages/container/{package}/versions",
+        )
+
+    def dispatch_workflow(
+        self,
+        repo: str,
+        workflow_id: str,
+        inputs: dict = None,
+        ref: str = "main",
+        owner: str = "WordPress",
+    ):
+        return self._make_request(
+            "POST",
+            f"repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
+            json={"inputs": inputs or {}, "ref": ref},
+        )

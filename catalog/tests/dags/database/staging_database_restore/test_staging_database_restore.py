@@ -9,6 +9,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from catalog.tests.dags.database.staging_database_restore.data import (
     DESCRIBE_DB_INSTANCES_RESPONSE,
 )
+from common.github import GitHubAPI
 from database.staging_database_restore import staging_database_restore
 
 
@@ -18,6 +19,11 @@ REFERENCE_DATE = datetime(2021, 1, 1, 0, 0, 0)
 @pytest.fixture
 def mock_rds_hook() -> RdsHook:
     return mock.MagicMock(spec=RdsHook)
+
+
+@pytest.fixture
+def mock_github() -> GitHubAPI:
+    return mock.MagicMock(spec=GitHubAPI)
 
 
 @pytest.mark.parametrize("should_skip", [True, False])
@@ -109,3 +115,45 @@ def test_make_rename_task_group():
     # This should not be affected by the trigger rule
     assert await_rename.trigger_rule == TriggerRule.ALL_SUCCESS
     assert await_rename.retries == 2
+
+
+@pytest.mark.parametrize(
+    "tags, expected",
+    [
+        (
+            ["11926a78cfe8ca150fe6d232a5689141c35417d1", "latest"],
+            "11926a78cfe8ca150fe6d232a5689141c35417d1",
+        ),
+        (
+            ["rel-2023.05.30.17.57.04", "latest"],
+            "rel-2023.05.30.17.57.04",
+        ),
+        (
+            ["rel-2023.05.30.17.57.04"],
+            "rel-2023.05.30.17.57.04",
+        ),
+        (
+            [
+                "11926a78cfe8ca150fe6d232a5689141c35417d1",
+                "2e82df0105a94f7b85c48321fc3e05c23edc49bd",
+                "latest",
+            ],
+            "11926a78cfe8ca150fe6d232a5689141c35417d1",
+        ),
+        pytest.param(
+            ["11926a78cfe8ca150fe6d232a5689141c35417d1"],
+            None,
+            marks=pytest.mark.raises(
+                exception=ValueError, match="Latest version is not"
+            ),
+        ),
+    ],
+)
+def test_get_latest_api_package_version(tags, expected, mock_github):
+    mock_github.get_package_versions.return_value = [
+        {"metadata": {"container": {"tags": tags}}}
+    ]
+    actual = staging_database_restore.get_latest_api_package_version.function(
+        github=mock_github
+    )
+    assert actual == expected
