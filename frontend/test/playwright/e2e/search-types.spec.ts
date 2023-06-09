@@ -1,10 +1,11 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import {
   changeSearchType,
   goToSearchTerm,
 } from "~~/test/playwright/utils/navigation"
-import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 import { searchPath } from "~/constants/media"
@@ -95,10 +96,6 @@ async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
 
 test.describe("search types", () => {
   breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
-      await mockProviderApis(context)
-    })
-
     for (const searchType of searchTypes) {
       test(`Can open ${searchType.name} search page on SSR`, async ({
         page,
