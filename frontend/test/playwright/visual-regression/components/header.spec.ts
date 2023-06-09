@@ -75,9 +75,13 @@ for (const dir of languageDirections) {
           ? page
           : page.locator(headerSelector)
 
-        await page.addStyleTag({ content: "#search-bar{background: red}" })
-
-        // To catch any latency with SVGs rendering
+        // Attempt to wait for SVGs to fully load. This aims to prevent
+        // previously-identified flake in this test but as it deals with
+        // a very subtle SVG sprite rendering issue this may not fully
+        // address the issue, or may indirectly address the issue rather
+        // than truly fix the core problem.
+        //
+        // See: https://github.com/WordPress/openverse/issues/2357
         await page.waitForLoadState("load")
 
         await !expectSnapshot(`searchbar-active-${dir}`, locator)
