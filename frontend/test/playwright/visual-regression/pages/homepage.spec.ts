@@ -59,13 +59,15 @@ for (const dir of languageDirections) {
           )
         })
 
-        test("content switcher open", async ({ page }) => {
+        // @todo Fix flaky test: https://github.com/WordPress/openverse/issues/2377
+        test.skip("content switcher open", async ({ page }) => {
           await page.locator("#search-type-button").click()
 
           await expectSnapshot(`content-switcher-open-${dir}`, page)
         })
 
-        test("content switcher with external sources open", async ({
+        // @todo Fix flaky test: https://github.com/WordPress/openverse/issues/2377
+        test.skip("content switcher with external sources open", async ({
           page,
         }) => {
           await page.goto(pathWithDir("/?ff_additional_search_types=on", dir))
