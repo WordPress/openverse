@@ -65,10 +65,10 @@ module.exports = async ({ github, core }) => {
     const isDryRun = process.env.DRY_RUN === 'true' ?? false
 
     const currentDate = new Date()
+    // Create a date by subtracting DAYS_UPDATED_WITHIN days
+    // (converted to milliseconds) from the current date in milliseconds.
     const requiredUpdatedByDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate() - DAYS_UPDATED_WITHIN
+      currentDate.getTime() - DAYS_UPDATED_WITHIN * 24 * 60 * 60 * 1000
     )
 
     // Fetch project cards with their associated issue data
