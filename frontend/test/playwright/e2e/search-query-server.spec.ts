@@ -1,4 +1,6 @@
-import { test, expect } from "@playwright/test"
+import { expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test-fixture"
 
 import {
   assertCheckboxStatus,
@@ -7,7 +9,6 @@ import {
   goToSearchTerm,
   searchTypeNames,
 } from "~~/test/playwright/utils/navigation"
-import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -29,10 +30,6 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("search query on SSR", () => {
   breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
-      await mockProviderApis(context)
-    })
-
     test("q query parameter is set as the search term", async ({ page }) => {
       await goToSearchTerm(page, "cat", {
         query: "license=cc0&license_type=commercial&searchBy=creator",
