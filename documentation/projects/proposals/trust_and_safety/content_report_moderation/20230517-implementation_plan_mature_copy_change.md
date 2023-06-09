@@ -105,12 +105,17 @@ the following steps will need to be taken:
    copied.
 5. Deploy this version of the API and run the data management command until no
    more rows need to be copied for each of the columns.
-6. Remove all code references to the old model from the API, but leave the
+6. Modify the ingestion server to use the new tables as reference for
+   determining mature status. Specifically the
+   [`exists_in_mature` table check](https://github.com/WordPress/openverse/blob/765a24028baa922b27fc0c38b8ae4c69902eec40/ingestion_server/ingestion_server/queries.py#L33-L37)
+   (this will necessarily involve updating tests and initialization SQL as
+   well).
+7. Remove all code references to the old model from the API, but leave the
    models in place for the time being. Data should now only be written to and
    read from the new tables.
-7. Deploy this version of the API so that the only versions currently deployed
+8. Deploy this version of the API so that the only versions currently deployed
    are writing to the new tables.
-8. Remove the old models (`MatureImage`, `MatureAudio`, `NsfwReport`,
+9. Remove the old models (`MatureImage`, `MatureAudio`, `NsfwReport`,
    `NsfwReportAudio`) from the API codebase and deploy this version of the API.
    This will remove the old tables from the database.
 
@@ -204,9 +209,9 @@ which no longer exists.
 
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
-This work will include several migrations for the API, which will need to be
-deployed one after another in production as described in
-[the API section](#api).
+This work will include several migrations for the API as well as a deployment
+for the ingestion server, which will need to be deployed one after another in
+production as described in [the API section](#api).
 
 ### Tools & packages
 
@@ -234,7 +239,10 @@ No design work should be necessary.
 The frontend copy work and the API copy & code work can be done simultaneously.
 The frontend code work should wait until the API work is complete so the content
 reporting using `sensitive` rather than `mature` is available on the API prior
-to the frontend code changes.
+to the frontend code changes. It will also need to take into account and
+coordinate with the changes being made as part of the
+["Fetching, blurring sensitive results"](https://docs.openverse.org/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html)
+implementation.
 
 ## Blockers
 
