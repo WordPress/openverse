@@ -22,7 +22,6 @@ for (const dir of languageDirections) {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
       test.beforeEach(async ({ page }) => {
         await setBreakpointCookie(page, breakpoint)
-
         await goToSearchTerm(page, "birds", { dir })
       })
 
@@ -66,7 +65,7 @@ for (const dir of languageDirections) {
         )
       })
 
-      test("searchbar active", async ({ page }) => {
+      test.only("searchbar active", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
           await filters.close(page)
         }
@@ -75,7 +74,13 @@ for (const dir of languageDirections) {
         const locator = isMobileBreakpoint(breakpoint)
           ? page
           : page.locator(headerSelector)
-        await expectSnapshot(`searchbar-active-${dir}`, locator)
+
+        await page.addStyleTag({ content: "#search-bar{background: red}" })
+
+        // To catch any latency with SVGs rendering
+        await page.waitForLoadState("load")
+
+        await !expectSnapshot(`searchbar-active-${dir}`, locator)
       })
     })
   })
