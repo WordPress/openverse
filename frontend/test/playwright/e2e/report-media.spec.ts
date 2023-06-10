@@ -1,7 +1,6 @@
-import { expect, Page, BrowserContext } from "@playwright/test"
+import { test, expect, Page, BrowserContext } from "@playwright/test"
 
-import { test } from "~~/test/playwright/utils/test-fixture"
-
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   openFirstResult,
@@ -80,6 +79,10 @@ const submitOtherReport = async (page: Page, context: BrowserContext) => {
   const response = await submitApiReport(page)
   return expect(response.status()).toBe(200)
 }
+
+test.beforeEach(async ({ context }) => {
+  await mockProviderApis(context)
+})
 
 const reports = {
   dmca: submitDmcaReport,

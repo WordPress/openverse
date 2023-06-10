@@ -1,6 +1,4 @@
-import { expect } from "@playwright/test"
-
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { expect, test } from "@playwright/test"
 
 test.describe.configure({ mode: "parallel" })
 const wrapperLocator = ".wrapper"

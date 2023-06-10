@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test, Page } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
@@ -8,8 +8,6 @@ import {
   languageDirections,
   pathWithDir,
 } from "~~/test/playwright/utils/navigation"
-
-import type { Page } from "@playwright/test"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -59,15 +57,13 @@ for (const dir of languageDirections) {
           )
         })
 
-        // @todo Fix flaky test: https://github.com/WordPress/openverse/issues/2377
-        test.skip("content switcher open", async ({ page }) => {
+        test("content switcher open", async ({ page }) => {
           await page.locator("#search-type-button").click()
 
           await expectSnapshot(`content-switcher-open-${dir}`, page)
         })
 
-        // @todo Fix flaky test: https://github.com/WordPress/openverse/issues/2377
-        test.skip("content switcher with external sources open", async ({
+        test("content switcher with external sources open", async ({
           page,
         }) => {
           await page.goto(pathWithDir("/?ff_additional_search_types=on", dir))

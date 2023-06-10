@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test } from "@playwright/test"
 
 import breakpoints, {
   isMobileBreakpoint,
@@ -66,8 +66,7 @@ for (const dir of languageDirections) {
         )
       })
 
-      // Skipping flaky test: https://github.com/WordPress/openverse/issues/2357
-      test.skip("searchbar active", async ({ page }) => {
+      test("searchbar active", async ({ page }) => {
         if (!isMobileBreakpoint(breakpoint)) {
           await filters.close(page)
         }
