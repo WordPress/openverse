@@ -1,6 +1,4 @@
-import { expect, type Page } from "@playwright/test"
-
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { expect, test, type Page } from "@playwright/test"
 
 import { searchFromHeader } from "~~/test/playwright/utils/navigation"
 

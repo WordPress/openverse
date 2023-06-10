@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test, Page } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
@@ -8,8 +8,6 @@ import {
   languageDirections,
   pathWithDir,
 } from "~~/test/playwright/utils/navigation"
-
-import type { Page } from "@playwright/test"
 
 test.describe.configure({ mode: "parallel" })
 

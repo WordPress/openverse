@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 import breakpoints from "~~/test/playwright/utils/breakpoints"

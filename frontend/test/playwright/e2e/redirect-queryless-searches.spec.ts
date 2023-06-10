@@ -3,9 +3,7 @@
  * redirect to the homepage.
  */
 
-import { expect } from "@playwright/test"
-
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test, expect } from "@playwright/test"
 
 import { searchTypes, searchPath } from "~/constants/media"
 
