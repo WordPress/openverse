@@ -326,7 +326,7 @@ jobs:
 
       - name: Print ingestion-server test logs
         run: |
-          just ingestion_server/logs > ingestion_server/test/ingestion_logs.txt
+          just ingestion_server/test-logs > ingestion_server/test/ingestion_logs.txt
           cat ingestion_server/test/ingestion_logs.txt
 
       - name: Upload ingestion test logs
