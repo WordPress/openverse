@@ -324,6 +324,11 @@ jobs:
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
 
+      - name: Print ingestion-server test logs
+        if: success() || failure()
+        run: |
+          just ingestion_server/logs > ingestion_server/test/ingestion_logs.txt
+
       - name: Upload ingestion test logs
         if: success() || failure()
         uses: actions/upload-artifact@v3
@@ -334,6 +339,9 @@ jobs:
       - name: Print ingestion test logs
         if: success() || failure()
         run: cat ingestion_server/test/ingestion_logs.txt
+
+      - name: Cleanup ingestion-server test
+        run: just ingestion_server/test-clean-dc
 
   #######
   # API #
