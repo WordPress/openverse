@@ -324,9 +324,10 @@ jobs:
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
 
-      - name: Output ingestion-server test logs
+      - name: Print ingestion-server test logs
         run: |
           just ingestion_server/logs > ingestion_server/test/ingestion_logs.txt
+          cat ingestion_server/test/ingestion_logs.txt
 
       - name: Upload ingestion test logs
         if: success() || failure()
