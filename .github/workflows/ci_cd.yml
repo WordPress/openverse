@@ -325,7 +325,6 @@ jobs:
         run: just ingestion_server/test-local
 
       - name: Print ingestion-server test logs
-        if: success() || failure()
         run: |
           just ingestion_server/logs > ingestion_server/test/ingestion_logs.txt
 
