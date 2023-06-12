@@ -15,6 +15,7 @@
           layout="row"
           :size="audioTrackSize"
           @mousedown="sendSelectSearchResultEvent(audio)"
+          @interacted="$emit('interacted', $event)"
         />
       </li>
     </ol>
@@ -40,6 +41,8 @@ import { AUDIO } from "~/constants/media"
 
 import type { FetchState } from "~/models/fetch-state"
 import type { AudioDetail } from "~/models/media"
+import { defineEvent } from "~/types/emits"
+import { AudioInteractionData } from "~/types/analytics"
 
 import LoadingIcon from "~/components/LoadingIcon.vue"
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
@@ -56,6 +59,9 @@ export default defineComponent({
       type: Object as PropType<FetchState>,
       required: true,
     },
+  },
+  emits: {
+    interacted: defineEvent<[AudioInteractionData]>(),
   },
   setup() {
     const uiStore = useUiStore()

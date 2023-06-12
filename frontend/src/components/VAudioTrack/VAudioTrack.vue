@@ -49,10 +49,10 @@
 import {
   computed,
   defineComponent,
-  ref,
-  watch,
   onUnmounted,
   PropType,
+  ref,
+  watch,
 } from "vue"
 import { useContext, useRoute } from "@nuxtjs/composition-api"
 
@@ -67,12 +67,13 @@ import { AUDIO } from "~/constants/media"
 
 import type { AudioDetail } from "~/types/media"
 import {
+  activeAudioStatus,
   AudioLayout,
   AudioSize,
   AudioStatus,
-  activeAudioStatus,
   layoutMappings,
 } from "~/constants/audio"
+import { AudioInteraction, AudioInteractionData } from "~/types/analytics"
 import { useSeekable } from "~/composables/use-seekable"
 import {
   useMatchSearchRoutes,
@@ -141,7 +142,7 @@ export default defineComponent({
   },
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
-    interacted: defineEvent<[]>(),
+    interacted: defineEvent<[AudioInteractionData]>(),
   },
   setup(props, { emit }) {
     const i18n = useI18n()
@@ -358,13 +359,11 @@ export default defineComponent({
             errorMsg = "err_unknown"
             $sentry.captureException(err)
         }
-        console.log("Error playing audio:", err, errorMsg)
-        errorMsg = i18n.t(`audioTrack.messages.${errorMsg}`).toString()
-        console.log("Setting message in active media store: ", errorMsg)
-        activeMediaStore.setMessage({ message: errorMsg })
+        activeMediaStore.setMessage({
+          message: i18n.t(`audioTrack.messages.${errorMsg}`).toString(),
+        })
         localAudio?.pause()
       })
-      console.log("Playing audio:", localAudio?.src)
     }
     const pause = () => localAudio?.pause()
 
@@ -391,7 +390,8 @@ export default defineComponent({
      * This function can safely ignore the `loading` status because
      * that status is never toggled _to_.
      */
-    const handleToggle = (state?: "playing" | "paused" | "played") => {
+    const handleToggle = (state?: Exclude<AudioStatus, "loading">) => {
+      let event: AudioInteraction | undefined
       if (!state) {
         switch (status.value) {
           case "playing":
@@ -407,12 +407,18 @@ export default defineComponent({
       switch (state) {
         case "playing":
           play()
+          event = "play"
           break
         case "paused":
           pause()
+          event = "pause"
           break
       }
-      emit("interacted")
+      emit("interacted", {
+        event,
+        id: props.audio.id,
+        provider: props.audio.provider,
+      })
     }
 
     /* Interface with VWaveform */
@@ -429,7 +435,11 @@ export default defineComponent({
       if (localAudio) {
         localAudio.currentTime = frac * duration.value
       }
-      emit("interacted")
+      emit("interacted", {
+        event: "seek",
+        id: props.audio.id,
+        provider: props.audio.provider,
+      })
     }
 
     /* Layout */
@@ -497,7 +507,6 @@ export default defineComponent({
       onTogglePlayback: togglePlayback,
     })
     const handleKeydown = (event: KeyboardEvent) => {
-      if (seekable.willBeHandled(event)) emit("interacted")
       seekable.listeners.keydown(event)
     }
 

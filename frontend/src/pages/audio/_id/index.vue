@@ -4,7 +4,12 @@
       <VBackToSearchResultsLink :id="audio.id" :href="backToSearchPath" />
     </div>
 
-    <VAudioTrack layout="full" :audio="audio" class="main-track" />
+    <VAudioTrack
+      layout="full"
+      :audio="audio"
+      class="main-track"
+      @interacted="sendAudioEvent($event, 'AudioDetailPage')"
+    />
     <div
       class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
     >
@@ -14,6 +19,7 @@
         v-if="audio.id"
         :media="relatedMedia"
         :fetch-state="relatedFetchState"
+        @interacted="sendAudioEvent($event, 'VRelatedAudio')"
       />
     </div>
   </VSkipToContentContainer>
@@ -25,6 +31,8 @@ import { defineComponent } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import type { AudioDetail } from "~/types/media"
+import { AudioInteractionData } from "~/types/analytics"
+import { useAnalytics } from "~/composables/use-analytics"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
@@ -54,6 +62,8 @@ export default defineComponent({
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
+    const { getDebouncedEventSender } = useAnalytics()
+    const sendDebouncedEvent = getDebouncedEventSender(500)
 
     const audio = computed(() =>
       singleResultStore.mediaType === AUDIO
@@ -64,11 +74,22 @@ export default defineComponent({
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
+    const sendAudioEvent = (
+      data: AudioInteractionData,
+      component: "AudioDetailPage" | "VRelatedAudio"
+    ) => {
+      sendDebouncedEvent("AUDIO_INTERACTED", {
+        ...data,
+        component: component,
+      })
+    }
+
     return {
       audio,
       backToSearchPath,
       relatedMedia,
       relatedFetchState,
+      sendAudioEvent,
     }
   },
   async asyncData({ route, error, app, $pinia }) {

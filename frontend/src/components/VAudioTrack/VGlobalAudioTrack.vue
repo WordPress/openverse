@@ -28,6 +28,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue"
 
+import { AudioInteraction } from "~/types/analytics"
+import { useAnalytics } from "~/composables/use-analytics"
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
@@ -66,6 +68,8 @@ export default defineComponent({
     const i18n = useI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
+    const { getDebouncedEventSender } = useAnalytics()
+    const sendAudioEvent = getDebouncedEventSender(500)
 
     const ariaLabel = computed(() =>
       i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
@@ -190,7 +194,17 @@ export default defineComponent({
 
     /* Interface with VPlayPause */
 
-    const handleToggle = (state?: "playing" | "paused") => {
+    const sendAudioInteractionEvent = (event: AudioInteraction) => {
+      sendAudioEvent("AUDIO_INTERACTION", {
+        id: props.audio.id,
+        provider: props.audio.provider,
+        event,
+        component: "VGlobalAudioTrack",
+      })
+    }
+    const handleToggle = (
+      state?: Exclude<AudioStatus, "loading" | "played">
+    ) => {
       if (!state) {
         switch (status.value) {
           case "playing":
@@ -202,15 +216,19 @@ export default defineComponent({
             break
         }
       }
-
+      let event: AudioInteraction
       switch (state) {
         case "playing":
           play()
+          event = "play"
           break
         case "paused":
           pause()
+          event = "pause"
           break
       }
+
+      sendAudioInteractionEvent(event)
     }
 
     /* Interface with VWaveform */
@@ -218,6 +236,7 @@ export default defineComponent({
     const handleSeeked = (frac: number) => {
       if (activeAudio.obj.value) {
         activeAudio.obj.value.currentTime = frac * duration.value
+        sendAudioInteractionEvent("seek")
       }
     }
 
