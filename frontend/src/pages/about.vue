@@ -9,7 +9,7 @@
 
     <i18n path="about.collection.content" tag="p">
       <template #openverse>Openverse</template>
-      <template #common-crawl>
+      <template #commonCrawl>
         <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
       </template>
     </i18n>
@@ -45,7 +45,7 @@
 
     <i18n path="about.transfer.content" tag="p">
       <template #openverse>Openverse</template>
-      <template #creative-commons>
+      <template #creativeCommons>
         <VLink
           href="https://creativecommons.org/2021/05/03/cc-search-to-join-wordpress/"
           >Creative Commons</VLink
@@ -68,65 +68,63 @@
     </i18n>
 
     <h2 id="external-sources">
-      {{ $t("external-sources-page.title") }}
+      {{ $t("externalSourcesPage.title") }}
     </h2>
 
-    <i18n path="external-sources-page.intro" tag="p">
+    <i18n path="externalSourcesPage.intro" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
-        <VLink href="/sources">{{ $t("external-sources-page.link") }}</VLink>
+        <VLink href="/sources">{{ $t("externalSourcesPage.link") }}</VLink>
       </template>
     </i18n>
     <p>
-      {{ $t("external-sources-page.license", { openverse: "Openverse" }) }}
+      {{ $t("externalSourcesPage.license", { openverse: "Openverse" }) }}
     </p>
     <p>
-      {{ $t("external-sources-page.explanation", { openverse: "Openverse" }) }}
+      {{ $t("externalSourcesPage.explanation", { openverse: "Openverse" }) }}
     </p>
     <p>
-      {{
-        $t("external-sources-page.relationships", { openverse: "Openverse" })
-      }}
+      {{ $t("externalSourcesPage.relationships", { openverse: "Openverse" }) }}
     </p>
     <h2>
-      {{ $t("external-sources-page.new.title") }}
+      {{ $t("externalSourcesPage.new.title") }}
     </h2>
-    <i18n path="external-sources-page.new.content" tag="p">
+    <i18n path="externalSourcesPage.new.content" tag="p">
       <template #issue>
         <VLink
           aria-label="issue"
           href="https://github.com/WordPress/openverse/issues"
-          >{{ $t("external-sources-page.new.issue") }}</VLink
+          >{{ $t("externalSourcesPage.new.issue") }}</VLink
         >
       </template>
       <template #email>
         <VLink aria-label="email" href="mailto:openverse@wordpress.org">{{
-          $t("external-sources-page.new.email")
+          $t("externalSourcesPage.new.email")
         }}</VLink>
       </template>
     </i18n>
     <h2>
-      {{ $t("external-sources-page.why.title") }}
+      {{ $t("externalSourcesPage.why.title") }}
     </h2>
-    <i18n path="external-sources-page.why.content" tag="p">
+    <i18n path="externalSourcesPage.why.content" tag="p">
       <template #old>
         <VLink
           aria-label="email"
           href="https://oldsearch.creativecommons.org"
-          >{{ $t("external-sources-page.why.old") }}</VLink
+          >{{ $t("externalSourcesPage.why.old") }}</VLink
         >
       </template>
     </i18n>
 
     <p>
-      {{ $t("external-sources-page.why.new", { openverse: "Openverse" }) }}
+      {{ $t("externalSourcesPage.why.new", { openverse: "Openverse" }) }}
     </p>
-    <i18n path="external-sources-page.why.feedback-suggestions" tag="p">
+    <i18n path="externalSourcesPage.why.feedbackSuggestions" tag="p">
       <template #feedback>
         <VLink
-          :aria-label="$t('external-sources-page.why.aria-label')"
+          :aria-label="$t('externalSourcesPage.why.ariaLabel')"
           href="/feedback"
-          >{{ $t("external-sources-page.why.feedback-link") }}</VLink
+          >{{ $t("externalSourcesPage.why.feedbackLink") }}</VLink
         >
       </template>
     </i18n>
