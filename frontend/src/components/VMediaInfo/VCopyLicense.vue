@@ -17,7 +17,10 @@
       >
         <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
         <!-- eslint-disable vue/no-v-html -->
-        <div v-html="getAttributionMarkup({ includeIcons: false })" />
+        <div
+          ref="richRef"
+          v-html="getAttributionMarkup({ includeIcons: false })"
+        />
         <!-- eslint-enable vue/no-v-html -->
       </VLicenseTabPanel>
       <VLicenseTabPanel
@@ -41,11 +44,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent, onBeforeUnmount, onMounted, PropType, ref } from "vue"
 
 import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
 import type { Media } from "~/types/media"
 import { useI18n } from "~/composables/use-i18n"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VTab from "~/components/VTabs/VTab.vue"
@@ -63,10 +67,36 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const richRef = ref<HTMLElement | null>(null)
+
     const i18n = useI18n()
     const getAttributionMarkup = (options?: AttributionOptions) =>
       getAttribution(props.media, i18n, options)
+
+    const { sendCustomEvent } = useAnalytics()
+
+    const sendAnalyticsEvent = (event: MouseEvent) => {
+      if (!event.currentTarget) return
+
+      const url = (event.currentTarget as HTMLAnchorElement).href
+      sendCustomEvent("EXTERNAL_LINK_CLICK", { url })
+    }
+
+    onMounted(() => {
+      richRef.value?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", sendAnalyticsEvent)
+      })
+    })
+
+    onBeforeUnmount(() => {
+      richRef.value?.querySelectorAll("a").forEach((link) => {
+        link.removeEventListener("click", sendAnalyticsEvent)
+      })
+    })
+
     return {
+      richRef,
+
       tabs,
 
       getAttributionMarkup,

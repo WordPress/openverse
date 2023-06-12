@@ -98,6 +98,7 @@
             show-external-icon
             :external-icon-size="6"
             :href="DMCA_FORM_URL"
+            :send-external-link-click-event="false"
             @click="handleDmcaSubmit"
           >
             {{ $t("mediaDetails.contentReport.form.dmca.open") }}

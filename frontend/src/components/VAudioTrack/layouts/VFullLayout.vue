@@ -34,6 +34,7 @@
               <VLink
                 class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"
                 :href="audio.creator_url"
+                :send-external-link-click-event="false"
               >
                 {{ audio.creator }}
               </VLink>
@@ -59,6 +60,7 @@
         show-external-icon
         :external-icon-size="6"
         class="description-bold order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
+        :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
         {{ $t("audioDetails.weblink") }}

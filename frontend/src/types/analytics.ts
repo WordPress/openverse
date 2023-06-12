@@ -41,6 +41,15 @@ export type Events = {
     identifier: string
   }
   /**
+   * Description: The user right clicks a single image result, most likely to download it.
+   * Questions:
+   *   - Do users right-click images often? Does this suggest downloading them directly,
+   *     when not paired with a `GET_MEDIA` event?
+   */
+  RIGHT_CLICK_IMAGE: {
+    id: string
+  }
+  /**
    * Click on the 'back to search' link on a single result
    *
    * - Are these links used much? Are they necessary?
@@ -129,6 +138,38 @@ export type Events = {
     next: SearchType
     /** The name of the Vue component used to switch content types. */
     component: string
+  }
+  /**
+   * Description: The user clicks to a link outside of Openverse.
+   * Questions:
+   *   - What types of external content do users seek?
+   *   - Are there external resources we should make more visible?
+   *   - Is there content we might want to add to Openverse directly?
+   */
+  EXTERNAL_LINK_CLICK: {
+    /** The url of the external link */
+    url: string
+  }
+  /**
+   * Description: The user visits a creator's link in the single result UI
+   * Questions:
+   *   - Are creator links clicked much? Does Openverse increase visibility
+   *     of included creator's profiles?
+   */
+  VISIT_CREATOR_LINK: {
+    /** The unique ID of the media */
+    id: string
+    /** The permalink to the creator's profile */
+    url: string
+  }
+  /**
+   * Description: The user visits a CC license description page on CC.org
+   * Questions:
+   *   - How often are external licenses viewed?
+   */
+  VISIT_LICENSE_PAGE: {
+    /** The slug of the license the user clicked on */
+    license: string
   }
 }
 
