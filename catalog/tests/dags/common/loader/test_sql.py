@@ -19,7 +19,7 @@ from common.loader import sql
 from common.storage import columns as col
 
 
-POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
+POSTGRES_CONN_ID = "TEST_CONN_ID"
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
 
 

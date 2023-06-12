@@ -14,7 +14,7 @@ from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 
 
 DDL_DEFINITIONS_PATH = Path(__file__).parents[5] / "docker" / "upstream_db"
-POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
+POSTGRES_CONN_ID = "TEST_CONN_ID"
 POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 
 

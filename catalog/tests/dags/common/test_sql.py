@@ -13,7 +13,7 @@ from common.sql import PGExecuteQueryOperator, PostgresHook
 logger = logging.getLogger(__name__)
 
 
-POSTGRES_TEST_CONN_ID = os.getenv("TEST_CONN_ID")
+POSTGRES_TEST_CONN_ID = "TEST_CONN_ID"
 DEFAULT_TIMEOUT = timedelta(hours=1).total_seconds()
 default_timeout_msg = (
     f"DAG_DEFAULT_ARGS sets the default task execution timeout to "
