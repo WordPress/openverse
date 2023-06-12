@@ -37,7 +37,7 @@ export type Events = {
   CLICK_HOME_GALLERY_IMAGE: {
     /** the set to which the image belongs */
     set: string
-    /** the id of the image */
+    /** The unique ID of the media */
     id: string
   }
   /**
