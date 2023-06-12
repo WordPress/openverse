@@ -1,6 +1,4 @@
-import { expect, Expect } from "@playwright/test"
-
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test, expect, Expect } from "@playwright/test"
 
 import { VIEWPORTS } from "~/constants/screens"
 import type { Breakpoint } from "~/constants/screens"

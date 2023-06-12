@@ -42,11 +42,11 @@ describe("useSearchType", () => {
       video: "video",
     })
     expect(labels).toEqual({
-      all: "search-type.all",
-      audio: "search-type.audio",
-      image: "search-type.image",
-      "model-3d": "search-type.model-3d",
-      video: "search-type.video",
+      all: "searchType.all",
+      audio: "searchType.audio",
+      image: "searchType.image",
+      "model-3d": "searchType.model3d",
+      video: "searchType.video",
     })
     expect(additionalTypes.value).toEqual([])
   })
@@ -56,7 +56,7 @@ describe("useSearchType", () => {
 
     const { icon, label } = getSearchTypeProps()
     expect(icon).toEqual(ALL_MEDIA)
-    expect(label).toEqual("search-type.all")
+    expect(label).toEqual("searchType.all")
   })
 
   it("should return correct props when type is passed", () => {
@@ -64,7 +64,7 @@ describe("useSearchType", () => {
 
     const { icon, label } = getSearchTypeProps(AUDIO)
     expect(icon).toEqual(AUDIO)
-    expect(label).toEqual("search-type.audio")
+    expect(label).toEqual("searchType.audio")
   })
 
   it("should send the analytics event when setActiveType is called", () => {

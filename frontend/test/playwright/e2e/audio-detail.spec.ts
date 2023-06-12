@@ -1,6 +1,6 @@
-import { expect, Page } from "@playwright/test"
+import { test, expect, Page } from "@playwright/test"
 
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 const goToCustomAudioPage = async (page: Page) => {
   // Test in a custom audio detail page, it should apply the same for any audio.
@@ -14,6 +14,10 @@ const showsErrorPage = async (page: Page) => {
 }
 
 test.describe.configure({ mode: "parallel" })
+
+test.beforeEach(async ({ context }) => {
+  await mockProviderApis(context)
+})
 
 test("shows the data that is only available in single result, not search response", async ({
   page,

@@ -1,8 +1,6 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test, Page } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
-import type { Page } from "@playwright/test"
 
 const goTo = async (page: Page, slug: string) => {
   await page.goto(`/iframe.html?id=components-vmedialicense--${slug}`)

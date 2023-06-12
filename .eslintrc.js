@@ -28,6 +28,7 @@ module.exports = {
     "plugin:@intlify/vue-i18n/recommended",
     "plugin:import/recommended",
     "plugin:eslint-comments/recommended",
+    "plugin:jsonc/recommended-with-jsonc",
   ],
   plugins: [
     "@typescript-eslint",
@@ -185,7 +186,6 @@ module.exports = {
         "tsdoc/syntax": "error",
       },
     },
-    // Overrides for unit tests
     {
       env: { jest: true },
       files: ["frontend/test/unit/**"],
@@ -213,23 +213,12 @@ module.exports = {
         ],
       },
     },
-    // Overrides for Playwright tests
     {
-      files: ["frontend/test/{playwright,storybook}/**/*.spec.{ts,js}"],
-      rules: {
-        "no-restricted-syntax": [
-          "error",
-          {
-            selector:
-              "ImportDeclaration[source.value='@playwright/test']:has(ImportSpecifier[local.name='test'])",
-            message:
-              "Do not import 'test' from '@playwright/test'. Use 'import { test } from '~~/test/playwright/utils/test-fixture' instead, which mocks Openverse provider APIs and the analytics server.",
-          },
-        ],
-      },
-    },
-    {
-      files: ["automations/js/src/**"],
+      files: [
+        "automations/js/src/**",
+        "frontend/test/**",
+        "frontend/src/**/**.json",
+      ],
       rules: {
         "unicorn/filename-case": "off",
       },
@@ -262,9 +251,33 @@ module.exports = {
           // Allow things like `Component.stories.js` and `Component.types.js`
           {
             case: "pascalCase",
-            ignore: [".eslintrc.js", ".*\\..*\\.js"],
+            ignore: [".eslintrc.js", ".*\\..*\\.js", ".*\\.json"],
           },
         ],
+      },
+    },
+    {
+      files: [
+        "frontend/src/locales/scripts/en.json5",
+        "frontend/test/locales/*.json",
+      ],
+      rules: {
+        "jsonc/key-name-casing": [
+          "error",
+          {
+            camelCase: true,
+            "kebab-case": false,
+            snake_case: true, // for err_* keys
+            ignores: ["ncSampling+", "sampling+"],
+          },
+        ],
+      },
+    },
+    {
+      files: ["frontend/src/locales/scripts/en.json5"],
+      rules: {
+        "jsonc/quote-props": "off",
+        "jsonc/quotes": "off",
       },
     },
   ],

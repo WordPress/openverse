@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { languageDirections, t } from "~~/test/playwright/utils/navigation"
@@ -29,7 +29,7 @@ test.describe("media-reuse", () => {
 
           await page.locator(`#tab-${tab.id}`).click()
           // Make sure the tab is not focused and doesn't have a pink ring
-          const reuseTitle = t("media-details.reuse.title", dir)
+          const reuseTitle = t("mediaDetails.reuse.title", dir)
           await page.locator(`h2:has-text("${reuseTitle}")`).click()
           await expectSnapshot(
             `media-reuse-${dir}-${tab.id}-tab`,
