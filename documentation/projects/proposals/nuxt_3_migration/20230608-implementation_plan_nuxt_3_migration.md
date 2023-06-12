@@ -9,9 +9,8 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] @sarayourfriend - for extensive experience with JS
-- [ ] @zackkrida - for extensive frontend experience and the previous migration
-      to Nuxt
+- [ ] @sarayourfriend
+- [ ] @zackkrida
 
 ## Project links
 
