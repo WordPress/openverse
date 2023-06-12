@@ -62,8 +62,8 @@ export default defineComponent({
 
     const buttonLabel = computed(() =>
       isFetching.value
-        ? i18n.t("browse-page.loading")
-        : i18n.t("browse-page.load")
+        ? i18n.t("browsePage.loading")
+        : i18n.t("browsePage.load")
     )
 
     return {

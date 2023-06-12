@@ -2,10 +2,10 @@
   <div id="content-report-form">
     <div v-if="status === SENT">
       <h2 class="heading-6 mb-4">
-        {{ $t("media-details.content-report.success.title") }}
+        {{ $t("mediaDetails.contentReport.success.title") }}
       </h2>
       <i18n
-        path="media-details.content-report.success.note"
+        path="mediaDetails.contentReport.success.note"
         class="text-sm"
         tag="p"
       >
@@ -21,22 +21,22 @@
 
     <div v-else-if="status === FAILED">
       <h2 class="heading-6 mb-4">
-        {{ $t("media-details.content-report.failure.title") }}
+        {{ $t("mediaDetails.contentReport.failure.title") }}
       </h2>
       <p class="text-sm">
-        {{ $t("media-details.content-report.failure.note") }}
+        {{ $t("mediaDetails.contentReport.failure.note") }}
       </p>
     </div>
 
     <!-- Main form -->
     <div v-else>
       <div class="heading-6 mb-4">
-        {{ $t("media-details.content-report.long") }}
+        {{ $t("mediaDetails.contentReport.long") }}
       </div>
 
       <p class="mb-4 text-sm">
         {{
-          $t("media-details.content-report.form.disclaimer", {
+          $t("mediaDetails.contentReport.form.disclaimer", {
             openverse: "Openverse",
           })
         }}
@@ -45,7 +45,7 @@
       <form class="text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col">
           <legend class="label-bold mb-4">
-            {{ $t("media-details.content-report.form.question") }}
+            {{ $t("mediaDetails.contentReport.form.question") }}
           </legend>
           <VRadio
             v-for="reason in reasons"
@@ -56,7 +56,7 @@
             name="reason"
             :value_="reason"
           >
-            {{ $t(`media-details.content-report.form.${reason}.option`) }}
+            {{ $t(`mediaDetails.contentReport.form.${reason}.option`) }}
           </VRadio>
         </fieldset>
 
@@ -84,7 +84,7 @@
             class="label-bold"
             @click="handleCancel"
           >
-            {{ $t("media-details.content-report.form.cancel") }}
+            {{ $t("mediaDetails.contentReport.form.cancel") }}
           </VButton>
 
           <VButton
@@ -101,7 +101,7 @@
             :send-external-link-click-event="false"
             @click="handleDmcaSubmit"
           >
-            {{ $t("media-details.content-report.form.dmca.open") }}
+            {{ $t("mediaDetails.contentReport.form.dmca.open") }}
           </VButton>
           <VButton
             v-else
@@ -112,9 +112,9 @@
             variant="filled-dark"
             size="medium"
             class="label-bold"
-            :value="$t('media-details.content-report.form.submit')"
+            :value="$t('mediaDetails.contentReport.form.submit')"
           >
-            {{ $t("media-details.content-report.form.submit") }}
+            {{ $t("mediaDetails.contentReport.form.submit") }}
           </VButton>
         </div>
       </form>

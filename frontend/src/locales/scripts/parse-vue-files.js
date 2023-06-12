@@ -106,7 +106,7 @@ function parseVueFiles(vueFilesPath) {
  * Parses all vue files found in the glob paths, and returns an
  * array of objects with i18n path, line number, and vue file path.
  * {
-    path: 'browse-page.aria.close',
+    path: 'browsePage.aria.close',
     line: 13,
     file: '/components/AppModal.vue'
   },
