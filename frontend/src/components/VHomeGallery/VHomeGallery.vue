@@ -29,7 +29,7 @@
             :class="idx >= imageCount ? 'hidden' : 'block'"
             :style="{ '--delay': `${idx * 0.05}s` }"
             :href="image.url"
-            @click="handleClick(image.identifier)"
+            @click="handleClick(image.id)"
           >
             <img
               :height="dimens"
@@ -118,7 +118,7 @@ export default defineComponent({
         url: router.resolve(
           app.localePath({
             name: "image-id",
-            params: { id: image.identifier },
+            params: { id: image.id },
           })
         ).href,
       }))
@@ -126,10 +126,10 @@ export default defineComponent({
     const imageCount = computed(() => columnCount.value * rowCount)
 
     const { sendCustomEvent } = useAnalytics()
-    const handleClick = (identifier: string) => {
+    const handleClick = (id: string) => {
       sendCustomEvent("CLICK_HOME_GALLERY_IMAGE", {
         set: imageSet.value.key,
-        identifier,
+        id,
       })
     }
 

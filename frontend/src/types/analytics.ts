@@ -37,8 +37,8 @@ export type Events = {
   CLICK_HOME_GALLERY_IMAGE: {
     /** the set to which the image belongs */
     set: string
-    /** the identifier of the image */
-    identifier: string
+    /** The unique ID of the media */
+    id: string
   }
   /**
    * Description: The user right clicks a single image result, most likely to download it.
