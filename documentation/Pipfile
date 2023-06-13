@@ -3,13 +3,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[packages]
-sphinx-notfound-page = "*"
-
 [dev-packages]
 sphinx = "*"
 sphinx-autobuild = "*"
 sphinx-copybutton = "*"
+sphinx-reredirects = "*"
+sphinx-notfound-page = "*"
 furo = "*"
 myst-parser = "*"
 sphinxcontrib-mermaid = "*"

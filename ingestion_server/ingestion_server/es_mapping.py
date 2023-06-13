@@ -60,7 +60,10 @@ def index_settings(table_name):
             "title": {
                 "type": "text",
                 "similarity": "boolean",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
+                "fields": {
+                    "keyword": {"type": "keyword", "ignore_above": 256},
+                    "raw": {"type": "text", "index": True},
+                },
                 "analyzer": "custom_english",
             },
             "foreign_landing_url": {
@@ -68,7 +71,10 @@ def index_settings(table_name):
                 "type": "text",
             },
             "description": {
-                "fields": {"keyword": {"type": "keyword", "similarity": "boolean"}},
+                "fields": {
+                    "keyword": {"type": "keyword", "similarity": "boolean"},
+                    "raw": {"type": "text", "index": True},
+                },
                 "type": "text",
                 "analyzer": "custom_english",
             },
@@ -111,7 +117,10 @@ def index_settings(table_name):
                     "accuracy": {"type": "float"},
                     "name": {
                         "type": "text",
-                        "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
+                        "fields": {
+                            "keyword": {"type": "keyword", "ignore_above": 256},
+                            "raw": {"type": "text", "index": True},
+                        },
                         "analyzer": "custom_english",
                     },
                 }

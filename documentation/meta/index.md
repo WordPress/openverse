@@ -9,6 +9,6 @@ maintainer_tasks
 ci_cd/index
 decision_making/index
 documentation/index
-traffic/index
+monitoring/index
 communication_aliases
 ```
