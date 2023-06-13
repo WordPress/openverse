@@ -61,17 +61,17 @@ def _message(text: str, summary: str = None, level: Level = Level.INFO) -> None:
 
 
 def verbose(text: str, summary: str = None) -> None:
-    log.debug(text, stacklevel=2)
+    log.debug(text)
     _message(text, summary, level=Level.VERBOSE)
 
 
 def info(text: str, summary: str = None) -> None:
-    log.info(text, stacklevel=2)
+    log.info(text)
     _message(text, summary, level=Level.INFO)
 
 
 def error(text: str, summary: str = None) -> None:
-    log.error(text, stacklevel=2)
+    log.error(text)
     _message(text, summary, level=Level.ERROR)
 
 
