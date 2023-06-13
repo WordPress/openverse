@@ -1,11 +1,8 @@
 name: PR Limit Reminders
 
 on:
-  pull_request:
-    types: [opened, reopened]
-  push:
-    branches:
-      - "pr-count-prompt"
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
 
 jobs:
   analyze-user-prs:
