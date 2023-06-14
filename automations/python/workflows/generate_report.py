@@ -14,9 +14,7 @@ gh_slack_username_map = json.loads(os.environ.get("GH_SLACK_USERNAME_MAP", "{}")
 github_username = os.environ.get(
     "GITHUB_ACTOR"
 )  # GitHub username of the actor that initiated the current workflow
-commit_message = os.environ.get(
-    "COMMIT_MESSAGE"
-)  # replace this with the correct environment variable
+commit_message = os.environ.get("COMMIT_MESSAGE")
 commit_url = f"{server_url}/{repository}/commit/{os.environ.get('GITHUB_SHA')}"
 
 slack_id = gh_slack_username_map.get(github_username, "")
