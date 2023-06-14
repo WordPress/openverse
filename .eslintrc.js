@@ -221,6 +221,8 @@ module.exports = {
       ],
       rules: {
         "unicorn/filename-case": "off",
+        // Translations contain non-breaking and other whitespace characters
+        "no-irregular-whitespace": ["off"],
       },
     },
     {

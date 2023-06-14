@@ -87,6 +87,7 @@ import { computed, defineComponent, ref, watch } from "vue"
 import { useRoute } from "@nuxtjs/composition-api"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
+import { useAnalytics } from "~/composables/use-analytics"
 import usePages from "~/composables/use-pages"
 
 import { useUiStore } from "~/stores/ui"
@@ -119,6 +120,8 @@ export default defineComponent({
 
     const route = useRoute()
 
+    const { sendCustomEvent } = useAnalytics()
+
     const { all: allPages, current: currentPage } = usePages()
 
     const isModalVisible = ref(false)
@@ -148,6 +151,13 @@ export default defineComponent({
       deactivateFocusTrap,
     })
 
+    const eventedOnTriggerClick = (...args) => {
+      if (!isModalVisible.value) {
+        sendCustomEvent("OPEN_PAGES_MENU", {})
+      }
+      return onTriggerClick(...args)
+    }
+
     // When clicking on an internal link in the modal, close the modal
     watch(route, () => {
       if (isModalVisible.value) {
@@ -167,7 +177,7 @@ export default defineComponent({
       closePageMenu,
       openPageMenu,
       isSm,
-      onTriggerClick,
+      onTriggerClick: eventedOnTriggerClick,
       triggerA11yProps,
       triggerElement,
     }
