@@ -65,6 +65,8 @@ import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
 
+import type { Ref } from "vue"
+
 /**
  * The desktop search header.
  */
@@ -85,8 +87,8 @@ export default defineComponent({
     const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
-    const isHeaderScrolled = inject(IsHeaderScrolledKey)
-    const isSidebarVisible = inject(IsSidebarVisibleKey)
+    const isHeaderScrolled = inject<Ref<boolean>>(IsHeaderScrolledKey)
+    const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
@@ -106,11 +108,19 @@ export default defineComponent({
       document.activeElement?.blur()
       updateSearchState()
     }
+
     const areFiltersDisabled = computed(
       () => !searchStore.searchTypeIsSupported
     )
 
-    const toggleSidebar = () => uiStore.toggleFilters()
+    const toggleSidebar = () => {
+      const state = isSidebarVisible?.value ? "closed" : "opened"
+      sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
+        mediaType: searchStore.searchType,
+        state,
+      })
+      uiStore.toggleFilters()
+    }
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
