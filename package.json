@@ -33,6 +33,7 @@
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-jest": "27.2.1",
     "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jest": "27.2.1",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-tsdoc": "0.2.17",
     "eslint-plugin-unicorn": "42.0.0",
@@ -56,5 +57,10 @@
         "babel-core": "7.0.0-bridge.0"
       }
     }
+  },
+  "dependencies": {
+    "@nuxt/types": "^2.17.0",
+    "nuxt-i18n": "^6.28.1",
+    "tailwindcss": "^3.3.2"
   }
 }

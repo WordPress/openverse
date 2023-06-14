@@ -12,20 +12,21 @@
 /**
  * mapping of breakpoint names to the lower-bound of their screen width range
  */
-const SCREEN_SIZES = Object.freeze(
+export const SCREEN_SIZES = Object.freeze(
   /** @type {const} */ ({
     "2xl": 1536,
     xl: 1280,
     lg: 1024,
     md: 768,
     sm: 640,
+    xs: 340
   })
 )
 
 /**
  * the same as SCREEN_SIZES but with the 'xs' breakpoint added for use in JS.
  */
-const ALL_SCREEN_SIZES = Object.freeze(
+export const ALL_SCREEN_SIZES = Object.freeze(
   /** @type {const }*/ { ...SCREEN_SIZES, xs: 0 }
 )
 
@@ -33,7 +34,7 @@ const ALL_SCREEN_SIZES = Object.freeze(
  * mapping of breakpoint names to the lower-bound of their screen width range,
  * with the 'px' suffix attached; This is used by Tailwind.
  */
-const SCREENS = /** @type {Record<RealBreakpoint, string>} */ (
+export const SCREENS = /** @type {Record<RealBreakpoint, string>} */ (
   Object.fromEntries(
     Object.entries(SCREEN_SIZES)
       .map(([key, val]) => [key, `${val}px`])
@@ -45,7 +46,7 @@ const SCREENS = /** @type {Record<RealBreakpoint, string>} */ (
  * mapping of breakpoint names to viewport specifications; This is used by
  * the viewports plugin of Storybook.
  */
-const VIEWPORTS = /** @type {Record<Breakpoint, Viewport>} */ (
+export const VIEWPORTS = /** @type {Record<Breakpoint, Viewport>} */ (
   Object.fromEntries(
     /** @type {[Breakpoint, number][]} */ (Object.entries(SCREEN_SIZES))
       .concat([["xs", 340]])

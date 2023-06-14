@@ -1,8 +1,8 @@
-const defaultTheme = require("tailwindcss/defaultTheme")
-const plugin = require("tailwindcss/plugin")
+import defaultTheme from "tailwindcss/defaultTheme";
+import plugin from "tailwindcss/plugin";
 
-const { SCREENS } = require("./src/constants/screens")
-const { Z_INDICES } = require("./src/constants/z-indices")
+import { SCREENS } from "./src/constants/screens";
+import { Z_INDICES } from "./src/constants/z-indices";
 
 module.exports = {
   content: [
@@ -223,7 +223,7 @@ module.exports = {
       outlineWidth: {
         1.5: "1.5px",
       },
-      typography: (theme) => ({
+      typography: (theme: (arg0: string) => any) => ({
         DEFAULT: {
           css: {
             "--tw-prose-body": theme("colors.dark-charcoal"),

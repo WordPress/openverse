@@ -5,7 +5,7 @@
     "composite": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "target": "ES2018",
+    "target": "ES2022",
     "module": "ESNext",
     "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
     "noEmit": true,
@@ -24,7 +24,7 @@
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
+    // "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
     "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./src/*"],
