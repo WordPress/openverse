@@ -978,17 +978,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Get commit message
+        id: commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
       - name: Generate report
         id: report
         env:
-          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
-          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
-          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          COMMIT_MESSAGE: ${{ steps.commit.outputs.commit_message }}
           DEPLOY_API_RESULT: ${{ needs.deploy-api.result }}
-          SERVER_URL: ${{ github.server_url }}
+          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
+          GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+          GITHUB_ACTOR: ${{ github.event.head_commit.author.username }}
+          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-          PYTHONPATH: ${{ github.workspace }}/automations/python
+          SERVER_URL: ${{ github.server_url }}
         working-directory: automations/python/workflows
         run: python generate_report.py
 
