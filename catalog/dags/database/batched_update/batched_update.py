@@ -28,8 +28,6 @@ def resume_update(
     """
     Return True to short circuit temp table creation if this DagRun is
     resuming from an existing temp table.
-
-    A DAG can be resumed only if `
     """
     if resume_update:
         # Skip table creation and indexing
@@ -79,7 +77,7 @@ def run_sql(
         return 0
 
     postgres = PostgresHook(
-        postgres_conn_id=POSTGRES_CONN_ID,
+        postgres_conn_id=postgres_conn_id,
         default_statement_timeout=(
             timeout if timeout else PostgresHook.get_execution_timeout(task)
         ),
