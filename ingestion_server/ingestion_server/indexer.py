@@ -517,13 +517,10 @@ class TableIndexer:
                     "query": {
                         "bool": {
                             "must_not": [
-                                {
-                                    "multi_match": {
-                                        "query": f'"{term}"',
-                                        "fields": ["tags.name", "title", "description"],
-                                    }
-                                }
-                                for term in sensitive_terms
+                                # Use `terms` query for exact matching against
+                                # unanalyzed raw fields
+                                {"terms": {f"{field}.raw": sensitive_terms}}
+                                for field in ["tags.name", "title", "description"]
                             ]
                         }
                     },

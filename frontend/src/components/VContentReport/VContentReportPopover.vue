@@ -2,7 +2,7 @@
   <VPopover
     ref="popoverEl"
     :hide-on-click-outside="false"
-    :label="$t('media-details.content-report.long').toString()"
+    :label="$t('mediaDetails.contentReport.long').toString()"
     placement="bottom-end"
     width="w-80"
   >

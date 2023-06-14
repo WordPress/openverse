@@ -125,6 +125,7 @@ importers:
       cookie-universal-nuxt: ^2.1.5
       core-js: ^3.27.2
       css-loader: ^5.2.7
+      eslint-plugin-jsonc: ^2.8.0
       express-prom-bundle: ^6.4.1
       express-useragent: ^1.0.15
       focus-trap: ^7.1.0
@@ -235,6 +236,7 @@ importers:
       chokidar: 3.5.3
       comment-json: 4.2.3
       css-loader: 5.2.7_webpack@4.46.0
+      eslint-plugin-jsonc: 2.8.0
       jest: 26.6.3
       jest-fail-on-console: 3.1.1
       jest-transform-stub: 2.0.0
@@ -2184,6 +2186,18 @@ packages:
   /@discoveryjs/json-ext/0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
+
+  /@eslint-community/eslint-utils/4.4.0:
+    resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+    dependencies:
+      eslint-visitor-keys: 3.4.1
+    dev: true
 
   /@eslint-community/eslint-utils/4.4.0_eslint@8.41.0:
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -9924,6 +9938,20 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
+    dev: true
+
+  /eslint-plugin-jsonc/2.8.0:
+    resolution: {integrity: sha512-K4VsnztnNwpm+V49CcCu5laq8VjclJpuhfI9LFkOrOyK+BKdQHMzkWo43B4X4rYaVrChm4U9kw/tTU5RHh5Wtg==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: '>=6.0.0'
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0
+      jsonc-eslint-parser: 2.3.0
+      natural-compare: 1.4.0
     dev: true
 
   /eslint-plugin-prettier/4.2.1_kuab6g4o5cytp2fsnrjqsidrgq:

@@ -28,6 +28,7 @@ module.exports = {
     "plugin:@intlify/vue-i18n/recommended",
     "plugin:import/recommended",
     "plugin:eslint-comments/recommended",
+    "plugin:jsonc/recommended-with-jsonc",
   ],
   plugins: [
     "@typescript-eslint",
@@ -213,7 +214,11 @@ module.exports = {
       },
     },
     {
-      files: ["automations/js/src/**"],
+      files: [
+        "automations/js/src/**",
+        "frontend/test/**",
+        "frontend/src/**/**.json",
+      ],
       rules: {
         "unicorn/filename-case": "off",
       },
@@ -246,9 +251,33 @@ module.exports = {
           // Allow things like `Component.stories.js` and `Component.types.js`
           {
             case: "pascalCase",
-            ignore: [".eslintrc.js", ".*\\..*\\.js"],
+            ignore: [".eslintrc.js", ".*\\..*\\.js", ".*\\.json"],
           },
         ],
+      },
+    },
+    {
+      files: [
+        "frontend/src/locales/scripts/en.json5",
+        "frontend/test/locales/*.json",
+      ],
+      rules: {
+        "jsonc/key-name-casing": [
+          "error",
+          {
+            camelCase: true,
+            "kebab-case": false,
+            snake_case: true, // for err_* keys
+            ignores: ["ncSampling+", "sampling+"],
+          },
+        ],
+      },
+    },
+    {
+      files: ["frontend/src/locales/scripts/en.json5"],
+      rules: {
+        "jsonc/quote-props": "off",
+        "jsonc/quotes": "off",
       },
     },
   ],

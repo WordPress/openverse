@@ -9,19 +9,19 @@ import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
  */
 const i18nKeys = {
   [ALL_MEDIA]: {
-    noResult: "browse-page.all-no-results",
-    result: "browse-page.all-result-count",
-    more: "browse-page.all-result-count-more",
+    noResult: "browsePage.allNoResults",
+    result: "browsePage.allResultCount",
+    more: "browsePage.allResultCountMore",
   },
   [IMAGE]: {
-    noResult: "browse-page.contentLink.image.zero",
-    result: "browse-page.contentLink.image.count",
-    more: "browse-page.contentLink.image.countMore",
+    noResult: "browsePage.contentLink.image.zero",
+    result: "browsePage.contentLink.image.count",
+    more: "browsePage.contentLink.image.countMore",
   },
   [AUDIO]: {
-    noResult: "browse-page.contentLink.audio.zero",
-    result: "browse-page.contentLink.audio.count",
-    more: "browse-page.contentLink.audio.countMore",
+    noResult: "browsePage.contentLink.audio.zero",
+    result: "browsePage.contentLink.audio.count",
+    more: "browsePage.contentLink.audio.countMore",
   },
 }
 

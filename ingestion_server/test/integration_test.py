@@ -535,25 +535,32 @@ class TestIngestion(unittest.TestCase):
     )
     def test_filtered_indexes(self):
         """
-        Check that the audio data has been successfully indexed in Elasticsearch.
+        Check that the sensitive terms are correctly filtered out.
 
-        The number of hits for a blank search should match the size of the loaded mock
-        data.
+        Each sensitive term should have zero exact matches for it when querying
+        the filtered index. We use `term` against the `.raw` fields to ensure this.
         """
         params = zip(mock_sensitive_terms, ["audio-filtered", "image-filtered"])
         for sensitive_term, index in params:
             with self.subTest(
-                f"Check that {index} does not include mock sensitive term {sensitive_term}"
+                f"Check that {index} does not include mock sensitive term {sensitive_term} exactly"
             ):
                 es = self._get_es()
-                res = es.search(
-                    index=index, query={"query_string": {"query": sensitive_term}}
-                )
+                queryable_fields = ["title", "description", "tags.name"]
+                query = {
+                    "bool": {
+                        "should": [
+                            {"term": {f"{field}.raw": sensitive_term}}
+                            for field in queryable_fields
+                        ]
+                    }
+                }
+                res = es.search(index=index, query=query)
                 count = res["hits"]["total"]["value"]
                 self.assertEqual(
                     count,
                     0,
-                    f"There should be no results for {sensitive_term} in {index}. Found {count}.",
+                    f"There should be no results that exactly match {sensitive_term} in {index}. Found {count}.",
                 )
 
     @pytest.mark.order(after="test_upstream_indexed_audio")

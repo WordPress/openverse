@@ -63,7 +63,7 @@
         :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
-        {{ $t("audio-details.weblink") }}
+        {{ $t("audioDetails.weblink") }}
       </VButton>
     </div>
   </div>
