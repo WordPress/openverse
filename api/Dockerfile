@@ -14,9 +14,6 @@ FROM realies/audiowaveform:latest AS awf
 RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
   xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
 
-# Print the structure of the /deps directory
-RUN find /deps -print
-
 ##################
 # Python builder #
 ##################
@@ -64,15 +61,17 @@ ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /api
 
-# Print the root directory structure
-RUN ls -la /
-
 ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
 # Copy virtualenv from the builder image
 COPY --from=builder /venv /venv
 
-# Copy `audiowaveform` dependencies
+# Copy `audiowaveform` dependencies. This is unreliable as we use
+# The `latest` version of the audiowaveform image which may introduce
+# dependency changes which *could* have a different directory structure.
+# If this step is failing, try adding the logging in this commit to help
+# update the dependency paths:
+# https://github.com/WordPress/openverse/commit/6cd8e3944a1d4ba7a3e80705b969a6a50eb75b5a
 COPY --from=awf /deps/lib/ /lib/
 COPY --from=awf /deps/usr/ /usr/
 
