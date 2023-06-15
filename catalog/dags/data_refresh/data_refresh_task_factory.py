@@ -169,16 +169,15 @@ def create_data_refresh_task_group(
             )
             tasks.append(ingest_upstream_tasks)
 
-        # Poll the API, targeting the newly created index rather than the live index,
-        # and wait until healthy results are returned.
-        api_health_check = ingestion_server.api_health_check(
+        # Await healthy results from the newly created elasticsearch index.
+        index_readiness_check = ingestion_server.index_readiness_check(
             media_type=data_refresh.media_type,
             index_suffix=XCOM_PULL_TEMPLATE.format(
                 generate_index_suffix.task_id, "return_value"
             ),
-            timeout=data_refresh.api_healthcheck_timeout,
+            timeout=data_refresh.index_readiness_timeout,
         )
-        tasks.append(api_health_check)
+        tasks.append(index_readiness_check)
 
         # Trigger the `promote` task on the ingestion server and await its completion.
         # This task promotes the newly created API DB table and elasticsearch index.

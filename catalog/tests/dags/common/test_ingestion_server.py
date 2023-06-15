@@ -32,10 +32,10 @@ def clean_db():
 
 
 @pytest.fixture()
-def healthcheck_dag():
-    # Create a DAG that just has an api_health_check task
+def index_readiness_dag():
+    # Create a DAG that just has an index_readiness_check task
     with DAG(dag_id=TEST_DAG_ID, schedule=None, start_date=TEST_START_DATE) as dag:
-        ingestion_server.api_health_check(
+        ingestion_server.index_readiness_check(
             media_type="image", index_suffix="my_test_suffix", timeout=timedelta(days=1)
         )
 
@@ -62,30 +62,51 @@ def test_response_filter_stat(data, expected):
 
 
 @pytest.mark.parametrize(
-    "response_code, response_json, expected_status",
+    "response_code, response_json, environment, expected_status",
     [
-        # Pass
-        (200, {"result_count": 10000}, TaskInstanceState.SUCCESS),
-        # No result count
-        (200, {}, TaskInstanceState.UP_FOR_RESCHEDULE),
-        (200, {"foo": "bar"}, TaskInstanceState.UP_FOR_RESCHEDULE),
-        # Not enough records
-        (200, {"result_count": 0}, TaskInstanceState.UP_FOR_RESCHEDULE),
-        (200, {"result_count": 100}, TaskInstanceState.UP_FOR_RESCHEDULE),
-        # Errors
+        # Production
+        # Healthy cluster
+        (200, {"status": "green"}, "prod", TaskInstanceState.SUCCESS),
+        # Unhealthy cluster
+        (200, {"status": "yellow"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
+        (200, {"status": "red"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
+        # Missing status
+        (200, {}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
+        (200, {"foo": "bar"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
+        # Error
         pytest.param(
             400,
             {"detail": {"internal__index": ["Invalid index name `audio-foo`."]}},
+            "prod",
+            TaskInstanceState.UP_FOR_RETRY,
+            marks=pytest.mark.raises(exception=AirflowException),
+        ),
+        #
+        # Not production environment
+        # Healthy cluster
+        (200, {"status": "green"}, "dev", TaskInstanceState.SUCCESS),
+        # Outside of production, yellow status is permitted
+        (200, {"status": "yellow"}, "dev", TaskInstanceState.SUCCESS),
+        # Red is still considered unhealthy
+        (200, {"status": "red"}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
+        # Missing status
+        (200, {}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
+        (200, {"foo": "bar"}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
+        # Error
+        pytest.param(
+            400,
+            {"detail": {"internal__index": ["Invalid index name `audio-foo`."]}},
+            "dev",
             TaskInstanceState.UP_FOR_RETRY,
             marks=pytest.mark.raises(exception=AirflowException),
         ),
     ],
 )
-def test_api_health_check(
-    healthcheck_dag, response_code, response_json, expected_status
+def test_index_readiness_check(
+    index_readiness_dag, response_code, response_json, environment, expected_status
 ):
     execution_date = TEST_START_DATE + timedelta(days=1)
-    dagrun = healthcheck_dag.create_dagrun(
+    dagrun = index_readiness_dag.create_dagrun(
         start_date=execution_date,
         execution_date=execution_date,
         data_interval=(execution_date, execution_date),
@@ -93,16 +114,23 @@ def test_api_health_check(
         run_type=DagRunType.MANUAL,
     )
 
-    with mock.patch(
-        "airflow.providers.http.hooks.http.requests.Session.send"
-    ) as mock_session_send:
+    def _var_mock(*args, **kwargs):
+        return environment
+
+    with (
+        mock.patch(
+            "airflow.providers.http.hooks.http.requests.Session.send"
+        ) as mock_session_send,
+        mock.patch("common.ingestion_server.Variable") as MockVariable,
+    ):
+        MockVariable.get.side_effect = _var_mock
         r = requests.Response()
         r.status_code = response_code
         r.reason = "test"
         r.json = mock.MagicMock(return_value=response_json)
         mock_session_send.return_value = r
 
-        ti = dagrun.get_task_instance(task_id="api_health_check")
-        ti.task = healthcheck_dag.get_task(task_id="api_health_check")
+        ti = dagrun.get_task_instance(task_id="index_readiness_check")
+        ti.task = index_readiness_dag.get_task(task_id="index_readiness_check")
         ti.run()
         assert ti.state == expected_status

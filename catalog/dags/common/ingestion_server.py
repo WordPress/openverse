@@ -4,11 +4,12 @@ from datetime import timedelta
 from urllib.parse import urlparse
 
 from airflow.exceptions import AirflowSkipException
+from airflow.models import Variable
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
 
-from common.constants import API_CONN_ID, XCOM_PULL_TEMPLATE
+from common.constants import ES_PROD_CONN_ID, XCOM_PULL_TEMPLATE
 
 
 logger = logging.getLogger(__name__)
@@ -68,17 +69,19 @@ def response_check_wait_for_completion(response: Response) -> bool:
     return True
 
 
-def response_check_api_health_check(response: Response) -> bool:
+def response_check_index_readiness_check(response: Response) -> bool:
     """
-    Handle the response for `api_health_check` Sensor.
-
-    Waits for an API query using the chosen index to return results.
+    Handle the response for `index_readiness_check` Sensor, to await a
+    healthy Elasticsearch cluster.
     """
     data = response.json()
+    status = data.get("status", None)
 
-    result_count = data.get("result_count", 0)
-    logger.info(f"Retrieved {result_count} records from the API using the new index.")
-    return result_count > THRESHOLD_RESULT_COUNT
+    if Variable.get("ENVIRONMENT", default_var="dev") == "prod":
+        return status == "green"
+
+    # If we are not in production, we may proceed with a yellow cluster status.
+    return status in ["green", "yellow"]
 
 
 def get_current_index(target_alias: str) -> SimpleHttpOperator:
@@ -143,35 +146,23 @@ def trigger_and_wait_for_task(
     return trigger, waiter
 
 
-def api_health_check(
+def index_readiness_check(
     media_type: str,
     index_suffix: str,
     timeout: timedelta,
     poke_interval: int = POKE_INTERVAL,
-    retries: int = 8,
 ) -> HttpSensor:
     """
-    Poll the API for the given media endpoint, targeting the given index, and return
-    successfully when healthy results are returned.
-
-    If no results are returned, it will reschedule and poll again. If a 400 is received
-    because the API is not able to connect to the given index, the task will fail and
-    retry. The task is set to retry with exponential backoff, such that the retry delay
-    doubles between each attempt.
+    Poll the Elasticsearch cluster health endpoint, targeting the given index, and
+    return successfully when a healthy status is identified.
     """
     return HttpSensor(
-        task_id="api_health_check",
-        http_conn_id=API_CONN_ID,
-        endpoint=f"{media_type}",
-        request_params={"internal__index": f"{media_type}-{index_suffix}"},
-        headers={
-            "Authorization": "Bearer {{ var.value.get('API_ACCESS_TOKEN', 'not_set') }}"
-        },
+        task_id="index_readiness_check",
+        http_conn_id=ES_PROD_CONN_ID,
+        endpoint=f"_cluster/health/{media_type}-{index_suffix}",
         method="GET",
-        response_check=response_check_api_health_check,
+        response_check=response_check_index_readiness_check,
         mode="reschedule",
         poke_interval=poke_interval,
         timeout=timeout.total_seconds(),
-        retries=retries,
-        retry_exponential_backoff=True,
     )
