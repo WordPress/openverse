@@ -75,8 +75,8 @@ def test_response_filter_stat(data, expected):
         (200, {"foo": "bar"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
         # Error
         pytest.param(
-            400,
-            {"detail": {"internal__index": ["Invalid index name `audio-foo`."]}},
+            408,
+            {"status": "red", "timed_out": "true"},
             "prod",
             TaskInstanceState.UP_FOR_RETRY,
             marks=pytest.mark.raises(exception=AirflowException),
@@ -94,8 +94,8 @@ def test_response_filter_stat(data, expected):
         (200, {"foo": "bar"}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
         # Error
         pytest.param(
-            400,
-            {"detail": {"internal__index": ["Invalid index name `audio-foo`."]}},
+            408,
+            {"status": "red", "timed_out": "true"},
             "dev",
             TaskInstanceState.UP_FOR_RETRY,
             marks=pytest.mark.raises(exception=AirflowException),
