@@ -433,7 +433,7 @@ on both sides.
     such things.
 
 This list is not an exhaustive list of all possible useful alarms. It is a
-starting point. We should and will add and remove
+starting point. We should and will add and remove alarms over time.
 
 #### Logs Insights metrics based alarms
 
