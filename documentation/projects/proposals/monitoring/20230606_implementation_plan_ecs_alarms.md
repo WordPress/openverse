@@ -162,7 +162,7 @@ module "api-monitoring" {
 New modules for each service/environment help to prevent an increase in root
 module complexity. In order to consolidate monitoring configuration, the
 existing `service-monitors` instances, which configure UptimeRobot, will be
-moved into these new monitoring modules. Likewise, existing RDS and
+moved into these new monitoring modules. Likewise, existing RDS, Elasticache and
 Elasticsearch monitors present in the `next` root modules should be moved.
 
 ```{note}
