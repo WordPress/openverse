@@ -73,7 +73,9 @@ ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansP
 COPY --from=builder /venv /venv
 
 # Copy `audiowaveform` dependencies
-COPY --from=awf /deps /
+COPY --from=awf /deps/lib/ /lib/
+COPY --from=awf /deps/usr/ /usr/
+
 # Copy `audiowaveform` binary
 COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 
