@@ -167,10 +167,6 @@ There should be no changes to infrastructure.
 
 <!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
 
-### Tools & packages
-
-<!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
-
 Nuxt uses `module`s for adding functionality. The table below describes the
 changes that need to be made to the modules we use.
 
