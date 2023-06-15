@@ -12,7 +12,10 @@ FROM realies/audiowaveform:latest AS awf
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
 RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
-    xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
+  xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
+
+# Print the structure of the /deps directory
+RUN find /deps -print
 
 ##################
 # Python builder #
@@ -32,10 +35,10 @@ ENV PATH="/venv/bin:$PATH"
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
 RUN apt-get update \
-      && apt-get install -y python3-dev \
-      && rm -rf /var/lib/apt/lists/* \
-    && python -m venv /venv \
-    && pip install --upgrade pipenv
+  && apt-get install -y python3-dev \
+  && rm -rf /var/lib/apt/lists/* \
+  && python -m venv /venv \
+  && pip install --upgrade pipenv
 
 # Copy the Pipenv files into the container
 COPY Pipfile Pipfile.lock ./
@@ -61,6 +64,9 @@ ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /api
 
+# Print the root directory structure
+RUN ls -la /
+
 ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
 # Copy virtualenv from the builder image
@@ -76,16 +82,16 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 #   - libpq-dev: required by `psycopg2`
 # - Create directory for dumping API logs
 RUN apt-get update \
-      && apt-get install -y curl libpq-dev libexempi8 postgresql-client \
-      && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /var/log/openverse_api/openverse_api.log
+  && apt-get install -y curl libpq-dev libexempi8 postgresql-client \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /var/log/openverse_api/openverse_api.log
 
 # Create a folder for placing static files
 RUN mkdir /static
 
 # Create a non-root user, and make it the owner of the static dir created above
 RUN useradd --create-home opener \
-    && chown -R opener /static
+  && chown -R opener /static
 USER opener
 
 # Copy code into the final image
@@ -93,10 +99,10 @@ COPY --chown=opener . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`
 RUN env \
-      SETUP_ES="False" \
-      STATIC_ROOT="/static" \
-      DJANGO_SECRET_KEY="any string" \
-    python manage.py collectstatic
+  SETUP_ES="False" \
+  STATIC_ROOT="/static" \
+  DJANGO_SECRET_KEY="any string" \
+  python manage.py collectstatic
 
 # Add the release version to the docker container
 ARG SEMANTIC_VERSION
