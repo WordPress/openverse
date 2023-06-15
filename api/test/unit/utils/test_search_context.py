@@ -17,7 +17,16 @@ def test_no_results(media_type_config):
     (True, False),
     ids=lambda x: "has_sensitive_text" if x else "no_sensitive_text",
 )
-def test_sensitive_text(media_type_config, has_sensitive_text):
+@pytest.mark.parametrize(
+    "setting_enabled",
+    (True, False),
+    ids=lambda x: "setting_enabled" if x else "setting_disabled",
+)
+def test_sensitive_text(
+    media_type_config, has_sensitive_text, setting_enabled, settings
+):
+    settings.ENABLE_FILTERED_INDEX_QUERIES = setting_enabled
+
     clear_results = media_type_config.model_factory.create_batch(
         # Use size 10 to force result size beyond the default ES query window
         size=10,
@@ -43,5 +52,7 @@ def test_sensitive_text(media_type_config, has_sensitive_text):
 
     assert search_context == SearchContext(
         {r.identifier for r in results},
-        {maybe_sensitive_text_model.identifier} if has_sensitive_text else set(),
+        {maybe_sensitive_text_model.identifier}
+        if has_sensitive_text and setting_enabled
+        else set(),
     )
