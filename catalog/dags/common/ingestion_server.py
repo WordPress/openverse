@@ -33,7 +33,6 @@ def response_filter_stat(response: Response) -> str:
     # Indices are named as '<media type>-<suffix>', so everything after the first
     # hyphen '-' is the suffix.
     _, index_suffix = index_name.split("-", maxsplit=1)
-    logger.info(index_suffix)
     return index_suffix
 
 
