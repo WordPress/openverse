@@ -8,7 +8,7 @@ from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
 
-from common.constants import ES_PROD_CONN_ID, XCOM_PULL_TEMPLATE
+from common.constants import ES_PROD_HTTP_CONN_ID, XCOM_PULL_TEMPLATE
 
 
 logger = logging.getLogger(__name__)
@@ -154,7 +154,7 @@ def index_readiness_check(
     """
     return HttpSensor(
         task_id="index_readiness_check",
-        http_conn_id=ES_PROD_CONN_ID,
+        http_conn_id=ES_PROD_HTTP_CONN_ID,
         endpoint=f"{media_type}-{index_suffix}/_search",
         method="GET",
         response_check=response_check_index_readiness_check,
