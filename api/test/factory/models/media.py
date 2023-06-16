@@ -172,7 +172,7 @@ class MediaFactory(DjangoModelFactory):
             {
                 "_index": origin_index,
                 "_score": 1.0,
-                "_id": media.pk,
+                "_id": str(media.pk),
                 "_source": source_document,
             }
         )
