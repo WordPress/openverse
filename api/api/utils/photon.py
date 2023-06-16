@@ -1,5 +1,6 @@
 import logging
 from os.path import splitext
+from typing import Literal
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -23,8 +24,6 @@ class UpstreamThumbnailException(APIException):
     default_code = "upstream_photon_failure"
 
 
-ALLOWED_TYPES = {"gif", "jpg", "jpeg", "png", "webp"}
-
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
         purpose="ThumbnailGeneration"
@@ -32,26 +31,29 @@ HEADERS = {
 }
 
 
-def _get_file_extension_from_url(image_url: str) -> str:
-    """Return the image extension if present in the URL."""
-    parsed = urlparse(image_url)
-    _, ext = splitext(parsed.path)
-    return ext[1:].lower()  # remove the leading dot
+PHOTON_TYPES = {"gif", "jpg", "jpeg", "png", "webp"}
+ORIGINAL_TYPES = {"svg"}
+
+PHOTON = "photon"
+ORIGINAL = "original"
+THUMBNAIL_STRATEGY = Literal[PHOTON, ORIGINAL]
 
 
-def _get_file_extension_from_content_type(content_type: str) -> str | None:
+def get_thumbnail_strategy(ext: str | None) -> THUMBNAIL_STRATEGY | None:
     """
-    Return the image extension if present in the Response's content type
-    header.
+    We use photon for image types that are supported by photon (PHOTON_TYPES),
+    for SVG images we use the original image.
     """
-    if content_type and "/" in content_type:
-        return content_type.split("/")[1]
+    if ext in PHOTON_TYPES:
+        return PHOTON
+    elif ext in ORIGINAL_TYPES:
+        return ORIGINAL
     return None
 
 
-def check_image_type(image_url: str, media_obj) -> None:
+def get_image_extension(image_url: str, image_identifier: str) -> str | None:
     cache = django_redis.get_redis_connection("default")
-    key = f"media:{media_obj.identifier}:thumb_type"
+    key = f"media:{image_identifier}:thumb_type"
 
     ext = _get_file_extension_from_url(image_url)
 
@@ -79,12 +81,32 @@ def check_image_type(image_url: str, media_obj) -> None:
                 ext = None
 
             cache.set(key, ext if ext else "unknown")
-
-    if ext not in ALLOWED_TYPES:
-        raise UnsupportedMediaType(ext)
+    return ext
 
 
-def _get_photon_params(image_url, is_full_size, is_compressed):
+def _get_file_extension_from_url(image_url: str) -> str:
+    """Return the image extension if present in the URL."""
+    parsed = urlparse(image_url)
+    _, ext = splitext(parsed.path)
+    return ext[1:].lower()  # remove the leading dot
+
+
+def _get_file_extension_from_content_type(content_type: str) -> str | None:
+    """
+    Return the image extension if present in the Response's content type
+    header.
+    """
+    if content_type and "/" in content_type:
+        return content_type.split("/")[1]
+    return None
+
+
+def get_photon_request_params(
+    parsed_image_url,
+    is_full_size: bool,
+    is_compressed: bool,
+    headers: dict,
+):
     """
     Photon options documented here:
     https://developer.wordpress.com/docs/photon/api/
@@ -96,8 +118,6 @@ def _get_photon_params(image_url, is_full_size, is_compressed):
 
     if is_compressed:
         params["quality"] = settings.THUMBNAIL_QUALITY
-
-    parsed_image_url = urlparse(image_url)
 
     if parsed_image_url.query:
         # No need to URL encode this string because requests will already
@@ -111,33 +131,51 @@ def _get_photon_params(image_url, is_full_size, is_compressed):
         # do not serve over HTTP and do not have a redirect)
         params["ssl"] = "true"
 
-    return params, parsed_image_url
-
-
-def get(
-    image_url: str,
-    accept_header: str = "image/*",
-    is_full_size: bool = False,
-    is_compressed: bool = True,
-) -> HttpResponse:
-    logger = parent_logger.getChild("get")
-    tallies = django_redis.get_redis_connection("tallies")
-    month = get_monthly_timestamp()
-
-    params, parsed_image_url = _get_photon_params(
-        image_url, is_full_size, is_compressed
-    )
-
     # Photon excludes the protocol, so we need to reconstruct the url + port + path
     # to send as the "path" of the Photon request
     domain = parsed_image_url.netloc
     path = parsed_image_url.path
     upstream_url = f"{settings.PHOTON_ENDPOINT}{domain}{path}"
 
-    headers = {"Accept": accept_header} | HEADERS
     if settings.PHOTON_AUTH_KEY:
         headers["X-Photon-Authentication"] = settings.PHOTON_AUTH_KEY
 
+    return upstream_url, params, headers
+
+
+def get(
+    image_url: str,
+    image_identifier: str,
+    image_filetype: str | None = None,
+    accept_header: str = "image/*",
+    is_full_size: bool = False,
+    is_compressed: bool = True,
+) -> HttpResponse:
+    """
+    Proxy an image through Photon if its filetype is supported, return the original
+    image if the filetype is SVG, and raise .
+    """
+    logger = parent_logger.getChild("get")
+    tallies = django_redis.get_redis_connection("tallies")
+    month = get_monthly_timestamp()
+
+    image_extension = image_filetype or get_image_extension(image_url, image_identifier)
+    thumbnail_strategy = get_thumbnail_strategy(image_extension)
+    if not thumbnail_strategy:
+        raise UnsupportedMediaType(image_extension)
+
+    headers = {"Accept": accept_header} | HEADERS
+
+    parsed_image_url = urlparse(image_url)
+    domain = parsed_image_url.netloc
+
+    if thumbnail_strategy == ORIGINAL:
+        upstream_url = image_url
+        params = {}
+    else:
+        upstream_url, params, headers = get_photon_request_params(
+            parsed_image_url, is_full_size, is_compressed, headers
+        )
     try:
         upstream_response = requests.get(
             upstream_url,

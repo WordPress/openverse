@@ -164,10 +164,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        photon.check_image_type(image_url, media_obj)
-
         return photon.get(
             image_url,
+            media_obj.identifier,
+            media_obj.filetype,
             accept_header=request.headers.get("Accept", "image/*"),
             **serializer.validated_data,
         )
