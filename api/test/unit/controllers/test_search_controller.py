@@ -2,6 +2,11 @@ import random
 import re
 from collections.abc import Callable
 from enum import Enum, auto
+from test.factory.es_http import (
+    MOCK_DEAD_RESULT_URL,
+    MOCK_LIVE_RESULT_URL,
+    create_mock_es_http_image_search_response,
+)
 from unittest import mock
 from uuid import uuid4
 
@@ -551,50 +556,12 @@ def test_resolves_index(
 def test_no_post_process_results_recursion(
     wrapped_post_process_results, image_media_type_config, settings
 ):
-    mock_result_url = "https://example.com/openverse-image-result-url"
-    mock_es_response = {
-        "took": 3,
-        "timed_out": False,
-        "_shards": {"total": 18, "successful": 18, "skipped": 0, "failed": 0},
-        "hits": {
-            "total": {"value": 45, "relation": "eq"},
-            "max_score": 11.0007305,
-            "hits": [
-                {
-                    "_index": "image-init",
-                    "_type": "_doc",
-                    "_id": "3345",
-                    "_score": 7.607353,
-                    "_source": {
-                        "thumbnail": None,
-                        "aspect_ratio": "wide",
-                        "extension": "jpg",
-                        "size": "large",
-                        "authority_boost": 85,
-                        "max_boost": 85,
-                        "min_boost": 1,
-                        "id": i + 1,
-                        "identifier": str(uuid4()),
-                        "title": "Bird Nature Photo",
-                        "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
-                        "creator": "Nature's Beauty",
-                        "creator_url": "https://example.com/author/121424",
-                        "url": mock_result_url,
-                        "license": "cc0",
-                        "license_version": "1.0",
-                        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "provider": "example",
-                        "source": "example",
-                        "category": "photograph",
-                        "created_on": "2022-02-26T08:48:33+00:00",
-                        "tags": [{"name": "bird"}],
-                        "mature": False,
-                    },
-                }
-                for i in range(5)
-            ],
-        },
-    }
+    hit_count = 5
+    mock_es_response = create_mock_es_http_image_search_response(
+        index=image_media_type_config.origin_index,
+        total_hits=45,
+        hit_count=hit_count,
+    )
 
     es_host = settings.ES.transport.kwargs["host"]
     es_port = settings.ES.transport.kwargs["port"]
@@ -608,9 +575,9 @@ def test_no_post_process_results_recursion(
 
     # Ensure dead link filtering does not remove any results
     pook.head(
-        mock_result_url,
+        MOCK_LIVE_RESULT_URL,
         reply=200,
-    ).times(len(mock_es_response["hits"]["hits"]))
+    )
 
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
@@ -680,168 +647,20 @@ def test_post_process_results_recurses_as_needed(
     # between each run
     redis,
 ):
-    mock_live_result_url = "https://example.com/openverse-image-result-url"
-    mock_dead_result_url = f"{mock_live_result_url}-dead"
+    mock_es_response_1 = create_mock_es_http_image_search_response(
+        index=image_media_type_config.origin_index,
+        total_hits=mock_total_hits,
+        hit_count=10,
+        live_hit_count=2,
+    )
 
-    mock_es_response_1 = {
-        "took": 3,
-        "timed_out": False,
-        "_shards": {"total": 18, "successful": 18, "skipped": 0, "failed": 0},
-        "hits": {
-            "total": {"value": mock_total_hits, "relation": "eq"},
-            "max_score": 11.0007305,
-            "hits": [
-                {
-                    "_index": "image-init",
-                    "_type": "_doc",
-                    "_id": "3345",
-                    "_score": 7.607353,
-                    "_source": {
-                        "thumbnail": None,
-                        "aspect_ratio": "wide",
-                        "extension": "jpg",
-                        "size": "large",
-                        "authority_boost": 85,
-                        "max_boost": 85,
-                        "min_boost": 1,
-                        "id": i + 1,
-                        "identifier": str(uuid4()),
-                        "title": "Bird Nature Photo",
-                        "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
-                        "creator": "Nature's Beauty",
-                        "creator_url": "https://example.com/author/121424",
-                        "url": mock_live_result_url,
-                        "license": "cc0",
-                        "license_version": "1.0",
-                        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "provider": "example",
-                        "source": "example",
-                        "category": "photograph",
-                        "created_on": "2022-02-26T08:48:33+00:00",
-                        "tags": [{"name": "bird"}],
-                        "mature": False,
-                    },
-                }
-                for i in range(2)
-            ]
-            + [
-                {
-                    "_index": "image-init",
-                    "_type": "_doc",
-                    "_id": "3345",
-                    "_score": 7.607353,
-                    "_source": {
-                        "thumbnail": None,
-                        "aspect_ratio": "wide",
-                        "extension": "jpg",
-                        "size": "large",
-                        "authority_boost": 85,
-                        "max_boost": 85,
-                        "min_boost": 1,
-                        "id": i + 1,
-                        "identifier": str(uuid4()),
-                        "title": "Bird Nature Photo",
-                        "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
-                        "creator": "Nature's Beauty",
-                        "creator_url": "https://example.com/author/121424",
-                        "url": mock_dead_result_url,
-                        "license": "cc0",
-                        "license_version": "1.0",
-                        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "provider": "example",
-                        "source": "example",
-                        "category": "photograph",
-                        "created_on": "2022-02-26T08:48:33+00:00",
-                        "tags": [{"name": "bird"}],
-                        "mature": False,
-                    },
-                }
-                for i in range(8)
-            ],
-        },
-    }
-
-    mock_es_response_2 = {
-        "took": 3,
-        "timed_out": False,
-        "_shards": {"total": 18, "successful": 18, "skipped": 0, "failed": 0},
-        "hits": {
-            "total": {"value": mock_total_hits, "relation": "eq"},
-            "max_score": 11.0007305,
-            "hits": mock_es_response_1["hits"]["hits"]
-            + [
-                {
-                    "_index": "image-init",
-                    "_type": "_doc",
-                    "_id": "3345",
-                    "_score": 7.607353,
-                    "_source": {
-                        "thumbnail": None,
-                        "aspect_ratio": "wide",
-                        "extension": "jpg",
-                        "size": "large",
-                        "authority_boost": 85,
-                        "max_boost": 85,
-                        "min_boost": 1,
-                        "id": i + 1,
-                        "identifier": str(uuid4()),
-                        "title": "Bird Nature Photo",
-                        "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
-                        "creator": "Nature's Beauty",
-                        "creator_url": "https://example.com/author/121424",
-                        "url": mock_live_result_url,
-                        "license": "cc0",
-                        "license_version": "1.0",
-                        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "provider": "example",
-                        "source": "example",
-                        "category": "photograph",
-                        "created_on": "2022-02-26T08:48:33+00:00",
-                        "tags": [{"name": "bird"}],
-                        "mature": False,
-                    },
-                }
-                # Two more live results, then fill the rest of the page with dead ones
-                for i in range(2)
-            ]
-            + [
-                {
-                    "_index": "image-init",
-                    "_type": "_doc",
-                    "_id": "3345",
-                    "_score": 7.607353,
-                    "_source": {
-                        "thumbnail": None,
-                        "aspect_ratio": "wide",
-                        "extension": "jpg",
-                        "size": "large",
-                        "authority_boost": 85,
-                        "max_boost": 85,
-                        "min_boost": 1,
-                        "id": i + 1,
-                        "identifier": str(uuid4()),
-                        "title": "Bird Nature Photo",
-                        "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
-                        "creator": "Nature's Beauty",
-                        "creator_url": "https://example.com/author/121424",
-                        "url": mock_dead_result_url,
-                        "license": "cc0",
-                        "license_version": "1.0",
-                        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-                        "provider": "example",
-                        "source": "example",
-                        "category": "photograph",
-                        "created_on": "2022-02-26T08:48:33+00:00",
-                        "tags": [{"name": "bird"}],
-                        "mature": False,
-                    },
-                }
-                for i in range(
-                    mock_total_hits - len(mock_es_response_1["hits"]["hits"]) - 2
-                )
-            ],
-        },
-    }
+    mock_es_response_2 = create_mock_es_http_image_search_response(
+        index=image_media_type_config.origin_index,
+        total_hits=mock_total_hits,
+        hit_count=4,
+        live_hit_count=2,
+        base_hits=mock_es_response_1["hits"]["hits"],
+    )
 
     es_host = settings.ES.transport.kwargs["host"]
     es_port = settings.ES.transport.kwargs["port"]
@@ -880,16 +699,16 @@ def test_post_process_results_recurses_as_needed(
     live_results = [
         r
         for r in mock_es_response_2["hits"]["hits"]
-        if r["_source"]["url"] == mock_live_result_url
+        if r["_source"]["url"] == MOCK_LIVE_RESULT_URL
     ]
 
     pook.head(
-        mock_live_result_url,
+        MOCK_LIVE_RESULT_URL,
         reply=200,
     )
 
     pook.head(
-        mock_dead_result_url,
+        MOCK_DEAD_RESULT_URL,
         reply=400,
     )
 
