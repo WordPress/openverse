@@ -450,7 +450,6 @@ def test_search_tallies_pages_less_than_5(
         search_params=serializer,
         ip=0,
         origin_index=media_type_config.origin_index,
-        exact_index=False,
         page=page,
         page_size=page_size,
         filter_dead=False,
@@ -489,7 +488,6 @@ def test_search_tallies_handles_empty_page(
         search_params=serializer,
         ip=0,
         origin_index=media_type_config.origin_index,
-        exact_index=False,
         # Force calculated result depth length to include results within 80th position and above
         # to force edge case where retrieved results are only partially tallied.
         page=1,
@@ -532,7 +530,6 @@ def test_resolves_index(
         search_params=serializer,
         ip=0,
         origin_index=origin_index,
-        exact_index=False,
         page=1,
         page_size=20,
         filter_dead=False,

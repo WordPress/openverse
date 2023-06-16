@@ -27,7 +27,7 @@ from api.utils.url import add_protocol
 
 
 @extend_schema_serializer(
-    # Hide unstable and internal fields from documentation.
+    # Hide unstable fields from documentation.
     # Also see `field_names` below.
     exclude_fields=[
         "unstable__sort_by",
@@ -35,7 +35,6 @@ from api.utils.url import add_protocol
         "unstable__authority",
         "unstable__authority_boost",
         "unstable__include_sensitive_results",
-        "internal__index",
     ],
 )
 class MediaSearchRequestSerializer(serializers.Serializer):
@@ -169,16 +168,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         default=False,
     )
 
-    # The ``internal__`` prefix is used in the query params.
-    # If you rename these fields, update the following references:
-    #   - ``field_names`` in ``MediaSearchRequestSerializer``
-    #   - validators for these fields in ``MediaSearchRequestSerializer``
-    internal__index = serializers.CharField(
-        source="index",
-        help_text="The index against which to perform the search.",
-        required=False,
-    )
-
     page_size = serializers.IntegerField(
         label="page_size",
         help_text="Number of results to return per page.",
@@ -265,23 +254,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
             )
 
         return self.initial_data.get("mature") or value
-
-    def validate_internal__index(self, value):
-        """
-        Check whether the given index name is a valid index or alias. However,
-        for unauthenticated requests, no check is performed and ``None`` is
-        returned immediately.
-
-        :param value: the provided index name to check
-        :return: ``None`` if request is anonymous, the provided name if it is valid
-        :raise: ``serializers.ValidationError`` if not anonymous and invalid index name
-        """
-
-        if self.is_request_anonymous():
-            return None
-        if not settings.ES.indices.exists(value):  # ``exists`` includes aliases.
-            raise serializers.ValidationError(f"Invalid index name `{value}`.")
-        return value
 
     def validate_page_size(self, value):
         is_anonymous = self.is_request_anonymous()

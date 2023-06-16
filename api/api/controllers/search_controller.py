@@ -296,7 +296,6 @@ def _resolve_index(
 def search(
     search_params: media_serializers.MediaSearchRequestSerializer,
     origin_index: OriginIndex,
-    exact_index: bool,
     page_size: int,
     ip: int,
     filter_dead: bool,
@@ -308,7 +307,6 @@ def search(
     :param search_params: Search parameters. See
      :class: `ImageSearchQueryStringSerializer`.
     :param origin_index: The Elasticsearch index to search (e.g. 'image')
-    :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
     :param ip: The user's hashed IP. Hashed IPs are used to anonymously but
     uniquely identify users exclusively for ensuring query consistency across
@@ -318,10 +316,7 @@ def search(
     :return: Tuple with a List of Hits from elasticsearch, the total count of
     pages, the number of results, and the ``SearchContext`` as a dict.
     """
-    if not exact_index:
-        index = _resolve_index(origin_index, search_params)
-    else:
-        index = origin_index
+    index = _resolve_index(origin_index, search_params)
 
     search_client = Search(index=index)
 

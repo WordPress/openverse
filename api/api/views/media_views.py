@@ -81,21 +81,12 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         hashed_ip = hash(self._get_user_ip(request))
         filter_dead = params.validated_data["filter_dead"]
-
-        if pref_index := params.validated_data.get("index"):
-            logger.info(f"Using preferred index {pref_index} for media.")
-            search_index = pref_index
-            exact_index = True
-        else:
-            logger.info("Using default index for media.")
-            search_index = self.default_index
-            exact_index = False
+        search_index = self.default_index
 
         try:
             results, num_pages, num_results, search_context = search_controller.search(
                 params,
                 search_index,
-                exact_index,
                 page_size,
                 hashed_ip,
                 filter_dead,
