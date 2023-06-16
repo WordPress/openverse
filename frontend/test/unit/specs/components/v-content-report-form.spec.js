@@ -13,36 +13,36 @@ jest.mock("~/composables/use-analytics", () => ({
 }))
 
 const getDmcaInput = () =>
-  expect(screen.findByRole("radio", {
+  screen.getByRole("radio", {
     name: /Infringes copyright/i,
-  })).toBeInTheDocument()
+  })
 const getMatureInput = () =>
-  expect(screen.findByRole("radio", {
+  screen.getByRole("radio", {
     name: /mature/i,
-  })).toBeInTheDocument()
+  })
 const getOtherInput = () =>
-  expect(screen.findByRole("radio", {
+  screen.getByRole("radio", {
     name: /other/i,
-  })).toBeInTheDocument()
+  })
 const getCancelButton = () =>
-  expect(screen.findByRole("button", {
+  screen.getByRole("button", {
     name: /cancel/i,
-  })).toBeInTheDocument()
+  })
 const getReportButton = () =>
-  expect(screen.findByRole("button", {
+  screen.getByRole("button", {
     name: /report/i,
-  })).toBeInTheDocument()
+  })
 
 // When DMCA selected
 const getReportLink = () =>
-  expect(screen.findByRole("link", {
+  screen.getByRole("link", {
     name: /DMCA form/i,
-  })).toBeInTheDocument()
+  })
 // When other selected
 const getDescriptionTextarea = () =>
-  expect(screen.findByRole("textbox", {
+  screen.getByRole("textbox", {
     name: /Describe the issue. Required/i,
-  })).toBeInTheDocument()
+  })
 
 const mockImplementation = () => Promise.resolve()
 const mock = jest.fn().mockImplementation(mockImplementation)
@@ -87,7 +87,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getReportButton())
 
     // Submission successful message
-    getByText(/Thank you for reporting this content/i)
+    expect(queryByText(/Thank you for reporting this content/i)).toBeInTheDocument()
   })
 
   it("should render error message if report sending fails", async () => {
@@ -98,7 +98,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getReportButton())
 
     // Submission error message
-    getByText(/Something went wrong, please try again after some time./i)
+    expect(queryByText(/Something went wrong, please try again after some time./i)).toBeInTheDocument()
   })
 
   it("should render DMCA notice", async () => {
@@ -106,9 +106,9 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getDmcaInput())
 
     // Notice with link to provider
-    getByText(
+    expect(queryByText(
       /No action will be taken until this form is filled out and submitted/i
-    )
+    )).toBeInTheDocument()
     getReportLink()
   })
 
@@ -117,7 +117,7 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getOtherInput())
 
     // Report form with a submit button
-    getByText(/Describe the issue./i)
+    expect(queryByText(/Describe the issue./i)).toBeInTheDocument()
     getDescriptionTextarea()
   })
 
