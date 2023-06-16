@@ -26,7 +26,6 @@ describe("VImageCell", () => {
       props: {
         image,
         searchTerm: "cat",
-        aspectRatio: "square",
         relatedTo: null,
       },
     }
