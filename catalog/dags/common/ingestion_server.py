@@ -16,8 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15))
-# Minimum number of records we expect to get back from the API when querying an index.
-THRESHOLD_RESULT_COUNT = int(os.getenv("API_HEALTHCHECK_RECORD_COUNT", 10_000))
 
 
 def response_filter_stat(response: Response) -> str:
