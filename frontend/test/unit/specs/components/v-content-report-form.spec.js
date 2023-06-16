@@ -1,5 +1,3 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["getByText", "getDmcaInput", "getMatureInput", "getOtherInput", "getCancelButton", "getReportButton", "getReportLink", "getDescriptionTextarea", "expect"] }] */
-
 import { fireEvent, screen } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
@@ -15,36 +13,36 @@ jest.mock("~/composables/use-analytics", () => ({
 }))
 
 const getDmcaInput = () =>
-  screen.getByRole("radio", {
+  expect(screen.findByRole("radio", {
     name: /Infringes copyright/i,
-  })
+  })).toBeInTheDocument()
 const getMatureInput = () =>
-  screen.getByRole("radio", {
+  expect(screen.findByRole("radio", {
     name: /mature/i,
-  })
+  })).toBeInTheDocument()
 const getOtherInput = () =>
-  screen.getByRole("radio", {
+  expect(screen.findByRole("radio", {
     name: /other/i,
-  })
+  })).toBeInTheDocument()
 const getCancelButton = () =>
-  screen.getByRole("button", {
+  expect(screen.findByRole("button", {
     name: /cancel/i,
-  })
+  })).toBeInTheDocument()
 const getReportButton = () =>
-  screen.getByRole("button", {
+  expect(screen.findByRole("button", {
     name: /report/i,
-  })
+  })).toBeInTheDocument()
 
 // When DMCA selected
 const getReportLink = () =>
-  screen.getByRole("link", {
+  expect(screen.findByRole("link", {
     name: /DMCA form/i,
-  })
+  })).toBeInTheDocument()
 // When other selected
 const getDescriptionTextarea = () =>
-  screen.getByRole("textbox", {
+  expect(screen.findByRole("textbox", {
     name: /Describe the issue. Required/i,
-  })
+  })).toBeInTheDocument()
 
 const mockImplementation = () => Promise.resolve()
 const mock = jest.fn().mockImplementation(mockImplementation)
