@@ -75,7 +75,10 @@ def response_check_index_readiness_check(response: Response) -> bool:
     """
     data = response.json()
     hits = data.get("hits", {}).get("total", {}).get("value", 0)
-    logger.info(f"Retrieved {hits} records from Elasticsearch using the new index.")
+    logger.info(
+        f"Retrieved {hits} records from Elasticsearch using the new index."
+        f" Checking against threshold of {THRESHOLD_RESULT_COUNT}."
+    )
 
     return hits >= THRESHOLD_RESULT_COUNT
 
