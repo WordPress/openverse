@@ -145,8 +145,8 @@ def get_photon_request_params(
 
 def get(
     image_url: str,
-    image_identifier: str,
-    image_filetype: str | None = None,
+    media_identifier: str,
+    media_filetype: str | None = None,
     accept_header: str = "image/*",
     is_full_size: bool = False,
     is_compressed: bool = True,
@@ -159,7 +159,7 @@ def get(
     tallies = django_redis.get_redis_connection("tallies")
     month = get_monthly_timestamp()
 
-    image_extension = image_filetype or get_image_extension(image_url, image_identifier)
+    image_extension = media_filetype or get_image_extension(image_url, media_identifier)
     thumbnail_strategy = get_thumbnail_strategy(image_extension)
     if not thumbnail_strategy:
         raise UnsupportedMediaType(image_extension)

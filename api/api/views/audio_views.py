@@ -72,7 +72,7 @@ class AudioViewSet(MediaViewSet):
         if not image_url:
             raise NotFound("Could not find artwork.")
 
-        return super().thumbnail(request, audio, image_url)
+        return super().thumbnail(request, audio, image_url, AUDIO_TYPE)
 
     @waveform
     @action(
