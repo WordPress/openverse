@@ -4,7 +4,6 @@ from datetime import timedelta
 from urllib.parse import urlparse
 
 from airflow.exceptions import AirflowSkipException
-from airflow.models import Variable
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
@@ -16,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15))
+# Minimum number of records we expect to get back from ES when querying an index.
+THRESHOLD_RESULT_COUNT = int(os.getenv("ES_INDEX_READINESS_RECORD_COUNT", 10_000))
 
 
 def response_filter_stat(response: Response) -> str:
@@ -70,16 +71,14 @@ def response_check_wait_for_completion(response: Response) -> bool:
 def response_check_index_readiness_check(response: Response) -> bool:
     """
     Handle the response for `index_readiness_check` Sensor, to await a
-    healthy Elasticsearch cluster.
+    healthy Elasticsearch cluster. We expect to retrieve a healthy number
+    of results.
     """
     data = response.json()
-    status = data.get("status", None)
+    hits = data.get("hits", {}).get("total", {}).get("value", 0)
+    logger.info(f"Retrieved {hits} records from Elasticsearch using the new index.")
 
-    if Variable.get("ENVIRONMENT", default_var="dev") == "prod":
-        return status == "green"
-
-    # If we are not in production, we may proceed with a yellow cluster status.
-    return status in ["green", "yellow"]
+    return hits >= THRESHOLD_RESULT_COUNT
 
 
 def get_current_index(target_alias: str) -> SimpleHttpOperator:
@@ -151,13 +150,13 @@ def index_readiness_check(
     poke_interval: int = POKE_INTERVAL,
 ) -> HttpSensor:
     """
-    Poll the Elasticsearch cluster health endpoint, targeting the given index, and
-    return successfully when a healthy status is identified.
+    Poll the Elasticsearch index, returning true only when results greater
+    than the expected threshold_count are returned.
     """
     return HttpSensor(
         task_id="index_readiness_check",
         http_conn_id=ES_PROD_CONN_ID,
-        endpoint=f"_cluster/health/{media_type}-{index_suffix}",
+        endpoint=f"{media_type}-{index_suffix}/_search",
         method="GET",
         response_check=response_check_index_readiness_check,
         mode="reschedule",

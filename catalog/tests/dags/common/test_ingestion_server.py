@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 import requests
-from airflow.exceptions import AirflowException, AirflowSkipException
+from airflow.exceptions import AirflowSkipException
 from airflow.models import DagRun, TaskInstance
 from airflow.models.dag import DAG
 from airflow.utils.session import create_session
@@ -62,48 +62,33 @@ def test_response_filter_stat(data, expected):
 
 
 @pytest.mark.parametrize(
-    "response_code, response_json, environment, expected_status",
+    "response_code, response_json, expected_status",
     [
-        # Production
-        # Healthy cluster
-        (200, {"status": "green"}, "prod", TaskInstanceState.SUCCESS),
-        # Unhealthy cluster
-        (200, {"status": "yellow"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
-        (200, {"status": "red"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
-        # Missing status
-        (200, {}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
-        (200, {"foo": "bar"}, "prod", TaskInstanceState.UP_FOR_RESCHEDULE),
-        # Error
         pytest.param(
-            408,
-            {"status": "red", "timed_out": "true"},
-            "prod",
-            TaskInstanceState.UP_FOR_RETRY,
-            marks=pytest.mark.raises(exception=AirflowException),
+            200,
+            {"hits": {"total": {"value": 20_000, "relation": "eq"}}},
+            TaskInstanceState.SUCCESS,
+            id="healthy-index",
         ),
-        #
-        # Not production environment
-        # Healthy cluster
-        (200, {"status": "green"}, "dev", TaskInstanceState.SUCCESS),
-        # Outside of production, yellow status is permitted
-        (200, {"status": "yellow"}, "dev", TaskInstanceState.SUCCESS),
-        # Red is still considered unhealthy
-        (200, {"status": "red"}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
-        # Missing status
-        (200, {}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
-        (200, {"foo": "bar"}, "dev", TaskInstanceState.UP_FOR_RESCHEDULE),
-        # Error
         pytest.param(
-            408,
-            {"status": "red", "timed_out": "true"},
-            "dev",
-            TaskInstanceState.UP_FOR_RETRY,
-            marks=pytest.mark.raises(exception=AirflowException),
+            200,
+            {"hits": {"total": {"value": 100, "relation": "eq"}}},
+            TaskInstanceState.UP_FOR_RESCHEDULE,
+            id="not-enough-records",
+        ),
+        pytest.param(
+            200, {"foo": "bar"}, TaskInstanceState.UP_FOR_RESCHEDULE, id="missing-hits"
+        ),
+        pytest.param(
+            404,
+            {"error": {"root_cause": [{"type": "index_not_found_exception"}]}},
+            TaskInstanceState.UP_FOR_RESCHEDULE,
+            id="index-not-found-error",
         ),
     ],
 )
 def test_index_readiness_check(
-    index_readiness_dag, response_code, response_json, environment, expected_status
+    index_readiness_dag, response_code, response_json, expected_status
 ):
     execution_date = TEST_START_DATE + timedelta(days=1)
     dagrun = index_readiness_dag.create_dagrun(
@@ -114,16 +99,9 @@ def test_index_readiness_check(
         run_type=DagRunType.MANUAL,
     )
 
-    def _var_mock(*args, **kwargs):
-        return environment
-
-    with (
-        mock.patch(
-            "airflow.providers.http.hooks.http.requests.Session.send"
-        ) as mock_session_send,
-        mock.patch("common.ingestion_server.Variable") as MockVariable,
-    ):
-        MockVariable.get.side_effect = _var_mock
+    with mock.patch(
+        "airflow.providers.http.hooks.http.requests.Session.send"
+    ) as mock_session_send:
         r = requests.Response()
         r.status_code = response_code
         r.reason = "test"
