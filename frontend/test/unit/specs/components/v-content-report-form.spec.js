@@ -82,7 +82,7 @@ describe("VContentReportForm", () => {
   })
 
   it("should render thank you note when report is sent", async () => {
-    const { getByText } = render(VContentReportForm, options)
+    const { queryByText } = render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
     await fireEvent.click(getReportButton())
 
@@ -93,7 +93,7 @@ describe("VContentReportForm", () => {
   it("should render error message if report sending fails", async () => {
     ReportService.sendReport = () => Promise.reject()
 
-    const { getByText } = render(VContentReportForm, options)
+    const { queryByText } = render(VContentReportForm, options)
     await fireEvent.click(getMatureInput())
     await fireEvent.click(getReportButton())
 
@@ -102,7 +102,7 @@ describe("VContentReportForm", () => {
   })
 
   it("should render DMCA notice", async () => {
-    const { getByText } = render(VContentReportForm, options)
+    const { queryByText } = render(VContentReportForm, options)
     await fireEvent.click(getDmcaInput())
 
     // Notice with link to provider
@@ -113,7 +113,7 @@ describe("VContentReportForm", () => {
   })
 
   it("should render other description form", async () => {
-    const { getByText } = render(VContentReportForm, options)
+    const { queryByText } = render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())
 
     // Report form with a submit button
