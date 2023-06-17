@@ -6,7 +6,6 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from api.constants.media_types import AUDIO_TYPE
 from api.controllers import search_controller
 from api.models import ContentProvider
 from api.serializers.provider_serializers import ProviderSerializer
@@ -161,17 +160,13 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def thumbnail(self, request, media_obj, image_url, media_type):
+    def thumbnail(self, request, media_obj, image_url):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
-        # If the image `filetype` in the database is not `null`,
-        # we can use it and not parse the extension from the URL.
-        media_filetype = None if media_type == AUDIO_TYPE else media_obj.filetype
 
         return photon.get(
             image_url,
             media_obj.identifier,
-            media_filetype,
             accept_header=request.headers.get("Accept", "image/*"),
             **serializer.validated_data,
         )

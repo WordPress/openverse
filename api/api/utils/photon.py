@@ -51,9 +51,9 @@ def get_thumbnail_strategy(ext: str | None) -> THUMBNAIL_STRATEGY | None:
     return None
 
 
-def get_image_extension(image_url: str, image_identifier: str) -> str | None:
+def get_image_extension(image_url: str, media_identifier: str) -> str | None:
     cache = django_redis.get_redis_connection("default")
-    key = f"media:{image_identifier}:thumb_type"
+    key = f"media:{media_identifier}:thumb_type"
 
     ext = _get_file_extension_from_url(image_url)
 
@@ -146,7 +146,6 @@ def get_photon_request_params(
 def get(
     image_url: str,
     media_identifier: str,
-    media_filetype: str | None = None,
     accept_header: str = "image/*",
     is_full_size: bool = False,
     is_compressed: bool = True,
@@ -159,7 +158,7 @@ def get(
     tallies = django_redis.get_redis_connection("tallies")
     month = get_monthly_timestamp()
 
-    image_extension = media_filetype or get_image_extension(image_url, media_identifier)
+    image_extension = get_image_extension(image_url, media_identifier)
     thumbnail_strategy = get_thumbnail_strategy(image_extension)
     if not thumbnail_strategy:
         raise UnsupportedMediaType(image_extension)
