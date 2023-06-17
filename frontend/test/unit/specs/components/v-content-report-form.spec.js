@@ -89,7 +89,9 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getReportButton())
 
     // Submission successful message
-    expect(queryByText(/Thank you for reporting this content/i)).toBeInTheDocument()
+    expect(
+      queryByText(/Thank you for reporting this content/i)
+    ).toBeInTheDocument()
   })
 
   it("should render error message if report sending fails", async () => {
@@ -100,7 +102,9 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getReportButton())
 
     // Submission error message
-    expect(queryByText(/Something went wrong, please try again after some time./i)).toBeInTheDocument()
+    expect(
+      queryByText(/Something went wrong, please try again after some time./i)
+    ).toBeInTheDocument()
   })
 
   it("should render DMCA notice", async () => {
@@ -108,9 +112,11 @@ describe("VContentReportForm", () => {
     await fireEvent.click(getDmcaInput())
 
     // Notice with link to provider
-    expect(queryByText(
-      /No action will be taken until this form is filled out and submitted/i
-    )).toBeInTheDocument()
+    expect(
+      queryByText(
+        /No action will be taken until this form is filled out and submitted/i
+      )
+    ).toBeInTheDocument()
     getReportLink()
   })
 
