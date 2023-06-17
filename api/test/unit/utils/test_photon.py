@@ -356,7 +356,7 @@ def test_get_http_exception_handles_error(
     redis.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
-        photon_get(image_url=TEST_IMAGE_URL, image_identifier=TEST_IMAGE_IDENTIFIER)
+        photon_get(TEST_IMAGE_URL, TEST_IMAGE_IDENTIFIER)
 
     assert_func = (
         capture_exception.assert_called_once
