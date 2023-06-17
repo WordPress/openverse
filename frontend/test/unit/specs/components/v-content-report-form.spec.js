@@ -1,4 +1,3 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["queryByText", "getDmcaInput", "getMatureInput", "getOtherInput", "getCancelButton", "getReportButton", "getReportLink", "getDescriptionTextarea", "expect"] }] */
 
 import { fireEvent, screen } from "@testing-library/vue"
 
