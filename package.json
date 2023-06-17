@@ -17,7 +17,7 @@
     "pnpm": ">= 7.17.1"
   },
   "volta": {
-    "node": "18.15.0"
+    "node": "18.16.0"
   },
   "devDependencies": {
     "@babel/core": "7.20.12",

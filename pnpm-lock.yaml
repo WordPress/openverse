@@ -80,9 +80,9 @@ importers:
       '@babel/runtime-corejs3': ^7.21.0
       '@itsjonq/remake': ^2.0.0
       '@nuxt/components': ^2.2.1
-      '@nuxt/types': ^2.16.3
+      '@nuxt/types': ^2.17.0
       '@nuxt/typescript-build': ^3.0.1
-      '@nuxt/vue-app': ^2.16.3
+      '@nuxt/vue-app': ^2.17.0
       '@nuxtjs/composition-api': ^0.33.1
       '@nuxtjs/eslint-module': ^3.1.0
       '@nuxtjs/i18n': ^7.0.3
@@ -166,8 +166,8 @@ importers:
       webpack: ^4.46.0
     dependencies:
       '@nuxt/components': 2.2.1
-      '@nuxt/vue-app': 2.16.3
-      '@nuxtjs/composition-api': 0.33.1_4qxcmsmrhcgebucfy5kmoalo7q
+      '@nuxt/vue-app': 2.17.0
+      '@nuxtjs/composition-api': 0.33.1_2fbzhtyog7bmybvhyeifufnl3a
       '@nuxtjs/i18n': 7.2.0_vue@2.7.14
       '@nuxtjs/proxy': 2.1.0
       '@nuxtjs/redirect-module': 0.3.1
@@ -211,8 +211,8 @@ importers:
       '@babel/preset-typescript': 7.21.0_@babel+core@7.21.3
       '@babel/runtime-corejs3': 7.21.0
       '@itsjonq/remake': 2.0.0
-      '@nuxt/types': 2.16.3
-      '@nuxt/typescript-build': 3.0.1_kk6tyvluq4qaeeeyga5u5vellq
+      '@nuxt/types': 2.17.0
+      '@nuxt/typescript-build': 3.0.1_4iooitihkbuzmfdnjfckvzb5vi
       '@nuxtjs/eslint-module': 3.1.0_webpack@4.46.0
       '@nuxtjs/storybook': 4.3.2_fsn54piaonfvnn6tqljrgpgicu
       '@pinia/testing': 0.0.15_pinia@2.0.33+vue@2.7.14
@@ -339,10 +339,10 @@ packages:
       '@babel/generator': 7.21.3
       '@babel/helper-module-transforms': 7.21.2
       '@babel/helpers': 7.21.0
-      '@babel/parser': 7.21.3
+      '@babel/parser': 7.22.5
       '@babel/template': 7.20.7
       '@babel/traverse': 7.21.3
-      '@babel/types': 7.21.3
+      '@babel/types': 7.22.5
       convert-source-map: 1.8.0
       debug: 4.3.4
       gensync: 1.0.0-beta.2
@@ -957,7 +957,6 @@ packages:
   /@babel/helper-string-parser/7.22.5:
     resolution: {integrity: sha512-mM4COjgZox8U+JcXQwPijIZLElkgEpO5rsERVDJTc2qfCDfERyob6k5WegS14SX18IIjv+XD+GrqNumY5JRCDw==}
     engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/helper-validator-identifier/7.19.1:
     resolution: {integrity: sha512-awrNfaMtnHUr653GgGEs++LlAvW6w+DcPrOliSMXWCKo597CwL5Acf/wWdNkf/tfEQE3mjkeD1YOVZOUV/od1w==}
@@ -966,7 +965,6 @@ packages:
   /@babel/helper-validator-identifier/7.22.5:
     resolution: {integrity: sha512-aJXu+6lErq8ltp+JhkJUfk1MTGyuA4v7f3pA+BJ5HLfNC6nAQ0Cpi9uOquUj8Hehg0aUiHzWQbOVJGao6ztBAQ==}
     engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/helper-validator-option/7.21.0:
     resolution: {integrity: sha512-rmL/B8/f0mKS2baE9ZpyTcTavvEuWhTTW8amjzXNvYG4AwBsqTLikfXsEofsJEfKHf+HQVQbFOHy6o+4cnC/fQ==}
@@ -1070,7 +1068,6 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.22.5
-    dev: false
 
   /@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression/7.18.6_@babel+core@7.21.3:
     resolution: {integrity: sha512-Dgxsyg54Fx1d4Nge8UnvTrED63vrwOdPmyvPzlNN/boaliRP54pm3pGzZD1SJUwrBA+Cs/xdG8kXX6Mn/RfISQ==}
@@ -3291,7 +3288,6 @@ packages:
       '@babel/helper-string-parser': 7.22.5
       '@babel/helper-validator-identifier': 7.22.5
       to-fast-properties: 2.0.0
-    dev: false
 
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -3979,7 +3975,7 @@ packages:
     engines: {node: '>= 10.14.2'}
     dependencies:
       callsites: 3.1.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       source-map: 0.6.1
     dev: true
 
@@ -3998,7 +3994,7 @@ packages:
     engines: {node: '>= 10.14.2'}
     dependencies:
       '@jest/test-result': 26.6.2
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       jest-haste-map: 26.6.2
       jest-runner: 26.6.3
       jest-runtime: 26.6.3
@@ -4551,11 +4547,11 @@ packages:
       - encoding
     dev: false
 
-  /@nuxt/types/2.16.3:
-    resolution: {integrity: sha512-55c5zU4JaAvyOqFxKGRNhPhBXfxptTLH0ypBXiALUojN15ZAhSjo3AqhtunZUqufBSuCEJtKD+fsBM/Fwvz+0A==}
-    engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
+  /@nuxt/types/2.17.0:
+    resolution: {integrity: sha512-McgjOTBpnbicjo830MYiCtI1zzkkq0W23GlxcWfLAsi5vjqjfcBn9w9emVhOCDfNNbhMPsvfp3B5MyPZEaqo9A==}
+    engines: {node: ^14.18.0 || >=16.10.0}
     dependencies:
-      '@types/babel__core': 7.20.0
+      '@types/babel__core': 7.20.1
       '@types/compression': 1.7.2
       '@types/connect': 3.4.35
       '@types/etag': 1.8.1
@@ -4572,13 +4568,13 @@ packages:
       '@types/webpack-hot-middleware': 2.25.5
     dev: true
 
-  /@nuxt/typescript-build/3.0.1_kk6tyvluq4qaeeeyga5u5vellq:
+  /@nuxt/typescript-build/3.0.1_4iooitihkbuzmfdnjfckvzb5vi:
     resolution: {integrity: sha512-+9mQuLlwYSDTesyt5lYjWzUit/DD78V+OSzaqGJUkybjS63YZUBcUw6Fr4jAeRreMlseFnJFIjtQQV1osunrhg==}
     peerDependencies:
       '@nuxt/types': '>=2.13.1'
       typescript: 4.x || 5.x
     dependencies:
-      '@nuxt/types': 2.16.3
+      '@nuxt/types': 2.17.0
       consola: 2.15.3
       defu: 6.1.2
       fork-ts-checker-webpack-plugin: 6.5.3_gs6d5ria4vrhid7ajofnihvx3i
@@ -4623,22 +4619,6 @@ packages:
       signal-exit: 4.0.2
       ua-parser-js: 1.0.35
       ufo: 1.1.2
-    dev: false
-
-  /@nuxt/vue-app/2.16.3:
-    resolution: {integrity: sha512-Lacweyb3K0tRcHKIYVbAkGEptnXy0aNzXVF/n0niTMqtyWQ16pp2md3Ab0vcYXZf8Ya1Yy1NB8FhPqPYjG8OtA==}
-    engines: {node: ^14.18.0 || ^16.10.0 || ^17.0.0 || ^18.0.0 || ^19.0.0}
-    dependencies:
-      node-fetch-native: 1.0.2
-      ufo: 1.1.1
-      unfetch: 5.0.0
-      vue: 2.7.14
-      vue-client-only: 2.1.0
-      vue-meta: 2.4.0
-      vue-no-ssr: 1.1.1
-      vue-router: 3.6.5_vue@2.7.14
-      vue-template-compiler: 2.7.14
-      vuex: 3.6.2_vue@2.7.14
     dev: false
 
   /@nuxt/vue-app/2.17.0:
@@ -4789,7 +4769,7 @@ packages:
       - whiskers
     dev: false
 
-  /@nuxtjs/composition-api/0.33.1_4qxcmsmrhcgebucfy5kmoalo7q:
+  /@nuxtjs/composition-api/0.33.1_2fbzhtyog7bmybvhyeifufnl3a:
     resolution: {integrity: sha512-dI0c5atKDsEIVycrsKw9T+aaos2VggscSJBPZpC1BXKzHR7+9Ilor+SHvnAEb5j2E2v+8x407Uo339oJzhlD1A==}
     engines: {node: '>=v14.13.0'}
     peerDependencies:
@@ -4797,7 +4777,7 @@ packages:
       nuxt: ^2.15
       vue: ^2.7.8
     dependencies:
-      '@nuxt/vue-app': 2.16.3
+      '@nuxt/vue-app': 2.17.0
       defu: 6.1.0
       estree-walker: 2.0.2
       fs-extra: 9.1.0
@@ -6934,6 +6914,16 @@ packages:
       '@types/babel__traverse': 7.14.2
     dev: true
 
+  /@types/babel__core/7.20.1:
+    resolution: {integrity: sha512-aACu/U/omhdk15O4Nfb+fHgH/z3QsfQzpnvRZhYhThms83ZnAOZz7zZAWO7mn2yyNQaA4xTO8GLK3uqFU4bYYw==}
+    dependencies:
+      '@babel/parser': 7.22.5
+      '@babel/types': 7.22.5
+      '@types/babel__generator': 7.6.3
+      '@types/babel__template': 7.4.1
+      '@types/babel__traverse': 7.14.2
+    dev: true
+
   /@types/babel__generator/7.6.3:
     resolution: {integrity: sha512-/GWCmzJWqV7diQW54smJZzWbSFf4QYtF71WCKhcx6Ru/tFyQIY2eiiITcCAeuPbNSvT9YCGkVMqqvSk2Z0mXiA==}
     dependencies:
@@ -8890,7 +8880,7 @@ packages:
     resolution: {integrity: sha512-GAwkz0AihzY5bkwIY5QDR+LvsRQgB/B+1foMPvi0FZPMl5fjD7ICiznUiBdLYMH1QYe6vqu4gWYytZOccLouFw==}
     engines: {node: '>= 10.0.0'}
     dependencies:
-      '@babel/types': 7.21.3
+      '@babel/types': 7.22.5
     dev: true
 
   /babylon/6.18.0:
@@ -10136,8 +10126,8 @@ packages:
   /constantinople/4.0.1:
     resolution: {integrity: sha512-vCrqcSIq4//Gx74TXXCGnHpulY1dskqLTFGDmhrGxzeXL8lF8kvXv6mpNWlJj1uD4DW23D4ljAqbY4RRaaUZIw==}
     dependencies:
-      '@babel/parser': 7.21.3
-      '@babel/types': 7.21.3
+      '@babel/parser': 7.22.5
+      '@babel/types': 7.22.5
     dev: true
 
   /constants-browserify/1.0.0:
@@ -14222,7 +14212,7 @@ packages:
     engines: {node: '>= 10.14.2'}
     dependencies:
       '@types/node': 17.0.32
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: true
 
   /jest-snapshot/26.6.2:
@@ -14514,7 +14504,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
     dev: false
 
   /jsonfile/6.1.0:
@@ -14522,7 +14512,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
 
   /jstransformer/1.0.0:
     resolution: {integrity: sha512-C9YK3Rf8q6VAPDCCU9fnqo3mAfOH6vUGnMcP4AQAYIEpWtfGLpwOTmZ+igtdK5y+VvI2n3CyYSzy4Qh34eq24A==}
@@ -15526,10 +15516,6 @@ packages:
     dependencies:
       minimatch: 3.1.2
     dev: true
-
-  /node-fetch-native/1.0.2:
-    resolution: {integrity: sha512-KIkvH1jl6b3O7es/0ShyCgWLcfXxlBrLBbP3rOr23WArC66IMcU4DeZEeYEOwnopYhawLTn7/y+YtmASe8DFVQ==}
-    dev: false
 
   /node-fetch-native/1.2.0:
     resolution: {integrity: sha512-5IAMBTl9p6PaAjYCnMv5FmqIF6GcZnawAVnzaCG0rX2aYZJ4CxEkZNtVPuTRug7fL7wyM5BQYTlAzcyMPi6oTQ==}
@@ -21314,8 +21300,8 @@ packages:
     resolution: {integrity: sha512-RNGKj82nUPg3g5ygxkQl0R937xLyho1J24ItRCBTr/m1YnZkzJy1hUiHUJrc/VlsDQzsCnInEGSg3bci0Lmd4w==}
     engines: {node: '>= 10.0.0'}
     dependencies:
-      '@babel/parser': 7.21.3
-      '@babel/types': 7.21.3
+      '@babel/parser': 7.22.5
+      '@babel/types': 7.22.5
       assert-never: 1.2.1
       babel-walk: 3.0.0-canary-5
     dev: true
