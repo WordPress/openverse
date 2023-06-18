@@ -8,4 +8,4 @@ frontend/storybook-static
 
 !.pnpmfile.cjs
 
-frontend/src/locales
+frontend/src/locales/*.json
