@@ -1,6 +1,8 @@
 const { writeFile } = require("fs/promises")
 const os = require("os")
 
+const { camel } = require("case")
+
 /**
  * Mutates an object at the path with the value. If the path
  * does not exist, it is created by nesting objects along the
@@ -34,7 +36,11 @@ const replacePlaceholders = (json) => {
     return null
   }
   if (typeof json === "string") {
-    return json.replace(/###([a-zA-Z-]*)###/g, "{$1}")
+    // Replace old kebab-cased keys that can still be in the translations with camelCased keys the app expects
+    return json.replace(
+      /###([a-zA-Z-]*)###/g,
+      (_, match) => `{${camel(match)}}`
+    )
   }
   let currentJson = { ...json }
 
