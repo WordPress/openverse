@@ -6,6 +6,7 @@
       :href="imageLink"
       class="group relative block w-full overflow-hidden rounded-sm bg-dark-charcoal-10 text-dark-charcoal-10 focus-bold-filled"
       :aria-label="contextSensitiveTitle"
+      @mousedown="sendSelectSearchResultEvent"
     >
       <figure
         itemprop="image"
@@ -47,6 +48,10 @@ import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
 
+import { useAnalytics } from "~/composables/use-analytics"
+
+import { IMAGE } from "~/constants/media"
+
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
 
@@ -81,6 +86,10 @@ export default defineComponent({
     aspectRatio: {
       type: String as PropType<AspectRatio>,
       default: "square",
+    },
+    relatedTo: {
+      type: [String, null] as PropType<string | null>,
+      default: null,
     },
   },
   setup(props) {
@@ -139,6 +148,17 @@ export default defineComponent({
       })
     })
 
+    const { sendCustomEvent } = useAnalytics()
+    const sendSelectSearchResultEvent = () => {
+      sendCustomEvent("SELECT_SEARCH_RESULT", {
+        id: props.image.id,
+        mediaType: IMAGE,
+        provider: props.image.provider,
+        query: props.searchTerm || "",
+        relatedTo: props.relatedTo,
+      })
+    }
+
     return {
       styles,
       imgWidth,
@@ -152,6 +172,8 @@ export default defineComponent({
       getImgDimension,
 
       isSquare,
+
+      sendSelectSearchResultEvent,
     }
   },
 })

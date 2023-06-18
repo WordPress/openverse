@@ -178,6 +178,25 @@ export type Events = {
     /** The slug of the license the user clicked on */
     license: string
   }
+  /**
+   * Description: Whenever the user selects a result from the search results page.
+   * Questions:
+   *   - Which results are most popular for given searches?
+   *   - How often do searches lead to clicking a result?
+   *   - Are there popular searches that do not result in result selection?
+   */
+  SELECT_SEARCH_RESULT: {
+    /** The unique ID of the media */
+    id: string
+    /** If the result is a related result, provide the ID of the 'original' result */
+    relatedTo: string | null
+    /** The media type being searched */
+    mediaType: SearchType
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The search term */
+    query: string
+  }
 }
 
 /**
