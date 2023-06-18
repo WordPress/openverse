@@ -1,12 +1,4 @@
-/**
- * This file cannot be converted to TypeScript because it's referenced in the
- * Tailwind config.
- */
 
-/**
- * mapping of z-index names to z-indices; Ensure that these values are also
- * written in the `tailwind.safelist.txt` file in the project root.
- */
 export const Z_INDICES: { [key: string]: string | number } = Object.freeze({
   auto: "auto",
   10: 10,
@@ -29,10 +21,4 @@ export const Z_INDICES: { [key: string]: string | number } = Object.freeze({
 export const zIndexValidator = (value: string | number): boolean =>
   Object.keys(Z_INDICES).includes(value.toString());
 
-/**
- * This module is consumed by Nuxt and Tailwind config, so it needs to use CJS modules.
- */
-module.exports = {
-  Z_INDICES,
-  zIndexValidator,
-};
+

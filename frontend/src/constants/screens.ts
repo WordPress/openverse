@@ -1,9 +1,4 @@
 /**
- * This file cannot be converted to TypeScript because it's referenced in the
- * Tailwind config. `RealBreakpoints` excludes 'xs' because it's not defined in
- * Tailwind (being mobile-first) but is used in JavaScript to refer to mobile
- * screens that are narrower than 640px ('sm').
- *
  * @typedef {'2xl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs'} Breakpoint
  * @typedef {Exclude<Breakpoint, 'xs'>} RealBreakpoint
  * @typedef {{ name: string, styles: { width: string, height: string }}} Viewport
@@ -13,7 +8,7 @@
  * mapping of breakpoint names to the lower-bound of their screen width range
  */
 export const SCREEN_SIZES = Object.freeze(
-  /** @type {const} */ ({
+  ({
     "2xl": 1536,
     xl: 1280,
     lg: 1024,
@@ -27,14 +22,14 @@ export const SCREEN_SIZES = Object.freeze(
  * the same as SCREEN_SIZES but with the 'xs' breakpoint added for use in JS.
  */
 export const ALL_SCREEN_SIZES = Object.freeze(
-  /** @type {const }*/ { ...SCREEN_SIZES, xs: 0 }
+  { ...SCREEN_SIZES, xs: 0 }
 )
 
 /**
  * mapping of breakpoint names to the lower-bound of their screen width range,
  * with the 'px' suffix attached; This is used by Tailwind.
  */
-export const SCREENS = /** @type {Record<RealBreakpoint, string>} */ (
+export const SCREENS = (
   Object.fromEntries(
     Object.entries(SCREEN_SIZES)
       .map(([key, val]) => [key, `${val}px`])
@@ -46,9 +41,9 @@ export const SCREENS = /** @type {Record<RealBreakpoint, string>} */ (
  * mapping of breakpoint names to viewport specifications; This is used by
  * the viewports plugin of Storybook.
  */
-export const VIEWPORTS = /** @type {Record<Breakpoint, Viewport>} */ (
+export const VIEWPORTS = (
   Object.fromEntries(
-    /** @type {[Breakpoint, number][]} */ (Object.entries(SCREEN_SIZES))
+    (Object.entries(SCREEN_SIZES))
       .concat([["xs", 340]])
       .map(([key, val]) => [
         key,
@@ -60,12 +55,10 @@ export const VIEWPORTS = /** @type {Record<Breakpoint, Viewport>} */ (
   )
 )
 
-/**
- * This module is consumed by Nuxt and Tailwind config, so it needs to use CJS modules.
- */
-module.exports = {
+
+export default {
   ALL_SCREEN_SIZES,
   SCREEN_SIZES,
   SCREENS,
   VIEWPORTS,
-}
+} as const //as discussed removed /**@type {const} */() 

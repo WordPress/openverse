@@ -1,10 +1,10 @@
-import defaultTheme from "tailwindcss/defaultTheme";
-import plugin from "tailwindcss/plugin";
+import defaultTheme from "tailwindcss/defaultTheme"
+import plugin from "tailwindcss/plugin"
+import { SCREENS } from "./src/constants/screens"
+import { Z_INDICES } from "./src/constants/z-indices"
+import typographyPlugin from "@tailwindcss/typography"
 
-import { SCREENS } from "./src/constants/screens";
-import { Z_INDICES } from "./src/constants/z-indices";
-
-module.exports = {
+export default {
   content: [
     "./src/**/*.{vue,js,jsx,ts,tsx,mdx}",
     "./nuxt.config.js",

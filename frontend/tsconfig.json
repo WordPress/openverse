@@ -5,7 +5,7 @@
     "composite": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "target": "ES2022",
+    "target": "ES2018",
     "module": "ESNext",
     "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
     "noEmit": true,
@@ -99,7 +99,6 @@
      * them with TypeScript without introducing syntax changes that are not compatible
      * with other tools we rely on.
      */
-    "src/constants/**/*",
     "src/server-middleware/healthcheck.js",
     /** End of non TypeScript files section */
     "**/*.json"
