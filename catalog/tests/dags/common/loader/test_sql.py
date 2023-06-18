@@ -2,13 +2,11 @@ import json
 import logging
 import os
 import time
-from collections import namedtuple
 from textwrap import dedent
 from unittest import mock
 
 import psycopg2
 import pytest
-from airflow.models import TaskInstance
 from flaky import flaky
 from psycopg2.errors import InvalidTextRepresentation
 
@@ -16,94 +14,13 @@ from catalog.tests.dags.common.popularity.test_sql import (
     TableInfo,
     _set_up_std_popularity_func,
 )
-from common.constants import IMAGE
+from catalog.tests.test_utils import sql as utils
 from common.loader import sql
-from common.loader.sql import TSV_COLUMNS, create_column_definitions
 from common.storage import columns as col
-from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 
 
 POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
-POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
-S3_LOCAL_ENDPOINT = os.getenv("S3_LOCAL_ENDPOINT")
-ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
-SECRET_KEY = os.getenv("AWS_SECRET_KEY")
-
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
-
-LOADING_TABLE_COLUMN_DEFINITIONS = create_column_definitions(
-    TSV_COLUMNS[IMAGE], is_loading=True
-)
-
-CREATE_LOAD_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
-  {LOADING_TABLE_COLUMN_DEFINITIONS}
-);"""
-
-IMAGE_TABLE_COLUMN_DEFINITIONS = create_column_definitions(IMAGE_TABLE_COLUMNS)
-
-CREATE_IMAGE_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
-  {IMAGE_TABLE_COLUMN_DEFINITIONS}
-);"""
-
-UNIQUE_CONDITION_QUERY = (
-    "CREATE UNIQUE INDEX {table}_provider_fid_idx"
-    " ON public.{table}"
-    " USING btree (provider, md5(foreign_identifier));"
-    "CREATE UNIQUE INDEX {table}_identifier_key"
-    " ON public.{table}"
-    " USING btree (identifier);"
-    "CREATE UNIQUE INDEX {table}_url_key"
-    " ON public.{table}"
-    " USING btree (url);"
-)
-
-
-PostgresRef = namedtuple("PostgresRef", ["cursor", "connection"])
-ti = mock.Mock(spec=TaskInstance)
-ti.xcom_pull.return_value = None
-
-COLUMN_NAMES = [column.db_name for column in IMAGE_TABLE_COLUMNS]
-
-# ids for main database columns
-updated_idx = COLUMN_NAMES.index(col.UPDATED_ON.db_name)
-ingestion_idx = COLUMN_NAMES.index(col.INGESTION_TYPE.db_name)
-provider_idx = COLUMN_NAMES.index(col.PROVIDER.db_name)
-source_idx = COLUMN_NAMES.index(col.SOURCE.db_name)
-fid_idx = COLUMN_NAMES.index(col.FOREIGN_ID.db_name)
-land_url_idx = COLUMN_NAMES.index(col.LANDING_URL.db_name)
-url_idx = COLUMN_NAMES.index(col.DIRECT_URL.db_name)
-thm_idx = COLUMN_NAMES.index(col.THUMBNAIL.db_name)
-filesize_idx = COLUMN_NAMES.index(col.FILESIZE.db_name)
-license_idx = COLUMN_NAMES.index(col.LICENSE.db_name)
-version_idx = COLUMN_NAMES.index(col.LICENSE_VERSION.db_name)
-creator_idx = COLUMN_NAMES.index(col.CREATOR.db_name)
-creator_url_idx = COLUMN_NAMES.index(col.CREATOR_URL.db_name)
-title_idx = COLUMN_NAMES.index(col.TITLE.db_name)
-metadata_idx = COLUMN_NAMES.index(col.META_DATA.db_name)
-tags_idx = COLUMN_NAMES.index(col.TAGS.db_name)
-synced_idx = COLUMN_NAMES.index(col.LAST_SYNCED.db_name)
-removed_idx = COLUMN_NAMES.index(col.REMOVED.db_name)
-watermarked_idx = COLUMN_NAMES.index(col.WATERMARKED.db_name)
-width_idx = COLUMN_NAMES.index(col.WIDTH.db_name)
-height_idx = COLUMN_NAMES.index(col.HEIGHT.db_name)
-standardized_popularity_idx = COLUMN_NAMES.index(col.STANDARDIZED_POPULARITY.db_name)
-
-
-def create_query_values(
-    column_values: dict,
-    columns=None,
-):
-    if columns is None:
-        columns = TSV_COLUMNS[IMAGE]
-    result = []
-    for column in columns:
-        val = column_values.get(column.db_name)
-        if val is None:
-            val = "null"
-        else:
-            val = f"'{str(val)}'"
-        result.append(val)
-    return ",".join(result)
 
 
 @pytest.fixture
@@ -131,14 +48,14 @@ def table_info(
 
 
 @pytest.fixture
-def postgres(load_table) -> PostgresRef:
-    conn = psycopg2.connect(POSTGRES_TEST_URI)
+def postgres(load_table) -> utils.PostgresRef:
+    conn = psycopg2.connect(utils.POSTGRES_TEST_URI)
     cur = conn.cursor()
     drop_command = f"DROP TABLE IF EXISTS {load_table}"
     cur.execute(drop_command)
     conn.commit()
 
-    yield PostgresRef(cursor=cur, connection=conn)
+    yield utils.PostgresRef(cursor=cur, connection=conn)
 
     cur.execute(drop_command)
     cur.close()
@@ -147,8 +64,10 @@ def postgres(load_table) -> PostgresRef:
 
 
 @pytest.fixture
-def postgres_with_load_table(postgres: PostgresRef, load_table) -> PostgresRef:
-    create_command = CREATE_LOAD_TABLE_QUERY.format(load_table)
+def postgres_with_load_table(
+    postgres: utils.PostgresRef, load_table
+) -> utils.PostgresRef:
+    create_command = utils.CREATE_LOAD_TABLE_QUERY.format(load_table)
     postgres.cursor.execute(create_command)
     postgres.connection.commit()
 
@@ -159,7 +78,7 @@ def postgres_with_load_table(postgres: PostgresRef, load_table) -> PostgresRef:
 def postgres_with_load_and_image_table(
     load_table, image_table, table_info, mock_pg_hook_task
 ):
-    conn = psycopg2.connect(POSTGRES_TEST_URI)
+    conn = psycopg2.connect(utils.POSTGRES_TEST_URI)
     cur = conn.cursor()
     drop_test_relations_query = f"""
     DROP TABLE IF EXISTS {load_table} CASCADE;
@@ -173,14 +92,14 @@ def postgres_with_load_and_image_table(
 
     cur.execute(drop_test_relations_query)
 
-    cur.execute(CREATE_LOAD_TABLE_QUERY.format(load_table))
+    cur.execute(utils.CREATE_LOAD_TABLE_QUERY.format(load_table))
     cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;')
-    cur.execute(CREATE_IMAGE_TABLE_QUERY.format(image_table))
-    cur.execute(UNIQUE_CONDITION_QUERY.format(table=image_table))
+    cur.execute(utils.CREATE_IMAGE_TABLE_QUERY.format(image_table))
+    cur.execute(utils.UNIQUE_CONDITION_QUERY.format(table=image_table))
 
     conn.commit()
 
-    yield PostgresRef(cursor=cur, connection=conn)
+    yield utils.PostgresRef(cursor=cur, connection=conn)
 
     cur.execute(drop_test_relations_query)
     cur.close()
@@ -529,7 +448,7 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
     SOURCE = "images_source"
     INGESTION_TYPE = "test_ingestion"
 
-    query_values = create_query_values(
+    query_values = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.LANDING_URL.db_name: LAND_URL,
@@ -563,24 +482,24 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     actual_row = actual_rows[0]
     assert len(actual_rows) == 1
-    assert actual_row[ingestion_idx] == INGESTION_TYPE
-    assert actual_row[provider_idx] == PROVIDER
-    assert actual_row[source_idx] == SOURCE
-    assert actual_row[fid_idx] == FID
-    assert actual_row[land_url_idx] == LAND_URL
-    assert actual_row[url_idx] == IMG_URL
-    assert actual_row[thm_idx] == THM_URL
-    assert actual_row[filesize_idx] == FILESIZE
-    assert actual_row[license_idx] == LICENSE
-    assert actual_row[version_idx] == VERSION
-    assert actual_row[creator_idx] == CREATOR
-    assert actual_row[creator_url_idx] == CREATOR_URL
-    assert actual_row[title_idx] == TITLE
-    assert actual_row[metadata_idx] == json.loads(META_DATA)
-    assert actual_row[tags_idx] == json.loads(TAGS)
-    assert actual_row[watermarked_idx] is False
-    assert actual_row[width_idx] == WIDTH
-    assert actual_row[height_idx] == HEIGHT
+    assert actual_row[utils.ingestion_idx] == INGESTION_TYPE
+    assert actual_row[utils.provider_idx] == PROVIDER
+    assert actual_row[utils.source_idx] == SOURCE
+    assert actual_row[utils.fid_idx] == FID
+    assert actual_row[utils.land_url_idx] == LAND_URL
+    assert actual_row[utils.url_idx] == IMG_URL
+    assert actual_row[utils.thm_idx] == THM_URL
+    assert actual_row[utils.filesize_idx] == FILESIZE
+    assert actual_row[utils.license_idx] == LICENSE
+    assert actual_row[utils.version_idx] == VERSION
+    assert actual_row[utils.creator_idx] == CREATOR
+    assert actual_row[utils.creator_url_idx] == CREATOR_URL
+    assert actual_row[utils.title_idx] == TITLE
+    assert actual_row[utils.metadata_idx] == json.loads(META_DATA)
+    assert actual_row[utils.tags_idx] == json.loads(TAGS)
+    assert actual_row[utils.watermarked_idx] is False
+    assert actual_row[utils.width_idx] == WIDTH
+    assert actual_row[utils.height_idx] == HEIGHT
 
 
 def test_upsert_records_inserts_two_records_to_image_table(
@@ -623,8 +542,8 @@ def test_upsert_records_inserts_two_records_to_image_table(
     )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
-    assert actual_rows[0][fid_idx] == FID_A
-    assert actual_rows[1][fid_idx] == FID_B
+    assert actual_rows[0][utils.fid_idx] == FID_A
+    assert actual_rows[1][utils.fid_idx] == FID_B
 
 
 def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
@@ -661,8 +580,8 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     original_row = postgres_with_load_and_image_table.cursor.fetchall()
     logging.info(f"\n{len(original_row)}\nOriginal row: {original_row}\n")
     original_row = original_row[0]
-    original_updated_on = original_row[updated_idx]
-    original_last_synced = original_row[synced_idx]
+    original_updated_on = original_row[utils.updated_idx]
+    original_last_synced = original_row[utils.synced_idx]
     logging.info(
         f"\nLast updated: {original_updated_on}\nSynced: {original_last_synced}"
     )
@@ -677,8 +596,8 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
         f"\n{len(updated_result)}\nLast updated: {original_updated_on}\nSynced: {original_last_synced}"
     )
     updated_row = updated_result[0]
-    updated_updated_on = updated_row[updated_idx]
-    updated_last_synced = updated_row[synced_idx]
+    updated_updated_on = updated_row[utils.updated_idx]
+    updated_last_synced = updated_row[utils.synced_idx]
 
     assert len(updated_result) == 1
     assert updated_updated_on > original_updated_on
@@ -727,7 +646,7 @@ def test_upsert_records_replaces_data(
     TITLE_B = "Bobs Great Pic"
     META_DATA_B = '{"description": "Bobs cool picture"}'
 
-    query_values = create_query_values(
+    query_values = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.LANDING_URL.db_name: LAND_URL_A,
@@ -759,7 +678,7 @@ def test_upsert_records_replaces_data(
     )
     postgres_with_load_and_image_table.connection.commit()
 
-    query_values = create_query_values(
+    query_values = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.LANDING_URL.db_name: LAND_URL_B,
@@ -796,17 +715,17 @@ def test_upsert_records_replaces_data(
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     actual_row = actual_rows[0]
     assert len(actual_rows) == 1
-    assert actual_row[land_url_idx] == LAND_URL_B
-    assert actual_row[url_idx] == IMG_URL_B
-    assert actual_row[thm_idx] == THM_URL_B
-    assert actual_row[license_idx] == LICENSE_B
-    assert actual_row[version_idx] == VERSION_B
-    assert actual_row[creator_idx] == CREATOR_B
-    assert actual_row[creator_url_idx] == CREATOR_URL_B
-    assert actual_row[title_idx] == TITLE_B
-    assert actual_row[metadata_idx] == json.loads(META_DATA_B)
-    assert actual_row[tags_idx] == json.loads(TAGS)
-    assert actual_row[width_idx] == WIDTH_B
+    assert actual_row[utils.land_url_idx] == LAND_URL_B
+    assert actual_row[utils.url_idx] == IMG_URL_B
+    assert actual_row[utils.thm_idx] == THM_URL_B
+    assert actual_row[utils.license_idx] == LICENSE_B
+    assert actual_row[utils.version_idx] == VERSION_B
+    assert actual_row[utils.creator_idx] == CREATOR_B
+    assert actual_row[utils.creator_url_idx] == CREATOR_URL_B
+    assert actual_row[utils.title_idx] == TITLE_B
+    assert actual_row[utils.metadata_idx] == json.loads(META_DATA_B)
+    assert actual_row[utils.tags_idx] == json.loads(TAGS)
+    assert actual_row[utils.width_idx] == WIDTH_B
 
 
 def test_upsert_records_does_not_replace_with_nulls(
@@ -843,7 +762,7 @@ def test_upsert_records_does_not_replace_with_nulls(
     LICENSE_B = "cc0"
     VERSION_B = "1.0"
 
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.LANDING_URL.db_name: LAND_URL_A,
@@ -875,7 +794,7 @@ def test_upsert_records_does_not_replace_with_nulls(
     )
     postgres_with_load_and_image_table.connection.commit()
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.LANDING_URL.db_name: LAND_URL_B,
@@ -902,18 +821,18 @@ def test_upsert_records_does_not_replace_with_nulls(
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     actual_row = actual_rows[0]
     assert len(actual_rows) == 1
-    assert actual_row[land_url_idx] == LAND_URL_B
-    assert actual_row[thm_idx] == THM_URL_A
-    assert actual_row[filesize_idx] == FILESIZE
-    assert actual_row[license_idx] == LICENSE_B
-    assert actual_row[version_idx] == VERSION_B
-    assert actual_row[creator_idx] == CREATOR_A
-    assert actual_row[creator_url_idx] == CREATOR_URL_A
-    assert actual_row[title_idx] == TITLE_A
-    assert actual_row[metadata_idx] == json.loads(META_DATA_A)
-    assert actual_row[tags_idx] == json.loads(TAGS)
-    assert actual_row[width_idx] == WIDTH_A
-    assert actual_row[height_idx] == HEIGHT_A
+    assert actual_row[utils.land_url_idx] == LAND_URL_B
+    assert actual_row[utils.thm_idx] == THM_URL_A
+    assert actual_row[utils.filesize_idx] == FILESIZE
+    assert actual_row[utils.license_idx] == LICENSE_B
+    assert actual_row[utils.version_idx] == VERSION_B
+    assert actual_row[utils.creator_idx] == CREATOR_A
+    assert actual_row[utils.creator_url_idx] == CREATOR_URL_A
+    assert actual_row[utils.title_idx] == TITLE_A
+    assert actual_row[utils.metadata_idx] == json.loads(META_DATA_A)
+    assert actual_row[utils.tags_idx] == json.loads(TAGS)
+    assert actual_row[utils.width_idx] == WIDTH_A
+    assert actual_row[utils.height_idx] == HEIGHT_A
 
 
 def test_upsert_records_merges_meta_data(
@@ -934,7 +853,7 @@ def test_upsert_records_merges_meta_data(
     META_DATA_A = '{"description": "a cool picture", "test": "should stay"}'
     META_DATA_B = '{"description": "I updated my description"}'
 
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -947,7 +866,7 @@ def test_upsert_records_merges_meta_data(
         {query_values_a}
     );"""
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -979,7 +898,7 @@ def test_upsert_records_merges_meta_data(
     assert len(actual_rows) == 1
     expected_meta_data = json.loads(META_DATA_A)
     expected_meta_data.update(json.loads(META_DATA_B))
-    assert actual_row[metadata_idx] == expected_meta_data
+    assert actual_row[utils.metadata_idx] == expected_meta_data
 
 
 def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
@@ -1000,7 +919,7 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     META_DATA_A = '{"description": "a cool picture", "test": "should stay"}'
     META_DATA_B = '{"description": "I updated my description", "test": null}'
 
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1013,7 +932,7 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
         {query_values_a}
         );"""
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1047,7 +966,7 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
         "description": json.loads(META_DATA_B)["description"],
         "test": json.loads(META_DATA_A)["test"],
     }
-    assert actual_row[metadata_idx] == expected_meta_data
+    assert actual_row[utils.metadata_idx] == expected_meta_data
 
 
 def test_upsert_records_merges_tags(
@@ -1075,7 +994,7 @@ def test_upsert_records_merges_tags(
         ]
     )
 
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1088,7 +1007,7 @@ def test_upsert_records_merges_tags(
         {query_values_a}
         );"""
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1123,7 +1042,7 @@ def test_upsert_records_merges_tags(
         {"name": "tagtwo", "provider": "test"},
         {"name": "tagthree", "provider": "test"},
     ]
-    actual_tags = actual_row[tags_idx]
+    actual_tags = actual_row[utils.tags_idx]
     assert len(actual_tags) == 3
     assert all([t in expect_tags for t in actual_tags])
     assert all([t in actual_tags for t in expect_tags])
@@ -1149,7 +1068,7 @@ def test_upsert_records_does_not_replace_tags_with_null(
         {"name": "tagtwo", "provider": "test"},
     ]
 
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1162,7 +1081,7 @@ def test_upsert_records_does_not_replace_tags_with_null(
         {query_values_a}
         );"""
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1195,7 +1114,7 @@ def test_upsert_records_does_not_replace_tags_with_null(
         {"name": "tagone", "provider": "test"},
         {"name": "tagtwo", "provider": "test"},
     ]
-    actual_tags = actual_row[tags_idx]
+    actual_tags = actual_row[utils.tags_idx]
     assert len(actual_tags) == 2
     assert all([t in expect_tags for t in actual_tags])
     assert all([t in actual_tags for t in expect_tags])
@@ -1219,7 +1138,7 @@ def test_upsert_records_replaces_null_tags(
         {"name": "tagone", "provider": "test"},
         {"name": "tagtwo", "provider": "test"},
     ]
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1231,7 +1150,7 @@ def test_upsert_records_replaces_null_tags(
     load_data_query_a = f"""INSERT INTO {load_table} VALUES(
         {query_values_a}
         );"""
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1267,7 +1186,7 @@ def test_upsert_records_replaces_null_tags(
         {"name": "tagone", "provider": "test"},
         {"name": "tagtwo", "provider": "test"},
     ]
-    actual_tags = actual_row[tags_idx]
+    actual_tags = actual_row[utils.tags_idx]
     assert len(actual_tags) == 2
     assert all([t in expect_tags for t in actual_tags])
     assert all([t in actual_tags for t in expect_tags])
@@ -1294,7 +1213,7 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
     META_DATA_B = '{"description": "the same cool picture"}'
 
     # A and B have different foreign identifiers, but the same url
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_A,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1307,7 +1226,7 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
         {query_values_a}
     );"""
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_B,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1349,8 +1268,8 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
     assert len(actual_rows) == 1
     # No data in A should have been updated or merged
     expected_meta_data = json.loads(META_DATA_A)
-    assert actual_row[metadata_idx] == expected_meta_data
-    assert actual_row[fid_idx] == "a"
+    assert actual_row[utils.metadata_idx] == expected_meta_data
+    assert actual_row[utils.fid_idx] == "a"
 
 
 def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_merge(
@@ -1376,7 +1295,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
     IMG_URL_C = "https://images.com/c/img.jpg"
 
     # A and B have different foreign identifiers, but the same url
-    query_values_a = create_query_values(
+    query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_A,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1389,7 +1308,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
         {query_values_a}
     );"""
 
-    query_values_b = create_query_values(
+    query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_B,
             col.DIRECT_URL.db_name: IMG_URL,
@@ -1403,7 +1322,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
         );"""
 
     # C is not a duplicate of anything, just a normal image
-    query_values_c = create_query_values(
+    query_values_c = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_C,
             col.DIRECT_URL.db_name: IMG_URL_C,
@@ -1443,9 +1362,9 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
     assert len(actual_rows) == 2
     # No data in A should have been updated or merged
     expected_meta_data = json.loads(META_DATA_A)
-    assert actual_rows[0][metadata_idx] == expected_meta_data
-    assert actual_rows[0][fid_idx] == "a"
-    assert actual_rows[1][fid_idx] == "c"
+    assert actual_rows[0][utils.metadata_idx] == expected_meta_data
+    assert actual_rows[0][utils.fid_idx] == "a"
+    assert actual_rows[1][utils.fid_idx] == "c"
 
 
 def test_upsert_records_calculates_standardized_popularity(
@@ -1509,7 +1428,7 @@ def test_upsert_records_calculates_standardized_popularity(
     # records, and also insert a new one.
 
     # A record matching one of our existing records into the load table.
-    query_values_update_old_record = create_query_values(
+    query_values_update_old_record = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_A,  # Matching a record that was already inserted
             col.DIRECT_URL.db_name: "https://test.com/a.jpg",
@@ -1520,7 +1439,7 @@ def test_upsert_records_calculates_standardized_popularity(
     )
 
     # A brand new record into the load table.
-    query_values_update_new_record = create_query_values(
+    query_values_update_new_record = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID_C,
             col.DIRECT_URL.db_name: "https://test.com/z.jpg",
@@ -1567,17 +1486,17 @@ def test_upsert_records_calculates_standardized_popularity(
     assert len(actual_rows) == 3
 
     # This record was present on the image table but was not updated, so it still has null popularity.
-    assert actual_rows[0][fid_idx] == FID_B
-    assert actual_rows[0][standardized_popularity_idx] is None
+    assert actual_rows[0][utils.fid_idx] == FID_B
+    assert actual_rows[0][utils.standardized_popularity_idx] is None
 
     # This is the row that was updated; it should have standardized popularity calculated based on its
     # updated raw popularity score, rather than the initial raw score.
-    assert actual_rows[1][fid_idx] == FID_A
-    assert actual_rows[1][standardized_popularity_idx] == 0.44444444444444453
+    assert actual_rows[1][utils.fid_idx] == FID_A
+    assert actual_rows[1][utils.standardized_popularity_idx] == 0.44444444444444453
 
     # This is the new record
-    assert actual_rows[2][fid_idx] == FID_C
-    assert actual_rows[2][standardized_popularity_idx] == 0.6153846153846154
+    assert actual_rows[2][utils.fid_idx] == FID_C
+    assert actual_rows[2][utils.standardized_popularity_idx] == 0.6153846153846154
 
 
 def test_drop_load_table_drops_table(postgres_with_load_table, load_table, identifier):
