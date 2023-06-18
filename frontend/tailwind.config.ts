@@ -2,7 +2,7 @@ import defaultTheme from "tailwindcss/defaultTheme"
 import plugin from "tailwindcss/plugin"
 import { SCREENS } from "./src/constants/screens"
 import { Z_INDICES } from "./src/constants/z-indices"
-import typographyPlugin from "@tailwindcss/typography"
+
 
 export default {
   content: [
