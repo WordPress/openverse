@@ -8,6 +8,7 @@
 
 - [ ] @krysal
 - [ ] @stacimc
+- [x] @AetherUnbound
 
 ## Project links
 
