@@ -477,13 +477,9 @@ and develop those, the query to derive the data is relatively simple. At a
 glance, I don't think the cost would be tremendous for the metric as our log
 data each month is relatively low (<10 GB per month).
 
-As I said, if reviewers think we should go ahead with this, I can develop the
-query and add it to this implementation plan. However, I think it's best to
-start with this initial set of alarms and explore Logs Insights-based metric
-alarms at a later date. We have heaps of metrics aside from route specific
-timings I would love to even just have dashboard widgets for, like ES response
-time, ES query counts, average pagination query counts, dead link query time,
-etc.
+During the clarification round, reviewers agreed that Logs Insights metrics
+based alarms are outside the scope of this implementation plan.
+[I've created an issue to investigate the use of log parsing for route-specific timings on critical paths](https://github.com/WordPress/openverse/issues/2435).
 
 ### Composite Alarms
 
