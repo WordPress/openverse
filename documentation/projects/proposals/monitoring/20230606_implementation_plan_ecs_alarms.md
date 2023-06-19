@@ -296,6 +296,7 @@ Run books must include the following:
 - Instructions/guidelines to help identify the severity of the issue
 - Additional helpful information for diagnosing particular problems beyond
   severity identification
+- Links to related incident reports
 
 #### Example Run Books
 

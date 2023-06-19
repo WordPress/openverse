@@ -46,3 +46,8 @@ caused by an organic increase in traffic. Consider scaling the API by one task
 if the increase is substantial and sustained, otherwise investigate traffic
 origin according to the _traffic analysis run book_ and identify potential
 sources of organic traffic increases (conferences, etc).
+
+### Related incident reports
+
+- _2023-06-08 at 03:00 UTC: Something broke, oh dear!_
+- _2023-08-03 at 17:00 UTC: Something broke less badly, oh dear._

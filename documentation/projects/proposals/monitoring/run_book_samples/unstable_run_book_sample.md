@@ -78,3 +78,8 @@ activity like indexing during a data refresh.
 - 2023-06-12 at 16:00 UTC. This happened during low traffic when response time
   is also much lower than peak traffic. We think we might be able to add
   downtime for 13:00 to 20:00 UTC.
+
+### Related incident reports
+
+- _2023-06-08 at 03:00 UTC: Something broke, oh dear!_
+- _2023-08-03 at 17:00 UTC: Something broke less badly, oh dear._
