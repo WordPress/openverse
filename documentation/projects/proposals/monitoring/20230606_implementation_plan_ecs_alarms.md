@@ -136,7 +136,7 @@ used in the field and alternative turns of phrase are much clumsier.
 ```{note}
 I use "alarm" throughout this document as a synonym for "alarms that send alerts".
 For the purposes of this implementation plan, all alarms either trigger alert actions
-themselves or are constiuents in composite alarms that in turn trigger alert actions.
+themselves or are constituents in composite alarms that in turn trigger alert actions.
 Where relevant, I have tried to clarify which alarms should trigger the alert actions.
 ```
 
@@ -271,7 +271,7 @@ Every notification sent by an alarm must include a link to a run book.
 Run books are critical to alarm development because they document and share the
 knowledge of metric interpretation with everyone responding to alerts. Some
 alarms may share similar or exactly the same details or instructions. In those
-cases, we can develop documents that are linked to from individual alert run
+cases, we can develop documents that are linked to via individual alert run
 books. Even if every detail is shared between two separate alarms, each alarm
 must still have its own run book to serve as a space to encourage alarm-specific
 documentation. An alarm will naturally have few details in its run book to begin
@@ -343,7 +343,7 @@ Keep in mind that false negatives can be harder to identify, particularly
 because you are rarely forced to confront a false negative. While false
 negatives are not noisy, and an alarm that does not have false positives and
 still catches _some_ problems is better than nothing, we should also consider
-false negatives when determining an alarm;s accuracy.
+false negatives when determining an alarm's accuracy.
 
 In summary, each alarm needs time, attention, and experience from one or a
 handful of maintainers for it to reach a state where we can be sure that when it
@@ -386,7 +386,7 @@ Each service should have a CloudWatch alarm that alerts if the Target Group
 ```{important}
 The `UnHealthyHostCount` alarm is the only alarm in this implementation plan
 that should be implemented for staging. The reason we _can_ implement this for
-staging and the others not is because this is the only metric that does not
+staging and not the others is because this is the only metric that does not
 rely on real user behaviour to create usable numbers we can depend on for
 alert thresholds. All the other metrics used for alarms in this implementation
 plan rely on having consistent historical and ongoing data that is generated
