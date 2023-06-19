@@ -146,7 +146,7 @@ export type Events = {
    */
   TOGGLE_FILTER_SIDEBAR: {
     /** The media type being searched */
-    mediaType: SearchType
+    searchType: SearchType
     /** The state of the filter sidebar after the user interaction. */
     toState: "opened" | "closed"
   }
