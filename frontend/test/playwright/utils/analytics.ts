@@ -32,7 +32,6 @@ export function expectAnalyticsEvent<T extends EventName>(
   event: EventResponse<T>,
   expectedPayload: Events[T]
 ): void {
-  console.log({ event, expectedPayload })
   const isValidEvent = validateAnalyticsEvent(event, expectedPayload)
   expect(isValidEvent).toBeTruthy()
 }
@@ -42,7 +41,12 @@ export const collectAnalyticsEvents = (context: BrowserContext) => {
   context.route("/api/event", (route, request) => {
     const postData = request.postData()
     if (postData) {
-      sentAnalyticsEvents.push(JSON.parse(postData))
+      const parsedData = JSON.parse(postData)
+      const event = parsedData
+      if (parsedData.p) {
+        event.p = JSON.parse(parsedData.p)
+      }
+      sentAnalyticsEvents.push({ ...parsedData })
     }
     route.continue()
   })

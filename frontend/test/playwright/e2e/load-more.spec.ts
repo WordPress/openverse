@@ -146,8 +146,6 @@ test.describe("Load more button", () => {
   }) => {
     const analyticsEvents = collectAnalyticsEvents(context)
 
-    console.info(analyticsEvents)
-
     await goToSearchTerm(page, "cat")
     await expect(page.locator(loadMoreButton)).toBeVisible()
 
