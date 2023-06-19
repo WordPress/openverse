@@ -3,8 +3,8 @@ import re
 from collections.abc import Callable
 from enum import Enum, auto
 from test.factory.es_http import (
-    MOCK_DEAD_RESULT_URL,
-    MOCK_LIVE_RESULT_URL,
+    MOCK_DEAD_RESULT_URL_PREFIX,
+    MOCK_LIVE_RESULT_URL_PREFIX,
     create_mock_es_http_image_search_response,
 )
 from unittest import mock
@@ -18,6 +18,7 @@ from elasticsearch_dsl import Search
 from api.controllers import search_controller
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
+from api.utils.search_context import SearchContext
 
 
 pytestmark = pytest.mark.django_db
@@ -552,10 +553,22 @@ def test_resolves_index(
     "api.controllers.search_controller._post_process_results",
     wraps=search_controller._post_process_results,
 )
+@mock.patch("api.controllers.search_controller.SearchContext")
 @pook.on
 def test_no_post_process_results_recursion(
-    wrapped_post_process_results, image_media_type_config, settings
+    mock_search_context,
+    wrapped_post_process_results,
+    image_media_type_config,
+    settings,
+    # request the redis mock to auto-clean Redis between each test run
+    # otherwise the dead link query mask causes test details to leak
+    # between each run
+    redis,
 ):
+    # Search context does not matter for this test, so we can mock it
+    # to avoid needing to account for additional ES requests
+    mock_search_context.build.return_value = SearchContext(set(), set())
+
     hit_count = 5
     mock_es_response = create_mock_es_http_image_search_response(
         index=image_media_type_config.origin_index,
@@ -566,47 +579,19 @@ def test_no_post_process_results_recursion(
     es_host = settings.ES.transport.kwargs["host"]
     es_port = settings.ES.transport.kwargs["port"]
 
-    es_endpoint_pattern = f"http://{es_host}:{es_port}/{{index}}/_search"
-
     # `origin_index` enforced by passing `exact_index=True` below.
-    search_es_endpoint = es_endpoint_pattern.format(
-        index=image_media_type_config.origin_index
+    es_endpoint = (
+        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
     )
 
-    mock_search = (
-        pook.post(search_es_endpoint).times(1).reply(200).json(mock_es_response).mock
-    )
-
-    live_results = [
-        r
-        for r in mock_es_response["hits"]["hits"]
-        if r["_source"]["url"] == MOCK_LIVE_RESULT_URL
-    ]
-
-    filtered_es_endpoint = es_endpoint_pattern.format(
-        index=image_media_type_config.filtered_index
-    )
-    mock_filtered_es_response = create_mock_es_http_image_search_response(
-        index=image_media_type_config.filtered_index,
-        total_hits=len(live_results),
-        # pass 0 for hit_count to force only the base hits to exist in the response
-        hit_count=0,
-        base_hits=live_results,
-    )
-
-    (
-        pook.post(filtered_es_endpoint)
-        .times(1)
-        .reply(200)
-        .json(mock_filtered_es_response)
-        .mock
-    )
+    mock_search = pook.post(es_endpoint).times(1).reply(200).json(mock_es_response).mock
 
     # Ensure dead link filtering does not remove any results
     pook.head(
-        MOCK_LIVE_RESULT_URL,
-        reply=200,
-    )
+        pook.regex(rf"{MOCK_LIVE_RESULT_URL_PREFIX}/\d"),
+    ).times(
+        hit_count
+    ).reply(200)
 
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
@@ -663,8 +648,10 @@ def test_no_post_process_results_recursion(
     "api.controllers.search_controller._post_process_results",
     wraps=search_controller._post_process_results,
 )
+@mock.patch("api.controllers.search_controller.SearchContext")
 @pook.on
 def test_post_process_results_recurses_as_needed(
+    mock_search_context,
     wrapped_post_process_results,
     image_media_type_config,
     settings,
@@ -676,6 +663,10 @@ def test_post_process_results_recurses_as_needed(
     # between each run
     redis,
 ):
+    # Search context does not matter for this test, so we can mock it
+    # to avoid needing to account for additional ES requests
+    mock_search_context.build.return_value = SearchContext(set(), set())
+
     mock_es_response_1 = create_mock_es_http_image_search_response(
         index=image_media_type_config.origin_index,
         total_hits=mock_total_hits,
@@ -694,7 +685,10 @@ def test_post_process_results_recurses_as_needed(
     es_host = settings.ES.transport.kwargs["host"]
     es_port = settings.ES.transport.kwargs["port"]
 
-    es_endpoint_pattern = f"http://{es_host}:{es_port}/{{index}}/_search"
+    # `origin_index` enforced by passing `exact_index=True` below.
+    es_endpoint = (
+        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+    )
 
     # `from` is always 0 if there is no query mask
     # see `_paginate_with_dead_link_mask` branch 1
@@ -702,13 +696,8 @@ def test_post_process_results_recurses_as_needed(
     # with no significant benefit
     re.compile('from":0')
 
-    # `origin_index` enforced by passing `exact_index=True` below.
-    search_es_endpoint = es_endpoint_pattern.format(
-        index=image_media_type_config.origin_index
-    )
-
     mock_first_es_request = (
-        pook.post(search_es_endpoint)
+        pook.post(es_endpoint)
         # The dead link ratio causes the initial query size to double
         .body(re.compile(f'size":{(page_size * page) * 2}'))
         .body(re.compile('from":0'))
@@ -719,7 +708,7 @@ def test_post_process_results_recurses_as_needed(
     )
 
     mock_second_es_request = (
-        pook.post(search_es_endpoint)
+        pook.post(es_endpoint)
         # Size is clamped to the total number of available hits
         .body(re.compile(f'size":{mock_total_hits}'))
         .body(re.compile('from":0'))
@@ -732,37 +721,16 @@ def test_post_process_results_recurses_as_needed(
     live_results = [
         r
         for r in mock_es_response_2["hits"]["hits"]
-        if r["_source"]["url"] == MOCK_LIVE_RESULT_URL
+        if r["_source"]["url"].startswith(MOCK_LIVE_RESULT_URL_PREFIX)
     ]
 
-    filtered_es_endpoint = es_endpoint_pattern.format(
-        index=image_media_type_config.filtered_index
-    )
-    mock_filtered_es_response = create_mock_es_http_image_search_response(
-        index=image_media_type_config.filtered_index,
-        total_hits=len(live_results),
-        # pass 0 for hit_count to force only the base hits to exist in the response
-        hit_count=0,
-        base_hits=live_results,
-    )
+    pook.head(pook.regex(rf"{MOCK_LIVE_RESULT_URL_PREFIX}/\d")).times(
+        len(live_results)
+    ).reply(200)
 
-    mock_filtered_es_request = (
-        pook.post(filtered_es_endpoint)
-        .times(1)
-        .reply(200)
-        .json(mock_filtered_es_response)
-        .mock
-    )
-
-    pook.head(
-        MOCK_LIVE_RESULT_URL,
-        reply=200,
-    )
-
-    pook.head(
-        MOCK_DEAD_RESULT_URL,
-        reply=400,
-    )
+    pook.head(pook.regex(rf"{MOCK_DEAD_RESULT_URL_PREFIX}/\d")).times(
+        len(mock_es_response_2["hits"]["hits"]) - len(live_results)
+    ).reply(400)
 
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
@@ -782,7 +750,6 @@ def test_post_process_results_recurses_as_needed(
 
     assert mock_first_es_request.total_matches == 1
     assert mock_second_es_request.total_matches == 1
-    assert mock_filtered_es_request.total_matches == 1
 
     assert {r["_source"]["identifier"] for r in live_results} == {
         r.identifier for r in results

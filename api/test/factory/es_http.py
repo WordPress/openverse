@@ -1,8 +1,8 @@
 from uuid import uuid4
 
 
-MOCK_LIVE_RESULT_URL = "https://example.com/openverse-image-result-url"
-MOCK_DEAD_RESULT_URL = f"{MOCK_LIVE_RESULT_URL}-dead"
+MOCK_LIVE_RESULT_URL_PREFIX = "https://example.com/openverse-live-image-result-url"
+MOCK_DEAD_RESULT_URL_PREFIX = "https://example.com/openverse-dead-image-result-url"
 
 
 def create_mock_es_http_image_hit(_id: str, index: str, live: bool = True):
@@ -25,7 +25,9 @@ def create_mock_es_http_image_hit(_id: str, index: str, live: bool = True):
             "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
             "creator": "Nature's Beauty",
             "creator_url": "https://example.com/author/121424",
-            "url": MOCK_LIVE_RESULT_URL if live else MOCK_DEAD_RESULT_URL,
+            "url": f"{MOCK_LIVE_RESULT_URL_PREFIX}/{_id}"
+            if live
+            else f"{MOCK_DEAD_RESULT_URL_PREFIX}/{_id}",
             "license": "cc0",
             "license_version": "1.0",
             "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
