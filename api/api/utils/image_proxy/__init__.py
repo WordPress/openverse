@@ -52,8 +52,8 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     """
-    Proxy an image through Photon if its filetype is supported, return the original
-    image if the filetype is SVG, and raise .
+    Proxy an image through Photon if its file type is supported, else return the 
+    original image if the file type is SVG. Otherwise, raise an exception.
     """
     logger = parent_logger.getChild("get")
     tallies = django_redis.get_redis_connection("tallies")
