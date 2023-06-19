@@ -50,4 +50,16 @@ describe("VHeaderDesktop", () => {
       searchType: "all",
     })
   })
+
+  it("sends TOGGLE_FILTER_SIDEBAR analytics event when the filter sidebar is shown", async () => {
+    const screen = render(VHeaderDesktop, options)
+    const filterSidebarTrigger = screen.getByText("Filters")
+
+    await fireEvent.click(filterSidebarTrigger)
+
+    expect(sendCustomEventMock).toHaveBeenCalledWith("TOGGLE_FILTER_SIDEBAR", {
+      mediaType: "all",
+      toState: "opened",
+    })
+  })
 })
