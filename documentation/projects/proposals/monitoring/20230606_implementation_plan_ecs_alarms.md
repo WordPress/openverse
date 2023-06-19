@@ -221,22 +221,23 @@ All unstable alarm should eventually be stabilised or deleted. No alarm should
 indefinitely stay in the "unstable" category. In order to increase and
 distribute accountability for alarm stabilisation, each alarm will be assigned
 to a maintainer who will be responsible for investigating false positive alerts
-that come from alarm. Ideally, most of the Openverse maintainers will be
-assigned at least one alarm from this implementation plan to shepherd into
-stability. The maintainer assigned to stabilise the alarm is not solely
+that come from the unstable alarm. Ideally, most of the Openverse maintainers
+will be assigned at least one alarm from this implementation plan to shepherd
+into stability. The maintainer assigned to stabilise the alarm is not solely
 responsible for identifying areas of stability improvement. The development of
 automated monitoring tools is still a collaborative effort. However, in addition
-to ensuring no alarm falls to the wayside, assigning a maintainer also ensures
-that each alarm has someone who understands the long-term context of the alarm,
-is aware of all of its previous behaviour, and has paid consistent attention to
-it. Alarm maintainers should have a similar relationship to their assigned
-alarms as project leads do for projects. The maintainer will create issues to
-iterate on the alarm and its run book but is not necessarily the person who will
-implement those issues. Once the alarm is stabilised, there will no longer be a
-single person assigned to it. Once maintainers reach a high level of confidence
-that the alarm will not regularly cause false positives, the alarm should be
-stabilised, with relevant run books updated to reflect that. To summarise the
-overall process:
+to ensuring false alarm investigation does not fall to the wayside, assigning a
+maintainer also ensures that each alarm has someone who understands the
+long-term context of the alarm, is aware of all of its previous behaviour, and
+has paid consistent attention to it during stabilisation. Alarm maintainers
+should have a similar relationship to their assigned alarms as project leads do
+for projects. The maintainer will create issues to iterate on the alarm and its
+run book but is not necessarily the person who will implement those issues.
+**Once the alarm is stabilised, there will no longer be a single person assigned
+to it**. Once maintainers reach a high level of confidence that the alarm will
+not regularly cause false positives, the alarm should be stabilised, with
+relevant run books updated by the maintainer to reflect the fact. At this point,
+the alarm's maintainer will be unassigned. To summarise the overall process:
 
 1. Propose a new alarm based on metric observation
 2. Implement the unstable version of the alarm and create the initial run book
@@ -246,6 +247,11 @@ overall process:
    on experience evaluating the unstable alarm
 5. Stabilise the alarm by updating the run book and sending alerts to the stable
    channel
+   - The runbook should be updated to note:
+     - When the alarm was stabilised
+     - Remove the assigned maintainer
+     - Consolidate false positive advice or anything else that can be simplified
+       now that we have a deeper understanding of the alarm
 
 ### Run Books
 
