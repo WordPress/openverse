@@ -148,7 +148,7 @@ export type Events = {
     /** The media type being searched */
     mediaType: SearchType
     /** The state of the filter sidebar after the user interaction. */
-    toState: "open" | "closed"
+    toState: "opened" | "closed"
   }
   /**
    * Description: The user clicks to a link outside of Openverse.

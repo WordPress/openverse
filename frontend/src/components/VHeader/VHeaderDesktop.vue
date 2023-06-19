@@ -114,10 +114,10 @@ export default defineComponent({
     )
 
     const toggleSidebar = () => {
-      const state = isSidebarVisible?.value ? "closed" : "opened"
+      const toState = isSidebarVisible?.value ? "closed" : "opened"
       sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
         mediaType: searchStore.searchType,
-        state,
+        toState,
       })
       uiStore.toggleFilters()
     }
