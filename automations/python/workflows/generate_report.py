@@ -17,7 +17,7 @@ github_username = os.environ.get(
 commit_message = os.environ.get("COMMIT_MESSAGE")
 commit_url = f"{server_url}/{repository}/commit/{os.environ.get('GITHUB_SHA')}"
 
-slack_id = gh_slack_username_map.get(github_username, "")
+slack_id = gh_slack_username_map.get(github_username)
 
 jobs = ["emit-docs", "publish-images", "deploy-frontend", "deploy-api"]
 
@@ -29,6 +29,8 @@ for job_name in jobs:
     results[job_name] = result
     counts[result] += 1
 
+user_mention = f"<@{slack_id}>" if slack_id else github_username
+
 payload = {
     "text": ", ".join(f"{count} {result}" for result, count in counts.items()),
     "blocks": [
@@ -37,7 +39,7 @@ payload = {
             "text": {
                 "type": "mrkdwn",
                 "text": (
-                    f"Hi <@{slack_id}>, some CI + CD checks failed for your merge of <{commit_url}|{commit_message}>'.\n"  # noqa: E501
+                    f"Hi {user_mention}, some CI + CD checks failed for your merge of <{commit_url}|{commit_message}>'.\n"  # noqa: E501
                     "This _could_ indicate problems with deployments or tests introduced by your PR.\n"  # noqa: E501
                     "Please reply to this message with :ack: when seen, :github-approved: when resolved, or :issue_created: if it is unresolved and needs work.\n"  # noqa: E501
                     "Please link to any issues relevant to resolving this problem."  # noqa: E501
