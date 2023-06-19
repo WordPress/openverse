@@ -248,7 +248,7 @@ the alarm's maintainer will be unassigned. To summarise the overall process:
    on experience evaluating the unstable alarm
 5. Stabilise the alarm by updating the run book and sending alerts to the stable
    channel
-   - The runbook should be updated to note:
+   - The run book should be updated to note:
      - When the alarm was stabilised
      - Remove the assigned maintainer
      - Consolidate false positive advice or anything else that can be simplified
