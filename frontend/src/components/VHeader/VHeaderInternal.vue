@@ -151,11 +151,11 @@ export default defineComponent({
       deactivateFocusTrap,
     })
 
-    const eventedOnTriggerClick = (...args) => {
+    const eventedOnTriggerClick = () => {
       if (!isModalVisible.value) {
         sendCustomEvent("OPEN_PAGES_MENU", {})
       }
-      return onTriggerClick(...args)
+      return onTriggerClick()
     }
 
     // When clicking on an internal link in the modal, close the modal
