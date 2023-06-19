@@ -37,6 +37,7 @@ const replacePlaceholders = (json) => {
   }
   if (typeof json === "string") {
     // Replace old kebab-cased keys that can still be in the translations with camelCased keys the app expects
+    // TODO: Remove this once all translation strings are updated.
     return json.replace(
       /###([a-zA-Z-]*)###/g,
       (_, match) => `{${camel(match)}}`
