@@ -1,6 +1,6 @@
 // Playwright utilities for making sure analytics events are sent correctly.
 // Use collectAnalyticsEvents at the top of your test to collect all analytics events,
-// and then expectAnalyticsEvent to make sure a specific event(s) has the correct payload.
+// and then expectEventPayloadToMatch to make sure a specific event(s) has the correct payload.
 
 import { BrowserContext, expect } from "@playwright/test"
 
@@ -28,7 +28,7 @@ export function validateAnalyticsEvent<T extends EventName>(
   return true
 }
 
-export function expectAnalyticsEvent<T extends EventName>(
+export function expectEventPayloadToMatch<T extends EventName>(
   event: EventResponse<T>,
   expectedPayload: Events[T]
 ): void {

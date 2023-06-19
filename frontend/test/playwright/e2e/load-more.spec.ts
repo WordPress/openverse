@@ -11,7 +11,7 @@ import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
 import {
   collectAnalyticsEvents,
-  expectAnalyticsEvent,
+  expectEventPayloadToMatch,
 } from "../utils/analytics"
 
 test.describe.configure({ mode: "parallel" })
@@ -136,11 +136,8 @@ test.describe("Load more button", () => {
   /**
    * Checks that an analytics event is posted to /api/event and has the correct
    * payload for the LOAD_MORE_RESULTS event.
-   *
-   * TODO: Some of this should be extracted into a reusable helper for validating
-   * analytics events.
    */
-  test.only(`Sends a valid analytics event when loading more results`, async ({
+  test(`Sends a valid analytics event when loading more results`, async ({
     page,
     context,
   }) => {
@@ -155,10 +152,8 @@ test.describe("Load more button", () => {
       (event) => event.n === "LOAD_MORE_RESULTS"
     )
 
-    expect(loadMoreEvent).toBeTruthy()
-
     if (loadMoreEvent) {
-      expectAnalyticsEvent(loadMoreEvent, {
+      expectEventPayloadToMatch(loadMoreEvent, {
         query: "cat",
         searchType: "all",
       })
