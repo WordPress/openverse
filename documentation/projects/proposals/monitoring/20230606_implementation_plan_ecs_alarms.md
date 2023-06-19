@@ -171,10 +171,14 @@ alarms present in the `next` root modules should also be moved.
 
 ```{note}
 The CloudWatch Dashboards that collect all metrics for `next` root module services
-will not be moved into these new modules. The dashboards include all services defined
-in the root module and keeping it in the root module level allows us to easily share
-documentation relevant for all services and simplify the configuration as proposed
-in [WordPress/openverse-infrastructure #472](https://github.com/WordPress/openverse-infrastructure/issues/472).
+will not be moved into these new modules. These are configured by the
+`concrete/cloudwatch-dashboard` module which creates a dashboard for all services
+in the root module. Keeping this configuration at the root module level allows us
+to easily share documentation relevant for all services and simplify the configuration
+as proposed in
+[WordPress/openverse-infrastructure #472](https://github.com/WordPress/openverse-infrastructure/issues/472).
+Splitting these could make sense in the future if significant differences in the needs
+of services arise. That is outside the scope of this implementation plan, however.
 ```
 
 We will need at least one new SNS topic for unstable alarms to send
