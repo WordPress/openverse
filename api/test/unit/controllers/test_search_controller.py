@@ -566,12 +566,41 @@ def test_no_post_process_results_recursion(
     es_host = settings.ES.transport.kwargs["host"]
     es_port = settings.ES.transport.kwargs["port"]
 
+    es_endpoint_pattern = f"http://{es_host}:{es_port}/{{index}}/_search"
+
     # `origin_index` enforced by passing `exact_index=True` below.
-    es_endpoint = (
-        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+    search_es_endpoint = es_endpoint_pattern.format(
+        index=image_media_type_config.origin_index
     )
 
-    mock_search = pook.post(es_endpoint, reply=200, response_json=mock_es_response)
+    mock_search = (
+        pook.post(search_es_endpoint).times(1).reply(200).json(mock_es_response).mock
+    )
+
+    live_results = [
+        r
+        for r in mock_es_response["hits"]["hits"]
+        if r["_source"]["url"] == MOCK_LIVE_RESULT_URL
+    ]
+
+    filtered_es_endpoint = es_endpoint_pattern.format(
+        index=image_media_type_config.filtered_index
+    )
+    mock_filtered_es_response = create_mock_es_http_image_search_response(
+        index=image_media_type_config.filtered_index,
+        total_hits=len(live_results),
+        # pass 0 for hit_count to force only the base hits to exist in the response
+        hit_count=0,
+        base_hits=live_results,
+    )
+
+    (
+        pook.post(filtered_es_endpoint)
+        .times(1)
+        .reply(200)
+        .json(mock_filtered_es_response)
+        .mock
+    )
 
     # Ensure dead link filtering does not remove any results
     pook.head(
@@ -709,7 +738,7 @@ def test_post_process_results_recurses_as_needed(
     )
     mock_filtered_es_response = create_mock_es_http_image_search_response(
         index=image_media_type_config.filtered_index,
-        total_hits=4,
+        total_hits=len(live_results),
         # pass 0 for hit_count to force only the base hits to exist in the response
         hit_count=0,
         base_hits=live_results,
