@@ -20,10 +20,9 @@
 This implementation plan is not associated with a specific project plan.
 It was requested as a result of various discussions between maintainers
 reflecting on recent incidents. While there were some open issues to add
-monitors and alarms for specific things, without a cohesive implementation
+monitoring and alarms for specific things, without a cohesive implementation
 plan to describe the general approach, these continued to fall to the
-wayside. We need to establish a general approach for the initial set of
-monitors and alarms that can be built and iterated upon as the project evolves.
+wayside. We need to establish a general approach for the initial set of alarms that can be built and iterated upon as the project evolves.
 ```
 
 ## Expected Outcomes
@@ -47,8 +46,8 @@ stabilisation.
 
 This implementation plan has the following goals:
 
-1. Establish a baseline approach for maintaining and configuring monitors and
-   alarms through Terraform.
+1. Establish a baseline approach for maintaining, configuring, and organising
+   service monitoring tools through Terraform.
 2. Propose an initial set of unstable alerts for our ECS services and describe
    their implementation details.
 3. Describe a plan for stabilising new alarms that includes the creation and
@@ -165,8 +164,10 @@ module "api-monitoring" {
 New modules for each service/environment help to prevent an increase in root
 module complexity. In order to consolidate monitoring configuration, the
 existing `service-monitors` instances, which configure UptimeRobot, will be
-moved into these new monitoring modules. Likewise, existing RDS, Elasticache and
-Elasticsearch monitors present in the `next` root modules should be moved.
+moved into these new monitoring modules. `service-monitors` should be renamed at
+this point to reflect the fact that it only configures UptimeRobot and not
+"monitors in general". Likewise, existing RDS, Elasticache, and Elasticsearch
+alarms present in the `next` root modules should also be moved.
 
 ```{note}
 The CloudWatch Dashboards that collect all metrics for `next` root module services
@@ -510,9 +511,11 @@ eagerly to the alarms if we can avoid it.
 <!-- Describe the implementation step necessary for completion. -->
 
 1. Create the monitoring modules for frontend and API production and move
-   existing monitors into these
+   existing alarms into these
    - This includes moving the UptimeRobot configuration for each service as well
-     as the database CPU usage monitors
+     as the database and Redis monitors
+   - Rename `service-monitors` to `service-uptime-robot` to clarify the module's
+     purpose
    - Also create the new SNS topic for the unstable alerts' notification channel
    - Create the unhealthy host count alarm for API and frontend services
      - This serves as a proof of functionality for any infrastructure changes
@@ -589,7 +592,7 @@ There will be no changes to the API.
 
 <!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
 
-Run books will be created for each monitor or group of related monitors to help
+Run books will be created for each alarm or group of related alarm to help
 maintainers know how to respond when they alarm.
 
 ## Rollback
