@@ -119,6 +119,9 @@ used in the field and alternative turns of phrase are much clumsier.
 - "Notification channel": A place where alarms send alerts. e.g., a Slack or
   Matrix channel, an email address, or a tool like
   PagerDuty[^notification-channels]. These are configured via SNS.
+- "Downtime": A known period of time when a given metric is unsuitable for
+  alarming, typically due to daily variations in user behaviour.
+  [See the section on downtime for examples and implementation details](#downtime).
 
 [^notification-channels]:
     I am intentionally vague in this implementation plan about specific
@@ -412,12 +415,6 @@ dinner at your desk to fix it) but is still very high priority: if our services
 fail while our monitoring is broken we won't know until users tell us about it
 or we happen to notice on our own by chance.
 
-The anomaly-based alerts will probably need downtime during low traffic periods.
-In my experience, anomaly detection is generally pretty flaky when services have
-significant periods of low activity, which all of ours do. We should start
-without downtime but anticipate the need for those alerts. Refer to
-[CloudWatch documentation regarding "metric math functions" for examples of how to combine expressions based on date metrics to configure downtime for specific periods of time](https://aws.amazon.com/blogs/mt/enhance-cloudwatch-metrics-with-metric-math-functions/).
-
 The response time anomaly should be configured only to alert when the response
 time is outside the upper range of the anomaly, not below (it's fine if things
 are "too fast")[^too-fast]. Request count anomaly should be configured to alert
@@ -434,6 +431,28 @@ on both sides.
 
 This list is not an exhaustive list of all possible useful alarms. It is a
 starting point. We should and will add and remove alarms over time.
+
+#### Downtime
+
+Some anomaly-based alerts may need downtime during low traffic periods. In my
+experience, anomaly detection is generally pretty flaky when services have
+significant periods of low activity, which all of ours do. We should start
+without downtime but anticipate the need for those alerts. Refer to
+[CloudWatch documentation regarding "metric math functions" for examples of how to combine expressions based on date metrics to configure downtime for specific periods of time](https://aws.amazon.com/blogs/mt/enhance-cloudwatch-metrics-with-metric-math-functions/).
+
+The main alarm I suspect will need downtime is request count. With large
+fluctuations it can be difficult to tell the difference between request count
+falling due to increase error rate or due to the daily ebb and flow of usage. As
+above, alarms should start without downtime. However, if an alarm configuration
+makes sense for catching dips during high-traffic but causes false alarms during
+low traffic, a downtime during daily or weekly low traffic periods is the best
+way to prevent this. Occasionally separate alarms may be configured for these
+periods of time, in which case each alarm would have downtime configured the
+opposite of the other. In other words, it may be the case that we still want
+anomaly detection for low traffic periods, but the configuration differs from
+high traffic periods. In that case, we would create two separate alarms, with
+the high traffic anomaly detection alarm configured with downtime during the
+period of time that the low traffic anomaly alarm is on and vice-versa.
 
 #### Logs Insights metrics based alarms
 
