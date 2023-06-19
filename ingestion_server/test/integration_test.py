@@ -6,6 +6,7 @@ ensures that the data has been copied and indexed downstream.
 """
 
 import logging
+import os
 import pathlib
 import platform
 import subprocess
@@ -430,6 +431,10 @@ class TestIngestion(unittest.TestCase):
     def tearDownClass(cls) -> None:
         # Terminate the Bottle process started in ``setUp``
         cls.cb_process.terminate()
+
+        # Tear down the Docker Compose stack locally
+        if "GITHUB_ACTIONS" not in os.environ:
+            cls._compose_cmd(["down", "-v"], capture_output=True)
 
         # Close connections with databases
         for conn in [cls.upstream_db, cls.downstream_db]:
