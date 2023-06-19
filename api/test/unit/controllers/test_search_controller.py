@@ -712,6 +712,7 @@ def test_post_process_results_recurses_as_needed(
         # The dead link ratio causes the initial query size to double
         .body(re.compile(f'size":{(page_size * page) * 2}'))
         .body(re.compile('from":0'))
+        .times(1)
         .reply(200)
         .json(mock_es_response_1)
         .mock
@@ -722,6 +723,7 @@ def test_post_process_results_recurses_as_needed(
         # Size is clamped to the total number of available hits
         .body(re.compile(f'size":{mock_total_hits}'))
         .body(re.compile('from":0'))
+        .times(1)
         .reply(200)
         .json(mock_es_response_2)
         .mock
@@ -745,7 +747,11 @@ def test_post_process_results_recurses_as_needed(
     )
 
     mock_filtered_es_request = (
-        pook.post(filtered_es_endpoint).reply(200).json(mock_filtered_es_response).mock
+        pook.post(filtered_es_endpoint)
+        .times(1)
+        .reply(200)
+        .json(mock_filtered_es_response)
+        .mock
     )
 
     pook.head(
