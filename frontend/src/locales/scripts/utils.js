@@ -25,6 +25,18 @@ exports.setToValue = function setValue(obj, path, value) {
   o[a[0]] = value
 }
 
+function replacer(_, match) {
+  // Replace ###<text>### from `po` files with {<text>} in `vue`.
+  // Additionally, the old kebab-cased keys that can still be in the
+  // translations are replaced with camelCased keys the app expects.
+  // TODO: Remove `camel` and warning once all translation strings are updated.
+  // https://github.com/WordPress/openverse/issues/2438
+  if (match.includes("-")) {
+    console.warn("Found kebab-cased key in translation strings:", match)
+  }
+  return `{${camel(match)}}`
+}
+
 /**
  * Replace ###<text>### with {<text>}.
  *
@@ -36,12 +48,7 @@ const replacePlaceholders = (json) => {
     return null
   }
   if (typeof json === "string") {
-    // Replace old kebab-cased keys that can still be in the translations with camelCased keys the app expects
-    // TODO: Remove this once all translation strings are updated.
-    return json.replace(
-      /###([a-zA-Z-]*)###/g,
-      (_, match) => `{${camel(match)}}`
-    )
+    return json.replace(/###([a-zA-Z-]*)###/g, replacer)
   }
   let currentJson = { ...json }
 
