@@ -76,7 +76,7 @@
       </ul>
     </div>
 
-    <h2>{{ $t("prefPage.store-state") }}</h2>
+    <h2>{{ $t("prefPage.storeState") }}</h2>
     <pre><code>{{ flags }}</code></pre>
   </VContentPage>
 </template>

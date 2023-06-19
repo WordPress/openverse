@@ -14,6 +14,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
@@ -29,6 +30,7 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+    const { sendCustomEvent } = useAnalytics()
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
@@ -54,6 +56,11 @@ export default defineComponent({
      */
     const onLoadMore = async () => {
       if (isFetching.value) return
+
+      sendCustomEvent("LOAD_MORE_RESULTS", {
+        query: searchStore.searchTerm,
+        searchType: searchStore.searchType,
+      })
 
       await mediaStore.fetchMedia({
         shouldPersistMedia: true,

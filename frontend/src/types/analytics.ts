@@ -190,6 +190,21 @@ export type Events = {
     /** The search term */
     query: string
   }
+  /**
+   * Description: Whenever the user clicks the load more button
+   * Questions:
+   *   - On what page do users typically find a result?
+   *   - How often and how many pages of results do users load?
+   *   - Can we experiment with the types of results / result rankings
+   *     on certain pages, pages that users don't usually choose a result
+   *     from anyway?
+   */
+  LOAD_MORE_RESULTS: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The search term */
+    query: string
+  }
 }
 
 /**

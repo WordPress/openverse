@@ -9,6 +9,11 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
+import {
+  collectAnalyticsEvents,
+  expectAnalyticsEvent,
+} from "../utils/analytics"
+
 test.describe.configure({ mode: "parallel" })
 
 const loadMoreButton = `button:has-text("${t("browsePage.load", "ltr")}")`
@@ -127,4 +132,38 @@ test.describe("Load more button", () => {
       })
     })
   }
+
+  /**
+   * Checks that an analytics event is posted to /api/event and has the correct
+   * payload for the LOAD_MORE_RESULTS event.
+   *
+   * TODO: Some of this should be extracted into a reusable helper for validating
+   * analytics events.
+   */
+  test.only(`Sends a valid analytics event when loading more results`, async ({
+    page,
+    context,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    console.info(analyticsEvents)
+
+    await goToSearchTerm(page, "cat")
+    await expect(page.locator(loadMoreButton)).toBeVisible()
+
+    await page.click(loadMoreButton)
+
+    const loadMoreEvent = analyticsEvents.find(
+      (event) => event.n === "LOAD_MORE_RESULTS"
+    )
+
+    expect(loadMoreEvent).toBeTruthy()
+
+    if (loadMoreEvent) {
+      expectAnalyticsEvent(loadMoreEvent, {
+        query: "cat",
+        searchType: "all",
+      })
+    }
+  })
 })
