@@ -10,12 +10,8 @@ import pook
 import pytest
 import requests
 
-from api.utils.photon import (
-    HEADERS,
-    UpstreamThumbnailException,
-    _get_file_extension_from_url,
-)
-from api.utils.photon import get as photon_get
+from api.utils.image_proxy import HEADERS, UpstreamThumbnailException, extension
+from api.utils.image_proxy import get as photon_get
 from api.utils.tallies import get_monthly_timestamp
 
 
@@ -429,7 +425,7 @@ def test_get_unsuccessful_request_raises_custom_exception():
     ],
 )
 def test__get_extension_from_url(image_url, expected_ext):
-    assert _get_file_extension_from_url(image_url) == expected_ext
+    assert extension._get_file_extension_from_url(image_url) == expected_ext
 
 
 @pytest.mark.django_db
