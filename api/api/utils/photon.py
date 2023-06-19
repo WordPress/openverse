@@ -63,7 +63,7 @@ def check_image_type(image_url: str, media_obj) -> None:
     if not ext:
         # If the extension is still not present, try getting it from the content type
         try:
-            response = requests.head(image_url)
+            response = requests.head(image_url, timeout=10)
             response.raise_for_status()
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
