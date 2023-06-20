@@ -32,16 +32,29 @@ ORIGINAL = "original"
 THUMBNAIL_STRATEGY = Literal["photon_proxy", "original"]
 
 
-def get_thumbnail_strategy(ext: str | None) -> THUMBNAIL_STRATEGY | None:
+def get_request_params_for_extension(
+    ext: str,
+    headers: dict[str, str],
+    image_url: str,
+    parsed_image_url: urlparse,
+    is_full_size: bool,
+    is_compressed: bool,
+) -> tuple[str, dict[str, str], dict[str, str]]:
     """
-    We use photon for image types that are supported by photon (PHOTON_TYPES),
-    for SVG images we use the original image.
+    Get the request params (url, params, headers) for the thumbnail proxy.
+    If the image type is supported by photon, we use photon, and compute the necessary
+    request params, if the file can be cached and returned as is (SVG), we do that,
+    otherwise we raise UnsupportedMediaType exception.
     """
     if ext in PHOTON_TYPES:
-        return PHOTON
+        return get_photon_request_params(
+            parsed_image_url, is_full_size, is_compressed, headers
+        )
     elif ext in ORIGINAL_TYPES:
-        return ORIGINAL
-    return None
+        return image_url, {}, headers
+    raise UnsupportedMediaType(
+        f"Image extension {ext} is not supported by the thumbnail proxy."
+    )
 
 
 def get(
@@ -52,7 +65,7 @@ def get(
     is_compressed: bool = True,
 ) -> HttpResponse:
     """
-    Proxy an image through Photon if its file type is supported, else return the 
+    Proxy an image through Photon if its file type is supported, else return the
     original image if the file type is SVG. Otherwise, raise an exception.
     """
     logger = parent_logger.getChild("get")
@@ -60,22 +73,21 @@ def get(
     month = get_monthly_timestamp()
 
     image_extension = get_image_extension(image_url, media_identifier)
-    thumbnail_strategy = get_thumbnail_strategy(image_extension)
-    if not thumbnail_strategy:
-        raise UnsupportedMediaType(image_extension)
 
     headers = {"Accept": accept_header} | HEADERS
 
     parsed_image_url = urlparse(image_url)
     domain = parsed_image_url.netloc
 
-    if thumbnail_strategy == ORIGINAL:
-        upstream_url = image_url
-        params = {}
-    else:
-        upstream_url, params, headers = get_photon_request_params(
-            parsed_image_url, is_full_size, is_compressed, headers
-        )
+    upstream_url, params, headers = get_request_params_for_extension(
+        image_extension,
+        headers,
+        image_url,
+        parsed_image_url,
+        is_full_size,
+        is_compressed,
+    )
+
     try:
         upstream_response = requests.get(
             upstream_url,
@@ -114,4 +126,3 @@ def get(
         status=res_status,
         content_type=content_type,
     )
-
