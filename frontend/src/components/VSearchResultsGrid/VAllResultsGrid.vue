@@ -67,7 +67,7 @@ import { useUiStore } from "~/stores/ui"
 import { isDetail } from "~/types/media"
 import { AudioInteractionData } from "~/types/analytics"
 
-import { useAnalytics } from "~/composables/use-analytics"
+import { useDebouncedAnalytics } from "~/composables/use-analytics"
 import { useI18n } from "~/composables/use-i18n"
 
 import VSnackbar from "~/components/VSnackbar.vue"
@@ -92,8 +92,7 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
-    const { getDebouncedEventSender } = useAnalytics()
-    const sendAudioEvent = getDebouncedEventSender(500)
+    const { sendCustomEventDebounced: sendAudioEvent } = useDebouncedAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
 

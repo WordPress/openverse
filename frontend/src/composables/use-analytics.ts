@@ -79,13 +79,15 @@ export const useAnalytics = () => {
     })
   }
 
-  const getDebouncedEventSender = (timeout = 500) =>
-    useDebounceFn(<T extends EventName>(name: T, payload: Events[T]) => {
-      sendCustomEvent(name, payload)
-    }, timeout)
-
   return {
     sendCustomEvent,
-    getDebouncedEventSender,
+  }
+}
+
+export const useDebouncedAnalytics = (timeout = 500) => {
+  const { sendCustomEvent } = useAnalytics()
+  const sendCustomEventDebounced = useDebounceFn(sendCustomEvent, timeout)
+  return {
+    sendCustomEventDebounced,
   }
 }

@@ -32,7 +32,7 @@ import { defineComponent } from "@nuxtjs/composition-api"
 import { AUDIO } from "~/constants/media"
 import type { AudioDetail } from "~/types/media"
 import { AudioInteractionData } from "~/types/analytics"
-import { useAnalytics } from "~/composables/use-analytics"
+import { useDebouncedAnalytics } from "~/composables/use-analytics"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
@@ -62,8 +62,8 @@ export default defineComponent({
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
-    const { getDebouncedEventSender } = useAnalytics()
-    const sendDebouncedEvent = getDebouncedEventSender(500)
+
+    const { sendCustomEventDebounced } = useDebouncedAnalytics()
 
     const audio = computed(() =>
       singleResultStore.mediaType === AUDIO
@@ -78,7 +78,7 @@ export default defineComponent({
       data: AudioInteractionData,
       component: "AudioDetailPage" | "VRelatedAudio"
     ) => {
-      sendDebouncedEvent("AUDIO_INTERACTED", {
+      sendCustomEventDebounced("AUDIO_INTERACTION", {
         ...data,
         component: component,
       })

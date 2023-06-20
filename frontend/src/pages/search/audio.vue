@@ -41,7 +41,7 @@ import { computed, defineComponent, ref, inject } from "vue"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
-import { useAnalytics } from "~/composables/use-analytics"
+import { useDebouncedAnalytics } from "~/composables/use-analytics"
 
 import { IsSidebarVisibleKey } from "~/types/provides"
 import type { AudioInteractionData } from "~/types/analytics"
@@ -67,8 +67,7 @@ export default defineComponent({
 
     const uiStore = useUiStore()
 
-    const { getDebouncedEventSender } = useAnalytics()
-    const sendAudioEvent = getDebouncedEventSender(500)
+    const { sendCustomEventDebounced: sendAudioEvent } = useDebouncedAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
     const results = computed(() => props.resultItems.audio)

@@ -5,12 +5,12 @@ import type {
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 import type { NonMatureFilterCategory } from "~/constants/filters"
-import type { AudioDetail } from "~/types/media"
 
 export type AudioInteraction = "play" | "pause" | "seek"
-export type AudioInteractionData = Pick<AudioDetail, "id" | "provider"> & {
-  event: AudioInteraction
-}
+export type AudioInteractionData = Exclude<
+  Events["AUDIO_INTERACTION"],
+  "component"
+>
 export type AudioComponent =
   | "VRelatedAudio"
   | "VGlobalAudioTrack"
