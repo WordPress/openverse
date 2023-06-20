@@ -11,7 +11,6 @@
         :image="image"
         :search-term="searchTerm"
         aspect-ratio="intrinsic"
-        :related-to="relatedTo"
       />
     </ol>
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
@@ -34,7 +33,6 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
@@ -76,11 +74,7 @@ export default defineComponent({
     const searchTerm = computed(() => searchStore.searchTerm)
     const isError = computed(() => Boolean(props.fetchState.fetchingError))
 
-    const relatedTo = computed(() => {
-      return props.isSinglePage ? useRelatedMediaStore().mainMediaId : null
-    })
-
-    return { isError, searchTerm, relatedTo }
+    return { isError, searchTerm }
   },
 })
 </script>

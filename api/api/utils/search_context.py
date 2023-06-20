@@ -1,8 +1,6 @@
 from dataclasses import asdict, dataclass
 from typing import Self
 
-from django.conf import settings
-
 from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.response import Hit
 
@@ -27,9 +25,6 @@ class SearchContext:
             return cls(set(), set())
 
         all_result_identifiers = {r.identifier for r in results}
-
-        if not settings.ENABLE_FILTERED_INDEX_QUERIES:
-            return cls(all_result_identifiers, set())
 
         filtered_index_search = Search(index=f"{origin_index}-filtered")
         filtered_index_search = filtered_index_search.query(

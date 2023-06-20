@@ -10,12 +10,7 @@
       class="-mx-2 mb-12 flex flex-col gap-4 md:-mx-4"
     >
       <li v-for="audio in media" :key="audio.id">
-        <VAudioTrack
-          :audio="audio"
-          layout="row"
-          :size="audioTrackSize"
-          @mousedown="sendSelectSearchResultEvent(audio)"
-        />
+        <VAudioTrack :audio="audio" layout="row" :size="audioTrackSize" />
       </li>
     </ol>
     <LoadingIcon
@@ -32,11 +27,6 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { useUiStore } from "~/stores/ui"
-
-import { useSearchStore } from "~/stores/search"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
-import { useAnalytics } from "~/composables/use-analytics"
-import { AUDIO } from "~/constants/media"
 
 import type { FetchState } from "~/models/fetch-state"
 import type { AudioDetail } from "~/models/media"
@@ -59,24 +49,12 @@ export default defineComponent({
   },
   setup() {
     const uiStore = useUiStore()
-    const relatedMediaStore = useRelatedMediaStore()
 
     const audioTrackSize = computed(() => {
       return uiStore.isBreakpoint("md") ? "l" : "s"
     })
 
-    const { sendCustomEvent } = useAnalytics()
-    const sendSelectSearchResultEvent = (audio: AudioDetail) => {
-      sendCustomEvent("SELECT_SEARCH_RESULT", {
-        id: audio.id,
-        relatedTo: relatedMediaStore.mainMediaId,
-        mediaType: AUDIO,
-        provider: audio.provider,
-        query: useSearchStore().searchTerm,
-      })
-    }
-
-    return { audioTrackSize, sendSelectSearchResultEvent }
+    return { audioTrackSize }
   },
 })
 </script>

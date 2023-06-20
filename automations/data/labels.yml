@@ -150,60 +150,39 @@ groups:
     labels:
       # Programming languages
       - name: javascript
-        description: Involves JavaScript
+        description: Requires familiarity with JavaScript
         emoji: "🟨"
       - name: python
-        description: Involves Python
+        description: Requires familiarity with Python
         emoji: "🐍"
       - name: php
-        description: Involves PHP
+        description: Requires familiarity with PHP
         emoji: "🐘"
       # Libraries / other software
       - name: vue
-        description: Involves Vue.js
+        description: Requires familiarity with Vue.js
         emoji: "🔧"
       - name: django
-        description: Involves Django
+        description: Requires familiarity with Django
         emoji: "🔧"
       - name: airflow
-        description: Involves Apache Airflow
+        description: Requires familiarity with Apache Airflow
         emoji: "🔧"
       - name: docker
-        description: Involves Docker
+        description: Requires familiarity with Docker
         emoji: "🐳"
       - name: postgres
-        description: Involves PostgreSQL
+        description: Requires familiarity with PostgreSQL
         emoji: "💾"
       - name: css
-        description: Involves CSS
+        description: Requires familiarity with CSS
         emoji: "🎨"
       - name: bash
-        description: Involves Bash
+        description: Requires familiarity with Bash
         emoji: "💲"
       - name: typescript
-        description: Involves TypeScript
+        description: Requires familiarity with TypeScript
         emoji: "⌨️"
-      - name: pytest
-        description: Involves pytest
-        emoji: "🐍"
-      - name: jest
-        description: Involves Jest
-        emoji: "🟨"
-      - name: playwright
-        description: Involves Playwright
-        emoji: "🔧"
-      - name: elasticsearch
-        description: Involves Elasticsearch
-        emoji: "🔧"
-      - name: redis
-        description: Involves Redis
-        emoji: "🔧"
-      - name: github actions
-        description: Involves Github Actions
-        emoji: "🔧"
-      - name: just
-        description: Involves Just.js
-        emoji: "🔧"
 
   # Labels related to new source issues
   - name: provider
