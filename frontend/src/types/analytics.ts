@@ -1,4 +1,8 @@
-import type { MediaType, SearchType } from "~/constants/media"
+import type {
+  MediaType,
+  SearchType,
+  SupportedSearchType,
+} from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 import type { NonMatureFilterCategory } from "~/constants/filters"
 
@@ -60,6 +64,26 @@ export type Events = {
     id: string
     /** The content type being searched (can include All content) */
     searchType: SearchType
+  }
+  /**
+   * Description: Whenever the user scrolls to the end of the results page.
+   * Useful to evaluate how often users load more results or click
+   * on the external sources dropdown.
+   *
+   * This event is mainly used as part of a funnel leading to a
+   * `LOAD_MORE` or `VIEW_EXTERNAL_SOURCES` event.
+   *
+   * Questions:
+   *   - Do users use external search after reaching the result end?
+   *   - Do users find a result before reaching the end of the results?
+   */
+  REACH_RESULT_END: {
+    /** The media type being searched */
+    searchType: SupportedSearchType
+    /** The search term */
+    query: string
+    /** The current page of results the user is on. */
+    resultPage: number
   }
   /**
    * Description: The user clicks the CTA button to the external source to use the image

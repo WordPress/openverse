@@ -62,10 +62,10 @@ export default defineComponent({
 
     const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {
+      const licenseKey =
+        props.license === "sampling+" ? props.license : camel(props.license)
       return {
-        readable: i18n
-          .t(`licenseReadableNames.${camel(props.license)}`)
-          .toString(),
+        readable: i18n.t(`licenseReadableNames.${licenseKey}`).toString(),
         full: getFullLicenseName(props.license, "", i18n),
       }
     })
