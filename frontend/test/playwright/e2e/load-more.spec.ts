@@ -12,7 +12,7 @@ import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
-} from "../utils/analytics"
+} from "~/utils/analytics"
 
 test.describe.configure({ mode: "parallel" })
 
