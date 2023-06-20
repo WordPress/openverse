@@ -148,7 +148,7 @@ def trigger_and_wait_for_task(
 def index_readiness_check(
     media_type: str,
     index_suffix: str,
-    timeout: timedelta,
+    timeout: timedelta = timedelta(days=1),
     poke_interval: int = POKE_INTERVAL,
 ) -> HttpSensor:
     """

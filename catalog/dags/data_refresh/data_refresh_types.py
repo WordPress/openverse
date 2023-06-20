@@ -39,7 +39,7 @@ class DataRefresh:
     create_materialized_view_timeout:  timedelta expressing amount of time the
                                        creation of the matview may take
     index_readiness_timeout:           timedelta expressing amount of time it may take
-                                       to await a healthy ES cluster after reindexing
+                                       to await a healthy ES index after reindexing
     doc_md:                            str used for the DAG's documentation markdown
     """
 
