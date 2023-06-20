@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@nuxt/components": "^2.2.1",
-    "@nuxt/vue-app": "^2.16.3",
+    "@nuxt/vue-app": "^2.17.0",
     "@nuxtjs/composition-api": "^0.33.1",
     "@nuxtjs/i18n": "^7.0.3",
     "@nuxtjs/proxy": "^2.1.0",
@@ -86,7 +86,7 @@
     "focus-visible": "^5.2.0",
     "glob": "^8.0.1",
     "node-html-parser": "^5.3.3",
-    "nuxt": "^2.16.3",
+    "nuxt": "^2.17.0",
     "pinia": "^2.0.33",
     "portal-vue": "^2.1.7",
     "postcss-focus-visible": "^6.0.4",
@@ -106,8 +106,8 @@
     "@babel/preset-typescript": "^7.21.0",
     "@babel/runtime-corejs3": "^7.21.0",
     "@itsjonq/remake": "^2.0.0",
-    "@nuxt/types": "^2.16.3",
-    "@nuxt/typescript-build": "^3.0.0",
+    "@nuxt/types": "^2.17.0",
+    "@nuxt/typescript-build": "^3.0.1",
     "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/storybook": "^4.3.2",
     "@pinia/testing": "^0.0.15",
@@ -156,6 +156,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not dead"
   ]
 }
