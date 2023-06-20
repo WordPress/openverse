@@ -7,12 +7,12 @@ import {
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
-import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
-} from "~/utils/analytics"
+} from "~~/test/playwright/utils/analytics"
+
+import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
