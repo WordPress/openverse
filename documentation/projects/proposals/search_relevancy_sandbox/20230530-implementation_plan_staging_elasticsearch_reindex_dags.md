@@ -18,7 +18,10 @@ This document describes the addition of two DAGs for Elasticsearch (ES) index
 creation ––full and proportional-by-provider–– which will allow us to decouple
 the process from the long Ingestion server's data refresh process and experiment
 with smaller indices. Also includes the adoption of two new index aliases for
-ease of handling the new index types.
+ease of handling and querying the new index types from the API with the
+[`internal__index`](api_ii_param) param.
+
+[api_ii_param]: https://github.com/WordPress/openverse/pull/2073
 
 ## Expected Outcomes
 
@@ -67,8 +70,8 @@ create the index.
 3. If `promoted=True` is passed, then inmediatly make the `media` alias point to
    the new index. A
 4. If the index is promoted then the DAG checks if `remove_old_if_promoted=True`
-   and proceeds to [trigger the task in the ingestion server](DELETE_INDEX).
-   Otherwise the DAG ends at the previous step.
+   and proceeds to trigger the [DELETE_INDEX](delete_index) task in the
+   Ingestion server. Otherwise the DAG ends at the previous step.
 
 [reindex]:
   https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L282
@@ -113,8 +116,11 @@ database fully indexed, as the `source_index` for the ES
 5. Iterate over the items of the resulting dictionary to index the subset of
    each provider.
 
-```json
+```
 POST _reindex?wait_for_completion=false
+```
+
+```json
 {
   "max_docs": num_items,
   "source": {
@@ -132,7 +138,7 @@ POST _reindex?wait_for_completion=false
 ```
 
 6. Make the alias `<media>-subset-by-provider` point to the new index.
-7. Optionally. Query the stats of the resulting infex and print the results.
+7. Optionally. Query the stats of the resulting index and print the results.
 
 ```
 GET /image-reindexed-by-provider/_stats
@@ -140,9 +146,16 @@ GET /image-reindexed-by-provider/_stats
 
 ## Alternatives
 
-<!-- Describe any alternatives considered and why they were not chosen or recommended. -->
+### Combining both DAGs into one
 
-💭
+One alternative to creating two different indices by separate is to create the
+proportional by provider index using the Ingestion server. This would require
+modifying the REINDEX task of the ingestion server or creating a new one that
+takes only a subset of the providers by the indicated proportion.
+
+However, I discarded this option in favor of the one explained above because
+having both DAGs is much simpler and provides more possibilities for the
+creation of different indexes, which is the end goal of the project.
 
 ## Parallelizable streams
 
@@ -161,7 +174,7 @@ There is nothing currently blocking the implementation of this proposal.
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-🤔
+We can discard the DAGs if the results are not as expected.
 
 ## Risks
 
@@ -169,8 +182,8 @@ There is nothing currently blocking the implementation of this proposal.
 
 Elasticsearch does not impose any limit on the amount of indices one can create
 but naturally they come with a cost. We don't have policies for creating or
-deleting indices by the time being so we should monitor if we reach a point
-where this impact the cluster performance.
+deleting indices for the time being so we should monitor if we reach a point
+where having many indexes impact the cluster performance.
 
 ## Prior art
 
