@@ -1,25 +1,26 @@
 <template>
-  <div
-    class="app grid h-[100dvh] h-screen grid-cols-1 grid-rows-[auto,1fr] flex-col bg-yellow"
-    :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
-  >
-    <div class="header-el">
-      <VTeleportTarget name="skip-to-content" :force-destroy="true" />
-      <VBanners />
-      <VHeaderInternal class="bg-yellow" />
-    </div>
-    <div class="main-content flex flex-grow flex-col overflow-y-scroll">
-      <Nuxt class="flex-grow" />
-      <VFooter mode="internal" class="bg-yellow" />
-    </div>
+  <div>
+    <VSkipToContentButton />
+    <div
+      class="app grid h-[100dvh] h-[100vh] grid-cols-1 grid-rows-[auto,1fr] flex-col bg-yellow"
+      :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
+    >
+      <div class="header-el">
+        <VBanners />
+        <VHeaderInternal class="bg-yellow" />
+      </div>
+      <div class="main-content flex flex-grow flex-col overflow-y-scroll">
+        <Nuxt class="flex-grow" />
+        <VFooter mode="internal" class="bg-yellow" />
+      </div>
 
-    <VModalTarget class="modal" />
-    <VGlobalAudioSection />
+      <VModalTarget class="modal" />
+      <VGlobalAudioSection />
+    </div>
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue"
-import { PortalTarget as VTeleportTarget } from "portal-vue"
 
 import { useLayout } from "~/composables/use-layout"
 
@@ -31,6 +32,7 @@ import VFooter from "~/components/VFooter/VFooter.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
 import VModalTarget from "~/components/VModal/VModalTarget.vue"
+import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 
 /**
  * The default layout is one screen high and yellow, without sidebars.
@@ -38,12 +40,12 @@ import VModalTarget from "~/components/VModal/VModalTarget.vue"
 export default defineComponent({
   name: "DefaultLayout",
   components: {
+    VSkipToContentButton,
     VBanners,
     VFooter,
     VGlobalAudioSection,
     VHeaderInternal,
     VModalTarget,
-    VTeleportTarget,
   },
   setup() {
     const uiStore = useUiStore()

@@ -1,7 +1,5 @@
 <template>
-  <VSkipToContentContainer
-    class="browse-page flex w-full flex-col px-6 lg:px-10"
-  >
+  <div id="content" class="browse-page flex w-full flex-col px-6 lg:px-10">
     <VSearchGrid
       :fetch-state="fetchState"
       :query="query"
@@ -26,7 +24,7 @@
       :is-filter-sidebar-visible="isSidebarVisible"
       data-testid="scroll-button"
     />
-  </VSkipToContentContainer>
+  </div>
 </template>
 
 <script lang="ts">
@@ -41,7 +39,6 @@ import { useSearchStore } from "~/stores/search"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
 import VSearchGrid from "~/components/VSearchGrid.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
 
 export default defineComponent({
@@ -49,7 +46,6 @@ export default defineComponent({
   components: {
     VScrollButton,
     VSearchGrid,
-    VSkipToContentContainer,
   },
   layout: "search-layout",
   middleware: searchMiddleware,

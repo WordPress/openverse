@@ -10,10 +10,7 @@
     >
       <!-- Push content by 1/4th height without absolute positioning. -->
       <div class="spacer grow" />
-      <VSkipToContentContainer
-        as="main"
-        class="z-10 grow-[3] space-y-4 lg:space-y-6"
-      >
+      <main id="content" class="z-10 grow-[3] space-y-4 lg:space-y-6">
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
           {{ $t("404.title") }}
         </h1>
@@ -29,7 +26,7 @@
           </i18n>
         </p>
         <VStandaloneSearchBar route="404" @submit="handleSearch" />
-      </VSkipToContentContainer>
+      </main>
     </div>
   </div>
 </template>
@@ -44,7 +41,6 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
 
 import VLink from "~/components/VLink.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
@@ -52,7 +48,6 @@ export default defineComponent({
   name: "VFourOhFour",
   components: {
     VLink,
-    VSkipToContentContainer,
     VStandaloneSearchBar,
     VSvg,
   },

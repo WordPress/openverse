@@ -1,5 +1,5 @@
 <template>
-  <VSkipToContentContainer as="main">
+  <main id="content">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
       <VBackToSearchResultsLink
         :id="$route.params.id"
@@ -27,7 +27,7 @@
         />
       </div>
     </template>
-  </VSkipToContentContainer>
+  </main>
 </template>
 
 <script lang="ts">
@@ -49,7 +49,6 @@ import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
@@ -59,7 +58,6 @@ export default defineComponent({
     VBackToSearchResultsLink,
     VMediaReuse,
     VRelatedAudio,
-    VSkipToContentContainer,
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
