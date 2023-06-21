@@ -1,6 +1,4 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["getPopover", "getTrigger", "getExternalArea", "expectOpen", "doOpen", "expectClosed"] } ] */
-
-import Vue from "vue"
+import Vue, { nextTick } from "vue"
 import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
 
@@ -43,9 +41,6 @@ const TestWrapper = Vue.component("TestWrapper", {
   `,
 })
 
-const nextTick = async () =>
-  await new Promise((resolve) => setTimeout(resolve, 1))
-
 const getPopover = () => screen.getByText(/code is poetry/i)
 const queryPopover = () => screen.queryByText(/code is poetry/i)
 const getTrigger = () => screen.getByRole("button", {})
@@ -55,10 +50,6 @@ const clickOutside = () => userEvent.click(getExternalArea())
 const doOpen = async (trigger = getTrigger()) => {
   await userEvent.click(trigger)
   await nextTick()
-}
-
-const expectOpen = () => {
-  expect(getPopover()).toBeVisible()
 }
 
 describe("VPopover", () => {
@@ -72,7 +63,7 @@ describe("VPopover", () => {
     expect(queryPopover()).not.toBeInTheDocument()
 
     await doOpen()
-    expectOpen()
+    expect(getPopover()).toBeVisible()
   })
 
   describe("accessibility", () => {
@@ -88,7 +79,7 @@ describe("VPopover", () => {
       expect(trigger).not.toHaveAttribute("aria-expanded")
 
       await doOpen(trigger)
-      expectOpen()
+      expect(getPopover()).toBeVisible()
 
       expect(trigger).toHaveAttribute("aria-expanded", "true")
     })
@@ -97,21 +88,10 @@ describe("VPopover", () => {
       it("should focus the popover by default when opening if there is no tabbable content in the popover and warn", async () => {
         render(TestWrapper)
         await doOpen()
-        expectOpen()
+        expect(getPopover()).toBeVisible()
         expect(getPopover().parentElement).toHaveFocus()
 
         expect(warn).toHaveBeenCalledWith(noFocusableElementWarning)
-      })
-
-      // https://github.com/WordPress/openverse/issues/2300
-      // eslint-disable-next-line jest/no-disabled-tests
-      it.skip("should focus the first tabbable element in the popover by default and not warn", async () => {
-        render(TestWrapper, { props: { popoverContentTabIndex: 0 } })
-        await doOpen()
-        expectOpen()
-        await nextTick()
-        expect(getPopover()).toHaveFocus()
-        expect(warn).not.toHaveBeenCalled()
       })
 
       it("should neither focus no warn when the prop is false", async () => {
@@ -120,7 +100,7 @@ describe("VPopover", () => {
         })
         getTrigger().focus()
         await doOpen()
-        expectOpen()
+        expect(getPopover()).toBeVisible()
         expect(getTrigger()).toHaveFocus()
         expect(warn).not.toHaveBeenCalled()
       })
@@ -132,7 +112,7 @@ describe("VPopover", () => {
           props: { popoverProps: { trapFocus: false } },
         })
         await doOpen()
-        expectOpen()
+        expect(getPopover()).toBeVisible()
         await clickOutside()
         expect(queryPopover()).not.toBeVisible()
         expect(getTrigger()).toHaveFocus()
@@ -143,7 +123,7 @@ describe("VPopover", () => {
           props: { popoverProps: { trapFocus: false, autoFocusOnHide: false } },
         })
         await doOpen()
-        expectOpen()
+        expect(getPopover()).toBeVisible()
         await clickOutside()
         expect(getTrigger()).not.toHaveFocus()
       })
@@ -151,15 +131,11 @@ describe("VPopover", () => {
   })
 
   describe("hideOnClickOutside", () => {
-    // This test is broken (for some reason clickOutside does not appear to actually cause a click
-    // to happen in this case).
-    // https://github.com/WordPress/openverse/issues/2220
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip("should hide the popover if a click happens outside the popover by default", async () => {
+    it("should hide the popover if a click happens outside the popover by default", async () => {
       render(TestWrapper)
 
       await doOpen()
-      expectOpen()
+      expect(getPopover()).toBeVisible()
       await clickOutside()
       await nextTick()
       expect(queryPopover()).not.toBeVisible()
@@ -171,10 +147,10 @@ describe("VPopover", () => {
       })
 
       await doOpen()
-      expectOpen()
+      expect(getPopover()).toBeVisible()
 
       await clickOutside()
-      expectOpen()
+      expect(getPopover()).toBeVisible()
     })
   })
 
@@ -182,7 +158,7 @@ describe("VPopover", () => {
     it("should hide the popover if escape is sent in the popover by default", async () => {
       render(TestWrapper)
       await doOpen()
-      expectOpen()
+      expect(getPopover()).toBeVisible()
       await userEvent.keyboard("{escape}")
       expect(queryPopover()).not.toBeVisible()
     })
@@ -190,9 +166,9 @@ describe("VPopover", () => {
     it("should not hide if the escape is sent in the popover when false", async () => {
       render(TestWrapper, { props: { popoverProps: { hideOnEsc: false } } })
       await doOpen()
-      expectOpen()
+      expect(getPopover()).toBeVisible()
       await userEvent.keyboard("{escape}")
-      expectOpen()
+      expect(getPopover()).toBeVisible()
     })
   })
 })
