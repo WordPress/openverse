@@ -51,3 +51,18 @@ def test_sends_UA_header(requests):
     assert len(requests.requests) > 0
     for r in requests.requests:
         assert r.headers == HEADERS
+
+
+def test_long_title_returns_correctly(requests):
+    # Make the title 400 chars long
+    _MOCK_IMAGE_INFO_LONG_TITLE = dict(_MOCK_IMAGE_INFO)
+    _MOCK_IMAGE_INFO_LONG_TITLE["title"] = "a" * 400
+
+    watermark("http://example.com/", _MOCK_IMAGE_INFO_LONG_TITLE)
+
+    assert len(requests.requests) > 0
+    for r in requests.requests:
+        assert r.headers == HEADERS
+
+    # Assert that the content of the response is the mock image bytes
+    assert requests.requests[0].response.content == _MOCK_IMAGE_BYTES
