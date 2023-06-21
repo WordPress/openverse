@@ -36,3 +36,4 @@ POSTGRES_API_STAGING_CONN_ID = os.getenv(
 )
 AWS_CONN_ID = os.getenv("AWS_CONN_ID", "aws_conn_id")
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
+ES_PROD_HTTP_CONN_ID = "elasticsearch_http_production"
