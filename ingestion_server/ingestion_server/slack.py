@@ -60,18 +60,18 @@ def _message(text: str, summary: str = None, level: Level = Level.INFO) -> None:
         pass
 
 
-def verbose(text: str, summary: str = None) -> None:
-    log.debug(text, stacklevel=2)
+def verbose(text: str, summary: str = None, stacklevel: int = 2) -> None:
+    log.debug(text, stacklevel=stacklevel)
     _message(text, summary, level=Level.VERBOSE)
 
 
-def info(text: str, summary: str = None) -> None:
-    log.info(text, stacklevel=2)
+def info(text: str, summary: str = None, stacklevel: int = 2) -> None:
+    log.info(text, stacklevel=stacklevel)
     _message(text, summary, level=Level.INFO)
 
 
-def error(text: str, summary: str = None) -> None:
-    log.error(text, stacklevel=2)
+def error(text: str, summary: str = None, stacklevel: int = 2) -> None:
+    log.error(text, stacklevel=stacklevel)
     _message(text, summary, level=Level.ERROR)
 
 
@@ -82,4 +82,4 @@ def status(model: str, text: str) -> None:
     Model is required an all messages get prepended with the model.
     """
     text = f"`{model}`: {text}"
-    info(text, None)
+    info(text, None, stacklevel=3)
