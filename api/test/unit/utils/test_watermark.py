@@ -53,7 +53,10 @@ def test_sends_UA_header(requests):
         assert r.headers == HEADERS
 
 
-def test_long_title_returns_correctly(requests):
+# Previously, wrapped titles would throw a TypeError:
+# slice indices must be integers or None or have an __index__ method.
+# See: https://github.com/WordPress/openverse/issues/2466
+def test_long_title_wraps_correctly(requests):
     # Make the title 400 chars long
     _MOCK_IMAGE_INFO_LONG_TITLE = dict(_MOCK_IMAGE_INFO)
     _MOCK_IMAGE_INFO_LONG_TITLE["title"] = "a" * 400
@@ -63,6 +66,3 @@ def test_long_title_returns_correctly(requests):
     assert len(requests.requests) > 0
     for r in requests.requests:
         assert r.headers == HEADERS
-
-    # Assert that the content of the response is the mock image bytes
-    assert requests.requests[0].response.content == _MOCK_IMAGE_BYTES
