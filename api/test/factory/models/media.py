@@ -156,7 +156,7 @@ class MediaFactory(DjangoModelFactory):
         source_document = cls._create_es_source_document(media, mature)
         es.create(
             index=origin_index,
-            id=media.pk,
+            id=str(media.pk),
             document=source_document,
             refresh=True,
         )
@@ -172,7 +172,7 @@ class MediaFactory(DjangoModelFactory):
             {
                 "_index": origin_index,
                 "_score": 1.0,
-                "_id": media.pk,
+                "_id": str(media.pk),
                 "_source": source_document,
             }
         )

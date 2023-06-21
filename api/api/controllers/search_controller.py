@@ -205,9 +205,25 @@ def _post_process_results(
             end = 90 + 45
             ```
             """
-            end += int(end / 2)
-            if start + end > ELASTICSEARCH_MAX_RESULT_WINDOW:
+            if end >= search_results.hits.total.value:
+                # Total available hits already exhausted in previous iteration
                 return results
+
+            end += int(end / 2)
+            query_size = start + end
+            if query_size > ELASTICSEARCH_MAX_RESULT_WINDOW:
+                return results
+
+            # subtract start to account for the records skipped
+            # and which should not count towards the total
+            # available hits for the query
+            total_available_hits = search_results.hits.total.value - start
+            if query_size > total_available_hits:
+                # Clamp the query size to last available hit. On the next
+                # iteration, if results are still insufficient, the check
+                # to compare previous_query_size and total_available_hits
+                # will prevent further query attempts
+                end = search_results.hits.total.value
 
             s = s[start:end]
             search_response = s.execute()
