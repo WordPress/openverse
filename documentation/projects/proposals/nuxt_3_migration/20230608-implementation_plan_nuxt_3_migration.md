@@ -64,7 +64,7 @@ app, this conversion is out of scope for this project. We can, however, convert
 some components if they need extensive code changes anyway, or if the behavior
 within them changes significantly and the `script setup` simplifies the
 component. The decision whether to convert components to `script setup` would be
-at the discretion of the PR implementer, but e should not refactor for
+at the discretion of the PR implementer, but we should not refactor for
 refactoring's sake alone, after all.
 
 #### Testing
