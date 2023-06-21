@@ -121,10 +121,11 @@ export default defineComponent({
       filterType: NonMatureFilterCategory
       code: string
     }) => {
-      searchStore.toggleFilter({ filterType, code })
+      const checked = searchStore.toggleFilter({ filterType, code })
       sendCustomEvent("APPLY_FILTER", {
-        key: filterType,
-        value: code,
+        category: filterType,
+        key: code,
+        checked,
         searchType: searchType.value,
         query: searchTerm.value,
       })

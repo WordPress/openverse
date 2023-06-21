@@ -192,7 +192,7 @@ export type Events = {
     query: string
   }
   /**
-   * Description: Whenever the user sets a filter
+   * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
    * Questions:
    *  - Do most users filter their searches?
    *  - What % of users use filtering?
@@ -200,10 +200,12 @@ export type Events = {
    *  - Are any filters so commonly applied they should become defaults?
    */
   APPLY_FILTER: {
-    /** The name of the filter (not the user-facing filter category label) */
-    key: NonMatureFilterCategory
-    /** The value of the filter  */
-    value: string
+    /** The filter category, e.g. `license`  */
+    category: NonMatureFilterCategory
+    /** The filter key, e.g. `by` */
+    key: string
+    /** Whether the filter is checked or unchecked */
+    checked: boolean
     /** The media type being searched, can include All content */
     searchType: SearchType
     /** The search term */

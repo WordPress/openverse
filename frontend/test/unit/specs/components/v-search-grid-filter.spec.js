@@ -57,10 +57,11 @@ describe("VSearchGridFilter", () => {
       screen.queryByRole("checkbox", { name: /use commercially/i })
     )
     expect(sendCustomEventMock).toHaveBeenCalledWith("APPLY_FILTER", {
-      key: "licenseTypes",
+      category: "licenseTypes",
+      key: "commercial",
+      checked: true,
       query: "cat",
       searchType: ALL_MEDIA,
-      value: "commercial",
     })
   })
 
