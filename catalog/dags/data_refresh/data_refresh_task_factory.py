@@ -152,25 +152,48 @@ def create_data_refresh_task_group(
         )
         tasks.append(generate_index_suffix)
 
-        action_data_map: dict[str, dict] = {
-            "ingest_upstream": {},
-            "promote": {"alias": target_alias},
-        }
-        for action, action_post_data in action_data_map.items():
-            with TaskGroup(group_id=action) as task_group:
-                ingestion_server.trigger_and_wait_for_task(
-                    action=action,
-                    model=data_refresh.media_type,
-                    data={
-                        "index_suffix": XCOM_PULL_TEMPLATE.format(
-                            generate_index_suffix.task_id, "return_value"
-                        ),
-                    }
-                    | action_post_data,
-                    timeout=data_refresh.data_refresh_timeout,
-                )
+        # Trigger the 'ingest_upstream' task on the ingestion server and await its
+        # completion. This task copies the media table for the given model from the
+        # Catalog into the API DB and builds the elasticsearch index. The new table
+        # and index are not promoted until a later step.
+        with TaskGroup(group_id="ingest_upstream") as ingest_upstream_tasks:
+            ingestion_server.trigger_and_wait_for_task(
+                action="ingest_upstream",
+                model=data_refresh.media_type,
+                data={
+                    "index_suffix": XCOM_PULL_TEMPLATE.format(
+                        generate_index_suffix.task_id, "return_value"
+                    ),
+                },
+                timeout=data_refresh.data_refresh_timeout,
+            )
+            tasks.append(ingest_upstream_tasks)
 
-            tasks.append(task_group)
+        # Await healthy results from the newly created elasticsearch index.
+        index_readiness_check = ingestion_server.index_readiness_check(
+            media_type=data_refresh.media_type,
+            index_suffix=XCOM_PULL_TEMPLATE.format(
+                generate_index_suffix.task_id, "return_value"
+            ),
+            timeout=data_refresh.index_readiness_timeout,
+        )
+        tasks.append(index_readiness_check)
+
+        # Trigger the `promote` task on the ingestion server and await its completion.
+        # This task promotes the newly created API DB table and elasticsearch index.
+        with TaskGroup(group_id="promote") as promote_tasks:
+            ingestion_server.trigger_and_wait_for_task(
+                action="promote",
+                model=data_refresh.media_type,
+                data={
+                    "index_suffix": XCOM_PULL_TEMPLATE.format(
+                        generate_index_suffix.task_id, "return_value"
+                    ),
+                    "alias": target_alias,
+                },
+                timeout=data_refresh.data_refresh_timeout,
+            )
+            tasks.append(promote_tasks)
 
         # Delete the alias' previous target index, now unused.
         delete_old_index = ingestion_server.trigger_task(
