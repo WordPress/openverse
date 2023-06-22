@@ -40,7 +40,7 @@ Node.js scripts.
 | ---------------- | ----------------------------------- |
 | `playwright_vr`  | `test:playwright visual-regression` |
 | `playwright_e2e` | `test:playwright e2e`               |
-| `storybook_vr`   | `test:storybook`                    |
+| `storybook`      | `test:storybook`                    |
 
 This job is skipped if the frontend codebase has not changed.
 
