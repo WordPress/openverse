@@ -433,7 +433,7 @@ class TestIngestion(unittest.TestCase):
         cls.cb_process.terminate()
 
         # Tear down the Docker Compose stack locally
-        if "GITHUB_ACTIONS" not in os.environ:
+        if "CI" not in os.environ:
             cls._compose_cmd(["down", "-v"], capture_output=True)
 
         # Close connections with databases
