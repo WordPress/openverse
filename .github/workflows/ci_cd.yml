@@ -336,9 +336,6 @@ jobs:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
 
-      - name: Cleanup ingestion-server test
-        run: just ingestion_server/test-clean-dc
-
   #######
   # API #
   #######
