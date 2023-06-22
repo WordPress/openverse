@@ -4,12 +4,20 @@ We run Playwright tests for our Nuxt application. We also run them for
 Storybook, where components are tested in isolation and (ideally) in a
 comprehensive way that is not always possible inside an actual application.
 
-Generally it is preferable to write regular Jest tests with
+Generally, it is preferable to write regular Jest tests with
 `@testing-library/vue`, however, some interactions require a real web browser
-context (like loading audio files, testing drag and drop interactions, etc). For
-these, Playwright is the perfect tool. We can also use Playwright to write
-visual regression tests for components in isolation so that we don't have to
-duplicate things like focus state testing into our application level tests.
+context (like loading audio files, complex popover interactions, testing drag
+and drop interactions, etc). For these, Playwright is the perfect tool.
+
+We also use Playwright to write visual regression tests for components in
+isolation so that we don't have to duplicate things like focus state testing
+into our application-level tests. Sometimes, components cannot be tested in the
+full app because they are shifted 1-2 pixels between the tests and therefore the
+identical images do not match due to shifting.
+
+You will find the functional component tests in `/test/storybook/functional`,
+and visual regression tests that with snapshots in
+`/test/storybook/visual-regression`
 
 Our Nuxt playwright tests are described by the
 [Playwright testing guide](./playwright_tests.md). Please see the section on
