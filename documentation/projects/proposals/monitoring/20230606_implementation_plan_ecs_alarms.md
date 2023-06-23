@@ -289,7 +289,13 @@ incidence response plan.
 
 ```{tip}
 Run books are for _alerts_, not alarms. Alerts inform us of relevant alarm
-states. Some alarms may go off for multiple states. For example, anomaly detection may use the same alarm to notify when a metric is too high or too low. Each is a separate "alert" and may require separate information to identify severity. Additional consideration may be necessary for alerts from composite alarms. These may require manually checking multiple alarms to help identify severity. Keeping this in mind helps us focus each run book as much as possible so that responders have the most accessible information at any time.
+states. Some alarms may go off for multiple states. For example, anomaly
+detection may use the same alarm to notify when a metric is too high or too low.
+Each is a separate "alert" and may require separate information to identify
+severity. Additional consideration may be necessary for alerts from composite
+alarms. These may require manually checking multiple alarms to help identify 
+severity. Keeping this in mind helps us focus each run book as much as
+possible so that responders have the most accessible information at any time.
 ```
 
 Run books must include the following:
