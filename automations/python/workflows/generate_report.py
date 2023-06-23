@@ -39,10 +39,9 @@ payload = {
             "text": {
                 "type": "mrkdwn",
                 "text": (
-                    f"Hi {user_mention}, some CI + CD checks failed for your merge of <{commit_url}|{commit_message}>'.\n"  # noqa: E501
+                    f"Hi {user_mention}, some CI + CD checks failed for your merge of <{commit_url}|{commit_message}>.\n"  # noqa: E501
                     "This _could_ indicate problems with deployments or tests introduced by your PR.\n"  # noqa: E501
-                    "Please reply to this message with :ack: when seen, :github-approved: when resolved, or :issue_created: if it is unresolved and needs work.\n"  # noqa: E501
-                    "Please link to any issues relevant to resolving this problem."  # noqa: E501
+                    "Please reply to this message with :ack: when seen, :github-approved: when resolved, or :issue_created: if it is unresolved and needs work. Link to any relevant issues you create.\n"  # noqa: E501
                 ),
             },
         },
