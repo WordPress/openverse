@@ -333,6 +333,7 @@ export const useSearchStore = defineStore("search", {
     },
     /**
      * Toggles a filter's checked parameter. Requires either codeIdx or code.
+     * Returns the new checked value.
      */
     toggleFilter({
       filterType,
@@ -342,7 +343,7 @@ export const useSearchStore = defineStore("search", {
       filterType: FilterCategory
       codeIdx?: number
       code?: string
-    }) {
+    }): boolean {
       if (typeof codeIdx === "undefined" && typeof code === "undefined") {
         throw new Error(
           `Cannot toggle filter of type ${filterType}. Use code or codeIdx parameter`
@@ -351,6 +352,7 @@ export const useSearchStore = defineStore("search", {
       const filterItems = this.filters[filterType]
       const idx = codeIdx ?? filterItems.findIndex((f) => f.code === code)
       this.filters[filterType][idx].checked = !filterItems[idx].checked
+      return this.filters[filterType][idx].checked
     },
 
     /**

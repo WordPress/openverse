@@ -4,16 +4,26 @@ import { render } from "~~/test/unit/test-utils/render"
 
 import { useSearchStore } from "~/stores/search"
 
+import { useAnalytics } from "~/composables/use-analytics"
+import { ALL_MEDIA } from "~/constants/media"
+
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 
+jest.mock("~/composables/use-analytics")
 describe("VSearchGridFilter", () => {
   let options = {}
   let searchStore
   let configureStoreCb
   const routerMock = { push: jest.fn() }
   const routeMock = { path: jest.fn() }
+  const sendCustomEventMock = jest.fn()
+  useAnalytics.mockImplementation(() => ({
+    sendCustomEvent: sendCustomEventMock,
+  }))
 
   beforeEach(() => {
+    sendCustomEventMock.mockClear()
+
     options = {
       mocks: {
         $route: routeMock,
@@ -34,6 +44,25 @@ describe("VSearchGridFilter", () => {
     )
     // `getBy` serves as expect because it throws an error if no element is found
     screen.getByRole("checkbox", { checked: true, name: /use commercially/i })
+  })
+
+  it("sends APPLY_FILTER event when filter is toggled", async () => {
+    configureStoreCb = (localVue, options) => {
+      searchStore = useSearchStore(options.pinia)
+      searchStore.setSearchTerm("cat")
+    }
+    render(VSearchGridFilter, options, configureStoreCb)
+
+    await fireEvent.click(
+      screen.queryByRole("checkbox", { name: /use commercially/i })
+    )
+    expect(sendCustomEventMock).toHaveBeenCalledWith("APPLY_FILTER", {
+      category: "licenseTypes",
+      key: "commercial",
+      checked: true,
+      query: "cat",
+      searchType: ALL_MEDIA,
+    })
   })
 
   it("clears filters", async () => {
