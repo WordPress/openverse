@@ -12,6 +12,8 @@ DATABASES = {
         "USER": config("DJANGO_DATABASE_USER", default="deploy"),
         "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
         "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),
+        # Default of 5 matches RDS documentation's advised max DNS caching time
+        "CONN_MAX_AGE": config("DJANGO_CONN_MAX_AGE", default=5),
         "OPTIONS": {
             "application_name": config(
                 "DJANGO_DATABASE_APPLICATION_NAME", default="openverse-api"
