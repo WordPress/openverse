@@ -2,8 +2,6 @@ import defaultTheme from "tailwindcss/defaultTheme"
 import plugin from "tailwindcss/plugin"
 import { SCREENS } from "./src/constants/screens"
 import { Z_INDICES } from "./src/constants/z-indices"
-
-
 export default {
   content: [
     "./src/**/*.{vue,js,jsx,ts,tsx,mdx}",
@@ -223,7 +221,7 @@ export default {
       outlineWidth: {
         1.5: "1.5px",
       },
-      typography: (theme) => ({
+      typography: (theme: (arg0: string) => any) => ({
         DEFAULT: {
           css: {
             "--tw-prose-body": theme("colors.dark-charcoal"),
