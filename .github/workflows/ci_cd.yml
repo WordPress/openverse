@@ -566,13 +566,13 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook_vr
+          - storybook
         include:
           - name: playwright_vr
             script: "test:playwright visual-regression"
           - name: playwright_e2e
             script: "test:playwright e2e"
-          - name: storybook_vr
+          - name: storybook
             script: "test:storybook"
 
     steps:
@@ -610,7 +610,7 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook_vr
+          - storybook
 
     steps:
       - name: Pass
@@ -941,6 +941,22 @@ jobs:
           repo: openverse-infrastructure
           token: ${{ secrets.ACCESS_TOKEN }}
           event_type: deploy_staging_api
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
+
+      - name: Deploy staging thumbnails
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_api_thumbnails
           client_payload: |
             {
               "actor": "${{ github.actor }}",

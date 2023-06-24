@@ -206,6 +206,12 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             destination_index_suffix=destination_index_suffix,
         )
 
+        # Await healthy results from the newly created elasticsearch index.
+        index_readiness_check = ingestion_server.index_readiness_check(
+            media_type=media_type,
+            index_suffix=destination_index_suffix,
+        )
+
         do_point_alias = point_alias(destination_index_suffix=destination_index_suffix)
 
         delete_old_index = ingestion_server.trigger_task(
@@ -235,7 +241,7 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
         )
 
         get_current_index_if_exists >> continue_if_no_current_index >> do_create
-        await_create >> do_point_alias
+        await_create >> index_readiness_check >> do_point_alias
 
         [get_current_index_if_exists, do_point_alias] >> delete_old_index
 

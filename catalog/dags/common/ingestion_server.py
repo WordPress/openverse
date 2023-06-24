@@ -8,13 +8,15 @@ from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
 
-from common.constants import XCOM_PULL_TEMPLATE
+from common.constants import ES_PROD_HTTP_CONN_ID, XCOM_PULL_TEMPLATE
 
 
 logger = logging.getLogger(__name__)
 
 
 POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15))
+# Minimum number of records we expect to get back from ES when querying an index.
+THRESHOLD_RESULT_COUNT = int(os.getenv("ES_INDEX_READINESS_RECORD_COUNT", 10_000))
 
 
 def response_filter_stat(response: Response) -> str:
@@ -63,6 +65,22 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
     logger.info(f"Data refresh done with {data['progress']}% completed.")
     return True
+
+
+def response_check_index_readiness_check(response: Response) -> bool:
+    """
+    Handle the response for `index_readiness_check` Sensor, to await a
+    healthy Elasticsearch cluster. We expect to retrieve a healthy number
+    of results.
+    """
+    data = response.json()
+    hits = data.get("hits", {}).get("total", {}).get("value", 0)
+    logger.info(
+        f"Retrieved {hits} records from Elasticsearch using the new index."
+        f" Checking against threshold of {THRESHOLD_RESULT_COUNT}."
+    )
+
+    return hits >= THRESHOLD_RESULT_COUNT
 
 
 def get_current_index(target_alias: str) -> SimpleHttpOperator:
@@ -125,3 +143,25 @@ def trigger_and_wait_for_task(
     waiter = wait_for_task(action, trigger, timeout, poke_interval)
     trigger >> waiter
     return trigger, waiter
+
+
+def index_readiness_check(
+    media_type: str,
+    index_suffix: str,
+    timeout: timedelta = timedelta(days=1),
+    poke_interval: int = POKE_INTERVAL,
+) -> HttpSensor:
+    """
+    Poll the Elasticsearch index, returning true only when results greater
+    than the expected threshold_count are returned.
+    """
+    return HttpSensor(
+        task_id="index_readiness_check",
+        http_conn_id=ES_PROD_HTTP_CONN_ID,
+        endpoint=f"{media_type}-{index_suffix}/_search",
+        method="GET",
+        response_check=response_check_index_readiness_check,
+        mode="reschedule",
+        poke_interval=poke_interval,
+        timeout=timeout.total_seconds(),
+    )

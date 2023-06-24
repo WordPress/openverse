@@ -9,7 +9,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from api.controllers import search_controller
 from api.models import ContentProvider
 from api.serializers.provider_serializers import ProviderSerializer
-from api.utils import photon
+from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 
 
@@ -164,10 +164,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        photon.check_image_type(image_url, media_obj)
-
-        return photon.get(
+        return image_proxy.get(
             image_url,
+            media_obj.identifier,
             accept_header=request.headers.get("Accept", "image/*"),
             **serializer.validated_data,
         )
