@@ -1,6 +1,5 @@
 import defaultTheme from "tailwindcss/defaultTheme"
 import plugin from "tailwindcss/plugin"
-
 import { SCREENS } from "./src/constants/screens"
 import { Z_INDICES } from "./src/constants/z-indices"
 
@@ -224,7 +223,7 @@ export default {
       outlineWidth: {
         1.5: "1.5px",
       },
-      typography: (theme: (arg0: string) => any) => ({
+      typography: (theme) => ({
         DEFAULT: {
           css: {
             "--tw-prose-body": theme("colors.dark-charcoal"),

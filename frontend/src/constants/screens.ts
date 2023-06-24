@@ -1,29 +1,26 @@
-/**
- * @typedef {'2xl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs'} Breakpoint
- * @typedef {Exclude<Breakpoint, 'xs'>} RealBreakpoint
- * @typedef {{ name: string, styles: { width: string, height: string }}} Viewport
- */
+export type Breakpoint = '2xl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs';
+export type RealBreakpoint = Exclude<Breakpoint, 'xs'>;
 
 /**
  * mapping of breakpoint names to the lower-bound of their screen width range
  */
 export const SCREEN_SIZES = Object.freeze(
-  ({
+  {
     "2xl": 1536,
     xl: 1280,
     lg: 1024,
     md: 768,
     sm: 640,
     xs: 340
-  })
+  } as const
 )
 
 /**
  * the same as SCREEN_SIZES but with the 'xs' breakpoint added for use in JS.
  */
 export const ALL_SCREEN_SIZES = Object.freeze(
-  { ...SCREEN_SIZES, xs: 0 }
-)
+  { ...SCREEN_SIZES, xs: 0 } as const
+) 
 
 /**
  * mapping of breakpoint names to the lower-bound of their screen width range,
@@ -55,10 +52,3 @@ export const VIEWPORTS = (
   )
 )
 
-
-export default {
-  ALL_SCREEN_SIZES,
-  SCREEN_SIZES,
-  SCREENS,
-  VIEWPORTS,
-} as const //as discussed removed /**@type {const} */() 
