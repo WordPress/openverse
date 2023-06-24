@@ -1,5 +1,5 @@
+import django_redis
 from deepdiff import DeepHash
-from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
 
@@ -32,7 +32,7 @@ def get_query_mask(query_hash: str) -> list[int]:
     :param query_hash: Unique value for a particular query.
     :return: Boolean mask as a list of integers (0 or 1).
     """
-    redis = get_redis_connection("default")
+    redis = django_redis.get_redis_connection("default")
     key = f"{query_hash}:dead_link_mask"
     return list(map(int, redis.lrange(key, 0, -1)))
 
@@ -44,7 +44,7 @@ def save_query_mask(query_hash: str, mask: list):
     :param mask: Boolean mask as a list of integers (0 or 1).
     :param query_hash: Unique value to be used as key.
     """
-    redis_pipe = get_redis_connection("default").pipeline()
+    redis_pipe = django_redis.get_redis_connection("default").pipeline()
     key = f"{query_hash}:dead_link_mask"
 
     redis_pipe.delete(key)
