@@ -33,7 +33,7 @@ function verify_loaded_data {
 load_sample_data "image"
 verify_loaded_data "image"
 load_sample_data "audio"
-verify_loaded_data "image"
+verify_loaded_data "audio"
 
 #######
 # API #
