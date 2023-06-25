@@ -7,7 +7,6 @@ import {
 } from "@storybook/addon-docs"
 
 import { placements as popoverPlacements } from "@popperjs/core"
-import { log } from "~/utils/console"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VButton from "~/components/VButton.vue"
@@ -38,7 +37,9 @@ export const DefaultPopoverStory = (args) => ({
       <div tabindex="0">Focusable external area</div>
       <VPopover v-bind="args" v-on="args" v-for="item in args.popoverItems" :key="item" class="mb-2">
         <template #trigger="{ visible, a11yProps }">
-          <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
+          <VButton :pressed="visible" variant="filled-pink" size="medium" v-bind="a11yProps">{{
+              visible ? 'Close' : 'Open'
+           }}</VButton>
         </template>
         <div class="py-1 px-2">Code is Poetry</div>
       </VPopover>
@@ -54,11 +55,13 @@ export const ControlStory = (args) => ({
   template: `
     <VPopover v-bind="args" v-on="args">
       <template #trigger="{ visible, a11yProps }">
-        <VButton :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
+        <VButton :pressed="visible" variant="filled-pink" size="medium" v-bind="a11yProps">{{
+            visible ? 'Close' : 'Open'
+        }}</VButton>
       </template>
       <template #default="{ close }">
         <div class="p-4">
-        <VButton @click="close">Close popover</VButton>
+        <VButton variant="filled-gray" size="medium"  @click="close">Close popover</VButton>
         </div>
       </template>
     </VPopover>
