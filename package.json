@@ -13,11 +13,11 @@
   },
   "packageManager": "pnpm@7.17.1",
   "engines": {
-    "node": ">= 16.0.0 <17",
+    "node": ">= 18.0.0 <19",
     "pnpm": ">= 7.17.1"
   },
   "volta": {
-    "node": "16.19.1"
+    "node": "18.16.0"
   },
   "devDependencies": {
     "@babel/core": "7.20.12",

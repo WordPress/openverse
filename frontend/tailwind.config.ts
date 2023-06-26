@@ -224,8 +224,8 @@ export default {
       typography: (theme: (arg0: string) => any) => ({
         DEFAULT: {
           css: {
-            "--tw-prose-body": theme("colors.dark-charcoal"),
-            "--tw-prose-headings": theme("colors.dark-charcoal"),
+            "--tw-prose-body": theme("colors.dark-charcoal.default"),
+            "--tw-prose-headings": theme("colors.dark-charcoal.default"),
             "--tw-prose-links": theme("colors.pink"),
             a: {
               textDecoration: "none",

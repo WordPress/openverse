@@ -1,9 +1,16 @@
 import random
+import re
 from collections.abc import Callable
 from enum import Enum, auto
+from test.factory.es_http import (
+    MOCK_DEAD_RESULT_URL_PREFIX,
+    MOCK_LIVE_RESULT_URL_PREFIX,
+    create_mock_es_http_image_search_response,
+)
 from unittest import mock
 from uuid import uuid4
 
+import pook
 import pytest
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
@@ -11,6 +18,7 @@ from elasticsearch_dsl import Search
 from api.controllers import search_controller
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
+from api.utils.search_context import SearchContext
 
 
 pytestmark = pytest.mark.django_db
@@ -539,3 +547,212 @@ def test_resolves_index(
     )
 
     search_class.assert_called_once_with(index=searched_index)
+
+
+@mock.patch(
+    "api.controllers.search_controller._post_process_results",
+    wraps=search_controller._post_process_results,
+)
+@mock.patch("api.controllers.search_controller.SearchContext")
+@pook.on
+def test_no_post_process_results_recursion(
+    mock_search_context,
+    wrapped_post_process_results,
+    image_media_type_config,
+    settings,
+    # request the redis mock to auto-clean Redis between each test run
+    # otherwise the dead link query mask causes test details to leak
+    # between each run
+    redis,
+):
+    # Search context does not matter for this test, so we can mock it
+    # to avoid needing to account for additional ES requests
+    mock_search_context.build.return_value = SearchContext(set(), set())
+
+    hit_count = 5
+    mock_es_response = create_mock_es_http_image_search_response(
+        index=image_media_type_config.origin_index,
+        total_hits=45,
+        hit_count=hit_count,
+    )
+
+    es_host = settings.ES.transport.kwargs["host"]
+    es_port = settings.ES.transport.kwargs["port"]
+
+    # `origin_index` enforced by passing `exact_index=True` below.
+    es_endpoint = (
+        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+    )
+
+    mock_search = pook.post(es_endpoint).times(1).reply(200).json(mock_es_response).mock
+
+    # Ensure dead link filtering does not remove any results
+    pook.head(
+        pook.regex(rf"{MOCK_LIVE_RESULT_URL_PREFIX}/\d"),
+    ).times(
+        hit_count
+    ).reply(200)
+
+    serializer = image_media_type_config.search_request_serializer(
+        # This query string does not matter, ultimately, as pook is mocking
+        # the ES response regardless of the input
+        data={"q": "bird perched"}
+    )
+    serializer.is_valid()
+    results, _, _, _ = search_controller.search(
+        search_params=serializer,
+        ip=0,
+        origin_index=image_media_type_config.origin_index,
+        exact_index=True,
+        page=3,
+        page_size=20,
+        filter_dead=True,
+    )
+
+    assert {r["_source"]["identifier"] for r in mock_es_response["hits"]["hits"]} == {
+        r.identifier for r in results
+    }
+
+    assert wrapped_post_process_results.call_count == 1
+    assert mock_search.total_matches == 1
+
+
+@pytest.mark.parametrize(
+    # both scenarios force `post_process_results`
+    # to recurse to fill the page due to the dead link
+    # configuration present in the test body
+    "page, page_size, mock_total_hits",
+    # Note the following
+    # - DEAD_LINK_RATIO causes all query sizes to start at double the page size
+    # - The test function is configured so that each request only returns 2 live
+    #   results
+    # - We clear the redis cache between each test, meaning there is no query-based
+    #   dead link mask. This forces `from` to 0 for each case.
+    # - Recursion should only continue while results still exist that could fulfill
+    #   the requested page size. Once the available hits are exhaused, the function
+    #   should stop recursing. This is why exceeding  or matching the available
+    #   hits is significant.
+    (
+        # First request: from: 0, size: 10
+        # Second request: from: 0, size: 15, exceeds max results
+        pytest.param(1, 5, 12, id="first_page"),
+        # First request: from: 0, size: 22
+        # Second request: from 0, size: 33, exceeds max results
+        pytest.param(3, 4, 32, id="last_page"),
+        # First request: from: 0, size: 22
+        # Second request: from 0, size: 33, matches max results
+        pytest.param(3, 4, 33, id="last_page_with_exact_max_results"),
+    ),
+)
+@mock.patch(
+    "api.controllers.search_controller._post_process_results",
+    wraps=search_controller._post_process_results,
+)
+@mock.patch("api.controllers.search_controller.SearchContext")
+@pook.on
+def test_post_process_results_recurses_as_needed(
+    mock_search_context,
+    wrapped_post_process_results,
+    image_media_type_config,
+    settings,
+    page,
+    page_size,
+    mock_total_hits,
+    # request the redis mock to auto-clean Redis between each test run
+    # otherwise the dead link query mask causes test details to leak
+    # between each run
+    redis,
+):
+    # Search context does not matter for this test, so we can mock it
+    # to avoid needing to account for additional ES requests
+    mock_search_context.build.return_value = SearchContext(set(), set())
+
+    mock_es_response_1 = create_mock_es_http_image_search_response(
+        index=image_media_type_config.origin_index,
+        total_hits=mock_total_hits,
+        hit_count=10,
+        live_hit_count=2,
+    )
+
+    mock_es_response_2 = create_mock_es_http_image_search_response(
+        index=image_media_type_config.origin_index,
+        total_hits=mock_total_hits,
+        hit_count=4,
+        live_hit_count=2,
+        base_hits=mock_es_response_1["hits"]["hits"],
+    )
+
+    es_host = settings.ES.transport.kwargs["host"]
+    es_port = settings.ES.transport.kwargs["port"]
+
+    # `origin_index` enforced by passing `exact_index=True` below.
+    es_endpoint = (
+        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+    )
+
+    # `from` is always 0 if there is no query mask
+    # see `_paginate_with_dead_link_mask` branch 1
+    # Testing this with a query mask would introduce far more complexity
+    # with no significant benefit
+    re.compile('from":0')
+
+    mock_first_es_request = (
+        pook.post(es_endpoint)
+        # The dead link ratio causes the initial query size to double
+        .body(re.compile(f'size":{(page_size * page) * 2}'))
+        .body(re.compile('from":0'))
+        .times(1)
+        .reply(200)
+        .json(mock_es_response_1)
+        .mock
+    )
+
+    mock_second_es_request = (
+        pook.post(es_endpoint)
+        # Size is clamped to the total number of available hits
+        .body(re.compile(f'size":{mock_total_hits}'))
+        .body(re.compile('from":0'))
+        .times(1)
+        .reply(200)
+        .json(mock_es_response_2)
+        .mock
+    )
+
+    live_results = [
+        r
+        for r in mock_es_response_2["hits"]["hits"]
+        if r["_source"]["url"].startswith(MOCK_LIVE_RESULT_URL_PREFIX)
+    ]
+
+    pook.head(pook.regex(rf"{MOCK_LIVE_RESULT_URL_PREFIX}/\d")).times(
+        len(live_results)
+    ).reply(200)
+
+    pook.head(pook.regex(rf"{MOCK_DEAD_RESULT_URL_PREFIX}/\d")).times(
+        len(mock_es_response_2["hits"]["hits"]) - len(live_results)
+    ).reply(400)
+
+    serializer = image_media_type_config.search_request_serializer(
+        # This query string does not matter, ultimately, as pook is mocking
+        # the ES response regardless of the input
+        data={"q": "bird perched"}
+    )
+    serializer.is_valid()
+    results, _, _, _ = search_controller.search(
+        search_params=serializer,
+        ip=0,
+        origin_index=image_media_type_config.origin_index,
+        exact_index=True,
+        page=page,
+        page_size=page_size,
+        filter_dead=True,
+    )
+
+    assert mock_first_es_request.total_matches == 1
+    assert mock_second_es_request.total_matches == 1
+
+    assert {r["_source"]["identifier"] for r in live_results} == {
+        r.identifier for r in results
+    }
+
+    assert wrapped_post_process_results.call_count == 2
