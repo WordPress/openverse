@@ -124,7 +124,7 @@ Per the
 the `mature` field of the media serializer will remain, and will eventually have
 a `sensitivity` field added to it to encapsulate specific information about the
 reason behind a media being marked sensitive. Those changes are not under the
-purview of this IP.
+purview of this implementation plan.
 
 The Elasticsearch model property
 [`mature`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/ingestion_server/ingestion_server/elasticsearch_models.py#L118)
