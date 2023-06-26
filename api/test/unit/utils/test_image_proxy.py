@@ -10,18 +10,14 @@ import pook
 import pytest
 import requests
 
-from api.utils.photon import (
-    HEADERS,
-    UpstreamThumbnailException,
-    _get_file_extension_from_url,
-    check_image_type,
-)
-from api.utils.photon import get as photon_get
+from api.utils.image_proxy import HEADERS, UpstreamThumbnailException, extension
+from api.utils.image_proxy import get as photon_get
 from api.utils.tallies import get_monthly_timestamp
 
 
 PHOTON_URL_FOR_TEST_IMAGE = f"{settings.PHOTON_ENDPOINT}subdomain.example.com/path_part1/part2/image_dot_jpg.jpg"
 TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "http://")
+TEST_MEDIA_IDENTIFIER = "123"
 
 UA_HEADER = HEADERS["User-Agent"]
 
@@ -30,6 +26,11 @@ UA_HEADER = HEADERS["User-Agent"]
 # I will come back to try to sort it out later but for now
 # this will get the tests working.
 MOCK_BODY = "mock response body"
+
+SVG_BODY = """<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+<text x="10" y="10" fill="white">SVG</text>
+</svg>"""
 
 
 @pytest.fixture
@@ -59,9 +60,27 @@ def test_get_successful_no_auth_key_default_args(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_IMAGE_URL)
+    res = photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER)
 
     assert res.content == MOCK_BODY.encode()
+    assert res.status_code == 200
+    assert mock_get.matched
+
+
+@pook.on
+def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
+    mock_get: pook.Mock = (
+        pook.get(TEST_IMAGE_URL.replace(".jpg", ".svg"))
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(SVG_BODY)
+        .mock
+    )
+
+    res = photon_get(TEST_IMAGE_URL.replace(".jpg", ".svg"), TEST_MEDIA_IDENTIFIER)
+
+    assert res.content == SVG_BODY.encode()
     assert res.status_code == 200
     assert mock_get.matched
 
@@ -84,7 +103,7 @@ def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
         .mock
     )
 
-    res = photon_get(TEST_IMAGE_URL)
+    res = photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -107,7 +126,7 @@ def test_get_successful_no_auth_key_not_compressed(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_IMAGE_URL, is_compressed=False)
+    res = photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER, is_compressed=False)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -130,7 +149,7 @@ def test_get_successful_no_auth_key_full_size(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_IMAGE_URL, is_full_size=True)
+    res = photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER, is_full_size=True)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -148,7 +167,9 @@ def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_IMAGE_URL, is_full_size=True, is_compressed=False)
+    res = photon_get(
+        TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER, is_full_size=True, is_compressed=False
+    )
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -172,7 +193,7 @@ def test_get_successful_no_auth_key_png_only(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_IMAGE_URL, accept_header="image/png")
+    res = photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER, accept_header="image/png")
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -200,7 +221,7 @@ def test_get_successful_forward_query_params(mock_image_data):
 
     url_with_params = f"{TEST_IMAGE_URL}?{params}"
 
-    res = photon_get(url_with_params)
+    res = photon_get(url_with_params, TEST_MEDIA_IDENTIFIER)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -235,7 +256,7 @@ def test_get_successful_records_response_code(mock_image_data, redis):
         .mock
     )
 
-    photon_get(TEST_IMAGE_URL)
+    photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER)
     month = get_monthly_timestamp()
     assert redis.get(f"thumbnail_response_code:{month}:200") == b"1"
     assert (
@@ -290,7 +311,7 @@ def test_get_exception_handles_error(
     redis.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
-        photon_get(TEST_IMAGE_URL)
+        photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER)
 
     assert_func = (
         capture_exception.assert_called_once
@@ -331,7 +352,7 @@ def test_get_http_exception_handles_error(
     redis.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
-        photon_get(TEST_IMAGE_URL)
+        photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER)
 
     assert_func = (
         capture_exception.assert_called_once
@@ -369,7 +390,7 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
         .mock
     )
 
-    res = photon_get(https_url)
+    res = photon_get(https_url, TEST_MEDIA_IDENTIFIER)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -383,7 +404,7 @@ def test_get_unsuccessful_request_raises_custom_exception():
     with pytest.raises(
         UpstreamThumbnailException, match=r"Failed to render thumbnail."
     ):
-        photon_get(TEST_IMAGE_URL)
+        photon_get(TEST_IMAGE_URL, TEST_MEDIA_IDENTIFIER)
 
     assert mock_get.matched
 
@@ -404,34 +425,34 @@ def test_get_unsuccessful_request_raises_custom_exception():
     ],
 )
 def test__get_extension_from_url(image_url, expected_ext):
-    assert _get_file_extension_from_url(image_url) == expected_ext
+    assert extension._get_file_extension_from_url(image_url) == expected_ext
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("image_type", ["apng", "svg", "bmp"])
-def test_check_image_type_raises_by_not_allowed_types(image_type):
+@pytest.mark.parametrize("image_type", ["apng", "tiff", "bmp"])
+def test_photon_get_raises_by_not_allowed_types(image_type):
     image_url = TEST_IMAGE_URL.replace(".jpg", f".{image_type}")
     image = ImageFactory.create(url=image_url)
 
     with pytest.raises(UnsupportedMediaType):
-        check_image_type(image_url, image)
+        photon_get(image_url, image.identifier)
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "headers, expected_cache_val",
     [
-        ({"Content-Type": "image/svg+xml"}, b"svg+xml"),
+        ({"Content-Type": "image/tiff"}, b"tiff"),
         (None, b"unknown"),
     ],
 )
-def test_check_image_type_saves_image_type_to_cache(redis, headers, expected_cache_val):
+def test_photon_get_saves_image_type_to_cache(redis, headers, expected_cache_val):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
 
     with mock.patch("requests.head") as mock_head, pytest.raises(UnsupportedMediaType):
         mock_head.return_value.headers = headers
-        check_image_type(image_url, image)
+        photon_get(image_url, image.identifier)
 
     key = f"media:{image.identifier}:thumb_type"
     assert redis.get(key) == expected_cache_val

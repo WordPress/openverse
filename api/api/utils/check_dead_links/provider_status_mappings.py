@@ -20,4 +20,8 @@ provider_status_mappings = defaultdict(
         # https://github.com/WordPress/openverse/issues/1200
         unknown=(429,),
     ),
+    europeana=StatusMapping(
+        # https://github.com/WordPress/openverse/issues/2417
+        unknown=(429,),
+    ),
 )

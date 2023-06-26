@@ -1,5 +1,6 @@
 import type { MediaType, SearchType } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
+import type { NonMatureFilterCategory } from "~/constants/filters"
 
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
@@ -171,6 +172,48 @@ export type Events = {
     /** The slug of the license the user clicked on */
     license: string
   }
+<<<<<<< HEAD
+=======
+  /**
+   * Description: Whenever the user selects a result from the search results page.
+   * Questions:
+   *   - Which results are most popular for given searches?
+   *   - How often do searches lead to clicking a result?
+   *   - Are there popular searches that do not result in result selection?
+   */
+  SELECT_SEARCH_RESULT: {
+    /** The unique ID of the media */
+    id: string
+    /** If the result is a related result, provide the ID of the 'original' result */
+    relatedTo: string | null
+    /** The media type being searched */
+    mediaType: SearchType
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The search term */
+    query: string
+  }
+  /**
+   * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
+   * Questions:
+   *  - Do most users filter their searches?
+   *  - What % of users use filtering?
+   *  - Which filters are most popular? Least popular?
+   *  - Are any filters so commonly applied they should become defaults?
+   */
+  APPLY_FILTER: {
+    /** The filter category, e.g. `license`  */
+    category: NonMatureFilterCategory
+    /** The filter key, e.g. `by` */
+    key: string
+    /** Whether the filter is checked or unchecked */
+    checked: boolean
+    /** The media type being searched, can include All content */
+    searchType: SearchType
+    /** The search term */
+    query: string
+  }
+>>>>>>> 3e982b5acb2e39f78349f0d355913a8afd3916a9
 }
 
 /**
