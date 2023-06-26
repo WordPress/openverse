@@ -26,6 +26,7 @@ NO_COLOR := "\\033[0m"
     '"$(just docker/es/health {{ host }})" != "200"' \
     "Waiting for Elasticsearch to be healthy..."
 
+# Check that the given index exists
 @check-index index="image" dest="":
     -curl \
       -s \
@@ -42,3 +43,22 @@ NO_COLOR := "\\033[0m"
     just ../../_loop \
     '"$(just docker/es/check-index {{ index }} {{ dest }})" != "1"' \
     "Waiting for index '{{ index }}' to be ready..."
+
+# Check that the given index has the given number of docs
+@check-count index="image" count="5000":
+    -curl \
+      -X POST \
+      -s \
+      -H 'Accept: application/json' \
+      'http://localhost:50292/{{ index }}/_count' \
+    | grep '"count":{{ count }}' \
+    | wc -l \
+    | xargs
+
+# Wait for the index to have the given number of docs
+@wait-for-count index="image" count="5000":
+    # The just command on the second line is executed in the context of the
+    # root directory and so must be prefixed with `docker/es/`.
+    just ../../_loop \
+    '"$(just docker/es/check-count {{ index }} {{ count }})" != "1"' \
+    "Waiting for index '{{ index }}' to have {{ count }} docs..."
