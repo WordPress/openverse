@@ -1,7 +1,7 @@
 # Elasticsearch and Indexing
 
-There is a two-step process for copying data from an upstream source
-and loading it into the Openverse API using ingestion server:
+There is a two-step process for copying data from an upstream source and loading
+it into the Openverse API using ingestion server:
 
 1. The data is copied from the upstream catalog database and into the downstream
    API database.
