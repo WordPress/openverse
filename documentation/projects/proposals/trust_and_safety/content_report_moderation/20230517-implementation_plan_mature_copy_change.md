@@ -75,8 +75,8 @@ tables already use table aliases as well
 ([`ImageReport`](https://github.com/WordPress/openverse/blob/7b95a4c8eaa9804f53b4be7ac969e04ca437695a/api/api/models/image.py#L121-L122)
 and
 [`AudioReport`](https://github.com/WordPress/openverse/blob/7b95a4c8eaa9804f53b4be7ac969e04ca437695a/api/api/models/audio.py#L304-L305)) -
-since we're already performing table renames as part of this implementation plan, it makes sense
-to rename these tables for the same reason.
+since we're already performing table renames as part of this implementation
+plan, it makes sense to rename these tables for the same reason.
 
 In order to perform both of these changes in a
 [zero-downtime manner](https://docs.openverse.org/general/zero_downtime_database_management.html),
