@@ -9,6 +9,9 @@ NO_COLOR := "\\033[0m"
     printf "==============================================={{ NO_COLOR }}\n"
     just --list --unsorted
 
+# Run a script
+run script *args:
+    pnpm --filter automations exec node src/{{ script }} {{ args }}
 
 #################
 # Weekly report #
@@ -16,7 +19,7 @@ NO_COLOR := "\\033[0m"
 
 # Generate and post the weekly report
 report:
-    node src/last_week_tonight.mjs
+    just run last_week_tonight.mjs
 
 ##########
 # Render #
@@ -24,7 +27,7 @@ report:
 
 # Run `render-jinja.js` with given input file, output file and context
 render in_file out_file ctx="{}":
-    node src/render-jinja.js {{ in_file }} {{ out_file }} '{{ ctx }}'
+    just run render-jinja.js {{ in_file }} {{ out_file }} '{{ ctx }}'
 
 # Render `.pre-commit-config.yaml`
 render-precommit:

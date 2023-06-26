@@ -1,6 +1,6 @@
 # Automations
 
-This section contains automations for managing the Openverse repositories and
+This section documents automations used to manage the Openverse repositories and
 Developer Experience.
 
 ```{toctree}

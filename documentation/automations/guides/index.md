@@ -3,6 +3,5 @@
 ```{toctree}
 :titlesonly:
 
-requirements
-installation
+quickstart
 ```
