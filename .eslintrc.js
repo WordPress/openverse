@@ -29,6 +29,7 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:eslint-comments/recommended",
     "plugin:jsonc/recommended-with-jsonc",
+    "plugin:@openverse/recommended",
   ],
   plugins: [
     "@typescript-eslint",
@@ -36,6 +37,7 @@ module.exports = {
     "vue",
     "vuejs-accessibility",
     "unicorn",
+    "@openverse",
   ],
   rules: {
     semi: [2, "never"],
@@ -188,7 +190,7 @@ module.exports = {
     },
     {
       env: { jest: true },
-      files: ["frontend/test/unit/**"],
+      files: ["packages/**/*/test", "frontend/test/unit/**"],
       plugins: ["jest"],
       extends: ["plugin:jest/recommended"],
       rules: {
@@ -291,6 +293,7 @@ module.exports = {
         alias: {
           "~": "./frontend/src",
           "~~": "./frontend",
+          "@openverse/eslint-plugin": "./packages/eslint-plugin/src",
         },
         /**
          * SVG imports are excluded for the import/no-unresolved
