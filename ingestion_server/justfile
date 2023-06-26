@@ -61,7 +61,7 @@ wait-up: up
 ########
 
 # Make a cURL POST request to the service with the given data
-_curl-post data host="localhost:50281":
+curl-post data host="localhost:50281":
     STATUS_CODE=$(curl \
       -X POST \
       -H 'Content-Type: application/json' \
@@ -76,21 +76,21 @@ _curl-post data host="localhost:50281":
 
 # Load sample data into temp table in API and new index in Elasticsearch
 ingest-upstream model="image" suffix="init":
-    just _curl-post '{"model": "{{ model }}", "action": "INGEST_UPSTREAM", "index_suffix": "{{ suffix }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "INGEST_UPSTREAM", "index_suffix": "{{ suffix }}"}'
 
 # Promote temp table to prod in API and new index to primary in Elasticsearch
 promote model="image" suffix="init" alias="image":
-    just _curl-post '{"model": "{{ model }}", "action": "PROMOTE", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "PROMOTE", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
 
 # Delete an index in Elasticsearch
 delete model="image" suffix="init" alias="image":
-    just _curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
 
 point-alias model suffix alias:
-    just _curl-post '{"model": "{{ model }}", "action": "POINT_ALIAS", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "POINT_ALIAS", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
 
 create-and-populate-filtered-index model="image" destination_suffix="init":
-    just _curl-post '{"model": "{{ model }}", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "{{ destination_suffix }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "{{ destination_suffix }}"}'
 
 #########
 # Tests #
