@@ -62,12 +62,17 @@ wait-up: up
 
 # Make a cURL POST request to the service with the given data
 _curl-post data host="localhost:50281":
-    curl \
+    STATUS_CODE=$(curl \
       -X POST \
       -H 'Content-Type: application/json' \
       -d '{{ data }}' \
-      -w "\n" \
-      'http://{{ host }}/task'
+      -o /dev/stderr \
+      -w "%{http_code}" \
+      'http://{{ host }}/task'); \
+    if [ $STATUS_CODE -lt 200 ] || [ $STATUS_CODE -ge 300 ]; then \
+      echo "Status: $STATUS_CODE"; \
+      exit 1; \
+    fi
 
 # Load sample data into temp table in API and new index in Elasticsearch
 ingest-upstream model="image" suffix="init":
