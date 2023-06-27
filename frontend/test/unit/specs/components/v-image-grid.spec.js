@@ -11,10 +11,11 @@ const propsData = {
     { id: "i3", url: "http://localhost:8080/i3.svg", title: "image3" },
   ],
   fetchState: {
+    isSinglePage: true,
     isFetching: false,
     fetchingError: null,
   },
-  isSinglePage: false,
+  isSinglePage: true,
   imageGridLabel: "Image Results",
 }
 
