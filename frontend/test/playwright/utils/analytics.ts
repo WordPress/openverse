@@ -17,7 +17,6 @@ export function expectEventPayloadToMatch<T extends EventName>(
   event: EventResponse<T>,
   expectedPayload: Events[T]
 ): void {
-  console.log(event, expectedPayload)
   expect(expectedPayload).toMatchObject(event.p)
 }
 
