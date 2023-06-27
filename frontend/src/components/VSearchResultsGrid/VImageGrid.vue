@@ -17,7 +17,9 @@
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
       {{ fetchState.fetchingError }}
     </h5>
-    <VLoadMore class="mt-4" />
+    <footer v-if="!isSinglePage" class="pt-4">
+      <VLoadMore />
+    </footer>
   </section>
 </template>
 
