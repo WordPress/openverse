@@ -227,9 +227,15 @@ All unstable alarm should eventually be stabilised or deleted. No alarm should
 indefinitely stay in the "unstable" category. In order to increase and
 distribute accountability for alarm stabilisation, each alarm will be assigned
 to a maintainer who will be responsible for investigating false positive alerts
-that come from the unstable alarm. Ideally, most of the Openverse maintainers
-will be assigned at least one alarm from this implementation plan to shepherd
-into stability. The maintainer assigned to stabilise the alarm is not solely
+that come from the unstable alarm. Issues to create an alarm will remain open
+until the alarm is stabilised to represent the ongoing work of stabilisation. As
+with all other Openverse work, these issues can be reassigned as needed. MSR is
+still responsible for triaging individual alerts. The default assignee to
+investigate false alarms will be the maintainer assigned to the associated alarm
+creation issue. If folks running MSR find that unstable alarms are too noisy, we
+can change this approach for specific alarms or all alarms to have the
+maintainer assigned to stabilising the alarm be responsible for responding to
+the alerts. The maintainer assigned to stabilise the alarm is not solely
 responsible for identifying areas of stability improvement. The development of
 automated monitoring tools is still a collaborative effort. However, in addition
 to ensuring false alarm investigation does not fall to the wayside, assigning a
@@ -237,13 +243,12 @@ maintainer also ensures that each alarm has someone who understands the
 long-term context of the alarm, is aware of all of its previous behaviour, and
 has paid consistent attention to it during stabilisation. Alarm maintainers
 should have a similar relationship to their assigned alarms as project leads do
-for projects. The maintainer will create issues to iterate on the alarm and its
-run book but is not necessarily the person who will implement those issues.
-**Once the alarm is stabilised, there will no longer be a single person assigned
-to it**. Once maintainers reach a high level of confidence that the alarm will
-not regularly cause false positives, the alarm should be stabilised, with
-relevant run books updated by the maintainer to reflect the fact. At this point,
-the alarm's maintainer will be unassigned. To summarise the overall process:
+for projects. Once the alarm is stabilised, there will no longer be a specific
+person assigned to it. Once maintainers reach a high level of confidence that
+the alarm will not regularly cause false positives, the alarm should be
+stabilised, with relevant run books updated by the maintainer to reflect the
+fact. At this point, the alarm's maintainer will be unassigned. To summarise the
+overall process:
 
 1. Propose a new alarm based on metric observation
 2. Implement the unstable version of the alarm and create the initial run book
@@ -255,9 +260,9 @@ the alarm's maintainer will be unassigned. To summarise the overall process:
    channel
    - The run book should be updated to note:
      - When the alarm was stabilised
-     - Remove the assigned maintainer
      - Consolidate false positive advice or anything else that can be simplified
        now that we have a deeper understanding of the alarm
+   - The issue for the alarm will be closed as completed
 
 ### Run Books
 
@@ -293,7 +298,7 @@ states. Some alarms may go off for multiple states. For example, anomaly
 detection may use the same alarm to notify when a metric is too high or too low.
 Each is a separate "alert" and may require separate information to identify
 severity. Additional consideration may be necessary for alerts from composite
-alarms. These may require manually checking multiple alarms to help identify 
+alarms. These may require manually checking multiple alarms to help identify
 severity. Keeping this in mind helps us focus each run book as much as
 possible so that responders have the most accessible information at any time.
 ```
@@ -373,7 +378,7 @@ the goals of the alarm.
 ```
 
 Each service should have a CloudWatch alarm that alerts if the Target Group
-"UnHealthyHostCount" for each production service exceeds 0.
+"UnHealthyHostCount" for any service exceeds 0.
 
 ```json
 {
@@ -418,6 +423,10 @@ Each service should have the following:
 - Request count anomalous for time period
 - 5xx count over time period over threshold
 - 2xx count over time period under threshold
+
+We will group alarm creation by metric and service so that we can work to
+stabilise alarms based on specific metrics at the same time. The
+["Outlined Steps"](#outlined-steps) section lists each specific group of alarms.
 
 Each of these use metrics that are already used in the ECS service dashboards.
 Implementers should reference the dashboard configuration for example queries
@@ -525,18 +534,31 @@ eagerly to the alarms if we can avoid it.
    - Rename `service-monitors` to `service-uptime-robot` to clarify the module's
      purpose
    - Also create the new SNS topic for the unstable alerts' notification channel
-   - Create the unhealthy host count alarm for API and frontend services
+   - Create the unhealthy host count alarm for production and staging services
      - This serves as a proof of functionality for any infrastructure changes
        from this first step
-1. Create each of the rest of the alarms. Each service will have distinct issues
-   for response time alarms and response count alarms. This allows the chance
-   for multiple people to work on alarm development and prevents alarms of
-   potentially differing complexity to block each other.
+   - **This step is high priority as it unblocks further alarm creation**
+1. Create each of the rest of the alarms.
+
+Alarm creation will happen in groups based on service and related metrics for
+the alarm. Each service will have an issue for each the response time (threshold
+and anomaly) and response count alarms. In other words, each service will have 2
+issues to implement the initial set of alarms for it:
+
+- General API
+  - Response time (threshold and anomaly)
+  - Response count
+- API Thumbnails
+  - Response time (threshold and anomaly)
+  - Response count
+- Frontend
+  - Response time (threshold and anomaly)
+  - Response count
 
 A note should be added to all issues created for this implementation plan that
-it is probably easier to develop the metric queries and alarm configurations in
-the AWS Dashboard and then export them into our Terraform configuration after
-the initial iteration.
+it is easier to develop the metric queries and alarm configurations in the AWS
+Dashboard and then export them into our Terraform configuration after the
+initial iteration.
 
 ## Parallelizable streams
 
