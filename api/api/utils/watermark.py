@@ -79,7 +79,9 @@ def _fit_in_width(text, font, max_width):
     """
 
     char_length = font.getlength("x")  # x has the closest to average width
-    max_chars = max_width // char_length
+    max_chars = int(
+        max_width // char_length
+    )  # Must be an integer to be used with `wrap` below
 
     text = "\n".join(["\n".join(wrap(line, max_chars)) for line in text.split("\n")])
 

@@ -1,5 +1,6 @@
 import type { MediaType, SearchType } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
+import type { NonMatureFilterCategory } from "~/constants/filters"
 
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
@@ -198,6 +199,26 @@ export type Events = {
     mediaType: SearchType
     /** The slug (not the prettified name) of the provider */
     provider: string
+    /** The search term */
+    query: string
+  }
+  /**
+   * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
+   * Questions:
+   *  - Do most users filter their searches?
+   *  - What % of users use filtering?
+   *  - Which filters are most popular? Least popular?
+   *  - Are any filters so commonly applied they should become defaults?
+   */
+  APPLY_FILTER: {
+    /** The filter category, e.g. `license`  */
+    category: NonMatureFilterCategory
+    /** The filter key, e.g. `by` */
+    key: string
+    /** Whether the filter is checked or unchecked */
+    checked: boolean
+    /** The media type being searched, can include All content */
+    searchType: SearchType
     /** The search term */
     query: string
   }
