@@ -28,7 +28,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue"
 
-import { useDebouncedAnalytics } from "~/composables/use-analytics"
+import { useAnalytics } from "~/composables/use-analytics"
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
@@ -68,7 +68,7 @@ export default defineComponent({
     const i18n = useI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
-    const { sendCustomEventDebounced } = useDebouncedAnalytics()
+    const { sendCustomEvent } = useAnalytics()
 
     const ariaLabel = computed(() =>
       i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
@@ -194,7 +194,7 @@ export default defineComponent({
     /* Interface with VPlayPause */
 
     const sendAudioInteractionEvent = (event: AudioInteraction) => {
-      sendCustomEventDebounced("AUDIO_INTERACTION", {
+      sendCustomEvent("AUDIO_INTERACTION", {
         id: props.audio.id,
         provider: props.audio.provider,
         event,
