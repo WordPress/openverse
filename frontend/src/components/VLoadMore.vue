@@ -1,5 +1,5 @@
 <template>
-  <div ref="loadMoreSectionRef">
+  <div ref="loadMoreSectionRef" class="w-full">
     <VButton
       v-show="canLoadMore"
       class="label-bold lg:description-bold h-16 w-full lg:h-18"
