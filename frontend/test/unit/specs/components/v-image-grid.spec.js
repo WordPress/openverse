@@ -27,12 +27,12 @@ describe("VImageGrid", () => {
       stubs: ["VLicense"],
     }
   })
-  it("renders images without load more button", () => {
+  it("renders images without load more button for related images", () => {
     render(VImageGrid, options)
     expect(screen.queryAllByRole("img").length).toEqual(propsData.images.length)
     expect(screen.queryAllByRole("figure").length).toEqual(
       propsData.images.length
     )
-    expect(screen.queryByTestId("load-more")).not.toBeVisible()
+    expect(screen.queryByTestId("load-more")).toBeNull()
   })
 })
