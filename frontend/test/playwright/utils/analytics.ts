@@ -13,27 +13,12 @@ export type EventResponse<T extends EventName> = {
 
 export type AnalyticEventResponses = Array<EventResponse<EventName>>
 
-export function validateAnalyticsEvent<T extends EventName>(
-  event: EventResponse<T>,
-  expectedPayload: Events[T]
-): boolean {
-  const payload = event.p
-
-  for (const key in expectedPayload) {
-    if (payload[key] !== expectedPayload[key]) {
-      return false
-    }
-  }
-
-  return true
-}
-
 export function expectEventPayloadToMatch<T extends EventName>(
   event: EventResponse<T>,
   expectedPayload: Events[T]
 ): void {
-  const isValidEvent = validateAnalyticsEvent(event, expectedPayload)
-  expect(isValidEvent).toBeTruthy()
+  console.log(event, expectedPayload)
+  expect(expectedPayload).toMatchObject(event.p)
 }
 
 export const collectAnalyticsEvents = (context: BrowserContext) => {
@@ -48,7 +33,7 @@ export const collectAnalyticsEvents = (context: BrowserContext) => {
       }
       sentAnalyticsEvents.push({ ...parsedData })
     }
-    route.continue()
+    route.abort()
   })
 
   return sentAnalyticsEvents

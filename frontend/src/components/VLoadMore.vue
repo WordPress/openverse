@@ -1,21 +1,24 @@
 <template>
-  <VButton
-    v-show="canLoadMore"
-    ref="loadMoreButtonRef"
-    class="label-bold lg:description-bold h-16 w-full lg:h-18"
-    variant="filled-gray"
-    size="disabled"
-    :disabled="fetchState.isFetching"
-    data-testid="load-more"
-    @click="onLoadMore"
-  >
-    {{ buttonLabel }}
-  </VButton>
+  <div ref="loadMoreSectionRef">
+    <VButton
+      v-show="canLoadMore"
+      class="label-bold lg:description-bold h-16 w-full lg:h-18"
+      variant="filled-gray"
+      size="disabled"
+      :disabled="fetchState.isFetching"
+      data-testid="load-more"
+      @click="onLoadMore"
+    >
+      {{ buttonLabel }}
+    </VButton>
+  </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
+
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -30,7 +33,8 @@ export default defineComponent({
     VButton,
   },
   setup() {
-    const loadMoreButtonRef = ref(null)
+    const loadMoreSectionRef = ref(null)
+    const route = useRoute()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -95,13 +99,20 @@ export default defineComponent({
     onMounted(() => {
       mainPageElement.value = document.getElementById("main-page")
     })
-    const isLoadMoreButtonVisible = useElementVisibility(loadMoreButtonRef, {
+    const isLoadMoreButtonVisible = useElementVisibility(loadMoreSectionRef, {
       scrollTarget: mainPageElement,
+    })
+
+    // Reset the reachResultEndEvent whenever the route changes,
+    // to make sure the result end is tracked properly whenever
+    // the search query or content type changes
+    watch(route, () => {
+      reachResultEndEventSent.value = false
     })
 
     watch(isLoadMoreButtonVisible, (isVisible) => {
       if (isVisible) {
-        if (reachResultEndEventSent.value || !canLoadMore.value) {
+        if (reachResultEndEventSent.value) {
           return
         }
         sendReachResultEnd()
@@ -115,7 +126,7 @@ export default defineComponent({
       onLoadMore,
       canLoadMore,
 
-      loadMoreButtonRef,
+      loadMoreSectionRef,
     }
   },
 })
