@@ -324,16 +324,17 @@ jobs:
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
 
+      - name: Print ingestion-server test logs
+        run: |
+          just ingestion_server/test-logs > ingestion_server/test/ingestion_logs.txt
+          cat ingestion_server/test/ingestion_logs.txt
+
       - name: Upload ingestion test logs
         if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
-
-      - name: Print ingestion test logs
-        if: success() || failure()
-        run: cat ingestion_server/test/ingestion_logs.txt
 
   #######
   # API #
