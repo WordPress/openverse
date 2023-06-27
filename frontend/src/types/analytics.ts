@@ -141,6 +141,17 @@ export type Events = {
     component: string
   }
   /**
+   * Description: The visibility of the filter sidebar on desktop is toggled
+   * Questions:
+   *   - Do a majority users prefer the sidebar visible or hidden?
+   */
+  TOGGLE_FILTER_SIDEBAR: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The state of the filter sidebar after the user interaction. */
+    toState: "opened" | "closed"
+  }
+  /**
    * Description: The user clicks to a link outside of Openverse.
    * Questions:
    *   - What types of external content do users seek?

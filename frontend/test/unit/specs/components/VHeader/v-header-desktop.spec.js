@@ -50,4 +50,37 @@ describe("VHeaderDesktop", () => {
       searchType: "all",
     })
   })
+
+  it("sends TOGGLE_FILTER_SIDEBAR analytics event when the filter sidebar is opened", async () => {
+    const screen = render(VHeaderDesktop, options)
+    const filterSidebarTrigger = screen.getByText("Filters")
+
+    await fireEvent.click(filterSidebarTrigger)
+
+    expect(sendCustomEventMock).toHaveBeenCalledWith("TOGGLE_FILTER_SIDEBAR", {
+      searchType: "all",
+      toState: "opened",
+    })
+  })
+
+  describe("when the filter sidebar is visible", () => {
+    beforeEach(() => {
+      options.provide[IsSidebarVisibleKey] = ref(true)
+    })
+
+    it("sends TOGGLE_FILTER_SIDEBAR analytics event when the filter sidebar is closed", async () => {
+      const screen = render(VHeaderDesktop, options)
+      const filterSidebarTrigger = screen.getByText("Filters")
+
+      await fireEvent.click(filterSidebarTrigger)
+
+      expect(sendCustomEventMock).toHaveBeenCalledWith(
+        "TOGGLE_FILTER_SIDEBAR",
+        {
+          searchType: "all",
+          toState: "closed",
+        }
+      )
+    })
+  })
 })
