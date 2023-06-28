@@ -56,7 +56,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
             provider__in=ContentProvider.objects.filter(
                 filter_content=True
             ).values_list("provider_identifier")
-        ).all()
+        )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
