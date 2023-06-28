@@ -29,7 +29,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   webServer: {
     command: `./node_modules/.bin/npm-run-all -p -r talkback ${pwCommand}`,
-    cwd: "/app",
+    cwd: "/frontend",
     timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
