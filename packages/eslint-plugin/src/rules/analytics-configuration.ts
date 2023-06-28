@@ -10,7 +10,6 @@ type Options = readonly [
 
 const messages = {
   reservedPayloadPropNames: "{{ propName }} is a reserved payload prop name.",
-
   eventNameFormat:
     "Event name {{ eventName }} must be in SCREAMING_SNAKE_CASE.",
   emptyPayloadType:
