@@ -431,19 +431,6 @@ class TestIngestion(unittest.TestCase):
         # Terminate the Bottle process started in ``setUp``
         cls.cb_process.terminate()
 
-        # Stop all running containers and delete all data in volumes
-        compose_path = cls.compose_path
-        log_output = compose_path.parent / "ingestion_logs.txt"
-        with log_output.open("w") as file:
-            cls._compose_cmd(
-                ["logs", "--no-color"], stderr=subprocess.STDOUT, stdout=file
-            )
-
-        cls._compose_cmd(
-            ["down", "-v"],
-            capture_output=True,
-        )
-
         # Close connections with databases
         for conn in [cls.upstream_db, cls.downstream_db]:
             if conn:

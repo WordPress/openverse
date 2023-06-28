@@ -38,6 +38,7 @@ export interface MediaState {
     audio: FetchState
     image: FetchState
   }
+  currentPage: number
 }
 
 export const initialResults = deepFreeze({
@@ -67,6 +68,7 @@ export const useMediaStore = defineStore("media", {
         fetchingError: null,
       },
     },
+    currentPage: 0,
   }),
 
   getters: {
@@ -366,6 +368,7 @@ export const useMediaStore = defineStore("media", {
       const mediaType = this._searchType
       if (!payload.shouldPersistMedia) {
         this._resetFetchState()
+        this.currentPage = 0
       }
       const mediaToFetch = (
         (mediaType !== ALL_MEDIA
@@ -385,11 +388,17 @@ export const useMediaStore = defineStore("media", {
           })
         )
       )
+      if (mediaType === ALL_MEDIA) {
+        this.currentPage += 1
+      } else {
+        this.currentPage = this.results[mediaType].page ?? 0
+      }
     },
 
     clearMedia() {
       supportedMediaTypes.forEach((mediaType) => {
         this.resetMedia(mediaType)
+        this._resetFetchState()
       })
     },
 
