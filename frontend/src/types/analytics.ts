@@ -1,5 +1,6 @@
 import type { MediaType, SearchType } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
+import type { NonMatureFilterCategory } from "~/constants/filters"
 
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
@@ -37,8 +38,8 @@ export type Events = {
   CLICK_HOME_GALLERY_IMAGE: {
     /** the set to which the image belongs */
     set: string
-    /** the identifier of the image */
-    identifier: string
+    /** The unique ID of the media */
+    id: string
   }
   /**
    * Description: The user right clicks a single image result, most likely to download it.
@@ -47,7 +48,7 @@ export type Events = {
    *     when not paired with a `GET_MEDIA` event?
    */
   RIGHT_CLICK_IMAGE: {
-    identifier: string
+    id: string
   }
   /**
    * Click on the 'back to search' link on a single result
@@ -138,6 +139,88 @@ export type Events = {
     next: SearchType
     /** The name of the Vue component used to switch content types. */
     component: string
+  }
+  /**
+   * Description: The visibility of the filter sidebar on desktop is toggled
+   * Questions:
+   *   - Do a majority users prefer the sidebar visible or hidden?
+   */
+  TOGGLE_FILTER_SIDEBAR: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The state of the filter sidebar after the user interaction. */
+    toState: "opened" | "closed"
+  }
+  /**
+   * Description: The user clicks to a link outside of Openverse.
+   * Questions:
+   *   - What types of external content do users seek?
+   *   - Are there external resources we should make more visible?
+   *   - Is there content we might want to add to Openverse directly?
+   */
+  EXTERNAL_LINK_CLICK: {
+    /** The url of the external link */
+    url: string
+  }
+  /**
+   * Description: The user visits a creator's link in the single result UI
+   * Questions:
+   *   - Are creator links clicked much? Does Openverse increase visibility
+   *     of included creator's profiles?
+   */
+  VISIT_CREATOR_LINK: {
+    /** The unique ID of the media */
+    id: string
+    /** The permalink to the creator's profile */
+    url: string
+  }
+  /**
+   * Description: The user visits a CC license description page on CC.org
+   * Questions:
+   *   - How often are external licenses viewed?
+   */
+  VISIT_LICENSE_PAGE: {
+    /** The slug of the license the user clicked on */
+    license: string
+  }
+  /**
+   * Description: Whenever the user selects a result from the search results page.
+   * Questions:
+   *   - Which results are most popular for given searches?
+   *   - How often do searches lead to clicking a result?
+   *   - Are there popular searches that do not result in result selection?
+   */
+  SELECT_SEARCH_RESULT: {
+    /** The unique ID of the media */
+    id: string
+    /** If the result is a related result, provide the ID of the 'original' result */
+    relatedTo: string | null
+    /** The media type being searched */
+    mediaType: SearchType
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The search term */
+    query: string
+  }
+  /**
+   * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
+   * Questions:
+   *  - Do most users filter their searches?
+   *  - What % of users use filtering?
+   *  - Which filters are most popular? Least popular?
+   *  - Are any filters so commonly applied they should become defaults?
+   */
+  APPLY_FILTER: {
+    /** The filter category, e.g. `license`  */
+    category: NonMatureFilterCategory
+    /** The filter key, e.g. `by` */
+    key: string
+    /** Whether the filter is checked or unchecked */
+    checked: boolean
+    /** The media type being searched, can include All content */
+    searchType: SearchType
+    /** The search term */
+    query: string
   }
 }
 

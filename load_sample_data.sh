@@ -12,7 +12,7 @@ DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 # Load sample data
 function load_sample_data {
   docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql <<-EOF
-    DELETE FROM $1;
+		DELETE FROM $1;
 		\copy $1 \
 			from './sample_data/sample_$1.csv' \
 			with (FORMAT csv, HEADER true);
@@ -20,8 +20,20 @@ function load_sample_data {
 		EOF"
 }
 
+function verify_loaded_data {
+  COUNT=$(docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql -AXqt <<-EOF
+		SELECT COUNT(*) FROM $1;
+		EOF")
+  if [ "$COUNT" -ne 5000 ]; then
+    echo "Error: table $1 count differs from expected."
+    exit 1
+  fi
+}
+
 load_sample_data "image"
+verify_loaded_data "image"
 load_sample_data "audio"
+verify_loaded_data "audio"
 
 #######
 # API #
@@ -61,13 +73,6 @@ docker-compose exec -T "$DB_SERVICE_NAME" bash -c "psql <<-EOF
 #############
 # Ingestion #
 #############
-
-# Load search quality assurance data.
-just ingestion_server/load-test-data "audio"
-sleep 2
-
-just ingestion_server/load-test-data "image"
-sleep 2
 
 # Ingest and index the data
 just ingestion_server/ingest-upstream "audio" "init"

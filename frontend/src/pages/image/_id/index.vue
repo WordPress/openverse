@@ -15,7 +15,7 @@
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
-        @contextmenu="handleRightClick(image.identifier)"
+        @contextmenu="handleRightClick(image.id)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -38,24 +38,27 @@
         :external-icon-size="6"
         has-icon-end
         size="large"
+        :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
-        {{ $t("image-details.weblink") }}
+        {{ $t("imageDetails.weblink") }}
       </VButton>
       <div class="description-bold flex flex-1 flex-col justify-center">
         <h1 class="description-bold md:heading-5 line-clamp-2">
           {{ image.title }}
         </h1>
-        <i18n v-if="image.creator" path="image-details.creator" tag="span">
+        <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
           <template #name>
             <VLink
               v-if="image.creator_url"
               :aria-label="
-                $t('media-details.aria.creator-url', {
+                $t('mediaDetails.aria.creatorUrl', {
                   creator: image.creator,
                 })
               "
               :href="image.creator_url"
+              :send-external-link-click-event="false"
+              @click="sendVisitCreatorLinkEvent"
               >{{ image.creator }}</VLink
             >
             <span v-else>{{ image.creator }}</span>
@@ -205,9 +208,9 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleRightClick = (identifier: string) => {
+    const handleRightClick = (id: string) => {
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
-        identifier,
+        id,
       })
     }
 
@@ -219,6 +222,16 @@ export default defineComponent({
         id: image.value.id,
         provider: image.value.provider,
         mediaType: IMAGE,
+      })
+    }
+
+    const sendVisitCreatorLinkEvent = () => {
+      if (!image.value) {
+        return
+      }
+      sendCustomEvent("VISIT_CREATOR_LINK", {
+        id: image.value.id,
+        url: image.value.creator_url,
       })
     }
 
@@ -239,6 +252,7 @@ export default defineComponent({
       backToSearchPath,
 
       sendGetMediaEvent,
+      sendVisitCreatorLinkEvent,
     }
   },
   async asyncData({ app, error, route, $pinia }) {

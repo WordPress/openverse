@@ -10,18 +10,6 @@ env:
   ISSUE_ID: ${{ github.event.issue.node_id }} # The global issue ID that works in both REST and GraphQL APIs.
 
 jobs:
-  add_issue:
-    name: Add new issue
-    runs-on: ubuntu-latest
-    steps:
-      - name: Add issue to "Backlog"
-        uses: alex-page/github-project-automation-plus@v0.8.3
-        with:
-          project: Openverse
-          column: Backlog
-          # TODO: Switch to GITHUB_TOKEN if the project is moved to a repo
-          repo-token: ${{ secrets.ACCESS_TOKEN }}
-
   add_issue_to_project:
     name: Add new issue to project
     runs-on: ubuntu-latest

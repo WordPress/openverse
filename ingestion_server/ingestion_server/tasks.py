@@ -50,10 +50,6 @@ class TaskTypes(Enum):
     DELETE_INDEX = auto()
     """delete the given index after it has been superseded by a new one"""
 
-    LOAD_TEST_DATA = auto()
-    """create indices in ES for QA tests; this is not intended to run in production but
-    can be run without negative consequences"""
-
     CREATE_AND_POPULATE_FILTERED_INDEX = auto()
     """create a filtered index based on existing alias index"""
 
@@ -217,7 +213,6 @@ def perform_task(
             func(model, **kwargs)  # Directly invoke indexer methods if no task function
     except Exception as err:
         exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
-        logging.error(f"Error processing task `{action}` for `{model}`: {err}")
         slack.error(
             f":x_red: Error processing task `{action}` for `{model}` "
             f"(`{exception_type}`): \n"

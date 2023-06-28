@@ -12,6 +12,11 @@ jest.mock("~/composables/use-analytics", () => ({
 
 describe("VContentLink", () => {
   let options = {}
+  const sendCustomEventMock = jest.fn()
+
+  useAnalytics.mockImplementation(() => ({
+    sendCustomEvent: sendCustomEventMock,
+  }))
 
   beforeEach(() => {
     options = {
@@ -33,11 +38,6 @@ describe("VContentLink", () => {
   })
 
   it("sends CHANGE_CONTENT_TYPE event when clicked", async () => {
-    const sendCustomEventMock = jest.fn()
-
-    useAnalytics.mockImplementation(() => ({
-      sendCustomEvent: sendCustomEventMock,
-    }))
     render(VContentLink, options)
     const btn = screen.getByRole("link")
 
