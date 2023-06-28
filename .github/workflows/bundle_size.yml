@@ -54,6 +54,7 @@ jobs:
           pattern: "./frontend/.nuxt/dist/client/**/*.{modern.js,js,css}"
           exclude: "{./frontend/.nuxt/dist/client/lang-*.json.js,./frontend/.nuxt/dist/client/lang-*.json.modern.js}"
           minimum-change-threshold: 10
+          build-script: --filter frontend build
 
       - name: Checkout repository # again, to enable cleaning
         if: always()
