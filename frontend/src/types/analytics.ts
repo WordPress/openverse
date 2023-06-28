@@ -46,6 +46,13 @@ export type Events = {
     id: string
   }
   /**
+   * Description: The user opens the menu which lists pages.
+   * Questions:
+   *   - How often is this menu used?
+   *   - Is this menu visible enough?
+   */
+  OPEN_PAGES_MENU: Record<string, never>
+  /**
    * Description: The user right clicks a single image result, most likely to download it.
    * Questions:
    *   - Do users right-click images often? Does this suggest downloading them directly,
