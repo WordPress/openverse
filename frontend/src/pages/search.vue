@@ -3,7 +3,6 @@
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
     <VSearchGrid
-      ref="searchGridRef"
       :fetch-state="fetchState"
       :query="query"
       :supported="supported"
@@ -32,8 +31,9 @@
 
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
-import { computed, inject, ref } from "vue"
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { computed, inject, watch } from "vue"
+import { storeToRefs } from "pinia"
+import { defineComponent, useMeta, useRoute } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
@@ -44,8 +44,6 @@ import VSearchGrid from "~/components/VSearchGrid.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
 
-import type { Context } from "@nuxt/types"
-
 export default defineComponent({
   name: "BrowsePage",
   components: {
@@ -55,14 +53,13 @@ export default defineComponent({
   },
   layout: "search-layout",
   middleware: searchMiddleware,
-  scrollToTop: false,
   setup() {
-    const searchGridRef = ref<InstanceType<typeof VSearchGrid> | null>(null)
-
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+
+    const route = useRoute()
 
     // I don't know *exactly* why this is necessary, but without it
     // transitioning from the homepage to this page breaks the
@@ -71,19 +68,18 @@ export default defineComponent({
     // hydration and Vue reactives. Hopefully fixed in Nuxt 3.
     searchStore.refreshRecentSearches()
 
-    const searchTerm = computed(() => searchStore.searchTerm)
-    const searchType = computed(() => searchStore.searchType)
-    const query = computed(() => searchStore.searchQueryParams)
-    const supported = computed(() => searchStore.searchTypeIsSupported)
-    const resultCount = computed(() => mediaStore.resultCount)
-    const fetchState = computed(() => mediaStore.fetchState)
-    const resultItems = computed(() => mediaStore.resultItems)
+    const {
+      searchTerm,
+      searchType,
+      searchQueryParams: query,
+      searchTypeIsSupported: supported,
+    } = storeToRefs(searchStore)
+
+    const { resultCount, fetchState, resultItems } = storeToRefs(mediaStore)
 
     const needsFetching = computed(() =>
       Boolean(
-        searchStore.searchTypeIsSupported &&
-          !mediaStore.resultCount &&
-          searchStore.searchTerm.trim() !== ""
+        supported.value && !resultCount.value && searchTerm.value.trim() !== ""
       )
     )
 
@@ -92,8 +88,30 @@ export default defineComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
+    const fetchMedia = async (
+      payload: { shouldPersistMedia?: boolean } = {}
+    ) => {
+      return mediaStore.fetchMedia(payload)
+    }
+
+    watch(route, async (newRoute, oldRoute) => {
+      /**
+       * Updates the search type only if the route's path changes.
+       * Scrolls `main-page` to top if the path changes.
+       */
+      if (
+        newRoute.path !== oldRoute.path ||
+        !isShallowEqualObjects(newRoute.query, oldRoute.query)
+      ) {
+        const { query: urlQuery, path } = newRoute
+        searchStore.setSearchStateFromUrl({ urlQuery, path })
+
+        document.getElementById("main-page")?.scroll(0, 0)
+        await fetchMedia()
+      }
+    })
+
     return {
-      searchGridRef,
       showScrollButton,
       searchTerm,
       searchType,
@@ -105,6 +123,8 @@ export default defineComponent({
       resultItems,
       needsFetching,
       isSidebarVisible,
+
+      fetchMedia,
     }
   },
   /**
@@ -128,27 +148,5 @@ export default defineComponent({
     }
   },
   head: {},
-  watch: {
-    /**
-     * Updates the search type only if the route's path changes.
-     */
-    async $route(newRoute: Context["route"], oldRoute: Context["route"]) {
-      if (
-        newRoute.path !== oldRoute.path ||
-        !isShallowEqualObjects(newRoute.query, oldRoute.query)
-      ) {
-        const { query, path } = newRoute
-        const searchStore = useSearchStore(this.$nuxt.$pinia)
-        searchStore.setSearchStateFromUrl({ urlQuery: query, path })
-        await this.fetchMedia()
-      }
-    },
-  },
-  methods: {
-    fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
-      const mediaStore = useMediaStore(this.$pinia)
-      return mediaStore.fetchMedia(payload)
-    },
-  },
 })
 </script>
