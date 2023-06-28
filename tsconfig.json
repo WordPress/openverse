@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "sourceMap": true,
+    "esModuleInterop": true,
     /* Strict Type-Checking Options */
     "strict": true,
     /* Additional Checks */
