@@ -37,6 +37,7 @@ jobs:
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
       ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
+      packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -561,13 +562,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        - build
-        - unit_test
-      include:
-        - name: build
-          script: "build"
-        - name: unit_test
-          script: "test:unit"
+        name:
+          - build
+          - unit_test
+        include:
+          - name: build
+            script: "build"
+          - name: unit_test
+            script: "test:unit"
 
     steps:
       - name: Checkout repository
