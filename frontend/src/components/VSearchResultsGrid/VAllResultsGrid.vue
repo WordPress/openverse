@@ -94,7 +94,8 @@ export default defineComponent({
     const resultsLoading = computed(() => {
       return (
         Boolean(mediaStore.fetchState.fetchingError) ||
-        mediaStore.fetchState.isFetching
+        mediaStore.fetchState.isFetching ||
+        !mediaStore.fetchState.hasStarted
       )
     })
 

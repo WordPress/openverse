@@ -95,6 +95,35 @@ of our CI. Nonetheless, given certain semantic merge conflicts, it is possible
 that a PR could pass CI and still cause a build failure when merged, so it is
 technically possible for a failure to occur during the first step.
 
+#### Debugging Failures
+
+```{tip}
+Please refer to the [general ECS logging documentation](/meta/monitoring/cloudwatch_logs/index.md)
+for details about how to find logs for individual tasks.
+
+An additional resource that is often helpful other than logs is the events list for a
+service. You can find that under the "Events" tab of the ECS service's page:
+
+![Example ECS events tab for the production API](/_static/ecs_events_tab.png)
+
+This tab shows a chronological list of the 100 most recent "events". Please
+[refer to the AWS ECS documentation for information on what each of these events mean](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_cwe_events.html).
+```
+
+#### Re-running Failed Deployments
+
+```{tip}
+To re-run a failed deployment with the same tag, simply re-run the failed deployment
+workflow in the WordPress/openverse-infrastructure repository. **Do not re-run the
+release workflow in the monorepo or this will create duplicate tags**. This approach
+is useful if you think the deployment failed due to a temporary fluke.
+
+![Example failed production API deployment workflow.](/_static/rerun_failed_deployment.png)
+
+To re-run this failed production API deployment, re-run the failed jobs via the GitHub
+UI.
+```
+
 ## Staging
 
 Staging is automatically deployed any time code is merged to the `main` branch

@@ -1,22 +1,29 @@
 <template>
-  <VButton
-    v-show="canLoadMore"
-    class="label-bold lg:description-bold h-16 w-full lg:h-18"
-    variant="filled-gray"
-    size="disabled"
-    :disabled="isFetching"
-    data-testid="load-more"
-    @click="onLoadMore"
-  >
-    {{ buttonLabel }}
-  </VButton>
+  <div ref="loadMoreSectionRef" class="w-full">
+    <VButton
+      v-show="canLoadMore"
+      class="label-bold lg:description-bold h-16 w-full lg:h-18"
+      variant="filled-gray"
+      size="disabled"
+      :disabled="fetchState.isFetching"
+      data-testid="load-more"
+      @click="onLoadMore"
+    >
+      {{ buttonLabel }}
+    </VButton>
+  </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { computed, defineComponent, onMounted, ref, watch } from "vue"
+import { storeToRefs } from "pinia"
+import { useElementVisibility } from "@vueuse/core"
+
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VButton from "~/components/VButton.vue"
 
@@ -26,11 +33,19 @@ export default defineComponent({
     VButton,
   },
   setup() {
+    const loadMoreSectionRef = ref(null)
+    const route = useRoute()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
+    const { sendCustomEvent } = useAnalytics()
+
+    // Use the `_searchType` from mediaStore because it falls back to ALL_MEDIA
+    // for unsupported search types.
+    const { fetchState, resultCount, currentPage, _searchType } =
+      storeToRefs(mediaStore)
+    const { searchTerm } = storeToRefs(searchStore)
 
     /**
      * Whether we should show the "Load more" button.
@@ -40,12 +55,13 @@ export default defineComponent({
      */
     const canLoadMore = computed(
       () =>
-        searchStore.searchTerm !== "" &&
-        !mediaStore.fetchState.fetchingError &&
-        !mediaStore.fetchState.isFinished &&
-        mediaStore.resultCount > 0
+        searchTerm.value !== "" &&
+        !fetchState.value.fetchingError &&
+        !fetchState.value.isFinished &&
+        resultCount.value > 0
     )
 
+    const reachResultEndEventSent = ref(false)
     /**
      * On button click, fetch media, persisting the existing results.
      * The button is disabled when we are fetching, but we still check
@@ -53,24 +69,64 @@ export default defineComponent({
      *
      */
     const onLoadMore = async () => {
-      if (isFetching.value) return
+      if (fetchState.value.isFetching) return
+
+      reachResultEndEventSent.value = false
 
       await mediaStore.fetchMedia({
         shouldPersistMedia: true,
       })
     }
 
+    const sendReachResultEnd = () => {
+      // This function can be called before the media is fetched and
+      // currentPage is updated from 0, so we use the value or 1.
+      // The currentPage can never be 0 here because then the loadMore
+      // button would not be visible.
+      sendCustomEvent("REACH_RESULT_END", {
+        searchType: _searchType.value,
+        query: searchTerm.value,
+        resultPage: currentPage.value || 1,
+      })
+    }
+
     const buttonLabel = computed(() =>
-      isFetching.value
+      fetchState.value.isFetching
         ? i18n.t("browsePage.loading")
         : i18n.t("browsePage.load")
     )
+    const mainPageElement = ref<HTMLElement | null>(null)
+    onMounted(() => {
+      mainPageElement.value = document.getElementById("main-page")
+    })
+    const isLoadMoreButtonVisible = useElementVisibility(loadMoreSectionRef, {
+      scrollTarget: mainPageElement,
+    })
+
+    // Reset the reachResultEndEvent whenever the route changes,
+    // to make sure the result end is tracked properly whenever
+    // the search query or content type changes
+    watch(route, () => {
+      reachResultEndEventSent.value = false
+    })
+
+    watch(isLoadMoreButtonVisible, (isVisible) => {
+      if (isVisible) {
+        if (reachResultEndEventSent.value) {
+          return
+        }
+        sendReachResultEnd()
+        reachResultEndEventSent.value = true
+      }
+    })
 
     return {
       buttonLabel,
-      isFetching,
+      fetchState,
       onLoadMore,
       canLoadMore,
+
+      loadMoreSectionRef,
     }
   },
 })
