@@ -582,7 +582,7 @@ jobs:
           install_recipe: node-install
 
       - name: Run packages checks
-        run: pnpm --filter ./packages run -r --aggregate-output ${{ matrix.script }}
+        run: pnpm --filter ./packages/* run --aggregate-output ${{ matrix.script }}
 
   # This job runs when `package-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
