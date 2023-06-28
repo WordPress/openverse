@@ -1,4 +1,6 @@
-import { ESLintUtils, TSESTree } from "@typescript-eslint/utils"
+import { OpenverseRule } from "../utils/rule-creator"
+
+import type { TSESTree } from "@typescript-eslint/utils"
 
 type Options = readonly [
   {
@@ -65,11 +67,13 @@ const getPropertyName = (node: TSESTree.TSPropertySignature): string => {
 
 // Use without docs for now... should we add a section in the reference
 // documentation explaining custom rules?
-export const analyticsConfiguration = ESLintUtils.RuleCreator.withoutDocs<
-  Options,
-  MessageIds
->({
+export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
+  name: "analytics-configuration",
   meta: {
+    docs: {
+      description: "Ensure correct Openverse analytics event configuration",
+      recommended: "error",
+    },
     type: "problem",
     messages,
     schema: [
