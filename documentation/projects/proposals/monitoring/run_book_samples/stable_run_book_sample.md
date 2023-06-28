@@ -33,7 +33,7 @@ Configured downtime:
 After confirming there is not a total outage, you need to identify the source of
 the slowdown. Historically the source of response time increases have been
 issues in dead link filtering. Check for dead link timing first and foremost and
-check for increased 5xx on the route that may indicate issues with completing
+check for increased 5xx responses on the route that may indicate issues with completing
 the dead link process.
 
 After that, check Elasticsearch pagination and total query time per search
