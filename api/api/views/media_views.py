@@ -27,7 +27,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
     pagination_class = StandardPagination
 
     # Populate these in the corresponding subclass
-    model_class: AbstractMedia = None
+    model_class: type[AbstractMedia] = None
     query_serializer_class = None
     default_index = None
 
