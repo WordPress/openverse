@@ -223,7 +223,7 @@ process outlined below for "unstable alarm response".
 
 ### Stabilising Alarms
 
-All unstable alarm should eventually be stabilised or deleted. No alarm should
+All unstable alarms should eventually be stabilised or deleted. No alarm should
 indefinitely stay in the "unstable" category. In order to increase and
 distribute accountability for alarm stabilisation, each alarm will be assigned
 to a maintainer who will be responsible for investigating false positive alerts
