@@ -64,8 +64,6 @@ const getPropertyName = (node: TSESTree.TSPropertySignature): string => {
   )
 }
 
-// Use without docs for now... should we add a section in the reference
-// documentation explaining custom rules?
 export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
   name: "analytics-configuration",
   meta: {
