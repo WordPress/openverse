@@ -10,7 +10,7 @@
 ## Project links
 
 - [Project Thread](https://github.com/WordPress/openverse/issues/392)
-- [Project Proposal](./20230331-project_proposal_search_relevancy_sandbox.md)
+- [Project Proposal](/projects/proposals/search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.md)
 
 ## Overview
 
@@ -19,7 +19,7 @@ creation ––full and proportional-by-provider–– which will allow us to de
 the process from the long Ingestion server's data refresh process and experiment
 with smaller indices. Also includes the adoption of two new index aliases for
 ease of handling and querying the new index types from the API with the
-[`internal__index`](api_ii_param) param.
+[`internal__index`][api_ii_param] param.
 
 [api_ii_param]: https://github.com/WordPress/openverse/pull/2073
 
@@ -33,11 +33,11 @@ ease of handling and querying the new index types from the API with the
 ## Dependencies
 
 Same as for
-[Implementation Plan: Update Staging Database](./20230406-implementation_plan_update_staging_database.md).
+[Implementation Plan: Update Staging Database](/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.md).
 
-This work is related to the
-[Staging database recreation DAG](staging_db_recreation) plan for having
-production volumes in the staging DB, which is expected to finish soon.
+This work is related to the [Staging database recreation
+DAG][staging_db_recreation] plan for having production volumes in the staging
+DB, which is expected to finish soon.
 
 [staging_db_recreation]: https://github.com/WordPress/openverse/issues/1989
 
@@ -59,7 +59,7 @@ production volumes in the staging DB, which is expected to finish soon.
 #### Outlined Steps
 
 This DAG will leverage the **Ingestion server's API** and use the existing
-[`REINDEX` task](REINDEX), which is the same used by the data refresh process to
+[`REINDEX` task][reindex], which is the same used by the data refresh process to
 create the index.
 
 1. Get the current timestamp in order to create the index suffix with the form
@@ -70,7 +70,7 @@ create the index.
 3. If `promoted=True` is passed, then inmediatly make the `media` alias point to
    the new index. A
 4. If the index is promoted then the DAG checks if `remove_old_if_promoted=True`
-   and proceeds to trigger the [DELETE_INDEX](delete_index) task in the
+   and proceeds to trigger the [DELETE_INDEX][delete_index] task in the
    Ingestion server. Otherwise the DAG ends at the previous step.
 
 [reindex]:
@@ -85,7 +85,7 @@ create the index.
 This DAG is intented to be used most likely with the index resulting from the
 previous DAG or from the data refresh process, that is, an index with the
 database fully indexed, as the `source_index` for the ES
-[Reindex](es_reindex_api) API.
+[Reindex][es_reindex_api] API.
 
 [es_reindex_api]:
   https://www.elastic.co/guide/en/elasticsearch/reference/7.12/docs-reindex.html
