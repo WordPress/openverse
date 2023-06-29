@@ -21,12 +21,6 @@
     "node": "18.16.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.22.5",
-    "@babel/core": "7.22.5",
-    "@babel/eslint-parser": "7.22.5",
-    "@babel/plugin-transform-typescript": "7.22.5",
-    "@babel/preset-env": "7.22.5",
-    "@babel/preset-typescript": "7.22.5",
     "@intlify/eslint-plugin-vue-i18n": "1.4.0",
     "@nuxt/types": "2.17.0",
     "@openverse/eslint-plugin": "workspace:*",

@@ -104,7 +104,6 @@
     "@babel/parser": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
-    "@babel/runtime-corejs3": "^7.22.5",
     "@itsjonq/remake": "^2.0.0",
     "@nuxt/typescript-build": "^3.0.1",
     "@nuxtjs/eslint-module": "^3.1.0",
