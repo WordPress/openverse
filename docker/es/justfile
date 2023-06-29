@@ -38,8 +38,8 @@ _curl path:
       'http://localhost:50292/{{ path }}'
 
 # Count the number of times the given string appears in the response
-_curl-wc path search method="GET":
-    just _curl {{ path }} {{ method }} \
+_curl-wc path search:
+    just _curl {{ path }} \
     | grep -o "{{ search }}" \
     | wc -l \
     | xargs
