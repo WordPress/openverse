@@ -285,7 +285,7 @@ can run `mkcert -install` to verify your installation.
 ### `psycopg2` build prerequisites
 
 ```{note}
-This is only need if the `psycopg2` installation fails when running parts of the project outside of Docker.
+This is only needed if the `psycopg2` installation fails when running parts of the project outside of Docker.
 ```
 
 Openverse uses `psycopg2` built from source on the client for compatibility

@@ -14,7 +14,7 @@ you need to run this.
 
 `just install` in the repository root directory will install all Python and
 Node.js dependencies for automations as well as other parts of the repository.
-If you wish to install solely dependencies for automations run the following:
+If you wish to install only dependencies for automations, run the following:
 
 - `pipenv install` in `automations/python`
 - `pnpm install --filter=automations`
