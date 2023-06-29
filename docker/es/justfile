@@ -61,4 +61,5 @@ NO_COLOR := "\\033[0m"
     # root directory and so must be prefixed with `docker/es/`.
     just ../../_loop \
     '"$(just docker/es/check-count {{ index }} {{ count }})" != "1"' \
-    "Waiting for index '{{ index }}' to have {{ count }} docs..."
+    "Waiting for index '{{ index }}' to have {{ count }} docs..." \
+    "10s"
