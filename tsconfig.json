@@ -29,7 +29,7 @@
     "paths": {
       "~/*": ["./frontend/src/*"],
       "~~/*": ["./frontend/*"],
-      "@openverse/eslint-plugin": ["./packages/eslint-plugin/src"]
+      "@openverse/*": ["./packages/*/src"]
     },
     "rootDirs": ["frontend/src", "packages/eslint-plugin/src"],
     "baseUrl": "."

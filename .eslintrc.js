@@ -289,18 +289,9 @@ module.exports = {
       messageSyntaxVersion: "^8.24.3",
     },
     "import/resolver": {
-      "eslint-import-resolver-custom-alias": {
-        alias: {
-          "~": "./frontend/src",
-          "~~": "./frontend",
-          "@openverse/eslint-plugin": "./packages/eslint-plugin/src",
-        },
-        /**
-         * SVG imports are excluded for the import/no-unresolved
-         * rule above due to lack of support for `?inline` suffix
-         *
-         * Therefore, there's no need to configure them here
-         */
+      typescript: {
+        // This plugin automatically pulls paths from tsconfig
+        // so we don't need to redefine Nuxt and package aliases
         extensions: [".js", ".ts", ".vue", ".png"],
       },
     },
