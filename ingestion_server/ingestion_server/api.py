@@ -160,6 +160,7 @@ class TaskResource(BaseTaskResource):
         active_workers = Value("i", int(False))
         is_bad_request = Value("i", 0)
 
+        task_sentry_hub = sentry_sdk.Hub(sentry_sdk.Hub.current)
         task = Process(
             target=perform_task,
             kwargs={
@@ -178,6 +179,7 @@ class TaskResource(BaseTaskResource):
                 "destination_index_suffix": destination_index_suffix,
                 "alias": alias,
                 "force_delete": force_delete,
+                "sentry_hub": task_sentry_hub,
             },
         )
         task.start()
