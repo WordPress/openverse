@@ -1,13 +1,4 @@
-import path from "path"
-
-import { addAliases } from "module-alias"
-
 import type { PlaywrightTestConfig } from "@playwright/test"
-
-addAliases({
-  "~": path.resolve(process.cwd(), "src"),
-  "~~": process.cwd(),
-})
 
 const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
 
