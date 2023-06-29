@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
     "target": "ES2018",
-    "module": "CommonJS",
+    "module": "ESNext",
     "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
     "declaration": true,
     "isolatedModules": true,
