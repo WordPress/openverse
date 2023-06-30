@@ -182,6 +182,7 @@ test.describe("Load more button", () => {
       expectEventPayloadToMatch(loadMoreEvent, {
         query: "cat",
         searchType: "all",
+        resultPage: 2,
       })
     }
   })
