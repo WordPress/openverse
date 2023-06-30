@@ -1,5 +1,7 @@
 from test.factory.faker import Faker
 
+from django.utils import timezone
+
 import factory
 from factory.django import DjangoModelFactory
 from oauth2_provider.models import AccessToken
@@ -47,5 +49,10 @@ class AccessTokenFactory(DjangoModelFactory):
         model = AccessToken
 
     token = Faker("uuid4")
-    expires = Faker("date_time_between", start_date="+1y", end_date="+2y")
+    expires = Faker(
+        "date_time_between",
+        start_date="+1y",
+        end_date="+2y",
+        tzinfo=timezone.get_current_timezone(),
+    )
     application = factory.SubFactory(ThrottledApplicationFactory)
