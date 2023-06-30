@@ -135,7 +135,7 @@ test.describe("Load more button", () => {
        * Checks that an analytics event is posted to /api/event and has the correct
        * payload for the REACH_RESULT_END event.
        */
-      test(`Sends a valid analytics event when user reaches the load more page`, async ({
+      test(`Sends a valid REACH_RESULT_END event when user reaches the load more page`, async ({
         page,
         context,
       }) => {
@@ -159,33 +159,77 @@ test.describe("Load more button", () => {
     })
   }
 
-  /**
-   * Checks that an analytics event is posted to /api/event and has the correct
-   * payload for the LOAD_MORE_RESULTS event.
-   */
-  test(`Sends a valid analytics event when loading more results`, async ({
-    page,
-    context,
-  }) => {
-    const analyticsEvents = collectAnalyticsEvents(context)
+  test.describe(`LOAD_MORE_RESULTS analytics event`, () => {
+    test(`is sent when loading one page of results.`, async ({
+      page,
+      context,
+    }) => {
+      const analyticsEvents = collectAnalyticsEvents(context)
 
-    await goToSearchTerm(page, "cat")
-    await expect(page.locator(loadMoreButton)).toBeVisible()
+      await goToSearchTerm(page, "cat")
+      await expect(page.locator(loadMoreButton)).toBeVisible()
 
-    await page.click(loadMoreButton)
+      await page.click(loadMoreButton)
 
-    const loadMoreEvent = analyticsEvents.find(
-      (event) => event.n === "LOAD_MORE_RESULTS"
-    )
+      const loadMoreEvent = analyticsEvents.find(
+        (event) => event.n === "LOAD_MORE_RESULTS"
+      )
 
-    if (!loadMoreEvent) {
-      throw new Error("Load more event did not send.")
-    }
+      if (!loadMoreEvent) {
+        throw new Error("Load more event did not send.")
+      }
 
-    expectEventPayloadToMatch(loadMoreEvent, {
-      query: "cat",
-      searchType: "all",
-      resultPage: 1,
+      expectEventPayloadToMatch(loadMoreEvent, {
+        query: "cat",
+        searchType: "all",
+        resultPage: 1,
+      })
+    })
+
+    test(`is sent when loading two pages of results.`, async ({
+      page,
+      context,
+    }) => {
+      const analyticsEvents = collectAnalyticsEvents(context)
+
+      await goToSearchTerm(page, "cat")
+      await expect(page.locator(loadMoreButton)).toBeVisible()
+
+      await page.click(loadMoreButton)
+      await page.click(loadMoreButton)
+
+      const loadMoreEvents = analyticsEvents.filter(
+        (event) => event.n === "LOAD_MORE_RESULTS"
+      )
+
+      if (!loadMoreEvents) {
+        throw new Error("Load more event did not send.")
+      }
+
+      expect(loadMoreEvents.length).toBe(2)
+      loadMoreEvents.every((event, index) =>
+        expectEventPayloadToMatch(event, {
+          query: "cat",
+          searchType: "all",
+          resultPage: index + 1,
+        })
+      )
+    })
+
+    test(`is not sent when more results are not loaded.`, async ({
+      page,
+      context,
+    }) => {
+      const analyticsEvents = collectAnalyticsEvents(context)
+
+      await goToSearchTerm(page, "cat")
+      await expect(page.locator(loadMoreButton)).toBeVisible()
+
+      const loadMoreEvents = analyticsEvents.filter(
+        (event) => event.n === "LOAD_MORE_RESULTS"
+      )
+
+      expect(loadMoreEvents.length).toBe(0)
     })
   })
 })
