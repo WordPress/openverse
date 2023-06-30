@@ -282,14 +282,21 @@ following the
 [official instruction](https://github.com/FiloSottile/mkcert#installation). You
 can run `mkcert -install` to verify your installation.
 
-### OpenSSL
+### `psycopg2` build prerequisites
 
 ```{note}
-This is only need if the `psycopg2` install fails with the `ld: library not
-found for -lssl` error when running the project outside Docker.
+This is only needed if the `psycopg2` installation fails when running parts of the project outside of Docker.
 ```
 
-This `psycopg2` package can fail to install on Apple Silicon Macs with the
+Openverse uses `psycopg2` built from source on the client for compatibility
+reasons. You must ensure that
+[`psycopg2`'s build prerequisites are fulfilled for the library to install correctly](https://www.psycopg.org/docs/install.html#build-prerequisites).
+The linked documentation includes common troubleshooting instrustions for issues
+building the library.
+
+#### macOS
+
+The `psycopg2` package can fail to install on Apple Silicon Macs with the
 `ld: library not found for -lssl` error. To rectify this, install the
 [`openssl` formula](https://formulae.brew.sh/formula/openssl@3) using
 [Homebrew](https://brew.sh/) and set `LDFLAGS` and `CPPFLAGS` as per the
