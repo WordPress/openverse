@@ -43,7 +43,7 @@ DB, which is expected to finish soon.
 
 ## DAGs
 
-### `recreate_full_<media>_index` DAG
+### `recreate_full_<media>_staging_index` DAG
 
 #### Parameters
 
@@ -80,9 +80,9 @@ create the index.
 
 <!--------------------------------------------------------------------------->
 
-### `create_proportional_by_provider_<media>_index` DAG
+### `create_proportional_by_provider_<media>_staging_index` DAG
 
-This DAG is intented to be used most likely with the index resulting from the
+This DAG is intended to be used most likely with the index resulting from the
 previous DAG or from the data refresh process, that is, an index with the
 database fully indexed, as the `source_index` for the ES
 [Reindex][es_reindex_api] API.
