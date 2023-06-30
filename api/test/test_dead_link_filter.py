@@ -18,9 +18,6 @@ def redis(monkeypatch) -> FakeRedis:
     def get_redis_connection(*args, **kwargs):
         return fake_redis
 
-    monkeypatch.setattr(
-        "api.utils.dead_link_mask.get_redis_connection", get_redis_connection
-    )
     monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
 
     yield fake_redis

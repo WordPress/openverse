@@ -9,6 +9,9 @@ NO_COLOR := "\\033[0m"
     printf "==============================================={{ NO_COLOR }}\n"
     just --list --unsorted
 
+# Run a script
+run script *args:
+    pnpm --filter automations exec node src/{{ script }} {{ args }}
 
 #################
 # Weekly report #
@@ -16,37 +19,27 @@ NO_COLOR := "\\033[0m"
 
 # Generate and post the weekly report
 report:
-    node src/last_week_tonight.mjs
+    just run last_week_tonight.mjs
 
 ##########
 # Render #
 ##########
 
-# Run `render-jinja.js` with given input file, output file and context
-render in_file out_file ctx="{}":
-    node src/render-jinja.js {{ in_file }} {{ out_file }} '{{ ctx }}'
-
-# Render `.pre-commit-config.yaml`
-render-precommit:
-    just render templates/.pre-commit-config.local.yaml.jinja .pre-commit-config.yaml
-
-# Render `prettier.config.js`
-render-prettier:
-    just render templates/prettier.config.local.js.jinja prettier.config.js
-
-# Render GitHub issue & PR templates
-render-github:
-    just render templates/pull_request_template.md.jinja .github/PULL_REQUEST_TEMPLATE/pull_request_template.md
-
 render-release-drafter:
-    just render templates/release-drafter.yml.jinja .github/release-drafter-api.yml '{ "app": "API" }'
-    just render templates/release-drafter.yml.jinja .github/release-drafter-ingestion_server.yml '{ "app": "Ingestion server" }'
-    just render templates/release-drafter.yml.jinja .github/release-drafter-frontend.yml '{ "app": "Frontend" }'
-    just render templates/release-drafter.yml.jinja .github/release-drafter-catalog.yml '{ "app": "Catalog" }'
+    #! /usr/bin/env sh
+    render_release_drafter() {
+        slug=$1
+        name=$2
+        just run render-jinja.js \
+            templates/release-drafter.yml.jinja \
+            .github/release-drafter-$slug.yml \
+            "'{ \"app\": \"$name\" }'"
+    }
+    render_release_drafter api API
+    render_release_drafter ingestion_server "Ingestion Server"
+    render_release_drafter frontend Frontend
+    render_release_drafter catalog Catalog
 
 # Render all templates (shortcut for easy iteration)
 render-templates:
-    just render-precommit
-    just render-prettier
-    just render-github
     just render-release-drafter

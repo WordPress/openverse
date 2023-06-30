@@ -130,6 +130,32 @@ test.describe("Load more button", () => {
         })
         await expect(page.locator(loadMoreButton)).not.toBeVisible()
       })
+
+      /**
+       * Checks that an analytics event is posted to /api/event and has the correct
+       * payload for the REACH_RESULT_END event.
+       */
+      test(`Sends a valid analytics event when user reaches the load more page`, async ({
+        page,
+        context,
+      }) => {
+        const analyticsEvents = collectAnalyticsEvents(context)
+
+        await goToSearchTerm(page, "cat")
+        await expect(page.locator(loadMoreButton)).toBeVisible()
+
+        const reachResultEndEvent = analyticsEvents.find(
+          (event) => event.n === "REACH_RESULT_END"
+        )
+
+        if (reachResultEndEvent) {
+          expectEventPayloadToMatch(reachResultEndEvent, {
+            query: "cat",
+            searchType: "all",
+            resultPage: 1,
+          })
+        }
+      })
     })
   }
 

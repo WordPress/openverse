@@ -12,7 +12,7 @@ DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 # Load sample data
 function load_sample_data {
   docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql <<-EOF
-    DELETE FROM $1;
+		DELETE FROM $1;
 		\copy $1 \
 			from './sample_data/sample_$1.csv' \
 			with (FORMAT csv, HEADER true);
@@ -20,8 +20,20 @@ function load_sample_data {
 		EOF"
 }
 
+function verify_loaded_data {
+  COUNT=$(docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql -AXqt <<-EOF
+		SELECT COUNT(*) FROM $1;
+		EOF")
+  if [ "$COUNT" -ne 5000 ]; then
+    echo "Error: table $1 count differs from expected."
+    exit 1
+  fi
+}
+
 load_sample_data "image"
+verify_loaded_data "image"
 load_sample_data "audio"
+verify_loaded_data "audio"
 
 #######
 # API #
@@ -65,8 +77,10 @@ docker-compose exec -T "$DB_SERVICE_NAME" bash -c "psql <<-EOF
 # Ingest and index the data
 just ingestion_server/ingest-upstream "audio" "init"
 just docker/es/wait-for-index "audio-init"
+just docker/es/wait-for-count "audio-init"
 just ingestion_server/promote "audio" "init" "audio"
 just docker/es/wait-for-index "audio"
+just docker/es/wait-for-count "audio"
 just ingestion_server/create-and-populate-filtered-index "audio" "init"
 just docker/es/wait-for-index "audio-init-filtered"
 just ingestion_server/point-alias "audio" "init-filtered" "audio-filtered"
@@ -83,8 +97,10 @@ while true; do
 done
 set -e
 
+just docker/es/wait-for-count "image-init"
 just ingestion_server/promote "image" "init" "image"
 just docker/es/wait-for-index "image"
+just docker/es/wait-for-count "image"
 just ingestion_server/create-and-populate-filtered-index "image" "init"
 just docker/es/wait-for-index "image-init-filtered"
 just ingestion_server/point-alias "image" "init-filtered" "image-filtered"

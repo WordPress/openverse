@@ -2,8 +2,9 @@
 
 ## `deploy-api`
 
-Triggers a separate workflow using `workflow_dispatch` that deploys the staging
-environment of the API service to AWS ECS. That workflow is given two inputs.
+Triggers two separate workflows using `workflow_dispatch` that deploys the
+staging environment of the API service and the thumbnails-specific API
+deployment to AWS ECS. That workflows are given two inputs.
 
 - the tag of the image that was published by the
   [`publish-images`](/meta/ci_cd/jobs/docker.md#publish-images) job, which is
@@ -11,7 +12,7 @@ environment of the API service to AWS ECS. That workflow is given two inputs.
   [`get-image-tag`](/meta/ci_cd/jobs/preparation.md#get-image-tag) job
 - the actor of the CI + CD workflow, for tagging them in Slack messages
 
-This deployment is only triggered if all the following conditions are met.
+The deployments are only triggered if all the following conditions are met.
 
 - the API codebase has changed
 - the [`publish-images`](/meta/ci_cd/jobs/docker.md#publish-images) job has
