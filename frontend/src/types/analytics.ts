@@ -247,7 +247,8 @@ export type Events = {
     searchType: SearchType
     /** The search term */
     query: string
-    /** The current page of results the user is on. */
+    /** The current page of results the user is on,
+     * *before* loading more results.. */
     resultPage: number
   }
   /*

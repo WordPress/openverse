@@ -178,12 +178,14 @@ test.describe("Load more button", () => {
       (event) => event.n === "LOAD_MORE_RESULTS"
     )
 
-    if (loadMoreEvent) {
-      expectEventPayloadToMatch(loadMoreEvent, {
-        query: "cat",
-        searchType: "all",
-        resultPage: 2,
-      })
+    if (!loadMoreEvent) {
+      throw new Error("Load more event did not send.")
     }
+
+    expectEventPayloadToMatch(loadMoreEvent, {
+      query: "cat",
+      searchType: "all",
+      resultPage: 1,
+    })
   })
 })
