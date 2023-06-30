@@ -75,6 +75,7 @@ export default defineComponent({
       sendCustomEvent("LOAD_MORE_RESULTS", {
         query: searchStore.searchTerm,
         searchType: searchStore.searchType,
+        resultPage: currentPage.value || 1,
       })
 
       await mediaStore.fetchMedia({

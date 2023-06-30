@@ -247,6 +247,8 @@ export type Events = {
     searchType: SearchType
     /** The search term */
     query: string
+    /** The current page of results the user is on. */
+    resultPage: number
   }
   /*
    * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
