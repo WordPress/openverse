@@ -80,7 +80,7 @@ export default defineComponent({
     } catch (err) {
       error({
         statusCode: 404,
-        message: app.i18n.t("error.media-not-found", {
+        message: app.i18n.t("error.mediaNotFound", {
           mediaType: AUDIO,
           id: route.params.id,
         }),
