@@ -57,7 +57,7 @@ RUN pnpm build:only
 # Nuxt app #
 ############
 
-FROM node:16-alpine as app
+FROM node:20-alpine as app
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
