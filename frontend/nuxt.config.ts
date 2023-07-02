@@ -313,6 +313,16 @@ const config: NuxtConfig = {
           ? "https://openverse.org"
           : `http://localhost:${port}`),
     },
+    sentry: {
+      config: {
+        // We need to explicitly configure this for the frontend to have
+        // access to it at runtime. On the server side it would be picked
+        // up from the environment; the client-side doesn't have that
+        // luxury of a configured runtime environment, so we need to
+        // tell it what environment it is in.
+        environment: process.env.SENTRY_ENVIRONMENT,
+      },
+    },
   },
 }
 
