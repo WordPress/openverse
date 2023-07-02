@@ -4,7 +4,4 @@
 :titlesonly:
 
 quickstart
-config
-mapping
-test
 ```
