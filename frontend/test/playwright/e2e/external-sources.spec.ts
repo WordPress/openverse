@@ -7,7 +7,7 @@ import {
   expectEventPayloadToMatch,
 } from "../utils/analytics"
 
-test("sends analytics event on external source click", async ({
+test("sends correct analytics events", async ({
   page,
   context,
 }) => {
