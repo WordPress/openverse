@@ -77,10 +77,13 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, SetupContext } from "vue"
 
+import { storeToRefs } from "pinia"
+
 import { defineEvent } from "~/types/emits"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -143,6 +146,11 @@ export default defineComponent({
 
     const isVisible = ref(false)
 
+    // Use the `_searchType` from mediaStore because it falls back to ALL_MEDIA
+    // for unsupported search types.
+    const mediaStore = useMediaStore()
+    const { currentPage } = storeToRefs(mediaStore)
+
     const {
       close: closeDialog,
       open: openDialog,
@@ -160,6 +168,7 @@ export default defineComponent({
         sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
           searchType: searchStore.searchType,
           query: searchStore.searchTerm,
+          resultPage: currentPage.value || 1,
         })
       }
       onTriggerClick()
