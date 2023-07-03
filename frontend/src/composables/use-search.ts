@@ -9,7 +9,7 @@ import { useMatchSearchRoutes } from "~/composables/use-match-routes"
 import type { EventName, Events } from "~/types/analytics"
 
 export const useSearch = (
-  sendCustomEvent: <T extends EventName>(name: T, payload: Events[T]) => void
+  sendCustomEvent?: <T extends EventName>(name: T, payload: Events[T]) => void
 ) => {
   const mediaStore = useMediaStore()
   const searchStore = useSearchStore()
@@ -59,11 +59,12 @@ export const useSearch = (
   const updateSearchState = () => {
     if (searchTerm.value === "") return
     if (!searchTermChanged.value && isSearchRoute.value) return
-
-    sendCustomEvent("SUBMIT_SEARCH", {
-      searchType: searchStore.searchType,
-      query: searchTerm.value,
-    })
+    if (sendCustomEvent) {
+      sendCustomEvent("SUBMIT_SEARCH", {
+        searchType: searchStore.searchType,
+        query: searchTerm.value,
+      })
+    }
 
     const searchPath = searchStore.updateSearchPath({
       searchTerm: searchTerm.value,

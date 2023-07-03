@@ -7,7 +7,7 @@ import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
  * Not using dynamically-generated keys to ensure that
  * correct line is shown in the 'po' locale files
  */
-const i18nContentLinkKeys = {
+const i18nKeys = {
   [ALL_MEDIA]: {
     noResult: "browsePage.allNoResults",
     result: "browsePage.allResultCount",
@@ -24,27 +24,6 @@ const i18nContentLinkKeys = {
     more: "browsePage.contentLink.audio.countMore",
   },
 }
-/**
- * Not using dynamically-generated keys to ensure that
- * correct line is shown in the 'po' locale files
- */
-const i18nResultsCountKeys = {
-  [ALL_MEDIA]: {
-    noResult: "browsePage.searchResultsTitle.all.zero",
-    result: "browsePage.searchResultsTitle.all.count",
-    more: "browsePage.searchResultsTitle.all.countMore",
-  },
-  [IMAGE]: {
-    noResult: "browsePage.searchResultsTitle.image.zero",
-    result: "browsePage.searchResultsTitle.image.count",
-    more: "browsePage.searchResultsTitle.image.countMore",
-  },
-  [AUDIO]: {
-    noResult: "browsePage.searchResultsTitle.audio.zero",
-    result: "browsePage.searchResultsTitle.audio.count",
-    more: "browsePage.searchResultsTitle.audio.countMore",
-  },
-}
 
 /**
  * Returns the localized text for the number of search results.
@@ -57,10 +36,7 @@ export function useI18nResultsCount() {
 
   const getI18nKey = (
     resultsCount: number,
-    searchType: SupportedSearchType,
-    keysObject:
-      | typeof i18nResultsCountKeys
-      | typeof i18nContentLinkKeys = i18nContentLinkKeys
+    searchType: SupportedSearchType
   ) => {
     const countKey =
       resultsCount === 0
@@ -68,7 +44,7 @@ export function useI18nResultsCount() {
         : resultsCount >= 10000
         ? "more"
         : "result"
-    return keysObject[searchType][countKey]
+    return i18nKeys[searchType][countKey]
   }
 
   /**
@@ -86,22 +62,6 @@ export function useI18nResultsCount() {
       mediaType,
     })
   }
-
-  const getI18nResultsTitle = (
-    resultsCount: number,
-    query: string,
-    searchType: SupportedSearchType
-  ) => {
-    return i18n.tc(
-      getI18nKey(resultsCount, searchType, i18nResultsCountKeys),
-      resultsCount,
-      {
-        localeCount: getLocaleFormattedNumber(resultsCount),
-        query,
-        searchType,
-      }
-    )
-  }
   /**
    * Returns the localized text for the number of search results, using corresponding
    * pluralization rules and decimal separators.
@@ -116,7 +76,6 @@ export function useI18nResultsCount() {
   return {
     getI18nCount,
     getI18nContentLinkLabel,
-    getI18nResultsTitle,
     getLoading,
   }
 }

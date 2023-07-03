@@ -7,7 +7,9 @@
     "
   >
     <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
-      <VSearchResultsTitle :size="isAllView ? 'large' : 'default'"
+      <VSearchResultsTitle
+        :size="isAllView ? 'large' : 'default'"
+        aria-live="polite"
         ><span>{{ searchTerm }}</span
         ><span class="sr-only">{{
           searchResultsTitle
@@ -38,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, watch } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 
 import {
   ALL_MEDIA,
@@ -52,7 +54,7 @@ import { defineEvent } from "~/types/emits"
 import type { FetchState } from "~/types/fetch-state"
 import type { ApiQueryParams } from "~/utils/search-query-transform"
 import { getAdditionalSources } from "~/utils/get-additional-sources"
-import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
+import { useSearch } from "~/composables/use-search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
@@ -96,7 +98,6 @@ export default defineComponent({
     tab: defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
-    const { getI18nResultsTitle } = useI18nResultsCount()
     const hasNoResults = computed(() => {
       // noResult is hard-coded for search types that are not currently
       // supported by Openverse built-in search
@@ -133,20 +134,10 @@ export default defineComponent({
     )
 
     const searchTerm = computed(() => props.query.q || "")
+    const { searchStatus } = useSearch()
 
     const searchResultsTitle = computed(() => {
-      return props.fetchState.isFetching
-        ? undefined
-        : getI18nResultsTitle(
-            props.resultsCount,
-            searchTerm.value,
-            props.searchType
-          )
-    })
-    watch(searchResultsTitle, (title) => {
-      if (title) {
-        document.querySelector("h1").focus()
-      }
+      return props.fetchState.isFetching ? undefined : ". " + searchStatus.value
     })
 
     return {
