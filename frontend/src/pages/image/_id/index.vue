@@ -1,5 +1,5 @@
 <template>
-  <main id="content">
+  <main :id="skipToContentTargetId">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
       <VBackToSearchResultsLink
         :id="$route.params.id"
@@ -94,6 +94,7 @@ import { computed, ref } from "vue"
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -258,6 +259,8 @@ export default defineComponent({
       handleRightClick,
       backToSearchPath,
 
+      skipToContentTargetId,
+
       sendGetMediaEvent,
       sendVisitCreatorLinkEvent,
     }
@@ -269,7 +272,7 @@ export default defineComponent({
       await singleResultStore.fetch(IMAGE, imageId)
     } catch (err) {
       const errorMessage = app.i18n
-        .t("error.image-not-found", {
+        .t("error.imageNotFound", {
           id: imageId,
         })
         .toString()

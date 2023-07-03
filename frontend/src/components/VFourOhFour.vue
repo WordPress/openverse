@@ -10,7 +10,10 @@
     >
       <!-- Push content by 1/4th height without absolute positioning. -->
       <div class="spacer grow" />
-      <main id="content" class="z-10 grow-[3] space-y-4 lg:space-y-6">
+      <main
+        :id="skipToContentTargetId"
+        class="z-10 grow-[3] space-y-4 lg:space-y-6"
+      >
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
           {{ $t("404.title") }}
         </h1>
@@ -39,6 +42,7 @@ import { useSearchStore } from "~/stores/search"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 
 import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
@@ -73,6 +77,8 @@ export default defineComponent({
 
     return {
       handleSearch,
+
+      skipToContentTargetId,
     }
   },
   head: {},

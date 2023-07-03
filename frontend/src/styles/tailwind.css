@@ -188,4 +188,11 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply after:shadow-bold-filled;
     @apply focus-visible:ring-bold; /* outer-stroke: box-shadow */
   }
+
+  /**
+   * Scroll margin for skip-to-content target the target from being hidden by the fixed header.
+   */
+  #content {
+    @apply scroll-mt-20;
+  }
 }

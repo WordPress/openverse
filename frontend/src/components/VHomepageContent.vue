@@ -1,5 +1,5 @@
 <template>
-  <div id="content">
+  <div :id="skipToContentTargetId">
     <h1
       class="mb-2 mt-auto text-[40px] font-light leading-tight lg:text-[63px]"
     >
@@ -73,6 +73,7 @@
 import { computed, defineComponent, ref, PropType } from "vue"
 
 import type { SearchType } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 
 import useSearchType from "~/composables/use-search-type"
@@ -178,6 +179,8 @@ export default defineComponent({
       openContentSwitcher,
       isContentSwitcherVisible,
       triggerA11yProps,
+
+      skipToContentTargetId,
     }
   },
 })

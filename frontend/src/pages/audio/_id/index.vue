@@ -1,5 +1,5 @@
 <template>
-  <main id="content">
+  <main :id="skipToContentTargetId">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
       <VBackToSearchResultsLink
         :id="$route.params.id"
@@ -35,6 +35,7 @@ import { computed } from "vue"
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -96,7 +97,10 @@ export default defineComponent({
       backToSearchPath,
       relatedMedia,
       relatedFetchState,
+
       sendAudioEvent,
+
+      skipToContentTargetId,
     }
   },
   async asyncData({ route, error, app, $pinia }) {

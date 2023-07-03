@@ -1,5 +1,8 @@
 <template>
-  <div id="content" class="browse-page flex w-full flex-col px-6 lg:px-10">
+  <div
+    :id="skipToContentTargetId"
+    class="browse-page flex w-full flex-col px-6 lg:px-10"
+  >
     <VSearchGrid
       :fetch-state="fetchState"
       :query="query"
@@ -36,6 +39,7 @@ import { defineComponent, useMeta, useRoute } from "@nuxtjs/composition-api"
 import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
 import VSearchGrid from "~/components/VSearchGrid.vue"
@@ -119,6 +123,8 @@ export default defineComponent({
       resultItems,
       needsFetching,
       isSidebarVisible,
+
+      skipToContentTargetId,
 
       fetchMedia,
     }

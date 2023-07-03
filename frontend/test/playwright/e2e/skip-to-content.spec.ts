@@ -8,6 +8,7 @@ import {
 } from "~~/test/playwright/utils/navigation"
 
 import { keycodes } from "~/constants/key-codes"
+import { skipToContentTargetId } from "~/constants/window"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -41,12 +42,12 @@ for (const pageUrl of pages) {
         page.getByRole("link", { name: "Skip to content" })
       ).toBeFocused()
 
-      // We cannot check if the screenreader cursor has moved to the content
+      // We cannot check if the screen reader cursor has moved to the content
       // because Playwright does not support this, and when you click on
       // skip-to-content button, body becomes the active element.
       // This is why we simply check that there's a visible element with
       // id="content" on the page.
-      await expect(page.locator("#content")).toBeVisible()
+      await expect(page.locator(`#${skipToContentTargetId}`)).toBeVisible()
     })
   })
 }
