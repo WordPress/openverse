@@ -77,11 +77,16 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, SetupContext } from "vue"
 
+import { storeToRefs } from "pinia"
+
 import { defineEvent } from "~/types/emits"
 
 import { useUiStore } from "~/stores/ui"
+import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import type { MediaType } from "~/constants/media"
 import type { ExternalSource } from "~/types/external-source"
@@ -130,6 +135,8 @@ export default defineComponent({
     const sectionRef = ref<HTMLElement | null>(null)
     const triggerRef = ref<InstanceType<typeof VButton> | null>(null)
     const uiStore = useUiStore()
+    const searchStore = useSearchStore()
+    const { sendCustomEvent } = useAnalytics()
 
     const isMd = computed(() => uiStore.isBreakpoint("md"))
 
@@ -138,6 +145,9 @@ export default defineComponent({
     const lockBodyScroll = computed(() => !isMd.value)
 
     const isVisible = ref(false)
+
+    const mediaStore = useMediaStore()
+    const { currentPage } = storeToRefs(mediaStore)
 
     const {
       close: closeDialog,
@@ -151,6 +161,17 @@ export default defineComponent({
       emit: emit as SetupContext["emit"],
     })
 
+    const eventedOnTriggerClick = () => {
+      if (!isVisible.value) {
+        sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+          searchType: searchStore.searchType,
+          query: searchStore.searchTerm,
+          resultPage: currentPage.value || 1,
+        })
+      }
+      onTriggerClick()
+    }
+
     return {
       sectionRef,
       triggerRef,
@@ -159,7 +180,7 @@ export default defineComponent({
 
       closeDialog,
       openDialog,
-      onTriggerClick,
+      onTriggerClick: eventedOnTriggerClick,
       triggerA11yProps,
 
       isVisible,

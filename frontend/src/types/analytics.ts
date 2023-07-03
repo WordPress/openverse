@@ -234,6 +234,21 @@ export type Events = {
     query: string
   }
   /**
+   * Description: When a user opens the external sources popover.
+   * Questions:
+   *   - How often do users use this feature?
+   *   - Under what conditions to users use this feature? No results?
+   *     Many results, but none they actually select?
+   */
+  VIEW_EXTERNAL_SOURCES: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The search term */
+    query: string
+    /** Pagination depth */
+    resultPage: number
+  }
+  /*
    * Description: Whenever the user clicks the load more button
    * Questions:
    *   - On what page do users typically find a result?
