@@ -7,10 +7,7 @@ import {
   expectEventPayloadToMatch,
 } from "../utils/analytics"
 
-test("sends correct analytics events", async ({
-  page,
-  context,
-}) => {
+test("sends correct analytics events", async ({ page, context }) => {
   const pagePromise = page.context().waitForEvent("page")
 
   const events = collectAnalyticsEvents(context)
