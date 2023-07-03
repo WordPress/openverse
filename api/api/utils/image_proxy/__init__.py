@@ -9,6 +9,7 @@ from rest_framework.exceptions import UnsupportedMediaType
 import django_redis
 import requests
 import sentry_sdk
+from sentry_sdk import push_scope, set_context
 
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
@@ -108,7 +109,19 @@ def get(
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
             count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
-            sentry_sdk.capture_exception(exc)
+            with push_scope() as scope:
+                set_context(
+                    "upstream_url",
+                    {
+                        "url": upstream_url,
+                        "params": params,
+                        "headers": headers,
+                    },
+                )
+                scope.set_tag(
+                    "occurrences", settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY
+                )
+                sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):
             tallies.incr(
                 f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
