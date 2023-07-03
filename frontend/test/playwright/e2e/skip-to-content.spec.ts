@@ -34,8 +34,7 @@ for (const pageUrl of pages) {
 
       await page.goto(pageUrl)
 
-      // Tab to the home link and then to the skip to content button
-      await page.keyboard.press(keycodes.Tab)
+      // Tab to the skip to content button
       await page.keyboard.press(keycodes.Tab)
 
       await expect(
