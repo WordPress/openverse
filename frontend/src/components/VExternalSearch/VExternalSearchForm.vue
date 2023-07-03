@@ -146,8 +146,6 @@ export default defineComponent({
 
     const isVisible = ref(false)
 
-    // Use the `_searchType` from mediaStore because it falls back to ALL_MEDIA
-    // for unsupported search types.
     const mediaStore = useMediaStore()
     const { currentPage } = storeToRefs(mediaStore)
 
