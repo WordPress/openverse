@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "38ff50d446fb30abef70c396e48528ed5eac005712607c80a4b8ebe572d10e89"
+            "sha256": "1efd1b44c76952ec0ca0cee202dafc37a8f2f8bd38912ba9569f521f125a8567"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -487,7 +487,7 @@
                 "sha256:0e2454645dc00517dee4c6de3863411a9c5f1955d013c5fefa29123dadc92f98",
                 "sha256:66c4ece2adfe7cc120e2b6a6798a1fd5c777aecf82eec39bb95cef7cfc7ea2b3"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_version < '4'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_full_version < '4.0.0'",
             "version": "==7.17.9"
         },
         "elasticsearch-dsl": {
@@ -1512,11 +1512,11 @@
         },
         "fakeredis": {
             "hashes": [
-                "sha256:53f00f44f771d2b794f1ea036fa07a33476ab7368f1b0e908daab3eff80336f6",
-                "sha256:df7bb44fb9e593970c626325230e1c321f954ce7b204d4c4452eae5233d554ed"
+                "sha256:221edb25c0a38d0fb7c7b91f52c4e2beb6fbd3369899a8ab59328c3e432b062a",
+                "sha256:519ab3585ac0c652f04836209b9d835f33879560c7451c2abfc59a663cfaffbc"
             ],
             "index": "pypi",
-            "version": "==2.13.0"
+            "version": "==2.15.0"
         },
         "freezegun": {
             "hashes": [
@@ -1949,11 +1949,11 @@
         },
         "typing-extensions": {
             "hashes": [
-                "sha256:5d8c9dac95c27d20df12fb1d97b9793ab8b2af8a3a525e68c80e21060c161771",
-                "sha256:935ccf31549830cda708b42289d44b6f74084d616a00be651601a4f968e77c82"
+                "sha256:440d5dd3af93b060174bf433bccd69b0babc3b15b1a8dca43789fd7f61514b36",
+                "sha256:b75ddc264f0ba5615db7ba217daeb99701ad295353c45f9e95963337ceeeffb2"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==4.7.0"
+            "version": "==4.7.1"
         },
         "wcwidth": {
             "hashes": [
