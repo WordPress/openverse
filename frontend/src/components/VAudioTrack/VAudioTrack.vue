@@ -382,7 +382,7 @@ export default defineComponent({
 
     const message = computed(() =>
       activeMediaStore.message
-        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`)
+        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`).toString()
         : ""
     )
 

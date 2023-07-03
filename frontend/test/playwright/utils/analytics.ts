@@ -14,9 +14,14 @@ export type EventResponse<T extends EventName> = {
 export type AnalyticEventResponses = Array<EventResponse<EventName>>
 
 export function expectEventPayloadToMatch<T extends EventName>(
-  event: EventResponse<T>,
+  event: EventResponse<T> | undefined,
   expectedPayload: Events[T]
 ): void {
+  if (!event) {
+    throw new Error(
+      `Event is null; expected payload of ${JSON.stringify(expectedPayload)}`
+    )
+  }
   expect(event.p).toMatchObject(expectedPayload)
 }
 
