@@ -36,7 +36,7 @@ import { useI18n } from "~/composables/use-i18n"
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
 
-import { AudioInteraction } from "~/types/analytics"
+import type { AudioInteraction } from "~/types/analytics"
 import type { AudioDetail } from "~/types/media"
 import type { AudioStatus } from "~/constants/audio"
 

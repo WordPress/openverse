@@ -9,6 +9,10 @@ export interface ActiveMediaState {
   type: SupportedMediaType | null
   id: Media["id"] | null
   status: MediaStatus
+  /**
+   * The i18n key for the message to display when rendering the active media.
+   * Used to display playback errors.
+   */
   message: string | null
 }
 
@@ -61,9 +65,9 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
     /**
      * Set the message associated with rendering/playback of the active media.
      *
-     * @param message - the message to display to the user
+     * @param message - the i18n key of the message to display to the user
      */
-    setMessage({ message }: { message: string }) {
+    setMessage({ message }: { message: string | null }) {
       this.message = message
     },
   },

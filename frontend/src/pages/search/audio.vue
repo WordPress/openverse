@@ -67,7 +67,7 @@ export default defineComponent({
 
     const uiStore = useUiStore()
 
-    const { sendCustomEvent: sendAudioEvent } = useAnalytics()
+    const { sendCustomEvent } = useAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
     const results = computed(() => props.resultItems.audio)
@@ -99,7 +99,7 @@ export default defineComponent({
     }
 
     const handleInteraction = (data: AudioInteractionData) => {
-      sendAudioEvent("AUDIO_INTERACTION", {
+      sendCustomEvent("AUDIO_INTERACTION", {
         ...data,
         component: "AudioSearch",
       })

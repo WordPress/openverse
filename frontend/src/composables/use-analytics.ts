@@ -1,6 +1,5 @@
 import { computed, onMounted } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
-import { useDebounceFn } from "@vueuse/core"
 
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
@@ -81,13 +80,5 @@ export const useAnalytics = () => {
 
   return {
     sendCustomEvent,
-  }
-}
-
-export const useDebouncedAnalytics = (timeout = 500) => {
-  const { sendCustomEvent } = useAnalytics()
-  const sendCustomEventDebounced = useDebounceFn(sendCustomEvent, timeout)
-  return {
-    sendCustomEventDebounced,
   }
 }

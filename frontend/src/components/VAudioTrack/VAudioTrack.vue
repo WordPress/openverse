@@ -59,13 +59,16 @@ import { useContext, useRoute } from "@nuxtjs/composition-api"
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
+import { useSeekable } from "~/composables/use-seekable"
+import {
+  useMatchSearchRoutes,
+  useMatchSingleResultRoutes,
+} from "~/composables/use-match-routes"
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
 
 import { AUDIO } from "~/constants/media"
-
-import type { AudioDetail } from "~/types/media"
 import {
   activeAudioStatus,
   AudioLayout,
@@ -73,12 +76,9 @@ import {
   AudioStatus,
   layoutMappings,
 } from "~/constants/audio"
-import { AudioInteraction, AudioInteractionData } from "~/types/analytics"
-import { useSeekable } from "~/composables/use-seekable"
-import {
-  useMatchSearchRoutes,
-  useMatchSingleResultRoutes,
-} from "~/composables/use-match-routes"
+
+import type { AudioInteraction, AudioInteractionData } from "~/types/analytics"
+import type { AudioDetail } from "~/types/media"
 
 import { defineEvent } from "~/types/emits"
 
@@ -347,21 +347,19 @@ export default defineComponent({
 
       // Check if the audio can be played successfully
       localAudio?.play().catch((err) => {
-        let errorMsg = ""
+        let message = ""
         switch (err.name) {
           case "NotAllowedError":
-            errorMsg = "err_unallowed"
+            message = "err_unallowed"
             break
           case "NotSupportedError":
-            errorMsg = "err_unsupported"
+            message = "err_unsupported"
             break
           default:
-            errorMsg = "err_unknown"
+            message = "err_unknown"
             $sentry.captureException(err)
         }
-        activeMediaStore.setMessage({
-          message: i18n.t(`audioTrack.messages.${errorMsg}`).toString(),
-        })
+        activeMediaStore.setMessage({ message })
         localAudio?.pause()
       })
     }
@@ -382,7 +380,11 @@ export default defineComponent({
 
     /* Timekeeping */
 
-    const message = computed(() => activeMediaStore.message)
+    const message = computed(() =>
+      activeMediaStore.message
+        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`)
+        : ""
+    )
 
     /* Interface with VPlayPause */
 
