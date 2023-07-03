@@ -1,6 +1,5 @@
 <template>
   <h1
-    tabindex="-1"
     class="sr-only break-words md:not-sr-only"
     :class="[
       size === 'large'
