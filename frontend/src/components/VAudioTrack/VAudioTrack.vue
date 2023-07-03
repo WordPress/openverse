@@ -143,6 +143,8 @@ export default defineComponent({
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
     interacted: defineEvent<[AudioInteractionData]>(),
+    mousedown: defineEvent<[MouseEvent]>(),
+    focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
     const i18n = useI18n()
