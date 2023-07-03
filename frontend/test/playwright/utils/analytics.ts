@@ -17,7 +17,7 @@ export function expectEventPayloadToMatch<T extends EventName>(
   event: EventResponse<T>,
   expectedPayload: Events[T]
 ): void {
-  expect(expectedPayload).toMatchObject(event.p)
+  expect(event.p).toMatchObject(expectedPayload)
 }
 
 export const collectAnalyticsEvents = (context: BrowserContext) => {

@@ -5,7 +5,7 @@ import { goToSearchTerm } from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
-} from "~/utils/analytics"
+} from "~~/test/playwright/utils/analytics"
 
 test("sends correct analytics events", async ({ page, context }) => {
   const pagePromise = page.context().waitForEvent("page")

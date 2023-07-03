@@ -20,10 +20,10 @@ import { useElementVisibility } from "@vueuse/core"
 
 import { useRoute } from "@nuxtjs/composition-api"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import VButton from "~/components/VButton.vue"
 
@@ -38,7 +38,6 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-
     const { sendCustomEvent } = useAnalytics()
 
     // Use the `_searchType` from mediaStore because it falls back to ALL_MEDIA
@@ -72,6 +71,12 @@ export default defineComponent({
       if (fetchState.value.isFetching) return
 
       reachResultEndEventSent.value = false
+
+      sendCustomEvent("LOAD_MORE_RESULTS", {
+        query: searchStore.searchTerm,
+        searchType: searchStore.searchType,
+        resultPage: currentPage.value || 1,
+      })
 
       await mediaStore.fetchMedia({
         shouldPersistMedia: true,
