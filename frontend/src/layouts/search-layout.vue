@@ -29,7 +29,9 @@
         id="main-page"
         class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
       >
-        <Nuxt />
+        <main>
+          <Nuxt />
+        </main>
         <VFooter
           mode="content"
           class="border-t border-dark-charcoal-20 bg-white"

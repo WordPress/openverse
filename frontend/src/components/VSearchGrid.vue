@@ -29,7 +29,7 @@
   </section>
   <VErrorSection v-else class="w-full py-10">
     <template #image>
-      <VErrorImage :error-code="NO_RESULT" />
+      <VErrorImage error-code="NO_RESULT" />
     </template>
     <VNoResults
       :external-sources="externalSources"
@@ -49,7 +49,6 @@ import {
   isSupportedMediaType,
   isAdditionalSearchType,
 } from "~/constants/media"
-import { NO_RESULT } from "~/constants/errors"
 import { defineEvent } from "~/types/emits"
 import type { FetchState } from "~/types/fetch-state"
 import type { ApiQueryParams } from "~/utils/search-query-transform"
@@ -144,7 +143,6 @@ export default defineComponent({
       hasNoResults,
       externalSourcesType,
       isAllView,
-      NO_RESULT,
       externalSources,
       searchTerm,
       searchResultsTitle,
