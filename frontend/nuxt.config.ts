@@ -261,6 +261,16 @@ const config: NuxtConfig = {
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
     },
   },
+  typescript: {
+    typeCheck: {
+      typescript: {
+        configFile: "../tsconfig.json",
+        extensions: {
+          vue: true,
+        },
+      },
+    },
+  },
   storybook: {
     port: 6006, // standard port for Storybook
     stories: ["~/**/*.stories.@(mdx|js)"],

@@ -21,7 +21,8 @@ USER node
 WORKDIR /home/node/
 
 # Copy monorepo mocking files into `/home/node`, which pretends to be the monorepo root.
-COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
+# Note: these files must be manually un-ignored in the root .dockerignore
+COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml tsconfig.json ./
 RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
@@ -57,7 +58,7 @@ RUN pnpm build:only
 # Nuxt app #
 ############
 
-FROM node:16-alpine as app
+FROM node:${FRONTEND_NODE_VERSION}-alpine as app
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 

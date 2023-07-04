@@ -12,16 +12,18 @@ runs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Doesn't use `setup-env` because the next step uses `npm`, not `pnpm`.
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - name: Setup `pnpm`
+      uses: ./.github/actions/setup-env
       with:
-        node-version-file: "package.json"
+        # We just need to be able to use `pnpm`. `npm` will fail on
+        # any `workspace:*` dependency which we have in the root `package.json`
+        setup_python: false
+        install_deps: false
 
     - name: Install `@actions/artifact`
       shell: bash
       run: |
-        npm install @actions/artifact
+        pnpm install @actions/artifact -w
 
     - name: Download images
       uses: actions/github-script@v6

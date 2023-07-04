@@ -9,3 +9,6 @@ frontend/storybook-static
 !.pnpmfile.cjs
 
 frontend/src/locales/*.json
+
+# Packages generate a `dist` output when built that should be linted
+**/*/dist

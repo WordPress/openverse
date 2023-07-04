@@ -37,6 +37,7 @@ jobs:
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
       ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
+      packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -549,6 +550,60 @@ jobs:
     steps:
       - name: Pass
         run: echo 'Playwright tests are skipped because frontend is unchanged.'
+
+  package-checks:
+    name: Run checks for packages/*
+    if: |
+      needs.get-changes.outputs.packages == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - build
+          - unit_test
+        include:
+          - name: build
+            script: "build"
+          - name: unit_test
+            script: "test:unit"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Run packages checks
+        run: pnpm --filter ./packages/* run --aggregate-output ${{ matrix.script }}
+
+  # This job runs when `package-checks` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-package-checks:
+    name: Run checks for packages/*
+    if: |
+      !cancelled() &&
+      needs.package-checks.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - package-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - build
+          - unit_test
+
+    steps:
+      - name: Pass
+        run: echo 'Checks for packages are skipped because packages are unchanged.'
 
   playwright:
     name: Run Playwright tests

@@ -29,6 +29,7 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:eslint-comments/recommended",
     "plugin:jsonc/recommended-with-jsonc",
+    "plugin:@openverse/recommended",
   ],
   plugins: [
     "@typescript-eslint",
@@ -36,6 +37,7 @@ module.exports = {
     "vue",
     "vuejs-accessibility",
     "unicorn",
+    "@openverse",
   ],
   rules: {
     semi: [2, "never"],
@@ -188,7 +190,7 @@ module.exports = {
     },
     {
       env: { jest: true },
-      files: ["frontend/test/unit/**"],
+      files: ["packages/**/*/test", "frontend/test/unit/**"],
       plugins: ["jest"],
       extends: ["plugin:jest/recommended"],
       rules: {
@@ -287,17 +289,9 @@ module.exports = {
       messageSyntaxVersion: "^8.24.3",
     },
     "import/resolver": {
-      "eslint-import-resolver-custom-alias": {
-        alias: {
-          "~": "./frontend/src",
-          "~~": "./frontend",
-        },
-        /**
-         * SVG imports are excluded for the import/no-unresolved
-         * rule above due to lack of support for `?inline` suffix
-         *
-         * Therefore, there's no need to configure them here
-         */
+      typescript: {
+        // This plugin automatically pulls paths from tsconfig
+        // so we don't need to redefine Nuxt and package aliases
         extensions: [".js", ".ts", ".vue", ".png"],
       },
     },
