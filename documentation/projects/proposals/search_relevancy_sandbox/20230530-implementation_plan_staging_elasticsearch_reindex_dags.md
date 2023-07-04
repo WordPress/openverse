@@ -43,18 +43,19 @@ DB, which is expected to finish soon.
 
 ## DAGs
 
-### `recreate_full_<media>_staging_index` DAG
+### `recreate_full_<media_type>_staging_index` DAG
 
 #### Parameters
 
-1. `media_type`: The media type for which the index is being created. Presently
-   this would only be `image` or `audio`.
-2. `promote`: (Optional) A boolean value to indicate if result index will
-   replace the current one pointed by the `media` alias. If `True`, then the new
-   index will be the one used by the staging API. Defaults to `False`.
-3. `delete_old_if_promoted`: (Optional) A boolean value to indicate if the old
-   index pointed by the `<media>` alias should be deleted after replacement.
-   Defaults to `False`.
+1. `point_alias`: (Optional) A boolean value to indicate if the resulting index
+   will replace the current one pointed by the `<media_type>` alias. If `True`,
+   then the new index will be the one used by the staging API. Defaults to
+   `False`. Note: This is different from the "POINT_ALIAS" task of the ingestion
+   server, as the action performed in this DAG does not always imply the
+   deletion of the previous index and promotion.
+2. `delete_old_if_aliased`: (Optional) A boolean value to indicate if the old
+   index pointed by the `<media_type>` alias should be deleted after
+   replacement. Defaults to `False`.
 
 #### Outlined Steps
 
@@ -67,25 +68,56 @@ create the index.
 2. Use the `ingestion_server.trigger_and_wait_for_task()` utility to send the
    `REINDEX` call to ingestion server, passing the previously generated
    `index_suffix` in the data payload.
-3. If `promoted=True` is passed, then inmediatly make the `media` alias point to
-   the new index. A
-4. If the index is promoted then the DAG checks if `remove_old_if_promoted=True`
-   and proceeds to trigger the [DELETE_INDEX][delete_index] task in the
-   Ingestion server. Otherwise the DAG ends at the previous step.
+3. Once the index is created, make the alias `<media_type>-full` point to it.
+
+   1. Check if the alias exists. Use the
+      [`ElasticsearchPythonHook`][es_python_hook] with the
+      [indices.exists_alias][es_py_exists_alias] function.
+
+   2. If the alias doesn't exist, then it can be created and assigned in one
+      step using the [`indices.put_alias`][es_py_put_alias] function.
+
+   3. If the alias exists, send the request to add the new index and remove the
+      old one(s). Get the current index pointed by `<media_type>-full` alias.
+      The [indices.resolves_index][es_py_resolves_index] function can provide
+      this information. An alias can be related to multiple indexes but it will
+      most likely be only one in this case. Then use `indices.update_aliases()`
+      with a body including both actions, analogous to the [ingest server's
+      task][ing_point_alias].
+
+4. If `point_alias=True` is passed, then inmediatly make the `<media_type>`
+   alias point to the new index, detaching any other following the same
+   procedure as indicated above. If `False` then the DAG ends at the previous
+   step.
+5. If the index is aliased then the DAG checks if `delete_old_if_aliased=True`
+   and proceeds to run [`indices.delete`][es_py_delete] with the old index name.
+   Otherwise the DAG ends at the previous step.
 
 [reindex]:
   https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L282
-[delete_index]:
-  https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/catalog/dags/data_refresh/data_refresh_task_factory.py#L222-L239
+[resolve]:
+  https://www.elastic.co/guide/en/elasticsearch/reference/7.12/indices-resolve-index-api.html
+[es_python_hook]:
+  https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_api/airflow/providers/elasticsearch/hooks/elasticsearch/index.html#airflow.providers.elasticsearch.hooks.elasticsearch.ElasticsearchPythonHook
+[es_py_exists_alias]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.exists_alias
+[es_py_put_alias]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.put_alias
+[es_py_resolves_index]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html?#elasticsearch.client.IndicesClient.resolve_index
+[ing_point_alias]:
+  https://github.com/WordPress/openverse/blob/08bb0317e1110694ca4d51058bebbc1dafb4fc13/ingestion_server/ingestion_server/indexer.py#L340
+[es_py_delete]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html?#elasticsearch.client.IndicesClient.delete
 
 <!--------------------------------------------------------------------------->
 
-### `create_proportional_by_provider_<media>_staging_index` DAG
+### `create_proportional_by_provider_<media_type>_staging_index` DAG
 
 This DAG is intended to be used most likely with the index resulting from the
 previous DAG or from the data refresh process, that is, an index with the
-database fully indexed, as the `source_index` for the ES
-[Reindex][es_reindex_api] API.
+database fully indexed, as the `source_index` for the [ES
+Reindex][es_reindex_api] API.
 
 [es_reindex_api]:
   https://www.elastic.co/guide/en/elasticsearch/reference/7.12/docs-reindex.html
@@ -103,7 +135,7 @@ database fully indexed, as the `source_index` for the ES
 #### Outlined Steps
 
 1. Get the list of media count by sources from the production Openverse API
-   [`https://api.openverse.engineering/v1/<media>/stats/`](https://api.openverse.engineering/v1/<media>/stats/)
+   [`https://api.openverse.engineering/v1/<media_type>/stats/`](https://api.openverse.engineering/v1/<media_type>/stats/)
 2. Calculate the total media adding up all the counts by provider
 3. Calculate the name of the new index with the following format:
 
@@ -137,7 +169,7 @@ POST _reindex?wait_for_completion=false
 }
 ```
 
-6. Make the alias `<media>-subset-by-provider` point to the new index.
+6. Make the alias `<media_type>-subset-by-provider` point to the new index.
 7. Optionally. Query the stats of the resulting index and print the results.
 
 ```
