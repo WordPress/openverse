@@ -1,6 +1,7 @@
 <template>
   <div
     :id="skipToContentTargetId"
+    tabindex="-1"
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
     <VSearchGrid

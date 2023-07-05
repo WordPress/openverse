@@ -12,6 +12,7 @@
       <div class="spacer grow" />
       <main
         :id="skipToContentTargetId"
+        tabindex="-1"
         class="z-10 grow-[3] space-y-4 lg:space-y-6"
       >
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
