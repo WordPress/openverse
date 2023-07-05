@@ -14,21 +14,23 @@
 
 ## Overview
 
-This document describes the addition of two DAGs for Elasticsearch (ES) index
-creation ––full and proportional-by-provider–– which will allow us to decouple
-the process from the long Ingestion server's data refresh process and experiment
-with smaller indices. Also includes the adoption of two new index aliases for
-ease of handling and querying the new index types from the API with the
+This document describes the addition of two DAG factories per media type for
+Elasticsearch (ES) index creation ––full and proportional-by-provider–– which
+will allow us to decouple the process from the long Ingestion server's data
+refresh process and experiment with smaller indices. The DAG factories will
+create a DAG per media type supported, which currently consists `image` and
+`audio`. Also includes the adoption of two new index aliases for ease of
+handling and querying the new index types from the API with the
 [`internal__index`][api_ii_param] param.
 
 [api_ii_param]: https://github.com/WordPress/openverse/pull/2073
 
 ## Expected Outcomes
 
-- 1 DAG for fully recreation of the index that the API uses which includes the
-  includes all the database contents.
-- 1 DAG to create indexes of reduced size but
-  proportional-to-production-by-provider index.
+- DAGs for fully recreation of the index that the API uses which includes all
+  the database contents, by media type.
+- DAGs to create indexes of reduced size, proportional-to-production-by-provider
+  index, by media type.
 
 ## Dependencies
 
@@ -124,8 +126,6 @@ Reindex][es_reindex_api] API.
 
 #### Parameters
 
-1. `media_type`: The media type for which the index is being created. Presently
-   this would only be `image` or `audio`.
 2. `source_index`: (Optional) The existing index on Elasticsearch to use as the
    basis for the new index. If not provided, the index aliased to
    `<media_type>-full` will be used.
