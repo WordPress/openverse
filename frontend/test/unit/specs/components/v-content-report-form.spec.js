@@ -1,4 +1,3 @@
-
 import { fireEvent, screen } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
@@ -14,34 +13,34 @@ jest.mock("~/composables/use-analytics", () => ({
 }))
 
 const getDmcaInput = () =>
-  screen.getByRole("radio", {
+  screen.queryByRole("radio", {
     name: /Infringes copyright/i,
   })
 const getMatureInput = () =>
-  screen.getByRole("radio", {
+  screen.queryByRole("radio", {
     name: /mature/i,
   })
 const getOtherInput = () =>
-  screen.getByRole("radio", {
+  screen.queryByRole("radio", {
     name: /other/i,
   })
 const getCancelButton = () =>
-  screen.getByRole("button", {
+  screen.queryByRole("button", {
     name: /cancel/i,
   })
 const getReportButton = () =>
-  screen.getByRole("button", {
+  screen.queryByRole("button", {
     name: /report/i,
   })
 
 // When DMCA selected
 const getReportLink = () =>
-  screen.getByRole("link", {
+  screen.queryByRole("link", {
     name: /DMCA form/i,
   })
 // When other selected
 const getDescriptionTextarea = () =>
-  screen.getByRole("textbox", {
+  screen.queryByRole("textbox", {
     name: /Describe the issue. Required/i,
   })
 
@@ -75,11 +74,14 @@ describe("VContentReportForm", () => {
 
   it("should contain the correct contents", async () => {
     await render(VContentReportForm, options)
-    getDmcaInput()
-    getMatureInput()
-    getOtherInput()
-    getCancelButton()
-    getReportLink()
+    expect(getDmcaInput()).toBeVisible()
+    expect(getMatureInput()).toBeVisible()
+    expect(getOtherInput()).toBeVisible()
+    expect(getCancelButton()).toBeVisible()
+    // By default, DMCA is selected, and we show a link to
+    // the report form instead of a report button.
+    expect(getReportButton()).not.toBeInTheDocument()
+    expect(getReportLink()).toBeVisible()
   })
 
   it("should render thank you note when report is sent", async () => {
