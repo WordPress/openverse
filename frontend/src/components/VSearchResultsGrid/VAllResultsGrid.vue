@@ -47,7 +47,7 @@
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
-          @interacted="hideSnackbar"
+          @interacted="handleInteraction"
           @focus="showSnackbar"
         />
       </template>
@@ -65,7 +65,9 @@ import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
+import type { AudioInteractionData } from "~/types/analytics"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useI18n } from "~/composables/use-i18n"
 
 import VSnackbar from "~/components/VSnackbar.vue"
@@ -89,6 +91,9 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+
+    const { sendCustomEvent } = useAnalytics()
+
     const searchTerm = computed(() => searchStore.searchTerm)
 
     const resultsLoading = computed(() => {
@@ -130,6 +135,14 @@ export default defineComponent({
 
     const isSidebarVisible = computed(() => uiStore.isFilterVisible)
 
+    const handleInteraction = (data: AudioInteractionData) => {
+      hideSnackbar()
+      sendCustomEvent("AUDIO_INTERACTION", {
+        ...data,
+        component: "VAllResultsGrid",
+      })
+    }
+
     return {
       searchTerm,
       isError,
@@ -146,7 +159,7 @@ export default defineComponent({
 
       isSnackbarVisible,
       showSnackbar,
-      hideSnackbar,
+      handleInteraction,
 
       isDetail,
     }

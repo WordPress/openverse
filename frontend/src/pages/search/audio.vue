@@ -25,7 +25,7 @@
           :size="audioTrackSize"
           layout="row"
           :search-term="searchTerm"
-          @interacted="hideSnackbar"
+          @interacted="handleInteraction"
           @mousedown="handleMouseDown"
           @focus="showSnackbar"
         />
@@ -39,10 +39,12 @@
 import { computed, defineComponent, ref, inject } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-
 import { useUiStore } from "~/stores/ui"
 
+import { useAnalytics } from "~/composables/use-analytics"
+
 import { IsSidebarVisibleKey } from "~/types/provides"
+import type { AudioInteractionData } from "~/types/analytics"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
@@ -64,6 +66,8 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const uiStore = useUiStore()
+
+    const { sendCustomEvent } = useAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
     const results = computed(() => props.resultItems.audio)
@@ -94,6 +98,13 @@ export default defineComponent({
       uiStore.hideInstructionsSnackbar()
     }
 
+    const handleInteraction = (data: AudioInteractionData) => {
+      sendCustomEvent("AUDIO_INTERACTION", {
+        ...data,
+        component: "AudioSearch",
+      })
+    }
+
     return {
       searchTerm,
       results,
@@ -104,6 +115,7 @@ export default defineComponent({
       isSnackbarVisible,
       showSnackbar,
       hideSnackbar,
+      handleInteraction,
     }
   },
 })
