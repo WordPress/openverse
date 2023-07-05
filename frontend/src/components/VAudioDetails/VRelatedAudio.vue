@@ -61,7 +61,7 @@ export default defineComponent({
     },
   },
   emits: {
-    interacted: defineEvent<[AudioInteractionData]>(),
+    interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
   },
   setup() {
     const uiStore = useUiStore()

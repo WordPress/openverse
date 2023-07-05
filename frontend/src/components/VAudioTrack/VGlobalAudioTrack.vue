@@ -215,7 +215,7 @@ export default defineComponent({
             break
         }
       }
-      let event: AudioInteraction
+      let event: AudioInteraction | undefined = undefined
       switch (state) {
         case "playing":
           play()
@@ -226,8 +226,9 @@ export default defineComponent({
           event = "pause"
           break
       }
-
-      sendAudioInteractionEvent(event)
+      if (event) {
+        sendAudioInteractionEvent(event)
+      }
     }
 
     /* Interface with VWaveform */
