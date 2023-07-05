@@ -2,6 +2,7 @@ import logging
 from datetime import timedelta
 
 from airflow.decorators import task
+from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
 
 from common import slack
@@ -36,21 +37,23 @@ def resume_update(
 
 
 @task
-def get_expected_update_count(query_id: str, batch_start: int | None, dry_run: bool):
-    """
-    Get the number of records left to update, when resuming an update
-    on an existing temp table.
-    """
-    total_count = run_sql.function(
+def get_expected_update_count(
+    query_id: str, total_row_count: int | None, dry_run: bool
+):
+    """Get the number of records in the temp table."""
+    # If we created the temp table as part of this DagRun, the total row count is
+    # passed in through XComs and is simply forwarded.
+    if total_row_count is not None:
+        return total_row_count
+
+    # If `resume_update` is True, we skip the table creation task and the count will
+    # not be available in XComs. We instead explicitly query the table for the count.
+    return run_sql.function(
         dry_run=dry_run,
-        sql_template=constants.SELECT_TEMP_TABLE_QUERY,
+        sql_template=constants.SELECT_TEMP_TABLE_COUNT_QUERY,
         query_id=query_id,
         handler=_single_value,
     )
-
-    if batch_start:
-        total_count -= batch_start
-    return max(total_count, 0)
 
 
 @task
@@ -89,22 +92,27 @@ def run_sql(
 
 @task
 def update_batches(
-    expected_row_count: int,
+    total_row_count: int,
     batch_size: int,
     dry_run: bool,
     table_name: str,
     query_id: str,
     update_query: str,
     update_timeout: int,
-    batch_start: int = 0,
+    batch_start_var: str,
     postgres_conn_id: str = POSTGRES_CONN_ID,
     task: AbstractOperator = None,
     **kwargs,
 ):
-    updated_count = 0
-    if batch_start is None:
-        batch_start = 0
+    # Progress is tracked in an Airflow variable. When the task run starts, we resume
+    # from the start point set by this variable (defaulted to 0). This prevents the
+    # task from starting over at the beginning on retries.
+    initial_batch_start = Variable.get(batch_start_var, 0, deserialize_json=True)
+    expected_row_count = max(total_row_count - initial_batch_start, 0)
+    logger.info(f"Starting at {initial_batch_start}")
 
+    updated_count = 0
+    batch_start = initial_batch_start
     while batch_start <= expected_row_count:
         batch_end = batch_start + batch_size
 
@@ -113,8 +121,7 @@ def update_batches(
             dry_run=dry_run,
             sql_template=constants.UPDATE_BATCH_QUERY,
             query_id=query_id,
-            # Only log the query the first time, so as not to spam the logs
-            log_sql=batch_start == 1,
+            log_sql=batch_start == initial_batch_start,
             postgres_conn_id=postgres_conn_id,
             task=task,
             timeout=update_timeout,
@@ -126,6 +133,9 @@ def update_batches(
 
         updated_count += count
         batch_start = batch_end
+
+        # Update the Airflow variable to the next value of batch_start.
+        Variable.set(batch_start_var, batch_end)
         logger.info(
             f"Updated {updated_count} rows. {expected_row_count - updated_count}"
             " remaining."
