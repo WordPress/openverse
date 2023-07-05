@@ -54,7 +54,7 @@ import type { ButtonForm } from "~/types/button"
 import VLink from "~/components/VLink.vue"
 
 export type ButtonProps = ProperlyExtractPropTypes<
-  NonNullable<typeof VButton["props"]>
+  NonNullable<(typeof VButton)["props"]>
 >
 
 /**

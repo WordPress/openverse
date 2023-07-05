@@ -52,7 +52,7 @@ const audioConfig = {
 
 const searchTypes = [allContentConfig, imageConfig, audioConfig] as const
 
-type SearchTypeConfig = typeof searchTypes[number]
+type SearchTypeConfig = (typeof searchTypes)[number]
 
 async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
   const loadMoreSection = page.locator('[data-testid="load-more"]')

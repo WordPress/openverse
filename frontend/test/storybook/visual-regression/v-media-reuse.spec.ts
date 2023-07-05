@@ -12,7 +12,7 @@ const tabs = [
 ]
 const defaultUrl =
   "/iframe.html?id=components-vmediainfo-vmediareuse--v-media-reuse"
-const pageUrl = (dir: typeof languageDirections[number]) =>
+const pageUrl = (dir: (typeof languageDirections)[number]) =>
   dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
 test.describe("media-reuse", () => {

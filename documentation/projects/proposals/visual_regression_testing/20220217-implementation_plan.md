@@ -316,15 +316,12 @@ export const testEachBreakpoint = (
   ) => Promise<void>
 ) => {
   SCREEN_SIZES.forEach((screenWidth, breakpoint) => {
-    test.describe(
-      `screen at breakpoint ${breakpoint} with width ${screenWidth}`,
-      () => {
-        test(title, async ({ page, context, request }, testInfo) => {
-          await page.setViewportSize({ width: screenWidth, height: 700 })
-          await testCb(breakpoint, { page, context, request }, testInfo)
-        })
-      }
-    )
+    test.describe(`screen at breakpoint ${breakpoint} with width ${screenWidth}`, () => {
+      test(title, async ({ page, context, request }, testInfo) => {
+        await page.setViewportSize({ width: screenWidth, height: 700 })
+        await testCb(breakpoint, { page, context, request }, testInfo)
+      })
+    })
   })
 }
 ```
