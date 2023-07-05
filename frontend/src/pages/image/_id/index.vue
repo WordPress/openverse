@@ -86,7 +86,7 @@
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
@@ -235,6 +235,8 @@ export default defineComponent({
       })
     }
 
+    useMeta(createDetailPageMeta(image.value?.title, image.value?.url))
+
     return {
       image,
       hasRelatedMedia,
@@ -272,9 +274,7 @@ export default defineComponent({
       })
     }
   },
-  head() {
-    return createDetailPageMeta(this.image.title, this.image.url)
-  },
+  head: {},
 })
 </script>
 
