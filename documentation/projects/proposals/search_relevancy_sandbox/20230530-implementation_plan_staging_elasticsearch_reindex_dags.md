@@ -93,7 +93,7 @@ create the index.
    step.
 5. If the index is aliased then the DAG checks if `delete_old_if_aliased=True`
    and proceeds to run [`indices.delete`][es_py_delete] with the old index name.
-   Otherwise the DAG ends at the previous step.
+   Otherwise, the DAG ends at the previous step.
 
 [reindex]:
   https://github.com/WordPress/openverse/blob/7427bbd4a8178d05a27e6fef07d70905ec7ef16b/ingestion_server/ingestion_server/indexer.py#L282
@@ -126,55 +126,62 @@ Reindex][es_reindex_api] API.
 
 #### Parameters
 
-2. `source_index`: (Optional) The existing index on Elasticsearch to use as the
+1. `source_index`: (Optional) The existing index on Elasticsearch to use as the
    basis for the new index. If not provided, the index aliased to
    `<media_type>-full` will be used.
-3. `percentage_of_production`: The proportion of items to take from each
-   provider from the total amount existing in production.
+2. `percentage_of_prod`: A float indicating the proportion of items to take from
+   each provider from the total amount existing in production. E.g. `0.25` for a
+   quarter of the production documents.
 
 #### Outlined Steps
 
 1. Get the list of media count by sources from the production Openverse API
-   [`https://api.openverse.engineering/v1/<media_type>/stats/`](https://api.openverse.engineering/v1/<media_type>/stats/)
-2. Calculate the total media adding up all the counts by provider
-3. Calculate the name of the new index with the following format:
+   `https://api.openverse.engineering/v1/<media_type>/stats/`
+2. Calculate the `total_media` adding up all the counts by provider
+3. Build the `dest_index` name with the following format:
 
 ```python
- f"{media_type}-{percentage_of_production}-percent-of-providers-{current_datetime}"
+ f"{media_type}-{percentage_of_prod}-percent-of-providers-{current_datetime}"
 ```
 
-4. Make a dictionary mapping all the providers with the required amount of items
-   for the new index based on the provided `percentage_of_production` param.
-5. Iterate over the items of the resulting dictionary to index the subset of
-   each provider.
+4. Make a a list of dictionaries mapping all the providers with the required
+   amount of items for the new index based on the provided `percentage_of_prod`
+   param.
+5. Using the [Dynamic Task Mapping][airflow_dtm] feature of Airflow, expand the
+   providers list to dispatch [`reindex`][es_py_reindex] tasks with the
+   following params setting to index the subset of each provider in parallel.
 
-```
-POST _reindex?wait_for_completion=false
-```
-
-```json
-{
-  "max_docs": num_items,
-  "source": {
-    "index": "image-full",
-    "query": {
-      "term": {
-        "source.keyword": "stocksnap"
+   - `wait_for_completion=False`
+   - `max_docs=docs_num`
+   - `dest=dest_index`
+   - ```python
+      source={
+         "index": source_index,
+         "query": {
+            "term": {
+               "source.keyword": provider
+            }
+         }
       }
-    }
-  },
-  "dest": {
-    "index": "image-50-percent-of-providers-20230608183000"
-  }
-}
-```
+     ```
 
-6. Make the alias `<media_type>-subset-by-provider` point to the new index.
-7. Optionally. Query the stats of the resulting index and print the results.
+6. Avoiding to `wait_for_completion` will make the previous step return records
+   of these tasks as documents in an aggregated form. Then here use Sensors and
+   the previously emitted task IDs to wait for reindex tasks to complete.
+7. Once all tasks are finished, trigger an [`indices.refresh`][es_py_refresh] to
+   make the index queyrable.
+8. Make the alias `<media_type>-subset-by-provider` point to the new index.
+   Follow the same procedure to that of `<media_type>-full` alias of the
+   previous DAG.
+9. Optionally. Query the [stats][es_py_stats] of the resulting index and print
+   the results.
 
-```
-GET /image-reindexed-by-provider/_stats
-```
+[es_py_reindex]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.Elasticsearch.reindex
+[es_py_refresh]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.refresh
+[es_py_stats]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.stats
 
 ## Alternatives
 
