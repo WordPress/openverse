@@ -62,8 +62,8 @@ export const renderingContexts = [
 ] as const
 
 export const renderModes = ["SSR", "CSR"] as const
-export type RenderMode = typeof renderModes[number]
-export type LanguageDirection = typeof languageDirections[number]
+export type RenderMode = (typeof renderModes)[number]
+export type LanguageDirection = (typeof languageDirections)[number]
 
 export function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))

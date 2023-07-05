@@ -158,7 +158,7 @@ export const createApiService = ({
      */
     post<T = unknown>(
       resource: string,
-      data: Parameters<typeof client["post"]>[1]
+      data: Parameters<(typeof client)["post"]>[1]
     ): Promise<AxiosResponse<T>> {
       return client.post(getResourceSlug(resource), data)
     },
@@ -173,7 +173,7 @@ export const createApiService = ({
     update<T = unknown>(
       resource: string,
       slug: string,
-      data: Parameters<typeof client["put"]>[1],
+      data: Parameters<(typeof client)["put"]>[1],
       headers: AxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.put(`${getResourceSlug(resource)}${slug}`, data, {

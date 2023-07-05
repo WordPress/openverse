@@ -45,7 +45,7 @@ export interface Choice {
 }
 
 export type SelectFieldProps = ProperlyExtractPropTypes<
-  NonNullable<typeof VSelectField["props"]>
+  NonNullable<(typeof VSelectField)["props"]>
 >
 
 /**

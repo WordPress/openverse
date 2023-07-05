@@ -104,7 +104,7 @@ export default defineComponent({
     // so we need to close it manually.
     const onClick = () => emit("close")
 
-    const isLinkExternal = (item: typeof allPages[number]) =>
+    const isLinkExternal = (item: (typeof allPages)[number]) =>
       !item.link.startsWith("/")
 
     const externalIconSize = computed(() => (props.isInModal ? 6 : 4))

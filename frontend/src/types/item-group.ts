@@ -5,13 +5,13 @@ export const itemGroupDirections = [
   "horizontal",
   "columns",
 ] as const
-export type ItemGroupDirection = typeof itemGroupDirections[number]
+export type ItemGroupDirection = (typeof itemGroupDirections)[number]
 
 export const itemGroupTypes = ["list", "menu", "radiogroup"] as const
-export type ItemGroupType = typeof itemGroupTypes[number]
+export type ItemGroupType = (typeof itemGroupTypes)[number]
 
 export const itemGroupSizes = ["small", "medium"] as const
-export type ItemGroupSize = typeof itemGroupSizes[number]
+export type ItemGroupSize = (typeof itemGroupSizes)[number]
 
 export type VIemGroupContext = {
   direction: ItemGroupDirection
