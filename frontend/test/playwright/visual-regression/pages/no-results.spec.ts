@@ -42,9 +42,9 @@ for (const searchType of supportedSearchTypes) {
           return childHeight + headerElHeight
         })
 
-        const viewportWidth = (await page.viewportSize()?.width) ?? 0
+        const viewportWidth = page.viewportSize()?.width
         await page.setViewportSize({
-          width: viewportWidth,
+          width: viewportWidth ?? 0,
           height: viewportHeight + 1,
         })
 

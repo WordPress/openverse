@@ -53,7 +53,9 @@ breakpoints.describeMobileAndDesktop(() => {
 
       await filters.open(page)
 
-      await assertCheckboxCount(page, "total", FILTER_COUNTS[searchType])
+      await expect(
+        assertCheckboxCount(page, "total", FILTER_COUNTS[searchType])
+      ).resolves.toBeUndefined()
     })
   }
 
@@ -66,7 +68,9 @@ breakpoints.describeMobileAndDesktop(() => {
     const expectedFilters = ["cc0", "commercial"]
 
     for (const checkbox of expectedFilters) {
-      await assertCheckboxStatus(page, checkbox)
+      await expect(
+        assertCheckboxStatus(page, checkbox)
+      ).resolves.toBeUndefined()
     }
   })
 
@@ -134,7 +138,7 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.click('label:has-text("commercial")')
 
     await assertCheckboxStatus(page, "commercial", "unchecked")
-    await expect(byNc).not.toBeDisabled()
+    await expect(byNc).toBeEnabled()
     for (const checkbox of ["commercial", "by-nc-sa", "by-nc-nd"]) {
       await assertCheckboxStatus(page, checkbox, "unchecked")
     }
@@ -163,6 +167,7 @@ breakpoints.describeMobileAndDesktop(() => {
     // '1 Filter' on `xl` or '1' on `lg` screens
     await assertCheckboxStatus(page, "cc0")
     await filters.close(page)
+    // eslint-disable-next-line playwright/no-conditional-in-test
     if (isPageDesktop(page)) {
       const filterButtonText = await page
         .locator('[aria-controls="filters"] span:visible')
@@ -170,6 +175,7 @@ breakpoints.describeMobileAndDesktop(() => {
       expect(filterButtonText).toContain("Filters")
     } else {
       const filtersAriaLabel =
+        // eslint-disable-next-line playwright/no-conditional-in-test
         (await page
           .locator('[aria-controls="content-settings-modal"]')
           .getAttribute("aria-label")) ?? ""
@@ -211,7 +217,9 @@ breakpoints.describeMobileAndDesktop(() => {
       )
       await filters.open(page)
 
-      await assertCheckboxStatus(page, source, "checked")
+      await expect(
+        assertCheckboxStatus(page, source, "checked")
+      ).resolves.toBeUndefined()
     })
   }
 })

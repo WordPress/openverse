@@ -34,7 +34,7 @@ describe("FilterChecklist", () => {
       label: /bar/i,
     })
     expect(checkbox).toBeTruthy()
-    expect(container.querySelector("svg")).not.toBeVisible()
+    expect(container.querySelector("svg")).toBeHidden()
 
     await fireEvent.click(checkbox)
     expect(container.querySelector("svg")).toBeVisible()

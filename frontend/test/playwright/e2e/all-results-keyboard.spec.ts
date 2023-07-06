@@ -51,12 +51,14 @@ test.describe("all results grid keyboard accessibility test", () => {
   test("should open image results as links", async ({ page }) => {
     await walkToType("image", page)
     await page.keyboard.press("Enter")
-    await page.waitForURL(
-      new RegExp(
-        `/image/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-        "i"
+    expect(
+      await page.waitForURL(
+        new RegExp(
+          `/image/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
+          "i"
+        )
       )
-    )
+    ).resolves.toBeUndefined()
   })
 
   test("should open audio results as links", async ({ page }) => {
@@ -123,6 +125,6 @@ test.describe("all results grid keyboard accessibility test", () => {
     await audio.getActive(nextFocusedResult)
 
     await expect(playButton).toBeVisible()
-    await expect(pauseButton).not.toBeVisible()
+    await expect(pauseButton).toBeHidden()
   })
 })

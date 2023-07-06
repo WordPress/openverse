@@ -1,3 +1,5 @@
+import { expect } from "@playwright/test"
+
 import rtlMessages from "~~/test/locales/ar.json"
 
 import enMessages from "~/locales/en.json"
@@ -205,11 +207,13 @@ export const assertCheckboxStatus = async (
   status: CheckboxStatus = "checked"
 ) => {
   const labelRegexp = typeof label === "string" ? new RegExp(label, "i") : label
-  await page.getByRole("checkbox", {
-    name: labelRegexp,
-    disabled: status === "disabled",
-    checked: status === "checked",
-  })
+  await expect(
+    page.getByRole("checkbox", {
+      name: labelRegexp,
+      disabled: status === "disabled",
+      checked: status === "checked",
+    })
+  ).resolves.toBeDefined()
 }
 
 export const changeSearchType = async (page: Page, to: SupportedSearchType) => {
@@ -352,6 +356,9 @@ export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   const firstResultHref = await getLocatorHref(firstResult)
   await firstResult.click({ position: { x: 32, y: 32 } })
   await scrollDownAndUp(page)
+  // Wait for all pending requests to finish, at which point we know
+  // that all lazy-loaded content is available
+  // eslint-disable-next-line playwright/no-networkidle
   await page.waitForURL(firstResultHref, { waitUntil: "networkidle" })
   await page.mouse.move(0, 0)
 }

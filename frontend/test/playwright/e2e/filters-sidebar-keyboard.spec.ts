@@ -46,9 +46,10 @@ for (const dir of languageDirections) {
       await walkToFilterButton(page)
 
       // Check that the filters sidebar is open
-      expect(
-        await page.locator("#filter-button").getAttribute("aria-expanded")
-      ).toBe("true")
+      await expect(page.locator("#filter-button")).toHaveAttribute(
+        "aria-expanded",
+        "true"
+      )
 
       await page.keyboard.press(keycodes.Tab)
 

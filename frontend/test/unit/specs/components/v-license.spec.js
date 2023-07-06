@@ -23,7 +23,7 @@ describe("VLicense", () => {
     options.props.hideName = true
     const { container } = render(VLicense, options)
     const licenseName = screen.queryByText("CC BY")
-    expect(licenseName).not.toBeVisible()
+    expect(licenseName).toBeHidden()
     const licenseIcons = container.querySelectorAll("svg")
     expect(licenseIcons).toHaveLength(2)
   })

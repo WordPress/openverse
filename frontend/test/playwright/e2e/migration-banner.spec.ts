@@ -58,9 +58,9 @@ test.describe("migration banner", () => {
     await migrationNotice
       .locator(`[aria-label="${t("migrationNotice.close")}"]:visible`)
       .click({ timeout: 500 })
-    await expect(migrationNotice).not.toBeVisible({ timeout: 500 })
+    await expect(migrationNotice).toBeHidden({ timeout: 500 })
 
     await page.reload()
-    await expect(migrationNotice).not.toBeVisible({ timeout: 500 })
+    await expect(migrationNotice).toBeHidden({ timeout: 500 })
   })
 })

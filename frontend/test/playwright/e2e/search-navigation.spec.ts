@@ -42,14 +42,14 @@ test.describe("search history navigation", () => {
       // Note: Need to add that a search was actually executed with the new
       // filters and that the page results have been updated for the new filters
       // @todo(sarayourfriend): ^?
-      expect(await page.isChecked("#modification")).toBe(true)
+      await expect(page.locator("#modifications")).toBeChecked()
 
       // Navigate backwards and verify URL is updated and the filter is unapplied
       await page.goBack()
 
       // Ditto here about the note above, need to verify a new search actually happened with new results
       expect(page.url()).not.toContain("license_type=modification")
-      expect(await page.isChecked("#modification")).toBe(false)
+      await expect(page.locator("#modification")).not.toBeChecked()
     })
 
     test("should update search results when back button updates search type", async ({
@@ -62,7 +62,7 @@ test.describe("search history navigation", () => {
 
       expect(page.url()).toContain("/search/image")
       // There are no content links on single media type search pages
-      await expect(await getContentLink(page, IMAGE)).not.toBeVisible()
+      await expect(await getContentLink(page, IMAGE)).toBeHidden()
 
       await page.goBack({ waitUntil: "networkidle" })
 
@@ -76,13 +76,12 @@ test.describe("search history navigation", () => {
       await goToSearchTerm(page, "galah")
 
       await searchFromHeader(page, "cat")
-      expect(await page.locator('input[name="q"]').inputValue()).toBe("cat")
+      await expect(page.locator('input[name="q"]')).toHaveValue("cat")
 
       await page.goBack()
 
       await expect(await getContentLink(page, IMAGE)).toBeVisible()
-
-      expect(await page.locator('input[name="q"]').inputValue()).toBe("galah")
+      await expect(page.locator('input[name="q"]')).toHaveValue("galah")
     })
 
     test("navigates to the image detail page correctly", async ({ page }) => {

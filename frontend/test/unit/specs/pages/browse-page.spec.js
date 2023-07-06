@@ -48,7 +48,7 @@ describe("SearchIndex", () => {
       searchStore.setSearchType(IMAGE)
     })
 
-    expect(screen.queryByLabelText(/scroll/i)).not.toBeVisible()
+    expect(screen.queryByLabelText(/scroll/i)).toBeHidden()
   })
 
   it("shows the scroll button when injected value is true", () => {

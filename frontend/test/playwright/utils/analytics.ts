@@ -17,12 +17,12 @@ export function expectEventPayloadToMatch<T extends EventName>(
   event: EventResponse<T> | undefined,
   expectedPayload: Events[T]
 ): void {
-  if (!event) {
-    throw new Error(
-      `Event is null; expected payload of ${JSON.stringify(expectedPayload)}`
-    )
-  }
-  expect(event.p).toMatchObject(expectedPayload)
+  expect(
+    event,
+    `Event not captured; expected payload of ${JSON.stringify(expectedPayload)}`
+  ).toBeDefined()
+  // Safe to cast as previous line ensures it is defined
+  expect((event as EventResponse<T>).p).toMatchObject(expectedPayload)
 }
 
 export const collectAnalyticsEvents = (context: BrowserContext) => {
