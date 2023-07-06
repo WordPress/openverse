@@ -1,7 +1,14 @@
 # Deployments
 
 This document covers API and Frontend deployments. It does not include
-information regarding the ingestion server or our Airflow instance.
+information regarding the ingestion server or our Airflow instance. If you need
+to deploy a specific application _now_, please see the deployment runbooks for
+each of our services:
+
+- [API](/api/guides/deploy.md)
+- [Frontend](/frontend/guides/deploy.md)
+- [Catalog](/catalog/guides/deploy.md)
+- [Ingestion Server](/ingestion_server/guides/deploy.md)
 
 ## Real-time Deployment Information
 
