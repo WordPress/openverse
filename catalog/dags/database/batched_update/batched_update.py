@@ -108,12 +108,11 @@ def update_batches(
     # from the start point set by this variable (defaulted to 0). This prevents the
     # task from starting over at the beginning on retries.
     initial_batch_start = Variable.get(batch_start_var, 0, deserialize_json=True)
-    expected_row_count = max(total_row_count - initial_batch_start, 0)
     logger.info(f"Starting at {initial_batch_start}")
 
     updated_count = 0
     batch_start = initial_batch_start
-    while batch_start <= expected_row_count:
+    while batch_start <= total_row_count:
         batch_end = batch_start + batch_size
 
         logger.info(f"Updating rows with id {batch_start} through {batch_end}.")
@@ -136,10 +135,9 @@ def update_batches(
 
         # Update the Airflow variable to the next value of batch_start.
         Variable.set(batch_start_var, batch_end)
-        logger.info(
-            f"Updated {updated_count} rows. {expected_row_count - updated_count}"
-            " remaining."
-        )
+
+        remaining_count = max(total_row_count - initial_batch_start - updated_count, 0)
+        logger.info(f"Updated {updated_count} rows. {remaining_count} remaining.")
 
     return updated_count
 
