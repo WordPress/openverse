@@ -19,10 +19,10 @@
   </VLink>
 </template>
 <script lang="ts">
-import { PropType } from "vue"
-
 import VLink from "~/components/VLink.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
+
+import type { PropType } from "vue"
 
 export default {
   name: "VWordPressLink",

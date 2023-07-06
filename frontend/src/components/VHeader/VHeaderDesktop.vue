@@ -104,8 +104,8 @@ export default defineComponent({
 
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-
-      document.activeElement?.blur()
+      const activeElement = document.activeElement as HTMLElement
+      activeElement?.blur()
       updateSearchState()
     }
 

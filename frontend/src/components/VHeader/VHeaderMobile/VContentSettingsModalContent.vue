@@ -74,7 +74,7 @@
   </VModalContent>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue"
+import { computed, defineComponent, PropType, ref } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -92,6 +92,8 @@ import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsB
 import VTab from "~/components/VTabs/VTab.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
+
+type ContentSettingsTab = "content-settings" | "filters"
 
 export default defineComponent({
   name: "VContentSettingsModalContent",
@@ -114,7 +116,7 @@ export default defineComponent({
       default: false,
     },
     close: {
-      type: Function,
+      type: Function as PropType<() => void>,
       required: true,
     },
     visible: {
@@ -133,9 +135,9 @@ export default defineComponent({
   setup(props) {
     const searchStore = useSearchStore()
     const content = useSearchType()
-    const selectedTab = ref<"content-settings" | "filters">("content-settings")
-    const changeSelectedTab = (tab: "content-settings" | "filters") => {
-      selectedTab.value = tab
+    const selectedTab = ref<ContentSettingsTab>("content-settings")
+    const changeSelectedTab = (tab: string) => {
+      selectedTab.value = tab as ContentSettingsTab
     }
 
     const areFiltersSelected = computed(() => searchStore.isAnyFilterApplied)

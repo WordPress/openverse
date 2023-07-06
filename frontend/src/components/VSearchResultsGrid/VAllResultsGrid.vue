@@ -32,7 +32,9 @@
           ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
           : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
       "
-      :aria-label="$t('browsePage.aria.results', { query: searchTerm })"
+      :aria-label="
+        $t('browsePage.aria.results', { query: searchTerm }).toString()
+      "
     >
       <template v-for="item in allMedia">
         <VImageCell
@@ -70,6 +72,8 @@ import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useI18n } from "~/composables/use-i18n"
 
+import type { SupportedMediaType } from "~/constants/media"
+
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
 import VAudioCell from "~/components/VSearchResultsGrid/VAudioCell.vue"
@@ -104,7 +108,7 @@ export default defineComponent({
       )
     })
 
-    const contentLinkPath = (mediaType: string) =>
+    const contentLinkPath = (mediaType: SupportedMediaType) =>
       searchStore.getSearchPath({ type: mediaType })
 
     const allMedia = computed(() => mediaStore.allMedia)
