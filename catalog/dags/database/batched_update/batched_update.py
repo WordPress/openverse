@@ -120,6 +120,7 @@ def update_batches(
             dry_run=dry_run,
             sql_template=constants.UPDATE_BATCH_QUERY,
             query_id=query_id,
+            # Only log the query the first time, so as not to spam the logs
             log_sql=batch_start == initial_batch_start,
             postgres_conn_id=postgres_conn_id,
             task=task,
