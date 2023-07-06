@@ -13,7 +13,7 @@ import { log } from "~/utils/console"
  * bounds of the composition API.
  */
 export const useAnalytics = () => {
-  const { $plausible, $ua } = useContext()
+  const { $plausible } = useContext()
   const i18n = useI18n()
   const uiStore = useUiStore()
   const featureFlagStore = useFeatureFlagStore()
@@ -27,18 +27,8 @@ export const useAnalytics = () => {
    * client-side; This excludes props that need `window`.
    */
   const isomorphicProps = computed(() => ({
-    timestamp: new Date().toISOString(),
     language: i18n.locale,
     breakpoint: uiStore.breakpoint,
-    ...($ua
-      ? {
-          ua: $ua.source,
-          os: $ua.os,
-          platform: $ua.platform,
-          browser: $ua.browser,
-          version: $ua.version,
-        }
-      : {}),
   }))
 
   /**
@@ -48,9 +38,6 @@ export const useAnalytics = () => {
   const windowProps = computed(() =>
     window
       ? {
-          origin: window.location.origin,
-          pathname: window.location.pathname,
-          referrer: window.document.referrer,
           width: window.innerWidth,
           height: window.innerHeight,
         }
@@ -73,7 +60,7 @@ export const useAnalytics = () => {
       props: {
         ...isomorphicProps.value,
         ...windowProps.value,
-        ...payload, // can override mandatory props
+        ...payload, // will override matching mandatory props
       },
     })
   }
