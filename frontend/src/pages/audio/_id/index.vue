@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { computed } from "vue"
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import type { AudioDetail } from "~/types/media"
@@ -84,6 +84,8 @@ export default defineComponent({
       })
     }
 
+    useMeta(createDetailPageMeta(audio.value?.title, audio.value?.url))
+
     return {
       audio,
       backToSearchPath,
@@ -108,9 +110,7 @@ export default defineComponent({
       })
     }
   },
-  head() {
-    return createDetailPageMeta(this.audio.title, this.audio.thumbnail)
-  },
+  head: {},
 })
 </script>
 <style>

@@ -106,11 +106,13 @@ export default defineComponent({
   },
   setup(props) {
     const audioFormats = computed(() => {
-      if (!props.audio.alt_files) return props.audio.filetype
+      if (!props.audio.alt_files) return props.audio.filetype ?? ""
       const altFormats = props.audio.alt_files.map(
         (altFile) => altFile.filetype
       )
-      altFormats.unshift(props.audio.filetype)
+      if (props.audio.filetype) {
+        altFormats.unshift(props.audio.filetype)
+      }
       const uniqueFormats = new Set(altFormats)
       return [...uniqueFormats].join(", ")
     })

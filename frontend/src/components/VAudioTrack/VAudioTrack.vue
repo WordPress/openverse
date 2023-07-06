@@ -142,7 +142,9 @@ export default defineComponent({
   },
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
-    interacted: defineEvent<[AudioInteractionData]>(),
+    interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
+    mousedown: defineEvent<[MouseEvent]>(),
+    focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
     const i18n = useI18n()
@@ -347,7 +349,7 @@ export default defineComponent({
 
       // Check if the audio can be played successfully
       localAudio?.play().catch((err) => {
-        let message = ""
+        let message: string
         switch (err.name) {
           case "NotAllowedError":
             message = "err_unallowed"
@@ -393,7 +395,7 @@ export default defineComponent({
      * that status is never toggled _to_.
      */
     const handleToggle = (state?: Exclude<AudioStatus, "loading">) => {
-      let event: AudioInteraction | undefined
+      let event: AudioInteraction | undefined = undefined
       if (!state) {
         switch (status.value) {
           case "playing":
@@ -416,11 +418,13 @@ export default defineComponent({
           event = "pause"
           break
       }
-      emit("interacted", {
-        event,
-        id: props.audio.id,
-        provider: props.audio.provider,
-      })
+      if (event) {
+        emit("interacted", {
+          event,
+          id: props.audio.id,
+          provider: props.audio.provider,
+        })
+      }
     }
 
     /* Interface with VWaveform */

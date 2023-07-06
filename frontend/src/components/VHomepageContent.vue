@@ -13,7 +13,7 @@
     <VStandaloneSearchBar
       ref="searchBarRef"
       class="mt-4 md:mt-6"
-      :has-popover="triggerElement && isContentSwitcherVisible"
+      :has-popover="!!triggerElement && isContentSwitcherVisible"
       @submit="handleSearch"
     >
       <VSearchTypeButton
@@ -70,7 +70,7 @@
   </VSkipToContentContainer>
 </template>
 <script lang="ts">
-import { computed, ref, PropType } from "vue"
+import { computed, defineComponent, ref, PropType } from "vue"
 
 import type { SearchType } from "~/constants/media"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -88,7 +88,7 @@ import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
 import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 
-export default {
+export default defineComponent({
   name: "VHomepageContent",
   components: {
     VContentSettingsModalContent,
@@ -120,7 +120,7 @@ export default {
     const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(
       null
     )
-    const nodeRef = computed(() => searchBarRef.value?.$el)
+    const nodeRef = computed(() => searchBarRef.value?.$el as HTMLElement)
 
     const { getSearchTypeProps } = useSearchType()
     const uiStore = useUiStore()
@@ -182,5 +182,5 @@ export default {
       triggerA11yProps,
     }
   },
-}
+})
 </script>

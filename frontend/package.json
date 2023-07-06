@@ -5,7 +5,7 @@
   "version": "2.2.1",
   "scripts": {
     "predev": "pnpm install && pnpm i18n:no-get",
-    "dev": "pnpm dev:only",
+    "dev": "run-p dev:only 'i18n:en --watch'",
     "dev:only": "nuxt --hostname 0.0.0.0",
     "dev:secure": "LOCAL_SSL=enabled pnpm dev",
     "prebuild": "pnpm install && pnpm i18n",
@@ -53,8 +53,7 @@
     "create:story": "remake story",
     "create:component-storybook-test": "remake component-storybook-test",
     "create:component-unit-test": "remake component-unit-test",
-    "add-component-to-tsconfig": "node bin/add-entry-to-tsconfig.js",
-    "create:component-scaffolding": "npm-run-all \"create:component-sfc --output=src/components --name={1}\" \"create:story --output=src/components/{1}/meta --name={1}\" \"create:component-unit-test --output=test/unit/specs/components/{1} --name={1} --fileName={2}\" \"create:component-storybook-test --output=test/storybook/visual-regression --fileName={2} --name={1}\" \"add-component-to-tsconfig {1}\" --",
+    "create:component-scaffolding": "npm-run-all \"create:component-sfc --output=src/components --name={1}\" \"create:story --output=src/components/{1}/meta --name={1}\" \"create:component-unit-test --output=test/unit/specs/components/{1} --name={1} --fileName={2}\" \"create:component-storybook-test --output=test/storybook/visual-regression --fileName={2} --name={1}\" --",
     "create:component": "./bin/create-component.sh"
   },
   "dependencies": {
