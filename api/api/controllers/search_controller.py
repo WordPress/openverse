@@ -44,7 +44,7 @@ def _unmasked_query_end(page_size, page):
     """
     Calculate the upper index of results to retrieve from Elasticsearch.
 
-    Used to retrieve the upper index of results to retrieve  under the
+    Used to retrieve the upper index of results to retrieve from Elasticsearch under the
     following conditions:
     1. There is no query mask
     2. The lower index is beyond the scope of the existing query mask
