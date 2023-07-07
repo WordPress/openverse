@@ -60,7 +60,7 @@ export const useAnalytics = () => {
       props: {
         ...isomorphicProps.value,
         ...windowProps.value,
-        ...payload, // will override matching mandatory props
+        ...payload,
       },
     })
   }
