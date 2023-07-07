@@ -162,16 +162,20 @@ export default defineComponent({
 
     useFetch(async () => {
       const imageId = route.value.params.id
-      await singleResultStore.fetch(IMAGE, imageId)
-
-      const fetchedImage = singleResultStore.image
-
-      if (!fetchedImage) {
-        // TODO: Handle timeout errors
-        nuxtError({ statusCode: 404 })
-      } else {
+      try {
+        await singleResultStore.fetch(IMAGE, imageId)
+        const fetchedImage = singleResultStore.image
+        if (!fetchedImage) {
+          throw new Error(
+            `Could not fetch image. Error: ${
+              singleResultStore.fetchState.fetchingError ?? "Unknown error"
+            }`
+          )
+        }
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
+      } catch (error) {
+        nuxtError({ statusCode: 404 })
       }
     })
 

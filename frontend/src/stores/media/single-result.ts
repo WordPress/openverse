@@ -158,6 +158,8 @@ export const useSingleResultStore = defineStore("single-result", {
         try {
           await this.fetchMediaItem(type, id)
         } catch (error) {
+          // Sends non-404 errors to Sentry and rethrows the error
+          // for the templates to handle.
           await this.handleFetchError(error)
         }
       }
@@ -172,19 +174,12 @@ export const useSingleResultStore = defineStore("single-result", {
       this.reset()
       this._updateFetchState("end", JSON.stringify(error))
 
-      /**
-       * Only send the error to Sentry if it is not a 404.
-       */
+      // Only send the error to Sentry if it is not a 404.
       if (!(axios.isAxiosError(error) && error.response?.status === 404)) {
         this.$nuxt.$sentry.captureException(error)
       }
-      /**
-       * Show the error page. Use the response code if it is an axios error; 404 otherwise.
-       */
-      const statusCode = axios.isAxiosError(error)
-        ? error.response?.status ?? 404
-        : 404
-      this.$nuxt.error({ statusCode, message: JSON.stringify(error) })
+
+      throw error
     },
     /**
      * Fetch the media item from the API.
