@@ -14,28 +14,42 @@ jest.mock("~/composables/use-analytics", () => ({
 describe("SingleImageResultPage", () => {
   const id = "123"
   let sendCustomEventMock = null
+  let options = null
 
   beforeEach(() => {
     sendCustomEventMock = jest.fn()
     useAnalytics.mockImplementation(() => ({
       sendCustomEvent: sendCustomEventMock,
     }))
+    options = {
+      mocks: {
+        $route: {
+          params: {
+            id,
+          },
+        },
+      },
+    }
   })
 
   it("should send RIGHT_CLICK_IMAGE analytics event", async () => {
     let singleImageStore
-    const screen = render(SingleImageResultPage, {}, (localVue, options) => {
-      singleImageStore = useSingleResultStore(options.pinia)
-      singleImageStore.mediaType = IMAGE
-      singleImageStore.mediaItem = {
-        frontendMediaType: IMAGE,
-        id,
-        url: "http://example.com/image.jpg",
-        width: 100,
-        height: 100,
-        providerName: "provider",
+    const screen = render(
+      SingleImageResultPage,
+      options,
+      (localVue, options) => {
+        singleImageStore = useSingleResultStore(options.pinia)
+        singleImageStore.mediaType = IMAGE
+        singleImageStore.mediaItem = {
+          frontendMediaType: IMAGE,
+          id,
+          url: "http://example.com/image.jpg",
+          width: 100,
+          height: 100,
+          providerName: "provider",
+        }
       }
-    })
+    )
     const image = await screen.findByRole("img")
     await fireEvent.contextMenu(image)
     expect(sendCustomEventMock).toHaveBeenCalledWith("RIGHT_CLICK_IMAGE", {

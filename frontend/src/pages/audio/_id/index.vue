@@ -1,27 +1,32 @@
 <template>
   <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink :id="audio.id" :href="backToSearchPath" />
-    </div>
-
-    <VAudioTrack
-      layout="full"
-      :audio="audio"
-      class="main-track"
-      @interacted="sendAudioEvent($event, 'AudioDetailPage')"
-    />
-    <div
-      class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
-    >
-      <VMediaReuse data-testid="audio-attribution" :media="audio" />
-      <VAudioDetails data-testid="audio-info" :audio="audio" />
-      <VRelatedAudio
-        v-if="audio.id"
-        :media="relatedMedia"
-        :fetch-state="relatedFetchState"
-        @interacted="sendAudioEvent($event, 'VRelatedAudio')"
+      <VBackToSearchResultsLink
+        :id="$route.params.id"
+        :href="backToSearchPath"
       />
     </div>
+
+    <template v-if="audio">
+      <VAudioTrack
+        layout="full"
+        :audio="audio"
+        class="main-track"
+        @interacted="sendAudioEvent($event, 'AudioDetailPage')"
+      />
+      <div
+        class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
+      >
+        <VMediaReuse data-testid="audio-attribution" :media="audio" />
+        <VAudioDetails data-testid="audio-info" :audio="audio" />
+        <VRelatedAudio
+          v-if="relatedMedia.length || relatedFetchState.isFetching"
+          :media="relatedMedia"
+          :fetch-state="relatedFetchState"
+          @interacted="sendAudioEvent($event, 'VRelatedAudio')"
+        />
+      </div>
+    </template>
   </VSkipToContentContainer>
 </template>
 
@@ -70,17 +75,19 @@ export default defineComponent({
         ? (singleResultStore.mediaItem as AudioDetail)
         : null
     )
-    const relatedMedia = computed(() => relatedMediaStore.media)
+    const relatedMedia = computed(
+      () => relatedMediaStore.media as AudioDetail[]
+    )
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
     const sendAudioEvent = (
-      data: AudioInteractionData,
+      data: Omit<AudioInteractionData, "component">,
       component: "AudioDetailPage" | "VRelatedAudio"
     ) => {
       sendCustomEvent("AUDIO_INTERACTION", {
         ...data,
-        component: component,
+        component,
       })
     }
 
