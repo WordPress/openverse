@@ -7,13 +7,19 @@
       />
     </div>
 
-    <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">
+    <figure
+      class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
+    >
+      <VBone
+        v-if="isLoadingThumbnail"
+        class="col-span-full row-span-full h-[500px] w-[300px] self-center"
+      />
       <img
         v-if="image && !sketchFabUid"
         id="main-image"
         :src="imageSrc"
         :alt="image.title"
-        class="mx-auto h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
+        class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
         :width="imageWidth"
         :height="imageHeight"
         @load="onImageLoaded"
@@ -91,7 +97,13 @@
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import {
+  defineComponent,
+  useContext,
+  useFetch,
+  useMeta,
+  useRoute,
+} from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
@@ -104,6 +116,7 @@ import { createDetailPageMeta } from "~/utils/og"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
+import VBone from "~/components/VSkeleton/VBone.vue"
 import VButton from "~/components/VButton.vue"
 import VImageDetails from "~/components/VImageDetails/VImageDetails.vue"
 import VLink from "~/components/VLink.vue"
@@ -117,6 +130,7 @@ import errorImage from "~/assets/image_not_available_placeholder.png"
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VBone,
     VBackToSearchResultsLink,
     VButton,
     VLink,
@@ -133,27 +147,45 @@ export default defineComponent({
     const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
 
-    const image = computed(() =>
-      singleResultStore.mediaType === IMAGE
-        ? (singleResultStore.mediaItem as ImageDetail)
-        : null
-    )
+    const route = useRoute()
 
+    const image = ref<ImageDetail | null>(singleResultStore.image)
+
+    /**
+     * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
+     * and then replace it with the provider image once it is loaded.
+     */
+    const imageSrc = ref(image.value?.thumbnail)
+
+    const isLoadingThumbnail = ref(true)
+
+    const { error: nuxtError } = useContext()
+
+    useFetch(async () => {
+      const imageId = route.value.params.id
+      await singleResultStore.fetch(IMAGE, imageId)
+
+      const fetchedImage = singleResultStore.image
+
+      if (!fetchedImage) {
+        // TODO: Handle timeout errors
+        nuxtError({ statusCode: 404 })
+      } else {
+        image.value = fetchedImage
+        imageSrc.value = fetchedImage.thumbnail
+      }
+    })
+
+    const backToSearchPath = computed(() => searchStore.backToSearchPath)
+    const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
     const relatedMedia = computed(
       () => relatedMediaStore.media as ImageDetail[]
     )
-    const backToSearchPath = computed(() => searchStore.backToSearchPath)
-    const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
     const imageWidth = ref(0)
     const imageHeight = ref(0)
     const imageType = ref("Unknown")
-    /**
-     * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
-     * and then replace it with the provider image once it is loaded.
-     */
-    const imageSrc = ref(image.value.thumbnail)
     const isLoadingMainImage = ref(true)
     const sketchFabfailure = ref(false)
 
@@ -175,7 +207,7 @@ export default defineComponent({
         return
       }
       imageSrc.value =
-        event.target.src === image.value.url
+        event.target.src === image.value?.url
           ? image.value.thumbnail
           : errorImage
     }
@@ -186,14 +218,15 @@ export default defineComponent({
      * @param event - the image load event.
      */
     const onImageLoaded = (event: Event) => {
-      if (!(event.target instanceof HTMLImageElement)) {
-        return
-      }
-      if (isLoadingMainImage.value) {
-        imageWidth.value = image.value?.width || event.target.naturalWidth
-        imageHeight.value = image.value?.height || event.target.naturalHeight
+      if (!(event.target instanceof HTMLImageElement) || !image.value) return
 
-        if (image.value?.filetype) {
+      isLoadingThumbnail.value = false
+
+      if (isLoadingMainImage.value) {
+        imageWidth.value = image.value.width || event.target.naturalWidth
+        imageHeight.value = image.value.height || event.target.naturalHeight
+
+        if (image.value.filetype) {
           imageType.value = image.value.filetype
         } else {
           axios
@@ -238,7 +271,7 @@ export default defineComponent({
       }
       sendCustomEvent("VISIT_CREATOR_LINK", {
         id: image.value.id,
-        url: image.value.creator_url,
+        url: image.value.creator_url ?? "",
       })
     }
 
@@ -255,6 +288,8 @@ export default defineComponent({
       imageType,
       sketchFabfailure,
       sketchFabUid,
+
+      isLoadingThumbnail,
       onImageLoaded,
       onImageError,
       handleRightClick,
@@ -262,23 +297,6 @@ export default defineComponent({
 
       sendGetMediaEvent,
       sendVisitCreatorLinkEvent,
-    }
-  },
-  async asyncData({ app, error, route, $pinia }) {
-    const imageId = route.params.id
-    const singleResultStore = useSingleResultStore($pinia)
-    try {
-      await singleResultStore.fetch(IMAGE, imageId)
-    } catch (err) {
-      const errorMessage = app.i18n
-        .t("error.image-not-found", {
-          id: imageId,
-        })
-        .toString()
-      return error({
-        statusCode: 404,
-        message: errorMessage,
-      })
     }
   },
   head: {},
