@@ -3,7 +3,6 @@ import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 import { useMediaStore } from "~/stores/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { warn } from "~/utils/console"
 
 const detailData = {
   [AUDIO]: { title: "audioDetails", id: "audio1", frontendMediaType: AUDIO },
@@ -12,10 +11,6 @@ const detailData = {
 jest.mock("axios", () => ({
   ...jest.requireActual("axios"),
   isAxiosError: jest.fn((obj) => "response" in obj),
-}))
-
-jest.mock("~/utils/console", () => ({
-  warn: jest.fn(),
 }))
 
 const mockImplementation = (mediaType) => () =>
@@ -53,8 +48,7 @@ describe("Media Item Store", () => {
         isFetching: false,
         fetchingError: null,
       })
-      expect(singleResultStore.audio).toEqual(null)
-      expect(singleResultStore.image).toEqual(null)
+      expect(singleResultStore.mediaItem).toEqual(null)
       expect(singleResultStore.mediaType).toEqual(null)
     })
   })
@@ -75,7 +69,7 @@ describe("Media Item Store", () => {
         const singleResultStore = useSingleResultStore()
 
         await singleResultStore.fetchMediaItem(type, "foo")
-        expect(singleResultStore[type]).toEqual(detailData[type])
+        expect(singleResultStore.mediaItem).toEqual(detailData[type])
       }
     )
     it.each(supportedMediaTypes)(
@@ -87,7 +81,7 @@ describe("Media Item Store", () => {
           [`${type}1`]: detailData[type],
         }
         await singleResultStore.fetchMediaItem(type, `${type}1`)
-        expect(singleResultStore[type]).toEqual(detailData[type])
+        expect(singleResultStore.mediaItem).toEqual(detailData[type])
       }
     )
 
@@ -111,22 +105,12 @@ describe("Media Item Store", () => {
     it.each(supportedMediaTypes)(
       "fetchMediaItem on 404 sets fetchingError and throws a new error",
       async (type) => {
-        mocks[type].mockImplementationOnce(() =>
-          Promise.reject({ response: { status: 404 } })
-        )
-        const expectedError = new Error(
-          "Could not fetch related image for id foo"
-        )
-
+        const expectedError = { response: { status: 404 } }
+        mocks[type].mockImplementationOnce(() => Promise.reject(expectedError))
         const singleResultStore = useSingleResultStore()
         const id = "foo"
 
-        await singleResultStore.fetch(type, id)
-        expect(warn.mock.calls[0][0]).toEqual("Could not load related media: ")
-        expect(warn.mock.calls[0][1]).toEqual(expectedError)
-
-        expect(warn).toHaveBeenCalledWith(
-          "Could not load related media: ",
+        await expect(singleResultStore.fetch(type, id)).rejects.toEqual(
           expectedError
         )
       }
