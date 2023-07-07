@@ -1,12 +1,15 @@
 <template>
   <VSkipToContentContainer as="main">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink :id="image.id" :href="backToSearchPath" />
+      <VBackToSearchResultsLink
+        :id="$route.params.id"
+        :href="backToSearchPath"
+      />
     </div>
 
     <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">
       <img
-        v-if="!sketchFabUid"
+        v-if="image && !sketchFabUid"
         id="main-image"
         :src="imageSrc"
         :alt="image.title"
@@ -15,7 +18,7 @@
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
-        @contextmenu="handleRightClick(image.id)"
+        @contextmenu="handleRightClick($route.params.id)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -25,60 +28,62 @@
       />
     </figure>
 
-    <section
-      id="title-button"
-      class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
-    >
-      <VButton
-        as="VLink"
-        :href="image.foreign_landing_url"
-        variant="filled-pink"
-        class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
-        show-external-icon
-        :external-icon-size="6"
-        has-icon-end
-        size="large"
-        :send-external-link-click-event="false"
-        @click="sendGetMediaEvent"
+    <template v-if="image">
+      <section
+        id="title-button"
+        class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
       >
-        {{ $t("imageDetails.weblink") }}
-      </VButton>
-      <div class="description-bold flex flex-1 flex-col justify-center">
-        <h1 class="description-bold md:heading-5 line-clamp-2">
-          {{ image.title }}
-        </h1>
-        <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
-          <template #name>
-            <VLink
-              v-if="image.creator_url"
-              :aria-label="
-                $t('mediaDetails.aria.creatorUrl', {
-                  creator: image.creator,
-                })
-              "
-              :href="image.creator_url"
-              :send-external-link-click-event="false"
-              @click="sendVisitCreatorLinkEvent"
-              >{{ image.creator }}</VLink
-            >
-            <span v-else>{{ image.creator }}</span>
-          </template>
-        </i18n>
-      </div>
-    </section>
+        <VButton
+          as="VLink"
+          :href="image.foreign_landing_url"
+          variant="filled-pink"
+          class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
+          show-external-icon
+          :external-icon-size="6"
+          has-icon-end
+          size="large"
+          :send-external-link-click-event="false"
+          @click="sendGetMediaEvent"
+        >
+          {{ $t("imageDetails.weblink") }}
+        </VButton>
+        <div class="description-bold flex flex-1 flex-col justify-center">
+          <h1 class="description-bold md:heading-5 line-clamp-2">
+            {{ image.title }}
+          </h1>
+          <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
+            <template #name>
+              <VLink
+                v-if="image.creator_url"
+                :aria-label="
+                  $t('mediaDetails.aria.creatorUrl', {
+                    creator: image.creator,
+                  })
+                "
+                :href="image.creator_url"
+                :send-external-link-click-event="false"
+                @click="sendVisitCreatorLinkEvent"
+                >{{ image.creator }}</VLink
+              >
+              <span v-else>{{ image.creator }}</span>
+            </template>
+          </i18n>
+        </div>
+      </section>
 
-    <VMediaReuse :media="image" />
-    <VImageDetails
-      :image="image"
-      :image-width="imageWidth"
-      :image-height="imageHeight"
-      :image-type="imageType"
-    />
-    <VRelatedImages
-      v-if="hasRelatedMedia"
-      :media="relatedMedia"
-      :fetch-state="relatedFetchState"
-    />
+      <VMediaReuse :media="image" />
+      <VImageDetails
+        :image="image"
+        :image-width="imageWidth"
+        :image-height="imageHeight"
+        :image-type="imageType"
+      />
+      <VRelatedImages
+        v-if="hasRelatedMedia || relatedFetchState.isFetching"
+        :media="relatedMedia"
+        :fetch-state="relatedFetchState"
+      />
+    </template>
   </VSkipToContentContainer>
 </template>
 
@@ -134,9 +139,11 @@ export default defineComponent({
         : null
     )
 
+    const relatedMedia = computed(
+      () => relatedMediaStore.media as ImageDetail[]
+    )
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
     const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
-    const relatedMedia = computed(() => relatedMediaStore.media)
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
     const imageWidth = ref(0)
