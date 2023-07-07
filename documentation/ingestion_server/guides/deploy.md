@@ -2,12 +2,9 @@
 
 ## Setup
 
-1. Check
-   [airflow](https://href.li/?https://airflow.openverse.engineering/home?tags=data_refresh)
+1. Check [airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
    to make sure a data refresh isn't occurring.
-1. Record and verify the latest commit SHA of the ingestion server in
-   [the ingestion server Docker image](https://github.com/wordpress/openverse/pkgs/container/openverse-ingestion_server).
-1. Release the app via
+2. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
    Click the "Run workflow" button, choose "ingestion server" from the dropdown,
    and supply the SHA identified in step 1.
@@ -36,7 +33,8 @@
 1. Push up a PR to the infrastructure repository with the Terraform changes you
    pushed (the version bump for the relevant module). Be sure to restore the
    value of `data_refresh_cleared` back to `false`.
-1. In the event of errors or problems, repeat the deployment process with the
-   previous production SHA identified in Step 1 of this guide.
+1. In the event of errors or problems, repeat the deployment process using the
+   latest stable version of the application. You can find this tag in the
+   [changelogs](/changelogs/index).
 1. If anything else goes wrong or service is disrupted, consider this a
    Production Incident and notify the team.
