@@ -95,7 +95,9 @@ def get_providers_update_confs(
                 popularity_refresh.media_type
             ),
             "batch_size": 10_000,
-            "update_timeout": popularity_refresh.refresh_popularity_batch_timeout,
+            "update_timeout": (
+                popularity_refresh.refresh_popularity_batch_timeout.total_seconds()
+            ),
             "dry_run": False,
             "resume_update": False,
         }
