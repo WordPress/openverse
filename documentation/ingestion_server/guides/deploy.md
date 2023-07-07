@@ -2,12 +2,15 @@
 
 ## Setup
 
-1. Check [airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
+1. Check [Airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
    to make sure a data refresh isn't occurring.
-2. Release the app via
+1. Visit the
+   [Ingestion Server Docker image](https://github.com/wordpress/openverse/pkgs/container/ing)
+   page and copy the SHA of the image tagged `latest`.
+1. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
    Click the "Run workflow" button, choose "ingestion server" from the dropdown,
-   and supply the SHA identified in step 1.
+   and supply the SHA identified in the previous step.
 
 ## Deployment
 
@@ -17,7 +20,7 @@
       and bump the ingestion server version with the
       `just bump dev ingestion-server` command.
    1. `just apply dev ingestion-server` and verify the plan before deploying.
-2. Deploy production:
+1. Deploy production:
    1. Update the value of `data_refresh_cleared` to `true` in the
       [production module declaration](https://github.com/WordPress/openverse-infrastructure/blob/main/environments/prod/ingestion-server.tf#L9).
    1. `just bump prod ingestion-server` command.

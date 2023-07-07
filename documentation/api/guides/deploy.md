@@ -11,12 +11,11 @@ For more information on how deployments work, please see the [general deployment
    Verify that the commit SHA live on the staging site is also tagged with
    `latest` in the Docker image.
    ![GitHub package directory screenshot](/_static/package_directory_example.png)
-
-2. Release the app via
+1. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
    Click the "Run workflow" button, choose "api" from the dropdown, and supply
    the SHA identified in step 1.
-3. That's it! The API will be deployed. You can monitor the deployment in the
+1. That's it! The API will be deployed. You can monitor the deployment in the
    maintainers `#openverse-notifications` channel and in the
    [infrastructure repository's workflow listing](https://github.com/WordPress/openverse-infrastructure/actions).
 

@@ -4,7 +4,7 @@
 
 1. Check [Airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
    to make sure a data refresh isn't occurring.
-2. Release the app via
+1. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
    Click the "Run workflow" button, choose "catalog" from the dropdown, and
    supply the SHA identified in step 1.
@@ -17,9 +17,9 @@
       and bump the ingestion server version with the `just bump dev catalog`
       command.
    1. `just apply dev catalog` and verify the plan before deploying.
-2. Deploy production:
+1. Deploy production:
    1. `just bump prod catalog` command.
-   2. `just apply prod catalog` and verify the plan before deploying.
+   1. `just apply prod catalog` and verify the plan before deploying.
 
 ## Post-deployment steps
 
