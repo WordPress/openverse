@@ -1,7 +1,7 @@
 const axios = require("axios")
 const rateLimit = require("axios-rate-limit")
 
-const { userAgent } = require("../../utils/user-agent")
+const { userAgent } = require("../../constants/user-agent")
 
 module.exports = rateLimit(
   axios.create({

@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { warn } from "~/utils/console"
 import { AUDIO, IMAGE } from "~/constants/media"
 
-import { userAgent } from "~/utils/user-agent"
+import { userAgent } from "~/constants/user-agent"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 

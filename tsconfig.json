@@ -51,7 +51,7 @@
      */
     "frontend/src/constants/**/*",
     "frontend/src/server-middleware/healthcheck.js",
-    "frontend/src/utils/user-agent.js",
+    "frontend/src/constants/user-agent.js",
     /** End of non TypeScript files section */
     "frontend/**/*.json"
   ],
