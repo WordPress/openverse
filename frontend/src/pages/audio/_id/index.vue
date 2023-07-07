@@ -82,12 +82,12 @@ export default defineComponent({
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
     const sendAudioEvent = (
-      data: AudioInteractionData,
+      data: Omit<AudioInteractionData, "component">,
       component: "AudioDetailPage" | "VRelatedAudio"
     ) => {
       sendCustomEvent("AUDIO_INTERACTION", {
         ...data,
-        component: component,
+        component,
       })
     }
 
