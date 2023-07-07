@@ -35,7 +35,7 @@ export const collectAnalyticsEvents = (context: BrowserContext) => {
       if (parsedData.p) {
         event.p = JSON.parse(parsedData.p)
       }
-      sentAnalyticsEvents.push({ ...parsedData })
+      sentAnalyticsEvents.push({ ...event })
     }
     route.abort()
   })

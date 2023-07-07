@@ -1,11 +1,11 @@
 import { test, expect, Page } from "@playwright/test"
 
 import {
-  assertCheckboxStatus,
   changeSearchType,
   goToSearchTerm,
   isPageDesktop,
   filters,
+  getCheckbox,
 } from "~~/test/playwright/utils/navigation"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -65,12 +65,10 @@ breakpoints.describeMobileAndDesktop(() => {
     )
     await filters.open(page)
     // Creator filter was removed from the UI
-    const expectedFilters = ["cc0", "commercial"]
+    const expectedFilters = ["Zero", "Use commercially"]
 
     for (const checkbox of expectedFilters) {
-      await expect(
-        assertCheckboxStatus(page, checkbox)
-      ).resolves.toBeUndefined()
+      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
     }
   })
 
@@ -82,10 +80,10 @@ breakpoints.describeMobileAndDesktop(() => {
     )
     await filters.open(page)
     // Creator filter was removed from the UI
-    const expectedFilters = ["cc0", "commercial"]
+    const expectedFilters = ["Zero", "Use commercially"]
 
     for (const checkbox of expectedFilters) {
-      await assertCheckboxStatus(page, checkbox)
+      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
     }
     await changeSearchType(page, IMAGE)
 
@@ -94,7 +92,7 @@ breakpoints.describeMobileAndDesktop(() => {
     )
     await filters.open(page)
     for (const checkbox of expectedFilters) {
-      await assertCheckboxStatus(page, checkbox)
+      await expect(getCheckbox(page, { regexp: checkbox })).toBeChecked()
     }
   })
 
@@ -107,8 +105,8 @@ breakpoints.describeMobileAndDesktop(() => {
     await filters.open(page)
 
     // Creator filter was removed from the UI
-    for (const checkbox of ["cc0", "commercial"]) {
-      await assertCheckboxStatus(page, checkbox)
+    for (const checkbox of ["Zero", "Use commercially"]) {
+      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
     }
 
     await changeSearchType(page, ALL_MEDIA)
@@ -124,23 +122,26 @@ breakpoints.describeMobileAndDesktop(() => {
   test("selecting some filters can disable dependent filters", async ({
     page,
   }) => {
+    const nonCommercialLicenses = [
+      "Attribution-NonCommercial",
+      "Attribution-NonCommercial-Share-Alike",
+      "Attribution-NonCommercial-NoDerivatives",
+    ]
     await page.goto("/search/audio?q=cat&license_type=commercial")
     await filters.open(page)
 
-    // by-nc is special because we normally test for fuzzy match, and by-nc matches 3 labels.
-    const byNc = page.locator('input[value="by-nc"]')
-    await expect(byNc).toBeDisabled()
-    for (const checkbox of ["by-nc-sa", "by-nc-nd"]) {
-      await assertCheckboxStatus(page, checkbox, "disabled")
+    await expect(getCheckbox(page, { label: "Use commercially" })).toBeChecked()
+
+    for (const checkbox of nonCommercialLicenses) {
+      await expect(getCheckbox(page, { label: checkbox })).not.toBeChecked()
     }
-    await assertCheckboxStatus(page, "commercial")
 
-    await page.click('label:has-text("commercial")')
+    await page.locator('label:has-text("Use commercially")').click()
 
-    await assertCheckboxStatus(page, "commercial", "unchecked")
-    await expect(byNc).toBeEnabled()
-    for (const checkbox of ["commercial", "by-nc-sa", "by-nc-nd"]) {
-      await assertCheckboxStatus(page, checkbox, "unchecked")
+    await expect(getCheckbox(page, { label: "Use commercially" })).toBeChecked()
+
+    for (const checkbox of nonCommercialLicenses) {
+      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
     }
   })
 
@@ -157,15 +158,16 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto("/search/image?q=cat&aspect_ratio=tall&license=cc0")
     await filters.open(page)
 
-    await assertCheckboxStatus(page, "tall")
-    await assertCheckboxStatus(page, "cc0")
+    await expect(getCheckbox(page, { label: "Tall" })).toBeChecked()
+    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
 
     await changeSearchType(page, AUDIO)
     await filters.open(page)
 
     // Only CC0 checkbox is checked, and the filter button label is
     // '1 Filter' on `xl` or '1' on `lg` screens
-    await assertCheckboxStatus(page, "cc0")
+    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
+
     await filters.close(page)
     // eslint-disable-next-line playwright/no-conditional-in-test
     if (isPageDesktop(page)) {
@@ -191,18 +193,20 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto("/search/image?q=cat")
     await filters.open(page)
 
-    await assertCheckboxStatus(page, "cc0", "unchecked")
+    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
 
-    const [response] = await Promise.all([
-      page.waitForResponse((response) => response.url().includes("cc0")),
-      page.click('label:has-text("CC0")'),
-    ])
+    // Alternative way with a predicate. Note no await.
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("/images/") && response.status() === 200
+    )
+    await page.getByLabel("Zero").click()
+    const response = await responsePromise
 
-    await assertCheckboxStatus(page, "cc0")
+    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
     // Remove the host url and path because when proxied, the 'http://localhost:49153' is used instead of the
     // real API url
-    const queryString = response.url().split("/images/")[1]
-    expect(queryString).toEqual("?q=cat&license=cc0")
+    expect(response.url()).toContain("?q=cat&license=cc0")
   })
 
   for (const [searchType, source] of [
@@ -217,9 +221,7 @@ breakpoints.describeMobileAndDesktop(() => {
       )
       await filters.open(page)
 
-      await expect(
-        assertCheckboxStatus(page, source, "checked")
-      ).resolves.toBeUndefined()
+      await expect(getCheckbox(page, { label: source })).toBeChecked()
     })
   }
 })

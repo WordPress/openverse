@@ -1,5 +1,3 @@
-import { expect } from "@playwright/test"
-
 import rtlMessages from "~~/test/locales/ar.json"
 
 import enMessages from "~/locales/en.json"
@@ -194,26 +192,21 @@ export const isDialogOpen = async (page: Page) => {
   return page.getByRole("dialog").isVisible({ timeout: 100 })
 }
 
+type CheckboxSelector = { label: string } | { regexp: RegExp | string }
+
 /**
- * Asserts that the checkbox has the given status.
- *
- * @param page - Playwright page object
- * @param label - the label of the checkbox, converted to a RegExp if string
- * @param status - the status to assert
+ * Returns checkbox using exact matching if label is provided,
+ * or fuzzy matching if regexp is provided.
  */
-export const assertCheckboxStatus = async (
-  page: Page,
-  label: string | RegExp,
-  status: CheckboxStatus = "checked"
-) => {
-  const labelRegexp = typeof label === "string" ? new RegExp(label, "i") : label
-  await expect(
-    page.getByRole("checkbox", {
-      name: labelRegexp,
-      disabled: status === "disabled",
-      checked: status === "checked",
-    })
-  ).resolves.toBeDefined()
+export const getCheckbox = (page: Page, selector: CheckboxSelector) => {
+  const name =
+    "label" in selector
+      ? selector.label
+      : typeof selector.regexp === "string"
+      ? new RegExp(selector.regexp, "i")
+      : selector.regexp
+
+  return page.getByRole("checkbox", { name, exact: "label" in selector })
 }
 
 export const changeSearchType = async (page: Page, to: SupportedSearchType) => {

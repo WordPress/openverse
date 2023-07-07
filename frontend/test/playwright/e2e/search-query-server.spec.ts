@@ -1,11 +1,11 @@
 import { test, expect } from "@playwright/test"
 
 import {
-  assertCheckboxStatus,
   currentContentType,
   filters,
   goToSearchTerm,
   searchTypeNames,
+  getCheckbox,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
@@ -72,8 +72,8 @@ test.describe("search query on SSR", () => {
 
       await filters.open(page)
       // Creator filter was removed from the UI
-      for (const checkbox of ["cc0", "commercial"]) {
-        await assertCheckboxStatus(page, checkbox)
+      for (const checkbox of ["Zero", "Use commercially"]) {
+        await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
       }
     })
 
@@ -87,7 +87,7 @@ test.describe("search query on SSR", () => {
       await filters.open(page)
       const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]
       for (const checkbox of checkboxes) {
-        await assertCheckboxStatus(page, checkbox)
+        await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
       }
     })
 

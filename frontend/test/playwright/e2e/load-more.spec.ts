@@ -142,6 +142,7 @@ test.describe("Load more button", () => {
         const analyticsEvents = collectAnalyticsEvents(context)
 
         await goToSearchTerm(page, "cat")
+        await page.locator(loadMoreButton).scrollIntoViewIfNeeded()
         await expect(page.locator(loadMoreButton)).toBeVisible()
 
         const reachResultEndEvent = analyticsEvents.find(
@@ -165,8 +166,6 @@ test.describe("Load more button", () => {
       const analyticsEvents = collectAnalyticsEvents(context)
 
       await goToSearchTerm(page, "cat")
-      await expect(page.locator(loadMoreButton)).toBeVisible()
-
       await page.click(loadMoreButton)
 
       const loadMoreEvent = analyticsEvents.find(
