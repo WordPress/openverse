@@ -50,7 +50,7 @@ describe("VCheckbox", () => {
     const checkboxes = screen.queryAllByLabelText(/jpgs/i, { role: "checkbox" })
 
     // The checkmark svg should not be visible
-    expect(container.querySelector("svg")).toBeHidden()
+    expect(container.querySelector("svg")).not.toBeVisible()
     expect(checkboxes).toHaveLength(1)
   })
 

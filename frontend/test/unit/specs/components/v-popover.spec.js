@@ -114,7 +114,7 @@ describe("VPopover", () => {
         await doOpen()
         expect(getPopover()).toBeVisible()
         await clickOutside()
-        expect(queryPopover()).toBeHidden()
+        expect(queryPopover()).not.toBeVisible()
         expect(getTrigger()).toHaveFocus()
       })
 
@@ -138,7 +138,7 @@ describe("VPopover", () => {
       expect(getPopover()).toBeVisible()
       await clickOutside()
       await nextTick()
-      expect(queryPopover()).toBeHidden()
+      expect(queryPopover()).not.toBeVisible()
     })
 
     it("should not hide the popover if a click happens outside the popover when false", async () => {
@@ -160,7 +160,7 @@ describe("VPopover", () => {
       await doOpen()
       expect(getPopover()).toBeVisible()
       await userEvent.keyboard("{escape}")
-      expect(queryPopover()).toBeHidden()
+      expect(queryPopover()).not.toBeVisible()
     })
 
     it("should not hide if the escape is sent in the popover when false", async () => {
