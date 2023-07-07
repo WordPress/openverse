@@ -8,4 +8,5 @@ applications are monitored.
 
 traffic/index
 cloudwatch_logs/index
+run_books/index
 ```
