@@ -34,7 +34,9 @@
    pushed (the version bump for the relevant module). Be sure to restore the
    value of `data_refresh_cleared` back to `false`.
 1. In the event of errors or problems, repeat the deployment process using the
-   latest stable version of the application. You can find this tag in the
-   [changelogs](/changelogs/index).
+   latest stable version of the application. You can find the release version
+   number in the [changelogs](/changelogs/index), and then the tag to pass to
+   the action is the version number prefixed with "rel-", for example
+   "rel-2023.07.03.17.52.00".
 1. If anything else goes wrong or service is disrupted, consider this a
    Production Incident and notify the team.
