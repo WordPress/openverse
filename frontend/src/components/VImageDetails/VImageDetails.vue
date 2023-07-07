@@ -2,29 +2,26 @@
   <section class="w-full">
     <div class="mb-6 flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
-        {{ $t("image-details.information.title") }}
+        {{ $t("imageDetails.information.title") }}
       </h2>
       <VContentReportPopover :media="image" />
     </div>
     <ul v-if="image && image.tags" class="mb-6 flex flex-wrap gap-2">
-      <VMediaTag
-        v-for="(tag, index) in image.tags.filter((i) => !!i)"
-        :key="index"
-        tag="li"
-        >{{ tag.name }}</VMediaTag
-      >
+      <VMediaTag v-for="(tag, index) in filteredTags" :key="index" tag="li">{{
+        tag.name
+      }}</VMediaTag>
     </ul>
     <dl>
       <div>
-        <dt>{{ $t("image-details.information.type") }}</dt>
+        <dt>{{ $t("imageDetails.information.type") }}</dt>
         <dd class="uppercase">{{ imgType }}</dd>
       </div>
       <div v-if="image.providerName !== image.sourceName">
-        <dt>{{ $t("image-details.information.provider") }}</dt>
+        <dt>{{ $t("imageDetails.information.provider") }}</dt>
         <dd>{{ image.providerName }}</dd>
       </div>
       <div>
-        <dt>{{ $t("image-details.information.source") }}</dt>
+        <dt>{{ $t("imageDetails.information.source") }}</dt>
         <dd>
           <VLink :href="image.foreign_landing_url" class="text-pink">{{
             image.sourceName
@@ -32,21 +29,23 @@
         </dd>
       </div>
       <div>
-        <dt>{{ $t("image-details.information.dimensions") }}</dt>
+        <dt>{{ $t("imageDetails.information.dimensions") }}</dt>
         <dd>
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ imageWidth }} &times; {{ imageHeight }}
-          {{ $t("image-details.information.pixels") }}
+          {{ $t("imageDetails.information.pixels") }}
         </dd>
       </div>
     </dl>
   </section>
 </template>
 
-<script>
-import { computed, defineComponent } from "vue"
+<script lang="ts">
+import { computed, defineComponent, PropType } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
+
+import type { ImageDetail } from "~/types/media"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
 import VLink from "~/components/VLink.vue"
@@ -57,7 +56,7 @@ export default defineComponent({
   components: { VContentReportPopover, VLink, VMediaTag },
   props: {
     image: {
-      type: Object,
+      type: Object as PropType<ImageDetail>,
       required: true,
     },
     imageWidth: {
@@ -80,10 +79,14 @@ export default defineComponent({
         }
         return props.imageType
       }
-      return i18n.t("image-details.information.unknown")
+      return i18n.t("imageDetails.information.unknown")
     })
 
-    return { imgType }
+    const filteredTags = computed(() => {
+      return props.image.tags.filter((i: { name: string }) => !!i)
+    })
+
+    return { filteredTags, imgType }
   },
 })
 </script>

@@ -2,6 +2,7 @@ set dotenv-load := false
 
 COLOR := "\\033[0;36m"
 NO_COLOR := "\\033[0m"
+IS_CI := env_var_or_default("CI", "")
 
 # Show all available recipes
 @_default:
@@ -61,31 +62,36 @@ wait-up: up
 ########
 
 # Make a cURL POST request to the service with the given data
-_curl-post data host="localhost:50281":
-    curl \
+curl-post data host="localhost:50281":
+    STATUS_CODE=$(curl \
       -X POST \
       -H 'Content-Type: application/json' \
       -d '{{ data }}' \
-      -w "\n" \
-      'http://{{ host }}/task'
+      -o /dev/stderr \
+      -w "%{http_code}" \
+      'http://{{ host }}/task'); \
+    if [ $STATUS_CODE -lt 200 ] || [ $STATUS_CODE -ge 300 ]; then \
+      echo "Status: $STATUS_CODE"; \
+      exit 1; \
+    fi
 
 # Load sample data into temp table in API and new index in Elasticsearch
 ingest-upstream model="image" suffix="init":
-    just _curl-post '{"model": "{{ model }}", "action": "INGEST_UPSTREAM", "index_suffix": "{{ suffix }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "INGEST_UPSTREAM", "index_suffix": "{{ suffix }}"}'
 
 # Promote temp table to prod in API and new index to primary in Elasticsearch
 promote model="image" suffix="init" alias="image":
-    just _curl-post '{"model": "{{ model }}", "action": "PROMOTE", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "PROMOTE", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
 
 # Delete an index in Elasticsearch
 delete model="image" suffix="init" alias="image":
-    just _curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "DELETE_INDEX", "index_suffix": "{{ suffix }}"}'
 
 point-alias model suffix alias:
-    just _curl-post '{"model": "{{ model }}", "action": "POINT_ALIAS", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "POINT_ALIAS", "index_suffix": "{{ suffix }}", "alias": "{{ alias }}"}'
 
 create-and-populate-filtered-index model="image" destination_suffix="init":
-    just _curl-post '{"model": "{{ model }}", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "{{ destination_suffix }}"}'
+    just curl-post '{"model": "{{ model }}", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "{{ destination_suffix }}"}'
 
 #########
 # Tests #
@@ -94,7 +100,11 @@ create-and-populate-filtered-index model="image" destination_suffix="init":
 # Run ingestion-server tests locally
 test-local *args:
     pipenv run pytest {{ args }}
+    {{ if IS_CI == "" { "just test-logs > test/ingestion_logs.txt && just test-clean-dc" } else { "" } }}
 
-# Clean integration test docker-compose stack. Useful if test tear down does not run due to catastrophic test failure.
+test-logs:
+    docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml logs --no-color
+
+# Clean integration test docker-compose stack. Is run after tests are finished locally.
 test-clean-dc:
     docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml down -v

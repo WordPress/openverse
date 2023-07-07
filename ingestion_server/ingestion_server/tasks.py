@@ -3,7 +3,10 @@
 import datetime
 import logging
 from enum import Enum, auto
+from functools import wraps
 from multiprocessing import Value
+
+import sentry_sdk
 
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MediaType
@@ -153,6 +156,47 @@ class TaskTracker:
         return {"task_id": task_id} | self.serialize_task_info(task_info)
 
 
+def _with_sentry(fn):
+    """
+    Wrap the decorated function for Sentry multiprocessing.
+
+    Convenience function to wrap ``perform_task`` in such a way
+    to extract the ``sentry_hub`` kwarg passed by ``api.py``, send
+    exceptions to Sentry, and fully flush the client's Sentry
+    queue before the worker exits.
+
+    We cannot use the convenient ``ThreadingIntegration`` because it
+    does not support ``multiprocessing``, only the legacy ``threading``
+    module (we use ``multiprocessing``)
+    """
+
+    @wraps(fn)
+    def fn_with_sentry(*args, **kwargs):
+        hub = kwargs.pop("sentry_hub")
+        with hub:
+            try:
+                result = fn(*args, **kwargs)
+            except Exception as exc:
+                result = None
+                logging.error(exc, exc_info=exc)
+                sentry_sdk.capture_exception(exc)
+
+        client = hub.client
+        if client is not None:
+            # Sentry does not send events right away (it handles messages async)
+            # and because the task finishing will shut down the worker thread
+            # we need to flush the client before exiting the function.
+            # ``client.flush`` will block until all messages in Sentry's queue are sent.
+            # We do this _outside_ the try/except so that _anything_ passed to sentry
+            # (like messages, etc) also get sent before the worker thread is closed.
+            client.flush(timeout=5)
+
+        return result
+
+    return fn_with_sentry
+
+
+@_with_sentry
 def perform_task(
     task_id: str,
     model: MediaType,
@@ -213,7 +257,6 @@ def perform_task(
             func(model, **kwargs)  # Directly invoke indexer methods if no task function
     except Exception as err:
         exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
-        logging.error(f"Error processing task `{action}` for `{model}`: {err}")
         slack.error(
             f":x_red: Error processing task `{action}` for `{model}` "
             f"(`{exception_type}`): \n"

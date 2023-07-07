@@ -43,8 +43,10 @@ you need to run this.
 
    Now you should be able to access the following endpoints:
 
-   - the list of ingestion jobs on
+   - The list of ingestion jobs on
      [http://localhost:50281/task](http://localhost:50281/task)
+
+   You can view logs for the service using `just logs ingestion_server`.
 
 ## Shutting down
 

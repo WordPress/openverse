@@ -37,6 +37,7 @@ jobs:
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
       ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
+      packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -324,16 +325,17 @@ jobs:
       - name: Run ingestion-server tests
         run: just ingestion_server/test-local
 
+      - name: Print ingestion-server test logs
+        run: |
+          just ingestion_server/test-logs > ingestion_server/test/ingestion_logs.txt
+          cat ingestion_server/test/ingestion_logs.txt
+
       - name: Upload ingestion test logs
         if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
-
-      - name: Print ingestion test logs
-        if: success() || failure()
-        run: cat ingestion_server/test/ingestion_logs.txt
 
   #######
   # API #
@@ -549,6 +551,60 @@ jobs:
       - name: Pass
         run: echo 'Playwright tests are skipped because frontend is unchanged.'
 
+  package-checks:
+    name: Run checks for packages/*
+    if: |
+      needs.get-changes.outputs.packages == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - build
+          - unit_test
+        include:
+          - name: build
+            script: "build"
+          - name: unit_test
+            script: "test:unit"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Run packages checks
+        run: pnpm --filter ./packages/* run --aggregate-output ${{ matrix.script }}
+
+  # This job runs when `package-checks` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-package-checks:
+    name: Run checks for packages/*
+    if: |
+      !cancelled() &&
+      needs.package-checks.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - package-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - build
+          - unit_test
+
+    steps:
+      - name: Pass
+        run: echo 'Checks for packages are skipped because packages are unchanged.'
+
   playwright:
     name: Run Playwright tests
     if: |
@@ -565,13 +621,13 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook_vr
+          - storybook
         include:
           - name: playwright_vr
             script: "test:playwright visual-regression"
           - name: playwright_e2e
             script: "test:playwright e2e"
-          - name: storybook_vr
+          - name: storybook
             script: "test:storybook"
 
     steps:
@@ -609,7 +665,7 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook_vr
+          - storybook
 
     steps:
       - name: Pass
@@ -949,6 +1005,22 @@ jobs:
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
 
+      - name: Deploy staging thumbnails
+        uses: felixp8/dispatch-and-wait@v0.1.0
+        with:
+          owner: WordPress
+          repo: openverse-infrastructure
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event_type: deploy_staging_api_thumbnails
+          client_payload: |
+            {
+              "actor": "${{ github.actor }}",
+              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
+              "run_name": "${{ steps.commit.outputs.commit_message }}"
+            }
+          wait_time: 60 # check every minute
+          max_time: 1800 # allow up to 30 minutes for a deployment
+
   ################
   # Notification #
   ################
@@ -978,17 +1050,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Get commit message
+        id: commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_commit_message.py
+
       - name: Generate report
         id: report
         env:
-          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
-          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
-          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          COMMIT_MESSAGE: ${{ steps.commit.outputs.commit_message }}
           DEPLOY_API_RESULT: ${{ needs.deploy-api.result }}
-          SERVER_URL: ${{ github.server_url }}
+          DEPLOY_FRONTEND_RESULT: ${{ needs.deploy-frontend.result }}
+          EMIT_DOCS_RESULT: ${{ needs.emit-docs.result }}
+          GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
+          GITHUB_ACTOR: ${{ github.event.head_commit.author.username }}
+          PUBLISH_IMAGES_RESULT: ${{ needs.publish-images.result }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
           REPOSITORY: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
-          PYTHONPATH: ${{ github.workspace }}/automations/python
+          SERVER_URL: ${{ github.server_url }}
         working-directory: automations/python/workflows
         run: python generate_report.py
 

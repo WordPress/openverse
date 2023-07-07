@@ -41,18 +41,18 @@
         :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
-        {{ $t("image-details.weblink") }}
+        {{ $t("imageDetails.weblink") }}
       </VButton>
       <div class="description-bold flex flex-1 flex-col justify-center">
         <h1 class="description-bold md:heading-5 line-clamp-2">
           {{ image.title }}
         </h1>
-        <i18n v-if="image.creator" path="image-details.creator" tag="span">
+        <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
           <template #name>
             <VLink
               v-if="image.creator_url"
               :aria-label="
-                $t('media-details.aria.creator-url', {
+                $t('mediaDetails.aria.creatorUrl', {
                   creator: image.creator,
                 })
               "
@@ -86,7 +86,7 @@
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
 import type { ImageDetail } from "~/types/media"
@@ -235,6 +235,8 @@ export default defineComponent({
       })
     }
 
+    useMeta(createDetailPageMeta(image.value?.title, image.value?.url))
+
     return {
       image,
       hasRelatedMedia,
@@ -272,9 +274,7 @@ export default defineComponent({
       })
     }
   },
-  head() {
-    return createDetailPageMeta(this.image.title, this.image.url)
-  },
+  head: {},
 })
 </script>
 

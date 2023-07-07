@@ -34,6 +34,7 @@ extensions = [
     "link_usernames",
     "sphinx_copybutton",
     "notfound.extension",
+    "sphinx_reredirects",
 ]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
 
@@ -82,3 +83,8 @@ issuetracker_project = "WordPress/openverse"
 # our site is served directly at the root docs.openverse.org URL
 # so the prefix should be the root
 notfound_urls_prefix = "/"
+
+redirects = {
+    "meta/traffic/index": "/meta/monitoring/traffic/index.html",
+    "meta/traffic/runbooks/identifying-and-blocking-traffic-anomalies": "/meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html",  # noqa: E501
+}

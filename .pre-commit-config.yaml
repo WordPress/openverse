@@ -89,9 +89,9 @@ repos:
     hooks:
       - id: prettier
         additional_dependencies:
-          - prettier@2.6.0
-          - prettier-plugin-tailwindcss@0.2.2
-          - typescript@4.9.3
+          - prettier@2.8.3
+          - prettier-plugin-tailwindcss@0.3.0
+          - typescript@4.9.5
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.9.0
@@ -112,21 +112,21 @@ repos:
     hooks:
       - id: types
         name: types
-        files: ^frontend/.*$
-        entry: bash -c 'pnpm exec vue-tsc -p frontend --noEmit'
+        files: ^(frontend|packages)/.*$
+        entry: bash -c 'pnpm exec vue-tsc -p . --noEmit'
         language: system
         pass_filenames: false
       - id: eslint
         name: eslint
-        files: \.(js|ts|vue)$
+        files: (frontend|automations|packages).*?\.(js|ts|vue|json5|json)$
         "types": [file] # ESLint only accepts [javascript] by default.
         language: system
         pass_filenames: false
-        entry: bash -c 'pnpm exec eslint --fix --ext .js,.ts,.vue --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js .pnpmfile.cjs .eslintrc.js prettier.config.js'
+        entry: bash -c 'pnpm run eslint --fix'
       - id: test:unit
         name: test:unit
-        files: ^frontend/.*$
-        entry: bash -c 'just frontend/run test:unit'
+        files: ^(frontend|packages)/.*$
+        entry: bash -c 'pnpm run -r test:unit'
         language: system
         pass_filenames: false
         stages:

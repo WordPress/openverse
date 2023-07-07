@@ -20,12 +20,15 @@ ingestion_server:
   - load_sample_data.sh
 frontend:
   - frontend/**
+  - packages/**
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - tsconfig.json
   - .npmrc
   - .pnpmfile.cjs
+packages:
+  - packages/**
 analytics:
   - docker/clickhouse/**
   - docker/plausible/**

@@ -1,14 +1,14 @@
 <template>
   <aside>
     <h2 class="heading-6 md:heading-5 mb-6">
-      {{ $t("image-details.related-images") }}
+      {{ $t("imageDetails.relatedImages") }}
     </h2>
     <VLoadingIcon v-if="fetchState.isFetching" />
     <VImageGrid
       :images="media"
       :is-single-page="true"
       :fetch-state="fetchState"
-      :image-grid-label="$t('image-details.related-images').toString()"
+      :image-grid-label="$t('imageDetails.relatedImages').toString()"
     />
   </aside>
 </template>

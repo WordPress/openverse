@@ -1,21 +1,19 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { Page, test } from "@playwright/test"
 
 import { t } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
-import type { Page } from "@playwright/test"
 
 const imageUrl = "/image/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b"
 
 const getReportButton = (page: Page) => {
   return page.getByRole("button", {
-    name: t("media-details.content-report.long"),
+    name: t("mediaDetails.contentReport.long"),
   })
 }
 
 const getReportForm = (page: Page) => {
   return page.getByRole("dialog", {
-    name: t("media-details.content-report.long"),
+    name: t("mediaDetails.contentReport.long"),
   })
 }
 

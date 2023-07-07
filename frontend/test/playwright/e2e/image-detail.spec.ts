@@ -1,7 +1,6 @@
-import { expect, Page } from "@playwright/test"
+import { test, expect, Page } from "@playwright/test"
 
-import { test } from "~~/test/playwright/utils/test-fixture"
-
+import { mockProviderApis } from "~~/test/playwright/utils/route"
 import { t } from "~~/test/playwright/utils/navigation"
 
 const goToCustomImagePage = async (page: Page) => {
@@ -16,6 +15,10 @@ const showsErrorPage = async (page: Page) => {
 }
 
 test.describe.configure({ mode: "parallel" })
+
+test.beforeEach(async ({ context }) => {
+  await mockProviderApis(context)
+})
 
 test("shows the author and title of the image", async ({ page }) => {
   await goToCustomImagePage(page)

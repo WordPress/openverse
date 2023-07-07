@@ -5,6 +5,7 @@
 
 preparation
 frontend
+packages
 docker
 catalog
 ingestion_server

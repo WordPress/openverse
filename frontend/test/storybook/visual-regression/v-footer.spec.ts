@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { languageDirections } from "~~/test/playwright/utils/navigation"
@@ -8,8 +8,8 @@ const footerKinds = ["internal", "content"] as const
 const defaultUrl = "/iframe.html?id=components-vfooter--"
 
 const pageUrl = (
-  dir: typeof languageDirections[number],
-  footerKind: typeof footerKinds[number]
+  dir: (typeof languageDirections)[number],
+  footerKind: (typeof footerKinds)[number]
 ) => {
   const url = `${defaultUrl}${footerKind}`
   return dir === "ltr" ? url : `${url}&globals=languageDirection:rtl`

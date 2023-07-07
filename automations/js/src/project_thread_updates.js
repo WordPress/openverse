@@ -1,5 +1,8 @@
 // @ts-check
 
+// The number of days a project must be updated within
+const DAYS_UPDATED_WITHIN = 14
+
 const activeDevelopmentStatuses = [
   'In Kickoff',
   'In RFC',
@@ -23,6 +26,7 @@ const GET_PROJECT_CARDS = `
               __typename
               ... on Issue {
                 id
+                createdAt
                 url
                 state
                 assignees(first: 10) {
@@ -61,10 +65,10 @@ module.exports = async ({ github, core }) => {
     const isDryRun = process.env.DRY_RUN === 'true' ?? false
 
     const currentDate = new Date()
-    const fourteenDaysAgo = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate() - 14
+    // Create a date by subtracting DAYS_UPDATED_WITHIN days
+    // (converted to milliseconds) from the current date in milliseconds.
+    const requiredUpdatedByDate = new Date(
+      currentDate.getTime() - DAYS_UPDATED_WITHIN * 24 * 60 * 60 * 1000
     )
 
     // Fetch project cards with their associated issue data
@@ -77,8 +81,13 @@ module.exports = async ({ github, core }) => {
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
-      // If we're not looking at an open issue, move along
-      if (issue.__typename !== 'Issue' || issue.state !== 'OPEN') continue
+      // If we're not looking at an open issue older than the required update date, move along
+      if (
+        issue.__typename !== 'Issue' ||
+        issue.state !== 'OPEN' ||
+        new Date(issue.createdAt) > requiredUpdatedByDate
+      )
+        continue
 
       // Check the status of the card to make sure the project is in active development
       const status = node.fieldValueByName.name
@@ -89,7 +98,7 @@ module.exports = async ({ github, core }) => {
       if (
         // Check if the issue has been commented on in the last 14 days
         !comments.some(
-          (comment) => new Date(comment.createdAt) > fourteenDaysAgo
+          (comment) => new Date(comment.createdAt) > requiredUpdatedByDate
         )
       ) {
         // If not, leave a reminder comment on the issue

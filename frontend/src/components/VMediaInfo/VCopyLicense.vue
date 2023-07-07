@@ -1,13 +1,13 @@
 <template>
   <div>
     <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
-      {{ $t("media-details.reuse.copy-license.title") }}
+      {{ $t("mediaDetails.reuse.copyLicense.title") }}
     </h3>
 
     <VTabs label="#copy-license-title" :selected-id="tabs[0]">
       <template #tabs>
         <VTab v-for="tab in tabs" :id="tab" :key="tab">
-          {{ $t(`media-details.reuse.copy-license.${tab}`) }}
+          {{ $t(`mediaDetails.reuse.copyLicense.${tab}`) }}
         </VTab>
       </template>
       <VLicenseTabPanel

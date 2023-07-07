@@ -1,4 +1,4 @@
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { test } from "@playwright/test"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -11,8 +11,8 @@ const defaultUrl =
   "/iframe.html?id=components-vnotificationbanner--default-story"
 
 const pageUrl = (
-  nature: typeof natures[number],
-  variant: typeof variants[number]
+  nature: (typeof natures)[number],
+  variant: (typeof variants)[number]
 ) => {
   const url = `${defaultUrl}&args=nature:${nature};variant:${variant}`
   return url

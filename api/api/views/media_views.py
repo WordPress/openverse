@@ -8,8 +8,9 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from api.controllers import search_controller
 from api.models import ContentProvider
+from api.models.media import AbstractMedia
 from api.serializers.provider_serializers import ProviderSerializer
-from api.utils import photon
+from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 
 
@@ -26,7 +27,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
     pagination_class = StandardPagination
 
     # Populate these in the corresponding subclass
-    model_class = None
+    model_class: type[AbstractMedia] = None
     query_serializer_class = None
     default_index = None
 
@@ -42,7 +43,20 @@ class MediaViewSet(ReadOnlyModelViewSet):
             raise ValueError(msg)
 
     def get_queryset(self):
-        return self.model_class.objects.all()
+        # The alternative to a sub-query would be using `extra` to do a join
+        # to the content provider table and filtering `filter_content`. However,
+        # that assumes that a content provider entry exists, which is not necessarily
+        # the case. We often don't add a content provider until after works from
+        # new providers are available in the API, and sometimes not even then.
+        # Search returns results with providers that do not have a ContentProvider
+        # table entry. Therefore, to maintain that assumption, a subquery is the only
+        # workable approach, as Django's `extra` does not provide any facility for
+        # handling null relations on the join.
+        return self.model_class.objects.exclude(
+            provider__in=ContentProvider.objects.filter(
+                filter_content=True
+            ).values_list("provider_identifier")
+        )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -164,10 +178,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        photon.check_image_type(image_url, media_obj)
-
-        return photon.get(
+        return image_proxy.get(
             image_url,
+            media_obj.identifier,
             accept_header=request.headers.get("Accept", "image/*"),
             **serializer.validated_data,
         )

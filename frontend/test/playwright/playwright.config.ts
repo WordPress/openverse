@@ -1,13 +1,4 @@
-import path from "path"
-
-import { addAliases } from "module-alias"
-
 import type { PlaywrightTestConfig } from "@playwright/test"
-
-addAliases({
-  "~": path.resolve(process.cwd(), "src"),
-  "~~": process.cwd(),
-})
 
 const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
 
@@ -29,7 +20,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   webServer: {
     command: `./node_modules/.bin/npm-run-all -p -r talkback ${pwCommand}`,
-    cwd: "/app",
+    cwd: "/frontend",
     timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
@@ -43,7 +34,7 @@ const config: PlaywrightTestConfig = {
     baseURL: "http://localhost:8443",
     trace: "retain-on-failure",
   },
-  timeout: 60 * 1e3, // 1 minute
+  timeout: 60 * 1e3,
   /**
    * When updating or recreating tapes, if we have more than one worker running
    * then Talkback is liable to see multiple requests at the same time that would

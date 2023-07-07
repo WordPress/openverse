@@ -62,3 +62,5 @@ grafana.db
 ingestion_server.log
 
 *.tsbuildinfo
+
+dist

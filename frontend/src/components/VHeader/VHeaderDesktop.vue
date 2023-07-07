@@ -19,7 +19,7 @@
       <VSearchBarButton
         v-show="searchTerm !== ''"
         icon="close-small"
-        :label="$t('browse-page.search-form.clear')"
+        :label="$t('browsePage.searchForm.clear')"
         inner-area-classes="bg-white hover:bg-dark-charcoal-10"
         class="hidden group-focus-within:flex"
         @click="clearSearchTerm"
@@ -65,6 +65,8 @@ import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
 
+import type { Ref } from "vue"
+
 /**
  * The desktop search header.
  */
@@ -85,8 +87,8 @@ export default defineComponent({
     const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
-    const isHeaderScrolled = inject(IsHeaderScrolledKey)
-    const isSidebarVisible = inject(IsSidebarVisibleKey)
+    const isHeaderScrolled = inject<Ref<boolean>>(IsHeaderScrolledKey)
+    const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
@@ -102,15 +104,23 @@ export default defineComponent({
 
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-
-      document.activeElement?.blur()
+      const activeElement = document.activeElement as HTMLElement
+      activeElement?.blur()
       updateSearchState()
     }
+
     const areFiltersDisabled = computed(
       () => !searchStore.searchTypeIsSupported
     )
 
-    const toggleSidebar = () => uiStore.toggleFilters()
+    const toggleSidebar = () => {
+      const toState = isSidebarVisible?.value ? "closed" : "opened"
+      sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
+        searchType: searchStore.searchType,
+        toState,
+      })
+      uiStore.toggleFilters()
+    }
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 

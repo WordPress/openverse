@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
@@ -63,7 +63,7 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleSearch = (searchTerm) => {
+    const handleSearch = (searchTerm: string) => {
       sendCustomEvent("SUBMIT_SEARCH", {
         searchType: ALL_MEDIA,
         query: searchTerm,

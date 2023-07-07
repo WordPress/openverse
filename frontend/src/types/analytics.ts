@@ -1,6 +1,22 @@
-import type { MediaType, SearchType } from "~/constants/media"
+import type {
+  MediaType,
+  SearchType,
+  SupportedSearchType,
+} from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
+import type { NonMatureFilterCategory } from "~/constants/filters"
 
+export type AudioInteraction = "play" | "pause" | "seek"
+export type AudioInteractionData = Exclude<
+  Events["AUDIO_INTERACTION"],
+  "component"
+>
+export type AudioComponent =
+  | "VRelatedAudio"
+  | "VGlobalAudioTrack"
+  | "AudioSearch"
+  | "AudioDetailPage"
+  | "VAllResultsGrid"
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
@@ -37,9 +53,16 @@ export type Events = {
   CLICK_HOME_GALLERY_IMAGE: {
     /** the set to which the image belongs */
     set: string
-    /** the identifier of the image */
-    identifier: string
+    /** The unique ID of the media */
+    id: string
   }
+  /**
+   * Description: The user opens the menu which lists pages.
+   * Questions:
+   *   - How often is this menu used?
+   *   - Is this menu visible enough?
+   */
+  OPEN_PAGES_MENU: Record<string, never>
   /**
    * Description: The user right clicks a single image result, most likely to download it.
    * Questions:
@@ -59,6 +82,26 @@ export type Events = {
     id: string
     /** The content type being searched (can include All content) */
     searchType: SearchType
+  }
+  /**
+   * Description: Whenever the user scrolls to the end of the results page.
+   * Useful to evaluate how often users load more results or click
+   * on the external sources dropdown.
+   *
+   * This event is mainly used as part of a funnel leading to a
+   * `LOAD_MORE` or `VIEW_EXTERNAL_SOURCES` event.
+   *
+   * Questions:
+   *   - Do users use external search after reaching the result end?
+   *   - Do users find a result before reaching the end of the results?
+   */
+  REACH_RESULT_END: {
+    /** The media type being searched */
+    searchType: SupportedSearchType
+    /** The search term */
+    query: string
+    /** The current page of results the user is on. */
+    resultPage: number
   }
   /**
    * Description: The user clicks the CTA button to the external source to use the image
@@ -140,6 +183,17 @@ export type Events = {
     component: string
   }
   /**
+   * Description: The visibility of the filter sidebar on desktop is toggled
+   * Questions:
+   *   - Do a majority users prefer the sidebar visible or hidden?
+   */
+  TOGGLE_FILTER_SIDEBAR: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The state of the filter sidebar after the user interaction. */
+    toState: "opened" | "closed"
+  }
+  /**
    * Description: The user clicks to a link outside of Openverse.
    * Questions:
    *   - What types of external content do users seek?
@@ -170,6 +224,96 @@ export type Events = {
   VISIT_LICENSE_PAGE: {
     /** The slug of the license the user clicked on */
     license: string
+  }
+  /**
+   * Description: Whenever the user selects a result from the search results page.
+   * Questions:
+   *   - Which results are most popular for given searches?
+   *   - How often do searches lead to clicking a result?
+   *   - Are there popular searches that do not result in result selection?
+   */
+  SELECT_SEARCH_RESULT: {
+    /** The unique ID of the media */
+    id: string
+    /** If the result is a related result, provide the ID of the 'original' result */
+    relatedTo: string | null
+    /** The media type being searched */
+    mediaType: SearchType
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The search term */
+    query: string
+  }
+  /**
+   * Description: When a user opens the external sources popover.
+   * Questions:
+   *   - How often do users use this feature?
+   *   - Under what conditions to users use this feature? No results?
+   *     Many results, but none they actually select?
+   */
+  VIEW_EXTERNAL_SOURCES: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The search term */
+    query: string
+    /** Pagination depth */
+    resultPage: number
+  }
+  /*
+   * Description: Whenever the user clicks the load more button
+   * Questions:
+   *   - On what page do users typically find a result?
+   *   - How often and how many pages of results do users load?
+   *   - Can we experiment with the types of results / result rankings
+   *     on certain pages, pages that users don't usually choose a result
+   *     from anyway?
+   */
+  LOAD_MORE_RESULTS: {
+    /** The media type being searched */
+    searchType: SearchType
+    /** The search term */
+    query: string
+    /** The current page of results the user is on,
+     * *before* loading more results.. */
+    resultPage: number
+  }
+  /*
+   * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
+   * Questions:
+   *  - Do most users filter their searches?
+   *  - What % of users use filtering?
+   *  - Which filters are most popular? Least popular?
+   *  - Are any filters so commonly applied they should become defaults?
+   */
+  APPLY_FILTER: {
+    /** The filter category, e.g. `license`  */
+    category: NonMatureFilterCategory
+    /** The filter key, e.g. `by` */
+    key: string
+    /** Whether the filter is checked or unchecked */
+    checked: boolean
+    /** The media type being searched, can include All content */
+    searchType: SearchType
+    /** The search term */
+    query: string
+  }
+
+  /** Description: The user plays, pauses, or seeks an audio track.
+   *
+   * Questions:
+   *   - Do users interact with media frequently?
+   *   - Is it more common to playback audio on single results
+   *     or search pages?
+   *   - How many audio plays do we get?
+   */
+  AUDIO_INTERACTION: {
+    /** The unique ID of the media */
+    id: string
+    event: AudioInteraction
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The name of the Vue component used on the interaction, e.g. the global or main player. */
+    component: AudioComponent
   }
 }
 

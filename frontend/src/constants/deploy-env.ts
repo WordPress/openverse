@@ -7,4 +7,4 @@ export const PRODUCTION = "production"
 // increasing order of code-readiness, from local to production.
 export const DEPLOY_ENVS = [LOCAL, DEVELOPMENT, STAGING, PRODUCTION] as const
 
-export type DeployEnv = typeof DEPLOY_ENVS[number]
+export type DeployEnv = (typeof DEPLOY_ENVS)[number]

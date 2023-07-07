@@ -28,6 +28,8 @@ module.exports = {
     "plugin:@intlify/vue-i18n/recommended",
     "plugin:import/recommended",
     "plugin:eslint-comments/recommended",
+    "plugin:jsonc/recommended-with-jsonc",
+    "plugin:@openverse/recommended",
   ],
   plugins: [
     "@typescript-eslint",
@@ -35,6 +37,7 @@ module.exports = {
     "vue",
     "vuejs-accessibility",
     "unicorn",
+    "@openverse",
   ],
   rules: {
     semi: [2, "never"],
@@ -185,10 +188,9 @@ module.exports = {
         "tsdoc/syntax": "error",
       },
     },
-    // Overrides for unit tests
     {
       env: { jest: true },
-      files: ["frontend/test/unit/**"],
+      files: ["packages/**/*/test", "frontend/test/unit/**"],
       plugins: ["jest"],
       extends: ["plugin:jest/recommended"],
       rules: {
@@ -213,23 +215,12 @@ module.exports = {
         ],
       },
     },
-    // Overrides for Playwright tests
     {
-      files: ["frontend/test/{playwright,storybook}/**/*.spec.{ts,js}"],
-      rules: {
-        "no-restricted-syntax": [
-          "error",
-          {
-            selector:
-              "ImportDeclaration[source.value='@playwright/test']:has(ImportSpecifier[local.name='test'])",
-            message:
-              "Do not import 'test' from '@playwright/test'. Use 'import { test } from '~~/test/playwright/utils/test-fixture' instead, which mocks Openverse provider APIs and the analytics server.",
-          },
-        ],
-      },
-    },
-    {
-      files: ["automations/js/src/**"],
+      files: [
+        "automations/js/src/**",
+        "frontend/test/**",
+        "frontend/src/**/**.json",
+      ],
       rules: {
         "unicorn/filename-case": "off",
       },
@@ -262,9 +253,33 @@ module.exports = {
           // Allow things like `Component.stories.js` and `Component.types.js`
           {
             case: "pascalCase",
-            ignore: [".eslintrc.js", ".*\\..*\\.js"],
+            ignore: [".eslintrc.js", ".*\\..*\\.js", ".*\\.json"],
           },
         ],
+      },
+    },
+    {
+      files: [
+        "frontend/src/locales/scripts/en.json5",
+        "frontend/test/locales/*.json",
+      ],
+      rules: {
+        "jsonc/key-name-casing": [
+          "error",
+          {
+            camelCase: true,
+            "kebab-case": false,
+            snake_case: true, // for err_* keys
+            ignores: ["ncSampling+", "sampling+"],
+          },
+        ],
+      },
+    },
+    {
+      files: ["frontend/src/locales/scripts/en.json5"],
+      rules: {
+        "jsonc/quote-props": "off",
+        "jsonc/quotes": "off",
       },
     },
   ],
@@ -274,17 +289,9 @@ module.exports = {
       messageSyntaxVersion: "^8.24.3",
     },
     "import/resolver": {
-      "eslint-import-resolver-custom-alias": {
-        alias: {
-          "~": "./frontend/src",
-          "~~": "./frontend",
-        },
-        /**
-         * SVG imports are excluded for the import/no-unresolved
-         * rule above due to lack of support for `?inline` suffix
-         *
-         * Therefore, there's no need to configure them here
-         */
+      typescript: {
+        // This plugin automatically pulls paths from tsconfig
+        // so we don't need to redefine Nuxt and package aliases
         extensions: [".js", ".ts", ".vue", ".png"],
       },
     },

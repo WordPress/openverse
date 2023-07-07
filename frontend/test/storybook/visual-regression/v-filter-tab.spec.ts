@@ -1,6 +1,4 @@
-import { expect, Page } from "@playwright/test"
-
-import { test } from "~~/test/playwright/utils/test-fixture"
+import { expect, Page, test } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
