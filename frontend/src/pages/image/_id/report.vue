@@ -4,14 +4,14 @@
     tabindex="-1"
     class="mx-auto mb-6 mt-8 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
   >
-    <figure class="mb-6 flex flex-col items-start gap-y-4">
+    <figure v-if="image" class="mb-6 flex flex-col items-start gap-y-4">
       <img
         id="main-image"
-        :src="imageSrc"
+        :src="image.thumbnail"
         :alt="image.title"
         class="mx-auto h-auto w-full rounded-sm"
-        :width="imageWidth"
-        :height="imageHeight"
+        :width="image.width"
+        :height="image.height"
       />
       <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
       <!-- eslint-disable vue/no-v-html -->
@@ -32,25 +32,25 @@
     </figure>
 
     <VContentReportForm
+      v-if="image"
       :close-fn="() => {}"
       :media="image"
       :allow-cancel="false"
-      :provider-name="image.providerName"
+      :provider-name="image.providerName || image.provider"
     />
   </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue"
+import { defineComponent, ref } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
-
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
-import type { ImageDetail } from "~/types/media"
 import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
+import type { ImageDetail } from "~/types/media"
 
 import VButton from "~/components/VButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
@@ -63,50 +63,37 @@ export default defineComponent({
   },
   layout: "content-layout",
   setup() {
-    const i18n = useI18n()
-    const singleResultStore = useSingleResultStore()
-    const image = computed(() =>
-      singleResultStore.mediaType === IMAGE
-        ? (singleResultStore.mediaItem as ImageDetail)
-        : null
-    )
-    const imageWidth = ref(0)
-    const imageHeight = ref(0)
-    const imageType = ref("Unknown")
-    /**
-     * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
-     * and then replace it with the provider image once it is loaded.
-     */
-    const imageSrc = ref(image.value.thumbnail)
+    const image = ref<ImageDetail | null>(null)
 
-    const getAttributionMarkup = (options?: AttributionOptions) =>
-      getAttribution(image.value, i18n, options)
+    const getAttributionMarkup = (options?: AttributionOptions) => {
+      return image.value ? getAttribution(image.value, useI18n(), options) : ""
+    }
 
     return {
       image,
-      imageWidth,
-      imageHeight,
-      imageType,
-      imageSrc,
       getAttributionMarkup,
 
       skipToContentTargetId,
     }
   },
-  async asyncData({ app, error, route, $pinia }) {
-    const imageId = route.params.id
+  async asyncData({ route, $pinia, error: nuxtError, i18n }) {
     const singleResultStore = useSingleResultStore($pinia)
+    const imageId = route.params.id
     try {
-      await singleResultStore.fetch(IMAGE, imageId)
-    } catch (err) {
-      const errorMessage = app.i18n
-        .t("error.imageNotFound", {
-          id: imageId,
-        })
-        .toString()
-      return error({
+      const image = await singleResultStore.fetch(IMAGE, imageId, {
+        fetchRelated: false,
+      })
+      return {
+        image,
+      }
+    } catch (error) {
+      return nuxtError({
         statusCode: 404,
-        message: errorMessage,
+        message: i18n
+          .t("error.imageNotFound", {
+            id: imageId,
+          })
+          .toString(),
       })
     }
   },

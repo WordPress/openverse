@@ -31,8 +31,14 @@
 </template>
 
 <script lang="ts">
-import { computed } from "vue"
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { computed, ref } from "vue"
+import {
+  defineComponent,
+  useContext,
+  useFetch,
+  useMeta,
+  useRoute,
+} from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -67,19 +73,29 @@ export default defineComponent({
     const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
 
-    const { sendCustomEvent } = useAnalytics()
+    const route = useRoute()
 
-    const audio = computed(() =>
-      singleResultStore.mediaType === AUDIO
-        ? (singleResultStore.mediaItem as AudioDetail)
-        : null
-    )
+    const audio = ref<AudioDetail | null>(singleResultStore.audio)
+
+    useFetch(async () => {
+      const audioId = route.value.params.id
+      await singleResultStore.fetch(AUDIO, audioId)
+
+      const fetchedAudio = singleResultStore.audio
+
+      if (!fetchedAudio) {
+        useContext().error({ statusCode: 404 })
+      }
+      audio.value = fetchedAudio
+    })
+
     const relatedMedia = computed(
       () => relatedMediaStore.media as AudioDetail[]
     )
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
+    const { sendCustomEvent } = useAnalytics()
     const sendAudioEvent = (
       data: Omit<AudioInteractionData, "component">,
       component: "AudioDetailPage" | "VRelatedAudio"
@@ -101,22 +117,6 @@ export default defineComponent({
       sendAudioEvent,
 
       skipToContentTargetId,
-    }
-  },
-  async asyncData({ route, error, app, $pinia }) {
-    const audioId = route.params.id
-    const singleResultStore = useSingleResultStore($pinia)
-
-    try {
-      await singleResultStore.fetch(AUDIO, audioId)
-    } catch (err) {
-      error({
-        statusCode: 404,
-        message: app.i18n.t("error.media-not-found", {
-          mediaType: AUDIO,
-          id: route.params.id,
-        }),
-      })
     }
   },
   head: {},
