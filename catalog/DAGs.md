@@ -20,6 +20,7 @@ The following are DAGs grouped by their primary tag:
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Other](#other)
+1.  [Popularity Refresh](#popularity_refresh)
 1.  [Provider](#provider)
 1.  [Provider Reingestion](#provider-reingestion)
 
@@ -71,6 +72,13 @@ The following are DAGs grouped by their primary tag:
 | --------------------------------------------------------- | ----------------- |
 | [`flickr_thumbnails_removal`](#flickr_thumbnails_removal) | `None`            |
 
+## Popularity Refresh
+
+| DAG ID                                                  | Schedule Interval |
+| ------------------------------------------------------- | ----------------- |
+| [`audio_popularity_refresh`](#audio_popularity_refresh) | `None`            |
+| [`image_popularity_refresh`](#image_popularity_refresh) | `None`            |
+
 ## Provider
 
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
@@ -113,6 +121,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
 1.  [`audio_data_refresh`](#audio_data_refresh)
+1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
@@ -126,6 +135,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`flickr_workflow`](#flickr_workflow)
 1.  [`freesound_workflow`](#freesound_workflow)
 1.  [`image_data_refresh`](#image_data_refresh)
+1.  [`image_popularity_refresh`](#image_popularity_refresh)
 1.  [`inaturalist_workflow`](#inaturalist_workflow)
 1.  [`jamendo_workflow`](#jamendo_workflow)
 1.  [`metropolitan_museum_reingestion_workflow`](#metropolitan_museum_reingestion_workflow)
@@ -220,6 +230,29 @@ and related PRs:
 
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
+
+## `audio_popularity_refresh`
+
+### Popularity Refresh DAG Factory
+
+This file generates our popularity refresh DAGs using a factory function.
+
+For the given media type these DAGs will first update the popularity metrics
+table, adding any new metrics and updating the percentile that is used in
+calculating the popularity constants. It then refreshes the popularity constants
+view, which recalculates the popularity constant for each provider.
+
+Once the constants have been updated, the DAG will trigger a `batched_update`
+DagRun for each provider of this media_type that is configured to support
+popularity data. The batched update recalculates standardized popularity scores
+for all records, using the new constant. When the updates are complete, all
+records have up-to-date popularity data. This DAG can be run concurrently with
+data refreshes and regular ingestion.
+
+You can find more background information on this process in the following
+implementation plan:
+
+- [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 
 ## `batched_update`
 
@@ -537,6 +570,29 @@ and related PRs:
 
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
+
+## `image_popularity_refresh`
+
+### Popularity Refresh DAG Factory
+
+This file generates our popularity refresh DAGs using a factory function.
+
+For the given media type these DAGs will first update the popularity metrics
+table, adding any new metrics and updating the percentile that is used in
+calculating the popularity constants. It then refreshes the popularity constants
+view, which recalculates the popularity constant for each provider.
+
+Once the constants have been updated, the DAG will trigger a `batched_update`
+DagRun for each provider of this media_type that is configured to support
+popularity data. The batched update recalculates standardized popularity scores
+for all records, using the new constant. When the updates are complete, all
+records have up-to-date popularity data. This DAG can be run concurrently with
+data refreshes and regular ingestion.
+
+You can find more background information on this process in the following
+implementation plan:
+
+- [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 
 ## `inaturalist_workflow`
 
