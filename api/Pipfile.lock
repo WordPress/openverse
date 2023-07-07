@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7c862c4e43d87609252c5815f3974b57ba8f46c3725176eb7d297769018af930"
+            "sha256": "0fcaa6e25d2b313af53b85fa75eeafeb4454572f081be77976f9ece7509ecc2d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -414,11 +414,11 @@
         },
         "django-oauth-toolkit": {
             "hashes": [
-                "sha256:46890decb24a34e2a5382debeaf7752e50d90b7a11716cf2a9fd067097ec0963",
-                "sha256:abd85c74af525a62365ec2049113e73a2ff8b46ef906e7104a7ba968ef02a11d"
+                "sha256:47dfeab97ec21496f307c2cf3468e64ca08897fa499bf3104366d32005c9111d",
+                "sha256:cf1cb1a5744672e6bd7d66b4a110a463bcef9cf5ed4f27e29682cc6a4d0df1ed"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==2.3.0"
         },
         "django-redis": {
             "hashes": [
@@ -487,7 +487,7 @@
                 "sha256:0e2454645dc00517dee4c6de3863411a9c5f1955d013c5fefa29123dadc92f98",
                 "sha256:66c4ece2adfe7cc120e2b6a6798a1fd5c777aecf82eec39bb95cef7cfc7ea2b3"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_version < '4.0'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_version < '4'",
             "version": "==7.17.9"
         },
         "elasticsearch-dsl": {
