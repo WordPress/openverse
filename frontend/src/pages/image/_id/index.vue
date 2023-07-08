@@ -186,9 +186,9 @@ export default defineComponent({
     )
     const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
-    const imageWidth = ref(0)
-    const imageHeight = ref(0)
-    const imageType = ref("Unknown")
+    const imageWidth = ref(image.value?.width ?? 0)
+    const imageHeight = ref(image.value?.height ?? 0)
+    const imageType = ref(image.value?.filetype ?? "Unknown")
     const isLoadingMainImage = ref(true)
     const sketchFabfailure = ref(false)
 
