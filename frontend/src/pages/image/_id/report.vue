@@ -17,7 +17,7 @@
       <!-- eslint-disable vue/no-v-html -->
       <figcaption
         class="block w-full text-left text-sr"
-        v-html="getAttributionMarkup({ includeIcons: false })"
+        v-html="attributionMarkup"
       />
       <!-- eslint-enable vue/no-v-html -->
       <VButton
@@ -42,14 +42,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent } from "@nuxtjs/composition-api"
 
-import { useI18n } from "~/composables/use-i18n"
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
+import { getAttribution } from "~/utils/attribution-html"
 import type { ImageDetail } from "~/types/media"
 
 import VButton from "~/components/VButton.vue"
@@ -62,28 +61,19 @@ export default defineComponent({
     VContentReportForm,
   },
   layout: "content-layout",
-  setup() {
-    const image = ref<ImageDetail | null>(null)
-
-    const getAttributionMarkup = (options?: AttributionOptions) => {
-      return image.value ? getAttribution(image.value, useI18n(), options) : ""
-    }
-
-    return {
-      image,
-      getAttributionMarkup,
-
-      skipToContentTargetId,
-    }
-  },
-  async asyncData({ route, $pinia, error: nuxtError, i18n }) {
+  async asyncData({ route, $pinia, i18n, error: nuxtError }) {
     const singleResultStore = useSingleResultStore($pinia)
     const imageId = route.params.id
     try {
       const image = await singleResultStore.fetch(IMAGE, imageId, {
         fetchRelated: false,
       })
+
+      const attributionMarkup = getAttribution(image, i18n, {
+        includeIcons: false,
+      })
       return {
+        attributionMarkup,
         image,
       }
     } catch (error) {
@@ -97,5 +87,10 @@ export default defineComponent({
       })
     }
   },
+  data: () => ({
+    image: null as ImageDetail | null,
+    attributionMarkup: "",
+    skipToContentTargetId,
+  }),
 })
 </script>
