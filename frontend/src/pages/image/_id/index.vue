@@ -152,7 +152,7 @@ export default defineComponent({
 
     /**
      * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
-     * and then replace it with the provider image once it is loaded.
+     * and replace it with the provider image once the thumbnail is loaded.
      */
     const imageSrc = ref(image.value?.thumbnail)
 
@@ -163,19 +163,19 @@ export default defineComponent({
     useFetch(async () => {
       const imageId = route.value.params.id
       try {
-        await singleResultStore.fetch(IMAGE, imageId)
-        const fetchedImage = singleResultStore.image
-        if (!fetchedImage) {
-          throw new Error(
-            `Could not fetch image. Error: ${
-              singleResultStore.fetchState.fetchingError ?? "Unknown error"
-            }`
-          )
-        }
+        const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
       } catch (error) {
-        nuxtError({ statusCode: 404 })
+        // The error is already handled by the store and was rethrown
+        // to display Nuxt error page.
+        // `fetchingError` sets the required error page props. It is not `null`,
+        // but the fallback is needed for type safety.
+        const fetchingError = singleResultStore.fetchState.fetchingError ?? {
+          statusCode: 404,
+          message: `Image with id ${imageId} not found`,
+        }
+        nuxtError(fetchingError)
       }
     })
 

@@ -2,13 +2,13 @@ import { defineStore } from "pinia"
 
 import axios from "axios"
 
-import type { FetchState } from "~/types/fetch-state"
+import type { FetchStateWithNuxtError } from "~/types/fetch-state"
 import type {
   AudioDetail,
   DetailFromMediaType,
   ImageDetail,
 } from "~/types/media"
-import { isDetail } from "~/types/media"
+import { isDetail, isMediaDetail } from "~/types/media"
 
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -18,11 +18,13 @@ import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useProviderStore } from "~/stores/provider"
 import { warn } from "~/utils/console"
 
+import type { NuxtError } from "@nuxt/types"
+
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
   mediaId: string | null
   mediaItem: DetailFromMediaType<SupportedMediaType> | null
-  fetchState: FetchState
+  fetchState: FetchStateWithNuxtError
 }
 
 export const useSingleResultStore = defineStore("single-result", {
@@ -49,7 +51,7 @@ export const useSingleResultStore = defineStore("single-result", {
   },
 
   actions: {
-    _endFetching(error?: string) {
+    _endFetching(error?: NuxtError) {
       this.fetchState.isFetching = false
       this.fetchState.fetchingError = error || null
     },
@@ -59,11 +61,13 @@ export const useSingleResultStore = defineStore("single-result", {
       this.fetchState.fetchingError = null
     },
 
-    _updateFetchState(action: "start" | "end", option?: string) {
+    _updateFetchState(action: "start" | "end", option?: NuxtError) {
       action === "start" ? this._startFetching() : this._endFetching(option)
     },
 
-    _addProviderName<T extends ImageDetail | AudioDetail>(mediaItem: T): T {
+    _addProviderName<T extends SupportedMediaType>(
+      mediaItem: DetailFromMediaType<T>
+    ): DetailFromMediaType<T> {
       const providerStore = useProviderStore()
 
       mediaItem.providerName = providerStore.getProviderName(
@@ -148,19 +152,37 @@ export const useSingleResultStore = defineStore("single-result", {
      *
      * Fetch the related media if necessary.
      */
-    async fetch(
-      type: SupportedMediaType,
+    async fetch<T extends SupportedMediaType>(
+      type: T,
       id: string,
       options?: { fetchRelated: boolean }
     ) {
-      const itemFetched = this.mediaId === id && !!this.mediaItem
-      if (!itemFetched) {
+      let item: DetailFromMediaType<T>
+
+      if (this.mediaId === id && isMediaDetail<T>(this.mediaItem, type)) {
+        item = this.mediaItem
+      } else {
         try {
-          await this.fetchMediaItem(type, id)
+          item = (await this.fetchMediaItem<T>(
+            type,
+            id
+          )) as DetailFromMediaType<T>
         } catch (error) {
-          // Sends non-404 errors to Sentry and rethrows the error
-          // for the templates to handle.
-          await this.handleFetchError(error)
+          this.reset()
+
+          this.$nuxt.$sentry.captureException(error)
+
+          const statusCode =
+            axios.isAxiosError(error) && error.response?.status
+              ? error.response.status
+              : 500
+          this._updateFetchState("end", {
+            statusCode,
+            message: `Could not fetch ${type} item with id ${id}`,
+          })
+          // Rethrow the error so that the error page can be rendered.
+          // TODO: Add error code and message based on the error.
+          throw error
         }
       }
 
@@ -168,23 +190,16 @@ export const useSingleResultStore = defineStore("single-result", {
       if (shouldFetchRelated) {
         await this.fetchRelatedMedia(type, id)
       }
+      return item
     },
 
-    async handleFetchError(error: unknown) {
-      this.reset()
-      this._updateFetchState("end", JSON.stringify(error))
-
-      // Only send the error to Sentry if it is not a 404.
-      if (!(axios.isAxiosError(error) && error.response?.status === 404)) {
-        this.$nuxt.$sentry.captureException(error)
-      }
-
-      throw error
-    },
     /**
      * Fetch the media item from the API.
      */
-    async fetchMediaItem(type: SupportedMediaType, id: string) {
+    async fetchMediaItem<T extends SupportedMediaType>(
+      type: SupportedMediaType,
+      id: string
+    ): Promise<DetailFromMediaType<typeof type>> {
       this._updateFetchState("start")
       const accessToken = this.$nuxt.$openverseApiToken
       const service = initServices[type](accessToken)
@@ -193,8 +208,9 @@ export const useSingleResultStore = defineStore("single-result", {
 
 
       this.setMediaItem(item)
-
       this._updateFetchState("end")
+
+      return item as DetailFromMediaType<T>
     },
   },
 })

@@ -116,3 +116,10 @@ export const isDetail = {
     return !!media && media.frontendMediaType === "image"
   },
 }
+
+export const isMediaDetail = <T extends SupportedMediaType>(
+  media: AudioDetail | ImageDetail | null,
+  mediaType: T
+): media is DetailFromMediaType<T> => {
+  return !!media && media.frontendMediaType === mediaType
+}
