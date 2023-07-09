@@ -3,7 +3,6 @@
     <h2 class="heading-6 md:heading-5 mb-6">
       {{ $t("imageDetails.relatedImages") }}
     </h2>
-    <VLoadingIcon v-if="fetchState.isFetching" />
     <VImageGrid
       :images="media"
       :is-single-page="true"
@@ -20,11 +19,10 @@ import type { ImageDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
-import VLoadingIcon from "~/components/LoadingIcon.vue"
 
 export default defineComponent({
   name: "VRelatedImages",
-  components: { VImageGrid, VLoadingIcon },
+  components: { VImageGrid },
   props: {
     media: {
       type: Array as PropType<ImageDetail[]>,
