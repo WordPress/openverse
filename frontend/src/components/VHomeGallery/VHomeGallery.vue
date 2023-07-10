@@ -112,9 +112,7 @@ export default defineComponent({
     const imageList = computed(() => {
       return imageSet.value.images.map((image, idx) => ({
         ...image,
-        src: require(`~/assets/homepage_images/${imageSet.value.key}/${
-          idx + 1
-        }.png`),
+        src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
         url: router.resolve(
           app.localePath({
             name: "image-id",
