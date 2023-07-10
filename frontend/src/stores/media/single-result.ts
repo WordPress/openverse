@@ -169,19 +169,16 @@ export const useSingleResultStore = defineStore("single-result", {
           )) as DetailFromMediaType<T>
         } catch (error) {
           this.reset()
-
-          this.$nuxt.$sentry.captureException(error)
-
           const statusCode =
             axios.isAxiosError(error) && error.response?.status
               ? error.response.status
-              : 500
+              : 404
+          const message = `Could not fetch ${type} item with id ${id}`
           this._updateFetchState("end", {
             statusCode,
-            message: `Could not fetch ${type} item with id ${id}`,
+            message,
           })
-          // Rethrow the error so that the error page can be rendered.
-          // TODO: Add error code and message based on the error.
+          // Rethrow the error to handle it in middleware/components.
           throw error
         }
       }

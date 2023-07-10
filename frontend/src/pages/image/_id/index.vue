@@ -158,7 +158,7 @@ export default defineComponent({
 
     const isLoadingThumbnail = ref(true)
 
-    const { error: nuxtError } = useContext()
+    const { error: nuxtError, $sentry } = useContext()
 
     useFetch(async () => {
       const imageId = route.value.params.id
@@ -167,15 +167,8 @@ export default defineComponent({
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
       } catch (error) {
-        // The error is already handled by the store and was rethrown
-        // to display Nuxt error page.
-        // `fetchingError` sets the required error page props. It is not `null`,
-        // but the fallback is needed for type safety.
-        const fetchingError = singleResultStore.fetchState.fetchingError ?? {
-          statusCode: 404,
-          message: `Image with id ${imageId} not found`,
-        }
-        nuxtError(fetchingError)
+        $sentry.captureException(error)
+        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
       }
     })
 
