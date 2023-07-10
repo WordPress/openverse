@@ -36,7 +36,7 @@ The following are DAGs grouped by their primary tag:
 | [`audio_data_refresh`](#audio_data_refresh)                   | `@weekly`         |
 | [`create_filtered_audio_index`](#create_filtered_audio_index) | `None`            |
 | [`create_filtered_image_index`](#create_filtered_image_index) | `None`            |
-| [`image_data_refresh`](#image_data_refresh)                   | `None`            |
+| [`image_data_refresh`](#image_data_refresh)                   | `@weekly`         |
 
 ## Database
 
