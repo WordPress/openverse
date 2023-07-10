@@ -34,7 +34,6 @@ describe("SearchIndex", () => {
       stubs: {
         NuxtChild: true,
         VSearchGrid: true,
-        VSkipToContentContainer: true,
       },
     }
   })

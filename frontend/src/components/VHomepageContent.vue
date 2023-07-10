@@ -1,5 +1,5 @@
 <template>
-  <VSkipToContentContainer>
+  <div :id="skipToContentTargetId" tabindex="-1">
     <h1
       class="mb-2 mt-auto text-[40px] font-light leading-tight lg:text-[63px]"
     >
@@ -67,12 +67,13 @@
         >
       </template>
     </i18n>
-  </VSkipToContentContainer>
+  </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, ref, PropType } from "vue"
 
 import type { SearchType } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 
 import useSearchType from "~/composables/use-search-type"
@@ -85,7 +86,6 @@ import VLink from "~/components/VLink.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 
 export default defineComponent({
@@ -95,7 +95,6 @@ export default defineComponent({
     VSearchTypes,
     VPopoverContent,
     VSearchTypeButton,
-    VSkipToContentContainer,
     VStandaloneSearchBar,
     VLink,
   },
@@ -180,6 +179,8 @@ export default defineComponent({
       openContentSwitcher,
       isContentSwitcherVisible,
       triggerA11yProps,
+
+      skipToContentTargetId,
     }
   },
 })

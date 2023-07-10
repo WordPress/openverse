@@ -1,5 +1,5 @@
 <template>
-  <VSkipToContentContainer as="main">
+  <main :id="skipToContentTargetId" tabindex="-1">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
       <VBackToSearchResultsLink
         :id="$route.params.id"
@@ -84,7 +84,7 @@
         :fetch-state="relatedFetchState"
       />
     </template>
-  </VSkipToContentContainer>
+  </main>
 </template>
 
 <script lang="ts">
@@ -94,6 +94,7 @@ import { computed, ref } from "vue"
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -110,7 +111,6 @@ import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
@@ -124,7 +124,6 @@ export default defineComponent({
     VMediaReuse,
     VRelatedImages,
     VSketchFabViewer,
-    VSkipToContentContainer,
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
@@ -260,6 +259,8 @@ export default defineComponent({
       handleRightClick,
       backToSearchPath,
 
+      skipToContentTargetId,
+
       sendGetMediaEvent,
       sendVisitCreatorLinkEvent,
     }
@@ -271,7 +272,7 @@ export default defineComponent({
       await singleResultStore.fetch(IMAGE, imageId)
     } catch (err) {
       const errorMessage = app.i18n
-        .t("error.image-not-found", {
+        .t("error.imageNotFound", {
           id: imageId,
         })
         .toString()

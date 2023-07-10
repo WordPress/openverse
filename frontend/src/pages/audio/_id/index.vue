@@ -1,5 +1,5 @@
 <template>
-  <VSkipToContentContainer as="main">
+  <main :id="skipToContentTargetId" tabindex="-1">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
       <VBackToSearchResultsLink
         :id="$route.params.id"
@@ -27,7 +27,7 @@
         />
       </div>
     </template>
-  </VSkipToContentContainer>
+  </main>
 </template>
 
 <script lang="ts">
@@ -35,6 +35,7 @@ import { computed } from "vue"
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -49,7 +50,6 @@ import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
@@ -59,7 +59,6 @@ export default defineComponent({
     VBackToSearchResultsLink,
     VMediaReuse,
     VRelatedAudio,
-    VSkipToContentContainer,
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
@@ -98,7 +97,10 @@ export default defineComponent({
       backToSearchPath,
       relatedMedia,
       relatedFetchState,
+
       sendAudioEvent,
+
+      skipToContentTargetId,
     }
   },
   async asyncData({ route, error, app, $pinia }) {
