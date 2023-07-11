@@ -19,7 +19,7 @@ import type { ErrorCode } from "~/constants/errors"
 import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
 import { useI18n } from "~/composables/use-i18n"
 
-import imageInfo from "~/assets/error_images/image_info.json"
+import imageInfo from "~/assets/error_images.json"
 
 interface ErrorImage extends AttributableMedia {
   src: string
