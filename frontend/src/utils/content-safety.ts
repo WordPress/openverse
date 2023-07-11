@@ -20,7 +20,7 @@ import {
  * @param frac - the fraction of items to mark as mature
  * @returns an array of strings representing the mature flags
  */
-export const markFakeSensitive = (id: string, frac = 0.5): Sensitivity[] => {
+export const getFakeSensitivities = (id: string, frac = 0.5): Sensitivity[] => {
   const random = prng(hash(id))()
 
   if (random > frac) {
