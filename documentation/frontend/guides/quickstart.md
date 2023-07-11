@@ -58,6 +58,17 @@ you need to run this.
 
    - the Openverse search engine frontend on
      [http://localhost:8443](http://localhost:8443)
+   
+## Error Case
+
+  
+   If Your `client` in the terminal gets stuck at around 95% and/or
+   an [HPM] Error occurs while proxying request http://localhost:8443/api/event to http://localhost:50288,
+   You might want to try this step to compile the Openverse ESLint plugin.
+   
+    $ pnpm --filter='@openverse/eslint-plugin' build 
+   
+  Restarting the dev server should work after this
 
 ## Shutting down
 
