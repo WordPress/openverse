@@ -55,7 +55,7 @@ import useResizeObserver from "~/composables/use-resize-observer"
 
 import VLink from "~/components/VLink.vue"
 
-import imageInfo from "~/assets/homepage_images/image_info.json"
+import imageInfo from "~/assets/ homepage_images.json"
 
 export const GALLERY_SETS = [
   "universe",
