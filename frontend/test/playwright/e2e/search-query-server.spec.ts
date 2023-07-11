@@ -91,21 +91,13 @@ test.describe("search query on SSR", () => {
       }
     })
 
-    test.skip("url mature query is set, and can be unchecked using the Safer Browsing popup", async ({
-      page,
-    }) => {
-      await goToSearchTerm(page, "cat", {
-        searchType: IMAGE,
-        query: "mature=true",
-      })
-
-      await page.click('button:has-text("Safer Browsing")')
-
-      const matureCheckbox = await page.locator("text=Show Mature Content")
-      await expect(matureCheckbox).toBeChecked()
-
-      await page.click("text=Show Mature Content")
-      await expect(page).toHaveURL("/search/image?q=cat")
-    })
+    test.fixme(
+      "URL sensntive query is set, and can be toggled using the UI.",
+      async () => {
+        // TODO: This test should be updated as part of the
+        // blurring sensitive results project.
+        // https://github.com/WordPress/openverse/issues/377
+      }
+    )
   })
 })
