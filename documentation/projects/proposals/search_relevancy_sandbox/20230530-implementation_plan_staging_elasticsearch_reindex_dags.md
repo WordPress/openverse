@@ -27,8 +27,8 @@ handling and querying the new index types from the API with the
 
 ## Expected Outcomes
 
-- DAGs for full recreation of the index that the API uses which includes all
-  the database contents, by media type.
+- DAGs for full recreation of the index that the API uses which includes all the
+  database contents, by media type.
 - DAGs to create indexes of reduced size, proportional-to-production-by-provider
   index, by media type.
 
@@ -83,9 +83,9 @@ create the index.
       old one(s). Get the current index pointed by `<media_type>-full` alias.
       The [indices.resolves_index][es_py_resolves_index] function can provide
       this information. An alias can be related to multiple indexes but it will
-      most likely be only one in this case. Then use `indices.update_aliases()`
-      with a body including both actions, analogous to the [ingest server's
-      task][ing_point_alias].
+      most likely be only one in this case. Then use
+      [`indices.update_aliases`][es_py_update_aliases] with a body including
+      both actions, analogous to the [ingest server's task][ing_point_alias].
 
 4. If `point_alias=True` is passed, then immediately make the `<media_type>`
    alias point to the new index, detaching any other following the same
@@ -107,6 +107,8 @@ create the index.
   https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.put_alias
 [es_py_resolves_index]:
   https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html?#elasticsearch.client.IndicesClient.resolve_index
+[es_py_update_aliases]:
+  https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.client.IndicesClient.update_aliases
 [ing_point_alias]:
   https://github.com/WordPress/openverse/blob/08bb0317e1110694ca4d51058bebbc1dafb4fc13/ingestion_server/ingestion_server/indexer.py#L340
 [es_py_delete]:
