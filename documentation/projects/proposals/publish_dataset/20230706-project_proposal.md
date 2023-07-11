@@ -11,10 +11,10 @@
 
 ## Project summary
 
-This project aims to publish and regularly update a dataset of Openverse' image
-metadata. This project will provide access to the data currently served by our
-API, but which is difficult to access in full and requires significant time and
-resources.
+This project aims to publish and regularly update a dataset or _datasets_ of
+Openverse' media metadata. This project will provide access to the data
+currently served by our API, but which is difficult to access in full, requires
+significant time, money, and compute resources.
 
 ## Motivation
 
@@ -22,28 +22,77 @@ For this project, understanding "why?" we would do this is of paramount
 importance. There are several key philosophical and technical advantages to
 sharing this dataset with the public.
 
-### Open Access
+### Open Access + Scraping Prevention
 
 Openverse is and always has been, since its days as
 ["CC Search"](https://creativecommons.org/2021/12/13/dear-users-of-cc-search-welcome-to-openverse/),
-informed by principles of the open access movement. Openverse has strived to
-remove all all financial, technical, and legal barriers to accessing the works
-of the global commons.
+informed by principles of the open access movement. Openverse strives to remove
+all all financial, technical, and legal barriers to accessing the works of the
+global commons.
 
 Due to technical and logistical limitations, we have previously been unable to
-accessibly provide access to the full Openverse dataset. Currently, users need
-to invest significant time and money into scraping the Openverse API. These
-financial and technical barriers to our users are deeply inequitable.
+accessibly provide access to the full Openverse dataset. Today, users need to
+invest significant time and money into scraping the Openverse API in order to
+access this data. These financial and technical barriers to our users are deeply
+inequitable. Additionally, this scraping disrupts Openverse access and stability
+for all users. It also requires significant maintainer effort to identify,
+mitigate, and block scraping traffic.
 
 By sharing this data as a full dataset on
-[HuggingFace](https://huggingface.co/datasets), we can remove these barriers to
-access and allow folks to access the data provided by Openverse.org and the
-Openverse API without restriction.
+[HuggingFace](https://huggingface.co/datasets), we can remove these barriers
+allow folks to access the data provided by Openverse.org and the Openverse API
+without restriction.
+
+### Contributions Back to Openverse
+
+Easily accessed Openverse datasets will facilitate easier generation of machine
+labels, translations, and other supplemental data which can be used to improve
+the experience of Openverse.org and the API. This data is typically generated as
+part of the
+[data preprocessing](https://huggingface.co/docs/transformers/preprocessing)
+stage of model training.
+
+HuggingFace in particular will enable community members to analyze the dataset
+and create supplemental datasets; to train models with the dataset; and to use
+the dataset with all of HuggingFace's tooling: the
+[Datasets](https://github.com/huggingface/datasets) library in particular.
+
+It is worth noting that this year we identified many projects to work on which
+rely on bulk analysis of Openverse's data. These projects could be replaced by,
+or made easier by the publication of the datasets. This could work in a few
+ways. A community member, training a model using the Openverse dataset,
+generates metadata that we want and planned to generate ourselves. Then, the
+HuggingFace platform presents an alternative to other SaSS products we intended
+to use to generate machine labels, detect sensitive content, and so on. Instead
+of those offerings we use models hosted on the HuggingFace hub. The
+[Datasets library](https://huggingface.co/docs/datasets/index) allows for easy
+loading of the Openverse dataset in any data pipelines we write. HuggingFace
+also offers the ability to deploy production-ready API endpoints for
+transformation models hosted on their hub. This feature is called
+[Inference Endpoints](https://huggingface.co/docs/inference-endpoints/index).
+
+#### Potentially-related projects
+
+- [External API for sensitive content detection #422](https://github.com/WordPress/openverse/issues/422) -
+  Instead of Rekognition or Google Vision, we may want to use a community model
+  on HuggingFace.
+- [Machine Image Labeling pipeline #426](https://github.com/WordPress/openverse/issues/426)
+  Either a community member may create an up to date set of machine-generated
+  labels we could use, or we could again create an Inference Endpoint with an
+  existing model, for example
+  [Vision Transformer](https://huggingface.co/google/vit-base-patch16-224)
+- [Duplicate image detection #427](https://github.com/WordPress/openverse/issues/427) -
+  Deduplication is an extremely common preprocessing step. We should be able to
+  apply the deduplication from
+
+### Resiliency
 
 The metadata for openly-licensed media, used by Openverse to power the API and
 frontend, is a community utility and should be available to all users,
-distinctly from Openverse itself. By publishing this dataset, we ensure access
-to this data is fast, accessible, and resilient.
+_distinctly_ from Openverse itself. By publishing this dataset, we ensure access
+to this data is fast, accessible, and resilient. With published datasets, this
+access remains even if Openverse is inaccessible, under attack, or experiencing
+any other unforeseen disruptions.
 
 ## Goals
 
@@ -55,19 +104,43 @@ or impacted through potential downstream changes, are "Result Relevancy",
 "Quantifying our Work","Search Experience", "Content Safety", and "Data
 inertia".
 
-I'll explain _how_ this project may impact those goals in subsequent sections.
-
 ## Requirements
 
 <!-- Detailed descriptions of the features required for the project. Include user stories if you feel they'd be helpful, but focus on describing a specification for how the feature would work with an eye towards edge cases. -->
+
+This project requires coordination with HuggingFace to release the dataset on
+their platform, bypassing their typical restrictions for Dataset size.
+
+We will also need to figure out the technical requirements for producing the raw
+dataset, which will be done in this project's implementation plan. Additionally
+in that plan we will:
+
+- Determine if we host a single dataset for all media types, or separate
+  datasets for different media types.
+- Develop a plan for updating the datasets regularly
+- Refine how we will provide access to our raw dataset for upload to
+  HuggingFace:
+  - Delivery mechanism (a requester pays S3 bucket?)
+  - File format (parquet files? TSVs? a Postgres dump?)
+
+We will also need to coordinate the launch of these efforts and associated
+outreach. See more about that in the [marketing section](#marketing).
 
 ## Success
 
 <!-- How do we measure the success of the project? How do we know our ideas worked? -->
 
+This project can be considered
+
 ## Participants and stakeholders
 
 <!-- Who is working on the project and who are the external stakeholders, if any? Consider the lead, implementers, designers, and other stakeholders who have a say in how the project goes. -->
+
+- Openverse maintainers
+- HuggingFace
+- Creative Commons
+- Aaron Ghokaslan
+- WordPress Foundation
 
 ## Infrastructure
 
