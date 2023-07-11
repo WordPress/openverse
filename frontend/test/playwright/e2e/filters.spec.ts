@@ -5,12 +5,13 @@ import {
   goToSearchTerm,
   isPageDesktop,
   filters,
-  getCheckbox,
 } from "~~/test/playwright/utils/navigation"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+import enMessages from "~/locales/en.json"
 
 import {
   supportedSearchTypes,
@@ -68,7 +69,7 @@ breakpoints.describeMobileAndDesktop(() => {
     const expectedFilters = ["Zero", "Use commercially"]
 
     for (const checkbox of expectedFilters) {
-      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
+      await expect(page.getByRole("checkbox", { name: checkbox })).toBeChecked()
     }
   })
 
@@ -83,7 +84,7 @@ breakpoints.describeMobileAndDesktop(() => {
     const expectedFilters = ["Zero", "Use commercially"]
 
     for (const checkbox of expectedFilters) {
-      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
+      await expect(page.getByRole("checkbox", { name: checkbox })).toBeChecked()
     }
     await changeSearchType(page, IMAGE)
 
@@ -92,7 +93,7 @@ breakpoints.describeMobileAndDesktop(() => {
     )
     await filters.open(page)
     for (const checkbox of expectedFilters) {
-      await expect(getCheckbox(page, { regexp: checkbox })).toBeChecked()
+      await expect(page.getByRole("checkbox", { name: checkbox })).toBeChecked()
     }
   })
 
@@ -106,7 +107,7 @@ breakpoints.describeMobileAndDesktop(() => {
 
     // Creator filter was removed from the UI
     for (const checkbox of ["Zero", "Use commercially"]) {
-      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
+      await expect(page.getByRole("checkbox", { name: checkbox })).toBeChecked()
     }
 
     await changeSearchType(page, ALL_MEDIA)
@@ -122,26 +123,64 @@ breakpoints.describeMobileAndDesktop(() => {
   test("selecting some filters can disable dependent filters", async ({
     page,
   }) => {
-    const nonCommercialLicenses = [
-      "Attribution-NonCommercial",
-      "Attribution-NonCommercial-Share-Alike",
-      "Attribution-NonCommercial-NoDerivatives",
-    ]
-    await page.goto("/search/audio?q=cat&license_type=commercial")
+    // Ignore the "+" licenses which are not presented on the page
+    // `exact: true` is required in locators later in this test to prevent "Attribution" from matching
+    // all CC licenses with the BY element (all of them :P)
+    const allLicenses = Object.values(enMessages.licenseReadableNames).filter(
+      (l) => !l.includes("Plus")
+    )
+    const nonCommercialLicenses = allLicenses.filter((l) =>
+      l.includes("NonCommercial")
+    )
+    const commercialLicenses = allLicenses.filter(
+      (l) => !nonCommercialLicenses.includes(l)
+    )
+
+    await page.goto("/search/audio?q=cat")
     await filters.open(page)
 
-    await expect(getCheckbox(page, { label: "Use commercially" })).toBeChecked()
+    await expect(
+      page.getByRole("checkbox", { name: "Use commercially" })
+    ).not.toBeChecked()
 
-    for (const checkbox of nonCommercialLicenses) {
-      await expect(getCheckbox(page, { label: checkbox })).not.toBeChecked()
+    // Use commercially is not enabled yet, so commercial licenses are still available
+    // Therefore, all active licenses should have enabled checkboxes
+    for (const checkbox of allLicenses) {
+      const element = page.getByRole("checkbox", {
+        name: checkbox,
+        exact: true,
+      })
+      await expect(element).toBeVisible()
+      await expect(element).toBeEnabled()
     }
 
+    // Enable the commercial use filter
     await page.locator('label:has-text("Use commercially")').click()
 
-    await expect(getCheckbox(page, { label: "Use commercially" })).toBeChecked()
+    await expect(
+      page.getByRole("checkbox", { name: "Use commercially" })
+    ).toBeChecked()
 
+    // Because we checked "Use commercially", licenses that disallow commercial
+    // use will be disabled and the rest will still be enabled.
+    // Additionally, none of the checkboxes will be checked becuase we've only
+    // manipulated the commercial filter, not any specific license filters
     for (const checkbox of nonCommercialLicenses) {
-      await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
+      await expect(
+        page.getByRole("checkbox", { name: checkbox, exact: true })
+      ).not.toBeChecked()
+      await expect(
+        page.getByRole("checkbox", { name: checkbox, exact: true })
+      ).toBeDisabled()
+    }
+
+    for (const checkbox of commercialLicenses) {
+      await expect(
+        page.getByRole("checkbox", { name: checkbox, exact: true })
+      ).not.toBeChecked()
+      await expect(
+        page.getByRole("checkbox", { name: checkbox, exact: true })
+      ).toBeEnabled()
     }
   })
 
@@ -158,15 +197,15 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto("/search/image?q=cat&aspect_ratio=tall&license=cc0")
     await filters.open(page)
 
-    await expect(getCheckbox(page, { label: "Tall" })).toBeChecked()
-    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
+    await expect(page.getByRole("checkbox", { name: "Tall" })).toBeChecked()
+    await expect(page.getByRole("checkbox", { name: "Zero" })).toBeChecked()
 
     await changeSearchType(page, AUDIO)
     await filters.open(page)
 
     // Only CC0 checkbox is checked, and the filter button label is
     // '1 Filter' on `xl` or '1' on `lg` screens
-    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
+    await expect(page.getByRole("checkbox", { name: "Zero" })).toBeChecked()
 
     await filters.close(page)
     // eslint-disable-next-line playwright/no-conditional-in-test
@@ -193,7 +232,7 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.goto("/search/image?q=cat")
     await filters.open(page)
 
-    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
+    await expect(page.getByRole("checkbox", { name: "Zero" })).not.toBeChecked()
 
     // Alternative way with a predicate. Note no await.
     const responsePromise = page.waitForResponse(
@@ -203,7 +242,7 @@ breakpoints.describeMobileAndDesktop(() => {
     await page.getByLabel("Zero").click()
     const response = await responsePromise
 
-    await expect(getCheckbox(page, { label: "Zero" })).toBeChecked()
+    await expect(page.getByRole("checkbox", { name: "Zero" })).toBeChecked()
     // Remove the host url and path because when proxied, the 'http://localhost:49153' is used instead of the
     // real API url
     expect(response.url()).toContain("?q=cat&license=cc0")
@@ -221,7 +260,7 @@ breakpoints.describeMobileAndDesktop(() => {
       )
       await filters.open(page)
 
-      await expect(getCheckbox(page, { label: source })).toBeChecked()
+      await expect(page.getByRole("checkbox", { name: source })).toBeChecked()
     })
   }
 })

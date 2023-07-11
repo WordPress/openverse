@@ -5,7 +5,6 @@ import {
   filters,
   goToSearchTerm,
   searchTypeNames,
-  getCheckbox,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
@@ -73,7 +72,9 @@ test.describe("search query on SSR", () => {
       await filters.open(page)
       // Creator filter was removed from the UI
       for (const checkbox of ["Zero", "Use commercially"]) {
-        await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
+        await expect(
+          page.getByRole("checkbox", { name: checkbox })
+        ).toBeChecked()
       }
     })
 
@@ -87,7 +88,10 @@ test.describe("search query on SSR", () => {
       await filters.open(page)
       const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]
       for (const checkbox of checkboxes) {
-        await expect(getCheckbox(page, { label: checkbox })).toBeChecked()
+        // exact: true required to prevent `SVG` matching a provider with SVG in the name
+        await expect(
+          page.getByRole("checkbox", { name: checkbox, exact: true })
+        ).toBeChecked()
       }
     })
 

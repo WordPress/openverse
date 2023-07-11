@@ -192,23 +192,6 @@ export const isDialogOpen = async (page: Page) => {
   return page.getByRole("dialog").isVisible({ timeout: 100 })
 }
 
-type CheckboxSelector = { label: string } | { regexp: RegExp | string }
-
-/**
- * Returns checkbox using exact matching if label is provided,
- * or fuzzy matching if regexp is provided.
- */
-export const getCheckbox = (page: Page, selector: CheckboxSelector) => {
-  const name =
-    "label" in selector
-      ? selector.label
-      : typeof selector.regexp === "string"
-      ? new RegExp(selector.regexp, "i")
-      : selector.regexp
-
-  return page.getByRole("checkbox", { name, exact: "label" in selector })
-}
-
 export const changeSearchType = async (page: Page, to: SupportedSearchType) => {
   await searchTypes.open(page)
 

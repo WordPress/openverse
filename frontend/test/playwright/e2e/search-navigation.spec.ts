@@ -6,7 +6,6 @@ import {
   searchFromHeader,
   openFirstResult,
   t,
-  getCheckbox,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
@@ -33,8 +32,11 @@ test.describe("search history navigation", () => {
       // Open filter sidebar
       await filters.open(page)
 
+      const modifyLocator = page.getByRole("checkbox", {
+        name: "Modify or adapt",
+      })
       // Apply a filter
-      await page.getByRole("checkbox", { name: /modify/i }).click()
+      await modifyLocator.click()
       // There is a debounce when choosing a filter.
       // we need to wait for the page to reload before running the test
       await page.waitForURL(/license_type=modification/)
@@ -43,14 +45,14 @@ test.describe("search history navigation", () => {
       // Note: Need to add that a search was actually executed with the new
       // filters and that the page results have been updated for the new filters
       // @todo(sarayourfriend): ^?
-      await expect(getCheckbox(page, { regexp: "modify" })).toBeChecked()
+      await expect(modifyLocator).toBeChecked()
 
       // Navigate backwards and verify URL is updated and the filter is unapplied
       await page.goBack()
 
       // Ditto here about the note above, need to verify a new search actually happened with new results
       expect(page.url()).not.toContain("license_type=modification")
-      await expect(getCheckbox(page, { regexp: "modify" })).toBeChecked()
+      await expect(modifyLocator).not.toBeChecked()
     })
 
     test("should update search results when back button updates search type", async ({
