@@ -51,7 +51,7 @@ export default defineComponent({
         const errorImage: ErrorImage = {
           ...image,
           originalTitle: image.title,
-          src: require(`~/assets/error_images/${image.file}.jpg`),
+          src: require(`/error_images/${image.file}.jpg`),
           alt: `errorImages.${image.id}`,
           license: image.license as License,
           license_version: image.license_version as LicenseVersion,
