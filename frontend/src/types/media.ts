@@ -46,6 +46,8 @@ export interface Media {
   fields_matched?: string[]
 
   mature: boolean
+  sensitivity: string[]
+  isSensitive: boolean
 }
 
 export interface ImageDetail extends Media {
@@ -90,7 +92,10 @@ export type DetailFromMediaType<T extends SupportedMediaType> =
  * being decoded in the `decodeMediaData` function.
  */
 export interface ApiMedia
-  extends Omit<Media, "frontendMediaType" | "title" | "originalTitle"> {
+  extends Omit<
+    Media,
+    "frontendMediaType" | "title" | "originalTitle" | "isSensitive"
+  > {
   title?: string
   originalTitle?: string
 }
