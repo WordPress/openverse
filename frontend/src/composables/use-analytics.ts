@@ -4,7 +4,6 @@ import { useContext } from "@nuxtjs/composition-api"
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useI18n } from "~/composables/use-i18n"
 
 import { log } from "~/utils/console"
 
@@ -14,7 +13,6 @@ import { log } from "~/utils/console"
  */
 export const useAnalytics = () => {
   const { $plausible } = useContext()
-  const i18n = useI18n()
   const uiStore = useUiStore()
   const featureFlagStore = useFeatureFlagStore()
 
@@ -27,7 +25,6 @@ export const useAnalytics = () => {
    * client-side; This excludes props that need `window`.
    */
   const isomorphicProps = computed(() => ({
-    language: i18n.locale,
     breakpoint: uiStore.breakpoint,
   }))
 
