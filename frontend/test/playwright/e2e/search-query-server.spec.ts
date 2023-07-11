@@ -92,7 +92,7 @@ test.describe("search query on SSR", () => {
     })
 
     test.fixme(
-      "URL sensntive query is set, and can be toggled using the UI.",
+      "URL sensitive query is set, and can be toggled using the UI.",
       async () => {
         // TODO: This test should be updated as part of the
         // blurring sensitive results project.
