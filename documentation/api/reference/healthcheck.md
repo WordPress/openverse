@@ -7,6 +7,8 @@ The Django API healthcheck endpoint checks the following:
   connections are available to the database
 - Optionally, whether Elasticsearch is accessible to Django (only when the
   `check_es` query parameter is present)
+  - When debugging live healthcheck requests, check the request parameters to
+    determine whether Elasticsearch health is included
 
 The healthcheck can fail for any of the following reasons:
 

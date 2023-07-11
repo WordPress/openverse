@@ -71,8 +71,8 @@ confirmed to be an issue with the API and not the database.
 ```{hint}
 If the persistent unhealthy hosts occur right after a deployment, you might be able to
 "fast track" to the conclusion that the issue is with the newly deployed version rather
-than a downstream service. However, coincidences do happen, so try to confirm the source
-of the issue before doing anything drastic.
+than a downstream service. However, coincidences do happen, so it's good practice to
+consider whether downstream service changes coinciding with the new version deployment.
 ```
 
 ```{warning}
