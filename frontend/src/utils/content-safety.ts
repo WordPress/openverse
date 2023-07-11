@@ -12,12 +12,12 @@ import {
 } from "~/constants/content-safety"
 
 /**
- * Marks the given item as mature based on a random number seeded with the
- * item's UUID v4 identifier. The `frac` param controls the probability of an
- * item being marked as mature.
+ * Get an array of randomly selected sensitive content flags for an item with
+ * the given UUID v4 identifier. The `frac` param controls the probability of an
+ * item having sensitivity flags.
  *
- * @param id - the ID of the item to mark as mature
- * @param frac - the fraction of items to mark as mature
+ * @param id - the ID of the item for which to calculate the flags
+ * @param frac - the fraction of items to probabilistically flag
  * @returns an array of strings representing the mature flags
  */
 export const getFakeSensitivities = (id: string, frac = 0.5): Sensitivity[] => {
