@@ -27,7 +27,7 @@ handling and querying the new index types from the API with the
 
 ## Expected Outcomes
 
-- DAGs for fully recreation of the index that the API uses which includes all
+- DAGs for full recreation of the index that the API uses which includes all
   the database contents, by media type.
 - DAGs to create indexes of reduced size, proportional-to-production-by-provider
   index, by media type.
@@ -87,7 +87,7 @@ create the index.
       with a body including both actions, analogous to the [ingest server's
       task][ing_point_alias].
 
-4. If `point_alias=True` is passed, then inmediatly make the `<media_type>`
+4. If `point_alias=True` is passed, then immediately make the `<media_type>`
    alias point to the new index, detaching any other following the same
    procedure as indicated above. If `False` then the DAG ends at the previous
    step.
