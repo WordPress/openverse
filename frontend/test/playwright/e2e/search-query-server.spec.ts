@@ -90,14 +90,5 @@ test.describe("search query on SSR", () => {
         await assertCheckboxStatus(page, checkbox)
       }
     })
-
-    test.fixme(
-      "URL sensitive query is set, and can be toggled using the UI.",
-      async () => {
-        // TODO: This test should be updated as part of the
-        // blurring sensitive results project.
-        // https://github.com/WordPress/openverse/issues/377
-      }
-    )
   })
 })
