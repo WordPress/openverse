@@ -67,7 +67,7 @@ const getInactive = async (context: Locator) =>
   (await getAllInactive(context, { filterVisible: true }))[0]
 
 const getNthAudioRow = async (page: Page, num: number) => {
-  const nthAudioRow = await page.getByRole("application").nth(num)
+  const nthAudioRow = page.getByRole("application").nth(num)
   await expect(nthAudioRow.getByRole("article")).toHaveAttribute(
     "status",
     "paused"

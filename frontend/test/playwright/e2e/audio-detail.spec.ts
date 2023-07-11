@@ -68,10 +68,10 @@ test("sends a custom event on seek", async ({ page, context }) => {
 
 test("shows the 404 error page when no valid id", async ({ page }) => {
   await page.goto("audio/foo")
-  await showsErrorPage(page)
+  await expect(showsErrorPage(page)).resolves.toBeUndefined()
 })
 
 test("shows the 404 error page when no id", async ({ page }) => {
   await page.goto("audio/")
-  await showsErrorPage(page)
+  await expect(showsErrorPage(page)).resolves.toBeUndefined()
 })

@@ -50,6 +50,7 @@ const cleanImageResults = async (page: Page) => {
   await page.addStyleTag({
     content: ".results-grid img { filter: brightness(0%); }",
   })
+  // eslint-disable-next-line playwright/no-wait-for-timeout
   await page.waitForTimeout(500)
 }
 

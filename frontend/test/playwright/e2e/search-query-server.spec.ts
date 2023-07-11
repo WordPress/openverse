@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test"
 
 import {
-  assertCheckboxStatus,
   currentContentType,
   filters,
   goToSearchTerm,
@@ -72,8 +71,10 @@ test.describe("search query on SSR", () => {
 
       await filters.open(page)
       // Creator filter was removed from the UI
-      for (const checkbox of ["cc0", "commercial"]) {
-        await assertCheckboxStatus(page, checkbox)
+      for (const checkbox of ["Zero", "Use commercially"]) {
+        await expect(
+          page.getByRole("checkbox", { name: checkbox })
+        ).toBeChecked()
       }
     })
 
@@ -87,7 +88,10 @@ test.describe("search query on SSR", () => {
       await filters.open(page)
       const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]
       for (const checkbox of checkboxes) {
-        await assertCheckboxStatus(page, checkbox)
+        // exact: true required to prevent `SVG` matching a provider with SVG in the name
+        await expect(
+          page.getByRole("checkbox", { name: checkbox, exact: true })
+        ).toBeChecked()
       }
     })
   })

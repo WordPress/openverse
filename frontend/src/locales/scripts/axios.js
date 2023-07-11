@@ -1,8 +1,7 @@
 const axios = require("axios")
 const rateLimit = require("axios-rate-limit")
 
-const userAgent =
-  "Openverse/0.1 (https://wordpress.org/openverse; openverse@wordpress.org)"
+const { userAgent } = require("../../constants/user-agent")
 
 module.exports = rateLimit(
   axios.create({
