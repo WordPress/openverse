@@ -105,12 +105,18 @@ describe("Media Item Store", () => {
     it.each(supportedMediaTypes)(
       "fetchMediaItem on 404 sets fetchingError and throws a new error",
       async (type) => {
-        const expectedError = { response: { status: 404 } }
-        mocks[type].mockImplementationOnce(() => Promise.reject(expectedError))
+        const errorResponse = { response: { status: 404 } }
+
+        mocks[type].mockImplementationOnce(() => Promise.reject(errorResponse))
         const singleResultStore = useSingleResultStore()
         const id = "foo"
 
-        await expect(singleResultStore.fetch(type, id)).rejects.toEqual(
+        const expectedError = {
+          message: `Could not fetch ${type} item with id ${id}`,
+          statusCode: errorResponse.response.status,
+        }
+        expect(await singleResultStore.fetch(type, id)).toEqual(null)
+        expect(singleResultStore.fetchState.fetchingError).toEqual(
           expectedError
         )
       }
