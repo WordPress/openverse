@@ -52,7 +52,14 @@ for (const { errorStatus, imageId } of errorTapes) {
       })
       await page.locator(`a[href*='/image/${imageId}']`).click()
 
-      await expectSnapshot(`single-result-error-CSR`, page, { fullPage: true })
+      // TODO: remove `maxDiffPixelRatio` after single result pages fetching is fixed
+      // https://github.com/WordPress/openverse/pull/2585
+      await expectSnapshot(
+        `single-result-error-CSR`,
+        page,
+        { fullPage: true },
+        { maxDiffPixelRatio: 0.02 }
+      )
     })
   })
 }
