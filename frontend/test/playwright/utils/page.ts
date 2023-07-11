@@ -1,3 +1,7 @@
+// Disable no-element-handle for this utility
+// It uses them appropriately to do meta-test setup
+/* eslint playwright/no-element-handle: ["off"] */
+
 import type { Page } from "@playwright/test"
 
 export const removeHiddenOverflow = async (page: Page) => {

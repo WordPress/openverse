@@ -21,11 +21,14 @@ test.describe("VFooter", () => {
   for (const dir of languageDirections) {
     for (const footerKind of footerKinds) {
       breakpoints.describeEvery(({ expectSnapshot }) => {
-        test(`footer-${footerKind}-${dir}`, async ({ page }) => {
+        test.beforeEach(async ({ page }) => {
           await page.goto(pageUrl(dir, footerKind))
           if (dir === "rtl") {
             await page.locator("#language").selectOption({ value: "ar" })
           }
+        })
+
+        test(`footer-${footerKind}-${dir}`, async ({ page }) => {
           await expectSnapshot(
             `footer-${footerKind}-${dir}`,
             page.locator("footer")
