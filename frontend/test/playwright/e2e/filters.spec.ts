@@ -163,7 +163,7 @@ breakpoints.describeMobileAndDesktop(() => {
 
     // Because we checked "Use commercially", licenses that disallow commercial
     // use will be disabled and the rest will still be enabled.
-    // Additionally, none of the checkboxes will be checked becuase we've only
+    // Additionally, none of the checkboxes will be checked because we've only
     // manipulated the commercial filter, not any specific license filters
     for (const checkbox of nonCommercialLicenses) {
       await expect(
