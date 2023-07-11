@@ -1,5 +1,6 @@
 import type { SupportedMediaType } from "~/constants/media"
 import type { License, LicenseVersion } from "~/constants/license"
+import type { Sensitivity } from "~/constants/content-safety"
 
 export interface Tag {
   name: string
@@ -46,7 +47,7 @@ export interface Media {
   fields_matched?: string[]
 
   mature: boolean
-  sensitivity: string[]
+  sensitivity: Sensitivity[]
   isSensitive: boolean
 }
 

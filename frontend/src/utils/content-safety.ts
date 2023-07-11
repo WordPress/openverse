@@ -4,6 +4,12 @@
 
 import { hash, rand as prng } from "~/utils/prng"
 import { log } from "~/utils/console"
+import {
+  USER_REPORTED,
+  PROVIDER_SUPPLIED,
+  TEXT_FILTERED,
+  Sensitivity,
+} from "~/constants/content-safety"
 
 /**
  * Marks the given item as mature based on a random number seeded with the
@@ -14,7 +20,7 @@ import { log } from "~/utils/console"
  * @param frac - the fraction of items to mark as mature
  * @returns an array of strings representing the mature flags
  */
-export const markFakeSensitive = (id: string, frac = 0.5): string[] => {
+export const markFakeSensitive = (id: string, frac = 0.5): Sensitivity[] => {
   const random = prng(hash(id))()
 
   if (random > frac) {
@@ -22,15 +28,15 @@ export const markFakeSensitive = (id: string, frac = 0.5): string[] => {
   }
 
   const sensitivityMask = Math.floor((random * 7) / frac) + 1
-  const sensitivity = []
+  const sensitivity: Sensitivity[] = []
   if ((sensitivityMask & 4) !== 0) {
-    sensitivity.push("user_reported_sensitive")
+    sensitivity.push(USER_REPORTED)
   }
   if ((sensitivityMask & 2) !== 0) {
-    sensitivity.push("provider_supplied_sensitive")
+    sensitivity.push(PROVIDER_SUPPLIED)
   }
   if ((sensitivityMask & 1) !== 0) {
-    sensitivity.push("sensitive_text")
+    sensitivity.push(TEXT_FILTERED)
   }
 
   log("Fake mature", id, sensitivity)
