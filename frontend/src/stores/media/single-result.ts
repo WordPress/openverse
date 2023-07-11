@@ -178,8 +178,8 @@ export const useSingleResultStore = defineStore("single-result", {
             statusCode,
             message,
           })
-          // Rethrow the error to handle it in middleware/components.
-          throw error
+          this.$nuxt.$sentry.captureException(error)
+          return null
         }
       }
 

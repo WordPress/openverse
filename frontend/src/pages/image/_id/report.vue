@@ -64,19 +64,10 @@ export default defineComponent({
   async asyncData({ route, $pinia, i18n, error: nuxtError }) {
     const singleResultStore = useSingleResultStore($pinia)
     const imageId = route.params.id
-    try {
-      const image = await singleResultStore.fetch(IMAGE, imageId, {
-        fetchRelated: false,
-      })
-
-      const attributionMarkup = getAttribution(image, i18n, {
-        includeIcons: false,
-      })
-      return {
-        attributionMarkup,
-        image,
-      }
-    } catch (error) {
+    const image = await singleResultStore.fetch(IMAGE, imageId, {
+      fetchRelated: false,
+    })
+    if (!image) {
       return nuxtError({
         statusCode: 404,
         message: i18n
@@ -85,6 +76,13 @@ export default defineComponent({
           })
           .toString(),
       })
+    }
+    const attributionMarkup = getAttribution(image, i18n, {
+      includeIcons: false,
+    })
+    return {
+      attributionMarkup,
+      image,
     }
   },
   data: () => ({

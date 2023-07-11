@@ -10,17 +10,12 @@ export const singleResultMiddleware: Middleware = async ({
   from,
   error,
   $pinia,
-  $sentry,
 }) => {
   const mediaType = route.fullPath.includes("/image/") ? IMAGE : AUDIO
   const singleResultStore = useSingleResultStore($pinia)
   if (process.server) {
-    try {
-      await singleResultStore.fetch(mediaType, route.params.id)
-    } catch (e) {
-      // Capture the error in Sentry and show error page.
-      // TODO: Use different error page for 429 and 500.
-      $sentry.captureException(e)
+    const media = await singleResultStore.fetch(mediaType, route.params.id)
+    if (!media) {
       error(singleResultStore.fetchState.fetchingError ?? {})
     }
   } else {

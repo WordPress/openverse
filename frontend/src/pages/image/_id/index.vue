@@ -158,17 +158,16 @@ export default defineComponent({
 
     const isLoadingThumbnail = ref(true)
 
-    const { error: nuxtError, $sentry } = useContext()
+    const { error: nuxtError } = useContext()
 
     useFetch(async () => {
       const imageId = route.value.params.id
-      try {
-        const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
+      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
+      if (!fetchedImage) {
+        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+      } else {
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
-      } catch (error) {
-        $sentry.captureException(error)
-        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
       }
     })
 
