@@ -7,4 +7,5 @@ quickstart
 config
 mapping
 test
+deploy
 ```

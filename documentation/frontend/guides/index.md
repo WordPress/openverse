@@ -5,6 +5,7 @@
 
 quickstart
 develop
+deploy
 test
 analytics
 icons

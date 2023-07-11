@@ -1,6 +1,7 @@
 <template>
-  <VSkipToContentContainer
-    as="main"
+  <main
+    :id="skipToContentTargetId"
+    tabindex="-1"
     class="mx-auto mb-6 mt-8 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
   >
     <figure class="mb-6 flex flex-col items-start gap-y-4">
@@ -36,7 +37,7 @@
       :allow-cancel="false"
       :provider-name="image.providerName"
     />
-  </VSkipToContentContainer>
+  </main>
 </template>
 
 <script lang="ts">
@@ -45,6 +46,7 @@ import { defineComponent, ref, computed } from "vue"
 import { useI18n } from "~/composables/use-i18n"
 
 import { IMAGE } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
 import type { ImageDetail } from "~/types/media"
@@ -52,14 +54,12 @@ import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
 
 import VButton from "~/components/VButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 export default defineComponent({
   name: "ReportImage",
   components: {
     VButton,
     VContentReportForm,
-    VSkipToContentContainer,
   },
   layout: "content-layout",
   setup() {
@@ -89,6 +89,8 @@ export default defineComponent({
       imageType,
       imageSrc,
       getAttributionMarkup,
+
+      skipToContentTargetId,
     }
   },
   async asyncData({ app, error, route, $pinia }) {
@@ -98,7 +100,7 @@ export default defineComponent({
       await singleResultStore.fetch(IMAGE, imageId)
     } catch (err) {
       const errorMessage = app.i18n
-        .t("error.image-not-found", {
+        .t("error.imageNotFound", {
           id: imageId,
         })
         .toString()

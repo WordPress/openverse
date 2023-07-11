@@ -1,5 +1,7 @@
 <template>
-  <VSkipToContentContainer
+  <div
+    :id="skipToContentTargetId"
+    tabindex="-1"
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
     <VSearchGrid
@@ -26,7 +28,7 @@
       :is-filter-sidebar-visible="isSidebarVisible"
       data-testid="scroll-button"
     />
-  </VSkipToContentContainer>
+  </div>
 </template>
 
 <script lang="ts">
@@ -38,10 +40,10 @@ import { defineComponent, useMeta, useRoute } from "@nuxtjs/composition-api"
 import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
 import VSearchGrid from "~/components/VSearchGrid.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
 
 export default defineComponent({
@@ -49,7 +51,6 @@ export default defineComponent({
   components: {
     VScrollButton,
     VSearchGrid,
-    VSkipToContentContainer,
   },
   layout: "search-layout",
   middleware: searchMiddleware,
@@ -123,6 +124,8 @@ export default defineComponent({
       resultItems,
       needsFetching,
       isSidebarVisible,
+
+      skipToContentTargetId,
 
       fetchMedia,
     }
