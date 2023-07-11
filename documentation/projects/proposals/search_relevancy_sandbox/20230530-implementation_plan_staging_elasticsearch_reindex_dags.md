@@ -178,6 +178,8 @@ Reindex][es_reindex_api] API.
 9. Optionally. Query the [stats][es_py_stats] of the resulting index and print
    the results.
 
+[airflow_dtm]:
+  https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dynamic-task-mapping.html
 [es_py_reindex]:
   https://elasticsearch-py.readthedocs.io/en/v8.8.0/api.html#elasticsearch.Elasticsearch.reindex
 [es_py_refresh]:
