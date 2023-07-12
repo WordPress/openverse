@@ -193,10 +193,10 @@ export const useSingleResultStore = defineStore("single-result", {
     /**
      * Fetch the media item from the API.
      */
-    async fetchMediaItem<T extends SupportedMediaType>(
-      type: SupportedMediaType,
+    async fetchMediaItem<MediaType extends SupportedMediaType>(
+      type: MediaType,
       id: string
-    ): Promise<DetailFromMediaType<typeof type>> {
+    ): Promise<DetailFromMediaType<MediaType>> {
       this._updateFetchState("start")
       const accessToken = this.$nuxt.$openverseApiToken
       const service = initServices[type](accessToken)
@@ -205,7 +205,7 @@ export const useSingleResultStore = defineStore("single-result", {
       this.setMediaItem(item)
       this._updateFetchState("end")
 
-      return item as DetailFromMediaType<T>
+      return item as DetailFromMediaType<MediaType>
     },
   },
 })
