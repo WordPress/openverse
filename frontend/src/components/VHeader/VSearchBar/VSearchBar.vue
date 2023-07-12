@@ -3,6 +3,7 @@
     <!-- Form action is a fallback for when JavaScript is disabled. -->
     <form
       action="/search"
+      role="search"
       class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-white"
       @submit.prevent="handleSearch"
     >
