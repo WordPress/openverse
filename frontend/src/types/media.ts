@@ -111,9 +111,9 @@ export type AspectRatio = "square" | "intrinsic"
 
 export const isDetail = {
   audio: (media: Media | null): media is AudioDetail =>
-    isMediaDetail<typeof AUDIO>(media, AUDIO),
+    isMediaDetail(media, AUDIO),
   image: (media: Media | null): media is ImageDetail =>
-    isMediaDetail<typeof IMAGE>(media, IMAGE),
+    isMediaDetail(media, IMAGE),
 }
 
 export const isMediaDetail = <T extends SupportedMediaType>(
