@@ -79,3 +79,4 @@ COPY --chown=ingestionu . /ingestion_server/
 EXPOSE 8001 8002
 
 # CMD is set from Docker Compose
+CMD ["gunicorn", "-c", "./gunicorn.conf.py"]
