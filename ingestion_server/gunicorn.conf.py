@@ -6,6 +6,7 @@ timeout = 120
 reload = True
 logconfig_dict = {
     # NOTE: Most of this is inherited from the default configuration
+    # https://github.com/benoitc/gunicorn/blob/cc2e3835784542e65886cd27f64d444309fbaad0/gunicorn/glogging.py#L48-L86
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
