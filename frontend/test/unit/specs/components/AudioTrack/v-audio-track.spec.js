@@ -19,9 +19,6 @@ jest.mock("~/composables/use-match-routes", () => ({
   useMatchSingleResultRoutes: jest.fn(() => ({ matches: { value: false } })),
 }))
 
-jest.mock("~/composables/use-browser-detection", () => ({
-  useBrowserIsBlink: jest.fn(() => false),
-}))
 
 const stubs = {
   VPlayPause: true,
