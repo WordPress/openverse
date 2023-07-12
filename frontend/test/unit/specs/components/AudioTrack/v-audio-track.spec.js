@@ -19,7 +19,6 @@ jest.mock("~/composables/use-match-routes", () => ({
   useMatchSingleResultRoutes: jest.fn(() => ({ matches: { value: false } })),
 }))
 
-
 const stubs = {
   VPlayPause: true,
   VLicense: true,
