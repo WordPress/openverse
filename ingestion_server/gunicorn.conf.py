@@ -1,4 +1,3 @@
-bind = ["0.0.0.0:8001"]
 capture_output = True
 accesslog = "-"
 errorlog = "-"
@@ -42,4 +41,3 @@ logconfig_dict = {
     },
 }
 loglevel = "debug"
-wsgi_app = "api:api"

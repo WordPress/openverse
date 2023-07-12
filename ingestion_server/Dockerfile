@@ -78,4 +78,4 @@ COPY --chown=ingestionu . /ingestion_server/
 # - 8002: Gunicorn server for `indexer_worker` Falcon app
 EXPOSE 8001 8002
 
-CMD ["gunicorn", "-c", "./gunicorn.conf.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8001", "api:api"]
