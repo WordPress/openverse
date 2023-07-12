@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 
 import axios from "axios"
 
-import type { FetchStateWithNuxtError } from "~/types/fetch-state"
+import type { FetchState } from "~/types/fetch-state"
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -24,7 +24,7 @@ export type MediaItemState = {
   mediaType: SupportedMediaType | null
   mediaId: string | null
   mediaItem: DetailFromMediaType<SupportedMediaType> | null
-  fetchState: FetchStateWithNuxtError
+  fetchState: FetchState<NuxtError>
 }
 
 export const useSingleResultStore = defineStore("single-result", {
