@@ -7,7 +7,7 @@
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
 - [ ] @AetherUnbound
-- [ ] @stacimc
+- [ ] @sarayourfriend
 
 ## Project summary
 
@@ -130,30 +130,78 @@ outreach. See more about that in the [marketing section](#marketing).
 
 <!-- How do we measure the success of the project? How do we know our ideas worked? -->
 
-This project can be considered
+This project can be considered a success when the dataset is published. Ideally,
+we will also observe meaningful usage of the dataset. Some ways we might measure
+this include:
+
+- Metrics built into HuggingFace
+  - Models trained with the Dataset are listed
+  - Downloads last month
+  - Likes
+- Our dataset trending on HuggingFace
+- Additionally, we may also see increased interest in our repositories
+- Any positive engagement with our marketing efforts for the project
 
 ## Participants and stakeholders
 
 <!-- Who is working on the project and who are the external stakeholders, if any? Consider the lead, implementers, designers, and other stakeholders who have a say in how the project goes. -->
 
-- Openverse maintainers
-- HuggingFace
-- Creative Commons
-- Aaron Ghokaslan
-- WordPress Foundation
+- Openverse maintainers - Responsible for creating the initial raw data dump,
+  maintaining the Openverse account and Dataset on HuggingFace
+- HuggingFace - A key partner responsible for the initial dataset upload,
+  providing advice, and potential marketing collaboration
+- Creative Commons - Stewards of the Commons and CC Licenses, advisors, and
+  another partner in marketing promotion
+- Aaron Ghokaslan - A researcher working on supplementary datasets and providing
+  technical advice
 
 ## Infrastructure
 
 <!-- What infrastructural considerations need to be made for this project? If there are none, say so explicitly rather than deleting the section. -->
 
+This project will likely require provisioning some new resources in AWS:
+
+- A dedicated bucket, perhaps a "Requester pays" bucket, for storing the backups
+- New scripts to generate backup artifacts
+
 ## Accessibility
 
 <!-- Are there specific accessibility concerns relevant to this project? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+
+This project doesn't directly raise any accessibility concerns. However, we
+should be mindful of any changes we would like to make on Openverse.org relating
+to copy edits about this initiative.
+
+We should also be mindful of any accessibility issues with HuggingFace's user
+interface, which we could share with them in an advisory capacity.
 
 ## Marketing
 
 <!-- Are there potential marketing opportunities that we'd need to coordinate with the community to accomplish? If there are none, say so explicitly rather than deleting the section. -->
 
+This release will be a big achievement and we should do quite a bit to promote
+it:
+
+- Reach out to past requesters of the dataset and share the HuggingFace link
+- Social channel cross-promotion between the WordPress Marketing team,
+  HuggingFace, and/or Creative Commons
+- Post to more tech-minded communities like HackerNews, certain Reddit
+  communities, etc.
+
+Additionally, our documentation will need to be updated extensively to inform
+users about the Dataset. The API docs, our developer handbook, our docs site,
+and potentially Openverse.org should all be update to reflect these changes.
+
 ## Required implementation plans
 
 <!-- What are the required implementation plans? Consider if they should be split per level of the stack or per feature. -->
+
+- Initial Data Dump Creation - A plan describing how to produce and provide
+  access to the raw data dumps which will be used to create the Dataset(s).
+  - This will be the first, largest, and most important plan
+- Dataset Maintenance - A plan describing how we will regularly release updates
+  to the Dataset(s)
+
+We will also want a plan for how we intend to _use_ the HuggingFace platform to
+complete our other projects for the year, but that might fall outside the scope
+of this project.
