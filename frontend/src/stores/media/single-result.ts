@@ -202,8 +202,6 @@ export const useSingleResultStore = defineStore("single-result", {
       const service = initServices[type](accessToken)
       const item = this._addProviderName(await service.getMediaDetail(id))
 
-
-
       this.setMediaItem(item)
       this._updateFetchState("end")
 
