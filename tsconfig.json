@@ -55,7 +55,7 @@
     /** End of non TypeScript files section */
     "frontend/**/*.json"
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "**/venv", "**/.venv"],
   "vueCompilerOptions": {
     "target": 2.7
   }
