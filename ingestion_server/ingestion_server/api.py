@@ -322,7 +322,7 @@ class StateResource:
         clear_state()
 
 
-def create_api(log=True):
+def create_api():
     """Create an instance of the Falcon API server."""
 
     _api = falcon.App()
