@@ -128,7 +128,7 @@ test.describe("Load more button", () => {
           mode,
           searchType: AUDIO,
         })
-        await expect(page.locator(loadMoreButton)).not.toBeVisible()
+        await expect(page.locator(loadMoreButton)).toBeHidden()
       })
 
       /**
@@ -142,19 +142,18 @@ test.describe("Load more button", () => {
         const analyticsEvents = collectAnalyticsEvents(context)
 
         await goToSearchTerm(page, "cat")
+        await page.locator(loadMoreButton).scrollIntoViewIfNeeded()
         await expect(page.locator(loadMoreButton)).toBeVisible()
 
         const reachResultEndEvent = analyticsEvents.find(
           (event) => event.n === "REACH_RESULT_END"
         )
 
-        if (reachResultEndEvent) {
-          expectEventPayloadToMatch(reachResultEndEvent, {
-            query: "cat",
-            searchType: "all",
-            resultPage: 1,
-          })
-        }
+        expectEventPayloadToMatch(reachResultEndEvent, {
+          query: "cat",
+          searchType: "all",
+          resultPage: 1,
+        })
       })
     })
   }
@@ -167,17 +166,11 @@ test.describe("Load more button", () => {
       const analyticsEvents = collectAnalyticsEvents(context)
 
       await goToSearchTerm(page, "cat")
-      await expect(page.locator(loadMoreButton)).toBeVisible()
-
       await page.click(loadMoreButton)
 
       const loadMoreEvent = analyticsEvents.find(
         (event) => event.n === "LOAD_MORE_RESULTS"
       )
-
-      if (!loadMoreEvent) {
-        throw new Error("Load more event did not send.")
-      }
 
       expectEventPayloadToMatch(loadMoreEvent, {
         query: "cat",
@@ -201,10 +194,6 @@ test.describe("Load more button", () => {
       const loadMoreEvents = analyticsEvents.filter(
         (event) => event.n === "LOAD_MORE_RESULTS"
       )
-
-      if (!loadMoreEvents) {
-        throw new Error("Load more event did not send.")
-      }
 
       expect(loadMoreEvents.length).toBe(2)
       loadMoreEvents.every((event, index) =>

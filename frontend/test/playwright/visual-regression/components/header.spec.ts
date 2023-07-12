@@ -34,48 +34,48 @@ for (const dir of languageDirections) {
         )
       })
 
-      test("resting", async ({ page }) => {
-        // By default, filters are open on desktop. We need to close them.
-        if (!isMobileBreakpoint(breakpoint)) {
-          await filters.close(page)
-        }
-        // Make sure the header is not hovered on
-        await page.mouse.move(0, 150)
-        await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
-      })
+      test.describe("starting with closed filters", () => {
+        test.beforeEach(async ({ page }) => {
+          // By default, filters are open on desktop. We need to close them.
+          if (!isMobileBreakpoint(breakpoint)) {
+            await filters.close(page)
+          }
+        })
 
-      test("scrolled", async ({ page }) => {
-        if (!isMobileBreakpoint(breakpoint)) {
-          await filters.close(page)
-        }
-        await scrollToBottom(page)
-        await page.mouse.move(0, 150)
-        await sleep(200)
-        await expectSnapshot(`scrolled-${dir}`, page.locator(headerSelector))
-      })
+        test("resting", async ({ page }) => {
+          // Make sure the header is not hovered on
+          await page.mouse.move(0, 150)
+          await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
+        })
 
-      test("searchbar hovered", async ({ page }) => {
-        if (!isMobileBreakpoint(breakpoint)) {
-          await filters.close(page)
-        }
-        await page.hover("input")
-        await hideInputCursors(page)
-        await expectSnapshot(
-          `searchbar-hovered-${dir}`,
-          page.locator(headerSelector)
-        )
-      })
+        test("scrolled", async ({ page }) => {
+          await scrollToBottom(page)
+          await page.mouse.move(0, 150)
+          await sleep(200)
+          await expectSnapshot(`scrolled-${dir}`, page.locator(headerSelector))
+        })
 
-      test("searchbar active", async ({ page }) => {
-        if (!isMobileBreakpoint(breakpoint)) {
-          await filters.close(page)
-        }
-        await hideInputCursors(page)
-        await page.click("input")
-        const locator = isMobileBreakpoint(breakpoint)
-          ? page
-          : page.locator(headerSelector)
-        await expectSnapshot(`searchbar-active-${dir}`, locator)
+        test("searchbar hovered", async ({ page }) => {
+          await page.hover("input")
+          await hideInputCursors(page)
+          await expectSnapshot(
+            `searchbar-hovered-${dir}`,
+            page.locator(headerSelector)
+          )
+        })
+
+        test("searchbar active", async ({ page }) => {
+          await hideInputCursors(page)
+          await page.click("input")
+          // Search takes up the entire view on mobile
+          // But on desktop, to reduce the snapshot size, we can scope the
+          // locator just to the header
+          // eslint-disable-next-line playwright/no-conditional-in-test
+          const locator = isMobileBreakpoint(breakpoint)
+            ? page
+            : page.locator(headerSelector)
+          await expectSnapshot(`searchbar-active-${dir}`, locator)
+        })
       })
     })
   })

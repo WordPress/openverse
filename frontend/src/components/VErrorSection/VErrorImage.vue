@@ -19,7 +19,7 @@ import type { ErrorCode } from "~/constants/errors"
 import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
 import { useI18n } from "~/composables/use-i18n"
 
-import imageInfo from "~/assets/error_images/image_info.json"
+import imageInfo from "~/assets/error_images.json"
 
 interface ErrorImage extends AttributableMedia {
   src: string
@@ -51,7 +51,7 @@ export default defineComponent({
         const errorImage: ErrorImage = {
           ...image,
           originalTitle: image.title,
-          src: require(`~/assets/error_images/${image.file}.jpg`),
+          src: `/error_images/${image.file}.jpg`,
           alt: `errorImages.${image.id}`,
           license: image.license as License,
           license_version: image.license_version as LicenseVersion,

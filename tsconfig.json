@@ -51,10 +51,11 @@
      */
     "frontend/src/constants/**/*",
     "frontend/src/server-middleware/healthcheck.js",
+    "frontend/src/constants/user-agent.js",
     /** End of non TypeScript files section */
     "frontend/**/*.json"
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "**/venv", "**/.venv"],
   "vueCompilerOptions": {
     "target": 2.7
   }

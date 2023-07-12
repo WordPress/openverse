@@ -55,7 +55,7 @@ import useResizeObserver from "~/composables/use-resize-observer"
 
 import VLink from "~/components/VLink.vue"
 
-import imageInfo from "~/assets/homepage_images/image_info.json"
+import imageInfo from "~/assets/homepage_images.json"
 
 export const GALLERY_SETS = [
   "universe",
@@ -112,9 +112,7 @@ export default defineComponent({
     const imageList = computed(() => {
       return imageSet.value.images.map((image, idx) => ({
         ...image,
-        src: require(`~/assets/homepage_images/${imageSet.value.key}/${
-          idx + 1
-        }.png`),
+        src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
         url: router.resolve(
           app.localePath({
             name: "image-id",

@@ -216,6 +216,15 @@ module.exports = {
       },
     },
     {
+      files: ["frontend/test/{playwright,storybook}/**"],
+      plugins: ["playwright"],
+      extends: ["plugin:playwright/recommended"],
+      rules: {
+        // Enable once https://github.com/playwright-community/eslint-plugin-playwright/issues/154 is resolved
+        "playwright/expect-expect": ["off"],
+      },
+    },
+    {
       files: [
         "automations/js/src/**",
         "frontend/test/**",

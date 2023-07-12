@@ -32,9 +32,9 @@ test.describe("translation banner", () => {
     await dismissBannersUsingCookies(page)
 
     await page.goto(russianSearchPath)
-    await expect(
-      page.locator('[data-testid="banner-translation"]')
-    ).not.toBeVisible({ timeout: 500 })
+    await expect(page.locator('[data-testid="banner-translation"]')).toBeHidden(
+      { timeout: 500 }
+    )
   })
 
   test("Can close the translation banner", async ({ page }) => {
@@ -44,12 +44,12 @@ test.describe("translation banner", () => {
     })
 
     const banner = page.locator('.span:has-text("Help us get to 100 percent")')
-    await expect(banner).not.toBeVisible({ timeout: 500 })
+    await expect(banner).toBeHidden({ timeout: 500 })
     // Test that the banner does not re-appear when navigating to the 'About us' page
     await page.locator('a[href="/ru/about"]').click()
-    await expect(banner).not.toBeVisible({ timeout: 500 })
+    await expect(banner).toBeHidden({ timeout: 500 })
 
     await page.goto(russianSearchPath)
-    await expect(banner).not.toBeVisible({ timeout: 500 })
+    await expect(banner).toBeHidden({ timeout: 500 })
   })
 })

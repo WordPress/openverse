@@ -1,3 +1,5 @@
+import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
+
 import { decodeMediaData } from "~/utils/decode-media-data"
 import { IMAGE } from "~/constants/media"
 
@@ -15,10 +17,17 @@ const requiredFields = {
   detail_url: "url",
   related_url: "url",
 
+  sensitivity: [],
+  isSensitive: false,
+
   tags: [],
 }
 
 describe("decodeImageData", () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it("decodes symbols correctly", () => {
     const data = {
       ...requiredFields,

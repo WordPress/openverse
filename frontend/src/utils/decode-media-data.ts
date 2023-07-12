@@ -4,6 +4,8 @@ import { decodeData as decodeString } from "~/utils/decode-data"
 import type { ApiMedia, Media, Tag } from "~/types/media"
 import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { getFakeSensitivities } from "~/utils/content-safety"
 
 const mediaTypeExtensions: Record<MediaType, string[]> = {
   [IMAGE]: ["jpg", "jpeg", "png", "gif", "svg"],
@@ -83,8 +85,15 @@ const mediaTitle = (
 export const decodeMediaData = <T extends Media>(
   media: ApiMedia,
   mediaType: T["frontendMediaType"]
-): T =>
-  ({
+): T => {
+  // Fake ~50% of results as mature.
+  const featureFlagStore = useFeatureFlagStore()
+  const sensitivity = featureFlagStore.isOn("fake_sensitive")
+    ? getFakeSensitivities(media.id)
+    : []
+  const isSensitive = sensitivity.length > 0
+
+  return {
     ...media,
     ...mediaTitle(media, mediaType),
     frontendMediaType: mediaType,
@@ -94,4 +103,7 @@ export const decodeMediaData = <T extends Media>(
       ...tag,
       name: decodeString(tag.name),
     })),
-  } as T)
+    sensitivity,
+    isSensitive,
+  } as T
+}
