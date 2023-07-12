@@ -63,7 +63,7 @@ export default defineComponent({
 
 <style scoped>
 .square {
-  aspect-square;
+  @apply aspect-square;
 }
 
 @screen md {
