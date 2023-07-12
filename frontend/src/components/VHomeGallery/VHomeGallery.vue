@@ -63,7 +63,7 @@ export const GALLERY_SETS = [
   "olympics",
   "random",
 ] as const
-export type GallerySet = typeof GALLERY_SETS[number]
+export type GallerySet = (typeof GALLERY_SETS)[number]
 
 /**
  * Displays a grid of images for the homepage, with each image linking to its

@@ -28,7 +28,7 @@ export const mobileBreakpoints = ["md", "sm", "xs"] as const
 
 export const isMobileBreakpoint = (
   bp: Breakpoint
-): bp is typeof mobileBreakpoints[number] =>
+): bp is (typeof mobileBreakpoints)[number] =>
   (mobileBreakpoints as unknown as string[]).includes(bp)
 
 // For desktop UA use the default
@@ -63,44 +63,41 @@ const makeBreakpointDescribe =
     blockOrOptions: T,
     block?: T extends Record<string, unknown> ? BreakpointBlock : undefined
   ) => {
-    test.describe(
-      `screen at breakpoint ${breakpoint} with width ${screenWidth}`,
-      () => {
-        const _block = (
-          typeof blockOrOptions === "function" ? blockOrOptions : block
-        ) as BreakpointBlock
-        const options =
-          typeof blockOrOptions !== "function"
-            ? { ...defaultOptions, ...blockOrOptions }
-            : defaultOptions
+    test.describe(`screen at breakpoint ${breakpoint} with width ${screenWidth}`, () => {
+      const _block = (
+        typeof blockOrOptions === "function" ? blockOrOptions : block
+      ) as BreakpointBlock
+      const options =
+        typeof blockOrOptions !== "function"
+          ? { ...defaultOptions, ...blockOrOptions }
+          : defaultOptions
 
-        test.use({
-          viewport: { width: screenWidth, height: 700 },
-          userAgent: options.uaMocking ? mockUaStrings[breakpoint] : undefined,
-        })
+      test.use({
+        viewport: { width: screenWidth, height: 700 },
+        userAgent: options.uaMocking ? mockUaStrings[breakpoint] : undefined,
+      })
 
-        const getConfigValues = (name: string) => ({
-          name: `${name}-${breakpoint}.png` as const,
-        })
+      const getConfigValues = (name: string) => ({
+        name: `${name}-${breakpoint}.png` as const,
+      })
 
-        const expectSnapshot = async <T extends ScreenshotAble>(
-          name: string,
-          screenshotAble: T,
-          options?: Parameters<T["screenshot"]>[0],
-          snapshotOptions?: Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0]
-        ) => {
-          const { name: snapshotName } = getConfigValues(name)
-          return expect(
-            await screenshotAble.screenshot(options)
-          ).toMatchSnapshot({
+      const expectSnapshot = async <T extends ScreenshotAble>(
+        name: string,
+        screenshotAble: T,
+        options?: Parameters<T["screenshot"]>[0],
+        snapshotOptions?: Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0]
+      ) => {
+        const { name: snapshotName } = getConfigValues(name)
+        return expect(await screenshotAble.screenshot(options)).toMatchSnapshot(
+          {
             name: snapshotName,
             ...snapshotOptions,
-          })
-        }
-
-        _block({ breakpoint, getConfigValues, expectSnapshot })
+          }
+        )
       }
-    )
+
+      _block({ breakpoint, getConfigValues, expectSnapshot })
+    })
   }
 
 const capitalize = (s: string): Capitalize<typeof s> =>

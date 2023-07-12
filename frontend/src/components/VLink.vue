@@ -1,9 +1,9 @@
 <!-- eslint-disable vue/no-restricted-syntax -->
 <template>
   <NuxtLink
-    v-if="isNuxtLink"
+    v-if="isInternal"
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
-    :to="linkTo"
+    v-bind="linkProps"
     v-on="$listeners"
     @mousedown.native="$emit('mousedown', $event)"
     @click.native="$emit('click', $event)"
@@ -16,9 +16,7 @@
   <a
     v-else
     :href="href"
-    target="_blank"
-    rel="noopener noreferrer"
-    :role="href ? undefined : 'link'"
+    v-bind="linkProps"
     :aria-disabled="!href"
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
     @click="handleExternalClick"
@@ -42,7 +40,8 @@
  * Links with `href` starting with `/` are treated as internal links.
  *
  * Internal links use `NuxtLink` component with `to` attribute set to `localePath(href)`
- * External links use `a` element set to open in a new tab and not raise an error with the current iframe setup.
+ * External links use `a` element. If `href` does not start with `#`, they are set to
+ * open in a new tab.
  */
 import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
@@ -50,6 +49,15 @@ import { useContext } from "@nuxtjs/composition-api"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
+
+type InternalLinkProps = { to: string }
+type ExternalLinkProps = { target: string; rel: string }
+type DisabledLinkProps = { role: string }
+type LinkProps =
+  | InternalLinkProps
+  | ExternalLinkProps
+  | DisabledLinkProps
+  | null
 
 export default defineComponent({
   name: "VLink",
@@ -100,13 +108,23 @@ export default defineComponent({
     const isInternal = computed(
       () => hasHref.value && props.href?.startsWith("/")
     )
-    const isNuxtLink = computed(() => hasHref.value && isInternal.value)
 
-    let linkTo = computed(() =>
-      checkHref(props) && isInternal.value
-        ? app?.localePath(props.href) ?? props.href
-        : null
-    )
+    const linkProps = computed<LinkProps>(() => {
+      if (checkHref(props)) {
+        if (props.href?.startsWith("/")) {
+          // Internal link should link to the localized page
+          return { to: app?.localePath(props.href) ?? props.href }
+        } else if (props.href?.startsWith("#")) {
+          // Anchor link for skip-to-content button
+          return null
+        } else {
+          // External link should open in a new tab
+          return { target: "_blank", rel: "noopener noreferrer" }
+        }
+      }
+      // if href is undefined, return props that make the link disabled
+      return { role: "link" }
+    })
 
     const { sendCustomEvent } = useAnalytics()
 
@@ -118,8 +136,7 @@ export default defineComponent({
     }
 
     return {
-      linkTo,
-      isNuxtLink,
+      linkProps,
       isInternal,
 
       handleExternalClick,

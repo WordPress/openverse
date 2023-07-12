@@ -55,7 +55,7 @@
               <VHomeLink variant="light" />
               <VCloseButton
                 variant="black"
-                icon-size="large"
+                icon-size="medium"
                 :label="$t('modal.closePagesMenu')"
                 @close="closePageMenu"
               />

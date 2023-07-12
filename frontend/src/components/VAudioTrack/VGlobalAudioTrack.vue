@@ -28,6 +28,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
@@ -35,6 +36,7 @@ import { useI18n } from "~/composables/use-i18n"
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
 
+import type { AudioInteraction } from "~/types/analytics"
 import type { AudioDetail } from "~/types/media"
 import type { AudioStatus } from "~/constants/audio"
 
@@ -66,6 +68,7 @@ export default defineComponent({
     const i18n = useI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
+    const { sendCustomEvent } = useAnalytics()
 
     const ariaLabel = computed(() =>
       i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
@@ -190,7 +193,17 @@ export default defineComponent({
 
     /* Interface with VPlayPause */
 
-    const handleToggle = (state?: "playing" | "paused") => {
+    const sendAudioInteractionEvent = (event: AudioInteraction) => {
+      sendCustomEvent("AUDIO_INTERACTION", {
+        id: props.audio.id,
+        provider: props.audio.provider,
+        event,
+        component: "VGlobalAudioTrack",
+      })
+    }
+    const handleToggle = (
+      state?: Exclude<AudioStatus, "loading" | "played">
+    ) => {
       if (!state) {
         switch (status.value) {
           case "playing":
@@ -202,14 +215,19 @@ export default defineComponent({
             break
         }
       }
-
+      let event: AudioInteraction | undefined = undefined
       switch (state) {
         case "playing":
           play()
+          event = "play"
           break
         case "paused":
           pause()
+          event = "pause"
           break
+      }
+      if (event) {
+        sendAudioInteractionEvent(event)
       }
     }
 
@@ -218,6 +236,7 @@ export default defineComponent({
     const handleSeeked = (frac: number) => {
       if (activeAudio.obj.value) {
         activeAudio.obj.value.currentTime = frac * duration.value
+        sendAudioInteractionEvent("seek")
       }
     }
 

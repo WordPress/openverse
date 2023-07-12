@@ -1,4 +1,4 @@
-export type AudioLayout = typeof audioLayouts[number]
+export type AudioLayout = (typeof audioLayouts)[number]
 export const audioLayouts = Object.freeze([
   "full",
   "box",
@@ -6,10 +6,10 @@ export const audioLayouts = Object.freeze([
   "global",
 ] as const)
 
-export type AudioSize = typeof audioSizes[number]
+export type AudioSize = (typeof audioSizes)[number]
 export const audioSizes = Object.freeze(["s", "m", "l"] as const)
 
-export type AudioStatus = typeof audioStatuses[number]
+export type AudioStatus = (typeof audioStatuses)[number]
 export const audioStatuses = Object.freeze([
   "playing",
   "paused",
@@ -17,7 +17,7 @@ export const audioStatuses = Object.freeze([
   "loading",
 ] as const)
 
-export type AudioFeature = typeof audioFeatures[number]
+export type AudioFeature = (typeof audioFeatures)[number]
 export const audioFeatures = Object.freeze([
   "timestamps",
   "duration",
@@ -48,4 +48,4 @@ export const statusVerbMap = Object.freeze({
 } as const)
 
 export const audioStatusVerbs = Object.values(statusVerbMap)
-export type AudioStatusVerb = typeof audioStatusVerbs[number]
+export type AudioStatusVerb = (typeof audioStatusVerbs)[number]

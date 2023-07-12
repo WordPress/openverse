@@ -1,5 +1,6 @@
 import type { SupportedMediaType } from "~/constants/media"
 import type { License, LicenseVersion } from "~/constants/license"
+import type { Sensitivity } from "~/constants/content-safety"
 
 export interface Tag {
   name: string
@@ -46,6 +47,8 @@ export interface Media {
   fields_matched?: string[]
 
   mature: boolean
+  sensitivity: Sensitivity[]
+  isSensitive: boolean
 }
 
 export interface ImageDetail extends Media {
@@ -90,7 +93,10 @@ export type DetailFromMediaType<T extends SupportedMediaType> =
  * being decoded in the `decodeMediaData` function.
  */
 export interface ApiMedia
-  extends Omit<Media, "frontendMediaType" | "title" | "originalTitle"> {
+  extends Omit<
+    Media,
+    "frontendMediaType" | "title" | "originalTitle" | "isSensitive"
+  > {
   title?: string
   originalTitle?: string
 }

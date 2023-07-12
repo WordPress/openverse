@@ -6,6 +6,17 @@ import type {
 import type { ReportReason } from "~/constants/content-report"
 import type { NonMatureFilterCategory } from "~/constants/filters"
 
+export type AudioInteraction = "play" | "pause" | "seek"
+export type AudioInteractionData = Exclude<
+  Events["AUDIO_INTERACTION"],
+  "component"
+>
+export type AudioComponent =
+  | "VRelatedAudio"
+  | "VGlobalAudioTrack"
+  | "AudioSearch"
+  | "AudioDetailPage"
+  | "VAllResultsGrid"
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
@@ -285,6 +296,24 @@ export type Events = {
     searchType: SearchType
     /** The search term */
     query: string
+  }
+
+  /** Description: The user plays, pauses, or seeks an audio track.
+   *
+   * Questions:
+   *   - Do users interact with media frequently?
+   *   - Is it more common to playback audio on single results
+   *     or search pages?
+   *   - How many audio plays do we get?
+   */
+  AUDIO_INTERACTION: {
+    /** The unique ID of the media */
+    id: string
+    event: AudioInteraction
+    /** The slug (not the prettified name) of the provider */
+    provider: string
+    /** The name of the Vue component used on the interaction, e.g. the global or main player. */
+    component: AudioComponent
   }
 }
 

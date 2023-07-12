@@ -63,14 +63,11 @@ class DataRefresh:
 DATA_REFRESH_CONFIGS = [
     DataRefresh(
         media_type="image",
-        # Temporarily turn off scheduled runs for the image data refresh.
-        # This allows us to keep the DAG enabled for manual runs.
-        schedule=None,
         data_refresh_timeout=timedelta(days=4),
         refresh_metrics_timeout=timedelta(hours=24),
-        refresh_matview_timeout=timedelta(days=21),
+        refresh_matview_timeout=timedelta(hours=72),
         create_pop_constants_view_timeout=timedelta(hours=24),
-        create_materialized_view_timeout=timedelta(days=21),
+        create_materialized_view_timeout=timedelta(hours=72),
     ),
     DataRefresh(media_type="audio"),
 ]

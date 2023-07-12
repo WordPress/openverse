@@ -25,10 +25,6 @@ test("sends correct analytics events", async ({ page, context }) => {
     (event) => event.n === "SELECT_EXTERNAL_SOURCE"
   )
 
-  if (!viewEvent || !selectEvent) {
-    throw new Error("Analytics events were not triggered properly.")
-  }
-
   expectEventPayloadToMatch(viewEvent, {
     searchType: "all",
     query: "cat",

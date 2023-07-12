@@ -12,21 +12,23 @@ const tabs = [
 ]
 const defaultUrl =
   "/iframe.html?id=components-vmediainfo-vmediareuse--v-media-reuse"
-const pageUrl = (dir: typeof languageDirections[number]) =>
+const pageUrl = (dir: (typeof languageDirections)[number]) =>
   dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
 test.describe("media-reuse", () => {
   for (const tab of tabs) {
     for (const dir of languageDirections) {
       breakpoints.describeEvery(({ expectSnapshot }) => {
-        test(`Should render a ${dir} media reuse section with "${tab.name}" tab open`, async ({
-          page,
-        }) => {
+        test.beforeEach(async ({ page }) => {
           await page.goto(pageUrl(dir))
           if (dir === "rtl") {
             await page.locator("#language").selectOption({ value: "ar" })
           }
+        })
 
+        test(`Should render a ${dir} media reuse section with "${tab.name}" tab open`, async ({
+          page,
+        }) => {
           await page.locator(`#tab-${tab.id}`).click()
           // Make sure the tab is not focused and doesn't have a pink ring
           const reuseTitle = t("mediaDetails.reuse.title", dir)

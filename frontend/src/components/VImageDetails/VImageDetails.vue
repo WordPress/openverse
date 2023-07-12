@@ -7,12 +7,9 @@
       <VContentReportPopover :media="image" />
     </div>
     <ul v-if="image && image.tags" class="mb-6 flex flex-wrap gap-2">
-      <VMediaTag
-        v-for="(tag, index) in image.tags.filter((i) => !!i)"
-        :key="index"
-        tag="li"
-        >{{ tag.name }}</VMediaTag
-      >
+      <VMediaTag v-for="(tag, index) in filteredTags" :key="index" tag="li">{{
+        tag.name
+      }}</VMediaTag>
     </ul>
     <dl>
       <div>
@@ -43,10 +40,12 @@
   </section>
 </template>
 
-<script>
-import { computed, defineComponent } from "vue"
+<script lang="ts">
+import { computed, defineComponent, PropType } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
+
+import type { ImageDetail } from "~/types/media"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
 import VLink from "~/components/VLink.vue"
@@ -57,7 +56,7 @@ export default defineComponent({
   components: { VContentReportPopover, VLink, VMediaTag },
   props: {
     image: {
-      type: Object,
+      type: Object as PropType<ImageDetail>,
       required: true,
     },
     imageWidth: {
@@ -83,7 +82,11 @@ export default defineComponent({
       return i18n.t("imageDetails.information.unknown")
     })
 
-    return { imgType }
+    const filteredTags = computed(() => {
+      return props.image.tags.filter((i: { name: string }) => !!i)
+    })
+
+    return { filteredTags, imgType }
   },
 })
 </script>

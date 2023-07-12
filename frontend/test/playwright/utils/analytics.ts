@@ -14,10 +14,15 @@ export type EventResponse<T extends EventName> = {
 export type AnalyticEventResponses = Array<EventResponse<EventName>>
 
 export function expectEventPayloadToMatch<T extends EventName>(
-  event: EventResponse<T>,
+  event: EventResponse<T> | undefined,
   expectedPayload: Events[T]
 ): void {
-  expect(event.p).toMatchObject(expectedPayload)
+  expect(
+    event,
+    `Event not captured; expected payload of ${JSON.stringify(expectedPayload)}`
+  ).toBeDefined()
+  // Safe to cast as previous line ensures it is defined
+  expect((event as EventResponse<T>).p).toMatchObject(expectedPayload)
 }
 
 export const collectAnalyticsEvents = (context: BrowserContext) => {
@@ -30,7 +35,7 @@ export const collectAnalyticsEvents = (context: BrowserContext) => {
       if (parsedData.p) {
         event.p = JSON.parse(parsedData.p)
       }
-      sentAnalyticsEvents.push({ ...parsedData })
+      sentAnalyticsEvents.push({ ...event })
     }
     route.abort()
   })
