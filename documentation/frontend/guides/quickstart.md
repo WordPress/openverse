@@ -39,10 +39,11 @@ you need to run this.
    ```
 
 4. To bring up the frontend, we have another `just` recipe. We have `just`
-   recipes for almost everything.
+   recipes for almost everything. Also, build it with the second command.
 
    ```console
    $ just frontend/run dev
+   $ pnpm --filter='@openverse/eslint-plugin' build
    ```
 
    If you want your frontend to use a different API instance, you can set the
