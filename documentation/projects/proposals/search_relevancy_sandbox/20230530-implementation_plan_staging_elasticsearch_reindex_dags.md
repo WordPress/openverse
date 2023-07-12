@@ -201,6 +201,17 @@ However, I discarded this option in favor of the one explained above because
 having both DAGs is much simpler and provides more possibilities for the
 creation of different indexes, which is the end goal of the project.
 
+### Combining DAGs for custom index creation into one
+
+During the discussion of this plan the idea of potencially combining the
+`create_proportional_by_provider_<media_type>_staging_index` DAG or both DAGs
+defined here with the one described in the plan to
+[create indexes with custom configurations](/projects/proposals/search_relevancy_sandbox/20230530-implementation_plan_staging_elasticsearch_reindex_dags.md).
+However, in principle, it is proposed the DAGs defined here only apply to the
+staging environment. In addition, following a divide and conquer strategy, we
+opted for the ease of developing them separately and combining them later to
+simplify once they are all implemented and tested.
+
 ## Parallelizable streams
 
 Both DAGs can be developed in parallel.
