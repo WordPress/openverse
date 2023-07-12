@@ -19,9 +19,10 @@ Elasticsearch (ES) index creation ––full and proportional-by-provider–– 
 will allow us to decouple the process from the long Ingestion server's data
 refresh process and experiment with smaller indices. The DAG factories will
 create a DAG per media type supported, which currently consists `image` and
-`audio`. Also includes the adoption of two new index aliases for ease of
-handling and querying the new index types from the API with the
-[`internal__index`][api_ii_param] param.
+`audio`, limited to staging environment at first. Also includes the adoption of
+two new index aliases for ease of handling and querying the new index types from
+the API with the [`internal__index`][api_ii_param] param. The use of these
+aliases is optional as the resulting indices can continue to be used directly.
 
 [api_ii_param]: https://github.com/WordPress/openverse/pull/2073
 
@@ -223,9 +224,9 @@ We can discard the DAGs if the results are not as expected.
 
 <!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
 
-Elasticsearch does not impose any limit on the amount of indices one can create
+Elasticsearch does not impose any limit on the amount of indexes one can create
 but naturally they come with a cost. We don't have policies for creating or
-deleting indices for the time being so we should monitor if we reach a point
+deleting indexes for the time being so we should monitor if we reach a point
 where having many indexes impact the cluster performance.
 
 ## Prior art
