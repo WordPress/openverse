@@ -78,5 +78,4 @@ COPY --chown=ingestionu . /ingestion_server/
 # - 8002: Gunicorn server for `indexer_worker` Falcon app
 EXPOSE 8001 8002
 
-# CMD is set from Docker Compose
 CMD ["gunicorn", "-c", "./gunicorn.conf.py"]
