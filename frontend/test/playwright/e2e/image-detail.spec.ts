@@ -38,9 +38,7 @@ test("shows the main image with its title as alt text", async ({ page }) => {
 
 test("does not show back to search results breadcrumb", async ({ page }) => {
   await goToCustomImagePage(page)
-  await expect(
-    page.locator(`text="${t("singleResult.back")}"`)
-  ).not.toBeVisible({
+  await expect(page.locator(`text="${t("singleResult.back")}"`)).toBeHidden({
     timeout: 300,
   })
 })

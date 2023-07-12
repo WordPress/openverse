@@ -55,7 +55,7 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
     await page.click('text="Open form"'), // Opens a new tab
   ])
   await newPage.waitForLoadState()
-  return expect(await newPage.url()).toContain("https://docs.google.com/forms")
+  return expect(newPage.url()).toContain("https://docs.google.com/forms")
 }
 
 // todo: Test a mature report with the optional description field

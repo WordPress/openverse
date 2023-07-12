@@ -19,7 +19,9 @@ const cleanImageCarousel = async (page: Page) => {
   await page.addStyleTag({
     content: ".home-cell > img { filter: brightness(0%); }",
   })
-  await page.waitForTimeout(1000) // wait for animation to finish
+  // wait for animation to finish
+  // eslint-disable-next-line playwright/no-wait-for-timeout
+  await page.waitForTimeout(1000)
 }
 
 for (const dir of languageDirections) {

@@ -192,26 +192,6 @@ export const isDialogOpen = async (page: Page) => {
   return page.getByRole("dialog").isVisible({ timeout: 100 })
 }
 
-/**
- * Asserts that the checkbox has the given status.
- *
- * @param page - Playwright page object
- * @param label - the label of the checkbox, converted to a RegExp if string
- * @param status - the status to assert
- */
-export const assertCheckboxStatus = async (
-  page: Page,
-  label: string | RegExp,
-  status: CheckboxStatus = "checked"
-) => {
-  const labelRegexp = typeof label === "string" ? new RegExp(label, "i") : label
-  await page.getByRole("checkbox", {
-    name: labelRegexp,
-    disabled: status === "disabled",
-    checked: status === "checked",
-  })
-}
-
 export const changeSearchType = async (page: Page, to: SupportedSearchType) => {
   await searchTypes.open(page)
 
@@ -352,6 +332,9 @@ export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   const firstResultHref = await getLocatorHref(firstResult)
   await firstResult.click({ position: { x: 32, y: 32 } })
   await scrollDownAndUp(page)
+  // Wait for all pending requests to finish, at which point we know
+  // that all lazy-loaded content is available
+  // eslint-disable-next-line playwright/no-networkidle
   await page.waitForURL(firstResultHref, { waitUntil: "networkidle" })
   await page.mouse.move(0, 0)
 }
