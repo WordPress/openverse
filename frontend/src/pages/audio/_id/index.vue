@@ -76,6 +76,7 @@ export default defineComponent({
     const route = useRoute()
 
     const audio = ref<AudioDetail | null>(singleResultStore.audio)
+    const { error: nuxtError } = useContext()
 
     useFetch(async () => {
       const audioId = route.value.params.id
@@ -84,7 +85,9 @@ export default defineComponent({
       const fetchedAudio = singleResultStore.audio
 
       if (!fetchedAudio) {
-        useContext().error({ statusCode: 404 })
+        nuxtError(
+          singleResultStore.fetchState.fetchingError ?? { statusCode: 404 }
+        )
       }
       audio.value = fetchedAudio
     })
