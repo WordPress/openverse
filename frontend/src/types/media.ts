@@ -1,6 +1,7 @@
 import type { SupportedMediaType } from "~/constants/media"
 import type { License, LicenseVersion } from "~/constants/license"
 import type { Sensitivity } from "~/constants/content-safety"
+import { AUDIO, IMAGE } from "~/constants/media"
 
 export interface Tag {
   name: string
@@ -109,16 +110,14 @@ export interface ImageDimensions {
 export type AspectRatio = "square" | "intrinsic"
 
 export const isDetail = {
-  audio: (media: AudioDetail | ImageDetail | null): media is AudioDetail => {
-    return !!media && media.frontendMediaType === "audio"
-  },
-  image: (media: AudioDetail | ImageDetail | null): media is ImageDetail => {
-    return !!media && media.frontendMediaType === "image"
-  },
+  audio: (media: Media | null): media is AudioDetail =>
+    isMediaDetail<typeof AUDIO>(media, AUDIO),
+  image: (media: Media | null): media is ImageDetail =>
+    isMediaDetail<typeof IMAGE>(media, IMAGE),
 }
 
 export const isMediaDetail = <T extends SupportedMediaType>(
-  media: AudioDetail | ImageDetail | null,
+  media: Media | null,
   mediaType: T
 ): media is DetailFromMediaType<T> => {
   return !!media && media.frontendMediaType === mediaType
