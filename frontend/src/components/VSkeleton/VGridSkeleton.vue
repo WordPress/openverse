@@ -63,14 +63,14 @@ export default defineComponent({
 
 <style scoped>
 .square {
-  aspect-ratio: 1 / 1;
+  aspect-square;
 }
 
-.masonry {
-  column-count: 2;
-  column-gap: 1rem;
+@screen md {
+  columns-1;
+  gap-x-4;
 
-  @screen md {
+  .masonry {
     column-count: 3;
   }
 
