@@ -84,44 +84,78 @@
       page: 1,
       results: [
         {
-          id: '2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95',
-          title: 'Hello Black & White Bird',
-          foreign_landing_url: 'https://www.jamendo.com/track/101464',
-          creator: 'The Old Dada Weatherman',
-          creator_url: 'https://www.jamendo.com/artist/6079/cynicalsense',
-          url: 'https://mp3d.jamendo.com/download/track/101464/mp32',
-          license: 'by-nc-sa',
-          license_version: '3.0',
-          license_url: 'https://creativecommons.org/licenses/by-nc-sa/3.0/',
-          provider: 'jamendo',
-          source: 'jamendo',
-          category: 'music',
-          tags: [
-            {
-              name: 'vocal',
-            },
-            {
-              name: 'male',
-            },
-            {
-              name: 'speed_medium',
-            },
-            {
-              name: 'happy',
-            },
+          "id": "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
+          "title": "Hello Black & White Bird",
+          "indexed_on": "2022-02-24T01:34:42.275707Z",
+          "foreign_landing_url": "https://www.jamendo.com/track/101464",
+          "url": "https://prod-1.storage.jamendo.com/?trackid=101464&format=mp32",
+          "creator": "The Old Dada Weatherman",
+          "creator_url": "https://www.jamendo.com/artist/6079/cynicalsense",
+          "license": "by-nc-sa",
+          "license_version": "3.0",
+          "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/",
+          "provider": "jamendo",
+          "source": "jamendo",
+          "category": "music",
+          "genres": [
+            "pop",
+            "singersongwriter"
           ],
-          fields_matched: [
-            'title',
+          "filesize": null,
+          "filetype": "mp32",
+          "tags": [
+            {
+              "name": "acousticguitar",
+              "accuracy": null
+            },
+            {
+              "name": "happy",
+              "accuracy": null
+            },
+            {
+              "name": "male",
+              "accuracy": null
+            },
+            {
+              "name": "sentimental",
+              "accuracy": null
+            },
+            {
+              "name": "speed_medium",
+              "accuracy": null
+            },
+            {
+              "name": "strings",
+              "accuracy": null
+            },
+            {
+              "name": "vocal",
+              "accuracy": null
+            }
           ],
-          genres: [
-            'pop',
+          "alt_files": null,
+          "attribution": "\"Hello Black & White Bird\" by The Old Dada Weatherman is licensed under CC BY-NC-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/.",
+          "fields_matched": [
+            "title"
           ],
-          duration: 206000,
-          thumbnail: 'http://localhost:49153/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/thumb/',
-          waveform: 'http://localhost:49153/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/waveform/',
-          detail_url: 'http://localhost:49153/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/',
-          related_url: 'http://localhost:49153/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/related/',
-          peaks: [],
+          "mature": false,
+          "audio_set": {
+            "title": "The Dada Weatherman (In Airplane Trouble)",
+            "foreign_landing_url": "https://www.jamendo.com/album/11348/the-dada-weatherman-in-airplane-trouble",
+            "creator": "The Old Dada Weatherman",
+            "creator_url": "https://www.jamendo.com/artist/6079/cynicalsense",
+            "url": null,
+            "filesize": null,
+            "filetype": null
+          },
+          "duration": 206000,
+          "bit_rate": null,
+          "sample_rate": null,
+          "thumbnail": "https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/thumb/",
+          "detail_url": "https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/",
+          "related_url": "https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/related/",
+          "waveform": "https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/waveform/",
+          "unstable__sensitivity": []
         },
         {
           id: '99103ce4-2772-4f10-876e-e708a106251e',
