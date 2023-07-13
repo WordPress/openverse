@@ -30,7 +30,7 @@
             'blur-sm': shouldBlur,
           }"
         >
-          {{ audio.title }}
+          {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
         </div>
 
         <div
@@ -48,7 +48,9 @@
               path="audioTrack.creator"
               :class="{ 'blur-sm': shouldBlur }"
             >
-              <template #creator>{{ audio.creator }}</template> </i18n
+              <template #creator>{{
+                shouldBlur ? $t("sensitiveContent.creator") : audio.creator
+              }}</template> </i18n
             ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
               $t("interpunct")
             }}</span>

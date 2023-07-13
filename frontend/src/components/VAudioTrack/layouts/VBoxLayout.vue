@@ -10,7 +10,7 @@
             class="font-heading line-clamp-3 text-base font-semibold leading-snug"
             :class="{ 'blur-sm': shouldBlur }"
           >
-            {{ audio.title }}
+            {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
           </h2>
           <div class="info">
             <VLicense

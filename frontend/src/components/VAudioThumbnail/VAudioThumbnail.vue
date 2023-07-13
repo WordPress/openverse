@@ -60,13 +60,20 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const uiStore = useUiStore()
+    const shouldBlur = computed(
+      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
+    )
+
     const i18n = useI18n()
-    const helpText = i18n
-      .t("audioThumbnail.alt", {
-        title: props.audio.title,
-        creator: props.audio.creator,
-      })
-      ?.toString()
+    const helpText = (
+      shouldBlur.value
+        ? i18n.t("sensitiveContent.title.audio")
+        : i18n.t("audioThumbnail.alt", {
+            title: props.audio.title,
+            creator: props.audio.creator,
+          })
+    )?.toString()
 
     /* Switching */
 
@@ -104,11 +111,6 @@ export default defineComponent({
       const maxFeasibleDistance = canvasSize * ((dotCount - 1) / (dotCount + 1))
       return lerp(maxRadius, minRadius, distance / maxFeasibleDistance)
     }
-
-    const uiStore = useUiStore()
-    const shouldBlur = computed(
-      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
-    )
 
     return {
       imgEl,
