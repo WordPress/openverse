@@ -69,7 +69,6 @@ export default defineComponent({
 .masonry {
   @apply columns-2 gap-x-4 md:columns-3 lg:columns-5;
 
-    column-count: 3;
   }
 
   @screen lg {
