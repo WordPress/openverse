@@ -4,8 +4,8 @@
 
 ## Reviewers
 
-- [ ] @AetherUnbound
-- [ ] @sarayourfriend
+- [x] @AetherUnbound
+- [x] @sarayourfriend
 
 ## Project links
 
@@ -136,6 +136,10 @@ version for maintainers safety.
 2. `percentage_of_prod`: A float indicating the proportion of items to take from
    each provider from the total amount existing in production. E.g. `0.25` for a
    quarter of the production documents.
+
+> **Note**: Until defining an automated mechanism for creating the filtered
+> index on staging, it will need to be recreated often manually or default the
+> `source_index` to the `<media_type>-full` alias.
 
 #### Outlined Steps
 
