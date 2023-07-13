@@ -743,4 +743,9 @@
   report: {
     imageDetails: "See image details",
   },
+  sensitiveContent: {
+    title: {
+      image: "This image may contain sensitive content.",
+    },
+  },
 }

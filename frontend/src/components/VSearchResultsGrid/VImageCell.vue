@@ -24,7 +24,11 @@
             isSquare ? 'h-full' : 'margin-auto',
             { 'scale-105 blur': shouldBlur },
           ]"
-          :alt="image.title"
+          :alt="
+            shouldBlur
+              ? $t('sensitiveContent.title.image').toString()
+              : image.title
+          "
           :src="imageUrl"
           :width="imgWidth"
           :height="imgHeight"
@@ -35,7 +39,13 @@
         <figcaption
           class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
         >
-          <h2 class="sr-only">{{ image.title }}</h2>
+          <h2 class="sr-only">
+            {{
+              shouldBlur
+                ? $t("sensitiveContent.title.image").toString()
+                : image.title
+            }}
+          </h2>
           <VLicense :license="image.license" :hide-name="true" />
         </figcaption>
       </figure>
@@ -146,9 +156,11 @@ export default defineComponent({
     }
 
     const contextSensitiveTitle = computed(() => {
-      return i18n.t("browsePage.aria.imageTitle", {
-        title: props.image.title,
-      })
+      return shouldBlur.value
+        ? i18n.t("sensitiveContent.title.image")
+        : i18n.t("browsePage.aria.imageTitle", {
+            title: props.image.title,
+          })
     })
 
     const { sendCustomEvent } = useAnalytics()
