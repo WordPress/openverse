@@ -20,7 +20,10 @@
           ref="img"
           loading="lazy"
           class="block w-full rounded-sm object-cover"
-          :class="isSquare ? 'h-full' : 'margin-auto'"
+          :class="[
+            isSquare ? 'h-full' : 'margin-auto',
+            { 'scale-105 blur': shouldBlur },
+          ]"
           :alt="image.title"
           :src="imageUrl"
           :width="imgWidth"
@@ -47,8 +50,8 @@ import { computed, defineComponent, PropType } from "vue"
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
-
 import { useAnalytics } from "~/composables/use-analytics"
+import { useUiStore } from "~/stores/ui"
 
 import { IMAGE } from "~/constants/media"
 
@@ -159,6 +162,11 @@ export default defineComponent({
       })
     }
 
+    const uiStore = useUiStore()
+    const shouldBlur = computed(
+      () => uiStore.shouldBlurSensitive && props.image.isSensitive
+    )
+
     return {
       styles,
       imgWidth,
@@ -166,6 +174,7 @@ export default defineComponent({
       imageUrl,
       imageLink,
       contextSensitiveTitle,
+      shouldBlur,
 
       getImageForeignUrl,
       onImageLoadError,

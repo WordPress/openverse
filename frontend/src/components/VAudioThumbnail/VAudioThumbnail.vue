@@ -1,8 +1,15 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
-  <div class="relative h-0 w-full bg-yellow pt-full" :title="helpText">
+  <div
+    class="relative h-0 w-full overflow-hidden bg-yellow pt-full"
+    :title="helpText"
+  >
     <!-- Programmatic thumbnail -->
-    <svg class="absolute inset-0" :viewBox="`0 0 ${canvasSize} ${canvasSize}`">
+    <svg
+      class="absolute inset-0"
+      :class="{ hidden: shouldBlur && isOk }"
+      :viewBox="`0 0 ${canvasSize} ${canvasSize}`"
+    >
       <template v-for="i in dotCount">
         <circle
           v-for="j in dotCount"
@@ -19,6 +26,7 @@
       <img
         ref="imgEl"
         class="h-full w-full overflow-clip object-cover object-center"
+        :class="{ 'scale-150 blur': shouldBlur }"
         :src="audio.thumbnail"
         :alt="helpText"
         @load="handleLoad"
@@ -28,12 +36,13 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent, PropType } from "vue"
+import { ref, onMounted, computed, defineComponent, PropType } from "vue"
 
 import { rand, hash } from "~/utils/prng"
 import { lerp, dist, bezier, Point } from "~/utils/math"
 import type { AudioDetail } from "~/types/media"
 import { useI18n } from "~/composables/use-i18n"
+import { useUiStore } from "~/stores/ui"
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
@@ -96,6 +105,11 @@ export default defineComponent({
       return lerp(maxRadius, minRadius, distance / maxFeasibleDistance)
     }
 
+    const uiStore = useUiStore()
+    const shouldBlur = computed(
+      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
+    )
+
     return {
       imgEl,
       isOk,
@@ -106,6 +120,8 @@ export default defineComponent({
       offset,
       radius,
       helpText,
+
+      shouldBlur,
     }
   },
 })
