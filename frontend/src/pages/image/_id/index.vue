@@ -141,6 +141,9 @@ export default defineComponent({
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
+  // Fetching on the server is disabled because it is
+  // handled by the `singleResultMiddleware`.
+  fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()

@@ -44,7 +44,6 @@ describe("Media Item Store", () => {
       setActivePinia(createPinia())
       const singleResultStore = useSingleResultStore()
       expect(singleResultStore.fetchState).toEqual({
-        hasStarted: false,
         isFetching: false,
         fetchingError: null,
       })

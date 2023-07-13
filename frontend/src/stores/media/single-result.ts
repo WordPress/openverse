@@ -16,7 +16,7 @@ import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useProviderStore } from "~/stores/provider"
-import { warn } from "~/utils/console"
+import { log, warn } from "~/utils/console"
 
 import type { NuxtError } from "@nuxt/types"
 
@@ -32,7 +32,7 @@ export const useSingleResultStore = defineStore("single-result", {
     mediaType: null,
     mediaId: null,
     mediaItem: null,
-    fetchState: { isFetching: false, hasStarted: false, fetchingError: null },
+    fetchState: { isFetching: false, fetchingError: null },
   }),
 
   getters: {
@@ -57,7 +57,6 @@ export const useSingleResultStore = defineStore("single-result", {
     },
     _startFetching() {
       this.fetchState.isFetching = true
-      this.fetchState.hasStarted = true
       this.fetchState.fetchingError = null
     },
 
@@ -87,7 +86,6 @@ export const useSingleResultStore = defineStore("single-result", {
       this.mediaType = null
       this.mediaId = null
       this.fetchState.isFetching = false
-      this.fetchState.hasStarted = false
       this.fetchState.fetchingError = null
     },
 
@@ -112,7 +110,7 @@ export const useSingleResultStore = defineStore("single-result", {
      * itself later.
      */
     setMediaById(type: SupportedMediaType, id: string) {
-      this.reset()
+      if (this.mediaId === id && isMediaDetail(this.mediaItem, type)) return
       const existingItem = useMediaStore().getItemById(type, id)
       if (existingItem) {
         this.setMediaItem(existingItem)
@@ -139,7 +137,10 @@ export const useSingleResultStore = defineStore("single-result", {
         useRelatedMediaStore()
           .fetchMedia(type, id)
           .catch((error) => {
-            warn("Could not load related media: ", error)
+            log(
+              "Capturing Sentry exception loading related media: ",
+              JSON.stringify(error)
+            )
             this.$nuxt.$sentry.captureException(error)
           })
       }
@@ -178,6 +179,11 @@ export const useSingleResultStore = defineStore("single-result", {
             statusCode,
             message,
           })
+          log(
+            `Capturing Sentry exception while fetching single ${type} with id ${id}: ${JSON.stringify(
+              error
+            )}`
+          )
           this.$nuxt.$sentry.captureException(error)
           return null
         }
@@ -196,7 +202,7 @@ export const useSingleResultStore = defineStore("single-result", {
     async fetchMediaItem<MediaType extends SupportedMediaType>(
       type: MediaType,
       id: string
-    ): Promise<DetailFromMediaType<MediaType>> {
+    ) {
       this._updateFetchState("start")
       const accessToken = this.$nuxt.$openverseApiToken
       const service = initServices[type](accessToken)

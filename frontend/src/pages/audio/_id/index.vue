@@ -68,6 +68,9 @@ export default defineComponent({
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
+  // Fetching on the server is disabled because it is
+  // handled by the `singleResultMiddleware`.
+  fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
     const relatedMediaStore = useRelatedMediaStore()
@@ -85,11 +88,10 @@ export default defineComponent({
       const fetchedAudio = singleResultStore.audio
 
       if (!fetchedAudio) {
-        nuxtError(
-          singleResultStore.fetchState.fetchingError ?? { statusCode: 404 }
-        )
+        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+      } else {
+        audio.value = fetchedAudio
       }
-      audio.value = fetchedAudio
     })
 
     const relatedMedia = computed(
