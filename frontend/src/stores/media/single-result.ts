@@ -98,9 +98,11 @@ export const useSingleResultStore = defineStore("single-result", {
       if (mediaItem) {
         this.mediaItem = this._addProviderName(mediaItem)
         this.mediaType = mediaItem.frontendMediaType
+        this.mediaId = mediaItem.id
       } else {
         this.mediaItem = null
         this.mediaType = null
+        this.mediaId = null
       }
     },
 
@@ -146,6 +148,20 @@ export const useSingleResultStore = defineStore("single-result", {
       }
     },
 
+    getExistingItem<T extends SupportedMediaType>(
+      type: T,
+      id: string
+    ): DetailFromMediaType<T> | null {
+      if (this.mediaId === id && isMediaDetail<T>(this.mediaItem, type)) {
+        return this.mediaItem
+      }
+      const existingItem = useMediaStore().getItemById(type, id)
+      if (existingItem) {
+        return existingItem as DetailFromMediaType<T>
+      }
+      return null
+    },
+
     /**
      * Check if the `id` matches the `mediaId` and the media item
      * is already fetched. If middleware only set the `id` and
@@ -158,36 +174,11 @@ export const useSingleResultStore = defineStore("single-result", {
       id: string,
       options?: { fetchRelated: boolean }
     ) {
-      let item: DetailFromMediaType<T>
+      const existingItem = this.getExistingItem(type, id)
 
-      if (this.mediaId === id && isMediaDetail<T>(this.mediaItem, type)) {
-        item = this.mediaItem
-      } else {
-        try {
-          item = (await this.fetchMediaItem<T>(
-            type,
-            id
-          )) as DetailFromMediaType<T>
-        } catch (error) {
-          this.reset()
-          const statusCode =
-            axios.isAxiosError(error) && error.response?.status
-              ? error.response.status
-              : 404
-          const message = `Could not fetch ${type} item with id ${id}`
-          this._updateFetchState("end", {
-            statusCode,
-            message,
-          })
-          log(
-            `Capturing Sentry exception while fetching single ${type} with id ${id}: ${JSON.stringify(
-              error
-            )}`
-          )
-          this.$nuxt.$sentry.captureException(error)
-          return null
-        }
-      }
+      const item = existingItem
+        ? existingItem
+        : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
 
       const shouldFetchRelated = options?.fetchRelated ?? true
       if (shouldFetchRelated) {
@@ -198,20 +189,39 @@ export const useSingleResultStore = defineStore("single-result", {
 
     /**
      * Fetch the media item from the API.
+     * On error, send the error to Sentry and return null.
      */
     async fetchMediaItem<MediaType extends SupportedMediaType>(
       type: MediaType,
       id: string
     ) {
-      this._updateFetchState("start")
-      const accessToken = this.$nuxt.$openverseApiToken
-      const service = initServices[type](accessToken)
-      const item = this._addProviderName(await service.getMediaDetail(id))
+      try {
+        this._updateFetchState("start")
+        const accessToken = this.$nuxt.$openverseApiToken
+        const service = initServices[type](accessToken)
+        const item = this._addProviderName(await service.getMediaDetail(id))
 
-      this.setMediaItem(item)
-      this._updateFetchState("end")
+        this.setMediaItem(item)
+        this._updateFetchState("end")
 
-      return item as DetailFromMediaType<MediaType>
+        return item as DetailFromMediaType<MediaType>
+      } catch (error) {
+        this.reset()
+        const statusCode = getErrorStatusCode(error)
+        const message = `Error fetching single ${type} item with id ${id}`
+
+        this._updateFetchState("end", { statusCode, message })
+
+        log(`${message}. Sending error to Sentry: ${JSON.stringify(error)}`)
+        this.$nuxt.$sentry.captureException(error)
+
+        return null
+      }
     },
   },
 })
+
+const getErrorStatusCode = (error: unknown) =>
+  axios.isAxiosError(error) && error.response?.status
+    ? error.response.status
+    : 404
