@@ -14,9 +14,8 @@ import type { SupportedMediaType } from "~/constants/media"
 
 import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useProviderStore } from "~/stores/provider"
-import { log, warn } from "~/utils/console"
+import { log } from "~/utils/console"
 
 import type { NuxtError } from "@nuxt/types"
 
@@ -122,32 +121,6 @@ export const useSingleResultStore = defineStore("single-result", {
       }
     },
 
-    /**
-     * On the server, make sure that the related media is rendered
-     * by awaiting the response.
-     * On the client, render the page while loading the related media by
-     * not awaiting the related media response.
-     */
-    async fetchRelatedMedia(type: SupportedMediaType, id: string) {
-      if (process.server) {
-        try {
-          await useRelatedMediaStore().fetchMedia(type, id)
-        } catch (error) {
-          warn("Could not load related media: ", error)
-        }
-      } else {
-        useRelatedMediaStore()
-          .fetchMedia(type, id)
-          .catch((error) => {
-            log(
-              "Capturing Sentry exception loading related media: ",
-              JSON.stringify(error)
-            )
-            this.$nuxt.$sentry.captureException(error)
-          })
-      }
-    },
-
     getExistingItem<T extends SupportedMediaType>(
       type: T,
       id: string
@@ -169,23 +142,12 @@ export const useSingleResultStore = defineStore("single-result", {
      *
      * Fetch the related media if necessary.
      */
-    async fetch<T extends SupportedMediaType>(
-      type: T,
-      id: string,
-      options?: { fetchRelated: boolean }
-    ) {
+    async fetch<T extends SupportedMediaType>(type: T, id: string) {
       const existingItem = this.getExistingItem(type, id)
 
-      const item = existingItem
+      return existingItem
         ? existingItem
         : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
-
-      const shouldFetchRelated =
-        item !== null && (options?.fetchRelated ?? true)
-      if (shouldFetchRelated) {
-        await this.fetchRelatedMedia(type, id)
-      }
-      return item
     },
 
     /**

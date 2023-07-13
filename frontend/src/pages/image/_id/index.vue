@@ -84,11 +84,7 @@
         :image-height="imageHeight"
         :image-type="imageType"
       />
-      <VRelatedImages
-        v-if="hasRelatedMedia || relatedFetchState.isFetching"
-        :media="relatedMedia"
-        :fetch-state="relatedFetchState"
-      />
+      <VRelatedImages />
     </template>
   </main>
 </template>
@@ -111,7 +107,6 @@ import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
 import { singleResultMiddleware } from "~/middleware/single-result"
@@ -146,7 +141,6 @@ export default defineComponent({
   fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
-    const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
 
     const route = useRoute()
@@ -175,11 +169,6 @@ export default defineComponent({
     })
 
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
-    const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
-    const relatedMedia = computed(
-      () => relatedMediaStore.media as ImageDetail[]
-    )
-    const relatedFetchState = computed(() => relatedMediaStore.fetchState)
 
     const imageWidth = ref(image.value?.width ?? 0)
     const imageHeight = ref(image.value?.height ?? 0)
@@ -277,9 +266,6 @@ export default defineComponent({
 
     return {
       image,
-      hasRelatedMedia,
-      relatedMedia,
-      relatedFetchState,
       imageWidth,
       imageHeight,
       imageSrc,

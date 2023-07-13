@@ -19,12 +19,7 @@
       >
         <VMediaReuse data-testid="audio-attribution" :media="audio" />
         <VAudioDetails data-testid="audio-info" :audio="audio" />
-        <VRelatedAudio
-          v-if="relatedMedia.length || relatedFetchState.isFetching"
-          :media="relatedMedia"
-          :fetch-state="relatedFetchState"
-          @interacted="sendAudioEvent($event, 'VRelatedAudio')"
-        />
+        <VRelatedAudio @interacted="sendAudioEvent($event, 'VRelatedAudio')" />
       </div>
     </template>
   </main>
@@ -46,7 +41,6 @@ import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
 import { singleResultMiddleware } from "~/middleware/single-result"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
@@ -73,7 +67,6 @@ export default defineComponent({
   fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
-    const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
 
     const route = useRoute()
@@ -94,10 +87,6 @@ export default defineComponent({
       }
     })
 
-    const relatedMedia = computed(
-      () => relatedMediaStore.media as AudioDetail[]
-    )
-    const relatedFetchState = computed(() => relatedMediaStore.fetchState)
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
     const { sendCustomEvent } = useAnalytics()
@@ -116,8 +105,6 @@ export default defineComponent({
     return {
       audio,
       backToSearchPath,
-      relatedMedia,
-      relatedFetchState,
 
       sendAudioEvent,
 

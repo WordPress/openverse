@@ -1,5 +1,6 @@
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import { AUDIO, IMAGE } from "~/constants/media"
 
@@ -15,6 +16,7 @@ export const singleResultMiddleware: Middleware = async ({
   const singleResultStore = useSingleResultStore($pinia)
   if (process.server) {
     const media = await singleResultStore.fetch(mediaType, route.params.id)
+    await useRelatedMediaStore($pinia).fetchMedia(mediaType, route.params.id)
     if (!media) {
       error(singleResultStore.fetchState.fetchingError ?? {})
     }

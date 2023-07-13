@@ -64,9 +64,7 @@ export default defineComponent({
   async asyncData({ route, $pinia, i18n, error: nuxtError }) {
     const singleResultStore = useSingleResultStore($pinia)
     const imageId = route.params.id
-    const image = await singleResultStore.fetch(IMAGE, imageId, {
-      fetchRelated: false,
-    })
+    const image = await singleResultStore.fetch(IMAGE, imageId)
     if (!image) {
       return nuxtError({
         statusCode: 404,
