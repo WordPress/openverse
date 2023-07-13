@@ -122,7 +122,8 @@ create the index.
 This DAG is intended to be used most likely with the index resulting from the
 previous DAG or from the data refresh process, that is, an index with the
 database fully indexed, as the `source_index` for the [ES
-Reindex][es_reindex_api] API.
+Reindex][es_reindex_api] API, although the default is set to the filtered
+version for maintainers safety.
 
 [es_reindex_api]:
   https://www.elastic.co/guide/en/elasticsearch/reference/7.12/docs-reindex.html
@@ -131,7 +132,7 @@ Reindex][es_reindex_api] API.
 
 1. `source_index`: (Optional) The existing index on Elasticsearch to use as the
    basis for the new index. If not provided, the index aliased to
-   `<media_type>-full` will be used.
+   `<media_type>-filtered` will be used.
 2. `percentage_of_prod`: A float indicating the proportion of items to take from
    each provider from the total amount existing in production. E.g. `0.25` for a
    quarter of the production documents.
