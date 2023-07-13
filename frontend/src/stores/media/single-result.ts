@@ -180,7 +180,8 @@ export const useSingleResultStore = defineStore("single-result", {
         ? existingItem
         : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
 
-      const shouldFetchRelated = options?.fetchRelated ?? true
+      const shouldFetchRelated =
+        item !== null && (options?.fetchRelated ?? true)
       if (shouldFetchRelated) {
         await this.fetchRelatedMedia(type, id)
       }
