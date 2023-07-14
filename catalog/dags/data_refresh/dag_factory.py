@@ -14,14 +14,14 @@ be run with the `force_refresh_metrics` option to run this refresh after the fir
 of the month.
 
 Once this step is complete, the data refresh can be initiated. A data refresh
-occurs on the data refresh server in the openverse-api project. This is a task
+occurs on the Ingestion server in the openverse project. This is a task
 which imports data from the upstream Catalog database into the API, copies contents
 to a new Elasticsearch index, and finally makes the index "live". This process is
 necessary to make new content added to the Catalog by our provider DAGs available
 to the API. You can read more in the [README](
-https://github.com/WordPress/openverse-api/blob/main/ingestion_server/README.md
+https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md
 ) Importantly, the data refresh TaskGroup is also configured to handle concurrency
-requirements of the data refresh server. Finally, once the origin indexes have been
+requirements of the Ingestion server. Finally, once the origin indexes have been
 refreshed, the corresponding filtered index creation DAG is triggered.
 
 You can find more background information on this process in the following
