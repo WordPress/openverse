@@ -27,7 +27,7 @@
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
-            'blur-sm': shouldBlur,
+            'blur-text': shouldBlur,
           }"
         >
           {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
@@ -46,7 +46,7 @@
             <i18n
               tag="span"
               path="audioTrack.creator"
-              :class="{ 'blur-sm': shouldBlur }"
+              :class="{ 'blur-text': shouldBlur }"
             >
               <template #creator>{{
                 shouldBlur ? $t("sensitiveContent.creator") : audio.creator

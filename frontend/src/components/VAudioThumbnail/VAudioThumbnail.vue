@@ -26,7 +26,7 @@
       <img
         ref="imgEl"
         class="h-full w-full overflow-clip object-cover object-center"
-        :class="{ 'scale-150 blur': shouldBlur }"
+        :class="{ 'scale-150 blur-image': shouldBlur }"
         :src="audio.thumbnail"
         :alt="helpText"
         @load="handleLoad"

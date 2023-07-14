@@ -107,7 +107,7 @@ describe("AudioTrack", () => {
     options.propsData.layout = "box"
     const { getByText } = render(VAudioTrack, options, configureVue)
     const h2 = getByText("This audio track may contain sensitive content.")
-    expect(h2).toHaveClass("blur-sm")
+    expect(h2).toHaveClass("blur-text")
   })
 
   it("has blurred info in row layout when audio is sensitive", async () => {
@@ -116,10 +116,10 @@ describe("AudioTrack", () => {
     const { getByText } = render(VAudioTrack, options, configureVue)
 
     const h2 = getByText("This audio track may contain sensitive content.")
-    expect(h2).toHaveClass("blur-sm")
+    expect(h2).toHaveClass("blur-text")
 
     const creator = getByText("by Creator")
-    expect(creator).toHaveClass("blur-sm")
+    expect(creator).toHaveClass("blur-text")
   })
 
   it("is does not contain title or creator anywhere when the audio is sensitive", async () => {

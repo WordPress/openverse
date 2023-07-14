@@ -8,7 +8,7 @@
         <div class="info flex flex-grow flex-col justify-between p-4">
           <h2
             class="font-heading line-clamp-3 text-base font-semibold leading-snug"
-            :class="{ 'blur-sm': shouldBlur }"
+            :class="{ 'blur-text': shouldBlur }"
           >
             {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
           </h2>

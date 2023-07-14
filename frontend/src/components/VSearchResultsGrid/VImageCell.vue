@@ -22,7 +22,7 @@
           class="block w-full rounded-sm object-cover"
           :class="[
             isSquare ? 'h-full' : 'margin-auto',
-            { 'scale-105 blur': shouldBlur },
+            { 'scale-150 blur-image': shouldBlur },
           ]"
           :alt="
             shouldBlur
