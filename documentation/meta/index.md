@@ -11,7 +11,6 @@ decision_making/index
 documentation/index
 monitoring/index
 communication_aliases
-examplefile
 ```
 
 Example change to a document!
