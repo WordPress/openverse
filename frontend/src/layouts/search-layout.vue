@@ -12,7 +12,14 @@
           : 'grid-cols-1',
       ]"
     >
-      <div class="header-el bg-white">
+      <div
+        class="header-el border-b bg-white"
+        :class="
+          isHeaderScrolled || isSidebarVisible
+            ? 'border-b-dark-charcoal-20'
+            : 'border-b-tx'
+        "
+      >
         <VBanners />
         <VHeaderDesktop v-if="isDesktopLayout" class="h-20 bg-white" />
         <VHeaderMobile v-else class="h-20 bg-white" />
