@@ -288,7 +288,7 @@ changes that need to be made to the modules we use.
 
 We should probably add [`nuxt-vitest`](https://github.com/danielroe/nuxt-vitest)
 for testing in Nuxt. The package is under active development, so we should pin
-to the patch version
+to the patch version.
 
 ## Alternatives
 
