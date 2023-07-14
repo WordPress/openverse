@@ -21,6 +21,9 @@ export const sentryConfig: ModuleOptions = {
       // Ignore errant focus-trap-vue errors
       /`initialFocus` did not return a node/,
 
+      // Ignore ResizeObserver loop limit exceeded errors
+      /ResizeObserver loop limit exceeded/,
+
       // Cloudflare
       /sendBeacon/,
 
