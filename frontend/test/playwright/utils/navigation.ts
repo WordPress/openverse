@@ -13,6 +13,8 @@ import {
   VIDEO,
 } from "~/constants/media"
 
+import type { Breakpoint } from "~/constants/screens"
+
 import type { BrowserContext, Locator, Page } from "@playwright/test"
 
 const messages: Record<string, Record<string, unknown>> = {
@@ -271,6 +273,15 @@ export const selectHomepageSearchType = async (
 export const dismissBannersUsingCookies = async (page: Page) => {
   await dismissAnalyticsBanner(page)
   await dismissTranslationBanner(page)
+}
+
+export const preparePageForTests = async (
+  page: Page,
+  breakpoint: Breakpoint
+) => {
+  await dismissBannersUsingCookies(page)
+  await closeFiltersUsingCookies(page)
+  await setBreakpointCookie(page, breakpoint)
 }
 
 export const goToSearchTerm = async (
