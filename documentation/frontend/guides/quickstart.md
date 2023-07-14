@@ -37,17 +37,20 @@ you need to run this.
    ```console
    $ just node-install
    ```
-   
+
 4. Filtering allows you to restrict commands to specific subsets of packages.
    You might want to try Filtering to compile just the Openverse ESLint plugin.
+
    ```console
    $ pnpm --filter='@openverse/eslint-plugin' build
    ```
-    Or
+
+   Or
+
    ```console
    $ pnpm --F '@openverse/eslint-plugin' build
    ```
-   
+
 5. To bring up the frontend, we have another `just` recipe. We have `just`
    recipes for almost everything.
 
