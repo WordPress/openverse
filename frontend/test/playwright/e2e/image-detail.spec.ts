@@ -2,6 +2,10 @@ import { test, expect, Page } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import { t } from "~~/test/playwright/utils/navigation"
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
 
 const goToCustomImagePage = async (page: Page) => {
   // Test in a custom image detail page, it should apply the same for any image.
@@ -57,4 +61,47 @@ test("shows the 404 error page when no valid id", async ({ page }) => {
 test("shows the 404 error page when no id", async ({ page }) => {
   await page.goto("image/")
   await showsErrorPage(page)
+})
+
+test.describe("analytics", () => {
+  test("sends GET_MEDIA event on CTA button click", async ({
+    context,
+    page,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await goToCustomImagePage(page)
+
+    await page.getByRole("link", { name: /get this image/i }).click()
+
+    const getMediaEvent = analyticsEvents.find(
+      (event) => event.n === "GET_MEDIA"
+    )
+
+    expectEventPayloadToMatch(getMediaEvent, {
+      id: "e9d97a98-621b-4ec2-bf70-f47a74380452",
+      provider: "flickr",
+      mediaType: "image",
+    })
+  })
+
+  test("sends RIGHT_CLICK_IMAGE event on right-click", async ({
+    context,
+    page,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await goToCustomImagePage(page)
+
+    const img = page.getByRole("img").first()
+    await img.click({ button: "right" })
+
+    const rightClickImageEvent = analyticsEvents.find(
+      (event) => event.n === "RIGHT_CLICK_IMAGE"
+    )
+
+    expectEventPayloadToMatch(rightClickImageEvent, {
+      id: "e9d97a98-621b-4ec2-bf70-f47a74380452",
+    })
+  })
 })
