@@ -16,14 +16,10 @@
         <VBanners />
         <VHeaderDesktop
           v-if="isDesktopLayout"
-          class="h-20 border-b bg-white"
+          class="h-20 bg-white"
           :class="headerBorder"
         />
-        <VHeaderMobile
-          v-else
-          class="h-20 border-b bg-white"
-          :class="headerBorder"
-        />
+        <VHeaderMobile v-else class="h-20 bg-white" :class="headerBorder" />
       </div>
 
       <aside
