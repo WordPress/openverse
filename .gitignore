@@ -12,7 +12,6 @@ logs/
 
 # Environment
 .env
-.venv
 
 # Python environments
 env/
