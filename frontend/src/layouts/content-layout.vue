@@ -5,12 +5,14 @@
       class="app grid min-h-[100dvh] min-h-screen grid-cols-1 grid-rows-[auto,1fr,auto] bg-white"
       :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
     >
-      <div
-        class="header-el sticky top-0 z-40 block border-b bg-white"
-        :class="isHeaderScrolled ? 'border-b-dark-charcoal-20' : 'border-b-tx'"
-      >
+      <div class="header-el sticky top-0 z-40 block bg-white">
         <VBanners />
-        <VHeaderInternal class="h-20 bg-white" />
+        <VHeaderInternal
+          class="h-20 border-b bg-white"
+          :class="
+            isHeaderScrolled ? 'border-b-dark-charcoal-20' : 'border-b-tx'
+          "
+        />
       </div>
 
       <div
