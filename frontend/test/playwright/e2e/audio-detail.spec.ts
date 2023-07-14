@@ -32,37 +32,61 @@ test("shows the data that is only available in single result, not search respons
   ).toBeVisible()
 })
 
-test("sends a custom event on play", async ({ page, context }) => {
-  const analyticsEvents = collectAnalyticsEvents(context)
-
-  await goToCustomAudioPage(page)
-  await page.getByRole("button", { name: "Play" }).first().click()
-  const audioInteractionEvent = analyticsEvents.find(
-    (event) => event.n === "AUDIO_INTERACTION"
-  )
-
-  expectEventPayloadToMatch(audioInteractionEvent, {
+test.describe("analytics", () => {
+  const audioObject = {
     id: "7e063ee6-343f-48e4-a4a5-f436393730f6",
-    event: "play",
     provider: "jamendo",
-    component: "AudioDetailPage",
+  }
+  test("sends GET_MEDIA event on CTA button click", async ({
+    context,
+    page,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await goToCustomAudioPage(page)
+
+    await page.getByRole("link", { name: /get this audio/i }).click()
+
+    const getMediaEvent = analyticsEvents.find(
+      (event) => event.n === "GET_MEDIA"
+    )
+
+    expectEventPayloadToMatch(getMediaEvent, {
+      ...audioObject,
+      mediaType: "audio",
+    })
   })
-})
 
-test("sends a custom event on seek", async ({ page, context }) => {
-  const analyticsEvents = collectAnalyticsEvents(context)
+  test("sends AUDIO_INTERACTION event on play", async ({ page, context }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
 
-  await goToCustomAudioPage(page)
-  await page.mouse.click(200, 200)
-  const audioInteractionEvent = analyticsEvents.find(
-    (event) => event.n === "AUDIO_INTERACTION"
-  )
+    await goToCustomAudioPage(page)
+    await page.getByRole("button", { name: "Play" }).first().click()
+    const audioInteractionEvent = analyticsEvents.find(
+      (event) => event.n === "AUDIO_INTERACTION"
+    )
 
-  expectEventPayloadToMatch(audioInteractionEvent, {
-    id: "7e063ee6-343f-48e4-a4a5-f436393730f6",
-    event: "seek",
-    provider: "jamendo",
-    component: "AudioDetailPage",
+    expectEventPayloadToMatch(audioInteractionEvent, {
+      ...audioObject,
+      event: "play",
+      component: "AudioDetailPage",
+    })
+  })
+
+  test("sends AUDIO_INTERACTION event on seek", async ({ page, context }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await goToCustomAudioPage(page)
+    await page.mouse.click(200, 200)
+    const audioInteractionEvent = analyticsEvents.find(
+      (event) => event.n === "AUDIO_INTERACTION"
+    )
+
+    expectEventPayloadToMatch(audioInteractionEvent, {
+      ...audioObject,
+      event: "seek",
+      component: "AudioDetailPage",
+    })
   })
 })
 

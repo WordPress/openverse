@@ -240,7 +240,6 @@ services:
       args: # Automatically inferred from env vars, unless specified
         - INGESTION_PY_VERSION
     image: openverse-ingestion_server
-    command: gunicorn -c ./gunicorn.conf.py
     ports:
       - "50281:8001"
     depends_on:
@@ -266,7 +265,7 @@ services:
       args: # Automatically inferred from env vars, unless specified
         - INGESTION_PY_VERSION
     image: openverse-ingestion_server
-    command: gunicorn -c ./gunicorn_worker.conf.py
+    command: gunicorn indexer_worker:api --bind 0.0.0.0:8002
     expose:
       - "8002"
     depends_on:

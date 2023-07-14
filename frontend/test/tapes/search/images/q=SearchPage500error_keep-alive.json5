@@ -1,0 +1,99 @@
+{
+    meta: {
+        createdAt: '2023-07-10T06:54:56.215Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/?q=SearchPage500error',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 500,
+        headers: {
+            date: [
+                'Mon, 10 Jul 2023 06:54:56 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept, Authorization, origin, Accept-Encoding',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '5/hour',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '3',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '100/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '98',
+            ],
+            'x-ratelimit-limit-anon_thumbnail': [
+                '150/minute',
+            ],
+            'x-ratelimit-available-anon_thumbnail': [
+                '148',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Mon, 10 Jul 2023 06:54:56 GMT',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '7e46e5f33ba7052c-OTP',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: {
+            detail: 'Internal Server Error',
+        },
+    },
+}
