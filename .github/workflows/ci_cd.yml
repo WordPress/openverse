@@ -899,7 +899,7 @@ jobs:
         run: |
           cp -r /tmp/gh-pages /tmp/gh-pages-for-diff
           sudo rm -rf /tmp/gh-pages-for-diff/_preview
-          diff -qbr -x '*.js' -x '*.json' -x '*.txt' -x '.*' -x 'CNAME' -x '*.pickle' -x '*.doctree' /tmp/gh-pages-for-diff/ /tmp/gh-pages/_preview/${{ github.event.pull_request.number }} || true
+          diff -qbr -x '*.js' -x '*.json' -x '*.html' -x '.*' -x 'CNAME' -x '*.pickle' -x '*.doctree' /tmp/gh-pages-for-diff/ /tmp/gh-pages/_preview/${{ github.event.pull_request.number }} || true
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
