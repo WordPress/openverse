@@ -6,17 +6,20 @@ catalog:
   - catalog/**
   - docker/minio/**
   - docker/upstream_db/**
+  - docker-compose.yml
 api:
   - api/**
   - docker/db/**
   - docker/es/**
   - docker/nginx/**
+  - docker-compose.yml
   - load_sample_data.sh
 ingestion_server:
   - ingestion_server/**
   - docker/db/**
   - docker/es/**
   - docker/upstream_db/**
+  - docker-compose.yml
   - load_sample_data.sh
 frontend:
   - frontend/**
@@ -30,6 +33,7 @@ analytics:
   - docker/clickhouse/**
   - docker/plausible/**
   - docker/plausible_db/**
+  - docker-compose.yml
   - setup_plausible.sh
 documentation:
   - documentation/**
