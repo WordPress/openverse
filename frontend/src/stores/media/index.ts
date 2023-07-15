@@ -5,7 +5,12 @@ import axios from "axios"
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import prepareSearchQueryParams from "~/utils/prepare-search-query-params"
-import type { DetailFromMediaType, Media } from "~/types/media"
+import type {
+  AudioDetail,
+  DetailFromMediaType,
+  ImageDetail,
+  Media,
+} from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 import {
   ALL_MEDIA,
@@ -190,7 +195,7 @@ export const useMediaStore = defineStore("media", {
      * TODO: Fix the algorithm.
      * This implementation can hide hits from media types with fewer hits.
      */
-    allMedia(state): Media[] {
+    allMedia(state): (AudioDetail | ImageDetail)[] {
       const media = this.resultItems
 
       // Seed the random number generator with the ID of

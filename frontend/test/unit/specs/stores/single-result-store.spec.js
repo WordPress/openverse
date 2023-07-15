@@ -1,12 +1,26 @@
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
+import { getAudioObj } from "~~/test/unit/fixtures/audio"
+
+import { image as imageObj } from "~~/test/unit/fixtures/image"
+
 import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 import { useMediaStore } from "~/stores/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 
 const detailData = {
-  [AUDIO]: { title: "audioDetails", id: "audio1", frontendMediaType: AUDIO },
-  [IMAGE]: { title: "imageDetails", id: "image1", frontendMediaType: IMAGE },
+  [AUDIO]: {
+    ...getAudioObj(),
+    title: "audioDetails",
+    id: "audio1",
+    frontendMediaType: AUDIO,
+  },
+  [IMAGE]: {
+    ...imageObj,
+    title: "imageDetails",
+    id: "image1",
+    frontendMediaType: IMAGE,
+  },
 }
 jest.mock("axios", () => ({
   ...jest.requireActual("axios"),
@@ -39,12 +53,23 @@ jest.mock("~/stores/media/services", () => ({
 }))
 
 describe("Media Item Store", () => {
+  let singleResultStore = null
+  let mediaStore = null
+  const originalEnv = process.env
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    singleResultStore = useSingleResultStore()
+    mediaStore = useMediaStore()
+  })
+  afterEach(() => {
+    mockGetMediaDetailAudio.mockClear()
+    mockGetMediaDetailImage.mockClear()
+    process.env = originalEnv
+  })
   describe("state", () => {
     it("sets default state", () => {
-      setActivePinia(createPinia())
-      const singleResultStore = useSingleResultStore()
       expect(singleResultStore.fetchState).toEqual({
-        hasStarted: false,
         isFetching: false,
         fetchingError: null,
       })
@@ -53,21 +78,74 @@ describe("Media Item Store", () => {
     })
   })
 
+  describe("getters", () => {
+    it.each(supportedMediaTypes)(
+      "%s getter returns the item when current item type matches",
+      (mediaType) => {
+        singleResultStore.$patch({
+          mediaItem: detailData[mediaType],
+          mediaType,
+          mediaId: detailData[mediaType].id,
+        })
+        expect(singleResultStore[mediaType]).toEqual(detailData[mediaType])
+      }
+    )
+
+    it.each(supportedMediaTypes)(
+      "`%s` returns `null` if the media type doesn't match",
+      (mediaType) => {
+        singleResultStore.$patch({
+          mediaItem: detailData[mediaType],
+          mediaType: mediaType,
+          mediaId: detailData[mediaType].id,
+        })
+        expect(
+          singleResultStore[mediaType === "image" ? "audio" : "image"]
+        ).toEqual(null)
+      }
+    )
+  })
+
   describe("actions", () => {
-    beforeEach(() => {
-      setActivePinia(createPinia())
-      useMediaStore()
+    it.each(supportedMediaTypes)(
+      "setMediaItem (%s) sets the media item and media type",
+      (type) => {
+        const mediaItem = detailData[type]
+        singleResultStore.setMediaItem(mediaItem)
+        expect(singleResultStore.mediaItem).toEqual(mediaItem)
+        expect(singleResultStore.mediaType).toEqual(type)
+        expect(singleResultStore.mediaId).toEqual(mediaItem.id)
+      }
+    )
+    it("setMediaItem(null) sets the media item to null", () => {
+      singleResultStore.setMediaItem(null)
+      expect(singleResultStore.mediaItem).toEqual(null)
+      expect(singleResultStore.mediaType).toEqual(null)
+      expect(singleResultStore.mediaId).toEqual(null)
     })
-    afterEach(() => {
-      mockGetMediaDetailAudio.mockClear()
-      mockGetMediaDetailImage.mockClear()
+
+    it("setMediaById sets the media if it exists in the media store", () => {
+      const mediaItem = detailData[AUDIO]
+      mediaStore.results.audio.items = { [mediaItem.id]: mediaItem }
+      singleResultStore.setMediaById(AUDIO, mediaItem.id)
+
+      expect(singleResultStore.mediaItem).toEqual(mediaItem)
+      expect(singleResultStore.mediaType).toEqual(AUDIO)
+      expect(singleResultStore.mediaId).toEqual(mediaItem.id)
+    })
+
+    it("setMediaById sets the media id and type if it doesn't exist media store", () => {
+      const mediaItem = detailData[AUDIO]
+      singleResultStore.setMediaById(AUDIO, mediaItem.id)
+
+      expect(singleResultStore.mediaItem).toEqual(null)
+      expect(singleResultStore.mediaType).toEqual(AUDIO)
+      expect(singleResultStore.mediaId).toEqual(mediaItem.id)
     })
 
     it.each(supportedMediaTypes)(
       "fetchMediaItem (%s) fetches a new media if none is found in the store",
       async (type) => {
-        const singleResultStore = useSingleResultStore()
-
         await singleResultStore.fetchMediaItem(type, "foo")
         expect(singleResultStore.mediaItem).toEqual(detailData[type])
       }
@@ -75,8 +153,6 @@ describe("Media Item Store", () => {
     it.each(supportedMediaTypes)(
       "fetchMediaItem (%s) re-uses existing media from the store",
       async (type) => {
-        const singleResultStore = useSingleResultStore()
-        const mediaStore = useMediaStore()
         mediaStore.results[type].items = {
           [`${type}1`]: detailData[type],
         }
@@ -88,32 +164,65 @@ describe("Media Item Store", () => {
     it.each(supportedMediaTypes)(
       "fetchMediaItem throws not found error on request error",
       async (type) => {
-        const expectedErrorMessage = "error"
+        const errorMessage = "error"
 
         mocks[type].mockImplementationOnce(() =>
-          Promise.reject(new Error(expectedErrorMessage))
+          Promise.reject(new Error(errorMessage))
         )
+        const expectedError = {
+          message: `Error fetching single ${type} item with id foo`,
+          statusCode: 404,
+        }
 
-        const singleResultStore = useSingleResultStore()
+        await singleResultStore.fetchMediaItem(type, "foo")
 
-        await expect(() =>
-          singleResultStore.fetchMediaItem(type, "foo")
-        ).rejects.toThrow(expectedErrorMessage)
+        expect(singleResultStore.fetchState.fetchingError).toEqual(
+          expectedError
+        )
       }
     )
 
     it.each(supportedMediaTypes)(
       "fetchMediaItem on 404 sets fetchingError and throws a new error",
       async (type) => {
-        mocks[type].mockImplementationOnce(() =>
-          Promise.reject({ response: { status: 404 } })
-        )
-        const singleResultStore = useSingleResultStore()
+        const errorResponse = { response: { status: 404 } }
+
+        mocks[type].mockImplementationOnce(() => Promise.reject(errorResponse))
         const id = "foo"
-        await expect(() =>
-          singleResultStore.fetchMediaItem(type, id)
-        ).rejects.toThrow(`Media of type ${type} with id ${id} not found`)
+
+        const expectedError = {
+          message: `Error fetching single ${type} item with id ${id}`,
+          statusCode: errorResponse.response.status,
+        }
+        expect(await singleResultStore.fetch(type, id)).toEqual(null)
+        expect(singleResultStore.fetchState.fetchingError).toEqual(
+          expectedError
+        )
       }
     )
+
+    it("`fetch` returns current item if it matches", async () => {
+      const mediaItem = detailData[AUDIO]
+      singleResultStore.$patch({
+        mediaItem: mediaItem,
+        mediaType: AUDIO,
+        mediaId: mediaItem.id,
+      })
+      expect(await singleResultStore.fetch(AUDIO, mediaItem.id)).toEqual(
+        mediaItem
+      )
+      expect(mockGetMediaDetailAudio).not.toHaveBeenCalled()
+    })
+
+    it("`fetch` gets an item from a media store and fetches related media", async () => {
+      const mediaType = /** @type {SupportedMediaType} */ (IMAGE)
+      const expectedMediaItem = detailData[mediaType]
+
+      mediaStore.results[IMAGE].items = { image1: expectedMediaItem }
+      const actual = await singleResultStore.fetch(IMAGE, expectedMediaItem.id)
+
+      expect(actual).toEqual(expectedMediaItem)
+      expect(mockGetMediaDetailImage).not.toHaveBeenCalled()
+    })
   })
 })

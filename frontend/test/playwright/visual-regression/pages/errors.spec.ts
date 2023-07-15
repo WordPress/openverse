@@ -31,35 +31,34 @@ for (const { errorStatus, imageId } of errorTapes) {
     })
 
     test(`${errorStatus} on single-result page on CSR`, async ({ page }) => {
-      await page.route(new RegExp(`v1/images/${imageId}`), (route) => {
-        const requestUrl = route.request().url()
+      await page.route(new RegExp(`v1/images/`), (route) => {
+        // const requestUrl = route.request().url()
 
-        if (requestUrl.includes("/thumb")) {
-          return route.continue()
-        }
-
+        // if (requestUrl.includes("/thumb")) {
+        //   return route.continue()
+        // }
         return route.fulfill({
           status: errorStatus,
+          headers: { "Access-Control-Allow-Origin": "*" },
           body: JSON.stringify({}),
         })
       })
 
       await preparePageForTests(page, breakpoint)
 
-      await goToSearchTerm(page, "errorSearchPages", {
-        mode: "CSR",
-        searchType: "image",
-      })
-      await page.locator(`a[href*='/image/${imageId}']`).click()
+      // If we navigate from the search results page, we will already have the
+      // image data in the store, and will not fetch it from the API.
+      // To simulate a client side error, we need to click on the home gallery:
+      // then we have to make a client-side request because we don't have any
+      // data for the images in the store.
+      await page.goto("/")
+      await page.locator("a.home-cell").first().click()
+      // We can't use `waitForURL` because it would be flaky:
+      // the URL loads a skeleton page before showing the error page.
+      // eslint-disable-next-line playwright/no-networkidle
+      await page.waitForLoadState("networkidle")
 
-      // TODO: remove `maxDiffPixelRatio` after single result pages fetching is fixed
-      // https://github.com/WordPress/openverse/pull/2585
-      await expectSnapshot(
-        `single-result-error-CSR`,
-        page,
-        { fullPage: true },
-        { maxDiffPixelRatio: 0.02 }
-      )
+      await expectSnapshot("single-result-error-CSR", page, { fullPage: true })
     })
   })
 }
