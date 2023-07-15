@@ -5,7 +5,12 @@ import axios from "axios"
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import prepareSearchQueryParams from "~/utils/prepare-search-query-params"
-import type { DetailFromMediaType, Media } from "~/types/media"
+import type {
+  AudioDetail,
+  DetailFromMediaType,
+  ImageDetail,
+  Media,
+} from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 import {
   ALL_MEDIA,
@@ -19,8 +24,6 @@ import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { markFakeSensitive } from "~/utils/content-safety"
 
 export type MediaStoreResult = {
   count: number
@@ -38,6 +41,7 @@ export interface MediaState {
     audio: FetchState
     image: FetchState
   }
+  currentPage: number
 }
 
 export const initialResults = deepFreeze({
@@ -67,6 +71,7 @@ export const useMediaStore = defineStore("media", {
         fetchingError: null,
       },
     },
+    currentPage: 0,
   }),
 
   getters: {
@@ -190,7 +195,7 @@ export const useMediaStore = defineStore("media", {
      * TODO: Fix the algorithm.
      * This implementation can hide hits from media types with fewer hits.
      */
-    allMedia(state): Media[] {
+    allMedia(state): (AudioDetail | ImageDetail)[] {
       const media = this.resultItems
 
       // Seed the random number generator with the ID of
@@ -366,6 +371,7 @@ export const useMediaStore = defineStore("media", {
       const mediaType = this._searchType
       if (!payload.shouldPersistMedia) {
         this._resetFetchState()
+        this.currentPage = 0
       }
       const mediaToFetch = (
         (mediaType !== ALL_MEDIA
@@ -385,11 +391,17 @@ export const useMediaStore = defineStore("media", {
           })
         )
       )
+      if (mediaType === ALL_MEDIA) {
+        this.currentPage += 1
+      } else {
+        this.currentPage = this.results[mediaType].page ?? 0
+      }
     },
 
     clearMedia() {
       supportedMediaTypes.forEach((mediaType) => {
         this.resetMedia(mediaType)
+        this._resetFetchState()
       })
     },
 
@@ -428,12 +440,6 @@ export const useMediaStore = defineStore("media", {
           page = undefined
         }
         this._updateFetchState(mediaType, "end", errorMessage)
-
-        // Fake ~50% of results as mature. This leaves actual mature results unchanged.
-        const featureFlagStore = useFeatureFlagStore()
-        if (featureFlagStore.isOn("fake_sensitive")) {
-          Object.values(data.results).forEach(markFakeSensitive)
-        }
 
         this.setMedia({
           mediaType,

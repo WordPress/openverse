@@ -1,8 +1,65 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "composite": true
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "target": "ES2018",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
+    "declaration": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    /* Strict Type-Checking Options */
+    "strict": true,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "importsNotUsedAsValues": "error",
+    /* Module Resolution Options */
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
+    "typeRoots": ["./frontend/typings", "./node_modules/@types"],
+    "paths": {
+      "~/*": ["./frontend/src/*"],
+      "~~/*": ["./frontend/*"],
+      "@openverse/*": ["./packages/*/src"]
+    },
+    "rootDirs": ["frontend/src", "packages/eslint-plugin/src"],
+    "baseUrl": "."
   },
-  "references": [{ "path": "frontend" }],
-  "files": []
+  "include": [
+    "**/*.ts",
+    "frontend/test/proxy.js",
+    "frontend/src/components/**/*.vue",
+
+    "frontend/src/pages/about.vue",
+    "frontend/src/pages/feedback.vue",
+    "frontend/src/pages/search-help.vue",
+    "frontend/src/pages/audio/_id/index.vue",
+    "frontend/src/pages/image/_id/index.vue",
+    "frontend/src/pages/image/_id/report.vue",
+    /**
+     * Some files from this section cannot be converted to TypeScript because they are
+     * used in non-TS contexts (like Tailwind configuration). Therefore they're left as
+     * "vanilla JavaScript" with JSDoc based type annotations. This allows us to check
+     * them with TypeScript without introducing syntax changes that are not compatible
+     * with other tools we rely on.
+     */
+    "frontend/src/constants/**/*",
+    "frontend/src/server-middleware/healthcheck.js",
+    "frontend/src/constants/user-agent.js",
+    /** End of non TypeScript files section */
+    "frontend/**/*.json"
+  ],
+  "exclude": ["node_modules", "**/venv", "**/.venv"],
+  "vueCompilerOptions": {
+    "target": 2.7
+  }
 }

@@ -86,7 +86,7 @@ If you use VS Code, you can install the
 [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 extension to get autocomplete for TailwindCSS classes.
 
-## Finding your local IP address <a name = "finding-your-local-ip-address"></a>
+## Finding your local IP address
 
 You can find the local IP address Nuxt uses by looking at the output of
 `nuxt dev`. Look in your console for a box of configuration details that looks

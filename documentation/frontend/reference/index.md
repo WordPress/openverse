@@ -8,4 +8,5 @@ testing_guidelines
 playwright_tests
 storybook_tests
 miscellaneous
+healthcheck
 ```

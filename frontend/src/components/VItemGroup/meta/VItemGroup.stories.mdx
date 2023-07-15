@@ -39,7 +39,7 @@ export const DefaultStory = (args) => ({
             @click="selectedItem = item"
             size="medium"
           >
-            <VIcon :name="item.id" /> {{ item.label }}
+            <VIcon :name="item.icon" /> {{ item.label }}
           </VItem>
         </VItemGroup>
       </div>
@@ -104,7 +104,7 @@ export const PopoverStory = (args) => ({
   template: `
     <VPopover>
         <template #trigger="{ a11yProps, visible }">
-            <VButton v-bind="a11yProps" :pressed="visible">{{ visible ? 'Close menu' : 'Open menu' }}</VButton>
+            <VButton variant="filled-pink" size="medium" v-bind="a11yProps" :pressed="visible">{{ visible ? 'Close menu' : 'Open menu' }}</VButton>
         </template>
         <VItemGroup v-bind="args" type="menu">
         <VItem

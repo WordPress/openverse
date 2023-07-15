@@ -52,7 +52,7 @@ const audioConfig = {
 
 const searchTypes = [allContentConfig, imageConfig, audioConfig] as const
 
-type SearchTypeConfig = typeof searchTypes[number]
+type SearchTypeConfig = (typeof searchTypes)[number]
 
 async function checkLoadMore(page: Page, searchType: SearchTypeConfig) {
   const loadMoreSection = page.locator('[data-testid="load-more"]')
@@ -111,6 +111,7 @@ test.describe("search types", () => {
       test(`Can open ${searchType.name} page client-side`, async ({ page }) => {
         // Audio is loading a lot of files, so we do not use it for the first SSR page
         const pageToOpen =
+          // eslint-disable-next-line playwright/no-conditional-in-test
           searchType.id === "all" ? searchTypes[1] : searchTypes[0]
         await page.goto(pageToOpen.url)
         await changeSearchType(page, searchType.id)
@@ -126,7 +127,7 @@ test.describe("search types", () => {
         page,
       }) => {
         await page.goto("/search/?q=birds")
-        const contentLink = await page.locator(
+        const contentLink = page.locator(
           `a:not([role="radio"])[href*="/search/${searchTypeName}"][href$="q=birds"]`
         )
         await expect(contentLink).toContainText(searchType.results)

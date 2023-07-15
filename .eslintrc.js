@@ -9,6 +9,7 @@ const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(
   })
 )
 
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
   env: {
@@ -27,6 +28,8 @@ module.exports = {
     "plugin:@intlify/vue-i18n/recommended",
     "plugin:import/recommended",
     "plugin:eslint-comments/recommended",
+    "plugin:jsonc/recommended-with-jsonc",
+    "plugin:@openverse/recommended",
   ],
   plugins: [
     "@typescript-eslint",
@@ -34,6 +37,7 @@ module.exports = {
     "vue",
     "vuejs-accessibility",
     "unicorn",
+    "@openverse",
   ],
   rules: {
     semi: [2, "never"],
@@ -95,16 +99,7 @@ module.exports = {
         message: "Use the <VLink> component instead of <RouterLink>.",
       },
     ],
-    "no-restricted-syntax": [
-      "error",
-      ...i18nDestructureRules,
-      {
-        selector:
-          "ImportDeclaration[source.value='@vue/test-utils']:has(ImportSpecifier[local.name='shallowMount'])",
-        message:
-          "Do not use @vue/test-utils' `shallowMount`. Use @testing-library/vue's `render` instead.",
-      },
-    ],
+    "no-restricted-syntax": ["error", ...i18nDestructureRules],
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
     "@typescript-eslint/no-var-requires": ["off"],
     "import/no-unresolved": [
@@ -194,9 +189,106 @@ module.exports = {
       },
     },
     {
-      files: ["*.spec.js"],
+      env: { jest: true },
+      files: ["packages/**/*/test", "frontend/test/unit/**"],
+      plugins: ["jest"],
+      extends: ["plugin:jest/recommended"],
       rules: {
+        "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
+        "no-restricted-imports": [
+          "error",
+          {
+            name: "pinia",
+            message:
+              "Please import pinia test utils from `~~/test/unit/test-utils/pinia`. The test-utils version ensures proper setup of universally necessary Nuxt context mocks.",
+          },
+        ],
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector:
+              "ImportDeclaration[source.value='@vue/test-utils']:has(ImportSpecifier[local.name='shallowMount'])",
+            message:
+              "Do not use @vue/test-utils' `shallowMount`. Use `~~/test/unit/test-utils/render` instead which includes helpful context setup or @testing-library/vue's `render` directly.",
+          },
+        ],
+      },
+    },
+    {
+      files: ["frontend/test/{playwright,storybook}/**"],
+      plugins: ["playwright"],
+      extends: ["plugin:playwright/recommended"],
+      rules: {
+        // Enable once https://github.com/playwright-community/eslint-plugin-playwright/issues/154 is resolved
+        "playwright/expect-expect": ["off"],
+      },
+    },
+    {
+      files: [
+        "automations/js/src/**",
+        "frontend/test/**",
+        "frontend/src/**/**.json",
+      ],
+      rules: {
+        "unicorn/filename-case": "off",
+      },
+    },
+    {
+      files: ["frontend/.storybook/**"],
+      rules: {
+        /**
+         * `.nuxt-storybook` doesn't exist in the CI when it
+         * lints files unless we ran the storybook build before linting,
+         * meaning that the imports used in the modules in this directory
+         * are mostly unavailable.
+         *
+         * To avoid turning these rules off we'd have to run the storybook
+         * build in CI before linting (or even instruct people to run
+         * storybook build locally before trying to lint) and that's just too
+         * heavy a lift when we can instead disable the rules for just this
+         * directory.
+         */
+        "import/extensions": "off",
+        "import/export": "off",
+        "import/no-unresolved": "off",
+      },
+    },
+    {
+      files: ["frontend/src/components/**"],
+      rules: {
+        "unicorn/filename-case": [
+          "error",
+          // Allow things like `Component.stories.js` and `Component.types.js`
+          {
+            case: "pascalCase",
+            ignore: [".eslintrc.js", ".*\\..*\\.js", ".*\\.json"],
+          },
+        ],
+      },
+    },
+    {
+      files: [
+        "frontend/src/locales/scripts/en.json5",
+        "frontend/test/locales/*.json",
+      ],
+      rules: {
+        "jsonc/key-name-casing": [
+          "error",
+          {
+            camelCase: true,
+            "kebab-case": false,
+            snake_case: true, // for err_* keys
+            ignores: ["ncSampling+", "sampling+"],
+          },
+        ],
+      },
+    },
+    {
+      files: ["frontend/src/locales/scripts/en.json5"],
+      rules: {
+        "jsonc/quote-props": "off",
+        "jsonc/quotes": "off",
       },
     },
   ],
@@ -206,17 +298,9 @@ module.exports = {
       messageSyntaxVersion: "^8.24.3",
     },
     "import/resolver": {
-      "eslint-import-resolver-custom-alias": {
-        alias: {
-          "~": "./frontend/src",
-          "~~": "./frontend",
-        },
-        /**
-         * SVG imports are excluded for the import/no-unresolved
-         * rule above due to lack of support for `?inline` suffix
-         *
-         * Therefore, there's no need to configure them here
-         */
+      typescript: {
+        // This plugin automatically pulls paths from tsconfig
+        // so we don't need to redefine Nuxt and package aliases
         extensions: [".js", ".ts", ".vue", ".png"],
       },
     },

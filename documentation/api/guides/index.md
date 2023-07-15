@@ -5,4 +5,6 @@
 
 quickstart
 test
+deploy
+https
 ```

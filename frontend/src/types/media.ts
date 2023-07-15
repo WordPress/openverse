@@ -1,5 +1,7 @@
 import type { SupportedMediaType } from "~/constants/media"
 import type { License, LicenseVersion } from "~/constants/license"
+import type { Sensitivity } from "~/constants/content-safety"
+import { AUDIO, IMAGE } from "~/constants/media"
 
 export interface Tag {
   name: string
@@ -46,6 +48,8 @@ export interface Media {
   fields_matched?: string[]
 
   mature: boolean
+  sensitivity: Sensitivity[]
+  isSensitive: boolean
 }
 
 export interface ImageDetail extends Media {
@@ -90,7 +94,10 @@ export type DetailFromMediaType<T extends SupportedMediaType> =
  * being decoded in the `decodeMediaData` function.
  */
 export interface ApiMedia
-  extends Omit<Media, "frontendMediaType" | "title" | "originalTitle"> {
+  extends Omit<
+    Media,
+    "frontendMediaType" | "title" | "originalTitle" | "isSensitive"
+  > {
   title?: string
   originalTitle?: string
 }
@@ -103,10 +110,15 @@ export interface ImageDimensions {
 export type AspectRatio = "square" | "intrinsic"
 
 export const isDetail = {
-  audio: (media: Media): media is AudioDetail => {
-    return media.frontendMediaType === "audio"
-  },
-  image: (media: Media): media is ImageDetail => {
-    return media.frontendMediaType === "image"
-  },
+  audio: (media: Media | null): media is AudioDetail =>
+    isMediaDetail(media, AUDIO),
+  image: (media: Media | null): media is ImageDetail =>
+    isMediaDetail(media, IMAGE),
+}
+
+export const isMediaDetail = <T extends SupportedMediaType>(
+  media: Media | null,
+  mediaType: T
+): media is DetailFromMediaType<T> => {
+  return !!media && media.frontendMediaType === mediaType
 }

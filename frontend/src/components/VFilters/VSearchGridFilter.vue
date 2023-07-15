@@ -5,7 +5,7 @@
       class="relative mb-6 flex items-center justify-between"
     >
       <h4 id="filters-heading" class="caption-bold uppercase">
-        {{ $t("filter-list.filter-by") }}
+        {{ $t("filterList.filterBy") }}
       </h4>
       <VButton
         v-show="isAnyFilterApplied"
@@ -15,15 +15,15 @@
         class="label-bold absolute end-0 !text-pink"
         @click="clearFilters"
       >
-        {{ $t("filter-list.clear") }}
+        {{ $t("filterList.clear") }}
       </VButton>
     </header>
-    <form ref="filtersFormRef" class="filters-form">
+    <form class="filters-form">
       <VFilterChecklist
         v-for="filterType in filterTypes"
         :key="filterType"
         :options="filters[filterType]"
-        :title="filterTypeTitle(filterType).toString()"
+        :title="filterTypeTitle(filterType)"
         :filter-type="filterType"
         @toggle-filter="toggleFilter"
       />
@@ -32,10 +32,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue"
+import { computed, defineComponent } from "vue"
+import { storeToRefs } from "pinia"
 
 import { useRouter } from "@nuxtjs/composition-api"
-import { kebab } from "case"
 
 import { watchDebounced } from "@vueuse/core"
 
@@ -44,6 +44,7 @@ import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
 import type { NonMatureFilterCategory } from "~/constants/filters"
 import { defineEvent } from "~/types/emits"
 import { useI18n } from "~/composables/use-i18n"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
 import VButton from "~/components/VButton.vue"
@@ -82,22 +83,29 @@ export default defineComponent({
     const i18n = useI18n()
     const router = useRouter()
 
-    const filtersFormRef = ref<HTMLFormElement | null>(null)
+    const { sendCustomEvent } = useAnalytics()
 
-    const isAnyFilterApplied = computed(() => searchStore.isAnyFilterApplied)
-    const filters = computed(() => searchStore.searchFilters)
+    const {
+      isAnyFilterApplied,
+      searchQueryParams,
+      searchTerm,
+      searchType,
+      searchFilters: filters,
+    } = storeToRefs(searchStore)
+
     const filterTypes = computed(
       () => Object.keys(filters.value) as NonMatureFilterCategory[]
     )
-    const filterTypeTitle = (filterType: string) =>
-      i18n.t(`filters.${kebab(filterType)}.title`)
+    const filterTypeTitle = (filterType: NonMatureFilterCategory) => {
+      return i18n.t(`filters.${filterType}.title`).toString()
+    }
 
     /**
      * This watcher fires even when the queries are equal. We update the path only
      * when the queries change.
      */
     watchDebounced(
-      () => searchStore.searchQueryParams,
+      searchQueryParams,
       (newQuery: ApiQueryParams, oldQuery: ApiQueryParams) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {
           router.push(searchStore.getSearchPath())
@@ -106,14 +114,30 @@ export default defineComponent({
       { debounce: 800, maxWait: 5000 }
     )
 
+    const toggleFilter = ({
+      filterType,
+      code,
+    }: {
+      filterType: NonMatureFilterCategory
+      code: string
+    }) => {
+      const checked = searchStore.toggleFilter({ filterType, code })
+      sendCustomEvent("APPLY_FILTER", {
+        category: filterType,
+        key: code,
+        checked,
+        searchType: searchType.value,
+        query: searchTerm.value,
+      })
+    }
+
     return {
-      filtersFormRef,
       isAnyFilterApplied,
       filters,
       filterTypes,
       filterTypeTitle,
       clearFilters: searchStore.clearFilters,
-      toggleFilter: searchStore.toggleFilter,
+      toggleFilter,
     }
   },
 })

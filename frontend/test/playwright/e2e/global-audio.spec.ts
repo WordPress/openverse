@@ -36,10 +36,10 @@ test.describe("Global Audio", () => {
       // Close the player
       await page
         .locator(".global-audio")
-        .getByRole("button", { name: t("audio-track.close") })
+        .getByRole("button", { name: t("audioTrack.close") })
         .click()
       // and confirm the player is not visible
-      await expect(page.locator(".global-audio")).not.toBeVisible()
+      await expect(page.locator(".global-audio")).toBeHidden()
     })
 
     test("player does not reproduce an audio different that the current audio in the details page", async ({

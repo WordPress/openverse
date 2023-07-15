@@ -42,10 +42,10 @@
       </template>
     </i18n>
 
-    <h2>{{ $t("pref-page.groups.analytics.title") }}</h2>
+    <h2>{{ $t("prefPage.groups.analytics.title") }}</h2>
 
     <p>
-      {{ $t("pref-page.groups.analytics.desc", { openverse: "Openverse" }) }}
+      {{ $t("prefPage.groups.analytics.desc", { openverse: "Openverse" }) }}
     </p>
 
     <VCheckbox
@@ -56,7 +56,7 @@
       @change="handleChange"
     >
       <div>
-        {{ $t("pref-page.features.analytics") }}
+        {{ $t("prefPage.features.analytics") }}
       </div>
     </VCheckbox>
   </VContentPage>
@@ -71,11 +71,12 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON, OFF } from "~/constants/feature-flag"
 
 import VLink from "~/components/VLink.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
 export default defineComponent({
   name: "VPrivacyPage",
-  components: { VLink, VContentPage },
+  components: { VLink, VCheckbox, VContentPage },
   layout: "content-layout",
   setup() {
     const i18n = useI18n()

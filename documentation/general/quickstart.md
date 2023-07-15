@@ -130,7 +130,7 @@ prerequisites.
 
    ```console
    $ just api/stats
-   just _curl-get "images/stats/" localhost:50280
+   just _curl-get "images/stats/" http://localhost:50280
    curl "http://localhost:50280/v1/images/stats/"
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
    ```

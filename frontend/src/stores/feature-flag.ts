@@ -24,7 +24,7 @@ import type { Context } from "@nuxt/types"
 
 import type { Dictionary } from "vue-router/types/router"
 
-type FlagName = keyof typeof featureData["features"]
+type FlagName = keyof (typeof featureData)["features"]
 export interface FeatureFlagState {
   flags: Record<FlagName, FeatureFlag>
 }

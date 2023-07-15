@@ -29,11 +29,12 @@
         <div
           class="subtitle mt-1 flex flex-col gap-2 text-base leading-snug lg:flex-row lg:items-center"
         >
-          <i18n as="span" path="audio-track.creator" class="font-semibold">
+          <i18n as="span" path="audioTrack.creator" class="font-semibold">
             <template #creator>
               <VLink
                 class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"
                 :href="audio.creator_url"
+                :send-external-link-click-event="false"
               >
                 {{ audio.creator }}
               </VLink>
@@ -59,9 +60,10 @@
         show-external-icon
         :external-icon-size="6"
         class="description-bold order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
+        :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
-        {{ $t("audio-details.weblink") }}
+        {{ $t("audioDetails.weblink") }}
       </VButton>
     </div>
   </div>

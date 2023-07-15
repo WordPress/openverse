@@ -1,5 +1,3 @@
-import { sendWindowMessage } from "~/utils/send-message"
-
 import { useNavigationStore } from "~/stores/navigation"
 import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -26,22 +24,11 @@ const middleware: Middleware = async ({
   $cookies,
   $ua,
   query,
-  route,
   $pinia,
 }: Context) => {
   /* Nav store */
 
   const navigationStore = useNavigationStore($pinia)
-
-  if ("embedded" in query) {
-    navigationStore.setIsEmbedded(query.embedded === "true")
-  }
-  if (process.client) {
-    sendWindowMessage({
-      type: "urlChange",
-      value: { path: route.fullPath, title: document.title },
-    })
-  }
 
   if (process.client && navigationStore.isReferredFromCc) {
     navigationStore.setIsReferredFromCc(false)

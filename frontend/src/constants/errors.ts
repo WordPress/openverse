@@ -8,4 +8,4 @@ export const SERVER_TIMEOUT = "SERVER_TIMEOUT"
 
 export const errorCodes = [NO_RESULT, SERVER_TIMEOUT] as const
 
-export type ErrorCode = typeof errorCodes[number]
+export type ErrorCode = (typeof errorCodes)[number]

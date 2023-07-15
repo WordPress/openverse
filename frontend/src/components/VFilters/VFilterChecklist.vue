@@ -23,7 +23,7 @@
       <VPopover
         v-if="isLicense(item.code)"
         strategy="fixed"
-        :label="$t('browse-page.aria.license-explanation').toString()"
+        :label="$t('browsePage.aria.licenseExplanation').toString()"
         :trap-focus="false"
       >
         <template #trigger="{ a11yProps }">
@@ -31,7 +31,7 @@
             v-bind="a11yProps"
             variant="transparent-tx"
             size="disabled"
-            :aria-label="$t('browse-page.aria.license-explanation')"
+            :aria-label="$t('browsePage.aria.licenseExplanation')"
             class="h-6 w-6"
           >
             <VIcon name="help" />
@@ -126,10 +126,10 @@ export default defineComponent({
     const getLicenseExplanationCloseAria = (license: License) => {
       const elements = getElements(license).filter((icon) => icon !== "cc")
       const descriptions = elements
-        .map((element) => i18n.t(`browse-page.license-description.${element}`))
+        .map((element) => i18n.t(`browsePage.licenseDescription.${element}`))
         .join(" ")
-      const close = i18n.t("modal.close-named", {
-        name: i18n.t("browse-page.aria.license-explanation"),
+      const close = i18n.t("modal.closeNamed", {
+        name: i18n.t("browsePage.aria.licenseExplanation"),
       })
       return `${descriptions} - ${close}`
     }

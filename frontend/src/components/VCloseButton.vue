@@ -5,7 +5,7 @@
     :borderless="true"
     :size="size"
     :class="{
-      'bg-black text-white ring-offset-black focus-slim-tx-yellow hover:border hover:border-white':
+      'bg-tx text-white ring-offset-tx focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10':
         variant === 'black',
       '!text-dark-charcoal-70 hover:!text-white':
         variant === 'filled-white-light',
@@ -62,7 +62,7 @@ export default defineComponent({
      * The size of the underlying VIconButton.
      */
     size: {
-      type: String as PropType<"tiny" | "small" | "medium" | "large">,
+      type: String as PropType<"close" | "small" | "medium" | "large">,
       default: "medium",
     },
     /**

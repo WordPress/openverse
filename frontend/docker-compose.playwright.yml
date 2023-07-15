@@ -9,14 +9,14 @@ services:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
       - ../node_modules:/node_modules
-      - .:/app
+      - .:/frontend
+      - ${PWD}/../tsconfig.json:/tsconfig.json
     user: ${USER_ID}
-    working_dir: /app
+    working_dir: /frontend
     command: pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-}
     environment:
       # This makes the webserver that Playwright runs show the build
       - DEBUG=pw:webserver
-      - DISABLE_SENTRY=true
       - UPDATE_TAPES=${UPDATE_TAPES:-false}
       - FASTSTART=${FASTSTART:-false}
     cpus: 0.000

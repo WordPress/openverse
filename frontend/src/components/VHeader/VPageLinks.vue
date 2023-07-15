@@ -98,13 +98,13 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const { all: allPages, current: currentPage } = usePages(true)
+    const { all: allPages, current: currentPage } = usePages()
 
     // The modal isn't closed if we click on the current page link,
     // so we need to close it manually.
     const onClick = () => emit("close")
 
-    const isLinkExternal = (item: typeof allPages[number]) =>
+    const isLinkExternal = (item: (typeof allPages)[number]) =>
       !item.link.startsWith("/")
 
     const externalIconSize = computed(() => (props.isInModal ? 6 : 4))

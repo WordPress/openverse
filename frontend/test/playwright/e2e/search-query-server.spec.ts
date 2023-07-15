@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test"
 
 import {
-  assertCheckboxStatus,
   currentContentType,
   filters,
   goToSearchTerm,
@@ -72,8 +71,10 @@ test.describe("search query on SSR", () => {
 
       await filters.open(page)
       // Creator filter was removed from the UI
-      for (const checkbox of ["cc0", "commercial"]) {
-        await assertCheckboxStatus(page, checkbox)
+      for (const checkbox of ["Zero", "Use commercially"]) {
+        await expect(
+          page.getByRole("checkbox", { name: checkbox })
+        ).toBeChecked()
       }
     })
 
@@ -87,25 +88,11 @@ test.describe("search query on SSR", () => {
       await filters.open(page)
       const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]
       for (const checkbox of checkboxes) {
-        await assertCheckboxStatus(page, checkbox)
+        // exact: true required to prevent `SVG` matching a provider with SVG in the name
+        await expect(
+          page.getByRole("checkbox", { name: checkbox, exact: true })
+        ).toBeChecked()
       }
-    })
-
-    test.skip("url mature query is set, and can be unchecked using the Safer Browsing popup", async ({
-      page,
-    }) => {
-      await goToSearchTerm(page, "cat", {
-        searchType: IMAGE,
-        query: "mature=true",
-      })
-
-      await page.click('button:has-text("Safer Browsing")')
-
-      const matureCheckbox = await page.locator("text=Show Mature Content")
-      await expect(matureCheckbox).toBeChecked()
-
-      await page.click("text=Show Mature Content")
-      await expect(page).toHaveURL("/search/image?q=cat")
     })
   })
 })

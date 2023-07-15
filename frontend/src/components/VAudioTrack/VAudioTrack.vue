@@ -49,35 +49,36 @@
 import {
   computed,
   defineComponent,
-  ref,
-  watch,
   onUnmounted,
   PropType,
+  ref,
+  watch,
 } from "vue"
 import { useContext, useRoute } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
-
-import { useActiveMediaStore } from "~/stores/active-media"
-import { useMediaStore } from "~/stores/media"
-
-import { AUDIO } from "~/constants/media"
-
-import type { AudioDetail } from "~/types/media"
-import {
-  AudioLayout,
-  AudioSize,
-  AudioStatus,
-  activeAudioStatus,
-  layoutMappings,
-} from "~/constants/audio"
 import { useSeekable } from "~/composables/use-seekable"
 import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
 } from "~/composables/use-match-routes"
+
+import { useActiveMediaStore } from "~/stores/active-media"
+import { useMediaStore } from "~/stores/media"
+
+import { AUDIO } from "~/constants/media"
+import {
+  activeAudioStatus,
+  AudioLayout,
+  AudioSize,
+  AudioStatus,
+  layoutMappings,
+} from "~/constants/audio"
+
+import type { AudioInteraction, AudioInteractionData } from "~/types/analytics"
+import type { AudioDetail } from "~/types/media"
 
 import { defineEvent } from "~/types/emits"
 
@@ -141,7 +142,9 @@ export default defineComponent({
   },
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
-    interacted: defineEvent<[]>(),
+    interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
+    mousedown: defineEvent<[MouseEvent]>(),
+    focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
     const i18n = useI18n()
@@ -346,25 +349,21 @@ export default defineComponent({
 
       // Check if the audio can be played successfully
       localAudio?.play().catch((err) => {
-        let errorMsg = ""
+        let message: string
         switch (err.name) {
           case "NotAllowedError":
-            errorMsg = "err_unallowed"
+            message = "err_unallowed"
             break
           case "NotSupportedError":
-            errorMsg = "err_unsupported"
+            message = "err_unsupported"
             break
           default:
-            errorMsg = "err_unknown"
+            message = "err_unknown"
             $sentry.captureException(err)
         }
-        console.log("Error playing audio:", err, errorMsg)
-        errorMsg = i18n.t(`audio-track.messages.${errorMsg}`).toString()
-        console.log("Setting message in active media store: ", errorMsg)
-        activeMediaStore.setMessage({ message: errorMsg })
+        activeMediaStore.setMessage({ message })
         localAudio?.pause()
       })
-      console.log("Playing audio:", localAudio?.src)
     }
     const pause = () => localAudio?.pause()
 
@@ -383,7 +382,11 @@ export default defineComponent({
 
     /* Timekeeping */
 
-    const message = computed(() => activeMediaStore.message)
+    const message = computed(() =>
+      activeMediaStore.message
+        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`).toString()
+        : ""
+    )
 
     /* Interface with VPlayPause */
 
@@ -391,7 +394,8 @@ export default defineComponent({
      * This function can safely ignore the `loading` status because
      * that status is never toggled _to_.
      */
-    const handleToggle = (state?: "playing" | "paused" | "played") => {
+    const handleToggle = (state?: Exclude<AudioStatus, "loading">) => {
+      let event: AudioInteraction | undefined = undefined
       if (!state) {
         switch (status.value) {
           case "playing":
@@ -407,12 +411,20 @@ export default defineComponent({
       switch (state) {
         case "playing":
           play()
+          event = "play"
           break
         case "paused":
           pause()
+          event = "pause"
           break
       }
-      emit("interacted")
+      if (event) {
+        emit("interacted", {
+          event,
+          id: props.audio.id,
+          provider: props.audio.provider,
+        })
+      }
     }
 
     /* Interface with VWaveform */
@@ -429,7 +441,11 @@ export default defineComponent({
       if (localAudio) {
         localAudio.currentTime = frac * duration.value
       }
-      emit("interacted")
+      emit("interacted", {
+        event: "seek",
+        id: props.audio.id,
+        provider: props.audio.provider,
+      })
     }
 
     /* Layout */
@@ -476,10 +492,10 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t("audio-track.aria-label-interactive-seekable", {
+        ? i18n.t("audioTrack.ariaLabelInteractiveSeekable", {
             title: props.audio.title,
           })
-        : i18n.t("audio-track.aria-label", { title: props.audio.title })
+        : i18n.t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
     const togglePlayback = () => {
@@ -497,7 +513,6 @@ export default defineComponent({
       onTogglePlayback: togglePlayback,
     })
     const handleKeydown = (event: KeyboardEvent) => {
-      if (seekable.willBeHandled(event)) emit("interacted")
       seekable.listeners.keydown(event)
     }
 

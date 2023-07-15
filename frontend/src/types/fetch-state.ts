@@ -1,6 +1,9 @@
-export interface FetchState {
+export interface BaseFetchState {
   isFetching: boolean
-  fetchingError: null | string
   hasStarted?: boolean
   isFinished?: boolean
+}
+
+export interface FetchState<ErrorType = string> extends BaseFetchState {
+  fetchingError: null | ErrorType
 }

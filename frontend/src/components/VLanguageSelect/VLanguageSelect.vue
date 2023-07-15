@@ -4,8 +4,8 @@
     v-model="locale"
     field-id="language"
     :choices="choices"
-    :blank-text="$t('language.language')"
-    :label-text="$t('language.language')"
+    :blank-text="$t('language.language').toString()"
+    :label-text="$t('language.language').toString()"
   >
     <template #start>
       <VIcon name="globe" />
@@ -42,7 +42,7 @@ export default defineComponent({
       },
     })
     const choices = computed<Choice[]>(() =>
-      i18n.locales
+      (i18n.locales as LocaleObject[])
         .map((locale: LocaleObject) => ({
           key: locale.code,
           text: locale.nativeName,

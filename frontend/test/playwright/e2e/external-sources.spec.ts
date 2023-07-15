@@ -1,30 +1,18 @@
-import { test, expect } from "@playwright/test"
+import { test } from "@playwright/test"
 
-import { goToSearchTerm, setCookies } from "~~/test/playwright/utils/navigation"
+import { goToSearchTerm } from "~~/test/playwright/utils/navigation"
 
-test("sends analytics event on external source click", async ({ page }) => {
-  let eventData: {
-    name: string
-    mediaType: string
-    query: string
-  } = { name: "", mediaType: "", query: "" }
-  page.on("request", (req) => {
-    if (req.method() === "POST") {
-      const requestData = req.postDataJSON()
-      if (requestData?.n == "SELECT_EXTERNAL_SOURCE") {
-        eventData = JSON.parse(requestData?.p)
-      }
-    }
-  })
-  // Start waiting for new page before clicking.
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
+
+test("sends correct analytics events", async ({ page, context }) => {
   const pagePromise = page.context().waitForEvent("page")
 
-  const mediaType = "image"
-  const name = "Centre For Ageing Better"
-  const query = "cat"
+  const events = collectAnalyticsEvents(context)
 
-  await setCookies(page.context(), { analytics: "true" })
-  await goToSearchTerm(page, "cat", { mode: "SSR", query: "ff_analytics=on" })
+  await goToSearchTerm(page, "cat", { mode: "SSR" })
 
   await page.getByRole("button", { name: "Source list" }).click()
   await page.getByRole("link", { name: "Centre for Ageing Better" }).click()
@@ -32,7 +20,20 @@ test("sends analytics event on external source click", async ({ page }) => {
   const newPage = await pagePromise
   await newPage.close()
 
-  expect(eventData.name).toEqual(name)
-  expect(eventData.mediaType).toEqual(mediaType)
-  expect(eventData.query).toEqual(query)
+  const viewEvent = events.find((event) => event.n === "VIEW_EXTERNAL_SOURCES")
+  const selectEvent = events.find(
+    (event) => event.n === "SELECT_EXTERNAL_SOURCE"
+  )
+
+  expectEventPayloadToMatch(viewEvent, {
+    searchType: "all",
+    query: "cat",
+    resultPage: 1,
+  })
+  expectEventPayloadToMatch(selectEvent, {
+    name: "Centre For Ageing Better",
+    mediaType: "image",
+    query: "cat",
+    component: "VExternalSourceList",
+  })
 })

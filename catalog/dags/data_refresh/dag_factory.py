@@ -14,14 +14,14 @@ be run with the `force_refresh_metrics` option to run this refresh after the fir
 of the month.
 
 Once this step is complete, the data refresh can be initiated. A data refresh
-occurs on the data refresh server in the openverse-api project. This is a task
+occurs on the Ingestion server in the openverse project. This is a task
 which imports data from the upstream Catalog database into the API, copies contents
 to a new Elasticsearch index, and finally makes the index "live". This process is
 necessary to make new content added to the Catalog by our provider DAGs available
 to the API. You can read more in the [README](
-https://github.com/WordPress/openverse-api/blob/main/ingestion_server/README.md
+https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md
 ) Importantly, the data refresh TaskGroup is also configured to handle concurrency
-requirements of the data refresh server. Finally, once the origin indexes have been
+requirements of the Ingestion server. Finally, once the origin indexes have been
 refreshed, the corresponding filtered index creation DAG is triggered.
 
 You can find more background information on this process in the following
@@ -51,6 +51,11 @@ from common.constants import (
 from common.sql import PGExecuteQueryOperator
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
+from data_refresh.recreate_view_data_task_factory import DROP_DB_VIEW_TASK_ID
+from data_refresh.recreate_view_data_task_factory import (
+    GROUP_ID as RECREATE_MATVIEW_GROUP_ID,
+)
+from data_refresh.recreate_view_data_task_factory import create_recreate_view_data_task
 from data_refresh.refresh_popularity_metrics_task_factory import (
     GROUP_ID as REFRESH_POPULARITY_METRICS_GROUP_ID,
 )
@@ -58,16 +63,15 @@ from data_refresh.refresh_popularity_metrics_task_factory import (
     UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID,
     create_refresh_popularity_metrics_task_group,
 )
-from data_refresh.refresh_view_data_task_factory import (
-    UPDATE_DB_VIEW_TASK_ID,
-    create_refresh_view_data_task,
-)
 from data_refresh.reporting import report_record_difference, report_status
 
 
 logger = logging.getLogger(__name__)
 
-REFRESH_MATERIALIZED_VIEW_TASK_ID = UPDATE_DB_VIEW_TASK_ID
+# The first task in the recreate_matview TaskGroup
+RECREATE_MATERIALIZED_VIEW_TASK_ID = (
+    f"{RECREATE_MATVIEW_GROUP_ID}.{DROP_DB_VIEW_TASK_ID}"
+)
 # The first task in the refresh_popularity_metrics TaskGroup
 REFRESH_POPULARITY_METRICS_TASK_ID = (
     f"{REFRESH_POPULARITY_METRICS_GROUP_ID}"
@@ -110,7 +114,7 @@ def _month_check(dag_id: str, session: SASession = None) -> str:
         return (
             REFRESH_POPULARITY_METRICS_TASK_ID
             if force_refresh_metrics
-            else REFRESH_MATERIALIZED_VIEW_TASK_ID
+            else RECREATE_MATERIALIZED_VIEW_TASK_ID
         )
 
     # Get the most recent successful dagrun for this Dag
@@ -135,7 +139,7 @@ def _month_check(dag_id: str, session: SASession = None) -> str:
     return (
         REFRESH_POPULARITY_METRICS_TASK_ID
         if not is_last_dagrun_in_current_month
-        else REFRESH_MATERIALIZED_VIEW_TASK_ID
+        else RECREATE_MATERIALIZED_VIEW_TASK_ID
     )
 
 
@@ -148,7 +152,7 @@ def _month_check_with_reporting(dag_id: str, media_type: str) -> str:
     next_task_id = _month_check(dag_id)
     next_step = {
         REFRESH_POPULARITY_METRICS_TASK_ID: "update popularity metrics",
-        REFRESH_MATERIALIZED_VIEW_TASK_ID: "refresh matview",
+        RECREATE_MATERIALIZED_VIEW_TASK_ID: "recreate matview",
     }.get(next_task_id, "unable to determine next step")
     message = f":horse_racing: Starting data refresh | _Next: {next_step}_"
     report_status(media_type, message, dag_id)
@@ -228,9 +232,10 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             data_refresh
         )
 
-        # Refresh the materialized view. This occurs on all DagRuns and updates
-        # popularity data for newly ingested records.
-        refresh_matview = create_refresh_view_data_task(data_refresh)
+        # Drop and recreate the materialized view. This occurs on all DagRuns and
+        # updates popularity data for newly ingested records. Formerly, we would refresh
+        # the materialized view, but that process would consistently time out.
+        recreate_matview = create_recreate_view_data_task(data_refresh)
 
         # Trigger the actual data refresh on the remote data refresh server, and wait
         # for it to complete.
@@ -283,9 +288,9 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Set up task dependencies
-        month_check >> [refresh_popularity_metrics, refresh_matview]
+        month_check >> [refresh_popularity_metrics, recreate_matview]
         before_record_count >> data_refresh_group
-        refresh_popularity_metrics >> refresh_matview >> data_refresh_group
+        refresh_popularity_metrics >> recreate_matview >> data_refresh_group
         data_refresh_group >> after_record_count >> report_counts
         data_refresh_group >> trigger_filtered_index_creation
 

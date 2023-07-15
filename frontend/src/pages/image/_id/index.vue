@@ -1,20 +1,30 @@
 <template>
-  <VSkipToContentContainer as="main">
+  <main :id="skipToContentTargetId" tabindex="-1">
     <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink :id="image.id" :href="backToSearchPath" />
+      <VBackToSearchResultsLink
+        :id="$route.params.id"
+        :href="backToSearchPath"
+      />
     </div>
 
-    <figure class="relative mb-4 border-b border-dark-charcoal-20 px-6">
+    <figure
+      class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
+    >
+      <VBone
+        v-if="isLoadingThumbnail"
+        class="col-span-full row-span-full h-[500px] w-[500px] self-center"
+      />
       <img
-        v-if="!sketchFabUid"
+        v-if="image && !sketchFabUid"
         id="main-image"
         :src="imageSrc"
         :alt="image.title"
-        class="mx-auto h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
+        class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
         :width="imageWidth"
         :height="imageHeight"
         @load="onImageLoaded"
         @error="onImageError"
+        @contextmenu="handleRightClick($route.params.id)"
       />
       <VSketchFabViewer
         v-if="sketchFabUid"
@@ -24,89 +34,98 @@
       />
     </figure>
 
-    <section
-      id="title-button"
-      class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
-    >
-      <VButton
-        as="VLink"
-        :href="image.foreign_landing_url"
-        variant="filled-pink"
-        class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
-        show-external-icon
-        :external-icon-size="6"
-        has-icon-end
-        size="large"
-        @click="sendGetMediaEvent"
+    <template v-if="image">
+      <section
+        id="title-button"
+        class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
       >
-        {{ $t("image-details.weblink") }}
-      </VButton>
-      <div class="description-bold flex flex-1 flex-col justify-center">
-        <h1 class="description-bold md:heading-5 line-clamp-2">
-          {{ image.title }}
-        </h1>
-        <i18n v-if="image.creator" path="image-details.creator" tag="span">
-          <template #name>
-            <VLink
-              v-if="image.creator_url"
-              :aria-label="
-                $t('media-details.aria.creator-url', {
-                  creator: image.creator,
-                })
-              "
-              :href="image.creator_url"
-              >{{ image.creator }}</VLink
-            >
-            <span v-else>{{ image.creator }}</span>
-          </template>
-        </i18n>
-      </div>
-    </section>
+        <VButton
+          as="VLink"
+          :href="image.foreign_landing_url"
+          variant="filled-pink"
+          class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
+          show-external-icon
+          :external-icon-size="6"
+          has-icon-end
+          size="large"
+          :send-external-link-click-event="false"
+          @click="sendGetMediaEvent"
+        >
+          {{ $t("imageDetails.weblink") }}
+        </VButton>
+        <div class="description-bold flex flex-1 flex-col justify-center">
+          <h1 class="description-bold md:heading-5 line-clamp-2">
+            {{ image.title }}
+          </h1>
+          <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
+            <template #name>
+              <VLink
+                v-if="image.creator_url"
+                :aria-label="
+                  $t('mediaDetails.aria.creatorUrl', {
+                    creator: image.creator,
+                  })
+                "
+                :href="image.creator_url"
+                :send-external-link-click-event="false"
+                @click="sendVisitCreatorLinkEvent"
+                >{{ image.creator }}</VLink
+              >
+              <span v-else>{{ image.creator }}</span>
+            </template>
+          </i18n>
+        </div>
+      </section>
 
-    <VMediaReuse :media="image" />
-    <VImageDetails
-      :image="image"
-      :image-width="imageWidth"
-      :image-height="imageHeight"
-      :image-type="imageType"
-    />
-    <VRelatedImages
-      v-if="hasRelatedMedia"
-      :media="relatedMedia"
-      :fetch-state="relatedFetchState"
-    />
-  </VSkipToContentContainer>
+      <VMediaReuse :media="image" />
+      <VImageDetails
+        :image="image"
+        :image-width="imageWidth"
+        :image-height="imageHeight"
+        :image-type="imageType"
+      />
+      <VRelatedImages />
+    </template>
+  </main>
 </template>
 
 <script lang="ts">
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { defineComponent, useRoute } from "@nuxtjs/composition-api"
+import {
+  defineComponent,
+  useContext,
+  useFetch,
+  useMeta,
+  useRoute,
+} from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
+import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
+import VBone from "~/components/VSkeleton/VBone.vue"
 import VButton from "~/components/VButton.vue"
 import VImageDetails from "~/components/VImageDetails/VImageDetails.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VBone,
     VBackToSearchResultsLink,
     VButton,
     VLink,
@@ -114,42 +133,46 @@ export default defineComponent({
     VMediaReuse,
     VRelatedImages,
     VSketchFabViewer,
-    VSkipToContentContainer,
-  },
-  beforeRouteEnter(to, from, next) {
-    if (from.path.includes("/search/")) {
-      to.meta.backToSearchPath = from.fullPath
-    }
-    if (from.path.includes("/search/") && to.query.q) {
-      useSearchStore().setSearchTerm(to.query.q)
-    }
-    next()
   },
   layout: "content-layout",
+  middleware: singleResultMiddleware,
+  // Fetching on the server is disabled because it is
+  // handled by the `singleResultMiddleware`.
+  fetchOnServer: false,
   setup() {
+    const singleResultStore = useSingleResultStore()
+    const searchStore = useSearchStore()
+
     const route = useRoute()
 
-    const singleResultStore = useSingleResultStore()
-    const relatedMediaStore = useRelatedMediaStore()
-    const image = computed(() =>
-      singleResultStore.mediaType === IMAGE
-        ? (singleResultStore.mediaItem as ImageDetail)
-        : null
-    )
+    const image = ref<ImageDetail | null>(singleResultStore.image)
 
-    const backToSearchPath = computed(() => route.value.meta?.backToSearchPath)
-    const hasRelatedMedia = computed(() => relatedMediaStore.media.length > 0)
-    const relatedMedia = computed(() => relatedMediaStore.media)
-    const relatedFetchState = computed(() => relatedMediaStore.fetchState)
-
-    const imageWidth = ref(0)
-    const imageHeight = ref(0)
-    const imageType = ref("Unknown")
     /**
      * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
-     * and then replace it with the provider image once it is loaded.
+     * and replace it with the provider image once the thumbnail is loaded.
      */
-    const imageSrc = ref(image.value.thumbnail)
+    const imageSrc = ref(image.value?.thumbnail)
+
+    const isLoadingThumbnail = ref(true)
+
+    const { error: nuxtError } = useContext()
+
+    useFetch(async () => {
+      const imageId = route.value.params.id
+      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
+      if (!fetchedImage) {
+        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+      } else {
+        image.value = fetchedImage
+        imageSrc.value = fetchedImage.thumbnail
+      }
+    })
+
+    const backToSearchPath = computed(() => searchStore.backToSearchPath)
+
+    const imageWidth = ref(image.value?.width ?? 0)
+    const imageHeight = ref(image.value?.height ?? 0)
+    const imageType = ref(image.value?.filetype ?? "Unknown")
     const isLoadingMainImage = ref(true)
     const sketchFabfailure = ref(false)
 
@@ -171,7 +194,7 @@ export default defineComponent({
         return
       }
       imageSrc.value =
-        event.target.src === image.value.url
+        event.target.src === image.value?.url
           ? image.value.thumbnail
           : errorImage
     }
@@ -182,14 +205,15 @@ export default defineComponent({
      * @param event - the image load event.
      */
     const onImageLoaded = (event: Event) => {
-      if (!(event.target instanceof HTMLImageElement)) {
-        return
-      }
-      if (isLoadingMainImage.value) {
-        imageWidth.value = image.value?.width || event.target.naturalWidth
-        imageHeight.value = image.value?.height || event.target.naturalHeight
+      if (!(event.target instanceof HTMLImageElement) || !image.value) return
 
-        if (image.value?.filetype) {
+      isLoadingThumbnail.value = false
+
+      if (isLoadingMainImage.value) {
+        imageWidth.value = image.value.width || event.target.naturalWidth
+        imageHeight.value = image.value.height || event.target.naturalHeight
+
+        if (image.value.filetype) {
           imageType.value = image.value.filetype
         } else {
           axios
@@ -211,6 +235,12 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
+    const handleRightClick = (id: string) => {
+      sendCustomEvent("RIGHT_CLICK_IMAGE", {
+        id,
+      })
+    }
+
     const sendGetMediaEvent = () => {
       if (!image.value) {
         return
@@ -222,44 +252,40 @@ export default defineComponent({
       })
     }
 
+    const sendVisitCreatorLinkEvent = () => {
+      if (!image.value) {
+        return
+      }
+      sendCustomEvent("VISIT_CREATOR_LINK", {
+        id: image.value.id,
+        url: image.value.creator_url ?? "",
+      })
+    }
+
+    useMeta(createDetailPageMeta(image.value?.title, image.value?.url))
+
     return {
       image,
-      hasRelatedMedia,
-      relatedMedia,
-      relatedFetchState,
       imageWidth,
       imageHeight,
       imageSrc,
       imageType,
       sketchFabfailure,
       sketchFabUid,
+
+      isLoadingThumbnail,
       onImageLoaded,
       onImageError,
+      handleRightClick,
       backToSearchPath,
 
+      skipToContentTargetId,
+
       sendGetMediaEvent,
+      sendVisitCreatorLinkEvent,
     }
   },
-  async asyncData({ app, error, route, $pinia }) {
-    const imageId = route.params.id
-    const singleResultStore = useSingleResultStore($pinia)
-    try {
-      await singleResultStore.fetch(IMAGE, imageId)
-    } catch (err) {
-      const errorMessage = app.i18n
-        .t("error.image-not-found", {
-          id: imageId,
-        })
-        .toString()
-      return error({
-        statusCode: 404,
-        message: errorMessage,
-      })
-    }
-  },
-  head() {
-    return createDetailPageMeta(this.image.title, this.image.url)
-  },
+  head: {},
 })
 </script>
 

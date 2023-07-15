@@ -14,9 +14,9 @@
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="all-results.snackbar.text" tag="p">
+      <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
-          <kbd class="font-sans">{{ $t(`all-results.snackbar.spacebar`) }}</kbd>
+          <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
       </i18n>
     </VSnackbar>
@@ -32,7 +32,9 @@
           ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
           : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
       "
-      :aria-label="$t('browse-page.aria.results', { query: searchTerm })"
+      :aria-label="
+        $t('browsePage.aria.results', { query: searchTerm }).toString()
+      "
     >
       <template v-for="item in allMedia">
         <VImageCell
@@ -47,7 +49,7 @@
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
-          @interacted="hideSnackbar"
+          @interacted="handleInteraction"
           @focus="showSnackbar"
         />
       </template>
@@ -65,8 +67,12 @@ import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
+import type { AudioInteractionData } from "~/types/analytics"
 
+import { useAnalytics } from "~/composables/use-analytics"
 import { useI18n } from "~/composables/use-i18n"
+
+import type { SupportedMediaType } from "~/constants/media"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
@@ -89,16 +95,20 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
+
+    const { sendCustomEvent } = useAnalytics()
+
     const searchTerm = computed(() => searchStore.searchTerm)
 
     const resultsLoading = computed(() => {
       return (
         Boolean(mediaStore.fetchState.fetchingError) ||
-        mediaStore.fetchState.isFetching
+        mediaStore.fetchState.isFetching ||
+        !mediaStore.fetchState.hasStarted
       )
     })
 
-    const contentLinkPath = (mediaType: string) =>
+    const contentLinkPath = (mediaType: SupportedMediaType) =>
       searchStore.getSearchPath({ type: mediaType })
 
     const allMedia = computed(() => mediaStore.allMedia)
@@ -108,8 +118,8 @@ export default defineComponent({
     const fetchState = computed(() => mediaStore.fetchState)
 
     const errorHeader = computed(() => {
-      const type = i18n.t("browse-page.search-form.audio")
-      return i18n.t("browse-page.fetching-error", { type })
+      const type = i18n.t("browsePage.searchForm.audio")
+      return i18n.t("browsePage.fetchingError", { type })
     })
 
     const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
@@ -129,6 +139,14 @@ export default defineComponent({
 
     const isSidebarVisible = computed(() => uiStore.isFilterVisible)
 
+    const handleInteraction = (data: AudioInteractionData) => {
+      hideSnackbar()
+      sendCustomEvent("AUDIO_INTERACTION", {
+        ...data,
+        component: "VAllResultsGrid",
+      })
+    }
+
     return {
       searchTerm,
       isError,
@@ -145,7 +163,7 @@ export default defineComponent({
 
       isSnackbarVisible,
       showSnackbar,
-      hideSnackbar,
+      handleInteraction,
 
       isDetail,
     }
