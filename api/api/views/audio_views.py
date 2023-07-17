@@ -24,7 +24,7 @@ from api.serializers.audio_serializers import (
 )
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
-from api.views.media_views import MediaViewSet
+from api.views.media_views import AsyncMediaView, MediaViewSet
 
 
 @extend_schema(tags=["audio"])
@@ -47,32 +47,6 @@ class AudioViewSet(MediaViewSet):
         return super().get_queryset().select_related("mature_audio", "audioset")
 
     # Extra actions
-
-    @thumbnail
-    @action(
-        detail=True,
-        url_path="thumb",
-        url_name="thumb",
-        serializer_class=MediaThumbnailRequestSerializer,
-        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
-    )
-    def thumbnail(self, request, *_, **__):
-        """
-        Retrieve the scaled down and compressed thumbnail of the artwork of an
-        audio track or its audio set.
-        """
-
-        audio = self.get_object()
-
-        image_url = None
-        if audio_thumbnail := audio.thumbnail:
-            image_url = audio_thumbnail
-        elif audio.audio_set and (audio_thumbnail := audio.audio_set.thumbnail):
-            image_url = audio_thumbnail
-        if not image_url:
-            raise NotFound("Could not find artwork.")
-
-        return super().thumbnail(request, audio, image_url)
 
     @waveform
     @action(
@@ -114,3 +88,33 @@ class AudioViewSet(MediaViewSet):
         """
 
         return super().report(request, identifier)
+
+
+class AsyncAudioView(AsyncMediaView):
+    model_class = Audio
+
+    @thumbnail
+    @action(
+        detail=True,
+        url_path="thumb",
+        url_name="thumb",
+        serializer_class=MediaThumbnailRequestSerializer,
+        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
+    )
+    async def thumbnail(self, request, *_, **__):
+        """
+        Retrieve the scaled down and compressed thumbnail of the artwork of an
+        audio track or its audio set.
+        """
+
+        audio = await self.aget_object()
+
+        image_url = None
+        if audio_thumbnail := audio.thumbnail:
+            image_url = audio_thumbnail
+        elif audio.audio_set and (audio_thumbnail := audio.audio_set.thumbnail):
+            image_url = audio_thumbnail
+        if not image_url:
+            raise NotFound("Could not find artwork.")
+
+        return await super().get_thumbnail(request, audio, image_url)

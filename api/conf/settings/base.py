@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third-party installed apps, more can be added in other settings files.
     "sslserver",
+    "adrf",
 ]
 
 MIDDLEWARE = [
@@ -60,6 +61,11 @@ TEMPLATES = [
     },
 ]
 
+# Allow both during transition. We need to deploy this with zero-downtime, so we can
+# deploy the WSGI app at first and then switch the configuration over to use uvicorn
+# and the ASGI app after it is deployed. In the mean time, async routes will still be
+# "async" just inside their own event loop per-request.
+ASGI_APPLICATION = "conf.asgi.application"
 WSGI_APPLICATION = "conf.wsgi.application"
 
 # Default primary key field type

@@ -1,43 +1,46 @@
 from os.path import splitext
 from urllib.parse import urlparse
 
-import django_redis
-import requests
+import aiohttp
+import django_async_redis
 import sentry_sdk
 
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
-def get_image_extension(image_url: str, media_identifier: str) -> str | None:
-    cache = django_redis.get_redis_connection("default")
+async def get_image_extension(image_url: str, media_identifier: str) -> str | None:
+    cache = await django_async_redis.get_redis_connection("adefault")
     key = f"media:{media_identifier}:thumb_type"
 
     ext = _get_file_extension_from_url(image_url)
 
     if not ext:
         # If the extension is not present in the URL, try to get it from the redis cache
-        ext = cache.get(key)
+        ext = await cache.get(key)
         ext = ext.decode("utf-8") if ext else None
 
     if not ext:
         # If the extension is still not present, try getting it from the content type
-        try:
-            response = requests.head(image_url, timeout=10)
-            response.raise_for_status()
-        except Exception as exc:
-            sentry_sdk.capture_exception(exc)
-            raise UpstreamThumbnailException(
-                "Failed to render thumbnail due to inability to check media "
-                f"type. {exc}"
-            )
-        else:
-            if response.headers and "Content-Type" in response.headers:
-                content_type = response.headers["Content-Type"]
-                ext = _get_file_extension_from_content_type(content_type)
+        async with aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=10)
+        ) as client:
+            try:
+                response = await client.head(image_url, timeout=10)
+                response.raise_for_status()
+            except Exception as exc:
+                sentry_sdk.capture_exception(exc)
+                raise UpstreamThumbnailException(
+                    "Failed to render thumbnail due to inability to check media "
+                    f"type. {exc}"
+                )
             else:
-                ext = None
+                if response.headers and "Content-Type" in response.headers:
+                    content_type = response.headers["Content-Type"]
+                    ext = _get_file_extension_from_content_type(content_type)
+                else:
+                    ext = None
 
-            cache.set(key, ext if ext else "unknown")
+                await cache.set(key, ext if ext else "unknown")
     return ext
 
 

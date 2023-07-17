@@ -33,27 +33,33 @@ REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
 REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
 
 
-def _make_cache_config(dbnum: int, **overrides) -> dict:
+def _make_cache_config(dbnum: int, aio: bool = False, **overrides) -> dict:
+    library = "django_async_redis" if aio else "django_redis"
     return {
-        "BACKEND": "django_redis.cache.RedisCache",
+        "BACKEND": f"{library}.cache.RedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{dbnum}",
         "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CLIENT_CLASS": f"{library}.client.DefaultClient",
         }
         | overrides.pop("OPTIONS", {}),
     } | overrides
 
 
+# `a` prefixed caches use aioredis backend
 CACHES = {
     # Site cache writes to 'default'
     "default": _make_cache_config(0),
+    "adefault": _make_cache_config(0, aio=True),
     # For rapidly changing stats that we don't want to hammer the database with
     "traffic_stats": _make_cache_config(1),
+    "atraffic_stats": _make_cache_config(1, aio=True),
     # For ensuring consistency among multiple Django workers and servers.
     # Used by Redlock.
     "locks": _make_cache_config(2),
+    "alocks": _make_cache_config(2, aio=True),
     # Used for tracking tallied figures that shouldn't expire and are indexed
     # with a timestamp range (for example, the key could a timestamp valid
     # for a given week), allowing historical data analysis.
     "tallies": _make_cache_config(3, TIMEOUT=None),
+    "atallies": _make_cache_config(3, aio=True, TIMEOUT=None),
 }

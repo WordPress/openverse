@@ -1,10 +1,14 @@
+import abc
 import logging
 
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
+
+from adrf.viewsets import ViewSet
+from asgiref.sync import sync_to_async
 
 from api.controllers import search_controller
 from api.models import ContentProvider
@@ -15,6 +19,62 @@ from api.utils.pagination import StandardPagination
 
 
 logger = logging.getLogger(__name__)
+
+
+class AsyncMediaView(ViewSet, GenericViewSet):
+    """
+    Encapsulate asynchronous media requests.
+
+    Isolates asynchronous API routes from yet-to-be-converted
+    synchronous routes.
+    """
+
+    view_is_async = True
+
+    lookup_field = "identifier"
+    lookup_value_regex = (
+        r"[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
+    )
+    model_class: type[AbstractMedia] = None
+
+    def get_queryset(self):
+        # The alternative to a sub-query would be using `extra` to do a join
+        # to the content provider table and filtering `filter_content`. However,
+        # that assumes that a content provider entry exists, which is not necessarily
+        # the case. We often don't add a content provider until after works from
+        # new providers are available in the API, and sometimes not even then.
+        # Search returns results with providers that do not have a ContentProvider
+        # table entry. Therefore, to maintain that assumption, a subquery is the only
+        # workable approach, as Django's `extra` does not provide any facility for
+        # handling null relations on the join.
+        return self.model_class.objects.exclude(
+            provider__in=ContentProvider.objects.filter(
+                filter_content=True
+            ).values_list("provider_identifier")
+        )
+
+    async def aget_object(self):
+        def fn():
+            return self.get_object()
+
+        return await sync_to_async(fn)()
+
+    async def get_thumbnail(self, request, media_obj, image_url):
+        serializer = self.get_serializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+
+        return await image_proxy.get(
+            image_url,
+            media_obj.identifier,
+            accept_header=request.headers.get("Accept", "image/*"),
+            **serializer.validated_data,
+        )
+
+    @abc.abstractmethod
+    async def thumbnail(self, request):
+        raise NotImplementedError(
+            "AsyncMediaView subclasses must implement `thumbnail`"
+        )
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
@@ -173,17 +233,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
         serializer.save()
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-    def thumbnail(self, request, media_obj, image_url):
-        serializer = self.get_serializer(data=request.query_params)
-        serializer.is_valid(raise_exception=True)
-
-        return image_proxy.get(
-            image_url,
-            media_obj.identifier,
-            accept_header=request.headers.get("Accept", "image/*"),
-            **serializer.validated_data,
-        )
 
     # Helper functions
 

@@ -10,9 +10,9 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 from rest_framework.routers import SimpleRouter
 
-from api.views.audio_views import AudioViewSet
+from api.views.audio_views import AsyncAudioView, AudioViewSet
 from api.views.health_views import HealthCheck
-from api.views.image_views import ImageViewSet
+from api.views.image_views import AsyncImageView, ImageViewSet
 from conf.urls.auth_tokens import urlpatterns as auth_tokens_urlpatterns
 from conf.urls.deprecations import urlpatterns as deprecations_urlpatterns
 from conf.urls.openapi import urlpatterns as openapi_urlpatterns
@@ -27,6 +27,8 @@ versioned_paths = [
 router = SimpleRouter()
 router.register("audio", AudioViewSet, basename="audio")
 router.register("images", ImageViewSet, basename="image")
+router.register("audio", AsyncAudioView, basename="audio")
+router.register("images", AsyncImageView, basename="image")
 versioned_paths += router.urls
 
 urlpatterns = [

@@ -85,7 +85,7 @@ LOGGING = {
             "handlers": ["console", "console_prod", "mail_admins"],
             # Keep this at info to avoid django internal debug logs;
             # we just want our own debug logs when log level is set to debug
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": False,
         },
         "django.server": {
