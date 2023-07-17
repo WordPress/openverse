@@ -82,8 +82,12 @@ transformation models hosted on their hub. This feature is called
   existing model, for example
   [Vision Transformer](https://huggingface.co/google/vit-base-patch16-224)
 - [Duplicate image detection #427](https://github.com/WordPress/openverse/issues/427) -
-  Deduplication is an extremely common preprocessing step. We should be able to
-  apply the deduplication from
+  Deduplication is an extremely common and important preprocessing step. It will
+  surely be implemented by community contributors and can be reapplied to
+  Openverse itself. It's possible we'll want a different deduplication strategy
+  that considers provenance and ownership (i.e, did the original author upload
+  or someone else), but at a minimum, we should be able to use community
+  solutions to _identify_ duplicates.
 
 ### Resiliency
 
