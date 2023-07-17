@@ -153,13 +153,22 @@ this include:
 <!-- Who is working on the project and who are the external stakeholders, if any? Consider the lead, implementers, designers, and other stakeholders who have a say in how the project goes. -->
 
 - Openverse maintainers - Responsible for creating the initial raw data dump,
-  maintaining the Openverse account and Dataset on HuggingFace
+  maintaining the Openverse account and Dataset on HuggingFace. We also need to
+  make sure maintainers are protected from liability related the dataset, for
+  example: from distributing PDM works, works acquired by institutions without
+  consent or input from their cultures of origin, or copyrighted works
+  incorrectly marked as CC licensed.
+- CC Licensors with works in Openverse - It is critical that we respect their
+  intentions and properly communicate the usage conditions for different license
+  attributes (NC, ND, SA, and so on) in our Dataset documentation. We also need
+  to spread awareness of the opt-in/out mechanism
+  [Spawning AI](https://spawning.ai/) which is integrated with HuggingFace.
 - HuggingFace - A key partner responsible for the initial dataset upload,
   providing advice, and potential marketing collaboration
 - Creative Commons - Stewards of the Commons and CC Licenses, advisors, and
   another partner in marketing promotion
-- Aaron Ghokaslan - A researcher working on supplementary datasets and providing
-  technical advice
+- Aaron Gokaslan & MosaicML - A researcher working on supplementary datasets and
+  providing technical advice
 
 ## Infrastructure
 
@@ -204,9 +213,12 @@ and potentially Openverse.org should all be update to reflect these changes.
 
 - Initial Data Dump Creation - A plan describing how to produce and provide
   access to the raw data dumps which will be used to create the Dataset(s).
-  - This will be the first, largest, and most important plan
+  Additionally, this plan should address the marketing and documentation of the
+  initial data dump. Essentially, all facets of the project relating to the
+  initial release.
+  - This is the first, largest, and most important plan.
 - Dataset Maintenance - A plan describing how we will regularly release updates
-  to the Dataset(s)
+  to the Dataset(s).
 
 We will also want a plan for how we intend to _use_ the HuggingFace platform to
 complete our other projects for the year, but that might fall outside the scope
