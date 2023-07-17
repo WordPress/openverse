@@ -122,10 +122,12 @@ in that plan we will:
 - Determine if we host a single dataset for all media types, or separate
   datasets for different media types.
 - Develop a plan for updating the datasets regularly
-- Refine how we will provide access to our raw dataset for upload to
-  HuggingFace:
-  - Delivery mechanism (a requester pays S3 bucket?)
-  - File format (parquet files? TSVs? a Postgres dump?)
+- Refine how we will provide access to our initial, raw dataset for upload to
+  HuggingFace. This refers to the initial, raw dump from Openverse, not the
+  actual dataset which will be provided to users. These details are somewhat
+  trivial as the data can be parsed and transformed prior to distribution.
+  - Delivery mechanism, likely a requester pays S3 bucket
+  - File format, likely parquet files
 
 We will also need to coordinate the launch of these efforts and associated
 outreach. See more about that in the [marketing section](#marketing).
