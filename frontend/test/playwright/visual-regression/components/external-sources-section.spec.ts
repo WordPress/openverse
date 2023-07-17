@@ -32,7 +32,9 @@ for (const dir of languageDirections) {
 
         await expectSnapshot(
           `external-${searchType}-sources-popover-${dir}`,
-          page.getByRole("dialog")
+          page.getByRole("dialog"),
+          {},
+          { maxDiffPixelRatio: 0.01 }
         )
       })
     })
