@@ -743,4 +743,11 @@
   report: {
     imageDetails: "See image details",
   },
+  sensitiveContent: {
+    title: {
+      image: "This image may contain sensitive content.",
+      audio: "This audio track may contain sensitive content.",
+    },
+    creator: "Creator",
+  },
 }
