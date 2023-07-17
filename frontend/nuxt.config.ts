@@ -153,7 +153,6 @@ const config: NuxtConfig = {
     "@nuxt/typescript-build",
     "@nuxtjs/composition-api/module",
     "@nuxtjs/svg-sprite",
-    "@nuxtjs/eslint-module",
     "@pinia/nuxt",
   ],
   modules: [

@@ -81,7 +81,6 @@ importers:
       '@nuxt/typescript-build': ^3.0.1
       '@nuxt/vue-app': ^2.17.0
       '@nuxtjs/composition-api': ^0.33.1
-      '@nuxtjs/eslint-module': ^3.1.0
       '@nuxtjs/i18n': ^7.0.3
       '@nuxtjs/proxy': ^2.1.0
       '@nuxtjs/redirect-module': ^0.3.1
@@ -206,7 +205,6 @@ importers:
       '@babel/preset-typescript': 7.22.5_@babel+core@7.22.5
       '@itsjonq/remake': 2.0.0
       '@nuxt/typescript-build': 3.0.1_4iooitihkbuzmfdnjfckvzb5vi
-      '@nuxtjs/eslint-module': 3.1.0_webpack@4.46.0
       '@nuxtjs/storybook': 4.3.2_gkvmblwwmcyxnycob2xhl3oupi
       '@pinia/testing': 0.0.15_pinia@2.0.33+vue@2.7.14
       '@playwright/test': 1.30.0
@@ -3584,21 +3582,6 @@ packages:
       vue: 2.7.14
     dev: false
 
-  /@nuxtjs/eslint-module/3.1.0_webpack@4.46.0:
-    resolution: {integrity: sha512-9bK8AOJBflWmbQeL77SHIsgyGzhiW2b1BdwOtZ53Yyfa7Km3XMMVd8CtLA7z4+03eS+4TVQMxw62yRpJH5icZA==}
-    peerDependencies:
-      eslint: '>=7'
-    peerDependenciesMeta:
-      eslint:
-        optional: true
-    dependencies:
-      consola: 2.15.3
-      defu: 6.1.2
-      eslint-webpack-plugin: 2.6.0_webpack@4.46.0
-    transitivePeerDependencies:
-      - webpack
-    dev: true
-
   /@nuxtjs/i18n/7.2.0_vue@2.7.14:
     resolution: {integrity: sha512-fO/QRMxZ0t6LpYJ7ti6mHc0lsog4SMr7Xll3d45zdVSI7+5eBE1YcoG8yXv1sndGQZoq8k0iD1dXuAJA6UL5ww==}
     dependencies:
@@ -5772,17 +5755,6 @@ packages:
   /@types/cookie/0.3.3:
     resolution: {integrity: sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow==}
     dev: false
-
-  /@types/eslint/7.29.0:
-    resolution: {integrity: sha512-VNcvioYDH8/FxaeTKkM4/TiTwt6pBV9E3OfGmvaw8tPl0rrHCJ4Ll15HRT+pMiFAf/MLQvAzC+6RzUMEL9Ceng==}
-    dependencies:
-      '@types/estree': 0.0.50
-      '@types/json-schema': 7.0.12
-    dev: true
-
-  /@types/estree/0.0.50:
-    resolution: {integrity: sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw==}
-    dev: true
 
   /@types/etag/1.8.1:
     resolution: {integrity: sha512-bsKkeSqN7HYyYntFRAmzcwx/dKW4Wa+KVMTInANlI72PWLQmOpZu96j0OqHZGArW4VQwCmJPteQlXaUDeOB0WQ==}
@@ -10583,25 +10555,6 @@ packages:
     resolution: {integrity: sha512-pZnmmLwYzf+kWaM/Qgrvpen51upAktaaiI01nsJD/Yr3lMOdNtq0cxkrrg16w64VtisN6okbs7Q8AfGqj4c9fA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /eslint-webpack-plugin/2.6.0_webpack@4.46.0:
-    resolution: {integrity: sha512-V+LPY/T3kur5QO3u+1s34VDTcRxjXWPUGM4hlmTb5DwVD0OQz631yGTxJZf4SpAqAjdbBVe978S8BJeHpAdOhQ==}
-    engines: {node: '>= 10.13.0'}
-    peerDependencies:
-      eslint: ^7.0.0 || ^8.0.0
-      webpack: ^4.0.0 || ^5.0.0
-    peerDependenciesMeta:
-      eslint:
-        optional: true
-    dependencies:
-      '@types/eslint': 7.29.0
-      arrify: 2.0.1
-      jest-worker: 27.4.5
-      micromatch: 4.0.5
-      normalize-path: 3.0.0
-      schema-utils: 3.1.1
-      webpack: 4.46.0
-    dev: true
-
   /eslint/8.41.0:
     resolution: {integrity: sha512-WQDQpzGBOP5IrXPo4Hc0814r4/v2rrIsB0rhT7jtunIalgg6gYXWhRMOejVO8yH21T/FGaxjmFjBMNqcIlmH1Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -13199,15 +13152,6 @@ packages:
       '@types/node': 17.0.32
       merge-stream: 2.0.0
       supports-color: 7.2.0
-
-  /jest-worker/27.4.5:
-    resolution: {integrity: sha512-f2s8kEdy15cv9r7q4KkzGXvlY0JTcmCbMHZBfSQDwW77REr45IDWwd0lksDFeVHH2jJ5pqb90T77XscrjeGzzg==}
-    engines: {node: '>= 10.13.0'}
-    dependencies:
-      '@types/node': 17.0.32
-      merge-stream: 2.0.0
-      supports-color: 8.1.1
-    dev: true
 
   /jest/26.6.3:
     resolution: {integrity: sha512-lGS5PXGAzR4RF7V5+XObhqz2KZIDUA1yD0DG6pBVmy10eh0ZIXQImRuzocsI/N2XZ1GrLFwTS27In2i2jlpq1Q==}
@@ -18490,13 +18434,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       has-flag: 4.0.0
-
-  /supports-color/8.1.1:
-    resolution: {integrity: sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==}
-    engines: {node: '>=10'}
-    dependencies:
-      has-flag: 4.0.0
-    dev: true
 
   /supports-hyperlinks/2.2.0:
     resolution: {integrity: sha512-6sXEzV5+I5j8Bmq9/vUphGRM/RJNT9SCURJLjwfOg51heRtguGWDzcaBlgAzKhQa0EVNpPEKzQuBwZ8S8WaCeQ==}

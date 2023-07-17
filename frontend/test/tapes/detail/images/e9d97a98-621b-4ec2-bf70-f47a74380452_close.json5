@@ -43,6 +43,9 @@
             'referrer-policy': [
                 'same-origin',
             ],
+            'access-control-allow-origin': [
+              '*',
+            ],
             'cross-origin-opener-policy': [
                 'same-origin',
             ],
