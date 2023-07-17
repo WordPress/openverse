@@ -1,35 +1,34 @@
 {
     meta: {
-        createdAt: '2023-07-10T06:54:34.258Z',
+        createdAt: '2023-07-17T15:35:18.912Z',
         host: 'https://api.openverse.engineering',
         resHumanReadable: true,
-        resUncompressed: true,
     },
     req: {
         headers: {
-            connection: 'keep-alive',
+            connection: 'close',
         },
-        url: '/v1/images/?q=SearchPage404error',
+        url: '/v1/images/?q=querywithnoresults',
         method: 'GET',
         body: '',
     },
     res: {
-        status: 404,
+        status: 200,
         headers: {
             date: [
-                'Mon, 10 Jul 2023 06:54:34 GMT',
+                'Mon, 17 Jul 2023 15:35:19 GMT',
             ],
             'content-type': [
                 'application/json',
             ],
-            'transfer-encoding': [
-                'chunked',
+            'content-length': [
+                '70',
             ],
             connection: [
-                'keep-alive',
+                'close',
             ],
             vary: [
-                'Accept, Authorization, origin, Accept-Encoding',
+                'Accept, Authorization, origin',
             ],
             allow: [
                 'GET, HEAD, OPTIONS',
@@ -38,7 +37,7 @@
                 '5/hour',
             ],
             'x-ratelimit-available-anon_burst': [
-                '3',
+                '4',
             ],
             'x-ratelimit-limit-anon_sustained': [
                 '100/day',
@@ -50,7 +49,7 @@
                 '150/minute',
             ],
             'x-ratelimit-available-anon_thumbnail': [
-                '148',
+                '149',
             ],
             'x-frame-options': [
                 'DENY',
@@ -64,9 +63,6 @@
             'cross-origin-opener-policy': [
                 'same-origin',
             ],
-            'access-control-allow-origin': [
-                '*',
-            ],
             'cache-control': [
                 'max-age=14400',
             ],
@@ -74,7 +70,10 @@
                 'MISS',
             ],
             'last-modified': [
-                'Mon, 10 Jul 2023 06:54:34 GMT',
+                'Mon, 17 Jul 2023 15:35:19 GMT',
+            ],
+            'accept-ranges': [
+                'bytes',
             ],
             'strict-transport-security': [
                 'max-age=15552000; includeSubDomains; preload',
@@ -83,17 +82,18 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '7e46e56a1c840544-OTP',
-            ],
-            'content-encoding': [
-                'br',
+                '7e838dd91ee326f6-OTP',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400',
             ],
         },
         body: {
-            detail: 'Not found.',
+            result_count: 0,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [],
         },
     },
 }

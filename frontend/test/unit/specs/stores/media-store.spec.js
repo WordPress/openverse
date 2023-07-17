@@ -1,5 +1,3 @@
-import { AxiosError } from "axios"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { deepClone } from "~/utils/clone"
@@ -192,11 +190,20 @@ describe("Media Store", () => {
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       searchStore.setSearchType(ALL_MEDIA)
-      mediaStore._updateFetchState(AUDIO, "end", "Error")
-      mediaStore._updateFetchState(IMAGE, "end", "Error")
+      mediaStore._updateFetchState(AUDIO, "end", {
+        message: "Error",
+        statusCode: 500,
+      })
+      mediaStore._updateFetchState(IMAGE, "end", {
+        message: "Error",
+        statusCode: 500,
+      })
 
       expect(mediaStore.fetchState).toEqual({
-        fetchingError: '{"image":"Error","audio":"Error"}',
+        fetchingError: {
+          message: "All media fetching error. Failed to fetch image",
+          statusCode: 500,
+        },
         hasStarted: true,
         isFetching: false,
         isFinished: true,
@@ -280,14 +287,6 @@ describe("Media Store", () => {
 
       expect(mediaStore.results.image.count).toBe(0)
       expect(mediaStore.results.image.page).toBe(1)
-    })
-
-    it("mediaNotFound throws an error", () => {
-      const mediaStore = useMediaStore()
-
-      expect(() => mediaStore.mediaNotFound(AUDIO)).toThrow(
-        "Media of type audio not found"
-      )
     })
 
     it.each(supportedMediaTypes)(
@@ -376,91 +375,6 @@ describe("Media Store", () => {
       supportedMediaTypes.forEach((mediaType) => {
         expect(mediaStore.results[mediaType]).toEqual(initialResults)
       })
-    })
-
-    it("handleMediaError handles 500 error", () => {
-      const mediaType = AUDIO
-      const error = new AxiosError(
-        "500 server error",
-        "ERR_BAD_RESPONSE",
-        undefined,
-        { path: "/foo" },
-        { status: 500 }
-      )
-      const mediaStore = useMediaStore()
-      mediaStore.handleMediaError({ mediaType, error })
-      expect(mediaStore.$nuxt.$sentry.captureEvent).toHaveBeenCalledWith({
-        message:
-          "Error fetching audio from API. Request failed with status code: 500",
-        extra: { mediaType, error },
-      })
-    })
-
-    it("handleMediaError handles a 403 error", () => {
-      const mediaType = AUDIO
-      const error = new AxiosError(
-        "403 error",
-        "ERR_BAD_REQUEST",
-        undefined,
-        { path: "/foo" },
-        { status: 403 }
-      )
-      const mediaStore = useMediaStore()
-      mediaStore.handleMediaError({ mediaType, error })
-      expect(mediaStore.$nuxt.$sentry.captureEvent).toHaveBeenCalledWith({
-        message:
-          "Error fetching audio from API. Request failed with status code: 403",
-        extra: { mediaType, error },
-      })
-      expect(mediaStore.mediaFetchState.audio.fetchingError).toEqual(
-        "Error fetching audio from API. Request failed with status code: 403"
-      )
-      expect(mediaStore.mediaFetchState.audio.isFetching).toEqual(false)
-    })
-
-    it("handleMediaError handles an error when server did not respond", async () => {
-      const mediaStore = useMediaStore()
-      const mediaType = AUDIO
-      const noResponseAxiosError = new AxiosError(
-        "Unknown error",
-        "ETIMEDOUT",
-        undefined,
-        {
-          path: "/foo",
-        }
-      )
-      await mediaStore.handleMediaError({
-        mediaType,
-        error: noResponseAxiosError,
-      })
-
-      const expectedErrorMessage =
-        "Error fetching audio from API. No response received from the server"
-      expect(mediaStore.mediaFetchState.audio.fetchingError).toEqual(
-        expectedErrorMessage
-      )
-      expect(mediaStore.mediaFetchState.audio.isFetching).toEqual(false)
-      expect(mediaStore.$nuxt.$sentry.captureEvent).toHaveBeenCalledWith({
-        message: expectedErrorMessage,
-        extra: { mediaType, error: noResponseAxiosError },
-      })
-    })
-
-    it("handleMediaError re-throws a non-Axios error", async () => {
-      const mediaStore = useMediaStore()
-      const nonAxiosError = new Error("non-Axios error")
-
-      const expectedErrorMessage =
-        "Error fetching audio from API. Unknown error"
-      await expect(
-        mediaStore.handleMediaError({
-          mediaType: AUDIO,
-          error: nonAxiosError,
-        })
-      ).rejects.toThrow(expectedErrorMessage)
-      expect(mediaStore.mediaFetchState.audio.fetchingError).toEqual(
-        expectedErrorMessage
-      )
     })
 
     describe("setMediaProperties", () => {

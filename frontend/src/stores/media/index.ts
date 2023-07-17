@@ -25,10 +25,12 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
+import type { NuxtError } from "@nuxt/types"
+
 export type MediaStoreResult = {
   count: number
   pageCount: number
-  page: number | undefined
+  page: number
   items: Record<string, Media>
 }
 
@@ -38,15 +40,15 @@ export interface MediaState {
     image: MediaStoreResult
   }
   mediaFetchState: {
-    audio: FetchState
-    image: FetchState
+    audio: FetchState<NuxtError>
+    image: FetchState<NuxtError>
   }
   currentPage: number
 }
 
 export const initialResults = deepFreeze({
   count: 0,
-  page: undefined,
+  page: 0,
   pageCount: 0,
   items: {},
 }) as MediaStoreResult
@@ -139,34 +141,42 @@ export const useMediaStore = defineStore("media", {
      * Search fetching state for selected search type. For 'All content', aggregates
      * the values for supported media types.
      */
-    fetchState(): FetchState {
+    fetchState(): FetchState<NuxtError> {
       if (this._searchType === ALL_MEDIA) {
         /**
          * For all_media, we return 'All media fetching error' if all types have some kind of error.
          */
-        const atLeastOne = (property: keyof FetchState) =>
+        const atLeastOne = (property: keyof FetchState<NuxtError>) =>
           supportedMediaTypes.some(
             (type) => this.mediaFetchState[type][property]
           )
 
-        const allMediaError = () => {
-          const errors = {} as Record<SupportedMediaType, string>
-          for (const mt of supportedMediaTypes) {
-            const error = this.mediaFetchState[mt].fetchingError
-            if (error) {
-              errors[mt] = error
+        const allMediaError = (): null | NuxtError => {
+          const statuses = supportedMediaTypes.map(
+            (mt) => this.mediaFetchState[mt].fetchingError?.statusCode
+          )
+          if (statuses.some((status) => status === 429)) {
+            return { statusCode: 429, message: "All media fetching error" }
+          } else if (statuses.every((status) => status === 404)) {
+            return { statusCode: 404, message: "All media fetching error" }
+          }
+          for (const mediaType of supportedMediaTypes) {
+            const error = this.mediaFetchState[mediaType].fetchingError
+            if (error?.statusCode && ![429, 404].includes(error.statusCode)) {
+              // Temporarily return the first error, until we have a better way to handle this.
+              return {
+                statusCode:
+                  this.mediaFetchState[mediaType].fetchingError?.statusCode,
+                message: `All media fetching error. Failed to fetch ${mediaType}`,
+              }
             }
           }
-          return JSON.stringify(errors)
+          return null
         }
 
         return {
           isFetching: atLeastOne("isFetching"),
-          fetchingError: supportedMediaTypes.every(
-            (type) => this.mediaFetchState[type].fetchingError !== null
-          )
-            ? allMediaError()
-            : null,
+          fetchingError: allMediaError(),
           hasStarted: atLeastOne("hasStarted"),
           isFinished: supportedMediaTypes.every(
             (type) => this.mediaFetchState[type].isFinished
@@ -263,7 +273,7 @@ export const useMediaStore = defineStore("media", {
      * @param mediaType - The media type for which the request was made.
      * @param error - The string representation of the error, if any.
      */
-    _endFetching(mediaType: SupportedMediaType, error?: string) {
+    _endFetching(mediaType: SupportedMediaType, error?: NuxtError) {
       this.mediaFetchState[mediaType].fetchingError = error || null
       this.mediaFetchState[mediaType].hasStarted = true
       this.mediaFetchState[mediaType].isFetching = false
@@ -294,7 +304,7 @@ export const useMediaStore = defineStore("media", {
     _updateFetchState(
       mediaType: SupportedMediaType,
       action: "reset" | "start" | "end" | "finish",
-      option?: string
+      error?: NuxtError
     ) {
       switch (action) {
         case "reset":
@@ -304,7 +314,7 @@ export const useMediaStore = defineStore("media", {
           this._startFetching(mediaType)
           break
         case "end":
-          this._endFetching(mediaType, option)
+          this._endFetching(mediaType, error)
           break
         case "finish":
           this._finishFetchingForQuery(mediaType)
@@ -316,7 +326,7 @@ export const useMediaStore = defineStore("media", {
       mediaType: T
       media: Record<string, DetailFromMediaType<T>>
       mediaCount: number
-      page: number | undefined
+      page: number
       pageCount: number
       shouldPersistMedia: boolean | undefined
     }) {
@@ -340,15 +350,11 @@ export const useMediaStore = defineStore("media", {
       const mediaPage = page || 1
       this.results[mediaType].items = mediaToSet
       this.results[mediaType].count = mediaCount || 0
-      this.results[mediaType].page = mediaCount === 0 ? undefined : mediaPage
+      this.results[mediaType].page = mediaCount === 0 ? 0 : mediaPage
       this.results[mediaType].pageCount = pageCount
       if (mediaPage >= pageCount) {
         this._updateFetchState(mediaType, "finish")
       }
-    },
-
-    mediaNotFound(mediaType: SupportedMediaType) {
-      throw new Error(`Media of type ${mediaType} not found`)
     },
 
     /**
@@ -357,7 +363,7 @@ export const useMediaStore = defineStore("media", {
     resetMedia(mediaType: SupportedMediaType) {
       this.results[mediaType].items = {}
       this.results[mediaType].count = 0
-      this.results[mediaType].page = undefined
+      this.results[mediaType].page = 0
       this.results[mediaType].pageCount = 0
     },
 
@@ -369,9 +375,9 @@ export const useMediaStore = defineStore("media", {
      */
     async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaType = this._searchType
-      if (!payload.shouldPersistMedia) {
-        this._resetFetchState()
-        this.currentPage = 0
+      const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
+      if (!shouldPersistMedia) {
+        this.clearMedia()
       }
       const mediaToFetch = (
         (mediaType !== ALL_MEDIA
@@ -383,19 +389,21 @@ export const useMediaStore = defineStore("media", {
           !this.mediaFetchState[type].isFetching &&
           !this.mediaFetchState[type].isFinished
       )
-      await Promise.all(
-        mediaToFetch.map((type) =>
-          this.fetchSingleMediaType({
-            mediaType: type,
-            shouldPersistMedia: Boolean(payload.shouldPersistMedia),
-          })
+
+      const resultCounts = await Promise.all(
+        mediaToFetch.map((mediaType) =>
+          this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-      if (mediaType === ALL_MEDIA) {
-        this.currentPage += 1
-      } else {
-        this.currentPage = this.results[mediaType].page ?? 0
-      }
+      const resultCount = resultCounts.includes(null)
+        ? null
+        : (resultCounts as number[]).reduce((a, b) => a + b, 0)
+
+      this.currentPage =
+        mediaType === ALL_MEDIA
+          ? this.currentPage + 1
+          : this.results[mediaType].page
+      return resultCount
     },
 
     clearMedia() {
@@ -403,6 +411,7 @@ export const useMediaStore = defineStore("media", {
         this.resetMedia(mediaType)
         this._resetFetchState()
       })
+      this.currentPage = 0
     },
 
     /**
@@ -419,14 +428,14 @@ export const useMediaStore = defineStore("media", {
       const queryParams = prepareSearchQueryParams({
         ...useSearchStore().searchQueryParams,
       })
-      let page
+      let page = 1
       if (shouldPersistMedia) {
         /**
          * If `shouldPersistMedia` is true, then we increment the page that was set by a previous
          * fetch. Normally, if `shouldPersistMedia` is true, `page` should have been set to 1 by the
-         * previous fetch. But if it wasn't and is still undefined, we set it to 0, and increment it.
+         * previous fetch.
          */
-        page = (this.results[mediaType].page ?? 0) + 1
+        page = this.results[mediaType].page + 1
         queryParams.page = `${page}`
       }
       this._updateFetchState(mediaType, "start")
@@ -435,11 +444,19 @@ export const useMediaStore = defineStore("media", {
         const service = initServices[mediaType](accessToken)
         const data = await service.search(queryParams)
         const mediaCount = data.result_count
-        let errorMessage
+        let errorData: NuxtError | undefined
+        /**
+         * When there are no results for a query, the API returns a 200 response.
+         * In such cases, we show the "No results" client error page.
+         */
         if (!mediaCount) {
-          page = undefined
+          page = 0
+          errorData = {
+            statusCode: 404,
+            message: `No ${mediaType} results found`,
+          }
         }
-        this._updateFetchState(mediaType, "end", errorMessage)
+        this._updateFetchState(mediaType, "end", errorData)
 
         this.setMedia({
           mediaType,
@@ -449,50 +466,18 @@ export const useMediaStore = defineStore("media", {
           shouldPersistMedia,
           page,
         })
-      } catch (error) {
-        await this.handleMediaError({ mediaType, error })
-      }
-    },
+        return mediaCount
+      } catch (error: unknown) {
+        const nuxtErrorData = getNuxtErrorData(error, mediaType)
+        this._updateFetchState(mediaType, "end", nuxtErrorData)
 
-    // Handles errors for media fetches and sets the fetch state accordingly
-    // Reported errors are logged to Sentry
-    async handleMediaError({
-      mediaType,
-      error,
-    }: {
-      mediaType: SupportedMediaType
-      error: unknown
-    }) {
-      let errorMessage
-      if (axios.isAxiosError(error)) {
-        // If the error is an axios error:
-        // If the error has a response property, and recieved a response that is not in the 2xx range,
-        // then the error is logged to Sentry
-        if (error.response) {
-          errorMessage = `Error fetching ${mediaType} from API. Request failed with status code: ${error.response.status}`
-        } else if (error.request) {
-          // If the error has a request property, but no response, then we capture the event in Sentry
-          errorMessage = `Error fetching ${mediaType} from API. No response received from the server`
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          errorMessage = `Error fetching ${mediaType} from API. Unknown Axios error`
-        }
-      } else {
-        // If the error is not an axios error, then we capture the event in Sentry
-        errorMessage = `Error fetching ${mediaType} from API. Unknown error`
-      }
-
-      this.$nuxt.$sentry.captureEvent({
-        message: errorMessage,
-        extra: {
-          mediaType,
-          error,
-        },
-      })
-
-      this._updateFetchState(mediaType, "end", errorMessage)
-      if (!axios.isAxiosError(error)) {
-        throw new Error(errorMessage)
+        this.$nuxt.$sentry.captureException(error, {
+          extra: {
+            nuxtErrorData,
+            mediaType,
+          },
+        })
+        return null
       }
     },
 
@@ -512,3 +497,31 @@ export const useMediaStore = defineStore("media", {
     },
   },
 })
+
+const getNuxtErrorData = (
+  error: unknown,
+  mediaType: SupportedMediaType
+): NuxtError => {
+  const errorData = {
+    message: `Error fetching ${mediaType} results. `,
+  } as NuxtError
+
+  if (axios.isAxiosError(error)) {
+    // If the error is an axios error:
+    // Received a response not in the 2xx range.
+    if (error.response) {
+      errorData.message += `Request failed with status code: ${error.response.status}`
+      errorData.statusCode = error.response.status
+    } else if (error.request) {
+      // The request was sent, but the response was never received.
+      errorData.message += `No response received from the server`
+    } else {
+      // Something happened during the request setup.
+      errorData.message += `Unknown Axios error`
+    }
+  } else {
+    // Unknown error, not from axios.
+    errorData.message += `Unknown error`
+  }
+  return errorData
+}

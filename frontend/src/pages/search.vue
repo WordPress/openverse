@@ -35,7 +35,12 @@
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, watch } from "vue"
 import { storeToRefs } from "pinia"
-import { defineComponent, useMeta, useRoute } from "@nuxtjs/composition-api"
+import {
+  defineComponent,
+  useContext,
+  useMeta,
+  useRoute,
+} from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
@@ -54,6 +59,7 @@ export default defineComponent({
   },
   layout: "search-layout",
   middleware: searchMiddleware,
+  fetchOnServer: false,
   setup() {
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
@@ -89,10 +95,26 @@ export default defineComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
+    const { error: nuxtError } = useContext()
+
     const fetchMedia = async (
       payload: { shouldPersistMedia?: boolean } = {}
     ) => {
-      return mediaStore.fetchMedia(payload)
+      /**
+       * If the fetch has already started in the middleware and there is an error,
+       * don't re-fetch.
+       */
+      if (
+        mediaStore.fetchState.fetchingError?.statusCode &&
+        mediaStore.fetchState.hasStarted
+      )
+        return
+      const results = await mediaStore.fetchMedia(payload)
+      if (!results) {
+        const errorStatus = mediaStore.fetchState.fetchingError?.statusCode
+        if (errorStatus !== 404)
+          return nuxtError(mediaStore.fetchState.fetchingError)
+      }
     }
 
     watch(route, async (newRoute, oldRoute) => {
@@ -129,18 +151,6 @@ export default defineComponent({
 
       fetchMedia,
     }
-  },
-  /**
-   * asyncData blocks the rendering of the page, so we only
-   * update the state from the route here, and do not fetch media.
-   */
-  async asyncData({ route, $pinia }) {
-    const searchStore = useSearchStore($pinia)
-    await searchStore.initProviderFilters()
-    searchStore.setSearchStateFromUrl({
-      path: route.path,
-      urlQuery: route.query,
-    })
   },
   /**
    * Fetch media, if necessary, in a non-blocking way.
