@@ -101,4 +101,35 @@ describe("AudioTrack", () => {
     expect(getByText(/Reproduction not allowed./i)).toBeVisible()
     // It's not possible to get the vm to test that Sentry has been called
   })
+
+  it("has blurred title in box layout when audio is sensitive", async () => {
+    options.propsData.audio.isSensitive = true
+    options.propsData.layout = "box"
+    const { getByText } = render(VAudioTrack, options, configureVue)
+    const h2 = getByText("This audio track may contain sensitive content.")
+    expect(h2).toHaveClass("blur-text")
+  })
+
+  it("has blurred info in row layout when audio is sensitive", async () => {
+    options.propsData.audio.isSensitive = true
+    options.propsData.layout = "row"
+    const { getByText } = render(VAudioTrack, options, configureVue)
+
+    const h2 = getByText("This audio track may contain sensitive content.")
+    expect(h2).toHaveClass("blur-text")
+
+    const creator = getByText("by Creator")
+    expect(creator).toHaveClass("blur-text")
+  })
+
+  it("is does not contain title or creator anywhere when the audio is sensitive", async () => {
+    options.propsData.audio.isSensitive = true
+    options.propsData.layout = "row"
+    const screen = render(VAudioTrack, options, configureVue)
+    let { title, creator } = options.propsData.audio
+    let match = RegExp(`(${title}|${creator})`)
+    expect(screen.queryAllByText(match)).toEqual([])
+    expect(screen.queryAllByTitle(match)).toEqual([])
+    expect(screen.queryAllByAltText(match)).toEqual([])
+  })
 })

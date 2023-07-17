@@ -42,6 +42,10 @@ export interface UiState {
    */
   isMobileUa: boolean
   dismissedBanners: BannerId[]
+  /**
+   * whether to blur sensitive content in search and single result pages
+   */
+  shouldBlurSensitive: boolean
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -55,6 +59,7 @@ export const useUiStore = defineStore("ui", {
     breakpoint: "sm",
     isMobileUa: true,
     dismissedBanners: [],
+    shouldBlurSensitive: true,
   }),
 
   getters: {
