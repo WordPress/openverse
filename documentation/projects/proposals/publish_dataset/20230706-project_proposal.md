@@ -12,9 +12,9 @@
 ## Project summary
 
 This project aims to publish and regularly update a dataset or _datasets_ of
-Openverse' media metadata. This project will provide access to the data
-currently served by our API, but which is difficult to access in full, requires
-significant time, money, and compute resources.
+Openverse's media metadata. This project will provide access to the data
+currently served by our API, but which is difficult to access in full and requires
+significant time, money, and compute resources to maintain.
 
 ## Motivation
 
@@ -39,7 +39,7 @@ for all users. It also requires significant maintainer effort to identify,
 mitigate, and block scraping traffic.
 
 By sharing this data as a full dataset on
-[HuggingFace](https://huggingface.co/datasets), we can remove these barriers
+[HuggingFace](https://huggingface.co/datasets), we can remove these barriers and
 allow folks to access the data provided by Openverse.org and the Openverse API
 without restriction.
 
@@ -52,7 +52,7 @@ part of the
 [data preprocessing](https://huggingface.co/docs/transformers/preprocessing)
 stage of model training.
 
-HuggingFace in particular will enable community members to analyze the dataset
+Presence on HuggingFace in particular will enable community members to analyze the dataset
 and create supplemental datasets; to train models with the dataset; and to use
 the dataset with all of HuggingFace's tooling: the
 [Datasets](https://github.com/huggingface/datasets) library in particular.
