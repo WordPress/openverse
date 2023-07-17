@@ -213,7 +213,7 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
         # Await healthy results from the newly created elasticsearch index.
         index_readiness_check = ingestion_server.index_readiness_check(
             media_type=media_type,
-            index_suffix=destination_index_suffix,
+            index_suffix=f"{destination_index_suffix}-filtered",
         )
 
         do_point_alias = point_alias(destination_index_suffix=destination_index_suffix)

@@ -19,20 +19,21 @@
       >
         <VMediaReuse data-testid="audio-attribution" :media="audio" />
         <VAudioDetails data-testid="audio-info" :audio="audio" />
-        <VRelatedAudio
-          v-if="relatedMedia.length || relatedFetchState.isFetching"
-          :media="relatedMedia"
-          :fetch-state="relatedFetchState"
-          @interacted="sendAudioEvent($event, 'VRelatedAudio')"
-        />
+        <VRelatedAudio @interacted="sendAudioEvent($event, 'VRelatedAudio')" />
       </div>
     </template>
   </main>
 </template>
 
 <script lang="ts">
-import { computed } from "vue"
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { computed, ref } from "vue"
+import {
+  defineComponent,
+  useContext,
+  useFetch,
+  useMeta,
+  useRoute,
+} from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -40,7 +41,6 @@ import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
 import { singleResultMiddleware } from "~/middleware/single-result"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
@@ -62,24 +62,34 @@ export default defineComponent({
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
+  // Fetching on the server is disabled because it is
+  // handled by the `singleResultMiddleware`.
+  fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
-    const relatedMediaStore = useRelatedMediaStore()
     const searchStore = useSearchStore()
 
-    const { sendCustomEvent } = useAnalytics()
+    const route = useRoute()
 
-    const audio = computed(() =>
-      singleResultStore.mediaType === AUDIO
-        ? (singleResultStore.mediaItem as AudioDetail)
-        : null
-    )
-    const relatedMedia = computed(
-      () => relatedMediaStore.media as AudioDetail[]
-    )
-    const relatedFetchState = computed(() => relatedMediaStore.fetchState)
+    const audio = ref<AudioDetail | null>(singleResultStore.audio)
+    const { error: nuxtError } = useContext()
+
+    useFetch(async () => {
+      const audioId = route.value.params.id
+      await singleResultStore.fetch(AUDIO, audioId)
+
+      const fetchedAudio = singleResultStore.audio
+
+      if (!fetchedAudio) {
+        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+      } else {
+        audio.value = fetchedAudio
+      }
+    })
+
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
+    const { sendCustomEvent } = useAnalytics()
     const sendAudioEvent = (
       data: Omit<AudioInteractionData, "component">,
       component: "AudioDetailPage" | "VRelatedAudio"
@@ -95,28 +105,10 @@ export default defineComponent({
     return {
       audio,
       backToSearchPath,
-      relatedMedia,
-      relatedFetchState,
 
       sendAudioEvent,
 
       skipToContentTargetId,
-    }
-  },
-  async asyncData({ route, error, app, $pinia }) {
-    const audioId = route.params.id
-    const singleResultStore = useSingleResultStore($pinia)
-
-    try {
-      await singleResultStore.fetch(AUDIO, audioId)
-    } catch (err) {
-      error({
-        statusCode: 404,
-        message: app.i18n.t("error.media-not-found", {
-          mediaType: AUDIO,
-          id: route.params.id,
-        }),
-      })
     }
   },
   head: {},
