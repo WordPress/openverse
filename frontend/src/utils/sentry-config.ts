@@ -23,6 +23,7 @@ export const sentryConfig: ModuleOptions = {
 
       // Ignore ResizeObserver loop-related errors
       /ResizeObserver loop limit exceeded/,
+      /ResizeObserver loop completed with undelivered notifications/,
 
       // Cloudflare
       /sendBeacon/,
