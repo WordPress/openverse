@@ -39,7 +39,7 @@ you need to run this.
    ```
 
 4. To bring up the frontend, we have another `just` recipe. We have `just`
-   recipes for almost everything. Also, build it with the second command.
+   recipes for almost everything.
 
    ```console
    $ just frontend/run dev
