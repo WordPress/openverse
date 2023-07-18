@@ -22,7 +22,7 @@
         v-if="isSidebarVisible"
         class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
       >
-        <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
+        <VSearchGridFilter class="px-10 pb-10 pt-8" />
       </aside>
 
       <div
@@ -118,10 +118,6 @@ export default defineComponent({
         isDesktopLayout.value
     )
 
-    const closeSidebar = () => {
-      uiStore.setFiltersState(false)
-    }
-
     const isHeaderScrolled = ref(false)
     const showScrollButton = ref(false)
 
@@ -154,8 +150,6 @@ export default defineComponent({
       isDesktopLayout,
       isSidebarVisible,
       breakpoint,
-
-      closeSidebar,
     }
   },
   head() {
