@@ -66,7 +66,11 @@ export default defineComponent({
   @apply aspect-square;
 }
 
-.masonry {
-  @apply columns-2 gap-x-4 md:columns-3 lg:columns-5;
+@screen md{
+  @apply columns-2 gap-x-4;
+
+  .masonry{  
+    md:columns-3 lg:columns-5;
+  }
 }
 </style>
