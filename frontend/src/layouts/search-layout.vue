@@ -14,8 +14,16 @@
     >
       <div class="header-el bg-white">
         <VBanners />
-        <VHeaderDesktop v-if="isDesktopLayout" class="h-20 bg-white" />
-        <VHeaderMobile v-else class="h-20 bg-white" />
+        <VHeaderDesktop
+          v-if="isDesktopLayout"
+          class="h-20 border-b bg-white"
+          :class="headerBorder"
+        />
+        <VHeaderMobile
+          v-else
+          class="h-20 border-b bg-white"
+          :class="headerBorder"
+        />
       </div>
 
       <aside
@@ -67,7 +75,6 @@ import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
-import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -76,7 +83,6 @@ import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 export default defineComponent({
   name: "SearchLayout",
   components: {
-    VSafeBrowsing,
     VSkipToContentButton,
     VBanners,
     VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
@@ -151,6 +157,12 @@ export default defineComponent({
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
+    const headerBorder = computed(() =>
+      isHeaderScrolled.value || isSidebarVisible.value
+        ? "border-b-dark-charcoal-20"
+        : "border-b-tx"
+    )
+
     return {
       isSensitiveContentEnabled,
 
@@ -161,6 +173,8 @@ export default defineComponent({
       isDesktopLayout,
       isSidebarVisible,
       breakpoint,
+
+      headerBorder,
     }
   },
   head() {

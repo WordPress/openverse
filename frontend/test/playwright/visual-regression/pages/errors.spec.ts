@@ -4,44 +4,37 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
   preparePageForTests,
-  renderModes,
 } from "~~/test/playwright/utils/navigation"
+
+import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
 
 import { supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
+// Tapes for simulating server single result errors.
 const errorTapes = [
-  { errorStatus: 404, imageId: "da5cb478-c093-4d62-b721-cda18797e3fc" },
-  { errorStatus: 429, imageId: "da5cb478-c093-4d62-b721-cda18797e3fd" },
   { errorStatus: 500, imageId: "da5cb478-c093-4d62-b721-cda18797e3fe" },
 ]
-
-for (const { errorStatus, imageId } of errorTapes) {
-  breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
+const singleResultCSRErrorStatuses = [404, 429, 500]
+/**
+ * SINGLE RESULT PAGE ERRORS
+ */
+breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
+  for (const { errorStatus, imageId } of errorTapes) {
     test(`${errorStatus} error on single-result page on SSR`, async ({
       page,
     }) => {
       await preparePageForTests(page, breakpoint)
 
-      const path = `/image/${imageId}`
-
-      await page.goto(path)
+      await page.goto(`/image/${imageId}`)
       await expectSnapshot(`single-result-error`, page, { fullPage: true })
     })
-
-    test(`${errorStatus} on single-result page on CSR`, async ({ page }) => {
+  }
+  for (const status of singleResultCSRErrorStatuses) {
+    test(`${status} on single-result page on CSR`, async ({ page }) => {
       await page.route(new RegExp(`v1/images/`), (route) => {
-        // const requestUrl = route.request().url()
-
-        // if (requestUrl.includes("/thumb")) {
-        //   return route.continue()
-        // }
-        return route.fulfill({
-          status: errorStatus,
-          headers: { "Access-Control-Allow-Origin": "*" },
-          body: JSON.stringify({}),
-        })
+        return route.fulfill({ status })
       })
 
       await preparePageForTests(page, breakpoint)
@@ -60,30 +53,50 @@ for (const { errorStatus, imageId } of errorTapes) {
 
       await expectSnapshot("single-result-error-CSR", page, { fullPage: true })
     })
+  }
+})
+
+/**
+ * SEARCH PAGE ERRORS
+ *
+ * On SSR, we only test for 500. TODO: add any other errors like the timeout?
+ * We can't test 404 errors because when there are no results, the server returns
+ * a 200 response with an empty list as the `results`.
+ * The server uses a throttle-exempt key, so we can't get 429 errors.
+ */
+for (const searchType of supportedSearchTypes) {
+  breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
+    test(`500 error on ${searchType} search on SSR`, async ({ page }) => {
+      await preparePageForTests(page, breakpoint)
+      await goToSearchTerm(page, `SearchPage500error`, { searchType })
+      await setViewportToFullHeight(page)
+      await expectSnapshot(`search-result-${searchType}-500-error-SSR`, page, {
+        fullPage: true,
+      })
+    })
   })
 }
 
-for (const { errorStatus } of errorTapes) {
+const searchCSRErrorStatuses = [429, 500]
+
+for (const errorStatus of searchCSRErrorStatuses) {
   for (const searchType of supportedSearchTypes) {
-    for (const renderMode of renderModes) {
-      breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
-        test.beforeEach(async ({ page }) => {
-          await preparePageForTests(page, breakpoint)
+    breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
+      test(`${errorStatus} error on ${searchType} search on CSR`, async ({
+        page,
+      }) => {
+        await preparePageForTests(page, breakpoint)
+        await goToSearchTerm(page, `SearchPage${errorStatus}error`, {
+          mode: "CSR",
+          searchType,
         })
-        test(`${errorStatus} error on ${searchType} search on ${renderMode}`, async ({
+        await setViewportToFullHeight(page)
+        await expectSnapshot(
+          `search-result-${searchType}-${errorStatus}-error-CSR`,
           page,
-        }) => {
-          await goToSearchTerm(page, `SearchPage${errorStatus}error`, {
-            mode: renderMode,
-            searchType,
-          })
-          await expectSnapshot(
-            `search-result-${searchType}-${errorStatus}-error-${renderMode}`,
-            page,
-            { fullPage: true }
-          )
-        })
+          { fullPage: true }
+        )
       })
-    }
+    })
   }
 }

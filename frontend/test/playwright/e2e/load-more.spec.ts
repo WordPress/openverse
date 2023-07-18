@@ -130,35 +130,36 @@ test.describe("Load more button", () => {
         })
         await expect(page.locator(loadMoreButton)).toBeHidden()
       })
-
-      /**
-       * Checks that an analytics event is posted to /api/event and has the correct
-       * payload for the REACH_RESULT_END event.
-       */
-      test(`Sends a valid REACH_RESULT_END event when user reaches the load more page`, async ({
-        page,
-        context,
-      }) => {
-        const analyticsEvents = collectAnalyticsEvents(context)
-
-        await goToSearchTerm(page, "cat")
-        await page.locator(loadMoreButton).scrollIntoViewIfNeeded()
-        await expect(page.locator(loadMoreButton)).toBeVisible()
-
-        const reachResultEndEvent = analyticsEvents.find(
-          (event) => event.n === "REACH_RESULT_END"
-        )
-
-        expectEventPayloadToMatch(reachResultEndEvent, {
-          query: "cat",
-          searchType: "all",
-          resultPage: 1,
-        })
-      })
     })
   }
 
-  test.describe(`LOAD_MORE_RESULTS analytics event`, () => {
+  test.describe("Analytics events", () => {
+    /**
+     * Checks that an analytics event is posted to /api/event and has the correct
+     * payload for the REACH_RESULT_END event.
+     */
+    test(`Sends a valid REACH_RESULT_END event when user reaches the load more page`, async ({
+      page,
+      context,
+    }) => {
+      const analyticsEvents = collectAnalyticsEvents(context)
+
+      await page.goto("/search/?q=cat")
+
+      await page.locator(loadMoreButton).scrollIntoViewIfNeeded()
+      await expect(page.locator(loadMoreButton)).toBeVisible()
+
+      const reachResultEndEvent = analyticsEvents.find(
+        (event) => event.n === "REACH_RESULT_END"
+      )
+
+      expectEventPayloadToMatch(reachResultEndEvent, {
+        query: "cat",
+        searchType: "all",
+        resultPage: 1,
+      })
+    })
+
     test(`is sent when loading one page of results.`, async ({
       page,
       context,

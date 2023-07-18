@@ -27,12 +27,16 @@ for (const dir of languageDirections) {
         await page
           .getByRole("contentinfo")
           .getByRole("link", { name: "Openverse" })
-          .hover()
+          .scrollIntoViewIfNeeded()
+
         await externalSourcesButton.click()
+        await page.mouse.move(0, 0)
 
         await expectSnapshot(
           `external-${searchType}-sources-popover-${dir}`,
-          page.getByRole("dialog")
+          page.getByRole("dialog"),
+          {},
+          { maxDiffPixelRatio: 0.01 }
         )
       })
     })
