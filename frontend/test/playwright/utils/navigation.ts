@@ -279,7 +279,7 @@ export const preparePageForTests = async (
   page: Page,
   breakpoint: Breakpoint
 ) => {
-  await dismissBannersUsingCookies(page)
+  await dismissAllBannersUsingCookies(page)
   await closeFiltersUsingCookies(page)
   await setBreakpointCookie(page, breakpoint)
 }
@@ -299,7 +299,7 @@ export const goToSearchTerm = async (
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
 
-  await dismissBannersUsingCookies(page)
+  await dismissAllBannersUsingCookies(page)
   if (mode === "SSR") {
     const path = `${searchPath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
@@ -359,6 +359,12 @@ export const getLocatorHref = async (locator: Locator) => {
 }
 
 export const scrollToBottom = async (page: Page) => {
+  // On search page, scroll the main page and not the window.
+  const mainScrollHeight = await page.evaluate(
+    () => document.getElementById("main-page")?.scrollHeight ?? 0
+  )
+  await page.mouse.wheel(0, mainScrollHeight)
+
   await page.evaluate(() => {
     window.scrollTo(0, document.body.scrollHeight)
   })
@@ -366,6 +372,8 @@ export const scrollToBottom = async (page: Page) => {
 
 export const scrollToTop = async (page: Page) => {
   await page.evaluate(() => {
+    // On search page, scroll the main page and not the window.
+    document.getElementById("main-page")?.scrollTo(0, 0)
     window.scrollTo(0, 0)
   })
   await sleep(200)

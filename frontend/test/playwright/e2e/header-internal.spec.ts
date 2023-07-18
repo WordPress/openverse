@@ -3,6 +3,7 @@ import { test, expect, Page } from "@playwright/test"
 import {
   isDialogOpen,
   LanguageDirection,
+  preparePageForTests,
   scrollToBottom,
   setBreakpointCookie,
   t,
@@ -34,7 +35,7 @@ test.describe.configure({ mode: "parallel" })
 test.describe("Header internal", () => {
   breakpoints.describeXs(() => {
     test.beforeEach(async ({ page }) => {
-      await setBreakpointCookie(page, "xs")
+      await preparePageForTests(page, "xs")
     })
 
     test("can open and close the modal on xs breakpoint", async ({ page }) => {
