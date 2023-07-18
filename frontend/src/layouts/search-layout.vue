@@ -22,7 +22,11 @@
         v-if="isSidebarVisible"
         class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
       >
-        <VSearchGridFilter class="px-10 pb-10 pt-8" />
+        <VSearchGridFilter class="px-10 py-8" />
+        <VSafeBrowsing
+          v-if="isSensitiveContentEnabled"
+          class="border-t border-dark-charcoal-20 px-10 py-8"
+        />
       </aside>
 
       <div
@@ -63,6 +67,7 @@ import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
+import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -71,6 +76,7 @@ import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 export default defineComponent({
   name: "SearchLayout",
   components: {
+    VSafeBrowsing,
     VSkipToContentButton,
     VBanners,
     VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
@@ -92,6 +98,9 @@ export default defineComponent({
     onMounted(() => {
       featureStore.initFromSession()
     })
+    const isSensitiveContentEnabled = computed(() =>
+      featureStore.isOn("sensitive_content")
+    )
 
     const { updateBreakpoint } = useLayout()
 
@@ -143,6 +152,8 @@ export default defineComponent({
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
     return {
+      isSensitiveContentEnabled,
+
       mainPageRef,
       headerRef,
 
