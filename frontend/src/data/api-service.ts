@@ -3,7 +3,17 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { warn } from "~/utils/console"
 import { AUDIO, IMAGE } from "~/constants/media"
 
+import { userAgent } from "~/constants/user-agent"
+
 const DEFAULT_REQUEST_TIMEOUT = 30000
+
+/**
+ * Openverse Axios request config with adjusted types for our use-case.
+ */
+export type OpenverseAxiosRequestConfig = Required<
+  Pick<AxiosRequestConfig, "headers">
+> &
+  AxiosRequestConfig
 
 /**
  * Returns a slug with trailing slash for a given resource name.
@@ -24,7 +34,7 @@ export const getResourceSlug = (resource: string): string => {
 const validateRequest = (
   errorCondition: boolean,
   message: string,
-  config: AxiosRequestConfig
+  config: OpenverseAxiosRequestConfig
 ): void => {
   if (errorCondition) {
     warn(
@@ -63,22 +73,22 @@ export interface ApiService {
   post<T = unknown>(
     resource: string,
     data: Parameters<AxiosInstance["post"]>[1],
-    headers?: AxiosRequestConfig["headers"]
+    headers?: OpenverseAxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
   update<T = unknown>(
     resource: string,
     slug: string,
     data: Parameters<AxiosInstance["put"]>[1],
-    headers: AxiosRequestConfig["headers"]
+    headers: OpenverseAxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
   put<T = unknown>(
     resource: string,
-    params: AxiosRequestConfig
+    params: OpenverseAxiosRequestConfig
   ): Promise<AxiosResponse<T>>
   delete<T = unknown>(
     resource: string,
     slug: string,
-    headers: AxiosRequestConfig["headers"]
+    headers: OpenverseAxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
 }
 
@@ -87,24 +97,27 @@ export const createApiService = ({
   accessToken = undefined,
   isVersioned = true,
 }: ApiServiceConfig = {}): ApiService => {
-  const axiosParams: AxiosRequestConfig = {
+  const axiosParams: OpenverseAxiosRequestConfig = {
     baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
+    headers: { "User-Agent": userAgent },
   }
+
   if (accessToken) {
-    axiosParams.headers = { Authorization: `Bearer ${accessToken}` }
+    axiosParams.headers["Authorization"] = `Bearer ${accessToken}`
   }
+
   const client = axios.create(axiosParams)
   client.interceptors.request.use(function (config) {
     validateRequest(
       !config.url?.endsWith("/"),
       "API request urls should have a trailing slash",
-      config
+      config as OpenverseAxiosRequestConfig
     )
     validateRequest(
       config.url?.includes("//") ?? false,
       "API request urls should not have two slashes",
-      config
+      config as OpenverseAxiosRequestConfig
     )
     return config
   })
@@ -158,7 +171,7 @@ export const createApiService = ({
      */
     post<T = unknown>(
       resource: string,
-      data: Parameters<typeof client["post"]>[1]
+      data: Parameters<(typeof client)["post"]>[1]
     ): Promise<AxiosResponse<T>> {
       return client.post(getResourceSlug(resource), data)
     },
@@ -173,8 +186,8 @@ export const createApiService = ({
     update<T = unknown>(
       resource: string,
       slug: string,
-      data: Parameters<typeof client["put"]>[1],
-      headers: AxiosRequestConfig["headers"]
+      data: Parameters<(typeof client)["put"]>[1],
+      headers: OpenverseAxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.put(`${getResourceSlug(resource)}${slug}`, data, {
         headers,
@@ -188,7 +201,7 @@ export const createApiService = ({
      */
     put<T = unknown>(
       resource: string,
-      params: AxiosRequestConfig
+      params: OpenverseAxiosRequestConfig
     ): Promise<AxiosResponse<T>> {
       return client.put(getResourceSlug(resource), params)
     },
@@ -202,7 +215,7 @@ export const createApiService = ({
     delete<T = unknown>(
       resource: string,
       slug: string,
-      headers: AxiosRequestConfig["headers"]
+      headers: OpenverseAxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.delete(`${getResourceSlug(resource)}${slug}`, { headers })
     },

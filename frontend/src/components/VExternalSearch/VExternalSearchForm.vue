@@ -7,28 +7,28 @@
   >
     <i18n
       v-if="!hasNoResults && isSupported"
-      path="external-sources.form.supported-title"
+      path="externalSources.form.supportedTitle"
       tag="p"
       class="description-regular"
     />
 
     <i18n
       v-else-if="!hasNoResults && !isSupported"
-      path="external-sources.form.unsupported-title"
+      path="externalSources.form.unsupportedTitle"
       tag="p"
       class="description-regular"
     >
       <template #openverse>Openverse</template>
-      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
     </i18n>
 
     <i18n
       v-else
-      path="external-sources.form.no-results-title"
+      path="externalSources.form.noResultsTitle"
       tag="p"
       class="description-regular"
     >
-      <template #type>{{ $t(`external-sources.form.types.${type}`) }}</template>
+      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
       <template #query>{{ searchTerm }}</template>
     </i18n>
 
@@ -44,7 +44,7 @@
       size="disabled"
       class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
       @click="onTriggerClick"
-      >{{ $t("external-sources.button").toString()
+      >{{ $t("externalSources.button").toString()
       }}<VIcon
         class="text-dark-charcoal-40"
         :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
@@ -77,11 +77,16 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, SetupContext } from "vue"
 
+import { storeToRefs } from "pinia"
+
 import { defineEvent } from "~/types/emits"
 
 import { useUiStore } from "~/stores/ui"
+import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import type { MediaType } from "~/constants/media"
 import type { ExternalSource } from "~/types/external-source"
@@ -130,6 +135,8 @@ export default defineComponent({
     const sectionRef = ref<HTMLElement | null>(null)
     const triggerRef = ref<InstanceType<typeof VButton> | null>(null)
     const uiStore = useUiStore()
+    const searchStore = useSearchStore()
+    const { sendCustomEvent } = useAnalytics()
 
     const isMd = computed(() => uiStore.isBreakpoint("md"))
 
@@ -138,6 +145,9 @@ export default defineComponent({
     const lockBodyScroll = computed(() => !isMd.value)
 
     const isVisible = ref(false)
+
+    const mediaStore = useMediaStore()
+    const { currentPage } = storeToRefs(mediaStore)
 
     const {
       close: closeDialog,
@@ -151,6 +161,17 @@ export default defineComponent({
       emit: emit as SetupContext["emit"],
     })
 
+    const eventedOnTriggerClick = () => {
+      if (!isVisible.value) {
+        sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+          searchType: searchStore.searchType,
+          query: searchStore.searchTerm,
+          resultPage: currentPage.value || 1,
+        })
+      }
+      onTriggerClick()
+    }
+
     return {
       sectionRef,
       triggerRef,
@@ -159,7 +180,7 @@ export default defineComponent({
 
       closeDialog,
       openDialog,
-      onTriggerClick,
+      onTriggerClick: eventedOnTriggerClick,
       triggerA11yProps,
 
       isVisible,

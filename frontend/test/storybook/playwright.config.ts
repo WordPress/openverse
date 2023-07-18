@@ -1,15 +1,7 @@
-import path from "path"
-
-import { addAliases } from "module-alias"
-
 import type { PlaywrightTestConfig } from "@playwright/test"
 
-addAliases({
-  "~": path.resolve(process.cwd(), "src"),
-  "~~": process.cwd(),
-})
-
 const config: PlaywrightTestConfig = {
+  forbidOnly: !!process.env.CI,
   webServer: {
     command: "pnpm storybook",
     timeout: 60_000 * 5, // 5 minutes

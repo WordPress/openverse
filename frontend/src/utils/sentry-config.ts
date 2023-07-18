@@ -1,17 +1,12 @@
-import { isProd } from "./node-env"
-
-import type { ModuleConfiguration } from "@nuxtjs/sentry"
+import type { ModuleOptions } from "@nuxtjs/sentry"
 
 /**
  * Get the Sentry configuration based on the current environment.
  * @param isDisabled - whether to disable Sentry
  * @returns the Sentry configuration to use
  */
-export const sentryConfig: ModuleConfiguration = {
+export const sentryConfig: ModuleOptions = {
   dsn: process.env.SENTRY_DSN,
-  disabled: process.env.DISABLE_SENTRY
-    ? true
-    : process.env.SENTRY_DSN === undefined || !isProd,
   logMockCalls: false,
   lazy: true,
   clientConfig: {

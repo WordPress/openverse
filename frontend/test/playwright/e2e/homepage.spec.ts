@@ -30,9 +30,9 @@ const searchTypePopover = "[aria-labelledby='search-type-button'] > div"
 const popoverIsVisible = async (page: Page) =>
   await expect(page.locator(searchTypePopover)).toBeVisible()
 const popoverIsNotVisible = async (page: Page) =>
-  await expect(page.locator(searchTypePopover)).not.toBeVisible()
+  await expect(page.locator(searchTypePopover)).toBeHidden()
 const clickPopoverButton = async (page: Page) =>
-  await page.getByRole("button", { name: t("search-type.all") }).click()
+  await page.getByRole("button", { name: t("searchType.all") }).click()
 
 test("can close the search type popover by clicking outside", async ({
   page,

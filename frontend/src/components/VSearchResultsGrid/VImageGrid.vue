@@ -11,6 +11,7 @@
         :image="image"
         :search-term="searchTerm"
         aspect-ratio="intrinsic"
+        :related-to="relatedTo"
       />
     </ol>
     <h5 v-if="isError && !fetchState.isFinished" class="py-4">
@@ -33,6 +34,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
@@ -40,6 +42,8 @@ import type { ImageDetail } from "~/types/media"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
+
+import type { NuxtError } from "@nuxt/types"
 
 export default defineComponent({
   name: "ImageGrid",
@@ -60,7 +64,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState>,
+      type: Object as PropType<FetchState<NuxtError>>,
       required: true,
     },
     imageGridLabel: {
@@ -72,9 +76,13 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const searchTerm = computed(() => searchStore.searchTerm)
-    const isError = computed(() => Boolean(props.fetchState.fetchingError))
+    const isError = computed(() => props.fetchState.fetchingError !== null)
 
-    return { isError, searchTerm }
+    const relatedTo = computed(() => {
+      return props.isSinglePage ? useRelatedMediaStore().mainMediaId : null
+    })
+
+    return { isError, searchTerm, relatedTo }
   },
 })
 </script>

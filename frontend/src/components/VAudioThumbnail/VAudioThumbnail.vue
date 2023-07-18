@@ -53,7 +53,7 @@ export default defineComponent({
   setup(props) {
     const i18n = useI18n()
     const helpText = i18n
-      .t("audio-thumbnail.alt", {
+      .t("audioThumbnail.alt", {
         title: props.audio.title,
         creator: props.audio.creator,
       })

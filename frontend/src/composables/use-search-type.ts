@@ -11,6 +11,7 @@ import {
   SearchType,
 } from "~/constants/media"
 
+import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
@@ -29,11 +30,11 @@ const icons = {
 } as const
 
 const labels = {
-  [ALL_MEDIA]: "search-type.all",
-  [IMAGE]: "search-type.image",
-  [AUDIO]: "search-type.audio",
-  [VIDEO]: "search-type.video",
-  [MODEL_3D]: "search-type.model-3d",
+  [ALL_MEDIA]: "searchType.all",
+  [IMAGE]: "searchType.image",
+  [AUDIO]: "searchType.audio",
+  [VIDEO]: "searchType.video",
+  [MODEL_3D]: "searchType.model3d",
 } as const
 
 export default function useSearchType() {
@@ -48,7 +49,9 @@ export default function useSearchType() {
   const featureFlagStore = useFeatureFlagStore()
 
   const additionalTypes = computed(() =>
-    featureFlagStore.isOn("external_sources") ? additionalSearchTypes : []
+    featureFlagStore.isOn("additional_search_types")
+      ? additionalSearchTypes
+      : []
   )
   const searchTypes = [...supportedSearchTypes]
 
@@ -61,6 +64,7 @@ export default function useSearchType() {
       component: componentName,
     })
     useSearchStore().setSearchType(searchType)
+    useMediaStore().clearMedia()
     previousSearchType.value = searchType
   }
 

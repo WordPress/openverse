@@ -3,6 +3,7 @@
  * For any changes made here, please make the corresponding changes in the
  * backend, or open an issue to track it.
  */
+import { camel } from "case"
 
 import type {
   License,
@@ -35,7 +36,7 @@ export const getFullLicenseName = (
 
   // PDM has no abbreviation
   if (license === "pdm" && i18n) {
-    licenseName = i18n.t(`license-readable-names.${license}`).toString()
+    licenseName = i18n.t(`licenseReadableNames.${camel(license)}`).toString()
   } else {
     licenseName = license.toUpperCase().replace("SAMPLING", "Sampling")
   }

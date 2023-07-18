@@ -29,7 +29,7 @@
             :class="idx >= imageCount ? 'hidden' : 'block'"
             :style="{ '--delay': `${idx * 0.05}s` }"
             :href="image.url"
-            @click="handleClick(image.identifier)"
+            @click="handleClick(image.id)"
           >
             <img
               :height="dimens"
@@ -55,7 +55,7 @@ import useResizeObserver from "~/composables/use-resize-observer"
 
 import VLink from "~/components/VLink.vue"
 
-import imageInfo from "~/assets/homepage_images/image_info.json"
+import imageInfo from "~/assets/homepage_images.json"
 
 export const GALLERY_SETS = [
   "universe",
@@ -63,7 +63,7 @@ export const GALLERY_SETS = [
   "olympics",
   "random",
 ] as const
-export type GallerySet = typeof GALLERY_SETS[number]
+export type GallerySet = (typeof GALLERY_SETS)[number]
 
 /**
  * Displays a grid of images for the homepage, with each image linking to its
@@ -112,13 +112,11 @@ export default defineComponent({
     const imageList = computed(() => {
       return imageSet.value.images.map((image, idx) => ({
         ...image,
-        src: require(`~/assets/homepage_images/${imageSet.value.key}/${
-          idx + 1
-        }.png`),
+        src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
         url: router.resolve(
           app.localePath({
             name: "image-id",
-            params: { id: image.identifier },
+            params: { id: image.id },
           })
         ).href,
       }))
@@ -126,10 +124,10 @@ export default defineComponent({
     const imageCount = computed(() => columnCount.value * rowCount)
 
     const { sendCustomEvent } = useAnalytics()
-    const handleClick = (identifier: string) => {
+    const handleClick = (id: string) => {
       sendCustomEvent("CLICK_HOME_GALLERY_IMAGE", {
         set: imageSet.value.key,
-        identifier,
+        id,
       })
     }
 

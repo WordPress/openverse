@@ -82,6 +82,7 @@ test.describe("v-checkbox", () => {
       await checkbox.click()
       // `force: true` is required because the `input`'s pointer events are actually intercepted by the visual SVG.
       // We still want to check that it works though as that does mimic the user behavior of checking directly on the checkbox.
+      // eslint-disable-next-line playwright/no-force-option
       await checkbox.click({ force: true })
       expect(
         await page.locator(".screenshot-area").screenshot()

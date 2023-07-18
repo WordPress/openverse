@@ -19,7 +19,9 @@ const cleanImageCarousel = async (page: Page) => {
   await page.addStyleTag({
     content: ".home-cell > img { filter: brightness(0%); }",
   })
-  await page.waitForTimeout(1000) // wait for animation to finish
+  // wait for animation to finish
+  // eslint-disable-next-line playwright/no-wait-for-timeout
+  await page.waitForTimeout(1000)
 }
 
 for (const dir of languageDirections) {
@@ -66,7 +68,7 @@ for (const dir of languageDirections) {
         test("content switcher with external sources open", async ({
           page,
         }) => {
-          await page.goto(pathWithDir("/?ff_external_sources=on", dir))
+          await page.goto(pathWithDir("/?ff_additional_search_types=on", dir))
           await cleanImageCarousel(page)
 
           await page.locator("#search-type-button").click()

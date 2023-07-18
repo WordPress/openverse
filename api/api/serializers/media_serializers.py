@@ -7,7 +7,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 
 from drf_spectacular.utils import extend_schema_serializer
+from elasticsearch_dsl.response import Hit
 
+from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
@@ -56,7 +58,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         "filter_dead",
         "extension",
         "mature",
-        "qa",
         # Excluded unstable fields, also see `exclude_fields` above.
         # "unstable__sort_by",
         # "unstable__sort_dir",
@@ -122,13 +123,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         default=False,
         required=False,
         help_text="Whether to include content for mature audiences.",
-    )
-    qa = serializers.BooleanField(
-        label="quality_assurance",
-        help_text="If enabled, searches are performed against the quality"
-        " assurance index instead of production.",
-        required=False,
-        default=False,
     )
 
     # The ``unstable__`` prefix is used in the query params.
@@ -333,11 +327,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         if errors:
             raise serializers.ValidationError(errors)
 
-        if "qa" in self.initial_data and "internal__index" in self.initial_data:
-            raise serializers.ValidationError(
-                "Cannot set both 'qa' and 'internal__index'. "
-                "Use exactly one of these."
-            )
         return data
 
     @property
@@ -405,6 +394,11 @@ class TagSerializer(serializers.Serializer):
     )
 
 
+@extend_schema_serializer(
+    exclude_fields=[
+        "unstable__sensitivity",
+    ],
+)
 class MediaSerializer(BaseModelSerializer):
     """
     This serializer serializes a single media file.
@@ -434,6 +428,7 @@ class MediaSerializer(BaseModelSerializer):
             "attribution",  # property
             "fields_matched",
             "mature",
+            "unstable__sensitivity",
         ]
         """
         Keep the fields names in sync with the actual fields below as this list is
@@ -467,6 +462,56 @@ class MediaSerializer(BaseModelSerializer):
     mature = serializers.BooleanField(
         help_text="Whether the media item is marked as mature",
     )
+
+    # This should be promoted to a stable field alongside
+    # `include_sensitive_results`
+    unstable__sensitivity = serializers.SerializerMethodField(
+        help_text=(
+            "An array of sensitivity annotations. "
+            "May contain the following values: 'sensitive_text', "
+            "'user_reported_sensitive', or 'provider_supplied_sensitive'"
+        )
+    )
+
+    def get_unstable__sensitivity(self, obj: Hit | AbstractMedia) -> list[str]:
+        result = []
+
+        # obj.identifier needs to be cast to a string because
+        # Django UUID fields return UUID objects by default
+        # and UUID comparison fails against _any_ string object,
+        # even if the string matches the UUID.
+        if str(obj.identifier) in self.context.get(
+            "sensitive_text_result_identifiers", set()
+        ):
+            result.append(sensitivity.TEXT)
+
+        # ``obj.mature`` will either be `mature` from the ES document
+        # or the ``mature`` property on the Image or Audio model.
+        if obj.mature:
+            # We do not currently have any documents marked `mature=true`
+            # that were not marked so as a result of a confirmed user report.
+            # This is despite the fact that the ingestion server _does_ copy
+            # the mature field from record `meta_data`. If you query for
+            # documents in the production image and audio indexes that have
+            # `mature=true` but do not have confirmed reports, you will get
+            # 0 results. Whether this is because we truly do not have results
+            # that providers have themselves marked as mature, unsafe, etc,
+            # it isn't clear (aside from Flickr, where we use "safe search").
+            # What is clear is that we do not need to handle provider reported
+            # sensitivity here because it simply does not occurr in our database.
+            # That is _very_ convenient because provider supplied maturity is
+            # much more complex to derive. Its condition is that the result
+            # has no report _and_ has `mature=true` on the document in ES.
+            # The only way to derive that is to query both the database and
+            # Elasticsearch (or have access to both of those individually).
+            # Due to the flexibility of this serializer in being able to
+            # handle both Elasticsearch ``Hit``s _and_ media model instances,
+            # trying to handle provider supplied maturity significantly
+            # increases complexity here and, in order to prevent redundant
+            # queries to either Postgres or ES, in other parts of the codebase.
+            result.append(sensitivity.USER_REPORTED)
+
+        return result
 
     def to_representation(self, *args, **kwargs):
         output = super().to_representation(*args, **kwargs)

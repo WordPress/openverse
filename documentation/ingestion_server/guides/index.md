@@ -4,5 +4,8 @@
 :titlesonly:
 
 quickstart
+config
+mapping
 test
+deploy
 ```

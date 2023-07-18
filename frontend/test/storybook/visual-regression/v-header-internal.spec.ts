@@ -6,7 +6,7 @@ import { languageDirections } from "~~/test/playwright/utils/navigation"
 const headerSelector = ".main-header"
 const defaultUrl =
   "/iframe.html?id=components-vheader-vheaderinternal--default-story"
-const pageUrl = (dir: typeof languageDirections[number]) =>
+const pageUrl = (dir: (typeof languageDirections)[number]) =>
   dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
 test.describe.configure({ mode: "parallel" })
@@ -35,6 +35,9 @@ test.describe("VHeaderInternal", () => {
       test(`mobile-header-internal-modal-${dir}`, async ({ page }) => {
         await page.goto(pageUrl(dir))
         await page.locator('button[aria-haspopup="dialog"]').click()
+        // Mouse stays over the button, so the close button is hovered.
+        // To prevent this, move the mouse away.
+        await page.mouse.move(0, 0)
         await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
       })
     })

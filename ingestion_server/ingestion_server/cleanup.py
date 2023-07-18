@@ -248,6 +248,10 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
         update_field_expressions = []
         for field, clean_value in cleaned_data.items():
             update_field_expressions.append(f"{field} = {clean_value}")
+            # Save cleaned values for later
+            # (except for tags, which take up too much space)
+            if field == "tags":
+                continue
             cleaned_values[field].append((identifier, clean_value))
 
         if len(update_field_expressions) > 0:
@@ -272,6 +276,9 @@ def save_cleaned_data(result: dict) -> dict[str, int]:
 
     cleanup_counts = {field: len(items) for field, items in result.items()}
     for field, cleaned_items in result.items():
+        # Skip the tag field because the file is too large and fills up the disk
+        if field == "tag":
+            continue
         if cleaned_items:
             with open(f"{field}.tsv", "a") as f:
                 csv_writer = csv.writer(f, delimiter="\t")

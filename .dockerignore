@@ -4,3 +4,4 @@
 !.npmrc
 !.pnpmfile.cjs
 !pnpm-lock.yaml
+!tsconfig.json

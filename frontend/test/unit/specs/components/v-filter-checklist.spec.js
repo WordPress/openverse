@@ -14,7 +14,7 @@ describe("FilterChecklist", () => {
       options: [
         {
           code: "music",
-          name: "filters.audio-categories.music",
+          name: "filters.audioCategories.music",
           checked: false,
         },
       ],

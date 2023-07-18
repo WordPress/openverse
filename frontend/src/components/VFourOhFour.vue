@@ -1,22 +1,18 @@
 <template>
   <div class="error grid overflow-x-hidden">
-    <svg
+    <VSvg
       class="z-0 pointer-events-none col-start-1 row-start-1 -mx-[15%] fill-dark-charcoal opacity-5 lg:mx-15 lg:-mt-20"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1320 569"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <use :href="`${Oops}#oops`" />
-    </svg>
-
+      name="oops"
+    />
     <div
       class="page-404 col-start-1 row-start-1 flex flex-col justify-self-stretch px-6 lg:max-w-2xl lg:justify-self-center lg:px-0"
     >
       <!-- Push content by 1/4th height without absolute positioning. -->
       <div class="spacer grow" />
-      <VSkipToContentContainer
-        as="main"
+      <main
+        :id="skipToContentTargetId"
+        tabindex="-1"
         class="z-10 grow-[3] space-y-4 lg:space-y-6"
       >
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
@@ -34,12 +30,12 @@
           </i18n>
         </p>
         <VStandaloneSearchBar route="404" @submit="handleSearch" />
-      </VSkipToContentContainer>
+      </main>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
@@ -47,19 +43,18 @@ import { useSearchStore } from "~/stores/search"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
 
 import VLink from "~/components/VLink.vue"
-import VSkipToContentContainer from "~/components/VSkipToContentContainer.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
-
-import Oops from "~/assets/oops.svg"
+import VSvg from "~/components/VSvg/VSvg.vue"
 
 export default defineComponent({
   name: "VFourOhFour",
   components: {
     VLink,
-    VSkipToContentContainer,
     VStandaloneSearchBar,
+    VSvg,
   },
   props: ["error"],
   setup() {
@@ -68,7 +63,7 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleSearch = (searchTerm) => {
+    const handleSearch = (searchTerm: string) => {
       sendCustomEvent("SUBMIT_SEARCH", {
         searchType: ALL_MEDIA,
         query: searchTerm,
@@ -83,7 +78,8 @@ export default defineComponent({
 
     return {
       handleSearch,
-      Oops,
+
+      skipToContentTargetId,
     }
   },
   head: {},

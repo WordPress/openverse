@@ -1,0 +1,23 @@
+{
+  "name": "@openverse/eslint-plugin",
+  "description": "Openverse ESLint plugin",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel --extensions '.ts' --out-dir dist ./src",
+    "test:unit": "pnpm run build && jest"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "^5.60.0",
+    "eslint": "^8.41.0",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "babel-plugin-add-module-exports": "^1.0.4"
+  }
+}

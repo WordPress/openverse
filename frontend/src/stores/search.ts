@@ -52,6 +52,7 @@ export const isSearchTypeSupported = (
 export interface SearchState {
   searchType: SearchType
   recentSearches: Ref<string[]>
+  backToSearchPath: string
   searchTerm: string
   localSearchTerm: string
   filters: Filters
@@ -82,6 +83,7 @@ export const useSearchStore = defineStore("search", {
   state: (): SearchState => ({
     searchType: ALL_MEDIA,
     searchTerm: "",
+    backToSearchPath: "",
     localSearchTerm: "",
     recentSearches: useStorage<string[]>("recent-searches", []),
     filters: deepClone(filterData as DeepWriteable<typeof filterData>),
@@ -161,6 +163,9 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
+    setBackToSearchPath(path: string) {
+      this.backToSearchPath = path
+    },
     /**
      * Updates the search type and search term, and returns the
      * updated localized search path.
@@ -208,11 +213,11 @@ export const useSearchStore = defineStore("search", {
     setSearchType(type: SearchType) {
       const featureFlagStore = useFeatureFlagStore()
       if (
-        !featureFlagStore.isOn("external_sources") &&
+        !featureFlagStore.isOn("additional_search_types") &&
         isAdditionalSearchType(type)
       ) {
         throw new Error(
-          `Please enable the 'external_sources' flag to use the ${type}`
+          `Please enable the 'additional_search_types' flag to use the ${type}`
         )
       }
 
@@ -328,6 +333,7 @@ export const useSearchStore = defineStore("search", {
     },
     /**
      * Toggles a filter's checked parameter. Requires either codeIdx or code.
+     * Returns the new checked value.
      */
     toggleFilter({
       filterType,
@@ -337,7 +343,7 @@ export const useSearchStore = defineStore("search", {
       filterType: FilterCategory
       codeIdx?: number
       code?: string
-    }) {
+    }): boolean {
       if (typeof codeIdx === "undefined" && typeof code === "undefined") {
         throw new Error(
           `Cannot toggle filter of type ${filterType}. Use code or codeIdx parameter`
@@ -346,6 +352,7 @@ export const useSearchStore = defineStore("search", {
       const filterItems = this.filters[filterType]
       const idx = codeIdx ?? filterItems.findIndex((f) => f.code === code)
       this.filters[filterType][idx].checked = !filterItems[idx].checked
+      return this.filters[filterType][idx].checked
     },
 
     /**

@@ -2,56 +2,70 @@ import { defineStore } from "pinia"
 
 import axios from "axios"
 
-import type { AudioDetail, ImageDetail, Media } from "~/types/media"
-import type { SupportedMediaType } from "~/constants/media"
 import type { FetchState } from "~/types/fetch-state"
+import type {
+  AudioDetail,
+  DetailFromMediaType,
+  ImageDetail,
+} from "~/types/media"
+import { isDetail, isMediaDetail } from "~/types/media"
+
+import type { SupportedMediaType } from "~/constants/media"
+
 import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useProviderStore } from "~/stores/provider"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { markFakeSensitive } from "~/utils/content-safety"
+import { log } from "~/utils/console"
 
-export type MediaItemState =
-  | {
-      mediaType: "audio"
-      mediaItem: AudioDetail
-      fetchState: FetchState
-    }
-  | {
-      mediaType: "image"
-      mediaItem: ImageDetail
-      fetchState: FetchState
-    }
-  | {
-      mediaType: null
-      mediaItem: null
-      fetchState: FetchState
-    }
+import type { NuxtError } from "@nuxt/types"
+
+export type MediaItemState = {
+  mediaType: SupportedMediaType | null
+  mediaId: string | null
+  mediaItem: DetailFromMediaType<SupportedMediaType> | null
+  fetchState: FetchState<NuxtError>
+}
 
 export const useSingleResultStore = defineStore("single-result", {
   state: (): MediaItemState => ({
-    mediaItem: null,
     mediaType: null,
-    fetchState: { isFetching: false, hasStarted: false, fetchingError: null },
+    mediaId: null,
+    mediaItem: null,
+    fetchState: { isFetching: false, fetchingError: null },
   }),
 
+  getters: {
+    audio(state): AudioDetail | null {
+      if (isDetail.audio(state.mediaItem)) {
+        return state.mediaItem
+      }
+      return null
+    },
+    image(state): ImageDetail | null {
+      if (isDetail.image(state.mediaItem)) {
+        return state.mediaItem
+      }
+      return null
+    },
+  },
+
   actions: {
-    _endFetching(error?: string) {
+    _endFetching(error?: NuxtError) {
       this.fetchState.isFetching = false
       this.fetchState.fetchingError = error || null
     },
     _startFetching() {
       this.fetchState.isFetching = true
-      this.fetchState.hasStarted = true
       this.fetchState.fetchingError = null
     },
 
-    _updateFetchState(action: "start" | "end", option?: string) {
+    _updateFetchState(action: "start" | "end", option?: NuxtError) {
       action === "start" ? this._startFetching() : this._endFetching(option)
     },
 
-    _addProviderName(mediaItem: Media) {
+    _addProviderName<T extends SupportedMediaType>(
+      mediaItem: DetailFromMediaType<T>
+    ): DetailFromMediaType<T> {
       const providerStore = useProviderStore()
 
       mediaItem.providerName = providerStore.getProviderName(
@@ -66,99 +80,111 @@ export const useSingleResultStore = defineStore("single-result", {
       }
       return mediaItem
     },
+    reset() {
+      this.mediaItem = null
+      this.mediaType = null
+      this.mediaId = null
+      this.fetchState.isFetching = false
+      this.fetchState.fetchingError = null
+    },
 
     /**
-     * If the result is available in the media store (from search results or related media),
-     * we can re-use it. Otherwise, we fetch it from the API.
-     * The media objects from the search results currently don't have filetype or filesize properties.
-     *
-     * @param type - media type of the item to fetch.
-     * @param id - string id of the item to fetch.
+     * Set the media item with the display name of its provider
+     * and its type. Reset the other media type item.
+     * If the media item is null, reset both media items.
      */
-    async fetch(type: SupportedMediaType, id: string) {
-      const mediaStore = useMediaStore()
-      const existingItem = mediaStore.getItemById(type, id)
-
-      if (existingItem) {
-        this.mediaType = existingItem.frontendMediaType
-        this.mediaItem = this._addProviderName(existingItem)
-        this.fetchMediaItem(type, id).then(() => {
-          /** noop to prevent the promise return ignored warning */
-        })
+    setMediaItem(mediaItem: AudioDetail | ImageDetail | null) {
+      if (mediaItem) {
+        this.mediaItem = this._addProviderName(mediaItem)
+        this.mediaType = mediaItem.frontendMediaType
+        this.mediaId = mediaItem.id
       } else {
-        await this.fetchMediaItem(type, id)
-      }
-      /**
-       * On the server, we await the related media to make sure it's rendered on the page.
-       * On the client, we don't await it to render the whole page while the related media are loading.
-       */
-      if (process.server) {
-        try {
-          await useRelatedMediaStore().fetchMedia(type, id)
-        } catch (error) {
-          console.warn("Could not load related media: ", error)
-        }
-      } else {
-        useRelatedMediaStore()
-          .fetchMedia(type, id)
-          .catch((error) =>
-            console.warn("Could not load related media: ", error)
-          )
+        this.mediaItem = null
+        this.mediaType = null
+        this.mediaId = null
       }
     },
+
     /**
-     * Fetches a media item from the API.
-     *
-     * @param type - media type of the item to fetch.
-     * @param id - string id of the item to fetch.
+     * If the item is already in the media store, reuse it.
+     * Otherwise, set the media type and id, fetch the media
+     * itself later.
      */
-    async fetchMediaItem(type: SupportedMediaType, id: string) {
+    setMediaById(type: SupportedMediaType, id: string) {
+      if (this.mediaId === id && isMediaDetail(this.mediaItem, type)) return
+      const existingItem = useMediaStore().getItemById(type, id)
+      if (existingItem) {
+        this.setMediaItem(existingItem)
+      } else {
+        this.mediaId = id
+        this.mediaType = type
+      }
+    },
+
+    getExistingItem<T extends SupportedMediaType>(
+      type: T,
+      id: string
+    ): DetailFromMediaType<T> | null {
+      if (this.mediaId === id && isMediaDetail<T>(this.mediaItem, type)) {
+        return this.mediaItem
+      }
+      const existingItem = useMediaStore().getItemById(type, id)
+      if (existingItem) {
+        return existingItem as DetailFromMediaType<T>
+      }
+      return null
+    },
+
+    /**
+     * Check if the `id` matches the `mediaId` and the media item
+     * is already fetched. If middleware only set the `id` and
+     * did not set the media, fetch the media item.
+     *
+     * Fetch the related media if necessary.
+     */
+    async fetch<T extends SupportedMediaType>(type: T, id: string) {
+      const existingItem = this.getExistingItem(type, id)
+
+      return existingItem
+        ? existingItem
+        : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
+    },
+
+    /**
+     * Fetch the media item from the API.
+     * On error, send the error to Sentry and return null.
+     */
+    async fetchMediaItem<MediaType extends SupportedMediaType>(
+      type: MediaType,
+      id: string
+    ) {
       try {
         this._updateFetchState("start")
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[type](accessToken)
         const item = this._addProviderName(await service.getMediaDetail(id))
 
-        // Fake ~50% of results as mature. This leaves actual mature results unchanged.
-        const featureFlagStore = useFeatureFlagStore()
-        if (featureFlagStore.isOn("fake_sensitive")) {
-          markFakeSensitive(item)
-        }
-
-        this.mediaItem = item
-        this.mediaType = type
-
+        this.setMediaItem(item)
         this._updateFetchState("end")
-      } catch (error: unknown) {
-        this.mediaItem = null
-        this.mediaType = type
-        if (axios.isAxiosError(error) && error.response?.status === 404) {
-          throw new Error(`Media of type ${type} with id ${id} not found`)
-        } else {
-          this.handleMediaError(error)
-        }
-      }
-    },
 
-    /**
-     * Throws a new error with a new error message.
-     */
-    handleMediaError(error: unknown) {
-      let errorMessage
-      if (axios.isAxiosError(error)) {
-        errorMessage =
-          error.response?.status === 500
-            ? "There was a problem with our servers"
-            : `Request failed with status ${
-                error.response?.status ?? "unknown"
-              }`
-      } else {
-        errorMessage =
-          error instanceof Error ? error.message : "Oops! Something went wrong"
-      }
+        return item as DetailFromMediaType<MediaType>
+      } catch (error) {
+        this.reset()
+        const statusCode = getErrorStatusCode(error)
+        const message = `Error fetching single ${type} item with id ${id}`
 
-      this._updateFetchState("end", errorMessage)
-      throw new Error(errorMessage)
+        this._updateFetchState("end", { statusCode, message })
+
+        log(`${message}. Sending error to Sentry: ${JSON.stringify(error)}`)
+        this.$nuxt.$sentry.captureException(error)
+
+        return null
+      }
     },
   },
 })
+
+const getErrorStatusCode = (error: unknown) =>
+  axios.isAxiosError(error) && error.response?.status
+    ? error.response.status
+    : 404

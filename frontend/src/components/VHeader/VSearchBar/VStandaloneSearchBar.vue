@@ -2,6 +2,7 @@
   <!-- Form action is a fallback for when JavaScript is disabled. -->
   <form
     action="/search"
+    role="search"
     class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-white sm:h-16"
     @submit.prevent="handleSearch"
   >
@@ -20,7 +21,7 @@
         :placeholder="$t('hero.search.placeholder').toString()"
         class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 focus:outline-none"
         :aria-label="
-          $t('search.search-bar-label', {
+          $t('search.searchBarLabel', {
             openverse: 'Openverse',
           }).toString()
         "

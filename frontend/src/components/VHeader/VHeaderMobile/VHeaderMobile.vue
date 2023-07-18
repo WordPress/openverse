@@ -32,7 +32,7 @@
               v-show="searchBarIsActive"
               icon="chevron-left"
               :inner-size="8"
-              :label="$t('header.back-button')"
+              :label="$t('header.backButton')"
               :rtl-flip="true"
               inner-area-classes="bg-dark-charcoal-10 hover:bg-dark-charcoal hover:text-white"
               @click="handleBack"
@@ -48,7 +48,7 @@
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
             :value="searchTerm"
             :aria-label="
-              $t('search.search-bar-label', {
+              $t('search.searchBarLabel', {
                 openverse: 'Openverse',
               }).toString()
             "
@@ -68,7 +68,7 @@
             <VSearchBarButton
               v-show="searchBarIsActive && searchTerm"
               icon="close-small"
-              :label="$t('browse-page.search-form.clear')"
+              :label="$t('browsePage.searchForm.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
             />

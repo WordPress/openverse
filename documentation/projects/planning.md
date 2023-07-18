@@ -71,57 +71,36 @@ relevant step of the process is complete.
 
 ## Providing project updates
 
-At all stages of a project (except for `Not Started` projects), fortnightly
-public updates are the best way for Openverse contributors and maintainers to
-understand the health of a project. Importantly, these updates allow us to
-allocate more time or material resources to projects that need them before work
-stalls completely.
+For all active projects (anything that isn't in the `Not Started`, `Completed`,
+and `On Hold` statuses), fortnightly public updates are the best way for
+Openverse contributors and maintainers to understand the health of a project.
+Importantly, these updates allow us to allocate more time or material resources
+to projects that need them before work stalls completely. They also help
+identify projects that have stalled and may need special attention, if they
+haven't seen an update in some time.
 
-Project updates should be left as comments in the project threads. Even if the
-update is "the project is blocked." or "No developments this week.", the updates
-should still be posted. This removes ambiguity for folks visiting the project,
-avoiding questions like "I don't see an update this week; is it being worked on
-or not?"
+Project updates should be left as comments in the project threads by the project
+lead or anyone working on a project. If you merge a significant PR related to
+the project or identify a bug that impacts an open project, please leave an
+update! Even if the update is "the project is blocked." or "No developments this
+week.", the updates should still be posted. This removes ambiguity for folks
+visiting the project, avoiding questions like "I don't see an update this week;
+is it being worked on or not?"
 
 These updates are useful for folks checking in on a project but also for the
 project lead. It's an opportunity to _reflect on_ the status of the project and
 any blockers, or successes to be shared.
 
-### Update Template
+Here are some real-life examples of useful project updates:
 
-Here is an update template to be followed for every project update. Some update
-information will be specific to the current phase of the project. In the future
-we might develop different templates for each project phase. For now, we'll see
-which conventions emerge as we begin using this process.
+- https://github.com/WordPress/openverse/issues/377#issuecomment-1566296377
+- https://github.com/WordPress/openverse/issues/392#issuecomment-1574444963
+- https://github.com/WordPress/openverse/issues/433#issuecomment-1560213117
 
-```md
-## Update YYYY-MM-DD
-
-<!--- A very brief, nearly single line summary giving a clear description of the
-project. Example: We continue to ship frontend PRs and are 75% complete with the
-milestone. Blocked on design approval from community contributors for the new
-signup flow. -->
-
-### Done
-
-<!-- List recently-completed tasks here -->
-
-- [x]
-
-### Next
-
-<!-- List this week's tasks here. We can assume that the majority of tasks are
-existing GitHub issues assigned to a contributor. -->
-
-- [ ]
-
-### Blockers
-
-<!-- List any blockers for the week: any upcoming concerns which need to be
-addressed. Please @ anyone who may be qualified to resolve these blockers. The
-more proactive you are about potential solutions the quicker we can make
-eliminate these blockers. -->
-```
+There are automated reminders configured for these updates via a
+[daily GitHub action](https://github.com/WordPress/openverse/blob/main/.github/workflows/project_thread_update_reminders.yml)
+that comments on the project thread, prompting the project lead to provide an
+update.
 
 ## Project Lifecycle
 
@@ -260,7 +239,7 @@ them.
 
 ### Implementation Plans (`status: In RFC`)
 
-- [Implementation Plan Template](./templates/implementation-plan)
+- [Implementation Plan Template](./templates/implementation-plan.md)
 
 Implementation plans are the next type of RFC created for a project. The main
 goal of an implementation plan is to produce a discrete and ordered list of
@@ -341,10 +320,10 @@ necessary.
 
 Finally, the implementation plan is merged into the repo. Project contributors
 create GitHub issues for all of the work identified in the implementation plan.
-This process can be quite time-consiming for large projects. Generally, it makes
+This process can be quite time-consuming for large projects. Generally, it makes
 sense to create issues in the order which they must be completed; this allows
 work to begin if, for some reason, there is delay in creating issues for work at
-the end of a project. It also however makes sense to priorize issues that are
+the end of a project. It also however makes sense to prioritize issues that are
 "good first issues" and "help wanted" issues contributors outside of the core
 maintainers can help with.
 
@@ -357,6 +336,12 @@ an atomic unit of work without needing to understand the full scope and
 technicalities of the project. The issue description should contain all
 necessary information to complete the issue. This can include linking to
 specific relevant sections of the existing implementation plan(s).
+
+These issues are also an excellent place for contributors to share experiments,
+theories, and examples of potential implementations. These can come from any
+contributors and should be considered by implementation authors prior to writing
+the implementation plan. The more resources available to implementation plan
+authors before they begin work, the better the quality of our final plans.
 
 ### Implementation (`status: In Progress`)
 
@@ -409,7 +394,7 @@ and riskier, due to increased review overhead, than going step-by-step.
 
 Code reviewers should focus primarily on the technical aspects of the
 implementation required by the issue. At times, during the course of a project,
-unforeseen amiguities will discovered during implementation and sometimes an
+unforeseen ambiguities will discovered during implementation and sometimes an
 alarm bell must be rung. However, these should be reserved for issues that will
 cause long-term harm to the project. Merely disagreeing with a particular detail
 of the project's implementation details is not sufficient for holding up a PR
@@ -430,7 +415,7 @@ difficult or much more time-consuming.
 
 ### Delivery (`status: Shipped`)
 
-After shipping, the project enters a period of evaluation. We do this to meaure
+After shipping, the project enters a period of evaluation. We do this to measure
 the success of the project and determine if it achieved the desired goal, but
 also to reflect on and make improvements to our own team processes.
 
@@ -443,14 +428,14 @@ changes in traffic to Openverse, as examples.
 During this phase, the project lead should report updates on these metrics
 regularly to help the team make a determination about changing the project
 status to `Success` or `Rollback`. Please make these updates on the project
-thread using the standard [update template](#update-template). Rolling back a
-project is not a decision we should take lightly, and by providing regular
-updates project leads can prevent this action from seeming like a surprise or a
-rash decision to others.
+thread using the [standard suggestions](#providing-project-updates). Rolling
+back a project is not a decision we should take lightly, and by providing
+regular updates project leads can prevent this action from seeming like a
+surprise or a rash decision to others.
 
 Frequent feedback on the success criteria can also help contributors come up
 with fast-follow improvements or modifications to the feature that may prevent
-rollback. Project leads should itentify these types of improvements in their
+rollback. Project leads should identify these types of improvements in their
 project thread updates as well.
 
 After the designated evaluation period we will make a decision about rolling
@@ -489,7 +474,7 @@ all projects and some additional metadata:
 - The status of the project
 
 At the time of writing, projects are added to this board manually. In the future
-we may develop automatations, for example one which automatically adds any issue
+we may develop automations, for example one which automatically adds any issue
 with the "project" label to this board.
 
 This board should be checked regularly as a 'dashboard' to answer some critical

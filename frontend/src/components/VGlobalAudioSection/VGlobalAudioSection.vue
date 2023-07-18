@@ -6,7 +6,7 @@
       class="!absolute end-0 top-0 z-30"
       variant="filled-transparent"
       size="large"
-      :label="$t('audio-track.close')"
+      :label="$t('audioTrack.close')"
       @close="handleClose"
     />
   </div>
@@ -51,8 +51,8 @@ export default defineComponent({
         return audioFromMediaStore as AudioDetail
       }
       const singleResultStore = useSingleResultStore()
-      if (singleResultStore.mediaItem?.id === trackId) {
-        return singleResultStore.mediaItem as AudioDetail
+      if (singleResultStore.mediaId === trackId) {
+        return singleResultStore.audio
       }
       return null
     }

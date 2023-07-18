@@ -36,7 +36,6 @@ from ingestion_server.distributed_reindex_scheduler import schedule_distributed_
 from ingestion_server.elasticsearch_models import media_type_to_elasticsearch_model
 from ingestion_server.es_helpers import get_stat
 from ingestion_server.es_mapping import index_settings
-from ingestion_server.qa import create_search_qa_index
 from ingestion_server.queries import get_existence_queries
 from ingestion_server.utils.sensitive_terms import get_sensitive_terms
 
@@ -338,17 +337,6 @@ class TableIndexer:
         self.refresh(destination_index)
         self.ping_callback()
 
-    def load_test_data(self, model_name: str, **_):
-        """
-        Create test indices in Elasticsearch for QA.
-
-        :param model_name: the name of the media type
-        """
-
-        create_search_qa_index(model_name)
-        if self.progress is not None:
-            self.progress.value = 100  # mark job as completed
-
     def point_alias(self, model_name: str, index_suffix: str, alias: str, **_):
         """
         Map the given index to the given alias.
@@ -379,7 +367,6 @@ class TableIndexer:
             if not alias_stat.is_alias:
                 # Alias is an index, this is fatal.
                 message = f"There is an index named `{alias}`, cannot proceed."
-                log.error(message)
                 slack.error(message)
                 return
             elif alias_stat.is_alias and curr_index != dest_index:
@@ -398,7 +385,6 @@ class TableIndexer:
                     f"Migrated alias `{alias}` from index `{curr_index}` to "
                     f"index `{dest_index}` | _Next: delete old index_"
                 )
-                log.info(message)
                 slack.status(model_name, message)
             else:
                 # Alias is already mapped.
@@ -410,7 +396,6 @@ class TableIndexer:
             # Alias does not exist, create it.
             self.es.indices.put_alias(index=dest_index, name=alias)
             message = f"Created alias `{alias}` pointing to index `{dest_index}`."
-            log.info(message)
             slack.status(model_name, message)
 
         if self.progress is not None:
@@ -448,7 +433,6 @@ class TableIndexer:
                         f"Verify that the API does not use this alias and then use the "
                         f"`force_delete` parameter."
                     )
-                    log.error(message)
                     slack.error(message)
                     return
                 target = target_stat.alt_names
@@ -461,20 +445,17 @@ class TableIndexer:
                         f"Index `{target}` is associated with aliases "
                         f"{target_stat.alt_names}, cannot delete. Delete aliases first."
                     )
-                    log.error(message)
                     slack.error(message)
                     return
 
             self.es.indices.delete(index=target)
             message = f"Index `{target}` was deleted - data refresh complete! :tada:"
-            log.info(message)
             slack.status(model_name, message)
         else:
             # Cannot delete as target does not exist.
             if self.is_bad_request is not None:
                 self.is_bad_request.value = 1
             message = f"Target `{target}` does not exist and cannot be deleted."
-            log.info(message)
             slack.status(model_name, message)
 
         if self.progress is not None:
@@ -529,13 +510,10 @@ class TableIndexer:
                     "query": {
                         "bool": {
                             "must_not": [
-                                {
-                                    "multi_match": {
-                                        "query": f'"{term}"',
-                                        "fields": ["tags.name", "title", "description"],
-                                    }
-                                }
-                                for term in sensitive_terms
+                                # Use `terms` query for exact matching against
+                                # unanalyzed raw fields
+                                {"terms": {f"{field}.raw": sensitive_terms}}
+                                for field in ["tags.name", "title", "description"]
                             ]
                         }
                     },

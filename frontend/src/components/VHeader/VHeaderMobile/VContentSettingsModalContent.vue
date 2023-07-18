@@ -22,21 +22,21 @@
           size="medium"
           class="me-4 gap-x-2"
           ><VIcon :name="searchType.searchType" />
-          <h2 class="label-regular">{{ $t("search-type.heading") }}</h2></VTab
+          <h2 class="label-regular">{{ $t("searchType.heading") }}</h2></VTab
         >
         <h2
           v-else
           class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal"
         >
           <VIcon :name="searchType.searchType" />
-          {{ $t("search-type.heading") }}
+          {{ $t("searchType.heading") }}
         </h2>
         <VFilterTab
           v-if="showFilters"
           :applied-filter-count="appliedFilterCount"
         />
         <VCloseButton
-          :label="$t('modal.close-content-settings')"
+          :label="$t('modal.closeContentSettings')"
           variant="filled-white"
           class="ms-auto self-center"
           @close="close"
@@ -67,14 +67,14 @@
         :disabled="isClearButtonDisabled"
         size="large"
         @click="clearFilters"
-        >{{ $t("filter-list.clear") }}
+        >{{ $t("filterList.clear") }}
       </VButton>
       <VShowResultsButton :is-fetching="isFetching" @click="close" />
     </footer>
   </VModalContent>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue"
+import { computed, defineComponent, PropType, ref } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -92,6 +92,8 @@ import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsB
 import VTab from "~/components/VTabs/VTab.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
+
+type ContentSettingsTab = "content-settings" | "filters"
 
 export default defineComponent({
   name: "VContentSettingsModalContent",
@@ -114,7 +116,7 @@ export default defineComponent({
       default: false,
     },
     close: {
-      type: Function,
+      type: Function as PropType<() => void>,
       required: true,
     },
     visible: {
@@ -133,9 +135,9 @@ export default defineComponent({
   setup(props) {
     const searchStore = useSearchStore()
     const content = useSearchType()
-    const selectedTab = ref<"content-settings" | "filters">("content-settings")
-    const changeSelectedTab = (tab: "content-settings" | "filters") => {
-      selectedTab.value = tab
+    const selectedTab = ref<ContentSettingsTab>("content-settings")
+    const changeSelectedTab = (tab: string) => {
+      selectedTab.value = tab as ContentSettingsTab
     }
 
     const areFiltersSelected = computed(() => searchStore.isAnyFilterApplied)

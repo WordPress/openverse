@@ -8,19 +8,19 @@ const { setToValue } = require("./utils")
  * if strings are for plural forms, join them with the pipe character.
  * Go from this:
  * {
- *  "browse-page.load\u0004Load more results": [
+ *  "browsePage.load\u0004Load more results": [
  *     "Загрузить ещё результаты"
  *   ],
- *   "browse-page.all-result-count-more\u0004Over ###localeCount### results": [
+ *   "browsePage.allResultCountMore\u0004Over ###localeCount### results": [
  *     "Более ###localeCount### результата",
  *     "Более ###localeCount### результатов",
  *     "Более ###localeCount### результатов"
  *   ]
- *  "browse-page.search-form.button\u0004Search": [],
+ *  "browsePage.searchForm.button\u0004Search": [],
  * }
  * To:
  * {
- *  "browse-page: {
+ *  "browsePage: {
  *   "load": "Загрузить ещё результаты"
  *   "all-result-count-more": "Более ###localeCount### результата|Более ###localeCount### результатов|Более ###localeCount### результатов",
  * }

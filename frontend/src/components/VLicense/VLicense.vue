@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+import { camel } from "case"
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License } from "~/constants/license"
@@ -61,8 +62,10 @@ export default defineComponent({
 
     const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {
+      const licenseKey =
+        props.license === "sampling+" ? props.license : camel(props.license)
       return {
-        readable: i18n.t(`license-readable-names.${props.license}`).toString(),
+        readable: i18n.t(`licenseReadableNames.${licenseKey}`).toString(),
         full: getFullLicenseName(props.license, "", i18n),
       }
     })

@@ -37,7 +37,7 @@
     <!-- To preserve the button width when state changes, this element is not
     removed from the DOM, only hidden and muted. -->
     <span :class="{ 'opacity-0': isFetching }" :aria-hidden="isFetching">
-      {{ $t("header.see-results") }}
+      {{ $t("header.seeResults") }}
     </span>
   </VButton>
 </template>

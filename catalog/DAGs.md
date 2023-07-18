@@ -19,6 +19,7 @@ The following are DAGs grouped by their primary tag:
 1.  [Database](#database)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
+1.  [Other](#other)
 1.  [Provider](#provider)
 1.  [Provider Reingestion](#provider-reingestion)
 
@@ -35,12 +36,13 @@ The following are DAGs grouped by their primary tag:
 | [`audio_data_refresh`](#audio_data_refresh)                   | `@weekly`         |
 | [`create_filtered_audio_index`](#create_filtered_audio_index) | `None`            |
 | [`create_filtered_image_index`](#create_filtered_image_index) | `None`            |
-| [`image_data_refresh`](#image_data_refresh)                   | `None`            |
+| [`image_data_refresh`](#image_data_refresh)                   | `@weekly`         |
 
 ## Database
 
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
+| [`batched_update`](#batched_update)                                               | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
@@ -62,6 +64,12 @@ The following are DAGs grouped by their primary tag:
 | ----------------------------------------------- | ----------------- |
 | [`oauth2_authorization`](#oauth2_authorization) | `None`            |
 | [`oauth2_token_refresh`](#oauth2_token_refresh) | `0 */12 * * *`    |
+
+## Other
+
+| DAG ID                                                    | Schedule Interval |
+| --------------------------------------------------------- | ----------------- |
+| [`flickr_thumbnails_removal`](#flickr_thumbnails_removal) | `None`            |
 
 ## Provider
 
@@ -105,6 +113,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
 1.  [`audio_data_refresh`](#audio_data_refresh)
+1.  [`batched_update`](#batched_update)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
@@ -113,6 +122,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
 1.  [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow)
 1.  [`flickr_reingestion_workflow`](#flickr_reingestion_workflow)
+1.  [`flickr_thumbnails_removal`](#flickr_thumbnails_removal)
 1.  [`flickr_workflow`](#flickr_workflow)
 1.  [`freesound_workflow`](#freesound_workflow)
 1.  [`image_data_refresh`](#image_data_refresh)
@@ -195,21 +205,95 @@ can also be run with the `force_refresh_metrics` option to run this refresh
 after the first of the month.
 
 Once this step is complete, the data refresh can be initiated. A data refresh
-occurs on the data refresh server in the openverse-api project. This is a task
-which imports data from the upstream Catalog database into the API, copies
-contents to a new Elasticsearch index, and finally makes the index "live". This
-process is necessary to make new content added to the Catalog by our provider
-DAGs available to the API. You can read more in the
-[README](https://github.com/WordPress/openverse-api/blob/main/ingestion_server/README.md)
+occurs on the Ingestion server in the openverse project. This is a task which
+imports data from the upstream Catalog database into the API, copies contents to
+a new Elasticsearch index, and finally makes the index "live". This process is
+necessary to make new content added to the Catalog by our provider DAGs
+available to the API. You can read more in the
+[README](https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md)
 Importantly, the data refresh TaskGroup is also configured to handle concurrency
-requirements of the data refresh server. Finally, once the origin indexes have
-been refreshed, the corresponding filtered index creation DAG is triggered.
+requirements of the Ingestion server. Finally, once the origin indexes have been
+refreshed, the corresponding filtered index creation DAG is triggered.
 
 You can find more background information on this process in the following issues
 and related PRs:
 
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
+
+## `batched_update`
+
+Batched Update DAG
+
+This DAG is used to run a batched SQL update on a media table in the Catalog
+database. It is automatically triggered by the `popularity_refresh` DAGs to
+refresh popularity data using newly calculated constants, but can also be
+triggered manually with custom SQL operations.
+
+The DAG must be run with a valid dag_run configuration specifying the SQL
+commands to be run. The DAG will then split the rows to be updated into batches,
+and report to Slack when all batches have been updated. It handles all
+deadlocking and timeout concerns, ensuring that the provided SQL is run without
+interfering with ingestion. For more information, see the implementation plan:
+https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html#special-considerations-avoiding-deadlocks-and-timeouts
+
+By default the DAG will run as a dry_run, logging the generated SQL but not
+actually running it. To actually perform the update, the `dry_run` parameter
+must be explicitly set to `false` in the configuration.
+
+Required Dagrun Configuration parameters:
+
+- query_id: a string identifier which will be appended to temporary table used
+  in the update
+- table_name: the name of the table to update. Must be a valid media table
+- select_query: a SQL `WHERE` clause used to select the rows that will be
+  updated
+- update_query: the SQL `UPDATE` expression to be run on all selected rows
+
+Optional params:
+
+- dry_run: bool, whether to actually run the generated SQL. True by default.
+- batch_size: int number of records to process in each batch. By default, 10_000
+- update_timeout: int number of seconds to run an individual batch update before
+  timing out. By default, 3600 (or one hour)
+- batch_start: int index into the temp table at which to start the update. By
+  default, this is 0 and all rows in the temp table are updated.
+- resume_update: boolean indicating whether to attempt to resume an update using
+  an existing temp table matching the `query_id`. When True, a new temp table is
+  not created.
+
+An example dag_run configuration used to set the thumbnails of all Flickr images
+to null would look like this:
+
+```
+{
+    "query_id": "my_flickr_query",
+    "table_name": "image",
+    "select_query": "WHERE provider='flickr'",
+    "update_query": "SET thumbnail=null",
+    "batch_size": 10,
+    "dry_run": false
+}
+```
+
+It is possible to resume an update from an arbitrary starting point on an
+existing temp table, for example if a DAG succeeds in creating the temp table
+but fails midway through the update. To do so, set the `resume_update` param to
+True and select your desired `batch_start`. For instance, if the example DAG
+given above failed after processing the first 50_000 records, you might run:
+
+```
+{
+    "query_id": "my_flickr_query",
+    "table_name": "image",
+    "select_query": "WHERE provider='flickr'",
+    "update_query": "SET thumbnail=null",
+    "batch_size": 10,
+    "batch_start": 50000,
+    "resume_update": true,
+    "dry_run": false
+}
+```
 
 ## `check_silenced_dags`
 
@@ -394,6 +478,11 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: https://www.flickr.com/help/terms/api Rate limit: 3600 requests per hour.
 
+## `flickr_thumbnails_removal`
+
+One-time run DAG to remove progressively all the old Flickr thumbnails, as they
+were determined to be unsuitable for the Openverse UI requirements.
+
 ## `flickr_workflow`
 
 Content Provider: Flickr
@@ -433,15 +522,15 @@ can also be run with the `force_refresh_metrics` option to run this refresh
 after the first of the month.
 
 Once this step is complete, the data refresh can be initiated. A data refresh
-occurs on the data refresh server in the openverse-api project. This is a task
-which imports data from the upstream Catalog database into the API, copies
-contents to a new Elasticsearch index, and finally makes the index "live". This
-process is necessary to make new content added to the Catalog by our provider
-DAGs available to the API. You can read more in the
-[README](https://github.com/WordPress/openverse-api/blob/main/ingestion_server/README.md)
+occurs on the Ingestion server in the openverse project. This is a task which
+imports data from the upstream Catalog database into the API, copies contents to
+a new Elasticsearch index, and finally makes the index "live". This process is
+necessary to make new content added to the Catalog by our provider DAGs
+available to the API. You can read more in the
+[README](https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md)
 Importantly, the data refresh TaskGroup is also configured to handle concurrency
-requirements of the data refresh server. Finally, once the origin indexes have
-been refreshed, the corresponding filtered index creation DAG is triggered.
+requirements of the Ingestion server. Finally, once the origin indexes have been
+refreshed, the corresponding filtered index creation DAG is triggered.
 
 You can find more background information on this process in the following issues
 and related PRs:
@@ -715,6 +804,11 @@ snapshot of the production database.
 
 For a full explanation of the DAG, see the implementation plan description:
 https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag
+
+This DAG can be skipped by setting the `SKIP_STAGING_DATABASE_RESTORE` Airflow
+Variable to `true`. To change this variable, navigate to Admin > Variables in
+the Airflow UI, then click the "edit" button next to the variable and set the
+value to either `true` or `false`.
 
 This DAG will default to using the standard AWS connection ID for the RDS
 operations. For local testing, you can set up two environment variables to have

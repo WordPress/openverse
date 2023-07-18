@@ -1,0 +1,95 @@
+{
+    meta: {
+        createdAt: '2023-07-10T06:54:53.278Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/images/?q=SearchPage500error',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 500,
+        headers: {
+            date: [
+                'Mon, 10 Jul 2023 06:54:54 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'content-length': [
+                '70',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '5/hour',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '4',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '100/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '99',
+            ],
+            'x-ratelimit-limit-anon_thumbnail': [
+                '150/minute',
+            ],
+            'x-ratelimit-available-anon_thumbnail': [
+                '149',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Mon, 10 Jul 2023 06:54:54 GMT',
+            ],
+            'accept-ranges': [
+                'bytes',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '7e46e5e0cd530557-OTP',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: {
+            detail: 'Internal Server Error',
+        },
+    },
+}

@@ -12,7 +12,7 @@ FROM realies/audiowaveform:latest AS awf
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
 RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
-    xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
+  xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
 
 ##################
 # Python builder #
@@ -32,10 +32,10 @@ ENV PATH="/venv/bin:$PATH"
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
 RUN apt-get update \
-      && apt-get install -y python3-dev \
-      && rm -rf /var/lib/apt/lists/* \
-    && python -m venv /venv \
-    && pip install --upgrade pipenv
+  && apt-get install -y python3-dev \
+  && rm -rf /var/lib/apt/lists/* \
+  && python -m venv /venv \
+  && pip install --upgrade pipenv
 
 # Copy the Pipenv files into the container
 COPY Pipfile Pipfile.lock ./
@@ -66,8 +66,15 @@ ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansP
 # Copy virtualenv from the builder image
 COPY --from=builder /venv /venv
 
-# Copy `audiowaveform` dependencies
-COPY --from=awf /deps /
+# Copy `audiowaveform` dependencies. This is unreliable as we use
+# The `latest` version of the audiowaveform image which may introduce
+# dependency changes which *could* have a different directory structure.
+# If this step is failing, try adding the logging in this commit to help
+# update the dependency paths:
+# https://github.com/WordPress/openverse/commit/6cd8e3944a1d4ba7a3e80705b969a6a50eb75b5a
+COPY --from=awf /deps/lib/ /lib/
+COPY --from=awf /deps/usr/ /usr/
+
 # Copy `audiowaveform` binary
 COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 
@@ -76,16 +83,16 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 #   - libpq-dev: required by `psycopg2`
 # - Create directory for dumping API logs
 RUN apt-get update \
-      && apt-get install -y curl libpq-dev libexempi8 postgresql-client \
-      && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /var/log/openverse_api/openverse_api.log
+  && apt-get install -y curl libpq-dev libexempi8 postgresql-client \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p /var/log/openverse_api/openverse_api.log
 
 # Create a folder for placing static files
 RUN mkdir /static
 
 # Create a non-root user, and make it the owner of the static dir created above
 RUN useradd --create-home opener \
-    && chown -R opener /static
+  && chown -R opener /static
 USER opener
 
 # Copy code into the final image
@@ -93,10 +100,10 @@ COPY --chown=opener . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`
 RUN env \
-      SETUP_ES="False" \
-      STATIC_ROOT="/static" \
-      DJANGO_SECRET_KEY="any string" \
-    python manage.py collectstatic
+  SETUP_ES="False" \
+  STATIC_ROOT="/static" \
+  DJANGO_SECRET_KEY="any string" \
+  python manage.py collectstatic
 
 # Add the release version to the docker container
 ARG SEMANTIC_VERSION
@@ -117,7 +124,7 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # NGINX #
 #########
 
-FROM nginx:1.24.0-alpine as nginx
+FROM nginx:1.25.1-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 

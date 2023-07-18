@@ -96,7 +96,7 @@ export default defineComponent({
     /**
      * Get the button label based on the current status of the player.
      */
-    const label = computed(() => `play-pause.${statusVerbMap[props.status]}`)
+    const label = computed(() => `playPause.${statusVerbMap[props.status]}`)
     /**
      * Get the button icon based on the current status of the player.
      */

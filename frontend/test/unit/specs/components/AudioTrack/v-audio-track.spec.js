@@ -1,3 +1,5 @@
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "getByText"] }] */
+
 import { fireEvent } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
@@ -15,10 +17,6 @@ jest.mock("~/composables/use-match-routes", () => ({
   // mocking `Ref<boolean>` as `{ value: boolean }`
   useMatchSearchRoutes: jest.fn(() => ({ matches: { value: false } })),
   useMatchSingleResultRoutes: jest.fn(() => ({ matches: { value: false } })),
-}))
-
-jest.mock("~/composables/use-browser-detection", () => ({
-  useBrowserIsBlink: jest.fn(() => false),
 }))
 
 const stubs = {
@@ -98,9 +96,9 @@ describe("AudioTrack", () => {
     const { getByRole, getByText } = render(VAudioTrack, options, configureVue)
 
     await fireEvent.click(getByRole("button"))
-    await expect(playStub).toHaveBeenCalledTimes(1)
-    await expect(pauseStub).toHaveBeenCalledTimes(1)
-    await expect(getByText(/Reproduction not allowed./i)).toBeVisible()
+    expect(playStub).toHaveBeenCalledTimes(1)
+    expect(pauseStub).toHaveBeenCalledTimes(1)
+    expect(getByText(/Reproduction not allowed./i)).toBeVisible()
     // It's not possible to get the vm to test that Sentry has been called
   })
 })

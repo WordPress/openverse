@@ -30,7 +30,7 @@
 import { defineComponent, computed, PropType } from "vue"
 
 import { defineEvent } from "~/types/emits"
-import { ProperlyExtractPropTypes } from "~/types/prop-extraction"
+import type { ProperlyExtractPropTypes } from "~/types/prop-extraction"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
@@ -45,7 +45,7 @@ export interface Choice {
 }
 
 export type SelectFieldProps = ProperlyExtractPropTypes<
-  NonNullable<typeof VSelectField["props"]>
+  NonNullable<(typeof VSelectField)["props"]>
 >
 
 /**
@@ -101,7 +101,7 @@ const VSelectField = defineComponent({
     "update:modelValue": defineEvent<[string]>(),
   },
   setup(props, { emit, attrs, slots }) {
-    const fieldName = computed(() => attrs["name"] ?? props.fieldId)
+    const fieldName = computed(() => (attrs["name"] as string) ?? props.fieldId)
     const modelMedium = computed<string>({
       get: () => props.modelValue ?? "",
       set: (value: string) => {

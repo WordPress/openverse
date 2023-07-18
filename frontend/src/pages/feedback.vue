@@ -11,7 +11,7 @@
           >#openverse</VLink
         >
       </template>
-      <template #making-wordpress>
+      <template #makingWordpress>
         <VLink href="https://make.wordpress.org/chat/">Making WordPress</VLink>
       </template>
       <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->

@@ -38,6 +38,8 @@ class DataRefresh:
                                        may take
     create_materialized_view_timeout:  timedelta expressing amount of time the
                                        creation of the matview may take
+    index_readiness_timeout:           timedelta expressing amount of time it may take
+                                       to await a healthy ES index after reindexing
     doc_md:                            str used for the DAG's documentation markdown
     """
 
@@ -52,6 +54,7 @@ class DataRefresh:
     create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
     create_materialized_view_timeout: timedelta = timedelta(hours=1)
     create_filtered_index_timeout: timedelta = timedelta(days=1)
+    index_readiness_timeout: timedelta = timedelta(days=1)
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
@@ -60,14 +63,11 @@ class DataRefresh:
 DATA_REFRESH_CONFIGS = [
     DataRefresh(
         media_type="image",
-        # Temporarily turn off scheduled runs for the image data refresh.
-        # This allows us to keep the DAG enabled for manual runs.
-        schedule=None,
         data_refresh_timeout=timedelta(days=4),
         refresh_metrics_timeout=timedelta(hours=24),
-        refresh_matview_timeout=timedelta(days=21),
+        refresh_matview_timeout=timedelta(hours=72),
         create_pop_constants_view_timeout=timedelta(hours=24),
-        create_materialized_view_timeout=timedelta(days=21),
+        create_materialized_view_timeout=timedelta(hours=72),
     ),
     DataRefresh(media_type="audio"),
 ]

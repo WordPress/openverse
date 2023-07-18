@@ -18,11 +18,11 @@ export const ALL_LICENSES = [
   ...DEPRECATED_CC_LICENSES,
 ] as const
 
-export type License = typeof ALL_LICENSES[number]
+export type License = (typeof ALL_LICENSES)[number]
 
 export const LICENSE_VERSIONS = ["", "1.0", "2.0", "2.5", "3.0", "4.0"] as const
 
-export type LicenseVersion = typeof LICENSE_VERSIONS[number]
+export type LicenseVersion = (typeof LICENSE_VERSIONS)[number]
 
 /**
  * Each element of this array can be constructed into an SVG in Creative Commons'
@@ -45,4 +45,4 @@ export const LICENSE_ICONS = [
   "share",
 ] as const
 
-export type LicenseElement = typeof LICENSE_ICONS[number]
+export type LicenseElement = (typeof LICENSE_ICONS)[number]

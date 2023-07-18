@@ -22,7 +22,7 @@ const walkToFilterButton = async (page: Page) => {
 
 const firstFilterCheckbox = (page: Page, dir: LanguageDirection) => {
   return page
-    .getByRole("region", { name: t("filters.filter-by", dir) })
+    .getByRole("region", { name: t("filters.filterBy", dir) })
     .getByRole("checkbox")
     .first()
 }
@@ -46,9 +46,10 @@ for (const dir of languageDirections) {
       await walkToFilterButton(page)
 
       // Check that the filters sidebar is open
-      expect(
-        await page.locator("#filter-button").getAttribute("aria-expanded")
-      ).toBe("true")
+      await expect(page.locator("#filter-button")).toHaveAttribute(
+        "aria-expanded",
+        "true"
+      )
 
       await page.keyboard.press(keycodes.Tab)
 

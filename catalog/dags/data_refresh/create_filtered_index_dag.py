@@ -51,7 +51,7 @@ used when manually triggering the DAG unless you are absolutely certain
 of what you are doing.
 """
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.decorators import task
@@ -59,6 +59,7 @@ from airflow.exceptions import AirflowSensorTimeout
 from airflow.models.param import Param
 from airflow.operators.empty import EmptyOperator
 from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
@@ -129,17 +130,20 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             timeout=data_refresh.create_filtered_index_timeout,
         )
 
-    def point_alias(destination_index_suffix: str):
+    def point_alias(destination_index_suffix: str) -> TaskGroup:
         point_alias_payload = {
             "alias": target_alias,
             "index_suffix": f"{destination_index_suffix}-filtered",
         }
 
-        return ingestion_server.trigger_task(
-            action="POINT_ALIAS",
-            model=media_type,
-            data=point_alias_payload,
-        )
+        with TaskGroup(group_id="point_alias") as point_alias_group:
+            ingestion_server.trigger_and_wait_for_task(
+                action="POINT_ALIAS",
+                model=media_type,
+                data=point_alias_payload,
+                timeout=timedelta(hours=12),  # matches the ingestion server's wait time
+            )
+        return point_alias_group
 
     with DAG(
         dag_id=f"create_filtered_{media_type}_index",
@@ -206,6 +210,12 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
             destination_index_suffix=destination_index_suffix,
         )
 
+        # Await healthy results from the newly created elasticsearch index.
+        index_readiness_check = ingestion_server.index_readiness_check(
+            media_type=media_type,
+            index_suffix=f"{destination_index_suffix}-filtered",
+        )
+
         do_point_alias = point_alias(destination_index_suffix=destination_index_suffix)
 
         delete_old_index = ingestion_server.trigger_task(
@@ -235,7 +245,7 @@ def filtered_index_creation_dag_factory(data_refresh: DataRefresh):
         )
 
         get_current_index_if_exists >> continue_if_no_current_index >> do_create
-        await_create >> do_point_alias
+        await_create >> index_readiness_check >> do_point_alias
 
         [get_current_index_if_exists, do_point_alias] >> delete_old_index
 

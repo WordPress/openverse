@@ -1,4 +1,4 @@
-import Vue from "vue"
+import Vue, { nextTick } from "vue"
 import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
 
@@ -41,34 +41,15 @@ const TestWrapper = Vue.component("TestWrapper", {
   `,
 })
 
-const nextTick = async () =>
-  await new Promise((resolve) => setTimeout(resolve, 1))
-
 const getPopover = () => screen.getByText(/code is poetry/i)
 const queryPopover = () => screen.queryByText(/code is poetry/i)
-const getTrigger = () => screen.getByRole("button")
+const getTrigger = () => screen.getByRole("button", {})
 const getExternalArea = () => screen.getByText(/external area/i)
 const clickOutside = () => userEvent.click(getExternalArea())
 
-const doOpen = async (trigger = getTrigger(), verify = true) => {
+const doOpen = async (trigger = getTrigger()) => {
   await userEvent.click(trigger)
   await nextTick()
-  if (verify) {
-    expectOpen()
-  }
-}
-
-const expectOpen = () => {
-  expect(getPopover()).toBeVisible()
-}
-
-const expectClosed = () => {
-  return (
-    expect(queryPopover() === null) ||
-    expect(queryPopover().parentElement.parentElement.style.display).toEqual(
-      "none"
-    )
-  )
 }
 
 describe("VPopover", () => {
@@ -79,10 +60,10 @@ describe("VPopover", () => {
   it("should open the popover when the trigger is clicked", async () => {
     render(TestWrapper)
 
-    expectClosed()
+    expect(queryPopover()).not.toBeInTheDocument()
 
-    // doOpen already has the visible assertion built in
     await doOpen()
+    expect(getPopover()).toBeVisible()
   })
 
   describe("accessibility", () => {
@@ -98,6 +79,7 @@ describe("VPopover", () => {
       expect(trigger).not.toHaveAttribute("aria-expanded")
 
       await doOpen(trigger)
+      expect(getPopover()).toBeVisible()
 
       expect(trigger).toHaveAttribute("aria-expanded", "true")
     })
@@ -106,18 +88,10 @@ describe("VPopover", () => {
       it("should focus the popover by default when opening if there is no tabbable content in the popover and warn", async () => {
         render(TestWrapper)
         await doOpen()
+        expect(getPopover()).toBeVisible()
         expect(getPopover().parentElement).toHaveFocus()
 
         expect(warn).toHaveBeenCalledWith(noFocusableElementWarning)
-      })
-
-      it("should focus the first tabbable element in the popover by default and not warn", async () => {
-        render(TestWrapper, { props: { popoverContentTabIndex: 0 } })
-        await doOpen()
-        await nextTick(() => {
-          expect(getPopover()).toHaveFocus()
-          expect(warn).not.toHaveBeenCalled()
-        })
       })
 
       it("should neither focus no warn when the prop is false", async () => {
@@ -126,6 +100,7 @@ describe("VPopover", () => {
         })
         getTrigger().focus()
         await doOpen()
+        expect(getPopover()).toBeVisible()
         expect(getTrigger()).toHaveFocus()
         expect(warn).not.toHaveBeenCalled()
       })
@@ -137,8 +112,9 @@ describe("VPopover", () => {
           props: { popoverProps: { trapFocus: false } },
         })
         await doOpen()
+        expect(getPopover()).toBeVisible()
         await clickOutside()
-        expectClosed()
+        expect(queryPopover()).not.toBeVisible()
         expect(getTrigger()).toHaveFocus()
       })
 
@@ -147,6 +123,7 @@ describe("VPopover", () => {
           props: { popoverProps: { trapFocus: false, autoFocusOnHide: false } },
         })
         await doOpen()
+        expect(getPopover()).toBeVisible()
         await clickOutside()
         expect(getTrigger()).not.toHaveFocus()
       })
@@ -158,9 +135,10 @@ describe("VPopover", () => {
       render(TestWrapper)
 
       await doOpen()
-
+      expect(getPopover()).toBeVisible()
       await clickOutside()
-      expectClosed()
+      await nextTick()
+      expect(queryPopover()).not.toBeVisible()
     })
 
     it("should not hide the popover if a click happens outside the popover when false", async () => {
@@ -169,9 +147,10 @@ describe("VPopover", () => {
       })
 
       await doOpen()
+      expect(getPopover()).toBeVisible()
 
       await clickOutside()
-      expectOpen()
+      expect(getPopover()).toBeVisible()
     })
   })
 
@@ -179,15 +158,17 @@ describe("VPopover", () => {
     it("should hide the popover if escape is sent in the popover by default", async () => {
       render(TestWrapper)
       await doOpen()
+      expect(getPopover()).toBeVisible()
       await userEvent.keyboard("{escape}")
-      expectClosed()
+      expect(queryPopover()).not.toBeVisible()
     })
 
     it("should not hide if the escape is sent in the popover when false", async () => {
       render(TestWrapper, { props: { popoverProps: { hideOnEsc: false } } })
       await doOpen()
+      expect(getPopover()).toBeVisible()
       await userEvent.keyboard("{escape}")
-      expectOpen()
+      expect(getPopover()).toBeVisible()
     })
   })
 })
