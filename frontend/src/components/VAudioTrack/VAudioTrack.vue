@@ -383,7 +383,7 @@ export default defineComponent({
     /* Timekeeping */
 
     const message = computed(() =>
-      activeMediaStore.message
+      activeMediaStore.id === props.audio.id && activeMediaStore.message
         ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`).toString()
         : ""
     )
