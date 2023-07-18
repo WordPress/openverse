@@ -8,7 +8,6 @@ const ruleTester = new RuleTester({
 
 ruleTester.run("no-disabled-test", rule, {
   valid: [
-    // Valid test cases
     'test("valid test", () => { /* implementation */ });',
     `
     // https://github.com/WordPress/openverse/issues/2573
@@ -79,7 +78,6 @@ ruleTester.run("no-disabled-test", rule, {
     `,
   ],
   invalid: [
-    // Invalid test cases
     {
       code: `
       test.skip('invalid skipped test', () => {
