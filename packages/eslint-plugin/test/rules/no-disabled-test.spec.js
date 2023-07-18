@@ -1,4 +1,5 @@
 const { RuleTester } = require("eslint")
+
 const rule = require("../../src/rules/no-disabled-test")
 
 const ruleTester = new RuleTester({
