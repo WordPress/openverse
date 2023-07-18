@@ -38,6 +38,7 @@ import { storeToRefs } from "pinia"
 import {
   defineComponent,
   useContext,
+  useFetch,
   useMeta,
   useRoute,
 } from "@nuxtjs/composition-api"
@@ -85,9 +86,7 @@ export default defineComponent({
     const { resultCount, fetchState, resultItems } = storeToRefs(mediaStore)
 
     const needsFetching = computed(() =>
-      Boolean(
-        supported.value && !resultCount.value && searchTerm.value.trim() !== ""
-      )
+      Boolean(supported.value && !resultCount.value && searchTerm.value !== "")
     )
 
     useMeta({
@@ -101,27 +100,34 @@ export default defineComponent({
       payload: { shouldPersistMedia?: boolean } = {}
     ) => {
       /**
-       * If the fetch has already started in the middleware and there is an error,
-       * don't re-fetch.
+       * If the fetch has already started in the middleware,
+       * and there is an error, don't re-fetch.
        */
-      if (
+      const hasMiddlewareError =
         mediaStore.fetchState.fetchingError?.statusCode &&
         mediaStore.fetchState.hasStarted
-      )
-        return
+      if (hasMiddlewareError) return
+
       const results = await mediaStore.fetchMedia(payload)
       if (!results) {
         const errorStatus = mediaStore.fetchState.fetchingError?.statusCode
+        /**
+         * 404 error is handled by the VErrorSection component in the child pages.
+         * For all other errors, show the Nuxt error page.
+         */
         if (errorStatus !== 404)
           return nuxtError(mediaStore.fetchState.fetchingError)
       }
     }
 
+    /**
+     * Search middleware runs when the path changes. This watcher
+     * is necessary to handle the query changes.
+     *
+     * It updates the search store state from the URL query,
+     * fetches media, and scrolls to top if necessary.
+     */
     watch(route, async (newRoute, oldRoute) => {
-      /**
-       * Updates the search type only if the route's path changes.
-       * Scrolls `main-page` to top if the path changes.
-       */
       if (
         newRoute.path !== oldRoute.path ||
         !isShallowEqualObjects(newRoute.query, oldRoute.query)
@@ -129,7 +135,17 @@ export default defineComponent({
         const { query: urlQuery, path } = newRoute
         searchStore.setSearchStateFromUrl({ urlQuery, path })
 
+        /**
+         * By default, Nuxt only scrolls to top when the path changes.
+         * This is a workaround to scroll to top when the query changes.
+         */
         document.getElementById("main-page")?.scroll(0, 0)
+        await fetchMedia()
+      }
+    })
+
+    useFetch(async () => {
+      if (needsFetching.value) {
         await fetchMedia()
       }
     })
@@ -148,16 +164,6 @@ export default defineComponent({
       isSidebarVisible,
 
       skipToContentTargetId,
-
-      fetchMedia,
-    }
-  },
-  /**
-   * Fetch media, if necessary, in a non-blocking way.
-   */
-  async fetch() {
-    if (this.needsFetching) {
-      await this.fetchMedia()
     }
   },
   head: {},

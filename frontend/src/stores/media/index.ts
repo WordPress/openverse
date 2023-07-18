@@ -16,9 +16,9 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
+  isAdditionalSearchType,
   SupportedMediaType,
   supportedMediaTypes,
-  isAdditionalSearchType,
 } from "~/constants/media"
 import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
@@ -151,6 +151,18 @@ export const useMediaStore = defineStore("media", {
             (type) => this.mediaFetchState[type][property]
           )
 
+        /**
+         * Returns a combined error for all media types.
+         *
+         * If at least one media type has a 429 error, returns 429 to stop the
+         * user from retrying the request.
+         *
+         * If all media types have a 404 error, returns 404 to show the "No results" page.
+         *
+         * If at least one media type has a different error, returns the first error.
+         * The handling of errors other than 404 and 429 should be improved after we
+         * get more information about the error codes we get from the API.
+         */
         const allMediaError = (): null | NuxtError => {
           const statuses = supportedMediaTypes.map(
             (mt) => this.mediaFetchState[mt].fetchingError?.statusCode
@@ -258,6 +270,18 @@ export const useMediaStore = defineStore("media", {
       }
 
       return newResults
+    },
+    _fetchableMediaTypes(): SupportedMediaType[] {
+      return (
+        (this._searchType !== ALL_MEDIA
+          ? [this._searchType]
+          : [IMAGE, AUDIO]) as SupportedMediaType[]
+      ).filter(
+        (type) =>
+          !this.mediaFetchState[type].fetchingError &&
+          !this.mediaFetchState[type].isFetching &&
+          !this.mediaFetchState[type].isFinished
+      )
     },
   },
 
@@ -368,7 +392,8 @@ export const useMediaStore = defineStore("media", {
     },
 
     /**
-     * Calls `fetchSingleMediaType` for selected media type(s). Can be called by changing the search query
+     * Calls `fetchSingleMediaType` for selected media type(s).
+     * Can be called by changing the search query
      * (search term or filter item), or by clicking 'Load more' button.
      * If the search query changed, fetch state is reset, otherwise only the media types for which
      * fetchState.isFinished is not true are fetched.
@@ -379,16 +404,8 @@ export const useMediaStore = defineStore("media", {
       if (!shouldPersistMedia) {
         this.clearMedia()
       }
-      const mediaToFetch = (
-        (mediaType !== ALL_MEDIA
-          ? [mediaType]
-          : [IMAGE, AUDIO]) as SupportedMediaType[]
-      ).filter(
-        (type) =>
-          !this.mediaFetchState[type].fetchingError &&
-          !this.mediaFetchState[type].isFetching &&
-          !this.mediaFetchState[type].isFinished
-      )
+
+      const mediaToFetch = this._fetchableMediaTypes
 
       const resultCounts = await Promise.all(
         mediaToFetch.map((mediaType) =>
