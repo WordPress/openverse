@@ -515,7 +515,7 @@ export const useMediaStore = defineStore("media", {
   },
 })
 
-const getNuxtErrorData = (
+export const getNuxtErrorData = (
   error: unknown,
   mediaType: SupportedMediaType
 ): NuxtError => {
