@@ -1,4 +1,3 @@
-import { useNavigationStore } from "~/stores/navigation"
 import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
@@ -26,14 +25,6 @@ const middleware: Middleware = async ({
   query,
   $pinia,
 }: Context) => {
-  /* Nav store */
-
-  const navigationStore = useNavigationStore($pinia)
-
-  if (process.client && navigationStore.isReferredFromCc) {
-    navigationStore.setIsReferredFromCc(false)
-  }
-
   /* Provider store */
   const providerStore = useProviderStore($pinia)
   await providerStore.fetchMediaProviders()

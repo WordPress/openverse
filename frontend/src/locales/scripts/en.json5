@@ -648,12 +648,6 @@
       arrowLabel: "Dropdown",
     },
   },
-  migrationNotice: {
-    intro: "{ccSearch} is now called {openverse} and joins {wordpress} as an open source project.",
-    more: "{readMore} about this announcement.",
-    read: "Read more",
-    close: "Close the announcement",
-  },
   downloadButton: {
     aria: {
       dropdownLabel: "Select the download file format",
