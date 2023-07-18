@@ -1,50 +1,50 @@
-import { expect, test } from "@playwright/test"
+import { test } from "@playwright/test"
 
 import {
+  dismissAllBannersUsingCookies,
   filters,
-  goToSearchTerm,
   languageDirections,
   pathWithDir,
+  setBreakpointCookie,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+import type { Breakpoint } from "~/constants/screens"
+
 test.describe.configure({ mode: "parallel" })
 
+const getFiltersName = (breakpoint: Breakpoint) =>
+  breakpoint === "lg" ? "filters-sidebar" : "filters-modal"
+
 for (const dir of languageDirections) {
-  breakpoints.describeEachDesktop(() => {
-    test(`Filters sidebar none selected - ${dir}`, async ({ page }) => {
-      await page.goto(pathWithDir("/search/birds", dir))
+  breakpoints.describeEachBreakpoint(["xs", "sm", "md", "lg"])(
+    ({ breakpoint, expectSnapshot }) => {
+      const isDesktop = breakpoint === "lg"
+      test.beforeEach(async ({ page }) => {
+        await setBreakpointCookie(page, breakpoint)
+        await dismissAllBannersUsingCookies(page)
+        await page.goto(pathWithDir("/search/?q=birds", dir))
+        await filters.open(page, dir)
+      })
+      test(`Filters modal none selected - ${dir}`, async ({ page }) => {
+        const snapshotName = `${getFiltersName(breakpoint)}-${dir}`
 
-      expect(await page.locator(".sidebar").screenshot()).toMatchSnapshot(
-        `filters-sidebar-${dir}.png`
-      )
-    })
+        await expectSnapshot(
+          snapshotName,
+          isDesktop ? page.locator(".sidebar") : page
+        )
+      })
 
-    test(`Filters sidebar 1 filter selected - ${dir}`, async ({ page }) => {
-      await goToSearchTerm(page, "birds", { dir })
-      await page.locator('input[type="checkbox"]').first().check()
+      test(`Filters modal 1 filter selected - ${dir}`, async ({ page }) => {
+        await page.locator('input[type="checkbox"]').first().check()
 
-      expect(await page.locator(".sidebar").screenshot()).toMatchSnapshot(
-        `filters-sidebar-checked-${dir}.png`
-      )
-    })
-  })
+        const snapshotName = `${getFiltersName(breakpoint)}-checked-${dir}`
 
-  breakpoints.describeEachMobile(({ expectSnapshot }) => {
-    test(`Filters modal none selected - ${dir}`, async ({ page }) => {
-      await page.goto(pathWithDir("/search/birds", dir))
-      await filters.open(page)
-
-      await expectSnapshot(`filters-modal-${dir}.png`, page)
-    })
-
-    test(`Filters modal 1 filter selected - ${dir}`, async ({ page }) => {
-      await page.goto(pathWithDir("/search/birds", dir))
-      await filters.open(page)
-
-      await page.locator('input[type="checkbox"]').first().check()
-
-      await expectSnapshot(`filters-modal-filters-selected-${dir}.png`, page)
-    })
-  })
+        await expectSnapshot(
+          snapshotName,
+          isDesktop ? page.locator(".sidebar") : page
+        )
+      })
+    }
+  )
 }
