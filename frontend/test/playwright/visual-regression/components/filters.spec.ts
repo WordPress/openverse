@@ -1,22 +1,19 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import {
+  filters,
   goToSearchTerm,
   languageDirections,
+  pathWithDir,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 test.describe.configure({ mode: "parallel" })
 
-const openFiltersTab = async (page: Page) => {
-  await page.locator("#content-settings-button").click()
-  await page.getByRole("tab").last().click()
-}
-
 for (const dir of languageDirections) {
   breakpoints.describeEachDesktop(() => {
     test(`Filters sidebar none selected - ${dir}`, async ({ page }) => {
-      await goToSearchTerm(page, "birds", { dir })
+      await page.goto(pathWithDir("/search/birds", dir))
 
       expect(await page.locator(".sidebar").screenshot()).toMatchSnapshot(
         `filters-sidebar-${dir}.png`
@@ -35,15 +32,15 @@ for (const dir of languageDirections) {
 
   breakpoints.describeEachMobile(({ expectSnapshot }) => {
     test(`Filters modal none selected - ${dir}`, async ({ page }) => {
-      await goToSearchTerm(page, "birds", { dir })
-      await openFiltersTab(page)
+      await page.goto(pathWithDir("/search/birds", dir))
+      await filters.open(page)
 
       await expectSnapshot(`filters-modal-${dir}.png`, page)
     })
 
     test(`Filters modal 1 filter selected - ${dir}`, async ({ page }) => {
-      await goToSearchTerm(page, "birds", { dir })
-      await openFiltersTab(page)
+      await page.goto(pathWithDir("/search/birds", dir))
+      await filters.open(page)
 
       await page.locator('input[type="checkbox"]').first().check()
 
