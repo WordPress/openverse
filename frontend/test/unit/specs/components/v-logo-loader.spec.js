@@ -1,8 +1,8 @@
 import { screen } from "@testing-library/vue"
 
-import { usePreferredReducedMotion } from "@vueuse/core"
-
 import { render } from "~~/test/unit/test-utils/render"
+
+import { useReducedMotion } from "~/composables/use-reduced-motion"
 
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
 
@@ -11,8 +11,8 @@ jest.mock("~/utils/console", () => ({
   log: jest.fn(),
 }))
 
-jest.mock("@vueuse/core", () => ({
-  usePreferredReducedMotion: jest.fn(),
+jest.mock("~/composables/use-reduced-motion", () => ({
+  useReducedMotion: jest.fn(),
 }))
 
 describe("VLogoLoader", () => {
@@ -24,7 +24,7 @@ describe("VLogoLoader", () => {
 
   describe("accessibility", () => {
     it("should render differently when the user prefers reduced motion", () => {
-      usePreferredReducedMotion.mockImplementation(() => true)
+      useReducedMotion.mockImplementation(() => true)
 
       render(VLogoLoader, {
         props: { status: "loading" },
@@ -33,7 +33,7 @@ describe("VLogoLoader", () => {
       expect(element).toHaveAttribute("data-prefers-reduced-motion", "true")
     })
     it("should show the default loading style when no motion preference is set", () => {
-      usePreferredReducedMotion.mockImplementation(() => false)
+      useReducedMotion.mockImplementation(() => false)
 
       render(VLogoLoader, {
         props: { status: "loading" },
