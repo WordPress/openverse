@@ -163,7 +163,7 @@ logger = logging.getLogger(__name__)
 )
 def batched_update():
     # Unique Airflow variable name for tracking the batch_start for this query
-    BATCH_START_VAR = "batch_start_{{ params.query_id }}"
+    BATCH_START_VAR = "batched_update_start_{{ params.query_id }}"
 
     check_for_resume_update = resume_update(
         resume_update="{{ params.resume_update }}",
