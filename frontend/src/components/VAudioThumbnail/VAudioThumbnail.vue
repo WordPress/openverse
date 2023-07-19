@@ -25,7 +25,7 @@
     <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
       <img
         ref="imgEl"
-        class="h-full w-full overflow-clip object-cover object-center"
+        class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform]"
         :class="{ 'scale-150 blur-image': shouldBlur }"
         :src="audio.thumbnail"
         :alt="helpText"

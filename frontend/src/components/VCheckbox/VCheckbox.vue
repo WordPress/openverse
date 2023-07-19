@@ -146,7 +146,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const localCheckedState = ref(props.checked || false)
     const labelClasses = computed(() =>
-      props.disabled ? "text-dark-charcoal-70" : "text-dark-charcoal"
+      props.disabled ? "text-dark-charcoal-40" : "text-dark-charcoal"
     )
     const inputAttrs = computed<CheckboxAttrs>(() => {
       const attrs: CheckboxAttrs = {

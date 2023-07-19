@@ -19,7 +19,7 @@
         <img
           ref="img"
           loading="lazy"
-          class="block w-full rounded-sm object-cover"
+          class="block w-full rounded-sm object-cover duration-200 motion-safe:transition-[filter,transform]"
           :class="[
             isSquare ? 'h-full' : 'margin-auto',
             { 'scale-150 blur-image': shouldBlur },

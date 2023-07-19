@@ -30,7 +30,11 @@
         v-if="isSidebarVisible"
         class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
       >
-        <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
+        <VSearchGridFilter class="px-10 py-8" />
+        <VSafeBrowsing
+          v-if="isSensitiveContentEnabled"
+          class="border-t border-dark-charcoal-20 px-10 py-8"
+        />
       </aside>
 
       <div
@@ -100,6 +104,9 @@ export default defineComponent({
     onMounted(() => {
       featureStore.initFromSession()
     })
+    const isSensitiveContentEnabled = computed(() =>
+      featureStore.isOn("sensitive_content")
+    )
 
     const { updateBreakpoint } = useLayout()
 
@@ -125,10 +132,6 @@ export default defineComponent({
         uiStore.isFilterVisible &&
         isDesktopLayout.value
     )
-
-    const closeSidebar = () => {
-      uiStore.setFiltersState(false)
-    }
 
     const isHeaderScrolled = ref(false)
     const showScrollButton = ref(false)
@@ -161,6 +164,8 @@ export default defineComponent({
     )
 
     return {
+      isSensitiveContentEnabled,
+
       mainPageRef,
       headerRef,
 
@@ -170,8 +175,6 @@ export default defineComponent({
       breakpoint,
 
       headerBorder,
-
-      closeSidebar,
     }
   },
   head() {
