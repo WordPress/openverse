@@ -1,7 +1,7 @@
 <template>
   <section id="safe-browsing" aria-labelledby="safe-browsing-heading">
     <header class="relative mb-6 flex items-center justify-between">
-      <h4 id="safe-browsing-headers" class="caption-bold uppercase">
+      <h4 id="safe-browsing-heading" class="caption-bold uppercase">
         {{ $t("filters.safeBrowsing.title") }}
       </h4>
     </header>
