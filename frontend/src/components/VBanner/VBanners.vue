@@ -1,11 +1,6 @@
 <template>
   <div>
     <div v-show="showBanners" class="flex flex-col gap-2 p-2 pb-0">
-      <VMigrationNotice
-        v-if="shouldShowMigrationBanner"
-        :variant="variant"
-        @close="dismissBanner('cc-referral')"
-      />
       <VAnalyticsNotice
         v-if="shouldShowAnalyticsBanner"
         :variant="variant"
@@ -32,16 +27,13 @@ import type { TranslationBannerId, BannerId } from "~/types/banners"
 export default defineComponent({
   name: "VBanners",
   components: {
-    VMigrationNotice: () => import("~/components/VBanner/VMigrationNotice.vue"),
     VTranslationStatusBanner: () =>
       import("~/components/VBanner/VTranslationStatusBanner.vue"),
     VAnalyticsNotice: () => import("~/components/VBanner/VAnalyticsNotice.vue"),
   },
   setup() {
     const uiStore = useUiStore()
-    const shouldShowMigrationBanner = computed(
-      () => uiStore.shouldShowMigrationBanner
-    )
+
     const shouldShowTranslationBanner = computed(
       () => uiStore.shouldShowTranslationBanner
     )
@@ -63,16 +55,13 @@ export default defineComponent({
     }
 
     const showBanners = computed(() =>
-      [
-        shouldShowMigrationBanner,
-        shouldShowTranslationBanner,
-        shouldShowAnalyticsBanner,
-      ].some((item) => item.value)
+      [shouldShowTranslationBanner, shouldShowAnalyticsBanner].some(
+        (item) => item.value
+      )
     )
 
     return {
       translationBannerId,
-      shouldShowMigrationBanner,
       shouldShowTranslationBanner,
       shouldShowAnalyticsBanner,
       showBanners,
