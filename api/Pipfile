@@ -20,7 +20,6 @@ pytest-sugar = "~=0.9"
 [packages]
 aiohttp = "~=3.8"
 aws-requests-auth = "~=0.4"
-boto3 = "~=1.26"
 deepdiff = "~=6.2"
 Django = "~=4.2"
 django-braces = "~=1.15"

@@ -149,14 +149,6 @@
             "index": "pypi",
             "version": "==0.4.3"
         },
-        "boto3": {
-            "hashes": [
-                "sha256:a0a049d16dabf559bd86d4622a985549154c6918f779f373fb7588bd3cf1272d",
-                "sha256:ea7dc518399106ee300b867596c92d2b7b498ee7721db935915cdd53339a9f92"
-            ],
-            "index": "pypi",
-            "version": "==1.26.126"
-        },
         "botocore": {
             "hashes": [
                 "sha256:6f35d59e230095aed7cd747604fe248fa384bebb7d09549077892f936a8ca3df",
