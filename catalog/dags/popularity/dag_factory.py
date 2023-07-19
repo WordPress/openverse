@@ -24,7 +24,6 @@ https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-
 """
 import datetime
 import logging
-import os
 
 from airflow import DAG
 from airflow.decorators import task
@@ -38,7 +37,7 @@ from popularity.refresh_popularity_metrics_task_factory import (
 )
 
 from common import slack
-from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID, REFRESH_POKE_INTERVAL
 from common.popularity import sql
 from database.batched_update.constants import DAG_ID as BATCHED_UPDATE_DAG_ID
 
@@ -133,8 +132,6 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
     )
 
     with dag:
-        poke_interval = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))
-
         # Refresh the underlying popularity tables. This step recalculates the
         # popularity constants, which will later be used to calculate updated
         # standardized popularity scores.
@@ -152,7 +149,7 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             wait_for_completion=True,
             # Release the worker slot while waiting
             deferrable=True,
-            poke_interval=poke_interval,
+            poke_interval=REFRESH_POKE_INTERVAL,
             retries=0,
         ).expand(
             # Build the conf for each provider
