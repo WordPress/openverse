@@ -62,7 +62,7 @@ export default defineComponent({
   setup() {
     const { app } = useContext()
 
-    const sensitivityPath = computed(() => app.localePath("/about")) // TODO
+    const sensitivityPath = computed(() => app.localePath("/about")) // TODO: Issue#2550
 
     const featureFlagStore = useFeatureFlagStore()
     let fetchSensitive = computed(() =>
