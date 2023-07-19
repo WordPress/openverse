@@ -3,6 +3,7 @@
 ```{toctree}
 :titlesonly:
 
+incidents/index
 github_contribution_practices
 dev_flow
 maintainer_tasks
