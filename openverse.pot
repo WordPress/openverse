@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-07-17T18:45:59+00:00\n"
+"POT-Creation-Date: 2023-07-19T02:36:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,7 +33,7 @@ msgctxt "hero.description"
 msgid "An extensive library of free stock photos, images, and audio, available for free use."
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:46
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:45
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:14
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:21
 msgctxt "hero.search.placeholder"
@@ -167,7 +167,7 @@ msgctxt "header.seeResults"
 msgid "See results"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:35
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:34
 msgctxt "header.backButton"
 msgid "Go back"
 msgstr ""
@@ -1281,8 +1281,8 @@ msgctxt "browsePage.searchForm.button"
 msgid "Search"
 msgstr ""
 
-#: src/components/VHeader/VHeaderDesktop.vue:22
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:71
+#: src/components/VHeader/VHeaderDesktop.vue:17
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:70
 msgctxt "browsePage.searchForm.clear"
 msgid "Clear"
 msgstr ""
@@ -1971,7 +1971,7 @@ msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:51
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:50
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:17
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:24
 msgctxt "search.searchBarLabel"
@@ -2020,28 +2020,6 @@ msgstr ""
 
 msgctxt "dropdownButton.aria.arrowLabel"
 msgid "Dropdown"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/components/VBanner/VMigrationNotice.vue:10
-msgctxt "migrationNotice.intro"
-msgid "###ccSearch### is now called ###openverse### and joins ###wordpress### as an open source project."
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/components/VBanner/VMigrationNotice.vue:16
-msgctxt "migrationNotice.more"
-msgid "###readMore### about this announcement."
-msgstr ""
-
-#: src/components/VBanner/VMigrationNotice.vue:21
-msgctxt "migrationNotice.read"
-msgid "Read more"
-msgstr ""
-
-#: src/components/VBanner/VMigrationNotice.vue:6
-msgctxt "migrationNotice.close"
-msgid "Close the announcement"
 msgstr ""
 
 msgctxt "downloadButton.aria.dropdownLabel"
