@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-07-19T02:36:43+00:00\n"
+"POT-Creation-Date: 2023-07-19T08:42:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1075,6 +1075,38 @@ msgctxt "filters.mature.enable"
 msgid "Enable Mature Content"
 msgstr ""
 
+#: src/components/VSafeBrowsing/VSafeBrowsing.vue:5
+msgctxt "filters.safeBrowsing.title"
+msgid "Safe Browsing"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VSafeBrowsing/VSafeBrowsing.vue:8
+msgctxt "filters.safeBrowsing.desc"
+msgid "Content marked as ###sensitive### is not shown by default."
+msgstr ""
+
+#: src/components/VSafeBrowsing/VSafeBrowsing.vue:11
+msgctxt "filters.safeBrowsing.sensitive"
+msgid "sensitive"
+msgstr ""
+
+msgctxt "filters.safeBrowsing.toggles.fetchSensitive.title"
+msgid "Sensitive results"
+msgstr ""
+
+msgctxt "filters.safeBrowsing.toggles.fetchSensitive.desc"
+msgid "Show results marked as sensitive in the results area."
+msgstr ""
+
+msgctxt "filters.safeBrowsing.toggles.blurSensitive.title"
+msgid "Blur content"
+msgstr ""
+
+msgctxt "filters.safeBrowsing.toggles.blurSensitive.desc"
+msgid "Blur images and texts to prevent seeing sensitive material."
+msgstr ""
+
 msgctxt "filters.lengths.title"
 msgid "Duration"
 msgstr ""
@@ -1148,7 +1180,7 @@ msgid "Hide filters"
 msgstr ""
 
 #: src/components/VFilters/VSearchGridFilter.vue:18
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:70
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:76
 msgctxt "filterList.clear"
 msgid "Clear filters"
 msgstr ""
