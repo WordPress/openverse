@@ -43,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
-import { useReducedMotion } from "~/composables/use-media-query"
+import { useReducedMotion } from "~/composables/use-reduced-motion"
 
 export default defineComponent({
   name: "VLogoLoader",
