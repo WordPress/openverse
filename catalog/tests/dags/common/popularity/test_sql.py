@@ -8,13 +8,13 @@ from typing import NamedTuple
 import psycopg2
 import pytest
 
+from catalog.tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
 from common.loader.sql import create_column_definitions
 from common.popularity import sql
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 
 
 DDL_DEFINITIONS_PATH = Path(__file__).parents[5] / "docker" / "upstream_db"
-POSTGRES_CONN_ID = "TEST_CONN_ID"
 POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 
 

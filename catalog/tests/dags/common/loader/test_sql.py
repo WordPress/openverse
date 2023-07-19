@@ -10,6 +10,7 @@ import pytest
 from flaky import flaky
 from psycopg2.errors import InvalidTextRepresentation
 
+from catalog.tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
 from catalog.tests.dags.common.popularity.test_sql import (
     TableInfo,
     _set_up_std_popularity_func,
@@ -19,7 +20,6 @@ from common.loader import sql
 from common.storage import columns as col
 
 
-POSTGRES_CONN_ID = "TEST_CONN_ID"
 RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resources")
 
 
