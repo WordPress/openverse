@@ -72,5 +72,8 @@ export default defineComponent({
   .masonry{  
     md:columns-3 lg:columns-5;
   }
+  .masonry {
+  @apply columns-2 gap-x-4 md:columns-3 lg:columns-5;
+  }
 }
 </style>
