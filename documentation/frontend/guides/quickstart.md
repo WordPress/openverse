@@ -43,7 +43,6 @@ you need to run this.
 
    ```console
    $ just frontend/run dev
-   $ pnpm --filter='@openverse/eslint-plugin' build
    ```
 
    If you want your frontend to use a different API instance, you can set the
