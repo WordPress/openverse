@@ -37,7 +37,7 @@ class PopularityRefresh:
     """
 
     dag_id: str = field(init=False)
-    media_type: str  # TODO
+    media_type: str
     start_date: datetime = datetime(2023, 1, 1)
     # The default schedule is initially set to None while we assess the performance
     # of refreshes. The schedule will be updated in
