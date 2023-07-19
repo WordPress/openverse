@@ -37,7 +37,7 @@ you’re not certain, it is better to record it than to ignore it. Do not assume
 "someone else" is handling an incident unless they have explicitly recorded it
 using the process defined here.
 
-## How do we _identify_ production incidents?
+## How do we _identify_ incidents?
 
 Incidents can be detected through various channels such as automated alerts,
 user reports, or through manual checks by maintainers. The Mini Support Rotation
@@ -47,7 +47,14 @@ While the MSR runner should be monitoring our communication channels closely,
 **any online maintainer who sees something that might be an incident should
 follow the incident recording process outlined here.**
 
-## How do we _classify_ production incidents?
+## How do we _classify_ incidents?
+
+Incidents are classified in two ways:
+
+- **Severity** - How impactful the incident is
+- **Status** - The current state of the incident
+
+### Severity
 
 Incidents should be classified using one of three levels of severity. It is
 important to note that regardless of severity, working to resolve incidents
@@ -55,7 +62,7 @@ always **takes priority over regular project work and MSR duties.** Once service
 is stabilized, any ongoing investigations, preventative measures, or
 documentation changes will be prioritized by the team alongside our other work.
 
-This priority schedule is intentionally distinct from our GitHub priority scale.
+This severity scale is intentionally distinct from our GitHub priority scale.
 Any GitHub issues created to _stabilize_ a Severity 1 or Severity 2 incident
 should be marked as "critical" in GitHub. Other issues should be prioritized at
 your own discretion.
@@ -67,7 +74,35 @@ your own discretion.
 - **Severity 3**: Minor issue affecting a limited number of users or
   non-critical functionality of Openverse.
 
-## How do we _handle_ production incidents?
+### Status
+
+- **Stabilization pending** - The incident is actively disrupting service
+- **Stabilized** - The incident is no longer directly disrupting service. root
+  causes may
+- **Under investigation** - The root causes of the incident are being
+  researched. Stabilized but not yet resolved
+- **Resolved** - The incident is stable, and long-term fixes to prevent future
+  occurrences or other mitigations have been identified.
+
+As you might expect, incidents can be _destabilized_ if they reoccur, and the
+state should rollback to "Stabilization pending":
+
+```{mermaid}
+graph LR
+    A[Stabilization pending]
+    B[Stabilized]
+    C[Under investigation]
+    D[Resolved]
+
+    A --> B
+    B --> C
+    B --> A
+    C --> A
+    C --> D
+    D --> A
+```
+
+## How do we _handle_ incidents?
 
 ```{warning}
 Dealing with an incident now? Go to the [Incident Response Runbook](/meta/incidents/runbooks/incident_response_runbook).
@@ -82,7 +117,7 @@ There are four main steps to handling production incidents:
 <!-- prettier-ignore -->
 | # | Name | Goal | Status After |
 |---|------|------|--------------|
-| 1 | Identify and Record | Visibly acknowledge the incident and create the communication threads necessary for ongoing discussion and investigation. Understand how bad the situation is based on our severity definitions. | Stabilization pending OR Stabilized (as appropriate)
+| 1 | Record | Visibly acknowledge the incident and create the communication threads necessary for ongoing discussion and investigation. Understand how bad the situation is based on our severity definitions. | Stabilization pending OR Stabilized (as appropriate)
 | 2 | Stabilize |<p>If there is a total or partial outage, identify service stabilization options and action them. | Stabilized |
 | 3 | Resolve | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement. | Under investigation |
 | 4 | Review | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys. | Under investigation OR Resolved (as appropriate) |
@@ -109,19 +144,6 @@ find who hasn’t done it recently.
 We can use our discretion in making these decisions, and if we find that the
 distribution of Lead responsibilities is inequitably distributed we can consider
 formal processes for finding them.
-
-## MSR and Incident Management
-
-MSR runners should be the de facto lead of any incidents that occur during their
-rotation. They should also, as part of their MSR duties, check in on any open
-incidents to make sure:
-
-- Action items are delegated, scheduled, and on track
-- All required incident documentation is completed
-- All closed incidents have had postmortems, or have one scheduled
-
-The key here is for the MSR to **delegate and direct**; not to necessarily
-execute the work themselves.
 
 ## Runbooks
 
