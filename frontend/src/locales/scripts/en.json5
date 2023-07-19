@@ -347,8 +347,8 @@
           desc: "Show results marked as sensitive in the results area.",
         },
         blurSensitive: {
-          title: "Blurred content",
-          desc: "Images and texts are blurred to prevent seeing them without consent.",
+          title: "Blur content",
+          desc: "Blur images and texts to prevent seeing sensitive material.",
         },
       },
     },
