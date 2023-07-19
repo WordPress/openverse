@@ -48,8 +48,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 import { useContext, useRouter } from "@nuxtjs/composition-api"
+import { usePreferredReducedMotion } from "@vueuse/core"
 
-import { useReducedMotion } from "~/composables/use-media-query"
 import { useAnalytics } from "~/composables/use-analytics"
 import useResizeObserver from "~/composables/use-resize-observer"
 
@@ -87,7 +87,7 @@ export default defineComponent({
   setup(props) {
     const { app } = useContext()
     const router = useRouter()
-    const prefersReducedMotion = useReducedMotion()
+    const prefersReducedMotion = usePreferredReducedMotion()
 
     const dimens = 152 // px
     const space = 24 // px; 32px space - 4px padding on both sides

@@ -42,8 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
-
-import { useReducedMotion } from "~/composables/use-media-query"
+import { usePreferredReducedMotion } from "@vueuse/core"
 
 export default defineComponent({
   name: "VLogoLoader",
@@ -58,7 +57,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const prefersReducedMotion = useReducedMotion()
+    const prefersReducedMotion = usePreferredReducedMotion()
 
     return { prefersReducedMotion }
   },

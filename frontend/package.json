@@ -70,7 +70,7 @@
     "@pinia/nuxt": "0.2.1",
     "@popperjs/core": "^2.11.2",
     "@tailwindcss/typography": "^0.5.9",
-    "@vueuse/core": "^9.3.0",
+    "@vueuse/core": "^10.2.1",
     "@wordpress/is-shallow-equal": "^4.6.0",
     "async-mutex": "^0.3.2",
     "axios": "^0.27.0",
