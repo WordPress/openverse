@@ -55,7 +55,7 @@ through a retry or by being manually cleared), it will pick up from where it lef
 off. Manually managing this Airflow variable should not be necessary.
 
 It is also possible to start an entirely new DagRun using an existing temp table,
-by setting the `skip_table_creation` param to True. With this option enabled, the
+by setting the `resume_update` param to True. With this option enabled, the
 DAG will skip creating the temp table and instead attempt to run an update with an
 existing temp table matching the `query_id`. This option should only be used when
 the DagRun configuration needs to be changed after the table was already created:
