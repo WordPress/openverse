@@ -33,18 +33,16 @@ class PopularityRefresh:
     refresh_metrics_timeout:           timedelta expressing amount of time the
                                        refresh popularity metrics and constants
                                        may take.
-    doc_md:                            str used for the DAG's documentation markdown
     """
 
     dag_id: str = field(init=False)
     media_type: str
+    default_args: dict | None = field(default_factory=dict)
     start_date: datetime = datetime(2023, 1, 1)
     # The default schedule is initially set to None while we assess the performance
     # of refreshes. The schedule will be updated in
     # https://github.com/WordPress/openverse/issues/2092
     schedule: str | None = None
-    default_args: dict | None = field(default_factory=dict)
-
     # Initial timeouts are generous; they should be updated after assessing the
     # performance in https://github.com/WordPress/openverse/issues/2092
     refresh_popularity_batch_timeout: timedelta = timedelta(hours=1)
