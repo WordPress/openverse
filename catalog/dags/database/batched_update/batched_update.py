@@ -144,6 +144,11 @@ def update_batches(
 
 
 @task
+def drop_temp_airflow_variable(airflow_var: str):
+    Variable.delete(airflow_var)
+
+
+@task
 def notify_slack(text: str, dry_run: bool) -> None:
     if not dry_run:
         slack.send_message(

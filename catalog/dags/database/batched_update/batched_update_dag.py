@@ -69,12 +69,12 @@ import logging
 
 from airflow.decorators import dag
 from airflow.models.param import Param
-from airflow.operators.bash import BashOperator
 from airflow.utils.trigger_rule import TriggerRule
 
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from database.batched_update import constants
 from database.batched_update.batched_update import (
+    drop_temp_airflow_variable,
     get_expected_update_count,
     notify_slack,
     resume_update,
@@ -238,9 +238,8 @@ def batched_update():
     )
 
     # Clean up the variable we used for tracking the last row
-    drop_variable = BashOperator(
-        task_id="drop_temp_airflow_variables",
-        bash_command=f"airflow variables delete {BATCH_START_VAR}",
+    drop_variable = drop_temp_airflow_variable(
+        airflow_var=BATCH_START_VAR,
     )
 
     # If there was an error, notify to Slack that the temporary table must be
