@@ -61,7 +61,6 @@ existing temp table matching the `query_id`. This option should only be used whe
 the DagRun configuration needs to be changed after the table was already created:
 for example, if there was a problem with the `update_query` which caused DAG
 failures during the `update_batches` step.
-```
 """
 
 
