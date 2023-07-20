@@ -22,8 +22,8 @@ implementation plan:
 - [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](
 https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 """
-import datetime
 import logging
+from datetime import datetime
 
 from airflow import DAG
 from airflow.decorators import task
@@ -56,8 +56,25 @@ def notify_slack(text: str, media_type: str, dag_id: str) -> None:
 
 
 @task
+def get_last_updated_time():
+    """
+    Return the current utc datetime, which will be used when building the batched
+    update queries. Once new popularity constants are calculated, they will
+    automatically be used to calculate popularity scores at ingestion. The popularity
+    refresh need only update the scores for records which were last updated before
+    this time.
+
+    Getting this cutoff time is pulled out into a separate task to ensure that it
+    runs only when the `refresh_popularity_metrics_and_constants` task is complete.
+    """
+    return datetime.utcnow()
+
+
+@task
 def get_providers_update_confs(
-    postgres_conn_id: str, popularity_refresh: PopularityRefresh
+    postgres_conn_id: str,
+    popularity_refresh: PopularityRefresh,
+    last_updated_time: datetime,
 ):
     """
     Build a list of DagRun confs for each provider of this media type. The confs will
@@ -69,11 +86,6 @@ def get_providers_update_confs(
     providers = sql.get_providers_with_popularity_data_for_media_type(
         postgres_conn_id, popularity_refresh.media_type
     )
-
-    # Once the new popularity constants are calculated, they will automatically be used
-    # to calculate popularity scores at ingestion. The popularity refresh need only
-    # update the scores for records which were last updated before this time.
-    last_updated_time = datetime.datetime.utcnow()
 
     # For each provider, create a conf that will be used by the batched_update to
     # refresh standardized popularity scores.
@@ -87,7 +99,7 @@ def get_providers_update_confs(
             # Query used to select records that should be refreshed
             "select_query": (
                 f"WHERE provider='{provider}' AND updated_on <"
-                f"'{last_updated_time.strftime('%Y-%m-%d %H:%M:%S')}'"
+                f" '{last_updated_time.strftime('%Y-%m-%d %H:%M:%S')}'"
             ),
             # Query used to update the standardized_popularity
             "update_query": sql.format_update_standardized_popularity_query(
@@ -139,6 +151,10 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             popularity_refresh
         )
 
+        # Once popularity constants have been calculated, establish the cutoff time
+        # after which records that have updates do not need to be refreshed.
+        get_cutoff_time = get_last_updated_time()
+
         # For each provider that supports popularity data for this media type, trigger a
         # batched_update to recalculate all old standardized popularity scores using the
         # newly refreshed constant.
@@ -153,7 +169,9 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             retries=0,
         ).expand(
             # Build the conf for each provider
-            conf=get_providers_update_confs(POSTGRES_CONN_ID, popularity_refresh)
+            conf=get_providers_update_confs(
+                POSTGRES_CONN_ID, popularity_refresh, get_cutoff_time
+            )
         )
 
         notify_complete = notify_slack(
@@ -166,7 +184,12 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
         )
 
         # Set up task dependencies
-        refresh_popularity_metrics >> refresh_popularity_scores >> notify_complete
+        (
+            refresh_popularity_metrics
+            >> get_cutoff_time
+            >> refresh_popularity_scores
+            >> notify_complete
+        )
 
     return dag
 
