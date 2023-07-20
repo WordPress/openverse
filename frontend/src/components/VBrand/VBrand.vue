@@ -6,7 +6,8 @@
       <VSvg class="h-full w-auto" viewBox="0 0 50 42" name="logo" />
       <VSvg class="h-full w-auto" viewBox="0 0 215 42" name="brand" />
     </span>
-    <span v-if="srText" class="sr-only">{{ srText }}</span>
+    <!-- 'static' fixes WordPress/openverse#2596 -->
+    <span v-if="srText" class="sr-only static">{{ srText }}</span>
   </div>
 </template>
 
