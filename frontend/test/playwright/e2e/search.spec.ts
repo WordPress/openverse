@@ -29,12 +29,17 @@ test("shows no results page when no results", async ({ page }) => {
 test("scroll to top on new search term submitted", async ({ page }) => {
   await goToSearchTerm(page, "galah")
   await scrollToBottom(page)
-  let scrollY = await page.evaluate(() => window.scrollY)
+
+  let scrollY = await page.evaluate(
+    () => document.getElementById("main-page")?.scrollTop
+  )
 
   expect(scrollY).not.toBe(0)
 
   await searchFromHeader(page, "honey")
-  scrollY = await page.evaluate(() => window.scrollY)
+  scrollY = await page.evaluate(
+    () => document.getElementById("main-page")?.scrollTop
+  )
 
   expect(scrollY).toBe(0)
 })
