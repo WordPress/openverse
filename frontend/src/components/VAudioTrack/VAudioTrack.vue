@@ -347,23 +347,29 @@ export default defineComponent({
       // Delay initializing the local audio element until playback is requested
       if (!localAudio) initLocalAudio()
 
+      const playPromise = localAudio?.play()
       // Check if the audio can be played successfully
-      localAudio?.play().catch((err) => {
-        let message: string
-        switch (err.name) {
-          case "NotAllowedError":
-            message = "err_unallowed"
-            break
-          case "NotSupportedError":
-            message = "err_unsupported"
-            break
-          default:
-            message = "err_unknown"
-            $sentry.captureException(err)
-        }
-        activeMediaStore.setMessage({ message })
-        localAudio?.pause()
-      })
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          let message: string
+          switch (err.name) {
+            case "NotAllowedError":
+              message = "err_unallowed"
+              break
+            case "NotSupportedError":
+              message = "err_unsupported"
+              break
+            case "AbortError":
+              message = "err_aborted"
+              break
+            default:
+              message = "err_unknown"
+              $sentry.captureException(err)
+          }
+          activeMediaStore.setMessage({ message })
+          localAudio?.pause()
+        })
+      }
     }
     const pause = () => localAudio?.pause()
 
