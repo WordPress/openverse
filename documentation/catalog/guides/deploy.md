@@ -2,29 +2,43 @@
 
 ## Setup
 
-1. Check [Airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
-   to make sure a data refresh isn't occurring.
+1. Check
+   [Airflow](https://airflow.openverse.engineering/dagrun/list/?_flt_3_state=running)
+   to make sure no DAGs are running.
+1. Visit the
+   [Catalog Docker image](https://github.com/WordPress/openverse/pkgs/container/openverse-catalog)
+   page and copy the SHA of the image tagged `latest`.
 1. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
    Click the "Run workflow" button, choose "catalog" from the dropdown, and
-   supply the SHA identified in step 1.
+   supply the SHA identified in the previous step
 
 ## Deployment
 
-1. After the app is built and tagged, deploy staging:
+The catalog only exists in production, so there is no staging deployment.
+
+1. After the app is built and tagged, deploy production:
    1. Checkout the
       [infrastructure repository](https://github.com/wordpress/openverse-infrastructure)
-      and bump the ingestion server version with the `just bump dev catalog`
+      and bump the catalog version with the `just bump prod catalog-airflow`
       command.
-   1. `just apply dev catalog` and verify the plan before deploying.
-1. Deploy production:
-   1. `just bump prod catalog` command.
-   1. `just apply prod catalog` and verify the plan before deploying.
+   1. Once you've verified that no DAGs are running, update the value of
+      `running_dags_cleared` to `true` in the
+      [production module declaration](https://github.com/WordPress/openverse-infrastructure/blob/27c41ede9b24991909194e0a6477f6b11fceac0c/environments/prod/catalog-airflow.tf#L33).
+   1. `just apply prod catalog-airflow` and verify the plan before deploying.
+   1. Restore the value of `running_dags_cleared` back to `false`.
+1. Update the Cloudwatch dashboard with the new instance information:
+   1. `just apply prod catalog-dashboard` and verify the plan before deploying
+      (only the catalog EC2 instance ID should be changed within the catalog's
+      dashboard).
 
 ## Post-deployment steps
 
 1. Check for any Sentry errors in the maintainer's `#openverse-alerts` channel,
    or in the Sentry UI.
+1. Ensure that Airflow is accessible at https://airflow.openverse.engineering.
+1. If an Airflow version upgrade was deployed, ensure that the version is
+   correct in the Airflow UI (bottom left of the footer on any page).
 1. Review and Approve the automatically-generated changelog pull request in the
    repository.
 1. Push up a PR to the infrastructure repository with the Terraform changes you
