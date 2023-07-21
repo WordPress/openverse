@@ -55,7 +55,7 @@
       </template>
     </ol>
 
-    <VLoadMore class="mt-4" />
+    <VLoadMore class="mb-10 mt-4" />
   </div>
 </template>
 
