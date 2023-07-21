@@ -112,11 +112,11 @@ Given the one-off (or extremely infrequent) nature of these dumps, it is my
 recommendation that we **do not** define the configuration for this device in
 Terraform. Instead, we can have the infrastructure itself entirely managed by
 Airflow. The AWS Airflow provider offers an
-[`EC2CreateInstanceOperator`](ec2createoperator), which accepts the run
+[`EC2CreateInstanceOperator`][ec2createoperator], which accepts the run
 configuration for the instance. The config for the instance can be stored
 alongside the Airflow DAG code which executes it, and Airflow can ensure that
 the instance is terminated (on both success and failure) using the
-[`EC2TerminateInstanceOperator`](ec2terminateoperator). This allows us to
+[`EC2TerminateInstanceOperator`][ec2terminateoperator]. This allows us to
 include all of the operational code for the data dump effort in a single
 repository rather than have it spread across both repositories (and have to
 manage deployment of the instance manually with Terraform prior to running the
@@ -162,7 +162,7 @@ recommendations I would suggest a 2GB limit[^2].
 <!-- Note any projects this plan is dependent on. -->
 
 Although not a specific dependency, some of the effort taken as part of the
-[document all media properties project](document_all_media) will likely be used
+[document all media properties project][document_all_media] will likely be used
 as a reference when generating the documentation to accompany this dataset.
 
 [document_all_media]: https://github.com/WordPress/openverse/issues/412
@@ -233,13 +233,13 @@ that will be present (with noted defaults) and used for the DAG's execution.
 The DAG will execute the following steps (_for each media type_):
 
 - Generate the S3 key prefix that will be used
-- Use the [`EC2CreateInstanceOperator`](ec2createoperator) to create the
+- Use the [`EC2CreateInstanceOperator`][ec2createoperator] to create the
   instance with the appropriately templated user data & configuration (from the
   params & Variables defined above)
 - For each media type, use the
   [`S3KeySensor`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/sensors/s3/index.html)
   to wait for the `_success` keys to be present
-- Use the [`EC2TerminateInstanceOperator`](ec2terminateoperator) to terminate
+- Use the [`EC2TerminateInstanceOperator`][ec2terminateoperator] to terminate
   the instance once the success key is found, or after the `S3KeySensor` has
   timed out. This step's dependencies should be _both_ the EC2 create & S3 key
   sensor task, and its
@@ -263,7 +263,7 @@ employ HuggingFace's
 ensure these terms are acknowledged and accepted by consumers.
 
 Information about fields will need to be created, although some of this effort
-was initiated in the [document all media properties](document_all_media)
+was initiated in the [document all media properties][document_all_media]
 project. Specifically, this
 [initial media properties description document](https://docs.google.com/spreadsheets/d/1qbzKc4NurABq1oH59QS7PoArNJIComWAciXqANDPlHk/edit#gid=51474613)
 can be used as a basis for this information.
