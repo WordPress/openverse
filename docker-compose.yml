@@ -216,7 +216,6 @@ services:
       - ./api:/api
     ports:
       - "50280:8000" # Django
-      - "50230:3000" # Sphinx (unused by default; see `sphinx-live` recipe)
     depends_on:
       - db
       - es
@@ -224,9 +223,6 @@ services:
     env_file:
       - api/env.docker
       - api/.env
-    environment:
-      STATIC_ROOT: ${STATIC_ROOT:-}
-      MEDIA_ROOT: ${MEDIA_ROOT:-}
     stdin_open: true
     tty: true
 

@@ -5,6 +5,8 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/topics/http/urls/
 """
 
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
@@ -37,3 +39,6 @@ urlpatterns = [
     path("healthcheck/", HealthCheck.as_view(), name="health"),
     path("v1/", include(versioned_paths)),
 ]
+
+if settings.ENVIRONMENT == "local":
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
