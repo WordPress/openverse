@@ -1,14 +1,11 @@
-import { reactive } from "vue"
-
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 // Mock the ~/stores/ui import
 jest.mock("~/stores/ui", () => ({
-  useUiStore: () =>
-    reactive({
-      shouldBlurSensitive: true,
-      revealedSensitiveResults: [],
-    }),
+  useUiStore: () => ({
+    shouldBlurSensitive: true,
+    revealedSensitiveResults: [],
+  }),
 }))
 
 describe("useSensitiveMedia composable", () => {
