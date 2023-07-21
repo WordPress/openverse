@@ -1,6 +1,6 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1">
-    <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
+    <div v-if="backToSearchPath" class="w-full px-4 pb-4 md:px-8">
       <VBackToSearchResultsLink
         :id="$route.params.id"
         :href="backToSearchPath"
