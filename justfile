@@ -255,3 +255,7 @@ i:
 # alias for `just frontend/run dev`
 f:
     just frontend/run dev
+
+# alias for `pnpm --filter {package} run {script}`
+p package script +args="":
+    pnpm --filter {{ package }} run {{ script }} {{ args }}
