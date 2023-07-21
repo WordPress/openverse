@@ -49,7 +49,7 @@
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
-          @interacted="handleInteraction"
+          @interacted="snackbar.hide"
           @focus="snackbar.show"
         />
       </template>
@@ -67,9 +67,7 @@ import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
-import type { AudioInteractionData } from "~/types/analytics"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { useI18n } from "~/composables/use-i18n"
 
@@ -96,8 +94,6 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-
-    const { sendCustomEvent } = useAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
 
@@ -129,19 +125,10 @@ export default defineComponent({
       () => fetchState.value.isFinished && allMedia.value.length === 0
     )
 
+    const uiStore = useUiStore()
     const snackbar = useAudioSnackbar()
 
-    const uiStore = useUiStore()
-
     const isSidebarVisible = computed(() => uiStore.isFilterVisible)
-
-    const handleInteraction = (data: AudioInteractionData) => {
-      snackbar.hide()
-      sendCustomEvent("AUDIO_INTERACTION", {
-        ...data,
-        component: "VAllResultsGrid",
-      })
-    }
 
     return {
       searchTerm,
@@ -157,7 +144,6 @@ export default defineComponent({
 
       isSidebarVisible,
 
-      handleInteraction,
       snackbar,
 
       isDetail,

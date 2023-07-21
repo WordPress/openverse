@@ -15,7 +15,7 @@
       <template #media>
         <NuxtChild
           :key="$route.path"
-          :result-items="resultItems"
+          :results="resultItems[searchType]"
           :fetch-state="fetchState"
           :search-term="query.q"
           :supported="supported"

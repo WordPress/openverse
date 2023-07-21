@@ -9,7 +9,7 @@
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @keydown="handleKeydown"
     @blur="handleBlur"
-    @mousedown="$emit('mousedown', $event)"
+    @mousedown="handleMousedown"
     @focus="$emit('focus', $event)"
   >
     <Component
@@ -21,6 +21,7 @@
     >
       <template #controller="waveformProps">
         <VWaveform
+          ref="waveformRef"
           v-bind="waveformProps"
           :is-parent-seeking="isSeeking"
           :peaks="audio.peaks"
@@ -81,6 +82,8 @@ import type { AudioInteraction, AudioInteractionData } from "~/types/analytics"
 import type { AudioDetail } from "~/types/media"
 
 import { defineEvent } from "~/types/emits"
+
+import type { AudioTrackClickEvent } from "~/types/events"
 
 import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
@@ -143,7 +146,7 @@ export default defineComponent({
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
     interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
-    mousedown: defineEvent<[MouseEvent]>(),
+    mousedown: defineEvent<[AudioTrackClickEvent]>(),
     focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
@@ -475,6 +478,18 @@ export default defineComponent({
     const playPauseRef = ref<HTMLElement | null>(null)
 
     /**
+     * A ref used on the waveform, so we can capture mousedown on the
+     * audio track outside it as it will open a detail page.
+     */
+    const waveformRef = ref<{ $el: HTMLElement } | null>(null)
+
+    const handleMousedown = (event: MouseEvent) => {
+      const inWaveform =
+        waveformRef.value?.$el.contains(event.target as Node) ?? false
+      emit("mousedown", { event, inWaveform })
+    }
+
+    /**
      * These layout-conditional props and listeners allow us
      * to set properties on the parent element depending on
      * the layout in use.
@@ -536,6 +551,7 @@ export default defineComponent({
       handleSeeked,
       handleKeydown,
       handleBlur: seekable.listeners.blur,
+      handleMousedown,
 
       isSeeking,
 
@@ -549,6 +565,7 @@ export default defineComponent({
       containerAttributes,
 
       playPauseRef,
+      waveformRef,
     }
   },
 })
