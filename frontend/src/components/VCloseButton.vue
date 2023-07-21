@@ -1,5 +1,5 @@
 <template>
-  <VIconButton
+  <VOldIconButton
     :button-props="buttonProps"
     :icon-props="iconProps"
     :borderless="true"
@@ -19,7 +19,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { ButtonVariant } from "~/types/button"
 
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VOldIconButton from "~/components/VIconButton/VOldIconButton.vue"
 
 import type { TranslateResult } from "vue-i18n"
 
@@ -39,7 +39,7 @@ type CloseButtonVariant =
  */
 export default defineComponent({
   name: "VCloseButton",
-  components: { VIconButton },
+  components: { VOldIconButton },
   props: {
     label: {
       type: [String, Object] as PropType<string | TranslateResult>,
@@ -59,7 +59,7 @@ export default defineComponent({
       default: "filled-white-light",
     },
     /**
-     * The size of the underlying VIconButton.
+     * The size of the underlying VOldIconButton.
      */
     size: {
       type: String as PropType<"close" | "small" | "medium" | "large">,
