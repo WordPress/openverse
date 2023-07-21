@@ -449,7 +449,7 @@ class TableIndexer:
                     return
 
             self.es.indices.delete(index=target)
-            message = f"Index `{target}` was deleted - data refresh complete! :tada:"
+            message = f"Index `{target}` was deleted"
             slack.status(model_name, message)
         else:
             # Cannot delete as target does not exist.
