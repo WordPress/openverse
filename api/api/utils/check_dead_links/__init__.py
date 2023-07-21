@@ -10,6 +10,7 @@ from asgiref.sync import async_to_sync
 from decouple import config
 from elasticsearch_dsl.response import Hit
 
+from api.utils.aiohttp import get_aiohttp_session
 from api.utils.check_dead_links.provider_status_mappings import provider_status_mappings
 from api.utils.dead_link_mask import get_query_mask, save_query_mask
 
@@ -32,9 +33,11 @@ def _get_expiry(status, default):
     return config(f"LINK_VALIDATION_CACHE_EXPIRY__{status}", default=default, cast=int)
 
 
-async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
+async def _head(url: str, **kwargs) -> tuple[str, int]:
     try:
-        async with session.head(url, allow_redirects=False) as response:
+        async with get_aiohttp_session().head(
+            url, allow_redirects=False, headers=HEADERS, **kwargs
+        ) as response:
             return url, response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
         _log_validation_failure(exception)
@@ -46,10 +49,9 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     tasks = []
     timeout = aiohttp.ClientTimeout(total=2)
-    async with aiohttp.ClientSession(headers=HEADERS, timeout=timeout) as session:
-        tasks = [asyncio.ensure_future(_head(url, session)) for url in urls]
-        responses = asyncio.gather(*tasks)
-        await responses
+    tasks = [asyncio.ensure_future(_head(url, timeout=timeout)) for url in urls]
+    responses = asyncio.gather(*tasks)
+    await responses
     return responses.result()
 
 

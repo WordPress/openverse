@@ -13,6 +13,7 @@ import sentry_sdk
 from asgiref.sync import sync_to_async
 from sentry_sdk import push_scope, set_context
 
+from api.utils.aiohttp import get_aiohttp_session
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
 from api.utils.image_proxy.photon import get_photon_request_params
@@ -94,16 +95,13 @@ async def get(
         is_full_size,
         is_compressed,
     )
-
-    async with aiohttp.ClientSession(
-        headers=headers, timeout=aiohttp.ClientTimeout(total=15)
-    ) as client:
-        try:
-            upstream_response = await client.get(
-                upstream_url,
-                params=params,
-            )
-
+    try:
+        async with get_aiohttp_session().get(
+            upstream_url,
+            params=params,
+            headers=headers,
+            timeout=aiohttp.ClientTimeout(total=15),
+        ) as upstream_response:
             await incr(f"thumbnail_response_code:{month}:{upstream_response.status}")
             await incr(
                 f"thumbnail_response_code_by_domain:{domain}:"
@@ -111,32 +109,31 @@ async def get(
             )
             upstream_response.raise_for_status()
             body = await upstream_response.read()
-        except Exception as exc:
-            raise exc
-            exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
-            key = f"thumbnail_error:{exception_name}:{domain}:{month}"
-            count = await incr(key)
-            if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
-                count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
-            ):
-                with push_scope() as scope:
-                    set_context(
-                        "upstream_url",
-                        {
-                            "url": upstream_url,
-                            "params": params,
-                            "headers": headers,
-                        },
-                    )
-                    scope.set_tag(
-                        "occurrences", settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY
-                    )
-                    sentry_sdk.capture_exception(exc)
-            if isinstance(exc, requests.exceptions.HTTPError):
-                await incr(
-                    f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
+    except Exception as exc:
+        exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
+        key = f"thumbnail_error:{exception_name}:{domain}:{month}"
+        count = await incr(key)
+        if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
+            count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
+        ):
+            with push_scope() as scope:
+                set_context(
+                    "upstream_url",
+                    {
+                        "url": upstream_url,
+                        "params": params,
+                        "headers": headers,
+                    },
                 )
-            raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
+                scope.set_tag(
+                    "occurrences", settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY
+                )
+                sentry_sdk.capture_exception(exc)
+        if isinstance(exc, requests.exceptions.HTTPError):
+            await incr(
+                f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
+            )
+        raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
 
     res_status = upstream_response.status
     content_type = upstream_response.headers.get("Content-Type")
