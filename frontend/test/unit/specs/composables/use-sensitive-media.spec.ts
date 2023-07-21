@@ -1,11 +1,12 @@
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
-// Mock the ~/stores/ui import
+let mockUseUiStore = {
+  shouldBlurSensitive: true,
+  revealedSensitiveResults: [],
+}
+
 jest.mock("~/stores/ui", () => ({
-  useUiStore: () => ({
-    shouldBlurSensitive: true,
-    revealedSensitiveResults: [],
-  }),
+  useUiStore: () => mockUseUiStore,
 }))
 
 describe("useSensitiveMedia composable", () => {
@@ -15,6 +16,10 @@ describe("useSensitiveMedia composable", () => {
     mockMedia = {
       id: "mock-id",
       isSensitive: false,
+    }
+    mockUseUiStore = {
+      shouldBlurSensitive: true,
+      revealedSensitiveResults: [],
     }
   })
 
@@ -36,6 +41,8 @@ describe("useSensitiveMedia composable", () => {
 
   it("should return sensitive-shown when media is sensitive and shouldBlurSensitive is false", () => {
     mockMedia.isSensitive = true
+    mockUseUiStore.shouldBlurSensitive = false
+
     const { visibility } = useSensitiveMedia(mockMedia)
     expect(visibility.value).toBe("sensitive-shown")
   })
@@ -65,6 +72,8 @@ describe("useSensitiveMedia composable", () => {
 
   it("should correctly report if a media can be hidden", () => {
     mockMedia.isSensitive = true
+    mockUseUiStore.shouldBlurSensitive = false
+
     const { reveal, canBeHidden } = useSensitiveMedia(mockMedia)
     reveal()
     expect(canBeHidden.value).toBe(false)
