@@ -61,9 +61,10 @@ import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
-import { useUiStore } from "~/stores/ui"
 
 import { IMAGE } from "~/constants/media"
+
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
@@ -174,10 +175,7 @@ export default defineComponent({
       })
     }
 
-    const uiStore = useUiStore()
-    const shouldBlur = computed(
-      () => uiStore.shouldBlurSensitive && props.image.isSensitive
-    )
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
 
     return {
       styles,

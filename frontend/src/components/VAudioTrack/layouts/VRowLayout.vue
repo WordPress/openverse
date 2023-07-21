@@ -108,7 +108,8 @@ import { computed, defineComponent, PropType } from "vue"
 import { timeFmt } from "~/utils/time-fmt"
 import type { AudioDetail } from "~/types/media"
 import type { AudioSize } from "~/constants/audio"
-import { useUiStore } from "~/stores/ui"
+
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
@@ -141,10 +142,7 @@ export default defineComponent({
     const isMedium = computed(() => props.size === "m")
     const isLarge = computed(() => props.size === "l")
 
-    const uiStore = useUiStore()
-    const shouldBlur = computed(
-      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
-    )
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 
     return {
       timeFmt,

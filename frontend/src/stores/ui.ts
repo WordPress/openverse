@@ -44,6 +44,8 @@ export interface UiState {
    * whether to blur sensitive content in search and single result pages
    */
   shouldBlurSensitive: boolean
+  /* A list of sensitive single result UUIDs the user has opted-into seeing */
+  revealedSensitiveResults: string[]
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -58,6 +60,7 @@ export const useUiStore = defineStore("ui", {
     isMobileUa: true,
     dismissedBanners: [],
     shouldBlurSensitive: true,
+    revealedSensitiveResults: [],
   }),
 
   getters: {
