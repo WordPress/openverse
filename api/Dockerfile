@@ -101,7 +101,6 @@ COPY --chown=opener . /api/
 # Collect static assets, these are used by the next stage, `nginx`
 RUN env \
   SETUP_ES="False" \
-  STATIC_ROOT="/static" \
   DJANGO_SECRET_KEY="any string" \
   python manage.py collectstatic
 
@@ -117,8 +116,8 @@ EXPOSE 8000 3000
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]
 
-# Run Django dev server, can be overridden from Docker Compose
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run using uvicorn for development. Production should run gunicorn with uvicorn workers.
+CMD ["uvicorn", "--reload", "--host", "0.0.0.0", "--port", "8000", "conf.asgi:application"]
 
 #########
 # NGINX #
