@@ -1,4 +1,4 @@
-2023-07-20 Implementation Plan: Additional Search Views
+# 2023-07-20 Implementation Plan: Additional Search Views
 
 **Author**: @obulat
 
@@ -34,14 +34,122 @@ Three collection pages are added to Openverse:
 
 - items with the selected tag
 - items from the selected source (provider)
-- items by the selected creator. The pages re-use the existing image grid and
-  audio collection views and can load more images or audio items on the Load
-  more button click. The single result pages are updated to add the links to
-  these pages, as seen in the Figma mockups: [link to Figma mockup]
+- items by the selected creator.
+
+The pages re-use the existing image grid and audio collection views and can load
+more images or audio items on the Load more button click. The single result
+pages are updated to add the links to these pages, as seen in the Figma mockups:
+
+- [Image single result](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-63284&mode=dev)
+- [Audio single result](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-63285&mode=dev)
+
+For the creator pages, a separate API media view is added to get the items that
+match the creator and source pair exactly.
 
 ## Outlined Steps
 
 <!-- Describe the implementation step necessary for completion. -->
+
+### API changes
+
+Currently, when filtering the search results, the API matches some query
+parameters in a fuzzy way: an item matches the query if the field value contains
+the query string as a separate word. When indexing the items, we "analyze" them,
+which means that we split the field values by whitespace and stem them. We also
+do the same to the query string. This means that the query string "bike" will
+match the field value "bikes", "biking", or "bike shop".
+
+For most of these pages, we need an exact match instead. This section will
+describe each page and the necessary changes.
+
+#### Source page
+
+To get the items from the selected source, we can use the `source` query
+parameter: https://api.openverse.engineering/v1/images/?source=met
+
+There is a limited number of sources, and we validate the `source` parameter
+against the full list. This means that the `source` parameter will be matched
+exactly.
+
+#### Creator page
+
+We could update the Elasticsearch index and the search controller to allow for
+exact matching by the `creator` field. However, I think there is an easier way
+that does not require any changes to the indexes: use the Django ORM to filter
+the items by the creator name and the provider name.
+
+We can add a media view at
+`/api/v1/<media>/creator/?q=<creator_name>&provider=<provider_name>`. It would
+use `self.get_queryset().filter(creator=creator, provider=provider)` to get all
+the items by the creator from the provider. This view would also need to filter
+out dead links, and return a paginated response.
+
+#### Tag page
+
+To get the items matching a tag, we can use the `tags` query parameter with a
+quoted value.
+https://api.openverse.engineering/v1/images/?tags=%22black%20cat%22 This query
+returns all images with tags that contain the phrase "black cat".
+
+This would not match the tags exactly, but tags page is supposed to show all
+items that are associated with the same topic or category.
+
+We could also add a media view at `/api/v1/<media>/tags/?q=<tag_name>`, but it
+is difficult to implement because the tags are stored as a list JSONField model.
+
+### Nuxt store changes
+
+We can re-use the search store as is for these pages. Currently, the store uses
+the `searchBy` filter to determine the shape of the API query. If `searchBy`
+value is set, then the `q` parameter is replaced with the
+`<searchBy>=<searchTerm>` query parameter.
+https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/src/utils/prepare-search-query-params.ts#L22-L25
+
+We can update the `searchBy` filter to have one of the possible values:
+`{ searchBy: <null|creator|source|tag> }`. Then, this value would be used to
+construct the API query.
+
+#### Update the `searchBy` filter
+
+Currently, this filter is shaped as other filters: it is a list of objects with
+`code`, `name` and `checked` properties. This is a possible value now: `{
+searchBy: { code: "creator", name: "filters.searchBy.creator", checked: true }}.
+
+Since this filter is mutually exclusive (you cannot search by both the creator
+and the tag, for example), this shape is very difficult to update.
+
+It is better to set the `searchBy` filter to have one of the possible values:
+`{ searchBy: <null|creator|source|tag> }`.
+
+We should create a new method, `setSearchBy`, in the `search` store, that would
+allow directly set the `searchBy` filter value.
+
+This change should also update `prepare-search-query-params` to use the
+`searchBy` filter value to construct the API query:
+
+```typescript
+const prepareSearchQuery = (
+  searchParams: Record<string, string>,
+  mediaType: SupportedMediaType
+) => {
+  if (searchParams.searchBy) {
+    if (searchBy === "creator") {
+      // the name of the source is stored in the `<mediaType>Provider` filter
+      return {
+        creator: searchTerm,
+        source: searchParams[`${mediaType}Provider`],
+      }
+    } else if (searchBy === "source") {
+      return { source: searchParams[`${mediaType}Provider`] }
+    } else if (searchBy === "tag") {
+      // The parameter is plural in the API
+      return { tags: searchTerm }
+    }
+  } else {
+    // Current search query transform
+  }
+}
+```
 
 ### Page changes
 
@@ -56,16 +164,21 @@ the actual value of the tag, creator or source name.
 
 This page should use the
 [`validate` method](https://v2.nuxt.com/docs/components-glossary/validate/) to
-make sure that the `collection`, `searchType` and `term` `params` are valid.
+make sure that the `collection`, `mediaType` and `term` `params` are valid.
 
 ```
-`validate({ params, $pinia }): {
-const { collection, searchType, term } = params
+validate({ params, $pinia }): {
+    const { collection, mediaType, term } = params
+    // Check that collection is one of ["tag", "creator" or "source"],
+    // and mediaType is one of `supportedMediaTypes`.
+    // Check that `term` is correctly escaped.
+    // If the params are not valid, return `false` to show the error page.
+    return isValid ? true : false
 ```
 
 This page should also update the state (`searchType`, `searchTerm` and
-`searchBy` filter) in the `search` store and handle fetching using
-`mediaStore`'s `fetchMedia` method in the `useFetch` hook. Since it is not
+`searchBy` and `provider` filters) in the `search` store and handle fetching
+using `mediaStore`'s `fetchMedia` method in the `useFetch` hook. Since it is not
 possible to change the path or query parameters from this page client-side,
 fetching can be much simpler than on the current search page (that has to watch
 for changes in the route and fetch if necessary).
@@ -90,12 +203,19 @@ different search views.
 #### Add a `VCollectionHeader` component
 
 Figma links:
-[creator desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56323&mode=design&t=pN0PPAzlKQEKT9tJ-4),
-[creator mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56362&mode=design&t=suLIyJHNmZrM0mPH-4),
-[source desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56381&mode=design&t=suLIyJHNmZrM0mPH-4),
-[source mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56421&mode=design&t=suLIyJHNmZrM0mPH-4),
-[tag desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1216-58402&mode=design&t=suLIyJHNmZrM0mPH-4),
-[tag mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56457&mode=design&t=suLIyJHNmZrM0mPH-4)
+
+- creator
+  [desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56323&mode=design&t=pN0PPAzlKQEKT9tJ-4)
+  and
+  [mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56362&mode=design&t=suLIyJHNmZrM0mPH-4)
+- source
+  [desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56381&mode=design&t=suLIyJHNmZrM0mPH-4)
+  and
+  [mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56421&mode=design&t=suLIyJHNmZrM0mPH-4)
+- tag
+  [desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1216-58402&mode=design&t=suLIyJHNmZrM0mPH-4)
+  and
+  [mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56457&mode=design&t=suLIyJHNmZrM0mPH-4)
 
 The header should have an icon (tag, creator or source), the name of the
 tag/creator/source. For source and the creator, there should be an external link
@@ -105,19 +225,21 @@ The header should also display the number of results, "251 audio files with the
 selected tag", "604 images provided by this source", "37 images by this creator
 in Hirshhorn Museum and Sculpture Garden".
 
-#### Add VCreatorLink component
+Note: There are sources that only have works by one creator. In this case, we
+should probably still have two separate pages for the source and the creator,
+but we might want to add a note that the creator is the only one associated with
+this source.
+
+#### Add `VCollectionLink` component and update the title and links container
 
 The "by creator" line under the main item on the single result page should be
-replaced with a `VCreatorLink` component - a wrapper over `VButton` with a link
-to the localized "creator" collection page.
+replaced with a section that has two buttons: one for a creator link and a
+source link. These links should be `VButtons` with `as="VLink"` and should link
+to the localized page for the creator or the source pages. This section should
+be horizontally scrollable on mobile. It should implement a scroll-snap
+(example: https://play.tailwindcss.com/AbfA33Za50)
 
-#### Add VSourceLink component
-
-Both the source and the provider should be replaced with `VSourceLink` component
-that links to the `source` page. This component is also a wrapper over `VButton`
-component.
-
-#### Update VMediaTag component to be a `VButton` wrapping a `VLink`
+#### Update `VMediaTag` component to be a `VButton` wrapping a `VLink`
 
 Each `VMediaTag` should be a `VButton` with `as="VLink"` and should link to the
 localized page for the tag collection. Figma link:
@@ -128,66 +250,49 @@ It should accept `href` as a prop.
 
 ### Other interface changes
 
-#### Update the "by" area of the single result page
-
-The "by creator" line should be replaced with a section that is
-horizontally-scrollable on mobile, and contains the `VCreatorLink` and
-`VSourceLink` components.
-
 #### Update links in the "information" section
 
-Add external link icon to the provider link; add creator link with external link
-icon The links to creator in the image and audio single result pages should have
-an "external link" icon.
-[image creator link](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/pages/image/_id/index.vue#L62-L73)
+The links to creator in the
+[image](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/pages/image/_id/index.vue#L62-L73)
 and
-[audio creator link](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VAudioTrack/layouts/VFullLayout.vue#L32-L41).
+[audio](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VAudioTrack/layouts/VFullLayout.vue#L32-L41)
+single result pages Information section should have an "external link" icon.
+
 Audio creator link should also be updated to match the image creator link. It
 should be a conditional component: `VLink` if the `creator_url` is truthy and
 `span` if the `creator_url` is falsy.
 
-Currently, the `foreign_landing_url` is linked to the "source" in the image page
-and "provider" in the audio page. The audio page should be updated to match the
-image page: the `foreign_landing_url` link should be added to the "source", not
-provider.
-[Audio provider link](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VAudioDetails/VAudioDetails.vue#L61C1-L63),
-[image source link](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VImageDetails/VImageDetails.vue#L26-L28)
-
-### Store changes
-
-#### Update the `searchBy` filter in the `search` store
-
-Currently, this filter is shaped as other filters: it is a list of objects with
-`code`, `name` and `checked` properties. This is a possible value now: `{
-searchBy: { code: "creator", name: "filters.searchBy.creator", checked: true }}.
-
-Since this filter is mutually exclusive (you cannot search by both the creator
-and the tag, for example), this shape is very difficult to update.
-
-It is better to set the `searchBy` filter to have one of the possible values:
-`{ searchBy: <null|creator|source|tag> }`.
-
-We should also create a new method, `setSearchBy`, in the `search` store, that
-would allow directly set the `searchBy` filter value.
+Currently, the `foreign_landing_url` is linked to the "source" in the
+[image](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VImageDetails/VImageDetails.vue#L26-L28)
+page and "provider" in the
+[audio page](https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VAudioDetails/VAudioDetails.vue#L61C1-L63).
+The audio page should be updated to match the image page: the
+`foreign_landing_url` link should be added to the "source", not provider.
 
 ### Analytics changes
 
-I am not sure what events we want to add, if any. Should we add `<VIEW>_CLICKED`
-events for the new views, or would page views be sufficient?
+The views can be tracked as page views, so no separate event is necessary. The
+only way to access the pages is directly or via links on the single results,
+which will all be captured by standard page visits.
 
-Should we add a new `SELECT_COLLECTION_ITEM` event similar to
-`SELECT_SEARCH_RESULT`?
+Clicking on the items will be tracked as `SELECT_SEARCH_RESULT` events. These
+events can be narrowed by pathname (`/search` or `/tag\*`, for example) to
+determine where the event occurred.
 
-The clicks on external creator link in the `VCollectionHeader` should be tracked
-as `VISIT_CREATOR_LINK` events. We don't have a special event for visiting
-source, should we add one, or should they be tracked as generic
-`VISIT_EXTERNAL_LINK`?
+Two analytics events should be added:
+
+- The clicks on external creator link in the `VCollectionHeader` should be
+  tracked as `VISIT_CREATOR_LINK` events.
+
+- We should also a special event for visiting source `VISIT_SOURCE_LINK`,
+  similar to `VISIT_CREATOR_LINK`.
 
 ### Tests
 
 We should add visual-regression tests for the new views. To minimize flakiness
 due to slow loading of the images, we should probably use the
-`{ filter: brightness(0%); }` trick for the images on the page.
+`{ filter: brightness(0%); }` trick for the images on the page:
+https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/test/playwright/visual-regression/pages/pages.spec.ts#L49-L55
 
 The search store tests should be updated to reflect the changes to the filters.
 
@@ -210,6 +315,8 @@ No new tools or packages are necessary.
 
 <!-- Note any projects this plan is dependent on. -->
 
+Not applicable.
+
 ## Design
 
 <!-- Note any design requirements for this plan. -->
@@ -221,20 +328,19 @@ https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?node-i
 
 <!-- What, if any, work within this plan can be parallelized? -->
 
-The work on components (`VCreatorLink`, `VSourceLink`, `VMediaTag`), and on the
-search store changes can be parallelized.
+The work on components (`VCollectionLink`, `VMediaTag`), and on the search store
+changes can be parallelized.
 
-We should create a separate branch for this work because adding the links to the
-collection pages on the single result pages (`VCreatorLink`, `VSourceLink`,
-`VMediaTag`) before the collection pages are ready is not possible.
+We should create a `additional_search_views` feature flag for this work because
+adding the links to the collection pages on the single result pages
+(`VCollectionLink`, `VMediaTag`) before the collection pages are ready is not
+possible.
 
 ## Blockers
 
 <!-- What hard blockers exist which might prevent further work on this project? -->
 
-The main blocker could be the maintainer capacity. If the "creator" API call is
-not easy to construct (since we need to combine both the creator and the
-provider), this might also be a blocker.
+The main blocker could be the maintainer capacity.
 
 ## Accessibility
 
@@ -247,16 +353,15 @@ indicate the change of context.
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-If we work on a separate branch, it would be easy to rollback by reverting the
-branch merge commit.
+To rollback the changes, we would need to set the feature flag to `OFF`.
 
 ## Risks
 
 <!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
 
 The biggest risk I see is that this project might be seen as an "invitation" to
-scraping. Hopefully, the work on providing the dataset would minimize such
-risks.
+scraping. Hopefully, frontend rate limiting and the work on providing the
+dataset would minimize such risks.
 
 ## Prior art
 
