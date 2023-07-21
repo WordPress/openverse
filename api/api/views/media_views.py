@@ -54,10 +54,7 @@ class AsyncMediaView(ViewSet, GenericViewSet):
         )
 
     async def aget_object(self):
-        def fn():
-            return self.get_object()
-
-        return await sync_to_async(fn)()
+        return await sync_to_async(self.get_object)()
 
     async def get_thumbnail(self, request, media_obj, image_url):
         serializer = self.get_serializer(data=request.query_params)
