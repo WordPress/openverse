@@ -9,8 +9,8 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] TBD
-- [ ] TBD
+- [ ] @zackkrida
+- [ ] @sarayourfriend
 
 ## Project links
 
@@ -65,7 +65,8 @@ describe each page and the necessary changes.
 #### Source page
 
 To get the items from the selected source, we can use the `source` query
-parameter: https://api.openverse.engineering/v1/images/?source=met
+parameter:
+[https://api.openverse.engineering/v1/images/?source=met](https://api.openverse.engineering/v1/images/?source=met)
 
 There is a limited number of sources, and we validate the `source` parameter
 against the full list. This means that the `source` parameter will be matched
@@ -88,8 +89,8 @@ out dead links, and return a paginated response.
 
 To get the items matching a tag, we can use the `tags` query parameter with a
 quoted value.
-https://api.openverse.engineering/v1/images/?tags=%22black%20cat%22 This query
-returns all images with tags that contain the phrase "black cat".
+[https://api.openverse.engineering/v1/images/?tags=%22black%20cat%22](https://api.openverse.engineering/v1/images/?source=met)
+This query returns all images with tags that contain the phrase "black cat".
 
 This would not match the tags exactly, but tags page is supposed to show all
 items that are associated with the same topic or category.
@@ -102,8 +103,9 @@ is difficult to implement because the tags are stored as a list JSONField model.
 We can re-use the search store as is for these pages. Currently, the store uses
 the `searchBy` filter to determine the shape of the API query. If `searchBy`
 value is set, then the `q` parameter is replaced with the
-`<searchBy>=<searchTerm>` query parameter.
-https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/src/utils/prepare-search-query-params.ts#L22-L25
+`<searchBy>=<searchTerm>` query parameter. API query parameters are constructed
+from the search store state in the
+[`prepare-search-query-params` method](https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/src/utils/prepare-search-query-params.ts#L22-L25)
 
 We can update the `searchBy` filter to have one of the possible values:
 `{ searchBy: <null|creator|source|tag> }`. Then, this value would be used to
@@ -111,18 +113,14 @@ construct the API query.
 
 #### Update the `searchBy` filter
 
-Currently, this filter is shaped as other filters: it is a list of objects with
-`code`, `name` and `checked` properties. This is a possible value now: `{
-searchBy: { code: "creator", name: "filters.searchBy.creator", checked: true }}.
+The `searchBy` filter will be used to determine the shape of the API query.
+While currently these parameters will be mutually exclusive (we can only search
+by one of them), we might want to allow searching by multiple parameters in the
+future.
 
-Since this filter is mutually exclusive (you cannot search by both the creator
-and the tag, for example), this shape is very difficult to update.
-
-It is better to set the `searchBy` filter to have one of the possible values:
-`{ searchBy: <null|creator|source|tag> }`.
-
-We should create a new method, `setSearchBy`, in the `search` store, that would
-allow directly set the `searchBy` filter value.
+For other filters, we only use `toggle` method to update the value. However, for
+`searchBy`, we need to be able to check one of the `searchBy` parameters, and
+uncheck the others. To enable that, we should add a new `search` store method.
 
 This change should also update `prepare-search-query-params` to use the
 `searchBy` filter value to construct the API query:
@@ -166,14 +164,15 @@ This page should use the
 [`validate` method](https://v2.nuxt.com/docs/components-glossary/validate/) to
 make sure that the `collection`, `mediaType` and `term` `params` are valid.
 
-```
-validate({ params, $pinia }): {
-    const { collection, mediaType, term } = params
-    // Check that collection is one of ["tag", "creator" or "source"],
-    // and mediaType is one of `supportedMediaTypes`.
-    // Check that `term` is correctly escaped.
-    // If the params are not valid, return `false` to show the error page.
-    return isValid ? true : false
+```typescript
+function validate({ params, $pinia }): boolean {
+  const { collection, mediaType, term } = params
+  // Check that collection is one of ["tag", "creator" or "source"],
+  // and mediaType is one of `supportedMediaTypes`.
+  // Check that `term` is correctly escaped.
+  // If the params are not valid, return `false` to show the error page.
+  return isValid ? true : false
+}
 ```
 
 This page should also update the state (`searchType`, `searchTerm` and
@@ -241,12 +240,12 @@ be horizontally scrollable on mobile. It should implement a scroll-snap
 
 #### Update `VMediaTag` component to be a `VButton` wrapping a `VLink`
 
-Each `VMediaTag` should be a `VButton` with `as="VLink"` and should link to the
-localized page for the tag collection. Figma link:
-https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56515&mode=design&t=nCX20BtJYqMOFAQm-4
-[VMediaTag component](https://github.com/WordPress/openverse/blob/c7b76139d5a001ce43bde27805be5394e5732d1a/frontend/src/components/VMediaTag/VMediaTag.vue)
-`<VButton variant="filled-gray" size="small" class="label-bold" as="VLink" href="href">{{tag}}</VButton>`.
-It should accept `href` as a prop.
+The
+[`VMediaTag` component](https://github.com/WordPress/openverse/blob/c7b76139d5a001ce43bde27805be5394e5732d1a/frontend/src/components/VMediaTag/VMediaTag.vue)
+should be updated to be a `VButton` wrapping a `VLink`, and should match the
+design in the
+[Figma mockups](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56515&mode=design&t=nCX20BtJYqMOFAQm-4).
+The component should link to the localized page for the tag collection.
 
 ### Other interface changes
 
@@ -291,8 +290,8 @@ Two analytics events should be added:
 
 We should add visual-regression tests for the new views. To minimize flakiness
 due to slow loading of the images, we should probably use the
-`{ filter: brightness(0%); }` trick for the images on the page:
-https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/test/playwright/visual-regression/pages/pages.spec.ts#L49-L55
+[ `{ filter: brightness(0%); }` trick](https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/test/playwright/visual-regression/pages/pages.spec.ts#L49-L55)
+for the images on the page.
 
 The search store tests should be updated to reflect the changes to the filters.
 
@@ -321,8 +320,7 @@ Not applicable.
 
 <!-- Note any design requirements for this plan. -->
 
-Figma designs in the dev mode:
-https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?node-id=22%3A13656&mode=dev
+[Figma designs in the dev mode](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?node-id=22%3A13656&mode=dev)
 
 ## Parallelizable streams
 
