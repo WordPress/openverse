@@ -27,8 +27,8 @@
 <!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
 
 This plan describes how the initial data dump of the media tables within
-Openverse's API databases will occur on a technical level, as well as
-information regarding marketing and documentation of the initial data dump.
+Openverse's API database will occur on a technical level, as well as information
+regarding marketing and documentation of the initial data dump.
 [HuggingFace](https://huggingface.co/) has graciously offered to host the
 dataset for free, and this plan assumes that a handoff of our data to the
 HuggingFace team will be made to accomplish this.
@@ -40,8 +40,7 @@ HuggingFace team will be made to accomplish this.
 Upon the completion of this implementation plan, the following should be
 available:
 
-- An unscheduled DAG which is capable of generating the data dump from
-  end-to-end.
+- An unscheduled DAG which is capable of generating the data dump in S3.
 - A copy of the Openverse API database's primary media tables (i.e. `image` and
   `audio`), in parquet format, is present within a "requester pays" S3 bucket
   which can be accessed by the HuggingFace team for consumption into their
@@ -68,40 +67,38 @@ available:
 
 Converting the data in our API database into any usable format will require a
 non-trivial amount of disk storage and compute time. Our desire is to deliver
-one or several parquet files per media type, and AWS does not provide the simple
-means through its existing services to accomplish this endeavor without
-additional processing. The easiest way of accomplishing this is to spin up an
-on-demand [EC2 instance](https://aws.amazon.com/ec2/instance-types/) with either
+one or several parquet files per media type, and AWS does not provide the means,
+through its existing services, to accomplish this without additional processing.
+The easiest way of achieving this is to spin up an on-demand
+[EC2 instance](https://aws.amazon.com/ec2/instance-types/) with either
 sufficient on-disk space (as for the
 [storage optimized units](https://aws.amazon.com/ec2/instance-types/#Storage_Optimized))
 or with an attached [block storage device](https://aws.amazon.com/ebs/)
 (available to most EC2 instances).
 
 Below are some rough calculations for potential compute time across various EC2
-types. For all EC2 instances except the storage optimized ones, these costs
+types. For all EC2 instances except the storage optimized one, these costs
 include an attached 3TB HDD
 ([`st 1` throughput-optimized type](https://aws.amazon.com/ebs/throughput-optimized/))
 EBS volume. These costs estimate 168 hours of runtime (~1 week) to process all
-of the data[^1].
+the data[^1].
 
 [^1]:
-    The 1 week processing estimate is not based on any data, but provides at
+    The 1-week processing estimate is not based on any data, but provides at
     least a benchmark for estimating costs. There are some significant
     differences in compute/memory between the various options which will impact
-    the time the dump takes.
+    the time the parquet generation takes.
 
-- General purpose low performance
-  (`m7g.xlarge | Family: m7g | 4vCPU | 16 GiB Memory | 3TB st1`): ~$60
-- General purpose high performance
-  (`m7g.4xlarge | Family: m7g | 16vCPU | 64 GiB Memory | 3TB st1`): ~$141
-- Mem optimized
-  (`r7g.4xlarge | Family: r7g | 16vCPU | 128 GiB Memory | 3TB st1`): ~$175
-- Storage Optimized
-  (`i4g.4xlarge | Family: i4g | 16vCPU | 128 GiB Memory | 3.7TB SSD`): ~$200
+| Purpose                          | Instance Type | vCPU | Memory (GiB) | Volume Size     | Cost (USD) |
+| -------------------------------- | ------------- | ---- | ------------ | --------------- | ---------- |
+| General purpose low performance  | `m7g.xlarge`  | 4    | 16           | 3TB             | ~$60       |
+| General purpose high performance | `m7g.4xlarge` | 16   | 64           | 3TB             | ~$141      |
+| Memory optimized                 | `r7g.4xlarge` | 16   | 128          | 3TB             | ~$175      |
+| Storage optimized                | `i4g.4xlarge` | 16   | 128          | 3.7TB (non-EBS) | ~$200      |
 
 Given the cost of running an instance for one week as listed above, my
 recommendation would be to use the **Storage optimized `i4g.4xlarge`** instance
-class.
+class for easiest configuration.
 
 **Managing the infrastructure**
 
@@ -113,9 +110,9 @@ recommendation that we **do not** define the configuration for this device in
 Terraform. Instead, we can have the infrastructure itself entirely managed by
 Airflow. The AWS Airflow provider offers an
 [`EC2CreateInstanceOperator`][ec2createoperator], which accepts the run
-configuration for the instance. The config for the instance can be stored
-alongside the Airflow DAG code which executes it, and Airflow can ensure that
-the instance is terminated (on both success and failure) using the
+configuration and parameters for the instance. The config for the instance can
+be stored alongside the Airflow DAG code which executes it, and Airflow can
+ensure that the instance is terminated (on both success and failure) using the
 [`EC2TerminateInstanceOperator`][ec2terminateoperator]. This allows us to
 include all of the operational code for the data dump effort in a single
 repository rather than have it spread across both repositories (and have to
@@ -136,7 +133,7 @@ significantly smaller than any comparable TSV produced from our dataset.
 Additionally, HuggingFace has shared that their preferred dataset format is
 parquet[^2].
 
-[^2]: https://github.com/WordPress/openverse/pull/2637#discussion_r1261521786
+[^2]: <https://github.com/WordPress/openverse/pull/2637#discussion_r1261521786>
 
 Since we will be running this operation on a transient EC2 instance (and we
 already have the AWS provider installed for Airflow), new tools & packages
@@ -147,7 +144,7 @@ utility provides
 [a large number of options](https://github.com/pacman82/odbc2parquet/blob/b562c49e6190558e8efe0713c1fbfe56ff254439/src/main.rs#L105-L233)
 for defining the maximum size/row count/properties of the output Parquet files.
 Some optimization may be required here, but based on my research and Apache's
-recommendations I would suggest a 2GB limit[^2].
+recommendations I would suggest a 2GB limit[^3].
 
 [^3]:
     The recommendation in
@@ -171,12 +168,18 @@ as a reference when generating the documentation to accompany this dataset.
 
 <!-- Describe the implementation step necessary for completion. -->
 
-### Data dump DAG
+### Data dump generation DAG
 
-The data dump DAG will be an unscheduled DAG which creates a series of parquet
-files from our production API database and uploads them to a designated S3
-bucket. It will accomplish most of these steps employing EC2 instances to
-perform most of the processing (see the infrastructure section above).
+This DAG will be an unscheduled DAG which creates a series of parquet files from
+our production API database[^4] and uploads them to a designated S3 bucket. It
+will accomplish most of these steps employing EC2 instances to perform most of
+the processing (see the [infrastructure section](#infrastructure) above).
+
+[^4]:
+    At present, we will likely be performing a `SELECT *` or a simple join for
+    these initial dumps. Since this is a direct read-and-stream operation from
+    the database, it should not have a significant impact on the API's query
+    performance.
 
 **EC2 instance**:
 
@@ -193,7 +196,7 @@ follows:
   appropriate command line settings.
 - Use the AWS CLI to upload the generated files to S3, in a prefix based on the
   generation date (e.g. `s3://data-dump/YYYY-MM-DD/<media-type>/`).
-- Add a success sentinel file for the media type (e.g.
+- Add a success semaphore file for the media type (e.g.
   `s3://data-dump/YYYY-MM-DD/<media-type>/_success`), which will be used by the
   DAG to determine when a dump is successful.
 - Initiate a shutdown of the EC2 instance (this will prevent the instance from
@@ -207,9 +210,9 @@ that will be handed into a given DAG run during execution.
 
 - `s3_bucket`: (Optional) The S3 bucket to publish the files into, under the
   prefix `data-dump/YYYY-MM-DD`. This will default to the same bucket as the
-  ingestion TSVs, primarily for local testing.
+  ingestion TSVs for local testing.
 - `query`: (Optional) The query to be handed into `odbc2parquet`, formatted with
-  the media type. By default this will be `SELECT * FROM {media_type}`.
+  the media type. By default, this will be `SELECT * FROM {media_type}`.
 - Any additional parameters to be handed into `odbc2parquet` (not defined here
   as testing & exploration will be necessary during development). These should
   have sensible defaults, but can be overridden.
@@ -300,7 +303,7 @@ interest in a data dump to inform them of the newly available dataset.
 
 A number of alternatives were discussed
 [in the issue for this implementation plan](https://github.com/WordPress/openverse/issues/2669).
-Below are several alternatives and why they were chosen not to be viable.
+Below are several alternatives and why they were deemed unsuitable.
 
 ### Leveraging a snapshot export
 
@@ -316,7 +319,7 @@ data together prior to publishing. Additionally, the large number of parquet
 files may make the handoff to HuggingFace more difficult. Ultimately any
 post-processing would require the use of EC2 anyway, so we abandoned this
 approach in favor of a more flexible one which also did not require we manage
-encryption keys.
+encryption keys during processing.
 
 ### AWS's built-in export extension
 
@@ -326,7 +329,7 @@ This export mechanism, however, is limited to the output types available to
 [Postgres's `COPY` command](https://www.postgresql.org/docs/current/sql-copy.html).
 Parquet file types are not supported in Postgres for this type of export by
 default. Similarly to the previous alternative, any post-processing into parquet
-would require EC2 usage, so we abandoned this approach.
+would require EC2 usage, so we are not pursuing this approach.
 
 ### AWS Glue
 
