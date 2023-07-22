@@ -41,7 +41,9 @@ export interface UiState {
   isMobileUa: boolean
   dismissedBanners: BannerId[]
   /**
-   * whether to blur sensitive content in search and single result pages
+   * Whether to blur sensitive content in search and single result pages.
+   * Value should *not* be set directly, use setShouldBlurSensitive(value: boolean)
+   * to ensure necessary side-effects are executed.
    */
   shouldBlurSensitive: boolean
   /* A list of sensitive single result UUIDs the user has opted-into seeing */
@@ -254,6 +256,10 @@ export const useUiStore = defineStore("ui", {
       return (
         breakpoints.indexOf(breakpoint) >= breakpoints.indexOf(this.breakpoint)
       )
+    },
+    setShouldBlurSensitive(value: boolean) {
+      this.shouldBlurSensitive = value
+      this.revealedSensitiveResults = []
     },
   },
 })

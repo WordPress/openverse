@@ -1,4 +1,4 @@
-import { computed, watch } from "vue"
+import { computed } from "vue"
 
 import type { Media } from "~/types/media"
 
@@ -18,15 +18,6 @@ export function useSensitiveMedia(
   media: Pick<Media, "id" | "isSensitive"> | null
 ) {
   const uiStore = useUiStore()
-
-  // Clear out previously-revealed results when the toggle is switched.
-  watch(
-    () => uiStore.shouldBlurSensitive,
-    () => {
-      uiStore.revealedSensitiveResults = []
-    },
-    { deep: true }
-  )
 
   /**
    * The current state of a single sentive media item.
