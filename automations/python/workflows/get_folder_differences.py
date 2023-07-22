@@ -115,7 +115,7 @@ def write_output(changed: list[str], new: list[str]):
         else ""
     )
     new_text = "**New files :heavy_plus_sign:**:\n" + format_list(new) if new else ""
-    body = f"""
+    body = f"""\
 **Full-stack documentation**: <https://docs.openverse.org/_preview/{PR_NUMBER}>
 
 Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
@@ -126,7 +126,7 @@ You can check [the GitHub pages deployment action list](https://github.com/WordP
 
 {new_text}
 """  # noqa: E501
-    write_to_github_output([f"body={body}"])
+    write_to_github_output(["body<<EOF", body, "EOF"])
 
 
 if __name__ == "__main__":
