@@ -881,6 +881,11 @@ jobs:
         with:
           ref: gh-pages
 
+      - name: Checkout automations from repository
+        uses: actions/checkout@v3
+        with:
+          path: /tmp/automations
+
       - name: Copy existing previews
         if: github.event_name == 'push'
         run: |
@@ -899,7 +904,7 @@ jobs:
         id: preview_diff
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PYTHONPATH: ${{ github.workspace }}/automations/python
+          PYTHONPATH: /tmp/automations/openverse/automations/python
         working-directory: automations/python/workflows
         run: python get_folder_differences.py
 
