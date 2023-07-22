@@ -905,7 +905,7 @@ jobs:
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PYTHONPATH: ${{ github.workspace }}/automation-checkout/openverse/automations/python
-        working-directory: automations/python/workflows
+        working-directory: ${{ github.workspace }}/automation-checkout/openverse/automations/python/workflows
         run: python get_folder_differences.py
 
       - name: Deploy
