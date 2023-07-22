@@ -20,7 +20,7 @@ export function useSensitiveMedia(
   const uiStore = useUiStore()
 
   /**
-   * The current state of a single sentive media item.
+   * The current state of a single sensitive media item.
    * Respects defaults from the site's filters and is
    * updated by user interactions.
    */
