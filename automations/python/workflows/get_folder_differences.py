@@ -46,7 +46,15 @@ def run_diff() -> str:
     exclusion_args = [f"-x='{exclusion}'" for exclusion in EXCLUSIONS]
 
     completed = subprocess.run(
-        ["diff", "-qbr", *exclusion_args, OUTPUT_FOLDER], capture_output=True, text=True
+        [
+            "diff",
+            "-qbr",
+            *exclusion_args,
+            OUTPUT_FOLDER,
+            ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER),
+        ],
+        capture_output=True,
+        text=True,
     )
     # diff returns 0 if there are no differences, 1 if there are differences
     if completed.returncode > 1:
