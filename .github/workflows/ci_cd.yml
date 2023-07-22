@@ -896,10 +896,12 @@ jobs:
 
       - name: Determine which files have changed
         if: github.event_name == 'pull_request'
-        run: |
-          cp -r /tmp/gh-pages /tmp/gh-pages-for-diff
-          sudo rm -rf /tmp/gh-pages-for-diff/_preview
-          diff -qbr -x '*.js' -x '*.json' -x '*.html' -x '.*' -x 'CNAME' -x '*.pickle' -x '*.doctree' -x '*.inv' /tmp/gh-pages-for-diff/ /tmp/gh-pages/_preview/${{ github.event.pull_request.number }} || true
+        id: preview_diff
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PYTHONPATH: ${{ github.workspace }}/automations/python
+        working-directory: automations/python/workflows
+        run: python get_folder_differences.py
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
@@ -922,12 +924,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.final-preview-comment.outputs.comment-id }}
           edit-mode: replace
-          body: |
-            **Full-stack documentation**: <https://docs.openverse.org/_preview/${{ github.event.pull_request.number }}>
-
-            Please note that GitHub pages takes a little time to deploy newly pushed code, if the links above don't work or you see old versions, wait 5 minutes and try again.
-
-            You can check [the GitHub pages deployment action list](https://github.com/${{ github.repository }}/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
+          body: ${{ steps.preview_diff.outputs.body }}
 
       - name: Checkout repository # again, to enable cleaning
         uses: actions/checkout@v3
