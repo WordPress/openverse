@@ -51,7 +51,7 @@ def run_diff() -> str:
         OUTPUT_FOLDER,
         ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER),
     ]
-    print(f"Running diff command: {' '.join(command)}")
+    print(f"Running diff command: {' '.join([str(c) for c in command])}")
 
     completed = subprocess.run(command, capture_output=True, text=True)
     # diff returns 0 if there are no differences, 1 if there are differences
