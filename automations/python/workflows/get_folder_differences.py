@@ -43,19 +43,17 @@ def folder_setup():
 
 def run_diff() -> str:
     """Use the `diff` CLI utility to determine the list of files that have changed."""
-    exclusion_args = [f"-x='{exclusion}'" for exclusion in EXCLUSIONS]
+    exclusion_args = [f"--exclude='{exclusion}'" for exclusion in EXCLUSIONS]
+    command = [
+        "diff",
+        "-qbr",
+        *exclusion_args,
+        OUTPUT_FOLDER,
+        ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER),
+    ]
+    print(f"Running diff command: {' '.join(command)}")
 
-    completed = subprocess.run(
-        [
-            "diff",
-            "-qbr",
-            *exclusion_args,
-            OUTPUT_FOLDER,
-            ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER),
-        ],
-        capture_output=True,
-        text=True,
-    )
+    completed = subprocess.run(command, capture_output=True, text=True)
     # diff returns 0 if there are no differences, 1 if there are differences
     if completed.returncode > 1:
         print("Error running diff:")
