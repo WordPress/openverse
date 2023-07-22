@@ -16,7 +16,7 @@ from shared.actions import write_to_github_output
 
 
 ORIGINAL_FOLDER = Path("/tmp/gh-pages")
-OUTPUT_FOLDER = Path("/tmp/gh-pages-for-diff")
+OUTPUT_FOLDER = Path("/tmp/gh-pages-for-diff/")
 BASE_URL = "https://docs.openverse.org"
 PR_NUMBER = os.environ.get("PR_NUMBER")
 EXCLUSIONS = {
@@ -44,16 +44,18 @@ def folder_setup():
 def run_diff() -> str:
     """Use the `diff` CLI utility to determine the list of files that have changed."""
     exclusion_args = [f"--exclude='{exclusion}'" for exclusion in EXCLUSIONS]
-    command = [
-        "diff",
-        "-qbr",
-        *exclusion_args,
-        OUTPUT_FOLDER,
-        ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER),
-    ]
-    print(f"Running diff command: {' '.join([str(c) for c in command])}")
+    command = " ".join(
+        [
+            "diff",
+            "-qbr",
+            *exclusion_args,
+            str(OUTPUT_FOLDER),
+            str(ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER)),
+        ]
+    )
+    print(f"Running diff command: {command}")
 
-    completed = subprocess.run(command, capture_output=True, text=True)
+    completed = subprocess.run(command, capture_output=True, text=True, shell=True)
     # diff returns 0 if there are no differences, 1 if there are differences
     if completed.returncode > 1:
         print("Error running diff:")
