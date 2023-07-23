@@ -276,9 +276,6 @@
     "image": "изображение",
     "occurred": "Произошла ошибка"
   },
-  "migrationNotice": {
-    "read": "Читать далее"
-  },
   "dropdownButton": {
     "aria": {
       "arrowLabel": "Выпадающий список"

@@ -124,7 +124,7 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # NGINX #
 #########
 
-FROM nginx:1.24.0-alpine as nginx
+FROM nginx:1.25.1-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 

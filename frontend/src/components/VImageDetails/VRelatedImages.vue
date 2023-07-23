@@ -1,9 +1,8 @@
 <template>
-  <aside>
+  <aside v-if="showRelated">
     <h2 class="heading-6 md:heading-5 mb-6">
       {{ $t("imageDetails.relatedImages") }}
     </h2>
-    <VLoadingIcon v-if="fetchState.isFetching" />
     <VImageGrid
       :images="media"
       :is-single-page="true"
@@ -14,26 +13,49 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, watch } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import type { ImageDetail } from "~/types/media"
-import type { FetchState } from "~/types/fetch-state"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
-import VLoadingIcon from "~/components/LoadingIcon.vue"
 
 export default defineComponent({
   name: "VRelatedImages",
-  components: { VImageGrid, VLoadingIcon },
-  props: {
-    media: {
-      type: Array as PropType<ImageDetail[]>,
-      required: true,
-    },
-    fetchState: {
-      type: Object as PropType<FetchState>,
-      required: true,
-    },
+  components: { VImageGrid },
+  setup() {
+    const relatedMediaStore = useRelatedMediaStore()
+
+    const route = useRoute()
+
+    watch(
+      route,
+      async (newRoute) => {
+        if (newRoute.params.id !== relatedMediaStore.mainMediaId) {
+          await relatedMediaStore.fetchMedia("image", newRoute.params.id)
+        }
+      },
+      { immediate: true }
+    )
+
+    const showRelated = computed(
+      () => media.value.length > 0 || relatedMediaStore.fetchState.isFetching
+    )
+
+    const media = computed(
+      () => (relatedMediaStore.media ?? []) as ImageDetail[]
+    )
+
+    const fetchState = computed(() => relatedMediaStore.fetchState)
+
+    return {
+      showRelated,
+
+      media,
+
+      fetchState,
+    }
   },
 })
 </script>

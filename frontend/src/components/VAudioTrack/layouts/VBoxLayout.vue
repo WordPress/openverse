@@ -8,8 +8,9 @@
         <div class="info flex flex-grow flex-col justify-between p-4">
           <h2
             class="font-heading line-clamp-3 text-base font-semibold leading-snug"
+            :class="{ 'blur-text': shouldBlur }"
           >
-            {{ audio.title }}
+            {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
           </h2>
           <div class="info">
             <VLicense
@@ -43,6 +44,7 @@ import { computed, defineComponent, PropType } from "vue"
 import type { AudioDetail } from "~/types/media"
 import type { AudioSize } from "~/constants/audio"
 import { useI18n } from "~/composables/use-i18n"
+import { useUiStore } from "~/stores/ui"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 
@@ -78,8 +80,14 @@ export default defineComponent({
       i18n.t(`filters.audioCategories.${props.audio.category}`).toString()
     )
 
+    const uiStore = useUiStore()
+    const shouldBlur = computed(
+      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
+    )
+
     return {
       isSmall,
+      shouldBlur,
 
       width,
       categoryLabel,

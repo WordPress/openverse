@@ -43,6 +43,8 @@ import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
 
+import type { NuxtError } from "@nuxt/types"
+
 export default defineComponent({
   name: "ImageGrid",
   components: { VGridSkeleton, VLoadMore, VImageCell },
@@ -62,7 +64,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState>,
+      type: Object as PropType<FetchState<NuxtError>>,
       required: true,
     },
     imageGridLabel: {
@@ -74,7 +76,7 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const searchTerm = computed(() => searchStore.searchTerm)
-    const isError = computed(() => Boolean(props.fetchState.fetchingError))
+    const isError = computed(() => props.fetchState.fetchingError !== null)
 
     const relatedTo = computed(() => {
       return props.isSinglePage ? useRelatedMediaStore().mainMediaId : null

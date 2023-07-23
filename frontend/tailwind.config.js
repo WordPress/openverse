@@ -197,6 +197,10 @@ module.exports = {
       serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
+      blur: {
+        image: "60px",
+        text: "4px",
+      },
       lineHeight: {
         loose: "2.0",
         larger: "1.9",

@@ -42,7 +42,6 @@ import { watchDebounced } from "@vueuse/core"
 import { useSearchStore } from "~/stores/search"
 import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
 import type { NonMatureFilterCategory } from "~/constants/filters"
-import { defineEvent } from "~/types/emits"
 import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -73,9 +72,6 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-  },
-  emits: {
-    close: defineEvent(),
   },
   setup() {
     const searchStore = useSearchStore()

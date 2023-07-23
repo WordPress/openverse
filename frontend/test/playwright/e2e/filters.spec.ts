@@ -5,6 +5,7 @@ import {
   goToSearchTerm,
   isPageDesktop,
   filters,
+  dismissAllBannersUsingCookies,
 } from "~~/test/playwright/utils/navigation"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -43,8 +44,9 @@ const FILTER_COUNTS = {
 }
 
 breakpoints.describeMobileAndDesktop(() => {
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, page }) => {
     await mockProviderApis(context)
+    await dismissAllBannersUsingCookies(page)
   })
   for (const searchType of supportedSearchTypes) {
     test(`correct total number of filters is displayed for ${searchType}`, async ({
@@ -156,6 +158,7 @@ breakpoints.describeMobileAndDesktop(() => {
 
     // Enable the commercial use filter
     await page.locator('label:has-text("Use commercially")').click()
+    await page.waitForURL(/license_type=commercial/)
 
     await expect(
       page.getByRole("checkbox", { name: "Use commercially" })

@@ -14,15 +14,27 @@
     >
       <div class="header-el bg-white">
         <VBanners />
-        <VHeaderDesktop v-if="isDesktopLayout" class="h-20 bg-white" />
-        <VHeaderMobile v-else class="h-20 bg-white" />
+        <VHeaderDesktop
+          v-if="isDesktopLayout"
+          class="h-20 border-b bg-white"
+          :class="headerBorder"
+        />
+        <VHeaderMobile
+          v-else
+          class="h-20 border-b bg-white"
+          :class="headerBorder"
+        />
       </div>
 
       <aside
         v-if="isSidebarVisible"
         class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
       >
-        <VSearchGridFilter class="px-10 pb-10 pt-8" @close="closeSidebar" />
+        <VSearchGridFilter class="px-10 py-8" />
+        <VSafeBrowsing
+          v-if="isSensitiveContentEnabled"
+          class="border-t border-dark-charcoal-20 px-10 py-8"
+        />
       </aside>
 
       <div
@@ -92,6 +104,9 @@ export default defineComponent({
     onMounted(() => {
       featureStore.initFromSession()
     })
+    const isSensitiveContentEnabled = computed(() =>
+      featureStore.isOn("sensitive_content")
+    )
 
     const { updateBreakpoint } = useLayout()
 
@@ -118,10 +133,6 @@ export default defineComponent({
         isDesktopLayout.value
     )
 
-    const closeSidebar = () => {
-      uiStore.setFiltersState(false)
-    }
-
     const isHeaderScrolled = ref(false)
     const showScrollButton = ref(false)
 
@@ -146,7 +157,15 @@ export default defineComponent({
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
+    const headerBorder = computed(() =>
+      isHeaderScrolled.value || isSidebarVisible.value
+        ? "border-b-dark-charcoal-20"
+        : "border-b-tx"
+    )
+
     return {
+      isSensitiveContentEnabled,
+
       mainPageRef,
       headerRef,
 
@@ -155,7 +174,7 @@ export default defineComponent({
       isSidebarVisible,
       breakpoint,
 
-      closeSidebar,
+      headerBorder,
     }
   },
   head() {

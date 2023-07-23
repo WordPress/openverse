@@ -2,7 +2,6 @@
 
 import logging
 import os
-import sys
 import time
 import uuid
 from multiprocessing import Process, Value
@@ -323,19 +322,8 @@ class StateResource:
         clear_state()
 
 
-def create_api(log=True):
+def create_api():
     """Create an instance of the Falcon API server."""
-
-    if log:
-        root = logging.getLogger()
-        root.setLevel(logging.DEBUG)
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(logging.INFO)
-        formatter = logging.Formatter(
-            "%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s"
-        )
-        handler.setFormatter(formatter)
-        root.addHandler(handler)
 
     _api = falcon.App()
 

@@ -7,11 +7,10 @@
       :handle-search="handleSearch"
       :search-type="searchType"
       :set-search-type="setSearchType"
-      :is-sm="isSm"
     />
 
     <!-- Image carousel -->
-    <VHomeGallery class="hidden h-full flex-grow xl:flex" />
+    <VHomeGallery v-if="isXl" class="flex h-full flex-grow" />
   </main>
 </template>
 
@@ -69,8 +68,7 @@ export default defineComponent({
       updateBreakpoint()
     })
 
-    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+    const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
     const searchType = ref<SupportedSearchType>(ALL_MEDIA)
 
@@ -93,8 +91,7 @@ export default defineComponent({
     }
 
     return {
-      isDesktopLayout,
-      isSm,
+      isXl,
 
       searchType,
       setSearchType,

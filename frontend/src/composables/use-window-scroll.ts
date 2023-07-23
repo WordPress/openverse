@@ -1,9 +1,9 @@
 // code taken from Vueuse
 import { throttle } from "throttle-debounce"
 import { ref } from "vue"
+import { useEventListener } from "@vueuse/core"
 
 import { defaultWindow } from "~/constants/window"
-import { useEventListener } from "~/composables/use-event-listener"
 
 /**
  * Whether the page has been scrolled down at all.

@@ -6,7 +6,6 @@ data has been indexed, notify Ingestion Server and stop the instance.
 """
 
 import logging as log
-import sys
 from multiprocessing import Process
 
 import boto3
@@ -111,15 +110,6 @@ def _self_destruct():
     ec2_client.stop_instances(InstanceIds=[instance_id])
 
 
-root = log.getLogger()
-root.setLevel(log.DEBUG)
-handler = log.StreamHandler(sys.stdout)
-handler.setLevel(log.INFO)
-formatter = log.Formatter(
-    "%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s"
-)
-handler.setFormatter(formatter)
-root.addHandler(handler)
 api = falcon.App()
 api.add_route("/indexing_task", IndexingJobResource())
 api.add_route("/healthcheck", HealthcheckResource())
