@@ -80,7 +80,7 @@ export default defineComponent({
     const uiStore = useUiStore()
     let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
     let setBlurSensitive = ({ checked }: { checked: boolean }) => {
-      uiStore.shouldBlurSensitive = checked
+      uiStore.setShouldBlurSensitive(checked)
     }
 
     const toggles = [
