@@ -61,8 +61,12 @@ up *flags:
 wait-up: up
     echo "🚧 TODO"
 
+# Create a new recipe called 'setup-plausible' that runs the setup_plausible.sh script
+setup-plausible:
+    ./setup_plausible.sh
+
 # Set up user and test site in Plausible
-init: wait-up
+init: wait-up setup-plausible
     cd .. && ./setup_plausible.sh
 
 # Run a package.json script via pnpm
