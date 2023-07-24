@@ -46,7 +46,7 @@ milestones like when a feature flag could be made available in a particular envi
 ## Step details
 
 <!--
-Describe the implementation step necessary for completion.
+Describe all of the implementation steps listed in the "step-by-step plan" in detail.
 
 For each step description, ensure the heading includes an obvious reference to the step as described in the
 "step-by-step plan" section above.
