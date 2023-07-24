@@ -35,6 +35,7 @@ describe("useSensitiveMedia composable", () => {
 
   it("should return sensitive-hidden when media is sensitive and shouldBlurSensitive is true", () => {
     mockMedia.isSensitive = true
+
     const { visibility } = useSensitiveMedia(mockMedia)
     expect(visibility.value).toBe("sensitive-hidden")
   })
@@ -49,24 +50,30 @@ describe("useSensitiveMedia composable", () => {
 
   it("should reveal sensitive media", () => {
     mockMedia.isSensitive = true
+
     const { reveal, visibility } = useSensitiveMedia(mockMedia)
     reveal()
+
     expect(visibility.value).toBe("sensitive-shown")
   })
 
   it("should hide sensitive media", () => {
     mockMedia.isSensitive = true
+
     const { reveal, hide, visibility } = useSensitiveMedia(mockMedia)
     reveal()
     hide()
+
     expect(visibility.value).toBe("sensitive-hidden")
   })
 
   it("should correctly report if a media is hidden", () => {
     mockMedia.isSensitive = true
+
     const { reveal, hide, isHidden } = useSensitiveMedia(mockMedia)
     reveal()
     hide()
+
     expect(isHidden.value).toBe(true)
   })
 
@@ -76,6 +83,7 @@ describe("useSensitiveMedia composable", () => {
 
     const { reveal, canBeHidden } = useSensitiveMedia(mockMedia)
     reveal()
+
     expect(canBeHidden.value).toBe(false)
   })
 })
