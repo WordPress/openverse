@@ -23,14 +23,14 @@ describe("useSensitiveMedia composable", () => {
     }
   })
 
-  it("should return insensitive when media is null", () => {
+  it("should return non-sensitive when media is null", () => {
     const { visibility } = useSensitiveMedia(null)
-    expect(visibility.value).toBe("insensitive")
+    expect(visibility.value).toBe("non-sensitive")
   })
 
-  it("should return insensitive when media is not sensitive", () => {
+  it("should return non-sensitive when media is not sensitive", () => {
     const { visibility } = useSensitiveMedia(mockMedia)
-    expect(visibility.value).toBe("insensitive")
+    expect(visibility.value).toBe("non-sensitive")
   })
 
   it("should return sensitive-hidden when media is sensitive and shouldBlurSensitive is true", () => {

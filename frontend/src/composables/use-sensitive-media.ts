@@ -5,7 +5,7 @@ import type { Media } from "~/types/media"
 import { useUiStore } from "~/stores/ui"
 
 type SensitiveVisibilityState =
-  | "insensitive"
+  | "non-sensitive"
   | "sensitive-shown"
   | "sensitive-hidden"
 
@@ -26,7 +26,7 @@ export function useSensitiveMedia(
    */
   const visibility = computed<SensitiveVisibilityState>(() => {
     if (!media) {
-      return "insensitive"
+      return "non-sensitive"
     } else if (media.isSensitive) {
       if (uiStore.revealedSensitiveResults.includes(media.id)) {
         return "sensitive-shown"
@@ -36,7 +36,7 @@ export function useSensitiveMedia(
           : "sensitive-shown"
       }
     } else {
-      return "insensitive"
+      return "non-sensitive"
     }
   })
 
