@@ -6,7 +6,7 @@ from uuid import uuid4
 from django.conf import settings
 from rest_framework.exceptions import UnsupportedMediaType
 
-import aiohttp
+import httpx
 import pook
 import pytest
 import requests
@@ -249,7 +249,7 @@ async def test_get_successful_forward_query_params(
 @pytest.fixture
 def setup_http_get_exception(monkeypatch):
     def do(exc):
-        mock_session = MagicMock(spec=aiohttp.ClientSession)
+        mock_session = MagicMock(spec=httpx.AsyncClient)
         mock_session.get.side_effect = exc
 
         monkeypatch.setattr(

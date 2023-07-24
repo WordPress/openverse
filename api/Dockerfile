@@ -116,8 +116,8 @@ EXPOSE 8000 3000
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]
 
-# Run using uvicorn for development. Production should run gunicorn with uvicorn workers.
-CMD ["uvicorn", "--reload", "--host", "0.0.0.0", "--port", "8000", "conf.asgi:application"]
+# Production should run gunicorn
+CMD ["gunicorn"]
 
 #########
 # NGINX #

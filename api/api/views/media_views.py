@@ -1,6 +1,7 @@
 import abc
 import logging
 
+from django.http import Http404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
@@ -8,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from adrf.viewsets import ViewSet
-from asgiref.sync import sync_to_async
 
 from api.controllers import search_controller
 from api.models import ContentProvider
@@ -54,7 +54,39 @@ class AsyncMediaView(ViewSet, GenericViewSet):
         )
 
     async def aget_object(self):
-        return await sync_to_async(self.get_object)()
+        """
+        Return the object the view is displaying.
+
+        Reimplementation of DRF method to make it async.
+
+        You may want to override this if you need to provide non-standard
+        queryset lookups.  Eg if objects are referenced using multiple
+        keyword arguments in the url conf.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Perform the lookup filtering.
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            "Expected view %s to be called with a URL keyword argument "
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            "attribute on the view correctly."
+            % (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        try:
+            obj = await queryset.aget(**filter_kwargs)
+        except queryset.model.DoesNotExist:
+            raise Http404(
+                "No %s matches the given query." % queryset.model._meta.object_name
+            )
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
     async def get_thumbnail(self, request, media_obj, image_url):
         serializer = self.get_serializer(data=request.query_params)

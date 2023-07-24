@@ -1,8 +1,7 @@
 from os.path import splitext
 from urllib.parse import urlparse
 
-import aiohttp
-import django_redis
+import django_async_redis
 import sentry_sdk
 from asgiref.sync import sync_to_async
 
@@ -17,7 +16,7 @@ async def get_image_extension(image_url: str, media_identifier: str) -> str | No
     Does not use async Redis client due to issues with `django-async-redis`
     incorrectly closing the event loop during the request lifecycle.
     """
-    cache = django_redis.get_redis_connection("default")
+    cache = await django_async_redis.get_redis_connection("adefault")
     key = f"media:{media_identifier}:thumb_type"
 
     ext = _get_file_extension_from_url(image_url)
@@ -29,10 +28,9 @@ async def get_image_extension(image_url: str, media_identifier: str) -> str | No
 
     if not ext:
         try:
-            response = await get_aiohttp_session().head(
-                image_url, timeout=aiohttp.ClientTimeout(total=10)
-            )
-            response.raise_for_status()
+            session = await get_aiohttp_session()
+            async with session.head(image_url, timeout=10) as response:
+                response.raise_for_status()
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
             raise UpstreamThumbnailException(

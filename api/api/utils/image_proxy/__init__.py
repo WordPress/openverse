@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from rest_framework.exceptions import UnsupportedMediaType
 
 import aiohttp
+import django_async_redis
 import django_redis
 import requests
 import sentry_sdk
@@ -73,11 +74,8 @@ async def get(
     original image if the file type is SVG. Otherwise, raise an exception.
     """
     logger = parent_logger.getChild("get")
-    tallies = django_redis.get_redis_connection("tallies")
-    # For some reason using django_async_redis for the tallies
-    # causes event loop issues. Wrapping the synchronous client's
-    # ``incr`` method prevents issues with using it in an async context
-    incr = sync_to_async(tallies.incr)
+    tallies = await django_async_redis.get_redis_connection("atallies")
+
     month = get_monthly_timestamp()
 
     image_extension = await get_image_extension(image_url, media_identifier)
@@ -95,24 +93,30 @@ async def get(
         is_full_size,
         is_compressed,
     )
+
     try:
-        async with get_aiohttp_session().get(
+        session = await get_aiohttp_session()
+        upstream_response = await session.get(
             upstream_url,
             params=params,
             headers=headers,
-            timeout=aiohttp.ClientTimeout(total=15),
-        ) as upstream_response:
-            await incr(f"thumbnail_response_code:{month}:{upstream_response.status}")
-            await incr(
-                f"thumbnail_response_code_by_domain:{domain}:"
-                f"{month}:{upstream_response.status}"
-            )
-            upstream_response.raise_for_status()
-            body = await upstream_response.read()
+            timeout=15,
+        )
+        await tallies.incr(
+            f"thumbnail_response_code:{month}:{upstream_response.status}"
+        )
+        await tallies.incr(
+            f"thumbnail_response_code_by_domain:{domain}:"
+            f"{month}:{upstream_response.status}"
+        )
+        upstream_response.raise_for_status()
+        body = await upstream_response.read()
     except Exception as exc:
+        # REMOVE THIS LINE. JUST FOR TESTING TO SEE THE REAL EXCEPTION
+        raise exc
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
-        count = await incr(key)
+        count = await tallies.incr(key)
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
             count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
@@ -128,9 +132,9 @@ async def get(
                 scope.set_tag(
                     "occurrences", settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY
                 )
-                sentry_sdk.capture_exception(exc)
+            sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):
-            await incr(
+            await tallies.incr(
                 f"thumbnail_http_error:{domain}:{month}:{exc.response.status_code}:{exc.response.text}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")

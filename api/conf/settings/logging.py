@@ -11,7 +11,7 @@ def health_check_filter(record: LogRecord) -> bool:
     return not ("GET /healthcheck" in record.getMessage() and record.status_code == 200)
 
 
-LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
+LOG_LEVEL = config("LOG_LEVEL", default="DEBUG").upper()
 DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
 
 # https://github.com/dabapps/django-log-request-id#logging-all-requests

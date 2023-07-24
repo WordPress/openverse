@@ -1,11 +1,11 @@
-wsgi_app = "conf.wsgi:application"
+wsgi_app = "conf.asgi:application"
 capture_output = True
 accesslog = "-"
 errorlog = "-"
 chdir = "/api"
 bind = ["0.0.0.0:8000"]
 workers = 4
-timeout = 120
+worker_class = "worker.UvicornWorker"
 logconfig_dict = {
     # NOTE: Most of this is inherited from the default configuration
     # https://github.com/benoitc/gunicorn/blob/cc2e3835784542e65886cd27f64d444309fbaad0/gunicorn/glogging.py#L48-L86

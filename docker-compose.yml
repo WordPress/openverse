@@ -225,6 +225,11 @@ services:
       - api/.env
     stdin_open: true
     tty: true
+    # Run using uvicorn in development. Allows the image to define the ideal
+    # production runtime scenario instead of needing to overwrite that during
+    # deployment.
+    command: gunicorn --reload
+    # command: uvicorn --reload --host 0.0.0.0 --port 8000 conf.asgi:application --lifespan on
 
   ingestion_server:
     profiles:
