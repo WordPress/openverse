@@ -5,7 +5,9 @@ from unittest.mock import MagicMock
 
 from rest_framework.test import APIClient, APIRequestFactory
 
+import pook
 import pytest
+import pytest_asyncio
 from elasticsearch import Elasticsearch
 from fakeredis import FakeRedis
 
@@ -21,6 +23,7 @@ from api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSerializer,
 )
+from api.utils import aiohttp
 
 
 @pytest.fixture()
@@ -128,3 +131,41 @@ def cleanup_elasticsearch_test_documents(request, settings):
         body={"query": {"match": {"tags.name": CREATED_BY_FIXTURE_MARKER}}},
         refresh=True,
     )
+
+
+@pytest_asyncio.fixture(autouse=True)
+async def cleanup_aiohttp_session():
+    yield None
+
+    if aiohttp._SESSION and not aiohttp._SESSION.closed:
+        await aiohttp._SESSION.close()
+
+
+@pytest.fixture
+def pook_on():
+    """
+    Safely turn pook on and off for a test.
+
+    pytest-asyncio marks mess with the `pook.on`
+    decorator, so this is a workaround that prevents
+    individual tests needing to safely handle clean up.
+    """
+    pook.on()
+    yield
+    pook.off()
+
+
+@pytest.fixture
+def pook_off():
+    """
+    Turn pook off after a test.
+
+    Similar to ``pook_on`` above.
+
+    Useful to ensure pook is turned off after a test
+    if you need to manually turn pook on (for example,
+    to avoid it capturing requests you actually do
+    want to send, e.g., to Elasticsearch).
+    """
+    yield
+    pook.off()

@@ -45,7 +45,6 @@ async def _head(url: str, **kwargs) -> tuple[str, int]:
 
 
 # https://stackoverflow.com/q/55259755
-@async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     tasks = []
     timeout = aiohttp.ClientTimeout(total=2)
@@ -55,7 +54,7 @@ async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     return responses.result()
 
 
-def check_dead_links(
+async def check_dead_links(
     query_hash: str, start_slice: int, results: list[Hit], image_urls: list[str]
 ) -> None:
     """
@@ -87,7 +86,7 @@ def check_dead_links(
             to_verify[url] = idx
     logger.debug(f"len(to_verify)={len(to_verify)}")
 
-    verified = _make_head_requests(to_verify.keys())
+    verified = await _make_head_requests(to_verify.keys())
 
     # Cache newly verified image statuses.
     to_cache = {CACHE_PREFIX + url: status for url, status in verified}
@@ -161,6 +160,9 @@ def check_dead_links(
         f"start_time={start_time} "
         f"delta={end_time - start_time} "
     )
+
+
+sync_check_dead_links = async_to_sync(check_dead_links)
 
 
 def _log_validation_failure(exception):

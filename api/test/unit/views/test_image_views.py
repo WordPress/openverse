@@ -74,7 +74,7 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
         url="http://iip.smk.dk/image.jpg",
         thumbnail=thumb_url,
     )
-    with patch("api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
+    with patch("api.views.media_views.AsyncMediaView.get_thumbnail") as thumb_call:
         mock_response = HttpResponse("mock_response")
         thumb_call.return_value = mock_response
         api_client.get(f"/v1/images/{image.identifier}/thumb/")

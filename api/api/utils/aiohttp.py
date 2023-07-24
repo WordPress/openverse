@@ -9,7 +9,7 @@ _SESSION: aiohttp.ClientSession = None
 def get_aiohttp_session():
     global _SESSION
 
-    if _SESSION is None or _SESSION.loop.is_closed():
+    if _SESSION is None or _SESSION.closed:
         _SESSION = aiohttp.ClientSession()
 
     return _SESSION

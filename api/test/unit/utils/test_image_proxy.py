@@ -53,34 +53,6 @@ def auth_key():
     settings.PHOTON_AUTH_KEY = None
 
 
-@pytest.fixture
-def pook_on():
-    """
-    Safely turn pook on and off for a test.
-
-    pytest mark's in general mess with the `pook.on`
-    decorator, so this is a workaround that prevents
-    individual tests needing to safely handle clean up.
-    """
-    pook.on()
-    yield
-    pook.off()
-
-
-@pytest.fixture
-def pook_off():
-    """
-    Turn pook off after a test.
-
-    Useful to ensure pook is turned off after a test
-    if you need to manually turn pook on (for example,
-    to avoid it capturing requests you actually do
-    want to send).
-    """
-    yield
-    pook.off()
-
-
 async def test_get_successful_no_auth_key_default_args(
     photon_url, image_url, pook_on, mock_image_data
 ):
