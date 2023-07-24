@@ -337,6 +337,21 @@
       title: "Search Settings",
       enable: "Enable Mature Content",
     },
+    safeBrowsing: {
+      title: "Safe Browsing",
+      desc: "Content marked as {sensitive} is not shown by default.",
+      sensitive: "sensitive",
+      toggles: {
+        fetchSensitive: {
+          title: "Sensitive results",
+          desc: "Show results marked as sensitive in the results area.",
+        },
+        blurSensitive: {
+          title: "Blur content",
+          desc: "Blur images and texts to prevent seeing sensitive material.",
+        },
+      },
+    },
     lengths: {
       title: "Duration",
       shortest: "< 30 sec",
@@ -648,12 +663,6 @@
       arrowLabel: "Dropdown",
     },
   },
-  migrationNotice: {
-    intro: "{ccSearch} is now called {openverse} and joins {wordpress} as an open source project.",
-    more: "{readMore} about this announcement.",
-    read: "Read more",
-    close: "Close the announcement",
-  },
   downloadButton: {
     aria: {
       dropdownLabel: "Select the download file format",
@@ -742,5 +751,12 @@
   },
   report: {
     imageDetails: "See image details",
+  },
+  sensitiveContent: {
+    title: {
+      image: "This image may contain sensitive content.",
+      audio: "This audio track may contain sensitive content.",
+    },
+    creator: "Creator",
   },
 }

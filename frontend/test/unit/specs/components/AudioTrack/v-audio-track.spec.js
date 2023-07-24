@@ -3,6 +3,7 @@
 import { fireEvent } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
+import { i18n } from "~~/test/unit/test-utils/i18n"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
@@ -19,10 +20,6 @@ jest.mock("~/composables/use-match-routes", () => ({
   useMatchSingleResultRoutes: jest.fn(() => ({ matches: { value: false } })),
 }))
 
-jest.mock("~/composables/use-browser-detection", () => ({
-  useBrowserIsBlink: jest.fn(() => false),
-}))
-
 const stubs = {
   VPlayPause: true,
   VLicense: true,
@@ -34,6 +31,10 @@ describe("AudioTrack", () => {
   let options = null
   let props = null
   let configureVue = null
+  let captureExceptionMock = jest.fn()
+  const $nuxt = {
+    context: { i18n, $sentry: { captureException: captureExceptionMock } },
+  }
 
   beforeEach(() => {
     props = {
@@ -54,6 +55,7 @@ describe("AudioTrack", () => {
     options = {
       propsData: props,
       stubs,
+      mocks: { $nuxt },
     }
   })
 
@@ -82,27 +84,83 @@ describe("AudioTrack", () => {
     expect(element).toHaveAttribute("href", props.audio.creator_url)
   })
 
-  it("on play error displays a message instead of the waveform", async () => {
-    options.propsData.audio.url = "bad.url"
-    options.propsData.layout = "row"
-    options.stubs.VPlayPause = false
-    options.stubs.VWaveform = false
-    options.stubs.VAudioThumbnail = true
-    const pauseStub = jest
-      .spyOn(window.HTMLMediaElement.prototype, "pause")
-      .mockImplementation(() => undefined)
+  it.each`
+    errorType              | errorText
+    ${"NotAllowedError"}   | ${/Reproduction not allowed./i}
+    ${"NotSupportedError"} | ${/This audio format is not supported by your browser./i}
+    ${"AbortError"}        | ${/You aborted playback./i}
+    ${"UnknownError"}      | ${/An unexpected error has occurred./i}
+  `(
+    "on play error displays a message instead of the waveform",
+    async ({ errorType, errorText }) => {
+      options.propsData.audio.url = "bad.url"
+      options.propsData.layout = "row"
+      options.stubs.VPlayPause = false
+      options.stubs.VWaveform = false
+      options.stubs.VAudioThumbnail = true
 
-    const playStub = jest
-      .spyOn(window.HTMLMediaElement.prototype, "play")
-      .mockImplementation(() =>
-        Promise.reject(new DOMException("msg", "NotAllowedError"))
+      jest.clearAllMocks()
+
+      const pauseStub = jest
+        .spyOn(window.HTMLMediaElement.prototype, "pause")
+        .mockImplementation(() => undefined)
+
+      const playError = new DOMException("msg", errorType)
+
+      const playStub = jest
+        .spyOn(window.HTMLMediaElement.prototype, "play")
+        .mockImplementation(() => Promise.reject(playError))
+
+      const { getByRole, getByText } = render(
+        VAudioTrack,
+        options,
+        configureVue
       )
-    const { getByRole, getByText } = render(VAudioTrack, options, configureVue)
 
-    await fireEvent.click(getByRole("button"))
-    expect(playStub).toHaveBeenCalledTimes(1)
-    expect(pauseStub).toHaveBeenCalledTimes(1)
-    expect(getByText(/Reproduction not allowed./i)).toBeVisible()
-    // It's not possible to get the vm to test that Sentry has been called
+      await fireEvent.click(getByRole("button"))
+      expect(playStub).toHaveBeenCalledTimes(1)
+      expect(pauseStub).toHaveBeenCalledTimes(1)
+      expect(getByText(errorText)).toBeVisible()
+
+      // Only the UnknownError should be sent to Sentry.
+      if (errorType === "UnknownError") {
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect(captureExceptionMock).toHaveBeenCalledWith(playError)
+      } else {
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect(captureExceptionMock).not.toHaveBeenCalled()
+      }
+    }
+  )
+
+  it("has blurred title in box layout when audio is sensitive", async () => {
+    options.propsData.audio.isSensitive = true
+    options.propsData.layout = "box"
+    const { getByText } = render(VAudioTrack, options, configureVue)
+    const h2 = getByText("This audio track may contain sensitive content.")
+    expect(h2).toHaveClass("blur-text")
+  })
+
+  it("has blurred info in row layout when audio is sensitive", async () => {
+    options.propsData.audio.isSensitive = true
+    options.propsData.layout = "row"
+    const { getByText } = render(VAudioTrack, options, configureVue)
+
+    const h2 = getByText("This audio track may contain sensitive content.")
+    expect(h2).toHaveClass("blur-text")
+
+    const creator = getByText("by Creator")
+    expect(creator).toHaveClass("blur-text")
+  })
+
+  it("is does not contain title or creator anywhere when the audio is sensitive", async () => {
+    options.propsData.audio.isSensitive = true
+    options.propsData.layout = "row"
+    const screen = render(VAudioTrack, options, configureVue)
+    let { title, creator } = options.propsData.audio
+    let match = RegExp(`(${title}|${creator})`)
+    expect(screen.queryAllByText(match)).toEqual([])
+    expect(screen.queryAllByTitle(match)).toEqual([])
+    expect(screen.queryAllByAltText(match)).toEqual([])
   })
 })

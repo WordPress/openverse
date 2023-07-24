@@ -1,7 +1,5 @@
 import { defineStore } from "pinia"
 
-import { useNavigationStore } from "~/stores/navigation"
-
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
 
@@ -42,6 +40,10 @@ export interface UiState {
    */
   isMobileUa: boolean
   dismissedBanners: BannerId[]
+  /**
+   * whether to blur sensitive content in search and single result pages
+   */
+  shouldBlurSensitive: boolean
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -55,6 +57,7 @@ export const useUiStore = defineStore("ui", {
     breakpoint: "sm",
     isMobileUa: true,
     dismissedBanners: [],
+    shouldBlurSensitive: true,
   }),
 
   getters: {
@@ -103,17 +106,6 @@ export const useUiStore = defineStore("ui", {
       return (
         !this.dismissedBanners.includes(this.translationBannerId) &&
         needsTranslationBanner(this.currentLocale)
-      )
-    },
-    /**
-     * The migration banner is shown if the user is referred from CC Search,
-     * and hasn't dismissed it yet.
-     */
-    shouldShowMigrationBanner(): boolean {
-      const navigationStore = useNavigationStore()
-      return (
-        !this.dismissedBanners.includes("cc-referral") &&
-        navigationStore.isReferredFromCc
       )
     },
     /**

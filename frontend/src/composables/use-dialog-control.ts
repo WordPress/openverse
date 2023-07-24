@@ -9,7 +9,7 @@ import {
   watch,
 } from "vue"
 
-import { MaybeComputedRef, resolveUnref } from "@vueuse/core"
+import { MaybeRefOrGetter, toValue } from "@vueuse/core"
 
 import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
 
@@ -25,7 +25,7 @@ export function useDialogControl({
   nodeRef?: Ref<HTMLElement | null>
   lockBodyScroll?: ComputedRef<boolean> | boolean
   emit: SetupContext["emit"]
-  deactivateFocusTrap?: MaybeComputedRef<Fn | undefined>
+  deactivateFocusTrap?: MaybeRefOrGetter<Fn | undefined>
 }) {
   const internallyControlled = typeof visibleRef === "undefined"
   const internalVisibleRef = internallyControlled ? ref(false) : visibleRef
@@ -71,7 +71,7 @@ export function useDialogControl({
   const open = () => (internalVisibleRef.value = true)
 
   const close = () => {
-    const fn = resolveUnref(deactivateFocusTrap)
+    const fn = toValue(deactivateFocusTrap)
     if (fn) fn()
     internalVisibleRef.value = false
   }

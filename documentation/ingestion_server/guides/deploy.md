@@ -5,7 +5,7 @@
 1. Check [Airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
    to make sure a data refresh isn't occurring.
 1. Visit the
-   [Ingestion Server Docker image](https://github.com/wordpress/openverse/pkgs/container/ing)
+   [Ingestion Server Docker image](https://github.com/WordPress/openverse/pkgs/container/openverse-ingestion_server)
    page and copy the SHA of the image tagged `latest`.
 1. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).

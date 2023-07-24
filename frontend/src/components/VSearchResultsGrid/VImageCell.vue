@@ -19,9 +19,16 @@
         <img
           ref="img"
           loading="lazy"
-          class="block w-full rounded-sm object-cover"
-          :class="isSquare ? 'h-full' : 'margin-auto'"
-          :alt="image.title"
+          class="block w-full rounded-sm object-cover duration-200 motion-safe:transition-[filter,transform]"
+          :class="[
+            isSquare ? 'h-full' : 'margin-auto',
+            { 'scale-150 blur-image': shouldBlur },
+          ]"
+          :alt="
+            shouldBlur
+              ? $t('sensitiveContent.title.image').toString()
+              : image.title
+          "
           :src="imageUrl"
           :width="imgWidth"
           :height="imgHeight"
@@ -32,7 +39,13 @@
         <figcaption
           class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
         >
-          <h2 class="sr-only">{{ image.title }}</h2>
+          <h2 class="sr-only">
+            {{
+              shouldBlur
+                ? $t("sensitiveContent.title.image").toString()
+                : image.title
+            }}
+          </h2>
           <VLicense :license="image.license" :hide-name="true" />
         </figcaption>
       </figure>
@@ -47,8 +60,8 @@ import { computed, defineComponent, PropType } from "vue"
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
-
 import { useAnalytics } from "~/composables/use-analytics"
+import { useUiStore } from "~/stores/ui"
 
 import { IMAGE } from "~/constants/media"
 
@@ -143,9 +156,11 @@ export default defineComponent({
     }
 
     const contextSensitiveTitle = computed(() => {
-      return i18n.t("browsePage.aria.imageTitle", {
-        title: props.image.title,
-      })
+      return shouldBlur.value
+        ? i18n.t("sensitiveContent.title.image")
+        : i18n.t("browsePage.aria.imageTitle", {
+            title: props.image.title,
+          })
     })
 
     const { sendCustomEvent } = useAnalytics()
@@ -159,6 +174,11 @@ export default defineComponent({
       })
     }
 
+    const uiStore = useUiStore()
+    const shouldBlur = computed(
+      () => uiStore.shouldBlurSensitive && props.image.isSensitive
+    )
+
     return {
       styles,
       imgWidth,
@@ -166,6 +186,7 @@ export default defineComponent({
       imageUrl,
       imageLink,
       contextSensitiveTitle,
+      shouldBlur,
 
       getImageForeignUrl,
       onImageLoadError,

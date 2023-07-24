@@ -94,24 +94,5 @@ test.describe("search query on SSR", () => {
         ).toBeChecked()
       }
     })
-
-    // https://github.com/WordPress/openverse/issues/2572
-    // eslint-disable-next-line playwright/no-skipped-test
-    test.skip("url mature query is set, and can be unchecked using the Safer Browsing popup", async ({
-      page,
-    }) => {
-      await goToSearchTerm(page, "cat", {
-        searchType: IMAGE,
-        query: "mature=true",
-      })
-
-      await page.click('button:has-text("Safer Browsing")')
-
-      const matureCheckbox = page.locator("text=Show Mature Content")
-      await expect(matureCheckbox).toBeChecked()
-
-      await page.click("text=Show Mature Content")
-      await expect(page).toHaveURL("/search/image?q=cat")
-    })
   })
 })

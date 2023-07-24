@@ -71,11 +71,6 @@
       "dropdownLabel": "حدد تنسيق ملف التنزيل"
     }
   },
-  "migrationNotice": {
-    "intro": "{ccSearch} يسمى الآن {openverse} وينضم إلى {wordpress} كمشروع مفتوح المصدر.",
-    "more": "{readMore} حول هذا الإعلان.",
-    "read": "اقرأ أكثر"
-  },
   "dropdownButton": {
     "aria": {
       "arrowLabel": "اسقاط"

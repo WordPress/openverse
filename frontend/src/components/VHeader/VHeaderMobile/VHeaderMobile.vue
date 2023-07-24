@@ -1,8 +1,7 @@
 <template>
   <header
     ref="headerRef"
-    class="main-header z-30 flex w-full items-center border-b border-tx bg-white px-6 py-4"
-    :class="{ 'border-dark-charcoal-20': isHeaderScrolled }"
+    class="main-header z-30 flex w-full items-center bg-white px-6 py-4"
   >
     <VInputModal
       class="flex w-full"
@@ -111,14 +110,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, nextTick, ref, watch } from "vue"
+import { computed, defineComponent, nextTick, ref, watch } from "vue"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
 import { cyclicShift } from "~/utils/math"
 
 import { keycodes } from "~/constants/key-codes"
-
-import { IsHeaderScrolledKey } from "~/types/provides"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useDialogControl } from "~/composables/use-dialog-control"
@@ -158,8 +155,6 @@ export default defineComponent({
 
     const searchBarIsActive = ref(false)
     const contentSettingsOpen = ref(false)
-
-    const isHeaderScrolled = inject(IsHeaderScrolledKey)
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
@@ -295,7 +290,6 @@ export default defineComponent({
       searchInputRef,
       headerRef,
 
-      isHeaderScrolled,
       isFetching,
 
       appliedFilterCount,

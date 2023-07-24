@@ -1,8 +1,15 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
-  <div class="relative h-0 w-full bg-yellow pt-full" :title="helpText">
+  <div
+    class="relative h-0 w-full overflow-hidden bg-yellow pt-full"
+    :title="helpText"
+  >
     <!-- Programmatic thumbnail -->
-    <svg class="absolute inset-0" :viewBox="`0 0 ${canvasSize} ${canvasSize}`">
+    <svg
+      class="absolute inset-0"
+      :class="{ hidden: shouldBlur && isOk }"
+      :viewBox="`0 0 ${canvasSize} ${canvasSize}`"
+    >
       <template v-for="i in dotCount">
         <circle
           v-for="j in dotCount"
@@ -18,7 +25,8 @@
     <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
       <img
         ref="imgEl"
-        class="h-full w-full overflow-clip object-cover object-center"
+        class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform]"
+        :class="{ 'scale-150 blur-image': shouldBlur }"
         :src="audio.thumbnail"
         :alt="helpText"
         @load="handleLoad"
@@ -28,12 +36,13 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent, PropType } from "vue"
+import { ref, onMounted, computed, defineComponent, PropType } from "vue"
 
 import { rand, hash } from "~/utils/prng"
 import { lerp, dist, bezier, Point } from "~/utils/math"
 import type { AudioDetail } from "~/types/media"
 import { useI18n } from "~/composables/use-i18n"
+import { useUiStore } from "~/stores/ui"
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
@@ -51,13 +60,20 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const uiStore = useUiStore()
+    const shouldBlur = computed(
+      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
+    )
+
     const i18n = useI18n()
-    const helpText = i18n
-      .t("audioThumbnail.alt", {
-        title: props.audio.title,
-        creator: props.audio.creator,
-      })
-      ?.toString()
+    const helpText = (
+      shouldBlur.value
+        ? i18n.t("sensitiveContent.title.audio")
+        : i18n.t("audioThumbnail.alt", {
+            title: props.audio.title,
+            creator: props.audio.creator,
+          })
+    )?.toString()
 
     /* Switching */
 
@@ -106,6 +122,8 @@ export default defineComponent({
       offset,
       radius,
       helpText,
+
+      shouldBlur,
     }
   },
 })
