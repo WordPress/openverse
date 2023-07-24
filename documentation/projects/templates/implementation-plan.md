@@ -30,11 +30,33 @@
 
 <!-- List any succinct expected products from this implementation plan. -->
 
-## Outlined Steps
+## Step-by-step plan
 
-<!-- Describe the implementation step necessary for completion. -->
+<!--
+List the ordered steps of the plan in the form of imperative-tone issue titles.
+
+The goal of this section is to give a high-level view of the order of implementation any relationships like
+blockages or other dependencies that exist between steps of the plan. Link each step to the step description
+in the following section.
+
+If special deployments are required between steps, explicitly note them here. Additionally, highlight key
+milestones like when a feature flag could be made available in a particular environment.
+-->
+
+## Step details
+
+<!--
+Describe the implementation step necessary for completion.
+
+For each step description, ensure the heading includes an obvious reference to the step as described in the
+"step-by-step plan" section above.
+-->
 
 ## Dependencies
+
+### Feature flags
+
+<!-- List feature flags/environment variables that will be utilised in the development of this plan. -->
 
 ### Infrastructure
 
@@ -56,13 +78,9 @@
 
 <!-- Note any design requirements for this plan. -->
 
-## Parallelizable streams
-
-<!-- What, if any, work within this plan can be parallelized? -->
-
 ## Blockers
 
-<!-- What hard blockers exist which might prevent further work on this project? -->
+<!-- What hard blockers exist that prevent further work on this project? -->
 
 ## API version changes
 
