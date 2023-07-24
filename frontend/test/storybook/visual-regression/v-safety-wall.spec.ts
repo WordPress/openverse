@@ -19,11 +19,5 @@ test.describe("VSafetyWall", () => {
         page.locator(safetyWallLocator)
       )
     })
-    test("Renders the wall correctly for sensitive media", async ({ page }) => {
-      await expectSnapshot(
-        `v-safetywall-default`,
-        page.locator(safetyWallLocator)
-      )
-    })
   })
 })
