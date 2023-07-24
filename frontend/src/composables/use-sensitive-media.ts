@@ -4,10 +4,7 @@ import type { Media } from "~/types/media"
 
 import { useUiStore } from "~/stores/ui"
 
-type SensitiveVisibilityState =
-  | "non-sensitive"
-  | "sensitive-shown"
-  | "sensitive-hidden"
+import type { SensitiveMediaVisibility } from "~/constants/content-safety"
 
 /**
  * A helper composable for working with sensitive media.
@@ -24,7 +21,7 @@ export function useSensitiveMedia(
    * Respects defaults from the site's filters and is
    * updated by user interactions.
    */
-  const visibility = computed<SensitiveVisibilityState>(() => {
+  const visibility = computed<SensitiveMediaVisibility>(() => {
     if (!media) {
       return "non-sensitive"
     } else if (media.isSensitive) {
