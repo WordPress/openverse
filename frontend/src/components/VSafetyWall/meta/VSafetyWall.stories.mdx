@@ -1,0 +1,17 @@
+import { Canvas, Meta, Story } from "@storybook/addon-docs"
+
+import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
+
+export const Template = (args) => ({
+  template: `<VSafetyWall v-bind="args"/>`,
+  components: { VSafetyWall },
+  setup() {
+    return { args }
+  },
+})
+
+<Meta title="Components/VSafetyWall" component={VSafetyWall} />
+
+<Canvas>
+  <Story name="default">{Template.bind({})}</Story>
+</Canvas>

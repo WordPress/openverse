@@ -1,32 +1,31 @@
 <template>
-  <main :id="skipToContentTargetId" tabindex="-1">
-    <div v-if="backToSearchPath" class="w-full px-2 py-2 md:px-6">
-      <VBackToSearchResultsLink
-        :id="$route.params.id"
-        :href="backToSearchPath"
-      />
-    </div>
-
-    <template v-if="audio">
-      <VAudioTrack
-        layout="full"
-        :audio="audio"
-        class="main-track"
-        @interacted="sendAudioEvent($event, 'AudioDetailPage')"
-      />
-      <div
-        class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
-      >
-        <VMediaReuse data-testid="audio-attribution" :media="audio" />
-        <VAudioDetails data-testid="audio-info" :audio="audio" />
-        <VRelatedAudio @interacted="sendAudioEvent($event, 'VRelatedAudio')" />
-      </div>
+  <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
+    <VSafetyWall v-if="isHidden" :media="audio" @reveal="reveal" />
+    <template v-else>
+      <VSingleResultControls v-if="audio" :media="audio" />
+      <template v-if="audio">
+        <VAudioTrack
+          layout="full"
+          :audio="audio"
+          class="main-track"
+          @interacted="sendAudioEvent($event, 'AudioDetailPage')"
+        />
+        <div
+          class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
+        >
+          <VMediaReuse data-testid="audio-attribution" :media="audio" />
+          <VAudioDetails data-testid="audio-info" :audio="audio" />
+          <VRelatedAudio
+            @interacted="sendAudioEvent($event, 'VRelatedAudio')"
+          />
+        </div>
+      </template>
     </template>
   </main>
 </template>
 
 <script lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import {
   defineComponent,
   useContext,
@@ -40,14 +39,13 @@ import { skipToContentTargetId } from "~/constants/window"
 import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { useSearchStore } from "~/stores/search"
 import { createDetailPageMeta } from "~/utils/og"
 
 import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
-import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
 
@@ -56,7 +54,6 @@ export default defineComponent({
   components: {
     VAudioDetails,
     VAudioTrack,
-    VBackToSearchResultsLink,
     VMediaReuse,
     VRelatedAudio,
   },
@@ -67,7 +64,6 @@ export default defineComponent({
   fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
-    const searchStore = useSearchStore()
 
     const route = useRoute()
 
@@ -87,8 +83,6 @@ export default defineComponent({
       }
     })
 
-    const backToSearchPath = computed(() => searchStore.backToSearchPath)
-
     const { sendCustomEvent } = useAnalytics()
     const sendAudioEvent = (
       data: Omit<AudioInteractionData, "component">,
@@ -102,13 +96,18 @@ export default defineComponent({
 
     useMeta(createDetailPageMeta(audio.value?.title, audio.value?.url))
 
+    const { isHidden, reveal, hide } = useSensitiveMedia(audio.value)
+
     return {
       audio,
-      backToSearchPath,
 
       sendAudioEvent,
 
       skipToContentTargetId,
+
+      isHidden,
+      reveal,
+      hide,
     }
   },
   head: {},
