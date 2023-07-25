@@ -15,22 +15,18 @@
 
 ## Deployment
 
-The catalog only exists in production, so there is no staging deployment.
+The catalog only exists in production, so there is no staging deployment. After
+the app is built and tagged, deploy production:
 
-1. After the app is built and tagged, deploy production:
-   1. Checkout the
-      [infrastructure repository](https://github.com/wordpress/openverse-infrastructure)
-      and bump the catalog version with the `just bump prod catalog-airflow`
-      command.
-   1. Once you've verified that no DAGs are running, update the value of
-      `running_dags_cleared` to `true` in the
-      [production module declaration](https://github.com/WordPress/openverse-infrastructure/blob/27c41ede9b24991909194e0a6477f6b11fceac0c/environments/prod/catalog-airflow.tf#L33).
-   1. `just apply prod catalog-airflow` and verify the plan before deploying.
-   1. Restore the value of `running_dags_cleared` back to `false`.
-1. Update the Cloudwatch dashboard with the new instance information:
-   1. `just apply prod catalog-dashboard` and verify the plan before deploying
-      (only the catalog EC2 instance ID should be changed within the catalog's
-      dashboard).
+1. Checkout the
+   [infrastructure repository](https://github.com/wordpress/openverse-infrastructure)
+   and bump the catalog version with the `just bump prod catalog-airflow`
+   command.
+1. Once you've verified that no DAGs are running, update the value of
+   `running_dags_cleared` to `true` in the
+   [production module declaration](https://github.com/WordPress/openverse-infrastructure/blob/27c41ede9b24991909194e0a6477f6b11fceac0c/environments/prod/catalog-airflow.tf#L33).
+1. `just apply prod catalog-airflow` and verify the plan before deploying.
+1. Restore the value of `running_dags_cleared` back to `false`.
 
 ## Post-deployment steps
 
