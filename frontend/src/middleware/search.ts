@@ -1,6 +1,6 @@
 import { useSearchStore } from "~/stores/search"
-
 import { useMediaStore } from "~/stores/media"
+import { NO_RESULT } from "~/constants/errors"
 
 import type { Middleware } from "@nuxt/types"
 
@@ -44,7 +44,12 @@ export const searchMiddleware: Middleware = async ({
     const results = await mediaStore.fetchMedia()
 
     const fetchingError = mediaStore.fetchState.fetchingError
-    if (!results && fetchingError && fetchingError?.statusCode !== 404) {
+    // NO_RESULTS is handled client-side, for other errors show server error page
+    if (
+      !results &&
+      fetchingError &&
+      !fetchingError?.message?.includes(NO_RESULT)
+    ) {
       nuxtError(fetchingError)
     }
   }

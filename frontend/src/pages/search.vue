@@ -46,6 +46,7 @@ import {
 import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+import { NO_RESULT } from "~/constants/errors"
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
@@ -101,21 +102,21 @@ export default defineComponent({
     ) => {
       /**
        * If the fetch has already started in the middleware,
-       * and there is an error, don't re-fetch.
+       * and there is an error or no results were found, don't re-fetch.
        */
-      const hasMiddlewareError =
-        mediaStore.fetchState.fetchingError?.statusCode &&
+      const shouldNotRefetch =
+        mediaStore.fetchState.fetchingError?.message &&
         mediaStore.fetchState.hasStarted
-      if (hasMiddlewareError) return
+      if (shouldNotRefetch) return
 
       const results = await mediaStore.fetchMedia(payload)
       if (!results) {
-        const errorStatus = mediaStore.fetchState.fetchingError?.statusCode
+        const error = mediaStore.fetchState.fetchingError
         /**
-         * 404 error is handled by the VErrorSection component in the child pages.
+         * NO_RESULT error is handled by the VErrorSection component in the child pages.
          * For all other errors, show the Nuxt error page.
          */
-        if (errorStatus !== 404)
+        if (error?.statusCode && !error?.message.includes(NO_RESULT))
           return nuxtError(mediaStore.fetchState.fetchingError)
       }
     }

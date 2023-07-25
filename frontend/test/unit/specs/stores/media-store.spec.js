@@ -336,8 +336,7 @@ describe("Media Store", () => {
       })
 
       expect(mediaStore.mediaFetchState["image"].fetchingError).toEqual({
-        message: "No image results found",
-        statusCode: 404,
+        message: "NO_RESULT: image.",
       })
     })
 

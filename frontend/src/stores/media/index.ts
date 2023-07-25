@@ -20,6 +20,7 @@ import {
   SupportedMediaType,
   supportedMediaTypes,
 } from "~/constants/media"
+import { NO_RESULT } from "~/constants/errors"
 import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
@@ -157,33 +158,33 @@ export const useMediaStore = defineStore("media", {
          * If at least one media type has a 429 error, returns 429 to stop the
          * user from retrying the request.
          *
-         * If all media types have a 404 error, returns 404 to show the "No results" page.
+         * If all media types have a NO_RESULT error, returns it to show the "No results" page.
          *
          * If at least one media type has a different error, returns the first error.
-         * The handling of errors other than 404 and 429 should be improved after we
+         * The handling of errors other than 429 should be improved after we
          * get more information about the error codes we get from the API.
          */
         const allMediaError = (): null | NuxtError => {
-          const statuses = supportedMediaTypes.map(
-            (mt) => this.mediaFetchState[mt].fetchingError?.statusCode
+          const errors = getMediaErrors(this.mediaFetchState)
+
+          if (!errors.length) {
+            return null
+          }
+
+          const tooManyRequestsError = findTooManyRequestsError(errors)
+          if (tooManyRequestsError) {
+            return tooManyRequestsError
+          }
+
+          const noResultError = findNoResultError(errors)
+          if (noResultError) {
+            return noResultError
+          }
+          // Temporarily return the first error, until we have a better way to handle this.
+          const results = errors.filter(
+            (error) => !error.message?.includes(NO_RESULT)
           )
-          if (statuses.some((status) => status === 429)) {
-            return { statusCode: 429, message: "All media fetching error" }
-          } else if (statuses.every((status) => status === 404)) {
-            return { statusCode: 404, message: "All media fetching error" }
-          }
-          for (const mediaType of supportedMediaTypes) {
-            const error = this.mediaFetchState[mediaType].fetchingError
-            if (error?.statusCode && ![429, 404].includes(error.statusCode)) {
-              // Temporarily return the first error, until we have a better way to handle this.
-              return {
-                statusCode:
-                  this.mediaFetchState[mediaType].fetchingError?.statusCode,
-                message: `All media fetching error. Failed to fetch ${mediaType}`,
-              }
-            }
-          }
-          return null
+          return results.length ? results[0] : null
         }
 
         return {
@@ -469,8 +470,7 @@ export const useMediaStore = defineStore("media", {
         if (!mediaCount) {
           page = 0
           errorData = {
-            statusCode: 404,
-            message: `No ${mediaType} results found`,
+            message: `${NO_RESULT}: ${mediaType}.`,
           }
         }
         this._updateFetchState(mediaType, "end", errorData)
@@ -541,4 +541,23 @@ export const getNuxtErrorData = (
     errorData.message += `Unknown error`
   }
   return errorData
+}
+
+const getMediaErrors = (
+  mediaFetchStates: MediaState["mediaFetchState"]
+): NuxtError[] => {
+  return supportedMediaTypes
+    .map((mediaType) => mediaFetchStates[mediaType].fetchingError)
+    .filter(Boolean) as NuxtError[]
+}
+
+const findTooManyRequestsError = (errors: NuxtError[]): null | NuxtError => {
+  return errors.find(({ statusCode }) => statusCode === 429) ?? null
+}
+
+const findNoResultError = (errors: NuxtError[]): null | NuxtError => {
+  return errors.length === supportedMediaTypes.length &&
+    errors.every(({ message }) => message?.includes(NO_RESULT))
+    ? { message: `${NO_RESULT}: All media` }
+    : null
 }
