@@ -12,7 +12,7 @@ test("sends correct analytics events", async ({ page, context }) => {
 
   const events = collectAnalyticsEvents(context)
 
-  await goToSearchTerm(page, "cat", { mode: "SSR" })
+  await goToSearchTerm(page, "cat", { searchType: "image", mode: "SSR" })
 
   await page.getByRole("button", { name: "Source list" }).click()
   await page.getByRole("link", { name: "Centre for Ageing Better" }).click()
@@ -26,7 +26,7 @@ test("sends correct analytics events", async ({ page, context }) => {
   )
 
   expectEventPayloadToMatch(viewEvent, {
-    searchType: "all",
+    searchType: "image",
     query: "cat",
     resultPage: 1,
   })
