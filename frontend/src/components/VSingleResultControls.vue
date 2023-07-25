@@ -1,5 +1,10 @@
 <template>
-  <div class="flex w-full justify-between px-4 pb-4 md:px-8">
+  <!-- Only display these controls if one of the children is shown,
+    to prevent rendering extra whitespace when both buttons are hidden. -->
+  <div
+    v-show="canBeHidden || backToSearchPath"
+    class="flex w-full justify-between px-4 pb-4 md:px-8"
+  >
     <VBackToSearchResultsLink
       v-if="backToSearchPath"
       :id="$route.params.id"
