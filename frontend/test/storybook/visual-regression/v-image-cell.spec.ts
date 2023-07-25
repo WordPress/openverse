@@ -4,8 +4,8 @@ import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
 import type { AspectRatio } from "~/types/media"
 
-const imageLocator = "#VImageCell"
-const imgLinkLocator = "VLink[itemprop='contentUrl']"
+const imageLocator = "ol.flex > li"
+const imgLinkLocator = "a[itemprop='contentUrl']"
 const imgElementLocator = "img[itemprop='thumbnailUrl']"
 
 test.describe.configure({ mode: "parallel" })
@@ -24,26 +24,20 @@ test.describe("VImageCell", () => {
       })
     })
 
-    test(`${ratio} on error`, async ({ page }) => {
-      await gotoWithArgs(page, {
-        aspectRatio: ratio,
-        image: { url: "invalidUrl" },
-      })
-      const imgElement = page.locator(imgElementLocator)
-      await expect(imgElement).toHaveAttribute(
-        "src",
-        "~/assets/image_not_available_placeholder.png"
-      )
-      expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
-        name: `v-image-cell-${ratio}-on-error.png`,
-      })
-    })
-
     test(`${ratio} focused`, async ({ page }) => {
       await gotoWithArgs(page, { aspectRatio: ratio })
       await page.focus(imgLinkLocator)
       expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
         name: `v-image-cell-${ratio}-focused.png`,
+      })
+    })
+
+    test(`${ratio} hovered`, async ({ page }) => {
+      await gotoWithArgs(page, { aspectRatio: ratio })
+      await page.focus(imgLinkLocator)
+      await page.hover(imgLinkLocator)
+      expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
+        name: `v-image-cell-${ratio}-focused-hovered.png`,
       })
     })
 

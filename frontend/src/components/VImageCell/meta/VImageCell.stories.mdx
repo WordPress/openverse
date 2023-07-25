@@ -14,12 +14,12 @@ export const Template = (args, { argTypes }) => ({
   components: { VImageCell },
   props: Object.keys(argTypes),
   template: `
-    <ol class="image-grid flex flex-wrap gap-4">
+    <ol class="flex flex-wrap gap-4">
       <VImageCell
         :image="image"
-        :searchTerm="searchTerm"
-        aspect-ratio="aspectRatio"
-        :relatedTo="relatedTo"
+        searchTerm="test"
+        :aspect-ratio="aspectRatio"
+        relatedTo="fake-uuid"
       />
     </ol>
   `,
@@ -38,21 +38,17 @@ export const Template = (args, { argTypes }) => ({
       viewport: { defaultViewport: "sm" },
     }}
     args={{
-      image: image,
-      searchTerm: "nature",
       aspectRatio: "intrinsic",
-      relatedTo: null,
+      image: image,
     }}
     argTypes={{
-      image: {
-        control: { type: "object" },
-      },
-      searchTerm: { control: "text" },
       aspectRatio: {
         options: ["square", "intrinsic"],
         control: { type: "radio" },
       },
-      relatedTo: { control: "text" },
+      image: {
+        control: { type: "object" },
+      },
     }}
   >
     {Template.bind({})}
