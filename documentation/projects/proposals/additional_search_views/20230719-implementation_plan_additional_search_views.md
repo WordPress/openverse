@@ -46,7 +46,39 @@ pages are updated to add the links to these pages, as seen in the Figma mockups:
 For the creator pages, a separate API media view is added to get the items that
 match the creator and source pair exactly.
 
-## Outlined Steps
+## Step-by-step plan
+
+The work on adding the new components can be done independently because it does
+not affect the existing pages. This includes the following steps:
+
+- Extract the `VAudioCollection` component
+- Add the `VCollectionHeader` component
+- Add the `VCollectionLink` component
+- Add the new `VTag` component
+- Update links in the "information" section
+- Add an analytics event for visiting source `VISIT_SOURCE_LINK` that is similar
+  to `VISIT_CREATOR_LINK`.
+
+This work can be done in parallel with the API changes. It would be useful to
+have the API changes done before the frontend changes, so that we can test the
+new pages with the real data and query parameters.
+
+Other frontend changes will affect the existing pages, so they will need to be
+done under a feature flag. This includes the updates to the single result pages,
+additional pages and updating the search query.
+
+- Add a `additional_search_views` feature flag
+- Update the `searchBy` filter
+- Create a page for `tag` / `creator` /`source` collections.
+- Update the `VCollectionLink` area on the single result page
+- Use `VTag` component in the search results
+
+Cleanup after the feature flag is removed:
+
+- Remove the `additional_search_views` feature flag
+- Remove `VMediaTag` component
+
+## Step details
 
 <!-- Describe the implementation step necessary for completion. -->
 
@@ -229,14 +261,17 @@ should probably still have two separate pages for the source and the creator,
 but we might want to add a note that the creator is the only one associated with
 this source.
 
-#### Add `VCollectionLink` component and update the title and links container
+#### Add `VCollectionLink` component
+
+This components should be a `VButton` with `as="VLink"` and should link to the
+localized page for the creator or the source pages.
+
+### Update the `VCollectionLink` area on the single result page
 
 The "by creator" line under the main item on the single result page should be
 replaced with a section that has two buttons: one for a creator link and a
-source link. These links should be `VButtons` with `as="VLink"` and should link
-to the localized page for the creator or the source pages. This section should
-be horizontally scrollable on mobile. It should implement a scroll-snap
-(example: https://play.tailwindcss.com/AbfA33Za50)
+source link. This section should be horizontally scrollable on mobile. It should
+implement a scroll-snap (example: https://play.tailwindcss.com/AbfA33Za50)
 
 #### Update `VMediaTag` component to be a `VButton` wrapping a `VLink`
 
