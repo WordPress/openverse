@@ -4,9 +4,10 @@ import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
 import type { AspectRatio } from "~/types/media"
 
-const imageLocator = "ol.flex > li"
-const imgLinkLocator = "a[itemprop='contentUrl']"
-const imgElementLocator = "img[itemprop='thumbnailUrl']"
+const imageCell = "a[itemprop='contentUrl']"
+// Necessary to make sure we can capture the focus state, which
+// exceeds the bounds of the actual component
+const screenshotEl = ".sb-main-padded"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -17,35 +18,36 @@ test.describe("VImageCell", () => {
   for (const ratio of aspectRatios) {
     test(`${ratio} loaded`, async ({ page }) => {
       await gotoWithArgs(page, { aspectRatio: ratio })
-      const imgElement = page.locator(imgElementLocator)
-      await expect(imgElement).toBeVisible()
-      expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
+      const mainEl = page.locator(imageCell)
+      await expect(mainEl).toBeVisible()
+      expect(await page.locator(screenshotEl).screenshot()).toMatchSnapshot({
         name: `v-image-cell-${ratio}-loaded.png`,
       })
     })
 
     test(`${ratio} focused`, async ({ page }) => {
       await gotoWithArgs(page, { aspectRatio: ratio })
-      await page.focus(imgLinkLocator)
-      expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
+      await page.focus(imageCell)
+      await page.locator(imageCell).click()
+      expect(await page.locator(screenshotEl).screenshot()).toMatchSnapshot({
         name: `v-image-cell-${ratio}-focused.png`,
       })
     })
 
     test(`${ratio} hovered`, async ({ page }) => {
       await gotoWithArgs(page, { aspectRatio: ratio })
-      await page.focus(imgLinkLocator)
-      await page.hover(imgLinkLocator)
-      expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
-        name: `v-image-cell-${ratio}-focused-hovered.png`,
+      await page.hover(imageCell)
+      expect(await page.locator(screenshotEl).screenshot()).toMatchSnapshot({
+        name: `v-image-cell-${ratio}-hovered.png`,
       })
     })
 
     test(`${ratio} focused hovered`, async ({ page }) => {
       await gotoWithArgs(page, { aspectRatio: ratio })
-      await page.focus(imgLinkLocator)
-      await page.hover(imgLinkLocator)
-      expect(await page.locator(imageLocator).screenshot()).toMatchSnapshot({
+      await page.focus(imageCell)
+      await page.hover(imageCell)
+      await page.locator(imageCell).click()
+      expect(await page.locator(screenshotEl).screenshot()).toMatchSnapshot({
         name: `v-image-cell-${ratio}-focused-hovered.png`,
       })
     })
