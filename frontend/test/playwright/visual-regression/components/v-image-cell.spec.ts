@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
-import { AspectRatio } from "~/types/media"
+import type { AspectRatio } from "~/types/media"
 
 const imageLocator = "#VImageCell"
 const imgLinkLocator = "VLink[itemprop='contentUrl']"
@@ -12,7 +12,7 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("VImageCell", () => {
   const gotoWithArgs = makeGotoWithArgs("components-vimagecell--v-image-cell")
-  const aspectRatios: AspectRatio[] = ["square", "4:3", "16:9"]
+  const aspectRatios: AspectRatio[] = ["square", "intrinsic"]
 
   for (const ratio of aspectRatios) {
     test(`${ratio} loaded`, async ({ page }) => {
@@ -30,7 +30,6 @@ test.describe("VImageCell", () => {
         image: { url: "invalidUrl" },
       })
       const imgElement = page.locator(imgElementLocator)
-      await page.waitForTimeout(2000) // Adjust timeout as necessary
       await expect(imgElement).toHaveAttribute(
         "src",
         "~/assets/image_not_available_placeholder.png"

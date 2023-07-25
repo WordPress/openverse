@@ -75,7 +75,7 @@ import { useI18n } from "~/composables/use-i18n"
 import type { SupportedMediaType } from "~/constants/media"
 
 import VSnackbar from "~/components/VSnackbar.vue"
-import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
+import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import VAudioCell from "~/components/VSearchResultsGrid/VAudioCell.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
