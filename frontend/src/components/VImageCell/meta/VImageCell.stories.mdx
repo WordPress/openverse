@@ -1,0 +1,68 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+import VImageCell from "~/components/VImageCell.vue"
+
+<Meta title="Components/VImageCell" components={VImageCell} />
+
+export const Template = (args) => ({
+  template: `
+    <div class="flex"><div id="wrapper"
+        class="px-4 h-16 flex items-center justify-center"
+        :class="args?.variant.startsWith('transparent') ? 'bg-dark-charcoal-06': 'bg-white'">
+    <VImageCell v-bind="args" class="description-bold" v-on="args">
+      <img src="/path/to/image.jpg" alt="Sample Image"/>
+    </VImageCell>
+    </div></div>
+  `,
+  components: { VImageCell },
+  setup() {
+    return { args }
+  },
+})
+
+# VImageCell
+
+<Description of={VImageCell} />
+
+<ArgsTable of={VImageCell} />
+
+<Canvas>
+  <Story
+    name="VImageCell"
+    parameters={{
+      viewport: { defaultViewport: "sm" },
+    }}
+    args={{
+      size: "medium",
+      variant: "filled-primary",
+    }}
+    argTypes={{
+      as: {
+        options: imageCellForms, // Adjust as per your requirements
+        control: { type: "radio" },
+      },
+      variant: {
+        options: imageCellVariants, // Adjust as per your requirements
+        control: { type: "select" },
+      },
+      pressed: { control: "boolean" },
+      size: {
+        options: imageCellSizes, // Adjust as per your requirements
+        control: { type: "radio" },
+      },
+      disabled: { control: "boolean" },
+      focusableWhenDisabled: { control: "boolean" },
+      type: { control: "text" },
+      click: { action: "click" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+// Additional stories here as required, such as various variants of VImageCell.
