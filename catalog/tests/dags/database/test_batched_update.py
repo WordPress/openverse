@@ -3,6 +3,7 @@ import uuid
 
 import psycopg2
 import pytest
+from airflow.models import Variable
 
 from catalog.tests.test_utils import sql
 from common.storage import columns as col
@@ -33,6 +34,11 @@ def identifier(request):
 
 
 @pytest.fixture
+def batch_start_var(identifier):
+    return f"test_{identifier}_batch_start"
+
+
+@pytest.fixture
 def image_table(identifier):
     # Parallelized tests need to use distinct database tables
     return f"image_{identifier}"
@@ -44,7 +50,7 @@ def temp_table(identifier):
 
 
 @pytest.fixture
-def postgres_with_image_and_temp_table(image_table, temp_table):
+def postgres_with_image_and_temp_table(batch_start_var, image_table, temp_table):
     conn = psycopg2.connect(sql.POSTGRES_TEST_URI)
     cur = conn.cursor()
     drop_table_query = f"""
@@ -61,6 +67,9 @@ def postgres_with_image_and_temp_table(image_table, temp_table):
     yield sql.PostgresRef(cursor=cur, connection=conn)
 
     cur.execute(drop_table_query)
+    # Drop the test airflow variable
+    Variable.delete(batch_start_var)
+
     cur.close()
     conn.commit()
     conn.close()
@@ -116,23 +125,23 @@ def _load_sample_data_into_image_table(image_table, postgres):
 
 
 @pytest.mark.parametrize(
-    "batch_start, expected_count",
-    [
-        (None, 3),
-        (0, 3),
-        (1, 2),
-        (2, 1),
-        # Batch start greater than the total number of records
-        (4, 0),
-    ],
+    "total_row_count",
+    (
+        # Simulate a 'normal' flow, where the total count is passed into
+        # the task via XCOM after creating the table
+        3,
+        # Simulate a DagRun that is using `resume_update` to skip creating a
+        # new table, so None is passed in from XCOM and we need to run a
+        # `SELECT COUNT(*)` on the temp table
+        None,
+    ),
 )
 def test_get_expected_update_count(
     postgres_with_image_and_temp_table,
     image_table,
     temp_table,
     identifier,
-    batch_start,
-    expected_count,
+    total_row_count,
 ):
     # Load sample data into the image table
     _load_sample_data_into_image_table(
@@ -149,10 +158,10 @@ def test_get_expected_update_count(
     postgres_with_image_and_temp_table.connection.commit()
 
     total_count = get_expected_update_count.function(
-        query_id=f"test_{identifier}", batch_start=batch_start, dry_run=False
+        query_id=f"test_{identifier}", total_row_count=total_row_count, dry_run=False
     )
 
-    assert total_count == expected_count
+    assert total_count == 3
 
 
 def test_update_batches(
@@ -160,6 +169,7 @@ def test_update_batches(
     image_table,
     temp_table,
     identifier,
+    batch_start_var,
 ):
     # Load sample data into the image table
     _load_sample_data_into_image_table(
@@ -181,10 +191,11 @@ def test_update_batches(
         dry_run=False,
         query_id=f"test_{identifier}",
         table_name=image_table,
-        expected_row_count=2,
+        total_row_count=2,
         batch_size=1,
         update_query=update_query,
         update_timeout=3600,
+        batch_start_var=batch_start_var,
         postgres_conn_id=sql.POSTGRES_CONN_ID,
     )
 
@@ -212,6 +223,7 @@ def test_update_batches_dry_run(
     image_table,
     temp_table,
     identifier,
+    batch_start_var,
 ):
     # Load sample data into the image table
     _load_sample_data_into_image_table(
@@ -232,12 +244,12 @@ def test_update_batches_dry_run(
     updated_count = update_batches.function(
         dry_run=True,
         query_id=f"test_{identifier}",
-        batch_start=None,
         table_name=image_table,
-        expected_row_count=2,
+        total_row_count=2,
         batch_size=1,
         update_query=update_query,
         update_timeout=3600,
+        batch_start_var=batch_start_var,
         postgres_conn_id=sql.POSTGRES_CONN_ID,
     )
 
@@ -252,11 +264,12 @@ def test_update_batches_dry_run(
         assert row[sql.title_idx] == OLD_TITLE
 
 
-def test_update_batches_from_batch_start(
+def test_update_batches_resuming_from_batch_start(
     postgres_with_image_and_temp_table,
     image_table,
     temp_table,
     identifier,
+    batch_start_var,
 ):
     # Load sample data into the image table
     _load_sample_data_into_image_table(
@@ -272,17 +285,20 @@ def test_update_batches_from_batch_start(
     postgres_with_image_and_temp_table.cursor.execute(create_temp_table_query)
     postgres_with_image_and_temp_table.connection.commit()
 
-    # Test update query, setting batch_start to 1
+    # Set the batch_start Airflow variable to 1, to skip the first
+    # record
+    Variable.set(batch_start_var, 1)
+
     update_query = f"SET title='{NEW_TITLE}'"
     updated_count = update_batches.function(
         dry_run=False,
         query_id=f"test_{identifier}",
         table_name=image_table,
-        expected_row_count=2,
+        total_row_count=3,
         batch_size=1,
-        batch_start=1,
         update_query=update_query,
         update_timeout=3600,
+        batch_start_var=batch_start_var,
         postgres_conn_id=sql.POSTGRES_CONN_ID,
     )
 

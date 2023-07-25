@@ -15,6 +15,7 @@
     <slot name="media" />
 
     <VExternalSearchForm
+      v-if="!isAllView"
       :type="externalSourcesType"
       :has-no-results="hasNoResults"
       :external-sources="externalSources"
