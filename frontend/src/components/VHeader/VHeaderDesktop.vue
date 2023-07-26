@@ -15,7 +15,7 @@
         v-show="searchTerm !== ''"
         icon="close-small"
         :label="$t('browsePage.searchForm.clear')"
-        inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+        variant="filled-white"
         class="hidden group-focus-within:flex"
         @click="clearSearchTerm"
       />

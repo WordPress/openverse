@@ -30,10 +30,9 @@
             <VSearchBarButton
               v-show="searchBarIsActive"
               icon="chevron-left"
-              :inner-size="8"
               :label="$t('header.backButton')"
               :rtl-flip="true"
-              inner-area-classes="bg-dark-charcoal-10 hover:bg-dark-charcoal hover:text-white"
+              variant="filled-gray"
               @click="handleBack"
             />
           </slot>

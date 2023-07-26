@@ -12,6 +12,7 @@
         [$style[`connection-${connections}`]]: isConnected,
         [$style[`icon-start-${size}`]]: hasIconStart,
         [$style[`icon-end-${size}`]]: hasIconEnd,
+        [$style[`icon-only`]]: iconOnly,
         'gap-x-2':
           (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
         'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
@@ -292,7 +293,7 @@ export default VButton
   @apply h-8 px-2 py-0;
 }
 .size-small-icon-only {
-  @apply h-8 w-8 p-0;
+  @apply h-8 w-8;
 }
 .icon-start-small {
   @apply ps-1;
@@ -305,7 +306,7 @@ export default VButton
   @apply h-10 px-3 py-0;
 }
 .size-medium-icon-only {
-  @apply h-10 w-10 p-0;
+  @apply h-10 w-10;
 }
 .icon-start-medium {
   @apply ps-2;
@@ -318,13 +319,16 @@ export default VButton
   @apply h-12 px-5 py-0;
 }
 .size-large-icon-only {
-  @apply h-12 w-12 p-0;
+  @apply h-12 w-12;
 }
 .icon-start-large {
   @apply ps-4;
 }
 .icon-end-large {
   @apply pe-4;
+}
+.icon-only {
+  @apply flex-none;
 }
 
 a.button {

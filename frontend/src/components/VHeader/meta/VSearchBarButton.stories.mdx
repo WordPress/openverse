@@ -12,28 +12,28 @@ import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButto
   title="Components/VHeader/VHeaderMobile/VSearchBarButton"
   component={VSearchBarButton}
   argTypes={{
-    iconPath: {
+    icon: {
       control: {
         type: "select",
-        options: ["close-small", "chevron-left", "source"],
         default: "close-small",
       },
-    },
-    innerSize: {
-      control: {
-        type: "select",
-        options: [6, 8],
-      },
+      options: ["close-small", "chevron-left", "source"],
     },
     rtlFlip: {
       control: {
         type: "boolean",
       },
     },
-    innerAreaClasses: {
+    variant: {
       control: {
-        type: "text",
+        type: "select",
       },
+      options: [
+        "filled-white",
+        "filled-gray",
+        "transparent-gray",
+        "transparent-dark",
+      ],
     },
     click: {
       action: "click",
@@ -42,7 +42,7 @@ import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButto
 />
 
 export const Template = (args) => ({
-  template: `<div class="bg-white"><VSearchBarButton label="VSearchBarButton" v-bind="args" v-on="args" /></div>`,
+  template: `<div class="wrapper border-dark-charcoal-10 inline-flex justify-start p-2"><VSearchBarButton label="VSearchBarButton" v-bind="args" v-on="args" /></div>`,
   components: { VSearchBarButton },
   setup() {
     if (!args.icon) {
@@ -59,12 +59,21 @@ export const Template = (args) => ({
 <ArgsTable of={VSearchBarButton} />
 
 <Canvas>
-  <Story name="Default">{Template.bind({})}</Story>
+  <Story
+    name="Default"
+    args={{
+      icon: "close-small",
+      label: "VSearchBarButton",
+      variant: "filled-white",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
 </Canvas>
 
 export const contentSettingsTemplate = (args) => ({
   template: `
-    <div class="bg-dark-charcoal-10 rounded-sm flex justify-end">
+    <div class="wrapper rounded-sm inline-flex justify-end bg-dark-charcoal-10">
     <VContentSettingsButton label="VContentSettingsButton" :are-filters-selected="true" v-bind="args" />
     </div>
   `,
@@ -92,18 +101,17 @@ export const activeButtonsTemplate = (args) => ({
   template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink">
   <VSearchBarButton
     icon="chevron-left"
-    :inner-size="8"
     :label="$t('header.back-button')"
-    inner-area-classes="hover:bg-dark-charcoal hover:text-white"
+    variant="filled-gray"
     :rtl-flip="true"
   />
   <VSearchBarButton
     icon="close-small"
     :label="$t('browsePage.searchForm.clear')"
-    inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+    variant="transparent-gray"
   />
 </div>`,
-  components: { VContentSettingsButton },
+  components: { VContentSettingsButton, VSearchBarButton },
   setup() {
     return { args }
   },
