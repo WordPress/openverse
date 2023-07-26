@@ -21,7 +21,6 @@
         'focus-slim-tx': isFocusSlimTx,
         'focus-bold-filled ': variant === 'dropdown-label-pressed',
         border: !isPlainDangerous,
-        'focus-visible:outline-none': isPlainDangerous,
       },
     ]"
     :aria-pressed="pressed"
