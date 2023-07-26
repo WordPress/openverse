@@ -1,7 +1,7 @@
 <template>
   <!-- Negative margin compensates for the `p-4` padding in row layout. -->
   <section class="-mx-2 md:-mx-4">
-    <VSnackbar size="large" :is-visible="isSnackbarVisible">
+    <VSnackbar size="large" :is-visible="snackbar.isVisible.value">
       <i18n path="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
@@ -26,8 +26,8 @@
           layout="row"
           :search-term="searchTerm"
           @interacted="handleInteraction"
-          @mousedown="handleMouseDown"
-          @focus="showSnackbar"
+          @mousedown="snackbar.handleMouseDown"
+          @focus="snackbar.show"
         />
       </li>
     </ol>
@@ -36,12 +36,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, inject } from "vue"
+import { computed, defineComponent, inject } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { useAnalytics } from "~/composables/use-analytics"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 
 import { IsSidebarVisibleKey } from "~/types/provides"
 import type { AudioInteractionData } from "~/types/analytics"
@@ -79,24 +80,7 @@ export default defineComponent({
       !isDesktopLayout.value ? "s" : filterVisibleRef.value ? "l" : "m"
     )
 
-    const isMouseDown = ref(false)
-    const handleMouseDown = () => {
-      isMouseDown.value = true
-    }
-
-    const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
-    const showSnackbar = () => {
-      if (isMouseDown.value) {
-        // The audio player was clicked to open the single result view, not
-        // focused via keyboard.
-        isMouseDown.value = false
-      } else {
-        uiStore.showInstructionsSnackbar()
-      }
-    }
-    const hideSnackbar = () => {
-      uiStore.hideInstructionsSnackbar()
-    }
+    const snackbar = useAudioSnackbar()
 
     const handleInteraction = (data: AudioInteractionData) => {
       sendCustomEvent("AUDIO_INTERACTION", {
@@ -110,12 +94,8 @@ export default defineComponent({
       results,
       audioTrackSize,
 
-      handleMouseDown,
-
-      isSnackbarVisible,
-      showSnackbar,
-      hideSnackbar,
       handleInteraction,
+      snackbar,
     }
   },
 })
