@@ -38,8 +38,8 @@ export const Template = (args) => ({
 export const sizesTemplate = (args) => ({
   template: `
     <div class="flex gap-x-2">
-      <div v-for="size in args.baseButtonSizes" :key="size" class="flex flex-col items-center p-2">
-        <p>{{ size }}</p>
+      <div v-for="size in args.baseButtonSizes" :key="size" class="flex flex-col items-center p-2 gap-2">
+        <p class="label-bold">{{ size }}</p>
         <VIconButton
            label="v-icon-button"
            :size="size"

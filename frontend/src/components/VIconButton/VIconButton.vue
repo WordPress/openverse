@@ -1,12 +1,10 @@
 <template>
   <VButton
-    v-bind="buttonProps"
     :aria-label="label"
-    size="disabled"
+    :size="size"
     :variant="variant"
     class="icon-button"
-    :class="buttonSizeClasses"
-    :type="type"
+    icon-only
     v-on="$listeners"
   >
     <slot name="default" :icon-size="6" />
@@ -20,20 +18,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { defineComponent, PropType } from "vue"
 
-import type { ButtonSize, ButtonType, ButtonVariant } from "~/types/button"
+import type { ButtonSize, ButtonVariant } from "~/types/button"
 
 import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
-import VButton, { type ButtonProps } from "~/components/VButton.vue"
+import VButton from "~/components/VButton.vue"
 
 import type { TranslateResult } from "vue-i18n"
-
-const sizes = {
-  small: 8,
-  medium: 10,
-  large: 12,
-}
 
 /**
  * The icon-only version of VButton component. In some cases, VButton is replaced
@@ -66,33 +58,12 @@ export default defineComponent({
       required: false,
     },
     /**
-     * Props to pass down to the `VButton` component nested inside the button.
-     * See documentation on `VButton`.
-     */
-    buttonProps: {
-      type: Object as PropType<Omit<ButtonProps, "size">>,
-      default: () => ({ variant: "transparent-tx" }),
-    },
-    /**
-     * the label for the button; This is used for accessibility purposes.
+     * The label used for accessibility purposes.
      */
     label: {
       type: [String, Object] as PropType<string | TranslateResult>,
       required: true,
     },
-  },
-  setup(props, { attrs }) {
-    const type = (attrs["type"] ?? "button") as ButtonType
-
-    const buttonSizeClasses = computed(
-      () => `w-${sizes[props.size]} h-${sizes[props.size]}`
-    )
-
-    return {
-      type,
-
-      buttonSizeClasses,
-    }
   },
 })
 </script>

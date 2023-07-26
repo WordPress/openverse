@@ -6,7 +6,7 @@
     :class="[
       $style.button,
       $style[variant],
-      $style[`size-${size}`],
+      $style[`size-${size}${iconOnly ? '-icon-only' : ''}`],
       {
         [$style[`${variant}-pressed`]]: isActive,
         [$style[`connection-${connections}`]]: isConnected,
@@ -21,6 +21,7 @@
         'focus-slim-tx': isFocusSlimTx,
         'focus-bold-filled ': variant === 'dropdown-label-pressed',
         border: !isPlainDangerous,
+        'focus-visible:outline-none': isPlainDangerous,
       },
     ]"
     :aria-pressed="pressed"
@@ -184,6 +185,13 @@ const VButton = defineComponent({
       type: Boolean,
       default: false,
     },
+    /**
+     * If the button is only an icon, width is set to height, and padding is removed.
+     */
+    iconOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { attrs }) {
     const propsRef = toRefs(props)
@@ -284,6 +292,9 @@ export default VButton
 .size-small {
   @apply h-8 px-2 py-0;
 }
+.size-small-icon-only {
+  @apply h-8 w-8 p-0;
+}
 .icon-start-small {
   @apply ps-1;
 }
@@ -294,6 +305,9 @@ export default VButton
 .size-medium {
   @apply h-10 px-3 py-0;
 }
+.size-medium-icon-only {
+  @apply h-10 w-10 p-0;
+}
 .icon-start-medium {
   @apply ps-2;
 }
@@ -303,6 +317,9 @@ export default VButton
 
 .size-large {
   @apply h-12 px-5 py-0;
+}
+.size-large-icon-only {
+  @apply h-12 w-12 p-0;
 }
 .icon-start-large {
   @apply ps-4;
