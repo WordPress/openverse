@@ -5,7 +5,7 @@
     :href="href"
     has-icon-start
     variant="transparent-gray"
-    size="small"
+    size="medium"
     class="label-bold inline-flex"
     v-bind="$attrs"
     @mousedown="handleClick"
