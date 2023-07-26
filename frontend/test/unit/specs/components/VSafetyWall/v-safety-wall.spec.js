@@ -1,4 +1,4 @@
-import { fireEvent } from "@testing-library/vue"
+import { fireEvent, waitFor } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
@@ -34,17 +34,23 @@ describe("VSafetyWall.vue", () => {
   })
 
   it("emits reveal event when showMedia method is called", async () => {
-    const { getByText } = render(VSafetyWall, options)
+    const { getByText, emitted } = render(VSafetyWall, options)
     const showButton = getByText("Show content")
 
     await fireEvent.click(showButton)
 
-    expect(useSearchStore).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(emitted().reveal).toBeTruthy()
+    })
   })
 
-  it("backToSearchPath gets the value from the store", () => {
-    render(VSafetyWall, options)
+  it("backToSearchPath gets the value from the store", async () => {
+    const { findByText } = render(VSafetyWall, options)
 
-    expect(useSearchStore).toHaveBeenCalled()
+    const backToSearchButton = await findByText("Back to results")
+    expect(backToSearchButton).toBeInTheDocument()
+    expect(backToSearchButton.getAttribute("href")).toBe(
+      mockStore.backToSearchPath
+    )
   })
 })
