@@ -114,11 +114,11 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * Returns the number of checked filters, excluding the `mature` filter.
+     * Returns the number of checked filters, excluding the `includeSensitiveResults` filter.
      */
     appliedFilterCount(state) {
       const filterKeys = mediaFilterKeys[state.searchType].filter(
-        (f) => f !== "mature"
+        (f) => f !== "includeSensitiveResults"
       )
       return filterKeys.reduce((count, filterCategory) => {
         return (
@@ -131,11 +131,14 @@ export const useSearchStore = defineStore("search", {
      * Returns the object with filters for selected search type,
      * with codes, names for i18n labels, and checked status.
      *
-     * Excludes `searchBy` and `mature` filters that we don't display.
+     * Excludes `searchBy` and `includeSensitiveResults` filters that we don't display.
      */
     searchFilters(state) {
       return mediaFilterKeys[state.searchType]
-        .filter((filterKey) => !["searchBy", "mature"].includes(filterKey))
+        .filter(
+          (filterKey) =>
+            !["searchBy", "includeSensitiveResults"].includes(filterKey)
+        )
         .reduce((obj, filterKey) => {
           obj[filterKey] = this.filters[filterKey]
           return obj
@@ -143,7 +146,7 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * True if any filter for selected search type except `mature` is checked.
+     * True if any filter for selected search type except `includeSensitiveResults` is checked.
      */
     isAnyFilterApplied() {
       const filterEntries = Object.entries(this.searchFilters) as [
@@ -152,7 +155,8 @@ export const useSearchStore = defineStore("search", {
       ][]
       return filterEntries.some(
         ([filterKey, filterItems]) =>
-          filterKey !== "mature" && filterItems.some((filter) => filter.checked)
+          filterKey !== "includeSensitiveResults" &&
+          filterItems.some((filter) => filter.checked)
       )
     },
     /**
@@ -413,12 +417,12 @@ export const useSearchStore = defineStore("search", {
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
 
-      // When setting filters from URL query, 'mature' has a value of 'true',
-      // but we need the 'mature' code. Creating a local shallow copy to prevent mutation.
-      if (query.mature === "true") {
-        query.mature = "mature"
+      // Convert the 'includeSensitiveResults' query param with value "true" to get both the parameter filterType `includeSensitiveResults` and the filterCode with the same name.
+      // includeSensitiveResults: { code: includeSensitiveResults, name: '...', checked: true }
+      if (query.includeSensitiveResults === "true") {
+        query.includeSensitiveResults = "includeSensitiveResults"
       } else {
-        delete query.mature
+        delete query.includeSensitiveResults
       }
 
       const newFilterData = queryToFilterData({

@@ -28,7 +28,7 @@ export interface ApiQueryParams {
   category?: string
   source?: string
   length?: string
-  mature?: string
+  unstable__include_sensitive_results?: string
   page?: string
   /**
    * A conditional to show audio waveform data.
@@ -58,7 +58,7 @@ const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
   audioProviders: "source",
   imageProviders: "source",
   searchBy: "searchBy",
-  mature: "mature",
+  includeSensitiveResults: "unstable__include_sensitive_results",
 }
 
 const getMediaFilterTypes = (searchType: SearchType) => {
@@ -70,14 +70,15 @@ const getMediaFilterTypes = (searchType: SearchType) => {
 /**
  * Joins all the filters which have the checked property `true`
  * to a string separated by commas for the API request URL, e.g.: "by,nd-nc,nc-sa".
- * Mature is a special case, and is converted to `true`.
+ * `includeSensitiveResults` is a special case, and is converted to `true`.
  */
 const filterToString = (filterItem: FilterItem[]) => {
   const filterString = filterItem
     .filter((f) => f.checked)
     .map((filterItem) => filterItem.code)
     .join(",")
-  return filterString === "mature" ? "true" : filterString
+  // TODO: check this
+  return filterString === "includeSensitiveResults" ? "true" : filterString
 }
 
 /**
@@ -199,7 +200,10 @@ export const queryToFilterData = ({
     } else {
       const queryDataKey = filterPropertyMappings[filterDataKey]
       if (query[queryDataKey]) {
-        if (queryDataKey === "mature" && query[queryDataKey].length > 0) {
+        if (
+          queryDataKey === "unstable__include_sensitive_results" &&
+          query[queryDataKey].length > 0
+        ) {
           filters[filterDataKey][0].checked = true
         } else {
           const filterValues = query[queryDataKey].split(",")

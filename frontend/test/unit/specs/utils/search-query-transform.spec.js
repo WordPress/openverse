@@ -88,7 +88,9 @@ describe("searchQueryTransform", () => {
         { code: "brooklynmuseum", checked: true },
       ],
       searchBy: [{ code: "creator", checked: true }],
-      mature: [{ code: "mature", checked: true }],
+      includeSensitiveResults: [
+        { code: "includeSensitiveResults", checked: true },
+      ],
     }
     const expectedQueryData = {
       aspect_ratio: "tall",
@@ -96,7 +98,7 @@ describe("searchQueryTransform", () => {
       extension: "jpg",
       license: "cc0",
       license_type: "commercial",
-      mature: "true",
+      unstable__include_sensitive_results: "true",
       searchBy: "creator",
       size: "medium",
       source: "animaldiversity,brooklynmuseum",
@@ -247,8 +249,12 @@ describe("searchQueryTransform", () => {
       searchBy: [
         { code: "creator", checked: true, name: "filters.searchBy.creator" },
       ],
-      mature: [
-        { code: "mature", name: "filters.mature.mature", checked: true },
+      includeSensitiveResults: [
+        {
+          code: "includeSensitiveResults",
+          name: "filters.mature.mature",
+          checked: true,
+        },
       ],
     }
     const query = {
@@ -260,7 +266,7 @@ describe("searchQueryTransform", () => {
       length: "medium",
       source: "jamendo",
       searchBy: "creator",
-      mature: "true",
+      includeSensitiveResults: "true",
     }
     const testFilters = deepClone(filters)
     testFilters.audioProviders = [
@@ -289,7 +295,7 @@ describe("searchQueryTransform", () => {
      * exist in `filters.audioProviders` list before. Other values either exist in
      * `filters.imageProviders` list, or do not exist at all, so they are discarded.
      * Valid filter items for categories that exist for all search types
-     * (`license`, `license_type`, `searchBy`, `mature`) are set to checked.
+     * (`license`, `license_type`, `searchBy`, `includeSensitiveResults`) are set to checked.
      * Invalid filter items for valid categories (`nonexistent` in `license`)
      * are discarded.
      */
@@ -302,7 +308,7 @@ describe("searchQueryTransform", () => {
       length: "medium",
       source: "animaldiversity,wikimedia,nonexistent,wikimedia_audio,jamendo",
       searchBy: "creator",
-      mature: "true",
+      unstable__include_sensitive_results: "true",
     }
     const expectedFilters = deepClone(filters)
     const setChecked = (code, filterCategory) => {
@@ -315,7 +321,7 @@ describe("searchQueryTransform", () => {
     setChecked("commercial", "licenseTypes")
     setChecked("medium", "lengths")
     setChecked("creator", "searchBy")
-    setChecked("mature", "mature")
+    setChecked("includeSensitiveResults", "includeSensitiveResults")
     setChecked("jamendo", "audioProviders")
     setChecked("wikimedia_audio", "audioProviders")
 
@@ -337,10 +343,13 @@ describe("searchQueryTransform", () => {
       source: "animaldiversity,brooklynmuseum",
       q: "cat",
       searchBy: "creator",
-      mature: "true",
+      unstable__include_sensitive_results: "true",
     }
     const queryString =
-      "http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial&category=photograph&extension=jpg&aspect_ratio=tall&size=medium&source=animaldiversity,brooklynmuseum&searchBy=creator&mature=true"
+      "http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial" +
+      "&category=photograph&extension=jpg&aspect_ratio=tall&size=medium" +
+      "&source=animaldiversity,brooklynmuseum&searchBy=creator" +
+      "&unstable__include_sensitive_results=true"
     const result = queryStringToQueryData(queryString)
     expect(result).toEqual(expectedQueryData)
   })

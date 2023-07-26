@@ -17,6 +17,8 @@ import {
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
+const sensitiveUrlQuery = { unstable__include_sensitive_results: "true" }
+
 describe("Search Store", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -30,19 +32,19 @@ describe("Search Store", () => {
   describe("getters", () => {
     /**
      * Check for some special cases:
-     * - `mature` and `searchBy`.
+     * - `includeSensitiveResults` and `searchBy`.
      * - several options for single filter.
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
      */
     it.each`
-      query                                          | searchType   | filterCount
-      ${{ licenses: ["by"], mature: ["mature"] }}    | ${IMAGE}     | ${1}
-      ${{ licenses: ["by"], searchBy: ["creator"] }} | ${ALL_MEDIA} | ${2}
-      ${{ licenses: ["cc0", "pdm", "by", "by-nc"] }} | ${ALL_MEDIA} | ${4}
-      ${{ lengths: ["medium"] }}                     | ${AUDIO}     | ${1}
-      ${{ imageExtensions: ["svg"] }}                | ${IMAGE}     | ${1}
-      ${{ audioExtensions: ["mp3"] }}                | ${AUDIO}     | ${1}
+      query                                                                         | searchType   | filterCount
+      ${{ licenses: ["by"], includeSensitiveResults: ["includeSensitiveResults"] }} | ${IMAGE}     | ${1}
+      ${{ licenses: ["by"], searchBy: ["creator"] }}                                | ${ALL_MEDIA} | ${2}
+      ${{ licenses: ["cc0", "pdm", "by", "by-nc"] }}                                | ${ALL_MEDIA} | ${4}
+      ${{ lengths: ["medium"] }}                                                    | ${AUDIO}     | ${1}
+      ${{ imageExtensions: ["svg"] }}                                               | ${IMAGE}     | ${1}
+      ${{ audioExtensions: ["mp3"] }}                                               | ${AUDIO}     | ${1}
     `(
       "returns correct filter status for $query and searchType $searchType",
       ({ query, searchType, filterCount }) => {
@@ -95,7 +97,7 @@ describe("Search Store", () => {
     /**
      * For non-supported search types, the filters fall back to 'All content' filters.
      * Number of displayed filters is one less than the number of mediaFilterKeys
-     * because `mature` filter is not displayed.
+     * because `includeSensitiveResults` filter is not displayed.
      */
     it.each`
       searchType   | filterTypeCount
@@ -120,7 +122,7 @@ describe("Search Store", () => {
     )
     /**
      * Check for some special cases:
-     * - `mature` and `searchBy`.
+     * - `includeSensitiveResults` and `searchBy`.
      * - several options for single filter.
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
@@ -128,18 +130,18 @@ describe("Search Store", () => {
      * - more than one value for a parameter in the query (q=cat&q=dog).
      */
     it.each`
-      query                                               | expectedQueryParams                                 | searchType
-      ${{ q: "cat", license: "by", mature: "true" }}      | ${{ q: "cat", license: "by", mature: "true" }}      | ${IMAGE}
-      ${{ license: "by", mature: "true" }}                | ${{ q: "", license: "by", mature: "true" }}         | ${IMAGE}
-      ${{ license: "", mature: "" }}                      | ${{ q: "" }}                                        | ${IMAGE}
-      ${{ q: "cat", license: "by", searchBy: "creator" }} | ${{ q: "cat", license: "by", searchBy: "creator" }} | ${ALL_MEDIA}
-      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${ALL_MEDIA}
-      ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat" }}                                     | ${IMAGE}
-      ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat", length: "medium" }}                   | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat", extension: "svg" }}                   | ${IMAGE}
-      ${{ q: "cat", extension: "mp3" }}                   | ${{ q: "cat", extension: "mp3" }}                   | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat" }}                                     | ${AUDIO}
-      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}    | ${{ q: "cat", license: "by" }}                      | ${IMAGE}
+      query                                                       | expectedQueryParams                                                         | searchType
+      ${{ ...sensitiveUrlQuery, q: "cat", license: "by" }}        | ${{ q: "cat", license: "by", unstable__include_sensitive_results: "true" }} | ${IMAGE}
+      ${{ ...sensitiveUrlQuery, license: "by" }}                  | ${{ q: "", license: "by", unstable__include_sensitive_results: "true" }}    | ${IMAGE}
+      ${{ license: "", unstable__include_sensitive_results: "" }} | ${{ q: "" }}                                                                | ${IMAGE}
+      ${{ q: "cat", license: "by", searchBy: "creator" }}         | ${{ q: "cat", license: "by", searchBy: "creator" }}                         | ${ALL_MEDIA}
+      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                                | ${ALL_MEDIA}
+      ${{ q: "cat", length: "medium" }}                           | ${{ q: "cat" }}                                                             | ${IMAGE}
+      ${{ q: "cat", length: "medium" }}                           | ${{ q: "cat", length: "medium" }}                                           | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                           | ${{ q: "cat", extension: "svg" }}                                           | ${IMAGE}
+      ${{ q: "cat", extension: "mp3" }}                           | ${{ q: "cat", extension: "mp3" }}                                           | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                           | ${{ q: "cat" }}                                                             | ${AUDIO}
+      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}            | ${{ q: "cat", license: "by" }}                                              | ${IMAGE}
     `(
       "returns correct searchQueryParams and filter status for $query and searchType $searchType",
       ({ query, expectedQueryParams, searchType }) => {
@@ -193,13 +195,13 @@ describe("Search Store", () => {
     )
 
     it.each`
-      query                                | path                | searchType
-      ${{ license: "cc0,by", q: "cat" }}   | ${"/search/"}       | ${ALL_MEDIA}
-      ${{ searchBy: "creator", q: "dog" }} | ${"/search/image/"} | ${IMAGE}
-      ${{ mature: "true", q: "galah" }}    | ${"/search/audio/"} | ${AUDIO}
-      ${{ length: "medium" }}              | ${"/search/image"}  | ${IMAGE}
+      query                                                          | path                | searchType
+      ${{ license: "cc0,by", q: "cat" }}                             | ${"/search/"}       | ${ALL_MEDIA}
+      ${{ searchBy: "creator", q: "dog" }}                           | ${"/search/image/"} | ${IMAGE}
+      ${{ unstable__include_sensitive_results: "true", q: "galah" }} | ${"/search/audio/"} | ${AUDIO}
+      ${{ length: "medium" }}                                        | ${"/search/image"}  | ${IMAGE}
     `(
-      "`setSearchStateFromUrl` should set '$searchType' from query  $query and path '$path'",
+      "`setSearchStateFromUrl` should set '$searchType' from query $query and path '$path'",
       ({ query, path, searchType }) => {
         const searchStore = useSearchStore()
         const expectedQuery = { ...searchStore.searchQueryParams, ...query }
@@ -220,7 +222,7 @@ describe("Search Store", () => {
       ${[["licenses", "by"], ["licenses", "by-nc-sa"]]}                     | ${["license", "by,by-nc-sa"]}
       ${[["licenseTypes", "commercial"], ["licenseTypes", "modification"]]} | ${["license_type", "commercial,modification"]}
       ${[["searchBy", "creator"]]}                                          | ${["searchBy", "creator"]}
-      ${[["mature", "mature"]]}                                             | ${["mature", "true"]}
+      ${[["includeSensitiveResults", "includeSensitiveResults"]]}           | ${["unstable__include_sensitive_results", "true"]}
       ${[["sizes", "large"]]}                                               | ${["size", undefined]}
     `(
       "toggleFilter updates the query values to $query",
@@ -258,15 +260,15 @@ describe("Search Store", () => {
     )
 
     it.each`
-      filterType           | codeIdx
-      ${"licenses"}        | ${0}
-      ${"licenseTypes"}    | ${0}
-      ${"imageExtensions"} | ${0}
-      ${"imageCategories"} | ${0}
-      ${"searchBy"}        | ${0}
-      ${"aspectRatios"}    | ${0}
-      ${"sizes"}           | ${0}
-      ${"mature"}          | ${0}
+      filterType                   | codeIdx
+      ${"licenses"}                | ${0}
+      ${"licenseTypes"}            | ${0}
+      ${"imageExtensions"}         | ${0}
+      ${"imageCategories"}         | ${0}
+      ${"searchBy"}                | ${0}
+      ${"aspectRatios"}            | ${0}
+      ${"sizes"}                   | ${0}
+      ${"includeSensitiveResults"} | ${0}
     `(
       "toggleFilter updates $filterType filter state",
       ({ filterType, codeIdx }) => {
@@ -350,15 +352,15 @@ describe("Search Store", () => {
     })
 
     it.each`
-      filterType           | code              | idx
-      ${"licenses"}        | ${"cc0"}          | ${1}
-      ${"licenseTypes"}    | ${"modification"} | ${1}
-      ${"imageExtensions"} | ${"svg"}          | ${3}
-      ${"imageCategories"} | ${"photograph"}   | ${0}
-      ${"searchBy"}        | ${"creator"}      | ${0}
-      ${"mature"}          | ${"mature"}       | ${-0}
-      ${"aspectRatios"}    | ${"tall"}         | ${0}
-      ${"sizes"}           | ${"medium"}       | ${1}
+      filterType                   | code                         | idx
+      ${"licenses"}                | ${"cc0"}                     | ${1}
+      ${"licenseTypes"}            | ${"modification"}            | ${1}
+      ${"imageExtensions"}         | ${"svg"}                     | ${3}
+      ${"imageCategories"}         | ${"photograph"}              | ${0}
+      ${"searchBy"}                | ${"creator"}                 | ${0}
+      ${"includeSensitiveResults"} | ${"includeSensitiveResults"} | ${0}
+      ${"aspectRatios"}            | ${"tall"}                    | ${0}
+      ${"sizes"}                   | ${"medium"}                  | ${1}
     `(
       "toggleFilter should set filter '$code' of type '$filterType",
       ({ filterType, code, idx }) => {

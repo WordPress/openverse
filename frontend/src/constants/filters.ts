@@ -23,10 +23,13 @@ export interface Filters {
   audioProviders: FilterItem[]
   imageProviders: FilterItem[]
   searchBy: FilterItem[]
-  mature: FilterItem[]
+  includeSensitiveResults: FilterItem[]
 }
 export type FilterCategory = keyof Filters
-export type NonMatureFilterCategory = Exclude<FilterCategory, "mature">
+export type NonMatureFilterCategory = Exclude<
+  FilterCategory,
+  "includeSensitiveResults"
+>
 
 /**
  * List of filters available for each search type. The order of the keys
@@ -43,7 +46,7 @@ export const mediaFilterKeys = deepFreeze<Record<SearchType, FilterCategory[]>>(
       "sizes",
       "imageProviders",
       "searchBy",
-      "mature",
+      "includeSensitiveResults",
     ],
     [AUDIO]: [
       "licenseTypes",
@@ -53,11 +56,16 @@ export const mediaFilterKeys = deepFreeze<Record<SearchType, FilterCategory[]>>(
       "lengths",
       "audioProviders",
       "searchBy",
-      "mature",
+      "includeSensitiveResults",
     ],
     [VIDEO]: [],
     [MODEL_3D]: [],
-    [ALL_MEDIA]: ["licenseTypes", "licenses", "searchBy", "mature"],
+    [ALL_MEDIA]: [
+      "licenseTypes",
+      "licenses",
+      "searchBy",
+      "includeSensitiveResults",
+    ],
   }
 )
 
@@ -101,7 +109,7 @@ const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
   audioProviders: [],
   imageProviders: [],
   searchBy: ["creator"],
-  mature: ["mature"],
+  includeSensitiveResults: ["includeSensitiveResults"],
 })
 /**
  * Converts the filterCodesPerCategory object into the format that's used by the filter store.
