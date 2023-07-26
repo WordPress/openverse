@@ -37,9 +37,12 @@ export const Template = (args) => ({
   component={VSafetyWall}
   argTypes={{
     sensitivities: {
-      control: { type: "check", options: SENSITIVITIES },
-      defaultValue: SENSITIVITIES,
+      control: { type: "check" },
     },
+    options: SENSITIVITIES,
+  }}
+  args={{
+    sensitivities: SENSITIVITIES,
   }}
 />
 
