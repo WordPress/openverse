@@ -439,6 +439,54 @@ def create_media_view(
         postgres.run(create_audioset_view_query())
 
 
+def get_providers_with_popularity_data_for_media_type(
+    postgres_conn_id: str,
+    media_type: str = IMAGE,
+    constants_view: str = IMAGE_POPULARITY_CONSTANTS_VIEW,
+    pg_timeout: float = timedelta(minutes=10).total_seconds(),
+):
+    """
+    Return a list of distinct `provider`s that support popularity data,
+    for the given media type.
+    """
+    if media_type == AUDIO:
+        constants_view = AUDIO_POPULARITY_CONSTANTS_VIEW
+
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
+    )
+    providers = postgres.get_records(
+        f"SELECT DISTINCT provider FROM public.{constants_view};"
+    )
+
+    return [x[0] for x in providers]
+
+
+def format_update_standardized_popularity_query(
+    media_type=IMAGE,
+    standardized_popularity_func=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
+    table_name=TABLE_NAMES[IMAGE],
+    db_columns=IMAGE_TABLE_COLUMNS,
+    db_view_name=IMAGE_VIEW_NAME,
+    db_view_id_idx=IMAGE_VIEW_ID_IDX,
+    db_view_provider_fid_idx=IMAGE_VIEW_PROVIDER_FID_IDX,
+    task: AbstractOperator = None,
+):
+    """
+    Create a SQL query for updating the standardized popularity for the given
+    media type. Only the `SET ...` portion of the query is returned, to be used
+    by a `batched_update` DagRun.
+    """
+    if media_type == AUDIO:
+        table_name = TABLE_NAMES[AUDIO]
+        standardized_popularity_func = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
+
+    return (
+        f"SET {col.STANDARDIZED_POPULARITY.db_name} = {standardized_popularity_func}"
+        f"({table_name}.{PARTITION}, {table_name}.{METADATA_COLUMN})"
+    )
+
+
 def update_db_view(
     postgres_conn_id, media_type=IMAGE, db_view_name=IMAGE_VIEW_NAME, task=None
 ):
