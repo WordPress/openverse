@@ -18,71 +18,47 @@
 
 - [Project Thread](https://github.com/WordPress/openverse/issues/410)
 - [Project Proposal](https://docs.openverse.org/projects/proposals/additional_search_views/20230424-project_proposal_additional_search_views.html)
-
-## Overview
-
-<!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
-
-This plan describes the changes that need to be added on the frontend: the new
-components, pages and store.
+- [Milestone](https://github.com/WordPress/openverse/milestone/17)
 
 ## Expected Outcomes
 
 <!-- List any succinct expected products from this implementation plan. -->
 
-Three collection pages are added to Openverse:
+API endpoints return all media with the selected tag, from the selected source
+or by the selected creator, sorted by date added to Openverse.
 
-- items with the selected tag
-- items from the selected source (provider)
-- items by the selected creator.
+Frontend allows to browse media items by a selected creator, source, or with a
+selected tag.
 
-The pages re-use the existing image grid and audio collection views and can load
-more images or audio items on the Load more button click. The single result
-pages are updated to add the links to these pages, as seen in the Figma mockups:
-
-- [Image single result](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-63284&mode=dev)
-- [Audio single result](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-63285&mode=dev)
-
-For the creator pages, a separate API media view is added to get the items that
-match the creator and source pair exactly.
+The single result pages link to these collection views; the external links are
+also updated to clearly show that they are external.
 
 ## Step-by-step plan
 
-The work on adding the new components can be done independently because it does
-not affect the existing pages. This includes the following steps:
-
-- Extract the `VAudioCollection` component
-- Add the `VCollectionHeader` component
-- Add the `VCollectionLink` component
-- Add the new `VTag` component
-- Update links in the "information" section
-- Add an analytics event for visiting source `VISIT_SOURCE_LINK` that is similar
-  to `VISIT_CREATOR_LINK`.
-
-This work can be done in parallel with the API changes. It would be useful to
-have the API changes done before the frontend changes, so that we can test the
-new pages with the real data and query parameters.
-
-Other frontend changes will affect the existing pages, so they will need to be
-done under a feature flag. This includes the updates to the single result pages,
-additional pages and updating the search query.
-
-- Add a `additional_search_views` feature flag
-- Update the `searchBy` filter
-- Create a page for `tag` / `creator` /`source` collections.
-- Update the `VCollectionLink` area on the single result page
-- Use `VTag` component in the search results
-
-Cleanup after the feature flag is removed:
-
-- Remove the `additional_search_views` feature flag
-- Remove `VMediaTag` component
+1. Update the Elasticsearch index to enable exact matching of the `tag`,
+   `source` and `creator` fields (both the query analyzer and the index
+   analyzer). This will require reindexing.
+2. Add API endpoints for exact matching of the `tag`, `source` and `creator`
+   fields.
+3. Create the new components: `VCollectionHeader`, `VCollectionLink` and `VTag`.
+4. Update the store and utils used to construct the API query to allow for
+   searching by `tag`, `creator` or `source`, in addition to the current search
+   by title/description/tags combination.
+5. Add a switchable "additional_search_views" feature flag.
+6. Create a page for `tag` / `creator` /`source` collections. The page should
+   handle fetching and updating the search store state.
+7. Update the single result pages: tags area, the "creator" and "source" area
+   under the main media item.
+8. Add the Analytics event `VISIT_SOURCE_LINK` and update where
+   `VISIT_CREATOR_LINK` is sent.
+9. Cleanup after the feature flag is removed:
+   - Remove conditional rendering on the single result pages.
+   - Remove the `additional_search_views` feature flag and `VMediaTag`
+     component.
 
 ## Step details
 
-<!-- Describe the implementation step necessary for completion. -->
-
-### API changes
+### 1. Elasticsearch updates
 
 Currently, when filtering the search results, the API matches some query
 parameters in a fuzzy way: an item matches the query if the field value contains
@@ -91,189 +67,108 @@ which means that we split the field values by whitespace and stem them. We also
 do the same to the query string. This means that the query string "bike" will
 match the field value "bikes", "biking", or "bike shop".
 
-For most of these pages, we need an exact match instead. This section will
-describe each page and the necessary changes.
+For these pages, however, we need an exact match.
 
-#### Source page
+One alternative implementation considered when writing this plan was to use the
+database instead of the Elasticsearch to get the results. This would make it
+easy to get the exact matches. However, there are some problems with using the
+database rather than ES to access anything:
 
-To get the items from the selected source, we can use the `source` query
-parameter:
-[https://api.openverse.engineering/v1/images/?source=met](https://api.openverse.engineering/v1/images/?source=met)
+- The database does not cache queries in the same way that ES does. Repeated
+  queries will not necessarily be as efficient as from ES.
+- The database does not score documents at all, so the order will different
+  dramatically to the way that ES would order the documents. That's an issue
+  with respect to popularity data today already, but will become even more of an
+  issue if we start to score documents based on other metrics as theorised by
+  our search relevancy discussions.
+- `creator` is not indexed in the API database, so a query against it will be
+  very slow.
 
-There is a limited number of sources, and we validate the `source` parameter
-against the full list. This means that the `source` parameter will be matched
-exactly.
+This is why we should update the existing Elasticsearch index to enable exact
+and add new endpoints for the `tag`, `creator` and `source` matches.
 
-#### Creator page
+The updates to the Elasticsearch index should:
 
-We could update the Elasticsearch index and the search controller to allow for
-exact matching by the `creator` field. However, I think there is an easier way
-that does not require any changes to the indexes: use the Django ORM to filter
-the items by the creator name and the provider name.
+- use
+  [`keyword` field type](https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html)
+  for mapping and
+  [`term` query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html)
+  for `creator`, `source` and `tags` fields. This will allow for exact matching
+  of the values (e.g. `bike` will not match `bikes` or `biking`), and will
+  probably make the search more performant since the fields and the query won't
+  need to be analyzed and/or stemmed.
 
-We can add a media view at
-`/api/v1/<media>/creator/?q=<creator_name>&provider=<provider_name>`. It would
-use `self.get_queryset().filter(creator=creator, provider=provider)` to get all
-the items by the creator from the provider. This view would also need to filter
-out dead links, and return a paginated response.
+We will need to run the data refresh to reindex the data.
 
-#### Tag page
+### 2. New API endpoints
 
-To get the items matching a tag, we can use the `tags` query parameter with a
-quoted value.
-[https://api.openverse.engineering/v1/images/?tags=%22black%20cat%22](https://api.openverse.engineering/v1/images/?source=met)
-This query returns all images with tags that contain the phrase "black cat".
+The new routes should use path parameters instead of query parameters for the
+`tag`, `creator` and `source` values. This will make the URLs more readable,
+easier to share, will be easier to cache or perform cache invalidation required
+by #1969. The path parameters should be URL encoded to preserve special
+characters and spaces.
 
-This would not match the tags exactly, but tags page is supposed to show all
-items that are associated with the same topic or category.
+Instead of using query strings, we can describe the resource via the path:
+`/<media type>/source/<source>/creator/<creator>` is very clean, easy to read
+and understand, and very easy to manage the cache for because it is a static
+path. The source page can use the same route by leaving off the creator. This
+removes the need to manage specific query params as well and would allow us to
+add querying within these routes more easily in the future behind the regular q
+parameter if we wanted.
 
-We could also add a media view at `/api/v1/<media>/tags/?q=<tag_name>`, but it
-is difficult to implement because the tags are stored as a list JSONField model.
+For the tag route, the singular `tag` rather than plural `tags` should be used
+for legibility since we are presenting a single tag.
 
-### Nuxt store changes
+The new views should use the same pagination and dead link cleanup as the search
+views.
 
-We can re-use the search store as is for these pages. Currently, the store uses
-the `searchBy` filter to determine the shape of the API query. If `searchBy`
-value is set, then the `q` parameter is replaced with the
-`<searchBy>=<searchTerm>` query parameter. API query parameters are constructed
-from the search store state in the
-[`prepare-search-query-params` method](https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/src/utils/prepare-search-query-params.ts#L22-L25)
-
-We can update the `searchBy` filter to have one of the possible values:
-`{ searchBy: <null|creator|source|tag> }`. Then, this value would be used to
-construct the API query.
-
-#### Update the `searchBy` filter
-
-The `searchBy` filter will be used to determine the shape of the API query.
-While currently these parameters will be mutually exclusive (we can only search
-by one of them), we might want to allow searching by multiple parameters in the
-future.
-
-For other filters, we only use `toggle` method to update the value. However, for
-`searchBy`, we need to be able to check one of the `searchBy` parameters, and
-uncheck the others. To enable that, we should add a new `search` store method.
-
-This change should also update `prepare-search-query-params` to use the
-`searchBy` filter value to construct the API query:
-
-```typescript
-const prepareSearchQuery = (
-  searchParams: Record<string, string>,
-  mediaType: SupportedMediaType
-) => {
-  if (searchParams.searchBy) {
-    if (searchBy === "creator") {
-      // the name of the source is stored in the `<mediaType>Provider` filter
-      return {
-        creator: searchTerm,
-        source: searchParams[`${mediaType}Provider`],
-      }
-    } else if (searchBy === "source") {
-      return { source: searchParams[`${mediaType}Provider`] }
-    } else if (searchBy === "tag") {
-      // The parameter is plural in the API
-      return { tags: searchTerm }
-    }
-  } else {
-    // Current search query transform
-  }
-}
-```
-
-### Page changes
-
-#### Create a page for `tag` / `creator` /`source` collections.
-
-Nuxt allows creating nested dynamic routes like
-`/pages/_collection/_mediaType/_term`.
-
-Here, the collection can be `tag`, `creator` or `source`. `mediaType` can be one
-of the supported media types (currently, `image` and `audio`). `term` refers to
-the actual value of the tag, creator or source name.
-
-This page should use the
-[`validate` method](https://v2.nuxt.com/docs/components-glossary/validate/) to
-make sure that the `collection`, `mediaType` and `term` `params` are valid.
-
-```typescript
-function validate({ params, $pinia }): boolean {
-  const { collection, mediaType, term } = params
-  // Check that collection is one of ["tag", "creator" or "source"],
-  // and mediaType is one of `supportedMediaTypes`.
-  // Check that `term` is correctly escaped.
-  // If the params are not valid, return `false` to show the error page.
-  return isValid ? true : false
-}
-```
-
-This page should also update the state (`searchType`, `searchTerm` and
-`searchBy` and `provider` filters) in the `search` store and handle fetching
-using `mediaStore`'s `fetchMedia` method in the `useFetch` hook. Since it is not
-possible to change the path or query parameters from this page client-side,
-fetching can be much simpler than on the current search page (that has to watch
-for changes in the route and fetch if necessary).
-
-This page should have the common header (title, button - link to the source
-external URL or the creator URL, and the summary of item counts in the
-collection), and a nested component: the image grid or the audio collection.
-
-### New and updated components
+### 3. New and updated components
 
 #### Extract the `VAudioCollection` component
 
 Currently, it is not possible to reuse the audio collection from the audio
 search result page because it is a part of the `audio.vue` page. We should
 extract the part that shows the loading skeleton, the column of `VAudioTrack`
-rows and the Load more section. This component will be reused in the audio
-search page and on the Additional search views. One thing that I'm not sure
-about here is whether the analytics events should stay the same and be sent from
-all pages - or if we should somehow differentiate the events coming from
-different search views.
+rows and the Load more section into `VAudioCollection` component. This component
+will be reused in the audio search page and on the Additional search views.
 
 #### Add a `VCollectionHeader` component
 
-Figma links:
-
-- creator
-  [desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56323&mode=design&t=pN0PPAzlKQEKT9tJ-4)
-  and
-  [mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56362&mode=design&t=suLIyJHNmZrM0mPH-4)
-- source
-  [desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56381&mode=design&t=suLIyJHNmZrM0mPH-4)
-  and
-  [mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56421&mode=design&t=suLIyJHNmZrM0mPH-4)
-- tag
-  [desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1216-58402&mode=design&t=suLIyJHNmZrM0mPH-4)
-  and
-  [mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56457&mode=design&t=suLIyJHNmZrM0mPH-4)
-
-The header should have an icon (tag, creator or source), the name of the
+The header should have an icon (tag, creator or source) and the name of the
 tag/creator/source. For source and the creator, there should be an external link
-button.
+button if it's available (not all creators have urls).
 
 The header should also display the number of results, "251 audio files with the
 selected tag", "604 images provided by this source", "37 images by this creator
 in Hirshhorn Museum and Sculpture Garden".
 
-Note: There are sources that only have works by one creator. In this case, we
+_Note_: There are sources that only have works by one creator. In this case, we
 should probably still have two separate pages for the source and the creator,
 but we might want to add a note that the creator is the only one associated with
 this source.
 
+**Figma links**: **creator**
+[desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56323&mode=design&t=pN0PPAzlKQEKT9tJ-4)
+and
+[mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56362&mode=design&t=suLIyJHNmZrM0mPH-4),
+**source**
+[desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56381&mode=design&t=suLIyJHNmZrM0mPH-4)
+and
+[mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56421&mode=design&t=suLIyJHNmZrM0mPH-4),
+**tag**
+[desktop](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1216-58402&mode=design&t=suLIyJHNmZrM0mPH-4)
+and
+[mobile](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56457&mode=design&t=suLIyJHNmZrM0mPH-4).
+
 #### Add `VCollectionLink` component
 
-This components should be a `VButton` with `as="VLink"` and should link to the
-localized page for the creator or the source pages.
+This component should be a `VButton` with `as="VLink"`, should have an icon, and
+should accept a localized link to the creator or source page.
 
-### Update the `VCollectionLink` area on the single result page
+**Figma link**:
+[creator and source buttons](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56972&mode=dev)
 
-The "by creator" line under the main item on the single result page should be
-replaced with a section that has two buttons: one for a creator link and a
-source link. This section should be horizontally scrollable on mobile. It should
-implement a scroll-snap (example: https://play.tailwindcss.com/AbfA33Za50)
-
-#### Update `VMediaTag` component to be a `VButton` wrapping a `VLink`
+#### Create a new `VTag` component to be a `VButton` wrapping a `VLink`
 
 The
 [`VMediaTag` component](https://github.com/WordPress/openverse/blob/c7b76139d5a001ce43bde27805be5394e5732d1a/frontend/src/components/VMediaTag/VMediaTag.vue)
@@ -281,8 +176,6 @@ should be updated to be a `VButton` wrapping a `VLink`, and should match the
 design in the
 [Figma mockups](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56515&mode=design&t=nCX20BtJYqMOFAQm-4).
 The component should link to the localized page for the tag collection.
-
-### Other interface changes
 
 #### Update links in the "information" section
 
@@ -303,23 +196,156 @@ page and "provider" in the
 The audio page should be updated to match the image page: the
 `foreign_landing_url` link should be added to the "source", not provider.
 
-### Analytics changes
+### 4. Nuxt store and API request changes
 
-The views can be tracked as page views, so no separate event is necessary. The
-only way to access the pages is directly or via links on the single results,
-which will all be captured by standard page visits.
+We can re-use the search store as is for these pages. Currently, the frontend
+can perform searches by `source` parameter. If `searchBy` value is set, then the
+`q` parameter is replaced with the `<searchBy>=<searchTerm>` query parameter.
 
-Clicking on the items will be tracked as `SELECT_SEARCH_RESULT` events. These
-events can be narrowed by pathname (`/search` or `/tag\*`, for example) to
-determine where the event occurred.
+For this project, we should add new values to the `searchBy` filter.
 
-Two analytics events should be added:
+The API request URL is constructed from the search store state in the
+[`prepare-search-query-params` method](https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/src/utils/prepare-search-query-params.ts#L22-L25).
+We will need to update this method to use the `searchBy` filter value to
+construct the API request path as described in the "API Changes" section.
+
+#### Update the `searchBy` filter
+
+The `searchBy` filter will be used to determine the shape of the API request.
+While currently these parameters will be mutually exclusive (we can only search
+by one of them), we might want to allow searching by multiple parameters in the
+future.
+
+For other filters, we only use `toggle` method to update the value. However, for
+`searchBy`, we need to be able to check one of the `searchBy` parameters, and
+uncheck the others. To enable that, we should add a new `search` store method.
+
+If `searchBy` is set to `tag`, `creator` or `source`, then the media store
+should create search path instead of the search query. So, instead of calling
+`prepareSearchQuery` to create the query parameters, it should call
+`prepareSearchPath` to create the path.
+
+```typescript
+const searchPathOrQuery = searchBy
+  ? prepareSearchPath(searchParams, mediaType)
+  : prepareSearchQuery(searchParams, mediaType)
+
+const prepareSearchPath = (
+  searchParams: Record<string, string>,
+  mediaType: SupportedMediaType
+) => {
+  let path
+  if (searchBy === "tag") {
+    path = `${mediaType}/tag/${searchTerm}`
+  } else {
+    path = `${mediaType}/source/${searchParams[`${mediaType}Provider`]}`
+    if (searchBy === "creator") {
+      path += `/creator/${searchTerm}`
+    }
+  }
+  return path
+}
+```
+
+### 5. Add the `additional_search_views` feature flag
+
+The flag should be switchable, and off by default.
+
+### 6. Create a page for `tag` / `creator` /`source` collections.
+
+Nuxt allows creating nested dynamic routes like
+`/pages/_collection/_mediaType/_term`.
+
+We should add the following pages:
+
+- `/pages/_mediaType/tag/_tag`
+- `/pages/_mediaType/source/_source`
+- `/pages/_mediaType/source/_source/creator/_creator` (this page might not be
+  needed as it might be handled by the source page)
+
+To make sure that the `mediaType`, `source` and `creator` parameters are valid,
+this page should use the
+[`validate` method](https://v2.nuxt.com/docs/components-glossary/validate/) to
+make sure that and show an error page if necessary.
+
+```typescript
+function validate({ params, $pinia }): boolean {
+  const { collection, mediaType, term } = params
+  // Check that collection is one of ["tag", "creator" or "source"],
+  // and mediaType is one of `supportedMediaTypes`.
+  // Check that `term` is correctly escaped.
+  // If the params are not valid, return `false` to show the error page.
+  return isValid ? true : false
+}
+```
+
+This page should also update the state (`searchType`, `searchTerm` and
+`searchBy` and `provider` filters) in the `search` store and handle fetching
+using `mediaStore`'s `fetchMedia` method in the `useFetch` hook.
+
+Since it is not possible to change the path or query parameters from this page
+client-side, fetching can be much simpler than on the current search page (that
+has to watch for changes in the route and fetch if necessary).
+
+This page should use `VCollectionHeader` and the image grid or the audio
+collection.
+
+### 7. Update the single result pages
+
+All of these changes should be conditional on whether the
+`additional_search_views` feature flag is enabled.
+
+The Figma links for new designs:
+
+- [Image single result](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-63284&mode=dev)
+- [Audio single result](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-63285&mode=dev)
+
+#### Update the `VCollectionLink` area on the single result page
+
+The content info line under the main item on the single result page should be
+replaced with a section that has two buttons: one for a creator link and a
+source link. This section should be horizontally scrollable on mobile. It should
+implement a scroll-snap (example: https://play.tailwindcss.com/AbfA33Za50)
+
+#### Use `VTag` with links for the tags
+
+The tags should be rendered using the `VTag` component with links to the tag
+collection page.
+
+#### Update the tags area on the single result page
+
+The tags area should be collapsible to make long lists of tags collapsible:
+https://github.com/WordPress/openverse/issues/2589
+
+#### Add the information popover next to source and provider links
+
+The information popover should be added next to the source and provider links
+that explains the difference between the source and provider.
+
+[**Figma link**](https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&node-id=1200-56521&mode=dev)
+
+### 8. Additional analytics events
+
+Some existing events will already track the new views events. The views can be
+tracked as page views, so no separate event is necessary. The only way to access
+the pages is directly or via links on the single results, which will all be
+captured by standard page visits. Clicking on the items will be tracked as
+`SELECT_SEARCH_RESULT` events. These events can be narrowed by pathname
+(`/search` or `/tag\*`, for example) to determine where the event occurred.
+
+Two analytics events should be added or updated:
 
 - The clicks on external creator link in the `VCollectionHeader` should be
   tracked as `VISIT_CREATOR_LINK` events.
 
 - We should also a special event for visiting source `VISIT_SOURCE_LINK`,
   similar to `VISIT_CREATOR_LINK`.
+
+### 9. Cleanup after the feature flag is enabled in production
+
+After the feature flag is enabled in production, we should remove the
+conditional rendering on the single result pages and remove the
+`additional_search_views` feature flag and (old) `VMediaTag` component.
 
 ### Tests
 
@@ -361,13 +387,15 @@ Not applicable.
 
 <!-- What, if any, work within this plan can be parallelized? -->
 
-The work on components (`VCollectionLink`, `VMediaTag`), and on the search store
-changes can be parallelized.
+The API changes can be done independently of the frontend changes, although they
+should be finished before the final testing of the frontend changes.
 
-We should create a `additional_search_views` feature flag for this work because
-adding the links to the collection pages on the single result pages
-(`VCollectionLink`, `VMediaTag`) before the collection pages are ready is not
-possible.
+Adding the new components (step 3), Nuxt store update (step 4) and the
+`additional_search_views` feature flag (step 5) can be done in parallel, and are
+not dependent on anything.
+
+The work on the single result pages (step 7) can be done in parallel with the
+work on the collection pages (step 6), but should follow the previous steps.
 
 ## Blockers
 
@@ -386,7 +414,7 @@ indicate the change of context.
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-To rollback the changes, we would need to set the feature flag to `OFF`.
+To roll back the changes, we would need to set the feature flag to `OFF`.
 
 ## Risks
 
