@@ -173,7 +173,7 @@ describe("Media Store", () => {
 
     it.each`
       searchType   | fetchState
-      ${ALL_MEDIA} | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
+      ${ALL_MEDIA} | ${{ fetchingError: "Error", hasStarted: true, isFetching: true, isFinished: false }}
       ${AUDIO}     | ${{ fetchingError: "Error", hasStarted: true, isFetching: false, isFinished: true }}
       ${IMAGE}     | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
     `(
@@ -203,7 +203,7 @@ describe("Media Store", () => {
 
       expect(mediaStore.fetchState).toEqual({
         fetchingError: {
-          message: "All media fetching error. Failed to fetch image",
+          message: "Error",
           statusCode: 500,
         },
         hasStarted: true,
