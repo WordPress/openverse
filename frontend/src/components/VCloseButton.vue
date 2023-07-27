@@ -26,7 +26,7 @@ import type { TranslateResult } from "vue-i18n"
 type CloseButtonVariant =
   | "filled-white"
   | "filled-white-light"
-  | "filled-transparent"
+  | "transparent-dark"
   | "transparent-gray"
   | "filled-dark"
   | "black"
