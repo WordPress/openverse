@@ -13,7 +13,7 @@
         :to="contentLinkPath(mediaType)"
       />
     </div>
-    <VSnackbar size="large" :is-visible="isSnackbarVisible">
+    <VSnackbar size="large" :is-visible="snackbar.isVisible.value">
       <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
           <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
@@ -50,7 +50,7 @@
           :audio="item"
           :search-term="searchTerm"
           @interacted="handleInteraction"
-          @focus="showSnackbar"
+          @focus="snackbar.show"
         />
       </template>
     </ol>
@@ -70,6 +70,7 @@ import { isDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 
 import { useAnalytics } from "~/composables/use-analytics"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { useI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
@@ -128,19 +129,14 @@ export default defineComponent({
       () => fetchState.value.isFinished && allMedia.value.length === 0
     )
 
+    const snackbar = useAudioSnackbar()
+
     const uiStore = useUiStore()
-    const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
-    const showSnackbar = () => {
-      uiStore.showInstructionsSnackbar()
-    }
-    const hideSnackbar = () => {
-      uiStore.hideInstructionsSnackbar()
-    }
 
     const isSidebarVisible = computed(() => uiStore.isFilterVisible)
 
     const handleInteraction = (data: AudioInteractionData) => {
-      hideSnackbar()
+      snackbar.hide()
       sendCustomEvent("AUDIO_INTERACTION", {
         ...data,
         component: "VAllResultsGrid",
@@ -161,9 +157,8 @@ export default defineComponent({
 
       isSidebarVisible,
 
-      isSnackbarVisible,
-      showSnackbar,
       handleInteraction,
+      snackbar,
 
       isDetail,
     }

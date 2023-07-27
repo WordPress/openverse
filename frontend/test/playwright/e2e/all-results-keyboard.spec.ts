@@ -1,50 +1,21 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import audio from "~~/test/playwright/utils/audio"
+import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+
+import {
+  locateFocusedResult,
+  walkToNextOfType,
+  walkToType,
+} from "~~/test/playwright/utils/search-results"
 
 import { keycodes } from "~/constants/key-codes"
-
-const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
-  const isActiveElementOfType = () => {
-    return page.evaluate(
-      ([contextType]) => {
-        const regex = new RegExp(`^${contextType}:`, "i")
-        const element = document.activeElement as HTMLAnchorElement | null
-        const toTest = element?.title || element?.ariaLabel || ""
-        return regex.test(toTest)
-      },
-      [type]
-    )
-  }
-
-  while (!(await isActiveElementOfType())) {
-    await page.keyboard.press(keycodes.Tab)
-  }
-}
-
-const walkToType = async (type: "image" | "audio", page: Page) => {
-  // Go to skip to content button
-  await page.keyboard.press(keycodes.Tab)
-  // Skip to content
-  await page.keyboard.press(keycodes.Enter)
-
-  await walkToNextOfType(type, page)
-}
-
-const locateFocusedResult = async (page: Page) => {
-  const href = await page.evaluate(
-    () => (document.activeElement as HTMLAnchorElement | null)?.href
-  )
-  expect(href).toBeDefined()
-  const url = new URL(href ?? "")
-
-  return page.locator(`[href="${url.pathname}?q=birds"]`)
-}
 
 test.describe.configure({ mode: "parallel" })
 
 test.describe("all results grid keyboard accessibility test", () => {
   test.beforeEach(async ({ page }) => {
+    await preparePageForTests(page, "xl")
     await page.goto("/search/?q=birds")
   })
 
@@ -74,6 +45,28 @@ test.describe("all results grid keyboard accessibility test", () => {
         "i"
       )
     )
+  })
+
+  test("should show instructions snackbar when focusing first audio", async ({
+    page,
+  }) => {
+    await walkToType("audio", page)
+
+    await expect(page.locator("[role=alert]")).toBeVisible()
+  })
+
+  test("should hide the instructions snackbar when interacted with audio", async ({
+    page,
+  }) => {
+    await walkToType("audio", page)
+
+    await expect(page.locator("[role=alert]")).toBeVisible()
+
+    const focusedResult = await locateFocusedResult(page)
+    const playButton = await audio.getInactive(focusedResult)
+    await playButton.click()
+
+    await expect(page.locator("[role=alert]")).toBeHidden()
   })
 
   test("should allow toggling audio playback via play/pause click", async ({
