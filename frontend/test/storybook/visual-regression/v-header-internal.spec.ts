@@ -1,7 +1,7 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { languageDirections } from "~~/test/playwright/utils/navigation"
+import { languageDirections, sleep } from "~~/test/playwright/utils/navigation"
 
 const headerSelector = ".main-header"
 const defaultUrl =
@@ -38,6 +38,8 @@ test.describe("VHeaderInternal", () => {
         // Mouse stays over the button, so the close button is hovered.
         // To prevent this, move the mouse away.
         await page.mouse.move(0, 0)
+        // Wait for the fonts to load.
+        await sleep(300)
         await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
       })
     })
