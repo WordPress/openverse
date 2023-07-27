@@ -53,22 +53,18 @@
               {{ audioFormats.toUpperCase() }}
             </dd>
           </div>
-          <div>
+          <div v-if="audio.source && audio.sourceName !== audio.providerName">
             <dt>
               {{ $t("audioDetails.table.provider") }}
             </dt>
-            <dd>
-              <VLink :href="audio.foreign_landing_url">
-                {{ audio.providerName }}
-              </VLink>
-            </dd>
+            <dd>{{ audio.providerName }}</dd>
           </div>
-          <div v-if="audio.source && audio.sourceName !== audio.providerName">
+          <div>
             <dt>
               {{ $t("audioDetails.table.source") }}
             </dt>
             <dd>
-              {{ audio.sourceName }}
+              <VSourceExternalLink :media="audio" />
             </dd>
           </div>
           <div v-if="audio.genres && audio.genres.length > 0">
@@ -94,10 +90,17 @@ import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
+import VSourceExternalLink from "~/components/VImageDetails/VSourceExternalLink.vue"
 
 export default defineComponent({
   name: "VAudioDetails",
-  components: { VAudioThumbnail, VContentReportPopover, VLink, VMediaTag },
+  components: {
+    VSourceExternalLink,
+    VAudioThumbnail,
+    VContentReportPopover,
+    VLink,
+    VMediaTag,
+  },
   props: {
     audio: {
       type: Object as PropType<AudioDetail>,

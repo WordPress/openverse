@@ -16,17 +16,13 @@
         <dt>{{ $t("imageDetails.information.type") }}</dt>
         <dd class="uppercase">{{ imgType }}</dd>
       </div>
-      <div v-if="image.providerName !== image.sourceName">
+      <div v-if="image.source && image.providerName !== image.sourceName">
         <dt>{{ $t("imageDetails.information.provider") }}</dt>
         <dd>{{ image.providerName }}</dd>
       </div>
       <div>
         <dt>{{ $t("imageDetails.information.source") }}</dt>
-        <dd>
-          <VLink :href="image.foreign_landing_url" class="text-pink">{{
-            image.sourceName
-          }}</VLink>
-        </dd>
+        <dd><VSourceExternalLink :media="image" /></dd>
       </div>
       <div>
         <dt>{{ $t("imageDetails.information.dimensions") }}</dt>
@@ -48,12 +44,12 @@ import { useI18n } from "~/composables/use-i18n"
 import type { ImageDetail } from "~/types/media"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
-import VLink from "~/components/VLink.vue"
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
+import VSourceExternalLink from "~/components/VImageDetails/VSourceExternalLink.vue"
 
 export default defineComponent({
   name: "VImageDetails",
-  components: { VContentReportPopover, VLink, VMediaTag },
+  components: { VSourceExternalLink, VContentReportPopover, VMediaTag },
   props: {
     image: {
       type: Object as PropType<ImageDetail>,
@@ -71,7 +67,6 @@ export default defineComponent({
   },
   setup(props) {
     const i18n = useI18n()
-
     const imgType = computed(() => {
       if (props.imageType) {
         if (props.imageType.split("/").length > 1) {
