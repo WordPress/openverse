@@ -4,8 +4,9 @@
     href="/"
     :aria-label="$t('header.homeLink', { openverse: 'Openverse' }).toString()"
     variant="transparent-tx"
-    size="disabled"
-    class="h-12 w-12 text-dark-charcoal hover:bg-yellow"
+    size="large"
+    icon-only
+    class="text-dark-charcoal hover:bg-yellow"
   >
     <VLogoLoader
       :status="isFetching ? 'loading' : 'idle'"
