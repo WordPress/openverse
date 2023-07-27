@@ -54,6 +54,7 @@ from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
 from common.constants import REFRESH_POKE_INTERVAL, XCOM_PULL_TEMPLATE
@@ -148,6 +149,7 @@ def create_data_refresh_task_group(
         # Generate a UUID suffix that will be used by the newly created index.
         generate_index_suffix = PythonOperator(
             task_id="generate_index_suffix", python_callable=lambda: uuid.uuid4().hex
+            trigger_rule=TriggerRule.NONE_FAILED
         )
         tasks.append(generate_index_suffix)
 
