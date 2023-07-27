@@ -2,7 +2,6 @@
   <div>
     <VButton
       v-if="isMd"
-      id="hide-button"
       variant="transparent-gray"
       class="label-bold"
       size="small"
@@ -16,8 +15,6 @@
     </VButton>
     <VIconButton
       v-else
-      id="menu-button"
-      ref="menuButtonRef"
       :icon-props="{ name: 'eye-closed' }"
       size="small"
       :label="$t('sensitiveContent.singleResult.hide').toString()"
