@@ -83,6 +83,7 @@ export default defineComponent({
     const snackbar = useAudioSnackbar()
 
     const handleInteraction = (data: AudioInteractionData) => {
+      snackbar.hide()
       sendCustomEvent("AUDIO_INTERACTION", {
         ...data,
         component: "AudioSearch",
