@@ -1,6 +1,6 @@
 <template>
   <VButton
-    :label="label"
+    :aria-label="label"
     size="large"
     variant="plain--avoid"
     icon-only
