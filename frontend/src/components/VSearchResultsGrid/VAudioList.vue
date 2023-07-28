@@ -3,13 +3,9 @@
   <ol
     :aria-label="collectionLabel"
     class="-mx-2 flex flex-col md:-mx-4"
-    :class="{ 'gap-4': isRelated }"
+    :class="isRelated ? 'gap-4' : 'gap-2 md:gap-1'"
   >
-    <li
-      v-for="audio in results"
-      :key="audio.id"
-      :class="{ 'mb-2 md:mb-1': !isRelated }"
-    >
+    <li v-for="audio in results" :key="audio.id">
       <VAudioTrack
         :audio="audio"
         :size="audioTrackSize"
