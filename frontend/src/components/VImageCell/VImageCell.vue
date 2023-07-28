@@ -37,7 +37,7 @@
           @error="onImageLoadError($event)"
         />
         <figcaption
-          class="invisible absolute bottom-0 left-0 bg-white p-1 text-dark-charcoal group-hover:visible group-focus:visible"
+          class="invisible absolute bottom-2 left-2 rounded-sm bg-white p-2 text-dark-charcoal group-hover:visible group-focus:visible"
         >
           <h2 class="sr-only">
             {{

@@ -3,7 +3,7 @@ import { image } from "~~/test/unit/fixtures/image"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
-import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
+import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
 jest.mock("~/composables/use-analytics", () => ({
   useAnalytics: jest.fn(),
