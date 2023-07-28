@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-07-19T08:42:00+00:00\n"
+"POT-Creation-Date: 2023-07-28T14:12:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1258,7 +1258,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:122
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:119
 msgctxt "browsePage.fetchingError"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -1288,7 +1288,7 @@ msgctxt "browsePage.searchForm.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:121
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:118
 msgctxt "browsePage.searchForm.audio"
 msgid "audio"
 msgstr ""
@@ -1388,7 +1388,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VImageCell.vue:161
+#: src/components/VImageCell/VImageCell.vue:162
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -1400,8 +1400,8 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/VSearchResultsGrid/VAllResultsGrid.vue:36
-#: src/pages/search/audio.vue:20
-#: src/pages/search/image.vue:6
+#: src/pages/search/audio.vue:43
+#: src/pages/search/image.vue:7
 msgctxt "browsePage.aria.results"
 msgid "Search results for ###query###."
 msgstr ""
@@ -1530,7 +1530,6 @@ msgctxt "mediaDetails.loading"
 msgid "Loading..."
 msgstr ""
 
-#: src/components/VAudioDetails/VRelatedAudio.vue:30
 msgctxt "mediaDetails.relatedError"
 msgid "Error fetching related media"
 msgstr ""
@@ -1545,7 +1544,7 @@ msgid "read more about the tool"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:65
+#: src/pages/image/_id/index.vue:61
 msgctxt "mediaDetails.aria.creatorUrl"
 msgid "author ###name###"
 msgstr ""
@@ -1664,17 +1663,18 @@ msgid "Something went wrong, please try again after some time."
 msgstr ""
 
 #: src/components/VBackToSearchResultsLink.vue:14
+#: src/components/VSafetyWall/VSafetyWall.vue:40
 msgctxt "singleResult.back"
 msgid "Back to results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:60
+#: src/pages/image/_id/index.vue:56
 msgctxt "imageDetails.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/pages/image/_id/index.vue:54
+#: src/pages/image/_id/index.vue:50
 msgctxt "imageDetails.weblink"
 msgid "Get this image"
 msgstr ""
@@ -1730,8 +1730,7 @@ msgid "Genre"
 msgstr ""
 
 #: src/components/VAudioDetails/VRelatedAudio.vue:4
-#: src/components/VAudioDetails/VRelatedAudio.vue:7
-#: src/components/VAudioDetails/VRelatedAudio.vue:12
+#: src/components/VAudioDetails/VRelatedAudio.vue:10
 msgctxt "audioDetails.relatedAudios"
 msgid "Related audio"
 msgstr ""
@@ -1793,7 +1792,7 @@ msgid "Spacebar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/search/audio.vue:5
+#: src/components/VSearchResultsGrid/VAudioCollection.vue:8
 msgctxt "audioResults.snackbar.text"
 msgid "Press ###spacebar### to play or pause, and ###left### & ###right### to seek through the track."
 msgstr ""
@@ -1918,13 +1917,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:72
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:69
 msgctxt "audioThumbnail.alt"
 msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:498
+#: src/components/VAudioTrack/VAudioTrack.vue:519
 #: src/components/VAudioTrack/VGlobalAudioTrack.vue:74
 msgctxt "audioTrack.ariaLabel"
 msgid "Audio: ###title###"
@@ -1936,7 +1935,7 @@ msgid "Audio: ###title### - interactive player - press the space bar to play and
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:495
+#: src/components/VAudioTrack/VAudioTrack.vue:516
 msgctxt "audioTrack.ariaLabelInteractiveSeekable"
 msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track."
 msgstr ""
@@ -2301,16 +2300,18 @@ msgctxt "report.imageDetails"
 msgid "See image details"
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VImageCell.vue:29
-#: src/components/VSearchResultsGrid/VImageCell.vue:45
-#: src/components/VSearchResultsGrid/VImageCell.vue:160
+#: src/components/VImageCell/VImageCell.vue:29
+#: src/components/VImageCell/VImageCell.vue:45
+#: src/components/VImageCell/VImageCell.vue:161
+#: src/pages/image/_id/index.vue:265
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
 
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:71
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:68
 #: src/components/VAudioTrack/layouts/VBoxLayout.vue:13
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:33
+#: src/pages/audio/_id/index.vue:106
 msgctxt "sensitiveContent.title.audio"
 msgid "This audio track may contain sensitive content."
 msgstr ""
@@ -2318,4 +2319,50 @@ msgstr ""
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:52
 msgctxt "sensitiveContent.creator"
 msgid "Creator"
+msgstr ""
+
+#: src/components/VSafetyWall/VSafetyWall.vue:8
+msgctxt "sensitiveContent.singleResult.title"
+msgid "Sensitive content"
+msgstr ""
+
+#: src/components/VHideButton.vue:12
+#: src/components/VHideButton.vue:21
+msgctxt "sensitiveContent.singleResult.hide"
+msgid "Hide content"
+msgstr ""
+
+#: src/components/VSafetyWall/VSafetyWall.vue:49
+msgctxt "sensitiveContent.singleResult.show"
+msgid "Show content"
+msgstr ""
+
+#: src/components/VSafetyWall/VSafetyWall.vue:11
+msgctxt "sensitiveContent.singleResult.explanation"
+msgid "This work is marked as sensitive for the following reasons:"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/components/VSafetyWall/VSafetyWall.vue:20
+msgctxt "sensitiveContent.singleResult.learnMore"
+msgid "###link### about how ###openverse### handles sensitive content."
+msgstr ""
+
+#: src/components/VSafetyWall/VSafetyWall.vue:24
+msgctxt "sensitiveContent.singleResult.link"
+msgid "Learn more"
+msgstr ""
+
+msgctxt "sensitiveContent.reasons.providerSuppliedSensitive"
+msgid "The source of this work has marked it as sensitive."
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "sensitiveContent.reasons.sensitiveText"
+msgid "###openverse### has detected potentially sensitive text."
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "sensitiveContent.reasons.userReportedSensitive"
+msgid "###openverse### users have reported this work as sensitive."
 msgstr ""
