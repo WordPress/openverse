@@ -17,9 +17,8 @@ of Slack, which is found at the top of all #openverse- maintainer channels.
 ### Determining an estimated severity
 
 You will be asked to provide an estimated
-[severity](/meta/incidents/index.md#severity) for the incident. You are
-expected to use your best judgement here, but here are some examples to help
-you:
+[severity](/meta/incidents/index.md#severity) for the incident. You are expected
+to use your best judgement here, but here are some examples to help you:
 
 - **Severity 1** examples:
   - https://openverse.org is completely down.
