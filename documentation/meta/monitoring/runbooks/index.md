@@ -13,5 +13,7 @@ that can be a good resource when writing a new one.
 :titlesonly:
 
 api_request_count
+api_http_2xx_count
+api_http_5xx_count
 unhealthy_ecs_hosts
 ```
