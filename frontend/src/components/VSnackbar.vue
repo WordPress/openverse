@@ -1,6 +1,6 @@
 <template>
   <div
-    role="alert"
+    :role="isVisible ? 'alert' : undefined"
     :class="[
       $style.snackbar,
       $style[size],

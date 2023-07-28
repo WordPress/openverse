@@ -4,7 +4,7 @@ import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { deepClone } from "~/utils/clone"
 
-import { initialResults, useMediaStore } from "~/stores/media"
+import { initialResults, useMediaStore, getNuxtErrorData } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { ALL_MEDIA, AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 
@@ -173,7 +173,7 @@ describe("Media Store", () => {
 
     it.each`
       searchType   | fetchState
-      ${ALL_MEDIA} | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
+      ${ALL_MEDIA} | ${{ fetchingError: "Error", hasStarted: true, isFetching: true, isFinished: false }}
       ${AUDIO}     | ${{ fetchingError: "Error", hasStarted: true, isFetching: false, isFinished: true }}
       ${IMAGE}     | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
     `(
@@ -192,11 +192,20 @@ describe("Media Store", () => {
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       searchStore.setSearchType(ALL_MEDIA)
-      mediaStore._updateFetchState(AUDIO, "end", "Error")
-      mediaStore._updateFetchState(IMAGE, "end", "Error")
+      mediaStore._updateFetchState(AUDIO, "end", {
+        message: "Error",
+        statusCode: 500,
+      })
+      mediaStore._updateFetchState(IMAGE, "end", {
+        message: "Error",
+        statusCode: 500,
+      })
 
       expect(mediaStore.fetchState).toEqual({
-        fetchingError: '{"image":"Error","audio":"Error"}',
+        fetchingError: {
+          message: "Error",
+          statusCode: 500,
+        },
         hasStarted: true,
         isFetching: false,
         isFinished: true,
@@ -282,14 +291,6 @@ describe("Media Store", () => {
       expect(mediaStore.results.image.page).toBe(1)
     })
 
-    it("mediaNotFound throws an error", () => {
-      const mediaStore = useMediaStore()
-
-      expect(() => mediaStore.mediaNotFound(AUDIO)).toThrow(
-        "Media of type audio not found"
-      )
-    })
-
     it.each(supportedMediaTypes)(
       "fetchSingleMediaType (%s) on success",
       async (mediaType) => {
@@ -313,6 +314,31 @@ describe("Media Store", () => {
         expect(actualResult).toEqual(expectedResult)
       }
     )
+    it("fetchSingleMediaType on no results", async () => {
+      const mediaStore = useMediaStore()
+
+      searchStore = useSearchStore()
+      searchStore.setSearchTerm("cat")
+      const params = {
+        shouldPersistMedia: true,
+        mediaType: IMAGE,
+      }
+      const emptyResult = { result_count: 0, page_count: 0, results: [] }
+      mockSearchImage.mockResolvedValueOnce(emptyResult)
+      await mediaStore.fetchSingleMediaType(params)
+
+      const actualResult = mediaStore.results[IMAGE]
+      expect(actualResult).toEqual({
+        items: {},
+        count: 0,
+        page: 0,
+        pageCount: 0,
+      })
+
+      expect(mediaStore.mediaFetchState["image"].fetchingError).toEqual({
+        message: "NO_RESULT: image.",
+      })
+    })
 
     it("fetchSingleMediaType resets images if shouldPersistMedia is false", async () => {
       const mediaStore = useMediaStore()
@@ -378,109 +404,69 @@ describe("Media Store", () => {
       })
     })
 
-    it("handleMediaError handles 500 error", () => {
-      const mediaType = AUDIO
-      const error = new AxiosError(
-        "500 server error",
-        "ERR_BAD_RESPONSE",
-        undefined,
-        { path: "/foo" },
-        { status: 500 }
-      )
+    it("setMediaProperties merges the existing media item together with the properties passed in allowing overwriting", () => {
       const mediaStore = useMediaStore()
-      mediaStore.handleMediaError({ mediaType, error })
-      expect(mediaStore.$nuxt.$sentry.captureEvent).toHaveBeenCalledWith({
-        message:
-          "Error fetching audio from API. Request failed with status code: 500",
-        extra: { mediaType, error },
-      })
-    })
+      mediaStore.results.audio = testResult(AUDIO)
 
-    it("handleMediaError handles a 403 error", () => {
-      const mediaType = AUDIO
-      const error = new AxiosError(
-        "403 error",
-        "ERR_BAD_REQUEST",
-        undefined,
-        { path: "/foo" },
-        { status: 403 }
+      const existingMediaItem = deepClone(
+        mediaStore.getItemById(AUDIO, uuids[0])
       )
-      const mediaStore = useMediaStore()
-      mediaStore.handleMediaError({ mediaType, error })
-      expect(mediaStore.$nuxt.$sentry.captureEvent).toHaveBeenCalledWith({
-        message:
-          "Error fetching audio from API. Request failed with status code: 403",
-        extra: { mediaType, error },
-      })
-      expect(mediaStore.mediaFetchState.audio.fetchingError).toEqual(
-        "Error fetching audio from API. Request failed with status code: 403"
-      )
-      expect(mediaStore.mediaFetchState.audio.isFetching).toEqual(false)
-    })
-
-    it("handleMediaError handles an error when server did not respond", async () => {
-      const mediaStore = useMediaStore()
-      const mediaType = AUDIO
-      const noResponseAxiosError = new AxiosError(
-        "Unknown error",
-        "ETIMEDOUT",
-        undefined,
-        {
-          path: "/foo",
-        }
-      )
-      await mediaStore.handleMediaError({
-        mediaType,
-        error: noResponseAxiosError,
+      const hasLoaded = Symbol()
+      mediaStore.setMediaProperties(AUDIO, uuids[0], {
+        hasLoaded,
       })
 
-      const expectedErrorMessage =
-        "Error fetching audio from API. No response received from the server"
-      expect(mediaStore.mediaFetchState.audio.fetchingError).toEqual(
-        expectedErrorMessage
-      )
-      expect(mediaStore.mediaFetchState.audio.isFetching).toEqual(false)
-      expect(mediaStore.$nuxt.$sentry.captureEvent).toHaveBeenCalledWith({
-        message: expectedErrorMessage,
-        extra: { mediaType, error: noResponseAxiosError },
+      expect(mediaStore.getItemById(AUDIO, uuids[0])).toMatchObject({
+        ...existingMediaItem,
+        hasLoaded,
       })
     })
+  })
 
-    it("handleMediaError re-throws a non-Axios error", async () => {
-      const mediaStore = useMediaStore()
-      const nonAxiosError = new Error("non-Axios error")
-
-      const expectedErrorMessage =
-        "Error fetching audio from API. Unknown error"
-      await expect(
-        mediaStore.handleMediaError({
-          mediaType: AUDIO,
-          error: nonAxiosError,
-        })
-      ).rejects.toThrow(expectedErrorMessage)
-      expect(mediaStore.mediaFetchState.audio.fetchingError).toEqual(
-        expectedErrorMessage
-      )
-    })
-
-    describe("setMediaProperties", () => {
-      it("merges the existing media item together with the properties passed in allowing overwriting", () => {
-        const mediaStore = useMediaStore()
-        mediaStore.results.audio = testResult(AUDIO)
-
-        const existingMediaItem = deepClone(
-          mediaStore.getItemById(AUDIO, uuids[0])
+  // Add a test for getNuxtErrorData
+  describe("getNuxtErrorData", () => {
+    it.each`
+      status | message
+      ${500} | ${"Internal server error"}
+      ${429} | ${"Too many requests"}
+    `(
+      "returns the correct error data for axios errors",
+      ({ status, message }) => {
+        const error = new AxiosError(
+          "",
+          "ERR_BAD_RESPONSE",
+          {},
+          {},
+          {
+            status,
+            data: { detail: message },
+          }
         )
-        const hasLoaded = Symbol()
-        mediaStore.setMediaProperties(AUDIO, uuids[0], {
-          hasLoaded,
-        })
+        const expectedErrorData = {
+          statusCode: status,
+          message: `Error fetching image results. Request failed with status code: ${status}`,
+        }
+        const actualErrorData = getNuxtErrorData(error, IMAGE)
+        expect(actualErrorData).toEqual(expectedErrorData)
+      }
+    )
 
-        expect(mediaStore.getItemById(AUDIO, uuids[0])).toMatchObject({
-          ...existingMediaItem,
-          hasLoaded,
-        })
-      })
+    it("returns the correct error data for Axios error without a response", () => {
+      const error = new AxiosError("", "ERR_BAD_REQUEST", {}, {})
+      const expectedErrorData = {
+        message:
+          "Error fetching image results. No response received from the server",
+      }
+      const actualErrorData = getNuxtErrorData(error, IMAGE)
+      expect(actualErrorData).toEqual(expectedErrorData)
+    })
+    it("returns the correct error data for non-Axios errors", () => {
+      const error = new Error("Some error")
+      const expectedErrorData = {
+        message: "Error fetching image results. Unknown error",
+      }
+      const actualErrorData = getNuxtErrorData(error, IMAGE)
+      expect(actualErrorData).toEqual(expectedErrorData)
     })
   })
 })

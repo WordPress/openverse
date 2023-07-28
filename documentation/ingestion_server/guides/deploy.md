@@ -9,7 +9,7 @@
    page and copy the SHA of the image tagged `latest`.
 1. Release the app via
    [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
-   Click the "Run workflow" button, choose "ingestion server" from the dropdown,
+   Click the "Run workflow" button, choose "ingestion_server" from the dropdown,
    and supply the SHA identified in the previous step.
 
 ## Deployment

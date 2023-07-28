@@ -12,7 +12,7 @@
       />
     </nav>
     <div class="flex lg:hidden">
-      <VIconButton
+      <VOldIconButton
         id="menu-button"
         ref="menuButtonRef"
         :icon-props="{ name: 'menu' }"
@@ -94,7 +94,7 @@ import { useUiStore } from "~/stores/ui"
 
 import VCloseButton from "~/components/VCloseButton.vue"
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VOldIconButton from "~/components/VIconButton/VOldIconButton.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
@@ -107,12 +107,12 @@ export default defineComponent({
     VModalContent,
     VPopoverContent,
     VHomeLink,
-    VIconButton,
+    VOldIconButton,
     VPageLinks,
     VWordPressLink,
   },
   setup(_, { emit }) {
-    const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
+    const menuButtonRef = ref<InstanceType<typeof VOldIconButton> | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
     const modalContentRef = ref<InstanceType<typeof VModalContent> | null>(null)
 

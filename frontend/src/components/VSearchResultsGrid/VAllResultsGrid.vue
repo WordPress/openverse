@@ -13,7 +13,7 @@
         :to="contentLinkPath(mediaType)"
       />
     </div>
-    <VSnackbar size="large" :is-visible="isSnackbarVisible">
+    <VSnackbar size="large" :is-visible="snackbar.isVisible.value">
       <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
           <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
@@ -49,8 +49,8 @@
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
-          @interacted="handleInteraction"
-          @focus="showSnackbar"
+          @interacted="snackbar.hide"
+          @focus="snackbar.show"
         />
       </template>
     </ol>
@@ -67,9 +67,8 @@ import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
-import type { AudioInteractionData } from "~/types/analytics"
 
-import { useAnalytics } from "~/composables/use-analytics"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { useI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
@@ -95,8 +94,6 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-
-    const { sendCustomEvent } = useAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
 
@@ -129,23 +126,9 @@ export default defineComponent({
     )
 
     const uiStore = useUiStore()
-    const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
-    const showSnackbar = () => {
-      uiStore.showInstructionsSnackbar()
-    }
-    const hideSnackbar = () => {
-      uiStore.hideInstructionsSnackbar()
-    }
+    const snackbar = useAudioSnackbar()
 
     const isSidebarVisible = computed(() => uiStore.isFilterVisible)
-
-    const handleInteraction = (data: AudioInteractionData) => {
-      hideSnackbar()
-      sendCustomEvent("AUDIO_INTERACTION", {
-        ...data,
-        component: "VAllResultsGrid",
-      })
-    }
 
     return {
       searchTerm,
@@ -161,9 +144,7 @@ export default defineComponent({
 
       isSidebarVisible,
 
-      isSnackbarVisible,
-      showSnackbar,
-      handleInteraction,
+      snackbar,
 
       isDetail,
     }

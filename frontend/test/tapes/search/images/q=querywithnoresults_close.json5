@@ -1,6 +1,6 @@
 {
     meta: {
-        createdAt: '2023-07-10T06:54:41.817Z',
+        createdAt: '2023-07-10T06:54:31.443Z',
         host: 'https://api.openverse.engineering',
         resHumanReadable: true,
     },
@@ -8,15 +8,15 @@
         headers: {
             connection: 'close',
         },
-        url: '/v1/audio/?q=SearchPage429error&peaks=true',
+        url: '/v1/images/?q=querywithnoresults',
         method: 'GET',
         body: '',
     },
     res: {
-        status: 429,
+        status: 200,
         headers: {
             date: [
-                'Mon, 10 Jul 2023 06:54:42 GMT',
+                'Mon, 10 Jul 2023 06:54:32 GMT',
             ],
             'content-type': [
                 'application/json',
@@ -70,7 +70,7 @@
                 'MISS',
             ],
             'last-modified': [
-                'Mon, 10 Jul 2023 06:54:42 GMT',
+                'Mon, 10 Jul 2023 06:54:32 GMT',
             ],
             'accept-ranges': [
                 'bytes',
@@ -82,14 +82,18 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '7e46e5993e1d2870-OTP',
+                '7e46e558af1e0534-OTP',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400',
             ],
         },
         body: {
-            detail: 'Request was throttled. Expected available in 3600 seconds.',
+            result_count: 0,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [],
         },
     },
 }
