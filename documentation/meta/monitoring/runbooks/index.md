@@ -12,5 +12,6 @@ that can be a good resource when writing a new one.
 ```{toctree}
 :titlesonly:
 
+api_request_count
 unhealthy_ecs_hosts
 ```
