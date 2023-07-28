@@ -2,9 +2,10 @@
 Determine which files have changed in the documentation preview between
 the preview branch and the main branch.
 
-TODO: UPDATE
-For more information refer to the documentation:
-https://docs.openverse.org/meta/ci_cd/jobs/docker.html#determine-images
+This uses the `diff` CLI utility to determine the list of files that have
+changed. It then converts the paths to URLs that can be used to view the
+files on the docs preview site. Finally, it outputs the preview site docs
+generated comment along with a list of new and changed files.
 """
 import os
 import shutil
@@ -96,7 +97,7 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
         elif line.startswith("Only in"):
             if PR_NUMBER not in line:
                 continue
-            # Only in /tmp/gh-pages/_preview/2647/_sources/meta: examplefile.md.txt
+            # e.g. Only in /tmp/gh-pages/_preview/2647/_sources/meta: examplefile.md.txt
             added = line.replace(": ", "/").split()[2]
             new.append(convert_path_to_url(added))
     return changed, new
@@ -109,12 +110,12 @@ def format_list(items: list[str]) -> str:
 
 def write_output(changed: list[str], new: list[str]):
     """Write the changed and new files to the GitHub output."""
+    new_text = "**New files :heavy_plus_sign:**:\n" + format_list(new) if new else ""
     changed_text = (
         "**Changed files :arrows_counterclockwise:**:\n" + format_list(changed)
         if changed
         else ""
     )
-    new_text = "**New files :heavy_plus_sign:**:\n" + format_list(new) if new else ""
     body = f"""\
 **Full-stack documentation**: <https://docs.openverse.org/_preview/{PR_NUMBER}>
 
@@ -122,10 +123,12 @@ Please note that GitHub pages takes a little time to deploy newly pushed code, i
 
 You can check [the GitHub pages deployment action list](https://github.com/WordPress/openverse/actions/workflows/pages/pages-build-deployment) to see the current status of the deployments.
 
-{changed_text}
-
 {new_text}
+
+{changed_text}
 """  # noqa: E501
+    # This specific syntax makes it possible to write multi-line strings to the
+    # GitHub output without having to escape or convert the newlines.
     write_to_github_output(["body<<EOF", body, "EOF"])
 
 
