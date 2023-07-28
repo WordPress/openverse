@@ -2,7 +2,7 @@
   <div>
     <VSkipToContentButton />
     <div
-      class="app grid h-[100dvh] h-[100vh] min-h-[100dvh] min-h-[100vh] grid-rows-[auto,1fr,auto] bg-white"
+      class="app grid h-dyn-screen min-h-dyn-screen grid-rows-[auto,1fr,auto] bg-white"
       :class="[
         isDesktopLayout ? 'desktop' : 'mobile',
         breakpoint,
