@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 def notify_slack(text: str, media_type: str, dag_id: str) -> None:
     slack.send_message(
         text,
-        username=f"{media_type} Popularity Refresh",
+        username=f"{media_type.capitalize()} Popularity Refresh",
         icon_emoji=":database:",
         dag_id=dag_id,
     )

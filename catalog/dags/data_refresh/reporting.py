@@ -11,7 +11,7 @@ def report_status(media_type: str, message: str, dag_id: str):
     slack.send_message(
         text=message,
         dag_id=dag_id,
-        username="Data Refresh Notification",
+        username=f"{dag_id.replace('_', ' ').title()} Notification",
         icon_emoji="arrows_counterclockwise",
     )
     return message
