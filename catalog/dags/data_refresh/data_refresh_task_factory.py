@@ -148,8 +148,9 @@ def create_data_refresh_task_group(
 
         # Generate a UUID suffix that will be used by the newly created index.
         generate_index_suffix = PythonOperator(
-            task_id="generate_index_suffix", python_callable=lambda: uuid.uuid4().hex
-            trigger_rule=TriggerRule.NONE_FAILED
+            task_id="generate_index_suffix",
+            python_callable=lambda: uuid.uuid4().hex,
+            trigger_rule=TriggerRule.NONE_FAILED,
         )
         tasks.append(generate_index_suffix)
 
