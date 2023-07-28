@@ -108,14 +108,14 @@ def update_batches(
     # from the start point set by this variable (defaulted to 0). This prevents the
     # task from starting over at the beginning on retries.
     initial_batch_start = Variable.get(batch_start_var, 0, deserialize_json=True)
-    logger.info(f"Starting at {initial_batch_start}")
+    logger.info(f"Starting at {initial_batch_start:,}")
 
     updated_count = 0
     batch_start = initial_batch_start
     while batch_start <= total_row_count:
         batch_end = batch_start + batch_size
 
-        logger.info(f"Updating rows with id {batch_start} through {batch_end}.")
+        logger.info(f"Updating rows with id {batch_start:,} through {batch_end:,}.")
         count = run_sql.function(
             dry_run=dry_run,
             sql_template=constants.UPDATE_BATCH_QUERY,
@@ -137,8 +137,10 @@ def update_batches(
         # Update the Airflow variable to the next value of batch_start.
         Variable.set(batch_start_var, batch_end)
 
-        remaining_count = max(total_row_count - initial_batch_start - updated_count, 0)
-        logger.info(f"Updated {updated_count} rows. {remaining_count} remaining.")
+        percent_complete = (min(batch_end, total_row_count) / total_row_count) * 100
+        logger.info(
+            f"Updated {updated_count:,} rows. {percent_complete:.2f}% complete."
+        )
 
     return updated_count
 
@@ -149,7 +151,18 @@ def drop_temp_airflow_variable(airflow_var: str):
 
 
 @task
-def notify_slack(text: str, dry_run: bool) -> None:
+def notify_slack(text: str, dry_run: bool, count: int | None = None) -> None:
+    """
+    Send a message to Slack, or simply log if this is a dry run.
+    If a `count` is supplied, it is formatted and inserted into the text. This is
+    necessary because `count` is a value pulled from XComs, and cannot be formatted
+    in the task arguments.
+    """
+
+    if count is not None:
+        # Print integers with comma separator
+        text = text.format(count=f"{count:,}")
+
     if not dry_run:
         slack.send_message(
             text,

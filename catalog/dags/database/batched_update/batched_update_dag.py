@@ -196,9 +196,9 @@ def batched_update():
     )
 
     notify_before_update = notify_slack.override(task_id="notify_before_update")(
-        text=f"Preparing to update {select_rows_to_update} rows for update:"
-        " {{ params.query_id }}",
+        text="Preparing to update {count} rows for query: {{ params.query_id }}",
         dry_run="{{ params.dry_run}}",
+        count=select_rows_to_update,
     )
 
     check_for_resume_update >> [select_rows_to_update, expected_count]
@@ -220,9 +220,9 @@ def batched_update():
     expected_count >> [notify_before_update, perform_batched_update]
 
     notify_updated_count = notify_slack.override(task_id="notify_updated_count")(
-        text=f"Updated {perform_batched_update} records for update:"
-        " {{ params.query_id }}",
+        text="Updated {count} records for query: {{ params.query_id }}",
         dry_run="{{ params.dry_run}}",
+        count=perform_batched_update,
     )
 
     # The temporary table is only dropped if all updates were successful; this
