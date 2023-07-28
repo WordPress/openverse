@@ -151,7 +151,7 @@ def drop_temp_airflow_variable(airflow_var: str):
 
 
 @task
-def notify_slack(text: str, dry_run: bool, count: int | None = None) -> None:
+def notify_slack(text: str, dry_run: bool, count: int | None = None) -> str:
     """
     Send a message to Slack, or simply log if this is a dry run.
     If a `count` is supplied, it is formatted and inserted into the text. This is
@@ -172,3 +172,5 @@ def notify_slack(text: str, dry_run: bool, count: int | None = None) -> None:
         )
     else:
         logger.info(text)
+
+    return text
