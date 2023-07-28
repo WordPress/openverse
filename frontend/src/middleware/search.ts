@@ -1,11 +1,20 @@
 import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
+import { NO_RESULT } from "~/constants/errors"
 
 import type { Middleware } from "@nuxt/types"
 
-export const searchMiddleware: Middleware = ({ redirect, route, $pinia }) => {
+export const searchMiddleware: Middleware = async ({
+  redirect,
+  route,
+  $pinia,
+  error: nuxtError,
+}) => {
   const {
-    query: { q },
+    query: { q: rawQ },
   } = route
+  const q = Array.isArray(rawQ) ? rawQ[0] : rawQ
+
   /**
    * This middleware redirects any search without a query to the homepage.
    * This is meant to block direct access to /search and all sub-routes.
@@ -19,13 +28,29 @@ export const searchMiddleware: Middleware = ({ redirect, route, $pinia }) => {
    * Note that the search by creator is not displayed in the UI.
    */
   if (!q) return redirect("/")
-  /**
-   * We need to make sure that query `q` exists before checking if it matches
-   * the store searchTerm.
-   */
+
   const searchStore = useSearchStore($pinia)
-  const querySearchTerm = Array.isArray(q) ? q[0] : q
-  if (querySearchTerm !== searchStore.searchTerm) {
-    searchStore.setSearchTerm(querySearchTerm)
+
+  await searchStore.initProviderFilters()
+
+  searchStore.setSearchStateFromUrl({
+    path: route.path,
+    urlQuery: route.query,
+  })
+
+  // Fetch results before rendering the page on the server.
+  if (process.server) {
+    const mediaStore = useMediaStore($pinia)
+    const results = await mediaStore.fetchMedia()
+
+    const fetchingError = mediaStore.fetchState.fetchingError
+    // NO_RESULTS is handled client-side, for other errors show server error page
+    if (
+      !results &&
+      fetchingError &&
+      !fetchingError?.message?.includes(NO_RESULT)
+    ) {
+      nuxtError(fetchingError)
+    }
   }
 }

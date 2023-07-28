@@ -1,6 +1,6 @@
 {
     meta: {
-        createdAt: '2023-07-10T06:54:34.258Z',
+        createdAt: '2023-07-10T06:54:44.762Z',
         host: 'https://api.openverse.engineering',
         resHumanReadable: true,
         resUncompressed: true,
@@ -9,15 +9,15 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=SearchPage404error&peaks=true',
+        url: '/v1/audio/?q=SearchPage429error',
         method: 'GET',
         body: '',
     },
     res: {
-        status: 404,
+        status: 429,
         headers: {
             date: [
-                'Mon, 10 Jul 2023 06:54:34 GMT',
+                'Mon, 10 Jul 2023 06:54:45 GMT',
             ],
             'content-type': [
                 'application/json',
@@ -74,7 +74,7 @@
                 'MISS',
             ],
             'last-modified': [
-                'Mon, 10 Jul 2023 06:54:34 GMT',
+                'Mon, 10 Jul 2023 06:54:45 GMT',
             ],
             'strict-transport-security': [
                 'max-age=15552000; includeSubDomains; preload',
@@ -83,7 +83,7 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '7e46e56a1c840544-OTP',
+                '7e46e5abb959b9e1-OTP',
             ],
             'content-encoding': [
                 'br',
@@ -93,7 +93,7 @@
             ],
         },
         body: {
-            detail: 'Not found.',
+            detail: 'Request was throttled. Expected available in 3600 seconds.',
         },
     },
 }
