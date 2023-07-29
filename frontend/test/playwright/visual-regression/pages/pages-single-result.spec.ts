@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { Page, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
@@ -13,6 +13,14 @@ import { supportedMediaTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
+const cleanRelatedImages = async (page: Page) => {
+  await page.addStyleTag({
+    content: ".image-grid img { filter: brightness(0%); }",
+  })
+  // eslint-disable-next-line playwright/no-wait-for-timeout
+  await page.waitForTimeout(200)
+}
+
 for (const mediaType of supportedMediaTypes) {
   for (const dir of languageDirections) {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
@@ -24,13 +32,11 @@ for (const mediaType of supportedMediaTypes) {
         await goToSearchTerm(page, "birds", { dir })
         // This will include the "Back to results" link.
         await openFirstResult(page, mediaType)
+        await cleanRelatedImages(page)
 
-        await expectSnapshot(
-          `${mediaType}-${dir}-from-search-results`,
-          page,
-          { fullPage: true },
-          { maxDiffPixelRatio: 0.02 }
-        )
+        await expectSnapshot(`${mediaType}-${dir}-from-search-results`, page, {
+          fullPage: true,
+        })
       })
     })
   }
