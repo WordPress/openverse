@@ -5,43 +5,32 @@
     class="-mx-2 flex flex-col md:-mx-4"
     :class="isRelated ? 'gap-4' : 'gap-2 md:gap-1'"
   >
-    <li v-for="audio in results" :key="audio.id">
-      <VAudioTrack
-        :audio="audio"
-        :size="audioTrackSize"
-        layout="row"
-        :search-term="searchTerm"
-        @interacted="handleInteraction"
-        @mousedown="handleMousedown(audio, $event)"
-        @focus="$emit('focus', $event)"
-      />
-    </li>
+    <VAudioResult
+      v-for="audio in results"
+      :key="audio.id"
+      :search-term="searchTerm"
+      :audio="audio"
+      layout="row"
+      :size="audioTrackSize"
+    />
   </ol>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, ref, PropType } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType } from "vue"
 
-import type { AudioInteractionData } from "~/types/analytics"
 import type { AudioDetail } from "~/types/media"
-import { IsSidebarVisibleKey } from "~/types/provides"
-import { defineEvent } from "~/types/emits"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
-import { useAnalytics } from "~/composables/use-analytics"
-import { AUDIO } from "~/constants/media"
 
-import type { AudioTrackClickEvent } from "~/types/events"
-
-import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
+import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 
 /**
  * The list of audio for the search results and the related audio.
  */
 export default defineComponent({
   name: "VAudioList",
-  components: { VAudioTrack },
+  components: { VAudioResult },
   props: {
     results: {
       type: Array as PropType<AudioDetail[]>,
@@ -59,16 +48,8 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: {
-    interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
-    mousedown: defineEvent<[AudioTrackClickEvent]>(),
-    focus: defineEvent<[FocusEvent]>(),
-  },
-  setup(props, { emit }) {
-    const route = useRoute()
+  setup(props) {
     const uiStore = useUiStore()
-
-    const filterVisibleRef = inject(IsSidebarVisibleKey, ref(false))
 
     const audioTrackSize = computed(() => {
       if (props.isRelated) {
@@ -76,7 +57,7 @@ export default defineComponent({
       } else {
         return !uiStore.isDesktopLayout
           ? "s"
-          : filterVisibleRef.value
+          : uiStore.isFilterVisible
           ? "l"
           : "m"
       }
@@ -85,39 +66,9 @@ export default defineComponent({
     const searchStore = useSearchStore()
     const searchTerm = computed(() => searchStore.searchTerm)
 
-    const { sendCustomEvent } = useAnalytics()
-    const handleInteraction = (
-      data: Omit<AudioInteractionData, "component">
-    ) => {
-      sendCustomEvent("AUDIO_INTERACTION", {
-        ...data,
-        component: props.isRelated ? "VRelatedAudio" : "AudioSearch",
-      })
-      emit("interacted", data)
-    }
-    const handleMousedown = (
-      audio: AudioDetail,
-      { event, inWaveform }: AudioTrackClickEvent
-    ) => {
-      // We only navigate when clicking the audio track outside the waveform.
-      if (!inWaveform) {
-        sendCustomEvent("SELECT_SEARCH_RESULT", {
-          id: audio.id,
-          relatedTo: props.isRelated ? route.value.params.id : null,
-          mediaType: AUDIO,
-          provider: audio.provider,
-          query: searchTerm.value,
-        })
-      }
-      emit("mousedown", { event, inWaveform })
-    }
-
     return {
       audioTrackSize,
       searchTerm,
-
-      handleInteraction,
-      handleMousedown,
     }
   },
 })

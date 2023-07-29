@@ -1,1 +1,5 @@
-export type AudioTrackClickEvent = { event: MouseEvent; inWaveform: boolean }
+export type AudioTrackClickEvent = {
+  event: MouseEvent
+  inWaveform: boolean
+  inPlayPause: boolean
+}

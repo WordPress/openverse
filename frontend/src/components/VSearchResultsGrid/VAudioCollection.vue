@@ -4,7 +4,7 @@
       v-if="results.length === 0 && !fetchState.isFinished"
       is-for-tab="audio"
     />
-    <VSnackbar size="large" :is-visible="snackbar.isVisible.value">
+    <VSnackbar size="large" :is-visible="isSnackbarVisible">
       <i18n path="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
@@ -20,9 +20,6 @@
       :collection-label="collectionLabel"
       :is-related="isRelated"
       :results="results"
-      @focus="snackbar.show"
-      @interacted="snackbar.hide"
-      @mousedown="snackbar.handleMouseDown"
     />
     <footer v-if="!isRelated">
       <VLoadMore />
@@ -81,10 +78,10 @@ export default defineComponent({
     },
   },
   setup() {
-    const snackbar = useAudioSnackbar()
+    const { isVisible: isSnackbarVisible } = useAudioSnackbar()
 
     return {
-      snackbar,
+      isSnackbarVisible,
     }
   },
 })
