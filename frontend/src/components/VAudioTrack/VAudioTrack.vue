@@ -498,10 +498,8 @@ export default defineComponent({
     const handleMousedown = (event: MouseEvent) => {
       const inWaveform =
         waveformRef.value?.$el.contains(event.target as Node) ?? false
-      const inPlayPause =
-        playPauseRef.value?.$el.contains(event.target as Node) ?? false
       snackbar.handleMouseDown()
-      emit("mousedown", { event, inWaveform, inPlayPause })
+      emit("mousedown", { event, inWaveform })
     }
 
     /**
@@ -545,6 +543,7 @@ export default defineComponent({
       duration,
       currentTime,
       isReady: ref(true),
+      isSeekable: computed(() => props.layout !== "box"),
       onSeek: handleSeeked,
       onTogglePlayback: togglePlayback,
     })

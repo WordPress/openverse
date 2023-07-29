@@ -406,6 +406,7 @@ export default defineComponent({
     const { isSeeking: isSelfSeeking, ...seekable } = useSeekable({
       duration: toRef(props, "duration"),
       currentTime: toRef(props, "currentTime"),
+      isSeekable,
       isReady,
       onSeek: (frac) => {
         clearSeekProgress()

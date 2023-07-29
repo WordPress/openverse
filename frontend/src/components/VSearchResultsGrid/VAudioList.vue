@@ -12,6 +12,7 @@
       :audio="audio"
       layout="row"
       :size="audioTrackSize"
+      :is-related="isRelated"
     />
   </ol>
 </template>

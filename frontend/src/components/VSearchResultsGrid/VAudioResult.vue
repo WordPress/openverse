@@ -47,17 +47,21 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    isRelated: {
+      type: Boolean,
+      required: true,
+    },
   },
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
 
     const sendSelectSearchResultEvent = (
       audio: AudioDetail,
-      { inWaveform, inPlayPause }: AudioTrackClickEvent
+      { inWaveform }: AudioTrackClickEvent
     ) => {
       // Only send the event when the click navigates to the single result page.
       // If the click is in waveform or play-pause button, it controls the audio player.
-      if (inWaveform || inPlayPause) return
+      if (inWaveform) return
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: audio.id,
         mediaType: AUDIO,
@@ -69,10 +73,12 @@ export default defineComponent({
     const sendInteractionEvent = (
       data: Omit<AudioInteractionData, "component">
     ) => {
-      sendCustomEvent("AUDIO_INTERACTION", {
-        ...data,
-        component: "VAllResultsGrid",
-      })
+      const component = props.isRelated
+        ? "VRelatedAudio"
+        : props.layout === "box"
+        ? "VAllResultsGrid"
+        : "AudioSearch"
+      sendCustomEvent("AUDIO_INTERACTION", { ...data, component })
     }
 
     return {

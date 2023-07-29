@@ -31,11 +31,7 @@
             layout="box"
             :is-tabbable="false"
           />
-          <slot
-            name="controller"
-            :features="isMd ? ['seek'] : []"
-            :is-tabbable="false"
-          />
+          <slot name="controller" :features="[]" :is-tabbable="false" />
         </div>
       </div>
     </div>
@@ -49,7 +45,6 @@ import type { AudioDetail } from "~/types/media"
 import type { AudioSize } from "~/constants/audio"
 import { useI18n } from "~/composables/use-i18n"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-import { useUiStore } from "~/stores/ui"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 
@@ -70,10 +65,8 @@ export default defineComponent({
   },
   setup(props) {
     const i18n = useI18n()
-    const uiStore = useUiStore()
 
     const isSmall = computed(() => props.size === "s")
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
 
     const width = computed(() => {
       const magnitudes = {
@@ -90,7 +83,6 @@ export default defineComponent({
 
     const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
     return {
-      isMd,
       isSmall,
       shouldBlur,
 

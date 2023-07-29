@@ -50,6 +50,7 @@
           :audio="item"
           :search-term="searchTerm"
           layout="box"
+          :is-related="false"
         />
       </template>
     </ol>
