@@ -58,7 +58,7 @@ also updated to clearly show that they are external.
 
 ## Step details
 
-### 1. Elasticsearch updates
+### 1. Search controller updates
 
 Currently, when filtering the search results, the API matches some query
 parameters in a fuzzy way: an item matches the query if the field value contains
@@ -84,21 +84,38 @@ database rather than ES to access anything:
 - `creator` is not indexed in the API database, so a query against it will be
   very slow.
 
-This is why we should update the existing Elasticsearch index to enable exact
-and add new endpoints for the `tag`, `creator` and `source` matches.
+To enable exact matching, we don't need any changes in Elasticsearch index
+because we already have the `.keyword` fields for `creator`, `source` and
+`tags`. We just need to use them in the query. This will allow for exact
+matching of the values (e.g. `bike` will not match `bikes` or `biking`), and
+will probably make the search more performant since the fields and the query
+won't need to be analyzed and/or stemmed.
 
-The updates to the Elasticsearch index should:
+The search controller's `search` method should be refactored to be smaller and
+allow for more flexibility when creating the search query. The current
+implementation of query building consists of 3 steps.
 
-- use
-  [`keyword` field type](https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html)
-  for mapping and
-  [`term` query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html)
-  for `creator`, `source` and `tags` fields. This will allow for exact matching
-  of the values (e.g. `bike` will not match `bikes` or `biking`), and will
-  probably make the search more performant since the fields and the query won't
-  need to be analyzed and/or stemmed.
+We **first** apply the `filters`: if the query string has any parameters other
+than `q`, we use them for exact matches that must be in the search results, or
+must be excluded from the search results (if the parameter starts with
+`exclude_`).
 
-We will need to run the data refresh to reindex the data.
+**Then**, if `q` parameter is present, we apply the `q` parameter, which is a
+full-text search within `tags`, `title` and `description` fields. This is a
+fuzzy search, which means that the query string is stemmed and analyzed, and the
+field values are stemmed and analyzed, and the documents are scored based on the
+relevance of the match. If `q` is not present, but one of the
+`creator`/`source`/`tags` parameter is present, we search within those fields
+for fuzzy matches.
+
+**Finally**, we apply the ranking and sorting parameters, and "highlight" the
+fields that were matched in the results.
+
+The new search controller should allow for using different filters for the first
+step and to not use the full-text search. We should also create a new serializer
+for collection search requests. It should include the common parameters for
+`list` requests, such as `page` and `page_size`, and the parameters for the
+exact matches: `tag`, `creator` and `source`.
 
 ### 2. New API endpoints
 
