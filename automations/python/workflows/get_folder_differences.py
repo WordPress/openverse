@@ -105,7 +105,10 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
 
 def format_list(items: list[str]) -> str:
     """Format a list of items as a Markdown list."""
-    return "\n".join([f"- {item}" for item in items])
+    text = "\n".join([f"- {item}" for item in items])
+    if len(items) > 10:
+        text = f"<details><summary>View full list ({len(items)})</summary>\n\n{text}\n</details>"  # noqa: E501
+    return text
 
 
 def write_output(changed: list[str], new: list[str]):
