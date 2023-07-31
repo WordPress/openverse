@@ -71,7 +71,11 @@ function computeQueryParams(
   return queryKeys.reduce(
     (obj, key) => {
       if (key !== "q" && query[key]?.length) {
-        obj[key] = query[key]
+        if (key !== INCLUDE_SENSITIVE_QUERY_PARAM) {
+          obj[key] = query[key]
+        } else if (query[key] === "includeSensitiveResults") {
+          obj[key] = "true"
+        }
       }
       return obj
     },
@@ -421,10 +425,9 @@ export const useSearchStore = defineStore("search", {
       // Convert the 'unstable__include_sensitive_results=true' query param
       // to `includeSensitiveResults` filterType and the filterCode with the same name:
       // includeSensitiveResults: { code: includeSensitiveResults, name: '...', checked: true }
-      if (query[INCLUDE_SENSITIVE_QUERY_PARAM] === "true") {
-        query.includeSensitiveResults = "includeSensitiveResults"
+      if (!(query[INCLUDE_SENSITIVE_QUERY_PARAM] === "true")) {
+        delete query[INCLUDE_SENSITIVE_QUERY_PARAM]
       }
-      delete query[INCLUDE_SENSITIVE_QUERY_PARAM]
 
       const newFilterData = queryToFilterData({
         query,

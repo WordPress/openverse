@@ -18,8 +18,6 @@ import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-const sensitiveUrlQuery = { [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }
-
 describe("Search Store", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -131,18 +129,18 @@ describe("Search Store", () => {
      * - more than one value for a parameter in the query (q=cat&q=dog).
      */
     it.each`
-      query                                                   | expectedQueryParams                                                     | searchType
-      ${{ ...sensitiveUrlQuery, q: "cat", license: "by" }}    | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
-      ${{ ...sensitiveUrlQuery, license: "by" }}              | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
-      ${{ license: "", [INCLUDE_SENSITIVE_QUERY_PARAM]: "" }} | ${{ q: "" }}                                                            | ${IMAGE}
-      ${{ q: "cat", license: "by", searchBy: "creator" }}     | ${{ q: "cat", license: "by", searchBy: "creator" }}                     | ${ALL_MEDIA}
-      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}            | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
-      ${{ q: "cat", length: "medium" }}                       | ${{ q: "cat" }}                                                         | ${IMAGE}
-      ${{ q: "cat", length: "medium" }}                       | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                       | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
-      ${{ q: "cat", extension: "mp3" }}                       | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                       | ${{ q: "cat" }}                                                         | ${AUDIO}
-      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}        | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
+      query                                                                   | expectedQueryParams                                                     | searchType
+      ${{ [INCLUDE_SENSITIVE_QUERY_PARAM]: "true", q: "cat", license: "by" }} | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
+      ${{ [INCLUDE_SENSITIVE_QUERY_PARAM]: "true", license: "by" }}           | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
+      ${{ license: "", [INCLUDE_SENSITIVE_QUERY_PARAM]: "" }}                 | ${{ q: "" }}                                                            | ${IMAGE}
+      ${{ q: "cat", license: "by", searchBy: "creator" }}                     | ${{ q: "cat", license: "by", searchBy: "creator" }}                     | ${ALL_MEDIA}
+      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
+      ${{ q: "cat", length: "medium" }}                                       | ${{ q: "cat" }}                                                         | ${IMAGE}
+      ${{ q: "cat", length: "medium" }}                                       | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                                       | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
+      ${{ q: "cat", extension: "mp3" }}                                       | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                                       | ${{ q: "cat" }}                                                         | ${AUDIO}
+      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}                        | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
     `(
       "returns correct searchQueryParams and filter status for $query and searchType $searchType",
       ({ query, expectedQueryParams, searchType }) => {

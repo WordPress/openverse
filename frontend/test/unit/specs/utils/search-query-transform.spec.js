@@ -99,7 +99,7 @@ describe("searchQueryTransform", () => {
       extension: "jpg",
       license: "cc0",
       license_type: "commercial",
-      [INCLUDE_SENSITIVE_QUERY_PARAM]: "true",
+      [INCLUDE_SENSITIVE_QUERY_PARAM]: "includeSensitiveResults",
       searchBy: "creator",
       size: "medium",
       source: "animaldiversity,brooklynmuseum",
