@@ -7,6 +7,7 @@ import {
 import { AUDIO, IMAGE } from "~/constants/media"
 
 import { filterData, initFilters } from "~/constants/filters"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 describe("searchQueryTransform", () => {
   it("converts initial filters to query data", () => {
@@ -98,7 +99,7 @@ describe("searchQueryTransform", () => {
       extension: "jpg",
       license: "cc0",
       license_type: "commercial",
-      unstable__include_sensitive_results: "true",
+      [INCLUDE_SENSITIVE_QUERY_PARAM]: "true",
       searchBy: "creator",
       size: "medium",
       source: "animaldiversity,brooklynmuseum",
@@ -308,7 +309,7 @@ describe("searchQueryTransform", () => {
       length: "medium",
       source: "animaldiversity,wikimedia,nonexistent,wikimedia_audio,jamendo",
       searchBy: "creator",
-      unstable__include_sensitive_results: "true",
+      [INCLUDE_SENSITIVE_QUERY_PARAM]: "true",
     }
     const expectedFilters = deepClone(filters)
     const setChecked = (code, filterCategory) => {
@@ -343,13 +344,13 @@ describe("searchQueryTransform", () => {
       source: "animaldiversity,brooklynmuseum",
       q: "cat",
       searchBy: "creator",
-      unstable__include_sensitive_results: "true",
+      [INCLUDE_SENSITIVE_QUERY_PARAM]: "true",
     }
     const queryString =
       "http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial" +
       "&category=photograph&extension=jpg&aspect_ratio=tall&size=medium" +
       "&source=animaldiversity,brooklynmuseum&searchBy=creator" +
-      "&unstable__include_sensitive_results=true"
+      `&${INCLUDE_SENSITIVE_QUERY_PARAM}=true`
     const result = queryStringToQueryData(queryString)
     expect(result).toEqual(expectedQueryData)
   })

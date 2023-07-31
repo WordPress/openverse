@@ -13,11 +13,12 @@ import {
   supportedSearchTypes,
   VIDEO,
 } from "~/constants/media"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-const sensitiveUrlQuery = { unstable__include_sensitive_results: "true" }
+const sensitiveUrlQuery = { [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }
 
 describe("Search Store", () => {
   beforeEach(() => {
@@ -130,18 +131,18 @@ describe("Search Store", () => {
      * - more than one value for a parameter in the query (q=cat&q=dog).
      */
     it.each`
-      query                                                       | expectedQueryParams                                                         | searchType
-      ${{ ...sensitiveUrlQuery, q: "cat", license: "by" }}        | ${{ q: "cat", license: "by", unstable__include_sensitive_results: "true" }} | ${IMAGE}
-      ${{ ...sensitiveUrlQuery, license: "by" }}                  | ${{ q: "", license: "by", unstable__include_sensitive_results: "true" }}    | ${IMAGE}
-      ${{ license: "", unstable__include_sensitive_results: "" }} | ${{ q: "" }}                                                                | ${IMAGE}
-      ${{ q: "cat", license: "by", searchBy: "creator" }}         | ${{ q: "cat", license: "by", searchBy: "creator" }}                         | ${ALL_MEDIA}
-      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                                | ${ALL_MEDIA}
-      ${{ q: "cat", length: "medium" }}                           | ${{ q: "cat" }}                                                             | ${IMAGE}
-      ${{ q: "cat", length: "medium" }}                           | ${{ q: "cat", length: "medium" }}                                           | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                           | ${{ q: "cat", extension: "svg" }}                                           | ${IMAGE}
-      ${{ q: "cat", extension: "mp3" }}                           | ${{ q: "cat", extension: "mp3" }}                                           | ${AUDIO}
-      ${{ q: "cat", extension: "svg" }}                           | ${{ q: "cat" }}                                                             | ${AUDIO}
-      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}            | ${{ q: "cat", license: "by" }}                                              | ${IMAGE}
+      query                                                   | expectedQueryParams                                                     | searchType
+      ${{ ...sensitiveUrlQuery, q: "cat", license: "by" }}    | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
+      ${{ ...sensitiveUrlQuery, license: "by" }}              | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
+      ${{ license: "", [INCLUDE_SENSITIVE_QUERY_PARAM]: "" }} | ${{ q: "" }}                                                            | ${IMAGE}
+      ${{ q: "cat", license: "by", searchBy: "creator" }}     | ${{ q: "cat", license: "by", searchBy: "creator" }}                     | ${ALL_MEDIA}
+      ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}            | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
+      ${{ q: "cat", length: "medium" }}                       | ${{ q: "cat" }}                                                         | ${IMAGE}
+      ${{ q: "cat", length: "medium" }}                       | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                       | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
+      ${{ q: "cat", extension: "mp3" }}                       | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
+      ${{ q: "cat", extension: "svg" }}                       | ${{ q: "cat" }}                                                         | ${AUDIO}
+      ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}        | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
     `(
       "returns correct searchQueryParams and filter status for $query and searchType $searchType",
       ({ query, expectedQueryParams, searchType }) => {
@@ -195,11 +196,11 @@ describe("Search Store", () => {
     )
 
     it.each`
-      query                                                          | path                | searchType
-      ${{ license: "cc0,by", q: "cat" }}                             | ${"/search/"}       | ${ALL_MEDIA}
-      ${{ searchBy: "creator", q: "dog" }}                           | ${"/search/image/"} | ${IMAGE}
-      ${{ unstable__include_sensitive_results: "true", q: "galah" }} | ${"/search/audio/"} | ${AUDIO}
-      ${{ length: "medium" }}                                        | ${"/search/image"}  | ${IMAGE}
+      query                                                      | path                | searchType
+      ${{ license: "cc0,by", q: "cat" }}                         | ${"/search/"}       | ${ALL_MEDIA}
+      ${{ searchBy: "creator", q: "dog" }}                       | ${"/search/image/"} | ${IMAGE}
+      ${{ [INCLUDE_SENSITIVE_QUERY_PARAM]: "true", q: "galah" }} | ${"/search/audio/"} | ${AUDIO}
+      ${{ length: "medium" }}                                    | ${"/search/image"}  | ${IMAGE}
     `(
       "`setSearchStateFromUrl` should set '$searchType' from query $query and path '$path'",
       ({ query, path, searchType }) => {
@@ -222,7 +223,7 @@ describe("Search Store", () => {
       ${[["licenses", "by"], ["licenses", "by-nc-sa"]]}                     | ${["license", "by,by-nc-sa"]}
       ${[["licenseTypes", "commercial"], ["licenseTypes", "modification"]]} | ${["license_type", "commercial,modification"]}
       ${[["searchBy", "creator"]]}                                          | ${["searchBy", "creator"]}
-      ${[["includeSensitiveResults", "includeSensitiveResults"]]}           | ${["unstable__include_sensitive_results", "true"]}
+      ${[["includeSensitiveResults", "includeSensitiveResults"]]}           | ${[[INCLUDE_SENSITIVE_QUERY_PARAM], "true"]}
       ${[["sizes", "large"]]}                                               | ${["size", undefined]}
     `(
       "toggleFilter updates the query values to $query",

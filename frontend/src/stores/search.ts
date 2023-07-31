@@ -33,6 +33,7 @@ import {
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from "~/constants/filters"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -417,13 +418,13 @@ export const useSearchStore = defineStore("search", {
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
 
-      // Convert the 'includeSensitiveResults' query param with value "true" to get both the parameter filterType `includeSensitiveResults` and the filterCode with the same name.
+      // Convert the 'unstable__include_sensitive_results=true' query param
+      // to `includeSensitiveResults` filterType and the filterCode with the same name:
       // includeSensitiveResults: { code: includeSensitiveResults, name: '...', checked: true }
-      if (query.includeSensitiveResults === "true") {
+      if (query[INCLUDE_SENSITIVE_QUERY_PARAM] === "true") {
         query.includeSensitiveResults = "includeSensitiveResults"
-      } else {
-        delete query.includeSensitiveResults
       }
+      delete query[INCLUDE_SENSITIVE_QUERY_PARAM]
 
       const newFilterData = queryToFilterData({
         query,

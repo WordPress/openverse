@@ -11,6 +11,7 @@ import {
   SupportedSearchType,
   supportedSearchTypes,
 } from "~/constants/media"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 import { getParameterByName } from "~/utils/url-params"
 import { deepClone } from "~/utils/clone"
 
@@ -28,7 +29,7 @@ export interface ApiQueryParams {
   category?: string
   source?: string
   length?: string
-  unstable__include_sensitive_results?: string
+  [INCLUDE_SENSITIVE_QUERY_PARAM]?: string
   page?: string
   /**
    * A conditional to show audio waveform data.
@@ -58,7 +59,7 @@ const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
   audioProviders: "source",
   imageProviders: "source",
   searchBy: "searchBy",
-  includeSensitiveResults: "unstable__include_sensitive_results",
+  includeSensitiveResults: INCLUDE_SENSITIVE_QUERY_PARAM,
 }
 
 const getMediaFilterTypes = (searchType: SearchType) => {
@@ -77,8 +78,7 @@ const filterToString = (filterItem: FilterItem[]) => {
     .filter((f) => f.checked)
     .map((filterItem) => filterItem.code)
     .join(",")
-  // TODO: check this
-  return filterString === "includeSensitiveResults" ? "true" : filterString
+  return filterString === INCLUDE_SENSITIVE_QUERY_PARAM ? "true" : filterString
 }
 
 /**
@@ -201,7 +201,7 @@ export const queryToFilterData = ({
       const queryDataKey = filterPropertyMappings[filterDataKey]
       if (query[queryDataKey]) {
         if (
-          queryDataKey === "unstable__include_sensitive_results" &&
+          queryDataKey === INCLUDE_SENSITIVE_QUERY_PARAM &&
           query[queryDataKey].length > 0
         ) {
           filters[filterDataKey][0].checked = true
