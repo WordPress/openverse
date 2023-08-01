@@ -46,7 +46,7 @@
                 "sha256:539cc1d13202e33ca466e88b2807e29f4c13049d6d87031a3c110744495cb082",
                 "sha256:92d6037539857d8206b8f6ae472e8b77db8058fec5937a1ef3f54304089edbb9"
             ],
-            "index": "pypi",
+            "markers": "python_version >= '3.6'",
             "version": "==2023.7.22"
         },
         "charset-normalizer": {
@@ -148,11 +148,11 @@
         },
         "furo": {
             "hashes": [
-                "sha256:40e09fa17c6f4b22419d122e933089226dcdb59747b5b6c79363089827dea16f",
-                "sha256:594a8436ddfe0c071f3a9e9a209c314a219d8341f3f1af33fdf7c69544fab9e6"
+                "sha256:1c7936929ec57c5ddecc7c85f07fa8b2ce536b5c89137764cca508be90e11efd",
+                "sha256:257f63bab97aa85213a1fa24303837a3c3f30be92901ec732fea74290800f59e"
             ],
             "index": "pypi",
-            "version": "==2023.5.20"
+            "version": "==2023.7.26"
         },
         "idna": {
             "hashes": [
