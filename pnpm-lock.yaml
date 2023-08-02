@@ -58,13 +58,13 @@ importers:
       axios: ^0.27.0
       js-yaml: ^4.1.0
       k6: 0.0.0
-      nunjucks: ^3.2.3
+      nunjucks: ^3.2.4
     dependencies:
       '@octokit/rest': 19.0.7
       axios: 0.27.2
       js-yaml: 4.1.0
       k6: 0.0.0
-      nunjucks: 3.2.3
+      nunjucks: 3.2.4
     devDependencies:
       '@actions/core': 1.10.0
       '@actions/github': 5.1.1
@@ -14572,8 +14572,8 @@ packages:
     resolution: {integrity: sha512-Y1wZESM7VUThYY+4W+X4ySH2maqcA+p7UR+w8VWNWVAd6lwuXXWz/w/Cz43J/dI2I+PS6wD5N+bJUF+gjWvIqg==}
     dev: true
 
-  /nunjucks/3.2.3:
-    resolution: {integrity: sha512-psb6xjLj47+fE76JdZwskvwG4MYsQKXUtMsPh6U0YMvmyjRtKRFcxnlXGWglNybtNTNVmGdp94K62/+NjF5FDQ==}
+  /nunjucks/3.2.4:
+    resolution: {integrity: sha512-26XRV6BhkgK0VOxfbU5cQI+ICFUtMLixv1noZn1tGU38kQH5A5nmmbk/O45xdyBhD1esk47nKrY0mvQpZIhRjQ==}
     engines: {node: '>= 6.9.0'}
     hasBin: true
     peerDependencies:
