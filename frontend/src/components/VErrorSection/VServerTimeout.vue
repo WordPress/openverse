@@ -1,6 +1,6 @@
 <template>
   <div class="server-timeout">
-    <h4 class="text-5xl">{{ $t("server-timeout.heading") }}</h4>
+    <h4 class="text-5xl">{{ $t("serverTimeout.heading") }}</h4>
   </div>
 </template>
 

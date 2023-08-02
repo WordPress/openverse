@@ -32,7 +32,7 @@ export const NoResultsTemplate = (args) => ({
       <template #image>
        <VErrorImage :error-code="args.errorCode" />
       </template>
-      <VNoResults :media-type="args.type" :query="args.query" :search-term="args.query.q" :external-sources=[] />
+      <VNoResults :media-type="args.type" :search-term="args.searchTerm" :external-sources=[] />
     </VErrorSection>
     `,
   components: { VErrorSection, VErrorImage, VNoResults },
@@ -47,12 +47,7 @@ export const NoResultsTemplate = (args) => ({
     args={{
       errorCode: NO_RESULT,
       type: "image",
-      query: {
-        license: "",
-        license_type: "",
-        [INCLUDE_SENSITIVE_QUERY_PARAM]: false,
-        q: "sad person",
-      },
+      searchTerm: "sad person",
     }}
   >
     {NoResultsTemplate.bind({})}
