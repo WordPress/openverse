@@ -389,11 +389,11 @@
                 "falcon"
             ],
             "hashes": [
-                "sha256:0c9f858337ec3781cf4851972ef42bba8c9828aea116b0dbed8f38c5f9a1896c",
-                "sha256:760e4fb6d01c994110507133e08ecd4bdf4d75ee4be77f296a3579796cf73134"
+                "sha256:5053aa7647533b207417cea5f3ee2d5e13aea7001dbb711f46348d7a72597d60",
+                "sha256:78c764cbec1967c41e24967e9a4a5d1e67a7bc960d125d905f94c068a0300ac9"
             ],
             "index": "pypi",
-            "version": "==1.26.0"
+            "version": "==1.29.0"
         },
         "six": {
             "hashes": [
