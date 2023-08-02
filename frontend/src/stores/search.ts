@@ -422,7 +422,7 @@ export const useSearchStore = defineStore("search", {
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
 
-      // Convert the 'unstable__include_sensitive_results=true' query param
+      // TODO: Convert the 'unstable__include_sensitive_results=true' query param
       // to `includeSensitiveResults` filterType and the filterCode with the same name:
       // includeSensitiveResults: { code: includeSensitiveResults, name: '...', checked: true }
       if (!(query[INCLUDE_SENSITIVE_QUERY_PARAM] === "true")) {
