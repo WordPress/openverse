@@ -97,13 +97,13 @@ def test_mature_filtering_creates_mature_image_instance(
             call(
                 id=media.id,
                 index=media_type,
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
                 refresh=True,
             ),
             call(
                 id=media.id,
                 index=f"{media_type}-filtered",
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
                 refresh=True,
             ),
         ]
@@ -137,25 +137,25 @@ def test_deleting_mature_image_instance_resets_mature_flag(
                 id=media.pk,
                 refresh=True,
                 index=media_type,
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
             ),
             call(
                 id=media.pk,
                 refresh=True,
                 index=f"{media_type}-filtered",
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
             ),
             call(
                 id=media.pk,
                 refresh=True,
                 index=media_type,
-                body={"doc": {"mature": False}},
+                doc={"mature": False},
             ),
             call(
                 id=media.pk,
                 refresh=True,
                 index=f"{media_type}-filtered",
-                body={"doc": {"mature": False}},
+                doc={"mature": False},
             ),
         ],
     )
@@ -323,7 +323,7 @@ def test_mature_media_updates_all_indexes(
             call(
                 index=index,
                 id=media.id,
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
                 refresh=True,
             )
             for index in indexes
@@ -359,7 +359,7 @@ def test_mature_media_ignores_elasticsearch_404_errors(
             call(
                 index=index,
                 id=media.id,
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
                 refresh=True,
             )
             for index in indexes
@@ -396,7 +396,7 @@ def test_mature_media_reraises_elasticsearch_400_errors(
             call(
                 index=index,
                 id=media.id,
-                body={"doc": {"mature": True}},
+                doc={"mature": True},
                 refresh=True,
             )
             for index in indexes
