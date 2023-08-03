@@ -11,6 +11,7 @@ import {
   SupportedSearchType,
   supportedSearchTypes,
 } from "~/constants/media"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 import { getParameterByName } from "~/utils/url-params"
 import { deepClone } from "~/utils/clone"
 
@@ -28,7 +29,7 @@ export interface ApiQueryParams {
   category?: string
   source?: string
   length?: string
-  mature?: string
+  [INCLUDE_SENSITIVE_QUERY_PARAM]?: string
   page?: string
   /**
    * A conditional to show audio waveform data.
@@ -58,7 +59,7 @@ const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
   audioProviders: "source",
   imageProviders: "source",
   searchBy: "searchBy",
-  mature: "mature",
+  includeSensitiveResults: INCLUDE_SENSITIVE_QUERY_PARAM,
 }
 
 const getMediaFilterTypes = (searchType: SearchType) => {
@@ -70,14 +71,14 @@ const getMediaFilterTypes = (searchType: SearchType) => {
 /**
  * Joins all the filters which have the checked property `true`
  * to a string separated by commas for the API request URL, e.g.: "by,nd-nc,nc-sa".
- * Mature is a special case, and is converted to `true`.
+ * `includeSensitiveResults` is a special case, and is converted to `true`.
  */
 const filterToString = (filterItem: FilterItem[]) => {
   const filterString = filterItem
     .filter((f) => f.checked)
     .map((filterItem) => filterItem.code)
     .join(",")
-  return filterString === "mature" ? "true" : filterString
+  return filterString === INCLUDE_SENSITIVE_QUERY_PARAM ? "true" : filterString
 }
 
 /**
@@ -199,7 +200,10 @@ export const queryToFilterData = ({
     } else {
       const queryDataKey = filterPropertyMappings[filterDataKey]
       if (query[queryDataKey]) {
-        if (queryDataKey === "mature" && query[queryDataKey].length > 0) {
+        if (
+          queryDataKey === INCLUDE_SENSITIVE_QUERY_PARAM &&
+          query[queryDataKey].length > 0
+        ) {
           filters[filterDataKey][0].checked = true
         } else {
           const filterValues = query[queryDataKey].split(",")
