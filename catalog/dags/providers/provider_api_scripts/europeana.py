@@ -58,7 +58,7 @@ class EuropeanaRecordBuilder:
     This small class contains the record building functionality and simplifies testing.
     """
 
-    def get_record_data(self, data: dict) -> dict | None:
+    def get_record_data(self, data: dict, item_data: dict = {}) -> dict | None:
         try:
             record = {
                 "foreign_landing_url": self._get_foreign_landing_url(data),
@@ -68,6 +68,7 @@ class EuropeanaRecordBuilder:
                 "title": self._get_title(data),
                 "license_info": self._get_license_info(data),
             }
+            record.update(self._get_image_dimensions(item_data))
 
             data_providers = set(record["meta_data"]["dataProvider"])
             eligible_sub_providers = {
@@ -129,6 +130,19 @@ class EuropeanaRecordBuilder:
 
         return europeana_url
 
+    def _get_image_dimensions(self, item_data: dict) -> dict:
+        # Assume that we just want the first web resource, based on assumptions under
+        # _get_title and _get_foreign_landing_url, but might make sense to add some
+        # checks, e.g. that the web resource url matches the foreign landing url?
+        if aggregations := item_data.get("aggregations"):
+            if webresources := aggregations[0].get("webResources"):
+                resource = webresources[0]
+                return {
+                    "width": resource.get("ebucoreWidth"),
+                    "height": resource.get("ebucoreHeight"),
+                }
+        return {}
+
     def _get_meta_data_dict(self, data: dict) -> dict:
         meta_data = {
             "country": data.get("country"),
@@ -188,6 +202,9 @@ class EuropeanaDataIngester(ProviderDataIngester):
             "cursor": "*",
         }
 
+        self.item_params = {
+            "wskey": Variable.get("API_KEY_EUROPEANA", default_var=None)
+        }
         self.record_builder = EuropeanaRecordBuilder()
 
     def _get_timestamp_query_param(self, date):
@@ -223,7 +240,17 @@ class EuropeanaDataIngester(ProviderDataIngester):
         return response_json.get("items")
 
     def get_record_data(self, data: dict) -> dict:
-        return self.record_builder.get_record_data(data)
+        if not (item_id := self.record_builder._get_foreign_identifier(data)):
+            return
+        item_data = (
+            self.get_response_json(
+                query_params=self.item_params,
+                endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
+            )
+            or {}
+        )
+
+        return self.record_builder.get_record_data(data, item_data)
 
 
 def main(date):

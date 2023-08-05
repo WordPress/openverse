@@ -99,6 +99,7 @@ def test_get_batch_data_gets_items_property(ingester):
     assert ingester.get_batch_data(response_json) is response_json["items"]
 
 
+# TO DO: figure out fixtures and/or test cases to ensure that we can test this without failing on pytest-socket / SocketBlockedError
 def test_get_image_list_with_realistic_response(ingester):
     response_json = _get_resource_json("europeana_example.json")
     record_count = ingester.process_batch(response_json["items"])
@@ -178,6 +179,22 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
     assert (
         record_builder.get_record_data(image_data)["foreign_landing_url"] == expect_url
     )
+
+
+@pytest.mark.parametrize(
+    [
+        pytest.param("item_full.json", {"width": 381, "height": 480}, id="happy_path"),
+        pytest.param("item_no_aggregation.json", {}, id="no_aggregations"),
+        pytest.param("item_no_webresource.json", {}, id="no_webresources"),
+        pytest.param(
+            "item_no_dimensions_1st.json", {}, id="no_dimensions_first_resource"
+        ),
+        pytest.param("item_no_dimensions.json", {}, id="no_dimensions"),
+    ]
+)
+def _get_image_dimensions(record_builder, item_data_file, expected):
+    item_data = _get_resource_json(item_data_file)
+    assert record_builder._get_image_dimensions(item_data) == expected
 
 
 def test_get_meta_data_dict(record_builder):
