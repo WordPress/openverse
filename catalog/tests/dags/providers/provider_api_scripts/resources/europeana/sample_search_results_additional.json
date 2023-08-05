@@ -1,0 +1,2127 @@
+{
+  "apikey": "",
+  "success": true,
+  "requestNumber": 999,
+  "itemsCount": 12,
+  "totalResults": 36574809,
+  "items": [
+    {
+      "completeness": 10,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Fotovlucht Vliegbasis Soesterberg"],
+      "dcCreatorLangAware": {
+        "def": ["Fotovlucht Vliegbasis Soesterberg"]
+      },
+      "dcDescription": [
+        "Een Agusta Bell AB-412SP van 303 Squadron boven het betonningsvaartuig Terschelling (1988-) van Rijkswaterstaat, ingedeeld bij de Kustwacht, tijdens de\n          reddingsoefening 'Get Wet'.&nbsp;",
+        "Een Agusta Bell AB-412SP van het 303 squadron van de Koninklijke Luchtmacht hangt boven het schip de 'Terschelling' van de kustwacht, tijdens de oefening 'Get wet' boven de\n          Noordzee."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Een Agusta Bell AB-412SP van 303 Squadron boven het betonningsvaartuig Terschelling (1988-) van Rijkswaterstaat, ingedeeld bij de Kustwacht, tijdens de\n          reddingsoefening 'Get Wet'.&nbsp;",
+          "Een Agusta Bell AB-412SP van het 303 squadron van de Koninklijke Luchtmacht hangt boven het schip de 'Terschelling' van de kustwacht, tijdens de oefening 'Get wet' boven de\n          Noordzee."
+        ]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/010a31d7-9316-54d7-6ad0-83b9914688d9.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F010a31d7-9316-54d7-6ad0-83b9914688d9.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 10,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898849287,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Een Agusta Bell AB-412SP van 303 Squadron boven het betonningsvaartuig Terschelling (1988-) van Rijkswaterstaat, ingedeeld bij de Kustwacht, tijdens de\n          reddingsoefening 'Get Wet'.&nbsp;",
+        "Een Agusta Bell AB-412SP van het 303 squadron van de Koninklijke Luchtmacht hangt boven het schip de 'Terschelling' van de kustwacht, tijdens de oefening 'Get wet' boven de\n          Noordzee."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 6,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcDescription": [
+        "Dodenherdenking vliegbasis Soesterberg. Officieren brengen groet."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Dodenherdenking vliegbasis Soesterberg. Officieren brengen groet."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/48"],
+      "edmConceptLabel": [
+        {
+          "def": "Fotografie"
+        },
+        {
+          "def": "\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u044f"
+        },
+        {
+          "def": "Valokuva"
+        },
+        {
+          "def": "Fotografia"
+        },
+        {
+          "def": "\u0421\u043d\u0438\u043c\u043a\u0430"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "Fotoatt\u0113ls"
+        },
+        {
+          "def": "Photographie"
+        },
+        {
+          "def": "F\u00e9nyk\u00e9p"
+        },
+        {
+          "def": "Fotograf"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "Grianghraf"
+        },
+        {
+          "def": "Fotografia"
+        },
+        {
+          "def": "Fotografi"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "\u03a6\u03c9\u03c4\u03bf\u03b3\u03c1\u03b1\u03c6\u03af\u03b1"
+        },
+        {
+          "def": "Photograph"
+        },
+        {
+          "def": "Foto"
+        },
+        {
+          "def": "Fotograf\u00eda"
+        },
+        {
+          "def": "Foto"
+        },
+        {
+          "def": "Fotografie"
+        },
+        {
+          "def": "Argazkilaritza"
+        },
+        {
+          "def": "Fotografia"
+        },
+        {
+          "def": "Fotografi"
+        },
+        {
+          "def": "Fotografie"
+        },
+        {
+          "def": "Foto"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Fotografie"],
+        "ru": ["\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u044f"],
+        "fi": ["Valokuva"],
+        "pt": ["Fotografia"],
+        "bg": ["\u0421\u043d\u0438\u043c\u043a\u0430"],
+        "lt": ["Fotografija"],
+        "hr": ["Fotografija"],
+        "lv": ["Fotoatt\u0113ls"],
+        "fr": ["Photographie"],
+        "hu": ["F\u00e9nyk\u00e9p"],
+        "sk": ["Fotograf"],
+        "sl": ["Fotografija"],
+        "ga": ["Grianghraf"],
+        "ca": ["Fotografia"],
+        "sv": ["Fotografi"],
+        "mt": ["Fotografija"],
+        "el": ["\u03a6\u03c9\u03c4\u03bf\u03b3\u03c1\u03b1\u03c6\u03af\u03b1"],
+        "en": ["Photograph"],
+        "it": ["Foto"],
+        "es": ["Fotograf\u00eda"],
+        "et": ["Foto"],
+        "cs": ["Fotografie"],
+        "eu": ["Argazkilaritza"],
+        "pl": ["Fotografia"],
+        "da": ["Fotografi"],
+        "ro": ["Fotografie"],
+        "nl": ["Foto"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/000f2a5b-5bfb-e77d-61fa-a9cc4c1df9c6"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/619262d6-c6e4-9b83-3e22-46591bbbb1cb.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F619262d6-c6e4-9b83-3e22-46591bbbb1cb.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 6,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_000f2a5b_5bfb_e77d_61fa_a9cc4c1df9c6?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_000f2a5b_5bfb_e77d_61fa_a9cc4c1df9c6",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_000f2a5b_5bfb_e77d_61fa_a9cc4c1df9c6.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898830288,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Dodenherdenking vliegbasis Soesterberg. Officieren brengen groet."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 7,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Leger Film- en Fotodienst (LFFD)"],
+      "dcCreatorLangAware": {
+        "def": ["Leger Film- en Fotodienst (LFFD)"]
+      },
+      "dcDescription": [
+        "Oefening van Geneeskundige Troepen. Een oefengewonde wordt met een kabelbaan over een waterhindernis vervoerd."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Oefening van Geneeskundige Troepen. Een oefengewonde wordt met een kabelbaan over een waterhindernis vervoerd."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/001316d1-2602-ca8a-5256-0f43e359d440"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/67d9f18f-199a-bcd0-f2e1-eefbcdd6511c.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F67d9f18f-199a-bcd0-f2e1-eefbcdd6511c.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 7,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_001316d1_2602_ca8a_5256_0f43e359d440?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_001316d1_2602_ca8a_5256_0f43e359d440",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_001316d1_2602_ca8a_5256_0f43e359d440.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898726306,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Oefening van Geneeskundige Troepen. Een oefengewonde wordt met een kabelbaan over een waterhindernis vervoerd."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 8,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Leger Film- en Fotodienst (LFFD)"],
+      "dcCreatorLangAware": {
+        "def": ["Leger Film- en Fotodienst (LFFD)"]
+      },
+      "dcDescription": [
+        "NAVO-oefening Atlantic Lion.Leopard 1 tanks rijden over een drijvende pontonbrug.&nbsp;Op de achtergrond zijn nog verschillende voertuigen\n          zichtbaar."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "NAVO-oefening Atlantic Lion.Leopard 1 tanks rijden over een drijvende pontonbrug.&nbsp;Op de achtergrond zijn nog verschillende voertuigen\n          zichtbaar."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/48"],
+      "edmConceptLabel": [
+        {
+          "def": "Fotografie"
+        },
+        {
+          "def": "\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u044f"
+        },
+        {
+          "def": "Valokuva"
+        },
+        {
+          "def": "Fotografia"
+        },
+        {
+          "def": "\u0421\u043d\u0438\u043c\u043a\u0430"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "Fotoatt\u0113ls"
+        },
+        {
+          "def": "Photographie"
+        },
+        {
+          "def": "F\u00e9nyk\u00e9p"
+        },
+        {
+          "def": "Fotograf"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "Grianghraf"
+        },
+        {
+          "def": "Fotografia"
+        },
+        {
+          "def": "Fotografi"
+        },
+        {
+          "def": "Fotografija"
+        },
+        {
+          "def": "\u03a6\u03c9\u03c4\u03bf\u03b3\u03c1\u03b1\u03c6\u03af\u03b1"
+        },
+        {
+          "def": "Photograph"
+        },
+        {
+          "def": "Foto"
+        },
+        {
+          "def": "Fotograf\u00eda"
+        },
+        {
+          "def": "Foto"
+        },
+        {
+          "def": "Fotografie"
+        },
+        {
+          "def": "Argazkilaritza"
+        },
+        {
+          "def": "Fotografia"
+        },
+        {
+          "def": "Fotografi"
+        },
+        {
+          "def": "Fotografie"
+        },
+        {
+          "def": "Foto"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Fotografie"],
+        "ru": ["\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u044f"],
+        "fi": ["Valokuva"],
+        "pt": ["Fotografia"],
+        "bg": ["\u0421\u043d\u0438\u043c\u043a\u0430"],
+        "lt": ["Fotografija"],
+        "hr": ["Fotografija"],
+        "lv": ["Fotoatt\u0113ls"],
+        "fr": ["Photographie"],
+        "hu": ["F\u00e9nyk\u00e9p"],
+        "sk": ["Fotograf"],
+        "sl": ["Fotografija"],
+        "ga": ["Grianghraf"],
+        "ca": ["Fotografia"],
+        "sv": ["Fotografi"],
+        "mt": ["Fotografija"],
+        "el": ["\u03a6\u03c9\u03c4\u03bf\u03b3\u03c1\u03b1\u03c6\u03af\u03b1"],
+        "en": ["Photograph"],
+        "it": ["Foto"],
+        "es": ["Fotograf\u00eda"],
+        "et": ["Foto"],
+        "cs": ["Fotografie"],
+        "eu": ["Argazkilaritza"],
+        "pl": ["Fotografia"],
+        "da": ["Fotografi"],
+        "ro": ["Fotografie"],
+        "nl": ["Foto"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/001584f9-d51c-de76-52a4-f6365bfb77dd"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/ba6100b6-06c7-5e7b-6372-9c1eb26184eb.jpg"
+      ],
+      "edmPlaceAltLabel": [
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "de"
+        },
+        {
+          "def": "GER"
+        },
+        {
+          "def": "BR Deutschland"
+        },
+        {
+          "def": "BRD"
+        },
+        {
+          "def": "FRG"
+        },
+        {
+          "def": "DEU"
+        },
+        {
+          "def": "F\u00f6rbundsrepubliken Tyskland"
+        },
+        {
+          "def": "\u0424\u0435\u0434\u0435\u0440\u0430\u0442\u0438\u0432\u043d\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f"
+        },
+        {
+          "def": "\u0424\u0420\u0413"
+        },
+        {
+          "def": "Deutschland"
+        },
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "\u0414\u043e\u0439\u0447\u043b\u0430\u043d\u0434"
+        },
+        {
+          "def": "Saksan liittotasavalta"
+        },
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "\u0424\u0435\u0434\u0435\u0440\u0430\u043b\u043d\u0430 \u0440\u0435\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f"
+        },
+        {
+          "def": "\u0424\u0420\u0413"
+        },
+        {
+          "def": "Repubblika Federali tal-\u0120ermanja"
+        },
+        {
+          "def": "\u039f\u03bc\u03bf\u03c3\u03c0\u03bf\u03bd\u03b4\u03b9\u03b1\u03ba\u03ae \u0394\u03b7\u03bc\u03bf\u03ba\u03c1\u03b1\u03c4\u03af\u03b1 \u03c4\u03b7\u03c2 \u0393\u03b5\u03c1\u03bc\u03b1\u03bd\u03af\u03b1\u03c2"
+        },
+        {
+          "def": "Federal Republic of Germany"
+        },
+        {
+          "def": "Deutschland"
+        },
+        {
+          "def": "GER"
+        },
+        {
+          "def": "BR Deutschland"
+        },
+        {
+          "def": "DE"
+        },
+        {
+          "def": "BRD"
+        },
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "de"
+        },
+        {
+          "def": "GFR"
+        },
+        {
+          "def": "Repubblica Federale di Germania"
+        },
+        {
+          "def": "DEU"
+        },
+        {
+          "def": "GER"
+        },
+        {
+          "def": "BR Deutschland"
+        },
+        {
+          "def": "BRD"
+        },
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "Deutschland"
+        },
+        {
+          "def": "de"
+        },
+        {
+          "def": "RFA"
+        },
+        {
+          "def": "R\u00e9publique f\u00e9d\u00e9rale allemande"
+        },
+        {
+          "def": "R\u00e9publique f\u00e9d\u00e9rale d'Allemagne"
+        },
+        {
+          "def": "de"
+        },
+        {
+          "def": "GER"
+        },
+        {
+          "def": "BR Deutschland"
+        },
+        {
+          "def": "BRD"
+        },
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "Deutschland"
+        },
+        {
+          "def": "DE"
+        },
+        {
+          "def": "La R\u00e9publique f\u00e9d\u00e9rale d\u2019Allemagne"
+        },
+        {
+          "def": "All."
+        },
+        {
+          "def": "R. F. A."
+        },
+        {
+          "def": "N\u00e9met Sz\u00f6vets\u00e9gi K\u00f6zt\u00e1rsas\u00e1g"
+        },
+        {
+          "def": "Rep\u00fablica Federal de Alemania"
+        },
+        {
+          "def": "Republica Federal de Alemania"
+        },
+        {
+          "def": "Saksamaa Liitvabariik"
+        },
+        {
+          "def": "SLV"
+        },
+        {
+          "def": "Spolkov\u00e1 republika N\u011bmecko"
+        },
+        {
+          "def": "SRN"
+        },
+        {
+          "def": "NSR"
+        },
+        {
+          "def": "BRD"
+        },
+        {
+          "def": "Nemeck\u00e1 spolkov\u00e1 republika"
+        },
+        {
+          "def": "Deutschland"
+        },
+        {
+          "def": "BR Deutschland"
+        },
+        {
+          "def": "BRD"
+        },
+        {
+          "def": "Bundesrepublik Deutschland"
+        },
+        {
+          "def": "Republica Federal\u0103 Germania"
+        },
+        {
+          "def": "RFG"
+        },
+        {
+          "def": "Bondsrepubliek Duitsland"
+        },
+        {
+          "def": "DE"
+        },
+        {
+          "def": "DEU"
+        },
+        {
+          "def": "Bondsrepubliek"
+        }
+      ],
+      "edmPlaceAltLabelLangAware": {
+        "de": [
+          "Bundesrepublik Deutschland",
+          "de",
+          "GER",
+          "BR Deutschland",
+          "BRD",
+          "FRG",
+          "DEU"
+        ],
+        "sv": ["F\u00f6rbundsrepubliken Tyskland"],
+        "ru": [
+          "\u0424\u0435\u0434\u0435\u0440\u0430\u0442\u0438\u0432\u043d\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f",
+          "\u0424\u0420\u0413",
+          "Deutschland",
+          "Bundesrepublik Deutschland",
+          "\u0414\u043e\u0439\u0447\u043b\u0430\u043d\u0434"
+        ],
+        "fi": ["Saksan liittotasavalta", "Bundesrepublik Deutschland"],
+        "bg": [
+          "\u0424\u0435\u0434\u0435\u0440\u0430\u043b\u043d\u0430 \u0440\u0435\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f",
+          "\u0424\u0420\u0413"
+        ],
+        "mt": ["Repubblika Federali tal-\u0120ermanja"],
+        "el": [
+          "\u039f\u03bc\u03bf\u03c3\u03c0\u03bf\u03bd\u03b4\u03b9\u03b1\u03ba\u03ae \u0394\u03b7\u03bc\u03bf\u03ba\u03c1\u03b1\u03c4\u03af\u03b1 \u03c4\u03b7\u03c2 \u0393\u03b5\u03c1\u03bc\u03b1\u03bd\u03af\u03b1\u03c2"
+        ],
+        "en": [
+          "Federal Republic of Germany",
+          "Deutschland",
+          "GER",
+          "BR Deutschland",
+          "DE",
+          "BRD",
+          "Bundesrepublik Deutschland",
+          "de",
+          "GFR"
+        ],
+        "it": [
+          "Repubblica Federale di Germania",
+          "DEU",
+          "GER",
+          "BR Deutschland",
+          "BRD",
+          "Bundesrepublik Deutschland",
+          "Deutschland",
+          "de"
+        ],
+        "fr": [
+          "RFA",
+          "R\u00e9publique f\u00e9d\u00e9rale allemande",
+          "R\u00e9publique f\u00e9d\u00e9rale d'Allemagne",
+          "de",
+          "GER",
+          "BR Deutschland",
+          "BRD",
+          "Bundesrepublik Deutschland",
+          "Deutschland",
+          "DE",
+          "La R\u00e9publique f\u00e9d\u00e9rale d\u2019Allemagne",
+          "All.",
+          "R. F. A."
+        ],
+        "hu": ["N\u00e9met Sz\u00f6vets\u00e9gi K\u00f6zt\u00e1rsas\u00e1g"],
+        "es": [
+          "Rep\u00fablica Federal de Alemania",
+          "Republica Federal de Alemania"
+        ],
+        "et": ["Saksamaa Liitvabariik", "SLV"],
+        "cs": ["Spolkov\u00e1 republika N\u011bmecko", "SRN", "NSR", "BRD"],
+        "sk": ["Nemeck\u00e1 spolkov\u00e1 republika"],
+        "pl": [
+          "Deutschland",
+          "BR Deutschland",
+          "BRD",
+          "Bundesrepublik Deutschland"
+        ],
+        "ro": ["Republica Federal\u0103 Germania", "RFG"],
+        "nl": ["Bondsrepubliek Duitsland", "DE", "DEU", "Bondsrepubliek"]
+      },
+      "edmPlaceLabel": [
+        {
+          "def": "Deutschland"
+        },
+        {
+          "def": "Saksa"
+        },
+        {
+          "def": "\u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f"
+        },
+        {
+          "def": "Alemanha"
+        },
+        {
+          "def": "\u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f"
+        },
+        {
+          "def": "Vokietija"
+        },
+        {
+          "def": "Njema\u010dka"
+        },
+        {
+          "def": "V\u0101cija"
+        },
+        {
+          "def": "Allemagne"
+        },
+        {
+          "def": "N\u00e9metorsz\u00e1g"
+        },
+        {
+          "def": "Nemecko"
+        },
+        {
+          "def": "Nem\u010dija"
+        },
+        {
+          "def": "An Ghearm\u00e1in"
+        },
+        {
+          "def": "Alemanya"
+        },
+        {
+          "def": "Tyskland"
+        },
+        {
+          "def": "\u0120ermanja"
+        },
+        {
+          "def": "\u0393\u03b5\u03c1\u03bc\u03b1\u03bd\u03af\u03b1"
+        },
+        {
+          "def": "Germany"
+        },
+        {
+          "def": "Germania"
+        },
+        {
+          "def": "Alemania"
+        },
+        {
+          "def": "Saksamaa"
+        },
+        {
+          "def": "N\u011bmecko"
+        },
+        {
+          "def": "Alemania"
+        },
+        {
+          "def": "Niemcy"
+        },
+        {
+          "def": "Tyskland"
+        },
+        {
+          "def": "Germania"
+        },
+        {
+          "def": "Duitsland"
+        }
+      ],
+      "edmPlaceLabelLangAware": {
+        "de": ["Deutschland"],
+        "fi": ["Saksa"],
+        "ru": ["\u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f"],
+        "pt": ["Alemanha"],
+        "bg": ["\u0413\u0435\u0440\u043c\u0430\u043d\u0438\u044f"],
+        "lt": ["Vokietija"],
+        "hr": ["Njema\u010dka"],
+        "lv": ["V\u0101cija"],
+        "fr": ["Allemagne"],
+        "hu": ["N\u00e9metorsz\u00e1g"],
+        "sk": ["Nemecko"],
+        "sl": ["Nem\u010dija"],
+        "ga": ["An Ghearm\u00e1in"],
+        "ca": ["Alemanya"],
+        "sv": ["Tyskland"],
+        "mt": ["\u0120ermanja"],
+        "el": ["\u0393\u03b5\u03c1\u03bc\u03b1\u03bd\u03af\u03b1"],
+        "en": ["Germany"],
+        "it": ["Germania"],
+        "es": ["Alemania"],
+        "et": ["Saksamaa"],
+        "cs": ["N\u011bmecko"],
+        "eu": ["Alemania"],
+        "pl": ["Niemcy"],
+        "da": ["Tyskland"],
+        "ro": ["Germania"],
+        "nl": ["Duitsland"]
+      },
+      "edmPlaceLatitude": ["51.0"],
+      "edmPlaceLongitude": ["10.0"],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2Fba6100b6-06c7-5e7b-6372-9c1eb26184eb.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 8,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_001584f9_d51c_de76_52a4_f6365bfb77dd?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_001584f9_d51c_de76_52a4_f6365bfb77dd",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_001584f9_d51c_de76_52a4_f6365bfb77dd.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690899013892,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "NAVO-oefening Atlantic Lion.Leopard 1 tanks rijden over een drijvende pontonbrug.&nbsp;Op de achtergrond zijn nog verschillende voertuigen\n          zichtbaar."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 10,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Marine Elektronisch en Optisch Bedrijf (MEOB)"],
+      "dcCreatorLangAware": {
+        "def": ["Marine Elektronisch en Optisch Bedrijf (MEOB)"]
+      },
+      "dcDescription": [
+        "Amerikareis van Hr.Ms. Zierikzee (M 862) en Hr.Ms. Alkmaar (M 850).&nbsp;Werkzaamheden aan boord van de\n          Zierikzee.",
+        "Op verzoek van de United States Navy geven beide schepen een demonstratie mijnenvegen bij Charleston en Baltimore. De reis naar de Verenigde Staten is van\n          21 januari tot 12 april."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Amerikareis van Hr.Ms. Zierikzee (M 862) en Hr.Ms. Alkmaar (M 850).&nbsp;Werkzaamheden aan boord van de\n          Zierikzee.",
+          "Op verzoek van de United States Navy geven beide schepen een demonstratie mijnenvegen bij Charleston en Baltimore. De reis naar de Verenigde Staten is van\n          21 januari tot 12 april."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/004b9779-b53e-1764-ed03-b63261ea449a"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/63959171-f29d-8416-c39f-99e830f58738.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F63959171-f29d-8416-c39f-99e830f58738.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 10,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_004b9779_b53e_1764_ed03_b63261ea449a?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_004b9779_b53e_1764_ed03_b63261ea449a",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_004b9779_b53e_1764_ed03_b63261ea449a.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898833200,
+      "timestamp_created": "2023-08-01T09:27:44.155Z",
+      "timestamp_created_epoch": 1690882064155,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Amerikareis van Hr.Ms. Zierikzee (M 862) en Hr.Ms. Alkmaar (M 850).&nbsp;Werkzaamheden aan boord van de\n          Zierikzee.",
+        "Op verzoek van de United States Navy geven beide schepen een demonstratie mijnenvegen bij Charleston en Baltimore. De reis naar de Verenigde Staten is van\n          21 januari tot 12 april."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 7,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcDescription": [
+        "Tewaterzetting van een Landing Craft Assault (LCA) bij de Rijkswerf te Den Helder."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Tewaterzetting van een Landing Craft Assault (LCA) bij de Rijkswerf te Den Helder."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/00855e32-9822-674f-3ee1-bae7c4c6e6ab"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/1f4443ad-d62e-7deb-1265-e6c2765a692f.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F1f4443ad-d62e-7deb-1265-e6c2765a692f.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 7,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_00855e32_9822_674f_3ee1_bae7c4c6e6ab?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_00855e32_9822_674f_3ee1_bae7c4c6e6ab",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_00855e32_9822_674f_3ee1_bae7c4c6e6ab.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898850457,
+      "timestamp_created": "2023-08-01T09:27:44.155Z",
+      "timestamp_created_epoch": 1690882064155,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Tewaterzetting van een Landing Craft Assault (LCA) bij de Rijkswerf te Den Helder."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 8,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcDescription": [
+        "Vlootdagen te Den Helder.Demonstratie door Sikorsky HSS-1N (UH-34) Sea Air Rescue (SAR) helikopter van de Marine Luchtvaartdienst."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Vlootdagen te Den Helder.Demonstratie door Sikorsky HSS-1N (UH-34) Sea Air Rescue (SAR) helikopter van de Marine Luchtvaartdienst."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/0093940e-9bb3-c040-8175-4ee4506088c9"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/f49aecd9-276a-c6f6-f924-eaf4d2c5d69f.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2Ff49aecd9-276a-c6f6-f924-eaf4d2c5d69f.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 8,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_0093940e_9bb3_c040_8175_4ee4506088c9?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_0093940e_9bb3_c040_8175_4ee4506088c9",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_0093940e_9bb3_c040_8175_4ee4506088c9.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898957966,
+      "timestamp_created": "2023-08-01T09:27:44.155Z",
+      "timestamp_created_epoch": 1690882064155,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Vlootdagen te Den Helder.Demonstratie door Sikorsky HSS-1N (UH-34) Sea Air Rescue (SAR) helikopter van de Marine Luchtvaartdienst."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 7,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcDescription": [
+        "Adspirant marva's (marine vrouwenafdeling MARVA) op weg naar het Marvahuis op de Marinekazerne Amsterdam (MKAD)."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Adspirant marva's (marine vrouwenafdeling MARVA) op weg naar het Marvahuis op de Marinekazerne Amsterdam (MKAD)."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/00c48c4b-4b7d-a20d-31d9-a7a3783d1b0c"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/1544f5e3-809d-2284-9f3a-68ff797bc219.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F1544f5e3-809d-2284-9f3a-68ff797bc219.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 7,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_00c48c4b_4b7d_a20d_31d9_a7a3783d1b0c?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_00c48c4b_4b7d_a20d_31d9_a7a3783d1b0c",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_00c48c4b_4b7d_a20d_31d9_a7a3783d1b0c.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898996007,
+      "timestamp_created": "2023-08-01T09:27:44.155Z",
+      "timestamp_created_epoch": 1690882064155,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Adspirant marva's (marine vrouwenafdeling MARVA) op weg naar het Marvahuis op de Marinekazerne Amsterdam (MKAD)."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 8,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Audiovisuele Dienst Koninklijke Marine (AVDKM)"],
+      "dcCreatorLangAware": {
+        "def": ["Audiovisuele Dienst Koninklijke Marine (AVDKM)"]
+      },
+      "dcDescription": [
+        "Schoonschip van onder ander het naambord van het schoolgebouw van het Marine Opleidingskamp te Hilversum (MOKH)."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Schoonschip van onder ander het naambord van het schoolgebouw van het Marine Opleidingskamp te Hilversum (MOKH)."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/00de1ed2-10d9-0d28-6b4f-13881c62c5db"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/dfed32a1-cdc1-3ef9-7e02-ac0f73f0aa25.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2Fdfed32a1-cdc1-3ef9-7e02-ac0f73f0aa25.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 8,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_00de1ed2_10d9_0d28_6b4f_13881c62c5db?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_00de1ed2_10d9_0d28_6b4f_13881c62c5db",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_00de1ed2_10d9_0d28_6b4f_13881c62c5db.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898593458,
+      "timestamp_created": "2023-08-01T09:27:44.155Z",
+      "timestamp_created_epoch": 1690882064155,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Schoonschip van onder ander het naambord van het schoolgebouw van het Marine Opleidingskamp te Hilversum (MOKH)."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 10,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Dienst voor Legercontacten (DLC)"],
+      "dcCreatorLangAware": {
+        "def": ["Dienst voor Legercontacten (DLC)"]
+      },
+      "dcDescription": [
+        "Legercommandant luitenant-generaal S.H. Spoor neemt afscheid van repatri\u00ebrende militairen van het 2e Bataljon van het 5e Regiment Infanterie.",
+        "De 4e compagnie vertrok op 20 juli 1948 per s.s. Groote Beer, de overige compagnie\u00ebn op 23 juli 1948 per s.s. Johan van Oldenbarnevelt. Onbekend is op welk schip en welke\n          datum de foto precies is gemaakt."
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Legercommandant luitenant-generaal S.H. Spoor neemt afscheid van repatri\u00ebrende militairen van het 2e Bataljon van het 5e Regiment Infanterie.",
+          "De 4e compagnie vertrok op 20 juli 1948 per s.s. Groote Beer, de overige compagnie\u00ebn op 23 juli 1948 per s.s. Johan van Oldenbarnevelt. Onbekend is op welk schip en welke\n          datum de foto precies is gemaakt."
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/00ef884b-2c3b-f78f-460d-955ebd0a98fd"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/d412800d-20ac-0462-fc13-2b62faf30726.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2Fd412800d-20ac-0462-fc13-2b62faf30726.jpg&type=IMAGE"
+      ],
+      "edmTimespanLabel": [
+        {
+          "def": "1948-07-20/1948-07-23"
+        },
+        {
+          "def": "20. Jahrhundert"
+        },
+        {
+          "def": "XX \u0432\u0435\u043a"
+        },
+        {
+          "def": "1900-luku"
+        },
+        {
+          "def": "S\u00e9culo XX"
+        },
+        {
+          "def": "20 \u0432\u0435\u043a"
+        },
+        {
+          "def": "XX am\u017eius"
+        },
+        {
+          "def": "20. gadsimts"
+        },
+        {
+          "def": "20. stolje\u0107e"
+        },
+        {
+          "def": "XXe si\u00e8cle"
+        },
+        {
+          "def": "20. sz\u00e1zad"
+        },
+        {
+          "def": "20. storo\u010die"
+        },
+        {
+          "def": "20. stoletje"
+        },
+        {
+          "def": "20\u00fa haois"
+        },
+        {
+          "def": "Segle XX"
+        },
+        {
+          "def": "1900-talet"
+        },
+        {
+          "def": "20\u03cc\u03c2 \u03b1\u03b9\u03ce\u03bd\u03b1\u03c2"
+        },
+        {
+          "def": "20th century"
+        },
+        {
+          "def": "XX secolo"
+        },
+        {
+          "def": "Siglo XX"
+        },
+        {
+          "def": "20. sajand"
+        },
+        {
+          "def": "XX. mendea"
+        },
+        {
+          "def": "20. stolet\u00ed"
+        },
+        {
+          "def": "XX wiek"
+        },
+        {
+          "def": "Secolul al XX-lea"
+        },
+        {
+          "def": "20. \u00e5rhundrede"
+        },
+        {
+          "def": "20e eeuw"
+        },
+        {
+          "def": "http://www.wikidata.org/entity/Q6927"
+        },
+        {
+          "def": "http://id.loc.gov/authorities/names/sh2002012476"
+        },
+        {
+          "def": "http://id.loc.gov/authorities/names/sh85139020"
+        },
+        {
+          "def": "http://id.nlm.nih.gov/mesh/D049673"
+        },
+        {
+          "def": "https://www.freebase.com/m/089_x"
+        },
+        {
+          "def": "https://g.co/kg/m/089_x"
+        },
+        {
+          "def": "http://id.nlm.nih.gov/mesh/K01.400.504.968"
+        },
+        {
+          "def": "http://vocab.getty.edu/aat/300404514"
+        },
+        {
+          "def": "http://dbpedia.org/resource/20th_century"
+        }
+      ],
+      "edmTimespanLabelLangAware": {
+        "de": ["20. Jahrhundert"],
+        "ru": ["XX \u0432\u0435\u043a"],
+        "fi": ["1900-luku"],
+        "pt": ["S\u00e9culo XX"],
+        "bg": ["20 \u0432\u0435\u043a"],
+        "lt": ["XX am\u017eius"],
+        "lv": ["20. gadsimts"],
+        "hr": ["20. stolje\u0107e"],
+        "fr": ["XXe si\u00e8cle"],
+        "hu": ["20. sz\u00e1zad"],
+        "sk": ["20. storo\u010die"],
+        "sl": ["20. stoletje"],
+        "ga": ["20\u00fa haois"],
+        "ca": ["Segle XX"],
+        "sv": ["1900-talet"],
+        "el": ["20\u03cc\u03c2 \u03b1\u03b9\u03ce\u03bd\u03b1\u03c2"],
+        "en": ["20th century"],
+        "it": ["XX secolo"],
+        "es": ["Siglo XX"],
+        "et": ["20. sajand"],
+        "eu": ["XX. mendea"],
+        "cs": ["20. stolet\u00ed"],
+        "zxx": ["1948-07-20/1948-07-23"],
+        "pl": ["XX wiek"],
+        "ro": ["Secolul al XX-lea"],
+        "da": ["20. \u00e5rhundrede"],
+        "nl": ["20e eeuw"]
+      },
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 10,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_00ef884b_2c3b_f78f_460d_955ebd0a98fd?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_00ef884b_2c3b_f78f_460d_955ebd0a98fd",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_00ef884b_2c3b_f78f_460d_955ebd0a98fd.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898698871,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Legercommandant luitenant-generaal S.H. Spoor neemt afscheid van repatri\u00ebrende militairen van het 2e Bataljon van het 5e Regiment Infanterie.",
+        "De 4e compagnie vertrok op 20 juli 1948 per s.s. Groote Beer, de overige compagnie\u00ebn op 23 juli 1948 per s.s. Johan van Oldenbarnevelt. Onbekend is op welk schip en welke\n          datum de foto precies is gemaakt."
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 9,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Luchtfotografie Vliegbasis Gilze-Rijen"],
+      "dcCreatorLangAware": {
+        "def": ["Luchtfotografie Vliegbasis Gilze-Rijen"]
+      },
+      "dcDescription": [
+        "Watersnoodramp 1953.&nbsp;Luchtfoto van de doorgebroken dijk aan de zuidzijde van de Leendert-Abrahampolder (links boven) zuidoost van Kats nabij de strekdam\n          Katshoek.&nbsp;"
+      ],
+      "dcDescriptionLangAware": {
+        "def": [
+          "Watersnoodramp 1953.&nbsp;Luchtfoto van de doorgebroken dijk aan de zuidzijde van de Leendert-Abrahampolder (links boven) zuidoost van Kats nabij de strekdam\n          Katshoek.&nbsp;"
+        ]
+      },
+      "edmConcept": ["http://data.europeana.eu/concept/1665"],
+      "edmConceptLabel": [
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "Negativfilm"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatiivi"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "\u041d\u0435\u0433\u0430\u0442\u0438\u0432"
+        },
+        {
+          "def": "Negatyvas"
+        },
+        {
+          "def": "Negative"
+        },
+        {
+          "def": "Negat\u012bvs"
+        },
+        {
+          "def": "Pellicola per negativi"
+        },
+        {
+          "def": "Film n\u00e9gatif"
+        },
+        {
+          "def": "Negativo"
+        },
+        {
+          "def": "Fotonegatiiv"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Negativ"
+        },
+        {
+          "def": "Claonchl\u00f3"
+        },
+        {
+          "def": "Negatyw"
+        },
+        {
+          "def": "Negatief"
+        },
+        {
+          "def": "Negatiu"
+        }
+      ],
+      "edmConceptPrefLabelLangAware": {
+        "de": ["Negativfilm"],
+        "sv": ["Negativfilm"],
+        "ru": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "fi": ["Negatiivi"],
+        "pt": ["Negativo"],
+        "bg": ["\u041d\u0435\u0433\u0430\u0442\u0438\u0432"],
+        "lt": ["Negatyvas"],
+        "en": ["Negative"],
+        "lv": ["Negat\u012bvs"],
+        "it": ["Pellicola per negativi"],
+        "fr": ["Film n\u00e9gatif"],
+        "es": ["Negativo"],
+        "et": ["Fotonegatiiv"],
+        "cs": ["Negativ"],
+        "sl": ["Negativ"],
+        "ga": ["Claonchl\u00f3"],
+        "pl": ["Negatyw"],
+        "nl": ["Negatief"],
+        "ca": ["Negatiu"]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/00fd7d9f-e47d-adef-2d7f-c823603b7e78"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/7cb9c55f-f03d-dd84-c604-2b78b961000e.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F7cb9c55f-f03d-dd84-c604-2b78b961000e.jpg&type=IMAGE"
+      ],
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 9,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_00fd7d9f_e47d_adef_2d7f_c823603b7e78?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_00fd7d9f_e47d_adef_2d7f_c823603b7e78",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_00fd7d9f_e47d_adef_2d7f_c823603b7e78.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898751883,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": [
+        "Watersnoodramp 1953.&nbsp;Luchtfoto van de doorgebroken dijk aan de zuidzijde van de Leendert-Abrahampolder (links boven) zuidoost van Kats nabij de strekdam\n          Katshoek.&nbsp;"
+      ],
+      "type": "IMAGE",
+      "ugc": [false]
+    },
+    {
+      "completeness": 5,
+      "country": ["Netherlands"],
+      "dataProvider": ["Netherlands Institute for Military History"],
+      "dcCreator": ["Fototechnische Dienst Luchtvaartafdeeling"],
+      "dcCreatorLangAware": {
+        "def": ["Fototechnische Dienst Luchtvaartafdeeling"]
+      },
+      "dcDescription": ["Overasselt."],
+      "dcDescriptionLangAware": {
+        "def": ["Overasselt."]
+      },
+      "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "edmIsShownAt": [
+        "http://nimh-beeldbank.defensie.nl/memorix/01090513-acf7-303d-7b91-0b4539f3d570"
+      ],
+      "edmIsShownBy": [
+        "https://images.memorix.nl/nda/thumb/fullsize/8b82e808-7dfd-c671-ba20-750d46fe7be1.jpg"
+      ],
+      "edmPreview": [
+        "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F8b82e808-7dfd-c671-ba20-750d46fe7be1.jpg&type=IMAGE"
+      ],
+      "edmTimespanLabel": [
+        {
+          "def": "1920/1940"
+        },
+        {
+          "def": "20. Jahrhundert"
+        },
+        {
+          "def": "XX \u0432\u0435\u043a"
+        },
+        {
+          "def": "1900-luku"
+        },
+        {
+          "def": "S\u00e9culo XX"
+        },
+        {
+          "def": "20 \u0432\u0435\u043a"
+        },
+        {
+          "def": "XX am\u017eius"
+        },
+        {
+          "def": "20. gadsimts"
+        },
+        {
+          "def": "20. stolje\u0107e"
+        },
+        {
+          "def": "XXe si\u00e8cle"
+        },
+        {
+          "def": "20. sz\u00e1zad"
+        },
+        {
+          "def": "20. storo\u010die"
+        },
+        {
+          "def": "20. stoletje"
+        },
+        {
+          "def": "20\u00fa haois"
+        },
+        {
+          "def": "Segle XX"
+        },
+        {
+          "def": "1900-talet"
+        },
+        {
+          "def": "20\u03cc\u03c2 \u03b1\u03b9\u03ce\u03bd\u03b1\u03c2"
+        },
+        {
+          "def": "20th century"
+        },
+        {
+          "def": "XX secolo"
+        },
+        {
+          "def": "Siglo XX"
+        },
+        {
+          "def": "20. sajand"
+        },
+        {
+          "def": "XX. mendea"
+        },
+        {
+          "def": "20. stolet\u00ed"
+        },
+        {
+          "def": "XX wiek"
+        },
+        {
+          "def": "Secolul al XX-lea"
+        },
+        {
+          "def": "20. \u00e5rhundrede"
+        },
+        {
+          "def": "20e eeuw"
+        },
+        {
+          "def": "http://www.wikidata.org/entity/Q6927"
+        },
+        {
+          "def": "http://id.loc.gov/authorities/names/sh2002012476"
+        },
+        {
+          "def": "http://id.loc.gov/authorities/names/sh85139020"
+        },
+        {
+          "def": "http://id.nlm.nih.gov/mesh/D049673"
+        },
+        {
+          "def": "https://www.freebase.com/m/089_x"
+        },
+        {
+          "def": "https://g.co/kg/m/089_x"
+        },
+        {
+          "def": "http://id.nlm.nih.gov/mesh/K01.400.504.968"
+        },
+        {
+          "def": "http://vocab.getty.edu/aat/300404514"
+        },
+        {
+          "def": "http://dbpedia.org/resource/20th_century"
+        }
+      ],
+      "edmTimespanLabelLangAware": {
+        "de": ["20. Jahrhundert"],
+        "ru": ["XX \u0432\u0435\u043a"],
+        "fi": ["1900-luku"],
+        "pt": ["S\u00e9culo XX"],
+        "bg": ["20 \u0432\u0435\u043a"],
+        "lt": ["XX am\u017eius"],
+        "lv": ["20. gadsimts"],
+        "hr": ["20. stolje\u0107e"],
+        "fr": ["XXe si\u00e8cle"],
+        "hu": ["20. sz\u00e1zad"],
+        "sk": ["20. storo\u010die"],
+        "sl": ["20. stoletje"],
+        "ga": ["20\u00fa haois"],
+        "ca": ["Segle XX"],
+        "sv": ["1900-talet"],
+        "el": ["20\u03cc\u03c2 \u03b1\u03b9\u03ce\u03bd\u03b1\u03c2"],
+        "en": ["20th century"],
+        "it": ["XX secolo"],
+        "es": ["Siglo XX"],
+        "et": ["20. sajand"],
+        "eu": ["XX. mendea"],
+        "cs": ["20. stolet\u00ed"],
+        "zxx": ["1920/1940"],
+        "pl": ["XX wiek"],
+        "ro": ["Secolul al XX-lea"],
+        "da": ["20. \u00e5rhundrede"],
+        "nl": ["20e eeuw"]
+      },
+      "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+      "europeanaCompleteness": 5,
+      "guid": "https://www.europeana.eu/item/2021650/memorix_01090513_acf7_303d_7b91_0b4539f3d570?utm_source=api&utm_medium=api&utm_campaign=ounitece",
+      "id": "/2021650/memorix_01090513_acf7_303d_7b91_0b4539f3d570",
+      "index": 0,
+      "language": ["nl"],
+      "link": "https://api.europeana.eu/record/2021650/memorix_01090513_acf7_303d_7b91_0b4539f3d570.json?wskey=ounitece",
+      "previewNoDistribute": false,
+      "provider": ["Dutch Collections for Europe"],
+      "rights": ["http://creativecommons.org/publicdomain/zero/1.0/"],
+      "score": 0.5396352,
+      "timestamp": 1690898644704,
+      "timestamp_created": "2022-03-02T15:35:41.563Z",
+      "timestamp_created_epoch": 1646235341563,
+      "timestamp_update": "2023-08-01T14:02:32.057Z",
+      "timestamp_update_epoch": 1690898552057,
+      "title": ["Overasselt."],
+      "type": "IMAGE",
+      "ugc": [false]
+    }
+  ]
+}
