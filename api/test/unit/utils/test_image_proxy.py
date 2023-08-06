@@ -1,5 +1,4 @@
 from test.factory.models.image import ImageFactory
-from unittest import mock
 from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
@@ -443,16 +442,17 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
     "headers, expected_cache_val",
     [
         ({"Content-Type": "image/tiff"}, b"tiff"),
-        (None, b"unknown"),
+        ({"Content-Type": "unknown"}, b"unknown"),
     ],
 )
 def test_photon_get_saves_image_type_to_cache(redis, headers, expected_cache_val):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
-
-    with mock.patch("requests.head") as mock_head, pytest.raises(UnsupportedMediaType):
-        mock_head.return_value.headers = headers
+    pook.on()
+    pook.head(image_url, reply=200, response_headers=headers)
+    with pytest.raises(UnsupportedMediaType):
         photon_get(image_url, image.identifier)
 
     key = f"media:{image.identifier}:thumb_type"
     assert redis.get(key) == expected_cache_val
+    pook.off()

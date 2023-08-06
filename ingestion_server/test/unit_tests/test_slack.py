@@ -1,5 +1,6 @@
-from unittest import mock
+import json
 
+import pook
 import pytest
 
 from ingestion_server import slack
@@ -47,16 +48,18 @@ def test_message(
 ):
     monkeypatch.setenv("ENVIRONMENT", environment)
     monkeypatch.setenv(slack.SLACK_WEBHOOK, webhook)
-    with mock.patch("requests.post") as mock_post:
+    pook.on()
+    if webhook:
+        mock_post = pook.post(webhook)
         slack._message(text, summary)
-        assert mock_post.called == should_alert
-        if not should_alert:
-            return
-        data = mock_post.call_args.kwargs["json"]
-        assert data["blocks"][0]["text"]["text"] == text
-        assert data["text"] == expected_summary
-        if environment:
-            assert data["username"].endswith(environment.upper())
+        if should_alert:
+            assert mock_post.calls > 0
+            data = json.loads(mock_post.matches[0].body)
+            assert data["blocks"][0]["text"]["text"] == text
+            assert data["text"] == expected_summary
+            if environment:
+                assert data["username"].endswith(environment.upper())
+    pook.off()
 
 
 @pytest.mark.parametrize(
@@ -81,10 +84,13 @@ def test_message(
     ],
 )
 def test_log_levels(log_func, log_level, should_log, monkeypatch):
+    pook.on()
     monkeypatch.setenv("ENVIRONMENT", "staging")
     monkeypatch.setenv(slack.SLACK_WEBHOOK, "http://fake")
+    mock = pook.post("http://fake")
     if log_level:
         monkeypatch.setenv(slack.LOG_LEVEL, log_level)
-    with mock.patch("requests.post") as mock_post:
-        log_func("text", "summary")
-        assert mock_post.called == should_log
+    log_func("text", "summary")
+    pook.off()
+    expected_calls = 1 if should_log else 0
+    assert mock.calls == expected_calls
