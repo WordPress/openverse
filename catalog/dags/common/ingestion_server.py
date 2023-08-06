@@ -8,13 +8,16 @@ from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
 
-from common.constants import ES_PROD_HTTP_CONN_ID, XCOM_PULL_TEMPLATE
+from common.constants import (
+    ES_PROD_HTTP_CONN_ID,
+    REFRESH_POKE_INTERVAL,
+    XCOM_PULL_TEMPLATE,
+)
 
 
 logger = logging.getLogger(__name__)
 
 
-POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15))
 # Minimum number of records we expect to get back from ES when querying an index.
 THRESHOLD_RESULT_COUNT = int(os.getenv("ES_INDEX_READINESS_RECORD_COUNT", 10_000))
 
@@ -118,7 +121,7 @@ def wait_for_task(
     action: str,
     task_trigger: SimpleHttpOperator,
     timeout: timedelta,
-    poke_interval: int = POKE_INTERVAL,
+    poke_interval: int = REFRESH_POKE_INTERVAL,
 ) -> HttpSensor:
     return HttpSensor(
         task_id=f"wait_for_{action.lower()}",
@@ -137,7 +140,7 @@ def trigger_and_wait_for_task(
     model: str,
     timeout: timedelta,
     data: dict | None = None,
-    poke_interval: int = POKE_INTERVAL,
+    poke_interval: int = REFRESH_POKE_INTERVAL,
 ) -> tuple[SimpleHttpOperator, HttpSensor]:
     trigger = trigger_task(action, model, data)
     waiter = wait_for_task(action, trigger, timeout, poke_interval)
@@ -149,7 +152,7 @@ def index_readiness_check(
     media_type: str,
     index_suffix: str,
     timeout: timedelta = timedelta(days=1),
-    poke_interval: int = POKE_INTERVAL,
+    poke_interval: int = REFRESH_POKE_INTERVAL,
 ) -> HttpSensor:
     """
     Poll the Elasticsearch index, returning true only when results greater

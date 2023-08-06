@@ -2,25 +2,32 @@ export const buttonForms = ["VLink", "button"] as const
 
 export type ButtonForm = (typeof buttonForms)[number]
 
-export const buttonVariants = [
-  "plain",
-  "plain--avoid",
-  "dropdown-label",
-  "dropdown-label-pressed",
+export const baseButtonVariants = [
   "filled-pink",
   "filled-dark",
   "filled-gray",
   "filled-white",
-  "filled-transparent",
   "bordered-white",
   "bordered-gray",
   "transparent-tx",
   "transparent-gray",
   "transparent-dark",
 ] as const
+export type StandardButtonVariant = (typeof baseButtonVariants)[number]
+
+export const buttonVariants = [
+  ...baseButtonVariants,
+  "plain",
+  "plain--avoid",
+  "dropdown-label",
+  "dropdown-label-pressed",
+] as const
 export type ButtonVariant = (typeof buttonVariants)[number]
 
-export const buttonSizes = ["large", "medium", "small", "disabled"] as const
+export const baseButtonSizes = ["large", "medium", "small"] as const
+export type BaseButtonSize = (typeof baseButtonSizes)[number]
+
+export const buttonSizes = [...baseButtonSizes, "disabled"] as const
 export type ButtonSize = (typeof buttonSizes)[number]
 
 export const buttonTypes = ["button", "submit", "reset"] as const

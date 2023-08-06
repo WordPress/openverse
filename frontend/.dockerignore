@@ -13,6 +13,7 @@ dist/
 storybook-static
 .vercel
 .git
+test/
 
 # log files
 npm-debug.log*

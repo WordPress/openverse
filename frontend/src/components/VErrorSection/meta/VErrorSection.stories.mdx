@@ -12,6 +12,7 @@ import VNoResults from "~/components/VErrorSection/VNoResults.vue"
 import VServerTimeout from "~/components/VErrorSection/VServerTimeout.vue"
 
 import { NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 <Meta title="Components/VErrorSection" component={VErrorSection} />
 
@@ -31,7 +32,7 @@ export const NoResultsTemplate = (args) => ({
       <template #image>
        <VErrorImage :error-code="args.errorCode" />
       </template>
-      <VNoResults :type="args.type" :query="args.query"/>
+      <VNoResults :media-type="args.type" :search-term="args.searchTerm" :external-sources=[] />
     </VErrorSection>
     `,
   components: { VErrorSection, VErrorImage, VNoResults },
@@ -46,12 +47,7 @@ export const NoResultsTemplate = (args) => ({
     args={{
       errorCode: NO_RESULT,
       type: "image",
-      query: {
-        license: "",
-        license_type: "",
-        mature: false,
-        q: "sad person",
-      },
+      searchTerm: "sad person",
     }}
   >
     {NoResultsTemplate.bind({})}

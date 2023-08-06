@@ -2,7 +2,9 @@ import { expect, Page, test } from "@playwright/test"
 
 import {
   goToSearchTerm,
+  preparePageForTests,
   renderModes,
+  sleep,
   t,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -142,12 +144,15 @@ test.describe("Load more button", () => {
       page,
       context,
     }) => {
+      await preparePageForTests(page, "xl")
       const analyticsEvents = collectAnalyticsEvents(context)
 
       await page.goto("/search/?q=cat")
 
       await page.locator(loadMoreButton).scrollIntoViewIfNeeded()
       await expect(page.locator(loadMoreButton)).toBeVisible()
+
+      await sleep(300)
 
       const reachResultEndEvent = analyticsEvents.find(
         (event) => event.n === "REACH_RESULT_END"

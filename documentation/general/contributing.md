@@ -1,8 +1,9 @@
 # Welcome
 
-Thank you for your interest in Openverse! We're so excited to bring new
-contributors into the fold in Openverse, WordPress and FOSS in general. This
-document is a set of guidelines to help you contribute to this project.
+Thank you for your interest in Openverse! We're so excited to introduce new
+contributors to Openverse, WordPress and free and open-source software (FOSS) in
+general. This document is a set of guidelines to help you contribute to this
+project.
 
 ## Code of Conduct
 

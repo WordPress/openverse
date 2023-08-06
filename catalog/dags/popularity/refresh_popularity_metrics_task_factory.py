@@ -10,6 +10,7 @@ refresh DAG.
 """
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
+from popularity.popularity_refresh_types import PopularityRefresh
 
 from common.constants import POSTGRES_CONN_ID
 from common.popularity import sql
@@ -22,7 +23,9 @@ UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID = "update_media_popularity_metrics_table
 UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "update_media_popularity_constants_view"
 
 
-def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
+def create_refresh_popularity_metrics_task_group(
+    refresh_config: DataRefresh | PopularityRefresh,
+):
     """
     Create tasks related to refreshing popularity statistics.
 
@@ -33,10 +36,10 @@ def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
 
     Required Arguments:
 
-    data_refresh:  configuration data for the data refresh
+    refresh_config:  configuration data for the refresh
     """
-    media_type = data_refresh.media_type
-    execution_timeout = data_refresh.refresh_metrics_timeout
+    media_type = refresh_config.media_type
+    execution_timeout = refresh_config.refresh_metrics_timeout
 
     with TaskGroup(group_id=GROUP_ID) as refresh_all_popularity_data:
         update_metrics = PythonOperator(
@@ -58,7 +61,7 @@ def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
             python_callable=reporting.report_status,
             op_kwargs={
                 "media_type": media_type,
-                "dag_id": data_refresh.dag_id,
+                "dag_id": refresh_config.dag_id,
                 "message": "Popularity metrics update complete | "
                 "_Next: popularity constants view update_",
             },
@@ -83,7 +86,7 @@ def create_refresh_popularity_metrics_task_group(data_refresh: DataRefresh):
             python_callable=reporting.report_status,
             op_kwargs={
                 "media_type": media_type,
-                "dag_id": data_refresh.dag_id,
+                "dag_id": refresh_config.dag_id,
                 "message": "Popularity constants view update complete | "
                 "_Next: refresh matview_",
             },

@@ -4,7 +4,7 @@
     <VCloseButton
       v-if="audio"
       class="!absolute end-0 top-0 z-30"
-      variant="filled-transparent"
+      variant="transparent-dark"
       size="large"
       :label="$t('audioTrack.close')"
       @close="handleClose"
