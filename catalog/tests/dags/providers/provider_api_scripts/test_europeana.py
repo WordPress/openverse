@@ -182,6 +182,7 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
 
 
 @pytest.mark.parametrize(
+    "item_data_file, expected",
     [
         pytest.param("item_full.json", {"width": 381, "height": 480}, id="happy_path"),
         pytest.param("item_no_aggregation.json", {}, id="no_aggregations"),
@@ -189,10 +190,10 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
         pytest.param(
             "item_no_dimensions_1st.json", {}, id="no_dimensions_first_resource"
         ),
-        pytest.param("item_no_dimensions.json", {}, id="no_dimensions"),
-    ]
+        pytest.param("item_no_dimensions_any.json", {}, id="no_dimensions"),
+    ],
 )
-def _get_image_dimensions(record_builder, item_data_file, expected):
+def test_get_image_dimensions(item_data_file, expected, record_builder):
     item_data = _get_resource_json(item_data_file)
     assert record_builder._get_image_dimensions(item_data) == expected
 

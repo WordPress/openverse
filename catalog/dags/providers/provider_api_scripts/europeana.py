@@ -134,13 +134,13 @@ class EuropeanaRecordBuilder:
         # Assume that we just want the first web resource, based on assumptions under
         # _get_title and _get_foreign_landing_url, but might make sense to add some
         # checks, e.g. that the web resource url matches the foreign landing url?
-        if aggregations := item_data.get("aggregations"):
-            if webresources := aggregations[0].get("webResources"):
-                resource = webresources[0]
-                return {
-                    "width": resource.get("ebucoreWidth"),
-                    "height": resource.get("ebucoreHeight"),
-                }
+        if item_object := item_data.get("object"):
+            if aggregations := item_object.get("aggregations"):
+                if webresources := aggregations[0].get("webResources"):
+                    width = webresources[0].get("ebucoreWidth")
+                    height = webresources[0].get("ebucoreHeight")
+                    if width and height:
+                        return {"width": width, "height": height}
         return {}
 
     def _get_meta_data_dict(self, data: dict) -> dict:
