@@ -1,9 +1,13 @@
+from unittest.mock import patch
+
 import pytest
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
 from common.licenses import LicenseInfo, get_license_info
+from common.loader import provider_details as prov
+from common.storage.image import ImageStore
 from providers.provider_api_scripts.europeana import (
     EuropeanaDataIngester,
     EuropeanaRecordBuilder,
@@ -99,11 +103,18 @@ def test_get_batch_data_gets_items_property(ingester):
     assert ingester.get_batch_data(response_json) is response_json["items"]
 
 
-# TO DO: figure out fixtures and/or test cases to ensure that we can test this without failing on pytest-socket / SocketBlockedError
 def test_get_image_list_with_realistic_response(ingester):
-    response_json = _get_resource_json("europeana_example.json")
-    record_count = ingester.process_batch(response_json["items"])
-    assert record_count == len(response_json["items"])
+    image_store = ImageStore(provider=prov.EUROPEANA_DEFAULT_PROVIDER)
+    ingester.media_stores = {"image": image_store}
+    batch_json = _get_resource_json("europeana_example.json")
+    object_json = {}
+    with patch.object(
+        ingester, "get_response_json", return_value=object_json
+    ) as item_call:
+        with patch.object(image_store, "add_item"):
+            record_count = ingester.process_batch(batch_json["items"])
+            assert item_call.call_count == len(batch_json["items"])
+            assert record_count == len(batch_json["items"])
 
 
 def test_record_builder_get_record_data(ingester, record_builder):
