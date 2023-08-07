@@ -1,0 +1,57 @@
+{
+  "numRecordings": "1",
+  "numSpecies": "1",
+  "page": 1,
+  "numPages": 1,
+  "recordings": [
+    {
+      "id": "568023",
+      "gen": "Basileuterus",
+      "sp": "delattrii",
+      "ssp": "",
+      "group": "birds",
+      "en": "Chestnut-capped Warbler",
+      "rec": "Jerome Fischer",
+      "cnt": "Colombia",
+      "loc": "Mana Dulce, Cundinamarca",
+      "lat": "4.351",
+      "lng": "-74.652",
+      "alt": "380",
+      "type": "call",
+      "sex": "",
+      "stage": "",
+      "method": "field recording",
+      "url": "//xeno-canto.org/568023",
+      "file": "https://xeno-canto.org/568023/download",
+      "file-name": "XC568023-Rufous-capped Warbler, call, Mana Dulce, 200531-011.mp3",
+      "sono": {
+        "small": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/ffts/XC568023-small.png",
+        "med": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/ffts/XC568023-med.png",
+        "large": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/ffts/XC568023-large.png",
+        "full": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/ffts/XC568023-full.png"
+      },
+      "osci": {
+        "small": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/wave/XC568023-small.png",
+        "med": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/wave/XC568023-med.png",
+        "large": "//xeno-canto.org/sounds/uploaded/JPBSNBUUEF/wave/XC568023-large.png"
+      },
+      "lic": "//creativecommons.org/licenses/by-nc-sa/4.0/",
+      "q": "no score",
+      "length": "0:48",
+      "time": "16:00",
+      "date": "2020-05-31",
+      "uploaded": "2020-06-13",
+      "also": [],
+      "rmk": "",
+      "bird-seen": "yes",
+      "animal-seen": "yes",
+      "playback-used": "no",
+      "temp": "",
+      "regnr": "",
+      "auto": "no",
+      "dvc": "",
+      "mic": "",
+      "smp": "48000"
+    }
+  ]
+}
