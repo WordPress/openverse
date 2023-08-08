@@ -125,12 +125,9 @@ export const createApiService = ({
     (response) => response,
     (error) => {
       if (error.code === "ECONNABORTED") {
-        return Promise.reject({
-          message: `timeout of ${
-            DEFAULT_REQUEST_TIMEOUT / 1000
-          } seconds exceeded`,
-          ...error,
-        })
+        error.message = `timeout of ${
+          DEFAULT_REQUEST_TIMEOUT / 1000
+        } seconds exceeded`
       }
       return Promise.reject(error)
     }
