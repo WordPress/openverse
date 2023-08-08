@@ -117,8 +117,8 @@ EXPOSE 8000 3000
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]
 
-# Run Django dev server, can be overridden from Docker Compose
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# gunicorn configuration in gunicorn.conf.py
+CMD ["gunicorn"]
 
 #########
 # NGINX #
