@@ -11,6 +11,7 @@ from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 from database.batched_update import constants
 from database.batched_update.batched_update import (
     get_expected_update_count,
+    notify_slack,
     update_batches,
 )
 
@@ -318,3 +319,24 @@ def test_update_batches_resuming_from_batch_start(
     assert actual_rows[1][sql.title_idx] == NEW_TITLE
     assert actual_rows[2][sql.fid_idx] == FID_C
     assert actual_rows[2][sql.title_idx] == NEW_TITLE
+
+
+@pytest.mark.parametrize(
+    "text, count, expected_message",
+    [
+        ("Updated {count} records", 1000000, "Updated 1,000,000 records"),
+        (
+            "Updated {count} records",
+            2,
+            "Updated 2 records",
+        ),
+        (
+            "A message without a count",
+            None,
+            "A message without a count",
+        ),
+    ],
+)
+def test_notify_slack(text, count, expected_message):
+    actual_message = notify_slack.function(text, True, count)
+    assert actual_message == expected_message

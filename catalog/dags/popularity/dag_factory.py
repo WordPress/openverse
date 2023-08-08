@@ -37,7 +37,7 @@ from popularity.refresh_popularity_metrics_task_factory import (
 )
 
 from common import slack
-from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID, REFRESH_POKE_INTERVAL
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.popularity import sql
 from database.batched_update.constants import DAG_ID as BATCHED_UPDATE_DAG_ID
 
@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 def notify_slack(text: str, media_type: str, dag_id: str) -> None:
     slack.send_message(
         text,
-        username=f"{media_type} Popularity Refresh",
+        username=f"{media_type.capitalize()} Popularity Refresh",
         icon_emoji=":database:",
         dag_id=dag_id,
     )
@@ -165,7 +165,8 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             wait_for_completion=True,
             # Release the worker slot while waiting
             deferrable=True,
-            poke_interval=REFRESH_POKE_INTERVAL,
+            poke_interval=popularity_refresh.poke_interval,
+            execution_timeout=popularity_refresh.refresh_popularity_timeout,
             retries=0,
         ).expand(
             # Build the conf for each provider
