@@ -31,6 +31,8 @@
           :message="message"
           @seeked="handleSeeked"
           @toggle-playback="handleToggle"
+          @blur="handleWaveformBlur"
+          @focus="handleWaveformFocus"
         />
       </template>
 
@@ -142,15 +144,6 @@ export default defineComponent({
      */
     searchTerm: {
       type: String,
-    },
-    /**
-     * Whether instructions snackbar should be shown when this track is focused.
-     * This is used to show instructions for keyboard navigation on the search
-     * results page.
-     */
-    showsSnackbar: {
-      type: Boolean,
-      default: false,
     },
   },
   emits: {
@@ -442,9 +435,7 @@ export default defineComponent({
 
     const emitInteracted = (event?: AudioInteraction) => {
       if (!event) return
-      if (props.showsSnackbar) {
-        snackbar.hide()
-      }
+      snackbar.dismiss()
       emit("interacted", {
         event,
         id: props.audio.id,
@@ -560,10 +551,24 @@ export default defineComponent({
     const snackbar = useAudioSnackbar()
 
     const handleFocus = (event: FocusEvent) => {
-      if (props.showsSnackbar) {
-        snackbar.show()
-      }
+      snackbar.show()
       emit("focus", event)
+    }
+
+    const handleBlur = () => {
+      snackbar.hide()
+      seekable.listeners.blur()
+    }
+
+    const handleWaveformFocus = (event: FocusEvent) => {
+      if (!isComposite.value) {
+        handleFocus(event)
+      }
+    }
+    const handleWaveformBlur = () => {
+      if (!isComposite.value) {
+        handleBlur()
+      }
     }
 
     return {
@@ -573,9 +578,11 @@ export default defineComponent({
       handleToggle,
       handleSeeked,
       handleKeydown,
-      handleBlur: seekable.listeners.blur,
+      handleBlur,
       handleMousedown,
       handleFocus,
+      handleWaveformBlur,
+      handleWaveformFocus,
 
       isSeeking,
 

@@ -260,6 +260,8 @@ export default defineComponent({
      */
     seeked: defineEvent<[number]>(),
     "toggle-playback": defineEvent<[]>(),
+    focus: defineEvent<[FocusEvent]>(),
+    blur: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
     /* Utils */
@@ -468,6 +470,13 @@ export default defineComponent({
       event.stopPropagation()
       event.preventDefault()
     }
+    const handleFocus = (event: FocusEvent) => {
+      emit("focus", event)
+    }
+    const handleBlur = (event: FocusEvent) => {
+      seekable.listeners.blur()
+      emit("blur", event)
+    }
 
     /* v-on */
 
@@ -479,7 +488,9 @@ export default defineComponent({
           mouseup: handleMouseUp,
           mouseleave: handleMouseLeave,
           click: handleClick,
-          ...seekable.listeners,
+          blur: handleBlur,
+          focus: handleFocus,
+          keydown: seekable.listeners.keydown,
         }
       } else {
         return {}

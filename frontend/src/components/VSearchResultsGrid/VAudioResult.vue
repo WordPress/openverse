@@ -5,7 +5,6 @@
       :layout="layout"
       :size="size"
       :search-term="searchTerm"
-      :shows-snackbar="true"
       v-bind="$attrs"
       v-on="$listeners"
       @interacted="sendInteractionEvent"
@@ -18,6 +17,7 @@
 import { defineComponent, PropType } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { AUDIO } from "~/constants/media"
 
 import type { AudioInteractionData } from "~/types/analytics"
@@ -62,6 +62,7 @@ export default defineComponent({
       // Only send the event when the click navigates to the single result page.
       // If the click is in waveform or play-pause button, it controls the audio player.
       if (inWaveform) return
+      useAudioSnackbar().hide()
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: audio.id,
         mediaType: AUDIO,
