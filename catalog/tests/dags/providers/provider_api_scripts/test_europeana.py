@@ -109,12 +109,45 @@ def test_get_image_list_with_realistic_response(ingester):
     batch_json = _get_resource_json("europeana_example.json")
     object_json = {}
     with patch.object(
-        ingester, "get_response_json", return_value=object_json
+        ingester, "_get_additional_item_data", return_value=object_json
     ) as item_call:
         with patch.object(image_store, "add_item"):
             record_count = ingester.process_batch(batch_json["items"])
             assert item_call.call_count == len(batch_json["items"])
             assert record_count == len(batch_json["items"])
+
+
+@pytest.mark.parametrize(
+    "response_json, expected",
+    [
+        pytest.param(
+            {"success": True, "object": {"happy": "path"}},
+            {"happy": "path"},
+            id="happy_path",
+        ),
+        pytest.param({"success": False, "object": None}, {}, id="success_is_false"),
+        pytest.param({"success": True, "no": "object"}, {}, id="no_object"),
+        pytest.param(None, {}, id="no_response"),
+    ],
+)
+def test_get_additional_item_data(response_json, expected, ingester):
+    with patch.object(
+        ingester, "get_response_json", return_value=response_json
+    ) as patch_call:
+        actual = ingester._get_additional_item_data({"id": "/FAKE_ID"})
+        assert actual == expected
+    patch_call.assert_called_once_with(
+        endpoint="https://api.europeana.eu/record/v2/FAKE_ID.json",
+        query_params=ingester.item_params,
+    )
+
+
+def test_get_additional_item_data_no_foreign_id(ingester):
+    with patch.object(ingester, "get_response_json", return_value={}) as patch_call:
+        actual = ingester._get_additional_item_data({"info": "but not an ID"})
+        expected = {}
+        assert actual == expected
+    patch_call.assert_not_called
 
 
 def test_record_builder_get_record_data(ingester, record_builder):
@@ -205,7 +238,7 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
     ],
 )
 def test_get_image_dimensions(item_data_file, expected, record_builder):
-    item_data = _get_resource_json(item_data_file)
+    item_data = _get_resource_json(item_data_file).get("object", {})
     assert record_builder._get_image_dimensions(item_data) == expected
 
 

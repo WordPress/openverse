@@ -134,13 +134,12 @@ class EuropeanaRecordBuilder:
         # Assume that we just want the first web resource, based on assumptions under
         # _get_title and _get_foreign_landing_url, but might make sense to add some
         # checks, e.g. that the web resource url matches the foreign landing url?
-        if item_object := item_data.get("object"):
-            if aggregations := item_object.get("aggregations"):
-                if webresources := aggregations[0].get("webResources"):
-                    width = webresources[0].get("ebucoreWidth")
-                    height = webresources[0].get("ebucoreHeight")
-                    if width and height:
-                        return {"width": width, "height": height}
+        if aggregations := item_data.get("aggregations"):
+            if webresources := aggregations[0].get("webResources"):
+                width = webresources[0].get("ebucoreWidth")
+                height = webresources[0].get("ebucoreHeight")
+                if width and height:
+                    return {"width": width, "height": height}
         return {}
 
     def _get_meta_data_dict(self, data: dict) -> dict:
@@ -240,17 +239,29 @@ class EuropeanaDataIngester(ProviderDataIngester):
         return response_json.get("items")
 
     def get_record_data(self, data: dict) -> dict:
-        if not (item_id := self.record_builder._get_foreign_identifier(data)):
-            return
-        item_data = (
-            self.get_response_json(
-                query_params=self.item_params,
-                endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
-            )
-            or {}
+        return self.record_builder.get_record_data(
+            data,
+            self._get_additional_item_data(data),
         )
 
-        return self.record_builder.get_record_data(data, item_data)
+    def _get_additional_item_data(self, data) -> dict:
+        if not (item_id := data.get("id")):
+            logger.warning(f"No foreign id, cannot request additional info on {data}")
+            return {}
+        item_response = self.get_response_json(
+            query_params=self.item_params,
+            endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
+        )
+        # TO DO: Add in some functionality to stop asking for these if a certain number
+        # fail or come back with nothing in a given dag run?
+        if (
+            item_response is None
+            or item_response.get("success") is False
+            or "object" not in item_response
+        ):
+            logger.warning(f"Object not successfully retrieved. {item_response=}")
+            return {}
+        return item_response.get("object")
 
 
 def main(date):
