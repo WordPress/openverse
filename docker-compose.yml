@@ -120,6 +120,16 @@ services:
       _AIRFLOW_WWW_USER_LASTNAME: Flow
       _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
 
+  # Dev changes for the triggerer
+  triggerer:
+    <<: *airflow-common
+    depends_on:
+      - upstream_db
+      - s3
+    expose:
+      - "8794" # Used for logs
+    command: triggerer
+
   # Dev changes for the webserver container
   webserver:
     <<: *airflow-common
@@ -127,6 +137,7 @@ services:
       - upstream_db
       - s3
       - scheduler
+      - triggerer
     command: webserver
     ports:
       - "${AIRFLOW_PORT}:8080"

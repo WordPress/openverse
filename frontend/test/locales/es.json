@@ -368,11 +368,6 @@
       "content": "{openverse} es una herramienta que permite descubrir obras con licencia abierta y de dominio público y ser usadas por todos."
     }
   },
-  "migrationNotice": {
-    "intro": "{ccSearch} ahora se llama {openverse} y se une a {wordpress} como un proyecto de código abierto.",
-    "read": "Lee más",
-    "more": "{readMore} sobre este anuncio."
-  },
   "audioDetails": {
     "information": "Información del audio",
     "table": {

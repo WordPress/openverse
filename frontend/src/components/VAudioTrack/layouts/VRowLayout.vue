@@ -27,9 +27,10 @@
           :class="{
             'text-2xl': isMedium || isLarge,
             'leading-snug': isSmall,
+            'blur-text': shouldBlur,
           }"
         >
-          {{ audio.title }}
+          {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
         </div>
 
         <div
@@ -42,8 +43,14 @@
           }"
         >
           <div class="part-a">
-            <i18n tag="span" path="audioTrack.creator">
-              <template #creator>{{ audio.creator }}</template> </i18n
+            <i18n
+              tag="span"
+              path="audioTrack.creator"
+              :class="{ 'blur-text': shouldBlur }"
+            >
+              <template #creator>{{
+                shouldBlur ? $t("sensitiveContent.creator") : audio.creator
+              }}</template> </i18n
             ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
               $t("interpunct")
             }}</span>
@@ -102,6 +109,8 @@ import { timeFmt } from "~/utils/time-fmt"
 import type { AudioDetail } from "~/types/media"
 import type { AudioSize } from "~/constants/audio"
 
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 
@@ -133,6 +142,8 @@ export default defineComponent({
     const isMedium = computed(() => props.size === "m")
     const isLarge = computed(() => props.size === "l")
 
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+
     return {
       timeFmt,
 
@@ -142,6 +153,8 @@ export default defineComponent({
       isSmall,
       isMedium,
       isLarge,
+
+      shouldBlur,
     }
   },
 })

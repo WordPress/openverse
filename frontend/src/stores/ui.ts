@@ -1,7 +1,5 @@
 import { defineStore } from "pinia"
 
-import { useNavigationStore } from "~/stores/navigation"
-
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
 
@@ -42,6 +40,14 @@ export interface UiState {
    */
   isMobileUa: boolean
   dismissedBanners: BannerId[]
+  /**
+   * Whether to blur sensitive content in search and single result pages.
+   * Value should *not* be set directly, use setShouldBlurSensitive(value: boolean)
+   * to ensure necessary side-effects are executed.
+   */
+  shouldBlurSensitive: boolean
+  /* A list of sensitive single result UUIDs the user has opted-into seeing */
+  revealedSensitiveResults: string[]
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -55,6 +61,8 @@ export const useUiStore = defineStore("ui", {
     breakpoint: "sm",
     isMobileUa: true,
     dismissedBanners: [],
+    shouldBlurSensitive: true,
+    revealedSensitiveResults: [],
   }),
 
   getters: {
@@ -103,17 +111,6 @@ export const useUiStore = defineStore("ui", {
       return (
         !this.dismissedBanners.includes(this.translationBannerId) &&
         needsTranslationBanner(this.currentLocale)
-      )
-    },
-    /**
-     * The migration banner is shown if the user is referred from CC Search,
-     * and hasn't dismissed it yet.
-     */
-    shouldShowMigrationBanner(): boolean {
-      const navigationStore = useNavigationStore()
-      return (
-        !this.dismissedBanners.includes("cc-referral") &&
-        navigationStore.isReferredFromCc
       )
     },
     /**
@@ -259,6 +256,10 @@ export const useUiStore = defineStore("ui", {
       return (
         breakpoints.indexOf(breakpoint) >= breakpoints.indexOf(this.breakpoint)
       )
+    },
+    setShouldBlurSensitive(value: boolean) {
+      this.shouldBlurSensitive = value
+      this.revealedSensitiveResults = []
     },
   },
 })

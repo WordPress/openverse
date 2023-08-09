@@ -197,6 +197,16 @@ module.exports = {
       serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
+      height: {
+        "dyn-screen": ["100vh", "100dvh"],
+      },
+      minHeight: {
+        "dyn-screen": ["100vh", "100dvh"],
+      },
+      blur: {
+        image: "60px",
+        text: "4px",
+      },
       lineHeight: {
         loose: "2.0",
         larger: "1.9",

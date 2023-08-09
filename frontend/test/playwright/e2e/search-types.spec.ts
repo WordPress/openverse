@@ -89,8 +89,10 @@ async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
 async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
   await checkSearchMetadata(page, searchType)
   await checkLoadMore(page, searchType)
-  await checkExternalSourcesForm(page)
   await checkPageMeta(page, searchType)
+  if (searchType.id !== "all") {
+    await checkExternalSourcesForm(page)
+  }
 }
 
 test.describe("search types", () => {

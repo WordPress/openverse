@@ -41,7 +41,7 @@ import type { ImageDetail } from "~/types/media"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
-import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
+import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
 import type { NuxtError } from "@nuxt/types"
 

@@ -15,7 +15,7 @@
       <template #media>
         <NuxtChild
           :key="$route.path"
-          :result-items="resultItems"
+          :results="resultItems[searchType]"
           :fetch-state="fetchState"
           :search-term="query.q"
           :supported="supported"
@@ -35,11 +35,18 @@
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, watch } from "vue"
 import { storeToRefs } from "pinia"
-import { defineComponent, useMeta, useRoute } from "@nuxtjs/composition-api"
+import {
+  defineComponent,
+  useContext,
+  useFetch,
+  useMeta,
+  useRoute,
+} from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+import { NO_RESULT } from "~/constants/errors"
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
@@ -54,6 +61,7 @@ export default defineComponent({
   },
   layout: "search-layout",
   middleware: searchMiddleware,
+  fetchOnServer: false,
   setup() {
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
@@ -79,9 +87,7 @@ export default defineComponent({
     const { resultCount, fetchState, resultItems } = storeToRefs(mediaStore)
 
     const needsFetching = computed(() =>
-      Boolean(
-        supported.value && !resultCount.value && searchTerm.value.trim() !== ""
-      )
+      Boolean(supported.value && !resultCount.value && searchTerm.value !== "")
     )
 
     useMeta({
@@ -89,17 +95,40 @@ export default defineComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
+    const { error: nuxtError } = useContext()
+
     const fetchMedia = async (
       payload: { shouldPersistMedia?: boolean } = {}
     ) => {
-      return mediaStore.fetchMedia(payload)
+      /**
+       * If the fetch has already started in the middleware,
+       * and there is an error or no results were found, don't re-fetch.
+       */
+      const shouldNotRefetch =
+        mediaStore.fetchState.fetchingError?.message &&
+        mediaStore.fetchState.hasStarted
+      if (shouldNotRefetch) return
+
+      const results = await mediaStore.fetchMedia(payload)
+      if (!results) {
+        const error = mediaStore.fetchState.fetchingError
+        /**
+         * NO_RESULT error is handled by the VErrorSection component in the child pages.
+         * For all other errors, show the Nuxt error page.
+         */
+        if (error?.statusCode && !error?.message.includes(NO_RESULT))
+          return nuxtError(mediaStore.fetchState.fetchingError)
+      }
     }
 
+    /**
+     * Search middleware runs when the path changes. This watcher
+     * is necessary to handle the query changes.
+     *
+     * It updates the search store state from the URL query,
+     * fetches media, and scrolls to top if necessary.
+     */
     watch(route, async (newRoute, oldRoute) => {
-      /**
-       * Updates the search type only if the route's path changes.
-       * Scrolls `main-page` to top if the path changes.
-       */
       if (
         newRoute.path !== oldRoute.path ||
         !isShallowEqualObjects(newRoute.query, oldRoute.query)
@@ -107,7 +136,17 @@ export default defineComponent({
         const { query: urlQuery, path } = newRoute
         searchStore.setSearchStateFromUrl({ urlQuery, path })
 
+        /**
+         * By default, Nuxt only scrolls to top when the path changes.
+         * This is a workaround to scroll to top when the query changes.
+         */
         document.getElementById("main-page")?.scroll(0, 0)
+        await fetchMedia()
+      }
+    })
+
+    useFetch(async () => {
+      if (needsFetching.value) {
         await fetchMedia()
       }
     })
@@ -126,28 +165,6 @@ export default defineComponent({
       isSidebarVisible,
 
       skipToContentTargetId,
-
-      fetchMedia,
-    }
-  },
-  /**
-   * asyncData blocks the rendering of the page, so we only
-   * update the state from the route here, and do not fetch media.
-   */
-  async asyncData({ route, $pinia }) {
-    const searchStore = useSearchStore($pinia)
-    await searchStore.initProviderFilters()
-    searchStore.setSearchStateFromUrl({
-      path: route.path,
-      urlQuery: route.query,
-    })
-  },
-  /**
-   * Fetch media, if necessary, in a non-blocking way.
-   */
-  async fetch() {
-    if (this.needsFetching) {
-      await this.fetchMedia()
     }
   },
   head: {},

@@ -2,7 +2,7 @@ import { screen } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { useReducedMotion } from "~/composables/use-media-query"
+import { useReducedMotion } from "~/composables/use-reduced-motion"
 
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
 
@@ -11,7 +11,7 @@ jest.mock("~/utils/console", () => ({
   log: jest.fn(),
 }))
 
-jest.mock("~/composables/use-media-query", () => ({
+jest.mock("~/composables/use-reduced-motion", () => ({
   useReducedMotion: jest.fn(),
 }))
 

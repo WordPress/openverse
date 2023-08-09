@@ -8,7 +8,14 @@ export default function robots(_, res) {
 
   const contents =
     deployEnv === PRODUCTION
-      ? `# This file is intentionally left blank`
+      ? `# Block search result pages
+User-agent: *
+Disallow: /search/audio/
+Disallow: /search/image/
+Disallow: /search/
+Disallow: /image/
+Disallow: /audio/
+      `
       : `# Block crawlers from the staging site
 User-agent: *
 Disallow: /

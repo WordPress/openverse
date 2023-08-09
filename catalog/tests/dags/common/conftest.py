@@ -17,6 +17,9 @@ from common.constants import POSTGRES_CONN_ID
 from common.sql import PGExecuteQueryOperator, PostgresHook
 
 
+POSTGRES_TEST_CONN_ID = "postgres_openledger_testing"
+
+
 def _delete_bucket(bucket):
     key_list = [{"Key": obj.key} for obj in bucket.objects.all()]
     if len(list(bucket.objects.all())) > 0:

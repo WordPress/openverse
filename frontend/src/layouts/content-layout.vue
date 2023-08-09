@@ -2,14 +2,16 @@
   <div>
     <VSkipToContentButton />
     <div
-      class="app grid min-h-[100dvh] min-h-screen grid-cols-1 grid-rows-[auto,1fr,auto] bg-white"
+      class="app grid min-h-dyn-screen grid-cols-1 grid-rows-[auto,1fr,auto] bg-white"
       :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
     >
       <div class="header-el sticky top-0 z-40 block bg-white">
         <VBanners />
         <VHeaderInternal
-          class="h-20 bg-white"
-          :class="{ 'border-b-dark-charcoal-20': isHeaderScrolled }"
+          class="h-20 border-b bg-white"
+          :class="
+            isHeaderScrolled ? 'border-b-dark-charcoal-20' : 'border-b-tx'
+          "
         />
       </div>
 
@@ -36,7 +38,7 @@ import { useLayout } from "~/composables/use-layout"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import { IsHeaderScrolledKey, ShowScrollButtonKey } from "~/types/provides"
+import { ShowScrollButtonKey } from "~/types/provides"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
@@ -92,7 +94,6 @@ export default defineComponent({
     const showScrollButton = computed(() => scrollY.value > 70)
 
     provide(ShowScrollButtonKey, showScrollButton)
-    provide(IsHeaderScrolledKey, isHeaderScrolled)
 
     return {
       isHeaderScrolled,

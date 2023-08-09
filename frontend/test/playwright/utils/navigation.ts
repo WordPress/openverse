@@ -279,7 +279,7 @@ export const preparePageForTests = async (
   page: Page,
   breakpoint: Breakpoint
 ) => {
-  await dismissBannersUsingCookies(page)
+  await dismissAllBannersUsingCookies(page)
   await closeFiltersUsingCookies(page)
   await setBreakpointCookie(page, breakpoint)
 }
@@ -299,7 +299,7 @@ export const goToSearchTerm = async (
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
 
-  await dismissBannersUsingCookies(page)
+  await dismissAllBannersUsingCookies(page)
   if (mode === "SSR") {
     const path = `${searchPath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
@@ -358,17 +358,35 @@ export const getLocatorHref = async (locator: Locator) => {
   return href
 }
 
-export const scrollToBottom = async (page: Page) => {
-  await page.evaluate(() => {
-    window.scrollTo(0, document.body.scrollHeight)
-  })
+/**
+ * Scroll the site to the "end" (top or bottom) of the primary scrollable element, either:
+ * - the `window`, on interior pages
+ * - the `#main-page`, on search views
+ *
+ * This is necessary because on search views the window itself doesnt scroll, only
+ * its child elements (the search result area + the filter sidebar).
+ *
+ * This function will scroll both elements on every evocation.
+ */
+export const fullScroll = async (
+  page: Page,
+  direction: "bottom" | "top" = "bottom"
+) => {
+  await page.evaluate((direction) => {
+    const mainPage = document.getElementById("main-page")
+    mainPage?.scrollTo(0, direction === "top" ? 0 : mainPage?.scrollHeight)
+    window.scrollTo(0, direction === "top" ? 0 : document.body.scrollHeight)
+  }, direction)
 }
 
 export const scrollToTop = async (page: Page) => {
-  await page.evaluate(() => {
-    window.scrollTo(0, 0)
-  })
-  await sleep(200)
+  await fullScroll(page, "top")
+  await sleep(200) // TODO: Is this necessary?
+}
+
+export const scrollToBottom = async (page: Page) => {
+  await fullScroll(page, "bottom")
+  await sleep(200) // TODO: Is this necessary?
 }
 
 /**

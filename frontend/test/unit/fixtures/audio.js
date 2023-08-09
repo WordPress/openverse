@@ -47,6 +47,7 @@ export const getAudioObj = (overrides = {}) =>
       related_url:
         "http://localhost:8000/v1/audio/e19345b8-6937-49f7-a0fd-03bf057efc28/recommendations",
       peaks: [],
+      isSensitive: false,
     },
     overrides
   )

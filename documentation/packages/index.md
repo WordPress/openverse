@@ -15,6 +15,21 @@ and how to add/maintain them.
 Openverse does not currently have any method for publishing packages to NPM.
 ```
 
+## Running package scripts
+
+Run scripts for individual packages using `just p {package} {script}`. For
+example, to run tests for the `eslint-plugin`, run:
+
+```
+just p eslint-plugin test:unit
+```
+
+This also works for the Nuxt frontend as an alternative to `just frontend/run`:
+
+```
+just p frontend dev
+```
+
 ## Adding new packages
 
 The easiest way to create a new package is to copy an existing one and modify
@@ -60,3 +75,6 @@ This can be facilitated using `npm-run-all`'s `run-p`. e.g.:
 }
 ```
 ````
+
+All new packages should name their unit-test script `test:unit`. Our CI
+recursively runs `test:unit` for all pnpm workspaces to ensure tests pass.

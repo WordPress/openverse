@@ -136,10 +136,9 @@ export const useProviderStore = defineStore("provider", {
       } catch (error: unknown) {
         let errorMessage = `There was an error fetching media providers for ${mediaType}`
         if (error instanceof Error) {
-          errorMessage =
-            axios.isAxiosError(error) && "response" in error
-              ? `${errorMessage}: ${error.code}`
-              : `${errorMessage}: ${error?.message}`
+          errorMessage = axios.isAxiosError(error)
+            ? `${errorMessage}: ${error.code}`
+            : `${errorMessage}: ${error.message}`
         }
         warn(errorMessage)
         // Fallback on existing providers if there was an error

@@ -139,7 +139,7 @@ describe("Ui Store", () => {
 
     it("initFromCookies sets initial state with a dismissed banner", () => {
       const uiStore = useUiStore()
-      const dismissedBanners = ["ru", "ar", "cc-referral"]
+      const dismissedBanners = ["ru", "ar"]
       uiStore.initFromCookies({
         uiDismissedBanners: dismissedBanners,
       })
@@ -256,10 +256,10 @@ describe("Ui Store", () => {
     }
   )
   it.each`
-    originalState            | bannerId | expectedState                  | areCookiesSet
-    ${[]}                    | ${"es"}  | ${["es"]}                      | ${true}
-    ${["es"]}                | ${"es"}  | ${["es"]}                      | ${false}
-    ${["cc-referral", "es"]} | ${"de"}  | ${["cc-referral", "es", "de"]} | ${true}
+    originalState | bannerId | expectedState   | areCookiesSet
+    ${[]}         | ${"es"}  | ${["es"]}       | ${true}
+    ${["es"]}     | ${"es"}  | ${["es"]}       | ${false}
+    ${["es"]}     | ${"de"}  | ${["es", "de"]} | ${true}
   `(
     "dismissBanner($bannerId): $originalState -> $expectedState",
     ({ originalState, bannerId, expectedState, areCookiesSet }) => {
@@ -279,10 +279,10 @@ describe("Ui Store", () => {
     }
   )
   it.each`
-    originalState            | bannerId | expectedState
-    ${[]}                    | ${"es"}  | ${false}
-    ${["es"]}                | ${"es"}  | ${true}
-    ${["cc-referral", "es"]} | ${"de"}  | ${false}
+    originalState | bannerId | expectedState
+    ${[]}         | ${"es"}  | ${false}
+    ${["es"]}     | ${"es"}  | ${true}
+    ${["es"]}     | ${"de"}  | ${false}
   `(
     "isBannerDismissed($bannerId) for $originalState returns $expectedState",
     ({ originalState, bannerId, expectedState }) => {

@@ -135,7 +135,6 @@ const config: NuxtConfig = {
     { path: "~/components", extensions: ["vue"], pathPrefix: false },
   ],
   plugins: [
-    "~/plugins/migration-notice.ts",
     "~/plugins/ua-parse.ts",
     "~/plugins/focus-visible.client.ts",
     "~/plugins/api-token.server.ts",
