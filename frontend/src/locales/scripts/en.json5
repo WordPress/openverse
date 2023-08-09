@@ -570,12 +570,13 @@
     button: "Source list",
     title: "External sources",
     card: {
-      search: "Not finding what you're looking for? Try external sources",
+      search: "Not finding what you're looking for? Search in external sources",
       caption: "Click on a source below to directly search other collections of CC-licensed images.{break}Please note that Use filters are not supported for Open Clip Art Library or Nappy.",
     },
     form: {
       unsupportedTitle: "{openverse} does not yet support built-in {type} search.",
-      supportedTitle: "Not finding what you're looking for? Try an external source:",
+      supportedTitle: "Not finding what you're looking for? Search in external sources",
+      supportedTitleSM: "Search in external sources",
       noResultsTitle: 'No {type} results for "{query}".',
       caption: "Click on a source below to directly search other collections of CC-licensed {type}.",
       types: {

@@ -5,47 +5,55 @@
     class="external-sources flex flex-row place-items-center justify-center py-4"
     data-testid="external-sources-form"
   >
-    <i18n
-      v-if="!hasNoResults && isSupported"
-      path="externalSources.form.supportedTitle"
-      tag="p"
-      class="description-regular"
-    />
-
-    <i18n
-      v-else-if="!hasNoResults && !isSupported"
-      path="externalSources.form.unsupportedTitle"
-      tag="p"
-      class="description-regular"
-    >
-      <template #openverse>Openverse</template>
-      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
-    </i18n>
-
-    <i18n
-      v-else
-      path="externalSources.form.noResultsTitle"
-      tag="p"
-      class="description-regular"
-    >
-      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
-      <template #query>{{ searchTerm }}</template>
-    </i18n>
-
     <VButton
       id="external-sources-button"
       ref="triggerRef"
       :pressed="triggerA11yProps['aria-expanded']"
       aria-haspopup="dialog"
-      :aria-controls="
-        isMd ? 'external-sources-popover' : 'external-sources-modal'
-      "
-      variant="dropdown-label"
+      :aria-controls="'external-sources-modal'"
+      variant="filled-gray"
       size="disabled"
-      class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
+      class="label-bold lg:description-bold h-16 w-full lg:h-18"
       @click="onTriggerClick"
-      >{{ $t("externalSources.button").toString()
-      }}<VIcon
+    >
+      <i18n
+        v-if="!hasNoResults && isSupported && isMd"
+        path="externalSources.form.supportedTitle"
+        tag="p"
+        class="description-regular"
+      />
+
+      <i18n
+        v-else-if="!hasNoResults && isSupported && !isMd"
+        path="externalSources.form.supportedTitleSM"
+        tag="p"
+        class="description-regular"
+      />
+
+      <i18n
+        v-else-if="!hasNoResults && !isSupported"
+        path="externalSources.form.unsupportedTitle"
+        tag="p"
+        class="description-regular"
+      >
+        <template #openverse>Openverse</template>
+        <template #type>{{
+          $t(`externalSources.form.types.${type}`)
+        }}</template>
+      </i18n>
+
+      <i18n
+        v-else
+        path="externalSources.form.noResultsTitle"
+        tag="p"
+        class="description-regular"
+      >
+        <template #type>{{
+          $t(`externalSources.form.types.${type}`)
+        }}</template>
+        <template #query>{{ searchTerm }}</template>
+      </i18n>
+      <VIcon
         class="text-dark-charcoal-40"
         :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
         name="caret-down"
@@ -53,14 +61,14 @@
     </VButton>
     <template v-if="triggerElement">
       <Component
-        :is="isMd ? 'VPopoverContent' : 'VModalContent'"
-        :id="isMd ? 'external-sources-popover' : 'external-sources-modal'"
+        :is="'VModalContent'"
+        :id="'external-sources-modal'"
         :aria-labelledby="'external-sources-button'"
         :hide="closeDialog"
         :trigger-element="triggerElement"
         :visible="isVisible"
-        :z-index="isMd ? 'popover' : 'modal'"
-        :variant="isMd ? undefined : 'centered'"
+        :z-index="'modal'"
+        :variant="'centered'"
       >
         <VExternalSourceList
           class="flex flex-col"
@@ -94,14 +102,12 @@ import type { ExternalSource } from "~/types/external-source"
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
 
 export default defineComponent({
   name: "VExternalSearchForm",
   components: {
     VModalContent,
-    VPopoverContent,
     VIcon,
     VButton,
     VExternalSourceList,
