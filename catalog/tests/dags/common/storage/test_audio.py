@@ -40,6 +40,7 @@ mock_audio_args = {
     "alt_files": [],
     "source": "testing_source",
     "ingestion_type": "provider_api",
+    "audio_set_foreign_identifier": None,
 }
 
 
@@ -214,6 +215,7 @@ def default_audio_args():
         provider="testing_provider",
         source="testing_source",
         ingestion_type="provider_api",
+        audio_set_foreign_identifier=None,
     )
 
 
@@ -264,6 +266,7 @@ def test_create_tsv_row_creates_alt_files(
                 '[{"url": '
                 '"https://alternative.com/audio.mp3", "filesize": "123", "bit_rate": "41000", '
                 '"sample_rate": "16000"}]',
+                "\\N",
             ]
         )
         + "\n"
@@ -283,6 +286,7 @@ def test_create_tsv_row_creates_audio_set(
         "set_thumbnail": "thumbnail.jpg",
     }
     audio_args["audio_set"] = audio_set_data
+    audio_args["audio_set_foreign_identifier"] = "12345"
     test_audio = audio.Audio(**audio_args)
 
     def mock_url_validator(value):
@@ -319,6 +323,7 @@ def test_create_tsv_row_creates_audio_set(
                 '"set_position": "1", "set_thumbnail": "thumbnail.jpg"}',
                 "1",
                 "\\N",
+                "12345",
             ]
         )
         + "\n"
@@ -442,6 +447,7 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
         "provider": "testing_provider",
         "source": "testing_source",
         "ingestion_type": "provider_api",
+        "audio_set_foreign_identifier": "12345",
     }
     args_dict.update(req_args_dict)
 
@@ -476,6 +482,7 @@ def test_create_tsv_row_properly_places_entries(monkeypatch):
                 '"set_thumbnail": "https://album.com/thumbnail.jpg"}',
                 "1",
                 "\\N",
+                "12345",
             ]
         )
         + "\n"
