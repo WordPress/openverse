@@ -131,15 +131,19 @@ class EuropeanaRecordBuilder:
         return europeana_url
 
     def _get_image_dimensions(self, item_data: dict) -> dict:
-        # Assume that we just want the first web resource, based on assumptions under
-        # _get_title and _get_foreign_landing_url, but might make sense to add some
-        # checks, e.g. that the web resource url matches the foreign landing url?
+        # Assume that we just want the first dimensions available in the item response,
+        # but consider adding checks, e.g. on landing url.
+        # Test with the first webresource from the first aggregation, found dimensions
+        # for 1424 / 1589 images; so not too worried about performance implications of
+        # the loop. Limiting factor was much more the delay between requests.
         if aggregations := item_data.get("aggregations"):
-            if webresources := aggregations[0].get("webResources"):
-                width = webresources[0].get("ebucoreWidth")
-                height = webresources[0].get("ebucoreHeight")
-                if width and height:
-                    return {"width": width, "height": height}
+            for aggregation in aggregations:
+                if webresources := aggregation.get("webResources"):
+                    for webresource in webresources:
+                        width = webresource.get("ebucoreWidth")
+                        height = webresource.get("ebucoreHeight")
+                        if width and height:
+                            return {"width": width, "height": height}
         return {}
 
     def _get_meta_data_dict(self, data: dict) -> dict:
@@ -172,7 +176,6 @@ class EuropeanaDataIngester(ProviderDataIngester):
     providers = {"image": prov.EUROPEANA_DEFAULT_PROVIDER}
     sub_providers = prov.EUROPEANA_SUB_PROVIDERS
     endpoint = "https://api.europeana.eu/record/v2/search.json?"
-    delay = 30
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -245,22 +248,34 @@ class EuropeanaDataIngester(ProviderDataIngester):
         )
 
     def _get_additional_item_data(self, data) -> dict:
+        # Delay of 30 seconds is fine for 100 items at a time, but not for each item.
+        # Occasionally getting this error on the item request when the delay is 3 secs:
+        # ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed
+        # connection without response'))
+        # But it always works on the next try so maybe that's ok?
+        # Options:
+        # - Switch to 3 second delay across the board and leave everything else alone,
+        #   or maybe add a max number of this kind of failure per dag run.
+        # - Separate delayed requesters 30 seconds for batch, 1 second for items, same
+        #   default batch size = 100.
+        # - Smaller batches (35), but default delay = 1 sec, like Brooklyn Museum.
+        # Seems like might be best to reach out to Europeana and get their preference
+        # for the best way for us to proceed.
         if not (item_id := data.get("id")):
-            logger.warning(f"No foreign id, cannot request additional info on {data}")
+            logger.debug(f"No foreign id, cannot request additional info on {data}")
             return {}
         item_response = self.get_response_json(
             query_params=self.item_params,
             endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
         )
-        # TO DO: Add in some functionality to stop asking for these if a certain number
-        # fail or come back with nothing in a given dag run?
         if (
             item_response is None
             or item_response.get("success") is False
             or "object" not in item_response
         ):
-            logger.warning(f"Object not successfully retrieved. {item_response=}")
+            logger.debug(f"Object not successfully retrieved. {item_response=}")
             return {}
+        logger.debug(f"Successfully retrieved additional info for {item_id}")
         return item_response.get("object")
 
 

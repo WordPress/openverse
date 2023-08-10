@@ -232,7 +232,9 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
         pytest.param("item_no_aggregation.json", {}, id="no_aggregations"),
         pytest.param("item_no_webresource.json", {}, id="no_webresources"),
         pytest.param(
-            "item_no_dimensions_1st.json", {}, id="no_dimensions_first_resource"
+            "item_no_dimensions_1st.json",
+            {"width": 772, "height": 1024},
+            id="no_dimensions_first_resource",
         ),
         pytest.param("item_no_dimensions_any.json", {}, id="no_dimensions"),
     ],
