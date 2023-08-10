@@ -3,6 +3,10 @@
 This is an exhaustive list for new developers. Feel free to skip the steps that
 you have already done on your own.
 
+If you already have a development environment set up and want to set Openverse
+up on your computer, you can move on to the
+[quickstart guide](/general/quickstart.md).
+
 ## Operating system
 
 ```{caution}
