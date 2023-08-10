@@ -358,8 +358,8 @@ def create_audioset_view_query():
           -- record was most recently updated (see the final section of the ORDER BY clause
           -- below). More info here:
           -- https://github.com/WordPress/openverse-catalog/issues/658
-          SELECT DISTINCT ON (audio_set ->> 'foreign_identifier', provider)
-            (audio_set ->> 'foreign_identifier'::text)   ::character varying(1000) AS foreign_identifier,
+          SELECT DISTINCT ON (audio_set_foreign_identifier, provider)
+            (audio_set_foreign_identifier::text)         ::character varying(1000) AS foreign_identifier,
             (audio_set ->> 'title'::text)                ::character varying(2000) AS title,
             (audio_set ->> 'foreign_landing_url'::text)  ::character varying(1000) AS foreign_landing_url,
             (audio_set ->> 'creator'::text)              ::character varying(2000) AS creator,
@@ -369,10 +369,10 @@ def create_audioset_view_query():
             (audio_set ->> 'filetype'::text)             ::character varying(80) AS filetype,
             (audio_set ->> 'thumbnail'::text)            ::character varying(1000) AS thumbnail,
             provider
-          FROM public.{AUDIO_VIEW_NAME}
-          WHERE (audio_set IS NOT NULL)
+          FROM public.{TABLE_NAMES[AUDIO]}
+          WHERE (audio_set_foreign_identifier IS NOT NULL AND audio_set IS NOT NULL)
           ORDER BY
-            audio_set ->> 'foreign_identifier',
+            audio_set_foreign_identifier,
             provider,
             updated_on DESC;
         """  # noqa: E501
@@ -401,9 +401,6 @@ def create_media_view(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
-    audio_set_id_str = (
-        "\naudio_set ->> 'foreign_identifier' AS audio_set_foreign_identifier,"
-    )
     # We want to copy all columns except standardized popularity, which is calculated
     columns_to_select = (", ").join(
         [
@@ -416,7 +413,7 @@ def create_media_view(
         f"""
         CREATE MATERIALIZED VIEW public.{db_view_name} AS
           SELECT
-            {columns_to_select},{audio_set_id_str if media_type == AUDIO else ""}
+            {columns_to_select}
             {standardized_popularity_func}(
               {table_name}.{PARTITION},
               {table_name}.{METADATA_COLUMN}
