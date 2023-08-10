@@ -254,7 +254,7 @@ class FreesoundDataIngester(ProviderDataIngester):
             "license_info": item_license,
             "meta_data": self._get_metadata(media_data),
             "raw_tags": media_data.get("tags"),
-            "set_foreign_id": set_foreign_id,
+            "audio_set_foreign_identifier": set_foreign_id,
             "audio_set": audio_set,
             "set_url": set_url,
             "alt_files": alt_files,
