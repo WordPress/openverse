@@ -413,7 +413,7 @@ def create_media_view(
         f"""
         CREATE MATERIALIZED VIEW public.{db_view_name} AS
           SELECT
-            {columns_to_select}
+            {columns_to_select},
             {standardized_popularity_func}(
               {table_name}.{PARTITION},
               {table_name}.{METADATA_COLUMN}
