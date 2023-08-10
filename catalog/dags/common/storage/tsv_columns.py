@@ -39,6 +39,7 @@ COLUMNS = {
             col.AUDIO_SET,
             col.SET_POSITION,
             col.ALT_FILES,
+            col.AUDIO_SET_FOREIGN_IDENTIFIER,
         ],
     },
     IMAGE: {
