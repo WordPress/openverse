@@ -238,15 +238,16 @@ def perform_task(
     # These functions must have a signature of ``Callable[[], None]``.
 
     def ingest_upstream():  # includes ``reindex``
-        refresh_api_table(model, progress)
+        refresh_api_table(model, model, progress)
+        # For audio, also refresh the audioset view
         if model == "audio":
-            refresh_api_table("audioset", progress, approach="basic")
+            refresh_api_table("audioset_view", "audioset", progress, approach="basic")
         indexer.reindex(model, f"temp_import_{model}", **kwargs)
 
     def promote():  # includes point alias
         promote_api_table(model, progress)
         if model == "audio":
-            promote_api_table("audioset", progress)
+            promote_api_table("audioset_view", progress)
         indexer.point_alias(model, **kwargs)
 
     try:
