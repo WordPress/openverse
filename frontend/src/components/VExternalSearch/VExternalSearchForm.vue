@@ -5,36 +5,6 @@
     class="external-sources flex flex-row place-items-center justify-center py-4"
     data-testid="external-sources-form"
   >
-    <i18n
-      v-if="!hasNoResults && isSupported"
-      path="externalSources.form.supportedTitle"
-      tag="p"
-      class="description-regular"
-    />
-
-    <i18n
-      v-else-if="!hasNoResults && !isSupported"
-      path="externalSources.form.unsupportedTitle"
-      tag="p"
-      class="description-regular"
-    >
-      <template #openverse>Openverse</template>
-      <template #type>{{
-        $t(`externalSources.form.types.${externalSourcesType}`)
-      }}</template>
-    </i18n>
-
-    <i18n
-      v-else
-      path="externalSources.form.noResultsTitle"
-      tag="p"
-      class="description-regular"
-    >
-      <template #type>{{
-        $t(`externalSources.form.types.${externalSourcesType}`)
-      }}</template>
-      <template #query>{{ searchTerm }}</template>
-    </i18n>
 
     <VModal
       variant="centered"
@@ -44,17 +14,56 @@
     >
       <template #trigger="triggerA11yProps">
         <VButton
-          id="external-sources-button"
-          v-bind="triggerA11yProps"
-          aria-controls="external-sources-modal"
-          variant="dropdown-label"
-          size="disabled"
-          class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
-          >{{ `${$t("externalSources.button")}`
-          }}<VIcon
-            class="text-dark-charcoal-40"
-            :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
-            name="caret-down"
+            id="external-sources-button"
+            ref="triggerRef"
+            :pressed="triggerA11yProps['aria-expanded']"
+            aria-haspopup="dialog"
+            :aria-controls="'external-sources-modal'"
+            variant="filled-gray"
+            size="disabled"
+            class="label-bold lg:description-bold h-16 w-full lg:h-18"
+        >
+          <i18n
+              v-if="!hasNoResults && isSupported && isMd"
+              path="externalSources.form.supportedTitle"
+              tag="p"
+              class="description-regular"
+          />
+
+          <i18n
+              v-else-if="!hasNoResults && isSupported && !isMd"
+              path="externalSources.form.supportedTitleSM"
+              tag="p"
+              class="description-regular"
+          />
+
+          <i18n
+              v-else-if="!hasNoResults && !isSupported"
+              path="externalSources.form.unsupportedTitle"
+              tag="p"
+              class="description-regular"
+          >
+            <template #openverse>Openverse</template>
+            <template #type>{{
+                $t(`externalSources.form.types.${externalSourcesType}`)
+              }}</template>
+          </i18n>
+
+          <i18n
+              v-else
+              path="externalSources.form.noResultsTitle"
+              tag="p"
+              class="description-regular"
+          >
+            <template #type>{{
+                $t(`externalSources.form.types.${externalSourcesType}`)
+              }}</template>
+            <template #query>{{ searchTerm }}</template>
+          </i18n>
+          <VIcon
+              class="text-dark-charcoal-40"
+              :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
+              name="caret-down"
           />
         </VButton>
       </template>
@@ -80,12 +89,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { computed, defineComponent, ref } from "vue"
 
 import { storeToRefs } from "pinia"
 
 import { defineEvent } from "~/types/emits"
 
+import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
@@ -127,6 +137,8 @@ export default defineComponent({
   setup() {
     const sectionRef = ref<HTMLElement | null>(null)
     const searchStore = useSearchStore()
+    const uiStore = useUiStore()
+
     const { sendCustomEvent } = useAnalytics()
 
     const mediaStore = useMediaStore()
@@ -142,9 +154,12 @@ export default defineComponent({
 
     const { externalSourcesType } = useExternalSources()
 
+    const isMd = computed(() => uiStore.isBreakpoint("md"))
+
     return {
       externalSourcesType,
       sectionRef,
+      isMd,
 
       handleModalOpen,
     }
