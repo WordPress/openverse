@@ -19,7 +19,7 @@
             :pressed="triggerA11yProps['aria-expanded']"
             aria-haspopup="dialog"
             :aria-controls="'external-sources-modal'"
-            variant="filled-gray"
+            variant="bordered-gray"
             size="disabled"
             class="label-bold lg:description-bold h-16 w-full lg:h-18"
         >
