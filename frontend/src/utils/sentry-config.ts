@@ -17,6 +17,7 @@ export const sentryConfig: ModuleOptions = {
     ignoreErrors: [
       // Ignore browser extension errors
       /window\.bannerNight/,
+      /mce-visual-caret-hidden/,
 
       // Ignore errant focus-trap-vue errors
       /`initialFocus` did not return a node/,
