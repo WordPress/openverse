@@ -67,8 +67,9 @@ class EuropeanaRecordBuilder:
                 "meta_data": self._get_meta_data_dict(data),
                 "title": self._get_title(data),
                 "license_info": self._get_license_info(data),
-            }
-            record.update(self._get_image_dimensions(item_data))
+                "filetype": self._get_filetype(item_data),
+                "filesize": self._get_filesize(item_data),
+            } | self._get_image_dimensions(item_data)
 
             data_providers = set(record["meta_data"]["dataProvider"])
             eligible_sub_providers = {
@@ -82,13 +83,12 @@ class EuropeanaRecordBuilder:
                     f"image with foreign ID {record['foreign_identifier']}"
                 )
 
-            return record | {
-                "source": (
-                    eligible_sub_providers.pop()
-                    if len(eligible_sub_providers) == 1
-                    else EuropeanaDataIngester.providers["image"]
-                )
-            }
+            record["source"] = (
+                eligible_sub_providers.pop()
+                if len(eligible_sub_providers) == 1
+                else EuropeanaDataIngester.providers["image"]
+            )
+            return {k: v for k, v in record.items() if v is not None}
         except EmptyRequiredFieldException as exc:
             logger.warning("A required field was empty", exc_info=exc)
             return None
@@ -131,20 +131,20 @@ class EuropeanaRecordBuilder:
         return europeana_url
 
     def _get_image_dimensions(self, item_data: dict) -> dict:
-        # Assume that we just want the first dimensions available in the item response,
-        # but consider adding checks, e.g. on landing url.
-        # Test with the first webresource from the first aggregation, found dimensions
-        # for 1424 / 1589 images; so not too worried about performance implications of
-        # the loop. Limiting factor was much more the delay between requests.
-        if aggregations := item_data.get("aggregations"):
-            for aggregation in aggregations:
-                if webresources := aggregation.get("webResources"):
-                    for webresource in webresources:
-                        width = webresource.get("ebucoreWidth")
-                        height = webresource.get("ebucoreHeight")
-                        if width and height:
-                            return {"width": width, "height": height}
+        width = item_data.get("ebucoreWidth")
+        height = item_data.get("ebucoreHeight")
+        if width and height:
+            return {"width": width, "height": height}
         return {}
+
+    def _get_filetype(self, item_data: dict) -> str:
+        if filetype := item_data.get("ebucoreHasMimeType"):
+            if "/" in filetype:
+                return item_data.get("ebucoreHasMimeType").split("/")[1]
+        return filetype
+
+    def _get_filesize(self, item_data: dict) -> int:
+        return item_data.get("ebucoreFileByteSize")
 
     def _get_meta_data_dict(self, data: dict) -> dict:
         meta_data = {
@@ -176,6 +176,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
     providers = {"image": prov.EUROPEANA_DEFAULT_PROVIDER}
     sub_providers = prov.EUROPEANA_SUB_PROVIDERS
     endpoint = "https://api.europeana.eu/record/v2/search.json?"
+    delay = 3
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -255,28 +256,39 @@ class EuropeanaDataIngester(ProviderDataIngester):
         # But it always works on the next try so maybe that's ok?
         # Options:
         # - Switch to 3 second delay across the board and leave everything else alone,
-        #   or maybe add a max number of this kind of failure per dag run.
+        #   or maybe add a max number of this kind of failure per batch or per dag run.
         # - Separate delayed requesters 30 seconds for batch, 1 second for items, same
         #   default batch size = 100.
         # - Smaller batches (35), but default delay = 1 sec, like Brooklyn Museum.
+        # - Just go with defaults across the board, on the assumption that the batch
+        #   query is the expensive one, and there will be at least 30 seconds between,
+        #   given the 100 individual look-ups.
         # Seems like might be best to reach out to Europeana and get their preference
         # for the best way for us to proceed.
         if not (item_id := data.get("id")):
-            logger.debug(f"No foreign id, cannot request additional info on {data}")
+            logger.warning(f"No id, cannot request additional info on {data}")
             return {}
         item_response = self.get_response_json(
             query_params=self.item_params,
             endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
         )
-        if (
-            item_response is None
-            or item_response.get("success") is False
-            or "object" not in item_response
-        ):
-            logger.debug(f"Object not successfully retrieved. {item_response=}")
+        if item_response is None or not (item_response.get("success")):
+            logger.warning("Item request failed no response or ``success != True``")
             return {}
-        logger.debug(f"Successfully retrieved additional info for {item_id}")
-        return item_response.get("object")
+        # Assume that we just want the first info available in the item response,
+        # but consider adding checks, e.g. on landing url.
+        # Testing with the first webresource from the first aggregation, got dimensions
+        # for 1424 / 1589 images; so not too worried about performance implications of
+        # the loops. Limiting factor was much more the delay between requests.
+        if item_object := item_response.get("object"):
+            if aggregations := item_object.get("aggregations"):
+                for aggregation in aggregations:
+                    if webresources := aggregation.get("webResources"):
+                        for webresource in webresources:
+                            if filetype := webresource.get("ebucoreHasMimeType"):
+                                if filetype[:5] == "image":
+                                    return webresource
+        return {}
 
 
 def main(date):
