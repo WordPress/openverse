@@ -247,7 +247,7 @@ def perform_task(
     def promote():  # includes point alias
         promote_api_table(model, progress)
         if model == "audio":
-            promote_api_table("audioset_view", progress)
+            promote_api_table("audioset", progress)
         indexer.point_alias(model, **kwargs)
 
     try:

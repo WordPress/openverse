@@ -70,9 +70,9 @@ def _get_shared_cols(downstream, upstream, upstream_table: str, downstream_table
     """
     with downstream.cursor() as cur1, upstream.cursor() as cur2:
         get_tables = SQL("SELECT * FROM {table} LIMIT 0;")
-        cur1.execute(get_tables.format(table=Identifier(upstream_table)))
+        cur1.execute(get_tables.format(table=Identifier(downstream_table)))
         conn1_cols = {desc[0] for desc in cur1.description}
-        cur2.execute(get_tables.format(table=Identifier(downstream_table)))
+        cur2.execute(get_tables.format(table=Identifier(upstream_table)))
         conn2_cols = {desc[0] for desc in cur2.description}
 
     shared = list(conn1_cols.intersection(conn2_cols))
