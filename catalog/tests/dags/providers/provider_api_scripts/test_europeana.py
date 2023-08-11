@@ -33,7 +33,7 @@ def test_derive_timestamp_pair(ingester):
     # The timestamps below depend on the ``FROZEN_DATE`` constant
     # defined above.
     assert ingester.base_request_body["query"] == (
-        "timestamp_created:[2018-01-15T00:00:00Z TO 2018-01-16T00:00:00Z]"
+        "timestamp_update:[2018-01-15T00:00:00Z TO 2018-01-16T00:00:00Z]"
     )
 
 
