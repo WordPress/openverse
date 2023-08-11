@@ -3,8 +3,8 @@
 This is an exhaustive list for new developers. Feel free to skip the steps that
 you have already done on your own.
 
-If you already have a development environment set up and want to set Openverse
-up on your computer, you can move on to the
+If you already have a development environment set up and want to set up
+Openverse on your computer, you can move on to the
 [quickstart guide](/general/quickstart.md).
 
 ## Operating system
@@ -168,7 +168,7 @@ the specified package manager, also installing it if needed and not present.
 It's a part of Node.js and present in Node.js versions v14.19.0 and v16.9.0
 onwards. So no installation is needed.
 
-Enable Corepack in the monorepo root. Then check if Corepack can discover the
+Enable Corepack in the monorepo root. Then, check if Corepack can discover the
 right package manager, pnpm, by running the following commands.
 
 ```console
