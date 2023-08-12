@@ -27,11 +27,6 @@ runs:
       run: |
         just frontend/run storybook:build
 
-    - name: Build Tailwind Config Viewer
-      shell: bash
-      run: |
-        just frontend/run tcv:build
-
     # Storybook will be available at `/storybook`
     # Tailwind will be available at `/tailwind`
     - name: Merge all docs
@@ -39,4 +34,3 @@ runs:
       run: |
         mv documentation/_build /tmp/docs
         mv frontend/storybook-static /tmp/docs/storybook
-        mv frontend/.tcv-export /tmp/docs/tailwind
