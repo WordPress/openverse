@@ -129,6 +129,12 @@ export const useUiStore = defineStore("ui", {
     },
 
     hideInstructionsSnackbar() {
+      if (this.instructionsSnackbarState === "visible") {
+        this.instructionsSnackbarState = "not_shown"
+      }
+    },
+
+    dismissInstructionsSnackbar() {
       this.instructionsSnackbarState = "dismissed"
     },
 

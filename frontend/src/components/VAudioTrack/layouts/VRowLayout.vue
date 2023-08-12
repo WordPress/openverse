@@ -93,7 +93,7 @@
         />
         <slot
           name="controller"
-          :features="features"
+          :features="audioFeatures"
           :feature-notices="featureNotices"
           :is-tabbable="false"
         />
@@ -107,7 +107,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import { timeFmt } from "~/utils/time-fmt"
 import type { AudioDetail } from "~/types/media"
-import type { AudioSize } from "~/constants/audio"
+import { audioFeatures, AudioSize } from "~/constants/audio"
 
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
@@ -136,7 +136,6 @@ export default defineComponent({
       duration?: string
       seek?: string
     } = {}
-    const features = ["timestamps", "duration", "seek"]
 
     const isSmall = computed(() => props.size === "s")
     const isMedium = computed(() => props.size === "m")
@@ -147,7 +146,7 @@ export default defineComponent({
     return {
       timeFmt,
 
-      features,
+      audioFeatures,
       featureNotices,
 
       isSmall,

@@ -27,6 +27,9 @@ export const useAudioSnackbar = () => {
   const hide = () => {
     useUiStore().hideInstructionsSnackbar()
   }
+  const dismiss = () => {
+    useUiStore().dismissInstructionsSnackbar()
+  }
 
   const isVisible = computed(() => useUiStore().areInstructionsVisible)
 
@@ -34,6 +37,8 @@ export const useAudioSnackbar = () => {
     isVisible,
     show,
     hide,
+    dismiss,
     handleMouseDown,
+    isMouseDown,
   }
 }

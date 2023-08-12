@@ -7,6 +7,7 @@ export interface UseSeekableOptions
   extends ToRefs<{
     duration: number
     currentTime: number
+    isSeekable: boolean
     isReady: boolean
   }> {
   onSeek: (frac: number) => void
@@ -16,6 +17,7 @@ export interface UseSeekableOptions
 export const useSeekable = ({
   duration,
   currentTime,
+  isSeekable,
   isReady,
   onSeek,
   onTogglePlayback,
@@ -64,8 +66,16 @@ export const useSeekable = ({
   const arrowKeys = [keycodes.ArrowLeft, keycodes.ArrowRight]
   const seekingKeys = [...arrowKeys, keycodes.Home, keycodes.End]
   const handledKeys = [...seekingKeys, keycodes.Spacebar]
-  const willBeHandled = (event: KeyboardEvent) =>
-    (handledKeys as string[]).includes(event.key)
+
+  /**
+   * This composable handles space bar for toggling playback.
+   * If `isSeekable` is true, it also handles `seekingKeys`.
+   */
+  const willBeHandled = (event: KeyboardEvent) => {
+    return isSeekable.value
+      ? (handledKeys as string[]).includes(event.key)
+      : event.key === keycodes.Spacebar
+  }
 
   const handleKeys = (event: KeyboardEvent) => {
     if (!willBeHandled(event)) return

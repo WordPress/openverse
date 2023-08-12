@@ -10,7 +10,7 @@
     @keydown="handleKeydown"
     @blur="handleBlur"
     @mousedown="handleMousedown"
-    @focus="$emit('focus', $event)"
+    @focus="handleFocus"
   >
     <Component
       :is="layoutComponent"
@@ -31,6 +31,8 @@
           :message="message"
           @seeked="handleSeeked"
           @toggle-playback="handleToggle"
+          @blur="handleWaveformBlur"
+          @focus="handleWaveformFocus"
         />
       </template>
 
@@ -61,6 +63,7 @@ import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
 import { useSeekable } from "~/composables/use-seekable"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
@@ -427,13 +430,17 @@ export default defineComponent({
           event = "pause"
           break
       }
-      if (event) {
-        emit("interacted", {
-          event,
-          id: props.audio.id,
-          provider: props.audio.provider,
-        })
-      }
+      emitInteracted(event)
+    }
+
+    const emitInteracted = (event?: AudioInteraction) => {
+      if (!event) return
+      snackbar.dismiss()
+      emit("interacted", {
+        event,
+        id: props.audio.id,
+        provider: props.audio.provider,
+      })
     }
 
     /* Interface with VWaveform */
@@ -450,11 +457,7 @@ export default defineComponent({
       if (localAudio) {
         localAudio.currentTime = frac * duration.value
       }
-      emit("interacted", {
-        event: "seek",
-        id: props.audio.id,
-        provider: props.audio.provider,
-      })
+      emitInteracted("seek")
     }
 
     /* Layout */
@@ -475,7 +478,7 @@ export default defineComponent({
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
      */
-    const playPauseRef = ref<HTMLElement | null>(null)
+    const playPauseRef = ref<{ $el: HTMLElement } | null>(null)
 
     /**
      * A ref used on the waveform, so we can capture mousedown on the
@@ -486,6 +489,7 @@ export default defineComponent({
     const handleMousedown = (event: MouseEvent) => {
       const inWaveform =
         waveformRef.value?.$el.contains(event.target as Node) ?? false
+      snackbar.handleMouseDown()
       emit("mousedown", { event, inWaveform })
     }
 
@@ -530,6 +534,7 @@ export default defineComponent({
       duration,
       currentTime,
       isReady: ref(true),
+      isSeekable: computed(() => props.layout !== "box"),
       onSeek: handleSeeked,
       onTogglePlayback: togglePlayback,
     })
@@ -543,6 +548,29 @@ export default defineComponent({
       ...layoutBasedProps.value,
     }))
 
+    const snackbar = useAudioSnackbar()
+
+    const handleFocus = (event: FocusEvent) => {
+      snackbar.show()
+      emit("focus", event)
+    }
+
+    const handleBlur = () => {
+      snackbar.hide()
+      seekable.listeners.blur()
+    }
+
+    const handleWaveformFocus = (event: FocusEvent) => {
+      if (!isComposite.value) {
+        handleFocus(event)
+      }
+    }
+    const handleWaveformBlur = () => {
+      if (!isComposite.value) {
+        handleBlur()
+      }
+    }
+
     return {
       status,
       message,
@@ -550,8 +578,11 @@ export default defineComponent({
       handleToggle,
       handleSeeked,
       handleKeydown,
-      handleBlur: seekable.listeners.blur,
+      handleBlur,
       handleMousedown,
+      handleFocus,
+      handleWaveformBlur,
+      handleWaveformFocus,
 
       isSeeking,
 

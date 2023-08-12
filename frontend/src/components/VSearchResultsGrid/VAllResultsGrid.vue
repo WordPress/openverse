@@ -13,7 +13,7 @@
         :to="contentLinkPath(mediaType)"
       />
     </div>
-    <VSnackbar size="large" :is-visible="snackbar.isVisible.value">
+    <VSnackbar size="large" :is-visible="isSnackbarVisible">
       <i18n path="allResults.snackbar.text" tag="p">
         <template #spacebar>
           <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
@@ -44,13 +44,13 @@
           :search-term="searchTerm"
           aspect-ratio="square"
         />
-        <VAudioCell
+        <VAudioResult
           v-if="isDetail.audio(item)"
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
-          @interacted="snackbar.hide"
-          @focus="snackbar.show"
+          layout="box"
+          :is-related="false"
         />
       </template>
     </ol>
@@ -61,6 +61,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue"
+import { storeToRefs } from "pinia"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -68,14 +69,13 @@ import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
 
-import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { useI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
-import VAudioCell from "~/components/VSearchResultsGrid/VAudioCell.vue"
+import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
@@ -85,7 +85,7 @@ export default defineComponent({
   components: {
     VSnackbar,
     VImageCell,
-    VAudioCell,
+    VAudioResult,
     VLoadMore,
     VGridSkeleton,
     VContentLink,
@@ -126,9 +126,10 @@ export default defineComponent({
     )
 
     const uiStore = useUiStore()
-    const snackbar = useAudioSnackbar()
-
-    const isSidebarVisible = computed(() => uiStore.isFilterVisible)
+    const {
+      areInstructionsVisible: isSnackbarVisible,
+      isFilterVisible: isSidebarVisible,
+    } = storeToRefs(uiStore)
 
     return {
       searchTerm,
@@ -143,8 +144,7 @@ export default defineComponent({
       contentLinkPath,
 
       isSidebarVisible,
-
-      snackbar,
+      isSnackbarVisible,
 
       isDetail,
     }
