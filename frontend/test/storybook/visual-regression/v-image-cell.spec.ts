@@ -16,9 +16,7 @@ test.describe("VImageCell", () => {
   const aspectRatios: AspectRatio[] = ["square", "intrinsic"]
 
   for (const ratio of aspectRatios) {
-    // https://github.com/WordPress/openverse/issues/2820
-    // eslint-disable-next-line playwright/no-skipped-test
-    test.skip(`${ratio} loaded`, async ({ page }) => {
+    test(`${ratio} loaded`, async ({ page }) => {
       await gotoWithArgs(page, { aspectRatio: ratio })
       const mainEl = page.locator(imageCell)
       await expect(mainEl).toBeVisible()
