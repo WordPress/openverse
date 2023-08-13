@@ -1,17 +1,17 @@
 <template>
-  <section class="w-full">
-    <div class="mb-6 flex flex-row items-center justify-between">
+  <section class="flex w-full flex-col gap-y-6">
+    <div class="flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
         {{ $t("imageDetails.information.title") }}
       </h2>
       <VContentReportPopover :media="image" />
     </div>
-    <ul v-if="image && image.tags" class="mb-6 flex flex-wrap gap-2">
+    <ul v-if="image && image.tags" class="flex flex-wrap gap-2">
       <VMediaTag v-for="(tag, index) in filteredTags" :key="index" tag="li">{{
         tag.name
       }}</VMediaTag>
     </ul>
-    <dl>
+    <dl class="flex flex-col gap-y-6">
       <div>
         <dt>{{ $t("imageDetails.information.type") }}</dt>
         <dd class="uppercase">{{ imgType }}</dd>
@@ -87,18 +87,30 @@ export default defineComponent({
 </script>
 
 <style scoped>
-dl {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  grid-gap: 1rem;
-}
-
 dt,
 dd {
   @apply text-sm md:text-base;
 }
 
 dd {
-  @apply mt-2 font-semibold;
+  @apply font-semibold;
+}
+
+dl div {
+  @apply flex flex-row;
+}
+
+dl div > dt {
+  @apply w-1/3;
+}
+
+@screen sm {
+  dl {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+  dl div {
+    @apply flex flex-col gap-y-2;
+  }
 }
 </style>
