@@ -9,9 +9,9 @@ const getImageType = (
 ) => {
   if (imageType) {
     if (imageType.split("/").length > 1) {
-      return imageType.split("/")[1].toUpperCase()
+      return imageType.split("/")[1]
     }
-    return imageType.toUpperCase()
+    return imageType
   }
   return i18n.t("imageDetails.information.unknown")
 }
@@ -24,7 +24,7 @@ const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
     altFormats.unshift(audio.filetype)
   }
   const uniqueFormats = new Set(altFormats)
-  return [...uniqueFormats].join(", ").toUpperCase()
+  return [...uniqueFormats].join(", ")
 }
 
 export const getMediaMetadata = (
@@ -60,7 +60,7 @@ export const getMediaMetadata = (
       : getAudioType(media, i18n)
   metadata.push({
     label: i18n.t("imageDetails.information.type"),
-    value: mediaTypeString,
+    value: mediaTypeString.toString().toUpperCase(),
   })
 
   if (media.frontendMediaType === IMAGE) {
