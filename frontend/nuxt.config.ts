@@ -138,6 +138,7 @@ const config: NuxtConfig = {
     "~/plugins/ua-parse.ts",
     "~/plugins/focus-visible.client.ts",
     "~/plugins/api-token.server.ts",
+    "~/plugins/polyfills.client.ts",
     "~/plugins/sentry.ts",
   ],
   css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
