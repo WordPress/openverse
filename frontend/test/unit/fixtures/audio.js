@@ -4,6 +4,7 @@ export const getAudioObj = (overrides = {}) =>
   Object.assign(
     {
       id: uuid.v4(),
+      frontendMediaType: "audio",
       title: "La vie des bêtes",
       foreign_landing_url: "https://www.jamendo.com/track/11188",
       creator: "AS-POTIRONT!",
