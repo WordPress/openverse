@@ -16,6 +16,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
 
+import { getMediaMetadata } from "~/utils/metadata"
 import type { ImageDetail, Metadata } from "~/types/media"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
@@ -42,48 +43,18 @@ export default defineComponent({
   },
   setup(props) {
     const i18n = useI18n()
-    const imgType = computed(() => {
-      if (props.imageType) {
-        if (props.imageType.split("/").length > 1) {
-          return props.imageType.split("/")[1].toUpperCase()
-        }
-        return props.imageType
-      }
-      return i18n.t("imageDetails.information.unknown")
-    })
 
     const imageMetadata = computed<null | Metadata[]>(() => {
-      if (!props.image) return null
-      const metadata: Metadata[] = [
-        {
-          label: i18n.t("imageDetails.information.type"),
-          value: imgType.value,
-        },
-      ]
-      if (
-        props.image.source &&
-        props.image.providerName !== props.image.sourceName
-      ) {
-        metadata.push({
-          label: i18n.t("imageDetails.information.provider"),
-          value: props.image.providerName || props.image.provider,
-        })
-      }
-      metadata.push({
-        label: i18n.t("imageDetails.information.source"),
-        value: props.image,
-        component: "VSourceExternalLink",
-      })
-      metadata.push({
-        label: i18n.t("imageDetails.information.dimensions"),
-        value: `${props.imageWidth} × ${props.imageHeight} ${i18n.t(
-          "imageDetails.information.pixels"
-        )}`,
-      })
-      return metadata
+      return props.image
+        ? getMediaMetadata(props.image, i18n, {
+            width: props.imageWidth,
+            height: props.imageHeight,
+            type: props.imageType,
+          })
+        : null
     })
 
-    return { imgType, imageMetadata }
+    return { imageMetadata }
   },
 })
 </script>

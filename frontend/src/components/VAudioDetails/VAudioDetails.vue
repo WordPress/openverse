@@ -31,6 +31,8 @@ import type { AudioDetail } from "~/types/media"
 
 import { useI18n } from "~/composables/use-i18n"
 
+import { getMediaMetadata } from "~/utils/metadata"
+
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
 import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
@@ -52,70 +54,13 @@ export default defineComponent({
   },
   setup(props) {
     const i18n = useI18n()
-    const audioFormats = computed(() => {
-      if (!props.audio.alt_files) return props.audio.filetype ?? ""
-      const altFormats = props.audio.alt_files.map(
-        (altFile) => altFile.filetype
-      )
-      if (props.audio.filetype) {
-        altFormats.unshift(props.audio.filetype)
-      }
-      const uniqueFormats = new Set(altFormats)
-      return [...uniqueFormats].join(", ")
-    })
 
     const audioMetadata = computed(() => {
       if (!props.audio) return null
-      const metadata = []
-      if (props.audio.audio_set) {
-        metadata.push({
-          label: i18n.t("audioDetails.table.album"),
-          value: props.audio.audio_set.title,
-          url: props.audio.audio_set.foreign_landing_url,
-        })
-      }
-      if (props.audio.category) {
-        metadata.push({
-          label: i18n.t("audioDetails.table.category"),
-          value: i18n.t(`filters.audioCategories.${props.audio.category}`),
-        })
-      }
-      if (props.audio.sample_rate) {
-        metadata.push({
-          label: i18n.t("audioDetails.table.sampleRate"),
-          value: props.audio.sample_rate.toString(),
-        })
-      }
-      if (props.audio.filetype) {
-        metadata.push({
-          label: i18n.t("audioDetails.table.filetype"),
-          value: audioFormats.value.toUpperCase(),
-        })
-      }
-      if (
-        props.audio.source &&
-        props.audio.sourceName !== props.audio.providerName
-      ) {
-        metadata.push({
-          label: i18n.t("audioDetails.table.provider"),
-          value: props.audio.providerName || props.audio.provider,
-        })
-      }
-      metadata.push({
-        label: i18n.t("audioDetails.table.source"),
-        value: props.audio,
-        component: "VSourceExternalLink" as const,
-      })
-      if (props.audio.genres && props.audio.genres.length > 0) {
-        metadata.push({
-          label: i18n.t("audioDetails.table.genre"),
-          value: props.audio.genres.join(", "),
-        })
-      }
-      return metadata
+      return getMediaMetadata(props.audio, i18n)
     })
 
-    return { audioFormats, audioMetadata }
+    return { audioMetadata }
   },
 })
 </script>
