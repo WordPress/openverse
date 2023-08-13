@@ -3,6 +3,8 @@ import type { License, LicenseVersion } from "~/constants/license"
 import type { Sensitivity } from "~/constants/content-safety"
 import { AUDIO, IMAGE } from "~/constants/media"
 
+import type { TranslateResult } from "vue-i18n"
+
 export interface Tag {
   name: string
 }
@@ -121,4 +123,11 @@ export const isMediaDetail = <T extends SupportedMediaType>(
   mediaType: T
 ): media is DetailFromMediaType<T> => {
   return !!media && media.frontendMediaType === mediaType
+}
+
+export type Metadata = {
+  label: string | TranslateResult
+  url?: string
+  value: string | TranslateResult | AudioDetail | ImageDetail
+  component?: "VSourceExternalLink"
 }

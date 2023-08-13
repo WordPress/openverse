@@ -27,7 +27,7 @@ describe("VAudioDetails", () => {
     }
     options = {
       propsData: props,
-      stubs: ["VAudioThumbnail", "VContentReportPopover", "VLink", "VMediaTag"],
+      stubs: ["VAudioThumbnail", "VLink"],
     }
   })
 

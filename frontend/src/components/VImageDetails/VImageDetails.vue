@@ -6,33 +6,8 @@
       </h2>
       <VContentReportPopover :media="image" />
     </div>
-    <ul v-if="image && image.tags" class="flex flex-wrap gap-2">
-      <VMediaTag v-for="(tag, index) in filteredTags" :key="index" tag="li">{{
-        tag.name
-      }}</VMediaTag>
-    </ul>
-    <dl class="flex flex-col gap-y-6">
-      <div>
-        <dt>{{ $t("imageDetails.information.type") }}</dt>
-        <dd class="uppercase">{{ imgType }}</dd>
-      </div>
-      <div v-if="image.source && image.providerName !== image.sourceName">
-        <dt>{{ $t("imageDetails.information.provider") }}</dt>
-        <dd>{{ image.providerName }}</dd>
-      </div>
-      <div>
-        <dt>{{ $t("imageDetails.information.source") }}</dt>
-        <dd><VSourceExternalLink :media="image" /></dd>
-      </div>
-      <div>
-        <dt>{{ $t("imageDetails.information.dimensions") }}</dt>
-        <dd>
-          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          {{ imageWidth }} &times; {{ imageHeight }}
-          {{ $t("imageDetails.information.pixels") }}
-        </dd>
-      </div>
-    </dl>
+    <VMediaTags :tags="image.tags" />
+    <VMetadata v-if="imageMetadata" :metadata="imageMetadata" :media="image" />
   </section>
 </template>
 
@@ -41,15 +16,15 @@ import { computed, defineComponent, PropType } from "vue"
 
 import { useI18n } from "~/composables/use-i18n"
 
-import type { ImageDetail } from "~/types/media"
+import type { ImageDetail, Metadata } from "~/types/media"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
-import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
-import VSourceExternalLink from "~/components/VImageDetails/VSourceExternalLink.vue"
+import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
+import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
 
 export default defineComponent({
   name: "VImageDetails",
-  components: { VSourceExternalLink, VContentReportPopover, VMediaTag },
+  components: { VContentReportPopover, VMediaTags, VMetadata },
   props: {
     image: {
       type: Object as PropType<ImageDetail>,
@@ -77,40 +52,38 @@ export default defineComponent({
       return i18n.t("imageDetails.information.unknown")
     })
 
-    const filteredTags = computed(() => {
-      return props.image.tags.filter((i: { name: string }) => !!i)
+    const imageMetadata = computed<null | Metadata[]>(() => {
+      if (!props.image) return null
+      const metadata: Metadata[] = [
+        {
+          label: i18n.t("imageDetails.information.type"),
+          value: imgType.value,
+        },
+      ]
+      if (
+        props.image.source &&
+        props.image.providerName !== props.image.sourceName
+      ) {
+        metadata.push({
+          label: i18n.t("imageDetails.information.provider"),
+          value: props.image.providerName || props.image.provider,
+        })
+      }
+      metadata.push({
+        label: i18n.t("imageDetails.information.source"),
+        value: props.image,
+        component: "VSourceExternalLink",
+      })
+      metadata.push({
+        label: i18n.t("imageDetails.information.dimensions"),
+        value: `${props.imageWidth} × ${props.imageHeight} ${i18n.t(
+          "imageDetails.information.pixels"
+        )}`,
+      })
+      return metadata
     })
 
-    return { filteredTags, imgType }
+    return { imgType, imageMetadata }
   },
 })
 </script>
-
-<style scoped>
-dt,
-dd {
-  @apply text-sm md:text-base;
-}
-
-dd {
-  @apply font-semibold;
-}
-
-dl div {
-  @apply flex flex-row;
-}
-
-dl div > dt {
-  @apply w-1/3;
-}
-
-@screen sm {
-  dl {
-    @apply grid gap-4;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
-  dl div {
-    @apply flex flex-col gap-y-2;
-  }
-}
-</style>
