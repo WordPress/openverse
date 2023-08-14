@@ -19,7 +19,8 @@
     v-bind="linkProps"
     :aria-disabled="!href"
     :class="{
-      'inline-flex w-max items-center': showExternalIcon && !externalLinkInline,
+      'inline-flex w-max items-center gap-x-2':
+        showExternalIcon && !externalLinkInline,
       inline: showExternalIcon && externalLinkInline,
     }"
     @click="handleExternalClick"
@@ -28,7 +29,8 @@
     <slot /><VIcon
       v-if="showExternalIcon && !isInternal"
       name="external-link"
-      class="ms-1 inline-block sm:ms-2"
+      class="inline-block"
+      :class="{ 'ms-1': externalLinkInline }"
       :size="externalIconSize"
       rtl-flip
     />

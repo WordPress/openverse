@@ -12,7 +12,7 @@
           @click="sendVisitSourceLinkEvent(datum.url, datum.isSource)"
           >{{ datum.value }}</VLink
         >
-        <span v-else>{{ datum.value }}</span>
+        <span v-else class="w-auto sm:w-max">{{ datum.value }}</span>
       </dd>
     </div>
   </dl>
