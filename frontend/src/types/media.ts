@@ -128,6 +128,6 @@ export const isMediaDetail = <T extends SupportedMediaType>(
 export type Metadata = {
   label: string | TranslateResult
   url?: string
-  value: string | TranslateResult | AudioDetail | ImageDetail
-  component?: "VSourceExternalLink"
+  value: string | TranslateResult
+  isSource?: boolean
 }

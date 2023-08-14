@@ -1,6 +1,8 @@
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 import { AUDIO, IMAGE } from "~/constants/media"
 
+import { useProviderStore } from "~/stores/provider"
+
 import type { NuxtI18nInstance } from "@nuxtjs/i18n"
 
 const getImageType = (
@@ -13,12 +15,12 @@ const getImageType = (
     }
     return imageType
   }
-  return i18n.t("imageDetails.information.unknown")
+  return i18n.t("mediaDetails.information.unknown")
 }
 
 const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
   if (!audio.alt_files)
-    return audio.filetype ?? i18n.t("imageDetails.information.unknown")
+    return audio.filetype ?? i18n.t("mediaDetails.information.unknown")
   const altFormats = audio.alt_files.map((altFile) => altFile.filetype)
   if (audio.filetype) {
     altFormats.unshift(audio.filetype)
@@ -35,19 +37,25 @@ export const getMediaMetadata = (
   const metadata: Metadata[] = []
   if (media.source && media.providerName !== media.sourceName) {
     metadata.push({
-      label: i18n.t("imageDetails.information.provider"),
+      label: i18n.t("mediaDetails.providerLabel"),
       value: media.providerName || media.provider,
     })
   }
+  const sourceUrl = useProviderStore().getSourceUrl(
+    media.source ?? media.provider,
+    media.frontendMediaType
+  )
+  const sourceName = media.sourceName ?? media.providerName ?? media.provider
   metadata.push({
-    label: i18n.t("imageDetails.information.source"),
-    value: media,
-    component: "VSourceExternalLink",
+    label: i18n.t("mediaDetails.sourceLabel"),
+    isSource: true,
+    url: sourceUrl,
+    value: sourceName,
   })
 
   if (media.category) {
     metadata.push({
-      label: i18n.t("audioDetails.table.category"),
+      label: i18n.t("mediaDetails.information.category"),
       value: i18n.t(
         `filters.${media.frontendMediaType}Categories.${media.category}`
       ),
@@ -59,7 +67,7 @@ export const getMediaMetadata = (
       ? getImageType(imageInfo?.type, i18n)
       : getAudioType(media, i18n)
   metadata.push({
-    label: i18n.t("imageDetails.information.type"),
+    label: i18n.t("mediaDetails.information.type"),
     value: mediaTypeString.toString().toUpperCase(),
   })
 
@@ -73,7 +81,7 @@ export const getMediaMetadata = (
   }
   if (media.frontendMediaType === AUDIO) {
     if (media.audio_set) {
-      metadata.push({
+      metadata.unshift({
         label: i18n.t("audioDetails.table.album"),
         value: media.audio_set.title,
         url: media.audio_set.foreign_landing_url,

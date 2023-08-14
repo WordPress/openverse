@@ -450,6 +450,11 @@
     },
   },
   mediaDetails: {
+    information: {
+      type: "Type",
+      unknown: "Unknown",
+      category: "Category",
+    },
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
@@ -538,13 +543,8 @@
     creator: "by {name}",
     weblink: "Get this image",
     information: {
-      title: "Image information",
-      type: "Type",
-      provider: "Provider",
       dimensions: "Dimensions",
-      source: "Source",
       pixels: "pixels",
-      unknown: "Unknown",
     },
     relatedImages: "Related images",
     aria: {
@@ -556,14 +556,10 @@
     relatedAudios: "Related audio",
     table: {
       album: "Album",
-      category: "Type",
       sampleRate: "Sample Rate",
       filetype: "Format",
-      provider: "Provider",
-      source: "Source",
       genre: "Genre",
     },
-    information: "Audio information",
     weblink: "Get this audio",
   },
   allResults: {

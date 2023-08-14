@@ -2,7 +2,7 @@
   <section class="flex w-full flex-col gap-y-6">
     <div class="flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
-        {{ $t("imageDetails.information.title") }}
+        {{ $t("mediaDetails.imageInfo") }}
       </h2>
       <VContentReportPopover :media="image" />
     </div>
