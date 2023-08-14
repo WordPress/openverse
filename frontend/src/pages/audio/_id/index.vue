@@ -1,9 +1,9 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <VSafetyWall v-if="isHidden" :media="audio" @reveal="reveal" />
-    <template v-else>
-      <VSingleResultControls v-if="audio" :media="audio" />
-      <template v-if="audio">
+    <template v-if="audio">
+      <VSafetyWall v-if="isHidden" :media="audio" @reveal="reveal" />
+      <template v-else>
+        <VSingleResultControls :media="audio" />
         <VAudioTrack
           layout="full"
           :audio="audio"
@@ -13,8 +13,8 @@
         <div
           class="mx-auto mt-10 flex flex-col gap-10 px-6 lg:mt-16 lg:max-w-5xl lg:gap-16"
         >
-          <VMediaReuse data-testid="audio-attribution" :media="audio" />
-          <VAudioDetails data-testid="audio-info" :audio="audio" />
+          <VMediaReuse :media="audio" />
+          <VMediaDetails :media="audio" />
           <VRelatedAudio
             @interacted="sendAudioEvent($event, 'VRelatedAudio')"
           />
@@ -46,15 +46,19 @@ import { createDetailPageMeta } from "~/utils/og"
 
 import { useI18n } from "~/composables/use-i18n"
 
-import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
+import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
+import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
+import VSingleResultControls from "~/components/VSingleResultControls.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
   components: {
-    VAudioDetails,
+    VSingleResultControls,
+    VSafetyWall,
+    VMediaDetails,
     VAudioTrack,
     VMediaReuse,
     VRelatedAudio,

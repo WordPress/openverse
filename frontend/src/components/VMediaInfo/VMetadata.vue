@@ -5,7 +5,7 @@
     <div
       v-for="datum in metadata"
       :key="`${datum.label}`"
-      class="grid grid-cols-[30%,1fr] gap-x-4 text-sm sm:flex sm:flex-grow sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
+      class="grid grid-cols-[30%,1fr] gap-x-4 text-sm sm:flex sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
     >
       <dt class="sm:w-max">{{ datum.label }}</dt>
       <dd class="max-w-full overflow-hidden font-semibold">
@@ -18,7 +18,7 @@
           @click="sendVisitSourceLinkEvent(datum.url, datum.isSource)"
           >{{ datum.value }}</VLink
         >
-        <span v-else class="w-auto sm:w-max">{{ datum.value }}</span>
+        <span v-else class="w-auto sm:flex sm:w-max">{{ datum.value }}</span>
       </dd>
     </div>
   </dl>
