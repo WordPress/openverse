@@ -21,7 +21,7 @@ describe("VMediaDetails", () => {
 
   beforeEach(() => {
     props = {
-      audio: getAudioObj(overrides),
+      media: getAudioObj(overrides),
     }
     options = {
       propsData: props,
@@ -40,7 +40,7 @@ describe("VMediaDetails", () => {
   })
 
   it("hides the album title tag when it does not exists", () => {
-    options.propsData.audio.audio_set = null
+    options.propsData.media.audio_set = null
     render(VMediaDetails, options)
     expect(screen.queryByText("Album")).toBeNull()
   })
@@ -51,7 +51,7 @@ describe("VMediaDetails", () => {
   })
 
   it("displays multiple filetypes when they are available in alt_files", () => {
-    options.propsData.audio.alt_files = [
+    options.propsData.media.alt_files = [
       { filetype: "wav" },
       { filetype: "ogg" },
     ]
@@ -60,7 +60,7 @@ describe("VMediaDetails", () => {
   })
 
   it("displays only distinct filetypes", () => {
-    options.propsData.audio.alt_files = [
+    options.propsData.media.alt_files = [
       { filetype: "ogg" },
       { filetype: "ogg" },
     ]
