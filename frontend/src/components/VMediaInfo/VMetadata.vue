@@ -19,10 +19,11 @@ import { defineComponent, PropType } from "vue"
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 
 import VSourceExternalLink from "~/components/VImageDetails/VSourceExternalLink.vue"
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
   name: "VMetadata",
-  components: { VSourceExternalLink },
+  components: { VLink, VSourceExternalLink },
   props: {
     media: {
       type: Object as PropType<AudioDetail | ImageDetail>,
@@ -51,7 +52,7 @@ dl div {
 }
 
 dl div > dt {
-  @apply w-1/3;
+  @apply basis-1/3;
 }
 
 @screen sm {
