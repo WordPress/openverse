@@ -4,7 +4,6 @@
 :titlesonly:
 
 quickstart
-develop
 deploy
 test
 analytics
