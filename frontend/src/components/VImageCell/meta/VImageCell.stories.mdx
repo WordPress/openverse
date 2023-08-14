@@ -7,6 +7,7 @@ import {
 } from "@storybook/addon-docs"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import { image } from "~~/test/unit/fixtures/image"
+import { base64Image } from "~~/test/unit/fixtures/base64Image"
 
 <Meta title="Components/VImageCell" components={VImageCell} />
 
@@ -16,7 +17,7 @@ export const Template = (args, { argTypes }) => ({
   template: `
     <ol class="flex flex-wrap gap-4">
       <VImageCell
-        :image="image"
+        :image="{ ...image, url: base64Image }"
         searchTerm="test"
         :aspect-ratio="aspectRatio"
         relatedTo="fake-uuid"
