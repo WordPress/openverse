@@ -106,21 +106,8 @@ section before this will do anything.**
 
 - `width`: The width of the screen in pixels at the time of the event
 - `height`: The height of the screen in pixels at the time of the event
-- `timestamp`: ISO formatted UTC timestamp of the time the event was sent
-- `language`: The language the site was in when the event was sent
 - `breakpoint`: One of the Openverse breakpoint values, for determining broad
   page layout for a given event
-- `ua`: The full user agent string
-- `os`: The operating system of the user, extracted from the user agent string
-- `platform`: The platform of the user, extracted from the user agent string
-- `browser`: The name of the browser vendor, extracted from the user agent
-  string
-- `version`: The browser version, extracted from the user agent string
-- `origin`: The origin of the custom event, in production this will always be
-  `openverse.org` or `production.openverse.org`
-- `pathname`: The path the user was on when the event was triggered
-- `referrer`: The URL of the page that referred the user to the current page, if
-  any
 
 While these are included by default, any of them may not be present for a given
 event instance if the information was not available at the time. For example,
