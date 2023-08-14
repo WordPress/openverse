@@ -249,7 +249,7 @@ const config: NuxtConfig = {
         },
         plugins: {
           tailwindcss: {
-            config: path.resolve(__dirname, "tailwind.config.js"),
+            config: path.resolve(__dirname, "tailwind.config.ts"),
           },
           "postcss-focus-visible": {},
         },

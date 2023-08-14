@@ -140,7 +140,7 @@ Time                - 11px - xs semibold (default leading-tight)
    *
    * There is no bold-transparent variant.
    *
-   * The color of the ring (or outline for `focus-slim-filled`) is set by a plugin defined in `tailwind.config.js`.
+   * The color of the ring (or outline for `focus-slim-filled`) is set by a plugin defined in `tailwind.config.ts`.
    */
 
   [class*="focus-slim-offset"] {
@@ -194,5 +194,14 @@ Time                - 11px - xs semibold (default leading-tight)
    */
   #content {
     @apply scroll-mt-20;
+  }
+
+  .h-dyn-screen {
+    @apply h-screen;
+    @apply h-[100dvh];
+  }
+  .min-h-dyn-screen {
+    @apply min-h-screen;
+    @apply min-h-[100dvh];
   }
 }

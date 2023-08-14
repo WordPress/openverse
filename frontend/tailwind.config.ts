@@ -1,13 +1,16 @@
-const defaultTheme = require("tailwindcss/defaultTheme")
-const plugin = require("tailwindcss/plugin")
+import defaultTheme from "tailwindcss/defaultTheme"
+import plugin from "tailwindcss/plugin"
 
-const { SCREENS } = require("./src/constants/screens")
-const { Z_INDICES } = require("./src/constants/z-indices")
+import { SCREENS } from "./src/constants/screens"
+import { Z_INDICES } from "./src/constants/z-indices"
 
-module.exports = {
+import type { Config } from "tailwindcss"
+import type { PluginAPI } from "tailwindcss/types/config"
+
+export default {
   content: [
     "./src/**/*.{vue,js,jsx,ts,tsx,mdx}",
-    "./nuxt.config.js",
+    "./nuxt.config.ts",
     "./tailwind.safelist.txt",
   ],
   theme: {
@@ -116,7 +119,7 @@ module.exports = {
     ringWidth: {
       DEFAULT: "1.5px", // aka slim
       bold: "3.0px",
-      0: 0,
+      0: "0",
     },
     borderWidth: {
       0: "0px",
@@ -187,9 +190,9 @@ module.exports = {
       ],
     },
     flexGrow: {
-      0: 0,
-      DEFAULT: 1,
-      2: 2,
+      0: "0",
+      DEFAULT: "1",
+      2: "2",
     },
     fontFamily: {
       mono: ['"JetBrains Mono"', "monospace"],
@@ -197,12 +200,6 @@ module.exports = {
       serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
-      height: {
-        "dyn-screen": ["100vh", "100dvh"],
-      },
-      minHeight: {
-        "dyn-screen": ["100vh", "100dvh"],
-      },
       blur: {
         image: "60px",
         text: "4px",
@@ -233,7 +230,7 @@ module.exports = {
       outlineWidth: {
         1.5: "1.5px",
       },
-      typography: (theme) => ({
+      typography: (theme: PluginAPI["theme"]) => ({
         DEFAULT: {
           css: {
             "--tw-prose-body": theme("colors.dark-charcoal.default"),
@@ -275,4 +272,4 @@ module.exports = {
       )
     }),
   ],
-}
+} satisfies Config

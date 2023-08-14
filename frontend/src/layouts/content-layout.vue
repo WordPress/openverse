@@ -2,7 +2,7 @@
   <div>
     <VSkipToContentButton />
     <div
-      class="app grid min-h-dyn-screen grid-cols-1 grid-rows-[auto,1fr,auto] bg-white"
+      class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr,auto] bg-white"
       :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
     >
       <div class="header-el sticky top-0 z-40 block bg-white">
