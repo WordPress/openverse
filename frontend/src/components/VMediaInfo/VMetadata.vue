@@ -1,13 +1,19 @@
 <template>
-  <dl>
-    <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt>{{ datum.label }}</dt>
-      <dd>
+  <dl
+    class="flex flex-col gap-y-4 sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-5 sm:after:flex-auto sm:after:content-['']"
+  >
+    <div
+      v-for="datum in metadata"
+      :key="`${datum.label}`"
+      class="grid grid-cols-[30%,1fr] gap-x-4 text-sm sm:flex sm:flex-grow sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
+    >
+      <dt class="sm:w-max">{{ datum.label }}</dt>
+      <dd class="max-w-full overflow-hidden font-semibold">
         <VLink
           v-if="datum.url"
           :href="datum.url"
           class="text-pink"
-          :show-external-icon="true"
+          show-external-icon
           :external-link-inline="!isSm"
           @click="sendVisitSourceLinkEvent(datum.url, datum.isSource)"
           >{{ datum.value }}</VLink
@@ -62,40 +68,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-dt,
-dd {
-  @apply text-sm md:text-base;
-}
-
-dd {
-  @apply font-semibold;
-}
-dl {
-  @apply flex flex-col gap-y-4;
-}
-
-dl div {
-  @apply grid grid-cols-[30%,1fr] gap-x-4;
-}
-dl div dd {
-  @apply max-w-full overflow-hidden;
-}
-
-@screen sm {
-  dl {
-    @apply flex-row flex-wrap gap-x-10 gap-y-5;
-  }
-  dl::after {
-    content: "";
-    flex: auto;
-  }
-  dl div {
-    @apply flex flex-grow basis-0 flex-col gap-y-2;
-  }
-  dl div dt {
-    @apply w-max;
-  }
-}
-</style>
