@@ -10,9 +10,7 @@
 
     <VExternalSearchForm
       v-if="!isAllView"
-      :type="externalSourcesType"
       :has-no-results="hasNoResults"
-      :external-sources="externalSources"
       :search-term="searchTerm"
       :is-supported="supported"
     />
@@ -21,30 +19,18 @@
     <template #image>
       <VErrorImage error-code="NO_RESULT" />
     </template>
-    <VNoResults
-      :external-sources="externalSources"
-      :search-term="searchTerm"
-      :media-type="externalSourcesType"
-    />
+    <VNoResults :search-term="searchTerm" />
   </VErrorSection>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import {
-  ALL_MEDIA,
-  IMAGE,
-  isAdditionalSearchType,
-  isSupportedMediaType,
-  SearchType,
-} from "~/constants/media"
+import { ALL_MEDIA, SearchType } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { defineEvent } from "~/types/emits"
 import type { FetchState } from "~/types/fetch-state"
 import type { ApiQueryParams } from "~/utils/search-query-transform"
-import { getAdditionalSources } from "~/utils/get-additional-sources"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
@@ -99,28 +85,7 @@ export default defineComponent({
         : false
     })
 
-    /**
-     * External sources search form shows the external sources for current search type, or for images if the search type is 'All Content'.
-     */
-    const externalSourcesType = computed(() => {
-      const featureFlagStore = useFeatureFlagStore()
-      if (isSupportedMediaType(props.searchType)) {
-        return props.searchType
-      }
-      if (
-        featureFlagStore.isOn("additional_search_types") &&
-        isAdditionalSearchType(props.searchType)
-      ) {
-        return props.searchType
-      }
-      return IMAGE
-    })
-
     const isAllView = computed(() => props.searchType === ALL_MEDIA)
-
-    const externalSources = computed(() =>
-      getAdditionalSources(externalSourcesType.value, props.query)
-    )
 
     const searchTerm = computed(() => props.query.q || "")
 
@@ -134,10 +99,8 @@ export default defineComponent({
 
     return {
       hasNoResults,
-      externalSourcesType,
       isAllView,
       NO_RESULT,
-      externalSources,
       searchTerm,
       showError,
     }

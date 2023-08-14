@@ -1,6 +1,6 @@
 <template>
   <section
-    :key="type"
+    :key="externalSourcesType"
     ref="sectionRef"
     class="external-sources flex flex-row place-items-center justify-center py-4"
     data-testid="external-sources-form"
@@ -19,7 +19,9 @@
       class="description-regular"
     >
       <template #openverse>Openverse</template>
-      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
+      <template #type>{{
+        $t(`externalSources.form.types.${externalSourcesType}`)
+      }}</template>
     </i18n>
 
     <i18n
@@ -28,7 +30,9 @@
       tag="p"
       class="description-regular"
     >
-      <template #type>{{ $t(`externalSources.form.types.${type}`) }}</template>
+      <template #type>{{
+        $t(`externalSources.form.types.${externalSourcesType}`)
+      }}</template>
       <template #query>{{ searchTerm }}</template>
     </i18n>
 
@@ -64,8 +68,6 @@
       >
         <VExternalSourceList
           class="flex flex-col"
-          :external-sources="externalSources"
-          :media-type="type"
           :search-term="searchTerm"
           @close="closeDialog"
         />
@@ -75,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, SetupContext } from "vue"
+import { computed, defineComponent, ref, SetupContext } from "vue"
 
 import { storeToRefs } from "pinia"
 
@@ -87,9 +89,7 @@ import { useMediaStore } from "~/stores/media"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useAnalytics } from "~/composables/use-analytics"
-
-import type { MediaType } from "~/constants/media"
-import type { ExternalSource } from "~/types/external-source"
+import { useExternalSources } from "~/composables/use-external-sources"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"
@@ -107,16 +107,8 @@ export default defineComponent({
     VExternalSourceList,
   },
   props: {
-    type: {
-      type: String as PropType<MediaType>,
-      required: true,
-    },
     searchTerm: {
       type: String,
-      required: true,
-    },
-    externalSources: {
-      type: Array as PropType<ExternalSource[]>,
       required: true,
     },
     isSupported: {
@@ -133,7 +125,7 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const sectionRef = ref<HTMLElement | null>(null)
-    const triggerRef = ref<InstanceType<typeof VButton> | null>(null)
+    const triggerRef = ref<{ $el: HTMLElement } | null>(null)
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
     const { sendCustomEvent } = useAnalytics()
@@ -172,7 +164,10 @@ export default defineComponent({
       onTriggerClick()
     }
 
+    const { externalSourcesType } = useExternalSources()
+
     return {
+      externalSourcesType,
       sectionRef,
       triggerRef,
       triggerElement,
