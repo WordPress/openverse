@@ -272,7 +272,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
             query_params=self.item_params,
             endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
         )
-        if item_response is None or not (item_response.get("success")):
+        if not item_response or not item_response.get("success"):
             logger.warning("Item request failed no response or ``success != True``")
             return {}
         # Assume that we just want the first info available in the item response,
