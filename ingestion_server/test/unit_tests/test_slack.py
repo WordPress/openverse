@@ -48,18 +48,17 @@ def test_message(
 ):
     monkeypatch.setenv("ENVIRONMENT", environment)
     monkeypatch.setenv(slack.SLACK_WEBHOOK, webhook)
-    pook.on()
-    if webhook:
-        mock_post = pook.post(webhook)
-        slack._message(text, summary)
-        if should_alert:
-            assert mock_post.calls > 0
-            data = json.loads(mock_post.matches[0].body)
-            assert data["blocks"][0]["text"]["text"] == text
-            assert data["text"] == expected_summary
-            if environment:
-                assert data["username"].endswith(environment.upper())
-    pook.off()
+    with pook.use():
+        if webhook:
+            mock_post = pook.post(webhook)
+            slack._message(text, summary)
+            if should_alert:
+                assert mock_post.calls > 0
+                data = json.loads(mock_post.matches[0].body)
+                assert data["blocks"][0]["text"]["text"] == text
+                assert data["text"] == expected_summary
+                if environment:
+                    assert data["username"].endswith(environment.upper())
 
 
 @pytest.mark.parametrize(

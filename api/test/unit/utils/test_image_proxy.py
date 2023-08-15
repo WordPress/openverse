@@ -448,11 +448,10 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
 def test_photon_get_saves_image_type_to_cache(redis, headers, expected_cache_val):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
-    pook.on()
-    pook.head(image_url, reply=200, response_headers=headers)
-    with pytest.raises(UnsupportedMediaType):
-        photon_get(image_url, image.identifier)
+    with pook.use():
+        pook.head(image_url, reply=200, response_headers=headers)
+        with pytest.raises(UnsupportedMediaType):
+            photon_get(image_url, image.identifier)
 
-    key = f"media:{image.identifier}:thumb_type"
-    assert redis.get(key) == expected_cache_val
-    pook.off()
+        key = f"media:{image.identifier}:thumb_type"
+        assert redis.get(key) == expected_cache_val
