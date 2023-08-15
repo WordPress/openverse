@@ -1,5 +1,7 @@
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
-import { IMAGE } from "~/constants/media"
+import { AUDIO, IMAGE } from "~/constants/media"
+
+import { useProviderStore } from "~/stores/provider"
 
 import type { NuxtI18nInstance } from "@nuxtjs/i18n"
 
@@ -35,23 +37,43 @@ export const getMediaMetadata = (
   imageInfo?: { width?: number; height?: number; type?: string }
 ) => {
   const metadata: Metadata[] = []
+  if (media.source && media.providerName !== media.sourceName) {
+    metadata.push({
+      label: "mediaDetails.providerLabel",
+      value: media.providerName || media.provider,
+    })
+  }
+  const sourceUrl = useProviderStore().getSourceUrl(
+    media.source ?? media.provider,
+    media.frontendMediaType
+  )
+  const sourceName = media.sourceName ?? media.providerName ?? media.provider
+  metadata.push({
+    label: "mediaDetails.sourceLabel",
+    isSource: true,
+    url: sourceUrl,
+    value: sourceName,
+  })
+
+  if (media.category) {
+    metadata.push({
+      label: "mediaDetails.information.category",
+      value: i18n
+        .t(`filters.${media.frontendMediaType}Categories.${media.category}`)
+        .toString(),
+    })
+  }
+
+  const mediaTypeString =
+    media.frontendMediaType === IMAGE
+      ? getImageType(imageInfo?.type, i18n)
+      : getAudioType(media, i18n)
+  metadata.push({
+    label: "mediaDetails.information.type",
+    value: mediaTypeString.toString().toUpperCase(),
+  })
+
   if (media.frontendMediaType === IMAGE) {
-    const mediaTypeString = getImageType(imageInfo?.type, i18n)
-    metadata.push({
-      label: "mediaDetails.information.type",
-      value: mediaTypeString.toString().toUpperCase(),
-    })
-    if (media.providerName !== media.sourceName) {
-      metadata.push({
-        label: "mediaDetails.providerLabel",
-        value: media.providerName || media.provider,
-      })
-    }
-    metadata.push({
-      label: "mediaDetails.sourceLabel",
-      value: media.sourceName ?? media.providerName ?? media.provider,
-      url: media.foreign_landing_url,
-    })
     metadata.push({
       label: "imageDetails.information.dimensions",
       value: `${i18n.t("imageDetails.information.sizeInPixels", {
@@ -59,43 +81,13 @@ export const getMediaMetadata = (
         height: imageInfo?.height,
       })}`,
     })
-  } else {
-    const mediaTypeString = getAudioType(media, i18n)
+  }
+  if (media.frontendMediaType === AUDIO) {
     if (media.audio_set) {
-      metadata.push({
+      metadata.unshift({
         label: "audioDetails.table.album",
         value: media.audio_set.title,
         url: media.audio_set.foreign_landing_url,
-      })
-    }
-    if (media.category) {
-      const categoryKey = `filters.audioCategories.${media.category}`
-      metadata.push({
-        label: "audioDetails.table.category",
-        value: `${i18n.t(categoryKey)}`,
-      })
-    }
-    if (media.sample_rate) {
-      metadata.push({
-        label: "audioDetails.table.sampleRate",
-        value: `${media.sample_rate}`,
-      })
-    }
-    if (media.filetype) {
-      metadata.push({
-        label: "audioDetails.table.filetype",
-        value: mediaTypeString.toString().toUpperCase(),
-      })
-    }
-    metadata.push({
-      label: "mediaDetails.providerLabel",
-      value: media.providerName || media.provider,
-      url: media.foreign_landing_url,
-    })
-    if (media.source && media.providerName !== media.sourceName) {
-      metadata.push({
-        label: "mediaDetails.sourceLabel",
-        value: media.sourceName ?? media.providerName ?? media.provider,
       })
     }
     if (media.genres && media.genres.length > 0) {
@@ -104,6 +96,14 @@ export const getMediaMetadata = (
         value: media.genres.join(", "),
       })
     }
+
+    if (media.sample_rate) {
+      metadata.push({
+        label: "audioDetails.table.sampleRate",
+        value: media.sample_rate.toString(),
+      })
+    }
   }
+
   return metadata
 }
