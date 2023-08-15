@@ -304,6 +304,19 @@ jobs:
     needs:
       - get-changes
       - build-images
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - default
+          - es_7
+        include:
+          - name: default
+            version:
+          - name: es_7
+            version: 7.12.0
+    env:
+      OPENVERSE_ES_VER: ${{ matrix.version }}
 
     steps:
       - name: Checkout repository
@@ -352,6 +365,19 @@ jobs:
     needs:
       - get-changes
       - build-images
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - default
+          - es_7
+        include:
+          - name: default
+            version:
+          - name: es_7
+            version: 7.12.0
+    env:
+      OPENVERSE_ES_VER: ${{ matrix.version }}
 
     steps:
       - name: Checkout repository
