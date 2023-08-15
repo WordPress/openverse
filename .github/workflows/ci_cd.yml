@@ -350,6 +350,26 @@ jobs:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
 
+  # This job runs when `test-ing` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-test-ing:
+    name: Run tests for ingestion-server
+    if: |
+      !cancelled() &&
+      needs.test-ing.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - test-ing
+    strategy:
+      matrix:
+        name:
+          - es_current
+          - es_7
+
+    steps:
+      - name: Pass
+        run: echo 'Ingestion server tests are skipped because ingestion server is unchanged.'
+
   #######
   # API #
   #######
@@ -369,10 +389,10 @@ jobs:
       fail-fast: false
       matrix:
         name:
-          - default
+          - es_current
           - es_7
         include:
-          - name: default
+          - name: es_current
             version:
           - name: es_7
             version: 7.12.0
@@ -415,6 +435,26 @@ jobs:
         with:
           name: api_logs
           path: api_logs
+
+  # This job runs when `test-api` doesn't and always passes, thus allowing
+  # PRs to meet the required checks criteria and be merged.
+  bypass-test-api:
+    name: Run tests for the API
+    if: |
+      !cancelled() &&
+      needs.test-api.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - test-api
+    strategy:
+      matrix:
+        name:
+          - es_current
+          - es_7
+
+    steps:
+      - name: Pass
+        run: echo 'API tests are skipped because API is unchanged.'
 
   django-checks:
     name: Run Django checks
