@@ -373,7 +373,7 @@ class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
         self._perform_index_update(
             "update",
             raise_errors,
-            body={"doc": {"mature": is_mature}},
+            doc={"mature": is_mature},
         )
 
     def save(self, *args, **kwargs):
