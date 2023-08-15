@@ -286,7 +286,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
                     if webresources := aggregation.get("webResources"):
                         for webresource in webresources:
                             if filetype := webresource.get("ebucoreHasMimeType"):
-                                if filetype[:5] == "image":
+                                if filetype.startswith("image"):
                                     return webresource
         return {}
 
