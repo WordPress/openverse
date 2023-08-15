@@ -199,7 +199,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
         start_timestamp = start_timestamp.replace("+00:00", "Z")
         end_timestamp = end_timestamp.replace("+00:00", "Z")
 
-        return f"timestamp_created:[{start_timestamp} TO {end_timestamp}]"
+        return f"timestamp_update:[{start_timestamp} TO {end_timestamp}]"
 
     def get_next_query_params(self, prev_query_params) -> dict:
         if not prev_query_params:
