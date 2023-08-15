@@ -1,5 +1,6 @@
 export const image = {
   id: "f166c4a0-7207-4ea2-8728-15350a60d37f",
+  frontendMediaType: "image",
   title: "Cat cafe in Seoul",
   indexed_on: "2020-04-22T18:09:32.186574Z",
   foreign_landing_url: "https://www.flickr.com/photos/36703170@N02/5060030894",
