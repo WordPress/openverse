@@ -83,13 +83,12 @@ def test_message(
     ],
 )
 def test_log_levels(log_func, log_level, should_log, monkeypatch):
-    pook.on()
-    monkeypatch.setenv("ENVIRONMENT", "staging")
-    monkeypatch.setenv(slack.SLACK_WEBHOOK, "http://fake")
-    mock = pook.post("http://fake")
-    if log_level:
-        monkeypatch.setenv(slack.LOG_LEVEL, log_level)
-    log_func("text", "summary")
-    pook.off()
+    with pook.use():
+        monkeypatch.setenv("ENVIRONMENT", "staging")
+        monkeypatch.setenv(slack.SLACK_WEBHOOK, "http://fake")
+        mock = pook.post("http://fake")
+        if log_level:
+            monkeypatch.setenv(slack.LOG_LEVEL, log_level)
+        log_func("text", "summary")
     expected_calls = 1 if should_log else 0
     assert mock.calls == expected_calls
