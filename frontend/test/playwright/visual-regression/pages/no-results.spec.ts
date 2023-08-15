@@ -1,11 +1,9 @@
 import { test } from "@playwright/test"
 
 import {
-  closeFiltersUsingCookies,
-  dismissBannersUsingCookies,
   goToSearchTerm,
   languageDirections,
-  setBreakpointCookie,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
@@ -21,9 +19,7 @@ for (const searchType of supportedSearchTypes) {
       test(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
-        await dismissBannersUsingCookies(page)
-        await closeFiltersUsingCookies(page)
-        await setBreakpointCookie(page, breakpoint)
+        await preparePageForTests(page, breakpoint)
 
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
 

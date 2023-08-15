@@ -1,7 +1,7 @@
 <template>
   <header
     ref="nodeRef"
-    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx py-4 pe-3 ps-2 md:py-4 lg:pe-10 lg:ps-6"
+    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx px-2 py-4 md:py-4 lg:pe-10 lg:ps-6"
   >
     <VHomeLink variant="dark" />
     <nav class="hidden lg:flex">
@@ -12,7 +12,7 @@
       />
     </nav>
     <div class="flex lg:hidden">
-      <VIconButton
+      <VOldIconButton
         id="menu-button"
         ref="menuButtonRef"
         :icon-props="{ name: 'menu' }"
@@ -51,7 +51,7 @@
           @open="openPageMenu"
         >
           <template #top-bar>
-            <div class="flex h-20 w-full justify-between py-4 pe-3 ps-2">
+            <div class="flex h-20 w-full justify-between px-2 py-4">
               <VHomeLink variant="light" />
               <VCloseButton
                 variant="black"
@@ -94,7 +94,7 @@ import { useUiStore } from "~/stores/ui"
 
 import VCloseButton from "~/components/VCloseButton.vue"
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VOldIconButton from "~/components/VIconButton/VOldIconButton.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
@@ -107,12 +107,12 @@ export default defineComponent({
     VModalContent,
     VPopoverContent,
     VHomeLink,
-    VIconButton,
+    VOldIconButton,
     VPageLinks,
     VWordPressLink,
   },
   setup(_, { emit }) {
-    const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
+    const menuButtonRef = ref<InstanceType<typeof VOldIconButton> | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
     const modalContentRef = ref<InstanceType<typeof VModalContent> | null>(null)
 

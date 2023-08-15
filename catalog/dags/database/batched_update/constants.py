@@ -26,7 +26,7 @@ CREATE_TEMP_TABLE_QUERY = """
     {select_query};
     """
 CREATE_TEMP_TABLE_INDEX_QUERY = "CREATE INDEX ON {temp_table_name}(row_id)"
-SELECT_TEMP_TABLE_QUERY = """
+SELECT_TEMP_TABLE_COUNT_QUERY = """
     SELECT COUNT(*)
     FROM {temp_table_name};
     """

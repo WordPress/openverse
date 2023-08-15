@@ -5,9 +5,6 @@
 .nuxt-storybook
 storybook-static
 
-# Tailwind Config Viewer
-.tcv-export
-
 # Playwright creates these two folders
 test-results
 test/Default

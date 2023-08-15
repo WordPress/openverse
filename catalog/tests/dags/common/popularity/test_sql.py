@@ -8,13 +8,13 @@ from typing import NamedTuple
 import psycopg2
 import pytest
 
+from catalog.tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
 from common.loader.sql import create_column_definitions
 from common.popularity import sql
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 
 
 DDL_DEFINITIONS_PATH = Path(__file__).parents[5] / "docker" / "upstream_db"
-POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
 POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 
 
@@ -380,6 +380,47 @@ def test_constants_view_handles_zeros_and_missing(
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for expect_row, sorted_row in zip(expect_rows, sorted_rows):
         assert expect_row == pytest.approx(sorted_row)
+
+
+def test_get_providers_with_popularity_data_for_media_type(
+    postgres_with_image_table, table_info, mock_pg_hook_task
+):
+    data_query = dedent(
+        f"""
+        INSERT INTO {table_info.image} (
+          created_on, updated_on, provider, foreign_identifier, url,
+          meta_data, license, removed_from_source
+        )
+        VALUES
+          (
+            NOW(), NOW(), 'my_provider', 'fid_a', 'https://test.com/a.jpg',
+            '{{"views": 0, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'diff_provider', 'fid_b', 'https://test.com/b.jpg',
+            '{{"views": 50, "description": "cats"}}', 'cc0', false
+          ),
+          (
+            NOW(), NOW(), 'provider_without_popularity', 'fid_b', 'https://test.com/b.jpg',
+            '{{"views": 50, "description": "cats"}}', 'cc0', false
+          )
+        ;
+        """
+    )
+    metrics = {
+        "my_provider": {"metric": "views", "percentile": 0.8},
+        "diff_provider": {"metric": "comments", "percentile": 0.8},
+    }
+    _set_up_popularity_constants(
+        postgres_with_image_table, data_query, metrics, table_info, mock_pg_hook_task
+    )
+
+    expected_providers = ["diff_provider", "my_provider"]
+    actual_providers = sql.get_providers_with_popularity_data_for_media_type(
+        POSTGRES_CONN_ID, media_type="image", constants_view=table_info.constants
+    )
+
+    assert actual_providers == expected_providers
 
 
 def test_standardized_popularity_function_calculates(

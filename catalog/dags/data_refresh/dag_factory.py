@@ -42,6 +42,13 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.settings import SASession
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
+from popularity.refresh_popularity_metrics_task_factory import (
+    GROUP_ID as REFRESH_POPULARITY_METRICS_GROUP_ID,
+)
+from popularity.refresh_popularity_metrics_task_factory import (
+    UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID,
+    create_refresh_popularity_metrics_task_group,
+)
 
 from common.constants import (
     DAG_DEFAULT_ARGS,
@@ -56,13 +63,6 @@ from data_refresh.recreate_view_data_task_factory import (
     GROUP_ID as RECREATE_MATVIEW_GROUP_ID,
 )
 from data_refresh.recreate_view_data_task_factory import create_recreate_view_data_task
-from data_refresh.refresh_popularity_metrics_task_factory import (
-    GROUP_ID as REFRESH_POPULARITY_METRICS_GROUP_ID,
-)
-from data_refresh.refresh_popularity_metrics_task_factory import (
-    UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID,
-    create_refresh_popularity_metrics_task_group,
-)
 from data_refresh.reporting import report_record_difference, report_status
 
 

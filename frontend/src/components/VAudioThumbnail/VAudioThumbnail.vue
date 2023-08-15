@@ -36,13 +36,13 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, computed, defineComponent, PropType } from "vue"
+import { ref, onMounted, defineComponent, PropType } from "vue"
 
 import { rand, hash } from "~/utils/prng"
 import { lerp, dist, bezier, Point } from "~/utils/math"
 import type { AudioDetail } from "~/types/media"
 import { useI18n } from "~/composables/use-i18n"
-import { useUiStore } from "~/stores/ui"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 /**
  * Displays the cover art for the audio in a square aspect ratio.
@@ -60,10 +60,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const uiStore = useUiStore()
-    const shouldBlur = computed(
-      () => uiStore.shouldBlurSensitive && props.audio.isSensitive
-    )
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 
     const i18n = useI18n()
     const helpText = (

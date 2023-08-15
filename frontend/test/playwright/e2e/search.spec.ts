@@ -21,20 +21,20 @@ test.beforeEach(async ({ context }) => {
   await mockProviderApis(context)
 })
 
-test("shows no results page when no results", async ({ page }) => {
-  await page.goto("/search/image?q=243f6a8885a308d3")
-  await expect(page.locator(".error-section")).toBeVisible()
-})
-
 test("scroll to top on new search term submitted", async ({ page }) => {
   await goToSearchTerm(page, "galah")
   await scrollToBottom(page)
-  let scrollY = await page.evaluate(() => window.scrollY)
+
+  let scrollY = await page.evaluate(
+    () => document.getElementById("main-page")?.scrollTop
+  )
 
   expect(scrollY).not.toBe(0)
 
   await searchFromHeader(page, "honey")
-  scrollY = await page.evaluate(() => window.scrollY)
+  scrollY = await page.evaluate(
+    () => document.getElementById("main-page")?.scrollTop
+  )
 
   expect(scrollY).toBe(0)
 })

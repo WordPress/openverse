@@ -166,8 +166,8 @@ describe("Ui Store", () => {
 
   test.each`
     before         | after
-    ${"not_shown"} | ${"dismissed"}
-    ${"visible"}   | ${"dismissed"}
+    ${"not_shown"} | ${"not_shown"}
+    ${"visible"}   | ${"not_shown"}
     ${"dismissed"} | ${"dismissed"}
   `(
     "hideInstructionsSnackbar changes instructionsSnackbarState from $before to $after",

@@ -1,11 +1,5 @@
 <template>
-  <section
-    v-if="
-      !fetchState.hasStarted ||
-      fetchState.isFetching ||
-      (!fetchState.isFetching && resultsCount)
-    "
-  >
+  <section v-if="!showError">
     <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
       <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">
         {{ searchTerm }}
@@ -15,6 +9,7 @@
     <slot name="media" />
 
     <VExternalSearchForm
+      v-if="!isAllView"
       :type="externalSourcesType"
       :has-no-results="hasNoResults"
       :external-sources="externalSources"
@@ -40,9 +35,9 @@ import { computed, defineComponent, PropType } from "vue"
 import {
   ALL_MEDIA,
   IMAGE,
-  SearchType,
-  isSupportedMediaType,
   isAdditionalSearchType,
+  isSupportedMediaType,
+  SearchType,
 } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { defineEvent } from "~/types/emits"
@@ -129,6 +124,14 @@ export default defineComponent({
 
     const searchTerm = computed(() => props.query.q || "")
 
+    const showError = computed(() => {
+      return (
+        props.fetchState.hasStarted &&
+        !props.fetchState.isFetching &&
+        props.resultsCount === 0
+      )
+    })
+
     return {
       hasNoResults,
       externalSourcesType,
@@ -136,6 +139,7 @@ export default defineComponent({
       NO_RESULT,
       externalSources,
       searchTerm,
+      showError,
     }
   },
 })

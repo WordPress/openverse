@@ -758,5 +758,18 @@
       audio: "This audio track may contain sensitive content.",
     },
     creator: "Creator",
+    singleResult: {
+      title: "Sensitive content",
+      hide: "Hide content",
+      show: "Show content",
+      explanation: "This work is marked as sensitive for the following reasons:",
+      learnMore: "{link} about how {openverse} handles sensitive content.",
+      link: "Learn more",
+    },
+    reasons: {
+      providerSuppliedSensitive: "The source of this work has marked it as sensitive.",
+      sensitiveText: "{openverse} has detected potentially sensitive text.",
+      userReportedSensitive: "{openverse} users have reported this work as sensitive.",
+    },
   },
 }

@@ -31,8 +31,6 @@ Optional params:
 * batch_size: int number of records to process in each batch. By default, 10_000
 * update_timeout: int number of seconds to run an individual batch update before timing
                   out. By default, 3600 (or one hour)
-* batch_start: int index into the temp table at which to start the update. By default,
-               this is 0 and all rows in the temp table are updated.
 * resume_update: boolean indicating whether to attempt to resume an update using an
                existing temp table matching the `query_id`. When True, a new temp
                table is not created.
@@ -51,24 +49,18 @@ null would look like this:
 }
 ```
 
-It is possible to resume an update from an arbitrary starting point on an existing
-temp table, for example if a DAG succeeds in creating the temp table but fails midway
-through the update. To do so, set the `resume_update` param to True and select your
-desired `batch_start`. For instance, if the example DAG given above failed after
-processing the first 50_000 records, you might run:
+The `update_batches` task automatically keeps track of its progress in an Airflow
+variable suffixed with the `query_id`. If the task fails, when it resumes (either
+through a retry or by being manually cleared), it will pick up from where it left
+off. Manually managing this Airflow variable should not be necessary.
 
-```
-{
-    "query_id": "my_flickr_query",
-    "table_name": "image",
-    "select_query": "WHERE provider='flickr'",
-    "update_query": "SET thumbnail=null",
-    "batch_size": 10,
-    "batch_start": 50000,
-    "resume_update": true,
-    "dry_run": false
-}
-```
+It is also possible to start an entirely new DagRun using an existing temp table,
+by setting the `resume_update` param to True. With this option enabled, the
+DAG will skip creating the temp table and instead attempt to run an update with an
+existing temp table matching the `query_id`. This option should only be used when
+the DagRun configuration needs to be changed after the table was already created:
+for example, if there was a problem with the `update_query` which caused DAG
+failures during the `update_batches` step.
 """
 
 
@@ -81,6 +73,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from database.batched_update import constants
 from database.batched_update.batched_update import (
+    drop_temp_airflow_variable,
     get_expected_update_count,
     notify_slack,
     resume_update,
@@ -102,10 +95,7 @@ logger = logging.getLogger(__name__)
     max_active_runs=10,
     dagrun_timeout=constants.DAGRUN_TIMEOUT,
     doc_md=__doc__,
-    default_args={
-        **DAG_DEFAULT_ARGS,
-        "retries": 0,
-    },
+    default_args=DAG_DEFAULT_ARGS,
     render_template_as_native_obj=True,
     params={
         "query_id": Param(
@@ -152,22 +142,12 @@ logger = logging.getLogger(__name__)
                 " should take for a single batch to be updated."
             ),
         ),
-        "batch_start": Param(
-            default=None,
-            type=["integer", "null"],
-            description=(
-                "Optionally, a row_id from which to begin updating records. By"
-                " default, all records matching the SELECT will be updated."
-            ),
-            minimum=0,
-        ),
         "resume_update": Param(
             default=False,
             type="boolean",
             description=(
-                "Whether to resume an existing update. When True, the DAG will skip"
-                " creating a temp table, and instead try to use an existing temp table"
-                " matching the `query_id`."
+                "Whether to skip creating the temp table. When enabled, the DAG will"
+                " try to use an existing temp table matching the `query_id`."
             ),
         ),
         "dry_run": Param(
@@ -181,6 +161,9 @@ logger = logging.getLogger(__name__)
     },
 )
 def batched_update():
+    # Unique Airflow variable name for tracking the batch_start for this query
+    BATCH_START_VAR = "batched_update_start_{{ params.query_id }}"
+
     check_for_resume_update = resume_update(
         resume_update="{{ params.resume_update }}",
     )
@@ -208,25 +191,25 @@ def batched_update():
         trigger_rule=TriggerRule.NONE_FAILED,
     )(
         query_id="{{ params.query_id }}",
-        batch_start="{{ params.batch_start }}",
+        total_row_count=select_rows_to_update,
         dry_run="{{ params.dry_run }}",
     )
 
-    check_for_resume_update >> [select_rows_to_update, expected_count]
-    select_rows_to_update >> create_index >> expected_count
-
     notify_before_update = notify_slack.override(task_id="notify_before_update")(
-        text=f"Preparing to update {select_rows_to_update} rows for update:"
-        " {{ params.query_id }}",
+        text="Preparing to update {count} rows for query: {{ params.query_id }}",
         dry_run="{{ params.dry_run}}",
+        count=select_rows_to_update,
     )
+
+    check_for_resume_update >> [select_rows_to_update, expected_count]
+    select_rows_to_update >> [create_index, expected_count]
 
     perform_batched_update = update_batches.override(
         execution_timeout=constants.UPDATE_TIMEOUT
     )(
-        expected_row_count=expected_count,
+        total_row_count=expected_count,
         batch_size="{{ params.batch_size }}",
-        batch_start="{{ params.batch_start }}",
+        batch_start_var=BATCH_START_VAR,
         dry_run="{{ params.dry_run }}",
         table_name="{{ params.table_name }}",
         query_id="{{ params.query_id }}",
@@ -237,9 +220,9 @@ def batched_update():
     expected_count >> [notify_before_update, perform_batched_update]
 
     notify_updated_count = notify_slack.override(task_id="notify_updated_count")(
-        text=f"Updated {perform_batched_update} records for update:"
-        " {{ params.query_id }}",
+        text="Updated {count} records for query: {{ params.query_id }}",
         dry_run="{{ params.dry_run}}",
+        count=perform_batched_update,
     )
 
     # The temporary table is only dropped if all updates were successful; this
@@ -251,6 +234,11 @@ def batched_update():
         sql_template=constants.DROP_TABLE_QUERY,
         dry_run="{{ params.dry_run }}",
         query_id="{{ params.query_id }}",
+    )
+
+    # Clean up the variable we used for tracking the last row
+    drop_variable = drop_temp_airflow_variable(
+        airflow_var=BATCH_START_VAR,
     )
 
     # If there was an error, notify to Slack that the temporary table must be
@@ -266,6 +254,7 @@ def batched_update():
     perform_batched_update >> [
         notify_updated_count,
         drop_temporary_table,
+        drop_variable,
         notify_failure,
     ]
 

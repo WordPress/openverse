@@ -1,5 +1,5 @@
 <template>
-  <VIconButton
+  <VOldIconButton
     v-bind="$attrs"
     :tabindex="isTabbable ? 0 : -1"
     class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none active:shadow-ring disabled:opacity-70"
@@ -26,7 +26,7 @@
         />
       </svg>
     </template>
-  </VIconButton>
+  </VOldIconButton>
 </template>
 
 <script lang="ts">
@@ -36,7 +36,7 @@ import { AudioLayout, AudioStatus, statusVerbMap } from "~/constants/audio"
 import { defineEvent } from "~/types/emits"
 import type { ButtonConnections, ButtonVariant } from "~/types/button"
 
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VOldIconButton from "~/components/VIconButton/VOldIconButton.vue"
 
 const statusIconMap = {
   playing: "pause",
@@ -58,7 +58,7 @@ const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
  */
 export default defineComponent({
   name: "VPlayPause",
-  components: { VIconButton },
+  components: { VOldIconButton },
   inheritAttrs: false,
   model: {
     prop: "status",

@@ -9,8 +9,8 @@
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @keydown="handleKeydown"
     @blur="handleBlur"
-    @mousedown="$emit('mousedown', $event)"
-    @focus="$emit('focus', $event)"
+    @mousedown="handleMousedown"
+    @focus="handleFocus"
   >
     <Component
       :is="layoutComponent"
@@ -21,6 +21,7 @@
     >
       <template #controller="waveformProps">
         <VWaveform
+          ref="waveformRef"
           v-bind="waveformProps"
           :is-parent-seeking="isSeeking"
           :peaks="audio.peaks"
@@ -30,6 +31,8 @@
           :message="message"
           @seeked="handleSeeked"
           @toggle-playback="handleToggle"
+          @blur="handleWaveformBlur"
+          @focus="handleWaveformFocus"
         />
       </template>
 
@@ -60,6 +63,7 @@ import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
 import { useSeekable } from "~/composables/use-seekable"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
@@ -81,6 +85,8 @@ import type { AudioInteraction, AudioInteractionData } from "~/types/analytics"
 import type { AudioDetail } from "~/types/media"
 
 import { defineEvent } from "~/types/emits"
+
+import type { AudioTrackClickEvent } from "~/types/events"
 
 import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
@@ -143,7 +149,7 @@ export default defineComponent({
   emits: {
     "shift-tab": defineEvent<[KeyboardEvent]>(),
     interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
-    mousedown: defineEvent<[MouseEvent]>(),
+    mousedown: defineEvent<[AudioTrackClickEvent]>(),
     focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
@@ -347,23 +353,29 @@ export default defineComponent({
       // Delay initializing the local audio element until playback is requested
       if (!localAudio) initLocalAudio()
 
+      const playPromise = localAudio?.play()
       // Check if the audio can be played successfully
-      localAudio?.play().catch((err) => {
-        let message: string
-        switch (err.name) {
-          case "NotAllowedError":
-            message = "err_unallowed"
-            break
-          case "NotSupportedError":
-            message = "err_unsupported"
-            break
-          default:
-            message = "err_unknown"
-            $sentry.captureException(err)
-        }
-        activeMediaStore.setMessage({ message })
-        localAudio?.pause()
-      })
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          let message: string
+          switch (err.name) {
+            case "NotAllowedError":
+              message = "err_unallowed"
+              break
+            case "NotSupportedError":
+              message = "err_unsupported"
+              break
+            case "AbortError":
+              message = "err_aborted"
+              break
+            default:
+              message = "err_unknown"
+              $sentry.captureException(err)
+          }
+          activeMediaStore.setMessage({ message })
+          localAudio?.pause()
+        })
+      }
     }
     const pause = () => localAudio?.pause()
 
@@ -418,13 +430,17 @@ export default defineComponent({
           event = "pause"
           break
       }
-      if (event) {
-        emit("interacted", {
-          event,
-          id: props.audio.id,
-          provider: props.audio.provider,
-        })
-      }
+      emitInteracted(event)
+    }
+
+    const emitInteracted = (event?: AudioInteraction) => {
+      if (!event) return
+      snackbar.dismiss()
+      emit("interacted", {
+        event,
+        id: props.audio.id,
+        provider: props.audio.provider,
+      })
     }
 
     /* Interface with VWaveform */
@@ -441,11 +457,7 @@ export default defineComponent({
       if (localAudio) {
         localAudio.currentTime = frac * duration.value
       }
-      emit("interacted", {
-        event: "seek",
-        id: props.audio.id,
-        provider: props.audio.provider,
-      })
+      emitInteracted("seek")
     }
 
     /* Layout */
@@ -466,7 +478,20 @@ export default defineComponent({
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
      */
-    const playPauseRef = ref<HTMLElement | null>(null)
+    const playPauseRef = ref<{ $el: HTMLElement } | null>(null)
+
+    /**
+     * A ref used on the waveform, so we can capture mousedown on the
+     * audio track outside it as it will open a detail page.
+     */
+    const waveformRef = ref<{ $el: HTMLElement } | null>(null)
+
+    const handleMousedown = (event: MouseEvent) => {
+      const inWaveform =
+        waveformRef.value?.$el.contains(event.target as Node) ?? false
+      snackbar.handleMouseDown()
+      emit("mousedown", { event, inWaveform })
+    }
 
     /**
      * These layout-conditional props and listeners allow us
@@ -509,6 +534,7 @@ export default defineComponent({
       duration,
       currentTime,
       isReady: ref(true),
+      isSeekable: computed(() => props.layout !== "box"),
       onSeek: handleSeeked,
       onTogglePlayback: togglePlayback,
     })
@@ -522,6 +548,29 @@ export default defineComponent({
       ...layoutBasedProps.value,
     }))
 
+    const snackbar = useAudioSnackbar()
+
+    const handleFocus = (event: FocusEvent) => {
+      snackbar.show()
+      emit("focus", event)
+    }
+
+    const handleBlur = () => {
+      snackbar.hide()
+      seekable.listeners.blur()
+    }
+
+    const handleWaveformFocus = (event: FocusEvent) => {
+      if (!isComposite.value) {
+        handleFocus(event)
+      }
+    }
+    const handleWaveformBlur = () => {
+      if (!isComposite.value) {
+        handleBlur()
+      }
+    }
+
     return {
       status,
       message,
@@ -529,7 +578,11 @@ export default defineComponent({
       handleToggle,
       handleSeeked,
       handleKeydown,
-      handleBlur: seekable.listeners.blur,
+      handleBlur,
+      handleMousedown,
+      handleFocus,
+      handleWaveformBlur,
+      handleWaveformFocus,
 
       isSeeking,
 
@@ -543,6 +596,7 @@ export default defineComponent({
       containerAttributes,
 
       playPauseRef,
+      waveformRef,
     }
   },
 })

@@ -9,7 +9,7 @@
   >
     <!-- Logo and links -->
     <div v-if="isContentMode" class="logo-and-links flex flex-col gap-y-10">
-      <VLink href="/" class="logo text-dark-charcoal">
+      <VLink href="/" class="logo text-dark-charcoal" aria-label="Openverse">
         <VBrand class="text-[18px]" />
       </VLink>
       <nav>

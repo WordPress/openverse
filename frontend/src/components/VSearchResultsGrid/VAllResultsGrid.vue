@@ -44,39 +44,38 @@
           :search-term="searchTerm"
           aspect-ratio="square"
         />
-        <VAudioCell
+        <VAudioResult
           v-if="isDetail.audio(item)"
           :key="item.id"
           :audio="item"
           :search-term="searchTerm"
-          @interacted="handleInteraction"
-          @focus="showSnackbar"
+          layout="box"
+          :is-related="false"
         />
       </template>
     </ol>
 
-    <VLoadMore class="mt-4" />
+    <VLoadMore class="mb-6 mt-4 lg:mb-10" />
   </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "vue"
+import { storeToRefs } from "pinia"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
-import type { AudioInteractionData } from "~/types/analytics"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
 
 import VSnackbar from "~/components/VSnackbar.vue"
-import VImageCell from "~/components/VSearchResultsGrid/VImageCell.vue"
-import VAudioCell from "~/components/VSearchResultsGrid/VAudioCell.vue"
+import VImageCell from "~/components/VImageCell/VImageCell.vue"
+import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
@@ -86,7 +85,7 @@ export default defineComponent({
   components: {
     VSnackbar,
     VImageCell,
-    VAudioCell,
+    VAudioResult,
     VLoadMore,
     VGridSkeleton,
     VContentLink,
@@ -95,8 +94,6 @@ export default defineComponent({
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-
-    const { sendCustomEvent } = useAnalytics()
 
     const searchTerm = computed(() => searchStore.searchTerm)
 
@@ -129,23 +126,10 @@ export default defineComponent({
     )
 
     const uiStore = useUiStore()
-    const isSnackbarVisible = computed(() => uiStore.areInstructionsVisible)
-    const showSnackbar = () => {
-      uiStore.showInstructionsSnackbar()
-    }
-    const hideSnackbar = () => {
-      uiStore.hideInstructionsSnackbar()
-    }
-
-    const isSidebarVisible = computed(() => uiStore.isFilterVisible)
-
-    const handleInteraction = (data: AudioInteractionData) => {
-      hideSnackbar()
-      sendCustomEvent("AUDIO_INTERACTION", {
-        ...data,
-        component: "VAllResultsGrid",
-      })
-    }
+    const {
+      areInstructionsVisible: isSnackbarVisible,
+      isFilterVisible: isSidebarVisible,
+    } = storeToRefs(uiStore)
 
     return {
       searchTerm,
@@ -160,10 +144,7 @@ export default defineComponent({
       contentLinkPath,
 
       isSidebarVisible,
-
       isSnackbarVisible,
-      showSnackbar,
-      handleInteraction,
 
       isDetail,
     }

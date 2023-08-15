@@ -11,7 +11,7 @@ def report_status(media_type: str, message: str, dag_id: str):
     slack.send_message(
         text=message,
         dag_id=dag_id,
-        username="Data Refresh Notification",
+        username=f"{dag_id.replace('_', ' ').title()} Notification",
         icon_emoji="arrows_counterclockwise",
     )
     return message
@@ -27,6 +27,7 @@ def report_record_difference(before: str, after: str, media_type: str, dag_id: s
     # ',' - number is comma separated
     # '.' - number is a float
     message = f"""
+Data refresh for {media_type} complete! :tada:
 _Note: All values are row estimates and are not (but nearly) exact_
 *Record count difference for `{media_type}`*: {before:,} → {after:,}
 *Change*: {count_diff:+,} ({percent_diff:+}% Δ)

@@ -6,8 +6,6 @@ import {
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
-import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
-
 import { supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
@@ -69,7 +67,7 @@ for (const searchType of supportedSearchTypes) {
     test(`500 error on ${searchType} search on SSR`, async ({ page }) => {
       await preparePageForTests(page, breakpoint)
       await goToSearchTerm(page, `SearchPage500error`, { searchType })
-      await setViewportToFullHeight(page)
+
       await expectSnapshot(`search-result-${searchType}-500-error-SSR`, page, {
         fullPage: true,
       })
@@ -90,7 +88,7 @@ for (const errorStatus of searchCSRErrorStatuses) {
           mode: "CSR",
           searchType,
         })
-        await setViewportToFullHeight(page)
+
         await expectSnapshot(
           `search-result-${searchType}-${errorStatus}-error-CSR`,
           page,
