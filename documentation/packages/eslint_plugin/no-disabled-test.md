@@ -25,6 +25,10 @@ test.skip('invalid skipped test', () => {
 it.skip('another invalid skipped test', () => {
   // Missing issue comment
 });
+
+describe.skip('my skipped suite', () => {
+  // ... tests will be skipped
+});
 ```
 ````
 
@@ -39,16 +43,12 @@ test.skip('valid skipped test', () => {
   /* implementation */
 });
 
-// A skipped test with a preceding multi-line comment:
 /**
+ * A skipped test with a preceding multi-line comment:
  * https://github.com/your-org/your-repo/issues/456
  */
 it.skip('skipped test with comments', () => {
   /* implementation */
-});
-
-describe.skip('my skipped suite', () => {
-  // ... tests will be skipped
 });
 ```
 ````
