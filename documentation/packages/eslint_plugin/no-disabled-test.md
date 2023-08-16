@@ -40,7 +40,9 @@ test.skip('valid skipped test', () => {
 });
 
 // A skipped test with a preceding multi-line comment:
-// https://github.com/your-org/your-repo/issues/456
+/**
+ * https://github.com/your-org/your-repo/issues/456
+ */
 it.skip('skipped test with comments', () => {
   /* implementation */
 });
