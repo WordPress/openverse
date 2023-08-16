@@ -5,7 +5,6 @@
     class="external-sources flex flex-row place-items-center justify-center py-4"
     data-testid="external-sources-form"
   >
-
     <VModal
       variant="centered"
       :hide-on-click-outside="true"
@@ -24,42 +23,17 @@
             class="label-bold lg:description-bold h-16 w-full lg:h-18"
         >
           <i18n
-              v-if="!hasNoResults && isSupported && isMd"
+              v-if="isMd"
               path="externalSources.form.supportedTitle"
               tag="p"
               class="description-regular"
           />
-
           <i18n
-              v-else-if="!hasNoResults && isSupported && !isMd"
-              path="externalSources.form.supportedTitleSM"
+              v-else
+              path="externalSources.form.supportedTitleSm"
               tag="p"
               class="description-regular"
           />
-
-          <i18n
-              v-else-if="!hasNoResults && !isSupported"
-              path="externalSources.form.unsupportedTitle"
-              tag="p"
-              class="description-regular"
-          >
-            <template #openverse>Openverse</template>
-            <template #type>{{
-                $t(`externalSources.form.types.${externalSourcesType}`)
-              }}</template>
-          </i18n>
-
-          <i18n
-              v-else
-              path="externalSources.form.noResultsTitle"
-              tag="p"
-              class="description-regular"
-          >
-            <template #type>{{
-                $t(`externalSources.form.types.${externalSourcesType}`)
-              }}</template>
-            <template #query>{{ searchTerm }}</template>
-          </i18n>
           <VIcon
               class="text-dark-charcoal-40"
               :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
