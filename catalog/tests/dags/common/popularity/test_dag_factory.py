@@ -1,3 +1,4 @@
+from datetime import timedelta
 from unittest import mock
 
 import pytest
@@ -89,7 +90,12 @@ def test_get_providers_update_confs(providers, media_type, expected_confs):
         return_value=providers,
     ):
         actual_confs = get_providers_update_confs.function(
-            POSTGRES_CONN_ID, PopularityRefresh(media_type=media_type), TEST_DAY
+            POSTGRES_CONN_ID,
+            PopularityRefresh(
+                media_type=media_type,
+                refresh_popularity_batch_timeout=timedelta(hours=1),
+            ),
+            TEST_DAY,
         )
 
         assert actual_confs == expected_confs
