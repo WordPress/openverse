@@ -132,7 +132,7 @@ export default defineComponent({
 
     const isMd = computed(() => uiStore.isBreakpoint("md"))
 
-    const triggerElement = computed(() => triggerRef.value?.$el as HTMLElement)
+    const triggerElement = computed(() => triggerRef.value?.$el)
 
     const lockBodyScroll = computed(() => !isMd.value)
 

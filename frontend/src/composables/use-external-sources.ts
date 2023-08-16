@@ -9,13 +9,17 @@ import {
 } from "~/constants/media"
 import { getAdditionalSources } from "~/utils/get-additional-sources"
 
+/**
+ * This component uses `useStore` composables, and should only be called from within a component's setup function.
+ */
 export const useExternalSources = () => {
+  const featureFlagStore = useFeatureFlagStore()
+  const searchStore = useSearchStore()
   /**
-   * External sources search form shows the external sources for current search type, or for images if the search type is 'All Content'.
+   * Show the sources of the current media type, or fall back to "image"
+   * when the search type is not supported.
    */
   const externalSourcesType = computed(() => {
-    const featureFlagStore = useFeatureFlagStore()
-    const searchStore = useSearchStore()
     const searchType = searchStore.searchType
     if (
       isSupportedMediaType(searchType) ||
@@ -27,7 +31,6 @@ export const useExternalSources = () => {
     return IMAGE
   })
   const externalSources = computed(() => {
-    const searchStore = useSearchStore()
     const query = searchStore.searchQueryParams
     const type = externalSourcesType.value
     return getAdditionalSources(type, query)
