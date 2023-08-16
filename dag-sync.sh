@@ -30,6 +30,10 @@ have_dag=$(git log -p -1 "$new" --pretty=format: --name-only | grep "catalog/dag
 
 # Pull out the subject from the new commit
 subject=$(git log -1 --format='%s')
+# Swap the < & > characters for more complex unicode variants so they don't get
+# interpreted as delimiters by Slack
+subject=${subject//>/≻}
+subject=${subject//</≺}
 
 if [ -z "$SLACK_URL" ]; then
   echo "Slack hook was not supplied! Updates will not be posted"
