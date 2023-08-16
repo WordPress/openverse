@@ -432,8 +432,6 @@ def create_media_view(
     )
     postgres.run(create_view_query)
     postgres.run(add_idx_query)
-    if media_type == AUDIO:
-        postgres.run(create_audioset_view_query())
 
 
 def get_providers_with_popularity_data_for_media_type(
