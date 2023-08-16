@@ -28,14 +28,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType } from "vue"
+import { defineComponent, onMounted } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
+import { useExternalSources } from "~/composables/use-external-sources"
 import { useUiStore } from "~/stores/ui"
-
-import type { ExternalSource } from "~/types/external-source"
-
-import type { MediaType } from "~/constants/media"
 
 import VButton from "~/components/VButton.vue"
 
@@ -43,20 +40,6 @@ export default defineComponent({
   name: "VNoResults",
   components: { VButton },
   props: {
-    /**
-     * The list of external sources information: their name and url.
-     */
-    externalSources: {
-      type: Array as PropType<ExternalSource[]>,
-      required: true,
-    },
-    /**
-     * The media type to use as the criteria for filtering additional sources
-     */
-    mediaType: {
-      type: String as PropType<MediaType>,
-      required: true,
-    },
     /**
      * The search term for which the external sources links are generated.
      */
@@ -66,11 +49,12 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { externalSources, externalSourcesType } = useExternalSources()
     const { sendCustomEvent } = useAnalytics()
     const handleClick = (sourceName: string) => {
       sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
         name: sourceName,
-        mediaType: props.mediaType,
+        mediaType: externalSourcesType.value,
         query: props.searchTerm,
         component: "VNoResults",
       })
@@ -83,6 +67,7 @@ export default defineComponent({
 
     return {
       handleClick,
+      externalSources,
     }
   },
 })

@@ -29,12 +29,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
-import type { ExternalSource } from "~/types/external-source"
 
-import type { MediaType } from "~/constants/media"
+import { useExternalSources } from "~/composables/use-external-sources"
 
 import VButton from "~/components/VButton.vue"
 import VCloseButton from "~/components/VCloseButton.vue"
@@ -48,39 +47,29 @@ export default defineComponent({
   components: { VCloseButton, VButton },
   props: {
     /**
-     * The media type to use as the criteria for filtering additional sources
-     */
-    mediaType: {
-      type: String as PropType<MediaType>,
-      required: true,
-    },
-    /**
      * The search term for which the external sources links are generated.
      */
     searchTerm: {
       type: String,
       required: true,
     },
-    /**
-     * The list of external sources information: their name and url.
-     */
-    externalSources: {
-      type: Array as PropType<ExternalSource[]>,
-      required: true,
-    },
   },
   setup(props) {
+    const { externalSources, externalSourcesType } = useExternalSources()
+
     const { sendCustomEvent } = useAnalytics()
     const handleClick = (sourceName: string) => {
       sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
         name: sourceName,
-        mediaType: props.mediaType,
+        mediaType: externalSourcesType.value,
         query: props.searchTerm,
         component: "VExternalSourceList",
       })
     }
 
     return {
+      externalSources,
+      externalSourcesType,
       handleClick,
     }
   },
