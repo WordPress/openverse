@@ -3,5 +3,5 @@ import { NoDisabledTestRule } from "./no-disabled-test"
 
 export default {
   "analytics-configuration": analyticsConfiguration,
-  "no-disabled-test": NoDisabledTestRule,
+  "no-disabled-test": noDisabledTestRule,
 }

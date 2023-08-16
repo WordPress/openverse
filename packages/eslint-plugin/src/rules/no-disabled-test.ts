@@ -14,7 +14,7 @@ const messages = {
     "Disabled tests must have an issue comment with a GitHub link preceding them.",
 } as const
 
-export const NoDisabledTestRule = OpenverseRule<Options, MessageIds>({
+export const noDisabledTestRule = OpenverseRule<Options, MessageIds>({
   name: "no-disabled-test",
   meta: {
     type: "problem",
