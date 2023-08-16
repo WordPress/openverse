@@ -87,8 +87,9 @@ const validTestCases = [
   {
     name: "Test with valid issue comment preceded by comment",
     code: `
-        // A skipped test can be precded by multi-line comments:
-        // https://github.com/WordPress/openverse/issues/2573
+        /* A skipped test can be precded by multi-line comments:
+           https://github.com/WordPress/openverse/issues/2573
+        */
         describe.skip.each([
         [1, 1, 2],
         [1, 2, 3],
