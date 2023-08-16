@@ -23,21 +23,7 @@ export const noDisabledTestRule = OpenverseRule<Options, MessageIds>({
         "Disabled tests must have an issue comment with a GitHub link preceding them.",
       recommended: "error",
     },
-    schema: [
-      {
-        type: "object",
-        properties: {
-          reservedPropNames: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-          },
-        },
-        additionalProperties: false,
-        required: ["reservedPropNames"],
-      },
-    ],
+    schema: [],
     messages,
   },
   defaultOptions: [{ reservedPropNames: [] }],
