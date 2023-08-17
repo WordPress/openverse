@@ -1,5 +1,11 @@
 # Project Proposal: Providing and maintaining an Openverse image dataset
 
+```{note}
+The Openverse maintainer team has decided to pause this project for the time
+being. [See our public update on it here](https://github.com/WordPress/openverse/issues/2545#issuecomment-1682627814).
+This proposal may be picked back up when the discussion reopens in the future.
+```
+
 **Author**: @zackkrida
 
 ## Reviewers
