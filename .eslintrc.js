@@ -196,6 +196,8 @@ module.exports = {
       rules: {
         "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
+        // Superceeded by `@openverse/no-unexplained-disabled-test`
+        "jest/no-disabled-test": "off",
         "no-restricted-imports": [
           "error",
           {
@@ -222,6 +224,8 @@ module.exports = {
       rules: {
         // Enable once https://github.com/playwright-community/eslint-plugin-playwright/issues/154 is resolved
         "playwright/expect-expect": ["off"],
+        // Superceeded by `@openverse/no-unexplained-disabled-test`
+        "playwright/no-skipped-test": "off",
       },
     },
     {
