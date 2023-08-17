@@ -62,9 +62,10 @@ rely on bulk analysis of Openverse's data. These projects could be replaced by,
 or made easier by the publication of the datasets. This could work in a few
 ways. A community member, training a model using the Openverse dataset,
 generates metadata that we want and planned to generate ourselves. Then, the
-HuggingFace platform presents an alternative to other SaSS products we intended
-to use to generate machine labels, detect sensitive content, and so on. Instead
-of those offerings we use models hosted on the HuggingFace hub. The
+HuggingFace platform presents an alternative to other SaaS (software as a
+service) products we intended to use to generate machine labels, detect
+sensitive content, and so on. Instead of those offerings we use models hosted on
+the HuggingFace hub. The
 [Datasets library](https://huggingface.co/docs/datasets/index) allows for easy
 loading of the Openverse dataset in any data pipelines we write. HuggingFace
 also offers the ability to deploy production-ready API endpoints for
@@ -105,7 +106,7 @@ any other unforeseen disruptions.
 This project encompasses all of our 2023 "lighthouse goals", but "Community
 Development" is perhaps the broadest and most relevant. Others touched on here,
 or impacted through potential downstream changes, are "Result Relevancy",
-"Quantifying our Work","Search Experience", "Content Safety", and "Data
+"Quantifying our Work", "Search Experience", "Content Safety", and "Data
 inertia".
 
 ## Requirements
