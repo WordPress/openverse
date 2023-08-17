@@ -5,6 +5,7 @@ import { render } from "~~/test/unit/test-utils/render"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { IMAGE } from "~/constants/media"
+import { getAdditionalSources } from "~/utils/get-additional-sources"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 
@@ -15,6 +16,8 @@ jest.mock("~/composables/use-analytics", () => ({
 describe("VExternalSourceList", () => {
   let propsData
   let sendCustomEventMock
+  const searchTerm = "cat"
+  const expectedImageSources = getAdditionalSources(IMAGE, { q: searchTerm })
 
   beforeEach(() => {
     sendCustomEventMock = jest.fn()
@@ -22,12 +25,8 @@ describe("VExternalSourceList", () => {
       sendCustomEvent: sendCustomEventMock,
     }))
     propsData = {
-      searchTerm: "cat",
+      searchTerm,
       mediaType: IMAGE,
-      externalSources: [
-        { name: "source1", url: "https://source1.com/?q=cat" },
-        { name: "source2", url: "https://source2.com/?q=cat" },
-      ],
     }
     render(VExternalSourceList, {
       props: propsData,
@@ -36,13 +35,13 @@ describe("VExternalSourceList", () => {
 
   it("should render external sources links", () => {
     expect(screen.queryAllByRole("link")).toHaveLength(
-      propsData.externalSources.length
+      expectedImageSources.length
     )
   })
 
   it("should send SELECT_EXTERNAL_SOURCE analytics event on CTA button click", async () => {
     const source1Link = screen.getByRole("link", {
-      name: propsData.externalSources[0].name,
+      name: expectedImageSources[0].name,
     })
 
     const user = userEvent.setup()
@@ -50,7 +49,7 @@ describe("VExternalSourceList", () => {
 
     expect(sendCustomEventMock).toHaveBeenCalledWith("SELECT_EXTERNAL_SOURCE", {
       mediaType: IMAGE,
-      name: propsData.externalSources[0].name,
+      name: expectedImageSources[0].name,
       query: propsData.searchTerm,
       component: "VExternalSourceList",
     })
