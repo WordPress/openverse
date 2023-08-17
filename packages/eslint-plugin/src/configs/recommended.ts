@@ -6,6 +6,6 @@ export const recommended = {
         reservedPropNames: ["width", "height"],
       },
     ],
-    "@openverse/no-disabled-test": ["error"],
+    "@openverse/no-unexplained-disabled-test": ["error"],
   },
 }

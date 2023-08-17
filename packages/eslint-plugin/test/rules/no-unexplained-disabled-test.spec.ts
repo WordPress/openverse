@@ -5,7 +5,7 @@ import openverseEslintPlugin from "@openverse/eslint-plugin"
 const tester = new ESLintUtils.RuleTester({
   parser: "@typescript-eslint/parser",
   rules: {
-    "@openverse/no-disabled-test": ["error"],
+    "@openverse/no-unexplained-disabled-test": ["error"],
   },
 })
 
@@ -118,8 +118,8 @@ const validTestCases = [
 
 // Run the tests
 tester.run(
-  "@openverse/no-disabled-test",
-  openverseEslintPlugin.rules["no-disabled-test"],
+  "@openverse/no-unexplained-disabled-test",
+  openverseEslintPlugin.rules["no-unexplained-disabled-test"],
   {
     valid: validTestCases,
     invalid: invalidTestCases,

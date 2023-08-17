@@ -1,4 +1,4 @@
-# `no-disabled-test`
+# `no-unexplained-disabled-test`
 
 Ensures that disabled tests have an issue comment with a GitHub link preceding
 them.

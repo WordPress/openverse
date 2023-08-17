@@ -3,19 +3,14 @@ import { OpenverseRule } from "../utils/rule-creator"
 import type { TSESTree } from "@typescript-eslint/utils"
 
 type MessageIds = "missingIssueComment"
-type Options = readonly [
-  {
-    reservedPropNames: string[]
-  }
-]
 
 const messages = {
   missingIssueComment:
     "Disabled tests must have an issue comment with a GitHub link preceding them.",
 } as const
 
-export const noDisabledTestRule = OpenverseRule<Options, MessageIds>({
-  name: "no-disabled-test",
+export const noUnexplainedDisabledTest = OpenverseRule<[], MessageIds>({
+  name: "no-unexplained-disabled-test",
   meta: {
     type: "problem",
     docs: {
@@ -26,7 +21,7 @@ export const noDisabledTestRule = OpenverseRule<Options, MessageIds>({
     schema: [],
     messages,
   },
-  defaultOptions: [{ reservedPropNames: [] }],
+  defaultOptions: [],
   create(context) {
     const sourceCode = context.getSourceCode()
 
