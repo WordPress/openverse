@@ -45,7 +45,7 @@ For more information on how deployments work, please see the [general deployment
    ```{warning}
    **Do not click the "click to add all existing properties" button!** This button
    will cause all props to be added and therefore displayed on events, [even ones we've
-   explicitly removed](https://github.com/WordPress/openverse/blob/53c2e70171e22593027b184b599c530a47429a03/).
+   explicitly removed](https://github.com/WordPress/openverse/commit/53c2e70171e22593027b184b599c530a47429a03).
    Instead, manually add new custom properties one at a time by entering them into
    the input box on the page. If the event has already been sent once, the property
    names will auto-complete in the box, making it less tedious to add new ones.
