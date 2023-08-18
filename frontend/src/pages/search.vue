@@ -4,12 +4,11 @@
     tabindex="-1"
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
-    <VErrorSection v-if="fetchingError" class="w-full py-10">
-      <template #image>
-        <VErrorImage error-code="NO_RESULT" />
-      </template>
-      <VNoResults :search-term="searchTerm" />
-    </VErrorSection>
+    <VErrorPage
+        v-if="fetchingError"
+        :fetching-error="fetchingError"
+        class="w-full py-10"
+    />
     <section v-else>
       <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
         <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">{{
@@ -66,19 +65,15 @@ import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { areQueriesEqual } from "~/utils/search-query-transform"
 
+import VErrorPage from "~/components/VErrorSection/VErrorPage.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
-import VNoResults from "~/components/VErrorSection/VNoResults.vue"
-import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
-import VErrorImage from "~/components/VErrorSection/VErrorImage.vue"
 
 export default defineComponent({
   name: "BrowsePage",
   components: {
-    VErrorImage,
-    VErrorSection,
-    VNoResults,
+    VErrorPage,
     VSearchResultsTitle,
     VExternalSearchForm,
     VScrollButton,

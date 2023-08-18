@@ -38,7 +38,9 @@ export default defineComponent({
      * the code of the error, used to identify and render the appropriate image
      */
     errorCode: {
-      type: String as PropType<ErrorCode>,
+      type: String as PropType<
+        Extract<ErrorCode, "NO_RESULT" | "SERVER_TIMEOUT">
+      >,
       required: true,
     },
   },
@@ -71,12 +73,13 @@ export default defineComponent({
 
 <style scoped>
 ::v-deep(.attribution) {
-  @apply text-dark-charcoal-70;
+  @apply mt-4 text-sr text-dark-charcoal-70;
 }
-::v-deep(a) {
+::v-deep(.attribution a) {
   @apply text-current underline;
 }
-::v-deep(img) {
-  @apply opacity-70; /* to match the text color */
+/* license icons should match the text color */
+::v-deep(.attribution img) {
+  @apply opacity-70;
 }
 </style>
