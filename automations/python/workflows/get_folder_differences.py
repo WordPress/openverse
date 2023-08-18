@@ -94,13 +94,17 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
         if line.startswith("Files"):
             # e.g.: Files /tmp/gh-pages-for-diff/_sources/meta/index.md.txt and /tmp/gh-pages/_preview/2647/_sources/meta/index.md.txt differ  # noqa: E501
             updated = line.split()[3]
-            changed.append(convert_path_to_url(updated))
+            converted = convert_path_to_url(updated)
+            if converted.endswith("html"):
+                changed.append(converted)
         elif line.startswith("Only in"):
             if PR_NUMBER not in line:
                 continue
             # e.g. Only in /tmp/gh-pages/_preview/2647/_sources/meta: examplefile.md.txt
             added = line.replace(": ", "/").split()[2]
-            new.append(convert_path_to_url(added))
+            converted = convert_path_to_url(added)
+            if converted.endswith("html"):
+                new.append(converted)
     return changed, new
 
 
