@@ -14,15 +14,17 @@ import { ALL_LICENSES } from "~/constants/license"
   component={VLicenseElements}
   argTypes={{
     license: {
-      default: "by",
       options: ALL_LICENSES,
       control: "select",
     },
     size: {
-      default: "big",
       options: ["big", "small"],
       control: "select",
     },
+  }}
+  args={{
+    license: "by",
+    size: "big",
   }}
 />
 
