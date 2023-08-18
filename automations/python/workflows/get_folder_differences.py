@@ -29,6 +29,7 @@ EXCLUSIONS = {
     "*.pickle",
     "*.doctree",
     "*.inv",
+    "*.map",
 }
 
 
