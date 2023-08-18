@@ -47,14 +47,9 @@ class PopularityRefresh:
     media_type: str
     default_args: dict | None = field(default_factory=dict)
     start_date: datetime = datetime(2023, 1, 1)
-    # The default schedule is initially set to None while we assess the performance
-    # of refreshes. The schedule will be updated in
-    # https://github.com/WordPress/openverse/issues/2092
-    schedule: str | None = None
-    # Initial timeouts are generous; they should be updated after assessing the
-    # performance in https://github.com/WordPress/openverse/issues/2092
-    refresh_popularity_timeout: timedelta = timedelta(days=30)
-    refresh_popularity_batch_timeout: timedelta = timedelta(hours=1)
+    schedule: str | None = "@monthly"
+    refresh_popularity_timeout: timedelta = timedelta(days=14)
+    refresh_popularity_batch_timeout: timedelta = timedelta(minutes=5)
     refresh_metrics_timeout: timedelta = timedelta(hours=1)
     poke_interval: int = REFRESH_POKE_INTERVAL
 
@@ -71,5 +66,6 @@ POPULARITY_REFRESH_CONFIGS = [
         media_type="audio",
         # Poke every minute, instead of every thirty minutes
         poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
+        refresh_popularity_timeout=timedelta(days=1),
     ),
 ]
