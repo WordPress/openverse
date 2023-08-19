@@ -111,8 +111,7 @@ ENV SEMANTIC_VERSION=$SEMANTIC_VERSION
 
 # Exposes
 # - 8000: Dev server for API Django app
-# - 3000: Sphinx live server
-EXPOSE 8000 3000
+EXPOSE 8000
 
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]

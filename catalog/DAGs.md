@@ -76,8 +76,8 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                  | Schedule Interval |
 | ------------------------------------------------------- | ----------------- |
-| [`audio_popularity_refresh`](#audio_popularity_refresh) | `None`            |
-| [`image_popularity_refresh`](#image_popularity_refresh) | `None`            |
+| [`audio_popularity_refresh`](#audio_popularity_refresh) | `@monthly`        |
+| [`image_popularity_refresh`](#image_popularity_refresh) | `@monthly`        |
 
 ## Provider
 
