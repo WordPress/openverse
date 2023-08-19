@@ -1,20 +1,33 @@
 <template>
-  <dl :class="media.frontendMediaType">
-    <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt>{{ $t(datum.label) }}</dt>
-      <dd>
-        <VLink v-if="datum.url" :href="datum.url" class="text-pink">{{
-          datum.value
-        }}</VLink>
-        <span v-else>{{ datum.value }}</span>
+  <dl
+    class="flex flex-col gap-y-4 sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-5 sm:after:flex-auto sm:after:content-['']"
+  >
+    <div
+      v-for="datum in metadata"
+      :key="`${datum.label}`"
+      class="grid grid-cols-[30%,1fr] gap-x-4 text-sm sm:flex sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
+    >
+      <dt class="sm:w-max">{{ $t(datum.label) }}</dt>
+      <dd class="max-w-full overflow-hidden font-semibold">
+        <VLink
+          v-if="datum.url"
+          :href="datum.url"
+          class="text-pink"
+          show-external-icon
+          @click="sendVisitSourceLinkEvent(datum.source)"
+          >{{ datum.value }}</VLink
+        >
+        <span v-else class="w-auto sm:flex sm:w-max">{{ datum.value }}</span>
       </dd>
     </div>
   </dl>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VLink from "~/components/VLink.vue"
 
@@ -31,40 +44,21 @@ export default defineComponent({
       required: true,
     },
   },
+  setup() {
+    const route = useRoute()
+
+    const { sendCustomEvent } = useAnalytics()
+    const sendVisitSourceLinkEvent = (source?: string) => {
+      if (!source) return
+      sendCustomEvent("VISIT_SOURCE_LINK", {
+        id: route.value.params.id,
+        source,
+      })
+    }
+
+    return {
+      sendVisitSourceLinkEvent,
+    }
+  },
 })
 </script>
-
-<style scoped>
-dl.image {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  grid-gap: 1rem;
-}
-
-.image dt,
-.image dd {
-  @apply text-sm md:text-base;
-}
-
-.image dd {
-  @apply mt-2 font-semibold;
-}
-
-dl.audio {
-  @apply grid gap-4 lg:gap-5;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-}
-dl.audio div {
-  display: flex;
-  flex-direction: column;
-}
-
-.audio dt {
-  @apply text-base font-normal;
-  display: inline-block;
-}
-
-.audio dd {
-  @apply pt-2 text-base font-semibold capitalize leading-snug;
-}
-</style>

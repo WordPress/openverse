@@ -71,7 +71,7 @@ export const getMediaMetadata = (
     if (media.category) {
       const categoryKey = `filters.audioCategories.${media.category}`
       metadata.push({
-        label: "mediaDetails.information.type",
+        label: "audioDetails.table.category",
         value: `${i18n.t(categoryKey)}`,
       })
     }
