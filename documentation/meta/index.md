@@ -12,5 +12,3 @@ documentation/index
 monitoring/index
 communication_aliases
 ```
-
-Example change to a document!
