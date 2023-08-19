@@ -171,7 +171,8 @@
     },
     "information": {
       "dimensions": "أبعاد",
-      "pixels": "بكسل"
+      "pixels": "بكسل",
+      "sizeInPixels": "{width} × {height} بكسل"
     }
   },
   "singleResult": {

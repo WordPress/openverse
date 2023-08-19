@@ -9,37 +9,36 @@
     <div class="flex flex-col items-start gap-6 md:flex-row">
       <slot name="thumbnail" />
 
-      <div class="flex flex-grow flex-col gap-6">
+      <div
+        class="flex w-full flex-grow flex-col"
+        :class="
+          media.frontendMediaType === 'audio' ? 'gap-4 lg:gap-6' : 'gap-6'
+        "
+      >
         <p v-if="media.description">{{ media.description }}</p>
         <VMediaTags :tags="media.tags" />
-        <VAudioMetadata v-if="isDetail.audio(media)" :audio="media" />
-        <VImageMetadata
-          v-else-if="isDetail.image(media)"
-          :image="media"
-          v-bind="imageData"
-        />
+        <VMetadata v-if="metadata" :metadata="metadata" :media="media" />
       </div>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 
-import type { AudioDetail, ImageDetail } from "~/types/media"
+import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 
-import { isDetail } from "~/types/media"
+import { useI18n } from "~/composables/use-i18n"
+import { getMediaMetadata } from "~/utils/metadata"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
-import VAudioMetadata from "~/components/VMediaInfo/VAudioMetadata.vue"
-import VImageMetadata from "~/components/VMediaInfo/VImageMetadata.vue"
+import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
 import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
 
 export default defineComponent({
   components: {
-    VImageMetadata,
-    VAudioMetadata,
     VMediaTags,
+    VMetadata,
     VContentReportPopover,
   },
   props: {
@@ -47,17 +46,30 @@ export default defineComponent({
       type: Object as PropType<AudioDetail | ImageDetail>,
       required: true,
     },
-    imageData: {
-      type: Object as PropType<{
-        width: number
-        height: number
-        imageType: string
-      }>,
+    imageWidth: {
+      type: Number,
+    },
+    imageHeight: {
+      type: Number,
+    },
+    imageType: {
+      type: String,
     },
   },
-  setup() {
+  setup(props) {
+    const i18n = useI18n()
+
+    const metadata = computed<null | Metadata[]>(() => {
+      if (!props.media) return null
+      return getMediaMetadata(props.media, i18n, {
+        width: props.imageWidth,
+        height: props.imageHeight,
+        type: props.imageType,
+      })
+    })
+
     return {
-      isDetail,
+      metadata,
     }
   },
 })

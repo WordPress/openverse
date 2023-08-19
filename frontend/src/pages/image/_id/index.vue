@@ -76,11 +76,9 @@
         <VMediaReuse :media="image" />
         <VMediaDetails
           :media="image"
-          :image-data="{
-            width: imageWidth,
-            height: imageHeight,
-            imageType: imageType,
-          }"
+          :image-width="imageWidth"
+          :image-height="imageHeight"
+          :image-type="imageType"
         />
         <VRelatedImages />
       </template>

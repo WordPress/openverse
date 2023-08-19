@@ -545,6 +545,7 @@
     information: {
       dimensions: "Dimensions",
       pixels: "pixels",
+      sizeInPixels: "{width} × {height} pixels",
     },
     relatedImages: "Related images",
     aria: {
