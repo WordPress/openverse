@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import logging as log
 from math import ceil
-from typing import Literal
+from typing import TYPE_CHECKING
 
 from django.conf import settings
 from django.core.cache import cache
@@ -15,7 +15,8 @@ from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
 
 import api.models as models
-from api.constants.media_types import OriginIndex
+from api.constants.media_types import OriginIndex, SearchIndex
+from api.constants.search import SearchStrategy
 from api.constants.sorting import INDEXED_ON
 from api.controllers.elasticsearch.helpers import (
     ELASTICSEARCH_MAX_RESULT_WINDOW,
@@ -23,12 +24,17 @@ from api.controllers.elasticsearch.helpers import (
     get_query_slice,
     get_raw_es_response,
 )
-from api.serializers import media_serializers
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
 from api.utils.dead_link_mask import get_query_hash
 from api.utils.search_context import SearchContext
 
+if TYPE_CHECKING:
+    from api.serializers.audio_serializers import AudioCollectionRequestSerializer
+    from api.serializers.media_serializers import (
+        MediaSearchRequestSerializer,
+        PaginatedRequestSerializer,
+    )
 
 module_logger = logging.getLogger(__name__)
 
@@ -172,24 +178,24 @@ def get_excluded_providers_query() -> Q | None:
     return None
 
 
-def _resolve_index(
-    index: Literal["image", "audio"],
-    search_params: media_serializers.MediaSearchRequestSerializer,
-) -> Literal["image", "image-filtered", "audio", "audio-filtered"]:
-    use_filtered_index = all(
-        (
-            settings.ENABLE_FILTERED_INDEX_QUERIES,
-            not search_params.validated_data["include_sensitive_results"],
-        )
-    )
-    if use_filtered_index:
-        return f"{index}-filtered"
+def get_index(
+    exact_index: bool,
+    origin_index: OriginIndex,
+    search_params: MediaListRequestSerializer,
+) -> SearchIndex:
+    if exact_index:
+        return origin_index
 
-    return index
+    include_sensitive_results = search_params.validated_data.get(
+        "include_sensitive_results", False
+    )
+    if settings.ENABLE_FILTERED_INDEX_QUERIES and not include_sensitive_results:
+        return f"{origin_index}-filtered"
+    return origin_index
 
 
 def create_search_filter_queries(
-    search_params: media_serializers.MediaSearchRequestSerializer,
+    search_params: MediaListRequestSerializer,
 ) -> dict[str, list[Q]]:
     """
     Create a list of Elasticsearch queries for filtering search results.
@@ -230,7 +236,7 @@ def create_search_filter_queries(
 
 
 def create_ranking_queries(
-    search_params: media_serializers.MediaSearchRequestSerializer,
+    search_params: MediaListRequestSerializer,
 ) -> list[Q]:
     queries = [Q("rank_feature", field="standardized_popularity", boost=DEFAULT_BOOST)]
     if search_params.data["unstable__authority"]:
@@ -240,8 +246,8 @@ def create_ranking_queries(
     return queries
 
 
-def create_search_query(
-    search_params: media_serializers.MediaSearchRequestSerializer,
+def build_search_query(
+    search_params: MediaListRequestSerializer,
 ) -> Q:
     # Apply filters from the url query search parameters.
     url_queries = create_search_filter_queries(search_params)
@@ -315,8 +321,49 @@ def create_search_query(
     )
 
 
-def search(
-    search_params: media_serializers.MediaSearchRequestSerializer,
+def build_collection_query(
+    search_params: MediaListRequestSerializer,
+    collection_params: dict[str, str],
+):
+    """
+    Build the query to retrieve items in a collection.
+    :param collection_params: `tag`, `source` and/or `creator` values from the path.
+    :param search_params: the validated search parameters.
+    :return: the search client with the query applied.
+    """
+    search_query = {"filter": [], "must": [], "should": [], "must_not": []}
+    # Apply the term filters. Each tuple pairs a filter's parameter name in the API
+    # with its corresponding field in Elasticsearch. "None" means that the
+    # names are identical.
+    filters = [
+        # Collection filters allow a single value.
+        ("tag", "tags.name"),
+        ("source", None),
+        ("creator", None),
+    ]
+    for serializer_field, es_field in filters:
+        if serializer_field in collection_params:
+            if not (argument := collection_params.get(serializer_field)):
+                continue
+            parameter = es_field or serializer_field
+            search_query["filter"].append({"term": {parameter: argument}})
+
+    # Exclude mature content and disabled sources
+    include_sensitive_by_params = search_params.validated_data.get(
+        "include_sensitive_results", False
+    )
+    if not include_sensitive_by_params:
+        search_query["must_not"].append({"term": {"mature": True}})
+    if excluded_providers_query := get_excluded_providers_query():
+        search_query["must_not"].append(excluded_providers_query)
+
+    return Q("bool", **search_query)
+
+
+def query_media(
+    strategy: SearchStrategy,
+    search_params: MediaListRequestSerializer,
+    collection_params: dict[str, str] | None,
     origin_index: OriginIndex,
     exact_index: bool,
     page_size: int,
@@ -325,10 +372,17 @@ def search(
     page: int = 1,
 ) -> tuple[list[Hit], int, int, dict]:
     """
-    Perform a ranked paginated search from the set of keywords and, optionally, filters.
+    If ``strategy`` is ``search``, perform a ranked paginated search
+    from the set of keywords and, optionally, filters.
+    If `strategy` is `collection`, perform a paginated search
+    for the `tag`, `source` or `source` and `creator` combination.
 
-    :param search_params: Search parameters. See
-     :class: `ImageSearchQueryStringSerializer`.
+    :param collection_params: The path parameters for collection search, if
+    strategy is `collection`.
+    :param strategy: Whether to perform a default search or retrieve a collection.
+    :param search_params: If `strategy` is `collection`, `PaginatedRequestSerializer`
+    or `AudioCollectionRequestSerializer`. If `strategy` is `search`, search
+    query params, see :class: `MediaRequestSerializer`.
     :param origin_index: The Elasticsearch index to search (e.g. 'image')
     :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
@@ -337,46 +391,54 @@ def search(
     Elasticsearch shards.
     :param filter_dead: Whether dead links should be removed.
     :param page: The results page number.
-    :return: Tuple with a List of Hits from elasticsearch, the total count of
+    :return: Tuple with a list of Hits from elasticsearch, the total count of
     pages, the number of results, and the ``SearchContext`` as a dict.
     """
-    if not exact_index:
-        index = _resolve_index(origin_index, search_params)
+    index = get_index(exact_index, origin_index, search_params)
+
+    if strategy == "collection":
+        query = build_collection_query(search_params, collection_params)
     else:
-        index = origin_index
+        query = build_search_query(search_params)
 
-    s = Search(index=index)
+    s = Search(index=index).query(query)
 
-    search_query = create_search_query(search_params)
-    s = s.query(search_query)
+    if strategy == "search":
+        # Use highlighting to determine which fields contribute to the selection of
+        # top results.
+        s = s.highlight(*DEFAULT_SEARCH_FIELDS)
+        s = s.highlight_options(order="score")
+        s.extra(track_scores=True)
 
-    # Use highlighting to determine which fields contribute to the selection of
-    # top results.
-    s = s.highlight(*DEFAULT_SEARCH_FIELDS)
-    s = s.highlight_options(order="score")
-    s.extra(track_scores=True)
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
     # TODO: Re-add 7s request_timeout when ES stability is restored
     s = s.params(preference=str(ip))
 
-    # Sort by new
-    if search_params.validated_data["sort_by"] == INDEXED_ON:
-        s = s.sort({"created_on": {"order": search_params.validated_data["sort_dir"]}})
+    # Sort by `created_on` if the parameter is set or if `strategy` is `collection`.
+    sort_by = search_params.validated_data.get("sort_by")
+    sort_dir = search_params.validated_data.get("sort_dir", "desc")
+    if strategy == "collection" or sort_by == INDEXED_ON:
+        s = s.sort({"created_on": {"order": sort_dir}})
 
-    # Paginate
-    start, end = get_query_slice(s, page_size, page, filter_dead)
-    s = s[start:end]
-    search_response = get_es_response(s, es_query="search")
-
-    results = _post_process_results(
-        s, start, end, page_size, search_response, filter_dead
+    # Execute paginated search and tally results
+    page_count, result_count, results = execute_search(
+        s, page, page_size, filter_dead, index, es_query=strategy
     )
 
-    result_count, page_count = _get_result_and_page_count(
-        search_response, results, page_size, page
-    )
+    result_ids = [result.identifier for result in results]
+    search_context = SearchContext.build(result_ids, origin_index)
 
+    return results, page_count, result_count, search_context.asdict()
+
+
+def tally_results(
+    index: SearchIndex, results: list[Hit] | None, page: int, page_size: int
+) -> None:
+    """
+    Tally the number of the results from each provider in the results
+    for the search query.
+    """
     results_to_tally = results or []
     max_result_depth = page * page_size
     if max_result_depth <= 80:
@@ -405,13 +467,33 @@ def search(
         # check things like provider density for a set of queries.
         tallies.count_provider_occurrences(results_to_tally, index)
 
-    if not results:
-        results = []
 
-    result_ids = [result.identifier for result in results]
-    search_context = SearchContext.build(result_ids, origin_index)
+def execute_search(
+    s: Search,
+    page: int,
+    page_size: int,
+    filter_dead: bool,
+    index: SearchIndex,
+    es_query: str,
+) -> tuple[int, int, list[Hit]]:
+    """
+    Execute search for the given query slice, post-processes the results,
+    and returns the results and result and page counts.
+    """
+    start, end = get_query_slice(s, page_size, page, filter_dead)
+    s = s[start:end]
 
-    return results, page_count, result_count, search_context.asdict()
+    search_response = get_es_response(s, es_query=es_query)
+
+    results: list[Hit] = (
+        _post_process_results(s, start, end, page_size, search_response, filter_dead)
+        or []
+    )
+    result_count, page_count = _get_result_and_page_count(
+        search_response, results, page_size, page
+    )
+    tally_results(index, results, page, page_size)
+    return page_count, result_count, results
 
 
 def get_sources(index):

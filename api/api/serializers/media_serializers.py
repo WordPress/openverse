@@ -26,6 +26,64 @@ from api.utils.url import add_protocol
 #######################
 
 
+class PaginatedRequestSerializer(serializers.Serializer):
+    """This serializer passes pagination parameters from the query string."""
+
+    field_names = [
+        "page_size",
+        "page",
+    ]
+    page_size = serializers.IntegerField(
+        label="page_size",
+        help_text=f"Number of results to return per page. "
+        f"Maximum for unauthenticated requests is {settings.MAX_ANONYMOUS_PAGE_SIZE}.",
+        required=False,
+        default=settings.MAX_ANONYMOUS_PAGE_SIZE,
+        min_value=1,
+    )
+    page = serializers.IntegerField(
+        label="page",
+        help_text="The page of results to retrieve.",
+        required=False,
+        default=1,
+        max_value=settings.MAX_PAGINATION_DEPTH,
+        min_value=1,
+    )
+
+    def validate_page_size(self, value):
+        request = self.context.get("request")
+        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        max_value = (
+            settings.MAX_ANONYMOUS_PAGE_SIZE
+            if is_anonymous
+            else settings.MAX_AUTHED_PAGE_SIZE
+        )
+
+        validator = MaxValueValidator(
+            max_value,
+            message=serializers.IntegerField.default_error_messages["max_value"].format(
+                max_value=max_value
+            ),
+        )
+
+        if is_anonymous:
+            try:
+                validator(value)
+            except ValidationError as e:
+                raise NotAuthenticated(
+                    detail=e.message,
+                    code=e.code,
+                )
+        else:
+            validator(value)
+
+        return value
+
+    @property
+    def needs_db(self) -> bool:
+        return False
+
+
 @extend_schema_serializer(
     # Hide unstable and internal fields from documentation.
     # Also see `field_names` below.
@@ -38,7 +96,7 @@ from api.utils.url import add_protocol
         "internal__index",
     ],
 )
-class MediaSearchRequestSerializer(serializers.Serializer):
+class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     """This serializer parses and validates search query string parameters."""
 
     DeprecatedParam = namedtuple("DeprecatedParam", ["original", "successor"])
@@ -64,8 +122,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         # "unstable__authority",
         # "unstable__authority_boost",
         # "unstable__include_sensitive_results",
-        "page_size",
-        "page",
+        *PaginatedRequestSerializer.field_names,
     ]
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -179,22 +236,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         required=False,
     )
 
-    page_size = serializers.IntegerField(
-        label="page_size",
-        help_text="Number of results to return per page.",
-        required=False,
-        default=settings.MAX_ANONYMOUS_PAGE_SIZE,
-        min_value=1,
-    )
-    page = serializers.IntegerField(
-        label="page",
-        help_text="The page of results to retrieve.",
-        required=False,
-        default=1,
-        max_value=settings.MAX_PAGINATION_DEPTH,
-        min_value=1,
-    )
-
     def is_request_anonymous(self):
         request = self.context.get("request")
         return bool(request and request.user and request.user.is_anonymous)
@@ -283,34 +324,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError(f"Invalid index name `{value}`.")
         return value
 
-    def validate_page_size(self, value):
-        is_anonymous = self.is_request_anonymous()
-        max_value = (
-            settings.MAX_ANONYMOUS_PAGE_SIZE
-            if is_anonymous
-            else settings.MAX_AUTHED_PAGE_SIZE
-        )
-
-        validator = MaxValueValidator(
-            max_value,
-            message=serializers.IntegerField.default_error_messages["max_value"].format(
-                max_value=max_value
-            ),
-        )
-
-        if is_anonymous:
-            try:
-                validator(value)
-            except ValidationError as e:
-                raise NotAuthenticated(
-                    detail=e.message,
-                    code=e.code,
-                )
-        else:
-            validator(value)
-
-        return value
-
     @staticmethod
     def validate_extension(value):
         return value.lower()
@@ -328,10 +341,6 @@ class MediaSearchRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError(errors)
 
         return data
-
-    @property
-    def needs_db(self) -> bool:
-        return False
 
 
 class MediaThumbnailRequestSerializer(serializers.Serializer):

@@ -3,6 +3,8 @@ import random
 import re
 from collections.abc import Callable
 from enum import Enum, auto
+
+from api.serializers.media_serializers import PaginatedRequestSerializer
 from test.factory.es_http import (
     MOCK_DEAD_RESULT_URL_PREFIX,
     MOCK_LIVE_RESULT_URL_PREFIX,
@@ -14,10 +16,12 @@ from uuid import uuid4
 import pook
 import pytest
 from django_redis import get_redis_connection
-from elasticsearch_dsl import Search
+from elasticsearch_dsl import Q, Search
 
 from api.controllers import search_controller
 from api.controllers.elasticsearch import helpers as es_helpers
+from api.controllers.search_controller import build_collection_query
+from api.serializers import image_serializers
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
@@ -456,7 +460,8 @@ def test_search_tallies_pages_less_than_5(
     )
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
         ip=0,
         origin_index=media_type_config.origin_index,
@@ -495,7 +500,8 @@ def test_search_tallies_handles_empty_page(
     serializer = media_type_config.search_request_serializer(data={"q": "dogs"})
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
         ip=0,
         origin_index=media_type_config.origin_index,
@@ -538,7 +544,8 @@ def test_resolves_index(
     )
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
         ip=0,
         origin_index=origin_index,
@@ -605,7 +612,8 @@ def test_no_post_process_results_recursion(
         data={"q": "bird perched"}
     )
     serializer.is_valid()
-    results, _, _, _ = search_controller.search(
+    results, _, _, _ = search_controller.query_media(
+        strategy="search",
         search_params=serializer,
         ip=0,
         origin_index=image_media_type_config.origin_index,
@@ -743,7 +751,8 @@ def test_post_process_results_recurses_as_needed(
         data={"q": "bird perched"}
     )
     serializer.is_valid()
-    results, _, _, _ = search_controller.search(
+    results, _, _, _ = search_controller.query_media(
+        strategy="search",
         search_params=serializer,
         ip=0,
         origin_index=image_media_type_config.origin_index,
@@ -785,8 +794,10 @@ def test_excessive_recursion_in_post_process(
     serializer.is_valid()
 
     with caplog.at_level(logging.INFO):
-        results, _, _, _ = search_controller.search(
+        results, _, _, _ = search_controller.query_media(
+            strategy="search",
             search_params=serializer,
+            collection_params=None,
             ip=0,
             origin_index=image_media_type_config.origin_index,
             exact_index=True,
@@ -795,3 +806,63 @@ def test_excessive_recursion_in_post_process(
             filter_dead=True,
         )
     assert "Nesting threshold breached" in caplog.text
+
+
+@pytest.mark.parametrize(
+    ("data", "expected_query"),
+    [
+        pytest.param(
+            {"unstable__include_sensitive_results": False, "tag": "art"},
+            Q(
+                "bool",
+                filter=[{"terms": {"tags.name.keyword": ["art"]}}],
+                must_not=[{"term": {"mature": True}}],
+            ),
+            id="filter_by_tag_without_sensitive",
+        ),
+        pytest.param(
+            {"unstable__include_sensitive_results": True, "tag": "art"},
+            Q(
+                "bool",
+                filter=[{"terms": {"tags.name.keyword": ["art"]}}],
+            ),
+            id="filter_by_tag_with_sensitive",
+        ),
+        pytest.param(
+            {"unstable__include_sensitive_results": False, "source": "flickr"},
+            Q(
+                "bool",
+                filter=[{"terms": {"source.keyword": ["flickr"]}}],
+                must_not=[{"term": {"mature": True}}],
+            ),
+            id="filter_by_source_without_sensitive",
+        ),
+        pytest.param(
+            {
+                "unstable__include_sensitive_results": False,
+                "source": "flickr",
+                "creator": "nasa",
+            },
+            Q(
+                "bool",
+                filter=[
+                    {"terms": {"source.keyword": ["flickr"]}},
+                    {"terms": {"creator.keyword": ["nasa"]}},
+                ],
+                must_not=[{"term": {"mature": True}}],
+            ),
+            id="filter_by_creator_without_sensitive",
+        ),
+    ],
+)
+@mock.patch("api.controllers.search_controller.Search", wraps=Search)
+def test_build_collection_query(mock_search_class, data, expected_query):
+    # Setup
+    mock_search = mock_search_class.return_value
+
+    # Action
+    build_collection_query(mock_search, data)
+    actual_query = mock_search.query.call_args[0][0]
+
+    # Validate
+    assert actual_query == expected_query
