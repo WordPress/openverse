@@ -18,6 +18,8 @@ import type { LocaleObject } from "@nuxtjs/i18n"
 import type { Options as ProxyOptions } from "http-proxy-middleware"
 import type { IncomingMessage, NextFunction } from "connect"
 
+let plausibleLogged = false
+
 if (process.env.NODE_ENV === "production") {
   meta.push({
     // @ts-expect-error: 'http-equiv' isn't allowed here by Nuxt
@@ -316,12 +318,14 @@ const config: NuxtConfig = {
           ...console,
           error: (...data: unknown[]) => {
             if (
+              !plausibleLogged &&
               data.some(
                 (item) =>
                   typeof item === "string" && item.includes("ECONNREFUSED")
               )
             ) {
               console.warn("Plausible is not running.")
+              plausibleLogged = true
             }
           },
         }
