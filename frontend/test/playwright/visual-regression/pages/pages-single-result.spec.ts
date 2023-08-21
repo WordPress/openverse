@@ -41,7 +41,7 @@ for (const mediaType of supportedMediaTypes) {
             fullPage: true,
           },
           {
-            maxDiffPixelRatio: 0.1,
+            maxDiffPixelRatio: 0.01,
           }
         )
       })
