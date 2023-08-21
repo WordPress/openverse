@@ -108,6 +108,11 @@ repos:
     hooks:
       - id: actionlint-docker
 
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.5
+    hooks:
+      - id: codespell
+
   - repo: local # More local hooks are defined at the top.
     hooks:
       - id: types

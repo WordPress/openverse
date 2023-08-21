@@ -1,0 +1,2 @@
+[codespell]
+skip = /frontend/test/tapes/**/*,/catalog/tests/dags/providers/provider_api_scripts/resources/**/*
