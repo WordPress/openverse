@@ -71,6 +71,7 @@ describe("getAttribution", () => {
     const expectation =
       "&lt;script&gt;console.log(&quot;HELLO&quot;);&lt;/script&gt;"
     expect(attrText).toContain(expectation)
+    expect(attrText).not.toContain(mediaItemWithHtml.originalTitle)
   })
 
   it("does not use anchors in plain-text mode", () => {
