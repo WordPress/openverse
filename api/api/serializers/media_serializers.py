@@ -498,7 +498,7 @@ class MediaSerializer(BaseModelSerializer):
             # that providers have themselves marked as mature, unsafe, etc,
             # it isn't clear (aside from Flickr, where we use "safe search").
             # What is clear is that we do not need to handle provider reported
-            # sensitivity here because it simply does not occurr in our database.
+            # sensitivity here because it simply does not occur in our database.
             # That is _very_ convenient because provider supplied maturity is
             # much more complex to derive. Its condition is that the result
             # has no report _and_ has `mature=true` on the document in ES.

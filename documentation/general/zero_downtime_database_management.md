@@ -306,7 +306,7 @@ be aware of.
 
 In order to understand the potential issues that can arise in managing
 environment variables, it is necessary to first understand the mechanisms used
-to management them and how they are propogated to application instances.
+to management them and how they are propagated to application instances.
 
 Environment variables for applications and their environments are configured and
 managed in the _task definition template_. The ECS service for each application

@@ -1,8 +1,8 @@
 # Node.js packages
 
 Openverse uses `pnpm` workspaces to facilitate collecting multiple Node.js
-projects into a single repository. This section documents the individual packges
-and how to add/maintain them.
+projects into a single repository. This section documents the individual
+packages and how to add/maintain them.
 
 ```{toctree}
 :titlesonly:

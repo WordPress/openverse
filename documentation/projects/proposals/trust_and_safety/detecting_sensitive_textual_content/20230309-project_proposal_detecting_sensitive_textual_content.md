@@ -17,7 +17,7 @@ textual content are determined, blur those results on the frontend.
 > textual context. That inference applies specifically to the textual content
 > _only_, but is also likely to apply to content itself (whether image or
 > audio). We also acknowledge the various pit-falls that can come with this
-> approach as well as its insufficency. However, it's the best approach we can
+> approach as well as its insufficiency. However, it's the best approach we can
 > implement now, in a timely manner, that will substantively improve the
 > accessibility of Openverse.
 

@@ -248,7 +248,7 @@ steps should be organised into parallelisable work streams that can be
 distributed across multiple team members (if desired).
 
 Implementation plans share some philosophical goals with project plans. They
-should seek to uncover and discover new or unforseen details about a project.
+should seek to uncover and discover new or unforeseen details about a project.
 
 #### Required content
 

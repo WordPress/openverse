@@ -203,7 +203,7 @@ it. Please see the
      Terraform configuration)
 
 2. Deploy the code that depends on the new or updated variable by dispatching
-   the appropriate deployment workflow for the application and envionment that
+   the appropriate deployment workflow for the application and environment that
    was updated.
    - If the application only needs to be re-deployed to the already
      running-version, dispatch the workflow with the version present at the
