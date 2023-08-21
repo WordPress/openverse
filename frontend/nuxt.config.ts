@@ -312,7 +312,7 @@ const config: NuxtConfig = {
         (isProdNotPlaywright
           ? "https://plausible.io"
           : "http://localhost:50288"),
-      // Prevent red-herring errors in the console.
+      // Prevent ECONNREFUSED errors in the server console.
       logProvider: () => {
         return {
           ...console,
@@ -332,7 +332,7 @@ const config: NuxtConfig = {
               },
         }
       },
-      // Prevent 504 errors from polluting the console.
+      // Prevent 504 errors in the browser console.
       onError: (err, _req, res) => {
         if (!isProdNotPlaywright && err.message.includes("ECONNREFUSED")) {
           res.writeHead(200, { "Content-Type": "text/plain" })
