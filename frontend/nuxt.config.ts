@@ -316,23 +316,25 @@ const config: NuxtConfig = {
       logProvider: () => {
         return {
           ...console,
-          error: (...data: unknown[]) => {
-            if (
-              !plausibleLogged &&
-              data.some(
-                (item) =>
-                  typeof item === "string" && item.includes("ECONNREFUSED")
-              )
-            ) {
-              console.warn("Plausible is not running.")
-              plausibleLogged = true
-            }
-          },
+          error: isProdNotPlaywright
+            ? console.error
+            : (...data: unknown[]) => {
+                if (
+                  !plausibleLogged &&
+                  data.some(
+                    (item) =>
+                      typeof item === "string" && item.includes("ECONNREFUSED")
+                  )
+                ) {
+                  console.warn("Plausible is not running.")
+                  plausibleLogged = true
+                }
+              },
         }
       },
       // Prevent 504 errors from polluting the console.
       onError: (err, _req, res) => {
-        if (err.message.includes("ECONNREFUSED")) {
+        if (!isProdNotPlaywright && err.message.includes("ECONNREFUSED")) {
           res.writeHead(200, { "Content-Type": "text/plain" })
           res.end("plausible not running")
         }
