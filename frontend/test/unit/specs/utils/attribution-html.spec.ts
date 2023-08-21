@@ -62,6 +62,17 @@ describe("getAttribution", () => {
     expect(attrText).toContain(expectation)
   })
 
+  it("escapes embedded HTML", () => {
+    const mediaItemWithHtml = {
+      ...mediaItem,
+      originalTitle: '<script>console.log("HELLO");</script>',
+    }
+    const attrText = getAttribution(mediaItemWithHtml, i18n)
+    const expectation =
+      "&lt;script&gt;console.log(&quot;HELLO&quot;);&lt;/script&gt;"
+    expect(attrText).toContain(expectation)
+  })
+
   it("does not use anchors in plain-text mode", () => {
     document.body.innerHTML = getAttribution(mediaItem, i18n)
     expect(document.getElementsByTagName("a")).not.toHaveLength(0)
