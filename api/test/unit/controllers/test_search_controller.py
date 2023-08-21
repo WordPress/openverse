@@ -16,12 +16,10 @@ from uuid import uuid4
 import pook
 import pytest
 from django_redis import get_redis_connection
-from elasticsearch_dsl import Q, Search
+from elasticsearch_dsl import Search
 
 from api.controllers import search_controller
 from api.controllers.elasticsearch import helpers as es_helpers
-from api.controllers.search_controller import build_collection_query
-from api.serializers import image_serializers
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
@@ -463,6 +461,7 @@ def test_search_tallies_pages_less_than_5(
     search_controller.query_media(
         strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -503,6 +502,7 @@ def test_search_tallies_handles_empty_page(
     search_controller.query_media(
         strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -547,6 +547,7 @@ def test_resolves_index(
     search_controller.query_media(
         strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=origin_index,
         exact_index=False,
@@ -615,6 +616,7 @@ def test_no_post_process_results_recursion(
     results, _, _, _ = search_controller.query_media(
         strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -754,6 +756,7 @@ def test_post_process_results_recurses_as_needed(
     results, _, _, _ = search_controller.query_media(
         strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
