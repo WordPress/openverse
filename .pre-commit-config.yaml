@@ -112,6 +112,31 @@ repos:
     rev: v2.2.5
     hooks:
       - id: codespell
+        args: [
+            # Pass skip configuration as command line arguments rather than in the
+            # config file because neither cfg nor TOML support splitting this argument
+            # across multiple lines.
+            "-S",
+            "sample_data/*",
+            "-S",
+            "frontend/test/tapes/**/*",
+            "-S",
+            "frontend/test/playwright/e2e/resources/*",
+            "-S",
+            "frontend/test/unit/fixtures/*",
+            "-S",
+            "catalog/tests/dags/providers/provider_api_scripts/resources/**/*",
+            "-S",
+            "catalog/tests/dags/common/test_resources/**/*",
+            # Test locales are non-English and therefore should not be checked by codespell
+            "-S",
+            "frontend/test/locales/*.json",
+            "-S",
+            "pnpm-lock.yaml",
+            "-w",
+          ]
+        additional_dependencies:
+          - tomli
 
   - repo: local # More local hooks are defined at the top.
     hooks:

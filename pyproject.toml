@@ -1,0 +1,45 @@
+# TOML configuration for tools that support it should be placed in this file
+# We do not use pyproject.toml to describe build requirements. This file
+# should only be referenced for tool configuration, not build settings!
+
+[tool.codespell]
+exclude-file = ".codespell/ignore_lines.txt"
+ignore-words = ".codespell/ignore_words.txt"
+
+[tool.ruff.per-file-ignores]
+"*test*" = ["E501"]
+"*__init__*" = ["F401"]
+"*wsgi.py" = ["E402"]
+"*settings/__init__.py" = ["F403"]
+
+[tool.isort]
+profile = "black"
+
+sections = [
+  "FUTURE",
+  "STDLIB",
+  "DJANGO",
+  "THIRDPARTY",
+  "FIRSTPARTY",
+  "LOCALFOLDER",
+]
+
+known_django = [
+  "django",
+  "rest_framework",
+]
+
+known_first_party = [
+  "conf",
+  "api",
+  "ingestion_server",
+  "common",
+  "data_refresh",
+  "database",
+  "maintenance",
+  "oauth2",
+  "providers",
+  "retired",
+]
+
+lines_after_imports = 2
