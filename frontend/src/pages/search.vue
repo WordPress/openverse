@@ -5,9 +5,9 @@
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
     <VErrorPage
-        v-if="fetchingError"
-        :fetching-error="fetchingError"
-        class="w-full py-10"
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="w-full py-10"
     />
     <section v-else>
       <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
