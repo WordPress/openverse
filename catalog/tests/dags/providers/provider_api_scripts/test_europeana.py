@@ -119,47 +119,12 @@ def test_get_image_list_with_realistic_response(ingester):
 
 ITEM_HAPPY_RESPONSE = _get_resource_json("item_full.json")
 ITEM_NOT_1ST_RESPONSE = _get_resource_json("item_not_first_webresource.json")
-ITEM_HAPPY_WEBRESOURCE = {
-    "about": "https://images.memorix.nl/nda/thumb/640x480/010a31d7-9316-54d7-6ad0-83b9914688d9.jpg",
-    "textAttributionSnippet": " - https://www.europeana.eu/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6. Fotovlucht Vliegbasis Soesterberg. Nederlands Instituut voor Militaire Historie - http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6. CC0 - http://creativecommons.org/publicdomain/zero/1.0/",
-    "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Creator</dt><dd lang=''>Fotovlucht Vliegbasis Soesterberg</dd><dt>Institution</dt><dd lang=''><a href='http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6' target='_blank' rel='noopener'>Nederlands Instituut voor Militaire Historie</a></dd><dt>Country</dt><dd lang=''>Netherlands</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-zero'/>CC0</a></dd></dl>",
-    "ebucoreHasMimeType": "image/jpeg",
-    "ebucoreFileByteSize": 36272,
-    "ebucoreWidth": 381,
-    "ebucoreHeight": 480,
-    "edmHasColorSpace": "sRGB",
-    "edmComponentColor": [
-        "#FF6347",
-        "#556B2F",
-        "#E9967A",
-        "#A0522D",
-        "#FFEBCD",
-        "#DAA520",
-    ],
-    "ebucoreOrientation": "portrait",
-}
-ITEM_NOT_1ST_WEBRESOURCE = {
-    "about": "https://www.cortesaragon.es/fondoHistorico/i18n/catalogo_imagenes/imagen_id.do?idImagen=122319",
-    "textAttributionSnippet": "(en) Portrait of Augustine of Fifth and Guiu [Graphic Material] - https://www.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0. . Fondo Documental Histórico de las Cortes de Aragón - https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323. CC BY-NC-ND - http://creativecommons.org/licenses/by-nc-nd/4.0/",
-    "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Title</dt><dd lang='en'><a href='http://data.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0' target='_blank' rel='noopener'>Portrait of Augustine of Fifth and Guiu [Graphic Material]</a></dd><dt>Creator</dt><dt>Date</dt><dd lang=''>1801; 1853</dd><dt>Institution</dt><dd lang=''><a href='https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323' target='_blank' rel='noopener'>Fondo Documental Histórico de las Cortes de Aragón</a></dd><dt>Country</dt><dd lang=''>Spain</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/licenses/by-nc-nd/4.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-by'/><span class='icon-nc'/><span class='icon-nd'/>CC BY-NC-ND</a></dd></dl>",
-    "dctermsIsReferencedBy": [
-        "https://iiif.europeana.eu/presentation/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0/manifest"
-    ],
-    "ebucoreHasMimeType": "image/jpeg",
-    "ebucoreFileByteSize": 604829,
-    "ebucoreWidth": 772,
-    "ebucoreHeight": 1024,
-    "edmHasColorSpace": "sRGB",
-    "edmComponentColor": [
-        "#CD5C5C",
-        "#BC8F8F",
-        "#FFE4C4",
-        "#696969",
-        "#E9967A",
-        "#D2B48C",
-    ],
-    "ebucoreOrientation": "portrait",
-}
+ITEM_HAPPY_WEBRESOURCE = (
+    ITEM_HAPPY_RESPONSE.get("object").get("aggregations")[0].get("webResources")[0]
+)
+ITEM_NOT_1ST_WEBRESOURCE = (
+    ITEM_NOT_1ST_RESPONSE.get("object").get("aggregations")[0].get("webResources")[1]
+)
 
 
 @pytest.mark.parametrize(
