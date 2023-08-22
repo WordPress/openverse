@@ -9,8 +9,9 @@
       <VLink
         :href="`/audio/${audio.id}`"
         class="hover-underline absolute inset-x-0 top-[10.5px] z-10 line-clamp-2 flex flex-row items-center justify-between px-4 pe-12 text-sr font-semibold text-dark-charcoal"
+        :class="{ 'blur-text': shouldBlur }"
       >
-        {{ audio.title }}
+        {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
       </VLink>
 
       <slot name="controller" :usable-frac="0.5" />
@@ -22,6 +23,8 @@
 import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
+
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLink from "~/components/VLink.vue"
@@ -37,6 +40,13 @@ export default defineComponent({
       type: Object as PropType<AudioDetail>,
       required: true,
     },
+  },
+  setup(props) {
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+
+    return {
+      shouldBlur,
+    }
   },
 })
 </script>
