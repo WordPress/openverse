@@ -280,14 +280,12 @@ class EuropeanaDataIngester(ProviderDataIngester):
         # Testing with the first webresource from the first aggregation, got dimensions
         # for 1424 / 1589 images; so not too worried about performance implications of
         # the loops. Limiting factor was much more the delay between requests.
-        if item_object := item_response.get("object"):
-            if aggregations := item_object.get("aggregations"):
-                for aggregation in aggregations:
-                    if webresources := aggregation.get("webResources"):
-                        for webresource in webresources:
-                            if filetype := webresource.get("ebucoreHasMimeType"):
-                                if filetype.startswith("image"):
-                                    return webresource
+        if aggregations := item_response.get("object", {}).get("aggregations"):
+            for aggregation in aggregations:
+                for webresource in aggregation.get("webResources", []):
+                    if filetype := webresource.get("ebucoreHasMimeType"):
+                        if filetype.startswith("image"):
+                            return webresource
         return {}
 
 

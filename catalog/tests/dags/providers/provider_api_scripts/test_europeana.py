@@ -167,9 +167,9 @@ ITEM_NOT_1ST_WEBRESOURCE = {
     [
         pytest.param(ITEM_HAPPY_RESPONSE, ITEM_HAPPY_WEBRESOURCE, id="happy_path"),
         pytest.param(ITEM_NOT_1ST_RESPONSE, ITEM_NOT_1ST_WEBRESOURCE, id="not_first"),
-        pytest.param({"success": False, "object": None}, {}, id="success_is_false"),
+        pytest.param({"success": False, "object": {}}, {}, id="success_is_false"),
         pytest.param({"success": True, "no": "object"}, {}, id="no_object"),
-        pytest.param({"success": True, "object": None}, {}, id="no_aggregation"),
+        pytest.param({"success": True, "object": {}}, {}, id="no_aggregation"),
         pytest.param(None, {}, id="no_response"),
     ],
 )
