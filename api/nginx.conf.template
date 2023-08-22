@@ -47,13 +47,10 @@ server {
     charset        utf-8;
     client_max_body_size 75M;
     error_page 500 /500.json;
+    absolute_redirect off;
 
-    location /static {
-        alias /app/static;
-    }
-
-    location /media {
-        alias /app/media;
+    location /static/ {
+        alias /app/static/;
     }
 
     location / {

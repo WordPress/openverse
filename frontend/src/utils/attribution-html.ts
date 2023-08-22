@@ -19,6 +19,21 @@ import type VueI18n from "vue-i18n"
 /* Helper functions */
 
 /**
+ * Escape characters that have special meaning in HTML to break script injection
+ * attacks.
+ *
+ * @param unsafe - the unsafe text to sanitise
+ * @returns the sanitised text content
+ */
+const escapeHtml = (unsafe: string) =>
+  unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+
+/**
  * Create an HTML tag with the given name, attributes and children.
  *
  * @param name - the tag name
@@ -163,6 +178,7 @@ export const getAttribution = (
   /* Title */
 
   let title = mediaItem.originalTitle || tFn("genericTitle")
+  if (!isPlaintext) title = escapeHtml(title)
   if (!isPlaintext && mediaItem.foreign_landing_url)
     title = extLink(mediaItem.foreign_landing_url, title)
   if (mediaItem.originalTitle) title = tFn("actualTitle", { title })
@@ -204,6 +220,7 @@ export const getAttribution = (
 
   if (mediaItem.creator) {
     let creator = mediaItem.creator
+    if (!isPlaintext) creator = escapeHtml(creator)
     if (!isPlaintext && mediaItem.creator_url)
       creator = extLink(mediaItem.creator_url, creator)
     attributionParts.creator = tFn("creatorText", {

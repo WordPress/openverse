@@ -290,6 +290,22 @@ services:
     stdin_open: true
     tty: true
 
+  nginx:
+    profiles:
+      - api
+    build:
+      context: ./api/
+      target: nginx
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - API_PY_VERSION
+    ports:
+      - "50270:8080"
+    environment:
+      DJANGO_NGINX_UPSTREAM_URL: web:8000
+    depends_on:
+      - web
+
   proxy:
     profiles:
       - api

@@ -83,6 +83,21 @@ def drop_media_matview(
     postgres.run(f"DROP MATERIALIZED VIEW IF EXISTS public.{db_view} CASCADE;")
 
 
+def drop_media_popularity_constants(
+    postgres_conn_id,
+    media_type=IMAGE,
+    constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
+    pg_timeout: float = timedelta(minutes=10).total_seconds(),
+):
+    if media_type == AUDIO:
+        constants = AUDIO_POPULARITY_CONSTANTS_VIEW
+
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
+    )
+    postgres.run(f"DROP MATERIALIZED VIEW IF EXISTS public.{constants} CASCADE;")
+
+
 def drop_media_popularity_relations(
     postgres_conn_id,
     media_type=IMAGE,

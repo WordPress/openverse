@@ -15,7 +15,10 @@ import type http from "http"
 
 import type { NuxtConfig } from "@nuxt/types"
 import type { LocaleObject } from "@nuxtjs/i18n"
+import type { Options as ProxyOptions } from "http-proxy-middleware"
 import type { IncomingMessage, NextFunction } from "connect"
+
+let plausibleLogged = false
 
 if (process.env.NODE_ENV === "production") {
   meta.push({
@@ -303,9 +306,40 @@ const config: NuxtConfig = {
   },
   proxy: {
     // The key is appended to the address in the value.
-    "/api/event":
-      process.env.PLAUSIBLE_ORIGIN ??
-      (isProdNotPlaywright ? "https://plausible.io" : "http://localhost:50288"),
+    "/api/event": {
+      target:
+        process.env.PLAUSIBLE_ORIGIN ??
+        (isProdNotPlaywright
+          ? "https://plausible.io"
+          : "http://localhost:50288"),
+      // Prevent ECONNREFUSED errors in the server console.
+      logProvider: () => {
+        return {
+          ...console,
+          error: isProdNotPlaywright
+            ? console.error
+            : (...data: unknown[]) => {
+                if (
+                  !plausibleLogged &&
+                  data.some(
+                    (item) =>
+                      typeof item === "string" && item.includes("ECONNREFUSED")
+                  )
+                ) {
+                  console.warn("Plausible is not running.")
+                  plausibleLogged = true
+                }
+              },
+        }
+      },
+      // Prevent 504 errors in the browser console.
+      onError: (err, _req, res) => {
+        if (!isProdNotPlaywright && err.message.includes("ECONNREFUSED")) {
+          res.writeHead(200, { "Content-Type": "text/plain" })
+          res.end("plausible not running")
+        }
+      },
+    } satisfies ProxyOptions,
   },
   plausible: {
     trackLocalhost: !isProdNotPlaywright,

@@ -12,14 +12,14 @@
       />
     </nav>
     <div class="flex lg:hidden">
-      <VOldIconButton
+      <VIconButton
         id="menu-button"
         ref="menuButtonRef"
+        variant="transparent-dark"
+        size="large"
         :icon-props="{ name: 'menu' }"
         :label="$t('header.aria.menu')"
         v-bind="triggerA11yProps"
-        class="border-tx hover:bg-dark-charcoal hover:text-white"
-        :class="{ 'bg-dark-charcoal text-white': isModalVisible }"
         @click="onTriggerClick"
       />
       <template v-if="triggerElement">
@@ -94,27 +94,30 @@ import { useUiStore } from "~/stores/ui"
 
 import VCloseButton from "~/components/VCloseButton.vue"
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
-import VOldIconButton from "~/components/VIconButton/VOldIconButton.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 export default defineComponent({
   name: "VHeaderInternal",
   components: {
+    VIconButton,
     VCloseButton,
     VModalContent,
     VPopoverContent,
     VHomeLink,
-    VOldIconButton,
     VPageLinks,
     VWordPressLink,
   },
   setup(_, { emit }) {
-    const menuButtonRef = ref<InstanceType<typeof VOldIconButton> | null>(null)
+    const menuButtonRef = ref<{ $el: HTMLElement } | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
-    const modalContentRef = ref<InstanceType<typeof VModalContent> | null>(null)
+    const modalContentRef = ref<{
+      $el: HTMLElement
+      deactivateFocusTrap: () => void
+    } | null>(null)
 
     const uiStore = useUiStore()
 
