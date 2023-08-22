@@ -19,11 +19,13 @@ const getImageType = (
 const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
   if (!audio.alt_files)
     return audio.filetype ?? i18n.t("mediaDetails.information.unknown")
-  const altFormats = audio.alt_files.map((altFile) => altFile.filetype)
+  const altFormats = audio.alt_files
+    .map((altFile) => altFile.filetype)
+    .filter((filetype) => filetype !== audio.filetype)
+  const uniqueFormats = Array.from(new Set(altFormats))
   if (audio.filetype) {
-    altFormats.unshift(audio.filetype)
+    uniqueFormats.unshift(audio.filetype)
   }
-  const uniqueFormats = new Set(altFormats)
   return [...uniqueFormats].join(", ")
 }
 
