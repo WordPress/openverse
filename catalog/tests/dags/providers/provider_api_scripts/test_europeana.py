@@ -240,6 +240,8 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
             ITEM_HAPPY_WEBRESOURCE, {"width": 381, "height": 480}, id="happy_path"
         ),
         pytest.param({"no": "dimensions"}, {}, id="no_dimensions"),
+        pytest.param({"ebucoreWidth": 381}, {}, id="no_height"),
+        pytest.param({"ebucoreHeight": 480}, {}, id="no_width"),
     ],
 )
 def test_get_image_dimensions(item_data, expected, record_builder):
