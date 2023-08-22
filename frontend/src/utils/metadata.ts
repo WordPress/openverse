@@ -36,22 +36,22 @@ export const getMediaMetadata = (
   if (media.frontendMediaType === IMAGE) {
     const mediaTypeString = getImageType(imageInfo?.type, i18n)
     metadata.push({
-      label: `${i18n.t("mediaDetails.information.type")}`,
+      label: "mediaDetails.information.type",
       value: mediaTypeString.toString().toUpperCase(),
     })
     if (media.providerName !== media.sourceName) {
       metadata.push({
-        label: `${i18n.t("mediaDetails.providerLabel")}`,
+        label: "mediaDetails.providerLabel",
         value: media.providerName || media.provider,
       })
     }
     metadata.push({
-      label: `${i18n.t("mediaDetails.sourceLabel")}`,
+      label: "mediaDetails.sourceLabel",
       value: media.sourceName ?? media.providerName ?? media.provider,
       url: media.foreign_landing_url,
     })
     metadata.push({
-      label: `${i18n.t("imageDetails.information.dimensions")}`,
+      label: "imageDetails.information.dimensions",
       value: `${i18n.t("imageDetails.information.sizeInPixels", {
         width: imageInfo?.width,
         height: imageInfo?.height,
@@ -61,7 +61,7 @@ export const getMediaMetadata = (
     const mediaTypeString = getAudioType(media, i18n)
     if (media.audio_set) {
       metadata.push({
-        label: `${i18n.t("audioDetails.table.album")}`,
+        label: "audioDetails.table.album",
         value: media.audio_set.title,
         url: media.audio_set.foreign_landing_url,
       })
@@ -69,36 +69,36 @@ export const getMediaMetadata = (
     if (media.category) {
       const categoryKey = `filters.audioCategories.${media.category}`
       metadata.push({
-        label: `${i18n.t("mediaDetails.information.type")}`,
+        label: "mediaDetails.information.type",
         value: `${i18n.t(categoryKey)}`,
       })
     }
     if (media.sample_rate) {
       metadata.push({
-        label: `${i18n.t("audioDetails.table.sampleRate")}`,
+        label: "audioDetails.table.sampleRate",
         value: `${media.sample_rate}`,
       })
     }
     if (media.filetype) {
       metadata.push({
-        label: `${i18n.t("audioDetails.table.filetype")}`,
+        label: "audioDetails.table.filetype",
         value: mediaTypeString.toString().toUpperCase(),
       })
     }
     metadata.push({
-      label: `${i18n.t("mediaDetails.providerLabel")}`,
+      label: "mediaDetails.providerLabel",
       value: media.providerName || media.provider,
       url: media.foreign_landing_url,
     })
     if (media.source && media.providerName !== media.sourceName) {
       metadata.push({
-        label: `${i18n.t("mediaDetails.sourceLabel")}`,
+        label: "mediaDetails.sourceLabel",
         value: media.sourceName ?? media.providerName ?? media.provider,
       })
     }
     if (media.genres && media.genres.length > 0) {
       metadata.push({
-        label: `${i18n.t("audioDetails.table.genre")}`,
+        label: "audioDetails.table.genre",
         value: media.genres.join(", "),
       })
     }

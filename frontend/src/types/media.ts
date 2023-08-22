@@ -127,5 +127,5 @@ export type Metadata = {
   label: string
   url?: string
   value: string
-  isSource?: boolean
+  source?: string
 }

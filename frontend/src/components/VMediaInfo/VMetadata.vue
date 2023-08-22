@@ -1,7 +1,7 @@
 <template>
   <dl :class="media.frontendMediaType">
     <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt>{{ datum.label }}</dt>
+      <dt>{{ $t(datum.label) }}</dt>
       <dd>
         <VLink v-if="datum.url" :href="datum.url" class="text-pink">{{
           datum.value
@@ -12,10 +12,9 @@
   </dl>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
-import { useUiStore } from "~/stores/ui"
 
 import VLink from "~/components/VLink.vue"
 
@@ -31,14 +30,6 @@ export default defineComponent({
       type: Array as PropType<Metadata[]>,
       required: true,
     },
-  },
-  setup() {
-    const uiStore = useUiStore()
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
-
-    return {
-      isSm,
-    }
   },
 })
 </script>
