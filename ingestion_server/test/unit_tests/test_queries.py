@@ -29,7 +29,9 @@ def _join_seq(seq):
     ],
 )
 def test_get_copy_data_query(table, approach, limit, limit_expected, order_by_expected):
-    actual = queries.get_copy_data_query(table, ["col1", "col2"], approach, limit)
+    actual = queries.get_copy_data_query(
+        table, table, ["col1", "col2"], approach, limit
+    )
     as_string = _join_seq(actual.seq).replace("\\n", "\n").strip()
     assert ("LIMIT 100000" in as_string) == limit_expected
     assert ("ORDER BY identifier" in as_string) == (
