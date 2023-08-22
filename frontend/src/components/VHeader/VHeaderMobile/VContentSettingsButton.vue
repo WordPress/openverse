@@ -10,13 +10,13 @@
     aria-haspopup="dialog"
     :aria-expanded="isPressed"
     aria-controls="content-settings-modal"
-    inner-area-classes="bg-white hover:bg-dark-charcoal hover:text-white"
+    variant="filled-white"
     v-on="$listeners"
   >
     <template #notification>
       <span
         v-if="appliedFilterCount"
-        class="absolute right-[-2px] top-[-2px] h-[8px] w-[8px] rounded bg-pink"
+        class="absolute right-[-0.1875rem] top-[-0.1875rem] h-[0.5rem] w-[0.5rem] rounded bg-pink"
       />
     </template>
   </VSearchBarButton>
