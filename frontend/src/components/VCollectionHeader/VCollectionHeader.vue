@@ -35,8 +35,6 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { useRoute } from "@nuxtjs/composition-api"
-
 import { useUiStore } from "~/stores/ui"
 import type { Collection } from "~/types/search"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -69,6 +67,9 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    slug: {
+      type: String,
+    },
     url: {
       type: String,
     },
@@ -82,7 +83,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const route = useRoute()
     const uiStore = useUiStore()
 
     const iconName = computed(() => icons[props.collection])
@@ -92,14 +92,14 @@ export default defineComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const sendAnalyticsEvent = () => {
-      if (!props.url) return
+      if (!props.url || !props.slug) return
       const eventName =
         props.collection === "creator"
           ? "VISIT_CREATOR_LINK"
           : "VISIT_SOURCE_LINK"
       sendCustomEvent(eventName, {
-        id: route.value.params.id,
         url: props.url,
+        slug: props.slug,
       })
     }
 

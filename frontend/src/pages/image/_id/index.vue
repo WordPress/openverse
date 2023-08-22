@@ -253,6 +253,7 @@ export default defineComponent({
       }
       sendCustomEvent("VISIT_CREATOR_LINK", {
         id: image.value.id,
+        source: image.value.source ?? image.value.provider,
         url: image.value.creator_url ?? "",
       })
     }
