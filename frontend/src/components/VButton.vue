@@ -371,6 +371,9 @@ a.button {
 .transparent-dark {
   @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
+.transparent-dark-pressed {
+  @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90;
+}
 
 .dropdown-label {
   @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
