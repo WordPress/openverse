@@ -57,7 +57,7 @@ single best way to mitigate malicious traffic.
 Expectations about the ratio of traffic a single source should occupy are based
 on historical data and subject to change over time. To validate these baseline
 percentages, please analyze a time-slice of traffic *without* any known
-malicious traffic, if one exists in Cloudflare's avaliable data, checking for
+malicious traffic, if one exists in Cloudflare's available data, checking for
 any single source exceeding the percentages listed here.
 ```
 

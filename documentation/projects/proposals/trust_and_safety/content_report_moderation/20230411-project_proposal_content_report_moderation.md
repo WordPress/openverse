@@ -250,7 +250,7 @@ This change to API cache management does not necessarily entirely preclude the u
 #### Redis based cache invalidation strategy
 
 In order to invalidate search query responses that include a certain result, we
-need to maintain a reverse index of `result indentifier -> cache keys`. When a
+need to maintain a reverse index of `result identifier -> cache keys`. When a
 given result is marked as sensitive or deindexed due to a report, we need to
 bust the cached responses for the keys stored under that result's identifier.
 Cache keys also need to be invalidated based on the response cache timeout.

@@ -363,7 +363,7 @@ export const getLocatorHref = async (locator: Locator) => {
  * - the `window`, on interior pages
  * - the `#main-page`, on search views
  *
- * This is necessary because on search views the window itself doesnt scroll, only
+ * This is necessary because on search views the window itself does not scroll, only
  * its child elements (the search result area + the filter sidebar).
  *
  * This function will scroll both elements on every evocation.

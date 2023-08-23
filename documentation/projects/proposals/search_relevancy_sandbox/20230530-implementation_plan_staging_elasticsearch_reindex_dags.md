@@ -208,7 +208,7 @@ creation of different indexes, which is the end goal of the project.
 
 ### Combining DAGs for custom index creation into one
 
-During the discussion of this plan the idea of potencially combining the
+During the discussion of this plan the idea of potentially combining the
 `create_proportional_by_provider_<media_type>_staging_index` DAG or both DAGs
 defined here with the one described in the plan to
 [create indexes with custom configurations](/projects/proposals/search_relevancy_sandbox/20230530-implementation_plan_staging_elasticsearch_reindex_dags.md).

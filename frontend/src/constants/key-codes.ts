@@ -6,7 +6,7 @@
  * needed just add it.
  *
  * This mostly exists to avoid having to look at the MDN page
- * everytime you need to look up a keycode, especially for easy
+ * every time you need to look up a keycode, especially for easy
  * to forget ones like Spacebar, while also removing "magic strings".
  */
 

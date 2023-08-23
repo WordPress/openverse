@@ -17,7 +17,7 @@ p = pytest.param
 @pytest.mark.parametrize(
     "silenced_dags, dags_to_reenable, should_send_alert",
     (
-        # No Dags to reenable, task should skip
+        # No Dags to re-enable, task should skip
         p(
             {},
             [],
@@ -25,7 +25,7 @@ p = pytest.param
             marks=pytest.mark.raises(exception=AirflowSkipException),
             id="none to re-enable",
         ),
-        # One DAG to reenable
+        # One DAG to re-enable
         p(
             {
                 "dag_a_id": [
@@ -45,7 +45,7 @@ p = pytest.param
             True,
             id="one to re-enable",
         ),
-        # One DAG, multiple notifications to reenable
+        # One DAG, multiple notifications to re-enable
         p(
             {
                 "dag_a_id": [
@@ -74,7 +74,7 @@ p = pytest.param
             True,
             id="one to re-enable, multiple notifications",
         ),
-        # Multiple DAGs to reenable
+        # Multiple DAGs to re-enable
         p(
             {
                 "dag_a_id": [

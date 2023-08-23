@@ -141,7 +141,7 @@ def report_completion(
     )
     if skip_report_completion(duration, record_counts_by_media_type):
         raise AirflowSkipException(
-            "An upstream failure occured and no rows were loaded"
+            "An upstream failure occurred and no rows were loaded"
         )
 
     # List record count per media type

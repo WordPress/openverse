@@ -67,7 +67,7 @@ developed.
   - Content safety wall
   - Hide content button
 
-- Additonal pages
+- Additional pages
 
   - Sensitivity documentation page
 

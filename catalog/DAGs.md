@@ -328,7 +328,7 @@ which caused DAG failures during the `update_batches` step.
 Check for DAGs that have silenced Slack alerts or skipped errors which may need
 to be turned back on.
 
-When a DAG has known failures, it can be ommitted from Slack error reporting by
+When a DAG has known failures, it can be omitted from Slack error reporting by
 adding an entry to the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable.
 Similarly, errors that occur during the `pull_data` step may be configured to
 skip and allow ingestion to continue, using the `SKIPPED_INGESTION_ERRORS`
@@ -341,8 +341,8 @@ The `check_silenced_dags` DAG iterates over the entries in the
 verifies that the associated GitHub issues are still open. If an issue has been
 closed, it is assumed that the entry should be removed, and an alert is sent to
 prompt manual update of the configuration. This prevents developers from
-forgetting to reenable Slack reporting or turnoff error skipping after the issue
-has been resolved.
+forgetting to re-enable Slack reporting or turnoff error skipping after the
+issue has been resolved.
 
 The DAG runs weekly.
 

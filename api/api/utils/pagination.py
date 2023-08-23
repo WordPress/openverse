@@ -11,7 +11,7 @@ class StandardPagination(PageNumberPagination):
         super().__init__(*args, **kwargs)
         self.result_count = None  # populated later
         self.page_count = None  # populated later
-        self.page = 1  # default, get's updated when necessary
+        self.page = 1  # default, gets updated when necessary
 
     def get_paginated_response(self, data):
         return Response(

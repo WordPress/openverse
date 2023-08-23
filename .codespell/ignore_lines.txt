@@ -1,0 +1,18 @@
+;; Please include filenames and explanations for each ignored line.
+;; See https://docs.openverse.org/meta/codespell.html for docs.
+
+;; .github/workflows/release-app.yml
+;; The release-drafter/release-drafter configuration variable name cannot be changed
+          commitish: main
+
+;; frontend/src/locales/scripts/en.json5
+;; Prettier insists we escape a single quote rather than the double quotes and codespell
+;; does not understand the escaped `\'t` as "couldn't". It instead just sees "couldn".
+    heading: 'We couldn\'t find anything for "{query}".',
+
+;; catalog/tests/dags/providers/provider_api_scripts/test_wikimedia_commons.py
+;; "Titel" matches "title", but the phrase is in Dutch, not English, so "titel"
+;; is actually correct. Similarly, "als" incorrectly matches to "also" in the same
+;; block of Dutch text.
+        "Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, "
+        "bekend als Parmigianino"

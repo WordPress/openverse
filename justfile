@@ -202,7 +202,7 @@ node-recreate:
 logs services="" args=(if IS_CI != "" { "" } else { "-f" }):
     just dc logs {{ args }} {{ services }}
 
-# Attach to the specificed service to interacting with its TTY
+# Attach to the specified service to interacting with its TTY
 attach service:
     docker attach $(just dc ps | awk '{print $1}' | grep {{ service }})
 

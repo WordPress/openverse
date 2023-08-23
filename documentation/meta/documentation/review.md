@@ -1,6 +1,6 @@
 # Documentation proofreading and review
 
-Historically the Openverse project has occassionally done a "documentation bug
+Historically the Openverse project has occasionally done a "documentation bug
 bash" where maintainers sat down together to read through our existing
 documentation and identify potential issues or necessary changes. While this
 should happen in a concerted, maintainer-wide effort at least once a year, we

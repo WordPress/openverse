@@ -76,7 +76,7 @@ reports to find identify new terms are users are being exposed to inadvertently.
 1.  Why is the list in a standalone repository, instead of the
     https://github.com/wordPress/openverse?
 
-    The main reason to keep the list seperate is contributor safety. The list is
+    The main reason to keep the list separate is contributor safety. The list is
     kept independently from the codebase so that users must explicitly consent
     to viewing and downloading it. Additionally, there are Search Engine
     Optimization and blocklist considerations with public GitHub repositories.
@@ -92,7 +92,7 @@ reports to find identify new terms are users are being exposed to inadvertently.
     The vast majority of indexed works are in English. Additionally, it would be
     difficult to validate suggestions for terms in languages not spoken by
     Openverse maintainers, which to my current knowledge includes English,
-    Spanish, Brazilian Portugese, Turkish, and Russian. English is the only
+    Spanish, Brazilian Portuguese, Turkish, and Russian. English is the only
     language used by all maintainers.
 
 3.  On what basis will Openverse maintainers use their "discretion" to create

@@ -1,5 +1,5 @@
 """
-Retrives dead link tallies from Openverse API Redis.
+Retrieves dead link tallies from Openverse API Redis.
 
 This script assumes that the API Redis instance you care about is present
 on localhost (usually via tunneling). It will run through the link validation

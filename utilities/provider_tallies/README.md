@@ -15,5 +15,5 @@ By default, the script will output the results to `provider_tally_stats.csv` in
 the current directory. Use the `--output` flag to specify a different output
 file.
 
-This script can also be used to extract information acquired _after_ a certian
+This script can also be used to extract information acquired _after_ a certain
 date. Use the `--start-date` flag to specify a date in the format `YYYY-MM-DD`.
