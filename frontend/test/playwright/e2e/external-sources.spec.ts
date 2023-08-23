@@ -49,7 +49,7 @@ test("sends SELECT_EXTERNAL_SOURCE analytics events", async ({
 
   expectEventPayloadToMatch(selectEvent, {
     name: "Centre For Ageing Better",
-    mediaType: "audio",
+    mediaType: "image",
     query: "cat",
     component: "VExternalSourceList",
   })
