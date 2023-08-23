@@ -17,6 +17,7 @@
       :external-icon-size="5"
       has-icon-end
       :href="source.url"
+      :send-external-link-click-event="false"
       @mousedown="handleClick(source.name)"
     >
       {{ source.name }}

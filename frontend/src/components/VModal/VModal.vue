@@ -39,14 +39,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  toRef,
-  PropType,
-  SetupContext,
-} from "vue"
+import { defineComponent, ref, computed, PropType, SetupContext } from "vue"
 
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
@@ -138,16 +131,6 @@ export default defineComponent({
       type: String as PropType<ModalColorMode>,
       default: "light",
     },
-    /**
-     * This props allows for the modal to be opened or closed programmatically.
-     * The modal handles the visibility internally if this prop is not provided.
-     *
-     * @default undefined
-     */
-    visible: {
-      type: Boolean,
-      default: undefined,
-    },
     modalContentClasses: {
       type: String,
       default: "",
@@ -163,10 +146,7 @@ export default defineComponent({
      */
     "close",
   ],
-  setup(props, { emit }) {
-    const visiblePropRef =
-      typeof props.visible === "undefined" ? undefined : toRef(props, "visible")
-
+  setup(_, { emit }) {
     const nodeRef = ref<null | HTMLElement>(null)
     const modalContentRef = ref<{
       $el: HTMLElement
@@ -189,7 +169,6 @@ export default defineComponent({
       triggerA11yProps,
       visible: visibleRef,
     } = useDialogControl({
-      visibleRef: visiblePropRef,
       lockBodyScroll: true,
       nodeRef,
       emit: emit as SetupContext["emit"],
