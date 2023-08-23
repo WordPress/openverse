@@ -13,10 +13,10 @@ def _join_seq(seq):
 
 
 @pytest.mark.parametrize(
-    "table, order_by_expected",
+    "upstream_table, downstream_table, order_by_expected",
     [
-        ("sample_table", True),
-        ("audioset", False),
+        ("sample_table", "sample_table", True),
+        ("audioset_view", "audioset", False),
     ],
 )
 @pytest.mark.parametrize(
@@ -28,9 +28,11 @@ def _join_seq(seq):
         ("advanced", "100000", True),
     ],
 )
-def test_get_copy_data_query(table, approach, limit, limit_expected, order_by_expected):
+def test_get_copy_data_query(
+    upstream_table, downstream_table, approach, limit, limit_expected, order_by_expected
+):
     actual = queries.get_copy_data_query(
-        table, table, ["col1", "col2"], approach, limit
+        upstream_table, downstream_table, ["col1", "col2"], approach, limit
     )
     as_string = _join_seq(actual.seq).replace("\\n", "\n").strip()
     assert ("LIMIT 100000" in as_string) == limit_expected
