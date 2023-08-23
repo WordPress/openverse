@@ -30,8 +30,8 @@
       :mode="mode"
       :content-classes="modalContentClasses"
     >
-      <template #top-bar>
-        <slot name="top-bar" />
+      <template #top-bar="{ close: hide }">
+        <slot name="top-bar" :close="hide" />
       </template>
       <slot name="default" />
     </VModalContent>
