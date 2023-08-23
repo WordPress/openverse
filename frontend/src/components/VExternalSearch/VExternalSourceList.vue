@@ -1,25 +1,21 @@
 <template>
-  <div class="relative max-w-[280px]" data-testid="source-list-popover">
-    <h2 class="description-bold mb-2 px-4 pt-5 text-start">
-      {{ $t("externalSources.title") }}
-    </h2>
-    <VCloseButton
-      :label="$t('modal.close')"
-      class="!absolute end-0 top-0"
-      @close="$emit('close')"
-    />
-    <p class="caption-regular mb-4 px-4 text-start">
+  <div
+    class="p-4 pt-0 sm:max-w-[25rem] sm:p-6 sm:pt-0"
+    data-testid="source-list-popover"
+  >
+    <p class="label-regular px-3 py-4 text-start !leading-normal">
       {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton
       v-for="source in externalSources"
       :key="source.name"
       as="VLink"
-      variant="transparent-tx"
-      size="disabled"
-      class="caption-bold !w-full justify-between px-4 py-3 text-dark-charcoal hover:bg-dark-charcoal-10"
+      variant="transparent-gray"
+      size="medium"
+      class="label-regular !w-full justify-between"
       show-external-icon
-      :external-icon-size="4"
+      :external-icon-size="5"
+      has-icon-end
       :href="source.url"
       @mousedown="handleClick(source.name)"
     >
@@ -36,7 +32,6 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useExternalSources } from "~/composables/use-external-sources"
 
 import VButton from "~/components/VButton.vue"
-import VCloseButton from "~/components/VCloseButton.vue"
 
 /**
  * This component renders a list of pre-populated links to additional sources
@@ -44,7 +39,7 @@ import VCloseButton from "~/components/VCloseButton.vue"
  */
 export default defineComponent({
   name: "VExternalSourceList",
-  components: { VCloseButton, VButton },
+  components: { VButton },
   props: {
     /**
      * The search term for which the external sources links are generated.

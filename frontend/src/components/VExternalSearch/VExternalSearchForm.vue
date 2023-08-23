@@ -36,72 +36,71 @@
       <template #query>{{ searchTerm }}</template>
     </i18n>
 
-    <VButton
-      id="external-sources-button"
-      ref="triggerRef"
-      :pressed="triggerA11yProps['aria-expanded']"
-      aria-haspopup="dialog"
-      :aria-controls="
-        isMd ? 'external-sources-popover' : 'external-sources-modal'
-      "
-      variant="dropdown-label"
-      size="disabled"
-      class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
-      @click="onTriggerClick"
-      >{{ $t("externalSources.button").toString()
-      }}<VIcon
-        class="text-dark-charcoal-40"
-        :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
-        name="caret-down"
-      />
-    </VButton>
-    <template v-if="triggerElement">
-      <Component
-        :is="isMd ? 'VPopoverContent' : 'VModalContent'"
-        :id="isMd ? 'external-sources-popover' : 'external-sources-modal'"
-        :aria-labelledby="'external-sources-button'"
-        :hide="closeDialog"
-        :trigger-element="triggerElement"
-        :visible="isVisible"
-        :z-index="isMd ? 'popover' : 'modal'"
-        :variant="isMd ? undefined : 'centered'"
-      >
-        <VExternalSourceList
-          class="flex flex-col"
-          :search-term="searchTerm"
-          @close="closeDialog"
-        />
-      </Component>
-    </template>
+    <VModal
+      variant="centered"
+      :hide-on-click-outside="true"
+      labelled-by="external-sources-button"
+      @open="handleModalOpen"
+    >
+      <template #trigger="triggerA11yProps">
+        <VButton
+          id="external-sources-button"
+          v-bind="triggerA11yProps"
+          aria-controls="external-sources-modal"
+          variant="dropdown-label"
+          size="disabled"
+          class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
+          >{{ `${$t("externalSources.button")}`
+          }}<VIcon
+            class="text-dark-charcoal-40"
+            :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
+            name="caret-down"
+          />
+        </VButton>
+      </template>
+      <template #top-bar="{ close }">
+        <header class="flex items-center justify-between pe-4 ps-7 pt-4">
+          <h2 class="heading-6" tabindex="-1">
+            {{ $t("externalSources.title") }}
+          </h2>
+          <VCloseButton
+            size="small"
+            icon-size="medium"
+            variant="filled-white"
+            :label="$t('modal.close')"
+            @close="close"
+          />
+        </header>
+      </template>
+      <VExternalSourceList class="flex flex-col" :search-term="searchTerm" />
+    </VModal>
   </section>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, SetupContext } from "vue"
+import { defineComponent, ref } from "vue"
 
 import { storeToRefs } from "pinia"
 
 import { defineEvent } from "~/types/emits"
 
-import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
-import { useDialogControl } from "~/composables/use-dialog-control"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useExternalSources } from "~/composables/use-external-sources"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
-import VModalContent from "~/components/VModal/VModalContent.vue"
+import VCloseButton from "~/components/VCloseButton.vue"
+import VModal from "~/components/VModal/VModal.vue"
 
 export default defineComponent({
   name: "VExternalSearchForm",
   components: {
-    VModalContent,
-    VPopoverContent,
+    VModal,
+    VCloseButton,
     VIcon,
     VButton,
     VExternalSourceList,
@@ -123,45 +122,20 @@ export default defineComponent({
   emits: {
     tab: defineEvent<[KeyboardEvent]>(),
   },
-  setup(_, { emit }) {
+  setup() {
     const sectionRef = ref<HTMLElement | null>(null)
-    const triggerRef = ref<{ $el: HTMLElement } | null>(null)
-    const uiStore = useUiStore()
     const searchStore = useSearchStore()
     const { sendCustomEvent } = useAnalytics()
-
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
-
-    const triggerElement = computed(() => triggerRef.value?.$el)
-
-    const lockBodyScroll = computed(() => !isMd.value)
-
-    const isVisible = ref(false)
 
     const mediaStore = useMediaStore()
     const { currentPage } = storeToRefs(mediaStore)
 
-    const {
-      close: closeDialog,
-      open: openDialog,
-      onTriggerClick,
-      triggerA11yProps,
-    } = useDialogControl({
-      visibleRef: isVisible,
-      nodeRef: sectionRef,
-      lockBodyScroll,
-      emit: emit as SetupContext["emit"],
-    })
-
-    const eventedOnTriggerClick = () => {
-      if (!isVisible.value) {
-        sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
-          searchType: searchStore.searchType,
-          query: searchStore.searchTerm,
-          resultPage: currentPage.value || 1,
-        })
-      }
-      onTriggerClick()
+    const handleModalOpen = () => {
+      sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+        searchType: searchStore.searchType,
+        query: searchStore.searchTerm,
+        resultPage: currentPage.value || 1,
+      })
     }
 
     const { externalSourcesType } = useExternalSources()
@@ -169,16 +143,8 @@ export default defineComponent({
     return {
       externalSourcesType,
       sectionRef,
-      triggerRef,
-      triggerElement,
-      isMd,
 
-      closeDialog,
-      openDialog,
-      onTriggerClick: eventedOnTriggerClick,
-      triggerA11yProps,
-
-      isVisible,
+      handleModalOpen,
     }
   },
 })
