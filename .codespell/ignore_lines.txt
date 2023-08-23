@@ -1,5 +1,5 @@
 ;; Please include filenames and explanations for each ignored line.
-;; See README.md for more details on how to use this file.
+;; See https://docs.openverse.org/meta/codespell.html for docs.
 
 ;; .github/workflows/release-app.yml
 ;; The release-drafter/release-drafter configuration variable name cannot be changed
@@ -12,5 +12,7 @@
 
 ;; catalog/tests/dags/providers/provider_api_scripts/test_wikimedia_commons.py
 ;; "Titel" matches "title", but the phrase is in Dutch, not English, so "titel"
-;; is actually correct.
+;; is actually correct. Similarly, "als" incorrectly matches to "also" in the same
+;; block of Dutch text.
         "Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, "
+        "bekend als Parmigianino"

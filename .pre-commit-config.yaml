@@ -116,26 +116,30 @@ repos:
             # Pass skip configuration as command line arguments rather than in the
             # config file because neither cfg nor TOML support splitting this argument
             # across multiple lines.
+            # Globs must match the Python `glob` module's format:
+            # https://docs.python.org/3/library/glob.html#module-glob
             "-S",
-            "sample_data/*",
+            "sample_data/**",
             "-S",
-            "frontend/test/tapes/**/*",
+            "frontend/test/tapes/**",
             "-S",
-            "frontend/test/playwright/e2e/resources/*",
+            "frontend/test/playwright/e2e/resources/**",
             "-S",
-            "frontend/test/unit/fixtures/*",
+            "frontend/test/unit/fixtures/**",
             "-S",
-            "catalog/tests/dags/providers/provider_api_scripts/resources/**/*",
+            "catalog/tests/dags/providers/provider_api_scripts/resources/**",
             "-S",
-            "catalog/tests/dags/common/test_resources/**/*",
+            "catalog/tests/dags/common/test_resources/**",
             # Test locales are non-English and therefore should not be checked by codespell
             "-S",
             "frontend/test/locales/*.json",
             "-S",
             "pnpm-lock.yaml",
+            # Write changes in place
             "-w",
           ]
         additional_dependencies:
+          # Support pyproject.toml configuration
           - tomli
 
   - repo: local # More local hooks are defined at the top.

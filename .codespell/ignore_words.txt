@@ -1,5 +1,5 @@
 ;; Please include explanations for each ignored word.
-;; See README.md for more details on how to use this file.
+;; See https://docs.openverse.org/meta/codespell.html for docs.
 
 ;; Jest's `afterAll` hook incorrectly matched
 afterall
