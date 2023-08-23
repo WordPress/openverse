@@ -3,7 +3,7 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 test.describe("VCollectionHeader", () => {
-  breakpoints.describeMobileAndDesktop(({ expectSnapshot }) => {
+  breakpoints.describeEvery(({ expectSnapshot }) => {
     for (const languageDirection of ["ltr", "rtl"]) {
       test(`All headers ${languageDirection}`, async ({ page }) => {
         await page.goto(
