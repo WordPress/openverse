@@ -194,6 +194,9 @@ export default defineComponent({
 .modal-two-thirds {
   @apply mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white;
 }
+.modal-centered {
+  @apply m-6 rounded-md sm:m-0;
+}
 
 .modal-dark {
   @apply bg-black text-white;
@@ -206,7 +209,7 @@ export default defineComponent({
   @apply text-left align-bottom md:rounded-se-md md:rounded-ss-md;
 }
 .modal-content-centered {
-  @apply w-auto;
+  @apply w-auto rounded-md;
 }
 .modal-fit-content {
   @apply mt-auto w-full rounded-se-lg rounded-ss-lg bg-white;
