@@ -12,9 +12,9 @@ export const image = {
   license_url: "https://creativecommons.org/licenses/by-nc-sa/2.0/",
   provider: "flickr",
   source: "flickr",
-  category: null,
-  filesize: null,
-  filetype: null,
+  category: "photograph",
+  filesize: 118813,
+  filetype: "jpg",
   tags: [
     {
       name: "cat",
