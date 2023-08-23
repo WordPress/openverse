@@ -129,7 +129,7 @@ export default defineComponent({
   },
   setup(props, { emit, attrs }) {
     const propsRefs = toRefs(props)
-    const closeButton = ref<InstanceType<typeof VCloseButton> | null>(null)
+    const closeButton = ref<{ $el: HTMLElement } | null>(null)
     const initialFocusElement = computed(
       () => props.initialFocusElement || closeButton.value?.$el
     )

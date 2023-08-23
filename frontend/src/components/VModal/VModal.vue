@@ -168,7 +168,10 @@ export default defineComponent({
       typeof props.visible === "undefined" ? undefined : toRef(props, "visible")
 
     const nodeRef = ref<null | HTMLElement>(null)
-    const modalContentRef = ref<InstanceType<typeof VModalContent> | null>(null)
+    const modalContentRef = ref<{
+      $el: HTMLElement
+      deactivateFocusTrap?: () => void
+    } | null>(null)
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerRef = computed(
