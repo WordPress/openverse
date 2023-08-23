@@ -416,7 +416,7 @@ def test_create_meta_data_scrapes_text_from_html_description(wmc):
     media_data = _get_resource_json("image_data_html_description.json")
     expect_description = (
         "Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, "
-        "bekend also Parmigianino"
+        "bekend als Parmigianino"
     )
     actual_description = wmc.create_meta_data_dict(media_data)["description"]
     assert actual_description == expect_description
