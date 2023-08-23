@@ -8,7 +8,7 @@
     "
   >
     <VIcon :name="iconName" :size="isMd ? 10 : 6" class="icon" />
-    <h1 class="title text-3xl font-semibold leading-snug lg:text-6xl">
+    <h1 class="title text-3xl font-semibold leading-snug md:text-6xl">
       {{ title }}
     </h1>
     <VButton
@@ -16,7 +16,7 @@
       as="VLink"
       variant="filled-dark"
       size="medium"
-      class="button label-bold !flex-none md:ms-4"
+      class="button label-bold !flex-none md:ms-4 md:mt-1"
       has-icon-end
       show-external-icon
       :external-icon-size="6"
