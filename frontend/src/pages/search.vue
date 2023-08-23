@@ -17,9 +17,10 @@
         }}</VSearchResultsTitle>
       </header>
       <NuxtChild
-        v-if="isSupportedMediaType(searchType)"
         :key="$route.path"
-        :results="resultItems[searchType]"
+        :results="
+          isSupportedMediaType(searchType) ? resultItems[searchType] : null
+        "
         :fetch-state="fetchState"
         :search-term="query.q"
         :supported="supported"
