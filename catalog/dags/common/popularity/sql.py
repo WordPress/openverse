@@ -10,7 +10,6 @@ from common.popularity.constants import (
     AUDIO_POPULARITY_CONSTANTS_VIEW,
     AUDIO_POPULARITY_PERCENTILE_FUNCTION,
     AUDIO_VIEW_NAME,
-    AUDIOSET_VIEW_NAME,
     IMAGE_POPULARITY_CONSTANTS_VIEW,
     IMAGE_POPULARITY_PERCENTILE_FUNCTION,
     IMAGE_VIEW_NAME,
@@ -361,39 +360,6 @@ def create_standardized_media_popularity_function(
     postgres.run(query)
 
 
-def create_audioset_view_query():
-    """Return SQL to create the audioset_view."""
-    return dedent(
-        f"""
-        CREATE VIEW public.{AUDIOSET_VIEW_NAME}
-        AS
-          -- DISTINCT clause exists to ensure that only one record is present for a given
-          -- foreign identifier/provider pair. This exists as a hard constraint in the API table
-          -- downstream, so we must enforce it here. The audio_set data is chosen by which audio
-          -- record was most recently updated (see the final section of the ORDER BY clause
-          -- below). More info here:
-          -- https://github.com/WordPress/openverse-catalog/issues/658
-          SELECT DISTINCT ON (audio_set ->> 'foreign_identifier', provider)
-            (audio_set ->> 'foreign_identifier'::text)   ::character varying(1000) AS foreign_identifier,
-            (audio_set ->> 'title'::text)                ::character varying(2000) AS title,
-            (audio_set ->> 'foreign_landing_url'::text)  ::character varying(1000) AS foreign_landing_url,
-            (audio_set ->> 'creator'::text)              ::character varying(2000) AS creator,
-            (audio_set ->> 'creator_url'::text)          ::character varying(2000) AS creator_url,
-            (audio_set ->> 'url'::text)                  ::character varying(1000) AS url,
-            (audio_set ->> 'filesize'::text)             ::integer AS filesize,
-            (audio_set ->> 'filetype'::text)             ::character varying(80) AS filetype,
-            (audio_set ->> 'thumbnail'::text)            ::character varying(1000) AS thumbnail,
-            provider
-          FROM public.{AUDIO_VIEW_NAME}
-          WHERE (audio_set IS NOT NULL)
-          ORDER BY
-            audio_set ->> 'foreign_identifier',
-            provider,
-            updated_on DESC;
-        """  # noqa: E501
-    )
-
-
 def create_media_view(
     postgres_conn_id,
     media_type=IMAGE,
@@ -416,9 +382,6 @@ def create_media_view(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
-    audio_set_id_str = (
-        "\naudio_set ->> 'foreign_identifier' AS audio_set_foreign_identifier,"
-    )
     # We want to copy all columns except standardized popularity, which is calculated
     columns_to_select = (", ").join(
         [
@@ -431,7 +394,7 @@ def create_media_view(
         f"""
         CREATE MATERIALIZED VIEW public.{db_view_name} AS
           SELECT
-            {columns_to_select},{audio_set_id_str if media_type == AUDIO else ""}
+            {columns_to_select},
             {standardized_popularity_func}(
               {table_name}.{PARTITION},
               {table_name}.{METADATA_COLUMN}
@@ -450,8 +413,6 @@ def create_media_view(
     )
     postgres.run(create_view_query)
     postgres.run(add_idx_query)
-    if media_type == AUDIO:
-        postgres.run(create_audioset_view_query())
 
 
 def get_providers_with_popularity_data_for_media_type(

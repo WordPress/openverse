@@ -230,7 +230,7 @@ class JamendoDataIngester(ProviderDataIngester):
             "raw_tags": tags,
             "category": category,
             "genres": genres,
-            "set_foreign_id": set_id,
+            "audio_set_foreign_identifier": set_id,
             "audio_set": audio_set,
             "set_position": set_position,
             "set_url": set_url,
