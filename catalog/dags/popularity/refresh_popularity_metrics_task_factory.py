@@ -76,7 +76,7 @@ def create_refresh_popularity_metrics_task_group(
                 "media_type": media_type,
             },
             execution_timeout=execution_timeout,
-            doc="Drops the popularity constants view.",
+            doc=("Drops the popularity constants view."),
         )
 
         create_constants = PythonOperator(
