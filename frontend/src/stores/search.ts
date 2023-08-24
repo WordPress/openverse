@@ -341,7 +341,7 @@ export const useSearchStore = defineStore("search", {
       })
     },
     /**
-     * Toggles a filter's checked parameter. Requires either codeIdx or code.
+     * Toggle a filter's checked parameter. Requires either codeIdx or code.
      * Returns the new checked value.
      */
     toggleFilter({
@@ -353,14 +353,40 @@ export const useSearchStore = defineStore("search", {
       codeIdx?: number
       code?: string
     }): boolean {
+      return this.setFilter({ filterType, codeIdx, code, toggle: true })
+    },
+
+    /**
+     * Set the `checked` parameter of the specific search filter.
+     * @param filterType - the slug of the filter kind, e.g. `licenseType`.
+     * @param codeIdx - the index of the filter item to set.
+     * @param code - the slug code of the filter item, e.g. `commercial`.
+     * @param value - the value to set checked to, `true` by default.
+     * @param toggle - if `true`, the value will be toggled.
+     */
+    setFilter({
+      filterType,
+      codeIdx,
+      code,
+      value = true,
+      toggle = false,
+    }: {
+      filterType: FilterCategory
+      codeIdx?: number
+      code?: string
+      value?: boolean
+      toggle?: boolean
+    }) {
       if (typeof codeIdx === "undefined" && typeof code === "undefined") {
         throw new Error(
-          `Cannot toggle filter of type ${filterType}. Use code or codeIdx parameter`
+          `Cannot update filter of type ${filterType}. Use code or codeIdx parameter`
         )
       }
       const filterItems = this.filters[filterType]
       const idx = codeIdx ?? filterItems.findIndex((f) => f.code === code)
-      this.filters[filterType][idx].checked = !filterItems[idx].checked
+      this.filters[filterType][idx].checked = toggle
+        ? !this.filters[filterType][idx].checked
+        : value
       return this.filters[filterType][idx].checked
     },
 
