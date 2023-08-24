@@ -14,7 +14,7 @@
       size="medium"
       class="label-regular !w-full justify-between"
       show-external-icon
-      :external-icon-size="5"
+      :external-icon-size="6"
       has-icon-end
       :href="source.url"
       :send-external-link-click-event="false"

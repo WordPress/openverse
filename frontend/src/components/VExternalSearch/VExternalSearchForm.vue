@@ -59,16 +59,18 @@
         </VButton>
       </template>
       <template #top-bar="{ close }">
-        <header class="flex items-center justify-between pe-4 ps-7 pt-4">
+        <header
+          class="flex items-center justify-between pe-5 ps-7 pt-5 sm:pe-7 sm:ps-9 sm:pt-7"
+        >
           <h2 class="heading-6" tabindex="-1">
             {{ $t("externalSources.title") }}
           </h2>
-          <VCloseButton
+          <VIconButton
             size="small"
-            icon-size="medium"
-            variant="filled-white"
+            :icon-props="{ name: 'close' }"
+            variant="transparent-gray"
             :label="$t('modal.close')"
-            @close="close"
+            @click="close"
           />
         </header>
       </template>
@@ -93,14 +95,14 @@ import { useExternalSources } from "~/composables/use-external-sources"
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VCloseButton from "~/components/VCloseButton.vue"
 import VModal from "~/components/VModal/VModal.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 export default defineComponent({
   name: "VExternalSearchForm",
   components: {
     VModal,
-    VCloseButton,
+    VIconButton,
     VIcon,
     VButton,
     VExternalSourceList,
