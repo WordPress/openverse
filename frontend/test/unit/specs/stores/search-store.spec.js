@@ -405,7 +405,7 @@ describe("Search Store", () => {
       expect(() =>
         searchStore.toggleFilter({ filterType: "licenses" })
       ).toThrow(
-        "Cannot toggle filter of type licenses. Use code or codeIdx parameter"
+        "Cannot update filter of type licenses. Use code or codeIdx parameter"
       )
 
       expect(searchStore.filters).toEqual(expectedFilters)
