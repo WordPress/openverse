@@ -91,6 +91,7 @@ The following are DAGs grouped by their primary tag:
 | [`freesound_workflow`](#freesound_workflow)                     | `@quarterly`      | `False` | audio         |
 | [`inaturalist_workflow`](#inaturalist_workflow)                 | `0 0 2 * *`       | `False` | image         |
 | [`jamendo_workflow`](#jamendo_workflow)                         | `@monthly`        | `False` | audio         |
+| [`justtakeitfree_workflow`](#justtakeitfree_workflow)           | `@monthly`        | `False` | image         |
 | [`metropolitan_museum_workflow`](#metropolitan_museum_workflow) | `@daily`          | `True`  | image         |
 | `museum_victoria_workflow`                                      | `@monthly`        | `False` | image         |
 | [`nappy_workflow`](#nappy_workflow)                             | `@monthly`        | `False` | image         |
@@ -136,6 +137,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`image_popularity_refresh`](#image_popularity_refresh)
 1.  [`inaturalist_workflow`](#inaturalist_workflow)
 1.  [`jamendo_workflow`](#jamendo_workflow)
+1.  [`justtakeitfree_workflow`](#justtakeitfree_workflow)
 1.  [`metropolitan_museum_reingestion_workflow`](#metropolitan_museum_reingestion_workflow)
 1.  [`metropolitan_museum_workflow`](#metropolitan_museum_workflow)
 1.  [`nappy_workflow`](#nappy_workflow)
@@ -585,6 +587,16 @@ Notes: https://api.jamendo.com/v3.0/tracks/ 35,000 requests per month for
 non-commercial apps Jamendo Music has more than 500,000 tracks shared by 40,000
 artists from over 150 countries all over the world. Audio quality: uploaded as
 WAV/ FLAC/ AIFF bit depth: 16/24 sample rate: 44.1 or 48 kHz channels: 1/2
+
+## `justtakeitfree_workflow`
+
+Content Provider: Justtakeitfree
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: https://justtakeitfree.com/api/api.php
 
 ## `metropolitan_museum_reingestion_workflow`
 
