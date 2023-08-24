@@ -1,7 +1,10 @@
 CREATE TABLE public.image_popularity_metrics (
   provider character varying(80) PRIMARY KEY,
   metric character varying(80),
-  percentile float
+  percentile float,
+  raw_val float,
+  val float,
+  constant float
 );
 
 
@@ -30,19 +33,6 @@ $$
 LANGUAGE SQL
 STABLE
 RETURNS NULL ON NULL INPUT;
-
-
-CREATE MATERIALIZED VIEW public.image_popularity_constants AS
-  WITH popularity_metric_values AS (
-    SELECT
-    *,
-    image_popularity_percentile(provider, metric, percentile) AS val
-    FROM image_popularity_metrics
-  )
-  SELECT *, ((1 - percentile) / percentile) * val AS constant
-  FROM popularity_metric_values;
-
-CREATE UNIQUE INDEX ON image_popularity_constants (provider);
 
 
 CREATE FUNCTION standardized_image_popularity(provider text, meta_data jsonb)
