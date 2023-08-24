@@ -229,6 +229,7 @@ export default {
       },
       outlineWidth: {
         1.5: "1.5px",
+        3: "3px",
       },
       typography: (theme: PluginAPI["theme"]) => ({
         DEFAULT: {
