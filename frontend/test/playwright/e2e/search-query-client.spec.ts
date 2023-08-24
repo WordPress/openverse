@@ -2,8 +2,11 @@ import { expect, test } from "@playwright/test"
 
 import {
   changeSearchType,
+  filters,
   goToSearchTerm,
+  isPageDesktop,
   searchFromHeader,
+  t,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
@@ -20,6 +23,7 @@ import { AUDIO, IMAGE } from "~/constants/media"
  * current media type are discarded.
  * 5. Can change the `q` parameter by typing into the search input and clicking on
  * the Search button.
+ * 6. Can set `includeSensitiveResults` filter by toggling the UI.
  * All of these tests test search page on the client
  */
 
@@ -96,6 +100,36 @@ test.describe("search query on CSR", () => {
       await expect(page).toHaveURL(
         "/search/image?q=dog&license=by&extension=jpg"
       )
+    })
+
+    test("can set `includeSensitiveResults` filter by toggling the UI", async ({
+      page,
+    }) => {
+      await page.goto("/preferences")
+      // Feature flag labels are not translated
+      await page
+        .getByLabel(/Turn on sensitive content fetching and blurring/i)
+        .check()
+
+      await goToSearchTerm(page, "cat", { mode: "CSR" })
+
+      await filters.open(page)
+
+      await page
+        .getByLabel(t("filters.safeBrowsing.toggles.fetchSensitive.title"))
+        .check()
+
+      const searchButtonLabel = new RegExp(
+        t(
+          isPageDesktop(page)
+            ? "browsePage.searchForm.button"
+            : "header.seeResults"
+        ),
+        "i"
+      )
+      await page.getByRole("button", { name: searchButtonLabel }).click()
+
+      await expect(page).toHaveURL(/unstable__include_sensitive_results=true/i)
     })
   })
 })
