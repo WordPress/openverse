@@ -15,8 +15,12 @@ SPECTACULAR_SETTINGS = {
         API is a system that allows programmatic access to public domain digital
         media. It is our ambition to index and catalog billions of
         openly-licensed works, including articles, songs, videos, photographs,
-        paintings, and more. Using this API, developers will be able to access
-        the digital commons in their own applications.
+        paintings, and more.
+
+        Using this API, developers will be able to access the digital commons in
+        their own applications. You can see some examples of
+        [apps built with Openverse](https://docs.openverse.org/api/reference/made_with_ov.html)
+        in our docs.
         """
     ),
     "TOS": "https://docs.openverse.org/terms_of_service.html",
