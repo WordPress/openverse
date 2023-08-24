@@ -99,7 +99,7 @@ export default defineComponent({
           : "VISIT_SOURCE_LINK"
       sendCustomEvent(eventName, {
         url: props.url,
-        slug: props.slug,
+        source: props.slug,
       })
     }
 
