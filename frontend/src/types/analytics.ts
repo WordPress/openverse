@@ -231,7 +231,7 @@ export type Events = {
      * result page */
     id?: string
     /** The source's slug that identifies it */
-    slug: string
+    source: string
   }
   /**
    * Description: The user visits a CC license description page on CC.org
