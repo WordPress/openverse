@@ -5,7 +5,7 @@ from textwrap import dedent
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
 
-from common.constants import AUDIO, IMAGE
+from common.constants import AUDIO, DAG_DEFAULT_ARGS, IMAGE
 from common.loader.sql import TABLE_NAMES
 from common.popularity.constants import (
     AUDIO_POPULARITY_PERCENTILE_FUNCTION,
@@ -173,13 +173,6 @@ def update_media_popularity_metrics(
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
 
-    # TODO: Clean up comments
-    # When we want to add popularity data for a new provider,
-    # we do so by adding the name of the `metric` meta_data field to the relevant dict
-    # (ie IMAGE_POPULARITY_METRICS) in this file. When this task runs, all the values
-    # in that dictionary are reinserted into the metrics table. If we want to add/change
-    # a metric name, we make a code change and then run this method via the popularity
-    # refresh DAG.
     column_names = [c.name for c in POPULARITY_METRICS_TABLE_COLUMNS]
 
     # Note that we do not update the val and constant. That is only done during the
@@ -229,7 +222,7 @@ def calculate_media_popularity_percentile_value(
     )
 
     # Calculate the percentile value. E.g. if `percentile` = 0.80, then we'll
-    # calculate the *value* of the 80th percentile for this provider's
+    # calculate the _value_ of the 80th percentile for this provider's
     # popularity metric.
     calculate_new_percentile_value_query = dedent(
         f"""
@@ -292,24 +285,36 @@ def update_percentile_and_constants_values_for_provider(
 
 @task_group
 def update_percentile_and_constants_for_provider(
-    postgres_conn_id, provider, media_type=IMAGE, task: AbstractOperator = None
+    postgres_conn_id, provider, media_type=IMAGE, execution_timeout=None
 ):
-    # TODO: Add docstrings to tasks
-    calculate_val = calculate_media_popularity_percentile_value(
+    calculate_percentile_val = calculate_media_popularity_percentile_value.override(
+        task_id="calculate_percentile_value",
+        execution_timeout=execution_timeout
+        or DAG_DEFAULT_ARGS.get("execution_timeout"),
+    )(
         postgres_conn_id=postgres_conn_id,
         provider=provider,
         media_type=media_type,
-        task=task,
+    )
+    calculate_percentile_val.doc = (
+        "Calculate the percentile popularity value for this provider. For"
+        " example, if this provider has `percentile`=0.80 and `metric`='views',"
+        " calculate the 80th percentile value of views for all records for this"
+        " provider."
     )
 
-    # TODO: Add reporting?
-
-    update_percentile_and_constants_values_for_provider(
+    update_metrics_table = update_percentile_and_constants_values_for_provider.override(
+        task_id="update_percentile_values_and_constant",
+    )(
         postgres_conn_id=postgres_conn_id,
         provider=provider,
-        raw_percentile_value=calculate_val,
+        raw_percentile_value=calculate_percentile_val,
         media_type=media_type,
-        task=task,
+    )
+    update_metrics_table.doc = (
+        "Given the newly calculated percentile value, calculate the"
+        " popularity constant and update the metrics table with the newly"
+        " calculated values."
     )
 
 
