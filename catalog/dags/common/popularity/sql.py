@@ -2,6 +2,7 @@ from collections import namedtuple
 from datetime import timedelta
 from textwrap import dedent
 
+from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
 
 from common.constants import AUDIO, IMAGE
@@ -32,6 +33,8 @@ IMAGE_VIEW_PROVIDER_FID_IDX = "image_view_provider_fid_idx"
 AUDIO_VIEW_PROVIDER_FID_IDX = "audio_view_provider_fid_idx"
 
 # Column name constants
+RAW_VALUE = "raw_val"
+VALUE = "val"
 CONSTANT = "constant"
 FID = col.FOREIGN_ID.db_name
 IDENTIFIER = col.IDENTIFIER.db_name
@@ -64,7 +67,15 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=PARTITION, definition="character varying(80) PRIMARY KEY"),
     Column(name=METRIC, definition="character varying(80)"),
     Column(name=PERCENTILE, definition="float"),
+    Column(name=RAW_VALUE, definition="float"),
+    Column(name=VALUE, definition="float"),
+    Column(name=CONSTANT, definition="float"),
 ]
+
+POPULARITY_METRICS_BY_MEDIA_TYPE = {
+    AUDIO: AUDIO_POPULARITY_METRICS,
+    IMAGE: IMAGE_POPULARITY_METRICS,
+}
 
 
 def drop_media_matview(
@@ -153,11 +164,22 @@ def create_media_popularity_metrics(
     postgres.run(query)
 
 
+# TODO move this somewhere where it can be reused
+def _single_value(cursor):
+    try:
+        row = cursor.fetchone()
+        return row[0]
+    except Exception as e:
+        raise ValueError("Unable to extract expected row data from cursor") from e
+
+
+@task
 def update_media_popularity_metrics(
     postgres_conn_id,
     media_type=IMAGE,
     popularity_metrics=None,
     popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
     task: AbstractOperator = None,
 ):
     if popularity_metrics is None:
@@ -171,9 +193,24 @@ def update_media_popularity_metrics(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
+
+    # TODO: Clean up comments
+    # When we want to add popularity data for a new provider,
+    # we do so by adding the name of the `metric` meta_data field to the relevant dict
+    # (ie IMAGE_POPULARITY_METRICS) in this file. When this task runs, all the values
+    # in that dictionary are reinserted into the metrics table. If we want to add/change
+    # a metric name, we make a code change and then run this method via the popularity
+    # refresh DAG.
     column_names = [c.name for c in POPULARITY_METRICS_TABLE_COLUMNS]
+
+    # Note that we do not update the val and constant. That is only done during the
+    # calculation tasks. In other words, we never want to clear out the current value of
+    # the popularity constant unless we're already done calculating the new one, since
+    # that can be a time consuming process.
     updates_string = ",\n          ".join(
-        f"{c}=EXCLUDED.{c}" for c in column_names if c != PARTITION
+        f"{c}=EXCLUDED.{c}"
+        for c in column_names
+        if c not in [PARTITION, CONSTANT, "val"]
     )
     popularity_metric_inserts = _get_popularity_metric_insert_values_string(
         popularity_metrics
@@ -191,7 +228,104 @@ def update_media_popularity_metrics(
         ;
         """
     )
-    postgres.run(query)
+    return postgres.run(query)
+
+
+@task
+def calculate_media_popularity_percentile_value(
+    postgres_conn_id,
+    provider,
+    media_type=IMAGE,
+    popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
+    task: AbstractOperator = None,
+):
+    if media_type == AUDIO:
+        popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
+        popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
+
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+    )
+
+    # Calculate the percentile value. E.g. if `percentile` = 0.80, then we'll
+    # calculate the *value* of the 80th percentile for this provider's
+    # popularity metric.
+    calculate_new_percentile_value_query = dedent(
+        f"""
+        SELECT {popularity_percentile}({PARTITION}, {METRIC}, {PERCENTILE})
+        FROM {popularity_metrics_table}
+        WHERE {col.PROVIDER.db_name}='{provider}';
+        """
+    )
+
+    raw_percentile_value = postgres.run(
+        calculate_new_percentile_value_query, handler=_single_value
+    )
+
+    # Prevents `null` when there are no records for this provider (only likely in local
+    # dev environments)
+    return raw_percentile_value or 0
+
+
+@task
+def update_percentile_and_constants_values_for_provider(
+    postgres_conn_id,
+    provider,
+    raw_percentile_value,
+    media_type=IMAGE,
+    popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    task: AbstractOperator = None,
+):
+    if media_type == AUDIO:
+        popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
+
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+    )
+
+    provider_info = POPULARITY_METRICS_BY_MEDIA_TYPE.get(media_type, {}).get(provider)
+    percentile = provider_info.get("percentile", DEFAULT_PERCENTILE)
+
+    # Calculate the popularity constant using the percentile value
+    percentile_value = raw_percentile_value or 1
+    new_constant = ((1 - percentile) / (percentile)) * percentile_value
+
+    # Update the percentile value and constant in the metrics table
+    update_constant_query = dedent(
+        f"""
+        UPDATE public.{popularity_metrics_table}
+        SET {RAW_VALUE}={raw_percentile_value}, {VALUE} = {percentile_value},
+          {CONSTANT} = {new_constant}
+        WHERE {col.PROVIDER.db_name} = '{provider}';
+        """
+    )
+    return postgres.run(update_constant_query)
+
+
+@task_group
+def update_percentile_and_constants_for_provider(
+    postgres_conn_id, provider, media_type=IMAGE, task: AbstractOperator = None
+):
+    # TODO: Add docstrings to tasks
+    calculate_val = calculate_media_popularity_percentile_value(
+        postgres_conn_id=postgres_conn_id,
+        provider=provider,
+        media_type=media_type,
+        task=task,
+    )
+
+    # TODO: Add reporting?
+
+    update_percentile_and_constants_values_for_provider(
+        postgres_conn_id=postgres_conn_id,
+        provider=provider,
+        raw_percentile_value=calculate_val,
+        media_type=media_type,
+        task=task,
+    )
 
 
 def _get_popularity_metric_insert_values_string(
@@ -213,7 +347,8 @@ def _format_popularity_metric_insert_tuple_string(
     metric,
     percentile,
 ):
-    return f"('{provider}', '{metric}', {percentile})"
+    # Default null val and constant
+    return f"('{provider}', '{metric}', {percentile}, null, null, null)"
 
 
 def create_media_popularity_percentile_function(
@@ -321,10 +456,10 @@ def create_standardized_media_popularity_function(
     postgres_conn_id,
     media_type=IMAGE,
     function_name=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    popularity_constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
+    popularity_constants=IMAGE_POPULARITY_METRICS_TABLE_NAME,
 ):
     if media_type == AUDIO:
-        popularity_constants = AUDIO_POPULARITY_CONSTANTS_VIEW
+        popularity_constants = AUDIO_POPULARITY_METRICS_TABLE_NAME
         function_name = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
@@ -403,7 +538,7 @@ def create_media_view(
 def get_providers_with_popularity_data_for_media_type(
     postgres_conn_id: str,
     media_type: str = IMAGE,
-    constants_view: str = IMAGE_POPULARITY_CONSTANTS_VIEW,
+    constants_view: str = IMAGE_POPULARITY_METRICS_TABLE_NAME,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
     """
@@ -411,7 +546,7 @@ def get_providers_with_popularity_data_for_media_type(
     for the given media type.
     """
     if media_type == AUDIO:
-        constants_view = AUDIO_POPULARITY_CONSTANTS_VIEW
+        constants_view = AUDIO_POPULARITY_METRICS_TABLE_NAME
 
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
