@@ -230,11 +230,7 @@ def calculate_media_popularity_percentile_value(
         """
     )
 
-    raw_percentile_value = postgres.run(
-        calculate_new_percentile_value_query, handler=_single_value
-    )
-
-    return raw_percentile_value
+    return postgres.run(calculate_new_percentile_value_query, handler=_single_value)
 
 
 @task
