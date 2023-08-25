@@ -818,7 +818,7 @@ jobs:
       - name: Checkout automations from repository
         uses: actions/checkout@v3
         with:
-          path: automation-checkout
+          path: /tmp/automation-checkout
 
       - name: Copy existing previews
         if: github.event_name == 'push'
@@ -838,8 +838,8 @@ jobs:
         id: preview_diff
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PYTHONPATH: ${{ github.workspace }}/automation-checkout/automations/python
-        working-directory: ${{ github.workspace }}/automation-checkout/automations/python/workflows
+          PYTHONPATH: /tmp/automation-checkout/automations/python
+        working-directory: /tmp/automation-checkout/automations/python/workflows
         run: python get_folder_differences.py
 
       - name: Deploy
