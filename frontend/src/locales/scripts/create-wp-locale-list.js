@@ -88,7 +88,13 @@ async function getWpLocaleData() {
   const locales = Object.fromEntries(
     rawLocalesData.map(parseLocaleData).filter(Boolean)
   )
+  console.log(`${rawLocalesData.length} locales found in GP source code.`)
+
   const unsortedLocales = await addFetchedTranslationStatus(locales)
+  console.log(
+    `${Object.keys(unsortedLocales).length} locales found in WP GP instance.`
+  )
+
   return Object.keys(unsortedLocales)
     .sort()
     .reduce((accumulator, currentValue) => {
