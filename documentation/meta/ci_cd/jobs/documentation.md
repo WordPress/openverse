@@ -54,6 +54,9 @@ Documentation is only emitted if all the following conditions are met.
   that their changes are valid, or were skipped, implying that they have no
   changes.
 
+A comment is also published linking to the generated preview, and any new or
+modified pages.
+
 ## `clean-gh-pages`
 
 This job is executed when a PR is closed
