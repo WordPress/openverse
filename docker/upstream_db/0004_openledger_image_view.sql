@@ -38,7 +38,7 @@ RETURNS NULL ON NULL INPUT;
 CREATE FUNCTION standardized_image_popularity(provider text, meta_data jsonb)
 RETURNS FLOAT AS $$
   SELECT ($2->>metric)::FLOAT / (($2->>metric)::FLOAT + constant)
-  FROM image_popularity_constants WHERE provider=$1;
+  FROM image_popularity_metrics WHERE provider=$1;
 $$
 LANGUAGE SQL
 STABLE
