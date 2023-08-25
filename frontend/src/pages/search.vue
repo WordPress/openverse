@@ -4,30 +4,40 @@
     tabindex="-1"
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
-    <VSearchGrid
-      :fetch-state="fetchState"
-      :query="query"
-      :supported="supported"
-      :search-type="searchType"
-      :results-count="resultCount"
-      data-testid="search-grid"
-    >
-      <template #media>
-        <NuxtChild
-          :key="$route.path"
-          :results="resultItems[searchType]"
-          :fetch-state="fetchState"
-          :search-term="query.q"
-          :supported="supported"
-          data-testid="search-results"
-        />
+    <VErrorSection v-if="fetchingError" class="w-full py-10">
+      <template #image>
+        <VErrorImage error-code="NO_RESULT" />
       </template>
-    </VSearchGrid>
-    <VScrollButton
-      v-show="showScrollButton"
-      :is-filter-sidebar-visible="isSidebarVisible"
-      data-testid="scroll-button"
-    />
+      <VNoResults :search-term="searchTerm" />
+    </VErrorSection>
+    <section v-else>
+      <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
+        <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">{{
+          searchTerm
+        }}</VSearchResultsTitle>
+      </header>
+      <NuxtChild
+        :key="$route.path"
+        :results="
+          isSupportedMediaType(searchType) ? resultItems[searchType] : null
+        "
+        :fetch-state="fetchState"
+        :search-term="query.q"
+        :supported="supported"
+        data-testid="search-results"
+      />
+      <VExternalSearchForm
+        v-if="!isAllView"
+        :search-term="searchTerm"
+        :is-supported="supported"
+        :has-no-results="false"
+      />
+      <VScrollButton
+        v-show="showScrollButton"
+        :is-filter-sidebar-visible="isSidebarVisible"
+        data-testid="scroll-button"
+      />
+    </section>
   </div>
 </template>
 
@@ -47,17 +57,27 @@ import { searchMiddleware } from "~/middleware/search"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { NO_RESULT } from "~/constants/errors"
+import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
+
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 
-import VSearchGrid from "~/components/VSearchGrid.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
+import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
+import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
+import VNoResults from "~/components/VErrorSection/VNoResults.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+import VErrorImage from "~/components/VErrorSection/VErrorImage.vue"
 
 export default defineComponent({
   name: "BrowsePage",
   components: {
+    VErrorImage,
+    VErrorSection,
+    VNoResults,
+    VSearchResultsTitle,
+    VExternalSearchForm,
     VScrollButton,
-    VSearchGrid,
   },
   layout: "search-layout",
   middleware: searchMiddleware,
@@ -85,6 +105,8 @@ export default defineComponent({
     } = storeToRefs(searchStore)
 
     const { resultCount, fetchState, resultItems } = storeToRefs(mediaStore)
+
+    const isAllView = computed(() => searchType.value === ALL_MEDIA)
 
     const needsFetching = computed(() =>
       Boolean(supported.value && !resultCount.value && searchTerm.value !== "")
@@ -116,10 +138,18 @@ export default defineComponent({
          * NO_RESULT error is handled by the VErrorSection component in the child pages.
          * For all other errors, show the Nuxt error page.
          */
-        if (error?.statusCode && !error?.message.includes(NO_RESULT))
-          return nuxtError(mediaStore.fetchState.fetchingError)
+        if (
+          error !== null &&
+          !error?.message?.toLowerCase().includes(NO_RESULT) &&
+          !error?.message?.toLowerCase().includes("timeout")
+        ) {
+          return nuxtError(error)
+        }
       }
+      return null
     }
+
+    const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
 
     /**
      * Search middleware runs when the path changes. This watcher
@@ -157,12 +187,16 @@ export default defineComponent({
       searchType,
       supported,
       query,
+      isSupportedMediaType,
 
       resultCount,
       fetchState,
       resultItems,
       needsFetching,
       isSidebarVisible,
+      fetchingError,
+
+      isAllView,
 
       skipToContentTargetId,
     }

@@ -45,6 +45,8 @@
     "frontend/src/pages/audio/_id/index.vue",
     "frontend/src/pages/image/_id/index.vue",
     "frontend/src/pages/image/_id/report.vue",
+    "frontend/src/pages/search.vue",
+    "frontend/src/pages/search/**/*.vue",
     /**
      * Some files from this section cannot be converted to TypeScript because they are
      * used in non-TS contexts (like Tailwind configuration). Therefore they're left as
