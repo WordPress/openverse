@@ -2,8 +2,8 @@ CREATE TABLE public.audio_popularity_metrics (
   provider character varying(80) PRIMARY KEY,
   metric character varying(80),
   percentile float,
-  raw_val float,
-  val float,
+  raw_value float,
+  value float,
   constant float
 );
 
