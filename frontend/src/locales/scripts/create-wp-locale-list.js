@@ -33,16 +33,11 @@ const createPropertyRePatterns = ({
   properties = [
     "english_name",
     "native_name",
-    "lang_code_iso_639_1",
-    "lang_code_iso_639_2",
-    "country_code",
-    "slug",
+    "lang_code_iso_639_1", // used for HTML lang attribute
+    "slug", // unique identifier used by Nuxt i18n
     "nplurals",
     "plural_expression",
-    "google_code",
-    "facebook_locale",
     "text_direction",
-    "wp_locale",
   ],
 } = {}) => {
   const propertyRePatterns = {}
@@ -73,10 +68,7 @@ function parseLocaleData(rawData) {
         data[camelCasedPropName] = value[1]
       }
     })
-    return {
-      wpLocale: wpLocale,
-      data,
-    }
+    return [wpLocale, data]
   }
 }
 
@@ -89,20 +81,15 @@ function parseLocaleData(rawData) {
  * @returns {Promise<{}>}
  */
 async function getWpLocaleData() {
-  const locales = {}
-
   const data = await getGpLocalesData()
   const rawLocalesData = data
     .split("new GP_Locale();")
     .splice(1)
     .map((item) => item.trim())
 
-  rawLocalesData.forEach((rawData) => {
-    const localeData = parseLocaleData(rawData)
-    if (localeData) {
-      locales[localeData.wpLocale] = localeData.data
-    }
-  })
+  const locales = Object.fromEntries(
+    rawLocalesData.map(parseLocaleData).filter(Boolean)
+  )
   const unsortedLocales = await addFetchedTranslationStatus(locales)
   return Object.keys(unsortedLocales)
     .sort()
