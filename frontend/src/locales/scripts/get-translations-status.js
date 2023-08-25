@@ -10,22 +10,11 @@ const axios = require("./axios")
 
 const baseUrl = "https://translate.wordpress.org/projects/meta/openverse/"
 
-function parseRow(row, locales) {
+function parseRow(row) {
   const cells = row.querySelectorAll("td")
-  const langLink = cells[0].querySelector("a")
-  const langName = langLink.text.trim()
-  const langObject = locales.find((locale) => {
-    return locale.name === langName
-  })
-  if (langObject) {
-    const percentTranslated = parseInt(
-      cells[1].text.trim().replace("%", ""),
-      10
-    )
-    langObject.code = langObject.slug
-    langObject.translated = percentTranslated
-    return langObject
-  }
+  const langName = cells[0].querySelector("a").text.trim()
+  const percentTranslated = parseInt(cells[1].text.trim().replace("%", ""), 10)
+  return [langName, percentTranslated]
 }
 
 /**
@@ -35,22 +24,25 @@ function parseRow(row, locales) {
  * locale object.
  */
 const addFetchedTranslationStatus = async (gpLocales) => {
-  const locales = Object.values(gpLocales)
-
-  const localesData = {}
   const raw = await axios.get(baseUrl)
-
   const parsed = parser.parse(raw.data)
-  parsed
-    .querySelector("tbody")
-    .querySelectorAll("tr")
-    .forEach((row) => {
-      const locale = parseRow(row, locales)
-      if (locale) {
-        localesData[locale.wpLocale] = locale
-      }
-    })
-  return localesData
+  const langPercent = Object.fromEntries(
+    parsed.querySelector("tbody").querySelectorAll("tr").map(parseRow)
+  )
+
+  return Object.fromEntries(
+    Object.entries(gpLocales)
+      .filter(([, langObject]) =>
+        Object.hasOwnProperty.apply(langPercent, [langObject.name])
+      )
+      .map(([langKey, langObject]) => [
+        langKey,
+        {
+          ...langObject,
+          translated: langPercent[langObject.name],
+        },
+      ])
+  )
 }
 
 module.exports = { addFetchedTranslationStatus }
