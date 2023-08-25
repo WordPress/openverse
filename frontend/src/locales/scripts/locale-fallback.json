@@ -1,0 +1,14 @@
+{
+  "en-au": ["en"],
+  "en-ca": ["en"],
+  "en-gb": ["en"],
+  "en-za": ["en"],
+  "es-ar": ["es"],
+  "es-cl": ["es"],
+  "es-co": ["es"],
+  "es-do": ["es"],
+  "es-ec": ["es"],
+  "es-mx": ["es"],
+  "es-ve": ["es"],
+  "default": ["en"]
+}
