@@ -4,7 +4,7 @@ This file generates our data refresh DAGs using a factory function.
 For the given media type these DAGs will initiate a data refresh on the
 ingestion server and await the success or failure of that task.
 
-A data refresh occurs on the Ingestion server in the openverse project. This is a task
+A data refresh occurs on the Ingestion server in the Openverse project. This is a task
 which imports data from the upstream Catalog database into the API, copies contents
 to a new Elasticsearch index, and finally makes the index "live". This process is
 necessary to make new content added to the Catalog by our provider DAGs available
