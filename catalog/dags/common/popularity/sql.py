@@ -28,8 +28,7 @@ IMAGE_VIEW_PROVIDER_FID_IDX = "image_view_provider_fid_idx"
 AUDIO_VIEW_PROVIDER_FID_IDX = "audio_view_provider_fid_idx"
 
 # Column name constants
-RAW_VALUE = "raw_value"
-VALUE = "value"
+VALUE = "val"
 CONSTANT = "constant"
 FID = col.FOREIGN_ID.db_name
 IDENTIFIER = col.IDENTIFIER.db_name
@@ -62,7 +61,6 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=PARTITION, definition="character varying(80) PRIMARY KEY"),
     Column(name=METRIC, definition="character varying(80)"),
     Column(name=PERCENTILE, definition="float"),
-    Column(name=RAW_VALUE, definition="float"),
     Column(name=VALUE, definition="float"),
     Column(name=CONSTANT, definition="float"),
 ]
@@ -182,7 +180,7 @@ def update_media_popularity_metrics(
     updates_string = ",\n          ".join(
         f"{c}=EXCLUDED.{c}"
         for c in column_names
-        if c not in [PARTITION, CONSTANT, "val"]
+        if c not in [PARTITION, CONSTANT, VALUE]
     )
     popularity_metric_inserts = _get_popularity_metric_insert_values_string(
         popularity_metrics
@@ -275,8 +273,7 @@ def update_percentile_and_constants_values_for_provider(
     update_constant_query = dedent(
         f"""
         UPDATE public.{popularity_metrics_table}
-        SET {RAW_VALUE}={raw_percentile_value}, {VALUE} = {percentile_value},
-          {CONSTANT} = {new_constant}
+        SET {VALUE} = {percentile_value}, {CONSTANT} = {new_constant}
         WHERE {col.PROVIDER.db_name} = '{provider}';
         """
     )
@@ -338,7 +335,7 @@ def _format_popularity_metric_insert_tuple_string(
     percentile,
 ):
     # Default null val and constant
-    return f"('{provider}', '{metric}', {percentile}, null, null, null)"
+    return f"('{provider}', '{metric}', {percentile}, null, null)"
 
 
 def create_media_popularity_percentile_function(
