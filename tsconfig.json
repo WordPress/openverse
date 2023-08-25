@@ -43,6 +43,7 @@
     "frontend/src/pages/feedback.vue",
     "frontend/src/pages/index.vue",
     "frontend/src/pages/privacy.vue",
+    "frontend/src/pages/preferences.vue",
     "frontend/src/pages/search-help.vue",
     "frontend/src/pages/audio/_id/index.vue",
     "frontend/src/pages/image/_id/index.vue",
