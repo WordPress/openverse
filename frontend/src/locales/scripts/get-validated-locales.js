@@ -22,14 +22,18 @@ const getValidatedLocales = async () => {
   }
   const updatedLocaleList = await addFetchedTranslationStatus(localesList)
   const allLocales = Object.values(updatedLocaleList).map((locale) => ({
+    /* Nuxt i18n fields */
+
     code: locale.slug,
-    name: locale.name,
-    nativeName: locale.nativeName ?? locale.name,
-    iso: locale.langCodeIso_639_1,
-    wpLocale: locale.wpLocale,
     dir: locale.textDirection || "ltr",
-    translated: locale.translated,
     file: `${locale.slug}.json`,
+    iso: locale.langCodeIso_639_1 ?? undefined,
+
+    /* Custom fields */
+
+    name: locale.name,
+    nativeName: locale.nativeName || locale.name,
+    translated: locale.translated,
   }))
   for (const locale of allLocales) {
     const fileLocation = `${process.cwd()}/src/locales/${locale.file}`
