@@ -8,10 +8,8 @@ from airflow.models.abstractoperator import AbstractOperator
 from common.constants import AUDIO, IMAGE
 from common.loader.sql import TABLE_NAMES
 from common.popularity.constants import (
-    AUDIO_POPULARITY_CONSTANTS_VIEW,
     AUDIO_POPULARITY_PERCENTILE_FUNCTION,
     AUDIO_VIEW_NAME,
-    IMAGE_POPULARITY_CONSTANTS_VIEW,
     IMAGE_POPULARITY_PERCENTILE_FUNCTION,
     IMAGE_VIEW_NAME,
     STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
@@ -72,6 +70,8 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=CONSTANT, definition="float"),
 ]
 
+# Further refactoring of this type will be done in
+# https://github.com/WordPress/openverse/issues/2678
 POPULARITY_METRICS_BY_MEDIA_TYPE = {
     AUDIO: AUDIO_POPULARITY_METRICS,
     IMAGE: IMAGE_POPULARITY_METRICS,
@@ -97,25 +97,19 @@ def drop_media_popularity_relations(
     postgres_conn_id,
     media_type=IMAGE,
     db_view=IMAGE_VIEW_NAME,
-    constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
     metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
     if media_type == AUDIO:
         db_view = AUDIO_VIEW_NAME
-        constants = AUDIO_POPULARITY_CONSTANTS_VIEW
         metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
 
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
     )
     drop_media_view = f"DROP MATERIALIZED VIEW IF EXISTS public.{db_view} CASCADE;"
-    drop_popularity_constants = (
-        f"DROP MATERIALIZED VIEW IF EXISTS public.{constants} CASCADE;"
-    )
     drop_popularity_metrics = f"DROP TABLE IF EXISTS public.{metrics} CASCADE;"
     postgres.run(drop_media_view)
-    postgres.run(drop_popularity_constants)
     postgres.run(drop_popularity_metrics)
 
 
@@ -381,85 +375,14 @@ def create_media_popularity_percentile_function(
     postgres.run(query)
 
 
-def create_media_popularity_constants_view(
-    postgres_conn_id,
-    media_type=IMAGE,
-    popularity_constants=IMAGE_POPULARITY_CONSTANTS_VIEW,
-    popularity_constants_idx=IMAGE_POP_CONSTANTS_IDX,
-    popularity_metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
-    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
-    task: AbstractOperator = None,
-):
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
-    )
-    if media_type == AUDIO:
-        popularity_constants = AUDIO_POPULARITY_CONSTANTS_VIEW
-        popularity_constants_idx = AUDIO_POP_CONSTANTS_IDX
-        popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
-        popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
-
-    create_view_query = dedent(
-        f"""
-        CREATE MATERIALIZED VIEW public.{popularity_constants} AS
-          WITH
-            popularity_metric_raw_values AS (
-              SELECT
-                *,
-                {popularity_percentile}({PARTITION}, {METRIC}, {PERCENTILE})
-                  AS raw_value
-              FROM {popularity_metrics}
-            ),
-            popularity_metric_values AS(
-              SELECT
-                *,
-                CASE
-                  WHEN raw_value=0 THEN
-                    1
-                  ELSE
-                    raw_value
-                END AS value
-              FROM popularity_metric_raw_values
-            )
-          SELECT *, ((1 - {PERCENTILE}) / {PERCENTILE}) * value AS {CONSTANT}
-          FROM popularity_metric_values;
-        """
-    )
-    add_idx_query = dedent(
-        f"""
-        CREATE UNIQUE INDEX {popularity_constants_idx}
-          ON public.{popularity_constants}
-          USING btree({PARTITION}, {METRIC});
-        """
-    )
-    postgres.run(create_view_query)
-    postgres.run(add_idx_query)
-
-
-def update_media_popularity_constants(
-    postgres_conn_id,
-    media_type=IMAGE,
-    popularity_constants_view=IMAGE_POPULARITY_CONSTANTS_VIEW,
-    task: AbstractOperator = None,
-):
-    if media_type == AUDIO:
-        popularity_constants_view = AUDIO_POPULARITY_CONSTANTS_VIEW
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
-    )
-    postgres.run(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {popularity_constants_view};")
-
-
 def create_standardized_media_popularity_function(
     postgres_conn_id,
     media_type=IMAGE,
     function_name=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    popularity_constants=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    popularity_metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
 ):
     if media_type == AUDIO:
-        popularity_constants = AUDIO_POPULARITY_METRICS_TABLE_NAME
+        popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
         function_name = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
@@ -470,7 +393,7 @@ def create_standardized_media_popularity_function(
           provider text, meta_data jsonb
         ) RETURNS FLOAT AS $$
           SELECT ($2->>{METRIC})::float / (($2->>{METRIC})::float + {CONSTANT})
-          FROM {popularity_constants} WHERE provider=$1;
+          FROM {popularity_metrics} WHERE provider=$1;
         $$
         LANGUAGE SQL
         STABLE
@@ -538,7 +461,7 @@ def create_media_view(
 def get_providers_with_popularity_data_for_media_type(
     postgres_conn_id: str,
     media_type: str = IMAGE,
-    constants_view: str = IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    popularity_metrics: str = IMAGE_POPULARITY_METRICS_TABLE_NAME,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
     """
@@ -546,13 +469,13 @@ def get_providers_with_popularity_data_for_media_type(
     for the given media type.
     """
     if media_type == AUDIO:
-        constants_view = AUDIO_POPULARITY_METRICS_TABLE_NAME
+        popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
 
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
     )
     providers = postgres.get_records(
-        f"SELECT DISTINCT provider FROM public.{constants_view};"
+        f"SELECT DISTINCT provider FROM public.{popularity_metrics};"
     )
 
     return [x[0] for x in providers]
