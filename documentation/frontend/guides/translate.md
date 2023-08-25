@@ -2,7 +2,7 @@
 
 ## Fallbacks
 
-If the translation for a string is missing, the list of fallback language will
+If the translation for a string is missing, the list of fallback languages will
 be checked, in order, for a translation. If one is found, it will be used. If
 none is found, the final fallback, which is English will be used to render the
 text.
