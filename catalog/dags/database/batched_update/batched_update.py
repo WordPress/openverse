@@ -96,6 +96,9 @@ def update_batches(
     task: AbstractOperator = None,
     **kwargs,
 ):
+    if total_row_count == 0:
+        return 0
+
     # Progress is tracked in an Airflow variable. When the task run starts, we resume
     # from the start point set by this variable (defaulted to 0). This prevents the
     # task from starting over at the beginning on retries.
