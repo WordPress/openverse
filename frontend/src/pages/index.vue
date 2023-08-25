@@ -21,7 +21,9 @@ import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
-  SupportedSearchType,
+  isAdditionalSearchType,
+  isSupportedMediaType,
+  SearchType,
   supportedSearchTypes,
 } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -30,6 +32,8 @@ import { useLayout } from "~/composables/use-layout"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
+
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 import VHomepageContent from "~/components/VHomepageContent.vue"
@@ -43,6 +47,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
 
+    const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const uiStore = useUiStore()
@@ -70,10 +75,17 @@ export default defineComponent({
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
-    const searchType = ref<SupportedSearchType>(ALL_MEDIA)
+    const searchType = ref<SearchType>(ALL_MEDIA)
 
-    const setSearchType = (type: SupportedSearchType) => {
-      searchType.value = type
+    const setSearchType = (type: SearchType) => {
+      if (type === ALL_MEDIA || isSupportedMediaType(type)) {
+        searchType.value = type
+      } else if (
+        featureFlagStore.isOn("additional_search_types") &&
+        isAdditionalSearchType(type)
+      ) {
+        searchType.value = type
+      }
     }
 
     const handleSearch = (searchTerm: string) => {
