@@ -14,8 +14,7 @@
       size="medium"
       class="label-regular !w-full justify-between"
       show-external-icon
-      :external-icon-size="5"
-      has-icon-end
+      :external-icon-size="6"
       :href="source.url"
       :send-external-link-click-event="false"
       @mousedown="handleClick(source.name)"
