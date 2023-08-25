@@ -43,14 +43,6 @@ from data_refresh.reporting import report_record_difference
 logger = logging.getLogger(__name__)
 
 
-def _single_value(cursor):
-    try:
-        row = cursor.fetchone()
-        return row[0]
-    except Exception as e:
-        raise ValueError("Unable to extract expected row data from cursor") from e
-
-
 def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequence[str]):
     """
     Instantiate a DAG for a data refresh.
