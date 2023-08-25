@@ -328,8 +328,8 @@ def test_metrics_table_adds_values_and_constants(
     check_query = f"SELECT * FROM {table_info.metrics};"
     postgres_with_image_table.cursor.execute(check_query)
     expect_rows = [
-        ("diff_provider", "comments", 0.8, 50.0, 50.0, 12.5),
-        ("my_provider", "views", 0.5, 50.0, 50.0, 50.0),
+        ("diff_provider", "comments", 0.8, 50.0, 12.5),
+        ("my_provider", "views", 0.5, 50.0, 50.0),
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for expect_row, sorted_row in zip(expect_rows, sorted_rows):
@@ -386,8 +386,8 @@ def test_metrics_table_handles_zeros_and_missing_in_constants(
     check_query = f"SELECT * FROM {table_info.metrics};"
     postgres_with_image_table.cursor.execute(check_query)
     expect_rows = [
-        ("diff_provider", "comments", 0.8, None, None, None),
-        ("my_provider", "views", 0.8, 0.0, 1.0, 0.25),
+        ("diff_provider", "comments", 0.8, None, None),
+        ("my_provider", "views", 0.8, 1.0, 0.25),
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for expect_row, sorted_row in zip(expect_rows, sorted_rows):
