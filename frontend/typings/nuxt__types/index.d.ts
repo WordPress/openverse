@@ -52,5 +52,6 @@ declare module "@nuxtjs/i18n" {
   export interface LocaleObject {
     name: string
     nativeName: string
+    translated: number
   }
 }
