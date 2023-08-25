@@ -15,7 +15,7 @@ from common.popularity.constants import (
     STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
     STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
 )
-from common.sql import PostgresHook
+from common.sql import PostgresHook, _single_value
 from common.storage import columns as col
 from common.storage.db_columns import AUDIO_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
 
@@ -28,8 +28,8 @@ IMAGE_VIEW_PROVIDER_FID_IDX = "image_view_provider_fid_idx"
 AUDIO_VIEW_PROVIDER_FID_IDX = "audio_view_provider_fid_idx"
 
 # Column name constants
-RAW_VALUE = "raw_val"
-VALUE = "val"
+RAW_VALUE = "raw_value"
+VALUE = "value"
 CONSTANT = "constant"
 FID = col.FOREIGN_ID.db_name
 IDENTIFIER = col.IDENTIFIER.db_name
@@ -67,8 +67,8 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=CONSTANT, definition="float"),
 ]
 
-# Further refactoring of this type will be done in
-# https://github.com/WordPress/openverse/issues/2678
+# Further refactoring of this nature will be done in
+# https://github.com/WordPress/openverse/issues/2678.
 POPULARITY_METRICS_BY_MEDIA_TYPE = {
     AUDIO: AUDIO_POPULARITY_METRICS,
     IMAGE: IMAGE_POPULARITY_METRICS,
@@ -153,15 +153,6 @@ def create_media_popularity_metrics(
         """
     )
     postgres.run(query)
-
-
-# TODO move this somewhere where it can be reused
-def _single_value(cursor):
-    try:
-        row = cursor.fetchone()
-        return row[0]
-    except Exception as e:
-        raise ValueError("Unable to extract expected row data from cursor") from e
 
 
 @task
