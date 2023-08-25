@@ -22,9 +22,6 @@ from common.storage.db_columns import AUDIO_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
 
 DEFAULT_PERCENTILE = 0.85
 
-
-IMAGE_POP_CONSTANTS_IDX = "image_popularity_constants_provider_metric_idx"
-AUDIO_POP_CONSTANTS_IDX = "audio_popularity_constants_provider_metric_idx"
 IMAGE_VIEW_ID_IDX = "image_view_identifier_idx"
 AUDIO_VIEW_ID_IDX = "audio_view_identifier_idx"
 IMAGE_VIEW_PROVIDER_FID_IDX = "image_view_provider_fid_idx"
@@ -177,10 +174,7 @@ def update_media_popularity_metrics(
     task: AbstractOperator = None,
 ):
     if popularity_metrics is None:
-        if media_type == AUDIO:
-            popularity_metrics = AUDIO_POPULARITY_METRICS
-        else:
-            popularity_metrics = IMAGE_POPULARITY_METRICS
+        popularity_metrics = POPULARITY_METRICS_BY_MEDIA_TYPE[media_type]
     if media_type == AUDIO:
         popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
     postgres = PostgresHook(
@@ -258,9 +252,7 @@ def calculate_media_popularity_percentile_value(
         calculate_new_percentile_value_query, handler=_single_value
     )
 
-    # Prevents `null` when there are no records for this provider (only likely in local
-    # dev environments)
-    return raw_percentile_value or 0
+    return raw_percentile_value
 
 
 @task
@@ -269,18 +261,26 @@ def update_percentile_and_constants_values_for_provider(
     provider,
     raw_percentile_value,
     media_type=IMAGE,
+    popularity_metrics=None,
     popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
     task: AbstractOperator = None,
 ):
+    if popularity_metrics is None:
+        popularity_metrics = POPULARITY_METRICS_BY_MEDIA_TYPE.get(media_type, {})
     if media_type == AUDIO:
         popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
+
+    if raw_percentile_value is None:
+        # Occurs when a provider has a metric configured, but there are no records
+        # with any data for that metric.
+        return
 
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
 
-    provider_info = POPULARITY_METRICS_BY_MEDIA_TYPE.get(media_type, {}).get(provider)
+    provider_info = popularity_metrics.get(provider)
     percentile = provider_info.get("percentile", DEFAULT_PERCENTILE)
 
     # Calculate the popularity constant using the percentile value

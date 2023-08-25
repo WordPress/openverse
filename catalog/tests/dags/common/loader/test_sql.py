@@ -37,11 +37,9 @@ def table_info(
     return TableInfo(
         image=image_table,
         image_view=f"image_view_{identifier}",
-        constants=f"image_popularity_constants_{identifier}",
         metrics=f"image_popularity_metrics_{identifier}",
         standardized_popularity=f"standardized_popularity_{identifier}",
         popularity_percentile=f"popularity_percentile_{identifier}",
-        pop_constants_idx=f"test_popularity_constants_{identifier}_idx",
         image_view_idx=f"test_view_id_{identifier}_idx",
         provider_fid_idx=f"test_view_provider_fid_{identifier}_idx",
     )
@@ -84,7 +82,6 @@ def postgres_with_load_and_image_table(
     DROP TABLE IF EXISTS {load_table} CASCADE;
     DROP TABLE IF EXISTS {image_table} CASCADE;
     DROP INDEX IF EXISTS {image_table}_provider_fid_idx;
-    DROP MATERIALIZED VIEW IF EXISTS {table_info.constants} CASCADE;
     DROP TABLE IF EXISTS {table_info.metrics} CASCADE;
     DROP FUNCTION IF EXISTS {table_info.standardized_popularity} CASCADE;
     DROP FUNCTION IF EXISTS {table_info.popularity_percentile} CASCADE;
