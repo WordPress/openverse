@@ -35,8 +35,6 @@ const createPropertyRePatterns = ({
     "native_name",
     "lang_code_iso_639_1", // used for HTML lang attribute
     "slug", // unique identifier used by Nuxt i18n
-    "nplurals",
-    "plural_expression",
     "text_direction",
   ],
 } = {}) => {
