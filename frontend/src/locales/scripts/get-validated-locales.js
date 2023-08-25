@@ -37,7 +37,10 @@ const getValidatedLocales = async () => {
   }))
   for (const locale of allLocales) {
     const fileLocation = `${process.cwd()}/src/locales/${locale.file}`
-    if (fs.existsSync(fileLocation)) {
+    if (
+      fs.existsSync(fileLocation) &&
+      Object.keys(JSON.parse(fs.readFileSync(fileLocation))).length
+    ) {
       result.translated.push(locale)
     } else {
       result.untranslated.push(locale)
