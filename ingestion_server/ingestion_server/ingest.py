@@ -55,24 +55,24 @@ RELATIVE_UPSTREAM_DB_PORT = config(
 #: the port of the upstream DB from the POV of the downstream DB
 
 
-def _get_shared_cols(downstream, upstream, table: str):
+def _get_shared_cols(downstream, upstream, upstream_table: str, downstream_table: str):
     """
     Get the common columns between two tables with the same name in different DBs.
 
     Given two database connections and a table name, return the list of columns
-    that the two tables have in common. The upstream table has the "_view"
-    suffix attached to it.
+    that the two tables have in common.
 
     :param downstream: an open connection to the downstream PostgreSQL database
     :param upstream: an open connection to the upstream PostgreSQL database
-    :param table: the name of the downstream table
+    :param upstream_table: the name of the table in the upstream db
+    :param downstream_table: the name of the table in the downstream db
     :return: a list of the column names that are common to both databases
     """
     with downstream.cursor() as cur1, upstream.cursor() as cur2:
         get_tables = SQL("SELECT * FROM {table} LIMIT 0;")
-        cur1.execute(get_tables.format(table=Identifier(table)))
+        cur1.execute(get_tables.format(table=Identifier(downstream_table)))
         conn1_cols = {desc[0] for desc in cur1.description}
-        cur2.execute(get_tables.format(table=Identifier(f"{table}_view")))
+        cur2.execute(get_tables.format(table=Identifier(upstream_table)))
         conn2_cols = {desc[0] for desc in cur2.description}
 
     shared = list(conn1_cols.intersection(conn2_cols))
@@ -251,7 +251,8 @@ def _update_progress(progress, new_value):
 
 
 def refresh_api_table(
-    table: str,
+    upstream_table: str,
+    downstream_table: str,
     progress: multiprocessing.Value = None,
     approach: ApproachType = "advanced",
 ):
@@ -268,14 +269,15 @@ def refresh_api_table(
 
     This is the main function of this module.
 
-    :param table: The upstream table to copy.
+    :param upstream_table: The upstream table to copy.
+    :param downstream_table: The name of the copied table in the downstream db.
     :param progress: multiprocessing.Value float for sharing task progress
     :param approach: whether to use advanced logic specific to media ingestion
     """
 
     # Step 1: Get the list of overlapping columns
     slack.status(
-        table,
+        upstream_table,
         "Starting ingestion server data refresh | _Next: copying data from upstream_",
     )
     downstream_db = database_connect()
@@ -287,7 +289,9 @@ def refresh_api_table(
         host=UPSTREAM_DB_HOST,
         connect_timeout=5,
     )
-    shared_cols = _get_shared_cols(downstream_db, upstream_db, table)
+    shared_cols = _get_shared_cols(
+        downstream_db, upstream_db, upstream_table, downstream_table
+    )
     upstream_db.close()
 
     with downstream_db, downstream_db.cursor() as downstream_cur:
@@ -307,7 +311,7 @@ def refresh_api_table(
             UPSTREAM_DB_NAME,
             UPSTREAM_DB_USER,
             UPSTREAM_DB_PASSWORD,
-            f"{table}_view",
+            upstream_table,
         )
         downstream_cur.execute(init_fdw)
 
@@ -320,23 +324,33 @@ def refresh_api_table(
             limit_default = 0
         limit = config("DATA_REFRESH_LIMIT", cast=int, default=limit_default)
         copy_data = get_copy_data_query(
-            table, shared_cols, approach=approach, limit=limit
+            upstream_table,
+            downstream_table,
+            shared_cols,
+            approach=approach,
+            limit=limit,
         )
         log.info(f"Running copy-data query: \n{copy_data.as_string(downstream_cur)}")
         downstream_cur.execute(copy_data)
 
-    next_step = "image data cleaning" if table == "image" else "Elasticsearch reindex"
-    slack.status(table, f"Data copy complete | _Next: {next_step}_")
+    next_step = (
+        "image data cleaning"
+        if downstream_table == "image"
+        else "Elasticsearch reindex"
+    )
+    slack.status(upstream_table, f"Data copy complete | _Next: {next_step}_")
 
-    if table == "image":
+    if downstream_table == "image":
         # Step 5: Clean the data
         log.info("Cleaning data...")
-        clean_image_data(table)
+        clean_image_data(downstream_table)
         log.info("Cleaning completed!")
-        slack.status(table, "Data cleaning complete | _Next: Elasticsearch reindex_")
+        slack.status(
+            downstream_table, "Data cleaning complete | _Next: Elasticsearch reindex_"
+        )
 
     downstream_db.close()
-    log.info(f"Finished refreshing table '{table}'.")
+    log.info(f"Finished refreshing table '{downstream_table}'.")
     _update_progress(progress, 100.0)
 
 
