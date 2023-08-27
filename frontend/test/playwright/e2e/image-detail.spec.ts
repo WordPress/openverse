@@ -12,6 +12,7 @@ const goToCustomImagePage = async (page: Page) => {
   await page.goto("image/e9d97a98-621b-4ec2-bf70-f47a74380452")
 }
 
+/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["showsErrorPage"] }] */
 const showsErrorPage = async (page: Page) => {
   await expect(page.locator("h1")).toHaveText(
     /The content you’re looking for seems to have disappeared/

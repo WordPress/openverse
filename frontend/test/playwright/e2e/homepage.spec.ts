@@ -27,10 +27,12 @@ for (const searchType of supportedSearchTypes) {
 
 const searchTypePopover = "[aria-labelledby='search-type-button'] > div"
 
+/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["popoverIsVisible", "popoverIsNotVisible"] }] */
 const popoverIsVisible = async (page: Page) =>
   await expect(page.locator(searchTypePopover)).toBeVisible()
 const popoverIsNotVisible = async (page: Page) =>
   await expect(page.locator(searchTypePopover)).toBeHidden()
+
 const clickPopoverButton = async (page: Page) =>
   await page.getByRole("button", { name: t("searchType.all") }).click()
 
