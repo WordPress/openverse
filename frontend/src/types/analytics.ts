@@ -234,18 +234,6 @@ export type Events = {
     source: string
   }
   /**
-   * Description: The user visits a source's link in the single result UI
-   * Questions:
-   *   - Are source links clicked much? Does Openverse increase visibility
-   *     of included sources?
-   */
-  VISIT_SOURCE_LINK: {
-    /** The unique ID of the media */
-    id: string
-    /** The permalink to the source's homepage */
-    url: string
-  }
-  /**
    * Description: The user visits a CC license description page on CC.org
    * Questions:
    *   - How often are external licenses viewed?
