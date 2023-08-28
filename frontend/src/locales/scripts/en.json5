@@ -772,4 +772,10 @@
       userReportedSensitive: "{openverse} users have reported this work as sensitive.",
     },
   },
+  collection: {
+    link: {
+      source: "Open source site",
+      creator: "Open creator page",
+    },
+  },
 }
