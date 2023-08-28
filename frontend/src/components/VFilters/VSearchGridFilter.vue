@@ -35,12 +35,8 @@
 import { computed, defineComponent } from "vue"
 import { storeToRefs } from "pinia"
 
-import { useRouter } from "@nuxtjs/composition-api"
-
-import { watchDebounced } from "@vueuse/core"
-
 import { useSearchStore } from "~/stores/search"
-import { areQueriesEqual, ApiQueryParams } from "~/utils/search-query-transform"
+
 import type { NonMatureFilterCategory } from "~/constants/filters"
 import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -77,13 +73,11 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const i18n = useI18n()
-    const router = useRouter()
 
     const { sendCustomEvent } = useAnalytics()
 
     const {
       isAnyFilterApplied,
-      searchQueryParams,
       searchTerm,
       searchType,
       searchFilters: filters,
@@ -95,20 +89,6 @@ export default defineComponent({
     const filterTypeTitle = (filterType: NonMatureFilterCategory) => {
       return i18n.t(`filters.${filterType}.title`).toString()
     }
-
-    /**
-     * This watcher fires even when the queries are equal. We update the path only
-     * when the queries change.
-     */
-    watchDebounced(
-      searchQueryParams,
-      (newQuery: ApiQueryParams, oldQuery: ApiQueryParams) => {
-        if (!areQueriesEqual(newQuery, oldQuery)) {
-          router.push(searchStore.getSearchPath())
-        }
-      },
-      { debounce: 800, maxWait: 5000 }
-    )
 
     const toggleFilter = ({
       filterType,

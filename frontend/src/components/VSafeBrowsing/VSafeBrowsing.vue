@@ -68,8 +68,13 @@ export default defineComponent({
 
     const featureFlagStore = useFeatureFlagStore()
     const searchStore = useSearchStore()
-    let fetchSensitive = computed(() =>
-      featureFlagStore.isOn("fetch_sensitive")
+    let fetchSensitive = computed(
+      () =>
+        featureFlagStore.isOn("fetch_sensitive") &&
+        searchStore.isFilterChecked(
+          "includeSensitiveResults",
+          "includeSensitiveResults"
+        )
     )
     let setFetchSensitive = ({ checked }: { checked: boolean }) => {
       featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
