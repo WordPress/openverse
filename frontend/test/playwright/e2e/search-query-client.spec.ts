@@ -110,6 +110,9 @@ test.describe("search query on CSR", () => {
       await page
         .getByLabel(/Turn on sensitive content fetching and blurring/i)
         .check()
+      await page
+        .getByLabel(/Mark 50% of results as mature to test content safety./i)
+        .check()
 
       await goToSearchTerm(page, "cat", { mode: "CSR" })
 
@@ -129,7 +132,13 @@ test.describe("search query on CSR", () => {
       )
       await page.getByRole("button", { name: searchButtonLabel }).click()
 
-      await expect(page).toHaveURL(/unstable__include_sensitive_results=true/i)
+      const sensitiveImageLink = page
+        .getByRole("link", {
+          name: /This image may contain sensitive content/i,
+        })
+        .first()
+
+      await expect(sensitiveImageLink).toBeVisible()
     })
   })
 })
