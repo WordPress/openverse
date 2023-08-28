@@ -44,7 +44,11 @@ conversations, with attribution of course.
 
 **Available media:** images
 
-<img src="/_static/openverse_slack.png" width="335" height="541" />
+```{figure} /_static/openverse_slack.png
+:alt: Openverse Slack
+:width: 335
+:height: 541
+```
 
 ## Gutenberg integration
 
