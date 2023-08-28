@@ -3,17 +3,18 @@
     :images="results"
     :is-single-page="false"
     :fetch-state="fetchState"
-    :image-grid-label="
-      $t('browsePage.aria.results', { query: searchTerm }).toString()
-    "
+    :image-grid-label="`${$t('browsePage.aria.results', {
+      query: searchTerm,
+    })}`"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 
-import type { ImageDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
+
+import { useMediaStore } from "~/stores/media"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
@@ -23,10 +24,6 @@ export default defineComponent({
   name: "ImageSearch",
   components: { VImageGrid },
   props: {
-    results: {
-      type: Array as PropType<ImageDetail[]>,
-      required: true,
-    },
     fetchState: {
       type: Object as PropType<FetchState<NuxtError> | FetchState>,
       required: true,
@@ -35,6 +32,13 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const mediaStore = useMediaStore()
+
+    const results = computed(() => mediaStore.resultItems.image)
+
+    return { results }
   },
 })
 </script>
