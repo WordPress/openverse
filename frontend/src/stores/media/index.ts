@@ -109,7 +109,7 @@ export const useMediaStore = defineStore("media", {
           ...items,
           [type]: Object.values(state.results[type].items),
         }),
-        {} as Record<SupportedMediaType, Media[]>
+        {} as { image: ImageDetail[]; audio: AudioDetail[] }
       )
     },
 
@@ -251,7 +251,7 @@ export const useMediaStore = defineStore("media", {
         .sort(([, a], [, b]) => b - a)[0]
 
       // First, set the results to the type with most hits...
-      const newResults = media[mostHits]
+      const newResults = media[mostHits] as (AudioDetail | ImageDetail)[]
 
       // ...then push other items into the list, using a random index.
       let nonImageIndex = 1

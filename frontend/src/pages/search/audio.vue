@@ -3,16 +3,16 @@
     :results="results"
     :is-related="false"
     :fetch-state="fetchState"
-    :collection-label="collectionLabel"
+    :collection-label="`${$t('browsePage.aria.results', {
+      query: searchTerm,
+    })}`"
   />
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
-import type { AudioDetail } from "~/types/media"
+import { useMediaStore } from "~/stores/media"
 import type { FetchState } from "~/types/fetch-state"
 
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
@@ -25,8 +25,8 @@ export default defineComponent({
     VAudioCollection,
   },
   props: {
-    results: {
-      type: Array as PropType<AudioDetail[]>,
+    searchTerm: {
+      type: String,
       required: true,
     },
     fetchState: {
@@ -35,17 +35,11 @@ export default defineComponent({
     },
   },
   setup() {
-    const i18n = useI18n()
+    const mediaStore = useMediaStore()
 
-    const collectionLabel = computed(() => {
-      const query = useSearchStore().searchTerm
+    const results = computed(() => mediaStore.resultItems.audio)
 
-      return i18n.t("browsePage.aria.results", { query }).toString()
-    })
-
-    return {
-      collectionLabel,
-    }
+    return { results }
   },
 })
 </script>
