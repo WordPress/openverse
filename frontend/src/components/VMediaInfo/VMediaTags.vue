@@ -1,12 +1,14 @@
 <template>
-  <ul v-if="filteredTags.length" class="flex flex-wrap gap-2">
-    <VMediaTag v-for="(tag, index) in filteredTags" :key="index" tag="li">{{
+  <ul v-if="tags.length" class="flex flex-wrap gap-2">
+    <VMediaTag v-for="(tag, index) in tags" :key="index" tag="li">{{
       tag.name
     }}</VMediaTag>
   </ul>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { defineComponent, PropType } from "vue"
+
+import type { Tag } from "~/types/media"
 
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 
@@ -15,17 +17,9 @@ export default defineComponent({
   components: { VMediaTag },
   props: {
     tags: {
-      type: Array as PropType<{ name: string }[]>,
+      type: Array as PropType<Tag[]>,
       required: true,
     },
-  },
-  setup(props) {
-    const filteredTags = computed(() => {
-      return props.tags.filter((i: { name: string }) => !!i)
-    })
-    return {
-      filteredTags,
-    }
   },
 })
 </script>
