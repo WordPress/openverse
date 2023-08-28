@@ -6,6 +6,11 @@ tracks. All Openverse content is under a
 [Creative Commons license](https://creativecommons.org/licenses/) or is in the
 public domain.
 
+```{caution}
+Openverse cannot make any claims about the accuracy of license information. You
+should always verify the license of a particular work before using it.
+```
+
 As a developer, you can use the Openverse API to create incredible apps. Here
 are some apps powered by the Openverse API.
 
