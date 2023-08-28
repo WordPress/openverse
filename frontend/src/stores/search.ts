@@ -33,7 +33,6 @@ import {
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from "~/constants/filters"
-import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -59,22 +58,33 @@ export interface SearchState {
   filters: Filters
 }
 
+/**
+ * Computes the search query parameters from the search type, filters, and search term.
+ * `q` parameter is always included as the first query parameter.
+ * Only the filters that are relevant for the search type and have a value are included.
+ *
+ * Some parameters are excluded from the query, depending on the mode:
+ * - `includeSensitiveResults` is excluded in frontend mode, because it is set in the cookie.
+ */
 function computeQueryParams(
   searchType: SearchType,
   filters: Filters,
-  searchTerm: string
+  searchTerm: string,
+  mode: "frontend" | "API"
 ) {
   const query = { ...filtersToQueryData(filters, searchType) }
 
   const queryKeys = Object.keys(query) as (keyof ApiQueryParams)[]
 
+  const parametersToExclude =
+    mode === "frontend" ? ["includeSensitiveResults"] : []
+
   return queryKeys.reduce(
     (obj, key) => {
       if (key !== "q" && query[key]?.length) {
-        if (key !== INCLUDE_SENSITIVE_QUERY_PARAM) {
+        //
+        if (!parametersToExclude.includes(key)) {
           obj[key] = query[key]
-        } else if (query[key] === "includeSensitiveResults") {
-          obj[key] = "true"
         }
       }
       return obj
@@ -111,7 +121,8 @@ export const useSearchStore = defineStore("search", {
         return computeQueryParams(
           state.searchType,
           state.filters,
-          state.searchTerm
+          state.searchTerm,
+          "API"
         )
       } else {
         return { q: state.searchTerm }
@@ -206,7 +217,12 @@ export const useSearchStore = defineStore("search", {
       let queryParams
       if (!query) {
         if (type && isSearchTypeSupported(type)) {
-          queryParams = computeQueryParams(type, this.filters, this.searchTerm)
+          queryParams = computeQueryParams(
+            type,
+            this.filters,
+            this.searchTerm,
+            "frontend"
+          )
         } else {
           queryParams = this.searchQueryParams
         }
@@ -272,9 +288,6 @@ export const useSearchStore = defineStore("search", {
         search,
         ...this.recentSearches.filter((i) => i !== search),
       ].slice(0, parseInt(env.savedSearchCount))
-    },
-    computeQueryParams(type: SupportedSearchType) {
-      return computeQueryParams(type, this.filters, this.searchTerm)
     },
     clearRecentSearches() {
       this.recentSearches = []
@@ -448,12 +461,7 @@ export const useSearchStore = defineStore("search", {
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
 
-      // TODO: Convert the 'unstable__include_sensitive_results=true' query param
-      // to `includeSensitiveResults` filterType and the filterCode with the same name:
-      // includeSensitiveResults: { code: includeSensitiveResults, name: '...', checked: true }
-      if (!(query[INCLUDE_SENSITIVE_QUERY_PARAM] === "true")) {
-        delete query[INCLUDE_SENSITIVE_QUERY_PARAM]
-      }
+      // TODO: get includeSensitiveResults from the cookie?
 
       const newFilterData = queryToFilterData({
         query,
