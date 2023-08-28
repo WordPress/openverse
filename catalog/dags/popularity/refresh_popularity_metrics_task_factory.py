@@ -66,8 +66,6 @@ def create_refresh_popularity_metrics_task_group(
             },
         )
 
-        # For each provider that supports popularity data for this media type,
-        # recalculate the percentile value used to generate the constant.
         update_constants = (
             sql.update_percentile_and_constants_for_provider.override(
                 group_id=UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
