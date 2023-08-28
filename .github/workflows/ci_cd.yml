@@ -814,17 +814,18 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: gh-pages
+          path: gh-pages
 
       - name: Checkout automations from repository
         uses: actions/checkout@v3
         with:
-          path: /tmp/automation-checkout
+          path: automation-checkout
 
       - name: Copy existing previews
         if: github.event_name == 'push'
         run: |
           mv /tmp/docs /tmp/gh-pages
-          mv _preview /tmp/gh-pages/_preview
+          mv gh-pages/_preview /tmp/gh-pages/_preview
 
       - name: Replace preview of current PR
         if: github.event_name == 'pull_request'
@@ -838,8 +839,8 @@ jobs:
         id: preview_diff
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PYTHONPATH: /tmp/automation-checkout/automations/python
-        working-directory: /tmp/automation-checkout/automations/python/workflows
+          PYTHONPATH: ${{ github.workspace }}/automation-checkout/automations/python
+        working-directory: ${{ github.workspace }}/automation-checkout/automations/python/workflows
         run: python get_folder_differences.py
 
       - name: Deploy
