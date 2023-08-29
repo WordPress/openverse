@@ -13,31 +13,31 @@
     >
       <template #trigger="triggerA11yProps">
         <VButton
-            id="external-sources-button"
-            ref="triggerRef"
-            :pressed="triggerA11yProps['aria-expanded']"
-            aria-haspopup="dialog"
-            :aria-controls="'external-sources-modal'"
-            variant="bordered-gray"
-            size="disabled"
-            class="label-bold lg:description-bold h-16 w-full lg:h-18"
+          id="external-sources-button"
+          ref="triggerRef"
+          :pressed="triggerA11yProps['aria-expanded']"
+          aria-haspopup="dialog"
+          :aria-controls="'external-sources-modal'"
+          variant="bordered-gray"
+          size="disabled"
+          class="label-bold lg:description-bold h-16 w-full lg:h-18"
         >
           <i18n
-              v-if="isMd"
-              path="externalSources.form.supportedTitle"
-              tag="p"
-              class="description-regular"
+            v-if="isMd"
+            path="externalSources.form.supportedTitle"
+            tag="p"
+            class="description-regular"
           />
           <i18n
-              v-else
-              path="externalSources.form.supportedTitleSm"
-              tag="p"
-              class="description-regular"
+            v-else
+            path="externalSources.form.supportedTitleSm"
+            tag="p"
+            class="description-regular"
           />
           <VIcon
-              class="text-dark-charcoal-40"
-              :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
-              name="caret-down"
+            class="text-dark-charcoal-40"
+            :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
+            name="caret-down"
           />
         </VButton>
       </template>
