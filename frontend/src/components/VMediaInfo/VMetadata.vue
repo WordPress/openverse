@@ -1,49 +1,58 @@
 <template>
-  <dl class="metadata">
-    <div
-      v-for="datum in metadata"
-      :key="`${datum.label}`"
-      class="grid grid-cols-[auto,1fr] gap-x-4 text-sm sm:flex sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
-    >
-      <dt class="sm:w-max">{{ $t(datum.label) }}</dt>
-      <dd class="font-semibold">
-        <VLink
-          v-if="datum.url"
-          :href="datum.url"
-          class="!flex !w-auto text-pink"
-          show-external-icon
-          @click="sendVisitSourceLinkEvent(datum.source)"
-          >{{ datum.value }}</VLink
-        >
-        <span v-else class="w-auto sm:flex sm:w-max">{{ datum.value }}</span>
-      </dd>
+  <dl v-if="isSm" class="metadata grid gap-10" :style="columnCount">
+    <div v-for="datum in metadata" :key="`${datum.label}`">
+      <dt class="label-regular mb-2">{{ $t(datum.label) }}</dt>
+      <VMetadataValue
+        :datum="datum"
+        @click="sendVisitSourceLinkEvent(datum.source)"
+      />
     </div>
+  </dl>
+  <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-6">
+    <template v-for="datum in metadata">
+      <dt :key="`${datum.label}`" class="label-regular">
+        {{ $t(datum.label) }}
+      </dt>
+      <VMetadataValue
+        :key="`${datum.label}-value`"
+        :datum="datum"
+        @click="sendVisitSourceLinkEvent(datum.source)"
+      />
+    </template>
   </dl>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 import { useRoute } from "@nuxtjs/composition-api"
 
-import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
+import type { Metadata } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
+import { useUiStore } from "~/stores/ui"
 
-import VLink from "~/components/VLink.vue"
+import VMetadataValue from "~/components/VMediaInfo/VMetadataValue.vue"
 
 export default defineComponent({
   name: "VMetadata",
-  components: { VLink },
+  components: { VMetadataValue },
   props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
     metadata: {
       type: Array as PropType<Metadata[]>,
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const route = useRoute()
+    const uiStore = useUiStore()
+
+    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+
+    const columnCount = computed(() => {
+      // Audio page has a thumbnail, so it can fit fewer columns.
+      const maxColumnCount = route.value.name?.includes("audio-id") ? 4 : 5
+      return {
+        "--column-count": Math.min(maxColumnCount, props.metadata.length),
+      }
+    })
 
     const { sendCustomEvent } = useAnalytics()
     const sendVisitSourceLinkEvent = (source?: string) => {
@@ -56,20 +65,20 @@ export default defineComponent({
 
     return {
       sendVisitSourceLinkEvent,
+      isSm,
+      columnCount,
     }
   },
 })
 </script>
 
 <style scoped>
-.metadata {
-  @apply grid;
-}
-
 @screen sm {
   .metadata {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 160px));
-    @apply gap-x-10;
+    grid-template-columns: repeat(
+      var(--column-count, auto-fit),
+      minmax(0, 10rem)
+    );
   }
 }
 </style>
