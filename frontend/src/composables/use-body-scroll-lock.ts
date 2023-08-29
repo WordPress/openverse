@@ -34,6 +34,8 @@ export function useBodyScrollLock({
     scrollY = window.scrollY
     document.body.style.position = "fixed"
     document.body.style.top = `-${scrollY}px`
+    document.body.style.right = "0"
+    document.body.style.left = "0"
   }
 
   const unlock = () => {
@@ -45,6 +47,8 @@ export function useBodyScrollLock({
     const document = getDocument(nodeRef.value)
     document.body.style.position = ""
     document.body.style.top = ""
+    document.body.style.right = ""
+    document.body.style.left = ""
     if (scrollY) {
       window.scrollTo(0, scrollY)
       scrollY = null

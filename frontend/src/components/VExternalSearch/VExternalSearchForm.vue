@@ -2,7 +2,7 @@
   <section
     :key="externalSourcesType"
     ref="sectionRef"
-    class="external-sources flex flex-row place-items-center justify-center py-4"
+    class="external-sources flex flex-row place-items-center justify-center pb-6 pt-4 lg:pb-10"
     data-testid="external-sources-form"
   >
     <VModal
@@ -18,7 +18,7 @@
           ref="triggerRef"
           :pressed="triggerA11yProps['aria-expanded']"
           aria-haspopup="dialog"
-          :aria-controls="'external-sources-modal'"
+          aria-controls="external-sources-modal"
           variant="bordered-gray"
           size="disabled"
           class="label-bold lg:description-bold h-16 w-full gap-x-2 lg:h-18"
@@ -27,14 +27,8 @@
             v-if="isMd"
             path="externalSources.form.supportedTitle"
             tag="p"
-            class="description-regular"
           />
-          <i18n
-            v-else
-            path="externalSources.form.supportedTitleSm"
-            tag="p"
-            class="description-regular"
-          />
+          <i18n v-else path="externalSources.form.supportedTitleSm" tag="p" />
           <VIcon
             :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
             name="caret-down"

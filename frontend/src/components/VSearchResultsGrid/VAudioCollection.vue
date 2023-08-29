@@ -21,7 +21,7 @@
       :is-related="isRelated"
       :results="results"
     />
-    <footer v-if="!isRelated">
+    <footer v-if="!isRelated" class="mt-4">
       <VLoadMore />
     </footer>
   </section>
