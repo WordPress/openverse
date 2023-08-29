@@ -230,7 +230,11 @@ deploy:
 
 alias b := build
 alias d := down
-alias l := logs
+alias l := lint
+
+alias L := logs
+alias P := precommit
+alias I := install
 
 # alias for `just api/up`
 a:
