@@ -154,15 +154,11 @@
   "audioDetails": {
     "genreLabel": "النوع",
     "relatedAudios": "الصوت ذو الصلة",
-    "information": "معلومات صوتية",
     "weblink": "احصل على هذا الصوت",
     "table": {
       "album": "الألبوم",
-      "category": "يكتب",
       "sampleRate": "معدل العينة",
       "filetype": "شكل",
-      "provider": "مزود",
-      "source": "مصدر",
       "genre": "النوع"
     }
   },
@@ -174,19 +170,20 @@
       "creatorUrl": "المؤلف {creator}"
     },
     "information": {
-      "title": "معلومات الصورة",
-      "type": "يكتب",
-      "provider": "مزود",
       "dimensions": "أبعاد",
-      "source": "مصدر",
       "pixels": "بكسل",
-      "unknown": "مجهول"
+      "sizeInPixels": "{width} × {height} بكسل"
     }
   },
   "singleResult": {
     "back": "رجوع إلى نتائج البحث"
   },
   "mediaDetails": {
+    "information": {
+      "type": "يكتب",
+      "unknown": "مجهول",
+      "category": "فئة"
+    },
     "providerLabel": "مزود",
     "sourceLabel": "مصدر",
     "loading": "جار التحميل...",
