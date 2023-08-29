@@ -64,8 +64,9 @@ export interface SearchState {
  * `q` parameter is always included as the first query parameter.
  * Only the filters that are relevant for the search type and have a value are included.
  *
- * Some parameters are excluded from the query, depending on the mode:
- * - `includeSensitiveResults` is excluded in frontend mode, because it is set in the cookie.
+ * Some parameters are included in the query depending on the mode:
+ * - `INCLUDE_SENSITIVE_QUERY_PARAM` is added to the API search query if the setting is `on`
+ * in the featureFlagStore.
  */
 function computeQueryParams(
   searchType: SearchType,
@@ -92,12 +93,10 @@ function computeQueryParams(
       search_query[api_param_name] = query[api_param_name]
     }
   }
+  console.log("adding the fetch sensitive flag if needed")
 
-  // `includeSensitiveResults` parameter is used in the API params, but not shown on the frontend.
-  if (
-    mode === "API" &&
-    query[INCLUDE_SENSITIVE_QUERY_PARAM] === "includeSensitiveResults"
-  ) {
+  // `INCLUDE_SENSITIVE_QUERY_PARAM` is used in the API params, but not shown on the frontend.
+  if (mode === "API" && useFeatureFlagStore().isOn("fetch_sensitive")) {
     search_query[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
   }
 

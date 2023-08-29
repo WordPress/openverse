@@ -103,9 +103,11 @@ export const decodeMediaData = <T extends Media>(
 ): T => {
   // Fake ~50% of results as mature.
   const featureFlagStore = useFeatureFlagStore()
-  const sensitivity = featureFlagStore.isOn("fake_sensitive")
-    ? getFakeSensitivities(media.id)
-    : media[SENSITIVITY_RESPONSE_PARAM] ?? []
+  const sensitivity =
+    featureFlagStore.isOn("fake_sensitive") &&
+    featureFlagStore.isOn("fetch_sensitive")
+      ? getFakeSensitivities(media.id)
+      : media[SENSITIVITY_RESPONSE_PARAM] ?? []
   const isSensitive = sensitivity.length > 0
 
   return {

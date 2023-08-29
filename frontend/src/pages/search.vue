@@ -56,6 +56,7 @@ import {
 } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { NO_RESULT } from "~/constants/errors"
@@ -88,6 +89,7 @@ export default defineComponent({
   setup() {
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
+    const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
@@ -194,10 +196,7 @@ export default defineComponent({
     )
 
     const shouldFetchSensitiveResults = computed(() => {
-      return searchStore.isFilterChecked(
-        "includeSensitiveResults",
-        "includeSensitiveResults"
-      )
+      return featureFlagStore.isOn("fetch_sensitive")
     })
     watch(shouldFetchSensitiveResults, async () => {
       await fetchMedia()

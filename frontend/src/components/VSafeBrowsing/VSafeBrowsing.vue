@@ -48,8 +48,6 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
 import { ON, OFF } from "~/constants/feature-flag"
 
-import { useSearchStore } from "~/stores/search"
-
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VLink from "~/components/VLink.vue"
 
@@ -67,22 +65,12 @@ export default defineComponent({
     const sensitivityPath = computed(() => app.localePath("/about")) // TODO: Issue#2550
 
     const featureFlagStore = useFeatureFlagStore()
-    const searchStore = useSearchStore()
-    let fetchSensitive = computed(
-      () =>
-        featureFlagStore.isOn("fetch_sensitive") &&
-        searchStore.isFilterChecked(
-          "includeSensitiveResults",
-          "includeSensitiveResults"
-        )
+
+    let fetchSensitive = computed(() =>
+      featureFlagStore.isOn("fetch_sensitive")
     )
     let setFetchSensitive = ({ checked }: { checked: boolean }) => {
       featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
-      searchStore.setFilter({
-        filterType: "includeSensitiveResults",
-        code: "includeSensitiveResults",
-        value: checked,
-      })
 
       if (!checked) {
         // If sensitive content is not fetched, there is nothing to blur/unblur.
