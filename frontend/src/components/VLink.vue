@@ -18,17 +18,17 @@
     :href="href"
     v-bind="linkProps"
     :aria-disabled="!href"
-    :class="{ 'inline-flex w-max items-center': showExternalIcon }"
+    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
     @click="handleExternalClick"
     v-on="$listeners"
-    ><span>
-      <slot /><VIcon
-        v-if="showExternalIcon && !isInternal"
-        name="external-link"
-        class="ms-2 inline-block"
-        :size="externalIconSize"
-        rtl-flip
-    /></span>
+  >
+    <slot /><VIcon
+      v-if="showExternalIcon && !isInternal"
+      name="external-link"
+      class="inline-block"
+      :size="externalIconSize"
+      rtl-flip
+    />
   </a>
 </template>
 
