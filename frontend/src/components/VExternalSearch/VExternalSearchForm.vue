@@ -9,6 +9,7 @@
       variant="centered"
       :hide-on-click-outside="true"
       labelled-by="external-sources-button"
+      class="w-full"
       @open="handleModalOpen"
     >
       <template #trigger="triggerA11yProps">
@@ -20,7 +21,7 @@
           :aria-controls="'external-sources-modal'"
           variant="bordered-gray"
           size="disabled"
-          class="label-bold lg:description-bold h-16 w-full lg:h-18"
+          class="label-bold lg:description-bold h-16 w-full gap-x-2 lg:h-18"
         >
           <i18n
             v-if="isMd"
@@ -35,7 +36,6 @@
             class="description-regular"
           />
           <VIcon
-            class="text-dark-charcoal-40"
             :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
             name="caret-down"
           />
