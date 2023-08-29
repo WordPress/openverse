@@ -18,6 +18,9 @@
       </header>
       <NuxtChild
         :key="$route.path"
+        :results="
+          isSupportedMediaType(searchType) ? resultItems[searchType] : null
+        "
         :fetch-state="fetchState"
         :search-term="query.q"
         :supported="supported"
