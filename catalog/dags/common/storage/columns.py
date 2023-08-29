@@ -760,3 +760,10 @@ STANDARDIZED_POPULARITY = CalculatedColumn(
     required=False,
     sql_args=[PROVIDER.db_name, META_DATA.db_name],
 )
+
+AUDIO_SET_FOREIGN_IDENTIFIER = StringColumn(
+    name="audio_set_foreign_identifier",
+    required=False,
+    size=1000,
+    truncate=False,
+)

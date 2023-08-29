@@ -202,24 +202,14 @@ airflow dags trigger --conf
 ### Data Refresh DAG Factory
 
 This file generates our data refresh DAGs using a factory function. For the
-given media type these DAGs will first refresh the popularity data, then
-initiate a data refresh on the data refresh server and await the success or
-failure of that task.
+given media type these DAGs will initiate a data refresh on the ingestion server
+and await the success or failure of that task.
 
-Popularity data for each media type is collated in a materialized view. Before
-initiating a data refresh, the DAG will first refresh the view in order to
-update popularity data for records that have been ingested since the last
-refresh. On the first run of the month, the DAG will also refresh the underlying
-tables, including the percentile values and any new popularity metrics. The DAG
-can also be run with the `force_refresh_metrics` option to run this refresh
-after the first of the month.
-
-Once this step is complete, the data refresh can be initiated. A data refresh
-occurs on the Ingestion server in the openverse project. This is a task which
-imports data from the upstream Catalog database into the API, copies contents to
-a new Elasticsearch index, and finally makes the index "live". This process is
-necessary to make new content added to the Catalog by our provider DAGs
-available to the API. You can read more in the
+A data refresh occurs on the Ingestion server in the Openverse project. This is
+a task which imports data from the upstream Catalog database into the API,
+copies contents to a new Elasticsearch index, and finally makes the index
+"live". This process is necessary to make new content added to the Catalog by
+our provider DAGs available to the API. You can read more in the
 [README](https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md)
 Importantly, the data refresh TaskGroup is also configured to handle concurrency
 requirements of the Ingestion server. Finally, once the origin indexes have been
@@ -328,7 +318,7 @@ which caused DAG failures during the `update_batches` step.
 Check for DAGs that have silenced Slack alerts or skipped errors which may need
 to be turned back on.
 
-When a DAG has known failures, it can be ommitted from Slack error reporting by
+When a DAG has known failures, it can be omitted from Slack error reporting by
 adding an entry to the `SILENCED_SLACK_NOTIFICATIONS` Airflow variable.
 Similarly, errors that occur during the `pull_data` step may be configured to
 skip and allow ingestion to continue, using the `SKIPPED_INGESTION_ERRORS`
@@ -341,8 +331,8 @@ The `check_silenced_dags` DAG iterates over the entries in the
 verifies that the associated GitHub issues are still open. If an issue has been
 closed, it is assumed that the entry should be removed, and an alert is sent to
 prompt manual update of the configuration. This prevents developers from
-forgetting to reenable Slack reporting or turnoff error skipping after the issue
-has been resolved.
+forgetting to re-enable Slack reporting or turnoff error skipping after the
+issue has been resolved.
 
 The DAG runs weekly.
 
@@ -535,24 +525,14 @@ This script can be run either to ingest the full dataset or as a dated DAG.
 ### Data Refresh DAG Factory
 
 This file generates our data refresh DAGs using a factory function. For the
-given media type these DAGs will first refresh the popularity data, then
-initiate a data refresh on the data refresh server and await the success or
-failure of that task.
+given media type these DAGs will initiate a data refresh on the ingestion server
+and await the success or failure of that task.
 
-Popularity data for each media type is collated in a materialized view. Before
-initiating a data refresh, the DAG will first refresh the view in order to
-update popularity data for records that have been ingested since the last
-refresh. On the first run of the month, the DAG will also refresh the underlying
-tables, including the percentile values and any new popularity metrics. The DAG
-can also be run with the `force_refresh_metrics` option to run this refresh
-after the first of the month.
-
-Once this step is complete, the data refresh can be initiated. A data refresh
-occurs on the Ingestion server in the openverse project. This is a task which
-imports data from the upstream Catalog database into the API, copies contents to
-a new Elasticsearch index, and finally makes the index "live". This process is
-necessary to make new content added to the Catalog by our provider DAGs
-available to the API. You can read more in the
+A data refresh occurs on the Ingestion server in the Openverse project. This is
+a task which imports data from the upstream Catalog database into the API,
+copies contents to a new Elasticsearch index, and finally makes the index
+"live". This process is necessary to make new content added to the Catalog by
+our provider DAGs available to the API. You can read more in the
 [README](https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md)
 Importantly, the data refresh TaskGroup is also configured to handle concurrency
 requirements of the Ingestion server. Finally, once the origin indexes have been

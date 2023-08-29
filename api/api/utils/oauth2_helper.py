@@ -30,7 +30,7 @@ def get_token_info(token: str):
         application = models.ThrottledApplication.objects.get(accesstoken=token)
     except models.ThrottledApplication.DoesNotExist:
         # Critical because it indicates a data integrity problem.
-        # In practice should never occur so long as the preceeding
+        # In practice should never occur so long as the preceding
         # operation to retrieve the access token was successful.
         logger.critical("Failed to find application associated with access token.")
         return _no_result

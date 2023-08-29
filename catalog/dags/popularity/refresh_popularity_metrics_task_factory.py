@@ -20,8 +20,7 @@ from data_refresh.data_refresh_types import DataRefresh
 
 GROUP_ID = "refresh_popularity_metrics_and_constants"
 UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID = "update_media_popularity_metrics_table"
-DROP_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "drop_media_popularity_constants_view"
-CREATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "create_media_popularity_constants_view"
+UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "update_media_popularity_constants_view"
 
 
 def create_refresh_popularity_metrics_task_group(
@@ -68,33 +67,22 @@ def create_refresh_popularity_metrics_task_group(
             },
         )
 
-        drop_constants = PythonOperator(
-            task_id=DROP_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
-            python_callable=sql.drop_media_popularity_constants,
-            op_kwargs={
-                "postgres_conn_id": POSTGRES_CONN_ID,
-                "media_type": media_type,
-            },
-            execution_timeout=execution_timeout,
-            doc="Drops the popularity constants view.",
-        )
-
-        create_constants = PythonOperator(
-            task_id=CREATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
-            python_callable=sql.create_media_popularity_constants_view,
+        update_constants = PythonOperator(
+            task_id=UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
+            python_callable=sql.update_media_popularity_constants,
             op_kwargs={
                 "postgres_conn_id": POSTGRES_CONN_ID,
                 "media_type": media_type,
             },
             execution_timeout=execution_timeout,
             doc=(
-                "Recreates the popularity constants view. This completely "
+                "Updates the popularity constants view. This completely "
                 "recalculates the popularity constants for each provider."
             ),
         )
 
-        recreate_constants_status = PythonOperator(
-            task_id=f"report_{CREATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID}_status",
+        update_constants_status = PythonOperator(
+            task_id=f"report_{UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID}_status",
             python_callable=reporting.report_status,
             op_kwargs={
                 "media_type": media_type,
@@ -104,7 +92,7 @@ def create_refresh_popularity_metrics_task_group(
             },
         )
 
-        update_metrics >> [drop_constants, update_metrics_status]
-        drop_constants >> create_constants >> recreate_constants_status
+        update_metrics >> [update_constants, update_metrics_status]
+        update_constants >> update_constants_status
 
     return refresh_all_popularity_data

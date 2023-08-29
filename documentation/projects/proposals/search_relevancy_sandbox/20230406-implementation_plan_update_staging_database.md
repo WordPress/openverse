@@ -227,7 +227,7 @@ namely:
 3. Foreign Data Wrapper to insert all records from production media tables into
    staging
 
-We opted to defer the persuit of this alternate approach for the time being for
+We opted to defer the pursuit of this alternate approach for the time being for
 the following reasons:
 
 - The FDW/replication approach(es) described may have numerous pitfalls,

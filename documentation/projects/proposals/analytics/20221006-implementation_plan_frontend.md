@@ -69,7 +69,7 @@ analytics system.
 ## The technical details
 
 We will create a system for collecting events on the frontend. Each event will
-have a unique name, collect some default data about the enviroment (timestamp,
+have a unique name, collect some default data about the environment (timestamp,
 referer, and so on) and can have an optional data payload containing string and
 numerical values. I'd like to limit the payload shape to strings and numbers to
 keep it JSON serializable and simple. Allowing for complex nested objects might
@@ -486,7 +486,7 @@ async function sendEvent<T extends AnalyticsEventTypes>(
   }
   /**
    * Actually send the event here, with some additional values.
-   * I would have prefered to use `navigator.sendBeacon` here
+   * I would have preferred to use `navigator.sendBeacon` here
    * but it is blocked by most ad blockers.
    *
    * We might not want to call our api route "analytics" to
@@ -553,8 +553,8 @@ data. This is about as robust as an open-source user behavior tracking platform
 can be.
 
 [Plausible](https://plausible.io/) is a simple, lightweight, and self-hostable
-Google Analytics alternative. Our implementation here would be easily
-compatiable with Plausible's self-hosted or cloud offerings.
+Google Analytics alternative. Our implementation here would be easily compatible
+with Plausible's self-hosted or cloud offerings.
 
 [Umami](https://umami.is/) is quite similar to Plausible. Their codebase
 contains

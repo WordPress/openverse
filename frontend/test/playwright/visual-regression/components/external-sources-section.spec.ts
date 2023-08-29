@@ -21,7 +21,10 @@ for (const dir of languageDirections) {
         await goToSearchTerm(page, "birds", { searchType: mediaType, dir })
 
         const externalSourcesButton = page.getByRole("button", {
-          name: t("externalSources.button", dir),
+          name: new RegExp(
+            t("externalSources.form.supportedTitleSm", dir),
+            "i"
+          ),
         })
 
         await page

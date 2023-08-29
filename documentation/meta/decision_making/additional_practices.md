@@ -112,7 +112,7 @@ can follow two processes:
    discussions and halting other, smaller, often technical discussions.
 2. Split the group into groups of three or four people who can participate in
    different parts of the discussion. This is useful if there are multiple
-   time-sensitive discussions and could lead to synchronous "lightening process"
+   time-sensitive discussions and could lead to synchronous "lightning process"
    meetings to make faster decisions and reduce the ongoing discussion burden on
    team members. Even in this case, limit to 1 ongoing team-wide process
    discussion per group of contributors. This is less useful if everyone on the
@@ -155,4 +155,4 @@ can be broken into two separate sections to allow time for revision.
 
 Even in these cases, however, the text of the proposal should still be written
 in a GitHub PR or discussion and available for all participants to read _before_
-the lightening process.
+the lightning process.

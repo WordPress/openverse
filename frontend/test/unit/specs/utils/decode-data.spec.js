@@ -37,7 +37,7 @@ describe("decodeData", () => {
     expect(decodeData(data)).toBe("musée")
   })
 
-  it("shouldnt throw exception", () => {
+  it("shouldn't throw exception", () => {
     const data = "Classic Twill - SlipcoverFabrics.com 100% Cotton"
 
     expect(decodeData(data)).toBe(data)

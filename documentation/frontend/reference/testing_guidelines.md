@@ -16,7 +16,7 @@ deployed to production) you can find the staging deployment here:
 
 https://staging.openverse.org
 
-Staging is redeployed everytime we merge to the `main` branch, so if you're
+Staging is redeployed every time we merge to the `main` branch, so if you're
 looking to test the latest version of the app without going through the local
 set up, that's the easiest way to go.
 

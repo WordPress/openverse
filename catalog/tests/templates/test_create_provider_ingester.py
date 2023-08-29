@@ -49,7 +49,7 @@ def test_sanitize_provider(provider, expected_result):
 
 
 def test_files_created(tmp_path):
-    # Make temporary output directorys for testing
+    # Make temporary output directories for testing
     dags_path = tmp_path / "catalog" / "dags" / "providers"
     (dags_path / "provider_api_scripts").mkdir(parents=True)
     test_path = tmp_path / "catalog" / "tests"

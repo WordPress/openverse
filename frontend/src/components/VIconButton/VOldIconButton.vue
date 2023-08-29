@@ -3,7 +3,7 @@
     v-bind="buttonProps"
     :aria-label="label"
     size="disabled"
-    class="icon-button flex flex-shrink-0 flex-grow-0 items-center justify-center"
+    class="icon-button flex flex-none items-center justify-center"
     :class="[buttonSizeClasses, { 'border-1.5': !borderless }]"
     :type="type"
     v-on="$listeners"

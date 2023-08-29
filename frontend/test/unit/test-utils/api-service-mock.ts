@@ -11,7 +11,7 @@ const createApiService = apiService.createApiService as jest.Mock<
 >
 
 /**
- * Creates an API Serivce that get's reused throughout the lifetime of
+ * Creates an API Service that gets reused throughout the lifetime of
  * the current context in which it is called.
  *
  * @example
@@ -40,7 +40,7 @@ const createApiService = apiService.createApiService as jest.Mock<
  * With the particual way this mock creation function works,
  * even if `createApiService` is called several times during
  * the lifecycle of a particular test context, the same `apiService`
- * instace will be reused for each call. This is done to preserve
+ * instance will be reused for each call. This is done to preserve
  * lists of responses applied to the mock adapter in the `applyMocks`
  * callback. Otherwise, if `createApiService` is called more than
  * once per test, then each time it is called will cause a new

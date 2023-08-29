@@ -33,7 +33,7 @@ describe("prepareSearchQueryParams", () => {
     expect(result.tags).toBe("foo")
   })
 
-  it("doesnt remove q key when searchBy value is empty", () => {
+  it("does not remove q key when searchBy value is empty", () => {
     const params = {
       q: "foo",
       searchBy: [],

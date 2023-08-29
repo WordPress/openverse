@@ -154,7 +154,7 @@ provider. Instead, several requests need to be made in sequence until a
 complex behavior.
 
 ```python
-# Psuedo code serves as an example
+# Pseudo code serves as an example
 def get_response_json(
     self, query_params: dict, endpoint: str | None = None, **kwargs
 ):

@@ -68,7 +68,7 @@ class MetMuseumDataIngester(ProviderDataIngester):
     def get_batch_data(self, response_json):
         if response_json:
             self.object_ids_retrieved = response_json["total"]
-            # A single objet d'art may have more than one image (and therefore more
+            # A single work may have more than one image (and therefore more
             # than one record) associated with it, but there are generally on the order
             # of 10 or fewer records per object.
             logger.info(f"Total objects found {self.object_ids_retrieved}")

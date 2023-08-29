@@ -20,18 +20,18 @@ SET row_security = off;
 --
 
 CREATE VIEW public.audioset_view AS
- SELECT DISTINCT ((audio_view.audio_set ->> 'foreign_identifier'::text))::character varying(1000) AS foreign_identifier,
-    ((audio_view.audio_set ->> 'title'::text))::character varying(2000) AS title,
-    ((audio_view.audio_set ->> 'foreign_landing_url'::text))::character varying(1000) AS foreign_landing_url,
-    ((audio_view.audio_set ->> 'creator'::text))::character varying(2000) AS creator,
-    ((audio_view.audio_set ->> 'creator_url'::text))::character varying(2000) AS creator_url,
-    ((audio_view.audio_set ->> 'url'::text))::character varying(1000) AS url,
-    ((audio_view.audio_set ->> 'filesize'::text))::integer AS filesize,
-    ((audio_view.audio_set ->> 'filetype'::text))::character varying(80) AS filetype,
-    ((audio_view.audio_set ->> 'thumbnail'::text))::character varying(1000) AS thumbnail,
-    audio_view.provider
-   FROM public.audio_view
-  WHERE (audio_view.audio_set IS NOT NULL);
+ SELECT DISTINCT ((audio.audio_set ->> 'foreign_identifier'::text))::character varying(1000) AS foreign_identifier,
+    ((audio.audio_set ->> 'title'::text))::character varying(2000) AS title,
+    ((audio.audio_set ->> 'foreign_landing_url'::text))::character varying(1000) AS foreign_landing_url,
+    ((audio.audio_set ->> 'creator'::text))::character varying(2000) AS creator,
+    ((audio.audio_set ->> 'creator_url'::text))::character varying(2000) AS creator_url,
+    ((audio.audio_set ->> 'url'::text))::character varying(1000) AS url,
+    ((audio.audio_set ->> 'filesize'::text))::integer AS filesize,
+    ((audio.audio_set ->> 'filetype'::text))::character varying(80) AS filetype,
+    ((audio.audio_set ->> 'thumbnail'::text))::character varying(1000) AS thumbnail,
+    audio.provider
+   FROM public.audio
+  WHERE (audio.audio_set IS NOT NULL);
 
 
 ALTER TABLE public.audioset_view OWNER TO deploy;

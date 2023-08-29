@@ -61,7 +61,7 @@ class AudioStore(MediaStore):
         sample_rate: int | None = None,
         category: str | None = None,
         genres: list[str] | None = None,
-        set_foreign_id: str | None = None,
+        audio_set_foreign_identifier: str | None = None,
         audio_set: str | None = None,
         set_position: int | None = None,
         set_thumbnail: str | None = None,
@@ -120,7 +120,7 @@ class AudioStore(MediaStore):
         category:            Category such as 'music', 'sound', 'audio_book'
                              or 'podcast'.
         genres:              List of genres
-        set_foreign_id:      Unique identifier for the audio set on the
+        audio_set_foreign_identifier: Unique identifier for the audio set on the
                              source site.
         audio_set:           The name of the set (album, pack) the audio
                              is part of
@@ -149,7 +149,7 @@ class AudioStore(MediaStore):
                 "thumbnail": set_thumbnail,
                 "creator": creator,
                 "creator_url": creator_url,
-                "foreign_identifier": set_foreign_id,
+                "foreign_identifier": audio_set_foreign_identifier,
             }
 
         audio_data = {
@@ -176,6 +176,7 @@ class AudioStore(MediaStore):
             "alt_files": alt_files,
             "source": source,
             "ingestion_type": ingestion_type,
+            "audio_set_foreign_identifier": audio_set_foreign_identifier,
         }
 
         audio = self._get_audio(**audio_data)

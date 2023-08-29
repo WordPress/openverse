@@ -65,7 +65,7 @@ metric from over the last 5 minutes, or any other span of time). It includes
 anomaly detection as well as integration with many tools you can use for
 alerting like Slack, PagerDuty, or email. There are
 [official and unofficial client libraries](https://prometheus.io/docs/instrumenting/clientlibs/)
-for all the langauges we currently use or could conceivably use in the future
+for all the languages we currently use or could conceivably use in the future
 including Python, Node.js, Go, PHP, and JVM languages.
 
 Grafana is a data visualization tool that supports building complex dashboards.
@@ -156,8 +156,8 @@ up-front that we can anticipate wanting monitors for.
 - Sustained periods of time (60 seconds?) where
   `count_req_total == count_5xx_total` or
   `count_req_total >= (count_5xx_total / threshold)`
-  - Note, queries are rarely that intutive to write and have at least two moving
-    parts that dictate how the alarm works, the query and then the alarm
+  - Note, queries are rarely that intuitive to write and have at least two
+    moving parts that dictate how the alarm works, the query and then the alarm
     condition.
 - Each view has a version of the above relative to request frequency. Views with
   lower overall requests per second will require longer windows of time before
@@ -375,7 +375,7 @@ stack between local and production. This will mostly involve passing environment
 variables to Grafana and Prometheus to configure them for production.
 
 Aside from service configuration, however, there is also the issue of how to
-store our Prometheus query, alerting, and other configuations locally. Likewise
+store our Prometheus query, alerting, and other configurations locally. Likewise
 we need to address that for Grafana dashboards. For example, we don't want to
 have to manually copy the configurations for our anomaly monitors from
 production. Even if we develop these monitors in a live staging environment
@@ -515,7 +515,7 @@ contents of this PR.
 - Use a new, small RDS instance for Grafana's Postgres DB.
 - Rely on Prometheus primarily as a metrics aggregator and time series database.
   Do not use it for rule and alarm configuration.
-- Rely on Grafana for visbility and alarming upstream from Prometheus.
+- Rely on Grafana for visibility and alarming upstream from Prometheus.
 - Create separate alarm streams per service in Mailman and aggregate all alarms
   into a Slack channel for extra visibility and redundancy.
 - Use `django-prometheus` library to add the Prometheus `/metrics` endpoint to
@@ -543,7 +543,7 @@ contents of this PR.
      new endpoint.
 1. Create the same `/metrics` endpoint for Nuxt using the
    [Node.js client library](https://github.com/siimon/prom-client)
-   - This will be more work as we'll have to write our own middlware for it.
+   - This will be more work as we'll have to write our own middleware for it.
    - There are some existing Nuxt Prometheus modules like
      [this one](https://github.com/franckaragao/nuxt-prometheus-module) but
      they're not maintained and far more basic than what we actually want to
@@ -636,7 +636,7 @@ know).
 
 Graphite is also older than Prometheus and while it works really well, there's a
 lot less current information about how to deploy and configure it. There's also
-almost no support for languages outside of the core langauges supported by the
+almost no support for languages outside of the core languages supported by the
 project including poor JavaScript support (which would make monitoring our Nuxt
 service more difficult).
 

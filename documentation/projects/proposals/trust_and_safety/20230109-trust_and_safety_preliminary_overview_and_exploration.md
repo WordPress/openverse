@@ -277,7 +277,7 @@ possible, both for visual and textual material.
       query hashes. Needed to be able to easily bust cached pages to exclude the
       result.
   - Query hashes should be reversible (as in, we can derive the query parameters
-    from the hash or we maintain a mapping of hash -> query paramters) so that
+    from the hash or we maintain a mapping of hash -> query parameters) so that
     we can bust caches for a query hash
   - The HTTP cache for relevant searches and single results (currently
     Cloudflare) are automatically updated when a result is removed

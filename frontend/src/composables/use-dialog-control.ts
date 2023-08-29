@@ -40,7 +40,7 @@ export function useDialogControl({
     if (shouldLockBodyScroll.value) {
       visible ? lock() : unlock()
     }
-    if (!internallyControlled) emit(visible ? "open" : "close")
+    emit(visible ? "open" : "close")
     onCleanup(() => {
       if (shouldLockBodyScroll.value) {
         unlock()

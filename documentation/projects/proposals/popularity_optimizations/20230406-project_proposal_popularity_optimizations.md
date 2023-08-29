@@ -34,7 +34,7 @@ following criteria:
 1. A full data refresh should reliably complete in less than one week, for each
    media type.
 2. During a data refresh, all updates made to existing records since the
-   previous refesh should propagate to the API DB and Elasticsearch.
+   previous refresh should propagate to the API DB and Elasticsearch.
 3. During a data refresh, all _new_ records ingested since the previous refresh
    should propagate to the API DB and Elasticsearch.
 4. Records for providers that support popularity metrics should have

@@ -450,6 +450,11 @@
     },
   },
   mediaDetails: {
+    information: {
+      type: "Type",
+      unknown: "Unknown",
+      category: "Category",
+    },
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
@@ -538,13 +543,9 @@
     creator: "by {name}",
     weblink: "Get this image",
     information: {
-      title: "Image information",
-      type: "Type",
-      provider: "Provider",
       dimensions: "Dimensions",
-      source: "Source",
       pixels: "pixels",
-      unknown: "Unknown",
+      sizeInPixels: "{width} × {height} pixels",
     },
     relatedImages: "Related images",
     aria: {
@@ -556,14 +557,10 @@
     relatedAudios: "Related audio",
     table: {
       album: "Album",
-      category: "Type",
       sampleRate: "Sample Rate",
       filetype: "Format",
-      provider: "Provider",
-      source: "Source",
       genre: "Genre",
     },
-    information: "Audio information",
     weblink: "Get this audio",
   },
   allResults: {
@@ -590,7 +587,8 @@
     },
     form: {
       unsupportedTitle: "{openverse} does not yet support built-in {type} search.",
-      supportedTitle: "Not finding what you're looking for? Try an external source:",
+      supportedTitle: "Not finding what you're looking for? Search in external sources",
+      supportedTitleSm: "Search in external sources",
       noResultsTitle: 'No {type} results for "{query}".',
       caption: "Click on a source below to directly search other collections of CC-licensed {type}.",
       types: {
@@ -770,6 +768,12 @@
       providerSuppliedSensitive: "The source of this work has marked it as sensitive.",
       sensitiveText: "{openverse} has detected potentially sensitive text.",
       userReportedSensitive: "{openverse} users have reported this work as sensitive.",
+    },
+  },
+  collection: {
+    link: {
+      source: "Open source site",
+      creator: "Open creator page",
     },
   },
 }

@@ -246,7 +246,7 @@ def test_extract_audio_data_handles_example_dict(audio_data, file_size_patch):
             "num_downloads": 164,
         },
         "raw_tags": ["eh", "disinterest", "low", "uh", "voice", "uncaring"],
-        "set_foreign_id": "foo",
+        "audio_set_foreign_identifier": "foo",
         "set_url": "https://freesound.org/apiv2/packs/23434/",
         "title": "Ehh disinterested.wav",
     }

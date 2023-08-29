@@ -1,13 +1,11 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "screen.getByText"] }] */
-
 import { screen } from "@testing-library/vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 import { render } from "~~/test/unit/test-utils/render"
 
-import VAudioDetails from "~/components/VAudioDetails/VAudioDetails.vue"
+import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 
-describe("VAudioDetails", () => {
+describe("VMediaDetails", () => {
   let options
   let props
 
@@ -23,17 +21,17 @@ describe("VAudioDetails", () => {
 
   beforeEach(() => {
     props = {
-      audio: getAudioObj(overrides),
+      media: getAudioObj(overrides),
     }
     options = {
       propsData: props,
-      stubs: ["VAudioThumbnail", "VContentReportPopover", "VLink", "VMediaTag"],
+      stubs: ["VAudioThumbnail", "VLink"],
     }
   })
 
   it("renders the album title", () => {
-    render(VAudioDetails, options)
-    screen.getByText(/Test Album/i)
+    render(VMediaDetails, options)
+
     const album = screen.getByText(overrides.audio_set.title)
     expect(album).toHaveAttribute(
       "href",
@@ -42,31 +40,31 @@ describe("VAudioDetails", () => {
   })
 
   it("hides the album title tag when it does not exists", () => {
-    options.propsData.audio.audio_set = null
-    render(VAudioDetails, options)
+    options.propsData.media.audio_set = null
+    render(VMediaDetails, options)
     expect(screen.queryByText("Album")).toBeNull()
   })
 
   it("displays the main filetype when no alternative files are available", () => {
-    render(VAudioDetails, options)
-    screen.getByText("MP32") // throws if not found
+    render(VMediaDetails, options)
+    expect(screen.queryByText("MP32")).toBeVisible()
   })
 
   it("displays multiple filetypes when they are available in alt_files", () => {
-    options.propsData.audio.alt_files = [
+    options.propsData.media.alt_files = [
       { filetype: "wav" },
       { filetype: "ogg" },
     ]
-    render(VAudioDetails, options)
-    screen.getByText("MP32, WAV, OGG") // throws if not found
+    render(VMediaDetails, options)
+    expect(screen.queryByText("MP32, WAV, OGG")).toBeVisible()
   })
 
   it("displays only distinct filetypes", () => {
-    options.propsData.audio.alt_files = [
+    options.propsData.media.alt_files = [
       { filetype: "ogg" },
       { filetype: "ogg" },
     ]
-    render(VAudioDetails, options)
-    screen.getByText("MP32, OGG") // throws if not found
+    render(VMediaDetails, options)
+    expect(screen.queryByText("MP32, OGG")).toBeVisible()
   })
 })

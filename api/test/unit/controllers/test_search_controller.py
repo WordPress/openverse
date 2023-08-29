@@ -125,7 +125,7 @@ def test_paginate_with_dead_link_mask_new_search(
     If we do not have a query mask to represent this, but we request page 2 of size 2,
     where should we start the query? We would want to start at index 2 (skipping the
     first page of 2 results), but in actuality we need to start at index 6 because
-    the first page of 2 confirmed live results actually encompases the range from
+    the first page of 2 confirmed live results actually encompasses the range from
     1 to 5, as that is the smallest window in which we can fulfill the requested
     _first_ page of results that we're skipping.
 
@@ -629,7 +629,7 @@ def test_no_post_process_results_recursion(
     # - We clear the redis cache between each test, meaning there is no query-based
     #   dead link mask. This forces `from` to 0 for each case.
     # - Recursion should only continue while results still exist that could fulfill
-    #   the requested page size. Once the available hits are exhaused, the function
+    #   the requested page size. Once the available hits are exhausted, the function
     #   should stop recursing. This is why exceeding  or matching the available
     #   hits is significant.
     (

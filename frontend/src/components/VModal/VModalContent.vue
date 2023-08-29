@@ -129,7 +129,7 @@ export default defineComponent({
   },
   setup(props, { emit, attrs }) {
     const propsRefs = toRefs(props)
-    const closeButton = ref<InstanceType<typeof VCloseButton> | null>(null)
+    const closeButton = ref<{ $el: HTMLElement } | null>(null)
     const initialFocusElement = computed(
       () => props.initialFocusElement || closeButton.value?.$el
     )
@@ -194,6 +194,9 @@ export default defineComponent({
 .modal-two-thirds {
   @apply mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white;
 }
+.modal-centered {
+  @apply m-6 rounded sm:m-0;
+}
 
 .modal-dark {
   @apply bg-black text-white;
@@ -203,10 +206,10 @@ export default defineComponent({
 }
 
 .modal-content-default {
-  @apply text-left align-bottom md:rounded-se-md md:rounded-ss-md;
+  @apply text-left align-bottom md:rounded-se-lg md:rounded-ss-lg;
 }
 .modal-content-centered {
-  @apply w-auto;
+  @apply w-auto rounded;
 }
 .modal-fit-content {
   @apply mt-auto w-full rounded-se-lg rounded-ss-lg bg-white;
@@ -215,10 +218,10 @@ export default defineComponent({
   @apply flex w-full flex-col justify-between px-6 pb-10;
 }
 .modal-content-two-thirds {
-  @apply overflow-y-hidden rounded-se-md rounded-ss-md;
+  @apply overflow-y-hidden rounded-se-lg rounded-ss-lg;
 }
 .modal-content-fit-content {
-  @apply rounded-se-md rounded-ss-md;
+  @apply rounded-se-lg rounded-ss-lg;
 }
 .modal-content-dark {
   @apply bg-black text-white;

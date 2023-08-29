@@ -122,3 +122,10 @@ export const isMediaDetail = <T extends SupportedMediaType>(
 ): media is DetailFromMediaType<T> => {
   return !!media && media.frontendMediaType === mediaType
 }
+
+export type Metadata = {
+  label: string
+  url?: string
+  value: string
+  source?: string
+}

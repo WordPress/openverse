@@ -91,7 +91,7 @@ def test_get_record_data():
             "release_date": "2005-04-12",
         },
         "raw_tags": ["instrumental", "speed_medium"],
-        "set_foreign_id": "119",
+        "audio_set_foreign_identifier": "119",
         "set_position": 6,
         "set_thumbnail": "https://usercontent.jamendo.com/?type=album&id=119&width=200",
         "set_url": "https://www.jamendo.com/album/119/opera-i",

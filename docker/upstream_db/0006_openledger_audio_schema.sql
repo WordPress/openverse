@@ -45,7 +45,8 @@ CREATE TABLE public.audio (
     watermarked boolean,
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL,
-    standardized_popularity double precision
+    standardized_popularity double precision,
+    audio_set_foreign_identifier character varying(1000)
 );
 
 

@@ -75,8 +75,22 @@ const mediaTitle = (
 }
 
 /**
- * For any given media, decode the media title, creator name and individual tag
- * names. Also populates the `frontendMediaType` field on the model.
+ * Removes the tags that are empty or undefined, and decodes the tag names.
+ */
+const parseTags = (tags: Tag[]) => {
+  return tags
+    .filter((tag) => Boolean(tag))
+    .map((tag) => ({ ...tag, name: decodeString(tag.name) }))
+}
+
+/**
+ * Prepare any given media for the frontend:
+ * - decode the media title, creator name and individual tag names to ensure
+ * that there are no incorrectly encoded strings.
+ * - populate the `frontendMediaType` field on the model.
+ * - populate the `sensitivity` and `isSensitive` field on the model.
+ * - clean up the title by removing the file extension if it matches the media
+ * filetype, and removing "FILE:" prefix for wikimedia items.
  *
  * @param media - the media object of which to decode attributes
  * @param mediaType - the type of the media
@@ -98,11 +112,7 @@ export const decodeMediaData = <T extends Media>(
     ...mediaTitle(media, mediaType),
     frontendMediaType: mediaType,
     creator: decodeString(media.creator),
-    // TODO: remove `?? []`
-    tags: (media.tags ?? ([] as Tag[])).map((tag) => ({
-      ...tag,
-      name: decodeString(tag.name),
-    })),
+    tags: media.tags ? parseTags(media.tags) : ([] as Tag[]),
     sensitivity,
     isSensitive,
   } as T

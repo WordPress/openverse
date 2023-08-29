@@ -357,7 +357,7 @@ There are no external blockers to this project.
 
 <!-- Explore or mention any changes to the API versioning scheme. -->
 
-No API verison changes should be necessary.
+No API version changes should be necessary.
 
 ## Accessibility
 

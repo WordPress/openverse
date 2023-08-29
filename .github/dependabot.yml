@@ -36,7 +36,7 @@ updates:
       - "🧱 stack: ingestion server"
       - dependencies
 
-  # Enable version updates for Python dev-libs in the calalog
+  # Enable version updates for Python dev-libs in the catalog
   #
   # `requirements-dev.txt` can be updated more frequently than
   # `requirements_prod.txt` since they are not pinned by the Airflow constraints

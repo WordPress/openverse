@@ -405,7 +405,7 @@ result_ids = set({r["_id"] for r in results})
 results_in_filtered_index = query_filtered_index(results_ids)
 ids_in_filtered_index = set({r["_id"] for r in results_in_filtered_index})
 
-# Use set arithmatic to derive the list of sensitive documents
+# Use set arithmetic to derive the list of sensitive documents
 sensitive_text_result_ids = result_ids - ids_in_filtered_index
 ```
 

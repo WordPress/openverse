@@ -34,9 +34,16 @@ for (const mediaType of supportedMediaTypes) {
         await openFirstResult(page, mediaType)
         await cleanRelatedImages(page)
 
-        await expectSnapshot(`${mediaType}-${dir}-from-search-results`, page, {
-          fullPage: true,
-        })
+        await expectSnapshot(
+          `${mediaType}-${dir}-from-search-results`,
+          page,
+          {
+            fullPage: true,
+          },
+          {
+            maxDiffPixelRatio: 0.01,
+          }
+        )
       })
     })
   }

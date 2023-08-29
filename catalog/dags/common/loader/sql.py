@@ -245,7 +245,7 @@ def _is_tsv_column_from_different_version(
     column: Column, media_type: str, tsv_version: str
 ) -> bool:
     """
-    Check that a column appears in the available columns for a TSV verison.
+    Check that a column appears in the available columns for a TSV version.
 
     Check that column is a column that exists in TSV files (unlike the db-only
     columns like IDENTIFIER or CREATED_ON, or calculated values like
