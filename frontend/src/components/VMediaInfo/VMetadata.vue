@@ -1,18 +1,16 @@
 <template>
-  <dl
-    class="flex flex-col gap-y-4 sm:flex-row sm:flex-wrap sm:gap-x-10 sm:gap-y-5 sm:after:flex-auto sm:after:content-['']"
-  >
+  <dl class="metadata">
     <div
       v-for="datum in metadata"
       :key="`${datum.label}`"
-      class="grid grid-cols-[30%,1fr] gap-x-4 text-sm sm:flex sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
+      class="grid grid-cols-[auto,1fr] gap-x-4 text-sm sm:flex sm:basis-0 sm:flex-col sm:gap-y-2 md:text-base"
     >
       <dt class="sm:w-max">{{ $t(datum.label) }}</dt>
-      <dd class="max-w-full overflow-hidden font-semibold">
+      <dd class="font-semibold">
         <VLink
           v-if="datum.url"
           :href="datum.url"
-          class="text-pink"
+          class="!flex !w-auto text-pink"
           show-external-icon
           @click="sendVisitSourceLinkEvent(datum.source)"
           >{{ datum.value }}</VLink
@@ -62,3 +60,16 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+.metadata {
+  @apply grid;
+}
+
+@screen sm {
+  .metadata {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 160px));
+    @apply gap-x-10;
+  }
+}
+</style>

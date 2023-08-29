@@ -18,22 +18,17 @@
     :href="href"
     v-bind="linkProps"
     :aria-disabled="!href"
-    :class="{
-      'inline-flex w-max items-center gap-x-2':
-        showExternalIcon && !externalLinkInline,
-      inline: showExternalIcon && externalLinkInline,
-    }"
+    :class="{ 'inline-flex w-max items-center': showExternalIcon }"
     @click="handleExternalClick"
     v-on="$listeners"
-  >
-    <slot /><VIcon
-      v-if="showExternalIcon && !isInternal"
-      name="external-link"
-      class="inline-block"
-      :class="{ 'ms-1': externalLinkInline }"
-      :size="externalIconSize"
-      rtl-flip
-    />
+    ><span>
+      <slot /><VIcon
+        v-if="showExternalIcon && !isInternal"
+        name="external-link"
+        class="ms-2 inline-block"
+        :size="externalIconSize"
+        rtl-flip
+    /></span>
   </a>
 </template>
 
@@ -97,10 +92,6 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-    externalLinkInline: {
-      type: Boolean,
-      default: false,
-    },
   },
   setup(props) {
     const { app } = useContext()
@@ -109,7 +100,6 @@ export default defineComponent({
       showExternalIcon: boolean
       externalIconSize: number
       sendExternalLinkClickEvent: boolean
-      externalLinkInline: boolean
     } {
       return typeof p.href === "string" && !["", "#"].includes(p.href)
     }

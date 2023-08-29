@@ -50,7 +50,7 @@ export const getMediaMetadata = (
   const sourceName = media.sourceName ?? media.providerName ?? media.provider
   metadata.push({
     label: "mediaDetails.sourceLabel",
-    slug: media.source ?? media.provider,
+    source: media.source ?? media.provider,
     url: sourceUrl,
     value: sourceName,
   })
