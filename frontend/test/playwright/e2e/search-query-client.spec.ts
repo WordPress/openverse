@@ -23,7 +23,7 @@ import { AUDIO, IMAGE } from "~/constants/media"
  * current media type are discarded.
  * 5. Can change the `q` parameter by typing into the search input and clicking on
  * the Search button.
- * 6. Can set `includeSensitiveResults` filter by toggling the UI.
+ * 6. Can fetch sensitive results by toggling the UI.
  * All of these tests test search page on the client
  */
 

@@ -37,7 +37,7 @@ import { storeToRefs } from "pinia"
 
 import { useSearchStore } from "~/stores/search"
 
-import type { NonMatureFilterCategory } from "~/constants/filters"
+import type { FilterCategory } from "~/constants/filters"
 import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -84,9 +84,9 @@ export default defineComponent({
     } = storeToRefs(searchStore)
 
     const filterTypes = computed(
-      () => Object.keys(filters.value) as NonMatureFilterCategory[]
+      () => Object.keys(filters.value) as FilterCategory[]
     )
-    const filterTypeTitle = (filterType: NonMatureFilterCategory) => {
+    const filterTypeTitle = (filterType: FilterCategory) => {
       return i18n.t(`filters.${filterType}.title`).toString()
     }
 
@@ -94,7 +94,7 @@ export default defineComponent({
       filterType,
       code,
     }: {
-      filterType: NonMatureFilterCategory
+      filterType: FilterCategory
       code: string
     }) => {
       const checked = searchStore.toggleFilter({ filterType, code })

@@ -93,7 +93,6 @@ function computeQueryParams(
       search_query[api_param_name] = query[api_param_name]
     }
   }
-  console.log("adding the fetch sensitive flag if needed")
 
   // `INCLUDE_SENSITIVE_QUERY_PARAM` is used in the API params, but not shown on the frontend.
   if (mode === "API" && useFeatureFlagStore().isOn("fetch_sensitive")) {
@@ -156,12 +155,10 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * Returns the number of checked filters, excluding the `includeSensitiveResults` filter.
+     * Returns the number of checked filters.
      */
     appliedFilterCount(state) {
-      const filterKeys = mediaFilterKeys[state.searchType].filter(
-        (f) => f !== "includeSensitiveResults"
-      )
+      const filterKeys = mediaFilterKeys[state.searchType]
       return filterKeys.reduce((count, filterCategory) => {
         return (
           count + state.filters[filterCategory].filter((f) => f.checked).length
@@ -173,14 +170,11 @@ export const useSearchStore = defineStore("search", {
      * Returns the object with filters for selected search type,
      * with codes, names for i18n labels, and checked status.
      *
-     * Excludes `searchBy` and `includeSensitiveResults` filters that we don't display.
+     * Excludes `searchBy` filters that we don't display.
      */
     searchFilters(state) {
       return mediaFilterKeys[state.searchType]
-        .filter(
-          (filterKey) =>
-            !["searchBy", "includeSensitiveResults"].includes(filterKey)
-        )
+        .filter((filterKey) => filterKey !== "searchBy")
         .reduce((obj, filterKey) => {
           obj[filterKey] = this.filters[filterKey]
           return obj
@@ -188,17 +182,15 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * True if any filter for selected search type except `includeSensitiveResults` is checked.
+     * True if any filter for selected search type is checked.
      */
     isAnyFilterApplied() {
       const filterEntries = Object.entries(this.searchFilters) as [
         string,
         FilterItem[]
       ][]
-      return filterEntries.some(
-        ([filterKey, filterItems]) =>
-          filterKey !== "includeSensitiveResults" &&
-          filterItems.some((filter) => filter.checked)
+      return filterEntries.some(([, filterItems]) =>
+        filterItems.some((filter) => filter.checked)
       )
     },
     /**
