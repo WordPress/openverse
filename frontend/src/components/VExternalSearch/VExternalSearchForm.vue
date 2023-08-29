@@ -2,57 +2,34 @@
   <section
     :key="externalSourcesType"
     ref="sectionRef"
-    class="external-sources flex flex-row place-items-center justify-center py-4"
+    class="external-sources flex flex-row place-items-center justify-center pb-6 pt-4 lg:pb-10"
     data-testid="external-sources-form"
   >
-    <i18n
-      v-if="!hasNoResults && isSupported"
-      path="externalSources.form.supportedTitle"
-      tag="p"
-      class="description-regular"
-    />
-
-    <i18n
-      v-else-if="!hasNoResults && !isSupported"
-      path="externalSources.form.unsupportedTitle"
-      tag="p"
-      class="description-regular"
-    >
-      <template #openverse>Openverse</template>
-      <template #type>{{
-        $t(`externalSources.form.types.${externalSourcesType}`)
-      }}</template>
-    </i18n>
-
-    <i18n
-      v-else
-      path="externalSources.form.noResultsTitle"
-      tag="p"
-      class="description-regular"
-    >
-      <template #type>{{
-        $t(`externalSources.form.types.${externalSourcesType}`)
-      }}</template>
-      <template #query>{{ searchTerm }}</template>
-    </i18n>
-
     <VModal
       variant="centered"
       :hide-on-click-outside="true"
       labelled-by="external-sources-button"
+      class="w-full"
       @open="handleModalOpen"
     >
       <template #trigger="triggerA11yProps">
         <VButton
           id="external-sources-button"
-          v-bind="triggerA11yProps"
+          ref="triggerRef"
+          :pressed="triggerA11yProps['aria-expanded']"
+          aria-haspopup="dialog"
           aria-controls="external-sources-modal"
-          variant="dropdown-label"
+          variant="bordered-gray"
           size="disabled"
-          class="caption-regular ms-2 min-w-max gap-1 px-3 py-1 pe-1 text-dark-charcoal focus-visible:border-tx"
-          >{{ `${$t("externalSources.button")}`
-          }}<VIcon
-            class="text-dark-charcoal-40"
+          class="label-bold lg:description-bold h-16 w-full gap-x-2 lg:h-18"
+        >
+          <i18n
+            v-if="isMd"
+            path="externalSources.form.supportedTitle"
+            tag="p"
+          />
+          <i18n v-else path="externalSources.form.supportedTitleSm" tag="p" />
+          <VIcon
             :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
             name="caret-down"
           />
@@ -80,12 +57,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { computed, defineComponent, ref } from "vue"
 
 import { storeToRefs } from "pinia"
 
 import { defineEvent } from "~/types/emits"
 
+import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
@@ -127,6 +105,8 @@ export default defineComponent({
   setup() {
     const sectionRef = ref<HTMLElement | null>(null)
     const searchStore = useSearchStore()
+    const uiStore = useUiStore()
+
     const { sendCustomEvent } = useAnalytics()
 
     const mediaStore = useMediaStore()
@@ -142,9 +122,12 @@ export default defineComponent({
 
     const { externalSourcesType } = useExternalSources()
 
+    const isMd = computed(() => uiStore.isBreakpoint("md"))
+
     return {
       externalSourcesType,
       sectionRef,
+      isMd,
 
       handleModalOpen,
     }

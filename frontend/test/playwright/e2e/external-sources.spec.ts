@@ -15,7 +15,9 @@ test("sends VIEW_EXTERNAL_SOURCES analytics events", async ({
 
   await goToSearchTerm(page, "cat", { searchType: "image", mode: "SSR" })
 
-  await page.getByRole("button", { name: t("externalSources.button") }).click()
+  await page
+    .getByRole("button", { name: t("externalSources.form.supportedTitle") })
+    .click()
   await page.getByRole("button", { name: /close/i }).click()
 
   const viewEvent = events.find((event) => event.n === "VIEW_EXTERNAL_SOURCES")
@@ -37,7 +39,11 @@ test("sends SELECT_EXTERNAL_SOURCE analytics events", async ({
 
   await goToSearchTerm(page, "cat", { searchType: "image", mode: "SSR" })
 
-  await page.getByRole("button", { name: t("externalSources.button") }).click()
+  await page
+    .getByRole("button", {
+      name: new RegExp(t("externalSources.form.supportedTitleSm"), "i"),
+    })
+    .click()
   await page.getByRole("link", { name: "Centre for Ageing Better" }).click()
 
   const newPage = await pagePromise
