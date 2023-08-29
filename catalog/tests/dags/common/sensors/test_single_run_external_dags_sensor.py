@@ -91,7 +91,12 @@ def create_dagrun(dag, dag_state):
 )
 class TestExternalDAGsSensor(unittest.TestCase):
     def setUp(self):
-        Pool.create_or_update_pool(TEST_POOL, slots=1, description="test pool")
+        Pool.create_or_update_pool(
+            TEST_POOL,
+            slots=1,
+            description="test pool",
+            include_deferred=False,
+        )
 
     def test_fails_if_external_dag_does_not_exist(self):
         with pytest.raises(
