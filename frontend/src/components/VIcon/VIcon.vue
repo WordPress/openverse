@@ -1,6 +1,6 @@
 <template>
   <SvgIcon
-    class="v-icon flex-shrink-0 flex-grow-0"
+    class="v-icon flex-none"
     :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }]"
     :name="name"
     aria-hidden="true"
