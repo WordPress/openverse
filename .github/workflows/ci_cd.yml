@@ -830,7 +830,7 @@ jobs:
       - name: Replace preview of current PR
         if: github.event_name == 'pull_request'
         run: |
-          cp -r . /tmp/gh-pages
+          cp -r gh-pages /tmp/gh-pages
           sudo rm -rf /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
           mv /tmp/docs /tmp/gh-pages/_preview/${{ github.event.pull_request.number }}
 
