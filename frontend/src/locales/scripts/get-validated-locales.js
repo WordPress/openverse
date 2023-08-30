@@ -13,30 +13,40 @@ const { addFetchedTranslationStatus } = require("./get-translations-status")
  * @returns {{
  * translated: import('./types').I18nLocaleProps[],
  * untranslated: import('./types').I18nLocaleProps[]
+ * invalid: import('./types').I18nLocaleProps[],
  * }}
  */
 const getValidatedLocales = async () => {
   const result = {
     translated: [],
     untranslated: [],
+    invalid: [],
   }
   const updatedLocaleList = await addFetchedTranslationStatus(localesList)
   const allLocales = Object.values(updatedLocaleList).map((locale) => ({
+    /* Nuxt i18n fields */
+
     code: locale.slug,
-    name: locale.name,
-    nativeName: locale.nativeName ?? locale.name,
-    iso: locale.langCodeIso_639_1,
-    wpLocale: locale.wpLocale,
     dir: locale.textDirection || "ltr",
-    translated: locale.translated,
     file: `${locale.slug}.json`,
+    iso: locale.langCodeIso_639_1 ?? undefined,
+
+    /* Custom fields */
+
+    name: locale.name,
+    nativeName: locale.nativeName || locale.name,
+    translated: locale.translated,
   }))
   for (const locale of allLocales) {
     const fileLocation = `${process.cwd()}/src/locales/${locale.file}`
     if (fs.existsSync(fileLocation)) {
-      result.translated.push(locale)
+      if (Object.keys(JSON.parse(fs.readFileSync(fileLocation))).length) {
+        result.translated.push(locale)
+      } else {
+        result.untranslated.push(locale)
+      }
     } else {
-      result.untranslated.push(locale)
+      result.invalid.push(locale)
     }
   }
   return result
@@ -44,16 +54,30 @@ const getValidatedLocales = async () => {
 
 try {
   getValidatedLocales().then((locales) => {
+    console.log(`Found ${locales.translated.length} locales with translations.`)
     const fileName = "valid-locales.json"
+    const valid = [...locales.translated, ...locales.untranslated]
     fs.writeFileSync(
       process.cwd() + `/src/locales/scripts/` + fileName,
-      JSON.stringify(locales.translated, null, 2) + "\n"
+      JSON.stringify(valid, null, 2) + "\n"
+    )
+
+    console.log(
+      `Found ${locales.untranslated.length} locales without translations.`
     )
     const untranslatedFileName = "untranslated-locales.json"
     fs.writeFileSync(
       process.cwd() + `/src/locales/scripts/` + untranslatedFileName,
       JSON.stringify(locales.untranslated, null, 2) + "\n"
     )
+
+    console.log(`Found ${locales.invalid.length} invalid locales.`)
+    const invalidFileName = "invalid-locales.json"
+    fs.writeFileSync(
+      process.cwd() + `/src/locales/scripts/` + invalidFileName,
+      JSON.stringify(locales.invalid, null, 2) + "\n"
+    )
+
     console.log(`> Wrote locale metadata for @nuxt/i18n.`)
   })
 } catch (err) {

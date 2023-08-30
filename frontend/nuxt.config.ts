@@ -93,18 +93,20 @@ const filenames: NonNullable<NuxtConfig["build"]>["filenames"] = {
 
 const openverseLocales = [
   {
-    // unique identifier for the locale in Vue i18n
-    code: "en",
+    /* Nuxt i18n fields */
+
+    code: "en", // unique identifier for the locale in Vue i18n
+    dir: "ltr",
+    file: "en.json",
+    iso: "en", // used for SEO purposes (html lang attribute)
+
+    /* Custom fields */
+
     name: "English",
     nativeName: "English",
-    // ISO code used for SEO purposes (html lang attribute)
-    iso: "en",
-    // wp_locale as found in GlotPress
-    wpLocale: "en_US",
-    file: "en.json",
   },
   ...(locales ?? []),
-].filter((l) => Boolean(l.iso)) as LocaleObject[]
+].filter((l) => Boolean(l.code)) as LocaleObject[]
 
 const port = process.env.PORT || 8443
 const isProdNotPlaywright = isProd && !(process.env.PW === "true")

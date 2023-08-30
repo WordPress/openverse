@@ -8,4 +8,5 @@ deploy
 test
 analytics
 icons
+translate
 ```
