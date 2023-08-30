@@ -16,7 +16,6 @@ function load_sample_data {
 		\copy $1 \
 			from './sample_data/sample_$1.csv' \
 			with (FORMAT csv, HEADER true);
-		REFRESH MATERIALIZED VIEW $1_view;
 		EOF"
 }
 

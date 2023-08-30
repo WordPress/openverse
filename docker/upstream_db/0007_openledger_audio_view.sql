@@ -38,46 +38,6 @@ STABLE
 RETURNS NULL ON NULL INPUT;
 
 
-CREATE MATERIALIZED VIEW audio_view AS
-  SELECT
-    identifier,
-    created_on,
-    updated_on,
-    ingestion_type,
-    provider,
-    source,
-    foreign_identifier,
-    foreign_landing_url,
-    url,
-    thumbnail,
-    filetype,
-    duration,
-    bit_rate,
-    sample_rate,
-    category,
-    genres,
-    audio_set,
-    alt_files,
-    filesize,
-    license,
-    license_version,
-    creator,
-    creator_url,
-    title,
-    meta_data,
-    tags,
-    watermarked,
-    last_synced_with_source,
-    removed_from_source,
-    audio_set ->> 'foreign_identifier' AS audio_set_foreign_identifier,
-    standardized_audio_popularity(
-      audio.provider, audio.meta_data
-    ) AS standardized_popularity
-  FROM audio;
-
-CREATE UNIQUE INDEX ON audio_view (identifier);
-
-
 CREATE VIEW audioset_view AS
   -- DISTINCT clause exists to ensure that only one record is present for a given
   -- foreign identifier/provider pair. This exists as a hard constraint in the API table

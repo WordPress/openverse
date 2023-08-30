@@ -9,7 +9,6 @@ from common.constants import AUDIO, DAG_DEFAULT_ARGS, IMAGE
 from common.loader.sql import TABLE_NAMES
 from common.popularity.constants import (
     AUDIO_POPULARITY_PERCENTILE_FUNCTION,
-    AUDIO_VIEW_NAME,
     IMAGE_POPULARITY_PERCENTILE_FUNCTION,
     IMAGE_VIEW_NAME,
     STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
@@ -17,7 +16,7 @@ from common.popularity.constants import (
 )
 from common.sql import PostgresHook, _single_value
 from common.storage import columns as col
-from common.storage.db_columns import AUDIO_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
+from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 
 
 DEFAULT_PERCENTILE = 0.85
@@ -73,38 +72,19 @@ POPULARITY_METRICS_BY_MEDIA_TYPE = {
 }
 
 
-def drop_media_matview(
-    postgres_conn_id: str,
-    media_type: str = IMAGE,
-    db_view: str = IMAGE_VIEW_NAME,
-    pg_timeout: float = timedelta(minutes=10).total_seconds(),
-):
-    if media_type == AUDIO:
-        db_view = AUDIO_VIEW_NAME
-
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
-    )
-    postgres.run(f"DROP MATERIALIZED VIEW IF EXISTS public.{db_view} CASCADE;")
-
-
 def drop_media_popularity_relations(
     postgres_conn_id,
     media_type=IMAGE,
-    db_view=IMAGE_VIEW_NAME,
     metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
     if media_type == AUDIO:
-        db_view = AUDIO_VIEW_NAME
         metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
 
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
     )
-    drop_media_view = f"DROP MATERIALIZED VIEW IF EXISTS public.{db_view} CASCADE;"
     drop_popularity_metrics = f"DROP TABLE IF EXISTS public.{metrics} CASCADE;"
-    postgres.run(drop_media_view)
     postgres.run(drop_popularity_metrics)
 
 
@@ -392,61 +372,6 @@ def create_standardized_media_popularity_function(
     postgres.run(query)
 
 
-def create_media_view(
-    postgres_conn_id,
-    media_type=IMAGE,
-    standardized_popularity_func=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    table_name=TABLE_NAMES[IMAGE],
-    db_columns=IMAGE_TABLE_COLUMNS,
-    db_view_name=IMAGE_VIEW_NAME,
-    db_view_id_idx=IMAGE_VIEW_ID_IDX,
-    db_view_provider_fid_idx=IMAGE_VIEW_PROVIDER_FID_IDX,
-    task: AbstractOperator = None,
-):
-    if media_type == AUDIO:
-        table_name = TABLE_NAMES[AUDIO]
-        db_columns = AUDIO_TABLE_COLUMNS
-        db_view_name = AUDIO_VIEW_NAME
-        db_view_id_idx = AUDIO_VIEW_ID_IDX
-        db_view_provider_fid_idx = AUDIO_VIEW_PROVIDER_FID_IDX
-        standardized_popularity_func = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
-    )
-    # We want to copy all columns except standardized popularity, which is calculated
-    columns_to_select = (", ").join(
-        [
-            column.db_name
-            for column in db_columns
-            if column.db_name != col.STANDARDIZED_POPULARITY.db_name
-        ]
-    )
-    create_view_query = dedent(
-        f"""
-        CREATE MATERIALIZED VIEW public.{db_view_name} AS
-          SELECT
-            {columns_to_select},
-            {standardized_popularity_func}(
-              {table_name}.{PARTITION},
-              {table_name}.{METADATA_COLUMN}
-            ) AS standardized_popularity
-          FROM {table_name};
-        """
-    )
-    add_idx_query = dedent(
-        f"""
-        CREATE UNIQUE INDEX {db_view_id_idx}
-          ON public.{db_view_name} ({IDENTIFIER});
-        CREATE UNIQUE INDEX {db_view_provider_fid_idx}
-          ON public.{db_view_name}
-          USING btree({PROVIDER}, md5({FID}));
-        """
-    )
-    postgres.run(create_view_query)
-    postgres.run(add_idx_query)
-
-
 def get_providers_with_popularity_data_for_media_type(
     postgres_conn_id: str,
     media_type: str = IMAGE,
@@ -493,15 +418,3 @@ def format_update_standardized_popularity_query(
         f"SET {col.STANDARDIZED_POPULARITY.db_name} = {standardized_popularity_func}"
         f"({table_name}.{PARTITION}, {table_name}.{METADATA_COLUMN})"
     )
-
-
-def update_db_view(
-    postgres_conn_id, media_type=IMAGE, db_view_name=IMAGE_VIEW_NAME, task=None
-):
-    if media_type == AUDIO:
-        db_view_name = AUDIO_VIEW_NAME
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
-    )
-    postgres.run(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {db_view_name};")
