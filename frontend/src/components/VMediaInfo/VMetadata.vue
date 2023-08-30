@@ -1,7 +1,7 @@
 <template>
   <dl v-if="isSm" class="metadata grid gap-10" :style="columnCount">
     <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt class="label-regular mb-2">{{ $t(datum.label) }}</dt>
+      <dt class="label-regular mb-2 ps-1">{{ $t(datum.label) }}</dt>
       <VMetadataValue
         :datum="datum"
         @click="sendVisitSourceLinkEvent(datum.source)"
@@ -46,13 +46,9 @@ export default defineComponent({
 
     const isSm = computed(() => uiStore.isBreakpoint("sm"))
 
-    const columnCount = computed(() => {
-      // Audio page has a thumbnail, so it can fit fewer columns.
-      const maxColumnCount = route.value.name?.includes("audio-id") ? 4 : 5
-      return {
-        "--column-count": Math.min(maxColumnCount, props.metadata.length),
-      }
-    })
+    const columnCount = computed(() => ({
+      "--column-count": props.metadata.length,
+    }))
 
     const { sendCustomEvent } = useAnalytics()
     const sendVisitSourceLinkEvent = (source?: string) => {
@@ -75,10 +71,7 @@ export default defineComponent({
 <style scoped>
 @screen sm {
   .metadata {
-    grid-template-columns: repeat(
-      var(--column-count, auto-fit),
-      minmax(0, 10rem)
-    );
+    grid-template-columns: repeat(var(--column-count, 4), fit-content(10rem));
   }
 }
 </style>

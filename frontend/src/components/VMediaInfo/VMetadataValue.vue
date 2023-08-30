@@ -1,9 +1,9 @@
 <template>
-  <dd class="label-bold overflow-hidden break-words">
+  <dd class="label-bold overflow-hidden break-words p-1">
     <VLink
       v-if="datum.url"
       :href="datum.url"
-      class="text-pink"
+      class="flex text-pink focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1"
       :send-external-link-click-event="false"
       @click="$emit('click', datum.source)"
       ><span
