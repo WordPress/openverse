@@ -19,8 +19,8 @@ from data_refresh.data_refresh_types import DataRefresh
 
 
 GROUP_ID = "refresh_popularity_metrics_and_constants"
-UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID = "update_media_popularity_metrics_table"
-UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "update_media_popularity_constants_view"
+UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID = "update_media_popularity_metrics"
+UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID = "update_media_popularity_constants"
 
 
 def create_refresh_popularity_metrics_task_group(
@@ -42,18 +42,17 @@ def create_refresh_popularity_metrics_task_group(
     execution_timeout = refresh_config.refresh_metrics_timeout
 
     with TaskGroup(group_id=GROUP_ID) as refresh_all_popularity_data:
-        update_metrics = PythonOperator(
+        update_metrics = sql.update_media_popularity_metrics.override(
             task_id=UPDATE_MEDIA_POPULARITY_METRICS_TASK_ID,
-            python_callable=sql.update_media_popularity_metrics,
-            op_kwargs={
-                "postgres_conn_id": POSTGRES_CONN_ID,
-                "media_type": media_type,
-            },
             execution_timeout=execution_timeout,
-            doc=(
-                "Updates the popularity metrics table, adding any new "
-                "popularity metrics and updating the configured percentile."
-            ),
+        )(
+            postgres_conn_id=POSTGRES_CONN_ID,
+            media_type=media_type,
+        )
+        update_metrics.doc = (
+            "Updates the metrics and target percentiles. If a popularity"
+            " metric is configured for a new provider, this step will add it"
+            " to the metrics table."
         )
 
         update_metrics_status = PythonOperator(
@@ -63,22 +62,33 @@ def create_refresh_popularity_metrics_task_group(
                 "media_type": media_type,
                 "dag_id": refresh_config.dag_id,
                 "message": "Popularity metrics update complete | "
-                "_Next: popularity constants view update_",
+                "_Next: popularity constants update_",
             },
         )
 
-        update_constants = PythonOperator(
-            task_id=UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
-            python_callable=sql.update_media_popularity_constants,
-            op_kwargs={
-                "postgres_conn_id": POSTGRES_CONN_ID,
-                "media_type": media_type,
-            },
-            execution_timeout=execution_timeout,
-            doc=(
-                "Updates the popularity constants view. This completely "
-                "recalculates the popularity constants for each provider."
-            ),
+        update_constants = (
+            sql.update_percentile_and_constants_for_provider.override(
+                group_id=UPDATE_MEDIA_POPULARITY_CONSTANTS_TASK_ID,
+            )
+            .partial(
+                postgres_conn_id=POSTGRES_CONN_ID,
+                media_type=media_type,
+                execution_timeout=execution_timeout,
+            )
+            .expand(
+                provider=[
+                    provider
+                    for provider in sql.POPULARITY_METRICS_BY_MEDIA_TYPE[
+                        media_type
+                    ].keys()
+                ]
+            )
+        )
+        update_constants.doc = (
+            "Recalculate the percentile values and popularity constants"
+            " for each provider, and update them in the metrics table. The"
+            " popularity constants will be used to calculate standardized"
+            " popularity scores."
         )
 
         update_constants_status = PythonOperator(
@@ -87,12 +97,12 @@ def create_refresh_popularity_metrics_task_group(
             op_kwargs={
                 "media_type": media_type,
                 "dag_id": refresh_config.dag_id,
-                "message": "Popularity constants view update complete | "
+                "message": "Popularity constants update complete | "
                 "_Next: refresh matview_",
             },
         )
 
-        update_metrics >> [update_constants, update_metrics_status]
+        update_metrics >> [update_metrics_status, update_constants]
         update_constants >> update_constants_status
 
     return refresh_all_popularity_data

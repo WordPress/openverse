@@ -7,19 +7,11 @@ from airflow.models.abstractoperator import AbstractOperator
 
 from common import slack
 from common.constants import POSTGRES_CONN_ID
-from common.sql import PostgresHook
+from common.sql import PostgresHook, _single_value
 from database.batched_update import constants
 
 
 logger = logging.getLogger(__name__)
-
-
-def _single_value(cursor):
-    try:
-        row = cursor.fetchone()
-        return row[0]
-    except Exception as e:
-        raise ValueError("Unable to extract expected row data from cursor") from e
 
 
 @task.branch
@@ -104,6 +96,9 @@ def update_batches(
     task: AbstractOperator = None,
     **kwargs,
 ):
+    if total_row_count == 0:
+        return 0
+
     # Progress is tracked in an Airflow variable. When the task run starts, we resume
     # from the start point set by this variable (defaulted to 0). This prevents the
     # task from starting over at the beginning on retries.

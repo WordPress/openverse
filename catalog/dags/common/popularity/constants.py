@@ -1,8 +1,6 @@
 IMAGE_VIEW_NAME = "image_view"
 AUDIO_VIEW_NAME = "audio_view"
 AUDIOSET_VIEW_NAME = "audioset_view"
-IMAGE_POPULARITY_CONSTANTS_VIEW = "image_popularity_constants"
-AUDIO_POPULARITY_CONSTANTS_VIEW = "audio_popularity_constants"
 IMAGE_POPULARITY_PERCENTILE_FUNCTION = "image_popularity_percentile"
 AUDIO_POPULARITY_PERCENTILE_FUNCTION = "audio_popularity_percentile"
 STANDARDIZED_IMAGE_POPULARITY_FUNCTION = "standardized_image_popularity"

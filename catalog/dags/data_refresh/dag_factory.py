@@ -34,21 +34,13 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
-from common.sql import PGExecuteQueryOperator
+from common.sql import PGExecuteQueryOperator, _single_value
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 from data_refresh.reporting import report_record_difference
 
 
 logger = logging.getLogger(__name__)
-
-
-def _single_value(cursor):
-    try:
-        row = cursor.fetchone()
-        return row[0]
-    except Exception as e:
-        raise ValueError("Unable to extract expected row data from cursor") from e
 
 
 def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequence[str]):

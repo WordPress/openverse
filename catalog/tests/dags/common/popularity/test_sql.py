@@ -21,11 +21,9 @@ POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 class TableInfo(NamedTuple):
     image: str
     image_view: str
-    constants: str
     metrics: str
     standardized_popularity: str
     popularity_percentile: str
-    pop_constants_idx: str
     image_view_idx: str
     provider_fid_idx: str
 
@@ -38,11 +36,9 @@ def table_info(
     return TableInfo(
         image=image_table,
         image_view=f"image_view_{identifier}",
-        constants=f"image_popularity_constants_{identifier}",
         metrics=f"image_popularity_metrics_{identifier}",
         standardized_popularity=f"standardized_popularity_{identifier}",
         popularity_percentile=f"popularity_percentile_{identifier}",
-        pop_constants_idx=f"test_popularity_constants_{identifier}_idx",
         image_view_idx=f"test_view_id_{identifier}_idx",
         provider_fid_idx=f"test_view_provider_fid_{identifier}_idx",
     )
@@ -56,7 +52,6 @@ def postgres_with_image_table(table_info):
 
     drop_test_relations_query = f"""
     DROP MATERIALIZED VIEW IF EXISTS {table_info.image_view} CASCADE;
-    DROP MATERIALIZED VIEW IF EXISTS {table_info.constants} CASCADE;
     DROP TABLE IF EXISTS {table_info.metrics} CASCADE;
     DROP TABLE IF EXISTS {table_info.image} CASCADE;
     DROP FUNCTION IF EXISTS {table_info.standardized_popularity} CASCADE;
@@ -89,16 +84,36 @@ USING btree (provider, md5(foreign_identifier));
 
 def _set_up_popularity_metrics(metrics_dict, table_info, mock_pg_hook_task):
     conn_id = POSTGRES_CONN_ID
+    # Create metrics table
     sql.create_media_popularity_metrics(
         postgres_conn_id=conn_id,
         popularity_metrics_table=table_info.metrics,
     )
-    sql.update_media_popularity_metrics(
+    # Insert values from metrics_dict into metrics table
+    sql.update_media_popularity_metrics.function(
         postgres_conn_id=conn_id,
         popularity_metrics=metrics_dict,
         popularity_metrics_table=table_info.metrics,
         task=mock_pg_hook_task,
     )
+
+    # For each provider in metrics_dict, calculate the percentile and then
+    # update the percentile and popularity constant
+    for provider in metrics_dict.keys():
+        percentile_val = sql.calculate_media_popularity_percentile_value.function(
+            postgres_conn_id=conn_id,
+            provider=provider,
+            task=mock_pg_hook_task,
+            popularity_metrics_table=table_info.metrics,
+            popularity_percentile=table_info.popularity_percentile,
+        )
+        sql.update_percentile_and_constants_values_for_provider.function(
+            postgres_conn_id=conn_id,
+            provider=provider,
+            raw_percentile_value=percentile_val,
+            popularity_metrics_table=table_info.metrics,
+            popularity_metrics=metrics_dict,
+        )
 
 
 def _set_up_popularity_percentile_function(table_info):
@@ -117,18 +132,13 @@ def _set_up_popularity_constants(
     table_info,
     mock_pg_hook_task,
 ):
-    conn_id = POSTGRES_CONN_ID
-    _set_up_popularity_percentile_function(table_info)
-    _set_up_popularity_metrics(metrics_dict, table_info, mock_pg_hook_task)
+    # Execute the data query first (typically, loads sample data into the media table)
     pg.cursor.execute(data_query)
     pg.connection.commit()
-    sql.create_media_popularity_constants_view(
-        conn_id,
-        popularity_constants=table_info.constants,
-        popularity_constants_idx=table_info.pop_constants_idx,
-        popularity_metrics=table_info.metrics,
-        popularity_percentile=table_info.popularity_percentile,
-    )
+
+    # Then set up functions, metrics, and constants
+    _set_up_popularity_percentile_function(table_info)
+    _set_up_popularity_metrics(metrics_dict, table_info, mock_pg_hook_task)
 
 
 def _set_up_std_popularity_func(
@@ -150,7 +160,7 @@ def _set_up_std_popularity_func(
         conn_id,
         mock_pg_hook_task,
         function_name=table_info.standardized_popularity,
-        popularity_constants=table_info.constants,
+        popularity_metrics=table_info.metrics,
     )
 
 
@@ -270,7 +280,7 @@ def test_popularity_percentile_function_nones_when_missing_type(
     assert actual_percentile_val is None
 
 
-def test_constants_view_adds_values_and_constants(
+def test_metrics_table_adds_values_and_constants(
     postgres_with_image_table, table_info, mock_pg_hook_task
 ):
     data_query = dedent(
@@ -315,18 +325,18 @@ def test_constants_view_adds_values_and_constants(
         postgres_with_image_table, data_query, metrics, table_info, mock_pg_hook_task
     )
 
-    check_query = f"SELECT * FROM {table_info.constants};"
+    check_query = f"SELECT * FROM {table_info.metrics};"
     postgres_with_image_table.cursor.execute(check_query)
     expect_rows = [
-        ("diff_provider", "comments", 0.8, 50.0, 50.0, 12.5),
-        ("my_provider", "views", 0.5, 50.0, 50.0, 50.0),
+        ("diff_provider", "comments", 0.8, 50.0, 12.5),
+        ("my_provider", "views", 0.5, 50.0, 50.0),
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for expect_row, sorted_row in zip(expect_rows, sorted_rows):
         assert expect_row == pytest.approx(sorted_row)
 
 
-def test_constants_view_handles_zeros_and_missing(
+def test_metrics_table_handles_zeros_and_missing_in_constants(
     postgres_with_image_table, table_info, mock_pg_hook_task
 ):
     data_query = dedent(
@@ -364,18 +374,20 @@ def test_constants_view_handles_zeros_and_missing(
         """
     )
     metrics = {
+        # Provider that has some records with popularity data
         "my_provider": {"metric": "views", "percentile": 0.8},
+        # Provider that has a metric configured, but no records with data for that metric
         "diff_provider": {"metric": "comments", "percentile": 0.8},
     }
     _set_up_popularity_constants(
         postgres_with_image_table, data_query, metrics, table_info, mock_pg_hook_task
     )
 
-    check_query = f"SELECT * FROM {table_info.constants};"
+    check_query = f"SELECT * FROM {table_info.metrics};"
     postgres_with_image_table.cursor.execute(check_query)
     expect_rows = [
-        ("diff_provider", "comments", 0.8, None, None, None),
-        ("my_provider", "views", 0.8, 0.0, 1.0, 0.25),
+        ("diff_provider", "comments", 0.8, None, None),
+        ("my_provider", "views", 0.8, 1.0, 0.25),
     ]
     sorted_rows = sorted(list(postgres_with_image_table.cursor), key=lambda x: x[0])
     for expect_row, sorted_row in zip(expect_rows, sorted_rows):
@@ -417,7 +429,7 @@ def test_get_providers_with_popularity_data_for_media_type(
 
     expected_providers = ["diff_provider", "my_provider"]
     actual_providers = sql.get_providers_with_popularity_data_for_media_type(
-        POSTGRES_CONN_ID, media_type="image", constants_view=table_info.constants
+        POSTGRES_CONN_ID, media_type="image", popularity_metrics=table_info.metrics
     )
 
     assert actual_providers == expected_providers
@@ -456,7 +468,7 @@ def test_standardized_popularity_function_calculates(
     _set_up_std_popularity_func(
         postgres_with_image_table, data_query, metrics, table_info, mock_pg_hook_task
     )
-    check_query = f"SELECT * FROM {table_info.constants};"
+    check_query = f"SELECT * FROM {table_info.metrics};"
     postgres_with_image_table.cursor.execute(check_query)
     print(list(postgres_with_image_table.cursor))
     arg_list = [

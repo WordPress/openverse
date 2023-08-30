@@ -27,6 +27,14 @@ logger = logging.getLogger(__name__)
 # https://airflow.apache.org/docs/apache-airflow-providers-postgres/stable/_api/airflow/providers/postgres/hooks/postgres/index.html#airflow.providers.postgres.hooks.postgres.PostgresHook.copy_expert # noqa
 
 
+def _single_value(cursor):
+    try:
+        row = cursor.fetchone()
+        return row[0]
+    except Exception as e:
+        raise ValueError("Unable to extract expected row data from cursor") from e
+
+
 class PostgresHook(UpstreamPostgresHook):
     """
     PostgresHook that sets the database timeout on any query to match the airflow task
