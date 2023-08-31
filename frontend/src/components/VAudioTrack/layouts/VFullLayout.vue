@@ -18,7 +18,7 @@
     <div
       class="items-top mx-auto mt-6 flex flex-row flex-wrap gap-6 px-6 lg:max-w-5xl lg:flex-nowrap"
     >
-      <slot name="play-pause" :size="isSmall ? 'small' : 'large'" />
+      <slot name="play-pause" size="large" />
 
       <div
         class="audio-info order-2 flex w-full flex-col justify-center lg:order-1 lg:w-auto"
@@ -59,7 +59,7 @@
         has-icon-end
         show-external-icon
         :external-icon-size="6"
-        class="description-bold order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
+        class="description-bold order-1 ms-auto flex-shrink-0 lg:order-2 lg:my-1"
         :send-external-link-click-event="false"
         @click="sendGetMediaEvent"
       >
@@ -70,11 +70,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 import { timeFmt } from "~/utils/time-fmt"
-import { AudioSize, AudioStatus, audioFeatures } from "~/constants/audio"
+import { AudioStatus, audioFeatures } from "~/constants/audio"
 import { AUDIO } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -89,9 +89,6 @@ export default defineComponent({
       type: Object as PropType<AudioDetail>,
       required: true,
     },
-    size: {
-      type: String as PropType<AudioSize>,
-    },
     status: {
       type: String as PropType<AudioStatus>,
     },
@@ -102,8 +99,6 @@ export default defineComponent({
   },
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
-
-    const isSmall = computed(() => props.size === "s")
 
     const sendGetMediaEvent = () => {
       sendCustomEvent("GET_MEDIA", {
@@ -116,7 +111,6 @@ export default defineComponent({
     return {
       timeFmt,
 
-      isSmall,
       audioFeatures,
 
       sendGetMediaEvent,

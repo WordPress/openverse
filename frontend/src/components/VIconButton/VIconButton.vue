@@ -3,24 +3,29 @@
     :aria-label="label"
     :size="size"
     :variant="variant"
+    :connections="connections"
     class="icon-button"
     icon-only
     v-on="$listeners"
   >
-    <slot name="default" :icon-size="6" />
+    <slot name="default" :icon-size="iconSize" />
     <VIcon
       v-if="iconProps"
       class="pointer-events-none"
-      :size="6"
+      :size="iconSize"
       v-bind="iconProps"
     />
   </VButton>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 
-import type { ButtonSize, ButtonVariant } from "~/types/button"
+import type {
+  ButtonConnections,
+  ButtonSize,
+  ButtonVariant,
+} from "~/types/button"
 
 import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
@@ -40,7 +45,8 @@ export default defineComponent({
      */
     size: {
       type: String as PropType<Exclude<ButtonSize, "disabled">>,
-      required: true,
+      // required: true,
+      default: "medium",
     },
     /**
      * The visual variant of the button, matches the variants of VButton component.
@@ -58,12 +64,24 @@ export default defineComponent({
       required: false,
     },
     /**
+     * Connections to pass down to the `VButton` component nested inside the button.
+     */
+    connections: {
+      type: String as PropType<ButtonConnections>,
+    },
+    /**
      * The label used for accessibility purposes.
      */
     label: {
       type: [String, Object] as PropType<string | TranslateResult>,
       required: true,
     },
+  },
+  setup(props) {
+    const iconSize = computed(() => props.iconProps?.size ?? 6)
+    return {
+      iconSize,
+    }
   },
 })
 </script>

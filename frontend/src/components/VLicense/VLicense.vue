@@ -1,5 +1,8 @@
 <template>
-  <div class="license flex flex-row items-center gap-2">
+  <div
+    class="license flex flex-row items-center gap-2"
+    :aria-label="licenseName.readable"
+  >
     <div class="flex gap-1">
       <VIcon
         v-for="name in iconNames"
@@ -10,7 +13,7 @@
         :size="4"
       />
     </div>
-    <span v-show="!hideName" class="name" :aria-label="licenseName.readable">
+    <span v-show="!hideName" aria-hidden="true">
       {{ licenseName.full }}
     </span>
   </div>

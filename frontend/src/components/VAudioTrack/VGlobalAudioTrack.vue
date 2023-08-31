@@ -14,10 +14,11 @@
         />
       </template>
 
-      <template #play-pause="playPauseProps">
+      <template #play-pause="{ size, ...playPauseProps }">
         <VPlayPause
           v-bind="playPauseProps"
           :status="status"
+          :size="size"
           @toggle="handleToggle"
         />
       </template>

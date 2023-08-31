@@ -38,6 +38,7 @@ export default defineComponent({
     },
     size: {
       type: String as PropType<AudioSize>,
+      required: true,
     },
     audio: {
       type: Object as PropType<AudioDetail>,

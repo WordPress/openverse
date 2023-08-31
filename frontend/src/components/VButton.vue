@@ -327,6 +327,11 @@ export default VButton
 .icon-end-large {
   @apply pe-4;
 }
+
+.size-larger-icon-only {
+  @apply h-16 w-16;
+}
+
 .icon-only {
   @apply flex-none;
 }

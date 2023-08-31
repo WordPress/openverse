@@ -190,10 +190,9 @@ The component can be rendered in a multiple different layouts, by specifying a
 
 ### Box
 
-#### Sizes L and M (default)
+#### Size L (default)
 
-Box sizes L and M are identical with the only difference being the `width`
-dimension.
+Box size L shows waveforms.
 
 <Canvas>
   <Story
@@ -201,15 +200,6 @@ dimension.
     args={{
       layout: "box",
       size: "l",
-    }}
-  >
-    {Template.bind({})}
-  </Story>
-  <Story
-    name="Box (medium)"
-    args={{
-      layout: "box",
-      // size: 'm', (default)
     }}
   >
     {Template.bind({})}
@@ -272,7 +262,8 @@ export const Multiple = () => ({
         :key="key"
         class="mb-8"
         :audio="audioObj(audio)"
-        layout="row"/>
+        layout="row"
+        size="l" />
     </div>
   `,
   components: { VAudioTrack },

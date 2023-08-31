@@ -15,7 +15,7 @@
     <Component
       :is="layoutComponent"
       :audio="audio"
-      :size="layoutSize"
+      :size="size"
       :status="status"
       :current-time="currentTime"
     >
@@ -36,10 +36,11 @@
         />
       </template>
 
-      <template #play-pause="playPauseProps">
+      <template #play-pause="{ size: playPauseSize, ...playPauseProps }">
         <VPlayPause
           ref="playPauseRef"
           :status="status"
+          :size="playPauseSize"
           v-bind="playPauseProps"
           @toggle="handleToggle"
         />
@@ -137,6 +138,7 @@ export default defineComponent({
      */
     size: {
       type: String as PropType<AudioSize>,
+      default: "medium",
     },
     /**
      * the search term that was used to find this track; This is used
@@ -464,16 +466,6 @@ export default defineComponent({
     const layoutComponent = computed(() => layoutMappings[props.layout])
 
     /**
-     * Sets default size if not provided.
-     */
-    const layoutSize = computed(() => {
-      if (props.layout === "box" && !props.size) {
-        return undefined
-      }
-      return props.size ?? "m"
-    })
-
-    /**
      * A ref used on the play/pause button,
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
@@ -590,7 +582,6 @@ export default defineComponent({
       duration,
 
       layoutComponent,
-      layoutSize,
 
       isComposite,
       containerAttributes,

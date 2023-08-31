@@ -5,74 +5,71 @@
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
-      class="relative flex-shrink-0 overflow-hidden rounded-sm"
-      :class="isLarge ? 'me-6 w-30' : 'me-4 w-20'"
+      class="grid flex-none overflow-hidden rounded-sm"
+      :class="isMedium ? 'me-6 w-[95px]' : isSmall ? 'me-4 w-20' : 'me-4 w-16'"
     >
-      <VAudioThumbnail :audio="audio" />
-      <div v-show="isSmall" class="absolute bottom-0 ltr:right-0 rtl:left-0">
-        <slot name="play-pause" size="tiny" layout="row" :is-tabbable="false" />
+      <VAudioThumbnail :audio="audio" class="col-span-full row-span-full" />
+      <div
+        v-show="isSmall"
+        class="z-10 col-span-full row-span-full self-end justify-self-start"
+      >
+        <slot
+          name="play-pause"
+          size="small"
+          layout="row"
+          :is-tabbable="false"
+        />
       </div>
     </div>
 
     <div
       class="flex-grow"
       :class="{
-        'flex flex-row gap-8': isMedium,
-        'flex flex-col justify-between': isLarge,
+        'flex flex-row gap-8': isLarge,
+        'flex flex-col justify-between': isMedium,
       }"
     >
-      <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
-        <div
-          class="decoration-inherit font-heading line-clamp-2 block rounded-sm p-px font-semibold text-dark-charcoal hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
+      <div class="flex-shrink-0" :class="{ 'w-70': isLarge }" role="document">
+        <h2
+          class="decoration-inherit line-clamp-1 block h-[18px] rounded-sm p-px text-dark-charcoal hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline"
           :class="{
-            'text-2xl': isMedium || isLarge,
-            'leading-snug': isSmall,
+            'description-bold': isMedium || isLarge,
+            'label-bold': isSmall,
             'blur-text': shouldBlur,
           }"
         >
           {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
-        </div>
+        </h2>
 
         <div
-          class="mt-2 flex text-dark-charcoal-70"
-          :class="{
-            'text-sr': isSmall,
-            'leading-snug': isMedium || isLarge,
-            'flex-col gap-2': isSmall || isMedium,
-            'flex-row items-center': isLarge,
-          }"
+          class="mt-1 flex text-dark-charcoal-70"
+          :class="[
+            isSmall ? 'caption-regular' : 'label-regular',
+            isMedium ? 'flex-row items-center' : 'flex-col gap-1',
+          ]"
         >
-          <div class="part-a">
-            <i18n
-              tag="span"
-              path="audioTrack.creator"
-              :class="{ 'blur-text': shouldBlur }"
+          <i18n
+            tag="div"
+            path="audioTrack.creator"
+            class="flex"
+            :class="{ 'blur-text': shouldBlur, 'dot-after': isMedium }"
+          >
+            <template #creator>{{
+              shouldBlur ? $t("sensitiveContent.creator") : audio.creator
+            }}</template>
+          </i18n>
+          <div class="flex" :class="isSmall ? 'flex-col' : 'flex-row'">
+            <div
+              class="flex flex-row"
+              :class="isSmall ? 'mb-1' : !!audio.category ? 'dot-after' : ''"
             >
-              <template #creator>{{
-                shouldBlur ? $t("sensitiveContent.creator") : audio.creator
-              }}</template> </i18n
-            ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
-              $t("interpunct")
-            }}</span>
-          </div>
-
-          <div class="part-b inline-flex flex-row items-center">
-            <span v-show="isSmall">
-              <span
-                class="inline-block rounded-sm bg-dark-charcoal-06 p-1 font-semibold text-dark-charcoal"
-                >{{ timeFmt(audio.duration || 0, true) }}</span
-              ><span class="mx-2" aria-hidden="true">{{
-                $t("interpunct")
+              <span v-if="isSmall" class="dot-after flex">{{
+                timeFmt(audio.duration || 0, true)
+              }}</span
+              ><span v-if="audio.category">{{
+                $t(`filters.audioCategories.${audio.category}`)
               }}</span>
-            </span>
-
-            <span v-if="audio.category">
-              <span>{{ $t(`filters.audioCategories.${audio.category}`) }}</span
-              ><span class="mx-2" aria-hidden="true">{{
-                $t("interpunct")
-              }}</span>
-            </span>
-
+            </div>
             <VLicense :hide-name="isSmall" :license="audio.license" />
           </div>
         </div>
@@ -81,14 +78,12 @@
       <div
         v-show="!isSmall"
         class="flex flex-row"
-        :class="{
-          'flex-grow': isMedium,
-        }"
+        :class="{ 'flex-grow': isLarge }"
       >
         <slot
           name="play-pause"
-          :size="isLarge ? 'large' : 'extra-large'"
-          :layout="'row'"
+          :size="isLarge ? 'large' : 'medium'"
+          layout="row"
           :is-tabbable="false"
         />
         <slot
@@ -141,6 +136,14 @@ export default defineComponent({
     const isMedium = computed(() => props.size === "m")
     const isLarge = computed(() => props.size === "l")
 
+    const playPauseSize = computed(() => {
+      if (props.size === undefined) {
+        console.log("Why isn't there a size prop?", props.size)
+        return "medium"
+      }
+      return { l: "large", m: "medium", s: "small" }[props.size]
+    })
+
     const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 
     return {
@@ -152,6 +155,7 @@ export default defineComponent({
       isSmall,
       isMedium,
       isLarge,
+      playPauseSize,
 
       shouldBlur,
     }
@@ -174,10 +178,16 @@ export default defineComponent({
 }
 
 .row-track.size-m .waveform {
-  @apply h-20;
+  @apply h-12;
 }
 
 .row-track.size-l .waveform {
-  @apply h-14;
+  @apply h-16;
+}
+.dot-after {
+  @apply after:me-2 after:ms-2 after:inline-flex after:h-1 after:w-1 after:self-center after:rounded-full after:bg-dark-charcoal-70 after:text-2xl after:content-[""];
+}
+.dot-before {
+  @apply before:me-2 before:ms-2 before:inline-flex before:h-1 before:w-1 before:self-center before:rounded-full before:bg-dark-charcoal-70 before:text-base before:content-[""];
 }
 </style>
