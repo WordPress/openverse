@@ -5,6 +5,18 @@ CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
+while getopts 'c' OPTION; do
+  case "$OPTION" in
+  c)
+    echo "Loading upstream DB data..."
+    upstream_only=true
+    ;;
+  ?)
+    echo "Loading all sample data..."
+    ;;
+  esac
+done
+
 ###############
 # Upstream DB #
 ###############
@@ -34,6 +46,11 @@ load_sample_data "image"
 verify_loaded_data "image"
 load_sample_data "audio"
 verify_loaded_data "audio"
+
+# Terminate the script if received flag for only upstream data
+if [ "$upstream_only" = true ]; then
+  exit 0
+fi
 
 #######
 # API #

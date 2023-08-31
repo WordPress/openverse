@@ -170,7 +170,6 @@ wait-up: up
     just ingestion_server/wait-up
     just api/wait-up
     just frontend/wait-up
-    just catalog/wait-up
 
 # Also see `init` recipe in sub-justfiles
 # Load sample data into the Docker Compose services
