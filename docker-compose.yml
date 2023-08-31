@@ -239,7 +239,7 @@ services:
       MEDIA_ROOT: ${MEDIA_ROOT:-}
     stdin_open: true
     tty: true
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --reload --bind 0.0.0.0:8000
 
   ingestion_server:
     profiles:
