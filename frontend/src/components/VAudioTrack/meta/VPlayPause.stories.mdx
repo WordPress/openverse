@@ -14,10 +14,12 @@ import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
   argTypes={{
     status: {
       options: ["playing", "paused", "played"],
+      defaultValue: "paused",
       control: "select",
     },
     size: {
-      options: ["small", "medium", "large"],
+      defaultValue: "medium",
+      options: ["tiny", "small", "medium", "extra-large"],
       control: "select",
     },
     toggle: {
@@ -27,7 +29,7 @@ import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 />
 
 export const Template = (args) => ({
-  template: `<VPlayPause :size="args.size" :status="args.status" v-bind="args" v-on="args"/>`,
+  template: `<VPlayPause v-bind="args" v-on="args"/>`,
   components: { VPlayPause },
   setup() {
     return { args }
@@ -45,7 +47,8 @@ value of its `status` state.
 
 ## Size
 
-The button dimensions can be set by passing the `size` prop.
+The button dimensions can be set by passing the `size` prop (see
+[`VOldIconButton` docs](?path=/docs/components-voldiconbutton--default-story)).
 
 <Canvas>
   <Story
@@ -71,7 +74,7 @@ be achieved by playing till the end of a track.
 export const vModelTemplate = () => ({
   template: `
     <div>
-      <VPlayPause v-model="status" size="small" status="paused" />
+      <VPlayPause v-model="status" />
       {{ status }}
     </div>
   `,
@@ -87,8 +90,6 @@ export const vModelTemplate = () => ({
   <Story name="v-model">{vModelTemplate.bind({})}</Story>
 </Canvas>
 
-## Fall-through attributes
-
 The component is, indirectly, a transparent wrapper over `<button>` so all
 attributes of the button element can be applied to it, e.g. `disabled`.
 
@@ -97,8 +98,6 @@ attributes of the button element can be applied to it, e.g. `disabled`.
     name="Disabled"
     args={{
       disabled: true,
-      status: "playing",
-      size: "medium",
     }}
   >
     {Template.bind({})}
