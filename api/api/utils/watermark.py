@@ -150,6 +150,12 @@ def _get_attribution_text(image_info):
     return f'"{title}" by {creator} is licensed under {full_license}.'
 
 
+def _get_attribution_height(text, font):
+    draw = ImageDraw.Draw(Image.new("RGB", (0, 0)))
+    _, _, _, height = draw.multiline_textbbox((0, 0), text, font)
+    return height
+
+
 # Actions
 
 
@@ -200,7 +206,7 @@ def _print_attribution_on_image(img: Image.Image, image_info):
 
     text = _get_attribution_text(image_info)
     text = _fit_in_width(text, font, new_width)
-    _, attribution_height = font.getsize_multiline(text)
+    attribution_height = _get_attribution_height(text, font)
 
     frame_width = margin + new_width + margin
     frame_height = margin + height + margin + attribution_height + margin
