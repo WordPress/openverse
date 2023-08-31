@@ -44,6 +44,7 @@
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, watch } from "vue"
+import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 import {
   defineComponent,
@@ -51,9 +52,11 @@ import {
   useFetch,
   useMeta,
   useRoute,
+  useRouter,
 } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { NO_RESULT } from "~/constants/errors"
@@ -61,6 +64,7 @@ import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
 
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
+import { areQueriesEqual } from "~/utils/search-query-transform"
 
 import VScrollButton from "~/components/VScrollButton.vue"
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
@@ -85,10 +89,12 @@ export default defineComponent({
   setup() {
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
+    const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
     const route = useRoute()
+    const router = useRouter()
 
     // I don't know *exactly* why this is necessary, but without it
     // transitioning from the homepage to this page breaks the
@@ -173,6 +179,27 @@ export default defineComponent({
         document.getElementById("main-page")?.scroll(0, 0)
         await fetchMedia()
       }
+    })
+
+    /**
+     * This watcher fires even when the queries are equal. We update the path only
+     * when the queries change.
+     */
+    watchDebounced(
+      query,
+      (newQuery, oldQuery) => {
+        if (!areQueriesEqual(newQuery, oldQuery)) {
+          router.push(searchStore.getSearchPath())
+        }
+      },
+      { debounce: 800, maxWait: 5000 }
+    )
+
+    const shouldFetchSensitiveResults = computed(() => {
+      return featureFlagStore.isOn("fetch_sensitive")
+    })
+    watch(shouldFetchSensitiveResults, async () => {
+      await fetchMedia()
     })
 
     useFetch(async () => {

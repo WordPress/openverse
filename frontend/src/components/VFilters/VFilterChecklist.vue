@@ -58,7 +58,7 @@ import { defineComponent, PropType } from "vue"
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
 
-import type { NonMatureFilterCategory, FilterItem } from "~/constants/filters"
+import type { FilterItem, FilterCategory } from "~/constants/filters"
 
 import type { License } from "~/constants/license"
 
@@ -74,7 +74,7 @@ import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 
 type toggleFilterPayload = {
-  filterType: NonMatureFilterCategory
+  filterType: FilterCategory
   code: string
 }
 
@@ -98,7 +98,7 @@ export default defineComponent({
       type: String,
     },
     filterType: {
-      type: String as PropType<NonMatureFilterCategory>,
+      type: String as PropType<FilterCategory>,
       required: true,
     },
     disabled: {

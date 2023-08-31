@@ -30,3 +30,4 @@ export type SensitiveMediaVisibility = (typeof SENSITIVE_MEDIA_STATES)[number]
 
 export const INCLUDE_SENSITIVE_QUERY_PARAM =
   "unstable__include_sensitive_results"
+export const SENSITIVITY_RESPONSE_PARAM = "unstable__sensitivity"
