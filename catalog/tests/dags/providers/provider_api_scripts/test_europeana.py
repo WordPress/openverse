@@ -128,23 +128,35 @@ ITEM_NOT_1ST_WEBRESOURCE = (
 
 
 @pytest.mark.parametrize(
-    "response_json, expected",
+    "response_json, url, expected",
     [
-        pytest.param(ITEM_HAPPY_RESPONSE, ITEM_HAPPY_WEBRESOURCE, id="happy_path"),
-        pytest.param(ITEM_NOT_1ST_RESPONSE, ITEM_NOT_1ST_WEBRESOURCE, id="not_first"),
-        pytest.param({"success": False, "object": {}}, {}, id="success_is_false"),
-        pytest.param({"success": True, "no": "object"}, {}, id="no_object"),
-        pytest.param({"success": True, "object": {}}, {}, id="no_aggregation"),
-        pytest.param(None, {}, id="no_response"),
+        pytest.param(
+            ITEM_HAPPY_RESPONSE, "happy_url", ITEM_HAPPY_WEBRESOURCE, id="happy_path"
+        ),
+        pytest.param(
+            ITEM_NOT_1ST_RESPONSE, "happy_url", ITEM_NOT_1ST_WEBRESOURCE, id="not_first"
+        ),
+        pytest.param(
+            {"success": False, "object": {}}, "happy_url", {}, id="success_is_false"
+        ),
+        pytest.param(
+            {"success": True, "no": "object"}, "happy_url", {}, id="no_object"
+        ),
+        pytest.param(
+            {"success": True, "object": {}}, "happy_url", {}, id="no_aggregation"
+        ),
+        pytest.param(None, "happy_url", {}, id="no_response"),
+        pytest.param(ITEM_HAPPY_RESPONSE, "sad_url", {}, id="wrong_url"),
     ],
 )
-def test_get_additional_item_data(response_json, expected, ingester):
+def test_get_additional_item_data(response_json, url, expected, ingester):
     with patch.object(
         ingester, "get_response_json", return_value=response_json
-    ) as patch_call:
-        actual = ingester._get_additional_item_data({"id": "/FAKE_ID"})
-        assert actual == expected
-    patch_call.assert_called_once_with(
+    ) as patch_api_call:
+        with patch.object(ingester, "_get_id_and_url", return_value=("/FAKE_ID", url)):
+            actual = ingester._get_additional_item_data({})
+            assert actual == expected
+    patch_api_call.assert_called_once_with(
         endpoint="https://api.europeana.eu/record/v2/FAKE_ID.json",
         query_params=ingester.item_params,
     )

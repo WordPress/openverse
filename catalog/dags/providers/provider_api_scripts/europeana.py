@@ -248,6 +248,16 @@ class EuropeanaDataIngester(ProviderDataIngester):
             self._get_additional_item_data(data),
         )
 
+    def _get_id_and_url(self, data) -> tuple:
+        try:
+            return (
+                self.record_builder._get_foreign_identifier(data),
+                self.record_builder._get_image_url(data),
+            )
+        except EmptyRequiredFieldException as exc:
+            logger.warning("Missing id or url", exc_info=exc)
+            return (None, None)
+
     def _get_additional_item_data(self, data) -> dict:
         # Delay of 30 seconds is fine for 100 items at a time, but not for each item.
         # Occasionally getting this error on the item request when the delay is 3 secs:
@@ -265,8 +275,8 @@ class EuropeanaDataIngester(ProviderDataIngester):
         #   given the 100 individual look-ups.
         # Seems like might be best to reach out to Europeana and get their preference
         # for the best way for us to proceed.
-        if not (item_id := data.get("id")):
-            logger.warning(f"No id, cannot request additional info on {data}")
+        (item_id, url) = self._get_id_and_url(data)
+        if not (item_id and url):
             return {}
         item_response = self.get_response_json(
             query_params=self.item_params,
@@ -275,17 +285,19 @@ class EuropeanaDataIngester(ProviderDataIngester):
         if not item_response or not item_response.get("success"):
             logger.warning("Item request failed no response or ``success != True``")
             return {}
-        # Assume that we just want the first info available in the item response,
-        # but consider adding checks, e.g. on landing url.
-        # Testing with the first webresource from the first aggregation, got dimensions
-        # for 1424 / 1589 images; so not too worried about performance implications of
-        # the loops. Limiting factor was much more the delay between requests.
-        if aggregations := item_response.get("object", {}).get("aggregations"):
-            for aggregation in aggregations:
-                for webresource in aggregation.get("webResources", []):
-                    if filetype := webresource.get("ebucoreHasMimeType"):
-                        if filetype.startswith("image"):
-                            return webresource
+        aggregations = item_response.get("object", {}).get("aggregations", [])
+        for aggregation in aggregations:
+            return next(
+                (
+                    resource
+                    for resource in aggregation.get("webResources", [])
+                    if (
+                        resource.get("ebucoreHasMimeType", "").startswith("image")
+                        and resource.get("about") == url
+                    )
+                ),
+                {},
+            )
         return {}
 
 
