@@ -91,6 +91,18 @@ export const Template = (args) => ({
   },
 })
 
+export const ContainedTemplate = (args) => ({
+  template: `<div class="w-[11rem] h-[11rem]"><VAudioTrack v-bind="args" :audio="audioObj"/></div>`,
+  components: { VAudioTrack },
+  setup() {
+    const audioObj = computed(() => ({
+      ...commonAttrs(),
+      ...formatExamples[args.format],
+    }))
+    return { args, audioObj }
+  },
+})
+
 # Audio track
 
 <Description of={VAudioTrack} />
@@ -190,10 +202,9 @@ The component can be rendered in a multiple different layouts, by specifying a
 
 ### Box
 
-#### Sizes L and M (default)
+#### Size L (default)
 
-Box sizes L and M are identical with the only difference being the `width`
-dimension.
+Box size L shows waveforms.
 
 <Canvas>
   <Story
@@ -203,16 +214,7 @@ dimension.
       size: "l",
     }}
   >
-    {Template.bind({})}
-  </Story>
-  <Story
-    name="Box (medium)"
-    args={{
-      layout: "box",
-      // size: 'm', (default)
-    }}
-  >
-    {Template.bind({})}
+    {ContainedTemplate.bind({})}
   </Story>
 </Canvas>
 
@@ -229,7 +231,7 @@ dimension.
       viewport: { defaultViewport: "sm" },
     }}
   >
-    {Template.bind({})}
+    {ContainedTemplate.bind({})}
   </Story>
 </Canvas>
 

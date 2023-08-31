@@ -15,7 +15,7 @@
     <Component
       :is="layoutComponent"
       :audio="audio"
-      :size="layoutSize"
+      :size="size"
       :status="status"
       :current-time="currentTime"
     >
@@ -37,7 +37,15 @@
       </template>
 
       <template #play-pause="playPauseProps">
+        <VAudioControl
+          v-if="layout === 'box'"
+          ref="playPauseRef"
+          :status="status"
+          v-bind="playPauseProps"
+          @toggle="handleToggle"
+        />
         <VPlayPause
+          v-else
           ref="playPauseRef"
           :status="status"
           v-bind="playPauseProps"
@@ -88,6 +96,7 @@ import { defineEvent } from "~/types/emits"
 
 import type { AudioTrackClickEvent } from "~/types/events"
 
+import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
@@ -104,6 +113,7 @@ import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 export default defineComponent({
   name: "VAudioTrack",
   components: {
+    VAudioControl,
     VPlayPause,
     VWaveform,
     VLink,
@@ -464,16 +474,6 @@ export default defineComponent({
     const layoutComponent = computed(() => layoutMappings[props.layout])
 
     /**
-     * Sets default size if not provided.
-     */
-    const layoutSize = computed(() => {
-      if (props.layout === "box" && !props.size) {
-        return undefined
-      }
-      return props.size ?? "m"
-    })
-
-    /**
      * A ref used on the play/pause button,
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
@@ -590,7 +590,6 @@ export default defineComponent({
       duration,
 
       layoutComponent,
-      layoutSize,
 
       isComposite,
       containerAttributes,
