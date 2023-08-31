@@ -54,7 +54,7 @@ export default defineComponent({
 
     const audioTrackSize = computed(() => {
       if (props.isRelated) {
-        return uiStore.isBreakpoint("md") ? "l" : "s"
+        return uiStore.isBreakpoint("md") ? "m" : "s"
       } else {
         return !uiStore.isDesktopLayout
           ? "s"

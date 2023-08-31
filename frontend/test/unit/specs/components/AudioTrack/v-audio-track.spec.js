@@ -39,6 +39,7 @@ describe("AudioTrack", () => {
   beforeEach(() => {
     props = {
       audio: getAudioObj(),
+      layout: "full",
     }
     configureVue = (localVue, options) => {
       const activeMediaStore = useActiveMediaStore(options.pinia)
