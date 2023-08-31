@@ -327,6 +327,11 @@ export default VButton
 .icon-end-large {
   @apply pe-4;
 }
+
+.size-larger-icon-only {
+  @apply h-16 w-16;
+}
+
 .icon-only {
   @apply flex-none;
 }
@@ -340,7 +345,7 @@ a.button {
 }
 
 .filled-dark {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white;
+  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white disabled:opacity-70;
 }
 
 .filled-gray {

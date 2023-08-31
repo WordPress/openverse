@@ -37,7 +37,7 @@
       </template>
 
       <template #play-pause="playPauseProps">
-        <VPlayPause
+        <VOldPlayPause
           ref="playPauseRef"
           :status="status"
           v-bind="playPauseProps"
@@ -88,7 +88,7 @@ import { defineEvent } from "~/types/emits"
 
 import type { AudioTrackClickEvent } from "~/types/events"
 
-import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
+import VOldPlayPause from "~/components/VAudioTrack/VOldPlayPause.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
 import VRowLayout from "~/components/VAudioTrack/layouts/VRowLayout.vue"
@@ -104,7 +104,7 @@ import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 export default defineComponent({
   name: "VAudioTrack",
   components: {
-    VPlayPause,
+    VOldPlayPause,
     VWaveform,
     VLink,
     VWarningSuppressor,
