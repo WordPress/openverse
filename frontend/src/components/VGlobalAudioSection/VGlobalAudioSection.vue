@@ -1,5 +1,7 @@
 <template>
-  <div class="global-audio sticky bottom-0 z-global-audio sm:hidden">
+  <div
+    class="global-audio sticky bottom-0 z-global-audio rounded-sm border border-dark-charcoal border-opacity-20"
+  >
     <VGlobalAudioTrack v-if="audio" :audio="audio" />
     <VIconButton
       v-if="audio"
