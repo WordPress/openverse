@@ -1,11 +1,12 @@
 <template>
-  <VOldIconButton
-    v-bind="$attrs"
+  <VIconButton
     :tabindex="isTabbable ? 0 : -1"
-    class="play-pause flex-shrink-0 border-dark-charcoal bg-dark-charcoal text-white focus-visible:border-pink focus-visible:shadow-ring focus-visible:outline-none active:shadow-ring disabled:opacity-70"
-    :icon-props="icon === undefined ? undefined : { name: icon }"
+    class="play-pause"
+    :size="buttonSize"
+    variant="filled-dark"
+    :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
     :label="$t(label)"
-    :button-props="buttonProps"
+    :connections="connections"
     @click.stop.prevent="handleClick"
     @mousedown="handleMouseDown"
   >
@@ -26,17 +27,23 @@
         />
       </svg>
     </template>
-  </VOldIconButton>
+  </VIconButton>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { AudioLayout, AudioStatus, statusVerbMap } from "~/constants/audio"
+import {
+  AudioLayout,
+  audioLayouts,
+  AudioStatus,
+  audioStatuses,
+  statusVerbMap,
+} from "~/constants/audio"
 import { defineEvent } from "~/types/emits"
-import type { ButtonConnections, ButtonVariant } from "~/types/button"
+import type { ButtonConnections } from "~/types/button"
 
-import VOldIconButton from "~/components/VIconButton/VOldIconButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 const statusIconMap = {
   playing: "pause",
@@ -53,13 +60,22 @@ const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
 } as const
 
 /**
+ * The mapping of play-pause control sizes to the VIconButton sizes
+ * and the sizes of the contained icon.
+ */
+const sizes = {
+  small: { button: "small", icon: 6 },
+  medium: { button: "large", icon: 8 },
+  large: { button: "larger", icon: 10 },
+} as const
+
+/**
  * Displays the control for switching between the playing and paused states of
  * a media file.
  */
 export default defineComponent({
-  name: "VOldPlayPause",
-  components: { VOldIconButton },
-  inheritAttrs: false,
+  name: "VAudioControl",
+  components: { VIconButton },
   model: {
     prop: "status",
     event: "toggle",
@@ -71,16 +87,30 @@ export default defineComponent({
     status: {
       type: String as PropType<AudioStatus>,
       required: true,
+      validator: (val: string) =>
+        (audioStatuses as readonly string[]).includes(val),
     },
     /**
-     * The parent audio layout currently in use
+     * The size of the button. The size affects both the size of the button
+     * itself and the icon inside it.
+     */
+    size: {
+      type: String as PropType<"small" | "medium" | "large">,
+      required: true,
+      validator: (val: string) => ["small", "medium", "large"].includes(val),
+    },
+    /**
+     * The parent audio layout currently in use. The connections are determined
+     * by the layout and the size of the button.
      */
     layout: {
       type: String as PropType<AudioLayout>,
       default: "full",
+      validator: (val: string) =>
+        (audioLayouts as readonly string[]).includes(val),
     },
     /**
-     * whether the play-pause button can be focused by using the `Tab` key
+     * Whether the play-pause button can be focused by using the `Tab` key
      */
     isTabbable: {
       type: Boolean,
@@ -103,14 +133,18 @@ export default defineComponent({
     const icon = computed(() => statusIconMap[props.status])
 
     /**
-     * Sets the button variant to `plain--avoid` to manually handle focus states.
-     * Sets the connections (none-rounded corners) for the button based on the layout.
+     * Set the connections (none-rounded corners) for the button based on the layout.
      */
-    const buttonProps = computed(() => {
-      const variant = "plain--avoid" as ButtonVariant
-
-      return { variant, connections: layoutConnectionsMap[props.layout] }
+    const connections = computed(() => {
+      return props.layout === "row" && props.size === "small"
+        ? "none"
+        : layoutConnectionsMap[props.layout]
     })
+
+    /** Convert the `play-pause` sizes to `VIconButton` sizes */
+    const buttonSize = computed(() => sizes[props.size].button)
+
+    const iSize = computed(() => sizes[props.size].icon)
 
     const handleMouseDown = (event: MouseEvent) => {
       if (!props.isTabbable) event.preventDefault() // to prevent focus
@@ -118,10 +152,13 @@ export default defineComponent({
     const handleClick = () => {
       emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")
     }
+
     return {
       label,
       icon,
-      buttonProps,
+      connections,
+      buttonSize,
+      iSize,
       isLoading,
 
       handleClick,

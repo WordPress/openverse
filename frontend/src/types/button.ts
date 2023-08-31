@@ -28,7 +28,7 @@ export const baseButtonSizes = ["large", "medium", "small"] as const
 export type BaseButtonSize = (typeof baseButtonSizes)[number]
 
 /**
- * `larger` is only used for the `VPlayPause` button component.
+ * `larger` is only used for the `VAudioControl` button component.
  */
 export const buttonSizes = [...baseButtonSizes, "disabled", "larger"] as const
 export type ButtonSize = (typeof buttonSizes)[number]

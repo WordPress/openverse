@@ -6,20 +6,18 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
-import VOldPlayPause from "~/components/VAudioTrack/VOldPlayPause.vue"
+import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 
 <Meta
-  title="Components/Audio track/Play-pause toggle - old component"
-  components={VOldPlayPause}
+  title="Components/Audio track/Audio control"
+  components={VAudioControl}
   argTypes={{
     status: {
       options: ["playing", "paused", "played"],
-      defaultValue: "paused",
       control: "select",
     },
     size: {
-      defaultValue: "medium",
-      options: ["tiny", "small", "medium", "extra-large"],
+      options: ["small", "medium", "large"],
       control: "select",
     },
     toggle: {
@@ -29,26 +27,25 @@ import VOldPlayPause from "~/components/VAudioTrack/VOldPlayPause.vue"
 />
 
 export const Template = (args) => ({
-  template: `<VOldPlayPause v-bind="args" v-on="args"/>`,
-  components: { VOldPlayPause },
+  template: `<VAudioControl :size="args.size" :status="args.status" v-bind="args" v-on="args"/>`,
+  components: { VAudioControl },
   setup() {
     return { args }
   },
 })
 
-# Play-pause toggle
+# Audio control
 
-<Description of={VOldPlayPause} />
+<Description of={VAudioControl} />
 
-<ArgsTable of={VOldPlayPause} />
+<ArgsTable of={VAudioControl} />
 
 It should be noted that the component emits the `toggle` event with the opposite
 value of its `status` state.
 
 ## Size
 
-The button dimensions can be set by passing the `size` prop (see
-[`VOldIconButton` docs](?path=/docs/components-voldiconbutton--default-story)).
+The button dimensions can be set by passing the `size` prop.
 
 <Canvas>
   <Story
@@ -74,11 +71,11 @@ be achieved by playing till the end of a track.
 export const vModelTemplate = () => ({
   template: `
     <div>
-      <VOldPlayPause v-model="status" />
+      <VAudioControl v-model="status" size="small" status="paused" />
       {{ status }}
     </div>
   `,
-  components: { VOldPlayPause },
+  components: { VAudioControl },
   data() {
     return {
       status: "played",
@@ -90,6 +87,8 @@ export const vModelTemplate = () => ({
   <Story name="v-model">{vModelTemplate.bind({})}</Story>
 </Canvas>
 
+## Fall-through attributes
+
 The component is, indirectly, a transparent wrapper over `<button>` so all
 attributes of the button element can be applied to it, e.g. `disabled`.
 
@@ -98,6 +97,8 @@ attributes of the button element can be applied to it, e.g. `disabled`.
     name="Disabled"
     args={{
       disabled: true,
+      status: "playing",
+      size: "medium",
     }}
   >
     {Template.bind({})}
