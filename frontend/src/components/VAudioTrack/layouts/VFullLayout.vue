@@ -15,13 +15,30 @@
         <slot name="controller" :features="audioFeatures" :usable-frac="0.8" />
       </div>
     </div>
+
     <div
-      class="items-top mx-auto mt-6 flex flex-row flex-wrap gap-6 px-6 lg:max-w-5xl lg:flex-nowrap"
+      class="mx-auto grid grid-cols-1 grid-rows-[auto,auto] gap-6 p-6 pb-0 lg:mb-6 lg:max-w-5xl"
     >
-      <slot name="play-pause" :size="isSmall ? 'small' : 'large'" />
+      <div class="row-start-1 flex justify-between gap-x-6 sm:col-start-2">
+        <slot name="play-pause" size="medium" />
+        <VButton
+          as="VLink"
+          :href="audio.foreign_landing_url"
+          size="large"
+          variant="filled-pink"
+          has-icon-end
+          show-external-icon
+          :external-icon-size="6"
+          class="description-bold col-start-2 flex-shrink-0"
+          :send-external-link-click-event="false"
+          @click="sendGetMediaEvent"
+        >
+          {{ $t("audioDetails.weblink") }}
+        </VButton>
+      </div>
 
       <div
-        class="audio-info order-2 flex w-full flex-col justify-center lg:order-1 lg:w-auto"
+        class="audio-info row-start-2 flex w-full flex-col justify-center sm:col-start-1 sm:row-start-1 lg:w-auto"
       >
         <h1 class="description-bold lg:heading-5 lg:line-clamp-2">
           {{ audio.title }}
@@ -32,7 +49,7 @@
           <i18n as="span" path="audioTrack.creator" class="font-semibold">
             <template #creator>
               <VLink
-                class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"
+                class="rounded-sm p-px focus-visible:outline-none focus-visible:ring focus-visible:ring-pink"
                 :href="audio.creator_url"
                 :send-external-link-click-event="false"
               >
@@ -40,31 +57,8 @@
               </VLink>
             </template>
           </i18n>
-
-          <span
-            class="hidden text-dark-charcoal-70 lg:block"
-            aria-hidden="true"
-            >{{ $t("interpunct") }}</span
-          >
-
-          <div>{{ timeFmt(audio.duration || 0, true) }}</div>
         </div>
       </div>
-
-      <VButton
-        as="VLink"
-        :href="audio.foreign_landing_url"
-        size="large"
-        variant="filled-pink"
-        has-icon-end
-        show-external-icon
-        :external-icon-size="6"
-        class="description-bold order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
-        :send-external-link-click-event="false"
-        @click="sendGetMediaEvent"
-      >
-        {{ $t("audioDetails.weblink") }}
-      </VButton>
     </div>
   </div>
 </template>
@@ -74,9 +68,10 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 import { timeFmt } from "~/utils/time-fmt"
-import { AudioSize, AudioStatus, audioFeatures } from "~/constants/audio"
+import { AudioStatus, audioFeatures } from "~/constants/audio"
 import { AUDIO } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
+import { useUiStore } from "~/stores/ui"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
@@ -89,9 +84,6 @@ export default defineComponent({
       type: Object as PropType<AudioDetail>,
       required: true,
     },
-    size: {
-      type: String as PropType<AudioSize>,
-    },
     status: {
       type: String as PropType<AudioStatus>,
     },
@@ -101,9 +93,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { sendCustomEvent } = useAnalytics()
+    const uiStore = useUiStore()
 
-    const isSmall = computed(() => props.size === "s")
+    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+
+    const { sendCustomEvent } = useAnalytics()
 
     const sendGetMediaEvent = () => {
       sendCustomEvent("GET_MEDIA", {
@@ -114,9 +108,9 @@ export default defineComponent({
     }
 
     return {
+      isSm,
       timeFmt,
 
-      isSmall,
       audioFeatures,
 
       sendGetMediaEvent,
