@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3074c0e07db3296cac73625f4cf4e2cd0080e04d12a78bf7ee28455e887e7468"
+            "sha256": "281119330664f17cb2e7a558ce16e12aa1e4dbd656d8017ffa797b0d50490b2d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,7 +38,7 @@
                 "sha256:492bbc69dca35d12daac71c4db1bfff0c876c00ef4a2ffacce226d4638eb72da",
                 "sha256:bd2520ca0d9d7d12694a53d44ac482d181b4ec1888909b035a3dbf40d0f57d4a"
             ],
-            "markers": "python_version >= '3.6'",
+            "markers": "python_full_version >= '3.6.0'",
             "version": "==4.12.2"
         },
         "certifi": {
@@ -127,7 +127,7 @@
                 "sha256:f779d3ad205f108d14e99bb3859aa7dd8e9c68874617c72354d7ecaec2a054ac",
                 "sha256:f87f746ee241d30d6ed93969de31e5ffd09a2961a051e60ae6bddde9ec3583aa"
             ],
-            "markers": "python_version >= '3.7'",
+            "markers": "python_full_version >= '3.7.0'",
             "version": "==3.2.0"
         },
         "colorama": {
@@ -410,11 +410,11 @@
         },
         "sphinx-notfound-page": {
             "hashes": [
-                "sha256:c4867b345afccef72de71fb410c412540dfbb5c2de0dc06bde70b331b8f30469",
-                "sha256:f728403280026b84c234540bebbed7f710b9ea582e7348a35a5becefe4024332"
+                "sha256:14cd388956de5cdf8710ab4ff31776ef8d85759c4f46014ee30f368e83bd3a3b",
+                "sha256:40a5741a6b07245a08fe55dbbd603ad6719e191b1419ab2e5337c706ebd16554"
             ],
             "index": "pypi",
-            "version": "==0.8.3"
+            "version": "==1.0.0"
         },
         "sphinx-reredirects": {
             "hashes": [
