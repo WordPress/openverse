@@ -2,6 +2,7 @@ import { title as titleCase } from "case"
 
 import { decodeData as decodeString } from "~/utils/decode-data"
 import type { ApiMedia, Media, Tag } from "~/types/media"
+import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
 import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -102,9 +103,11 @@ export const decodeMediaData = <T extends Media>(
 ): T => {
   // Fake ~50% of results as mature.
   const featureFlagStore = useFeatureFlagStore()
-  const sensitivity = featureFlagStore.isOn("fake_sensitive")
-    ? getFakeSensitivities(media.id)
-    : []
+  const sensitivity =
+    featureFlagStore.isOn("fake_sensitive") &&
+    featureFlagStore.isOn("fetch_sensitive")
+      ? getFakeSensitivities(media.id)
+      : media[SENSITIVITY_RESPONSE_PARAM] ?? []
   const isSensitive = sensitivity.length > 0
 
   return {

@@ -59,29 +59,47 @@ export interface SearchState {
   filters: Filters
 }
 
+/**
+ * Builds the search query parameters for the given search type, filters, and search term.
+ * `q` parameter is always included as the first query parameter.
+ * Only the filters that are relevant for the search type and have a value are included.
+ *
+ * Some parameters are included in the query depending on the mode:
+ * - `INCLUDE_SENSITIVE_QUERY_PARAM` is added to the API search query if the setting is `on`
+ * in the featureFlagStore.
+ */
 function computeQueryParams(
   searchType: SearchType,
   filters: Filters,
-  searchTerm: string
+  searchTerm: string,
+  mode: "frontend" | "API"
 ) {
+  // The filters object is converted to a Record<string, string> object.
+  // e.g., { licenseTypes: [{ code: "commercial", checked: true }] }
+  // => { license_type: "commercial" }
   const query = { ...filtersToQueryData(filters, searchType) }
 
-  const queryKeys = Object.keys(query) as (keyof ApiQueryParams)[]
+  // Ensure that `q` always comes first in the frontend URL.
+  const search_query: ApiQueryParams = { q: searchTerm.trim() }
 
-  return queryKeys.reduce(
-    (obj, key) => {
-      if (key !== "q" && query[key]?.length) {
-        if (key !== INCLUDE_SENSITIVE_QUERY_PARAM) {
-          obj[key] = query[key]
-        } else if (query[key] === "includeSensitiveResults") {
-          obj[key] = "true"
-        }
-      }
-      return obj
-    },
-    // Ensure that q filter always comes first
-    { q: searchTerm.trim() } as ApiQueryParams
+  // Parameters that are included in the query "as is".
+  const param_names = Object.keys(query).filter(
+    (key): key is Exclude<keyof ApiQueryParams, "q"> =>
+      !["q", INCLUDE_SENSITIVE_QUERY_PARAM].includes(key)
   )
+
+  for (const api_param_name of param_names) {
+    if (query[api_param_name]?.length) {
+      search_query[api_param_name] = query[api_param_name]
+    }
+  }
+
+  // `INCLUDE_SENSITIVE_QUERY_PARAM` is used in the API params, but not shown on the frontend.
+  if (mode === "API" && useFeatureFlagStore().isOn("fetch_sensitive")) {
+    search_query[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
+  }
+
+  return search_query
 }
 
 export const useSearchStore = defineStore("search", {
@@ -111,7 +129,8 @@ export const useSearchStore = defineStore("search", {
         return computeQueryParams(
           state.searchType,
           state.filters,
-          state.searchTerm
+          state.searchTerm,
+          "API"
         )
       } else {
         return { q: state.searchTerm }
@@ -119,12 +138,27 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * Returns the number of checked filters, excluding the `includeSensitiveResults` filter.
+     * Returns the search query parameters for API request:
+     * drops all parameters with blank values.
+     */
+    frontendSearchUrlParams(state) {
+      if (isSearchTypeSupported(state.searchType)) {
+        return computeQueryParams(
+          state.searchType,
+          state.filters,
+          state.searchTerm,
+          "frontend"
+        )
+      } else {
+        return { q: state.searchTerm }
+      }
+    },
+
+    /**
+     * Returns the number of checked filters.
      */
     appliedFilterCount(state) {
-      const filterKeys = mediaFilterKeys[state.searchType].filter(
-        (f) => f !== "includeSensitiveResults"
-      )
+      const filterKeys = mediaFilterKeys[state.searchType]
       return filterKeys.reduce((count, filterCategory) => {
         return (
           count + state.filters[filterCategory].filter((f) => f.checked).length
@@ -136,14 +170,11 @@ export const useSearchStore = defineStore("search", {
      * Returns the object with filters for selected search type,
      * with codes, names for i18n labels, and checked status.
      *
-     * Excludes `searchBy` and `includeSensitiveResults` filters that we don't display.
+     * Excludes `searchBy` filters that we don't display.
      */
     searchFilters(state) {
       return mediaFilterKeys[state.searchType]
-        .filter(
-          (filterKey) =>
-            !["searchBy", "includeSensitiveResults"].includes(filterKey)
-        )
+        .filter((filterKey) => filterKey !== "searchBy")
         .reduce((obj, filterKey) => {
           obj[filterKey] = this.filters[filterKey]
           return obj
@@ -151,17 +182,15 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * True if any filter for selected search type except `includeSensitiveResults` is checked.
+     * True if any filter for selected search type is checked.
      */
     isAnyFilterApplied() {
       const filterEntries = Object.entries(this.searchFilters) as [
         string,
         FilterItem[]
       ][]
-      return filterEntries.some(
-        ([filterKey, filterItems]) =>
-          filterKey !== "includeSensitiveResults" &&
-          filterItems.some((filter) => filter.checked)
+      return filterEntries.some(([, filterItems]) =>
+        filterItems.some((filter) => filter.checked)
       )
     },
     /**
@@ -206,9 +235,14 @@ export const useSearchStore = defineStore("search", {
       let queryParams
       if (!query) {
         if (type && isSearchTypeSupported(type)) {
-          queryParams = computeQueryParams(type, this.filters, this.searchTerm)
+          queryParams = computeQueryParams(
+            type,
+            this.filters,
+            this.searchTerm,
+            "frontend"
+          )
         } else {
-          queryParams = this.searchQueryParams
+          queryParams = this.frontendSearchUrlParams
         }
       } else {
         queryParams = query
@@ -272,9 +306,6 @@ export const useSearchStore = defineStore("search", {
         search,
         ...this.recentSearches.filter((i) => i !== search),
       ].slice(0, parseInt(env.savedSearchCount))
-    },
-    computeQueryParams(type: SupportedSearchType) {
-      return computeQueryParams(type, this.filters, this.searchTerm)
     },
     clearRecentSearches() {
       this.recentSearches = []
@@ -341,7 +372,7 @@ export const useSearchStore = defineStore("search", {
       })
     },
     /**
-     * Toggles a filter's checked parameter. Requires either codeIdx or code.
+     * Toggle a filter's checked parameter. Requires either codeIdx or code.
      * Returns the new checked value.
      */
     toggleFilter({
@@ -353,14 +384,40 @@ export const useSearchStore = defineStore("search", {
       codeIdx?: number
       code?: string
     }): boolean {
+      return this.setFilter({ filterType, codeIdx, code, toggle: true })
+    },
+
+    /**
+     * Set the `checked` parameter of the specific search filter.
+     * @param filterType - the slug of the filter kind, e.g. `licenseType`.
+     * @param codeIdx - the index of the filter item to set.
+     * @param code - the slug code of the filter item, e.g. `commercial`.
+     * @param value - the value to set checked to, `true` by default.
+     * @param toggle - if `true`, the value will be toggled.
+     */
+    setFilter({
+      filterType,
+      codeIdx,
+      code,
+      value = true,
+      toggle = false,
+    }: {
+      filterType: FilterCategory
+      codeIdx?: number
+      code?: string
+      value?: boolean
+      toggle?: boolean
+    }) {
       if (typeof codeIdx === "undefined" && typeof code === "undefined") {
         throw new Error(
-          `Cannot toggle filter of type ${filterType}. Use code or codeIdx parameter`
+          `Cannot update filter of type ${filterType}. Use code or codeIdx parameter`
         )
       }
       const filterItems = this.filters[filterType]
       const idx = codeIdx ?? filterItems.findIndex((f) => f.code === code)
-      this.filters[filterType][idx].checked = !filterItems[idx].checked
+      this.filters[filterType][idx].checked = toggle
+        ? !this.filters[filterType][idx].checked
+        : value
       return this.filters[filterType][idx].checked
     },
 
@@ -417,17 +474,18 @@ export const useSearchStore = defineStore("search", {
       path: string
       urlQuery: Context["query"]
     }) {
-      const query = queryDictionaryToQueryParams(urlQuery)
+      // Update `fetch_sensitive` from the feature flag store because
+      // the value is not present in the URL.
+      const query = queryDictionaryToQueryParams({
+        ...urlQuery,
+        ...(useFeatureFlagStore().isOn("fetch_sensitive")
+          ? { [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }
+          : {}),
+      })
+
       this.setSearchTerm(query.q)
       this.searchType = queryStringToSearchType(path)
       if (!isSearchTypeSupported(this.searchType)) return
-
-      // TODO: Convert the 'unstable__include_sensitive_results=true' query param
-      // to `includeSensitiveResults` filterType and the filterCode with the same name:
-      // includeSensitiveResults: { code: includeSensitiveResults, name: '...', checked: true }
-      if (!(query[INCLUDE_SENSITIVE_QUERY_PARAM] === "true")) {
-        delete query[INCLUDE_SENSITIVE_QUERY_PARAM]
-      }
 
       const newFilterData = queryToFilterData({
         query,
@@ -471,6 +529,12 @@ export const useSearchStore = defineStore("search", {
             dependentFilters.includes(item.code) && item.checked
         )
       }
+    },
+
+    isFilterChecked(filterCategory: FilterCategory, code: string): boolean {
+      const filterItems = this.filters[filterCategory]
+      const idx = filterItems.findIndex((f) => f.code === code)
+      return idx >= 0 && filterItems[idx].checked
     },
   },
 })

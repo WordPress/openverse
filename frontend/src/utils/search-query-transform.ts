@@ -59,7 +59,6 @@ const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
   audioProviders: "source",
   imageProviders: "source",
   searchBy: "searchBy",
-  includeSensitiveResults: INCLUDE_SENSITIVE_QUERY_PARAM,
 }
 
 const getMediaFilterTypes = (searchType: SearchType) => {

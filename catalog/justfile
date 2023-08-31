@@ -63,10 +63,15 @@ up *flags:
 up-deps *flags:
     env COMPOSE_PROFILES="catalog_dependencies" just ../up {{ flags }}
 
+# Load sample data into upstream DB
+init: up
+    cd .. && ./load_sample_data.sh -c
+
 # Tear down all the services and recreate the ones of the catalog profile
 recreate:
     just ../down -v
     just up --force-recreate --build
+    just init
 
 ##################
 # Administration #
