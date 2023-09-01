@@ -10,7 +10,7 @@
   </dl>
   <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-6">
     <template v-for="datum in metadata">
-      <dt :key="`${datum.label}`" class="label-regular">
+      <dt :key="`${datum.label}`" class="label-regular pt-1">
         {{ $t(datum.label) }}
       </dt>
       <VMetadataValue
