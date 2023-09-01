@@ -1,10 +1,12 @@
 import os
 from collections import namedtuple
+from datetime import datetime, timedelta
 from textwrap import dedent
 
 import psycopg2
 import pytest
 from popularity import sql
+from popularity.popularity_refresh_types import PopularityRefresh
 
 from catalog.tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
 from common.constants import SQLInfo
@@ -411,3 +413,69 @@ def test_standardized_popularity_function_calculates(
         actual_std_pop_val = postgres_with_image_table.cursor.fetchone()[0]
         expect_std_pop_val = arg_list[i][2]
         assert actual_std_pop_val == expect_std_pop_val
+
+
+@pytest.mark.parametrize(
+    "providers, media_type, expected_confs",
+    [
+        # No providers for this media type
+        ([], "image", []),
+        (
+            ["foo_provider"],
+            "image",
+            [
+                {
+                    "query_id": "foo_provider_popularity_refresh_20230101",
+                    "table_name": "image",
+                    "select_query": "WHERE provider='foo_provider' AND updated_on < '2023-01-01 00:00:00'",
+                    "update_query": "SET standardized_popularity = standardized_image_popularity(image.provider, image.meta_data)",
+                    "batch_size": 10000,
+                    "update_timeout": 3600.0,
+                    "dry_run": False,
+                    "resume_update": False,
+                },
+            ],
+        ),
+        (
+            ["my_provider", "your_provider"],
+            "audio",
+            [
+                {
+                    "query_id": "my_provider_popularity_refresh_20230101",
+                    "table_name": "audio",
+                    "select_query": "WHERE provider='my_provider' AND updated_on < '2023-01-01 00:00:00'",
+                    "update_query": "SET standardized_popularity = standardized_audio_popularity(audio.provider, audio.meta_data)",
+                    "batch_size": 10000,
+                    "update_timeout": 3600.0,
+                    "dry_run": False,
+                    "resume_update": False,
+                },
+                {
+                    "query_id": "your_provider_popularity_refresh_20230101",
+                    "table_name": "audio",
+                    "select_query": "WHERE provider='your_provider' AND updated_on < '2023-01-01 00:00:00'",
+                    "update_query": "SET standardized_popularity = standardized_audio_popularity(audio.provider, audio.meta_data)",
+                    "batch_size": 10000,
+                    "update_timeout": 3600.0,
+                    "dry_run": False,
+                    "resume_update": False,
+                },
+            ],
+        ),
+    ],
+)
+def test_get_providers_update_confs(providers, media_type, expected_confs):
+    TEST_DAY = datetime(2023, 1, 1)
+    config = PopularityRefresh(
+        media_type=media_type,
+        refresh_popularity_batch_timeout=timedelta(hours=1),
+        popularity_metrics={provider: {"metric": "views"} for provider in providers},
+    )
+
+    actual_confs = sql.get_providers_update_confs.function(
+        POSTGRES_CONN_ID,
+        config,
+        TEST_DAY,
+    )
+
+    assert actual_confs == expected_confs
