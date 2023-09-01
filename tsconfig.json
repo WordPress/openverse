@@ -24,12 +24,20 @@
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
+    "types": [
+      "@types/jest",
+      "@nuxt/types",
+      "@nuxtjs/i18n",
+      "@pinia/nuxt",
+      "@sentry/core"
+    ],
     "typeRoots": ["./frontend/typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./frontend/src/*"],
       "~~/*": ["./frontend/*"],
-      "@openverse/*": ["./packages/*/src"]
+      "@openverse/*": ["./packages/*/src"],
+      // Workaround for https://github.com/microsoft/TypeScript/issues/42873
+      "@sentry/core": ["node_modules/@sentry/core"]
     },
     "rootDirs": ["frontend/src", "packages/eslint-plugin/src"],
     "baseUrl": "."

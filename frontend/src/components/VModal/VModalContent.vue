@@ -9,6 +9,8 @@
         contentClasses,
       ]"
     >
+      <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+      <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
       <div
         ref="dialogRef"
         v-bind="$attrs"
