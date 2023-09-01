@@ -20,12 +20,12 @@ POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")
 
 class TableInfo(NamedTuple):
     image: str
-    image_view: str
+    # image_view: str
     metrics: str
     standardized_popularity: str
     popularity_percentile: str
-    image_view_idx: str
-    provider_fid_idx: str
+    # image_view_idx: str
+    # provider_fid_idx: str
 
 
 @pytest.fixture
