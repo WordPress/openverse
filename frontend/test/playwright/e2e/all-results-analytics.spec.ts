@@ -30,6 +30,7 @@ test.describe("all results grid analytics test", () => {
       provider: "jamendo",
     })
   })
+
   test("should send SELECT_SEARCH_RESULT event when image result is selected", async ({
     context,
     page,

@@ -27,7 +27,7 @@
           class="mb-4 last:mb-0"
         >
           <VCheckbox
-            v-if="getFlagStatus(featureData.features[name]) === SWITCHABLE"
+            v-if="isFlagName(name) && isSwitchable(name)"
             :id="name"
             class="flex-row items-center"
             :checked="featureState(name) === ON"
@@ -40,20 +40,20 @@
     </div>
 
     <div
-      v-for="isSwitchable in [false, true]"
-      :key="isSwitchable"
+      v-for="isFlagSwitchable in [false, true]"
+      :key="`${isFlagSwitchable}`"
       class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
-        {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.title`) }}
+        {{ $t(`prefPage.${isFlagSwitchable ? "s" : "nonS"}witchable.title`) }}
       </h2>
       <p class="label-regular mb-4">
-        {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.desc`) }}
+        {{ $t(`prefPage.${isFlagSwitchable ? "s" : "nonS"}witchable.desc`) }}
       </p>
       <ul>
         <template v-for="(feature, name) in flags">
           <li
-            v-if="(getFlagStatus(feature) === SWITCHABLE) === isSwitchable"
+            v-if="(getFlagStatus(feature) === SWITCHABLE) === isFlagSwitchable"
             :key="name"
             class="mb-4 flex flex-row items-center last:mb-0"
           >
@@ -61,7 +61,7 @@
               :id="name"
               class="flex-row items-center"
               :checked="featureState(name) === ON"
-              :disabled="!isSwitchable"
+              :disabled="!isFlagSwitchable"
               is-switch
               @change="handleChange"
             >
@@ -86,8 +86,14 @@ import { computed, defineComponent } from "vue"
 
 import featureData from "~~/feat/feature-flags.json"
 
-import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
+import {
+  useFeatureFlagStore,
+  getFlagStatus,
+  isFlagName,
+} from "~/stores/feature-flag"
 import { SWITCHABLE, ON, OFF, FEATURE_STATES } from "~/constants/feature-flag"
+
+import type { FeatureFlag } from "~/types/feature-flag"
 
 import VContentPage from "~/components/VContentPage.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
@@ -114,9 +120,26 @@ export default defineComponent({
       checked,
     }: {
       name: string
-      checked: boolean
+      checked?: boolean
     }) => {
+      if (!isFlagName(name)) {
+        throw new Error(
+          `Cannot change the state of flag ${name}: it does not exist.`
+        )
+      }
       featureFlagStore.toggleFeature(name, checked ? ON : OFF)
+    }
+
+    const isSwitchable = (name: string) => {
+      if (!isFlagName(name)) {
+        throw new Error(
+          `Error getting switchable status for flag ${name}: it does not exist.`
+        )
+      }
+      // TS does not convert the statuses for flag from string to FlagStatus.
+      // It parses the JSON values for env-based statuses as { staging: string; production: string; }
+      const flag = featureData.features[name] as FeatureFlag
+      return getFlagStatus(flag) === SWITCHABLE
     }
 
     return {
@@ -130,9 +153,11 @@ export default defineComponent({
 
       handleChange,
       getFlagStatus,
+      isSwitchable,
 
       featureData,
     }
   },
+  methods: { isFlagName },
 })
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
+    <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/no-static-element-interactions -->
     <div
       ref="triggerContainerRef"
       class="flex w-min items-stretch whitespace-nowrap"
       @click="onTriggerClick"
     >
-      <!-- eslint-enable vuejs-accessibility/click-events-have-key-events -->
       <!--
         @slot The trigger, should be a button 99.99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the popover will not open
           @binding {object} a11yProps

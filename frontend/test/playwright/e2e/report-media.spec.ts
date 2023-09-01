@@ -90,6 +90,10 @@ const reports = {
   other: submitOtherReport,
 }
 
+// The right side of the object above contains the assertion functions
+// These are aliased as `reportAssertion` in the `Object.entries(reports).forEach` loop below
+/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["reportAssertion"] }] */
+
 /**
  * Iterate through all the media types and supported reports
  * to make sure every permutation works correctly.
