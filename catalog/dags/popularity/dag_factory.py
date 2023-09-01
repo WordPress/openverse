@@ -28,11 +28,11 @@ from datetime import datetime
 from airflow import DAG
 from airflow.decorators import task
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from popularity import sql
 from popularity.popularity_refresh_types import (
     POPULARITY_REFRESH_CONFIGS,
     PopularityRefresh,
 )
-from popularity_refresh import popularity_refresh as sql
 
 from common import slack
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
@@ -97,10 +97,10 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
     with dag:
         update_metrics = sql.update_media_popularity_metrics.override(
             task_id="update_popularity_metrics",
-            execution_timeout=popularity_refresh.execution_timeout,
         )(
             postgres_conn_id=POSTGRES_CONN_ID,
             media_type=popularity_refresh.media_type,
+            popularity_metrics=popularity_refresh.popularity_metrics,
         )
         update_metrics.doc = (
             "Updates the metrics and target percentiles. If a popularity"
@@ -124,16 +124,10 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             .partial(
                 postgres_conn_id=POSTGRES_CONN_ID,
                 media_type=popularity_refresh.media_type,
-                execution_timeout=popularity_refresh.execution_timeout,
+                execution_timeout=popularity_refresh.refresh_metrics_timeout,
+                popularity_metrics=popularity_refresh.popularity_metrics,
             )
-            .expand(
-                provider=[
-                    provider
-                    for provider in sql.POPULARITY_METRICS_BY_MEDIA_TYPE[
-                        popularity_refresh.media_type
-                    ].keys()
-                ]
-            )
+            .expand(provider=list(popularity_refresh.popularity_metrics.keys()))
         )
         update_constants.doc = (
             "Recalculate the percentile values and popularity constants"

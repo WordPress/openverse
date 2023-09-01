@@ -6,10 +6,10 @@ from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
 from popularity.popularity_refresh_types import PopularityRefresh
 
-from common.constants import AUDIO, DAG_DEFAULT_ARGS, IMAGE, SQLInfo
+from common.constants import DAG_DEFAULT_ARGS, IMAGE, SQLInfo
 from common.sql import PostgresHook, _single_value
 from common.storage import columns as col
-from common.utils import setup_kwargs_for_media_type, setup_sql_info_for_media_type
+from common.utils import setup_sql_info_for_media_type
 
 
 DEFAULT_PERCENTILE = 0.85
@@ -28,19 +28,6 @@ PROVIDER = col.PROVIDER.db_name
 
 Column = namedtuple("Column", ["name", "definition"])
 
-IMAGE_POPULARITY_METRICS = {
-    "flickr": {"metric": "views"},
-    "nappy": {"metric": "downloads"},
-    "rawpixel": {"metric": "download_count"},
-    "stocksnap": {"metric": "downloads_raw"},
-    "wikimedia": {"metric": "global_usage_count"},
-}
-
-AUDIO_POPULARITY_METRICS = {
-    "jamendo": {"metric": "listens"},
-    "wikimedia_audio": {"metric": "global_usage_count"},
-    "freesound": {"metric": "num_downloads"},
-}
 
 POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=PARTITION, definition="character varying(80) PRIMARY KEY"),
@@ -49,14 +36,6 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=VALUE, definition="float"),
     Column(name=CONSTANT, definition="float"),
 ]
-
-
-def setup_popularity_metrics_for_media_type(func: callable) -> callable:
-    """Provide media-type-specific popularity metrics to the decorated function."""
-    return setup_kwargs_for_media_type(
-        {AUDIO: AUDIO_POPULARITY_METRICS, IMAGE: IMAGE_POPULARITY_METRICS},
-        "metrics_dict",
-    )(func)
 
 
 @task
@@ -75,11 +54,10 @@ def drop_media_popularity_functions(postgres_conn_id, media_type, sql_info=None)
 
 @task
 @setup_sql_info_for_media_type
-@setup_popularity_metrics_for_media_type
 def update_media_popularity_metrics(
     postgres_conn_id,
     media_type,
-    popularity_metrics=None,
+    popularity_metrics,
     sql_info=None,
     task: AbstractOperator = None,
 ):
@@ -148,13 +126,12 @@ def calculate_media_popularity_percentile_value(
 
 @task
 @setup_sql_info_for_media_type
-@setup_popularity_metrics_for_media_type
 def update_percentile_and_constants_values_for_provider(
     postgres_conn_id,
     provider,
     raw_percentile_value,
     media_type,
-    metrics_dict=None,
+    popularity_metrics,
     sql_info=None,
     task: AbstractOperator = None,
 ):
@@ -168,7 +145,7 @@ def update_percentile_and_constants_values_for_provider(
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
 
-    provider_info = metrics_dict.get(provider)
+    provider_info = popularity_metrics.get(provider)
     percentile = provider_info.get("percentile", DEFAULT_PERCENTILE)
 
     # Calculate the popularity constant using the percentile value
@@ -188,7 +165,7 @@ def update_percentile_and_constants_values_for_provider(
 
 @task_group
 def update_percentile_and_constants_for_provider(
-    postgres_conn_id, provider, media_type=IMAGE, execution_timeout=None
+    postgres_conn_id, provider, media_type, popularity_metrics, execution_timeout=None
 ):
     calculate_percentile_val = calculate_media_popularity_percentile_value.override(
         task_id="calculate_percentile_value",
@@ -213,6 +190,7 @@ def update_percentile_and_constants_for_provider(
         provider=provider,
         raw_percentile_value=calculate_percentile_val,
         media_type=media_type,
+        popularity_metrics=popularity_metrics,
     )
     update_metrics_table.doc = (
         "Given the newly calculated percentile value, calculate the"
@@ -316,12 +294,10 @@ def format_update_standardized_popularity_query(
 
 
 @task
-@setup_popularity_metrics_for_media_type
 def get_providers_update_confs(
     postgres_conn_id: str,
     popularity_refresh: PopularityRefresh,
     last_updated_time: datetime,
-    metrics_dict: dict = None,
 ):
     """
     Build a list of DagRun confs for each provider of this media type. The confs will
@@ -346,7 +322,7 @@ def get_providers_update_confs(
             ),
             # Query used to update the standardized_popularity
             "update_query": format_update_standardized_popularity_query(
-                popularity_refresh.media_type
+                media_type=popularity_refresh.media_type
             ),
             "batch_size": 10_000,
             "update_timeout": (
@@ -355,5 +331,5 @@ def get_providers_update_confs(
             "dry_run": False,
             "resume_update": False,
         }
-        for provider in metrics_dict.keys()
+        for provider in popularity_refresh.popularity_metrics.keys()
     ]
