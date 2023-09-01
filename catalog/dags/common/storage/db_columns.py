@@ -2,7 +2,9 @@
 This module contains the lists of database columns in the same order as in the
 main media tables within the database.
 """
+from common.constants import AUDIO, IMAGE
 from common.storage import columns as col
+from common.utils import setup_kwargs_for_media_type
 
 
 # Columns that are only in the main table;
@@ -79,3 +81,10 @@ AUDIO_TABLE_COLUMNS = [
     col.STANDARDIZED_POPULARITY,
     col.AUDIO_SET_FOREIGN_IDENTIFIER,
 ]
+
+DB_COLUMNS_BY_MEDIA_TYPE = {AUDIO: AUDIO_TABLE_COLUMNS, IMAGE: IMAGE_TABLE_COLUMNS}
+
+
+def setup_db_columns_for_media_type(func: callable) -> callable:
+    """Provide media-type-specific DB columns as a kwarg to the decorated function."""
+    return setup_kwargs_for_media_type(DB_COLUMNS_BY_MEDIA_TYPE, "db_columns")(func)

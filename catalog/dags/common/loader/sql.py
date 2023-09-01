@@ -4,29 +4,24 @@ from textwrap import dedent
 from airflow.models.abstractoperator import AbstractOperator
 from psycopg2.errors import InvalidTextRepresentation
 
-from common.constants import AUDIO, IMAGE, MediaType
+from common.constants import IMAGE, MediaType, SQLInfo
 from common.loader import provider_details as prov
 from common.loader.paths import _extract_media_type
-from common.popularity.constants import (
-    STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
-    STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-)
 from common.sql import PostgresHook
 from common.storage import columns as col
 from common.storage.columns import NULL, Column, UpsertStrategy
-from common.storage.db_columns import AUDIO_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
+from common.storage.db_columns import setup_db_columns_for_media_type
 from common.storage.tsv_columns import (
     COLUMNS,
-    CURRENT_AUDIO_TSV_COLUMNS,
-    CURRENT_IMAGE_TSV_COLUMNS,
-    required_columns,
+    REQUIRED_COLUMNS,
+    setup_tsv_columns_for_media_type,
 )
+from common.utils import setup_sql_info_for_media_type
 
 
 logger = logging.getLogger(__name__)
 
 LOAD_TABLE_NAME_STUB = "load_"
-TABLE_NAMES = {AUDIO: AUDIO, IMAGE: IMAGE}
 DB_USER_NAME = "deploy"
 NOW = "NOW()"
 FALSE = "'f'"
@@ -44,14 +39,6 @@ OLDEST_PER_PROVIDER = {
     prov.SMK_DEFAULT_PROVIDER: "1 month 3 days",
 }
 
-DB_COLUMNS = {
-    IMAGE: IMAGE_TABLE_COLUMNS,
-    AUDIO: AUDIO_TABLE_COLUMNS,
-}
-TSV_COLUMNS = {
-    AUDIO: CURRENT_AUDIO_TSV_COLUMNS,
-    IMAGE: CURRENT_IMAGE_TSV_COLUMNS,
-}
 CURRENT_TSV_VERSION = "001"
 RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731
 
@@ -67,10 +54,12 @@ def create_column_definitions(table_columns: list[Column], is_loading=True):
     return ",\n  ".join(definitions)
 
 
+@setup_tsv_columns_for_media_type
 def create_loading_table(
     postgres_conn_id: str,
     identifier: str,
-    media_type: str = IMAGE,
+    media_type: str,
+    tsv_columns: list[Column] = None,
 ):
     """Create intermediary table and indices if they do not exist."""
     load_table = _get_load_table_name(identifier, media_type=media_type)
@@ -78,8 +67,7 @@ def create_loading_table(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=10.0,
     )
-    loading_table_columns = TSV_COLUMNS[media_type]
-    columns_definition = f"{create_column_definitions(loading_table_columns)}"
+    columns_definition = f"{create_column_definitions(tsv_columns)}"
     table_creation_query = dedent(
         f"""
     CREATE UNLOGGED TABLE public.{load_table}(
@@ -216,7 +204,7 @@ def clean_intermediate_table_data(
     )
 
     missing_columns = 0
-    for column in required_columns:
+    for column in REQUIRED_COLUMNS:
         missing_columns += postgres.run(
             f"DELETE FROM {load_table} WHERE {column.db_name} IS NULL;",
             handler=RETURN_ROW_COUNT,
@@ -268,13 +256,15 @@ def _is_tsv_column_from_different_version(
     )
 
 
+@setup_sql_info_for_media_type
+@setup_db_columns_for_media_type
 def upsert_records_to_db_table(
     postgres_conn_id: str,
     identifier: str,
-    db_table: str = None,
-    media_type: str = IMAGE,
+    media_type: str,
     tsv_version: str = CURRENT_TSV_VERSION,
-    popularity_function: str = STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
+    db_columns: list[Column] = None,
+    sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
     """
@@ -285,35 +275,29 @@ def upsert_records_to_db_table(
 
     :param postgres_conn_id
     :param identifier
-    :param db_table
     :param media_type
     :param tsv_version:      The version of TSV being processed. This
     determines which columns are used in the upsert query.
     :param task              To be automagically passed by airflow.
     :return:
     """
-    if db_table is None:
-        db_table = TABLE_NAMES.get(media_type, TABLE_NAMES[IMAGE])
-
-    if media_type is AUDIO:
-        popularity_function = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
-
     load_table = _get_load_table_name(identifier, media_type=media_type)
-    logger.info(f"Upserting new records into {db_table}.")
+    logger.info(f"Upserting new records into {sql_info.media_table}.")
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
 
     # Remove identifier column
-    db_columns: list[Column] = DB_COLUMNS[media_type][1:]
+    db_columns = db_columns[1:]
+    # db_columns: list[Column] = DB_COLUMNS[media_type][1:]
     column_inserts = {}
     column_conflict_values = {}
     for column in db_columns:
         args = []
         if column.db_name == col.STANDARDIZED_POPULARITY.db_name:
             args = [
-                popularity_function,
+                sql_info.standardized_popularity_fn,
             ]
 
         if column.upsert_strategy == UpsertStrategy.no_change:
@@ -331,13 +315,13 @@ def upsert_records_to_db_table(
     upsert_conflict_string = ",\n    ".join(column_conflict_values.values())
     upsert_query = dedent(
         f"""
-        INSERT INTO {db_table} AS old
+        INSERT INTO {sql_info.media_table} AS old
         ({col.DIRECT_URL.name}, {', '.join(column_inserts.keys())})
         SELECT DISTINCT ON ({col.DIRECT_URL.name}) {col.DIRECT_URL.name},
         {', '.join(column_inserts.values())}
         FROM {load_table} as new
         WHERE NOT EXISTS (
-            SELECT {col.DIRECT_URL.name} from {db_table}
+            SELECT {col.DIRECT_URL.name} from {sql_info.media_table}
             WHERE {col.DIRECT_URL.name} = new.{col.DIRECT_URL.name} AND
                 MD5({col.FOREIGN_ID.name}) <> MD5(new.{col.FOREIGN_ID.name})
         )

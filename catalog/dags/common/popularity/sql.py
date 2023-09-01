@@ -5,26 +5,14 @@ from textwrap import dedent
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
 
-from common.constants import AUDIO, DAG_DEFAULT_ARGS, IMAGE
-from common.loader.sql import TABLE_NAMES
-from common.popularity.constants import (
-    AUDIO_POPULARITY_PERCENTILE_FUNCTION,
-    IMAGE_POPULARITY_PERCENTILE_FUNCTION,
-    IMAGE_VIEW_NAME,
-    STANDARDIZED_AUDIO_POPULARITY_FUNCTION,
-    STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-)
+from common.constants import AUDIO, DAG_DEFAULT_ARGS, IMAGE, SQLInfo
 from common.sql import PostgresHook, _single_value
 from common.storage import columns as col
-from common.storage.db_columns import IMAGE_TABLE_COLUMNS
+from common.utils import setup_kwargs_for_media_type, setup_sql_info_for_media_type
 
 
 DEFAULT_PERCENTILE = 0.85
 
-IMAGE_VIEW_ID_IDX = "image_view_identifier_idx"
-AUDIO_VIEW_ID_IDX = "audio_view_identifier_idx"
-IMAGE_VIEW_PROVIDER_FID_IDX = "image_view_provider_fid_idx"
-AUDIO_VIEW_PROVIDER_FID_IDX = "audio_view_provider_fid_idx"
 
 # Column name constants
 VALUE = "val"
@@ -38,9 +26,6 @@ PERCENTILE = "percentile"
 PROVIDER = col.PROVIDER.db_name
 
 Column = namedtuple("Column", ["name", "definition"])
-
-IMAGE_POPULARITY_METRICS_TABLE_NAME = "image_popularity_metrics"
-AUDIO_POPULARITY_METRICS_TABLE_NAME = "audio_popularity_metrics"
 
 IMAGE_POPULARITY_METRICS = {
     "flickr": {"metric": "views"},
@@ -64,59 +49,42 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
     Column(name=CONSTANT, definition="float"),
 ]
 
-# Further refactoring of this nature will be done in
-# https://github.com/WordPress/openverse/issues/2678.
-POPULARITY_METRICS_BY_MEDIA_TYPE = {
-    AUDIO: AUDIO_POPULARITY_METRICS,
-    IMAGE: IMAGE_POPULARITY_METRICS,
-}
+
+def setup_popularity_metrics_for_media_type(func: callable) -> callable:
+    return setup_kwargs_for_media_type(
+        {AUDIO: AUDIO_POPULARITY_METRICS, IMAGE: IMAGE_POPULARITY_METRICS},
+        "metrics_dict",
+    )(func)
 
 
-def drop_media_popularity_relations(
+@setup_sql_info_for_media_type
+def drop_media_popularity_metrics(
     postgres_conn_id,
-    media_type=IMAGE,
-    metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    media_type,
+    sql_info=None,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
-    if media_type == AUDIO:
-        metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
-
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
     )
-    drop_popularity_metrics = f"DROP TABLE IF EXISTS public.{metrics} CASCADE;"
-    postgres.run(drop_popularity_metrics)
+    postgres.run(f"DROP TABLE IF EXISTS public.{sql_info.metrics_table} CASCADE;")
 
 
-def drop_media_popularity_functions(
-    postgres_conn_id,
-    media_type=IMAGE,
-    standardized_popularity=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
-):
-    if media_type == AUDIO:
-        popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
-        standardized_popularity = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
+@setup_sql_info_for_media_type
+def drop_media_popularity_functions(postgres_conn_id, media_type, sql_info=None):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
     )
-    drop_standardized_popularity = (
-        f"DROP FUNCTION IF EXISTS public.{standardized_popularity} CASCADE;"
+    postgres.run(
+        f"DROP FUNCTION IF EXISTS public.{sql_info.standardized_popularity_fn} CASCADE;"
     )
-    drop_popularity_percentile = (
-        f"DROP FUNCTION IF EXISTS public.{popularity_percentile} CASCADE;"
+    postgres.run(
+        f"DROP FUNCTION IF EXISTS public.{sql_info.popularity_percentile_fn} CASCADE;"
     )
-    postgres.run(drop_standardized_popularity)
-    postgres.run(drop_popularity_percentile)
 
 
-def create_media_popularity_metrics(
-    postgres_conn_id,
-    media_type=IMAGE,
-    popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
-):
-    if media_type == AUDIO:
-        popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
+@setup_sql_info_for_media_type
+def create_media_popularity_metrics(postgres_conn_id, media_type, sql_info=None):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
     )
@@ -125,7 +93,7 @@ def create_media_popularity_metrics(
     )
     query = dedent(
         f"""
-        CREATE TABLE public.{popularity_metrics_table} (
+        CREATE TABLE public.{sql_info.metrics_table} (
           {popularity_metrics_columns_string}
         );
         """
@@ -134,18 +102,15 @@ def create_media_popularity_metrics(
 
 
 @task
+@setup_sql_info_for_media_type
+@setup_popularity_metrics_for_media_type
 def update_media_popularity_metrics(
     postgres_conn_id,
-    media_type=IMAGE,
+    media_type,
     popularity_metrics=None,
-    popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
-    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
+    sql_info=None,
     task: AbstractOperator = None,
 ):
-    if popularity_metrics is None:
-        popularity_metrics = POPULARITY_METRICS_BY_MEDIA_TYPE[media_type]
-    if media_type == AUDIO:
-        popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
@@ -168,7 +133,7 @@ def update_media_popularity_metrics(
 
     query = dedent(
         f"""
-        INSERT INTO public.{popularity_metrics_table} (
+        INSERT INTO public.{sql_info.metrics_table} (
           {', '.join(column_names)}
         ) VALUES
           {popularity_metric_inserts}
@@ -182,18 +147,14 @@ def update_media_popularity_metrics(
 
 
 @task
+@setup_sql_info_for_media_type
 def calculate_media_popularity_percentile_value(
     postgres_conn_id,
     provider,
     media_type=IMAGE,
-    popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
-    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
+    sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
-    if media_type == AUDIO:
-        popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
-        popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
-
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
@@ -204,8 +165,8 @@ def calculate_media_popularity_percentile_value(
     # popularity metric.
     calculate_new_percentile_value_query = dedent(
         f"""
-        SELECT {popularity_percentile}({PARTITION}, {METRIC}, {PERCENTILE})
-        FROM {popularity_metrics_table}
+        SELECT {sql_info.popularity_percentile_fn}({PARTITION}, {METRIC}, {PERCENTILE})
+        FROM {sql_info.metrics_table}
         WHERE {col.PROVIDER.db_name}='{provider}';
         """
     )
@@ -214,20 +175,17 @@ def calculate_media_popularity_percentile_value(
 
 
 @task
+@setup_sql_info_for_media_type
+@setup_popularity_metrics_for_media_type
 def update_percentile_and_constants_values_for_provider(
     postgres_conn_id,
     provider,
     raw_percentile_value,
-    media_type=IMAGE,
-    popularity_metrics=None,
-    popularity_metrics_table=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    media_type,
+    metrics_dict=None,
+    sql_info=None,
     task: AbstractOperator = None,
 ):
-    if popularity_metrics is None:
-        popularity_metrics = POPULARITY_METRICS_BY_MEDIA_TYPE.get(media_type, {})
-    if media_type == AUDIO:
-        popularity_metrics_table = AUDIO_POPULARITY_METRICS_TABLE_NAME
-
     if raw_percentile_value is None:
         # Occurs when a provider has a metric configured, but there are no records
         # with any data for that metric.
@@ -238,7 +196,7 @@ def update_percentile_and_constants_values_for_provider(
         default_statement_timeout=PostgresHook.get_execution_timeout(task),
     )
 
-    provider_info = popularity_metrics.get(provider)
+    provider_info = metrics_dict.get(provider)
     percentile = provider_info.get("percentile", DEFAULT_PERCENTILE)
 
     # Calculate the popularity constant using the percentile value
@@ -248,7 +206,7 @@ def update_percentile_and_constants_values_for_provider(
     # Update the percentile value and constant in the metrics table
     update_constant_query = dedent(
         f"""
-        UPDATE public.{popularity_metrics_table}
+        UPDATE public.{sql_info.metrics_table}
         SET {VALUE} = {percentile_value}, {CONSTANT} = {new_constant}
         WHERE {col.PROVIDER.db_name} = '{provider}';
         """
@@ -314,27 +272,25 @@ def _format_popularity_metric_insert_tuple_string(
     return f"('{provider}', '{metric}', {percentile}, null, null)"
 
 
+@setup_sql_info_for_media_type
 def create_media_popularity_percentile_function(
     postgres_conn_id,
-    media_type=IMAGE,
-    popularity_percentile=IMAGE_POPULARITY_PERCENTILE_FUNCTION,
-    media_table=TABLE_NAMES[IMAGE],
+    media_type,
+    sql_info=None,
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
     )
-    if media_type == AUDIO:
-        popularity_percentile = AUDIO_POPULARITY_PERCENTILE_FUNCTION
-        media_table = TABLE_NAMES[AUDIO]
+
     query = dedent(
         f"""
-        CREATE OR REPLACE FUNCTION public.{popularity_percentile}(
+        CREATE OR REPLACE FUNCTION public.{sql_info.popularity_percentile_fn}(
             provider text, pop_field text, percentile float
         ) RETURNS FLOAT AS $$
           SELECT percentile_disc($3) WITHIN GROUP (
             ORDER BY ({METADATA_COLUMN}->>$2)::float
           )
-          FROM {media_table} WHERE {PARTITION}=$1;
+          FROM {sql_info.media_table} WHERE {PARTITION}=$1;
         $$
         LANGUAGE SQL
         STABLE
@@ -344,25 +300,20 @@ def create_media_popularity_percentile_function(
     postgres.run(query)
 
 
+@setup_sql_info_for_media_type
 def create_standardized_media_popularity_function(
-    postgres_conn_id,
-    media_type=IMAGE,
-    function_name=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    popularity_metrics=IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    postgres_conn_id, media_type, sql_info=None
 ):
-    if media_type == AUDIO:
-        popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
-        function_name = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
     )
     query = dedent(
         f"""
-        CREATE OR REPLACE FUNCTION public.{function_name}(
+        CREATE OR REPLACE FUNCTION public.{sql_info.standardized_popularity_fn}(
           provider text, meta_data jsonb
         ) RETURNS FLOAT AS $$
           SELECT ($2->>{METRIC})::float / (($2->>{METRIC})::float + {CONSTANT})
-          FROM {popularity_metrics} WHERE provider=$1;
+          FROM {sql_info.metrics_table} WHERE provider=$1;
         $$
         LANGUAGE SQL
         STABLE
@@ -372,37 +323,31 @@ def create_standardized_media_popularity_function(
     postgres.run(query)
 
 
+@setup_sql_info_for_media_type
 def get_providers_with_popularity_data_for_media_type(
     postgres_conn_id: str,
     media_type: str = IMAGE,
-    popularity_metrics: str = IMAGE_POPULARITY_METRICS_TABLE_NAME,
+    sql_info=None,
     pg_timeout: float = timedelta(minutes=10).total_seconds(),
 ):
     """
     Return a list of distinct `provider`s that support popularity data,
     for the given media type.
     """
-    if media_type == AUDIO:
-        popularity_metrics = AUDIO_POPULARITY_METRICS_TABLE_NAME
-
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
     )
     providers = postgres.get_records(
-        f"SELECT DISTINCT provider FROM public.{popularity_metrics};"
+        f"SELECT DISTINCT provider FROM public.{sql_info.metrics_table};"
     )
 
     return [x[0] for x in providers]
 
 
+@setup_sql_info_for_media_type
 def format_update_standardized_popularity_query(
-    media_type=IMAGE,
-    standardized_popularity_func=STANDARDIZED_IMAGE_POPULARITY_FUNCTION,
-    table_name=TABLE_NAMES[IMAGE],
-    db_columns=IMAGE_TABLE_COLUMNS,
-    db_view_name=IMAGE_VIEW_NAME,
-    db_view_id_idx=IMAGE_VIEW_ID_IDX,
-    db_view_provider_fid_idx=IMAGE_VIEW_PROVIDER_FID_IDX,
+    media_type,
+    sql_info=None,
     task: AbstractOperator = None,
 ):
     """
@@ -410,11 +355,8 @@ def format_update_standardized_popularity_query(
     media type. Only the `SET ...` portion of the query is returned, to be used
     by a `batched_update` DagRun.
     """
-    if media_type == AUDIO:
-        table_name = TABLE_NAMES[AUDIO]
-        standardized_popularity_func = STANDARDIZED_AUDIO_POPULARITY_FUNCTION
-
     return (
-        f"SET {col.STANDARDIZED_POPULARITY.db_name} = {standardized_popularity_func}"
-        f"({table_name}.{PARTITION}, {table_name}.{METADATA_COLUMN})"
+        f"SET {col.STANDARDIZED_POPULARITY.db_name} ="
+        f" {sql_info.standardized_popularity_fn}({sql_info.media_table}.{PARTITION},"
+        f" {sql_info.media_table}.{METADATA_COLUMN})"
     )

@@ -103,26 +103,11 @@ def create_recreate_popularity_calculation_dag(data_refresh: DataRefresh):
             ),
         )
 
-        create_matview = PythonOperator(
-            task_id="create_materialized_popularity_view",
-            python_callable=sql.create_media_view,
-            op_kwargs={
-                "postgres_conn_id": POSTGRES_CONN_ID,
-                "media_type": media_type,
-            },
-            execution_timeout=data_refresh.create_materialized_view_timeout,
-            doc=(
-                "Create the materialized view containing standardized popularity data "
-                "for all records."
-            ),
-        )
-
         (
             [drop_relations, drop_functions]
             >> create_metrics_table
             >> [update_metrics_table, create_percentile_function]
             >> create_popularity_function
-            >> create_matview
         )
 
     return dag

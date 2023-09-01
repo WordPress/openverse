@@ -1,6 +1,7 @@
 from common.constants import AUDIO, IMAGE
 from common.storage import columns as col
 from common.storage.columns import Column
+from common.utils import setup_kwargs_for_media_type
 
 
 # Image has 'legacy' 000 version
@@ -120,6 +121,13 @@ COLUMNS = {
 
 CURRENT_AUDIO_TSV_COLUMNS: list[Column] = COLUMNS[AUDIO][CURRENT_VERSION[AUDIO]]
 CURRENT_IMAGE_TSV_COLUMNS: list[Column] = COLUMNS[IMAGE][CURRENT_VERSION[IMAGE]]
-
 # This list is the same for all media types
-required_columns = [col for col in CURRENT_IMAGE_TSV_COLUMNS if col.required]
+REQUIRED_COLUMNS = [col for col in CURRENT_IMAGE_TSV_COLUMNS if col.required]
+
+
+def setup_tsv_columns_for_media_type(func: callable) -> callable:
+    """Provide media-type-specific TSV columns as a kwarg to the decorated function."""
+    return setup_kwargs_for_media_type(
+        {AUDIO: CURRENT_AUDIO_TSV_COLUMNS, IMAGE: CURRENT_IMAGE_TSV_COLUMNS},
+        "tsv_columns",
+    )(func)
