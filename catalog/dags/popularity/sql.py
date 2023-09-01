@@ -56,6 +56,27 @@ def drop_media_popularity_functions(
 
 @task
 @setup_sql_info_for_media_type
+def create_media_popularity_metrics(
+    postgres_conn_id: str, media_type: str, sql_info: SQLInfo = None
+):
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
+    )
+    popularity_metrics_columns_string = ",\n            ".join(
+        f"{c.name} {c.definition}" for c in POPULARITY_METRICS_TABLE_COLUMNS
+    )
+    query = dedent(
+        f"""
+        CREATE TABLE public.{sql_info.metrics_table} (
+          {popularity_metrics_columns_string}
+        );
+        """
+    )
+    postgres.run(query)
+
+
+@task
+@setup_sql_info_for_media_type
 def update_media_popularity_metrics(
     postgres_conn_id: str,
     media_type: str,

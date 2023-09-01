@@ -41,7 +41,7 @@ def setup_kwargs_for_media_type(
         def wrapped(*args, **kwargs):
             # First check to see if the called function was already passed a value
             # for the given kwarg name. If so, simply use this.
-            if media_info := kwargs.pop(kwarg_name, None) is None:
+            if (media_info := kwargs.pop(kwarg_name, None)) is None:
                 # The called function should be passed a `media_type`, whose value
                 # is a key in the values dict
                 media_type = kwargs.get("media_type", None)

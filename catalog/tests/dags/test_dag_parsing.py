@@ -20,7 +20,8 @@ DAG_PATHS = [
     "maintenance/airflow_log_cleanup_workflow.py",
     "maintenance/pr_review_reminders/pr_review_reminders_dag.py",
     "maintenance/rotate_db_snapshots.py",
-    "database/recreate_popularity_calculation_dag_factory.py",
+    "popularity/recreate_popularity_calculation_dag_factory.py",
+    "popularity/popularity_refresh_dag_factory.py",
     "data_refresh/dag_factory.py",
     "data_refresh/create_filtered_index_dag.py",
     "oauth2/authorize_dag.py",
@@ -34,7 +35,8 @@ EXPECTED_COUNT = {
     "providers/provider_ingestion_workflow_dag_factory.py": len(
         REINGESTION_WORKFLOW_CONFIGS
     ),
-    "database/recreate_popularity_calculation_dag_factory.py": len(MEDIA_TYPES),
+    "popularity/recreate_popularity_calculation_dag_factory.py": len(MEDIA_TYPES),
+    "popularity/popularity_refresh_dag_factory.py": len(MEDIA_TYPES),
     "data_refresh/dag_factory.py": len(MEDIA_TYPES),
     "data_refresh/create_filtered_index_dag.py": len(MEDIA_TYPES),
 }
