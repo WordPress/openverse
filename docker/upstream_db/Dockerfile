@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM postgres:13.7 as db
+FROM postgres:13.12 as db
 
 ARG PGCLI_VERSION=3.2.0
 
