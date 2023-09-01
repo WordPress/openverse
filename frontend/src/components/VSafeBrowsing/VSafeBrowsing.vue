@@ -46,6 +46,7 @@ import { useContext } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
+import { useAnalytics } from "~/composables/use-analytics"
 import { ON, OFF } from "~/constants/feature-flag"
 
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
@@ -65,12 +66,14 @@ export default defineComponent({
     const sensitivityPath = computed(() => app.localePath("/about")) // TODO: Issue#2550
 
     const featureFlagStore = useFeatureFlagStore()
+    const { sendCustomEvent } = useAnalytics()
 
     let fetchSensitive = computed(() =>
       featureFlagStore.isOn("fetch_sensitive")
     )
     let setFetchSensitive = ({ checked }: { checked: boolean }) => {
       featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
+      sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
 
       if (!checked) {
         // If sensitive content is not fetched, there is nothing to blur/unblur.
@@ -83,6 +86,7 @@ export default defineComponent({
     let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
     let setBlurSensitive = ({ checked }: { checked: boolean }) => {
       uiStore.setShouldBlurSensitive(checked)
+      sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
     }
 
     const toggles = [
