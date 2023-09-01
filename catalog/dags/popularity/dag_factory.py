@@ -32,13 +32,10 @@ from popularity.popularity_refresh_types import (
     POPULARITY_REFRESH_CONFIGS,
     PopularityRefresh,
 )
-from popularity.refresh_popularity_metrics_task_factory import (
-    create_refresh_popularity_metrics_task_group,
-)
+from popularity_refresh import popularity_refresh as sql
 
 from common import slack
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
-from common.popularity import sql
 from database.batched_update.constants import DAG_ID as BATCHED_UPDATE_DAG_ID
 
 
@@ -70,52 +67,6 @@ def get_last_updated_time():
     return datetime.utcnow()
 
 
-@task
-def get_providers_update_confs(
-    postgres_conn_id: str,
-    popularity_refresh: PopularityRefresh,
-    last_updated_time: datetime,
-):
-    """
-    Build a list of DagRun confs for each provider of this media type. The confs will
-    be used by the `batched_update` DAG to perform a batched update of all existing
-    records, to recalculate their standardized_popularity with the new popularity
-    constant. Providers that do not support popularity data are omitted.
-    """
-    # For the media type, get a list of the providers who support popularity data
-    providers = sql.get_providers_with_popularity_data_for_media_type(
-        postgres_conn_id, popularity_refresh.media_type
-    )
-
-    # For each provider, create a conf that will be used by the batched_update to
-    # refresh standardized popularity scores.
-    return [
-        {
-            # Uniquely identify the query
-            "query_id": (
-                f"{provider}_popularity_refresh_{last_updated_time.strftime('%Y%m%d')}"
-            ),
-            "table_name": popularity_refresh.media_type,
-            # Query used to select records that should be refreshed
-            "select_query": (
-                f"WHERE provider='{provider}' AND updated_on <"
-                f" '{last_updated_time.strftime('%Y-%m-%d %H:%M:%S')}'"
-            ),
-            # Query used to update the standardized_popularity
-            "update_query": sql.format_update_standardized_popularity_query(
-                popularity_refresh.media_type
-            ),
-            "batch_size": 10_000,
-            "update_timeout": (
-                popularity_refresh.refresh_popularity_batch_timeout.total_seconds()
-            ),
-            "dry_run": False,
-            "resume_update": False,
-        }
-        for provider in providers
-    ]
-
-
 def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
     """
     Instantiate a DAG for a popularity refresh.
@@ -144,11 +95,60 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
     )
 
     with dag:
-        # Refresh the underlying popularity tables. This step recalculates the
-        # popularity constants, which will later be used to calculate updated
-        # standardized popularity scores.
-        refresh_popularity_metrics = create_refresh_popularity_metrics_task_group(
-            popularity_refresh
+        update_metrics = sql.update_media_popularity_metrics.override(
+            task_id="update_popularity_metrics",
+            execution_timeout=popularity_refresh.execution_timeout,
+        )(
+            postgres_conn_id=POSTGRES_CONN_ID,
+            media_type=popularity_refresh.media_type,
+        )
+        update_metrics.doc = (
+            "Updates the metrics and target percentiles. If a popularity"
+            " metric is configured for a new provider, this step will add it"
+            " to the metrics table."
+        )
+
+        update_metrics_status = notify_slack.override(
+            task_id="report_update_popularity_metrics_status"
+        )(
+            text="Popularity metrics update complete | _Next: popularity"
+            " constants update_",
+            media_type=popularity_refresh.media_type,
+            dag_id=popularity_refresh.dag_id,
+        )
+
+        update_constants = (
+            sql.update_percentile_and_constants_for_provider.override(
+                group_id="refresh_popularity_metrics_and_constants",
+            )
+            .partial(
+                postgres_conn_id=POSTGRES_CONN_ID,
+                media_type=popularity_refresh.media_type,
+                execution_timeout=popularity_refresh.execution_timeout,
+            )
+            .expand(
+                provider=[
+                    provider
+                    for provider in sql.POPULARITY_METRICS_BY_MEDIA_TYPE[
+                        popularity_refresh.media_type
+                    ].keys()
+                ]
+            )
+        )
+        update_constants.doc = (
+            "Recalculate the percentile values and popularity constants"
+            " for each provider, and update them in the metrics table. The"
+            " popularity constants will be used to calculate standardized"
+            " popularity scores."
+        )
+
+        update_constants_status = notify_slack.override(
+            task_id="report_update_popularity_metrics_status"
+        )(
+            text="Popularity constants update complete | _Next: refresh"
+            " popularity scores_",
+            media_type=popularity_refresh.media_type,
+            dag_id=popularity_refresh.dag_id,
         )
 
         # Once popularity constants have been calculated, establish the cutoff time
@@ -170,7 +170,7 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             retries=0,
         ).expand(
             # Build the conf for each provider
-            conf=get_providers_update_confs(
+            conf=sql.get_providers_update_confs(
                 POSTGRES_CONN_ID, popularity_refresh, get_cutoff_time
             )
         )
@@ -185,12 +185,9 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
         )
 
         # Set up task dependencies
-        (
-            refresh_popularity_metrics
-            >> get_cutoff_time
-            >> refresh_popularity_scores
-            >> notify_complete
-        )
+        update_metrics >> [update_metrics_status, update_constants]
+        update_constants >> [update_constants_status, get_cutoff_time]
+        get_cutoff_time >> refresh_popularity_scores >> notify_complete
 
     return dag
 

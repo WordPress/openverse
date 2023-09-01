@@ -1,9 +1,10 @@
 from collections import namedtuple
-from datetime import timedelta
+from datetime import datetime
 from textwrap import dedent
 
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
+from popularity.popularity_refresh_types import PopularityRefresh
 
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, IMAGE, SQLInfo
 from common.sql import PostgresHook, _single_value
@@ -51,25 +52,14 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
 
 
 def setup_popularity_metrics_for_media_type(func: callable) -> callable:
+    """Provide media-type-specific popularity metrics to the decorated function."""
     return setup_kwargs_for_media_type(
         {AUDIO: AUDIO_POPULARITY_METRICS, IMAGE: IMAGE_POPULARITY_METRICS},
         "metrics_dict",
     )(func)
 
 
-@setup_sql_info_for_media_type
-def drop_media_popularity_metrics(
-    postgres_conn_id,
-    media_type,
-    sql_info=None,
-    pg_timeout: float = timedelta(minutes=10).total_seconds(),
-):
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
-    )
-    postgres.run(f"DROP TABLE IF EXISTS public.{sql_info.metrics_table} CASCADE;")
-
-
+@task
 @setup_sql_info_for_media_type
 def drop_media_popularity_functions(postgres_conn_id, media_type, sql_info=None):
     postgres = PostgresHook(
@@ -81,24 +71,6 @@ def drop_media_popularity_functions(postgres_conn_id, media_type, sql_info=None)
     postgres.run(
         f"DROP FUNCTION IF EXISTS public.{sql_info.popularity_percentile_fn} CASCADE;"
     )
-
-
-@setup_sql_info_for_media_type
-def create_media_popularity_metrics(postgres_conn_id, media_type, sql_info=None):
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
-    )
-    popularity_metrics_columns_string = ",\n            ".join(
-        f"{c.name} {c.definition}" for c in POPULARITY_METRICS_TABLE_COLUMNS
-    )
-    query = dedent(
-        f"""
-        CREATE TABLE public.{sql_info.metrics_table} (
-          {popularity_metrics_columns_string}
-        );
-        """
-    )
-    postgres.run(query)
 
 
 @task
@@ -272,6 +244,7 @@ def _format_popularity_metric_insert_tuple_string(
     return f"('{provider}', '{metric}', {percentile}, null, null)"
 
 
+@task
 @setup_sql_info_for_media_type
 def create_media_popularity_percentile_function(
     postgres_conn_id,
@@ -300,6 +273,7 @@ def create_media_popularity_percentile_function(
     postgres.run(query)
 
 
+@task
 @setup_sql_info_for_media_type
 def create_standardized_media_popularity_function(
     postgres_conn_id, media_type, sql_info=None
@@ -324,27 +298,6 @@ def create_standardized_media_popularity_function(
 
 
 @setup_sql_info_for_media_type
-def get_providers_with_popularity_data_for_media_type(
-    postgres_conn_id: str,
-    media_type: str = IMAGE,
-    sql_info=None,
-    pg_timeout: float = timedelta(minutes=10).total_seconds(),
-):
-    """
-    Return a list of distinct `provider`s that support popularity data,
-    for the given media type.
-    """
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id, default_statement_timeout=pg_timeout
-    )
-    providers = postgres.get_records(
-        f"SELECT DISTINCT provider FROM public.{sql_info.metrics_table};"
-    )
-
-    return [x[0] for x in providers]
-
-
-@setup_sql_info_for_media_type
 def format_update_standardized_popularity_query(
     media_type,
     sql_info=None,
@@ -360,3 +313,47 @@ def format_update_standardized_popularity_query(
         f" {sql_info.standardized_popularity_fn}({sql_info.media_table}.{PARTITION},"
         f" {sql_info.media_table}.{METADATA_COLUMN})"
     )
+
+
+@task
+@setup_popularity_metrics_for_media_type
+def get_providers_update_confs(
+    postgres_conn_id: str,
+    popularity_refresh: PopularityRefresh,
+    last_updated_time: datetime,
+    metrics_dict: dict = None,
+):
+    """
+    Build a list of DagRun confs for each provider of this media type. The confs will
+    be used by the `batched_update` DAG to perform a batched update of all existing
+    records, to recalculate their standardized_popularity with the new popularity
+    constant. Providers that do not support popularity data are omitted.
+    """
+
+    # For each provider, create a conf that will be used by the batched_update to
+    # refresh standardized popularity scores.
+    return [
+        {
+            # Uniquely identify the query
+            "query_id": (
+                f"{provider}_popularity_refresh_{last_updated_time.strftime('%Y%m%d')}"
+            ),
+            "table_name": popularity_refresh.media_type,
+            # Query used to select records that should be refreshed
+            "select_query": (
+                f"WHERE provider='{provider}' AND updated_on <"
+                f" '{last_updated_time.strftime('%Y-%m-%d %H:%M:%S')}'"
+            ),
+            # Query used to update the standardized_popularity
+            "update_query": format_update_standardized_popularity_query(
+                popularity_refresh.media_type
+            ),
+            "batch_size": 10_000,
+            "update_timeout": (
+                popularity_refresh.refresh_popularity_batch_timeout.total_seconds()
+            ),
+            "dry_run": False,
+            "resume_update": False,
+        }
+        for provider in metrics_dict.keys()
+    ]
