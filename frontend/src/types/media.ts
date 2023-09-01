@@ -1,6 +1,9 @@
 import type { SupportedMediaType } from "~/constants/media"
 import type { License, LicenseVersion } from "~/constants/license"
-import type { Sensitivity } from "~/constants/content-safety"
+import {
+  SENSITIVITY_RESPONSE_PARAM,
+  Sensitivity,
+} from "~/constants/content-safety"
 import { AUDIO, IMAGE } from "~/constants/media"
 
 export interface Tag {
@@ -96,10 +99,15 @@ export type DetailFromMediaType<T extends SupportedMediaType> =
 export interface ApiMedia
   extends Omit<
     Media,
-    "frontendMediaType" | "title" | "originalTitle" | "isSensitive"
+    | "frontendMediaType"
+    | "title"
+    | "originalTitle"
+    | "isSensitive"
+    | "sensitivity"
   > {
   title?: string
   originalTitle?: string
+  [SENSITIVITY_RESPONSE_PARAM]?: Sensitivity[]
 }
 
 export interface ImageDimensions {

@@ -86,6 +86,8 @@ async function checkPageMeta(page: Page, searchType: SearchTypeConfig) {
   await expect(page).toHaveTitle(expectedTitle)
   await expect(page).toHaveURL(expectedURL)
 }
+
+/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["checkSearchResult"] }] */
 async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
   await checkSearchMetadata(page, searchType)
   await checkLoadMore(page, searchType)

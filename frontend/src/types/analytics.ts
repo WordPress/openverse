@@ -4,7 +4,7 @@ import type {
   SupportedSearchType,
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
-import type { NonMatureFilterCategory } from "~/constants/filters"
+import type { FilterCategory } from "~/constants/filters"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -304,7 +304,7 @@ export type Events = {
    */
   APPLY_FILTER: {
     /** The filter category, e.g. `license`  */
-    category: NonMatureFilterCategory
+    category: FilterCategory
     /** The filter key, e.g. `by` */
     key: string
     /** Whether the filter is checked or unchecked */

@@ -65,11 +65,13 @@ export default defineComponent({
     const sensitivityPath = computed(() => app.localePath("/about")) // TODO: Issue#2550
 
     const featureFlagStore = useFeatureFlagStore()
+
     let fetchSensitive = computed(() =>
       featureFlagStore.isOn("fetch_sensitive")
     )
     let setFetchSensitive = ({ checked }: { checked: boolean }) => {
       featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
+
       if (!checked) {
         // If sensitive content is not fetched, there is nothing to blur/unblur.
         // In this case, we reset blurring to its default value.
