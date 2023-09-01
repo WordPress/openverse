@@ -89,20 +89,6 @@ def create_recreate_popularity_calculation_dag(data_refresh: DataRefresh):
             ),
         )
 
-        create_constants_view = PythonOperator(
-            task_id="create_popularity_constants_view",
-            python_callable=sql.create_media_popularity_constants_view,
-            op_kwargs={
-                "postgres_conn_id": POSTGRES_CONN_ID,
-                "media_type": media_type,
-            },
-            execution_timeout=data_refresh.create_pop_constants_view_timeout,
-            doc=(
-                "Create the materialized view with popularity constants for each "
-                "provider, using the percentile function."
-            ),
-        )
-
         create_popularity_function = PythonOperator(
             task_id="create_standardized_popularity_function",
             python_callable=sql.create_standardized_media_popularity_function,
@@ -135,7 +121,6 @@ def create_recreate_popularity_calculation_dag(data_refresh: DataRefresh):
             [drop_relations, drop_functions]
             >> create_metrics_table
             >> [update_metrics_table, create_percentile_function]
-            >> create_constants_view
             >> create_popularity_function
             >> create_matview
         )

@@ -64,7 +64,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState<NuxtError>>,
+      type: Object as PropType<FetchState | FetchState<NuxtError>>,
       required: true,
     },
     imageGridLabel: {

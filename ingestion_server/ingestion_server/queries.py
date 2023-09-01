@@ -92,7 +92,8 @@ def get_fdw_query(
 
 
 def get_copy_data_query(
-    table: str,
+    upstream_table: str,
+    downstream_table: str,
     columns: list[str],
     approach: ApproachType,
     limit: int | None = 100_000,
@@ -109,7 +110,8 @@ def get_copy_data_query(
     by `identifier` to simulate a random sample and only the first 100k records
     will be pulled from the upstream database.
 
-    :param table: the name of the downstream table being replaced
+    :param upstream_table: the name of the upstream table being copied
+    :param downstream_table: the name of the downstream table being replaced
     :param columns: the names of the columns to copy from upstream
     :param approach: whether to use advanced logic specific to media ingestion
     :param limit: number of rows to copy when
@@ -119,7 +121,8 @@ def get_copy_data_query(
     table_creation = d(
         """
     DROP TABLE IF EXISTS {temp_table};
-    CREATE TABLE {temp_table} (LIKE {table} INCLUDING DEFAULTS INCLUDING CONSTRAINTS);
+    CREATE TABLE {temp_table} (LIKE {downstream_table} INCLUDING DEFAULTS
+        INCLUDING CONSTRAINTS);
     """
     )
 
@@ -180,7 +183,7 @@ def get_copy_data_query(
     # If a limit is requested, add the condition onto the select at the very end
     if limit:
         # The audioset view does not have identifiers associated with it
-        if table != "audioset":
+        if upstream_table != "audioset_view":
             select_insert += d(
                 """
             ORDER BY identifier"""
@@ -201,10 +204,10 @@ def get_copy_data_query(
     ]
 
     return SQL("".join(steps)).format(
-        table=Identifier(table),
-        temp_table=Identifier(f"temp_import_{table}"),
-        upstream_table=Identifier("upstream_schema", f"{table}_view"),
-        deleted_table=Identifier(f"api_deleted{table}"),
+        downstream_table=Identifier(downstream_table),
+        temp_table=Identifier(f"temp_import_{downstream_table}"),
+        upstream_table=Identifier("upstream_schema", upstream_table),
+        deleted_table=Identifier(f"api_deleted{downstream_table}"),
         columns=SQL(",").join([Identifier(col) for col in columns]),
         limit=PgLiteral(limit),
     )

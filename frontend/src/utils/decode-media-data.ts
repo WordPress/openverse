@@ -2,6 +2,7 @@ import { title as titleCase } from "case"
 
 import { decodeData as decodeString } from "~/utils/decode-data"
 import type { ApiMedia, Media, Tag } from "~/types/media"
+import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
 import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -75,8 +76,22 @@ const mediaTitle = (
 }
 
 /**
- * For any given media, decode the media title, creator name and individual tag
- * names. Also populates the `frontendMediaType` field on the model.
+ * Removes the tags that are empty or undefined, and decodes the tag names.
+ */
+const parseTags = (tags: Tag[]) => {
+  return tags
+    .filter((tag) => Boolean(tag))
+    .map((tag) => ({ ...tag, name: decodeString(tag.name) }))
+}
+
+/**
+ * Prepare any given media for the frontend:
+ * - decode the media title, creator name and individual tag names to ensure
+ * that there are no incorrectly encoded strings.
+ * - populate the `frontendMediaType` field on the model.
+ * - populate the `sensitivity` and `isSensitive` field on the model.
+ * - clean up the title by removing the file extension if it matches the media
+ * filetype, and removing "FILE:" prefix for wikimedia items.
  *
  * @param media - the media object of which to decode attributes
  * @param mediaType - the type of the media
@@ -88,9 +103,11 @@ export const decodeMediaData = <T extends Media>(
 ): T => {
   // Fake ~50% of results as mature.
   const featureFlagStore = useFeatureFlagStore()
-  const sensitivity = featureFlagStore.isOn("fake_sensitive")
-    ? getFakeSensitivities(media.id)
-    : []
+  const sensitivity =
+    featureFlagStore.isOn("fake_sensitive") &&
+    featureFlagStore.isOn("fetch_sensitive")
+      ? getFakeSensitivities(media.id)
+      : media[SENSITIVITY_RESPONSE_PARAM] ?? []
   const isSensitive = sensitivity.length > 0
 
   return {
@@ -98,11 +115,7 @@ export const decodeMediaData = <T extends Media>(
     ...mediaTitle(media, mediaType),
     frontendMediaType: mediaType,
     creator: decodeString(media.creator),
-    // TODO: remove `?? []`
-    tags: (media.tags ?? ([] as Tag[])).map((tag) => ({
-      ...tag,
-      name: decodeString(tag.name),
-    })),
+    tags: media.tags ? parseTags(media.tags) : ([] as Tag[]),
     sensitivity,
     isSensitive,
   } as T

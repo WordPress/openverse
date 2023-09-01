@@ -3,10 +3,13 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
+  languageDirections,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
-import { supportedSearchTypes } from "~/constants/media"
+import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
+
+import { ALL_MEDIA, supportedSearchTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -26,7 +29,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       await preparePageForTests(page, breakpoint)
 
       await page.goto(`/image/${imageId}`)
-      await expectSnapshot(`single-result-error`, page, { fullPage: true })
+      await expectSnapshot("generic-error", page, { fullPage: true })
     })
   }
   for (const status of singleResultCSRErrorStatuses) {
@@ -49,7 +52,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
 
-      await expectSnapshot("single-result-error-CSR", page, { fullPage: true })
+      await expectSnapshot("generic-error", page, { fullPage: true })
     })
   }
 })
@@ -57,7 +60,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
 /**
  * SEARCH PAGE ERRORS
  *
- * On SSR, we only test for 500. TODO: add any other errors like the timeout?
+ * On SSR, we only test for 500.
  * We can't test 404 errors because when there are no results, the server returns
  * a 200 response with an empty list as the `results`.
  * The server uses a throttle-exempt key, so we can't get 429 errors.
@@ -68,7 +71,7 @@ for (const searchType of supportedSearchTypes) {
       await preparePageForTests(page, breakpoint)
       await goToSearchTerm(page, `SearchPage500error`, { searchType })
 
-      await expectSnapshot(`search-result-${searchType}-500-error-SSR`, page, {
+      await expectSnapshot("generic-error", page, {
         fullPage: true,
       })
     })
@@ -77,24 +80,59 @@ for (const searchType of supportedSearchTypes) {
 
 const searchCSRErrorStatuses = [429, 500]
 
-for (const errorStatus of searchCSRErrorStatuses) {
-  for (const searchType of supportedSearchTypes) {
-    breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
-      test(`${errorStatus} error on ${searchType} search on CSR`, async ({
+for (const searchType of supportedSearchTypes) {
+  breakpoints.describeMobileAndDesktop(({ breakpoint, expectSnapshot }) => {
+    for (const dir of languageDirections) {
+      for (const errorStatus of searchCSRErrorStatuses) {
+        test(`${errorStatus} error on ${dir} ${searchType} search on CSR`, async ({
+          page,
+        }) => {
+          await preparePageForTests(page, breakpoint)
+          await goToSearchTerm(page, `SearchPage${errorStatus}error`, {
+            mode: "CSR",
+            searchType,
+          })
+
+          await expectSnapshot("generic-error", page, { fullPage: true })
+        })
+      }
+
+      test(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
         await preparePageForTests(page, breakpoint)
-        await goToSearchTerm(page, `SearchPage${errorStatus}error`, {
-          mode: "CSR",
-          searchType,
-        })
+
+        await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
+
+        await setViewportToFullHeight(page)
+
+        await page.mouse.move(0, 82)
 
         await expectSnapshot(
-          `search-result-${searchType}-${errorStatus}-error-CSR`,
-          page,
-          { fullPage: true }
+          `search-result-${
+            searchType === ALL_MEDIA ? "image" : searchType
+          }-no-results-${dir}`,
+          page.locator("#main-page")
         )
       })
-    })
-  }
+
+      test(`Timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
+        await preparePageForTests(page, breakpoint)
+
+        await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
+          route.abort("timedout")
+        })
+        await goToSearchTerm(page, "cat", { dir, searchType, mode: "CSR" })
+
+        // TODO: uncomment when the timeout page is implemented
+        // await setViewportToFullHeight(page)
+
+        await page.mouse.move(0, 82)
+
+        await expectSnapshot(`search-result-timeout-${dir}`, page, {
+          fullPage: true,
+        })
+      })
+    }
+  })
 }

@@ -4,7 +4,7 @@ import type {
   SupportedSearchType,
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
-import type { NonMatureFilterCategory } from "~/constants/filters"
+import type { FilterCategory } from "~/constants/filters"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -206,15 +206,32 @@ export type Events = {
   }
   /**
    * Description: The user visits a creator's link in the single result UI
+   * or the creator's collection page.
    * Questions:
    *   - Are creator links clicked much? Does Openverse increase visibility
    *     of included creator's profiles?
    */
   VISIT_CREATOR_LINK: {
-    /** The unique ID of the media */
-    id: string
+    /** The unique ID of the media, if the creator link is on the single result page */
+    id?: string
     /** The permalink to the creator's profile */
     url: string
+    /** The slug for the source where the creator's media is from */
+    source: string
+  }
+  /**
+   * Description: The user visits a source's link in the single result UI
+   * or the source's collection page.
+   * Questions:
+   *   - Are source links clicked much? Does Openverse increase visibility
+   *     of included sources?
+   */
+  VISIT_SOURCE_LINK: {
+    /** The unique ID of the media, if the source link is on the single
+     * result page */
+    id?: string
+    /** The source's slug that identifies it */
+    source: string
   }
   /**
    * Description: The user visits a CC license description page on CC.org
@@ -287,7 +304,7 @@ export type Events = {
    */
   APPLY_FILTER: {
     /** The filter category, e.g. `license`  */
-    category: NonMatureFilterCategory
+    category: FilterCategory
     /** The filter key, e.g. `by` */
     key: string
     /** Whether the filter is checked or unchecked */

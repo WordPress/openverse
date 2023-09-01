@@ -9,7 +9,6 @@ IS_PROD := env_var_or_default("PROD", env_var_or_default("IS_PROD", ""))
 PROD_ENV := env_var_or_default("PROD_ENV", "")
 IS_CI := env_var_or_default("CI", "")
 DC_USER := env_var_or_default("DC_USER", "opener")
-ENABLE_DC_OVERRIDES := env_var_or_default("OPENVERSE_ENABLE_DC_OVERRIDES", "true")
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
@@ -117,9 +116,6 @@ DOCKER_FILE := "-f " + (
         else { "docker-compose.yml" }
     }
     else { "docker-compose.yml" }
-) + (
-    if ENABLE_DC_OVERRIDES == "true" { " -f docker-compose.overrides.yml" }
-    else { "" }
 )
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
@@ -174,7 +170,6 @@ wait-up: up
     just ingestion_server/wait-up
     just api/wait-up
     just frontend/wait-up
-    just catalog/wait-up
 
 # Also see `init` recipe in sub-justfiles
 # Load sample data into the Docker Compose services
@@ -234,7 +229,11 @@ deploy:
 
 alias b := build
 alias d := down
-alias l := logs
+alias l := lint
+
+alias L := logs
+alias P := precommit
+alias I := install
 
 # alias for `just api/up`
 a:

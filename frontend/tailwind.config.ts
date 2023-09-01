@@ -226,7 +226,6 @@ export default {
       },
       borderRadius: {
         inherit: "inherit",
-        md: "0.5rem",
       },
       outlineWidth: {
         1.5: "1.5px",

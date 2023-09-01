@@ -1,0 +1,65 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
+
+<Meta title="Components/VCollectionHeader" component={VCollectionHeader} />
+
+export const AllCollectionsTemplate = (args) => ({
+  template: `
+<div class="wrapper w-full p-2 flex flex-col gap-2 bg-dark-charcoal-06">
+    <VCollectionHeader v-for="collection in args.collections" :key="collection.collectionName" v-bind="collection" class="bg-white"/>
+</div>`,
+  components: { VCollectionHeader },
+  setup() {
+    return { args }
+  },
+})
+
+export const collections = [
+  {
+    collectionName: "tag",
+    collection: "tag",
+    title: "cat",
+    resultsLabel: "10000 audio files with the selected tag",
+  },
+  {
+    collectionName: "source",
+    collection: "source",
+    title: "Metropolitan Museum of Art",
+    url: "https://www.metmuseum.org/",
+    resultsLabel: "10000 images provided by this source",
+  },
+  {
+    collectionName: "creator",
+    collection: "creator",
+    title: "iocyoungreporters",
+    url: "https://www.flickr.com/photos/126018610@N05",
+    resultsLabel: "10000 images. iocyoungreporters, Flickr",
+  },
+  {
+    collectionName: "source-with-long-name",
+    collection: "source",
+    title:
+      "Smithsonian Institution: National Museum of African American History and Culture",
+    url: "https://nmaahc.si.edu",
+    resultsLabel: "10000 images provided by this source",
+  },
+]
+
+# VCollectionHeader
+
+<Description of={VCollectionHeader} />
+
+<ArgsTable of={VCollectionHeader} />
+
+<Canvas>
+  <Story name="All collections" args={{ collections }}>
+    {AllCollectionsTemplate.bind({})}
+  </Story>
+</Canvas>

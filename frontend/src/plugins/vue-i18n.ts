@@ -1,6 +1,8 @@
+import fallbackLocale from "~/locales/scripts/locale-fallback.json"
+
 export default () => {
   return {
-    fallbackLocale: "en",
+    fallbackLocale,
     silentFallbackWarn: true,
     pluralizationRules: {
       /**

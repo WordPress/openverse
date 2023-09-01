@@ -97,6 +97,11 @@ If for some reason, you are unable to install `just`, you can refer to the
 commands individually in a terminal. It won't be the best user experience, but
 it will work just the same.
 
+We also recommend setting up
+[shell completions](https://github.com/casey/just#shell-completion-scripts) for
+`just` to make it faster to find and run recipes. On macOS with the default Z
+shell, Homebrew installs completions for `just` by default.
+
 ## Conditional setup
 
 A subset of the following requirements will be required depending on the extent

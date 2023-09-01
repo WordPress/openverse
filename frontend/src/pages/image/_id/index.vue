@@ -1,41 +1,41 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
-    <template v-else>
-      <VSingleResultControls v-if="image" :media="image" />
-      <figure
-        class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
-      >
-        <VBone
-          v-if="isLoadingThumbnail"
-          class="col-span-full row-span-full h-[500px] w-[500px] self-center"
-        />
-        <!--
-          re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906
-          Note: this one, I believe, should remain disabled ; but should be double checked by the issue nonetheless
-        -->
-        <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-        <img
-          v-if="image && !sketchFabUid"
-          id="main-image"
-          :src="imageSrc"
-          :alt="image.title"
-          class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
-          :width="imageWidth"
-          :height="imageHeight"
-          @load="onImageLoaded"
-          @error="onImageError"
-          @contextmenu="handleRightClick($route.params.id)"
-        />
-        <VSketchFabViewer
-          v-if="sketchFabUid"
-          :uid="sketchFabUid"
-          class="mx-auto rounded-se-sm rounded-ss-sm"
-          @failure="sketchFabfailure = true"
-        />
-      </figure>
+    <template v-if="image">
+      <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
+      <template v-else>
+        <VSingleResultControls :media="image" />
+        <figure
+          class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
+        >
+          <VBone
+            v-if="isLoadingThumbnail"
+            class="col-span-full row-span-full h-[500px] w-[500px] self-center"
+          />
+          <!--
+            re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906
+            Note: this one, I believe, should remain disabled ; but should be double checked by the issue nonetheless
+          -->
+          <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
+          <img
+            v-if="!sketchFabUid"
+            id="main-image"
+            :src="imageSrc"
+            :alt="image.title"
+            class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
+            :width="imageWidth"
+            :height="imageHeight"
+            @load="onImageLoaded"
+            @error="onImageError"
+            @contextmenu="handleRightClick($route.params.id)"
+          />
+          <VSketchFabViewer
+            v-if="sketchFabUid"
+            :uid="sketchFabUid"
+            class="mx-auto rounded-se-sm rounded-ss-sm"
+            @failure="sketchFabfailure = true"
+          />
+        </figure>
 
-      <template v-if="image">
         <section
           id="title-button"
           class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
@@ -79,8 +79,8 @@
         </section>
 
         <VMediaReuse :media="image" />
-        <VImageDetails
-          :image="image"
+        <VMediaDetails
+          :media="image"
           :image-width="imageWidth"
           :image-height="imageHeight"
           :image-type="imageType"
@@ -88,6 +88,10 @@
         <VRelatedImages />
       </template>
     </template>
+    <VBone
+      v-else-if="isLoadingThumbnail"
+      class="me-auto ms-auto h-[500px] w-[500px]"
+    />
   </main>
 </template>
 
@@ -117,21 +121,25 @@ import { useI18n } from "~/composables/use-i18n"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VButton from "~/components/VButton.vue"
-import VImageDetails from "~/components/VImageDetails/VImageDetails.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
+import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
+import VSingleResultControls from "~/components/VSingleResultControls.vue"
+import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VMediaDetails,
+    VSingleResultControls,
+    VSafetyWall,
     VBone,
     VButton,
     VLink,
-    VImageDetails,
     VMediaReuse,
     VRelatedImages,
     VSketchFabViewer,
@@ -258,6 +266,7 @@ export default defineComponent({
       }
       sendCustomEvent("VISIT_CREATOR_LINK", {
         id: image.value.id,
+        source: image.value.source ?? image.value.provider,
         url: image.value.creator_url ?? "",
       })
     }

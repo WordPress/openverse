@@ -1,4 +1,0 @@
-services:
-  es:
-    # Memory limit for ES, as it tends to be a memory hoarder
-    mem_limit: 4294967296

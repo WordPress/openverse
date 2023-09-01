@@ -75,6 +75,7 @@ import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
+import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -83,6 +84,7 @@ import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 export default defineComponent({
   name: "SearchLayout",
   components: {
+    VSafeBrowsing,
     VSkipToContentButton,
     VBanners,
     VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
