@@ -1,4 +1,5 @@
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+import type { Sensitivity } from "~/constants/content-safety"
 
 let mockUseUiStore = {
   shouldBlurSensitive: true,
@@ -10,11 +11,16 @@ jest.mock("~/stores/ui", () => ({
 }))
 
 describe("useSensitiveMedia composable", () => {
-  let mockMedia: { id: string; isSensitive: boolean }
+  let mockMedia: {
+    id: string
+    sensitivity: Sensitivity[]
+    isSensitive: boolean
+  }
 
   beforeEach(() => {
     mockMedia = {
       id: "mock-id",
+      sensitivity: [],
       isSensitive: false,
     }
     mockUseUiStore = {
