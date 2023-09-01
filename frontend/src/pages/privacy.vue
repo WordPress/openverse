@@ -93,7 +93,7 @@ export default defineComponent({
       () => featureFlagStore.featureState("analytics") === ON
     )
 
-    const handleChange = ({ checked }: { checked: boolean }) => {
+    const handleChange = ({ checked }: { checked?: boolean }) => {
       featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
     }
 
