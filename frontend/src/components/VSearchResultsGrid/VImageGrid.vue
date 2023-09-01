@@ -1,7 +1,7 @@
 <template>
   <section>
     <VGridSkeleton
-      v-if="!images.length && !fetchState.isFinished"
+      v-if="images != null && !images.length && !fetchState.isFinished"
       is-for-tab="image"
     />
     <ol class="image-grid flex flex-wrap gap-4" :aria-label="imageGridLabel">
