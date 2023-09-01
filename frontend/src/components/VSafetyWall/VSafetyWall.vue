@@ -36,6 +36,7 @@
           variant="filled-dark"
           class="label-bold"
           :href="backToSearchPath || '/'"
+          @mousedown="handleBack"
         >
           {{ $t("singleResult.back") }}
         </VButton>
@@ -44,7 +45,7 @@
           variant="bordered-gray"
           class="label-bold"
           has-icon-end
-          @click="showMedia"
+          @click="handleShow"
         >
           {{ $t("sensitiveContent.singleResult.show") }}
           <VIcon name="eye-open" />
@@ -59,6 +60,7 @@ import { PropType, computed, defineComponent } from "@nuxtjs/composition-api"
 import { camel } from "case"
 
 import { useSearchStore } from "~/stores/search"
+import { useAnalytics } from "~/composables/use-analytics"
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VLink from "~/components/VLink.vue"
@@ -78,17 +80,25 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const searchStore = useSearchStore()
     const backToSearchPath = computed(() => searchStore.backToSearchPath)
 
-    const showMedia = () => {
+    const { sendCustomEvent } = useAnalytics()
+    const handleBack = () => {
+      sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
+        id: props.media.id,
+        sensitivities: props.media.sensitivity.join(","),
+      })
+    }
+    const handleShow = () => {
       emit("reveal")
     }
 
     return {
       backToSearchPath,
-      showMedia,
+      handleBack,
+      handleShow,
       camel,
     }
   },
