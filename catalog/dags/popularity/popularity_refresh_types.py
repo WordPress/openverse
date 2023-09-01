@@ -21,7 +21,9 @@ class PopularityRefresh:
 
     media_type:          str describing the media type to be refreshed.
     popularity_metrics:  dictionary mapping providers of this media type
-                         to their popularity metrics and, optionally, percentile.
+                         to their popularity metrics and, optionally, percentile. If
+                         the percentile key is not included, the default value will
+                         be used.
                          Ex: {"my_provider": {"metric": "views", "percentile": 0.5}}
 
     Optional Constructor Arguments:

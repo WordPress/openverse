@@ -3,14 +3,14 @@ This file generates Apache Airflow DAGs that, for the given media type,
 completely wipes out and recreates the PostgreSQL functions involved in
 calculating our standardized popularity metric.
 
-These DAGs are not on a schedule, and should only be run manually when new
-SQL code is deployed for the calculation.
-
 Note that they do not drop any tables or views related to popularity, and
 they do not perform any popularity calculations. Once this DAG has been run,
 the associated popularity refresh DAG must be run in order to actually
 recalculate popularity constants and standardized popularity scores using
 the new functions.
+
+These DAGs are not on a schedule, and should only be run manually when new
+SQL code is deployed for the calculation.
 """
 from airflow import DAG
 from popularity import sql

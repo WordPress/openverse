@@ -1,12 +1,12 @@
 from collections import namedtuple
-from datetime import datetime
+from datetime import datetime, timedelta
 from textwrap import dedent
 
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
 from popularity.popularity_refresh_types import PopularityRefresh
 
-from common.constants import DAG_DEFAULT_ARGS, IMAGE, SQLInfo
+from common.constants import DAG_DEFAULT_ARGS, SQLInfo
 from common.sql import PostgresHook, single_value
 from common.storage import columns as col
 from common.utils import setup_sql_info_for_media_type
@@ -40,7 +40,9 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
 
 @task
 @setup_sql_info_for_media_type
-def drop_media_popularity_functions(postgres_conn_id, media_type, sql_info=None):
+def drop_media_popularity_functions(
+    postgres_conn_id: str, media_type: str, sql_info: SQLInfo = None
+):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
     )
@@ -55,10 +57,10 @@ def drop_media_popularity_functions(postgres_conn_id, media_type, sql_info=None)
 @task
 @setup_sql_info_for_media_type
 def update_media_popularity_metrics(
-    postgres_conn_id,
-    media_type,
-    popularity_metrics,
-    sql_info=None,
+    postgres_conn_id: str,
+    media_type: str,
+    popularity_metrics: dict,
+    sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
     postgres = PostgresHook(
@@ -99,9 +101,9 @@ def update_media_popularity_metrics(
 @task
 @setup_sql_info_for_media_type
 def calculate_media_popularity_percentile_value(
-    postgres_conn_id,
-    provider,
-    media_type=IMAGE,
+    postgres_conn_id: str,
+    provider: str,
+    media_type: str,
     sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
@@ -127,12 +129,12 @@ def calculate_media_popularity_percentile_value(
 @task
 @setup_sql_info_for_media_type
 def update_percentile_and_constants_values_for_provider(
-    postgres_conn_id,
-    provider,
-    raw_percentile_value,
-    media_type,
-    popularity_metrics,
-    sql_info=None,
+    postgres_conn_id: str,
+    provider: str,
+    raw_percentile_value: float,
+    media_type: str,
+    popularity_metrics: dict,
+    sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
     if raw_percentile_value is None:
@@ -165,7 +167,11 @@ def update_percentile_and_constants_values_for_provider(
 
 @task_group
 def update_percentile_and_constants_for_provider(
-    postgres_conn_id, provider, media_type, popularity_metrics, execution_timeout=None
+    postgres_conn_id: str,
+    provider: str,
+    media_type: str,
+    popularity_metrics: dict,
+    execution_timeout: timedelta = None,
 ):
     calculate_percentile_val = calculate_media_popularity_percentile_value.override(
         task_id="calculate_percentile_value",
@@ -200,9 +206,9 @@ def update_percentile_and_constants_for_provider(
 
 
 def _get_popularity_metric_insert_values_string(
-    popularity_metrics,
-    default_percentile=DEFAULT_PERCENTILE,
-):
+    popularity_metrics: dict,
+    default_percentile: float = DEFAULT_PERCENTILE,
+) -> str:
     return ",\n          ".join(
         _format_popularity_metric_insert_tuple_string(
             provider,
@@ -214,9 +220,9 @@ def _get_popularity_metric_insert_values_string(
 
 
 def _format_popularity_metric_insert_tuple_string(
-    provider,
-    metric,
-    percentile,
+    provider: str,
+    metric: str,
+    percentile: float,
 ):
     # Default null val and constant
     return f"('{provider}', '{metric}', {percentile}, null, null)"
@@ -225,9 +231,9 @@ def _format_popularity_metric_insert_tuple_string(
 @task
 @setup_sql_info_for_media_type
 def create_media_popularity_percentile_function(
-    postgres_conn_id,
-    media_type,
-    sql_info=None,
+    postgres_conn_id: str,
+    media_type: str,
+    sql_info: SQLInfo = None,
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
@@ -277,10 +283,10 @@ def create_standardized_media_popularity_function(
 
 @setup_sql_info_for_media_type
 def format_update_standardized_popularity_query(
-    media_type,
-    sql_info=None,
+    media_type: str,
+    sql_info: SQLInfo = None,
     task: AbstractOperator = None,
-):
+) -> str:
     """
     Create a SQL query for updating the standardized popularity for the given
     media type. Only the `SET ...` portion of the query is returned, to be used
@@ -298,7 +304,7 @@ def get_providers_update_confs(
     postgres_conn_id: str,
     popularity_refresh: PopularityRefresh,
     last_updated_time: datetime,
-):
+) -> list[dict]:
     """
     Build a list of DagRun confs for each provider of this media type. The confs will
     be used by the `batched_update` DAG to perform a batched update of all existing
