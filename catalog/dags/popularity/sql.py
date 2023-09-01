@@ -7,7 +7,7 @@ from airflow.models.abstractoperator import AbstractOperator
 from popularity.popularity_refresh_types import PopularityRefresh
 
 from common.constants import DAG_DEFAULT_ARGS, IMAGE, SQLInfo
-from common.sql import PostgresHook, _single_value
+from common.sql import PostgresHook, single_value
 from common.storage import columns as col
 from common.utils import setup_sql_info_for_media_type
 
@@ -121,7 +121,7 @@ def calculate_media_popularity_percentile_value(
         """
     )
 
-    return postgres.run(calculate_new_percentile_value_query, handler=_single_value)
+    return postgres.run(calculate_new_percentile_value_query, handler=single_value)
 
 
 @task
