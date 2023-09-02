@@ -74,13 +74,14 @@ def _set_up_popularity_metrics(metrics_dict, sql_info, mock_pg_hook_task):
         postgres_conn_id=conn_id, media_type="image", sql_info=sql_info
     )
     # Insert values from metrics_dict into metrics table
-    sql.update_media_popularity_metrics.function(
-        postgres_conn_id=conn_id,
-        media_type="image",
-        popularity_metrics=metrics_dict,
-        sql_info=sql_info,
-        task=mock_pg_hook_task,
-    )
+    if metrics_dict:
+        sql.update_media_popularity_metrics.function(
+            postgres_conn_id=conn_id,
+            media_type="image",
+            popularity_metrics=metrics_dict,
+            sql_info=sql_info,
+            task=mock_pg_hook_task,
+        )
 
     # For each provider in metrics_dict, calculate the percentile and then
     # update the percentile and popularity constant
@@ -117,8 +118,9 @@ def _set_up_popularity_metrics_and_constants(
     mock_pg_hook_task,
 ):
     # Execute the data query first (typically, loads sample data into the media table)
-    pg.cursor.execute(data_query)
-    pg.connection.commit()
+    if data_query:
+        pg.cursor.execute(data_query)
+        pg.connection.commit()
 
     # Then set up functions, metrics, and constants
     _set_up_popularity_percentile_function(sql_info)

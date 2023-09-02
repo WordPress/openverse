@@ -7,7 +7,7 @@ from airflow.models.abstractoperator import AbstractOperator
 from airflow.operators.python import PythonOperator
 from requests import Response
 
-from common.constants import POSTGRES_CONN_ID
+from common.constants import POSTGRES_CONN_ID, SQLInfo
 from common.sql import PGExecuteQueryOperator, PostgresHook
 from oauth2 import oauth2
 
@@ -43,6 +43,19 @@ def identifier(request):
 def image_table(identifier):
     # Parallelized tests need to use distinct database tables
     return f"image_{identifier}"
+
+
+@pytest.fixture
+def sql_info(
+    image_table,
+    identifier,
+) -> SQLInfo:
+    return SQLInfo(
+        media_table=image_table,
+        metrics_table=f"image_popularity_metrics_{identifier}",
+        standardized_popularity_fn=f"standardized_image_popularity_{identifier}",
+        popularity_percentile_fn=f"image_popularity_percentile_{identifier}",
+    )
 
 
 TEST_SQL = "SELECT PG_SLEEP(1);"

@@ -11,10 +11,7 @@ from flaky import flaky
 from psycopg2.errors import InvalidTextRepresentation
 
 from catalog.tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
-from catalog.tests.dags.common.popularity.test_sql import (
-    TableInfo,
-    _set_up_std_popularity_func,
-)
+from catalog.tests.dags.popularity.test_sql import _set_up_std_popularity_func
 from catalog.tests.test_utils import sql as utils
 from common.loader import sql
 from common.storage import columns as col
@@ -27,22 +24,6 @@ RESOURCES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "test_resou
 def load_table(identifier):
     # Parallelized tests need to use distinct database tables
     return f"load_image_{identifier}"
-
-
-@pytest.fixture
-def table_info(
-    image_table,
-    identifier,
-) -> TableInfo:
-    return TableInfo(
-        image=image_table,
-        image_view=f"image_view_{identifier}",
-        metrics=f"image_popularity_metrics_{identifier}",
-        standardized_popularity=f"standardized_popularity_{identifier}",
-        popularity_percentile=f"popularity_percentile_{identifier}",
-        image_view_idx=f"test_view_id_{identifier}_idx",
-        provider_fid_idx=f"test_view_provider_fid_{identifier}_idx",
-    )
 
 
 @pytest.fixture
@@ -73,26 +54,24 @@ def postgres_with_load_table(
 
 
 @pytest.fixture
-def postgres_with_load_and_image_table(
-    load_table, image_table, table_info, mock_pg_hook_task
-):
+def postgres_with_load_and_image_table(load_table, sql_info, mock_pg_hook_task):
     conn = psycopg2.connect(utils.POSTGRES_TEST_URI)
     cur = conn.cursor()
     drop_test_relations_query = f"""
     DROP TABLE IF EXISTS {load_table} CASCADE;
-    DROP TABLE IF EXISTS {image_table} CASCADE;
-    DROP INDEX IF EXISTS {image_table}_provider_fid_idx;
-    DROP TABLE IF EXISTS {table_info.metrics} CASCADE;
-    DROP FUNCTION IF EXISTS {table_info.standardized_popularity} CASCADE;
-    DROP FUNCTION IF EXISTS {table_info.popularity_percentile} CASCADE;
+    DROP TABLE IF EXISTS {sql_info.media_table} CASCADE;
+    DROP INDEX IF EXISTS {sql_info.media_table}_provider_fid_idx;
+    DROP TABLE IF EXISTS {sql_info.metrics_table} CASCADE;
+    DROP FUNCTION IF EXISTS {sql_info.standardized_popularity_fn} CASCADE;
+    DROP FUNCTION IF EXISTS {sql_info.popularity_percentile_fn} CASCADE;
     """
 
     cur.execute(drop_test_relations_query)
 
     cur.execute(utils.CREATE_LOAD_TABLE_QUERY.format(load_table))
     cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;')
-    cur.execute(utils.CREATE_IMAGE_TABLE_QUERY.format(image_table))
-    cur.execute(utils.UNIQUE_CONDITION_QUERY.format(table=image_table))
+    cur.execute(utils.CREATE_IMAGE_TABLE_QUERY.format(sql_info.media_table))
+    cur.execute(utils.UNIQUE_CONDITION_QUERY.format(table=sql_info.media_table))
 
     conn.commit()
 
@@ -142,7 +121,7 @@ def test_create_loading_table_creates_table(
     postgres, load_table, identifier, mock_pg_hook_task
 ):
     postgres_conn_id = POSTGRES_CONN_ID
-    sql.create_loading_table(postgres_conn_id, identifier)
+    sql.create_loading_table(postgres_conn_id, identifier, media_type="image")
 
     check_query = (
         f"SELECT EXISTS (SELECT FROM pg_tables WHERE tablename='{load_table}');"
@@ -154,9 +133,9 @@ def test_create_loading_table_creates_table(
 
 def test_create_loading_table_errors_if_run_twice_with_same_id(postgres, identifier):
     postgres_conn_id = POSTGRES_CONN_ID
-    sql.create_loading_table(postgres_conn_id, identifier)
+    sql.create_loading_table(postgres_conn_id, identifier, media_type="image")
     with pytest.raises(Exception):
-        sql.create_loading_table(postgres_conn_id, identifier)
+        sql.create_loading_table(postgres_conn_id, identifier, media_type="image")
 
 
 @flaky
@@ -421,6 +400,7 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -470,10 +450,21 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
     load_data_query = f"""INSERT INTO {load_table} VALUES(
         {query_values}
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query)
-    postgres_with_load_and_image_table.connection.commit()
+
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
+
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -504,6 +495,7 @@ def test_upsert_records_inserts_two_records_to_image_table(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -534,8 +526,21 @@ def test_upsert_records_inserts_two_records_to_image_table(
             );"""
         postgres_with_load_and_image_table.cursor.execute(load_data_query)
         postgres_with_load_and_image_table.connection.commit()
+
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        None,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
+
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
@@ -548,6 +553,7 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -567,11 +573,21 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
         '{FID}','{LAND_URL}','{IMG_URL}','{LICENSE}','{VERSION}',
         '{PROVIDER}','{PROVIDER}'
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query)
-    postgres_with_load_and_image_table.connection.commit()
+
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
 
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     original_row = postgres_with_load_and_image_table.cursor.fetchall()
@@ -585,7 +601,11 @@ def test_upsert_records_replaces_updated_on_and_last_synced_with_source(
 
     time.sleep(0.5)
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
     updated_result = postgres_with_load_and_image_table.cursor.fetchall()
@@ -606,6 +626,7 @@ def test_upsert_records_replaces_data(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -668,10 +689,20 @@ def test_upsert_records_replaces_data(
     load_data_query_a = f"""INSERT INTO {load_table} VALUES(
        {query_values}
        );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
+
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -705,7 +736,11 @@ def test_upsert_records_replaces_data(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -730,6 +765,7 @@ def test_upsert_records_does_not_replace_with_nulls(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -784,10 +820,20 @@ def test_upsert_records_does_not_replace_with_nulls(
     load_data_query_a = f"""INSERT INTO {load_table} VALUES(
         {query_values_a}
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
+
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -811,7 +857,11 @@ def test_upsert_records_does_not_replace_with_nulls(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -837,6 +887,7 @@ def test_upsert_records_merges_meta_data(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -875,10 +926,20 @@ def test_upsert_records_merges_meta_data(
     load_data_query_b = f"""INSERT INTO {load_table} VALUES(
         {query_values_b}
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
+
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
@@ -886,7 +947,11 @@ def test_upsert_records_merges_meta_data(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -903,6 +968,7 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -941,10 +1007,20 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     load_data_query_b = f"""INSERT INTO {load_table} VALUES(
         {query_values_b}
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
+
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
@@ -952,7 +1028,11 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -971,6 +1051,7 @@ def test_upsert_records_merges_tags(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -1016,10 +1097,19 @@ def test_upsert_records_merges_tags(
     load_data_query_b = f"""INSERT INTO {load_table} VALUES(
         {query_values_b}
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
@@ -1027,7 +1117,11 @@ def test_upsert_records_merges_tags(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -1050,6 +1144,7 @@ def test_upsert_records_does_not_replace_tags_with_null(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -1089,10 +1184,19 @@ def test_upsert_records_does_not_replace_tags_with_null(
     load_data_query_b = f"""INSERT INTO {load_table} VALUES(
         {query_values_b}
         );"""
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
@@ -1100,7 +1204,11 @@ def test_upsert_records_does_not_replace_tags_with_null(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -1122,6 +1230,7 @@ def test_upsert_records_replaces_null_tags(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -1160,10 +1269,19 @@ def test_upsert_records_replaces_null_tags(
         {query_values_b}
         );"""
 
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
@@ -1171,7 +1289,11 @@ def test_upsert_records_replaces_null_tags(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"SELECT * FROM {image_table};")
@@ -1194,6 +1316,7 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -1238,10 +1361,19 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
 
     # Simulate a DAG run where A is ingested into the loading table, upserted into
     # the image table, and finally the loading table is cleared for the next DAG run.
-    postgres_with_load_and_image_table.cursor.execute(load_data_query_a)
-    postgres_with_load_and_image_table.connection.commit()
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        load_data_query_a,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
@@ -1252,7 +1384,11 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
     postgres_with_load_and_image_table.connection.commit()
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -1274,6 +1410,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
     tmpdir,
     load_table,
     image_table,
+    sql_info,
     identifier,
     mock_pg_hook_task,
 ):
@@ -1345,9 +1482,20 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
     rows = postgres_with_load_and_image_table.cursor.fetchall()
     assert len(rows) == 3
 
+    _set_up_std_popularity_func(
+        postgres_with_load_and_image_table,
+        None,
+        {},
+        sql_info,
+        mock_pg_hook_task,
+    )
     # Now try upserting the records from the loading table to the final image table.
     sql.upsert_records_to_db_table(
-        postgres_conn_id, identifier, db_table=image_table, task=mock_pg_hook_task
+        postgres_conn_id,
+        identifier,
+        media_type="image",
+        sql_info=sql_info,
+        task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()
 
@@ -1370,7 +1518,7 @@ def test_upsert_records_calculates_standardized_popularity(
     load_table,
     image_table,
     identifier,
-    table_info,
+    sql_info,
     mock_pg_hook_task,
 ):
     postgres_conn_id = POSTGRES_CONN_ID
@@ -1407,17 +1555,17 @@ def test_upsert_records_calculates_standardized_popularity(
         PROVIDER: {"metric": "views", "percentile": 0.8},
     }
 
-    # Now we set up the popularity constants tables, views, and functions. This method will
-    # run the `data_query` to insert our test rows, which will initially have `null` standardized
+    # Now we re-set up the popularity constants tables, views, and functions after running
+    # the `data_query` to insert our test rows, which will initially have `null` standardized
     # popularity (because no popularity constants exist). Then it will insert `metrics` into
-    # the `image_popularity_metrics` table, and create the `image_popularity_constants` view,
-    # calculating a value for the popularity constant for PROVIDER using those initial records.
+    # the `image_popularity_metrics` table, and calculate a value for the popularity constant
+    # for PROVIDER using those initial records.
     # Then it sets up the standardized popularity function itself.
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         data_query,
         metrics,
-        table_info,
+        sql_info,
         mock_pg_hook_task,
     )
 
@@ -1471,8 +1619,8 @@ def test_upsert_records_calculates_standardized_popularity(
     sql.upsert_records_to_db_table(
         postgres_conn_id,
         identifier,
-        db_table=image_table,
-        popularity_function=table_info.standardized_popularity,
+        media_type="image",
+        sql_info=sql_info,
         task=mock_pg_hook_task,
     )
     postgres_with_load_and_image_table.connection.commit()

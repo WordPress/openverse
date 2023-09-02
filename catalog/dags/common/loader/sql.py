@@ -261,7 +261,7 @@ def _is_tsv_column_from_different_version(
 def upsert_records_to_db_table(
     postgres_conn_id: str,
     identifier: str,
-    media_type: str,
+    media_type: str = None,
     tsv_version: str = CURRENT_TSV_VERSION,
     db_columns: list[Column] = None,
     sql_info: SQLInfo = None,
