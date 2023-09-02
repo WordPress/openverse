@@ -290,7 +290,6 @@ def upsert_records_to_db_table(
 
     # Remove identifier column
     db_columns = db_columns[1:]
-    # db_columns: list[Column] = DB_COLUMNS[media_type][1:]
     column_inserts = {}
     column_conflict_values = {}
     for column in db_columns:
