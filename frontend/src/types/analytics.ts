@@ -332,6 +332,79 @@ export type Events = {
     /** The name of the Vue component used on the interaction, e.g. the global or main player. */
     component: AudioComponent
   }
+
+  /* Content safety events */
+
+  /**
+   * Description: The user flips the sidebar toggle to fetch sensitive results.
+   *
+   * Questions:
+   * - Are users seeking sensitive content from Openverse?
+   */
+  TOGGLE_FETCH_SENSITIVE: {
+    /** whether the switch was turned on or off */
+    checked: boolean
+  }
+  /**
+   * Description: The user flips the sidebar toggle to not blur sensitive
+   * content in the search results.
+   *
+   * Questions:
+   * - Are users comfortable seeing sensitive content alongside safe results?
+   * - Do users find the blurring useful or just an extra step?
+   */
+  TOGGLE_BLUR_SENSITIVE: {
+    /** whether the switch was turned on or off */
+    checked: boolean
+  }
+  /**
+   * Description: The user proceeds to see the sensitive content from the
+   * content safety wall.
+   *
+   * Questions:
+   * - Do people choose to see a result based on the explanation for why it was
+   *   marked sensitive?
+   * - What sensitivity values are most likely to make a user want to go ahead?
+   */
+  UNBLUR_SENSITIVE_RESULT: {
+    /** the unique ID of the sensitive result */
+    id: string
+    /** the reasons for why this result is considered sensitive */
+    sensitivities: string
+  }
+  /**
+   * Description: The user opts not to see the sensitive content and to go back
+   * to the search results from the content safety wall.
+   *
+   * Questions:
+   * - Do people choose not to see a result based on the explanation for why it
+   *   was marked sensitive?
+   * - What sensitivity values are most likely to make a user go back?
+   *
+   * This event is similar to the `BACK_TO_SEARCH` event, but is separate
+   * because it is only triggered from the content safety wall.
+   */
+  GO_BACK_FROM_SENSITIVE_RESULT: {
+    /** the unique ID of the sensitive result */
+    id: string
+    /** the reasons for why this result is considered sensitive */
+    sensitivities: string
+  }
+  /**
+   * Description: The user opts to re-hide the sensitive content that has been
+   * unblurred and presented to them.
+   *
+   * Questions:
+   * - What content on Openverse would be so sensitive that a person would want
+   *   to hide it after they've seen it?
+   * - Do users prefer to briefly see and re-hide most sensitive content?
+   */
+  REBLUR_SENSITIVE_RESULT: {
+    /** the unique ID of the sensitive result */
+    id: string
+    /** the reasons for why this result is considered sensitive */
+    sensitivities: string
+  }
 }
 
 /**
