@@ -32,6 +32,12 @@ frontend:
   - .pnpmfile.cjs
 packages:
   - packages/**
+  - package.json
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
+  - tsconfig.json
+  - .npmrc
+  - .pnpmfile.cjs
 analytics:
   - docker/clickhouse/**
   - docker/plausible/**
