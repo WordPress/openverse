@@ -268,7 +268,7 @@ const config: NuxtConfig = {
   typescript: {
     typeCheck: {
       typescript: {
-        configFile: "../tsconfig.json",
+        configFile: "./tsconfig.json",
         extensions: {
           vue: true,
         },
