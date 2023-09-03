@@ -5,6 +5,8 @@
       <div
         class="fixed inset-0 z-40 flex h-[100dvh] h-screen w-full justify-center overflow-y-auto bg-white"
       >
+        <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+        <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
         <div
           ref="dialogRef"
           v-bind="$attrs"
@@ -20,6 +22,7 @@
     </VTeleport>
   </div>
 </template>
+
 <script lang="ts">
 import {
   defineComponent,

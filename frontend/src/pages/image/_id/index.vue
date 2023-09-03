@@ -11,6 +11,11 @@
             v-if="isLoadingThumbnail"
             class="col-span-full row-span-full h-[500px] w-[500px] self-center"
           />
+          <!--
+            re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906
+            Note: this one, I believe, should remain disabled ; but should be double checked by the issue nonetheless
+          -->
+          <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
           <img
             v-if="!sketchFabUid"
             id="main-image"

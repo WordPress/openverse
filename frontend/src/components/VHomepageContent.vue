@@ -113,13 +113,9 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const searchTypeButtonRef = ref<InstanceType<
-      typeof VSearchTypeButton
-    > | null>(null)
-    const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(
-      null
-    )
-    const nodeRef = computed(() => searchBarRef.value?.$el as HTMLElement)
+    const searchTypeButtonRef = ref<{ $el: HTMLElement } | null>(null)
+    const searchBarRef = ref<{ $el: HTMLElement } | null>(null)
+    const nodeRef = computed(() => searchBarRef.value?.$el ?? null)
 
     const { getSearchTypeProps } = useSearchType()
     const uiStore = useUiStore()
@@ -132,7 +128,7 @@ export default defineComponent({
     const isLg = computed(() => uiStore.isBreakpoint("lg"))
 
     const triggerElement = computed(
-      () => (searchTypeButtonRef.value?.$el as HTMLElement) || null
+      () => searchTypeButtonRef.value?.$el || null
     )
 
     const lockBodyScroll = computed(() => !isLg.value)

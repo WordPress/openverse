@@ -1,26 +1,45 @@
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+import { useAnalytics } from "~/composables/use-analytics"
+import type { Sensitivity } from "~/constants/content-safety"
 
 let mockUseUiStore = {
   shouldBlurSensitive: true,
   revealedSensitiveResults: [],
 }
 
+jest.mock("~/composables/use-analytics")
+
 jest.mock("~/stores/ui", () => ({
   useUiStore: () => mockUseUiStore,
 }))
 
 describe("useSensitiveMedia composable", () => {
-  let mockMedia: { id: string; isSensitive: boolean }
+  const sendCustomEventMock = jest.fn()
+
+  let mockMedia: {
+    id: string
+    sensitivity: Sensitivity[]
+    isSensitive: boolean
+  }
 
   beforeEach(() => {
     mockMedia = {
       id: "mock-id",
+      sensitivity: [],
       isSensitive: false,
     }
     mockUseUiStore = {
       shouldBlurSensitive: true,
       revealedSensitiveResults: [],
     }
+
+    sendCustomEventMock.mockClear()
+    const mockedUseAnalytics = useAnalytics as jest.Mock<
+      ReturnType<typeof useAnalytics>
+    >
+    mockedUseAnalytics.mockImplementation(() => ({
+      sendCustomEvent: sendCustomEventMock,
+    }))
   })
 
   it("should return non-sensitive when media is null", () => {
@@ -55,6 +74,10 @@ describe("useSensitiveMedia composable", () => {
     reveal()
 
     expect(visibility.value).toBe("sensitive-shown")
+    expect(sendCustomEventMock).toHaveBeenCalledWith(
+      "UNBLUR_SENSITIVE_RESULT",
+      { id: "mock-id", sensitivities: "" }
+    )
   })
 
   it("should hide sensitive media", () => {
@@ -65,6 +88,10 @@ describe("useSensitiveMedia composable", () => {
     hide()
 
     expect(visibility.value).toBe("sensitive-hidden")
+    expect(sendCustomEventMock).toHaveBeenCalledWith(
+      "REBLUR_SENSITIVE_RESULT",
+      { id: "mock-id", sensitivities: "" }
+    )
   })
 
   it("should correctly report if a media is hidden", () => {

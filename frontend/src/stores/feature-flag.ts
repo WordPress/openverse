@@ -25,6 +25,10 @@ import type { Context } from "@nuxt/types"
 import type { Dictionary } from "vue-router/types/router"
 
 type FlagName = keyof (typeof featureData)["features"]
+
+export const isFlagName = (name: string): name is FlagName => {
+  return Object.keys(featureData.features).includes(name)
+}
 export interface FeatureFlagState {
   flags: Record<FlagName, FeatureFlag>
 }

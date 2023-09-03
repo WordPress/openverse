@@ -24,12 +24,20 @@
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "types": ["@types/jest", "@nuxt/types", "@nuxtjs/i18n", "@pinia/nuxt"],
+    "types": [
+      "@types/jest",
+      "@nuxt/types",
+      "@nuxtjs/i18n",
+      "@pinia/nuxt",
+      "@sentry/core"
+    ],
     "typeRoots": ["./frontend/typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./frontend/src/*"],
       "~~/*": ["./frontend/*"],
-      "@openverse/*": ["./packages/*/src"]
+      "@openverse/*": ["./packages/*/src"],
+      // Workaround for https://github.com/microsoft/TypeScript/issues/42873
+      "@sentry/core": ["node_modules/@sentry/core"]
     },
     "rootDirs": ["frontend/src", "packages/eslint-plugin/src"],
     "baseUrl": "."
@@ -38,21 +46,13 @@
     "**/*.ts",
     "frontend/test/proxy.js",
     "frontend/src/components/**/*.vue",
-
-    "frontend/src/pages/about.vue",
-    "frontend/src/pages/feedback.vue",
-    "frontend/src/pages/search-help.vue",
-    "frontend/src/pages/audio/_id/index.vue",
-    "frontend/src/pages/image/_id/index.vue",
-    "frontend/src/pages/image/_id/report.vue",
-    "frontend/src/pages/search.vue",
-    "frontend/src/pages/search/**/*.vue",
+    "frontend/src/pages/**/*.vue",
     /**
      * Some files from this section cannot be converted to TypeScript because they are
-     * used in non-TS contexts (like Tailwind configuration). Therefore they're left as
-     * "vanilla JavaScript" with JSDoc based type annotations. This allows us to check
-     * them with TypeScript without introducing syntax changes that are not compatible
-     * with other tools we rely on.
+     * used in non-TS contexts. Therefore, they're left as "vanilla JavaScript" with
+     * JSDoc based type annotations. This allows us to check them with TypeScript
+     * without introducing syntax changes that are not compatible with other tools
+     * we rely on.
      */
     "frontend/src/constants/**/*",
     "frontend/src/server-middleware/healthcheck.js",

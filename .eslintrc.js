@@ -222,10 +222,18 @@ module.exports = {
       plugins: ["playwright"],
       extends: ["plugin:playwright/recommended"],
       rules: {
-        // Enable once https://github.com/playwright-community/eslint-plugin-playwright/issues/154 is resolved
-        "playwright/expect-expect": ["off"],
         // Superceeded by `@openverse/no-unexplained-disabled-test`
         "playwright/no-skipped-test": "off",
+      },
+      settings: {
+        playwright: {
+          additionalAssertFunctionNames: [
+            // Shared assertion for confirming sent events
+            "expectEventPayloadToMatch",
+            // Shared assertion for visual regression tests
+            "expectSnapshot",
+          ],
+        },
       },
     },
     {

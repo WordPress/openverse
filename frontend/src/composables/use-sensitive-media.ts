@@ -3,6 +3,7 @@ import { computed } from "vue"
 import type { Media } from "~/types/media"
 
 import { useUiStore } from "~/stores/ui"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import type { SensitiveMediaVisibility } from "~/constants/content-safety"
 
@@ -12,9 +13,10 @@ import type { SensitiveMediaVisibility } from "~/constants/content-safety"
  * along with toggles for hiding/revealing the media.
  */
 export function useSensitiveMedia(
-  media: Pick<Media, "id" | "isSensitive"> | null
+  media: Pick<Media, "id" | "sensitivity" | "isSensitive"> | null
 ) {
   const uiStore = useUiStore()
+  const { sendCustomEvent } = useAnalytics()
 
   /**
    * The current state of a single sensitive media item.
@@ -40,6 +42,10 @@ export function useSensitiveMedia(
   function reveal() {
     if (media && !uiStore.revealedSensitiveResults.includes(media.id)) {
       uiStore.revealedSensitiveResults.push(media.id)
+      sendCustomEvent("UNBLUR_SENSITIVE_RESULT", {
+        id: media.id,
+        sensitivities: media.sensitivity.join(","),
+      })
     }
   }
 
@@ -49,6 +55,10 @@ export function useSensitiveMedia(
     if (index > -1) {
       uiStore.revealedSensitiveResults.splice(index, 1)
     }
+    sendCustomEvent("REBLUR_SENSITIVE_RESULT", {
+      id: media.id,
+      sensitivities: media.sensitivity.join(","),
+    })
   }
 
   const isHidden = computed(
