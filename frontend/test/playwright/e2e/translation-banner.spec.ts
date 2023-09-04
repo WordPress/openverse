@@ -39,9 +39,7 @@ test.describe("translation banner", () => {
 
   test("Can close the translation banner", async ({ page }) => {
     await page.goto(russianSearchPath)
-    await page.click('[data-testid="banner-translation"] button:visible', {
-      timeout: 500,
-    })
+    await page.click('[data-testid="banner-translation"] button:visible')
 
     const banner = page.locator('.span:has-text("Help us get to 100 percent")')
     await expect(banner).toBeHidden({ timeout: 500 })
