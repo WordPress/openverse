@@ -21,8 +21,6 @@ import {
 } from "~/constants/feature-flag"
 import { LOCAL, DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
-import type { Context } from "@nuxt/types"
-
 import type { Dictionary } from "vue-router/types/router"
 
 type FlagName = keyof (typeof featureData)["features"]
@@ -127,31 +125,6 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
         const flag = this.flags[name as FlagName]
         if (flag && getFlagStatus(flag) === SWITCHABLE) {
           Vue.set(flag, "preferredState", state)
-        }
-      })
-    },
-    /**
-     * Write the current state of the switchable flags to the cookie.
-     *
-     * @param cookies - the Nuxt cookies module
-     */
-    writeToCookies(cookies: Context["$cookies"]) {
-      cookies.set("features", this.flagStateMap(COOKIE))
-    },
-    /**
-     * Initialize the state of the switchable flags from the session storage.
-     * `Vue.set` is used to ensure reactivity is maintained.
-     */
-    initFromSession() {
-      if (typeof window === "undefined") return
-      const features = useStorage<Record<string, FeatureState>>(
-        "features",
-        {},
-        sessionStorage
-      )
-      Object.entries(this.flags).forEach(([name, flag]) => {
-        if (getFlagStatus(flag) === SWITCHABLE && flag.storage === SESSION) {
-          Vue.set(flag, "preferredState", features.value[name])
         }
       })
     },

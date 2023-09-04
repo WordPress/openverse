@@ -36,7 +36,6 @@ import { useWindowScroll } from "~/composables/use-window-scroll"
 import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { ShowScrollButtonKey } from "~/types/provides"
 
@@ -62,11 +61,6 @@ export default defineComponent({
   },
   setup() {
     const uiStore = useUiStore()
-
-    const featureStore = useFeatureFlagStore()
-    onMounted(() => {
-      featureStore.initFromSession()
-    })
 
     const { updateBreakpoint } = useLayout()
 

@@ -25,7 +25,6 @@ import { computed, defineComponent, onMounted } from "vue"
 import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
@@ -49,11 +48,6 @@ export default defineComponent({
   },
   setup() {
     const uiStore = useUiStore()
-
-    const featureStore = useFeatureFlagStore()
-    onMounted(() => {
-      featureStore.initFromSession()
-    })
 
     const { updateBreakpoint } = useLayout()
 
