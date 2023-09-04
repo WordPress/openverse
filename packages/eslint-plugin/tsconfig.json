@@ -3,11 +3,11 @@
   "compilerOptions": {
     "module": "ESNext",
     "noEmit": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "NodeNext",
     "rootDir": ".",
-    "lib": ["es2021"],
-    "target": "es2021"
+    "lib": ["ES2021"],
+    "target": "ES2021"
   },
-  "include": ["src", "tests"],
+  "include": ["src", "test"],
   "exclude": ["dist"]
 }
