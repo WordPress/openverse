@@ -531,7 +531,11 @@ export const getNuxtErrorData = (
       errorData.statusCode = error.response.status
     } else if (error.request) {
       // The request was sent, but the response was never received.
-      errorData.message += `No response received from the server`
+      if (error.code === "ECONNABORTED") {
+        errorData.message += `Timeout error`
+      } else {
+        errorData.message += `No response received from the server`
+      }
     } else {
       // Something happened during the request setup.
       errorData.message += `Unknown Axios error`

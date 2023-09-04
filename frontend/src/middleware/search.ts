@@ -44,11 +44,12 @@ export const searchMiddleware: Middleware = async ({
     const results = await mediaStore.fetchMedia()
 
     const fetchingError = mediaStore.fetchState.fetchingError
-    // NO_RESULTS is handled client-side, for other errors show server error page
+    // NO_RESULTS and timeout are handled client-side, for other errors show server error page
     if (
       !results &&
       fetchingError &&
-      !fetchingError?.message?.includes(NO_RESULT)
+      !fetchingError?.message?.includes(NO_RESULT) &&
+      !fetchingError?.message?.includes("timeout")
     ) {
       nuxtError(fetchingError)
     }

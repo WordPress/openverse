@@ -124,14 +124,14 @@ for (const searchType of supportedSearchTypes) {
         })
         await goToSearchTerm(page, "cat", { dir, searchType, mode: "CSR" })
 
-        // TODO: uncomment when the timeout page is implemented
-        // await setViewportToFullHeight(page)
+        await setViewportToFullHeight(page)
 
         await page.mouse.move(0, 82)
 
-        await expectSnapshot(`search-result-timeout-${dir}`, page, {
-          fullPage: true,
-        })
+        await expectSnapshot(
+          `search-result-timeout-${dir}`,
+          page.locator("#main-page")
+        )
       })
     }
   })
