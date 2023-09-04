@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-07-28T14:12:44+00:00\n"
+"POT-Creation-Date: 2023-09-04T09:17:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,7 +33,7 @@ msgctxt "hero.description"
 msgid "An extensive library of free stock photos, images, and audio, available for free use."
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:45
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:44
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:14
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:21
 msgctxt "hero.search.placeholder"
@@ -110,7 +110,7 @@ msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
-#: src/components/VHeader/VHeaderInternal.vue:19
+#: src/components/VHeader/VHeaderInternal.vue:21
 #: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:3
 msgctxt "header.aria.menu"
 msgid "menu"
@@ -167,7 +167,7 @@ msgctxt "header.seeResults"
 msgid "See results"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:34
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:33
 msgctxt "header.backButton"
 msgid "Go back"
 msgstr ""
@@ -1314,7 +1314,7 @@ msgid "Search"
 msgstr ""
 
 #: src/components/VHeader/VHeaderDesktop.vue:17
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:70
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:69
 msgctxt "browsePage.searchForm.clear"
 msgid "Clear"
 msgstr ""
@@ -1404,6 +1404,18 @@ msgstr ""
 #: src/pages/search/image.vue:7
 msgctxt "browsePage.aria.results"
 msgid "Search results for ###query###."
+msgstr ""
+
+msgctxt "mediaDetails.information.type"
+msgid "Type"
+msgstr ""
+
+msgctxt "mediaDetails.information.unknown"
+msgid "Unknown"
+msgstr ""
+
+msgctxt "mediaDetails.information.category"
+msgid "Category"
 msgstr ""
 
 #: src/components/VMediaInfo/VMediaReuse.vue:3
@@ -1544,7 +1556,7 @@ msgid "read more about the tool"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:61
+#: src/pages/image/_id/index.vue:66
 msgctxt "mediaDetails.aria.creatorUrl"
 msgid "author ###name###"
 msgstr ""
@@ -1663,55 +1675,33 @@ msgid "Something went wrong, please try again after some time."
 msgstr ""
 
 #: src/components/VBackToSearchResultsLink.vue:14
-#: src/components/VSafetyWall/VSafetyWall.vue:40
+#: src/components/VSafetyWall/VSafetyWall.vue:41
 msgctxt "singleResult.back"
 msgid "Back to results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:56
+#: src/pages/image/_id/index.vue:61
 msgctxt "imageDetails.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/pages/image/_id/index.vue:50
+#: src/pages/image/_id/index.vue:55
 msgctxt "imageDetails.weblink"
 msgid "Get this image"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:5
-msgctxt "imageDetails.information.title"
-msgid "Image information"
-msgstr ""
-
-#: src/components/VImageDetails/VImageDetails.vue:16
-msgctxt "imageDetails.information.type"
-msgid "Type"
-msgstr ""
-
-#: src/components/VImageDetails/VImageDetails.vue:20
-msgctxt "imageDetails.information.provider"
-msgid "Provider"
-msgstr ""
-
-#: src/components/VImageDetails/VImageDetails.vue:32
 msgctxt "imageDetails.information.dimensions"
 msgid "Dimensions"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:24
-msgctxt "imageDetails.information.source"
-msgid "Source"
-msgstr ""
-
-#: src/components/VImageDetails/VImageDetails.vue:36
 msgctxt "imageDetails.information.pixels"
 msgid "pixels"
 msgstr ""
 
-#: src/components/VImageDetails/VImageDetails.vue:82
-msgctxt "imageDetails.information.unknown"
-msgid "Unknown"
+#. Do not translate words between ### ###.
+msgctxt "imageDetails.information.sizeInPixels"
+msgid "###width### × ###height### pixels"
 msgstr ""
 
 #: src/components/VImageDetails/VRelatedImages.vue:4
@@ -1735,44 +1725,20 @@ msgctxt "audioDetails.relatedAudios"
 msgid "Related audio"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:27
 msgctxt "audioDetails.table.album"
 msgid "Album"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:35
-msgctxt "audioDetails.table.category"
-msgid "Type"
-msgstr ""
-
-#: src/components/VAudioDetails/VAudioDetails.vue:42
 msgctxt "audioDetails.table.sampleRate"
 msgid "Sample Rate"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:50
 msgctxt "audioDetails.table.filetype"
 msgid "Format"
 msgstr ""
 
-#: src/components/VAudioDetails/VAudioDetails.vue:58
-msgctxt "audioDetails.table.provider"
-msgid "Provider"
-msgstr ""
-
-#: src/components/VAudioDetails/VAudioDetails.vue:68
-msgctxt "audioDetails.table.source"
-msgid "Source"
-msgstr ""
-
-#: src/components/VAudioDetails/VAudioDetails.vue:76
 msgctxt "audioDetails.table.genre"
 msgid "Genre"
-msgstr ""
-
-#: src/components/VAudioDetails/VAudioDetails.vue:5
-msgctxt "audioDetails.information"
-msgid "Audio information"
 msgstr ""
 
 #: src/components/VAudioTrack/layouts/VFullLayout.vue:66
@@ -1810,17 +1776,16 @@ msgid "→"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VExternalSearch/VExternalSourceList.vue:12
+#: src/components/VExternalSearch/VExternalSourceList.vue:7
 msgctxt "externalSources.caption"
 msgid "###openverse### can not guarantee the accuracy of license information. Always verify that the work is actually under a CC license."
 msgstr ""
 
-#: src/components/VExternalSearch/VExternalSearchForm.vue:47
 msgctxt "externalSources.button"
 msgid "Source list"
 msgstr ""
 
-#: src/components/VExternalSearch/VExternalSourceList.vue:4
+#: src/components/VExternalSearch/VExternalSearchForm.vue:43
 msgctxt "externalSources.title"
 msgid "External sources"
 msgstr ""
@@ -1835,18 +1800,21 @@ msgid "Click on a source below to directly search other collections of CC-licens
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VExternalSearch/VExternalSearchForm.vue:15
 msgctxt "externalSources.form.unsupportedTitle"
 msgid "###openverse### does not yet support built-in ###type### search."
 msgstr ""
 
-#: src/components/VExternalSearch/VExternalSearchForm.vue:8
+#: src/components/VExternalSearch/VExternalSearchForm.vue:26
 msgctxt "externalSources.form.supportedTitle"
-msgid "Not finding what you're looking for? Try an external source:"
+msgid "Not finding what you're looking for? Search in external sources"
+msgstr ""
+
+#: src/components/VExternalSearch/VExternalSearchForm.vue:31
+msgctxt "externalSources.form.supportedTitleSm"
+msgid "Search in external sources"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VExternalSearch/VExternalSearchForm.vue:25
 msgctxt "externalSources.form.noResultsTitle"
 msgid "No ###type### results for \"###query###\"."
 msgstr ""
@@ -1923,7 +1891,7 @@ msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:519
+#: src/components/VAudioTrack/VAudioTrack.vue:523
 #: src/components/VAudioTrack/VGlobalAudioTrack.vue:74
 msgctxt "audioTrack.ariaLabel"
 msgid "Audio: ###title###"
@@ -1935,7 +1903,7 @@ msgid "Audio: ###title### - interactive player - press the space bar to play and
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:516
+#: src/components/VAudioTrack/VAudioTrack.vue:520
 msgctxt "audioTrack.ariaLabelInteractiveSeekable"
 msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track."
 msgstr ""
@@ -2002,7 +1970,7 @@ msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:50
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:49
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:17
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:24
 msgctxt "search.searchBarLabel"
@@ -2070,12 +2038,12 @@ msgid "•"
 msgstr ""
 
 #: src/components/VContentReport/VContentReportPopover.vue:15
-#: src/components/VExternalSearch/VExternalSourceList.vue:7
+#: src/components/VExternalSearch/VExternalSearchForm.vue:49
 msgctxt "modal.close"
 msgid "Close"
 msgstr ""
 
-#: src/components/VModal/VModalContent.vue:37
+#: src/components/VModal/VModalContent.vue:39
 msgctxt "modal.ariaClose"
 msgid "Close the modal"
 msgstr ""
@@ -2120,8 +2088,14 @@ msgctxt "noResults.alternatives"
 msgid "Try a different query or use one of the external sources to expand your search."
 msgstr ""
 
+#: src/components/VErrorSection/VErrorSection.vue:11
 msgctxt "serverTimeout.heading"
 msgid "Whoops, it looks like that request took too long to complete. Please try again."
+msgstr ""
+
+#: src/components/VErrorSection/VErrorSection.vue:11
+msgctxt "unknownError.heading"
+msgid "Whoops, it looks like something went wrong. Please try again."
 msgstr ""
 
 msgctxt "searchType.image"
@@ -2303,15 +2277,16 @@ msgstr ""
 #: src/components/VImageCell/VImageCell.vue:29
 #: src/components/VImageCell/VImageCell.vue:45
 #: src/components/VImageCell/VImageCell.vue:161
-#: src/pages/image/_id/index.vue:265
+#: src/pages/image/_id/index.vue:279
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
 
 #: src/components/VAudioThumbnail/VAudioThumbnail.vue:68
 #: src/components/VAudioTrack/layouts/VBoxLayout.vue:13
+#: src/components/VAudioTrack/layouts/VGlobalLayout.vue:14
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:33
-#: src/pages/audio/_id/index.vue:106
+#: src/pages/audio/_id/index.vue:120
 msgctxt "sensitiveContent.title.audio"
 msgid "This audio track may contain sensitive content."
 msgstr ""
@@ -2332,7 +2307,7 @@ msgctxt "sensitiveContent.singleResult.hide"
 msgid "Hide content"
 msgstr ""
 
-#: src/components/VSafetyWall/VSafetyWall.vue:49
+#: src/components/VSafetyWall/VSafetyWall.vue:50
 msgctxt "sensitiveContent.singleResult.show"
 msgid "Show content"
 msgstr ""
@@ -2365,4 +2340,12 @@ msgstr ""
 #. Do not translate words between ### ###.
 msgctxt "sensitiveContent.reasons.userReportedSensitive"
 msgid "###openverse### users have reported this work as sensitive."
+msgstr ""
+
+msgctxt "collection.link.source"
+msgid "Open source site"
+msgstr ""
+
+msgctxt "collection.link.creator"
+msgid "Open creator page"
 msgstr ""
