@@ -6,6 +6,7 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
+import { audioStatuses } from "~/constants/audio"
 import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 
 <Meta
@@ -13,7 +14,7 @@ import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
   components={VAudioControl}
   argTypes={{
     status: {
-      options: ["playing", "paused", "played"],
+      options: audioStatuses,
       control: "select",
     },
     size: {
