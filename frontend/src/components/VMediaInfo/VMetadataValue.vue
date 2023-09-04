@@ -1,5 +1,5 @@
 <template>
-  <dd class="label-bold overflow-hidden break-words p-1">
+  <dd class="label-bold flex justify-start overflow-hidden break-words p-1">
     <VLink
       v-if="datum.url"
       :href="datum.url"
