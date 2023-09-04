@@ -15,7 +15,6 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License, LicenseVersion } from "~/constants/license"
-import type { ErrorCode } from "~/constants/errors"
 import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
 import { useI18n } from "~/composables/use-i18n"
 
@@ -38,9 +37,7 @@ export default defineComponent({
      * the code of the error, used to identify and render the appropriate image
      */
     errorCode: {
-      type: String as PropType<
-        Extract<ErrorCode, "NO_RESULT" | "SERVER_TIMEOUT">
-      >,
+      type: String as PropType<"NO_RESULT" | "SERVER_TIMEOUT">,
       required: true,
     },
   },

@@ -4,7 +4,7 @@
     tabindex="-1"
     class="browse-page flex w-full flex-col px-6 lg:px-10"
   >
-    <VErrorPage
+    <VErrorSection
       v-if="fetchingError"
       :fetching-error="fetchingError"
       class="w-full py-10"
@@ -65,7 +65,7 @@ import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { areQueriesEqual } from "~/utils/search-query-transform"
 
-import VErrorPage from "~/components/VErrorSection/VErrorPage.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
@@ -73,7 +73,7 @@ import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 export default defineComponent({
   name: "BrowsePage",
   components: {
-    VErrorPage,
+    VErrorSection,
     VSearchResultsTitle,
     VExternalSearchForm,
     VScrollButton,

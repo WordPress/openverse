@@ -6,26 +6,26 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
-import VErrorPage from "~/components/VErrorSection/VErrorPage.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 import { NO_RESULT } from "~/constants/errors"
 import { useSearchStore } from "@/stores/search"
 
-<Meta title="Components/VErrorPage" component={VErrorPage} />
+<Meta title="Components/VErrorSection" component={VErrorSection} />
 
-# VErrorPage
+# VErrorSection
 
-<Description of={VErrorPage} />
+<Description of={VErrorSection} />
 
-<ArgsTable of={VErrorPage} />
+<ArgsTable of={VErrorSection} />
 
 ## No results
 
 This section appears when a search returns no hits.
 
 export const ErrorPageTemplate = (args) => ({
-  template: `<VErrorPage v-bind="args" />`,
-  components: { VErrorPage },
+  template: `<VErrorSection v-bind="args" />`,
+  components: { VErrorSection },
   setup() {
     const searchStore = useSearchStore()
     searchStore.setSearchTerm(
