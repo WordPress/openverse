@@ -5,6 +5,7 @@ import { useStorage } from "@vueuse/core"
 import featureData from "~~/feat/feature-flags.json"
 
 import { warn } from "~/utils/console"
+import { cookieOptions } from "~/utils/cookies"
 
 import type { FeatureFlag } from "~/types/feature-flag"
 import {
@@ -158,7 +159,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      this.$nuxt.$cookies.set("features", this.flagStateMap(COOKIE))
+      this.$nuxt.$cookies.set(
+        "features",
+        this.flagStateMap(COOKIE),
+        cookieOptions
+      )
     },
     /**
      * Write the current state of the switchable flags to the session storage.
