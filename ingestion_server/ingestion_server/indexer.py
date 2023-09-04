@@ -522,6 +522,9 @@ class TableIndexer:
             },
             slices="auto",
             wait_for_completion=True,
+            # 10k derived from in-production testing
+            # See https://github.com/WordPress/openverse/issues/2963
+            requests_per_second=10_000,
         )
 
         self.refresh(index_name=destination_index, change_settings=True)
