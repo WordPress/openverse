@@ -1,10 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "noEmit": true,
     "module": "ESNext",
-    "moduleResolution": "nodenext"
+    "noEmit": true,
+    "moduleResolution": "nodenext",
+    "rootDir": ".",
+    "lib": ["es2021"],
+    "target": "es2021"
   },
+  "include": ["src", "tests"],
   "exclude": ["dist"]
 }
