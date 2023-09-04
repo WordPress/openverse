@@ -688,7 +688,7 @@
     heading: "Whoops, it looks like that request took too long to complete. Please try again.",
   },
   unknownError: {
-    heading: "Whoops, it looks like something went wrong. Please try again. ",
+    heading: "Whoops, it looks like something went wrong. Please try again.",
   },
   searchType: {
     image: "Images",
