@@ -42,4 +42,8 @@ export interface OpenverseCookieState {
    * The state of the persistent feature flags.
    */
   features?: Record<string, FeatureState>
+  /**
+   * The state of the session-scoped feature flags.
+   */
+  sessionFeatures?: Record<string, FeatureState>
 }

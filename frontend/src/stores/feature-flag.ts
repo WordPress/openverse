@@ -116,17 +116,18 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
   actions: {
     /**
      * Given a list of key value pairs of flags and their preferred states,
-     * populate the store state to match the cookie.
-     *
-     * Values stored in the cookie are stored across sessions and can be
-     * modified using the '/preferences' page.
+     * populate the store state to match the cookie. The cookie may be
+     * persistent, if written by `writeToCookie`, or session-scoped, if written
+     * by `writeToSession`.
      *
      * @param cookies - mapping of feature flags and their preferred states
      */
     initFromCookies(cookies: Record<string, FeatureState>) {
-      Object.entries(this.flags).forEach(([name, flag]) => {
-        if (getFlagStatus(flag) === SWITCHABLE && flag.storage === COOKIE)
-          Vue.set(flag, "preferredState", cookies[name])
+      Object.entries(cookies).forEach(([name, state]) => {
+        const flag = this.flags[name as FlagName]
+        if (flag && getFlagStatus(flag) === SWITCHABLE) {
+          Vue.set(flag, "preferredState", state)
+        }
       })
     },
     /**
@@ -166,16 +167,17 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       )
     },
     /**
-     * Write the current state of the switchable flags to the session storage.
+     * Write the current state of the switchable flags to the session cookie.
+     * These cookies are read in the corresponding `initFromCookies` method.
+     *
+     * This is same as `writeToCookie`, except these cookies are not persistent
+     * and will be deleted by the browser after the session.
      */
     writeToSession() {
-      if (typeof window === "undefined") return
-      const features = useStorage<Record<string, FeatureState>>(
-        "features",
-        {},
-        sessionStorage
-      )
-      features.value = this.flagStateMap(SESSION)
+      this.$nuxt.$cookies.set("sessionFeatures", this.flagStateMap(SESSION), {
+        ...cookieOptions,
+        maxAge: undefined,
+      })
     },
     /**
      * Set the value of flag entries from the query parameters. Only those

@@ -33,6 +33,7 @@ const middleware: Middleware = async ({
 
   const featureFlagStore = useFeatureFlagStore($pinia)
   featureFlagStore.initFromCookies($cookies.get("features") ?? {})
+  featureFlagStore.initFromCookies($cookies.get("sessionFeatures") ?? {})
   featureFlagStore.initFromQuery(query)
 
   /* UI store */
