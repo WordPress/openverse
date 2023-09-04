@@ -1,4 +1,5 @@
-export const recommended = {
+export = {
+  plugins: ["@openverse"],
   rules: {
     "@openverse/analytics-configuration": [
       "error",

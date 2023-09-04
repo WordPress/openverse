@@ -14,9 +14,9 @@ Please consult each rule's page for documentation regarding the rule.
 
 All ESLint plugin rules and configuration must be written in TypeScript.
 
-All rules must have unit tests added using `ESLintUtils.RuleTester` from the
-`@typescript-eslint/utils` package. Use the `@typescript-eslint/parser` as the
-`parser` option.
+All rules must have unit tests added using `RuleTester` from the
+`@typescript-eslint/rule-tester` package. Use the `@typescript-eslint/parser` as
+the `parser` option.
 
 All rules are required to have a documentation page in this documentation
 section. Rule documentation should follow the typical ESLint rule documentation,
