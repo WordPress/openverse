@@ -10,11 +10,11 @@
     @click.stop.prevent="handleClick"
     @mousedown="handleMouseDown"
   >
-    <template #default="{ iconSize }">
+    <template #default>
       <svg
         v-if="isLoading"
         class="loading p-2"
-        :class="`w-${iconSize} h-${iconSize}`"
+        :class="`w-${iSize} h-${iSize}`"
         xmlns="http://www.w3.org/2000/svg"
         overflow="visible"
         viewBox="0 0 12 12"
