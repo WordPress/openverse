@@ -1,4 +1,4 @@
-import { computed } from "vue"
+import { computed, unref, Ref } from "vue"
 
 import type { Media } from "~/types/media"
 
@@ -7,14 +7,17 @@ import { useAnalytics } from "~/composables/use-analytics"
 
 import type { SensitiveMediaVisibility } from "~/constants/content-safety"
 
+type SensitiveFields = Pick<Media, "id" | "sensitivity" | "isSensitive">
+
 /**
  * A helper composable for working with sensitive media.
  * Provides the current visibility of a sensitive media,
  * along with toggles for hiding/revealing the media.
  */
 export function useSensitiveMedia(
-  media: Pick<Media, "id" | "sensitivity" | "isSensitive"> | null
+  rawMedia: SensitiveFields | Ref<SensitiveFields> | null
 ) {
+  const media = unref(rawMedia)
   const uiStore = useUiStore()
   const { sendCustomEvent } = useAnalytics()
 
