@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { defineComponent, PropType, toRefs } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
@@ -56,9 +56,8 @@ export default defineComponent({
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
 
-    const shouldBlur = computed(
-      () => useSensitiveMedia(props.audio).isHidden.value
-    )
+    const { audio } = toRefs(props)
+    const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
     const sendSelectSearchResultEvent = (
       audio: AudioDetail,
