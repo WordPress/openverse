@@ -172,7 +172,7 @@ export default defineComponent({
         provider: props.image.provider,
         query: props.searchTerm || "",
         relatedTo: props.relatedTo,
-        sensitivities: props.image.sensitivity.join(","),
+        sensitivities: props.image.sensitivity?.join(",") ?? "",
         isBlurred: shouldBlur.value,
       })
     }

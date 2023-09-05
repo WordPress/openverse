@@ -74,7 +74,7 @@ export default defineComponent({
         query: props.searchTerm,
         provider: audio.provider,
         relatedTo: null,
-        sensitivities: audio.sensitivity.join(","),
+        sensitivities: audio.sensitivity?.join(",") ?? "",
         isBlurred: shouldBlur.value,
       })
     }
