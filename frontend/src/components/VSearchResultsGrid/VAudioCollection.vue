@@ -1,7 +1,7 @@
 <template>
   <section>
     <VGridSkeleton
-      v-if="results.length === 0 && !fetchState.isFinished"
+      v-if="results && results.length === 0 && !fetchState.isFinished"
       is-for-tab="audio"
     />
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
