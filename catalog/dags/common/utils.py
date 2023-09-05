@@ -46,6 +46,9 @@ def setup_kwargs_for_media_type(
                 # is a key in the values dict
                 media_type = kwargs.get("media_type", None)
 
+                if media_type is None:
+                    raise ValueError("Missing `media_type` kwarg.")
+
                 if media_type not in values_by_media_type.keys():
                     raise ValueError(f"No values matching media type: {media_type}")
 
