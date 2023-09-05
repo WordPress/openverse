@@ -7,11 +7,9 @@ import {
 } from "@storybook/addon-docs"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
-import VErrorImage from "~/components/VErrorSection/VErrorImage.vue"
-import VNoResults from "~/components/VErrorSection/VNoResults.vue"
-import VServerTimeout from "~/components/VErrorSection/VServerTimeout.vue"
 
-import { NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
+import { NO_RESULT } from "~/constants/errors"
+import { useSearchStore } from "@/stores/search"
 
 <Meta title="Components/VErrorSection" component={VErrorSection} />
 
@@ -25,17 +23,14 @@ import { NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
 
 This section appears when a search returns no hits.
 
-export const NoResultsTemplate = (args) => ({
-  template: `
-    <VErrorSection>
-      <template #image>
-       <VErrorImage :error-code="args.errorCode" />
-      </template>
-      <VNoResults :media-type="args.type" :search-term="args.searchTerm" />
-    </VErrorSection>
-    `,
-  components: { VErrorSection, VErrorImage, VNoResults },
+export const ErrorPageTemplate = (args) => ({
+  template: `<VErrorSection v-bind="args" />`,
+  components: { VErrorSection },
   setup() {
+    const searchStore = useSearchStore()
+    searchStore.setSearchTerm(
+      args.fetchingError.details?.searchTerm ?? "sad person"
+    )
     return { args }
   },
 })
@@ -44,12 +39,15 @@ export const NoResultsTemplate = (args) => ({
   <Story
     name="No result"
     args={{
-      errorCode: NO_RESULT,
-      type: "image",
-      searchTerm: "sad person",
+      fetchingError: {
+        message: NO_RESULT,
+        requestKind: "search",
+        searchType: "image",
+        details: { searchTerm: "sad person" },
+      },
     }}
   >
-    {NoResultsTemplate.bind({})}
+    {ErrorPageTemplate.bind({})}
   </Story>
 </Canvas>
 
@@ -57,27 +55,34 @@ export const NoResultsTemplate = (args) => ({
 
 This result appears when an API request times out.
 
-export const ServerTimeoutTemplate = (args) => ({
-  template: `
-    <VErrorSection>
-      <template #image>
-        <!-- On large screens, image is in the left pane. -->
-        <VErrorImage class="hidden md:block" :error-code="args.errorCode" />
-      </template>
-      <VServerTimeout/>
-      <!-- On small screens, image is below error message. -->
-      <VErrorImage class="md:hidden mt-10" :error-code="args.errorCode" />
-    </VErrorSection>
-  `,
-  data: () => ({ SERVER_TIMEOUT }),
-  components: { VErrorSection, VErrorImage, VServerTimeout },
-  setup() {
-    return { args }
-  },
-})
-
 <Canvas>
-  <Story name="Server timeout" args={{ errorCode: SERVER_TIMEOUT }}>
-    {ServerTimeoutTemplate.bind({})}
+  <Story
+    name="Server timeout"
+    args={{
+      fetchingError: {
+        message: "server timeout",
+        requestKind: "search",
+        searchType: "image",
+      },
+    }}
+  >
+    {ErrorPageTemplate.bind({})}
   </Story>
 </Canvas>
+
+## Unknown error
+
+This page is shown when there is some other error.
+
+<Story
+  name="Unknown error"
+  args={{
+    fetchingError: {
+      message: "Unknown error",
+      requestKind: "search",
+      searchType: "image",
+    },
+  }}
+>
+  {ErrorPageTemplate.bind({})}
+</Story>

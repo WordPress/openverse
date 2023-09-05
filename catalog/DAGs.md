@@ -34,10 +34,10 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                        | Schedule Interval |
 | ------------------------------------------------------------- | ----------------- |
-| [`audio_data_refresh`](#audio_data_refresh)                   | `@weekly`         |
+| [`audio_data_refresh`](#audio_data_refresh)                   | `0 0 * * 2`       |
 | [`create_filtered_audio_index`](#create_filtered_audio_index) | `None`            |
 | [`create_filtered_image_index`](#create_filtered_image_index) | `None`            |
-| [`image_data_refresh`](#image_data_refresh)                   | `@weekly`         |
+| [`image_data_refresh`](#image_data_refresh)                   | `0 0 * * 2`       |
 
 ## Database
 

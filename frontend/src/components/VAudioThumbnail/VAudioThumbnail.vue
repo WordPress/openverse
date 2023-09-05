@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent, PropType } from "vue"
+import { toRefs, ref, onMounted, defineComponent, PropType } from "vue"
 
 import { rand, hash } from "~/utils/prng"
 import { lerp, dist, bezier, Point } from "~/utils/math"
@@ -60,7 +60,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+    const { audio } = toRefs(props)
+    const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
     const i18n = useI18n()
     const helpText = (
