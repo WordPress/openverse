@@ -525,6 +525,8 @@ class TableIndexer:
             # 10k derived from in-production testing
             # See https://github.com/WordPress/openverse/issues/2963
             requests_per_second=15_000,
+            # Temporary workaround to allow the action to complete.
+            request_timeout=48 * 3600,
         )
 
         self.refresh(index_name=destination_index, change_settings=True)
