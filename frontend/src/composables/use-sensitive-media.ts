@@ -1,4 +1,4 @@
-import { computed } from "vue"
+import { computed, unref, Ref } from "vue"
 
 import type { Media } from "~/types/media"
 
@@ -7,13 +7,15 @@ import { useAnalytics } from "~/composables/use-analytics"
 
 import type { SensitiveMediaVisibility } from "~/constants/content-safety"
 
+type SensitiveFields = Pick<Media, "id" | "sensitivity" | "isSensitive">
+
 /**
  * A helper composable for working with sensitive media.
  * Provides the current visibility of a sensitive media,
  * along with toggles for hiding/revealing the media.
  */
 export function useSensitiveMedia(
-  media: Pick<Media, "id" | "sensitivity" | "isSensitive"> | null
+  rawMedia: SensitiveFields | Ref<SensitiveFields> | null
 ) {
   const uiStore = useUiStore()
   const { sendCustomEvent } = useAnalytics()
@@ -24,6 +26,7 @@ export function useSensitiveMedia(
    * updated by user interactions.
    */
   const visibility = computed<SensitiveMediaVisibility>(() => {
+    const media = unref(rawMedia)
     if (!media) {
       return "non-sensitive"
     } else if (media.isSensitive) {
@@ -40,6 +43,7 @@ export function useSensitiveMedia(
   })
 
   function reveal() {
+    const media = unref(rawMedia)
     if (media && !uiStore.revealedSensitiveResults.includes(media.id)) {
       uiStore.revealedSensitiveResults.push(media.id)
       sendCustomEvent("UNBLUR_SENSITIVE_RESULT", {
@@ -50,6 +54,7 @@ export function useSensitiveMedia(
   }
 
   function hide() {
+    const media = unref(rawMedia)
     if (!media) return
     const index = uiStore.revealedSensitiveResults.indexOf(media.id)
     if (index > -1) {
@@ -61,21 +66,25 @@ export function useSensitiveMedia(
     })
   }
 
-  const isHidden = computed(
-    () =>
+  const isHidden = computed(() => {
+    const media = unref(rawMedia)
+    return (
       media &&
       uiStore.shouldBlurSensitive &&
       media.isSensitive &&
       visibility.value === "sensitive-hidden"
-  )
+    )
+  })
 
-  const canBeHidden = computed(
-    () =>
+  const canBeHidden = computed(() => {
+    const media = unref(rawMedia)
+    return (
       media &&
       uiStore.shouldBlurSensitive &&
       media.isSensitive &&
       visibility.value === "sensitive-shown"
-  )
+    )
+  })
 
   return { visibility, reveal, hide, isHidden, canBeHidden }
 }
