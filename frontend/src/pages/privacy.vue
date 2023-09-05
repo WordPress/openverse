@@ -63,8 +63,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue"
-import { useMeta } from "@nuxtjs/composition-api"
+import { computed } from "vue"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
 import { useFeatureFlagStore } from "~/stores/feature-flag"

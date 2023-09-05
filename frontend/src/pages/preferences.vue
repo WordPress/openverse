@@ -82,7 +82,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { computed } from "vue"
+import { defineComponent } from "@nuxtjs/composition-api"
 
 import featureData from "~~/feat/feature-flags.json"
 

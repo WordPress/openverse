@@ -272,15 +272,35 @@ export default defineComponent({
     }
 
     const { reveal, hide, isHidden } = useSensitiveMedia(image.value)
+    const isSensitive = computed(() => image.value?.isSensitive ?? false)
 
-    useMeta(() =>
-      createDetailPageMeta(
-        isHidden.value
-          ? i18n.t("sensitiveContent.title.image").toString()
-          : image.value?.title,
-        isHidden.value ? undefined : image.value?.url
-      )
+    const getPageTitle = (
+      isHidden: boolean | null,
+      image: ImageDetail | null | undefined
+    ) => {
+      return `${
+        isHidden ? i18n.t("sensitiveContent.title.image") : image?.title
+      } | Openverse`
+    }
+
+    const pageTitle = ref(getPageTitle(isHidden.value, image.value))
+    // Do not show sensitive content title in the social preview cards.
+    const detailPageMeta = createDetailPageMeta(
+      isSensitive.value
+        ? {
+            title: `${i18n.t("sensitiveContent.title.image")}`,
+            thumbnail: undefined,
+          }
+        : {
+            title:
+              image.value?.title ?? `${i18n.t("mediaDetails.reuse.image")}`,
+            thumbnail: image.value?.thumbnail,
+          }
     )
+    useMeta(() => ({
+      ...detailPageMeta,
+      title: pageTitle.value,
+    }))
 
     return {
       image,
