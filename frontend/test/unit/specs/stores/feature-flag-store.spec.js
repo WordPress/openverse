@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
-import { OFF, ON, COOKIE, SESSION } from "~/constants/feature-flag"
+import { OFF, COOKIE, SESSION } from "~/constants/feature-flag"
 
 jest.mock(
   "~~/feat/feature-flags.json",
@@ -86,27 +86,6 @@ describe("Feature flag store", () => {
         featureFlagStore.initFromCookies({
           feat_switchable_optout: OFF,
         })
-      expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
-      expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
-    }
-  )
-
-  it.each`
-    doSessionInit | featureState
-    ${false}      | ${"off"}
-    ${true}       | ${"on"}
-  `(
-    "cascades session-storage flag from sessionStorage",
-    ({ doSessionInit, featureState }) => {
-      const flagName = "feat_switchable_optin"
-      const featureFlagStore = useFeatureFlagStore()
-
-      window.sessionStorage.setItem(
-        "features",
-        JSON.stringify({ feat_switchable_optin: ON })
-      )
-      if (doSessionInit) featureFlagStore.initFromSession()
-
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
       expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
     }

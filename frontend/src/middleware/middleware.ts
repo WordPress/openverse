@@ -33,6 +33,7 @@ const middleware: Middleware = async ({
 
   const featureFlagStore = useFeatureFlagStore($pinia)
   featureFlagStore.initFromCookies($cookies.get("features") ?? {})
+  featureFlagStore.initFromCookies($cookies.get("sessionFeatures") ?? {})
   featureFlagStore.initFromQuery(query)
 
   /* UI store */
@@ -40,7 +41,7 @@ const middleware: Middleware = async ({
   const uiStore = useUiStore($pinia)
   const isMobileUa = $ua ? $ua.isMobile : false
 
-  $cookies.set("uiIsMobileUa", isMobileUa, { ...cookieOptions })
+  $cookies.set("uiIsMobileUa", isMobileUa, cookieOptions)
   uiStore.initFromCookies($cookies.getAll() ?? {})
 }
 export default middleware

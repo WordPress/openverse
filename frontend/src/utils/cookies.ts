@@ -5,6 +5,6 @@ import type { CookieSerializeOptions } from "cookie"
 export const cookieOptions: CookieSerializeOptions = {
   path: "/",
   sameSite: "strict",
-  maxAge: 60 * 60 * 24 * 60, // 60 days
+  maxAge: 60 * 60 * 24 * 60, // 60 days; Makes the cookie persistent.
   secure: isProd,
 }

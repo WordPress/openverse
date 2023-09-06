@@ -26,7 +26,7 @@ const cleanImageCarousel = async (page: Page) => {
 
 for (const dir of languageDirections) {
   test.describe(`${dir} homepage snapshots`, () => {
-    const path = pathWithDir("/", dir)
+    const path = pathWithDir("/?ff_additional_search_types=off", dir)
     test.beforeEach(async ({ page }) => {
       await page.goto(path)
       await dismissTranslationBanner(page)
