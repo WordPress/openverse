@@ -7,13 +7,6 @@ export = {
   extends: ["plugin:import/recommended"],
   plugins: ["import"],
   rules: {
-    "import/no-unresolved": [
-      "error",
-      {
-        // https://github.com/nuxt-community/svg-module/issues/4
-        ignore: [".svg"],
-      },
-    ],
     "import/newline-after-import": ["error"],
     "import/order": [
       "error",
