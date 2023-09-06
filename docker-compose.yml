@@ -234,12 +234,9 @@ services:
     env_file:
       - api/env.docker
       - api/.env
-    environment:
-      STATIC_ROOT: ${STATIC_ROOT:-}
-      MEDIA_ROOT: ${MEDIA_ROOT:-}
     stdin_open: true
     tty: true
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --reload -w 1
 
   ingestion_server:
     profiles:
