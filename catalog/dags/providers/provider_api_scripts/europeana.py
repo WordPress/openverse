@@ -259,22 +259,9 @@ class EuropeanaDataIngester(ProviderDataIngester):
             return (None, None)
 
     def _get_additional_item_data(self, data) -> dict:
-        # Delay of 30 seconds is fine for 100 items at a time, but not for each item.
-        # Occasionally getting this error on the item request when the delay is 3 secs:
-        # ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed
-        # connection without response'))
-        # But it always works on the next try so maybe that's ok?
-        # Options:
-        # - Switch to 3 second delay across the board and leave everything else alone,
-        #   or maybe add a max number of this kind of failure per batch or per dag run.
-        # - Separate delayed requesters 30 seconds for batch, 1 second for items, same
-        #   default batch size = 100.
-        # - Smaller batches (35), but default delay = 1 sec, like Brooklyn Museum.
-        # - Just go with defaults across the board, on the assumption that the batch
-        #   query is the expensive one, and there will be at least 30 seconds between,
-        #   given the 100 individual look-ups.
-        # Seems like might be best to reach out to Europeana and get their preference
-        # for the best way for us to proceed.
+        # The Europeana requester uses a 3 second delay to avoid overwhelming the item
+        # endpoint and to maintain at least a 30 second break between calls to the
+        # search endpoint.
         (item_id, url) = self._get_id_and_url(data)
         if not (item_id and url):
             return {}
