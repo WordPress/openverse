@@ -1,14 +1,14 @@
 <template>
-  <dl v-if="isSm" class="metadata grid gap-10" :style="columnCount">
+  <dl v-if="isSm" class="metadata grid gap-8" :style="columnCount">
     <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt class="label-regular mb-2 ps-1">{{ $t(datum.label) }}</dt>
+      <dt class="label-regular mb-1 ps-1">{{ $t(datum.label) }}</dt>
       <VMetadataValue
         :datum="datum"
         @click="sendVisitSourceLinkEvent(datum.source)"
       />
     </div>
   </dl>
-  <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-6">
+  <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2">
     <template v-for="datum in metadata">
       <dt :key="`${datum.label}`" class="label-regular pt-1">
         {{ $t(datum.label) }}
