@@ -172,7 +172,7 @@ def test_get_additional_item_data_no_foreign_id(ingester):
 
 def test_record_builder_get_record_data(ingester, record_builder):
     image_data = _get_resource_json("image_data_example.json") | {
-        "item webresource": _get_resource_json("item_full.json")
+        "item_webresource": _get_resource_json("item_full.json")
         .get("object")
         .get("aggregations")[0]
         .get("webResources")[0]

@@ -60,7 +60,7 @@ class EuropeanaRecordBuilder:
 
     def get_record_data(self, data: dict) -> dict | None:
         try:
-            item_data = data.get("item webresource", {})
+            item_data = data.get("item_webresource", {})
             record = {
                 "foreign_landing_url": self._get_foreign_landing_url(data),
                 "url": self._get_image_url(data),
@@ -245,7 +245,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
 
     def get_record_data(self, data: dict) -> dict:
         return self.record_builder.get_record_data(
-            data | {"item webresource": self._get_additional_item_data(data)}
+            data | {"item_webresource": self._get_additional_item_data(data)}
         )
 
     def _get_id_and_url(self, data) -> tuple:
