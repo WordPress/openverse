@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <g id="icon" fill="currentColor">
-    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 7H7V17H10V7ZM17 7H14V17H17V7Z" />
   </g>
 </svg>

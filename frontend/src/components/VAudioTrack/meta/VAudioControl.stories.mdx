@@ -1,0 +1,107 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import { audioStatuses } from "~/constants/audio"
+import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
+
+<Meta
+  title="Components/Audio track/Audio control"
+  components={VAudioControl}
+  argTypes={{
+    status: {
+      options: audioStatuses,
+      control: "select",
+    },
+    size: {
+      options: ["small", "medium", "large"],
+      control: "select",
+    },
+    toggle: {
+      action: "toggle",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VAudioControl :size="args.size" :status="args.status" v-bind="args" v-on="args"/>`,
+  components: { VAudioControl },
+  setup() {
+    return { args }
+  },
+})
+
+# Audio control
+
+<Description of={VAudioControl} />
+
+<ArgsTable of={VAudioControl} />
+
+It should be noted that the component emits the `toggle` event with the opposite
+value of its `status` state.
+
+## Size
+
+The button dimensions can be set by passing the `size` prop.
+
+<Canvas>
+  <Story
+    name="Default"
+    args={{
+      status: "playing",
+      size: "large",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Two-way binding
+
+The recommended way to use it is with `v-model` mapping to a `String` that can
+either be `'playing'`, `'paused'` or `'played'`.
+
+It should be noted that both paused and played states change to playing when
+toggled whereas the playing state toggles to paused. The played state can only
+be achieved by playing till the end of a track.
+
+export const vModelTemplate = () => ({
+  template: `
+    <div>
+      <VAudioControl v-model="status" size="small" status="paused" />
+      {{ status }}
+    </div>
+  `,
+  components: { VAudioControl },
+  data() {
+    return {
+      status: "played",
+    }
+  },
+})
+
+<Canvas>
+  <Story name="v-model">{vModelTemplate.bind({})}</Story>
+</Canvas>
+
+## Fall-through attributes
+
+The component is, indirectly, a transparent wrapper over `<button>` so all
+attributes of the button element can be applied to it, e.g. `disabled`.
+
+<Canvas>
+  <Story
+    name="Disabled"
+    args={{
+      disabled: true,
+      status: "playing",
+      size: "medium",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
