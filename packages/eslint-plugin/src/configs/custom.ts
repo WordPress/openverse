@@ -1,3 +1,8 @@
+import type { TSESLint } from "@typescript-eslint/utils"
+
+/**
+ * ESLint rules created by and for the Openverse project.
+ */
 export = {
   plugins: ["@openverse"],
   rules: {
@@ -9,4 +14,4 @@ export = {
     ],
     "@openverse/no-unexplained-disabled-test": ["error"],
   },
-}
+} satisfies TSESLint.Linter.Config

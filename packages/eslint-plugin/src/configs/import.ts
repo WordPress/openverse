@@ -1,3 +1,8 @@
+import type { TSESLint } from "@typescript-eslint/utils"
+
+/**
+ * ESLint `import` plugin configuration.
+ */
 export = {
   extends: ["plugin:import/recommended"],
   plugins: ["import"],
@@ -66,4 +71,33 @@ export = {
     ],
     "import/extensions": ["error", "always", { js: "never", ts: "never" }],
   },
-}
+  overrides: [
+    {
+      files: ["frontend/.storybook/**"],
+      rules: {
+        /**
+         * `.nuxt-storybook` doesn't exist in the CI when it
+         * lints files unless we ran the storybook build before linting,
+         * meaning that the imports used in the modules in this directory
+         * are mostly unavailable.
+         *
+         * To avoid turning these rules off we'd have to run the storybook
+         * build in CI before linting (or even instruct people to run
+         * storybook build locally before trying to lint) and that's just too
+         * heavy a lift when we can instead disable the rules for just this
+         * directory.
+         *
+         * Note: This means that if you disable these changes and have not
+         * deleted the `.nuxt-storybook` directory locally, you will not see
+         * any ESLint errors. That does not mean these rules are unnecessary.
+         * Delete the `frontend/.nuxt-storybook` directory and re-run ESLint
+         * with these rule changes commented out: now you will see the errors
+         * present in CI.
+         */
+        "import/extensions": "off",
+        "import/export": "off",
+        "import/no-unresolved": "off",
+      },
+    },
+  ],
+} satisfies TSESLint.Linter.Config

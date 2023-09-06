@@ -1,3 +1,5 @@
+import type { TSESLint } from "@typescript-eslint/utils"
+
 const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(
   (methodName) => ({
     selector: `VariableDeclarator[id.type="ObjectPattern"]:has(Property[key.name="${methodName}"])[init.callee.name="useI18n"]`,
@@ -87,4 +89,4 @@ export = {
       },
     ],
   },
-}
+} satisfies TSESLint.Linter.Config
