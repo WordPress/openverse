@@ -16,7 +16,7 @@ export const noUnexplainedDisabledTest = OpenverseRule<[], MessageIds>({
     docs: {
       description:
         "Disabled tests must have an issue comment with a GitHub link preceding them.",
-      recommended: "error",
+      recommended: "recommended",
     },
     schema: [],
     messages,

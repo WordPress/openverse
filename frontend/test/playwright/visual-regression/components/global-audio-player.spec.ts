@@ -5,6 +5,7 @@ import {
   dismissAnalyticsBanner,
   languageDirections,
   pathWithDir,
+  t,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
@@ -21,7 +22,10 @@ for (const dir of languageDirections) {
       )
       const audioRow = await audio.getNthAudioRow(page, 2)
       await audio.play(audioRow, dir)
-      await audio.pause(audioRow, dir)
+      await page
+        .locator(".global-track")
+        .getByRole("button", { name: t("playPause.pause", dir) })
+        .click()
       // To make the tests consistent, set the played area to the same position
       await page.mouse.click(170, 650)
       await expectSnapshot(`global-audio-player-on-search-${dir}.png`, page)

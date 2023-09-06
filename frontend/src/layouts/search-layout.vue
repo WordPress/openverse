@@ -103,9 +103,6 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const featureStore = useFeatureFlagStore()
-    onMounted(() => {
-      featureStore.initFromSession()
-    })
     const isSensitiveContentEnabled = computed(() =>
       featureStore.isOn("sensitive_content")
     )

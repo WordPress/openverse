@@ -27,7 +27,10 @@ export type ButtonVariant = (typeof buttonVariants)[number]
 export const baseButtonSizes = ["large", "medium", "small"] as const
 export type BaseButtonSize = (typeof baseButtonSizes)[number]
 
-export const buttonSizes = [...baseButtonSizes, "disabled"] as const
+/**
+ * `larger` is only used for the `VAudioControl` button component.
+ */
+export const buttonSizes = [...baseButtonSizes, "disabled", "larger"] as const
 export type ButtonSize = (typeof buttonSizes)[number]
 
 export const buttonTypes = ["button", "submit", "reset"] as const

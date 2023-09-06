@@ -101,7 +101,6 @@ COPY --chown=opener . /api/
 # Collect static assets, these are used by the next stage, `nginx`
 RUN env \
   SETUP_ES="False" \
-  STATIC_ROOT="/static" \
   DJANGO_SECRET_KEY="any string" \
   python manage.py collectstatic
 

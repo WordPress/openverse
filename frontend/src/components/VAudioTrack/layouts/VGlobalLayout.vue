@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { toRefs, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 
@@ -42,7 +42,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+    const { audio } = toRefs(props)
+    const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
     return {
       shouldBlur,

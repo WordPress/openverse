@@ -10,7 +10,7 @@
   "author": "Openverse <openverse@wordpress.org>",
   "scripts": {
     "preeslint": "pnpm --filter eslint-plugin run build",
-    "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages .pnpmfile.cjs .eslintrc.js tsconfig.json prettier.config.js"
+    "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json"
   },
   "packageManager": "pnpm@7.17.1",
   "engines": {
@@ -23,24 +23,22 @@
   "devDependencies": {
     "@intlify/eslint-plugin-vue-i18n": "2.0.0",
     "@openverse/eslint-plugin": "workspace:0.0.0",
-    "@types/jest": "26.0.22",
-    "@types/node": "17.0.32",
-    "@typescript-eslint/eslint-plugin": "6.4.1",
-    "@typescript-eslint/parser": "6.4.1",
+    "@typescript-eslint/eslint-plugin": "6.5.0",
+    "@typescript-eslint/parser": "6.5.0",
     "eslint": "8.48.0",
-    "eslint-config-prettier": "9.0.0",
+    "eslint-config-prettier": "8.6.0",
     "eslint-import-resolver-typescript": "3.6.0",
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-import": "2.28.1",
     "eslint-plugin-jest": "27.2.3",
     "eslint-plugin-playwright": "0.16.0",
-    "eslint-plugin-prettier": "5.0.0",
+    "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-tsdoc": "0.2.17",
     "eslint-plugin-unicorn": "48.0.1",
     "eslint-plugin-vue": "9.17.0",
     "eslint-plugin-vuejs-accessibility": "2.2.0",
-    "prettier": "3.0.2",
-    "prettier-plugin-tailwindcss": "0.5.3",
+    "prettier": "2.8.3",
+    "prettier-plugin-tailwindcss": "0.4.1",
     "typescript": "4.9.5",
     "vue-tsc": "1.2.0"
   },
