@@ -19,7 +19,7 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: check-executables-have-shebangs
       - id: check-json
-        exclude: tsconfig.json|.devcontainer/devcontainer.json # contains comments
+        exclude: tsconfig.(base\.)?json|.devcontainer/devcontainer.json # contains comments
       - id: check-case-conflict
       - id: check-toml
       - id: check-merge-conflict
@@ -147,7 +147,7 @@ repos:
       - id: types
         name: types
         files: ^(frontend|packages)/.*$
-        entry: bash -c 'pnpm exec vue-tsc -p . --noEmit'
+        entry: bash -c 'pnpm run -r types'
         language: system
         pass_filenames: false
       - id: eslint

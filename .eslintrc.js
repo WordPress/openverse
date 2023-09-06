@@ -189,6 +189,27 @@ module.exports = {
       },
     },
     {
+      files: ["frontend/**"],
+      settings: {
+        "import/resolver": {
+          typescript: {
+            project: "frontend/tsconfig.json",
+            extensions: [".js", ".ts", ".vue", ".png"],
+          },
+        },
+      },
+    },
+    {
+      files: ["packages/**"],
+      settings: {
+        "import/resolver": {
+          typescript: {
+            project: "packages/*/tsconfig.json",
+          },
+        },
+      },
+    },
+    {
       env: { jest: true },
       files: ["packages/**/*/test", "frontend/test/unit/**"],
       plugins: ["jest"],
@@ -308,13 +329,6 @@ module.exports = {
     "vue-i18n": {
       localeDir: "./frontend/src/locales/*.{json}",
       messageSyntaxVersion: "^8.24.3",
-    },
-    "import/resolver": {
-      typescript: {
-        // This plugin automatically pulls paths from tsconfig
-        // so we don't need to redefine Nuxt and package aliases
-        extensions: [".js", ".ts", ".vue", ".png"],
-      },
     },
   },
 }

@@ -1,8 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils"
+import { RuleTester } from "@typescript-eslint/rule-tester"
 
 import openverseEslintPlugin from "@openverse/eslint-plugin"
 
-const tester = new ESLintUtils.RuleTester({
+const tester = new RuleTester({
   parser: "@typescript-eslint/parser",
   rules: {
     "@openverse/no-unexplained-disabled-test": ["error"],

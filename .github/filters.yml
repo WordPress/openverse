@@ -27,7 +27,7 @@ frontend:
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
-  - tsconfig.json
+  - tsconfig.base.json
   - .npmrc
   - .pnpmfile.cjs
 packages:
@@ -56,10 +56,10 @@ lint:
   - .editorconfig
   - .eslintrc.js
   - .eslintignore
-  - .isort.cfg
-  - .ruff.toml
   - .prettierignore
   - .pre-commit-config.yaml
+  - tsconfig.base.json
+  - .codespell
 mgmt:
   - .github/**
   - .devcontainer/**
