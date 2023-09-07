@@ -15,4 +15,5 @@ that can be a good resource when writing a new one.
 unhealthy_ecs_hosts
 nuxt_2xx_under_threshold
 nuxt_5xx_above_threshold
+nuxt_request_count
 ```
