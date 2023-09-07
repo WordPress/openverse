@@ -108,7 +108,7 @@ export const decodeMediaData = <T extends Media>(
     featureFlagStore.isOn("fetch_sensitive")
       ? getFakeSensitivities(media.id)
       : media[SENSITIVITY_RESPONSE_PARAM] ?? []
-  const sortedSensitivity = sensitivity.sort()
+  sensitivity.sort()
   const isSensitive = sensitivity.length > 0
 
   return {
@@ -117,7 +117,7 @@ export const decodeMediaData = <T extends Media>(
     frontendMediaType: mediaType,
     creator: decodeString(media.creator),
     tags: media.tags ? parseTags(media.tags) : ([] as Tag[]),
-    sensitivity: sortedSensitivity,
+    sensitivity,
     isSensitive,
   } as T
 }
