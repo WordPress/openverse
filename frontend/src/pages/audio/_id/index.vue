@@ -126,18 +126,13 @@ export default defineComponent({
 
     const pageTitle = ref(getPageTitle(isHidden.value, audio.value))
     // Do not show sensitive content title in the social preview cards.
-    const detailPageMeta = createDetailPageMeta(
-      isSensitive.value
-        ? {
-            title: `${i18n.t("sensitiveContent.title.audio")}`,
-            thumbnail: undefined,
-          }
-        : {
-            title:
-              audio.value?.title ?? `${i18n.t("mediaDetails.reuse.audio")}`,
-            thumbnail: audio.value?.thumbnail,
-          }
-    )
+    const detailPageMeta = createDetailPageMeta({
+      title: isSensitive.value
+        ? `${i18n.t("sensitiveContent.title.audio")}`
+        : audio.value?.title ?? `${i18n.t("mediaDetails.reuse.audio")}`,
+      thumbnail: audio.value?.thumbnail,
+      isSensitive: isSensitive.value,
+    })
     useMeta(() => ({
       ...detailPageMeta,
       title: pageTitle.value,

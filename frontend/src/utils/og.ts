@@ -4,7 +4,13 @@ import type { MetaPropertyName } from "vue-meta/types/vue-meta"
 export const createDetailPageMeta = ({
   title,
   thumbnail,
-}: { title?: string; thumbnail?: string } = {}) => {
+  isSensitive,
+}: {
+  /** Media title or localized sensitive or generic media title */
+  title?: string
+  thumbnail?: string
+  isSensitive: boolean
+}) => {
   const head = {} as MetaInfo
   const meta = [
     {
@@ -20,7 +26,7 @@ export const createDetailPageMeta = ({
       content: title,
     })
   }
-  if (thumbnail) {
+  if (thumbnail && !isSensitive) {
     meta.push({
       hid: "og:image",
       name: "og:image",
