@@ -184,7 +184,7 @@ services:
   cache:
     profiles:
       - api
-    image: redis:4.0.14
+    image: redis:7.2.1
     ports:
       - "50263:6379"
 
