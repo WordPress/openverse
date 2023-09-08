@@ -62,10 +62,7 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
         if license_info is None:
             return None
 
-        raw_tags = data.get("tags")
-        filesize = self.get_file_info(url)
-
-        record_data = {
+        raw_record_data = {
             "foreign_landing_url": foreign_landing_url,
             "url": url,
             "license_info": license_info,
@@ -73,10 +70,11 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
             # Optional fields
             "creator": self.creator,
             "creator_url": self.creator_url,
-            "raw_tags": raw_tags,
-            "filesize": filesize,
+            "raw_tags": data.get("tags"),
+            "filesize": self.get_file_info(url),
+            "thumbnail": data.get("preview_link"),
         }
-        return record_data
+        return {k: v for k, v in raw_record_data.items() if v is not None}
 
     def get_file_info(self, url) -> int | None:
         """Get the image size in bytes."""
