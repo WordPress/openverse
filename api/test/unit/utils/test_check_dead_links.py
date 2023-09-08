@@ -8,7 +8,7 @@ from api.utils.check_dead_links import HEADERS, check_dead_links
 
 
 @pook.on
-async def test_sends_user_agent():
+def test_sends_user_agent():
     query_hash = "test_sends_user_agent"
     results = [{"provider": "best_provider_ever"} for _ in range(40)]
     image_urls = [f"https://example.org/{i}" for i in range(len(results))]
@@ -30,7 +30,7 @@ async def test_sends_user_agent():
         assert url in requested_urls
 
 
-async def test_handles_timeout():
+def test_handles_timeout():
     """
     Test that case where timeout occurs.
     """
@@ -54,7 +54,7 @@ async def test_handles_timeout():
 
 
 @pytest.mark.parametrize("provider", ("thingiverse", "flickr"))
-async def test_403_considered_dead(provider):
+def test_403_considered_dead(provider):
     query_hash = f"test_{provider}_403_considered_dead"
     other_provider = "fake_other_provider"
     results = [

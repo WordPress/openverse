@@ -16,7 +16,6 @@ pook = "~=1.0"
 pgcli = "~=3.5"
 freezegun = "~=1.2.2"
 pytest-sugar = "~=0.9"
-pytest-asyncio = "*"
 
 [packages]
 aiohttp = "~=3.8"
