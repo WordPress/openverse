@@ -50,9 +50,8 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { createDetailPageMeta } from "~/utils/og"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
@@ -86,7 +85,6 @@ export default defineComponent({
     const audio = ref<AudioDetail | null>(singleResultStore.audio)
 
     const { error: nuxtError } = useContext()
-    const i18n = useI18n()
 
     useFetch(async () => {
       const audioId = route.value.params.id
@@ -114,14 +112,12 @@ export default defineComponent({
 
     const { isHidden, reveal, hide } = useSensitiveMedia(audio.value)
 
-    useMeta(() =>
-      createDetailPageMeta(
-        isHidden.value
-          ? i18n.t("sensitiveContent.title.audio").toString()
-          : audio.value?.title,
-        isHidden.value ? undefined : audio.value?.url
-      )
-    )
+    const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
+
+    useMeta(() => ({
+      ...detailPageMeta,
+      title: pageTitle.value,
+    }))
 
     return {
       audio,

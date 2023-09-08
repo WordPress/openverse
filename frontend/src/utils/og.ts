@@ -1,7 +1,16 @@
 import type { MetaInfo } from "vue-meta"
 import type { MetaPropertyName } from "vue-meta/types/vue-meta"
 
-export const createDetailPageMeta = (title?: string, thumbnail?: string) => {
+export const createDetailPageMeta = ({
+  title,
+  thumbnail,
+  isSensitive,
+}: {
+  /** Media title or localized sensitive or generic media title */
+  title?: string
+  thumbnail?: string
+  isSensitive: boolean
+}) => {
   const head = {} as MetaInfo
   const meta = [
     {
@@ -11,14 +20,13 @@ export const createDetailPageMeta = (title?: string, thumbnail?: string) => {
     },
   ] as MetaPropertyName[]
   if (title) {
-    head.title = `${title} | Openverse`
     meta.push({
       hid: "og:title",
       name: "og:title",
       content: title,
     })
   }
-  if (thumbnail) {
+  if (thumbnail && !isSensitive) {
     meta.push({
       hid: "og:image",
       name: "og:image",

@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
-import { computed, inject, watch } from "vue"
+import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 import {
@@ -113,10 +113,15 @@ export default defineComponent({
       Boolean(supported.value && !resultCount.value && searchTerm.value !== "")
     )
 
-    useMeta({
-      title: `${searchTerm.value} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+    const pageTitle = ref(`${searchTerm.value} | Openverse`)
+    watch(searchTerm, () => {
+      pageTitle.value = `${searchTerm.value} | Openverse`
     })
+
+    useMeta(() => ({
+      title: pageTitle.value,
+      meta: [{ hid: "robots", name: "robots", content: "all" }],
+    }))
 
     const { error: nuxtError } = useContext()
 

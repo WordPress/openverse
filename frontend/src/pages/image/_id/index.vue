@@ -112,12 +112,10 @@ import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { createDetailPageMeta } from "~/utils/og"
 import { singleResultMiddleware } from "~/middleware/single-result"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VButton from "~/components/VButton.vue"
@@ -165,7 +163,6 @@ export default defineComponent({
     const isLoadingThumbnail = ref(true)
 
     const { error: nuxtError } = useContext()
-    const i18n = useI18n()
 
     useFetch(async () => {
       const imageId = route.value.params.id
@@ -273,14 +270,12 @@ export default defineComponent({
 
     const { reveal, hide, isHidden } = useSensitiveMedia(image.value)
 
-    useMeta(() =>
-      createDetailPageMeta(
-        isHidden.value
-          ? i18n.t("sensitiveContent.title.image").toString()
-          : image.value?.title,
-        isHidden.value ? undefined : image.value?.url
-      )
-    )
+    const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
+
+    useMeta(() => ({
+      ...detailPageMeta,
+      title: pageTitle.value,
+    }))
 
     return {
       image,
