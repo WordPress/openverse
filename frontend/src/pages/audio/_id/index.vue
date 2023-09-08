@@ -40,6 +40,7 @@ import {
   useFetch,
   useMeta,
   useRoute,
+  watch,
 } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
@@ -115,23 +116,22 @@ export default defineComponent({
     const { isHidden, reveal, hide } = useSensitiveMedia(audio.value)
     const isSensitive = computed(() => audio.value?.isSensitive ?? false)
 
-    const getPageTitle = (
-      isHidden: boolean | null,
-      audio: AudioDetail | null | undefined
-    ) => {
-      return `${
-        isHidden ? i18n.t("sensitiveContent.title.audio") : audio?.title
-      } | Openverse`
+    const getMediaTitle = () => {
+      return isSensitive.value
+        ? `${i18n.t("sensitiveContent.title.audio")}`
+        : audio.value?.title ?? `${i18n.t("mediaDetails.reuse.audio")}`
     }
+    const getPageTitle = () => `${getMediaTitle()} | Openverse`
 
-    const pageTitle = ref(getPageTitle(isHidden.value, audio.value))
+    const pageTitle = ref(getPageTitle())
     // Do not show sensitive content title in the social preview cards.
     const detailPageMeta = createDetailPageMeta({
-      title: isSensitive.value
-        ? `${i18n.t("sensitiveContent.title.audio")}`
-        : audio.value?.title ?? `${i18n.t("mediaDetails.reuse.audio")}`,
+      title: getMediaTitle(),
       thumbnail: audio.value?.thumbnail,
       isSensitive: isSensitive.value,
+    })
+    watch(audio, () => {
+      pageTitle.value = getPageTitle()
     })
     useMeta(() => ({
       ...detailPageMeta,
