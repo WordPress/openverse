@@ -22,7 +22,9 @@ in the Cloudflare logs).
 - If the API requests are returning 5XX responses, the severity is high. Further
   investigation into the API side is warranted to determine the cause for the
   5XX responses. Also refer to the
-  [API 5XX runbook](/meta/monitoring/runbooks/api_5xx_above_threshold.md).
+  [API 5XX runbook](/meta/monitoring/runbooks/index.md).
+
+<!-- TODO: Update link to /meta/monitoring/runbooks/api_5xx_above_threshold.md -->
 
 ## Historical false positives
 
