@@ -106,7 +106,7 @@ def _set_up_popularity_metrics(metrics_dict, sql_info, mock_pg_hook_task):
 def _set_up_popularity_percentile_function(sql_info):
     conn_id = POSTGRES_CONN_ID
     sql.create_media_popularity_percentile_function.function(
-        conn_id, "image", sql_info=sql_info
+        conn_id, media_type="image", sql_info=sql_info
     )
 
 
@@ -143,7 +143,7 @@ def _set_up_std_popularity_func(
         mock_pg_hook_task,
     )
     sql.create_standardized_media_popularity_function.function(
-        conn_id, "image", sql_info=sql_info
+        conn_id, media_type="image", sql_info=sql_info
     )
 
 

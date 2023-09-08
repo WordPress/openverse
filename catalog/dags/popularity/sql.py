@@ -41,7 +41,7 @@ POPULARITY_METRICS_TABLE_COLUMNS = [
 @task
 @setup_sql_info_for_media_type
 def drop_media_popularity_functions(
-    postgres_conn_id: str, media_type: str, sql_info: SQLInfo = None
+    postgres_conn_id: str, *, media_type: str, sql_info: SQLInfo = None
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
@@ -57,7 +57,7 @@ def drop_media_popularity_functions(
 @task
 @setup_sql_info_for_media_type
 def create_media_popularity_metrics(
-    postgres_conn_id: str, media_type: str, sql_info: SQLInfo = None
+    postgres_conn_id: str, *, media_type: str, sql_info: SQLInfo = None
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
@@ -79,8 +79,9 @@ def create_media_popularity_metrics(
 @setup_sql_info_for_media_type
 def update_media_popularity_metrics(
     postgres_conn_id: str,
-    media_type: str,
     popularity_metrics: dict,
+    *,
+    media_type: str,
     sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
@@ -124,6 +125,7 @@ def update_media_popularity_metrics(
 def calculate_media_popularity_percentile_value(
     postgres_conn_id: str,
     provider: str,
+    *,
     media_type: str,
     sql_info: SQLInfo = None,
     task: AbstractOperator = None,
@@ -153,8 +155,9 @@ def update_percentile_and_constants_values_for_provider(
     postgres_conn_id: str,
     provider: str,
     raw_percentile_value: float,
-    media_type: str,
     popularity_metrics: dict,
+    *,
+    media_type: str,
     sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
@@ -253,6 +256,7 @@ def _format_popularity_metric_insert_tuple_string(
 @setup_sql_info_for_media_type
 def create_media_popularity_percentile_function(
     postgres_conn_id: str,
+    *,
     media_type: str,
     sql_info: SQLInfo = None,
 ):
@@ -281,7 +285,7 @@ def create_media_popularity_percentile_function(
 @task
 @setup_sql_info_for_media_type
 def create_standardized_media_popularity_function(
-    postgres_conn_id, media_type, sql_info=None
+    postgres_conn_id: str, *, media_type: str, sql_info: SQLInfo = None
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
@@ -304,9 +308,9 @@ def create_standardized_media_popularity_function(
 
 @setup_sql_info_for_media_type
 def format_update_standardized_popularity_query(
+    *,
     media_type: str,
     sql_info: SQLInfo = None,
-    task: AbstractOperator = None,
 ) -> str:
     """
     Create a SQL query for updating the standardized popularity for the given

@@ -58,8 +58,9 @@ def create_column_definitions(table_columns: list[Column], is_loading=True):
 def create_loading_table(
     postgres_conn_id: str,
     identifier: str,
+    *,
     media_type: str,
-    tsv_columns: list[Column] = None,
+    tsv_columns: list[Column],
 ):
     """Create intermediary table and indices if they do not exist."""
     load_table = _get_load_table_name(identifier, media_type=media_type)
@@ -261,10 +262,11 @@ def _is_tsv_column_from_different_version(
 def upsert_records_to_db_table(
     postgres_conn_id: str,
     identifier: str,
-    media_type: str = None,
+    *,
+    media_type: str,
+    db_columns: list[Column],
+    sql_info: SQLInfo,
     tsv_version: str = CURRENT_TSV_VERSION,
-    db_columns: list[Column] = None,
-    sql_info: SQLInfo = None,
     task: AbstractOperator = None,
 ):
     """

@@ -1,4 +1,5 @@
 import functools
+from inspect import _ParameterKind, signature
 from typing import Any
 
 from common.constants import SQL_INFO_BY_MEDIA_TYPE
@@ -37,6 +38,15 @@ def setup_kwargs_for_media_type(
         use that value instead.
         """
 
+        # The called function must be supplied a `media_type` keyword-only argument. It
+        # cannot allow the value to be supplied as a positional argument.
+        if (
+            media_type := signature(func).parameters.get("media_type")
+        ) is None or media_type.kind != _ParameterKind.KEYWORD_ONLY:
+            raise Exception(
+                "Improperly configured: `media_type` must be a keyword-only argument"
+            )
+
         @functools.wraps(func)
         def wrapped(*args, **kwargs):
             # First check to see if the called function was already passed a value
@@ -45,9 +55,6 @@ def setup_kwargs_for_media_type(
                 # The called function should be passed a `media_type`, whose value
                 # is a key in the values dict
                 media_type = kwargs.get("media_type", None)
-
-                if media_type is None:
-                    raise ValueError("Missing `media_type` kwarg.")
 
                 if media_type not in values_by_media_type.keys():
                     raise ValueError(f"No values matching media type: {media_type}")

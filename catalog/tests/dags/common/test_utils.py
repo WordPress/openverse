@@ -44,7 +44,7 @@ p = pytest.param
 )
 def test_setup_kwargs_for_media_type(media_type, my_param, expected_param):
     @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
-    def test_fn(media_type: str, my_param: str = None):
+    def test_fn(*, media_type: str, my_param: str = None):
         assert my_param == expected_param
 
     test_fn(media_type=media_type, my_param=my_param)
@@ -56,37 +56,42 @@ def test_setup_kwargs_for_media_type_creates_new_decorator():
 
     # New function decorated with this decorator
     @new_decorator
-    def test_fn(media_type: str, new_param: str = None):
+    def test_fn(*, media_type: str, new_param: str = None):
         return new_param
 
     assert test_fn(media_type="audio") == "foo"
 
 
 def test_setup_kwargs_for_media_type_fails_without_media_type_kwarg():
-    # Decorated function does not have a media_type kwarg
-    @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
-    def test_fn(my_param: str = None):
-        return my_param
-
-    with pytest.raises(ValueError, match="Missing `media_type` kwarg."):
-        test_fn()
+    with pytest.raises(Exception, match="Improperly configured"):
+        # Decorated function does not have a media_type kwarg
+        @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
+        def test_fn(*, my_param: str = None):
+            pass
 
 
 def test_setup_kwargs_for_media_type_fails_with_media_type_arg():
-    # Decorated function sets up media_type as an *arg*
-    @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
-    def test_fn(media_type, my_param: str = None):
-        return my_param
+    with pytest.raises(Exception, match="Improperly configured"):
+        # Decorate a function that allows media_type to be passed as a keyword
+        # or as a positional argument
+        @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
+        def test_fn(media_type, my_param: str = None):
+            pass
 
-    with pytest.raises(ValueError, match="Missing `media_type` kwarg."):
-        # Pass media_type as arg rather than kwarg
-        test_fn("audio")
+
+def test_setup_kwargs_for_media_type_fails_with_var_kwargs():
+    with pytest.raises(Exception, match="Improperly configured"):
+        # Decorate a function that has var kwargs but does not explicitly
+        # require a keyword-only `media_type` arg
+        @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
+        def test_fn(**kwargs):
+            pass
 
 
 def test_setup_kwargs_for_media_type_fails_without_kwarg():
     # Decorated function does not have the kwarg we want populated
     @setup_kwargs_for_media_type(TEST_VALS_BY_MEDIA_TYPE, "my_param")
-    def test_fn(media_type: str):
+    def test_fn(*, media_type: str):
         pass
 
     with pytest.raises(
