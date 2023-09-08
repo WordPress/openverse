@@ -19,7 +19,7 @@ from api.constants.media_types import OriginIndex
 from api.constants.sorting import INDEXED_ON
 from api.serializers import media_serializers
 from api.utils import tallies
-from api.utils.check_dead_links import sync_check_dead_links
+from api.utils.check_dead_links import check_dead_links
 from api.utils.dead_link_mask import get_query_hash, get_query_mask
 from api.utils.search_context import SearchContext
 
@@ -177,7 +177,7 @@ def _post_process_results(
 
     if filter_dead:
         query_hash = get_query_hash(s)
-        sync_check_dead_links(query_hash, start, results, to_validate)
+        check_dead_links(query_hash, start, results, to_validate)
 
         if len(results) == 0:
             # first page is all dead links
