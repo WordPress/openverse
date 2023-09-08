@@ -33,14 +33,13 @@
 </template>
 
 <script lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import {
   defineComponent,
   useContext,
   useFetch,
   useMeta,
   useRoute,
-  watch,
 } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
@@ -51,9 +50,8 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { createDetailPageMeta } from "~/utils/og"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
@@ -87,7 +85,6 @@ export default defineComponent({
     const audio = ref<AudioDetail | null>(singleResultStore.audio)
 
     const { error: nuxtError } = useContext()
-    const i18n = useI18n()
 
     useFetch(async () => {
       const audioId = route.value.params.id
@@ -114,25 +111,9 @@ export default defineComponent({
     }
 
     const { isHidden, reveal, hide } = useSensitiveMedia(audio.value)
-    const isSensitive = computed(() => audio.value?.isSensitive ?? false)
 
-    const getMediaTitle = () => {
-      return isSensitive.value
-        ? `${i18n.t("sensitiveContent.title.audio")}`
-        : audio.value?.title ?? `${i18n.t("mediaDetails.reuse.audio")}`
-    }
-    const getPageTitle = () => `${getMediaTitle()} | Openverse`
+    const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
 
-    const pageTitle = ref(getPageTitle())
-    // Do not show sensitive content title in the social preview cards.
-    const detailPageMeta = createDetailPageMeta({
-      title: getMediaTitle(),
-      thumbnail: audio.value?.thumbnail,
-      isSensitive: isSensitive.value,
-    })
-    watch(audio, () => {
-      pageTitle.value = getPageTitle()
-    })
     useMeta(() => ({
       ...detailPageMeta,
       title: pageTitle.value,

@@ -105,7 +105,6 @@ import {
   useFetch,
   useMeta,
   useRoute,
-  watch,
 } from "@nuxtjs/composition-api"
 
 import { IMAGE } from "~/constants/media"
@@ -113,12 +112,10 @@ import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { createDetailPageMeta } from "~/utils/og"
 import { singleResultMiddleware } from "~/middleware/single-result"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VButton from "~/components/VButton.vue"
@@ -166,7 +163,6 @@ export default defineComponent({
     const isLoadingThumbnail = ref(true)
 
     const { error: nuxtError } = useContext()
-    const i18n = useI18n()
 
     useFetch(async () => {
       const imageId = route.value.params.id
@@ -273,25 +269,8 @@ export default defineComponent({
     }
 
     const { reveal, hide, isHidden } = useSensitiveMedia(image.value)
-    const isSensitive = computed(() => image.value?.isSensitive ?? false)
 
-    const getMediaTitle = () => {
-      return isSensitive.value
-        ? `${i18n.t("sensitiveContent.title.image")}`
-        : image.value?.title ?? `${i18n.t("mediaDetails.reuse.image")}`
-    }
-    const getPageTitle = () => `${getMediaTitle()} | Openverse`
-
-    const pageTitle = ref(getPageTitle())
-    // Do not show sensitive content title in the social preview cards.
-    const detailPageMeta = createDetailPageMeta({
-      title: getMediaTitle(),
-      thumbnail: image.value?.thumbnail,
-      isSensitive: isSensitive.value,
-    })
-    watch(image, () => {
-      pageTitle.value = getPageTitle()
-    })
+    const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
 
     useMeta(() => ({
       ...detailPageMeta,
