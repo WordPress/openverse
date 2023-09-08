@@ -1,16 +1,14 @@
 import asyncio
 from unittest import mock
 
-import aiohttp
 import pook
 import pytest
 
 from api.utils.check_dead_links import HEADERS, check_dead_links
 
 
-@mock.patch.object(aiohttp, "ClientSession", wraps=aiohttp.ClientSession)
 @pook.on
-def test_sends_user_agent(wrapped_client_session: mock.AsyncMock):
+async def test_sends_user_agent():
     query_hash = "test_sends_user_agent"
     results = [{"provider": "best_provider_ever"} for _ in range(40)]
     image_urls = [f"https://example.org/{i}" for i in range(len(results))]
@@ -18,6 +16,7 @@ def test_sends_user_agent(wrapped_client_session: mock.AsyncMock):
 
     head_mock = (
         pook.head(pook.regex(r"https://example.org/\d"))
+        .headers(HEADERS)
         .times(len(results))
         .reply(200)
         .mock
@@ -30,15 +29,10 @@ def test_sends_user_agent(wrapped_client_session: mock.AsyncMock):
     for url in image_urls:
         assert url in requested_urls
 
-    wrapped_client_session.assert_called_once_with(headers=HEADERS, timeout=mock.ANY)
 
-
-def test_handles_timeout():
+async def test_handles_timeout():
     """
     Test that case where timeout occurs.
-
-    Note: This test takes just over 3 seconds to run as it simulates network delay of
-    3 seconds.
     """
     query_hash = "test_handles_timeout"
     results = [{"identifier": i, "provider": "best_provider_ever"} for i in range(1)]
@@ -60,7 +54,7 @@ def test_handles_timeout():
 
 
 @pytest.mark.parametrize("provider", ("thingiverse", "flickr"))
-def test_403_considered_dead(provider):
+async def test_403_considered_dead(provider):
     query_hash = f"test_{provider}_403_considered_dead"
     other_provider = "fake_other_provider"
     results = [

@@ -6,10 +6,11 @@ from django.conf import settings
 
 import aiohttp
 import django_redis
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 from decouple import config
 from elasticsearch_dsl.response import Hit
 
+from api.utils.aiohttp import get_aiohttp_session
 from api.utils.check_dead_links.provider_status_mappings import provider_status_mappings
 from api.utils.dead_link_mask import get_query_mask, save_query_mask
 
@@ -23,8 +24,10 @@ HEADERS = {
 }
 
 
-def _get_cached_statuses(redis, image_urls):
-    cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
+async def _get_cached_statuses(redis, image_urls):
+    cached_statuses = await sync_to_async(redis.mget)(
+        [CACHE_PREFIX + url for url in image_urls]
+    )
     return [int(b.decode("utf-8")) if b is not None else None for b in cached_statuses]
 
 
@@ -32,9 +35,14 @@ def _get_expiry(status, default):
     return config(f"LINK_VALIDATION_CACHE_EXPIRY__{status}", default=default, cast=int)
 
 
+_TIMEOUT = aiohttp.ClientTimeout(total=2)
+
+
 async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
     try:
-        async with session.head(url, allow_redirects=False) as response:
+        async with session.head(
+            url, allow_redirects=False, headers=HEADERS, timeout=_TIMEOUT
+        ) as response:
             return url, response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
         _log_validation_failure(exception)
@@ -42,18 +50,16 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
 
 
 # https://stackoverflow.com/q/55259755
-@async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     tasks = []
-    timeout = aiohttp.ClientTimeout(total=2)
-    async with aiohttp.ClientSession(headers=HEADERS, timeout=timeout) as session:
-        tasks = [asyncio.ensure_future(_head(url, session)) for url in urls]
-        responses = asyncio.gather(*tasks)
-        await responses
+    session = await get_aiohttp_session()
+    tasks = [asyncio.ensure_future(_head(url, session)) for url in urls]
+    responses = asyncio.gather(*tasks)
+    await responses
     return responses.result()
 
 
-def check_dead_links(
+async def check_dead_links(
     query_hash: str, start_slice: int, results: list[Hit], image_urls: list[str]
 ) -> None:
     """
@@ -75,7 +81,7 @@ def check_dead_links(
 
     # Pull matching images from the cache.
     redis = django_redis.get_redis_connection("default")
-    cached_statuses = _get_cached_statuses(redis, image_urls)
+    cached_statuses = await _get_cached_statuses(redis, image_urls)
     logger.debug(f"len(cached_statuses)={len(cached_statuses)}")
 
     # Anything that isn't in the cache needs to be validated via HEAD request.
@@ -85,7 +91,7 @@ def check_dead_links(
             to_verify[url] = idx
     logger.debug(f"len(to_verify)={len(to_verify)}")
 
-    verified = _make_head_requests(to_verify.keys())
+    verified = await _make_head_requests(to_verify.keys())
 
     # Cache newly verified image statuses.
     to_cache = {CACHE_PREFIX + url: status for url, status in verified}
@@ -106,7 +112,7 @@ def check_dead_links(
         logger.debug(f"caching status={status} expiry={expiry}")
         pipe.expire(key, expiry)
 
-    pipe.execute()
+    await sync_to_async(pipe.execute)()
 
     # Merge newly verified results with cached statuses
     for idx, url in enumerate(to_verify):
@@ -144,13 +150,13 @@ def check_dead_links(
             new_mask[del_idx] = 0
 
     # Merge and cache the new mask
-    mask = get_query_mask(query_hash)
+    mask = await sync_to_async(get_query_mask)(query_hash)
     if mask:
         # skip the leading part of the mask that represents results that come before
         # the results we've verified this time around. Overwrite everything after
         # with our new results validation mask.
         new_mask = mask[:start_slice] + new_mask
-    save_query_mask(query_hash, new_mask)
+    await sync_to_async(save_query_mask)(query_hash, new_mask)
 
     end_time = time.time()
     logger.debug(
@@ -159,6 +165,9 @@ def check_dead_links(
         f"start_time={start_time} "
         f"delta={end_time - start_time} "
     )
+
+
+sync_check_dead_links = async_to_sync(check_dead_links)
 
 
 def _log_validation_failure(exception):

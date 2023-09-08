@@ -44,3 +44,11 @@ logconfig_dict = {
     },
 }
 loglevel = "debug"
+
+
+def worker_exit(server, worker):
+    worker.wsgi.shutdown()
+
+
+def worker_abort(worker):
+    worker.wsgi.shutdown()
