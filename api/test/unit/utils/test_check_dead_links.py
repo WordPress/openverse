@@ -43,7 +43,7 @@ def test_handles_timeout():
         raise asyncio.TimeoutError()
 
     with mock.patch(
-        "aiohttp.client.ClientSession._request", side_effect=raise_timeout_error
+        "httpx._client.AsyncClient._request", side_effect=raise_timeout_error
     ):
         check_dead_links(query_hash, start_slice, results, image_urls)
 

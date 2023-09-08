@@ -4,15 +4,15 @@ import time
 
 from django.conf import settings
 
-import aiohttp
 import django_redis
+import httpx
 from asgiref.sync import async_to_sync
 from decouple import config
 from elasticsearch_dsl.response import Hit
 
-from api.utils.aiohttp import get_aiohttp_session
 from api.utils.check_dead_links.provider_status_mappings import provider_status_mappings
 from api.utils.dead_link_mask import get_query_mask, save_query_mask
+from api.utils.httpx import get_httpx_client
 
 
 parent_logger = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ HEADERS = {
 
 
 def _get_cached_statuses(redis, image_urls):
+    return [None for _ in range(len(image_urls))]
     cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
     return [int(b.decode("utf-8")) if b is not None else None for b in cached_statuses]
 
@@ -33,16 +34,13 @@ def _get_expiry(status, default):
     return config(f"LINK_VALIDATION_CACHE_EXPIRY__{status}", default=default, cast=int)
 
 
-_TIMEOUT = aiohttp.ClientTimeout(total=2)
-
-
-async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
+async def _head(url: str, client: httpx.AsyncClient) -> tuple[str, int]:
     try:
-        async with session.head(
-            url, allow_redirects=False, headers=HEADERS, timeout=_TIMEOUT
-        ) as response:
-            return url, response.status
-    except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
+        response = await client.head(
+            url, follow_redirects=False, headers=HEADERS, timeout=2
+        )
+        return url, response.status_code
+    except (httpx.RequestError, asyncio.TimeoutError) as exception:
         _log_validation_failure(exception)
         return url, -1
 
@@ -51,8 +49,8 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
 @async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     tasks = []
-    session = await get_aiohttp_session()
-    tasks = [asyncio.ensure_future(_head(url, session)) for url in urls]
+    client = await get_httpx_client()
+    tasks = [asyncio.ensure_future(_head(url, client)) for url in urls]
     responses = asyncio.gather(*tasks)
     await responses
     return responses.result()

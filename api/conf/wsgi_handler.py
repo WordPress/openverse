@@ -32,24 +32,32 @@ class OpenverseWSGIHandler(WSGIHandler):
         super().__init__()
         self._on_shutdown: list[weakref.WeakMethod | weakref.ref] = []
 
+    def _clean_ref(self, ref):
+        self.logger.info("Cleaning up a ref")
+        self._on_shutdown.remove(ref)
+
     def register_shutdown_handler(self, handler: Callable[[], None]):
         """Register an individual shutdown handler."""
         if inspect.ismethod(handler):
-            self._on_shutdown.append(weakref.WeakMethod(handler))
+            ref = weakref.WeakMethod(handler, self._clean_ref)
         else:
-            self._on_shutdown.append(weakref.ref(handler))
+            ref = weakref.ref(handler, self._clean_ref)
+
+        self._on_shutdown.append(ref)
 
     def shutdown(self):
-        self.logger.info(
-            f"Shutting down with {len(self._on_shutdown)} handlers to execute"
-        )
+        live_handlers = 0
 
         for handler_ref in self._on_shutdown:
             if not (handler := handler_ref()):
                 self.logger.debug("Reference lost, skipping handler")
                 continue
 
+            live_handlers += 1
+
             if asyncio.iscoroutinefunction(handler):
                 async_to_sync(handler)()
             else:
                 handler()
+
+        self.logger.info(f"Executed {live_handlers} handler(s) before shutdown.")

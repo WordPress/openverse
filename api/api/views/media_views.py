@@ -146,8 +146,6 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
-        breakpoint()
-
         try:
             results, num_results, search_context = search_controller.related_media(
                 uuid=identifier,
