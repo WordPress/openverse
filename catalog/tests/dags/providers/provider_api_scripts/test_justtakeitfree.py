@@ -1,11 +1,3 @@
-"""
-TODO: Add additional tests for any methods you added in your subclass.
-Try to test edge cases (missing keys, different data types returned, Nones, etc).
-You may also need to update the given test names to be more specific.
-
-Run your tests locally with `just test -k justtakeitfree`
-"""
-
 import json
 from pathlib import Path
 from unittest.mock import patch
@@ -16,7 +8,6 @@ from providers.provider_api_scripts.justtakeitfree import JusttakeitfreeDataInge
 
 RESOURCES = Path(__file__).parent / "resources/justtakeitfree"
 
-# Set up test class
 jtif = JusttakeitfreeDataIngester()
 
 
@@ -66,6 +57,7 @@ def test_get_record_data():
             "https://creativecommons.org/licenses/by/4.0/"
         ),
         "raw_tags": ["Baturyn fortress", "Baturyn citadel", "cossack fortress"],
+        "thumbnail": "https://justtakeitfree.com/photos/2_800.jpg",
         "filesize": 100,
     }
 
