@@ -36,17 +36,19 @@ const pages = {
   imageDetail: {
     url: "/image/da5cb478-c093-4d62-b721-cda18797e3fb",
     title: "bird | Openverse",
-    ogImage:
-      "https://api.openverse.engineering/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/",
+    ogImage: new RegExp(
+      "/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/"
+    ),
     ogTitle: "bird",
     robots: "noindex",
   },
   audioDetail: {
-    url: "/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
-    title: "Hello Black & White Bird | Openverse",
-    ogImage:
-      "https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/thumb/",
-    ogTitle: "Hello Black & White Bird",
+    url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
+    title: "I Love My Dog You Love your Cat | Openverse",
+    ogImage: new RegExp(
+      "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
+    ),
+    ogTitle: "I Love My Dog You Love your Cat",
     robots: "noindex",
   },
   about: {
