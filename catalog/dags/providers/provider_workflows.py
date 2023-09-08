@@ -239,6 +239,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         ingester_class=JusttakeitfreeDataIngester,
+        start_date=datetime(2023, 9, 1),
     ),
     ProviderWorkflow(
         ingester_class=MetMuseumDataIngester,
