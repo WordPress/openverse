@@ -48,10 +48,10 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
 
     def get_record_data(self, data: list[dict]) -> dict | None:
         data = data[0]
-        if not (foreign_identifier := data.get("page_link", "").split("/")[-2]):
+        if not (foreign_landing_url := data.get("page_link")):
             return None
 
-        if not (foreign_landing_url := data.get("page_link")):
+        if not (foreign_identifier := foreign_landing_url.split("/")[-2]):
             return None
 
         if not (url := data.get("full_image_link")):
