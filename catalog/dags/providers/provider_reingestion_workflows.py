@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import timedelta
 
-from providers.provider_api_scripts.europeana import EuropeanaDataIngester
 from providers.provider_api_scripts.flickr import FlickrDataIngester
 from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
 from providers.provider_api_scripts.phylopic import PhylopicDataIngester
@@ -56,15 +55,6 @@ class ProviderReingestionWorkflow(ProviderWorkflow):
 
 
 PROVIDER_REINGESTION_WORKFLOWS = [
-    ProviderReingestionWorkflow(
-        # 60 total reingestion days
-        ingester_class=EuropeanaDataIngester,
-        max_active_tasks=3,
-        pull_timeout=timedelta(hours=16),
-        daily_list_length=7,
-        one_month_list_length=12,
-        three_month_list_length=40,
-    ),
     ProviderReingestionWorkflow(
         # 128 total reingestion days
         ingester_class=FlickrDataIngester,

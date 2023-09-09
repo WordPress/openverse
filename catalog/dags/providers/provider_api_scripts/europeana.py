@@ -60,6 +60,7 @@ class EuropeanaRecordBuilder:
 
     def get_record_data(self, data: dict) -> dict | None:
         try:
+            item_data = data.get("item_webresource", {})
             record = {
                 "foreign_landing_url": self._get_foreign_landing_url(data),
                 "url": self._get_image_url(data),
@@ -67,7 +68,9 @@ class EuropeanaRecordBuilder:
                 "meta_data": self._get_meta_data_dict(data),
                 "title": self._get_title(data),
                 "license_info": self._get_license_info(data),
-            }
+                "filetype": self._get_filetype(item_data),
+                "filesize": self._get_filesize(item_data),
+            } | self._get_image_dimensions(item_data)
 
             data_providers = set(record["meta_data"]["dataProvider"])
             eligible_sub_providers = {
@@ -81,13 +84,12 @@ class EuropeanaRecordBuilder:
                     f"image with foreign ID {record['foreign_identifier']}"
                 )
 
-            return record | {
-                "source": (
-                    eligible_sub_providers.pop()
-                    if len(eligible_sub_providers) == 1
-                    else EuropeanaDataIngester.providers["image"]
-                )
-            }
+            record["source"] = (
+                eligible_sub_providers.pop()
+                if len(eligible_sub_providers) == 1
+                else EuropeanaDataIngester.providers["image"]
+            )
+            return {k: v for k, v in record.items() if v is not None}
         except EmptyRequiredFieldException as exc:
             logger.warning("A required field was empty", exc_info=exc)
             return None
@@ -129,6 +131,22 @@ class EuropeanaRecordBuilder:
 
         return europeana_url
 
+    def _get_image_dimensions(self, item_data: dict) -> dict:
+        width = item_data.get("ebucoreWidth")
+        height = item_data.get("ebucoreHeight")
+        if width and height:
+            return {"width": width, "height": height}
+        return {}
+
+    def _get_filetype(self, item_data: dict) -> str:
+        if filetype := item_data.get("ebucoreHasMimeType"):
+            if "/" in filetype:
+                return item_data.get("ebucoreHasMimeType").split("/")[1]
+        return filetype
+
+    def _get_filesize(self, item_data: dict) -> int:
+        return item_data.get("ebucoreFileByteSize")
+
     def _get_meta_data_dict(self, data: dict) -> dict:
         meta_data = {
             "country": data.get("country"),
@@ -159,7 +177,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
     providers = {"image": prov.EUROPEANA_DEFAULT_PROVIDER}
     sub_providers = prov.EUROPEANA_SUB_PROVIDERS
     endpoint = "https://api.europeana.eu/record/v2/search.json?"
-    delay = 30
+    delay = 3
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -188,6 +206,9 @@ class EuropeanaDataIngester(ProviderDataIngester):
             "cursor": "*",
         }
 
+        self.item_params = {
+            "wskey": Variable.get("API_KEY_EUROPEANA", default_var=None)
+        }
         self.record_builder = EuropeanaRecordBuilder()
 
     def _get_timestamp_query_param(self, date):
@@ -223,7 +244,48 @@ class EuropeanaDataIngester(ProviderDataIngester):
         return response_json.get("items")
 
     def get_record_data(self, data: dict) -> dict:
-        return self.record_builder.get_record_data(data)
+        return self.record_builder.get_record_data(
+            data | {"item_webresource": self._get_additional_item_data(data)}
+        )
+
+    def _get_id_and_url(self, data) -> tuple:
+        try:
+            return (
+                self.record_builder._get_foreign_identifier(data),
+                self.record_builder._get_image_url(data),
+            )
+        except EmptyRequiredFieldException as exc:
+            logger.warning("Missing id or url", exc_info=exc)
+            return (None, None)
+
+    def _get_additional_item_data(self, data) -> dict:
+        # The Europeana requester uses a 3 second delay to avoid overwhelming the item
+        # endpoint and to maintain at least a 30 second break between calls to the
+        # search endpoint.
+        (item_id, url) = self._get_id_and_url(data)
+        if not (item_id and url):
+            return {}
+        item_response = self.get_response_json(
+            query_params=self.item_params,
+            endpoint=f"https://api.europeana.eu/record/v2{item_id}.json",
+        )
+        if not item_response or not item_response.get("success"):
+            logger.warning("Item request failed no response or ``success != True``")
+            return {}
+        aggregations = item_response.get("object", {}).get("aggregations", [])
+        for aggregation in aggregations:
+            return next(
+                (
+                    resource
+                    for resource in aggregation.get("webResources", [])
+                    if (
+                        resource.get("ebucoreHasMimeType", "").startswith("image")
+                        and resource.get("about") == url
+                    )
+                ),
+                {},
+            )
+        return {}
 
 
 def main(date):

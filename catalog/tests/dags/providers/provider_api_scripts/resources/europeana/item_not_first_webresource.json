@@ -1,0 +1,486 @@
+{
+  "apikey": "ounitece",
+  "success": true,
+  "statsDuration": 257,
+  "requestNumber": 999,
+  "object": {
+    "about": "/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+    "agents": [
+      {
+        "about": "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent4",
+        "prefLabel": { "es": ["Quinto y Giui, Agustín, 1774-1827"] },
+        "owlSameAs": [
+          "https://www.cortesaragon.es/fondoHistorico/aut/FDHA20130006956"
+        ]
+      },
+      {
+        "about": "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent6",
+        "prefLabel": { "es": ["López, Vicente, 1772-1850"] },
+        "owlSameAs": [
+          "https://www.cortesaragon.es/fondoHistorico/aut/FDHA20130006901"
+        ]
+      }
+    ],
+    "aggregations": [
+      {
+        "about": "/aggregation/provider/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+        "edmDataProvider": {
+          "def": ["http://data.europeana.eu/organization/1482250000004503496"]
+        },
+        "edmIsShownBy": "https://www.cortesaragon.es/fondoHistorico/i18n/catalogo_imagenes/imagen_id.do?idImagen=122319",
+        "edmIsShownAt": "https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323",
+        "edmObject": "https://www.cortesaragon.es/fondoHistorico/i18n/catalogo_imagenes/imagen_id.do?idImagen=122319",
+        "edmProvider": {
+          "def": ["http://data.europeana.eu/organization/1482250000004671126"]
+        },
+        "edmRights": {
+          "def": ["http://creativecommons.org/licenses/by-nc-nd/4.0/"]
+        },
+        "edmUgc": "false",
+        "aggregatedCHO": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+        "webResources": [
+          {
+            "about": "https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323",
+            "textAttributionSnippet": "(en) Portrait of Augustine of Fifth and Guiu [Graphic Material] - https://www.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0. . Fondo Documental Histórico de las Cortes de Aragón - https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323. CC BY-NC-ND - http://creativecommons.org/licenses/by-nc-nd/4.0/",
+            "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Title</dt><dd lang='en'><a href='http://data.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0' target='_blank' rel='noopener'>Portrait of Augustine of Fifth and Guiu [Graphic Material]</a></dd><dt>Creator</dt><dt>Date</dt><dd lang=''>1801; 1853</dd><dt>Institution</dt><dd lang=''><a href='https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323' target='_blank' rel='noopener'>Fondo Documental Histórico de las Cortes de Aragón</a></dd><dt>Country</dt><dd lang=''>Spain</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/licenses/by-nc-nd/4.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-by'/><span class='icon-nc'/><span class='icon-nd'/>CC BY-NC-ND</a></dd></dl>",
+            "ebucoreHasMimeType": "text/html",
+            "ebucoreFileByteSize": 0
+          },
+          {
+            "about": "happy_url",
+            "textAttributionSnippet": "(en) Portrait of Augustine of Fifth and Guiu [Graphic Material] - https://www.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0. . Fondo Documental Histórico de las Cortes de Aragón - https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323. CC BY-NC-ND - http://creativecommons.org/licenses/by-nc-nd/4.0/",
+            "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Title</dt><dd lang='en'><a href='http://data.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0' target='_blank' rel='noopener'>Portrait of Augustine of Fifth and Guiu [Graphic Material]</a></dd><dt>Creator</dt><dt>Date</dt><dd lang=''>1801; 1853</dd><dt>Institution</dt><dd lang=''><a href='https://www.cortesaragon.es/fondoHistorico/es/consulta/registro.do?id=2323' target='_blank' rel='noopener'>Fondo Documental Histórico de las Cortes de Aragón</a></dd><dt>Country</dt><dd lang=''>Spain</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/licenses/by-nc-nd/4.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-by'/><span class='icon-nc'/><span class='icon-nd'/>CC BY-NC-ND</a></dd></dl>",
+            "dctermsIsReferencedBy": [
+              "https://iiif.europeana.eu/presentation/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0/manifest"
+            ],
+            "ebucoreHasMimeType": "image/jpeg",
+            "ebucoreFileByteSize": 604829,
+            "ebucoreWidth": 772,
+            "ebucoreHeight": 1024,
+            "edmHasColorSpace": "sRGB",
+            "edmComponentColor": [
+              "#CD5C5C",
+              "#BC8F8F",
+              "#FFE4C4",
+              "#696969",
+              "#E9967A",
+              "#D2B48C"
+            ],
+            "ebucoreOrientation": "portrait"
+          },
+          {
+            "about": "https://iiif.europeana.eu/presentation/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0/manifest",
+            "rdfType": "http://iiif.io/api/presentation/3#Manifest"
+          }
+        ]
+      }
+    ],
+    "concepts": [
+      {
+        "about": "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent3",
+        "prefLabel": { "es": ["López, Vicente, 1772-1850, Taller de"] },
+        "broader": [
+          "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent6"
+        ],
+        "closeMatch": [
+          "https://www.cortesaragon.es/fondoHistorico/aut/FDHA20130006918"
+        ]
+      },
+      {
+        "about": "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent5",
+        "prefLabel": { "es": ["Dibujos a lápiz Conte-1853-España"] },
+        "broader": [
+          "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent7"
+        ],
+        "closeMatch": [
+          "https://www.cortesaragon.es/fondoHistorico/aut/FDHA20130006963"
+        ]
+      },
+      {
+        "about": "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent7",
+        "prefLabel": { "es": ["Dibujos a lápiz Conte"] },
+        "closeMatch": [
+          "https://www.cortesaragon.es/fondoHistorico/aut/FDHA20130006970"
+        ]
+      }
+    ],
+    "edmDatasetName": ["571_Hispana_FondoHistoricoCortesAragon"],
+    "europeanaAggregation": {
+      "about": "/aggregation/europeana/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+      "aggregatedCHO": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+      "edmCountry": { "def": ["Spain"] },
+      "edmLanguage": { "def": ["es"] },
+      "edmPreview": "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fwww.cortesaragon.es%2FfondoHistorico%2Fi18n%2Fcatalogo_imagenes%2Fimagen_id.do%3FidImagen%3D122319&type=IMAGE",
+      "edmLandingPage": "https://www.europeana.eu/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+      "dqvHasQualityAnnotation": [
+        "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0#contentTier",
+        "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0#metadataTier"
+      ]
+    },
+    "europeanaCollectionName": ["571_Hispana_FondoHistoricoCortesAragon"],
+    "europeanaCompleteness": 7,
+    "licenses": [
+      {
+        "about": "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent2",
+        "odrlInheritFrom": "http://creativecommons.org/licenses/by-nc-nd/4.0/"
+      }
+    ],
+    "organizations": [
+      {
+        "about": "http://data.europeana.eu/organization/1482250000004671126",
+        "prefLabel": { "en": ["Hispana"] }
+      },
+      {
+        "about": "http://data.europeana.eu/organization/1482250000004503496",
+        "prefLabel": {
+          "en": ["Historical Documentary Fund of the Cortes de Aragón"],
+          "es": ["Fondo Documental Histórico de las Cortes de Aragón"]
+        }
+      }
+    ],
+    "places": [
+      {
+        "about": "http://data.europeana.eu/place/83",
+        "prefLabel": {
+          "de": ["Spanien"],
+          "fi": ["Espanja"],
+          "ru": ["Испания"],
+          "pt": ["Espanha"],
+          "bg": ["Испания"],
+          "lt": ["Ispanija"],
+          "hr": ["Španjolska"],
+          "lv": ["Spānija"],
+          "fr": ["Espagne"],
+          "hu": ["Spanyolország"],
+          "sk": ["Španielsko"],
+          "sl": ["Španija"],
+          "ga": ["An Spáinn"],
+          "ca": ["Espanya"],
+          "sv": ["Spanien"],
+          "mt": ["Spanja"],
+          "el": ["Ισπανία"],
+          "en": ["Spain"],
+          "it": ["Spagna"],
+          "es": ["España"],
+          "et": ["Hispaania"],
+          "cs": ["Španělsko"],
+          "eu": ["Espainia"],
+          "pl": ["Hiszpania"],
+          "da": ["Spanien"],
+          "ro": ["Spania"],
+          "nl": ["Spanje"]
+        },
+        "altLabel": {
+          "de": ["Königreich Spanien", "ES", "ESP"],
+          "sv": ["España"],
+          "ru": ["Королевство Испания", "Эспанья"],
+          "pt": ["Reino de Espanha", "Reino da Espanha"],
+          "bg": ["Кралство Испания"],
+          "mt": ["Renju ta’ Spanja"],
+          "el": ["Βασίλειο της Ισπανίας"],
+          "en": ["Kingdom of Spain", "ES", "ESP"],
+          "it": ["Regno di Spagna"],
+          "fr": ["Royaume d'Espagne", "État espagnol", "ES", "ESP", "Esp."],
+          "es": [
+            "ES",
+            "ESP",
+            "Estado español",
+            "Reino de España (1975- )",
+            "Reino de España",
+            "Spaña"
+          ],
+          "eu": ["Espainiako Erresuma", "ES", "ESP"],
+          "cs": ["Španělské království"],
+          "sk": ["Španielske kráľovstvo"],
+          "ro": ["Regatul Spaniei"],
+          "nl": ["Koninkrijk Spanje", "ES", "ESP"],
+          "ca": ["Regne d'Espanya", "ES", "ESP", "Estat espanyol"]
+        },
+        "note": {
+          "de": ["Staat auf der Iberischen Halbinsel"],
+          "ru": ["Страна на юго-западе Европы"],
+          "fi": ["Valtio Lounais-Euroopassa"],
+          "pt": ["País europeu"],
+          "bg": ["Държава в Европа"],
+          "lv": ["Valsts Eiropā"],
+          "hr": ["Država u jugozapadnoj Europi"],
+          "fr": ["Pays d'Europe"],
+          "hu": ["Állam Délnyugat-Európában"],
+          "sk": ["Krajina v juhozápadnej Európe"],
+          "ga": ["Tír in iardheisceart na hEorpa"],
+          "ca": ["Estat d'Europa"],
+          "sv": ["Konstitutionell monarki i Sydeuropa"],
+          "mt": ["Pajjiż fl-Ewropa tal-Lbiċ"],
+          "el": ["Χώρα της νοτιοδυτικής Ευρώπης"],
+          "en": ["Country in southwestern Europe with territories in Africa"],
+          "it": [
+            "Stato dell'Europa sud-occidentale, membro dell'Unione europea"
+          ],
+          "es": ["País del suroeste de Europa"],
+          "et": ["Riik Edela-Euroopas"],
+          "cs": ["Stát v jihozápadní Evropě"],
+          "eu": ["Europako hego-mendebaldeko estatu burujabe bat"],
+          "pl": ["Państwo w Europie Południowej"],
+          "da": ["Land i Europa"],
+          "ro": ["Stat în Europa de Vest"],
+          "nl": [
+            "Land op het Iberisch Schiereiland in het zuidwesten van Europa"
+          ]
+        },
+        "latitude": 40.2,
+        "longitude": -3.5,
+        "owlSameAs": [
+          "http://www.wikidata.org/entity/Q29",
+          "http://viaf.org/viaf/133609710",
+          "https://d-nb.info/gnd/4055964-6",
+          "http://id.loc.gov/authorities/names/n79006971",
+          "http://data.bnf.fr/ark:/12148/cb118635857",
+          "http://www.idref.fr/026376296/id",
+          "http://www.idref.fr/027224406/id",
+          "http://id.ndl.go.jp/auth/ndlna/00571694",
+          "http://id.nlm.nih.gov/mesh/D013030",
+          "https://www.freebase.com/m/06mkj",
+          "https://g.co/kg/m/06mkj",
+          "http://id.nlm.nih.gov/mesh/Z01.542.846",
+          "http://libris.kb.se/resource/auth/163816",
+          "http://datos.bne.es/resource/XX109717",
+          "http://datos.bne.es/resource/XX450592",
+          "https://sws.geonames.org/2510769/",
+          "http://vocab.getty.edu/tgn/1000095",
+          "http://id.worldcat.org/fast/1204303",
+          "http://www.yso.fi/onto/yso/p105209",
+          "http://babelnet.org/rdf/s00031605n",
+          "http://nomisma.org/id/spain",
+          "http://zbw.eu/stw/descriptor/17161-5",
+          "http://vocabularies.unesco.org/thesaurus/concept923",
+          "http://lod.nl.go.kr/resource/KAB202013690",
+          "https://libris.kb.se/0xbddljj0wdngtx",
+          "http://www.yso.fi/onto/ysa/Y105209",
+          "http://dbpedia.org/resource/Spain"
+        ]
+      }
+    ],
+    "providedCHOs": [
+      {
+        "about": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0"
+      }
+    ],
+    "proxies": [
+      {
+        "about": "/proxy/europeana/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+        "dcDate": { "def": ["#1801", "#1801"], "zxx": ["1801"] },
+        "dcDescription": {
+          "en": [
+            "To the verse: “Copy of the original portrait of Lopez A. Quinto, 1824”"
+          ]
+        },
+        "dcIdentifier": {
+          "def": [
+            "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent0"
+          ]
+        },
+        "dcLanguage": { "def": ["spa"] },
+        "dcRights": {
+          "en": [
+            "The dissemination of descriptive information and digital images of this document has been authorized by the Cortes de Aragón exclusively for private use and for teaching and research activities. In no case is authorized its reproduction with lucrative purpose nor its distribution, public communication and transformation by any means without express and written authorization of the Cortes de Aragón. - http://creativecommons.org/-/by-nc-nd/4.0 /"
+          ]
+        },
+        "dcSubject": {
+          "en": [
+            "Fifth and Giui, Augustine, 1774-1827",
+            "Pencil drawings Conte-1853-Spain"
+          ]
+        },
+        "dcTitle": {
+          "en": ["Portrait of Augustine of Fifth and Guiu [Graphic Material]"]
+        },
+        "dcType": { "en": ["Illustrations and Photos"] },
+        "dctermsIssued": {
+          "en": ["[1st half s. XIX]"],
+          "es": ["[1ª mitad s. XIX]"]
+        },
+        "dctermsSpatial": {
+          "def": ["http://data.europeana.eu/place/83"],
+          "en": ["Spain"]
+        },
+        "dctermsTemporal": { "def": ["#1853", "#1853"], "en": ["1853"] },
+        "edmCurrentLocation": { "en": ["Cortes Aragón Library"] },
+        "proxyIn": [
+          "/aggregation/europeana/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0"
+        ],
+        "proxyFor": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+        "lineage": [
+          "/proxy/provider/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0"
+        ],
+        "edmType": "IMAGE",
+        "year": { "def": ["1801", "1853"] },
+        "europeanaProxy": true
+      },
+      {
+        "about": "/proxy/provider/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+        "dcCreator": {
+          "def": [
+            "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent3"
+          ]
+        },
+        "dcDate": { "def": ["1801"] },
+        "dcDescription": {
+          "es": [
+            "Al verso: \"Copia del retrato original de Lopez A. Quinto, 1824\""
+          ]
+        },
+        "dcFormat": { "en": ["image/jpeg"] },
+        "dcIdentifier": { "def": ["oai:fondohistorico.cortesaragon.es:2323"] },
+        "dcLanguage": { "def": ["spa"] },
+        "dcRights": {
+          "es": [
+            "La difusión de la información descriptiva y de las imágenes digitales de este documento ha sido autorizada por las Cortes de Aragón exclusivamente para uso privado y para actividades de docencia e investigación. En ningún caso se autoriza su reproducción con finalidad lucrativa ni su distribución, comunicación pública y transformación por cualquier medio sin autorización expresa y por escrito de las Cortes de Aragón. - http://creativecommons.org/licenses/by-nc-nd/4.0/"
+          ]
+        },
+        "dcSubject": {
+          "es": [
+            "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent4",
+            "https://hispana.mcu.es/lod/oai:fondohistorico.cortesaragon.es:2323#ent5"
+          ]
+        },
+        "dcTitle": {
+          "es": ["Retrato de Agustín de Quinto y Guiu [Material gráfico]"]
+        },
+        "dcType": { "es": ["Ilustraciones y Fotos"] },
+        "dctermsExtent": {
+          "es": [
+            "1 dibujo sobre papel : lápiz conté y carboncillo ; imagen de 48'5 x 36'5 cm en h. de 51'5 x 38 cm"
+          ]
+        },
+        "dctermsIssued": { "def": ["[1ª mitad s. XIX]"] },
+        "dctermsSpatial": { "es": ["España"] },
+        "dctermsTemporal": { "es": ["1853"] },
+        "edmHasType": { "es": ["Dibujos a lápiz Conte"] },
+        "edmCurrentLocation": { "es": ["Biblioteca Cortes Aragón"] },
+        "proxyIn": [
+          "/aggregation/provider/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0"
+        ],
+        "proxyFor": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0",
+        "edmType": "IMAGE",
+        "europeanaProxy": false
+      }
+    ],
+    "qualityAnnotations": [
+      {
+        "about": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0#contentTier",
+        "created": "2022-11-15T08:04:56.474594Z",
+        "target": [
+          "/aggregation/provider/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0"
+        ],
+        "body": "http://www.europeana.eu/schemas/epf/contentTier2"
+      },
+      {
+        "about": "/item/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0#metadataTier",
+        "created": "2022-11-15T08:04:56.474637Z",
+        "target": [
+          "/aggregation/provider/571/https___hispana_mcu_es_lod_oai_fondohistorico_cortesaragon_es_2323_ent0"
+        ],
+        "body": "http://www.europeana.eu/schemas/epf/metadataTierB"
+      }
+    ],
+    "timespans": [
+      {
+        "about": "http://data.europeana.eu/timespan/19",
+        "prefLabel": {
+          "de": ["19. Jahrhundert"],
+          "ru": ["XIX век"],
+          "fi": ["1800-luku"],
+          "pt": ["Século XIX"],
+          "bg": ["19 век"],
+          "lt": ["XIX amžius"],
+          "lv": ["19. gadsimts"],
+          "hr": ["19. stoljeće"],
+          "fr": ["XIXᵉ siècle"],
+          "hu": ["19. század"],
+          "sk": ["19. storočie"],
+          "sl": ["19. stoletje"],
+          "ga": ["19ú haois"],
+          "ca": ["Segle XIX"],
+          "sv": ["1800-talet"],
+          "el": ["19ος αιώνας"],
+          "en": ["19th century"],
+          "it": ["XIX secolo"],
+          "es": ["Siglo XIX"],
+          "et": ["19. sajand"],
+          "eu": ["XIX. mendea"],
+          "cs": ["19. století"],
+          "pl": ["XIX wiek"],
+          "ro": ["Secolul al XIX-lea"],
+          "da": ["19. århundrede"],
+          "nl": ["19e eeuw"]
+        },
+        "altLabel": {
+          "ru": ["19 век"],
+          "sv": [
+            "19:e århundradet",
+            "19:e seklet",
+            "1800-tal",
+            "1800-talet (århundrade)",
+            "1800-talet (sekel)"
+          ],
+          "en": [
+            "19th-century",
+            "19th-century",
+            "Nineteenth century",
+            "19. century",
+            "XIX Century"
+          ],
+          "it": [
+            "Ottocento",
+            "19° secolo",
+            "Secolo XIX",
+            "XIX Secolo",
+            "19esimo secolo",
+            "Diciannovesimo secolo",
+            "'800",
+            "Ottocento"
+          ],
+          "fr": ["19e siècle", "XIXe siècle"],
+          "da": ["1800-tallet"],
+          "ca": ["XIX", "Segle dinou", "Segle 19"],
+          "es": ["19. siglo", "Siglo 19", "Siglo diecinueve"]
+        },
+        "begin": { "def": ["1801-01-01"] },
+        "end": { "def": ["1900-01-01"] },
+        "owlSameAs": [
+          "http://www.wikidata.org/entity/Q6955",
+          "http://id.loc.gov/authorities/names/sh2002012475",
+          "http://id.loc.gov/authorities/names/sh85091984",
+          "http://id.nlm.nih.gov/mesh/D049672",
+          "https://www.freebase.com/m/08b3m",
+          "https://g.co/kg/m/08b3m",
+          "http://datos.bne.es/resource/XX4343988",
+          "http://vocab.getty.edu/aat/300404513",
+          "http://babelnet.org/rdf/s02210346n",
+          "http://dbpedia.org/resource/19th_century"
+        ]
+      },
+      {
+        "about": "#1853",
+        "prefLabel": { "zxx": ["1853"] },
+        "begin": { "def": ["1853-01-01"] },
+        "end": { "def": ["1853-12-31"] },
+        "isPartOf": { "def": ["http://data.europeana.eu/timespan/19"] },
+        "skosNotation": { "def": ["1853"] }
+      },
+      {
+        "about": "#1801",
+        "prefLabel": { "zxx": ["1801"] },
+        "begin": { "def": ["1801-01-01"] },
+        "end": { "def": ["1801-12-31"] },
+        "isPartOf": { "def": ["http://data.europeana.eu/timespan/19"] },
+        "skosNotation": { "def": ["1801"] }
+      }
+    ],
+    "timestamp_created": "2022-11-15T08:03:55.974Z",
+    "timestamp_created_epoch": 1668499435974,
+    "timestamp_update": "2022-11-15T08:03:55.974Z",
+    "timestamp_update_epoch": 1668499435974,
+    "type": "IMAGE"
+  }
+}

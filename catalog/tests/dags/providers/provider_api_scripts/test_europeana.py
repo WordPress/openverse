@@ -1,9 +1,13 @@
+from unittest.mock import patch
+
 import pytest
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
 from common.licenses import LicenseInfo, get_license_info
+from common.loader import provider_details as prov
+from common.storage.image import ImageStore
 from providers.provider_api_scripts.europeana import (
     EuropeanaDataIngester,
     EuropeanaRecordBuilder,
@@ -100,13 +104,79 @@ def test_get_batch_data_gets_items_property(ingester):
 
 
 def test_get_image_list_with_realistic_response(ingester):
-    response_json = _get_resource_json("europeana_example.json")
-    record_count = ingester.process_batch(response_json["items"])
-    assert record_count == len(response_json["items"])
+    image_store = ImageStore(provider=prov.EUROPEANA_DEFAULT_PROVIDER)
+    ingester.media_stores = {"image": image_store}
+    batch_json = _get_resource_json("europeana_example.json")
+    object_json = {}
+    with patch.object(
+        ingester, "_get_additional_item_data", return_value=object_json
+    ) as item_call:
+        with patch.object(image_store, "add_item"):
+            record_count = ingester.process_batch(batch_json["items"])
+            assert item_call.call_count == len(batch_json["items"])
+            assert record_count == len(batch_json["items"])
+
+
+ITEM_HAPPY_RESPONSE = _get_resource_json("item_full.json")
+ITEM_NOT_1ST_RESPONSE = _get_resource_json("item_not_first_webresource.json")
+ITEM_HAPPY_WEBRESOURCE = (
+    ITEM_HAPPY_RESPONSE.get("object").get("aggregations")[0].get("webResources")[0]
+)
+ITEM_NOT_1ST_WEBRESOURCE = (
+    ITEM_NOT_1ST_RESPONSE.get("object").get("aggregations")[0].get("webResources")[1]
+)
+
+
+@pytest.mark.parametrize(
+    "response_json, url, expected",
+    [
+        pytest.param(
+            ITEM_HAPPY_RESPONSE, "happy_url", ITEM_HAPPY_WEBRESOURCE, id="happy_path"
+        ),
+        pytest.param(
+            ITEM_NOT_1ST_RESPONSE, "happy_url", ITEM_NOT_1ST_WEBRESOURCE, id="not_first"
+        ),
+        pytest.param(
+            {"success": False, "object": {}}, "happy_url", {}, id="success_is_false"
+        ),
+        pytest.param(
+            {"success": True, "no": "object"}, "happy_url", {}, id="no_object"
+        ),
+        pytest.param(
+            {"success": True, "object": {}}, "happy_url", {}, id="no_aggregation"
+        ),
+        pytest.param(None, "happy_url", {}, id="no_response"),
+        pytest.param(ITEM_HAPPY_RESPONSE, "sad_url", {}, id="wrong_url"),
+    ],
+)
+def test_get_additional_item_data(response_json, url, expected, ingester):
+    with patch.object(
+        ingester, "get_response_json", return_value=response_json
+    ) as patch_api_call:
+        with patch.object(ingester, "_get_id_and_url", return_value=("/FAKE_ID", url)):
+            actual = ingester._get_additional_item_data({})
+            assert actual == expected
+    patch_api_call.assert_called_once_with(
+        endpoint="https://api.europeana.eu/record/v2/FAKE_ID.json",
+        query_params=ingester.item_params,
+    )
+
+
+def test_get_additional_item_data_no_foreign_id(ingester):
+    with patch.object(ingester, "get_response_json", return_value={}) as patch_call:
+        actual = ingester._get_additional_item_data({"info": "but not an ID"})
+        expected = {}
+        assert actual == expected
+    patch_call.assert_not_called
 
 
 def test_record_builder_get_record_data(ingester, record_builder):
-    image_data = _get_resource_json("image_data_example.json")
+    image_data = _get_resource_json("image_data_example.json") | {
+        "item_webresource": _get_resource_json("item_full.json")
+        .get("object")
+        .get("aggregations")[0]
+        .get("webResources")[0]
+    }
     record_data = record_builder.get_record_data(image_data)
 
     expect_meta_data = {
@@ -131,6 +201,10 @@ def test_record_builder_get_record_data(ingester, record_builder):
         ),
         "meta_data": expect_meta_data,
         "source": ingester.providers["image"],
+        "height": 480,
+        "width": 381,
+        "filesize": 36272,
+        "filetype": "jpeg",
     }
 
 
@@ -178,6 +252,46 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
     assert (
         record_builder.get_record_data(image_data)["foreign_landing_url"] == expect_url
     )
+
+
+@pytest.mark.parametrize(
+    "item_data, expected",
+    [
+        pytest.param(
+            ITEM_HAPPY_WEBRESOURCE, {"width": 381, "height": 480}, id="happy_path"
+        ),
+        pytest.param({"no": "dimensions"}, {}, id="no_dimensions"),
+        pytest.param({"ebucoreWidth": 381}, {}, id="no_height"),
+        pytest.param({"ebucoreHeight": 480}, {}, id="no_width"),
+    ],
+)
+def test_get_image_dimensions(item_data, expected, record_builder):
+    assert record_builder._get_image_dimensions(item_data) == expected
+
+
+@pytest.mark.parametrize(
+    "item_data, expected",
+    [
+        pytest.param(ITEM_HAPPY_WEBRESOURCE, "jpeg", id="happy_path"),
+        pytest.param({"ebucoreHasMimeType": "image-jpeg"}, "image-jpeg", id="no_slash"),
+        pytest.param({"ebucoreHasMimeType": "gibberish"}, "gibberish", id="gibberish"),
+        pytest.param({"ebucoreHasMimeType": None}, None, id="no_filetype"),
+    ],
+)
+def test_get_filetype(item_data, expected, record_builder):
+    assert record_builder._get_filetype(item_data) == expected
+
+
+@pytest.mark.parametrize(
+    "item_data, expected",
+    [
+        pytest.param(ITEM_HAPPY_WEBRESOURCE, 36272, id="happy_path"),
+        pytest.param({"ebucoreFileByteSize": "gibberish"}, "gibberish", id="gibberish"),
+        pytest.param({"no": "filesize"}, None, id="no_filesize"),
+    ],
+)
+def test_get_filesize(item_data, expected, record_builder):
+    assert record_builder._get_filesize(item_data) == expected
 
 
 def test_get_meta_data_dict(record_builder):

@@ -1,0 +1,202 @@
+{
+  "apikey": "test",
+  "success": true,
+  "statsDuration": 170,
+  "requestNumber": 999,
+  "object": {
+    "about": "/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+    "aggregations": [
+      {
+        "about": "/aggregation/provider/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+        "edmDataProvider": {
+          "def": ["http://data.europeana.eu/organization/1482250000004511854"]
+        },
+        "edmIsShownBy": "https://images.memorix.nl/nda/thumb/fullsize/010a31d7-9316-54d7-6ad0-83b9914688d9.jpg",
+        "edmIsShownAt": "http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6",
+        "edmObject": "https://images.memorix.nl/nda/thumb/640x480/010a31d7-9316-54d7-6ad0-83b9914688d9.jpg",
+        "edmProvider": {
+          "def": ["http://data.europeana.eu/organization/1482250000004671093"]
+        },
+        "edmRights": {
+          "def": ["http://creativecommons.org/publicdomain/zero/1.0/"]
+        },
+        "edmUgc": "false",
+        "aggregatedCHO": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+        "webResources": [
+          {
+            "about": "happy_url",
+            "textAttributionSnippet": " - https://www.europeana.eu/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6. Fotovlucht Vliegbasis Soesterberg. Nederlands Instituut voor Militaire Historie - http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6. CC0 - http://creativecommons.org/publicdomain/zero/1.0/",
+            "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Creator</dt><dd lang=''>Fotovlucht Vliegbasis Soesterberg</dd><dt>Institution</dt><dd lang=''><a href='http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6' target='_blank' rel='noopener'>Nederlands Instituut voor Militaire Historie</a></dd><dt>Country</dt><dd lang=''>Netherlands</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-zero'/>CC0</a></dd></dl>",
+            "ebucoreHasMimeType": "image/jpeg",
+            "ebucoreFileByteSize": 36272,
+            "ebucoreWidth": 381,
+            "ebucoreHeight": 480,
+            "edmHasColorSpace": "sRGB",
+            "edmComponentColor": [
+              "#FF6347",
+              "#556B2F",
+              "#E9967A",
+              "#A0522D",
+              "#FFEBCD",
+              "#DAA520"
+            ],
+            "ebucoreOrientation": "portrait"
+          },
+          {
+            "about": "http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6",
+            "textAttributionSnippet": " - https://www.europeana.eu/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6. Fotovlucht Vliegbasis Soesterberg. Nederlands Instituut voor Militaire Historie - http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6. CC0 - http://creativecommons.org/publicdomain/zero/1.0/",
+            "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Creator</dt><dd lang=''>Fotovlucht Vliegbasis Soesterberg</dd><dt>Institution</dt><dd lang=''><a href='http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6' target='_blank' rel='noopener'>Nederlands Instituut voor Militaire Historie</a></dd><dt>Country</dt><dd lang=''>Netherlands</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-zero'/>CC0</a></dd></dl>",
+            "ebucoreHasMimeType": "text/html",
+            "ebucoreFileByteSize": 0
+          },
+          {
+            "about": "https://images.memorix.nl/nda/thumb/fullsize/010a31d7-9316-54d7-6ad0-83b9914688d9.jpg",
+            "textAttributionSnippet": " - https://www.europeana.eu/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6. Fotovlucht Vliegbasis Soesterberg. Nederlands Instituut voor Militaire Historie - http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6. CC0 - http://creativecommons.org/publicdomain/zero/1.0/",
+            "htmlAttributionSnippet": "<link rel='stylesheet' type='text/css' href='https://api.europeana.eu/attribution/style.css'/><dl class='europeana-attribution' lang='en'><dt>Creator</dt><dd lang=''>Fotovlucht Vliegbasis Soesterberg</dd><dt>Institution</dt><dd lang=''><a href='http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6' target='_blank' rel='noopener'>Nederlands Instituut voor Militaire Historie</a></dd><dt>Country</dt><dd lang=''>Netherlands</dd><dt>Rights</dt><dd><a href='http://creativecommons.org/publicdomain/zero/1.0/' target='_blank' rel='noopener'><span class='icon-cc'/><span class='icon-zero'/>CC0</a></dd></dl>",
+            "dctermsIsReferencedBy": [
+              "https://iiif.europeana.eu/presentation/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6/manifest"
+            ],
+            "ebucoreHasMimeType": "image/jpeg",
+            "ebucoreFileByteSize": 157858,
+            "ebucoreWidth": 795,
+            "ebucoreHeight": 1000,
+            "edmHasColorSpace": "sRGB",
+            "edmComponentColor": [
+              "#FFEBCD",
+              "#8B0000",
+              "#FFFAFA",
+              "#FFEFD5",
+              "#FFD700",
+              "#E9967A"
+            ],
+            "ebucoreOrientation": "portrait"
+          },
+          {
+            "about": "https://iiif.europeana.eu/presentation/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6/manifest",
+            "rdfType": "http://iiif.io/api/presentation/3#Manifest"
+          }
+        ]
+      }
+    ],
+    "edmDatasetName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+    "europeanaAggregation": {
+      "about": "/aggregation/europeana/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+      "aggregatedCHO": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+      "edmCountry": {
+        "def": ["Netherlands"]
+      },
+      "edmLanguage": {
+        "def": ["nl"]
+      },
+      "edmPreview": "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fimages.memorix.nl%2Fnda%2Fthumb%2F640x480%2F010a31d7-9316-54d7-6ad0-83b9914688d9.jpg&type=IMAGE",
+      "edmLandingPage": "https://www.europeana.eu/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+      "dqvHasQualityAnnotation": [
+        "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6#contentTier",
+        "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6#metadataTier"
+      ]
+    },
+    "europeanaCollectionName": ["2021650_Ag_NL_DigitaleCollectie_nimh"],
+    "europeanaCompleteness": 10,
+    "organizations": [
+      {
+        "about": "http://data.europeana.eu/organization/1482250000004671093",
+        "prefLabel": {
+          "en": ["Dutch Collections for Europe"]
+        }
+      },
+      {
+        "about": "http://data.europeana.eu/organization/1482250000004511854",
+        "prefLabel": {
+          "en": ["Netherlands Institute for Military History"],
+          "nl": ["Nederlands Instituut voor Militaire Historie"]
+        }
+      }
+    ],
+    "providedCHOs": [
+      {
+        "about": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6"
+      }
+    ],
+    "proxies": [
+      {
+        "about": "/proxy/europeana/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+        "dcIdentifier": {
+          "def": [
+            "http://nimh-beeldbank.defensie.nl/memorix/0000ee69-1b9e-6823-478f-c88af61736c6"
+          ]
+        },
+        "proxyIn": [
+          "/aggregation/europeana/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6"
+        ],
+        "proxyFor": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+        "lineage": [
+          "/proxy/provider/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6"
+        ],
+        "europeanaProxy": true
+      },
+      {
+        "about": "/proxy/provider/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+        "dcCreator": {
+          "def": ["Fotovlucht Vliegbasis Soesterberg"]
+        },
+        "dcDescription": {
+          "def": [
+            "Een Agusta Bell AB-412SP van 303 Squadron boven het betonningsvaartuig Terschelling (1988-) van Rijkswaterstaat, ingedeeld bij de Kustwacht, tijdens de\n          reddingsoefening 'Get Wet'.&nbsp;",
+            "Een Agusta Bell AB-412SP van het 303 squadron van de Koninklijke Luchtmacht hangt boven het schip de 'Terschelling' van de kustwacht, tijdens de oefening 'Get wet' boven de\n          Noordzee."
+          ]
+        },
+        "dcIdentifier": {
+          "def": ["2156_018660"]
+        },
+        "dcSubject": {
+          "def": [
+            "R-02",
+            "Koninklijke Luchtmacht, squadrons Koninklijke Luchtmacht, 303 Squadron (KLu)",
+            "kustwacht"
+          ]
+        },
+        "dcType": {
+          "def": ["Digitaal fotobestand"]
+        },
+        "dctermsCreated": {
+          "def": ["2003-09-03 /"]
+        },
+        "dctermsIsPartOf": {
+          "def": ["Luchtfotoarchief Vliegbasis Soesterberg"]
+        },
+        "dctermsSpatial": {
+          "def": ["Noordzee, Nederland"]
+        },
+        "proxyIn": [
+          "/aggregation/provider/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6"
+        ],
+        "proxyFor": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6",
+        "edmType": "IMAGE",
+        "europeanaProxy": false
+      }
+    ],
+    "qualityAnnotations": [
+      {
+        "about": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6#contentTier",
+        "created": "2023-08-01T14:07:27.421851Z",
+        "target": [
+          "/aggregation/provider/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6"
+        ],
+        "body": "http://www.europeana.eu/schemas/epf/contentTier2"
+      },
+      {
+        "about": "/item/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6#metadataTier",
+        "created": "2023-08-01T14:07:27.421873Z",
+        "target": [
+          "/aggregation/provider/2021650/memorix_0000ee69_1b9e_6823_478f_c88af61736c6"
+        ],
+        "body": "http://www.europeana.eu/schemas/epf/metadataTier0"
+      }
+    ],
+    "timestamp_created": "2022-03-02T15:35:41.563Z",
+    "timestamp_created_epoch": 1646235341563,
+    "timestamp_update": "2023-08-01T14:02:32.057Z",
+    "timestamp_update_epoch": 1690898552057,
+    "type": "IMAGE"
+  }
+}
