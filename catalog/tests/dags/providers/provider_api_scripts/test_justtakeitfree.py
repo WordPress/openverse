@@ -57,7 +57,7 @@ def test_get_record_data():
             "https://creativecommons.org/licenses/by/4.0/"
         ),
         "raw_tags": ["Baturyn fortress", "Baturyn citadel", "cossack fortress"],
-        "thumbnail": "https://justtakeitfree.com/photos/2_800.jpg",
+        "thumbnail_url": "https://justtakeitfree.com/photos/2_800.jpg",
         "filesize": 100,
     }
 
