@@ -34,6 +34,9 @@ export const parseFetchingError = (
     if (isValidErrorCode(error.code)) {
       fetchingError.code = error.code
     }
+    if (error.response?.status) {
+      fetchingError.statusCode = error.response.status
+    }
     const responseData = error?.response?.data
     // Use the message returned by the API.
     if (
