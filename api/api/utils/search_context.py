@@ -44,7 +44,12 @@ class SearchContext:
             # cf: https://github.com/WordPress/openverse/issues/2154
             Q(
                 "terms",
-                **{"identifier.keyword": [result.identifier for result in results]},
+                **{"identifier.keyword": all_result_identifiers},
+            )
+            if len(results) > 1
+            else Q(
+                "term",
+                **{"identifier.keyword": all_result_identifiers[0]},
             )
         )
 
