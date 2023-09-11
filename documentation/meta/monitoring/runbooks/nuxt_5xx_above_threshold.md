@@ -13,8 +13,11 @@ Alarm link:
 
 Confirm there is not an outage.
 
-Determine the source of the 5XX errors (this can be checked by observing paths
-in the Cloudflare logs).
+Check if the connection to the API from Nuxt has been broken, which can result
+in Nuxt returning 5XX errors.
+
+If the connection is present and working, try to determine the source of the 5XX
+errors (this can be checked by observing paths in the Cloudflare logs).
 
 - If the API requests are returning 2XX responses, the severity is low. But you
   should continue to investigate the source of 5XX errors, which could be an
