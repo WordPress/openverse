@@ -24,7 +24,6 @@ export const image = {
   attribution:
     '"Cat cafe in Seoul" by toel-uru is licensed under CC BY-NC-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.0/.',
   fields_matched: ["description", "tags.name", "title"],
-  mature: false,
   height: 681,
   width: 1024,
   thumbnail:

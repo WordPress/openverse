@@ -18,7 +18,7 @@ import {
  *
  * @param id - the ID of the item for which to calculate the flags
  * @param frac - the fraction of items to probabilistically flag
- * @returns an array of strings representing the mature flags
+ * @returns an array of strings representing the sensitivity flags
  */
 export const getFakeSensitivities = (id: string, frac = 0.5): Sensitivity[] => {
   const random = prng(hash(id))()
@@ -39,6 +39,6 @@ export const getFakeSensitivities = (id: string, frac = 0.5): Sensitivity[] => {
     sensitivity.push(TEXT_FILTERED)
   }
 
-  log("Fake mature", id, sensitivity)
+  log("Fake sensitive", id, sensitivity)
   return sensitivity
 }

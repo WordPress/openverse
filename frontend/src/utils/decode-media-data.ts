@@ -101,7 +101,7 @@ export const decodeMediaData = <T extends Media>(
   media: ApiMedia,
   mediaType: T["frontendMediaType"]
 ): T => {
-  // Fake ~50% of results as mature.
+  // Fake ~50% of results as sensitive.
   const featureFlagStore = useFeatureFlagStore()
   const sensitivity =
     featureFlagStore.isOn("fake_sensitive") &&

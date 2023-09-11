@@ -1,8 +1,8 @@
 export const DMCA = "dmca"
-export const MATURE = "mature"
+export const SENSITIVE = "sensitive"
 export const OTHER = "other"
 
-export const reasons = [DMCA, MATURE, OTHER] as const
+export const reasons = [DMCA, SENSITIVE, OTHER] as const
 
 export type ReportReason = (typeof reasons)[number]
 

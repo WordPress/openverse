@@ -58,13 +58,13 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
   return expect(newPage.url()).toContain("https://docs.google.com/forms")
 }
 
-// todo: Test a mature report with the optional description field
-const submitMatureContentReport = async (
+// todo: Test a sensitive report with the optional description field
+const submitSensitiveContentReport = async (
   page: Page,
   context: BrowserContext
 ) => {
   await mockReportingEndpoint(context)
-  await page.click('text="Contains mature content"')
+  await page.click('text="Contains sensitive content"')
   const response = await submitApiReport(page)
   return expect(response.status()).toBe(200)
 }
@@ -86,7 +86,7 @@ test.beforeEach(async ({ context }) => {
 
 const reports = {
   dmca: submitDmcaReport,
-  mature: submitMatureContentReport,
+  sensitive: submitSensitiveContentReport,
   other: submitOtherReport,
 }
 

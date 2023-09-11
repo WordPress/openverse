@@ -333,10 +333,6 @@
       medium: "Medium",
       large: "Large",
     },
-    mature: {
-      title: "Search Settings",
-      enable: "Enable Mature Content",
-    },
     safeBrowsing: {
       title: "Safe Browsing",
       desc: "Content marked as {sensitive} is not shown by default.",
@@ -512,8 +508,8 @@
           form: "DMCA form",
           open: "Open form",
         },
-        mature: {
-          option: "Contains mature content",
+        sensitive: {
+          option: "Contains sensitive content",
           subLabel: "Optional",
           placeholder: "Optionally, provide a description.",
         },
