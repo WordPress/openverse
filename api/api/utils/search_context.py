@@ -1,12 +1,15 @@
 from dataclasses import asdict, dataclass
-from typing import Self
+from typing import Protocol, Self
 
 from django.conf import settings
 
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.response import Hit
 
 from api.constants.media_types import OriginIndex
+
+
+class Identifiable(Protocol):
+    identifier: str
 
 
 @dataclass
@@ -22,7 +25,7 @@ class SearchContext:
     """Subset of result identifiers for results with sensitive textual content."""
 
     @classmethod
-    def build(cls, results: list[Hit], origin_index: OriginIndex) -> Self:
+    def build(cls, results: list[Identifiable], origin_index: OriginIndex) -> Self:
         if not results:
             return cls(list(), set())
 
