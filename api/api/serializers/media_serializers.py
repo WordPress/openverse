@@ -365,6 +365,17 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
         fields = ["identifier", "reason", "description"]
         read_only_fields = ["identifier"]
 
+    def to_internal_value(self, data):
+        """
+        Map data before validation.
+
+        See ``MediaReportRequestSerializer::_map_reason`` docstring for
+        further explanation.
+        """
+
+        data["reason"] = self._map_reason(data["reason"])
+        return super().to_internal_value(data)
+
     def validate(self, attrs):
         if (
             attrs["reason"] == "other"
@@ -373,7 +384,36 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Description must be at least be 20 characters long"
             )
+
         return attrs
+
+    def _map_reason(self, value):
+        """
+        Map `sensitive` to `mature` of forwards compatibility.
+
+        This is an interim implementation until the API is updated
+        to use the new "sensitive" terminology.
+
+        Once the API is updated to use "sensitive" as the designator
+        rather than the current "mature" term, this function should
+        be updated to reverse the mapping, that is, map `mature` to
+        `sensitive`, for backwards compatibility.
+
+        Note: This cannot be implemented as a simpler `validate_reason` method
+        on the serializer because field validation runs _before_ validators
+        declared on the serializer. This means the choice field's validation
+        will complain about `reason` set to the incorrect value before we have
+        a chance to map it to the correct value.
+
+        This could be mitigated by adding all values, current, future, and
+        deprecated, to the model field. However, that requires a migration
+        each time we make that change, and would send an incorrect message
+        about our data expectations. It's cleaner and more consistent to map
+        the data up-front, at serialization time, to prevent any confusion at
+        the data model level.
+        """
+
+        return "mature" if value == "sensitive" else value
 
 
 ########################
