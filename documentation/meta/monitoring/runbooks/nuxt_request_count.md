@@ -15,7 +15,8 @@ Alarm link:
 in Cloudflare to determine if the increase is organic or due to a botnet.
 
 - If the increase is organic, we must update our baseline expectation of our
-  services' usages.
+  services' usages. The alarm thresholds should be updated if our services see
+  higher usage frequently and consistently.
 - If the increase is a botnet attack, we need to block these agents to restore
   usage to the usual level.
 
