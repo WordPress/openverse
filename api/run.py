@@ -8,6 +8,7 @@ if __name__ == "__main__":
         "conf.asgi:application",
         host="0.0.0.0",
         port=8000,
+        workers=1,
         reload=os.getenv("ENVIRONMENT") == "local",
         log_level="debug",
         log_config={
