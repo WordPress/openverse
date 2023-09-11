@@ -12,7 +12,8 @@ import audio from "~~/test/playwright/utils/audio"
 
 for (const dir of languageDirections) {
   breakpoints.describeXs(async ({ expectSnapshot }) => {
-    test(`Global audio player on the search page - ${dir}`, async ({
+    // https://github.com/WordPress/openverse/issues/3009
+    test.skip(`Global audio player on the search page - ${dir}`, async ({
       page,
     }) => {
       await dismissTranslationBanner(page)
