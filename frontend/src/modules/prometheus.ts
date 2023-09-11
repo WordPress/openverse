@@ -1,6 +1,6 @@
 import http from "http"
 
-import Prometheus from "prom-client"
+import { register } from "prom-client"
 import promBundle from "express-prom-bundle"
 
 import { searchTypes } from "../../src/constants/media"
@@ -57,7 +57,7 @@ const PrometheusModule: Module = function () {
   this.nuxt.hook("close", () => {
     metricsServer?.close()
     // Clear registry so that metrics can re-register when the server restarts in development
-    Prometheus.register.clear()
+    register.clear()
   })
 
   this.nuxt.hook("listen", () => {
@@ -66,9 +66,9 @@ const PrometheusModule: Module = function () {
     metricsServer = http
       .createServer(async (_, res) => {
         res.writeHead(200, {
-          "Content-Type": Prometheus.register.contentType,
+          "Content-Type": register.contentType,
         })
-        res.end(await Prometheus.register.metrics())
+        res.end(await register.metrics())
       })
       .listen(parseFloat(process.env.METRICS_PORT || "54641"), "0.0.0.0")
   })

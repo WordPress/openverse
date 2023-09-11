@@ -50,27 +50,6 @@ export const project: TSESLint.Linter.Config = {
       parser: "jsonc-eslint-parser",
     },
     {
-      files: ["frontend/**"],
-      settings: {
-        "import/resolver": {
-          typescript: {
-            project: "frontend/tsconfig.json",
-            extensions: [".js", ".ts", ".vue", ".png"],
-          },
-        },
-      },
-    },
-    {
-      files: ["packages/**"],
-      settings: {
-        "import/resolver": {
-          typescript: {
-            project: "packages/*/tsconfig.json",
-          },
-        },
-      },
-    },
-    {
       env: { jest: true },
       files: ["packages/**/*/test", "frontend/test/unit/**"],
       plugins: ["jest"],
