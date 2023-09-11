@@ -27,6 +27,14 @@ gone, the client also gets removed. Any time a request for a client is made,
 if a client already exists for the current loop, the client is reused. If one
 has not been created for the loop, then we create a new one.
 
+While each client's close function is registered to the application's shutdown
+hook, an additional complication arises due to the close function's reliance
+on the original event loop it was created inside still running at close time.
+Because of the `async_to_sync` behaviour described above, it isn't possible to
+rely on the application's shutdown to handle closing, a context manager to
+open and close resources used inside async contexts in Openverse is exported
+from ``api.utils.asgiref``. See that module for further explanation.
+
 [^shared-client-benefits]:
     https://www.python-httpx.org/advanced/#client-instances
 
@@ -69,6 +77,8 @@ async def get_httpx_client() -> httpx.AsyncClient:
 
     async with _LOCKS[loop]:
         client = _CLIENTS.get(loop)
+
+        create_client = False
 
         if not client:
             create_client = True

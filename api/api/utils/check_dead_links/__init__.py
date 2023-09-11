@@ -6,10 +6,10 @@ from django.conf import settings
 
 import django_redis
 import httpx
-from asgiref.sync import async_to_sync
 from decouple import config
 from elasticsearch_dsl.response import Hit
 
+from api.utils.asgiref import async_to_sync
 from api.utils.check_dead_links.provider_status_mappings import provider_status_mappings
 from api.utils.dead_link_mask import get_query_mask, save_query_mask
 from api.utils.httpx import get_httpx_client
@@ -25,7 +25,6 @@ HEADERS = {
 
 
 def _get_cached_statuses(redis, image_urls):
-    return [None for _ in range(len(image_urls))]
     cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
     return [int(b.decode("utf-8")) if b is not None else None for b in cached_statuses]
 
