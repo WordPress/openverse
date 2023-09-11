@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 def test_no_results(media_type_config):
     search_context = SearchContext.build([], media_type_config.origin_index)
 
-    assert search_context == SearchContext(set(), set())
+    assert search_context == SearchContext(list(), set())
 
 
 @pytest.mark.parametrize(
@@ -68,7 +68,7 @@ def test_sensitive_text(
         search_context = SearchContext.build(results, media_type_config.origin_index)
 
     assert search_context == SearchContext(
-        {r.identifier for r in results},
+        [r.identifier for r in results],
         {maybe_sensitive_text_model.identifier}
         if has_sensitive_text and setting_enabled
         else set(),
