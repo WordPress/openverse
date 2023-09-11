@@ -38,8 +38,8 @@ export interface MediaState {
     image: MediaStoreResult
   }
   mediaFetchState: {
-    audio: FetchState<FetchingError>
-    image: FetchState<FetchingError>
+    audio: FetchState
+    image: FetchState
   }
   currentPage: number
 }
@@ -142,12 +142,12 @@ export const useMediaStore = defineStore("media", {
      * Search fetching state for selected search type. For 'All content', aggregates
      * the values for supported media types.
      */
-    fetchState(): FetchState<FetchingError> {
+    fetchState(): FetchState {
       if (this._searchType === ALL_MEDIA) {
         /**
          * For all_media, we return 'All media fetching error' if all types have some kind of error.
          */
-        const atLeastOne = (property: keyof FetchState<FetchingError>) =>
+        const atLeastOne = (property: keyof FetchState) =>
           supportedMediaTypes.some(
             (type) => this.mediaFetchState[type][property]
           )

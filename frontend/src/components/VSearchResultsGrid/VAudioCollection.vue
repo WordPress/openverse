@@ -39,8 +39,6 @@ import VLoadMore from "~/components/VLoadMore.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VSnackbar from "~/components/VSnackbar.vue"
 
-import type { NuxtError } from "@nuxt/types"
-
 /**
  * This component shows a loading skeleton if the results are not yet loaded,
  * and then shows the list of audio, with the Load more button if needed.
@@ -66,7 +64,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState<NuxtError> | FetchState>,
+      type: Object as PropType<FetchState>,
       required: true,
     },
     /**

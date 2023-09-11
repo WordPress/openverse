@@ -13,7 +13,7 @@
 import { defineComponent, PropType } from "vue"
 
 import type { ImageDetail } from "~/types/media"
-import type { FetchingError, FetchState } from "~/types/fetch-state"
+import type { FetchState } from "~/types/fetch-state"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
@@ -26,7 +26,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState<FetchingError>>,
+      type: Object as PropType<FetchState>,
       required: true,
     },
     searchTerm: {

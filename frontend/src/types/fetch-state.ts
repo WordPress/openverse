@@ -3,16 +3,6 @@ import type { SupportedSearchType } from "~/constants/media"
 
 import type { NuxtError } from "@nuxt/types"
 
-export interface BaseFetchState {
-  isFetching: boolean
-  hasStarted?: boolean
-  isFinished?: boolean
-}
-
-export interface FetchState<ErrorType = string> extends BaseFetchState {
-  fetchingError: null | ErrorType
-}
-
 /**
  * Describes the kind of API request that was made.
  */
@@ -37,4 +27,11 @@ export interface FetchingError extends NuxtError {
    * Additional details about the error, e.g. the search term.
    */
   details?: Record<string, string>
+}
+
+export interface FetchState {
+  isFetching: boolean
+  hasStarted?: boolean
+  isFinished?: boolean
+  fetchingError: FetchingError | null
 }

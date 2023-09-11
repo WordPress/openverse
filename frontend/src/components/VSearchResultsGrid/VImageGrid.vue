@@ -33,14 +33,12 @@ import { computed, defineComponent, PropType } from "vue"
 import { useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
-import type { FetchingError, FetchState } from "~/types/fetch-state"
+import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
-
-import type { NuxtError } from "@nuxt/types"
 
 export default defineComponent({
   name: "ImageGrid",
@@ -61,9 +59,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<
-        FetchState<FetchingError> | FetchState<NuxtError> | FetchState
-      >,
+      type: Object as PropType<FetchState>,
       required: true,
     },
     imageGridLabel: {
