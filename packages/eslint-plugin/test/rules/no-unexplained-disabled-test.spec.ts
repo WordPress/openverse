@@ -50,6 +50,40 @@ const invalidTestCases = [
     `,
     errors: [{ messageId: "missingIssueComment" } as const],
   },
+  {
+    name: "Nested blocks with multiple skipped tests shows multiple errors",
+    code: `
+      describe("block", () => {
+        test("no skipped", () => {})
+
+        test.skip("first skipped", () => {})
+
+        test("also not skipped", () => {})
+
+        test.skip("second skipped", () => {})
+      })
+    `,
+    errors: [
+      { messageId: "missingIssueComment" },
+      { messageId: "missingIssueComment" },
+    ] as const,
+  },
+  {
+    name: "Skipped external block and skipped nested block have separate errors",
+    code: `
+      test.skip("external skip", () => {})
+
+      describe("block", () => {
+        test("not skipped", () => {})
+
+        test.skip("nested skip", () => {})
+      })
+    `,
+    errors: [
+      { messageId: "missingIssueComment" },
+      { messageId: "missingIssueComment" },
+    ] as const,
+  },
 ]
 
 const validTestCases = [
@@ -112,6 +146,29 @@ const validTestCases = [
         ])('.add(%i, %i)', async (a, b, expected) => {
         expect(a + b).toBe(expected) // will not be run
         })
+    `,
+  },
+  {
+    name: "Nested skip valid with comment on skipped test",
+    code: `
+      describe("group of tests", () => {
+        // https://github.com/WordPress/openverse/issues/2573
+        test.skip("skipped", () => {})
+      })
+    `,
+  },
+  {
+    name: "Nested and external blocks do not error",
+    code: `
+      // https://github.com/WordPress/openverse/issues/2573
+      test.skip("external skip", () => {})
+
+      describe("block", () => {
+        test("not skipped", () => {})
+
+        // https://github.com/WordPress/openverse/issues/2573
+        test.skip("nested skip", () => {})
+      })
     `,
   },
 ]

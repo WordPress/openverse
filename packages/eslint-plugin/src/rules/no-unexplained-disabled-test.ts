@@ -25,9 +25,7 @@ export const noUnexplainedDisabledTest = OpenverseRule<[], MessageIds>({
   create(context) {
     const sourceCode = context.getSourceCode()
 
-    const hasIssueCommentWithLink = (
-      node: TSESTree.Node | TSESTree.Comment
-    ) => {
+    const hasIssueCommentWithLink = (node: TSESTree.Node) => {
       const commentsBeforeNode = sourceCode.getCommentsBefore(node)
       for (const comment of commentsBeforeNode) {
         if (/\bhttps:\/\/github\.com\/.*?\/issues\/\d+\b/.test(comment.value)) {
@@ -38,14 +36,14 @@ export const noUnexplainedDisabledTest = OpenverseRule<[], MessageIds>({
       return false
     }
 
-    const testSkipRegex = /test\.skip\s*\(/g
-    const testSkipEachRegex = /test\.skip\.each\s*\(/g
-    const testConcurrentSkipEachRegex = /test\.concurrent\.skip\.each\s*\(/g
-    const testTodoRegex = /test\.todo\s*\(/g
-    const itSkipRegex = /it\.skip\s*\(/g
-    const itEachSkipRegex = /it\.each\.skip\s*\(/g
-    const describeSkipRegex = /describe\.skip\s*\(/g
-    const describeEachSkipRegex = /describe\.each\.skip\s*\(/g
+    const testSkipRegex = /^test\.skip\s*\(/g
+    const testSkipEachRegex = /^test\.skip\.each\s*\(/g
+    const testConcurrentSkipEachRegex = /^test\.concurrent\.skip\.each\s*\(/g
+    const testTodoRegex = /^test\.todo\s*\(/g
+    const itSkipRegex = /^it\.skip\s*\(/g
+    const itEachSkipRegex = /^it\.each\.skip\s*\(/g
+    const describeSkipRegex = /^describe\.skip\s*\(/g
+    const describeEachSkipRegex = /^describe\.each\.skip\s*\(/g
 
     return {
       CallExpression(node) {
