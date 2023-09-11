@@ -15,7 +15,7 @@ class SearchContext:
     # to convey that it is the Openverse result identifier and
     # not the document _id
 
-    all_result_identifiers: set[str]
+    all_result_identifiers: list[str]
     """All the result identifiers gathered for the search."""
 
     sensitive_text_result_identifiers: set[str]
@@ -24,9 +24,9 @@ class SearchContext:
     @classmethod
     def build(cls, results: list[Hit], origin_index: OriginIndex) -> Self:
         if not results:
-            return cls(set(), set())
+            return cls(list(), set())
 
-        all_result_identifiers = {r.identifier for r in results}
+        all_result_identifiers = [result.identifier for result in results]
 
         if not settings.ENABLE_FILTERED_INDEX_QUERIES:
             return cls(all_result_identifiers, set())
