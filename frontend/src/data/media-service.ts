@@ -99,7 +99,7 @@ class MediaService<T extends Media> {
     )) as AxiosResponse<MediaResult<DetailFromMediaType<T>[]>>
     return {
       ...res.data,
-      results: res.data.results.map((item) =>
+      results: (res.data.results ?? []).map((item) =>
         decodeMediaData(item, this.mediaType)
       ) as DetailFromMediaType<T>[],
     }
