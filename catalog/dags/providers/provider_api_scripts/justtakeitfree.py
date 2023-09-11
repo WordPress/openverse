@@ -72,7 +72,7 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
             "creator_url": self.creator_url,
             "raw_tags": data.get("tags"),
             "filesize": self.get_file_info(url),
-            "thumbnail": data.get("preview_link"),
+            "thumbnail_url": data.get("preview_link"),
         }
         return {k: v for k, v in raw_record_data.items() if v is not None}
 
