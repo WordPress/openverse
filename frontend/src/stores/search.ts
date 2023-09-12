@@ -69,7 +69,7 @@ export interface SearchState {
  * `INCLUDE_SENSITIVE_QUERY_PARAM` is never added to the frontend search query. It is added
  * to the API search query if the setting is `on` in the featureFlagStore.
  */
-function computeQueryParams(
+export function computeQueryParams(
   searchType: SearchType,
   filters: Filters,
   searchTerm: string,
@@ -213,10 +213,18 @@ export const useSearchStore = defineStore("search", {
       query,
     }: { type?: SearchType; query?: PaginatedSearchQuery } = {}): string {
       const searchType = type || this.searchType
-      const queryParams =
-        query ?? type === undefined
-          ? this.frontendSearchUrlParams
-          : computeQueryParams(type, this.filters, this.searchTerm, "frontend")
+      let queryParams = query
+      if (queryParams === undefined) {
+        queryParams =
+          searchType === undefined
+            ? this.frontendSearchUrlParams
+            : computeQueryParams(
+                searchType,
+                this.filters,
+                this.searchTerm,
+                "frontend"
+              )
+      }
 
       return this.$nuxt.localePath({
         path: searchPath(searchType),
@@ -477,7 +485,7 @@ export const useSearchStore = defineStore("search", {
       filterCategory: FilterCategory
     ): boolean | undefined {
       if (!["licenseTypes", "licenses"].includes(filterCategory)) {
-        return
+        return false
       }
       if (item.code === "commercial" || item.code === "modification") {
         const targetCode = {
