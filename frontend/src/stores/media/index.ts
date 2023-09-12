@@ -3,7 +3,6 @@ import { defineStore } from "pinia"
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import { isRetriable, parseFetchingError } from "~/utils/errors"
-import prepareSearchQueryParams from "~/utils/prepare-search-query-params"
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -24,6 +23,8 @@ import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
+
+import { PaginatedSearchQuery } from "~/types/search"
 
 export type MediaStoreResult = {
   count: number
@@ -442,9 +443,8 @@ export const useMediaStore = defineStore("media", {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
     }) {
-      const queryParams = prepareSearchQueryParams({
-        ...useSearchStore().searchQueryParams,
-      })
+      const queryParams = useSearchStore()
+        .searchQueryParams as PaginatedSearchQuery
       let page = 1
       if (shouldPersistMedia) {
         /**

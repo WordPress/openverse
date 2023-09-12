@@ -31,7 +31,7 @@ describe("Search Store", () => {
   describe("getters", () => {
     /**
      * Check for some special cases:
-     * - `fetch_sensitive` feature flag and `searchBy` filter.
+     * - `fetch_sensitive` feature flag filter.
      * - several options for single filter.
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
@@ -39,7 +39,6 @@ describe("Search Store", () => {
     it.each`
       sensitivityFlag | query                                          | searchType   | filterCount
       ${"on"}         | ${{ licenses: ["by"] }}                        | ${IMAGE}     | ${1}
-      ${"off"}        | ${{ licenses: ["by"], searchBy: ["creator"] }} | ${ALL_MEDIA} | ${2}
       ${"off"}        | ${{ licenses: ["cc0", "pdm", "by", "by-nc"] }} | ${ALL_MEDIA} | ${4}
       ${"off"}        | ${{ lengths: ["medium"] }}                     | ${AUDIO}     | ${1}
       ${"off"}        | ${{ imageExtensions: ["svg"] }}                | ${IMAGE}     | ${1}
@@ -115,16 +114,13 @@ describe("Search Store", () => {
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
         const filtersForDisplay = searchStore.searchFilters
-        // `searchBy` filter is not displayed
-        const expectedFilterCount = Math.max(0, filterTypeCount - 1)
-        expect(Object.keys(filtersForDisplay).length).toEqual(
-          expectedFilterCount
-        )
+
+        expect(Object.keys(filtersForDisplay).length).toEqual(filterTypeCount)
       }
     )
     /**
      * Check for some special cases:
-     * - `fetch_sensitive` feature flag and `searchBy` filter.
+     * - `fetch_sensitive` feature flag.
      * - several options for single filter.
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
@@ -132,18 +128,17 @@ describe("Search Store", () => {
      * - more than one value for a parameter in the query (q=cat&q=dog).
      */
     it.each`
-      sensitivityFlag | query                                               | expectedQueryParams                                                     | searchType
-      ${"on"}         | ${{ q: "cat", license: "by" }}                      | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
-      ${"on"}         | ${{ license: "by" }}                                | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
-      ${"off"}        | ${{ license: "" }}                                  | ${{ q: "" }}                                                            | ${IMAGE}
-      ${"off"}        | ${{ q: "cat", license: "by", searchBy: "creator" }} | ${{ q: "cat", license: "by", searchBy: "creator" }}                     | ${ALL_MEDIA}
-      ${"off"}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
-      ${"off"}        | ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat" }}                                                         | ${IMAGE}
-      ${"off"}        | ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
-      ${"off"}        | ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
-      ${"off"}        | ${{ q: "cat", extension: "mp3" }}                   | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
-      ${"off"}        | ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat" }}                                                         | ${AUDIO}
-      ${"off"}        | ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}    | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
+      sensitivityFlag | query                                            | expectedQueryParams                                                     | searchType
+      ${"on"}         | ${{ q: "cat", license: "by" }}                   | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
+      ${"on"}         | ${{ license: "by" }}                             | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
+      ${"off"}        | ${{ license: "" }}                               | ${{ q: "" }}                                                            | ${IMAGE}
+      ${"off"}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}     | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
+      ${"off"}        | ${{ q: "cat", length: "medium" }}                | ${{ q: "cat" }}                                                         | ${IMAGE}
+      ${"off"}        | ${{ q: "cat", length: "medium" }}                | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
+      ${"off"}        | ${{ q: "cat", extension: "svg" }}                | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
+      ${"off"}        | ${{ q: "cat", extension: "mp3" }}                | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
+      ${"off"}        | ${{ q: "cat", extension: "svg" }}                | ${{ q: "cat" }}                                                         | ${AUDIO}
+      ${"off"}        | ${{ q: ["cat", "dog"], license: ["by", "cc0"] }} | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
     `(
       "returns correct searchQueryParams and filter status for $query and searchType $searchType",
       ({ sensitivityFlag, query, expectedQueryParams, searchType }) => {
@@ -201,7 +196,7 @@ describe("Search Store", () => {
     it.each`
       sensitivityFlag | query                                                      | path                | searchType
       ${"off"}        | ${{ license: "cc0,by", q: "cat" }}                         | ${"/search/"}       | ${ALL_MEDIA}
-      ${"off"}        | ${{ searchBy: "creator", q: "dog" }}                       | ${"/search/image/"} | ${IMAGE}
+      ${"off"}        | ${{ q: "dog" }}                                            | ${"/search/image/"} | ${IMAGE}
       ${"on"}         | ${{ [INCLUDE_SENSITIVE_QUERY_PARAM]: "true", q: "galah" }} | ${"/search/audio/"} | ${AUDIO}
       ${"off"}        | ${{ length: "medium" }}                                    | ${"/search/image"}  | ${IMAGE}
     `(
@@ -227,7 +222,6 @@ describe("Search Store", () => {
       filters                                                               | query
       ${[["licenses", "by"], ["licenses", "by-nc-sa"]]}                     | ${["license", "by,by-nc-sa"]}
       ${[["licenseTypes", "commercial"], ["licenseTypes", "modification"]]} | ${["license_type", "commercial,modification"]}
-      ${[["searchBy", "creator"]]}                                          | ${["searchBy", "creator"]}
       ${[["sizes", "large"]]}                                               | ${["size", undefined]}
     `(
       "toggleFilter updates the query values to $query",
@@ -270,7 +264,6 @@ describe("Search Store", () => {
       ${"licenseTypes"}    | ${0}
       ${"imageExtensions"} | ${0}
       ${"imageCategories"} | ${0}
-      ${"searchBy"}        | ${0}
       ${"aspectRatios"}    | ${0}
       ${"sizes"}           | ${0}
     `(
@@ -361,7 +354,6 @@ describe("Search Store", () => {
       ${"licenseTypes"}    | ${"modification"} | ${1}
       ${"imageExtensions"} | ${"svg"}          | ${3}
       ${"imageCategories"} | ${"photograph"}   | ${0}
-      ${"searchBy"}        | ${"creator"}      | ${0}
       ${"aspectRatios"}    | ${"tall"}         | ${0}
       ${"sizes"}           | ${"medium"}       | ${1}
     `(
@@ -417,12 +409,12 @@ describe("Search Store", () => {
 
     it.each`
       searchType   | nextSearchType | expectedFilterCount
-      ${AUDIO}     | ${IMAGE}       | ${24}
-      ${IMAGE}     | ${ALL_MEDIA}   | ${11}
-      ${IMAGE}     | ${AUDIO}       | ${29}
-      ${ALL_MEDIA} | ${VIDEO}       | ${11}
-      ${VIDEO}     | ${AUDIO}       | ${29}
-      ${ALL_MEDIA} | ${IMAGE}       | ${24}
+      ${AUDIO}     | ${IMAGE}       | ${23}
+      ${IMAGE}     | ${ALL_MEDIA}   | ${10}
+      ${IMAGE}     | ${AUDIO}       | ${28}
+      ${ALL_MEDIA} | ${VIDEO}       | ${10}
+      ${VIDEO}     | ${AUDIO}       | ${28}
+      ${ALL_MEDIA} | ${IMAGE}       | ${23}
     `(
       "changing searchType from $searchType clears all but $expectedFilterCount $nextSearchType filters",
       async ({ searchType, nextSearchType, expectedFilterCount }) => {
