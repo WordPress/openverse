@@ -214,7 +214,7 @@ describe("Media Store", () => {
         },
         hasStarted: true,
         isFetching: false,
-        isFinished: false,
+        isFinished: true,
       })
     })
   })

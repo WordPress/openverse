@@ -18,7 +18,6 @@ export const singleResultMiddleware: Middleware = async ({
 
   if (process.server) {
     const media = await singleResultStore.fetch(mediaType, route.params.id)
-    await useRelatedMediaStore($pinia).fetchMedia(mediaType, route.params.id)
 
     if (!media) {
       const fetchingError = singleResultStore.fetchState.fetchingError
@@ -27,6 +26,7 @@ export const singleResultMiddleware: Middleware = async ({
         error(fetchingError ?? {})
       }
     }
+    await useRelatedMediaStore($pinia).fetchMedia(mediaType, route.params.id)
   } else {
     // Client-side rendering
     singleResultStore.setMediaById(mediaType, route.params.id)

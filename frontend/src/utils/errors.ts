@@ -70,11 +70,14 @@ const isValidErrorCode = (
 
 /**
  * Returns true if the request should be retried if error occurred on
- * the server. For 429 or 404 errors, or for NO_RESULT error,
+ * the server. For 429, 500 or 404 errors, or for NO_RESULT error,
  * the status will not change on retry, so the request should not be resent.
  * TODO: Update this function with other error codes if needed.
  */
 export const isRetriable = (error: FetchingError) => {
   const { statusCode, code } = error
-  return !(statusCode === 429 || statusCode === 404 || code === NO_RESULT)
+  return !(
+    (statusCode && [429, 404, 500].includes(statusCode)) ||
+    code === NO_RESULT
+  )
 }
