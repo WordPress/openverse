@@ -44,7 +44,8 @@ def setup_kwargs_for_media_type(
             media_type := signature(func).parameters.get("media_type")
         ) is None or media_type.kind != _ParameterKind.KEYWORD_ONLY:
             raise Exception(
-                "Improperly configured: `media_type` must be a keyword-only argument"
+                f"Improperly configured function `{func.__qualname__}`:"
+                " `media_type` must be a keyword-only argument."
             )
 
         @functools.wraps(func)
@@ -57,7 +58,10 @@ def setup_kwargs_for_media_type(
                 media_type = kwargs.get("media_type", None)
 
                 if media_type not in values_by_media_type.keys():
-                    raise ValueError(f"No values matching media type: {media_type}")
+                    raise ValueError(
+                        f"{func.__qualname__}: No values matching media type"
+                        f" `{media_type}`"
+                    )
 
                 # Get the value corresponding to the media type
                 media_info = values_by_media_type.get(media_type)
