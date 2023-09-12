@@ -63,11 +63,11 @@ export interface SearchState {
 /**
  * Builds the search query parameters for the given search type, filters, and search term.
  * `q` parameter is always included as the first query parameter.
+ * If the search type is not supported, only the `q` parameter is included.
  * Only the filters that are relevant for the search type and have a value are included.
  *
- * Some parameters are included in the query depending on the mode:
- * - `INCLUDE_SENSITIVE_QUERY_PARAM` is added to the API search query if the setting is `on`
- * in the featureFlagStore.
+ * `INCLUDE_SENSITIVE_QUERY_PARAM` is never added to the frontend search query. It is added
+ * to the API search query if the setting is `on` in the featureFlagStore.
  */
 function computeQueryParams(
   searchType: SearchType,
@@ -75,13 +75,15 @@ function computeQueryParams(
   searchTerm: string,
   mode: "frontend" | "API"
 ) {
-  // The filters object is converted to a Record<string, string> object.
-  // e.g., { licenseTypes: [{ code: "commercial", checked: true }] }
-  // => { license_type: "commercial" }
-
+  if (!isSearchTypeSupported(searchType)) {
+    return { q: searchTerm.trim() }
+  }
   // Ensure that `q` always comes first in the frontend URL.
   const search_query: SearchQuery = {
     q: searchTerm.trim(),
+    // The filters object is converted to a Record<string, string> object.
+    // e.g., { licenseTypes: [{ code: "commercial", checked: true }] }
+    // => { license_type: "commercial" }
     ...filtersToQueryData(filters, searchType),
   }
 
@@ -113,37 +115,28 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * Returns the search query parameters for API request:
-     * drops all parameters with blank values.
+     * Returns the search query parameters for API request.
      */
     searchQueryParams(state) {
-      if (isSearchTypeSupported(state.searchType)) {
-        return computeQueryParams(
-          state.searchType,
-          state.filters,
-          state.searchTerm,
-          "API"
-        )
-      } else {
-        return { q: state.searchTerm }
-      }
+      return computeQueryParams(
+        state.searchType,
+        state.filters,
+        state.searchTerm,
+        "API"
+      )
     },
 
     /**
-     * Returns the search query parameters for API request:
-     * drops all parameters with blank values.
+     * Returns the frontend search query parameters for the current search state.
+     * If the search type is not supported, returns only the `q` parameter.
      */
     frontendSearchUrlParams(state) {
-      if (isSearchTypeSupported(state.searchType)) {
-        return computeQueryParams(
-          state.searchType,
-          state.filters,
-          state.searchTerm,
-          "frontend"
-        )
-      } else {
-        return { q: state.searchTerm }
-      }
+      return computeQueryParams(
+        state.searchType,
+        state.filters,
+        state.searchTerm,
+        "frontend"
+      )
     },
 
     /**
@@ -210,7 +203,7 @@ export const useSearchStore = defineStore("search", {
       return this.getSearchPath()
     },
     /**
-     * Returns localized search path for the given search type.
+     * Returns localized frontend search path for the given search type.
      *
      * If search type is not provided, returns the path for the current search type.
      * If query is not provided, returns current query parameters.
@@ -220,21 +213,10 @@ export const useSearchStore = defineStore("search", {
       query,
     }: { type?: SearchType; query?: PaginatedSearchQuery } = {}): string {
       const searchType = type || this.searchType
-      let queryParams
-      if (!query) {
-        if (type && isSearchTypeSupported(type)) {
-          queryParams = computeQueryParams(
-            type,
-            this.filters,
-            this.searchTerm,
-            "frontend"
-          )
-        } else {
-          queryParams = this.frontendSearchUrlParams
-        }
-      } else {
-        queryParams = query
-      }
+      const queryParams =
+        query ?? type === undefined
+          ? this.frontendSearchUrlParams
+          : computeQueryParams(type, this.filters, this.searchTerm, "frontend")
 
       return this.$nuxt.localePath({
         path: searchPath(searchType),
