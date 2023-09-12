@@ -1,5 +1,4 @@
 import logging
-from dataclasses import dataclass
 
 from rest_framework import status
 from rest_framework.decorators import action
@@ -90,14 +89,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
     # Standard actions
 
     def retrieve(self, request, *_, **__):
-        @dataclass
-        class PseudoHit:  # implements Identifiable protocol
-            identifier: str
-
         instance = self.get_object()
-        hit = PseudoHit(identifier=str(instance.identifier))
-
-        search_context = SearchContext.build([hit], self.default_index).asdict()
+        search_context = SearchContext.build(
+            [str(instance.identifier)], self.default_index
+        ).asdict()
         serializer_context = search_context | self.get_serializer_context()
         serializer = self.get_serializer(instance, context=serializer_context)
 

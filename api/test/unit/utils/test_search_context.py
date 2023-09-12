@@ -48,6 +48,7 @@ def test_sensitive_text(
     )
 
     results = [maybe_sensitive_text_hit] + [hit for _, hit in clear_results]
+    result_ids = [result.identifier for result in results]
 
     if not setting_enabled:
         es_host = settings.ES.transport.kwargs["host"]
@@ -58,14 +59,14 @@ def test_sensitive_text(
             reply=500,
         ) as mock:
             search_context = SearchContext.build(
-                results, media_type_config.origin_index
+                result_ids, media_type_config.origin_index
             )
             assert (
                 mock.total_matches == 0
             ), "There should be zero requests to ES if the setting is disabled"
         pook.off()
     else:
-        search_context = SearchContext.build(results, media_type_config.origin_index)
+        search_context = SearchContext.build(result_ids, media_type_config.origin_index)
 
     assert search_context == SearchContext(
         [r.identifier for r in results],

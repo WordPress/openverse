@@ -1,15 +1,11 @@
 from dataclasses import asdict, dataclass
-from typing import Protocol, Self
+from typing import Self
 
 from django.conf import settings
 
 from elasticsearch_dsl import Q, Search
 
 from api.constants.media_types import OriginIndex
-
-
-class Identifiable(Protocol):
-    identifier: str
 
 
 @dataclass
@@ -25,11 +21,11 @@ class SearchContext:
     """Subset of result identifiers for results with sensitive textual content."""
 
     @classmethod
-    def build(cls, results: list[Identifiable], origin_index: OriginIndex) -> Self:
-        if not results:
+    def build(
+        cls, all_result_identifiers: list[str], origin_index: OriginIndex
+    ) -> Self:
+        if not all_result_identifiers:
             return cls(list(), set())
-
-        all_result_identifiers = [result.identifier for result in results]
 
         if not settings.ENABLE_FILTERED_INDEX_QUERIES:
             return cls(all_result_identifiers, set())
@@ -46,17 +42,14 @@ class SearchContext:
                 "terms",
                 **{"identifier.keyword": all_result_identifiers},
             )
-            if len(results) > 1
-            else Q(
-                "term",
-                **{"identifier.keyword": all_result_identifiers[0]},
-            )
         )
 
         # The default query size is 10, so we need to slice the query
         # to change the size to be big enough to encompass all the
         # results.
-        results_in_filtered_index = filtered_index_search[: len(results)].execute()
+        results_in_filtered_index = filtered_index_search[
+            : len(all_result_identifiers)
+        ].execute()
         filtered_index_identifiers = {
             result.identifier for result in results_in_filtered_index
         }
