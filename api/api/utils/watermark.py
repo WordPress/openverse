@@ -179,7 +179,7 @@ def _open_image(url):
     except requests.exceptions.RequestException as e:
         capture_exception(e)
         logger.error(f"Error loading image data: {e}")
-        raise UpstreamWatermarkException(e)
+        raise UpstreamWatermarkException(f"Error loading image data due to {e}")
 
     return img, img.getexif()
 
