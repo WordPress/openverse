@@ -7,7 +7,7 @@ from airflow.models.abstractoperator import AbstractOperator
 
 from common import slack
 from common.constants import POSTGRES_CONN_ID
-from common.sql import PostgresHook, _single_value
+from common.sql import PostgresHook, single_value
 from database.batched_update import constants
 
 
@@ -44,7 +44,7 @@ def get_expected_update_count(
         dry_run=dry_run,
         sql_template=constants.SELECT_TEMP_TABLE_COUNT_QUERY,
         query_id=query_id,
-        handler=_single_value,
+        handler=single_value,
     )
 
 

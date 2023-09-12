@@ -34,7 +34,7 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
-from common.sql import PGExecuteQueryOperator, _single_value
+from common.sql import PGExecuteQueryOperator, single_value
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 from data_refresh.reporting import report_record_difference
@@ -93,7 +93,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             task_id="get_before_record_count",
             conn_id=OPENLEDGER_API_CONN_ID,
             sql=count_sql,
-            handler=_single_value,
+            handler=single_value,
             return_last=True,
         )
 
@@ -108,7 +108,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             task_id="get_after_record_count",
             conn_id=OPENLEDGER_API_CONN_ID,
             sql=count_sql,
-            handler=_single_value,
+            handler=single_value,
             return_last=True,
         )
 

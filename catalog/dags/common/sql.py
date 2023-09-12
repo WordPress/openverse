@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 # https://airflow.apache.org/docs/apache-airflow-providers-postgres/stable/_api/airflow/providers/postgres/hooks/postgres/index.html#airflow.providers.postgres.hooks.postgres.PostgresHook.copy_expert # noqa
 
 
-def _single_value(cursor):
+def single_value(cursor):
     try:
         row = cursor.fetchone()
         return row[0]

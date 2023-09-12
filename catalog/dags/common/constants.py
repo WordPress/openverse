@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Literal
 
@@ -36,3 +37,41 @@ AWS_CONN_ID = "aws_default"
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
 ES_PROD_HTTP_CONN_ID = "elasticsearch_http_production"
 REFRESH_POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))
+
+
+@dataclass
+class SQLInfo:
+    """
+    Configuration object for a media type's popularity SQL info.
+
+    Required Constructor Arguments:
+
+    media_table:                name of the main media table
+    metrics_table:              name of the popularity metrics table
+    standardized_popularity_fn: name of the standardized_popularity sql
+                                function
+    popularity_percentile_fn:   name of the popularity percentile sql
+                                function
+
+    """
+
+    media_table: str
+    metrics_table: str
+    standardized_popularity_fn: str
+    popularity_percentile_fn: str
+
+
+SQL_INFO_BY_MEDIA_TYPE = {
+    AUDIO: SQLInfo(
+        media_table=AUDIO,
+        metrics_table="audio_popularity_metrics",
+        standardized_popularity_fn="standardized_audio_popularity",
+        popularity_percentile_fn="audio_popularity_percentile",
+    ),
+    IMAGE: SQLInfo(
+        media_table=IMAGE,
+        metrics_table="image_popularity_metrics",
+        standardized_popularity_fn="standardized_image_popularity",
+        popularity_percentile_fn="image_popularity_percentile",
+    ),
+}

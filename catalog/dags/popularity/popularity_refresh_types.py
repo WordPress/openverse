@@ -19,7 +19,12 @@ class PopularityRefresh:
 
     Required Constructor Arguments:
 
-    media_type: str describing the media type to be refreshed.
+    media_type:          str describing the media type to be refreshed.
+    popularity_metrics:  dictionary mapping providers of this media type
+                         to their popularity metrics and, optionally, percentile. If
+                         the percentile key is not included, the default value will
+                         be used.
+                         Ex: {"my_provider": {"metric": "views", "percentile": 0.5}}
 
     Optional Constructor Arguments:
 
@@ -45,6 +50,7 @@ class PopularityRefresh:
 
     dag_id: str = field(init=False)
     media_type: str
+    popularity_metrics: dict
     default_args: dict | None = field(default_factory=dict)
     start_date: datetime = datetime(2023, 1, 1)
     schedule: str | None = "@monthly"
@@ -61,11 +67,23 @@ POPULARITY_REFRESH_CONFIGS = [
     PopularityRefresh(
         media_type="image",
         refresh_metrics_timeout=timedelta(hours=24),
+        popularity_metrics={
+            "flickr": {"metric": "views"},
+            "nappy": {"metric": "downloads"},
+            "rawpixel": {"metric": "download_count"},
+            "stocksnap": {"metric": "downloads_raw"},
+            "wikimedia": {"metric": "global_usage_count"},
+        },
     ),
     PopularityRefresh(
         media_type="audio",
         # Poke every minute, instead of every thirty minutes
         poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
         refresh_popularity_timeout=timedelta(days=1),
+        popularity_metrics={
+            "jamendo": {"metric": "listens"},
+            "wikimedia_audio": {"metric": "global_usage_count"},
+            "freesound": {"metric": "num_downloads"},
+        },
     ),
 ]

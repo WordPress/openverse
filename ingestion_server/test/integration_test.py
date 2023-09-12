@@ -167,7 +167,6 @@ class TestIngestion(unittest.TestCase):
                     f"COPY {table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",
                     data,
                 )
-                cur.execute(f"REFRESH MATERIALIZED VIEW {table_name}_view")
         conn.commit()
         cur.close()
 

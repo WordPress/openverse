@@ -4,10 +4,10 @@ from unittest import mock
 
 from airflow.models import TaskInstance
 
-from common.constants import IMAGE
-from common.loader.sql import TSV_COLUMNS, create_column_definitions
+from common.loader.sql import create_column_definitions
 from common.storage import columns as col
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
+from common.storage.tsv_columns import CURRENT_IMAGE_TSV_COLUMNS
 
 
 POSTGRES_CONN_ID = os.getenv("TEST_CONN_ID")
@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("AWS_SECRET_KEY")
 
 
 LOADING_TABLE_COLUMN_DEFINITIONS = create_column_definitions(
-    TSV_COLUMNS[IMAGE], is_loading=True
+    CURRENT_IMAGE_TSV_COLUMNS, is_loading=True
 )
 
 CREATE_LOAD_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
@@ -80,7 +80,7 @@ def create_query_values(
     columns=None,
 ):
     if columns is None:
-        columns = TSV_COLUMNS[IMAGE]
+        columns = CURRENT_IMAGE_TSV_COLUMNS
     result = []
     for column in columns:
         val = column_values.get(column.db_name)
