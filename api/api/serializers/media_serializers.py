@@ -389,7 +389,7 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
 
     def _map_reason(self, value):
         """
-        Map `sensitive` to `mature` of forwards compatibility.
+        Map `sensitive` to `mature` for forwards compatibility.
 
         This is an interim implementation until the API is updated
         to use the new "sensitive" terminology.
