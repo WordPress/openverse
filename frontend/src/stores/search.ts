@@ -501,11 +501,5 @@ export const useSearchStore = defineStore("search", {
         )
       }
     },
-
-    isFilterChecked(filterCategory: FilterCategory, code: string): boolean {
-      const filterItems = this.filters[filterCategory]
-      const idx = filterItems.findIndex((f) => f.code === code)
-      return idx >= 0 && filterItems[idx].checked
-    },
   },
 })
