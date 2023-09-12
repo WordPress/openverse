@@ -28,6 +28,8 @@ test.describe("all results grid analytics test", () => {
       relatedTo: null,
       id: "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
       provider: "jamendo",
+      sensitivities: "",
+      isBlurred: false,
     })
   })
 
@@ -47,6 +49,8 @@ test.describe("all results grid analytics test", () => {
       query: "birds",
       provider: "flickr",
       relatedTo: null,
+      sensitivities: "",
+      isBlurred: false,
     })
   })
 

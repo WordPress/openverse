@@ -260,6 +260,10 @@ export type Events = {
     provider: string
     /** The search term */
     query: string
+    /** the reasons for why this result is considered sensitive */
+    sensitivities: string
+    /** whether the result was blurred or visible when selected by the user */
+    isBlurred: boolean | null
   }
   /**
    * Description: When a user opens the external sources popover.

@@ -108,6 +108,7 @@ export const decodeMediaData = <T extends Media>(
     featureFlagStore.isOn("fetch_sensitive")
       ? getFakeSensitivities(media.id)
       : media[SENSITIVITY_RESPONSE_PARAM] ?? []
+  sensitivity.sort()
   const isSensitive = sensitivity.length > 0
 
   return {

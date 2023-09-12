@@ -14,10 +14,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent, PropType, toRefs } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { AUDIO } from "~/constants/media"
 
 import type { AudioInteractionData } from "~/types/analytics"
@@ -55,6 +56,9 @@ export default defineComponent({
   setup(props) {
     const { sendCustomEvent } = useAnalytics()
 
+    const { audio } = toRefs(props)
+    const { isHidden: shouldBlur } = useSensitiveMedia(audio)
+
     const sendSelectSearchResultEvent = (
       audio: AudioDetail,
       { inWaveform }: AudioTrackClickEvent
@@ -69,6 +73,8 @@ export default defineComponent({
         query: props.searchTerm,
         provider: audio.provider,
         relatedTo: null,
+        sensitivities: audio.sensitivity?.join(",") ?? "",
+        isBlurred: shouldBlur.value,
       })
     }
     const sendInteractionEvent = (
