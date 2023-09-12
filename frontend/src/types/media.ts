@@ -50,7 +50,6 @@ export interface Media {
   tags: Tag[]
   fields_matched?: string[]
 
-  mature: boolean
   sensitivity: Sensitivity[]
   isSensitive: boolean
 }

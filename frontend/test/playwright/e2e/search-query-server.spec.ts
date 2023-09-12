@@ -19,7 +19,7 @@ import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
  * 3. query parameters are used to set the filter data:
  * 3a. One of each values for `all` content
  * 3b. Several query values - several filter checkboxes
- * 3c. Mature filter
+ * 3c. Sensitive results filter
  * 3d. Query parameters that are not used for current media type are discarded
  * All of these tests test server-generated search page, not the one generated on the client
  */

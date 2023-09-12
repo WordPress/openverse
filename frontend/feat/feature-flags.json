@@ -5,7 +5,7 @@
         "staging": "switchable",
         "production": "disabled"
       },
-      "description": "Mark 50% of results as mature to test content safety.",
+      "description": "Mark 50% of results as sensitive to test content safety.",
       "defaultState": "off",
       "storage": "cookie"
     },

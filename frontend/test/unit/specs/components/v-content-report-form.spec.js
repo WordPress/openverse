@@ -16,9 +16,9 @@ const getDmcaInput = () =>
   screen.queryByRole("radio", {
     name: /Infringes copyright/i,
   })
-const getMatureInput = () =>
+const getSensitiveInput = () =>
   screen.queryByRole("radio", {
-    name: /mature/i,
+    name: /sensitive/i,
   })
 const getOtherInput = () =>
   screen.queryByRole("radio", {
@@ -75,7 +75,7 @@ describe("VContentReportForm", () => {
   it("should contain the correct contents", async () => {
     await render(VContentReportForm, options)
     expect(getDmcaInput()).toBeVisible()
-    expect(getMatureInput()).toBeVisible()
+    expect(getSensitiveInput()).toBeVisible()
     expect(getOtherInput()).toBeVisible()
     expect(getCancelButton()).toBeVisible()
     // By default, DMCA is selected, and we show a link to
@@ -86,7 +86,7 @@ describe("VContentReportForm", () => {
 
   it("should render thank you note when report is sent", async () => {
     const { queryByText } = render(VContentReportForm, options)
-    await fireEvent.click(getMatureInput())
+    await fireEvent.click(getSensitiveInput())
     await fireEvent.click(getReportButton())
 
     // Submission successful message
@@ -99,7 +99,7 @@ describe("VContentReportForm", () => {
     ReportService.sendReport = () => Promise.reject()
 
     const { queryByText } = render(VContentReportForm, options)
-    await fireEvent.click(getMatureInput())
+    await fireEvent.click(getSensitiveInput())
     await fireEvent.click(getReportButton())
 
     // Submission error message
@@ -130,16 +130,16 @@ describe("VContentReportForm", () => {
     getDescriptionTextarea()
   })
 
-  it("should dispatch SEND_CONTENT_REPORT on next when mature is selected", async () => {
+  it("should dispatch SEND_CONTENT_REPORT on next when sensitive is selected", async () => {
     ReportService.sendReport = jest.fn()
 
     render(VContentReportForm, options)
-    await fireEvent.click(getMatureInput())
+    await fireEvent.click(getSensitiveInput())
     await fireEvent.click(getReportButton())
 
     expect(ReportService.sendReport).toHaveBeenCalledWith({
       identifier: props.media.id,
-      reason: "mature",
+      reason: "sensitive",
       mediaType: props.media.frontendMediaType,
       description: "",
     })

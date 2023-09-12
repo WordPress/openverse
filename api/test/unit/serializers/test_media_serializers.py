@@ -248,3 +248,35 @@ def test_index_is_only_set_if_matches_media_type(
     )
     assert serializer.is_valid() == is_valid
     assert serializer.validated_data.get("index") == (index if is_valid else None)
+
+
+@pytest.mark.django_db
+def test_report_serializer_maps_sensitive_reason_to_mature(media_type_config):
+    media = media_type_config.model_factory.create()
+    serializer = media_type_config.report_serializer(
+        data={
+            "identifier": media.identifier,
+            "reason": "sensitive",
+            "description": "Boop beep this is sensitive, whoa!",
+        }
+    )
+
+    serializer.is_valid(raise_exception=True)
+
+    assert serializer.validated_data["reason"] == "mature"
+
+
+@pytest.mark.django_db
+def test_report_serializer_accepts_mature_reason(media_type_config):
+    media = media_type_config.model_factory.create()
+    serializer = media_type_config.report_serializer(
+        data={
+            "identifier": media.identifier,
+            "reason": "mature",
+            "description": "Boop beep this is sensitive, whoa!",
+        }
+    )
+
+    serializer.is_valid(raise_exception=True)
+
+    assert serializer.validated_data["reason"] == "mature"

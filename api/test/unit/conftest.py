@@ -10,14 +10,17 @@ from elasticsearch import Elasticsearch
 from fakeredis import FakeRedis
 
 from api.serializers.audio_serializers import (
+    AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
 )
 from api.serializers.image_serializers import (
+    ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
     ImageSerializer,
 )
 from api.serializers.media_serializers import (
+    MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
     MediaSerializer,
 )
@@ -66,6 +69,7 @@ class MediaTypeConfig:
     mature_factory: MediaFactory
     search_request_serializer: MediaSearchRequestSerializer
     model_serializer: MediaSerializer
+    report_serializer: MediaReportRequestSerializer
 
 
 MEDIA_TYPE_CONFIGS = {
@@ -78,6 +82,7 @@ MEDIA_TYPE_CONFIGS = {
         mature_factory=model_factories.MatureImageFactory,
         search_request_serializer=ImageSearchRequestSerializer,
         model_serializer=ImageSerializer,
+        report_serializer=ImageReportRequestSerializer,
     ),
     "audio": MediaTypeConfig(
         media_type="audio",
@@ -88,6 +93,7 @@ MEDIA_TYPE_CONFIGS = {
         mature_factory=model_factories.MatureAudioFactory,
         search_request_serializer=AudioSearchRequestSerializer,
         model_serializer=AudioSerializer,
+        report_serializer=AudioReportRequestSerializer,
     ),
 }
 
