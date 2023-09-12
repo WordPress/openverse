@@ -16,6 +16,7 @@ from providers.provider_api_scripts.flickr import FlickrDataIngester
 from providers.provider_api_scripts.freesound import FreesoundDataIngester
 from providers.provider_api_scripts.inaturalist import INaturalistDataIngester
 from providers.provider_api_scripts.jamendo import JamendoDataIngester
+from providers.provider_api_scripts.justtakeitfree import JusttakeitfreeDataIngester
 from providers.provider_api_scripts.metropolitan_museum import MetMuseumDataIngester
 from providers.provider_api_scripts.museum_victoria import VictoriaDataIngester
 from providers.provider_api_scripts.nappy import NappyDataIngester
@@ -235,6 +236,10 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         ingester_class=JamendoDataIngester,
+    ),
+    ProviderWorkflow(
+        ingester_class=JusttakeitfreeDataIngester,
+        start_date=datetime(2023, 9, 1),
     ),
     ProviderWorkflow(
         ingester_class=MetMuseumDataIngester,
