@@ -15,7 +15,7 @@ import {
 } from "~/constants/media"
 import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
-import { useSearchStore } from "~/stores/search"
+import { computeQueryParams, useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 describe("Search Store", () => {
@@ -62,27 +62,37 @@ describe("Search Store", () => {
     )
 
     /**
-     * If the type is provided, search path is updated to it, and the query is
-     * kept as is if filter parameters can be used with the new type, otherwise
-     * the unused parameters are removed.
-     * - Uses the type and query from the store if type and query are undefined.
-     * Note that the search term is not added to the query either.
-     * - Replaces the type, keeps the store query if type is provided and query is undefined.
-     * Common query parameters are kept as is, and the parameters that are incompatible with
-     * the type are removed.
+     * If type or query are not provided, uses the current state values.
+     * Uses the query as is, if provided. Otherwise, uses the store state
+     * as the query, omitting parameters that are not relevant for the search type.
      */
     it.each`
-      type         | query                      | currentState                                                                                | expected
-      ${undefined} | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa", extension: "ogg" } }}
-      ${IMAGE}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/image", query: { q: "cat", license: "by,by-sa" } }}
-      ${AUDIO}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa" } }}
-      ${AUDIO}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/audio", query: { q: "cat" } }}
-      ${IMAGE}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/image", query: { q: "cat", extension: "svg" } }}
-      ${IMAGE}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${{ path: "/search/image", query: { q: "cat" } }}
-      ${VIDEO}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${{ path: "/search/video", query: { q: "cat", extension: "ogg" } }}
-      ${undefined} | ${{ param: "passedAsIs" }} | ${{ path: "/search/image", urlQuery: {} }}                                                  | ${{ path: "/search/image", query: { param: "passedAsIs" } }}
+      type         | currentState                                                                                | expected
+      ${undefined} | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa", extension: "ogg" } }}
+      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/image", query: { q: "cat", license: "by,by-sa" } }}
+      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa" } }}
+      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/audio", query: { q: "cat" } }}
+      ${IMAGE}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/image", query: { q: "cat", extension: "svg" } }}
+      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${{ path: "/search/image", query: { q: "cat" } }}
+      ${VIDEO}     | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${{ path: "/search/video", query: { q: "cat" } }}
     `(
-      "getSearchPath returns correct path $query and searchType $searchType",
+      "getSearchPath returns $expected.path, $expected.query for $type and current state $currentState.path, $currentState.urlQuery",
+      ({ type, query, currentState, expected }) => {
+        const searchStore = useSearchStore()
+
+        searchStore.setSearchStateFromUrl(currentState)
+
+        searchStore.getSearchPath({ type, query })
+
+        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+      }
+    )
+
+    it.each`
+      type         | query                          | currentState                                      | expected
+      ${undefined} | ${{ unknownParam: "dropped" }} | ${{ path: "/search/image", urlQuery: { q: "" } }} | ${{ path: "/search/image", query: { unknownParam: "dropped" } }}
+    `(
+      "getSearchPath returns $expected.path, $expected.query for query $query $type and current state $currentState.path, $currentState.urlQuery",
       ({ type, query, currentState, expected }) => {
         const searchStore = useSearchStore()
 
@@ -156,6 +166,7 @@ describe("Search Store", () => {
       }
     )
   })
+
   describe("actions", () => {
     it.each(["foo", ""])(
       "`setSearchTerm correctly updates the searchTerm",
@@ -175,6 +186,24 @@ describe("Search Store", () => {
         expect(searchStore.searchType).toEqual(type)
       }
     )
+    it("throws an error for additional search types if the feature flag is off", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("additional_search_types", "off")
+
+      expect(() => searchStore.setSearchType(VIDEO)).toThrow(
+        "Please enable the 'additional_search_types' flag to use the video"
+      )
+    })
+
+    it("sets an additional search types if the feature flag is on", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("additional_search_types", "on")
+
+      searchStore.setSearchType(VIDEO)
+      expect(searchStore.searchType).toEqual(VIDEO)
+    })
 
     // TODO: add support for video path
     it.each`
@@ -217,6 +246,32 @@ describe("Search Store", () => {
         expect(searchStore.searchQueryParams).toEqual(expectedQuery)
       }
     )
+
+    it("updateSearchPath updates searchType and query", () => {
+      const searchStore = useSearchStore()
+      searchStore.updateSearchPath({ type: "audio", searchTerm: "cat" })
+
+      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
+        path: "/search/audio",
+        query: { q: "cat" },
+      })
+    })
+
+    it("updateSearchPath keeps searchType and query if none provided", () => {
+      const searchStore = useSearchStore()
+      searchStore.setSearchTerm("cat")
+      searchStore.setSearchType("audio")
+      searchStore.updateSearchPath()
+
+      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
+        path: "/search/audio",
+        query: { q: "cat" },
+      })
+    })
 
     it.each`
       filters                                                               | query
@@ -381,6 +436,7 @@ describe("Search Store", () => {
       ${{ code: "commercial", filterType: "licenseTypes" }}   | ${{ filterType: "licenses", code: "by-nc-sa" }}         | ${true}
       ${{ code: "modification", filterType: "licenseTypes" }} | ${{ filterType: "licenses", code: "by-nd" }}            | ${true}
       ${{ code: "modification", filterType: "licenseTypes" }} | ${{ filterType: "licenses", code: "by-nc-nd" }}         | ${true}
+      ${{ code: "jpg", filterType: "imageExtensions" }}       | ${{ filterType: "imageExtensions", code: "png" }}       | ${false}
     `(
       "isFilterDisabled for $item.code should return $disabled when $dependency.code is checked",
       ({ item, dependency, disabled }) => {
@@ -494,6 +550,42 @@ describe("Search Store", () => {
 
         expect(searchStore.recentSearches).toEqual([])
       })
+    })
+  })
+
+  describe("computeQueryParams", () => {
+    it("should return only `q` if search type is not supported", () => {
+      const params = computeQueryParams(VIDEO, {}, "cat", "frontend")
+      expect(params).toEqual({ q: "cat" })
+    })
+
+    it("should not set sensitive query param if mode is `frontend`", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("sensitive_content", "on")
+      featureFlagStore.toggleFeature("fetch_sensitive", "on")
+
+      const params = computeQueryParams(
+        IMAGE,
+        searchStore.filters,
+        "cat",
+        "frontend"
+      )
+      expect(params).toEqual({ q: "cat" })
+    })
+    it("should set sensitive query param if mode is `api`", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("sensitive_content", "on")
+      featureFlagStore.toggleFeature("fetch_sensitive", "on")
+
+      const params = computeQueryParams(
+        IMAGE,
+        searchStore.filters,
+        "cat",
+        "api"
+      )
+      expect(params).toEqual({ q: "cat" })
     })
   })
 })
