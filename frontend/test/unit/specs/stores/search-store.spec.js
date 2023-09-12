@@ -273,6 +273,32 @@ describe("Search Store", () => {
       })
     })
 
+    it("updateSearchPath updates searchType and query", () => {
+      const searchStore = useSearchStore()
+      searchStore.updateSearchPath({ type: "audio", searchTerm: "cat" })
+
+      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
+        path: "/search/audio",
+        query: { q: "cat" },
+      })
+    })
+
+    it("updateSearchPath keeps searchType and query if none provided", () => {
+      const searchStore = useSearchStore()
+      searchStore.setSearchTerm("cat")
+      searchStore.setSearchType("audio")
+      searchStore.updateSearchPath()
+
+      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
+        path: "/search/audio",
+        query: { q: "cat" },
+      })
+    })
+
     it.each`
       filters                                                               | query
       ${[["licenses", "by"], ["licenses", "by-nc-sa"]]}                     | ${["license", "by,by-nc-sa"]}
