@@ -19,6 +19,7 @@ from test.media_integration import (
     search_quotes_exact,
     search_source_and_excluded,
     search_special_chars,
+    sensitive_search_and_detail,
     stats,
     uuid_validation,
 )
@@ -136,3 +137,7 @@ def test_image_uuid_validation():
 
 def test_image_related(image_fixture):
     related(image_fixture)
+
+
+def test_audio_sensitive_search_and_detail():
+    sensitive_search_and_detail("images")
