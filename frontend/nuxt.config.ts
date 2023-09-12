@@ -106,7 +106,7 @@ const openverseLocales = [
     nativeName: "English",
   },
   ...(locales ?? []),
-].filter((l) => Boolean(l.code)) as LocaleObject[]
+].filter((l) => Boolean(l.iso)) as LocaleObject[]
 
 const port = process.env.PORT || 8443
 const isProdNotPlaywright = isProd && !(process.env.PW === "true")
