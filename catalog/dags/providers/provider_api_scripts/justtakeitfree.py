@@ -7,6 +7,7 @@ Output:                 TSV file containing the media and the
                         respective meta-data.
 
 Notes:                  https://justtakeitfree.com/api/api.php
+This API requires an API key. For more details, see https://github.com/WordPress/openverse/pull/2793
 """
 import logging
 
