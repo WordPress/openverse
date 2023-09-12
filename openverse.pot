@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-09-04T09:17:35+00:00\n"
+"POT-Creation-Date: 2023-09-12T07:05:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1067,14 +1067,6 @@ msgctxt "filters.sizes.large"
 msgid "Large"
 msgstr ""
 
-msgctxt "filters.mature.title"
-msgid "Search Settings"
-msgstr ""
-
-msgctxt "filters.mature.enable"
-msgid "Enable Mature Content"
-msgstr ""
-
 #: src/components/VSafeBrowsing/VSafeBrowsing.vue:5
 msgctxt "filters.safeBrowsing.title"
 msgid "Safe Browsing"
@@ -1613,15 +1605,15 @@ msgctxt "mediaDetails.contentReport.form.dmca.open"
 msgid "Open form"
 msgstr ""
 
-msgctxt "mediaDetails.contentReport.form.mature.option"
-msgid "Contains mature content"
+msgctxt "mediaDetails.contentReport.form.sensitive.option"
+msgid "Contains sensitive content"
 msgstr ""
 
-msgctxt "mediaDetails.contentReport.form.mature.subLabel"
+msgctxt "mediaDetails.contentReport.form.sensitive.subLabel"
 msgid "Optional"
 msgstr ""
 
-msgctxt "mediaDetails.contentReport.form.mature.placeholder"
+msgctxt "mediaDetails.contentReport.form.sensitive.placeholder"
 msgid "Optionally, provide a description."
 msgstr ""
 
@@ -1885,7 +1877,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:69
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:70
 msgctxt "audioThumbnail.alt"
 msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
@@ -2277,16 +2269,14 @@ msgstr ""
 #: src/components/VImageCell/VImageCell.vue:29
 #: src/components/VImageCell/VImageCell.vue:45
 #: src/components/VImageCell/VImageCell.vue:161
-#: src/pages/image/_id/index.vue:279
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
 
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:68
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:69
 #: src/components/VAudioTrack/layouts/VBoxLayout.vue:13
 #: src/components/VAudioTrack/layouts/VGlobalLayout.vue:14
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:33
-#: src/pages/audio/_id/index.vue:120
 msgctxt "sensitiveContent.title.audio"
 msgid "This audio track may contain sensitive content."
 msgstr ""
