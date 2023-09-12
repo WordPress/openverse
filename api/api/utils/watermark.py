@@ -24,6 +24,10 @@ HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Watermark")
 }
 
++class UpstreamWatermarkException(APIException):
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
+    default_detail = "Could not render watermarked image due to upstream provider error."
+    default_code = "upstream_watermark_failure"
 
 class Dimension(Flag):
     """This enum represents the two dimensions of an image."""
@@ -169,12 +173,13 @@ def _open_image(url):
     logger = parent_logger.getChild("_open_image")
     try:
         response = requests.get(url, headers=HEADERS)
+        response.raise_for_status()
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
     except requests.exceptions.RequestException as e:
         capture_exception(e)
         logger.error(f"Error loading image data: {e}")
-        return None, None
+        raise UpstreamWatermarkException(e)
 
     return img, img.getexif()
 
