@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7e9adb0878e2d7523c7457b3712adde0aee93b6586d54eef2663d09e145a1b3e"
+            "sha256": "54293a6311c5ebb7d16bf6bb13d9a63f420b9275855cba28076d08f125ae95c2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,14 @@
         ]
     },
     "default": {
+        "adrf": {
+            "hashes": [
+                "sha256:a33f8f51f0f80072ffb2af061df1fb119bc00adaa720a2972049d4aa33155337",
+                "sha256:ce7160878ba27999d333752941cde0687c1a205fc26fa0eda1bad3924958dc69"
+            ],
+            "index": "pypi",
+            "version": "==0.1.2"
+        },
         "aiohttp": {
             "hashes": [
                 "sha256:002f23e6ea8d3dd8d149e569fd580c999232b5fbc601c48d55398fbc2e582e8c",
@@ -132,6 +140,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==3.7.2"
+        },
+        "async-property": {
+            "hashes": [
+                "sha256:17d9bd6ca67e27915a75d92549df64b5c7174e9dc806b30a3934dc4ff0506380",
+                "sha256:8924d792b5843994537f8ed411165700b27b2bd966cefc4daeefc1253442a9d7"
+            ],
+            "version": "==0.2.2"
         },
         "async-timeout": {
             "hashes": [
