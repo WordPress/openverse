@@ -38,7 +38,13 @@ import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 
-import { SearchQuery, PaginatedSearchQuery } from "~/types/search"
+import {
+  SearchQuery,
+  SearchStrategy,
+  PaginatedSearchQuery,
+  CollectionParams,
+  PaginatedCollectionQuery,
+} from "~/types/search"
 
 import type { Ref } from "vue"
 
@@ -53,6 +59,8 @@ export const isSearchTypeSupported = (
 
 export interface SearchState {
   searchType: SearchType
+  strategy: SearchStrategy
+  collectionParams: CollectionParams | null
   recentSearches: Ref<string[]>
   backToSearchPath: string
   searchTerm: string
@@ -98,10 +106,26 @@ export function computeQueryParams(
   return searchQuery
 }
 
+export function collectionToPath(collectionParams: CollectionParams) {
+  switch (collectionParams.collection) {
+    case "tag": {
+      return `tag/${collectionParams.tag}`
+    }
+    case "creator": {
+      return `source/${collectionParams.source}/creator/${collectionParams.creator}`
+    }
+    case "source": {
+      return `source/${collectionParams.source}`
+    }
+  }
+}
+
 export const useSearchStore = defineStore("search", {
   state: (): SearchState => ({
     searchType: ALL_MEDIA,
     searchTerm: "",
+    strategy: "default",
+    collectionParams: null,
     backToSearchPath: "",
     localSearchTerm: "",
     recentSearches: useStorage<string[]>("recent-searches", []),
@@ -173,6 +197,27 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
+    setStrategy(
+      strategy: SearchStrategy,
+      collectionParams: CollectionParams | null
+    ) {
+      this.strategy = strategy
+      this.collectionParams = collectionParams
+      if (strategy !== "default") {
+        this.clearFilters()
+      }
+    },
+    getSearchUrlParts(mediaType: SupportedMediaType) {
+      const query: PaginatedSearchQuery | PaginatedCollectionQuery =
+        this.strategy === "default"
+          ? computeQueryParams(mediaType, this.filters, this.searchTerm, "API")
+          : {}
+      const pathSlug =
+        this.collectionParams === null
+          ? ""
+          : collectionToPath(this.collectionParams)
+      return { query, pathSlug }
+    },
     setBackToSearchPath(path: string) {
       this.backToSearchPath = path
     },
@@ -218,6 +263,21 @@ export const useSearchStore = defineStore("search", {
         path: searchPath(searchType),
         query: queryParams as unknown as Dictionary<string>,
       })
+    },
+
+    /**
+     * Returns localized frontend path for the given collection.
+     * Does not support query parameters for now.
+     */
+    getCollectionPath({
+      type,
+      collectionParams,
+    }: {
+      type: SupportedMediaType
+      collectionParams: CollectionParams
+    }) {
+      const path = `/${type}/${collectionToPath(collectionParams)}/`
+      return this.$nuxt.localePath(path)
     },
 
     setSearchType(type: SearchType) {
