@@ -13,7 +13,7 @@ import audio from "~~/test/playwright/utils/audio"
 for (const dir of languageDirections) {
   breakpoints.describeXs(async ({ expectSnapshot }) => {
     // https://github.com/WordPress/openverse/issues/3009
-    test.skip(`Global audio player on the search page - ${dir}`, async ({
+    test(`Global audio player on the search page - ${dir}`, async ({
       page,
     }) => {
       await dismissTranslationBanner(page)
@@ -21,7 +21,7 @@ for (const dir of languageDirections) {
       await page.goto(
         pathWithDir("/search/audio/?q=honey&length=shortest", dir)
       )
-      const audioRow = await audio.getNthAudioRow(page, 2)
+      const audioRow = await audio.getNthAudioRow(page, 3)
       await audio.play(audioRow, dir)
       await page
         .locator(".global-track")
