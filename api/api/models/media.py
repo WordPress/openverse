@@ -353,7 +353,7 @@ class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
         db_constraint=False,
         db_column="identifier",
         related_name="mature_abstract_media",
-        help_text="The reference to the mature media.",
+        help_text="The reference to the sensitive media.",
     )
     """
     Sub-classes must override this field to point to a concrete sub-class of
