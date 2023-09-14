@@ -90,7 +90,7 @@
     </template>
     <VBone
       v-else-if="isLoadingThumbnail"
-      class="me-auto ms-auto h-[500px] w-[500px]"
+      class="col-span-full row-span-full h-[500px] w-[500px] self-center"
     />
   </main>
 </template>

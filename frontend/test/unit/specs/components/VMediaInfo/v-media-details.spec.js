@@ -5,6 +5,16 @@ import { render } from "~~/test/unit/test-utils/render"
 
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 
+jest.mock("@nuxtjs/composition-api", () => {
+  return {
+    ...jest.requireActual("@nuxtjs/composition-api"),
+    useRoute: jest.fn().mockReturnValue({
+      value: {
+        name: "audio-id__en",
+      },
+    }),
+  }
+})
 describe("VMediaDetails", () => {
   let options
   let props
@@ -24,15 +34,16 @@ describe("VMediaDetails", () => {
       media: getAudioObj(overrides),
     }
     options = {
+      mocks: { route: { value: { name: "audio-id" } } },
       propsData: props,
-      stubs: ["VAudioThumbnail", "VLink"],
+      stubs: ["VAudioThumbnail"],
     }
   })
 
   it("renders the album title", () => {
     render(VMediaDetails, options)
 
-    const album = screen.getByText(overrides.audio_set.title)
+    const album = screen.getByRole("link", { name: overrides.audio_set.title })
     expect(album).toHaveAttribute(
       "href",
       overrides.audio_set.foreign_landing_url

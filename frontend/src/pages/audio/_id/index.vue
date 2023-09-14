@@ -134,21 +134,3 @@ export default defineComponent({
   head: {},
 })
 </script>
-<style>
-.audio-page {
-  --wp-max-width: 940px;
-}
-.audio-page section,
-.audio-page aside {
-  max-width: var(--wp-max-width);
-  margin-right: auto;
-  margin-left: auto;
-}
-.audio-page .full-track .mx-16 {
-  @apply mt-6;
-  @apply px-4 md:px-0;
-  max-width: var(--wp-max-width);
-  margin-right: auto;
-  margin-left: auto;
-}
-</style>

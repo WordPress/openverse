@@ -9,15 +9,10 @@
     <div class="flex flex-col items-start gap-6 md:flex-row">
       <slot name="thumbnail" />
 
-      <div
-        class="flex w-full flex-grow flex-col"
-        :class="
-          media.frontendMediaType === 'audio' ? 'gap-4 lg:gap-6' : 'gap-6'
-        "
-      >
+      <div class="flex w-full flex-grow flex-col gap-6">
         <p v-if="media.description">{{ media.description }}</p>
         <VMediaTags :tags="media.tags" />
-        <VMetadata v-if="metadata" :metadata="metadata" :media="media" />
+        <VMetadata v-if="metadata" :metadata="metadata" />
       </div>
     </div>
   </section>

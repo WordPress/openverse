@@ -89,6 +89,12 @@ export const useProviderStore = defineStore("provider", {
       return this.providers
     },
 
+    _getProvider(providerCode: string, mediaType: SupportedMediaType) {
+      return this.providers[mediaType].find(
+        (p) => p.source_name === providerCode
+      )
+    },
+
     /**
      * Returns the display name for provider if available, or capitalizes the given providerCode.
      *
@@ -96,10 +102,16 @@ export const useProviderStore = defineStore("provider", {
      * @param mediaType - mediaType of the provider
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
-      const provider = this.providers[mediaType].find(
-        (p) => p.source_name === providerCode
-      )
+      const provider = this._getProvider(providerCode, mediaType)
       return provider?.display_name || capital(providerCode)
+    },
+
+    /**
+     * Returns the source URL given the source code and media type.
+     */
+    getSourceUrl(providerCode: string, mediaType: SupportedMediaType) {
+      const provider = this._getProvider(providerCode, mediaType)
+      return provider?.source_url
     },
 
     /**
