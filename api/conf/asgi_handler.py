@@ -29,8 +29,12 @@ class OpenverseASGIHandler(ASGIHandler):
     def __init__(self):
         super().__init__()
         self._on_shutdown: list[weakref.WeakMethod | weakref.ref] = []
+        self.has_shutdown = False
 
     def _clean_ref(self, ref):
+        if self.has_shutdown:
+            return
+
         self.logger.info("Cleaning up a ref")
         self._on_shutdown.remove(ref)
 
@@ -73,3 +77,4 @@ class OpenverseASGIHandler(ASGIHandler):
                 handler()
 
         self.logger.info(f"Executed {live_handlers} handler(s) before shutdown.")
+        self.has_shutdown = True
