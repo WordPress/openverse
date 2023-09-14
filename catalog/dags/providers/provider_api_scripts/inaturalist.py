@@ -397,8 +397,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                 )
 
                 # In testing this locally, the longest full iteration took 39 minutes,
-                # median was 18 minutes. We should probably adjust the timeouts with
-                # more info from production runs.
+                # median was 18 minutes.
                 load_transformed_data = PythonOperator.partial(
                     task_id="load_transformed_data",
                     python_callable=INaturalistDataIngester.load_transformed_data,
@@ -413,6 +412,14 @@ class INaturalistDataIngester(ProviderDataIngester):
                     doc_md=(
                         "Load one batch of data from source tables to target table."
                     ),
+                    # Use all of the available pool slots.
+                    pool_slots=128,
+                    # Default priority_weight is 1, higher numbers are more important.
+                    priority_weight=0,
+                    # Particularly towards the beginning there will be lots of
+                    # of downstream / dependent tasks, and we don't want airflow to
+                    # consider that in scheduling.
+                    weight_rule="absolute",
                 ).expand(
                     op_args=XComArg(get_batches, "return_value"),
                 )
