@@ -20,7 +20,7 @@ for (const dir of languageDirections) {
       await page.goto(
         pathWithDir("/search/audio/?q=honey&length=shortest", dir)
       )
-      const audioRow = await audio.getNthAudioRow(page, 3)
+      const audioRow = await audio.getNthAudioRow(page, 2)
       await audio.play(audioRow, dir)
       await page
         .locator(".global-track")
