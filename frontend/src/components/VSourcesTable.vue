@@ -111,15 +111,10 @@ export default defineComponent({
     function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
       let field1 = prov1[sorting.field]
       let field2 = prov2[sorting.field]
-
-      if (sorting.field === 'display_name') {
-       if (typeof field1 === 'string') {
-       field1 = field1.toLowerCase();
-      }
-      if (typeof field2 === 'string') {
-      field2 = field2.toLowerCase();
-      }
-    }
+      if (sorting.field === 'display_name' && typeof field1 === 'string' && typeof field2 === 'string') {
+        field1 = field1.toLowerCase()
+        field2 = field2.toLowerCase()
+      }      
       if (sorting.field === "source_url") {
         field1 = cleanSourceUrlForPresentation(field1 as string)
         field2 = cleanSourceUrlForPresentation(field2 as string)
