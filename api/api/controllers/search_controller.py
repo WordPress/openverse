@@ -486,9 +486,13 @@ def search(
         # check things like provider density for a set of queries.
         tallies.count_provider_occurrences(results_to_tally, index)
 
-    search_context = SearchContext.build(results, origin_index)
+    if not results:
+        results = []
 
-    return results or [], page_count, result_count, search_context.asdict()
+    result_ids = [result.identifier for result in results]
+    search_context = SearchContext.build(result_ids, origin_index)
+
+    return results, page_count, result_count, search_context.asdict()
 
 
 def related_media(uuid, index, filter_dead):
@@ -522,8 +526,12 @@ def related_media(uuid, index, filter_dead):
 
     result_count, _ = _get_result_and_page_count(response, results, page_size, page)
 
-    search_context = SearchContext.build(results, index)
-    return results or [], result_count, search_context.asdict()
+    if not results:
+        results = []
+
+    result_ids = [result.identifier for result in results]
+    search_context = SearchContext.build(result_ids, index)
+    return results, result_count, search_context.asdict()
 
 
 def get_sources(index):

@@ -153,3 +153,28 @@ def related(fixture):
     related_url = fixture["results"][0]["related_url"]
     response = requests.get(related_url)
     assert response.status_code == 200
+
+
+def sensitive_search_and_detail(media_type):
+    search_res = requests.get(
+        f"{API_URL}/v1/{media_type}/",
+        params={"q": "bird", "unstable__include_sensitive_results": "true"},
+        verify=False,
+    )
+    results = search_res.json()["results"]
+
+    sensitive_result = None
+    sensitivities = []
+    for result in results:
+        if sensitivities := result["unstable__sensitivity"]:
+            sensitive_result = result
+            break
+    assert sensitive_result is not None
+    assert len(sensitivities) != 0
+
+    detail_res = requests.get(
+        f"{API_URL}/v1/{media_type}/{sensitive_result['id']}", verify=False
+    )
+    details = detail_res.json()
+
+    assert sensitivities == details["unstable__sensitivity"]

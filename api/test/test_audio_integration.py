@@ -20,6 +20,7 @@ from test.media_integration import (
     search_quotes_exact,
     search_source_and_excluded,
     search_special_chars,
+    sensitive_search_and_detail,
     stats,
     uuid_validation,
 )
@@ -157,3 +158,7 @@ def test_audio_uuid_validation():
 
 def test_audio_related(audio_fixture):
     related(audio_fixture)
+
+
+def test_audio_sensitive_search_and_detail():
+    sensitive_search_and_detail("audio")

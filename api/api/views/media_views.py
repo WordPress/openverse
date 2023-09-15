@@ -12,6 +12,7 @@ from api.models.media import AbstractMedia
 from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
+from api.utils.search_context import SearchContext
 
 
 logger = logging.getLogger(__name__)
@@ -86,6 +87,16 @@ class MediaViewSet(ReadOnlyModelViewSet):
         return results
 
     # Standard actions
+
+    def retrieve(self, request, *_, **__):
+        instance = self.get_object()
+        search_context = SearchContext.build(
+            [str(instance.identifier)], self.default_index
+        ).asdict()
+        serializer_context = search_context | self.get_serializer_context()
+        serializer = self.get_serializer(instance, context=serializer_context)
+
+        return Response(serializer.data)
 
     def list(self, request, *_, **__):
         params = self._get_request_serializer(request)
