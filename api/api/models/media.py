@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
 
-from elasticsearch import Elasticsearch, TransportError
+from elasticsearch import BadRequestError, Elasticsearch, NotFoundError
 
 from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
@@ -275,14 +275,15 @@ class PerformIndexUpdateMixin:
                     refresh=True,
                     **es_method_args,
                 )
-            except TransportError as e:
-                if e.status_code == 404:
+            except (NotFoundError, BadRequestError) as e:
+                if isinstance(e, NotFoundError):
                     # This is expected for the filtered index, but we should still
                     # log, just in case.
                     logger.warning(
                         f"Document with _id {document_id} not found "
                         f"in {index} index. No update performed."
                     )
+                    continue
                 else:
                     raise e
 

@@ -51,11 +51,8 @@ def test_sensitive_text(
     result_ids = [result.identifier for result in results]
 
     if not setting_enabled:
-        es_host = settings.ES.transport.kwargs["host"]
-        es_port = settings.ES.transport.kwargs["port"]
-
         with pook.post(
-            f"http://{es_host}:{es_port}/{media_type_config.filtered_index}/_search",
+            f"{settings.ES_ENDPOINT}/{media_type_config.filtered_index}/_search",
             reply=500,
         ) as mock:
             search_context = SearchContext.build(

@@ -4,8 +4,9 @@ from typing import NamedTuple
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
+from elastic_transport import RequestsHttpNode
 from elasticsearch import ConnectionError as EsConnectionError
-from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection
+from elasticsearch import Elasticsearch, NotFoundError
 
 
 class Stat(NamedTuple):
@@ -45,8 +46,15 @@ def _elasticsearch_connect() -> Elasticsearch:
     :return: an Elasticsearch client
     """
 
+    elasticsearch_scheme = config("ELASTICSEARCH_SCHEME", default="http://")
     elasticsearch_url = config("ELASTICSEARCH_URL", default="localhost")
     elasticsearch_port = config("ELASTICSEARCH_PORT", default=9200, cast=int)
+
+    es_endpoint = "{scheme}{url}:{port}".format(
+        scheme=elasticsearch_scheme,
+        url=elasticsearch_url,
+        port=elasticsearch_port,
+    )
 
     # For AWS IAM access to Elasticsearch
     aws_region = config("AWS_REGION", "us-east-1")
@@ -65,9 +73,8 @@ def _elasticsearch_connect() -> Elasticsearch:
     )
     auth.encode = lambda x: bytes(x.encode("utf-8"))
     es = Elasticsearch(
-        host=elasticsearch_url,
-        port=elasticsearch_port,
-        connection_class=RequestsHttpConnection,
+        es_endpoint,
+        node_class=RequestsHttpNode,
         http_auth=auth,
         timeout=timeout * 3600,  # seconds
     )

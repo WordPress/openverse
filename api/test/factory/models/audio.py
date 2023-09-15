@@ -4,7 +4,7 @@ from test.factory.models.media import IdentifierFactory, MediaFactory
 import factory
 from factory.django import DjangoModelFactory
 
-from api.models.audio import Audio, AudioAddOn, MatureAudio
+from api.models.audio import Audio, AudioAddOn, AudioReport, MatureAudio
 
 
 class MatureAudioFactory(DjangoModelFactory):
@@ -28,3 +28,10 @@ class AudioAddOnFactory(DjangoModelFactory):
     audio_identifier = IdentifierFactory(AudioFactory)
 
     waveform_peaks = Faker("waveform")
+
+
+class AudioReportFactory(DjangoModelFactory):
+    class Meta:
+        model = AudioReport
+
+    media_obj = factory.SubFactory(AudioFactory)

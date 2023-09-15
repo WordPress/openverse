@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.conf import settings
 
 import factory
+import pook
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl.response import Hit
 from factory.django import DjangoModelFactory
@@ -95,6 +96,12 @@ class MediaFactory(DjangoModelFactory):
         skip_es = kwargs.pop("skip_es", False)
         with_hit = kwargs.pop("with_hit", False)
 
+        pook_active = pook.isactive()
+        if pook_active:
+            # Temporarily disable pook so that the calls to ES to create
+            # the factory document don't fail
+            pook.disable()
+
         model_class = cls._meta.get_model_class()
         if cls._highest_pre_existing_pk is None:
             response = settings.ES.search(
@@ -120,6 +127,10 @@ class MediaFactory(DjangoModelFactory):
 
         if mature_reported:
             cls._mature_factory.create(media_obj=model)
+
+        if pook_active:
+            # Reactivate pook if it was active
+            pook.activate()
 
         if with_hit:
             return model, hit
@@ -154,6 +165,7 @@ class MediaFactory(DjangoModelFactory):
 
         origin_index = media._meta.db_table
         source_document = cls._create_es_source_document(media, mature)
+
         es.create(
             index=origin_index,
             id=str(media.pk),
@@ -190,3 +202,8 @@ class IdentifierFactory(factory.SubFactory):
     def evaluate(self, instance, step, extra):
         model = super().evaluate(instance, step, extra)
         return model.identifier
+
+
+class MediaReportFactory(DjangoModelFactory):
+    class Meta:
+        abstract = True
