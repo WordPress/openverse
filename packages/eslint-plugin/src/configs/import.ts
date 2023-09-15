@@ -7,7 +7,7 @@ export = {
   extends: ["plugin:import/recommended", "plugin:import/typescript"],
   plugins: ["import"],
   rules: {
-    // `namespace` and `default` are handled by TypeSCript
+    // `namespace` and `default` are handled by TypeScript
     // There's no need to rely on ESLint for this
     // https://github.com/import-js/eslint-plugin-import/issues/2878
     "import/namespace": "off",
