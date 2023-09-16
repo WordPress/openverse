@@ -114,7 +114,8 @@ export default defineComponent({
       if (sorting.field === 'display_name' && typeof field1 === 'string' && typeof field2 === 'string') {
         field1 = field1.toLowerCase()
         field2 = field2.toLowerCase()
-      }      
+      }
+
       if (sorting.field === "source_url") {
         field1 = cleanSourceUrlForPresentation(field1 as string)
         field2 = cleanSourceUrlForPresentation(field2 as string)
