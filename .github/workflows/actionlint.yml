@@ -22,13 +22,3 @@ jobs:
         uses: docker://rhysd/actionlint:latest
         with:
           args: -color
-          
-lint:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Super-Linter
-      uses: super-linter/super-linter@v5.3.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
