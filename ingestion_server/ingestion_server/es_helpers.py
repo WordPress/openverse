@@ -71,7 +71,7 @@ def _elasticsearch_connect() -> Elasticsearch:
     es = Elasticsearch(
         es_endpoint,
         node_class=RequestsHttpNode,
-        http_auth=auth,
+        basic_auth=auth,
         timeout=timeout * 3600,  # seconds
     )
     es.info()

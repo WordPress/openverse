@@ -37,7 +37,7 @@ def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
         request_timeout=10,
         max_retries=1,
         retry_on_timeout=True,
-        http_auth=auth,
+        basic_auth=auth,
         node_class=RequestsHttpNode,
     )
     _es.info()

@@ -472,7 +472,7 @@ class TestIngestion(unittest.TestCase):
             request_timeout=10,
             max_retries=10,
             retry_on_timeout=True,
-            http_auth=None,
+            basic_auth=None,
         )
         es.cluster.health(wait_for_status="yellow")
         return es
