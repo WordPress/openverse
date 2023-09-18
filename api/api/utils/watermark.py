@@ -24,7 +24,7 @@ HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Watermark")
 }
 
-+class UpstreamWatermarkException(APIException):
+class UpstreamWatermarkException(APIException):
     status_code = status.HTTP_424_FAILED_DEPENDENCY
     default_detail = "Could not render watermarked image due to upstream provider error."
     default_code = "upstream_watermark_failure"
