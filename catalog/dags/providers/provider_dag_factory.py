@@ -380,7 +380,7 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
             ),
             "initial_query_params": Param(
                 default={},
-                type="object",
+                type=["object", "null"],
                 description=(
                     "Override the set of `query_params` that will be used to fetch the"
                     " first batch of records. This option is used to trigger a DagRun"
@@ -390,7 +390,7 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
             ),
             "query_params_list": Param(
                 default=[],
-                type="array",
+                type=["array", "null"],
                 items={
                     "type": "object",
                 },
