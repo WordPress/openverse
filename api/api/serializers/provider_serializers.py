@@ -29,7 +29,7 @@ class ProviderSerializer(serializers.ModelSerializer):
     )
 
     @staticmethod
-    def get_logo_url() -> str | None:
+    def get_logo_url(*_) -> str | None:
         return None
 
     class Meta:

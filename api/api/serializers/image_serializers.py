@@ -158,11 +158,11 @@ class OembedSerializer(BaseModelSerializer):
     )
 
     @staticmethod
-    def get_type() -> Literal["photo"]:
+    def get_type(*_) -> Literal["photo"]:
         return "photo"
 
     @staticmethod
-    def get_version() -> Literal["1.0"]:
+    def get_version(*_) -> Literal["1.0"]:
         return "1.0"
 
     class Meta:
