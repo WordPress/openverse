@@ -45,8 +45,7 @@ Documentation is only emitted if all the following conditions are met.
   - a PR and
     - the source is a branch of `WordPress/openverse` and not a fork
     - the author of the PR is not Dependabot
-- either the documentation or the frontend has changed (for the Storybook and
-  Tailwind Config Viewer)
+- either the documentation or the frontend has changed (for Storybook)
 - all the primary tests ([`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat),
   [`test-ing`](/meta/ci_cd/jobs/ingestion_server.md#test-ing),
   [`test-api`](/meta/ci_cd/jobs/api.md#test-api),

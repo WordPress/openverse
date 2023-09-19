@@ -72,7 +72,7 @@ input, passing a space-separated list of image names.
 
 ## `build-docs`
 
-Builds the documentation, including this Sphinx site, the frontend Storybook and
-the Tailwind config viewer and stores it at `/tmp/docs`. This compiled
-documentation is deployed to an appropriate location by the
+Builds the documentation, including this Sphinx site and the frontend Storybook
+and stores it at `/tmp/docs`. This compiled documentation is deployed to an
+appropriate location by the
 [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs) job.
