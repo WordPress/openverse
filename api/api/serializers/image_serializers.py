@@ -1,3 +1,5 @@
+from typing import Literal
+
 from rest_framework import serializers
 
 from api.constants.field_order import field_position_map
@@ -133,14 +135,13 @@ class OembedSerializer(BaseModelSerializer):
     spec: https://oembed.com.
     """
 
-    version = serializers.ReadOnlyField(
+    version = serializers.SerializerMethodField(
         help_text="The oEmbed version number, always set to 1.0.",
-        default="1.0",
     )
-    type = serializers.ReadOnlyField(
+    type = serializers.SerializerMethodField(
         help_text="The resource type, always set to 'photo' for images.",
-        default="photo",
     )
+
     width = serializers.SerializerMethodField(
         help_text="The width of the image in pixels."
     )
@@ -155,6 +156,14 @@ class OembedSerializer(BaseModelSerializer):
         help_text="A direct link to the media creator.",  # copied from ``Image``
         source="creator_url",
     )
+
+    @staticmethod
+    def get_type() -> Literal["photo"]:
+        return "photo"
+
+    @staticmethod
+    def get_version() -> Literal["1.0"]:
+        return "1.0"
 
     class Meta:
         model = Image
