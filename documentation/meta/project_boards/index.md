@@ -18,4 +18,5 @@ Read on to know more about these boards and the automations that apply to them.
 
 issues
 prs
+projects
 ```
