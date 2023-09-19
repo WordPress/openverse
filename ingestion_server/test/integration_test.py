@@ -19,7 +19,6 @@ import requests
 
 # Uses Bottle because, unlike Falcon, it can be run from within the test suite.
 from bottle import Bottle
-from elastic_transport import RequestsHttpNode
 from elasticsearch import Elasticsearch, NotFoundError
 
 from .gen_integration_compose import gen_integration_compose
@@ -468,11 +467,9 @@ class TestIngestion(unittest.TestCase):
         endpoint = f"http://localhost:{service_ports['es']}"
         es = Elasticsearch(
             endpoint,
-            node_class=RequestsHttpNode,
             request_timeout=10,
             max_retries=10,
             retry_on_timeout=True,
-            basic_auth=None,
         )
         es.cluster.health(wait_for_status="yellow")
         return es
