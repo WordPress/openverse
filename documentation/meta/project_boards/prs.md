@@ -18,7 +18,7 @@ The PRs board is currently private. It may be made public in the future.
 
 - **PR is created**
 
-  If a new PR is created, it is automatically added to the project board. Issues
+  If a new PR is created, it is automatically added to the project board. PRs
   from the infrastructure repository are also added to the board.
 
   - [Built-in workflow (monorepo)](https://github.com/orgs/WordPress/projects/98/workflows/8656692)
