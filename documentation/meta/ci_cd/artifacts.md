@@ -60,10 +60,9 @@ The following artifacts are related to documentation.
 
 - `documentation`
 
-  This is the main documentation comprising of the Sphinx site, the Storybook
-  and the Tailwind Config Viewer. It's built by the
-  [`build-docs`](/meta/ci_cd/jobs/documentation.md#build-docs) job and used by
-  the [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs) to deploy
-  either as the main documentation site (if the workflow is running for a new
-  commit pushed to `main`) or as a preview (if the workflow is running for a
-  PR).
+  This is the main documentation comprising the Sphinx site and the Storybook.
+  It's built by the [`build-docs`](/meta/ci_cd/jobs/documentation.md#build-docs)
+  job and used by the [`emit-docs`](/meta/ci_cd/jobs/documentation.md#emit-docs)
+  to deploy either as the main documentation site (if the workflow is running
+  for a new commit pushed to `main`) or as a preview (if the workflow is running
+  for a PR).

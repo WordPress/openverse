@@ -20,7 +20,6 @@ use the Openverse API, you should instead refer to the
 <!-- These use HTML anchors because Sphinx treats them as internal references without scheme. -->
 
 - <a href="./storybook">Storybook</a> (UI components)
-- <a href="./tailwind">Tailwind Config Viewer</a> (design tokens)
 
 # Table of contents
 
