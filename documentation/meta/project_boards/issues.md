@@ -13,7 +13,6 @@ this board are tied to events occurring for issues.
   provided it does not contain the any label with the text "project".
 
   - [Custom workflow](https://github.com/WordPress/openverse/blob/main/.github/workflows/new_issues.yml)
-  - [Built-in workflow](https://github.com/orgs/WordPress/projects/75/workflows/6899518)
 
 - **Issue is closed**
 
