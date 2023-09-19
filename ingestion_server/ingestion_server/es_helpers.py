@@ -4,7 +4,7 @@ from typing import NamedTuple
 
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
-from elastic_transport import RequestsHttpNode
+from elastic_transport import NodeConfig, RequestsHttpNode
 from elasticsearch import ConnectionError as EsConnectionError
 from elasticsearch import Elasticsearch, NotFoundError
 
@@ -68,10 +68,22 @@ def _elasticsearch_connect() -> Elasticsearch:
         aws_service="es",
     )
     auth.encode = lambda x: bytes(x.encode("utf-8"))
+
+    class OpenverseRequestsHttpNode(RequestsHttpNode):
+        """
+        Workaround Elasticsearch client's lack of flexible auth configuration.
+
+        Note: It's unclear whether we need the AWS authentication method with
+        the current Openverse production setup.
+        """
+
+        def __init__(self, config: NodeConfig):
+            config._extras["requests.session.auth"] = auth
+            super().__init__(config)
+
     es = Elasticsearch(
         es_endpoint,
-        node_class=RequestsHttpNode,
-        basic_auth=auth,
+        node_class=OpenverseRequestsHttpNode,
         timeout=timeout * 3600,  # seconds
     )
     es.info()
