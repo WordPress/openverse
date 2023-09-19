@@ -122,7 +122,7 @@ class MediaSearchRequestSerializer(serializers.Serializer):
         label="mature",
         default=False,
         required=False,
-        help_text="Whether to include content for mature audiences.",
+        help_text="Whether to include sensitive content.",
     )
 
     # The ``unstable__`` prefix is used in the query params.
