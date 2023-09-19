@@ -1,8 +1,9 @@
 # Project boards
 
-Openverse project management consists of two project boards,
-[one for issues](https://github.com/orgs/WordPress/projects/75) and
-[one for PRs](https://github.com/orgs/WordPress/projects/98).
+Openverse project management consists of three project boards,
+[one for issues](https://github.com/orgs/WordPress/projects/75),
+[one for PRs](https://github.com/orgs/WordPress/projects/98) and
+[one for project threads](https://github.com/orgs/WordPress/projects/70).
 
 Issues and PRs are added to these boards and move across columns based on their
 status. Automations to move these cards can be broadly classified into two
