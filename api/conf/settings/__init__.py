@@ -37,7 +37,6 @@ include(
     # additional packages
     "oauth2.py",
     "rest_framework.py",
-    "s3.py",
     "sentry.py",
     "spectacular.py",
     "thumbnails.py",
