@@ -7,9 +7,6 @@ import type { NuxtError } from "@nuxt/types"
  * Describes the kind of API request that was made.
  */
 export type RequestKind = "search" | "single-result" | "related" | "provider"
-/**
- * The error codes Axios uses.
- */
 
 /**
  * This interface represents errors related to data-fetching from the API.

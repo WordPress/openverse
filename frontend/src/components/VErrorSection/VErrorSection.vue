@@ -42,9 +42,9 @@ export default defineComponent({
      * For now, NO_RESULT image is used for searches without result,
      * and SERVER_TIMEOUT image is used as a fall-back for all other errors.
      */
-    const errorCode = computed(() => {
-      return props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
-    })
+    const errorCode = computed(() =>
+      props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
+    )
 
     const isTimeout = computed(() =>
       [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
