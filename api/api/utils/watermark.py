@@ -10,6 +10,9 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 from sentry_sdk import capture_exception
 
+from rest_framework import status
+from rest_framework.exceptions import APIException
+
 
 parent_logger = logging.getLogger(__name__)
 
@@ -179,7 +182,7 @@ def _open_image(url):
     except requests.exceptions.RequestException as e:
         capture_exception(e)
         logger.error(f"Error loading image data: {e}")
-        raise UpstreamWatermarkException(f"Error loading image data due to {e}")
+        raise UpstreamWatermarkException(f"Error loading image data: {e}")
 
     return img, img.getexif()
 
