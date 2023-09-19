@@ -2,9 +2,7 @@ import logging as log
 import time
 from typing import NamedTuple
 
-from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
-from elastic_transport import NodeConfig, RequestsHttpNode
 from elasticsearch import ConnectionError as EsConnectionError
 from elasticsearch import Elasticsearch, NotFoundError
 
@@ -52,38 +50,10 @@ def _elasticsearch_connect() -> Elasticsearch:
 
     es_endpoint = f"{es_scheme}{es_url}:{es_port}"
 
-    # For AWS IAM access to Elasticsearch
-    aws_region = config("AWS_REGION", "us-east-1")
-    aws_access_key_id = config("AWS_ACCESS_KEY_ID", default="")
-    aws_secret_access_key = config("AWS_SECRET_ACCESS_KEY", default="")
-
     timeout = 12  # hours
-
-    log.info(f"Connecting to {es_endpoint} with AWS auth")
-    auth = AWSRequestsAuth(
-        aws_access_key=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_host=es_url,
-        aws_region=aws_region,
-        aws_service="es",
-    )
-    auth.encode = lambda x: bytes(x.encode("utf-8"))
-
-    class OpenverseRequestsHttpNode(RequestsHttpNode):
-        """
-        Workaround Elasticsearch client's lack of flexible auth configuration.
-
-        Note: It's unclear whether we need the AWS authentication method with
-        the current Openverse production setup.
-        """
-
-        def __init__(self, config: NodeConfig):
-            config._extras["requests.session.auth"] = auth
-            super().__init__(config)
 
     es = Elasticsearch(
         es_endpoint,
-        node_class=OpenverseRequestsHttpNode,
         timeout=timeout * 3600,  # seconds
     )
     es.info()
