@@ -47,7 +47,7 @@ class StandardPagination(PageNumberPagination):
                     "description": description,
                     "example": example,
                 }
-                for field, [description, example] in field_descriptions.items()
+                for field, (description, example) in field_descriptions.items()
             }
             | {"results": schema},
         }
