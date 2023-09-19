@@ -1,0 +1,21 @@
+# Project boards
+
+Openverse project management consists of two project boards,
+[one for issues](https://github.com/orgs/WordPress/projects/75) and
+[one for PRs](https://github.com/orgs/WordPress/projects/98).
+
+Issues and PRs are added to these boards and move across columns based on their
+status. Automations to move these cards can be broadly classified into two
+types:
+
+- automations built into the GitHub Projects UI
+- custom automations run as GitHub Actions workflows
+
+Read on to know more about these boards and the automations that apply to them.
+
+```{toctree}
+:titlesonly:
+
+issues
+prs
+```
