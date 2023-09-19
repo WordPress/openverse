@@ -2,10 +2,9 @@ import logging as log
 import time
 from typing import NamedTuple
 
-from aws_requests_auth.aws_auth import AWSRequestsAuth
 from decouple import config
 from elasticsearch import ConnectionError as EsConnectionError
-from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection
+from elasticsearch import Elasticsearch, NotFoundError
 
 
 class Stat(NamedTuple):
@@ -45,30 +44,16 @@ def _elasticsearch_connect() -> Elasticsearch:
     :return: an Elasticsearch client
     """
 
-    elasticsearch_url = config("ELASTICSEARCH_URL", default="localhost")
-    elasticsearch_port = config("ELASTICSEARCH_PORT", default=9200, cast=int)
+    es_scheme = config("ELASTICSEARCH_SCHEME", default="http://")
+    es_url = config("ELASTICSEARCH_URL", default="localhost")
+    es_port = config("ELASTICSEARCH_PORT", default=9200, cast=int)
 
-    # For AWS IAM access to Elasticsearch
-    aws_region = config("AWS_REGION", "us-east-1")
-    aws_access_key_id = config("AWS_ACCESS_KEY_ID", default="")
-    aws_secret_access_key = config("AWS_SECRET_ACCESS_KEY", default="")
+    es_endpoint = f"{es_scheme}{es_url}:{es_port}"
 
     timeout = 12  # hours
 
-    log.info(f"Connecting to {elasticsearch_url}:{elasticsearch_port} with AWS auth")
-    auth = AWSRequestsAuth(
-        aws_access_key=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        aws_host=elasticsearch_url,
-        aws_region=aws_region,
-        aws_service="es",
-    )
-    auth.encode = lambda x: bytes(x.encode("utf-8"))
     es = Elasticsearch(
-        host=elasticsearch_url,
-        port=elasticsearch_port,
-        connection_class=RequestsHttpConnection,
-        http_auth=auth,
+        es_endpoint,
         timeout=timeout * 3600,  # seconds
     )
     es.info()

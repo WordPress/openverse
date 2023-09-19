@@ -576,15 +576,19 @@ def test_no_post_process_results_recursion(
         hit_count=hit_count,
     )
 
-    es_host = settings.ES.transport.kwargs["host"]
-    es_port = settings.ES.transport.kwargs["port"]
-
     # `origin_index` enforced by passing `exact_index=True` below.
     es_endpoint = (
-        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+        f"{settings.ES_ENDPOINT}/{image_media_type_config.origin_index}/_search"
     )
 
-    mock_search = pook.post(es_endpoint).times(1).reply(200).json(mock_es_response).mock
+    mock_search = (
+        pook.post(es_endpoint)
+        .times(1)
+        .reply(200)
+        .header("x-elastic-product", "Elasticsearch")
+        .json(mock_es_response)
+        .mock
+    )
 
     # Ensure dead link filtering does not remove any results
     pook.head(
@@ -682,12 +686,9 @@ def test_post_process_results_recurses_as_needed(
         base_hits=mock_es_response_1["hits"]["hits"],
     )
 
-    es_host = settings.ES.transport.kwargs["host"]
-    es_port = settings.ES.transport.kwargs["port"]
-
     # `origin_index` enforced by passing `exact_index=True` below.
     es_endpoint = (
-        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+        f"{settings.ES_ENDPOINT}/{image_media_type_config.origin_index}/_search"
     )
 
     # `from` is always 0 if there is no query mask
@@ -703,6 +704,7 @@ def test_post_process_results_recurses_as_needed(
         .body(re.compile('from":0'))
         .times(1)
         .reply(200)
+        .header("x-elastic-product", "Elasticsearch")
         .json(mock_es_response_1)
         .mock
     )
@@ -714,6 +716,7 @@ def test_post_process_results_recurses_as_needed(
         .body(re.compile('from":0'))
         .times(1)
         .reply(200)
+        .header("x-elastic-product", "Elasticsearch")
         .json(mock_es_response_2)
         .mock
     )

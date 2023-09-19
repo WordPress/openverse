@@ -19,7 +19,7 @@ import requests
 
 # Uses Bottle because, unlike Falcon, it can be run from within the test suite.
 from bottle import Bottle
-from elasticsearch import Elasticsearch, NotFoundError, RequestsHttpConnection
+from elasticsearch import Elasticsearch, NotFoundError
 
 from .gen_integration_compose import gen_integration_compose
 from .test_constants import service_ports
@@ -464,16 +464,15 @@ class TestIngestion(unittest.TestCase):
         self.assertEqual(2, len(res_json), msg)
 
     def _get_es(self):
-        return Elasticsearch(
-            host="localhost",
-            port=service_ports["es"],
-            connection_class=RequestsHttpConnection,
-            timeout=10,
+        endpoint = f"http://localhost:{service_ports['es']}"
+        es = Elasticsearch(
+            endpoint,
+            request_timeout=10,
             max_retries=10,
             retry_on_timeout=True,
-            http_auth=None,
-            wait_for_status="yellow",
         )
+        es.cluster.health(wait_for_status="yellow")
+        return es
 
     @pytest.mark.order(after="test_task_count_after_two")
     def test_promote_images(self):
