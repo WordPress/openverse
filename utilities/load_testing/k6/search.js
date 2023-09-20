@@ -6,10 +6,16 @@ import {
   makeResponseFailedCheck,
   REQUEST_HEADERS,
   SLEEP_DURATION,
+  discoveredUnconsumedTags,
+  getRandomWord,
 } from "./utils.js"
 
 export const searchBy = (param, page, media_type, page_size, followLinks) => {
-  let url = `${API_URL}${media_type}/?${param}&page=${page}&page_size=${page_size}&filter_dead=false`
+  if (param === "randomWord") {
+    param = `q=${getRandomWord()}`
+  }
+
+  let url = `${API_URL}${media_type}/?${param}&page=${page}&page_size=${page_size}&filter_dead=true`
   const response = http.get(url, { headers: REQUEST_HEADERS })
 
   const checkResponseFailed = makeResponseFailedCheck(param, page)
@@ -23,6 +29,9 @@ export const searchBy = (param, page, media_type, page_size, followLinks) => {
   const pageCount = parsedResp["page_count"]
   const detailUrls = parsedResp["results"].map((i) => i.detail_url)
   const relatedUrls = parsedResp["results"].map((i) => i.related_url)
+  parsedResp["results"].forEach((i) =>
+    i["tags"].forEach((t) => discoveredUnconsumedTags.add(t["name"]))
+  )
 
   // Don't view details/related if not requested
   if (!followLinks) {

@@ -5,12 +5,17 @@ import { randomItem } from "https://jslib.k6.io/k6-utils/1.2.0/index.js"
 export const API_URL =
   __ENV.API_URL || "https://api-dev.openverse.engineering/v1/"
 export const SLEEP_DURATION = 0.1
-// Use the random words list available locally, but filter any words that end with apostrophe-s
-const WORDS = open("/usr/share/dict/words")
-  .split("\n")
-  .filter((w) => !w.endsWith("'s"))
 
-export const getRandomWord = () => randomItem(WORDS)
+export const discoveredUnconsumedTags = new Set()
+
+export const getRandomWord = () => {
+  if (discoveredUnconsumedTags.size) {
+    const tag = randomItem(Array.from(discoveredUnconsumedTags))
+    discoveredUnconsumedTags.delete(tag)
+    return tag
+  }
+  return randomItem(["dog", "run", "cat", "honey", "happy"])
+}
 
 export const getProvider = (media_type) => {
   let url = `${API_URL}${media_type}/stats`

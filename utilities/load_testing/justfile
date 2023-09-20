@@ -13,3 +13,6 @@ api host=("http://" + DOCKER_HOST + ":8000"):
 
 k6 url="https://api-dev.openverse.engineering" +extra_args="": build
     docker run --rm -e API_TOKEN=$API_TOKEN -e API_URL={{ url }} -v {{ invocation_directory() }}/k6:/app {{ extra_args }} openverse-load-testing:latest k6 run main.js
+
+k6-local:
+    @API_TOKEN="" just k6 http://localhost:50280/v1/ --net=host

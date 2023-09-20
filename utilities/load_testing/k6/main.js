@@ -1,6 +1,6 @@
 import { group } from "k6"
 import { searchBy } from "./search.js"
-import { getProvider, getRandomWord } from "./utils.js"
+import { getProvider } from "./utils.js"
 
 const createScenario = (mediaType, pageSize, funcName) => {
   return {
@@ -64,7 +64,6 @@ const searchByField = (paramFunc, followLinks = false) => {
   )
 }
 
-export const searchByRandomWord = () =>
-  searchByField(() => `q=${getRandomWord()}`, true)
+export const searchByRandomWord = () => searchByField(() => `randomWord`, true)
 export const searchByProvider = () =>
   searchByField((media_type) => `source=${getProvider(media_type)}`, false)
