@@ -21,13 +21,16 @@ class ProviderSerializer(serializers.ModelSerializer):
         source="domain_name",
         help_text="The URL of the source, e.g. https://www.flickr.com",
     )
-    logo_url = serializers.ReadOnlyField(
-        default=None,
+    logo_url = serializers.SerializerMethodField(
         help_text="The URL to a logo for the source.",
     )
     media_count = serializers.SerializerMethodField(
         help_text="The number of media items indexed from the source.",
     )
+
+    @staticmethod
+    def get_logo_url(*_) -> str | None:
+        return None
 
     class Meta:
         model = ContentProvider
