@@ -9,7 +9,6 @@ ignore-words = ".codespell/ignore_words.txt"
 [tool.ruff.per-file-ignores]
 "*test*" = ["E501"]
 "*__init__*" = ["F401"]
-"*wsgi.py" = ["E402"]
 "*settings/__init__.py" = ["F403"]
 
 [tool.isort]
