@@ -9,6 +9,15 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 
 import os
 
+
+if os.getenv("ENABLE_TRACE_VIEW", "0") == "1":
+    TRACING = True
+    import tracemalloc
+
+    tracemalloc.start()
+else:
+    TRACING = False
+
 from django.core.wsgi import get_wsgi_application
 
 
