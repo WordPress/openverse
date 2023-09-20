@@ -1,4 +1,4 @@
-# Run Book: API Production Average Response Time above threshold
+# Run Book: API Production P99 Response Time above threshold
 
 ```{admonition} Metadata
 Status: **Unstable**
@@ -6,7 +6,7 @@ Status: **Unstable**
 Maintainer: @krysaldb
 
 Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+Average+Response+Time+under+threshold?>
+- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+P99+Response+Time+above+threshold?>
 ```
 
 ## Severity Guide
