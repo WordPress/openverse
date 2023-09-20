@@ -3,6 +3,11 @@
 import os
 import sys
 
+from gevent import monkey
+
+
+monkey.patch_all()
+
 
 def main():
     """Run administrative tasks."""
