@@ -556,19 +556,19 @@ def get_sources(index):
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
-        agg_body = {
-            "aggs": {
-                "unique_sources": {
-                    "terms": {
-                        "field": "source.keyword",
-                        "size": size,
-                        "order": {"_key": "desc"},
-                    }
+        
+        aggs = {
+            "unique_sources": {
+                "terms": {
+                    "field": "source.keyword",
+                    "size": size,
+                    "order": {"_key": "desc"},
                 }
             }
         }
+    
         try:
-            results = settings.ES.search(index=index, body=agg_body, request_cache=True)
+            results = settings.ES.search(index=index, aggs=aggs, request_cache=True)
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
