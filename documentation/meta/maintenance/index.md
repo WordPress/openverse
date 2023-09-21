@@ -10,5 +10,5 @@ repository itself: [`WordPress/openverse-infrastructure` (private repo)](
 ```{toctree}
 :titlesonly:
 
-elasticsearch_cluster.md
+elasticsearch_cluster
 ```
