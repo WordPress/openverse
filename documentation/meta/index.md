@@ -10,6 +10,7 @@ ci_cd/index
 decision_making/index
 documentation/index
 monitoring/index
+maintenance/index
 communication_aliases
 codespell
 ```
