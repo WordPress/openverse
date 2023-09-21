@@ -28,8 +28,12 @@ HEADERS = {
 }
 
 class UpstreamWatermarkException(APIException):
-    status_code = status.HTTP_424_FAILED_DEPENDENCY
-    default_detail = "Could not render watermarked image due to upstream provider error."
+    status_code = (
+        status.HTTP_424_FAILED_DEPENDENCY
+    )
+    default_detail = (
+        "Could not render watermarked image due to upstream provider error."
+    )
     default_code = "upstream_watermark_failure"
 
 class Dimension(Flag):
