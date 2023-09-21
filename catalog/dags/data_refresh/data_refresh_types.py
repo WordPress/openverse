@@ -46,7 +46,7 @@ class DataRefresh:
     dag_id: str = field(init=False)
     media_type: str
     start_date: datetime = datetime(2020, 1, 1)
-    schedule: str | None = "0 0 * * 2"
+    schedule: str | None = "0 0 * * 1"  # Mondays 00:00 UTC
     default_args: dict | None = field(default_factory=dict)
     data_refresh_timeout: timedelta = timedelta(days=1)
     refresh_metrics_timeout: timedelta = timedelta(hours=1)
