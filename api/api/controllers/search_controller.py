@@ -556,7 +556,6 @@ def get_sources(index):
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
-        
         aggs = {
             "unique_sources": {
                 "terms": {
@@ -566,7 +565,6 @@ def get_sources(index):
                 }
             }
         }
-    
         try:
             results = settings.ES.search(index=index, aggs=aggs, request_cache=True)
             buckets = results["aggregations"]["unique_sources"]["buckets"]
