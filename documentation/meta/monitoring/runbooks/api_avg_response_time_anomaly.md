@@ -6,7 +6,7 @@ Status: **Unstable**
 Maintainer: @krysaldb
 
 Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+Average+Response+Time+anomaly?>
+- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+Average+Response+Time+anomalously+high?>
 ```
 
 ## Severity Guide
