@@ -371,9 +371,53 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
         ],
         render_template_as_native_obj=True,
         user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
-        # Delete source data from airflow and db once ingestion is complete. Here as a
-        # parameter to support data quality testing in sql-only dags like iNaturalist.
-        params={"sql_rm_source_data_after_ingesting": Param(True, type="boolean")},
+        params={
+            "date": Param(
+                default=None,
+                type=["string", "null"],
+                format="date",
+                description="Override the ingestion date for a dated DAG.",
+            ),
+            "initial_query_params": Param(
+                default={},
+                type=["object", "null"],
+                description=(
+                    "Override the set of `query_params` that will be used to fetch the"
+                    " first batch of records. This option is used to trigger a DagRun"
+                    " that resumes ingestion from a desired starting point, rather"
+                    " than starting over from the beginning."
+                ),
+            ),
+            "query_params_list": Param(
+                default=[],
+                type=["array", "null"],
+                items={
+                    "type": "object",
+                },
+                description=(
+                    "A list of `query_params` dicts. When supplied, the ingester will"
+                    " be run for just these sets of params."
+                ),
+            ),
+            "skip_ingestion_errors": Param(
+                default=False,
+                type="boolean",
+                description=(
+                    "Whether to skip over all errors encountered during ingestion,"
+                    " continuing to the next batch and reporting errors in aggregate"
+                    " when ingestion is complete. This option should be used sparingly."
+                ),
+            ),
+            "sql_rm_source_data_after_ingesting": Param(
+                default=True,
+                type="boolean",
+                description=(
+                    "Whether to delete source data from airflow and DB once ingestion"
+                    " is complete. This is used to support data quality testing in"
+                    " SQL-only DAGs like iNaturalist."
+                ),
+            ),
+        },
     )
 
     with dag:
