@@ -40,7 +40,7 @@ const assertCheckboxCount = async (
 const FILTER_COUNTS = {
   [ALL_MEDIA]: 10,
   [AUDIO]: 31,
-  [IMAGE]: 69,
+  [IMAGE]: 71,
 }
 
 breakpoints.describeMobileAndDesktop(() => {
