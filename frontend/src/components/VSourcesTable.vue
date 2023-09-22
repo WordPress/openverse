@@ -111,7 +111,7 @@ export default defineComponent({
     function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
       let field1 = prov1[sorting.field]
       let field2 = prov2[sorting.field]
-      if (sorting.field === 'display_name') {
+      if (sorting.field === "display_name") {
         field1 = prov1[sorting.field].toLowerCase()
         field2 = prov2[sorting.field].toLowerCase()
       }
