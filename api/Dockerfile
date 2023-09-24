@@ -7,7 +7,7 @@ ARG API_PY_VERSION
 # Audio waveform #
 ##################
 
-FROM realies/audiowaveform:latest AS awf
+FROM docker.io/realies/audiowaveform:latest AS awf
 
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
@@ -18,7 +18,7 @@ RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
 # Python builder #
 ##################
 
-FROM python:${API_PY_VERSION} AS builder
+FROM docker.io/python:${API_PY_VERSION} AS builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -47,7 +47,7 @@ RUN pipenv install --system --deploy --dev
 # API #
 #######
 
-FROM python:${API_PY_VERSION}-slim AS api
+FROM docker.io/python:${API_PY_VERSION}-slim AS api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -122,7 +122,7 @@ CMD ["gunicorn"]
 # NGINX #
 #########
 
-FROM nginx:1.25.2-alpine as nginx
+FROM docker.io/nginx:1.25.2-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
