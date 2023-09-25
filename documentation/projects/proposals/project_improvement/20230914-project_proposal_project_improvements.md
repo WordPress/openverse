@@ -87,7 +87,7 @@ The following implementation plans would be required:
 
 1. improvements to existing, restoration of previous and creation of new
    automations
-   ([plan](/projects/proposals/project_automations/20230914-implementation_plan_project_automations.md))
+   ([plan](/projects/proposals/project_improvement/20230914-implementation_plan_project_automations.md))
 2. documentation of existing and creation of new useful views for project boards
    (plan)
 3. discussion of ideas related to the project and discussion boards as that has
