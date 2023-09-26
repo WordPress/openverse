@@ -217,7 +217,7 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
         # For each type we generate a sub-list of DAGs. We add a link to each generated
         # sub-list as part of a table of contents, but defer adding the sub-lists until
         # all are generated.
-        text += f" 1. [{name}](#{type_})\n"
+        text += f" 1. [{name}](#{type_.replace('_', '-')})\n"
         dag_types.append(generate_type_subsection(name, dags, is_provider))
 
     text += "\n" + "\n\n".join(dag_types)

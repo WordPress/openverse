@@ -14,13 +14,13 @@ The DAGs are shown in two forms:
 
 The following are DAGs grouped by their primary tag:
 
-1.  [Data Normalization](#data_normalization)
-1.  [Data Refresh](#data_refresh)
+1.  [Data Normalization](#data-normalization)
+1.  [Data Refresh](#data-refresh)
 1.  [Database](#database)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Other](#other)
-1.  [Popularity Refresh](#popularity_refresh)
+1.  [Popularity Refresh](#popularity-refresh)
 1.  [Provider](#provider)
 1.  [Provider Reingestion](#provider-reingestion)
 
