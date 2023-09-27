@@ -1,4 +1,4 @@
-# Project Proposal Template
+# Template: Project Proposal
 
 ```md
 # {YYYY-MM-DD} Project Proposal

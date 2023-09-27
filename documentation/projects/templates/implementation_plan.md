@@ -1,4 +1,4 @@
-# Implementation Plan Template
+# Template: Implementation Plan
 
 ```md
 # {YYYY-MM-DD} Implementation Plan: {Piece of project or project being implemented}
