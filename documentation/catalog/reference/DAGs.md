@@ -10,36 +10,36 @@ The DAGs are shown in two forms:
 - [DAGs by Type](#dags-by-type)
 - [Individual DAG documentation](#dag-documentation)
 
-# DAGs by Type
+## DAGs by Type
 
 The following are DAGs grouped by their primary tag:
 
-1.  [Data Normalization](#data_normalization)
-1.  [Data Refresh](#data_refresh)
+1.  [Data Normalization](#data-normalization)
+1.  [Data Refresh](#data-refresh)
 1.  [Database](#database)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Other](#other)
-1.  [Popularity Refresh](#popularity_refresh)
+1.  [Popularity Refresh](#popularity-refresh)
 1.  [Provider](#provider)
 1.  [Provider Reingestion](#provider-reingestion)
 
-## Data Normalization
+### Data Normalization
 
 | DAG ID                                | Schedule Interval |
 | ------------------------------------- | ----------------- |
 | [`add_license_url`](#add_license_url) | `None`            |
 
-## Data Refresh
+### Data Refresh
 
 | DAG ID                                                        | Schedule Interval |
 | ------------------------------------------------------------- | ----------------- |
-| [`audio_data_refresh`](#audio_data_refresh)                   | `0 0 * * 2`       |
+| [`audio_data_refresh`](#audio_data_refresh)                   | `0 0 * * 1`       |
 | [`create_filtered_audio_index`](#create_filtered_audio_index) | `None`            |
 | [`create_filtered_image_index`](#create_filtered_image_index) | `None`            |
-| [`image_data_refresh`](#image_data_refresh)                   | `0 0 * * 2`       |
+| [`image_data_refresh`](#image_data_refresh)                   | `0 0 * * 1`       |
 
-## Database
+### Database
 
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
@@ -49,7 +49,7 @@ The following are DAGs grouped by their primary tag:
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
 
-## Maintenance
+### Maintenance
 
 | DAG ID                                                                      | Schedule Interval |
 | --------------------------------------------------------------------------- | ----------------- |
@@ -59,27 +59,27 @@ The following are DAGs grouped by their primary tag:
 | [`pr_review_reminders`](#pr_review_reminders)                               | `0 0 * * 1-5`     |
 | [`rotate_db_snapshots`](#rotate_db_snapshots)                               | `0 0 * * 6`       |
 
-## Oauth
+### Oauth
 
 | DAG ID                                          | Schedule Interval |
 | ----------------------------------------------- | ----------------- |
 | [`oauth2_authorization`](#oauth2_authorization) | `None`            |
 | [`oauth2_token_refresh`](#oauth2_token_refresh) | `0 */12 * * *`    |
 
-## Other
+### Other
 
 | DAG ID                                                    | Schedule Interval |
 | --------------------------------------------------------- | ----------------- |
 | [`flickr_thumbnails_removal`](#flickr_thumbnails_removal) | `None`            |
 
-## Popularity Refresh
+### Popularity Refresh
 
 | DAG ID                                                  | Schedule Interval |
 | ------------------------------------------------------- | ----------------- |
 | [`audio_popularity_refresh`](#audio_popularity_refresh) | `@monthly`        |
 | [`image_popularity_refresh`](#image_popularity_refresh) | `@monthly`        |
 
-## Provider
+### Provider
 
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
 | --------------------------------------------------------------- | ----------------- | ------- | ------------- |
@@ -105,7 +105,7 @@ The following are DAGs grouped by their primary tag:
 | [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)     | `@daily`          | `True`  | image, audio  |
 | [`wordpress_workflow`](#wordpress_workflow)                     | `@monthly`        | `False` | image         |
 
-## Provider Reingestion
+### Provider Reingestion
 
 | DAG ID                                                                                  | Schedule Interval |
 | --------------------------------------------------------------------------------------- | ----------------- |
@@ -114,7 +114,7 @@ The following are DAGs grouped by their primary tag:
 | [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)                       | `@weekly`         |
 | [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)                     | `@weekly`         |
 
-# DAG documentation
+## DAG documentation
 
 The following is documentation associated with each DAG (where available):
 
@@ -160,9 +160,9 @@ The following is documentation associated with each DAG (where available):
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
 1.  [`wordpress_workflow`](#wordpress_workflow)
 
-## `add_license_url`
+### `add_license_url`
 
-### Add license URL
+#### Add license URL
 
 Add `license_url` to all rows that have `NULL` in their `meta_data` fields. This
 PR sets the meta_data value to "{license_url: https://... }", where the url is
@@ -172,9 +172,9 @@ This is a maintenance DAG that should be run once. If all the null values in the
 `meta_data` column are updated, the DAG will only run the first and the last
 step, logging the statistics.
 
-## `airflow_log_cleanup`
+### `airflow_log_cleanup`
 
-### Clean up airflow logs
+#### Clean up airflow logs
 
 A maintenance workflow that you can deploy into Airflow to periodically clean
 out the task logs to avoid those getting too big. By default, this will also
@@ -197,9 +197,9 @@ airflow dags trigger --conf
 - maxLogAgeInDays:<INT> - Optional
 - enableDelete:<BOOLEAN> - Optional
 
-## `audio_data_refresh`
+### `audio_data_refresh`
 
-### Data Refresh DAG Factory
+#### Data Refresh DAG Factory
 
 This file generates our data refresh DAGs using a factory function. For the
 given media type these DAGs will initiate a data refresh on the ingestion server
@@ -221,9 +221,9 @@ and related PRs:
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
 
-## `audio_popularity_refresh`
+### `audio_popularity_refresh`
 
-### Popularity Refresh DAG Factory
+#### Popularity Refresh DAG Factory
 
 This file generates our popularity refresh DAGs using a factory function.
 
@@ -244,7 +244,7 @@ implementation plan:
 
 - [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 
-## `batched_update`
+### `batched_update`
 
 Batched Update DAG
 
@@ -311,9 +311,9 @@ used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step.
 
-## `check_silenced_dags`
+### `check_silenced_dags`
 
-### Silenced DAGs check
+#### Silenced DAGs check
 
 Check for DAGs that have silenced Slack alerts or skipped errors which may need
 to be turned back on.
@@ -336,9 +336,9 @@ issue has been resolved.
 
 The DAG runs weekly.
 
-## `create_filtered_audio_index`
+### `create_filtered_audio_index`
 
-### Create filtered index DAG factory
+#### Create filtered index DAG factory
 
 This module creates the filtered index creation DAGs for each media type using a
 factory function.
@@ -350,7 +350,7 @@ index for a given media type. The DAG awaits the completion of the filtered
 index creation and then points the filtered index alias for the media type to
 the newly created index.
 
-#### When this DAG runs
+##### When this DAG runs
 
 The DAGs generated in this module are triggered by the data refresh DAGs.
 Maintaining this process separate from the data refresh DAGs, while still
@@ -360,7 +360,7 @@ changes to the filtered index creation; and for re-running filtered index
 creation if an urgent change to the sensitive terms calls for an immediate
 recreation of the filtered indexes.
 
-#### Race conditions
+##### Race conditions
 
 Because filtered index creation employs the `reindex` Elasticsearch API to
 derive the filtered index from an existing index, we need to be mindful of the
@@ -389,9 +389,9 @@ parameter is only for use by the data refresh DAG and should not be used when
 manually triggering the DAG unless you are absolutely certain of what you are
 doing.
 
-## `create_filtered_image_index`
+### `create_filtered_image_index`
 
-### Create filtered index DAG factory
+#### Create filtered index DAG factory
 
 This module creates the filtered index creation DAGs for each media type using a
 factory function.
@@ -403,7 +403,7 @@ index for a given media type. The DAG awaits the completion of the filtered
 index creation and then points the filtered index alias for the media type to
 the newly created index.
 
-#### When this DAG runs
+##### When this DAG runs
 
 The DAGs generated in this module are triggered by the data refresh DAGs.
 Maintaining this process separate from the data refresh DAGs, while still
@@ -413,7 +413,7 @@ changes to the filtered index creation; and for re-running filtered index
 creation if an urgent change to the sensitive terms calls for an immediate
 recreation of the filtered indexes.
 
-#### Race conditions
+##### Race conditions
 
 Because filtered index creation employs the `reindex` Elasticsearch API to
 derive the filtered index from an existing index, we need to be mindful of the
@@ -442,7 +442,7 @@ parameter is only for use by the data refresh DAG and should not be used when
 manually triggering the DAG unless you are absolutely certain of what you are
 doing.
 
-## `europeana_workflow`
+### `europeana_workflow`
 
 Content Provider: Europeana
 
@@ -452,7 +452,7 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: https://pro.europeana.eu/page/search
 
-## `finnish_museums_workflow`
+### `finnish_museums_workflow`
 
 Content Provider: Finnish Museums
 
@@ -466,15 +466,15 @@ script is a dated DAG that ingests all records that were last updated in the
 previous day. Because of this, it is not necessary to run a separate reingestion
 DAG, as updated data will be processed during regular ingestion.
 
-## `flickr_audit_sub_provider_workflow`
+### `flickr_audit_sub_provider_workflow`
 
-### Flickr Sub Provider Audit
+#### Flickr Sub Provider Audit
 
 Check the list of member institutions of the Flickr Commons for institutions
 that have cc-licensed images and are not already configured as sub-providers for
 the Flickr DAG. Report suggestions for new sub-providers to Slack.
 
-## `flickr_reingestion_workflow`
+### `flickr_reingestion_workflow`
 
 Content Provider: Flickr
 
@@ -484,12 +484,12 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: https://www.flickr.com/help/terms/api Rate limit: 3600 requests per hour.
 
-## `flickr_thumbnails_removal`
+### `flickr_thumbnails_removal`
 
 One-time run DAG to remove progressively all the old Flickr thumbnails, as they
 were determined to be unsuitable for the Openverse UI requirements.
 
-## `flickr_workflow`
+### `flickr_workflow`
 
 Content Provider: Flickr
 
@@ -499,7 +499,7 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: https://www.flickr.com/help/terms/api Rate limit: 3600 requests per hour.
 
-## `freesound_workflow`
+### `freesound_workflow`
 
 Content Provider: Freesound
 
@@ -510,9 +510,9 @@ Output: TSV file containing the image, the respective meta-data.
 Notes: https://freesound.org/docs/api/ Rate limit: No limit for our API key.
 This script can be run either to ingest the full dataset or as a dated DAG.
 
-## `image_data_refresh`
+### `image_data_refresh`
 
-### Data Refresh DAG Factory
+#### Data Refresh DAG Factory
 
 This file generates our data refresh DAGs using a factory function. For the
 given media type these DAGs will initiate a data refresh on the ingestion server
@@ -534,9 +534,9 @@ and related PRs:
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
 
-## `image_popularity_refresh`
+### `image_popularity_refresh`
 
-### Popularity Refresh DAG Factory
+#### Popularity Refresh DAG Factory
 
 This file generates our popularity refresh DAGs using a factory function.
 
@@ -557,7 +557,7 @@ implementation plan:
 
 - [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 
-## `inaturalist_workflow`
+### `inaturalist_workflow`
 
 Provider: iNaturalist
 
@@ -575,7 +575,7 @@ We use the table structure defined here,
 https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql
 except for adding ancestry tags to the taxa table.
 
-## `jamendo_workflow`
+### `jamendo_workflow`
 
 Content Provider: Jamendo
 
@@ -588,7 +588,7 @@ non-commercial apps Jamendo Music has more than 500,000 tracks shared by 40,000
 artists from over 150 countries all over the world. Audio quality: uploaded as
 WAV/ FLAC/ AIFF bit depth: 16/24 sample rate: 44.1 or 48 kHz channels: 1/2
 
-## `justtakeitfree_workflow`
+### `justtakeitfree_workflow`
 
 Content Provider: Justtakeitfree
 
@@ -599,7 +599,7 @@ Output: TSV file containing the media and the respective meta-data.
 Notes: https://justtakeitfree.com/api/api.php This API requires an API key. For
 more details, see https://github.com/WordPress/openverse/pull/2793
 
-## `metropolitan_museum_reingestion_workflow`
+### `metropolitan_museum_reingestion_workflow`
 
 Content Provider: Metropolitan Museum of Art
 
@@ -623,7 +623,7 @@ blocking during local development testing.
                         connect with just date and license.
                         https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
 
-## `metropolitan_museum_workflow`
+### `metropolitan_museum_workflow`
 
 Content Provider: Metropolitan Museum of Art
 
@@ -647,7 +647,7 @@ blocking during local development testing.
                         connect with just date and license.
                         https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
 
-## `nappy_workflow`
+### `nappy_workflow`
 
 Content Provider: Nappy
 
@@ -658,9 +658,9 @@ Output: TSV file containing the image meta-data.
 Notes: This api was written specially for Openverse. There are no known limits
 or restrictions. https://nappy.co/
 
-## `oauth2_authorization`
+### `oauth2_authorization`
 
-### OAuth Provider Authorization
+#### OAuth Provider Authorization
 
 Iterates through all the OAuth2 providers and attempts to authorize them using
 tokens found in the in the `OAUTH2_AUTH_KEYS` Variable. Once authorization has
@@ -672,9 +672,9 @@ authorization will create an access/refresh token pair in the
 
 - Freesound
 
-## `oauth2_token_refresh`
+### `oauth2_token_refresh`
 
-### OAuth Provider Token Refresh
+#### OAuth Provider Token Refresh
 
 Iterates through all OAuth2 providers and attempts to refresh the access token
 using the refresh token stored in the `OAUTH2_ACCESS_TOKENS` Variable. This DAG
@@ -684,7 +684,7 @@ will update the tokens stored in the Variable upon successful refresh.
 
 - Freesound
 
-## `phylopic_reingestion_workflow`
+### `phylopic_reingestion_workflow`
 
 Content Provider: PhyloPic
 
@@ -694,7 +694,7 @@ Output: TSV file containing the image, their respective meta-data.
 
 Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
-## `phylopic_workflow`
+### `phylopic_workflow`
 
 Content Provider: PhyloPic
 
@@ -704,9 +704,9 @@ Output: TSV file containing the image, their respective meta-data.
 
 Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
-## `pr_review_reminders`
+### `pr_review_reminders`
 
-### PR Review Reminders
+#### PR Review Reminders
 
 Iterates through open PRs in our repositories and pings assigned reviewers who
 have not yet approved the PR or explicitly requested changes.
@@ -727,7 +727,7 @@ Unfortunately the DAG does not know when someone is on vacation. It is up to the
 author of the PR to re-assign review if one of the randomly selected reviewers
 is unavailable for the time period during which the PR should be reviewed.
 
-## `rawpixel_workflow`
+### `rawpixel_workflow`
 
 Content Provider: Rawpixel
 
@@ -741,7 +741,7 @@ issues. The public API max results range is limited to 100,000 results, although
 the API key we've been given can circumvent this limit.
 https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
 
-## `recreate_audio_popularity_calculation`
+### `recreate_audio_popularity_calculation`
 
 This file generates Apache Airflow DAGs that, for the given media type,
 completely wipes out and recreates the PostgreSQL functions involved in
@@ -755,7 +755,7 @@ popularity constants and standardized popularity scores using the new functions.
 These DAGs are not on a schedule, and should only be run manually when new SQL
 code is deployed for the calculation.
 
-## `recreate_image_popularity_calculation`
+### `recreate_image_popularity_calculation`
 
 This file generates Apache Airflow DAGs that, for the given media type,
 completely wipes out and recreates the PostgreSQL functions involved in
@@ -769,9 +769,9 @@ popularity constants and standardized popularity scores using the new functions.
 These DAGs are not on a schedule, and should only be run manually when new SQL
 code is deployed for the calculation.
 
-## `report_pending_reported_media`
+### `report_pending_reported_media`
 
-### Report Pending Reported Media DAG
+#### Report Pending Reported Media DAG
 
 This DAG checks for any user-reported media pending manual review, and alerts
 via Slack.
@@ -782,7 +782,7 @@ whether further action (such as deindexing the record) needs to be taken. If a
 record has been reported multiple times, it only needs to be reviewed once and
 so is only counted once in the reporting by this DAG.
 
-## `rotate_db_snapshots`
+### `rotate_db_snapshots`
 
 Manages weekly database snapshots.
 
@@ -799,7 +799,7 @@ Requires two variables:
 `CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
 `CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 
-## `science_museum_workflow`
+### `science_museum_workflow`
 
 Content Provider: Science Museum
 
@@ -811,7 +811,7 @@ Notes:
 https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API
 Rate limited, no specific rate given.
 
-## `smithsonian_workflow`
+### `smithsonian_workflow`
 
 Content Provider: Smithsonian
 
@@ -821,7 +821,7 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: https://api.si.edu/openaccess/api/v1.0/search
 
-## `smk_workflow`
+### `smk_workflow`
 
 Content Provider: Statens Museum for Kunst (National Gallery of Denmark)
 
@@ -831,9 +831,9 @@ Output: TSV file containing the media metadata.
 
 Notes: https://www.smk.dk/en/article/smk-api/
 
-## `staging_database_restore`
+### `staging_database_restore`
 
-### Update the staging database
+#### Update the staging database
 
 This DAG is responsible for updating the staging database using the most recent
 snapshot of the production database.
@@ -855,7 +855,7 @@ the RDS operations run using a different hook:
 - `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the
   above example, it might be `AIRFLOW_CONN_AWS_RDS`)
 
-## `stocksnap_workflow`
+### `stocksnap_workflow`
 
 Content Provider: StockSnap
 
@@ -867,7 +867,7 @@ Notes: https://stocksnap.io/api/load-photos/date/desc/1 https://stocksnap.io/faq
 All images are licensed under CC0. No rate limits or authorization required. API
 is undocumented.
 
-## `wikimedia_commons_workflow`
+### `wikimedia_commons_workflow`
 
 **Content Provider:** Wikimedia Commons
 
@@ -875,7 +875,7 @@ is undocumented.
 
 **Output:** TSV file containing the image, the respective meta-data.
 
-### Notes
+#### Notes
 
 Rate limit of no more than 200 requests/second, and we are required to set a
 unique User-Agent field
@@ -967,7 +967,7 @@ cases where they might exceed the limit. Technically, it's feasible for almost
 any property to exceed the limit, but these are the ones that we've seen in
 practice.
 
-#### `imageinfo`
+##### `imageinfo`
 
 [Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bimageinfo)
 
@@ -977,7 +977,7 @@ practice.
 For these requests, we can remove the `metadata` property from the `iiprops`
 parameter to avoid this issue on subsequent iterations.
 
-#### `globalusage`
+##### `globalusage`
 
 [Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bglobalusage)
 
@@ -986,7 +986,7 @@ parameter to avoid this issue on subsequent iterations.
 For these requests, we can remove the `globalusage` property from the `prop`
 parameter entirely and eschew the popularity data for these items.
 
-## `wikimedia_reingestion_workflow`
+### `wikimedia_reingestion_workflow`
 
 **Content Provider:** Wikimedia Commons
 
@@ -994,7 +994,7 @@ parameter entirely and eschew the popularity data for these items.
 
 **Output:** TSV file containing the image, the respective meta-data.
 
-### Notes
+#### Notes
 
 Rate limit of no more than 200 requests/second, and we are required to set a
 unique User-Agent field
@@ -1086,7 +1086,7 @@ cases where they might exceed the limit. Technically, it's feasible for almost
 any property to exceed the limit, but these are the ones that we've seen in
 practice.
 
-#### `imageinfo`
+##### `imageinfo`
 
 [Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bimageinfo)
 
@@ -1096,7 +1096,7 @@ practice.
 For these requests, we can remove the `metadata` property from the `iiprops`
 parameter to avoid this issue on subsequent iterations.
 
-#### `globalusage`
+##### `globalusage`
 
 [Docs](https://commons.wikimedia.org/w/api.php?action=help&modules=query%2Bglobalusage)
 
@@ -1105,7 +1105,7 @@ parameter to avoid this issue on subsequent iterations.
 For these requests, we can remove the `globalusage` property from the `prop`
 parameter entirely and eschew the popularity data for these items.
 
-## `wordpress_workflow`
+### `wordpress_workflow`
 
 Content Provider: WordPress Photo Directory
 

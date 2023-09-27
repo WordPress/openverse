@@ -126,15 +126,15 @@ generate-dag-docs fail_on_diff="false":
     just ../run \
       {{ SERVICE }} \
       "bash -c 'python catalog/utilities/dag_doc_gen/dag_doc_generation.py && chmod 666 /opt/airflow/catalog/utilities/dag_doc_gen/DAGs.md'"
-    # Move the file to the top level, since that level is not mounted into the container
-    mv utilities/dag_doc_gen/DAGs.md DAGs.md
+    # Move the file to the top level on the documentation folder, since that level is not mounted into the container
+    mv utilities/dag_doc_gen/DAGs.md ../documentation/catalog/reference/DAGs.md
     echo -n "Running linting..."
     # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
-    just ../lint prettier catalog/DAGs.md &>/dev/null || true
+    just ../lint prettier documentation/catalog/reference/DAGs.md &>/dev/null || true
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e
-      git diff --exit-code DAGs.md
+      git diff --exit-code -- documentation/catalog/reference/DAGs.md
       if [ $? -ne 0 ]; then
           printf "\n\n\e[31m!! Changes found in DAG documentation, please run 'just generate-dag-docs' locally and commit difference !!\n\n"
           exit 1
