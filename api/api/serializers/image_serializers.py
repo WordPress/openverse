@@ -134,13 +134,11 @@ class OembedRequestSerializer(serializers.Serializer):
 
         try:
             uuid = UUID(identifier)
+            image = Image.objects.get(identifier=uuid)
         except ValueError:
             raise serializers.ValidationError(
                 {"Could not parse identifier from URL.": data["url"]}
             )
-
-        try:
-            image = Image.objects.get(identifier=uuid)
         except (Image.DoesNotExist, ValidationError):
             raise serializers.ValidationError(
                 {"Could not find image from the provided URL": data["url"]}
