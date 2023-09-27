@@ -1,4 +1,5 @@
 set dotenv-load := false
+set positional-arguments
 
 COLOR := "\\033[0;35m"
 NO_COLOR := "\\033[0m"
@@ -17,6 +18,48 @@ install:
 ##########
 # Sphinx #
 ##########
+
+# Create a new project with proposal and implementation plans
+init-project name *ips:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    TIMESTAMP=$(date '+%Y%m%d')
+    DATE=$(date '+%Y-%m-%d')
+    PROJECTFS="{{ replace(lowercase(name), ' ', '_') }}"
+    # Create project directory
+    mkdir "projects/proposals/$PROJECTFS"
+    # Create project directory index
+    sed \
+      -e '1,3d;$d' \
+      -e 's/{Project title}/{{ name }}/g' \
+      projects/templates/index.md > "projects/proposals/$PROJECTFS/index.md"
+    # Create project proposal
+    sed \
+      -e '1,3d;$d' \
+      -e 's/{Project proposal title}/{{ name }}/g' \
+      -e "s/{YYYY-MM-DD}/$DATE/g" \
+      projects/templates/project_proposal.md > "projects/proposals/$PROJECTFS/$TIMESTAMP-project_proposal.md"
+    # Create implementation plans
+    shift
+    for IP in "$@"; do
+        just create-ip "projects/proposals/$PROJECTFS" "$IP"
+    done
+
+# Create a new implementation plan in the given directory
+create-ip directory name:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    TIMESTAMP=$(date '+%Y%m%d')
+    DATE=$(date '+%Y-%m-%d')
+    IPFS="{{ replace(lowercase(name), ' ', '_') }}"
+    PROPOSALFS=$(find "{{ directory }}" -maxdepth 1 -name '*project_proposal.md')
+    # Create implementation plan
+    sed \
+      -e '1,3d;$d' \
+      -e "s/{YYYY-MM-DD}/$DATE/g" \
+      -e 's/{Implementation plan title}/{{ name }}/g' \
+      -e "s|{Project proposal path}|/$PROPOSALFS|g" \
+      projects/templates/implementation_plan.md > "{{ directory }}/$TIMESTAMP-implementation_plan_$IPFS.md"
 
 # Serve a live-reload documentation site
 live port="50230": clean
