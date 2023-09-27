@@ -397,6 +397,20 @@
                 logo_url: null,
                 media_count: 154,
             },
+            {
+              "source_name": "inaturalist",
+              "display_name": "iNaturalist",
+              "source_url": "https://inaturalist.org",
+              "logo_url": null,
+              "media_count": 158267579
+            },
+            {
+              "source_name": "nappy",
+              "display_name": "Nappy",
+              "source_url": "https://nappy.co",
+              "logo_url": null,
+              "media_count": 2211
+            },
         ],
     },
 }
