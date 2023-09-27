@@ -2,6 +2,7 @@ import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
+from test.constants import API_URL
 from test.factory.models.image import ImageFactory
 from unittest.mock import patch
 
@@ -52,7 +53,8 @@ def requests(monkeypatch) -> RequestsFixture:
 @pytest.mark.django_db
 def test_oembed_sends_ua_header(api_client, requests):
     image = ImageFactory.create()
-    res = api_client.get("/v1/images/oembed/", data={"url": f"/{image.identifier}"})
+    image.url = f"https://any.domain/any/path/{image.identifier}"
+    res = api_client.get(f"{API_URL}/v1/images/oembed/", data={"url": image.url})
 
     assert res.status_code == 200
 
