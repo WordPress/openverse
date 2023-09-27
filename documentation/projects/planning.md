@@ -181,7 +181,7 @@ section of this document.
 
 ### Kickoff (`status: In Kickoff`)
 
-- [Kickoff/Project Proposal template](./templates/project-proposal.md)
+- [Kickoff/Project Proposal template](./templates/project_proposal.md)
 
 In the kickoff stage, a **project proposal** is written and shared with the team
 by the project lead. The primary goals of this document are that of discovery;
@@ -273,7 +273,7 @@ them.
 
 ### Implementation Plans (`status: In RFC`)
 
-- [Implementation Plan Template](./templates/implementation-plan.md)
+- [Implementation Plan Template](./templates/implementation_plan.md)
 
 Implementation plans are the next type of RFC created for a project. The main
 goal of an implementation plan is to produce a discrete and ordered list of
