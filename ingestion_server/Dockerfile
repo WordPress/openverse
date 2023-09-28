@@ -7,7 +7,7 @@ ARG INGESTION_PY_VERSION
 # Python builder #
 ##################
 
-FROM python:${INGESTION_PY_VERSION} as builder
+FROM docker.io/python:${INGESTION_PY_VERSION} as builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -36,7 +36,7 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM python:${INGESTION_PY_VERSION}-slim as ing
+FROM docker.io/python:${INGESTION_PY_VERSION}-slim as ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
