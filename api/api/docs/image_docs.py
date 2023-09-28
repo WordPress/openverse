@@ -40,7 +40,7 @@ search = custom_extend_schema(
 
         By using this endpoint, you can obtain search results based on specified
         query and optionally filter results by
-        {fields_to_md(ImageSearchRequestSerializer.fields_names)}.
+        {fields_to_md(ImageSearchRequestSerializer.field_names)}.
 
         Results are ranked in order of relevance and paginated on the basis of the
         `page` param. The `page_size` param controls the total number of pages.

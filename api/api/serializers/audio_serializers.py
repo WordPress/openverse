@@ -48,8 +48,8 @@ class AudioSearchRequestSerializer(
 ):
     """Parse and validate search query string parameters."""
 
-    fields_names = [
-        *MediaSearchRequestSerializer.fields_names,
+    field_names = [
+        *MediaSearchRequestSerializer.field_names,
         *AudioSearchRequestSourceSerializer.field_names,
         "category",
         "length",

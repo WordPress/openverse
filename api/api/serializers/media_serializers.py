@@ -106,7 +106,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         DeprecatedParam("pagesize", "page_size"),
         DeprecatedParam("provider", "source"),
     ]
-    fields_names = [
+    field_names = [
         "q",
         "license",
         "license_type",
