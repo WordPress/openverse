@@ -36,7 +36,9 @@ class PaginatedRequestSerializer(serializers.Serializer):
     page_size = serializers.IntegerField(
         label="page_size",
         help_text=f"Number of results to return per page. "
-        f"Maximum for unauthenticated requests is {settings.MAX_ANONYMOUS_PAGE_SIZE}.",
+        f"Maximum is {settings.MAX_AUTHED_PAGE_SIZE} for authenticated "
+        f"requests, and {settings.MAX_ANONYMOUS_PAGE_SIZE} for "
+        f"unauthenticated requests.",
         required=False,
         default=settings.MAX_ANONYMOUS_PAGE_SIZE,
         min_value=1,
@@ -148,19 +150,30 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     )
     creator = serializers.CharField(
         label="creator",
-        help_text="Search by creator only. Cannot be used with `q`.",
+        help_text="Search by creator only. Cannot be used with `q`. The search "
+        "is fuzzy, so `creator=john` will match any value that includes the "
+        "word `john`. If the value contains space, items that contain any of "
+        "the words in the value will match. To search for several values, "
+        "join them with a comma.",
         required=False,
         max_length=200,
     )
     tags = serializers.CharField(
         label="tags",
-        help_text="Search by tag only. Cannot be used with `q`.",
+        help_text="Search by tag only. Cannot be used with `q`. The search "
+        "is fuzzy, so `tags=cat` will match any value that includes the word "
+        "`cat`. If the value contains space, items that contain any of the "
+        "words in the value will match. To search for several values, join "
+        "them with a comma.",
         required=False,
         max_length=200,
     )
     title = serializers.CharField(
         label="title",
-        help_text="Search by title only. Cannot be used with `q`.",
+        help_text="Search by title only. Cannot be used with `q`. The search is fuzzy,"
+        " so `title=photo` will match any value that includes the word `photo`. "
+        "If the value contains space, items that contain any of the words in the "
+        "value will match. To search for several values, join them with a comma.",
         required=False,
         max_length=200,
     )
