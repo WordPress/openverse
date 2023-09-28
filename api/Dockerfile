@@ -80,10 +80,9 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 
 # - Install system packages needed for running Python dependencies
 #   - libexempi8: required for watermarking
-#   - libpq-dev: required by `psycopg2`
 # - Create directory for dumping API logs
 RUN apt-get update \
-  && apt-get install -y curl libpq-dev libexempi8 postgresql-client \
+  && apt-get install -y curl libexempi8 postgresql-client \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 

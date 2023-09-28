@@ -92,6 +92,16 @@ def test_oembed_endpoint_with_non_existent_image():
     assert response.status_code == 404
 
 
+def test_oembed_endpoint_with_bad_identifier():
+    params = {
+        "url": "https://any.domain/any/path/not-a-valid-uuid",
+    }
+    response = requests.get(
+        f"{API_URL}/v1/images/oembed?{urlencode(params)}", verify=False
+    )
+    assert response.status_code == 400
+
+
 @pytest.mark.parametrize(
     "url",
     [

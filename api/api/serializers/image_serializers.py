@@ -1,4 +1,5 @@
 from typing import Literal
+from uuid import UUID
 
 from rest_framework import serializers
 
@@ -124,7 +125,15 @@ class OembedRequestSerializer(serializers.Serializer):
 
     @staticmethod
     def validate_url(value):
-        return add_protocol(value)
+        url = add_protocol(value)
+        if url.endswith("/"):
+            url = url[:-1]
+        identifier = url.rsplit("/", 1)[1]
+        try:
+            uuid = UUID(identifier)
+        except ValueError:
+            raise serializers.ValidationError("Could not parse identifier from URL.")
+        return uuid
 
 
 class OembedSerializer(BaseModelSerializer):

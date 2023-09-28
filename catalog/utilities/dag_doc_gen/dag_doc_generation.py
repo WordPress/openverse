@@ -45,13 +45,13 @@ The DAGs are shown in two forms:
  - [DAGs by Type](#dags-by-type)
  - [Individual DAG documentation](#dag-documentation)
 
-# DAGs by Type
+## DAGs by Type
 
 The following are DAGs grouped by their primary tag:
 
 """
 MIDAMBLE = """
-# DAG documentation
+## DAG documentation
 
 The following is documentation associated with each DAG (where available):
 
@@ -94,7 +94,7 @@ def get_provider_workflows() -> dict[str, ProviderWorkflow]:
 
 def fix_headings(doc: str) -> str:
     """
-    Increase all heading levels by 2.
+    Increase all heading levels by 3.
 
     This is necessary to accommodate the embedded setting of the DAG docs
     in the final Markdown output.
@@ -105,7 +105,7 @@ def fix_headings(doc: str) -> str:
     for match in reversed(list(HEADING_PROG.finditer(doc))):
         start, end = match.span()
         original_heading = match.string[start:end]
-        new_heading = f"##{original_heading}"
+        new_heading = f"###{original_heading}"
         doc = f"{doc[:start]}{new_heading}{doc[end:]}"
 
     return doc
@@ -149,7 +149,7 @@ def generate_type_subsection(
 ) -> str:
     """Generate the documentation for a "DAGs by type" subsection."""
     log.info(f"Building subsection for '{name}'")
-    text = f"## {name}\n\n"
+    text = f"### {name}\n\n"
     # Columns for all DAGs
     header = "| DAG ID | Schedule Interval |"
     # Conditionally add the other columns for the provider-specific DAGs
@@ -183,7 +183,7 @@ def generate_type_subsection(
 def generate_single_documentation(dag: DagInfo) -> str:
     """Generate the documentation for a single DAG."""
     return f"""
-## `{dag.dag_id}`
+### `{dag.dag_id}`
 
 {dag.doc}
 
@@ -217,7 +217,7 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
         # For each type we generate a sub-list of DAGs. We add a link to each generated
         # sub-list as part of a table of contents, but defer adding the sub-lists until
         # all are generated.
-        text += f" 1. [{name}](#{type_})\n"
+        text += f" 1. [{name}](#{type_.replace('_', '-')})\n"
         dag_types.append(generate_type_subsection(name, dags, is_provider))
 
     text += "\n" + "\n\n".join(dag_types)
