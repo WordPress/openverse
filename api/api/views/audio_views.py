@@ -3,20 +3,18 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 
-from drf_spectacular.utils import (
-    OpenApiExample,
-    OpenApiResponse,
-    extend_schema,
-    extend_schema_view,
-)
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from api.constants.media_types import AUDIO_TYPE
 from api.docs.audio_docs import (
+    creator_collection,
     detail,
     related,
     report,
     search,
+    source_collection,
     stats,
+    tag_collection,
     thumbnail,
     waveform,
 )
@@ -28,7 +26,6 @@ from api.serializers.audio_serializers import (
     AudioSerializer,
     AudioWaveformSerializer,
 )
-from api.serializers.error_serializers import NotFoundErrorSerializer
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 from api.views.media_views import MediaViewSet
@@ -56,91 +53,31 @@ class AudioViewSet(MediaViewSet):
         return super().get_queryset().select_related("mature_audio", "audioset")
 
     # Extra actions
-    @extend_schema(
-        operation_id="audio_by_creator",
-        summary="audio_by_creator_at_source",
-        responses={
-            200: AudioSerializer(many=True),
-            404: OpenApiResponse(
-                NotFoundErrorSerializer,
-                examples=[
-                    OpenApiExample(
-                        name="404",
-                        value={
-                            "detail": "Invalid source 'source_name'. "
-                            "Valid sources are ..."
-                        },
-                    )
-                ],
-            ),
-        },
-        parameters=[AudioCollectionRequestSerializer],
-    )
+    @creator_collection
     @action(
         detail=False,
         methods=["get"],
         url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
     )
     def creator_collection(self, request, source, creator):
-        """
-        Get a collection of audio items by a specific creator from the specified source.
-
-        The items in the collection will be sorted by the order in which they were
-        added to Openverse.
-        """
         return super().creator_collection(request, source, creator)
 
-    @extend_schema(
-        operation_id="audio_by_source",
-        summary="audio_by_source",
-        responses={
-            200: AudioSerializer(many=True),
-            404: OpenApiResponse(
-                NotFoundErrorSerializer,
-                examples=[
-                    OpenApiExample(
-                        name="404",
-                        value={
-                            "detail": "Invalid source 'source_name'. "
-                            "Valid sources are ..."
-                        },
-                    )
-                ],
-            ),
-        },
-        parameters=[AudioCollectionRequestSerializer],
-    )
+    @source_collection
     @action(
         detail=False,
         methods=["get"],
         url_path="source/(?P<source>[^/.]+)",
     )
     def source_collection(self, request, source):
-        """
-        Get a collection of audio items from a specific source.
-
-        The items in the collection will be sorted by the order in which they were
-        added to Openverse.
-        """
         return super().source_collection(request, source)
 
-    @extend_schema(
-        operation_id="audio_by_tag",
-        summary="audio_by_tag",
-        responses={200: AudioSerializer(many=True)},
-        parameters=[AudioCollectionRequestSerializer],
-    )
+    @tag_collection
     @action(
         detail=False,
         methods=["get"],
         url_path="tag/(?P<tag>[^/.]+)",
     )
     def tag_collection(self, request, tag, *_, **__):
-        """
-        Get a collection of audio items with a specific tag.
-
-        The items will be ranked by their popularity and authority.
-        """
         return super().tag_collection(request, tag, *_, **__)
 
     @thumbnail
