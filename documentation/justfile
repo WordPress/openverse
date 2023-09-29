@@ -46,19 +46,19 @@ init-project project_name *ip_names:
     # Create implementation plans
     shift
     for IP in "$@"; do
-        just create-ip "projects/proposals/$PROJECTFS" "$IP"
+        just create-ip "$PROJECTFS" "$IP"
     done
 
 # Create a new implementation plan in the given directory
-create-ip directory ip_name:
+create-ip project_dirname ip_name:
     #!/usr/bin/env bash
     set -eo pipefail
     TIMESTAMP=$(date '+%Y%m%d')
     DATE=$(date '+%Y-%m-%d')
     IPFS="{{ replace(lowercase(ip_name), ' ', '_') }}"
-    PROPOSALFS=$(find "{{ directory }}" -maxdepth 1 -name '*project_proposal.md')
+    PROPOSALFS=$(find "projects/proposals/{{ project_dirname }}" -maxdepth 1 -name '*project_proposal.md')
     # Create implementation plan
-    IPPATH="{{ directory }}/$TIMESTAMP-implementation_plan_$IPFS.md"
+    IPPATH="projects/proposals/{{ project_dirname }}/$TIMESTAMP-implementation_plan_$IPFS.md"
     sed \
       -e '1,3d;$d' \
       -e "s/{YYYY-MM-DD}/$DATE/g" \

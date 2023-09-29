@@ -63,11 +63,11 @@ documentation/projects/proposals/
 ```
 
 If you already have a project directory and want to add a new implementation
-plan, you can use the `just` recipe `create-ip`. It accepts the project directory
-and the plan name as arguments.
+plan, you can use the `just` recipe `create-ip`. It accepts the directory name
+(not full path) of the project and the plan name as arguments.
 
 ```bash
-$ just documentation/create-ip projects/proposals/project_name 'New IP'
+$ just documentation/create-ip project_name 'New IP'
 ```
 ````
 
