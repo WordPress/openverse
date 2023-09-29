@@ -112,7 +112,7 @@ services:
       - "8793" # Used for fetching logs
     environment:
       # Upgrade the DB on startup
-      _AIRFLOW_DB_UPGRADE: "true"
+      _AIRFLOW_DB_MIGRATE: "true"
       _AIRFLOW_WWW_USER_CREATE: "true"
       _AIRFLOW_WWW_USER_USERNAME: airflow
       _AIRFLOW_WWW_USER_PASSWORD: airflow
