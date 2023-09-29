@@ -29,16 +29,20 @@ init-project name *ips:
     # Create project directory
     mkdir "projects/proposals/$PROJECTFS"
     # Create project directory index
+    INDEXPATH="projects/proposals/$PROJECTFS/index.md"
     sed \
       -e '1,3d;$d' \
       -e 's/{Project title}/{{ name }}/g' \
-      projects/templates/index.md > "projects/proposals/$PROJECTFS/index.md"
+      projects/templates/index.md > $INDEXPATH
+    echo "Project index: $INDEXPATH"
     # Create project proposal
+    PROPOSALPATH="projects/proposals/$PROJECTFS/$TIMESTAMP-project_proposal.md"
     sed \
       -e '1,3d;$d' \
       -e 's/{Project proposal title}/{{ name }}/g' \
       -e "s/{YYYY-MM-DD}/$DATE/g" \
-      projects/templates/project_proposal.md > "projects/proposals/$PROJECTFS/$TIMESTAMP-project_proposal.md"
+      projects/templates/project_proposal.md > $PROPOSALPATH
+    echo "Project proposal: $PROPOSALPATH"
     # Create implementation plans
     shift
     for IP in "$@"; do
@@ -54,12 +58,14 @@ create-ip directory name:
     IPFS="{{ replace(lowercase(name), ' ', '_') }}"
     PROPOSALFS=$(find "{{ directory }}" -maxdepth 1 -name '*project_proposal.md')
     # Create implementation plan
+    IPPATH="{{ directory }}/$TIMESTAMP-implementation_plan_$IPFS.md"
     sed \
       -e '1,3d;$d' \
       -e "s/{YYYY-MM-DD}/$DATE/g" \
       -e 's/{Implementation plan title}/{{ name }}/g' \
       -e "s|{Project proposal path}|/$PROPOSALFS|g" \
-      projects/templates/implementation_plan.md > "{{ directory }}/$TIMESTAMP-implementation_plan_$IPFS.md"
+      projects/templates/implementation_plan.md > $IPPATH
+    echo "Implementation plan: $IPPATH"
 
 # Serve a live-reload documentation site
 live port="50230": clean
