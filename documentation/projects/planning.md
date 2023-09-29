@@ -26,8 +26,8 @@ maintainer in the #openverse channel of the
 For each project, planning documents should be kept in the
 `/documentation/projects/proposals/` directory of this repository.
 
-- Each project should have its own subdirectory. This is name after the project,
-  converted to `snake_case`.
+- Each project should have its own subdirectory. This is named after the
+  project, converted to `snake_case`.
 - Individual documents should be date-stamped in the `YYYYMMDD` format.
 - This subdirectory must contain an `index.md` file in a
   [standard format](/projects/templates/index.md).
@@ -67,7 +67,7 @@ plan, you can use the `just` recipe `create-ip`. It accepts the project director
 and the plan name as arguments.
 
 ```bash
-$ just documentation/create-ip project/proposals/project_name 'New IP'
+$ just documentation/create-ip projects/proposals/project_name 'New IP'
 ```
 ````
 
