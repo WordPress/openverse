@@ -30,7 +30,7 @@ services:
     profiles:
       - ingestion_server
       - api
-    image: postgres:13.10-alpine
+    image: docker.io/postgres:13.10-alpine
     ports:
       - "50254:5432"
     volumes:
@@ -65,7 +65,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: minio/minio:latest
+    image: docker.io/minio/minio:latest
     ports:
       - "5010:5000"
       - "5011:5001"
@@ -88,7 +88,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: minio/mc:latest
+    image: docker.io/minio/mc:latest
     env_file:
       - .env
       - docker/minio/.env
@@ -145,7 +145,7 @@ services:
   plausible_db:
     profiles:
       - frontend
-    image: postgres:13.10-alpine
+    image: docker.io/postgres:13.10-alpine
     expose:
       - "5432"
     volumes:
@@ -158,7 +158,7 @@ services:
   plausible_ch:
     profiles:
       - frontend
-    image: clickhouse/clickhouse-server:23.4-alpine
+    image: docker.io/clickhouse/clickhouse-server:23.4-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
       - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
@@ -184,7 +184,7 @@ services:
   cache:
     profiles:
       - api
-    image: redis:4.0.14
+    image: docker.io/redis:4.0.14
     ports:
       - "50263:6379"
 
@@ -306,7 +306,7 @@ services:
   proxy:
     profiles:
       - api
-    image: nginx:alpine
+    image: docker.io/nginx:alpine
     ports:
       - "50200:9080"
       - "50243:9443"
