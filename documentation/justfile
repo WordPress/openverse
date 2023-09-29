@@ -19,7 +19,7 @@ install:
 # Sphinx #
 ##########
 
-# Create a new project with proposal and implementation plans
+# Create a new project with proposal and, optionally, implementation plans
 init-project name *ips:
     #!/usr/bin/env bash
     set -eo pipefail

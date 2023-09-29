@@ -43,7 +43,7 @@ Refer to the existing projects for reference.
 
 ````{tip}
 You can initialise a new project using the `just` recipe `init-project`. It
-accepts one argument as the project name followed by any number of
+accepts one argument as the project name, followed optionally by any number of
 implementation plans.
 
 ```bash
