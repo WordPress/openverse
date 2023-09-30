@@ -23,10 +23,21 @@
     <p>{{ $t("sensitive.sensitivity.what", { openverse: "Openverse" }) }}</p>
     <p>{{ $t("sensitive.sensitivity.how", { openverse: "Openverse" }) }}</p>
 
-    <!-- TODO
-    <h2 id="on-off">{{ $t("sensitive.onOff.title") }}</h2>
-    <p>{{ $t("sensitive.onOff.description", { openverse: "Openverse" }) }}</p>
-    -->
+    <h2 id="on-off">
+      {{ $t("sensitive.onOff.title") }}
+    </h2>
+
+    <p>
+      {{ $t("sensitive.onOff.sensitiveResults", { openverse: "Openverse" }) }}
+    </p>
+
+    <p>
+      {{ $t("sensitive.onOff.blurSensitive", { openverse: "Openverse" }) }}
+    </p>
+
+    <p>
+      {{ $t("sensitive.onOff.where", { openverse: "Openverse" }) }}
+    </p>
 
     <h2 id="designations">
       {{ $t("sensitive.designations.title") }}

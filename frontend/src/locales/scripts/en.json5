@@ -269,7 +269,9 @@
     },
     onOff: {
       title: "Turning sensitive content on and off",
-      description: "",
+      sensitiveResults: "By default, {openverse} does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch.",
+      blurSensitive: "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure. Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch.",
+      where: "Both these toggles are available in the filter sidebar (on desktops) and in the “Filter” tab of the search settings pane (on mobile devices) on the search results page.",
     },
     designations: {
       title: "Sensitive content designations",
