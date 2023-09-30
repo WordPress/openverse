@@ -25,7 +25,7 @@ from api.utils.search_context import SearchContext
 
 
 ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
-SOURCE_CACHE_TIMEOUT = 60 * 20
+SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
 DEAD_LINK_RATIO = 1 / 2
 THUMBNAIL = "thumbnail"
