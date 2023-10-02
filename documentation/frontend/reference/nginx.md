@@ -2,7 +2,7 @@
 
 The frontend service relies on an Nginx reverse proxy in live environments to
 facilitate per-request logging in a format that matches other services we run
-(namely, Django). It also acts as a [proxy for Plausible](plausible_proxy),
+(namely, Django). It also acts as a [proxy for Plausible][plausible_proxy],
 removing the need for Nuxt to handle these requests, freeing it up to handle
 rendering SSR requests.
 
@@ -18,7 +18,7 @@ Additionally, the reverse proxy may be used in the future for the following:
 
 To test the frontend reverse proxy locally, run `just frontend/up`. To test the
 integration with your local Plausible container, follow the existing
-instructions in [the frontend analytics documentation](analytics_docs).
+instructions in [the frontend analytics documentation][analytics_docs].
 Everything should "just work".
 
 [analytics_docs]: /frontend/guides/analytics.md#plausible-set-up-and-first-run
