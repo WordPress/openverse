@@ -49,7 +49,11 @@ export const Template = (args, { argTypes }) => ({
     }}
     args={{
       aspectRatio: "intrinsic",
-      image: { ...image, url: base64Image },
+      image: {
+        ...image,
+        url: base64Image,
+        thumbnail: `data:image/png;base64,${base64Image}`,
+      },
     }}
   >
     {Template.bind({})}
