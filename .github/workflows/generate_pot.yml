@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -33,7 +33,7 @@ jobs:
         run: cp frontend/openverse.pot /tmp/openverse.pot
 
       - name: Checkout repository at `translations` branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: translations
 
@@ -48,4 +48,4 @@ jobs:
 
       - name: Checkout repository # again, to enable cleaning.
         if: always()
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4

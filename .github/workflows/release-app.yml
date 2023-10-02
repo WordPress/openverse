@@ -31,7 +31,7 @@ jobs:
       # Needed to open the changelog PR
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Creating the tag requires having the whole history of `main`
           fetch-depth: 0

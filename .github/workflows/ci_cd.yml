@@ -40,7 +40,7 @@ jobs:
       packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get changes
         id: paths-filter
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set matrix images
         id: set-matrix
@@ -95,7 +95,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -163,7 +163,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Sets up `just` and Node.js.
       # Node.js is needed for the frontend to download translations.
@@ -239,7 +239,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -271,7 +271,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -307,7 +307,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -355,7 +355,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -419,7 +419,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -485,7 +485,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -519,7 +519,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -573,7 +573,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -632,7 +632,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -749,7 +749,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -811,13 +811,13 @@ jobs:
           mkdir openverse
 
       - name: Checkout repository at `gh-pages` branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: gh-pages
 
       - name: Checkout automations from repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: automation-checkout
 
@@ -867,7 +867,7 @@ jobs:
           body: ${{ steps.preview_diff.outputs.body }}
 
       - name: Checkout repository # again, to enable cleaning
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: success() || failure()
 
   #################
@@ -904,7 +904,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v3
@@ -949,7 +949,7 @@ jobs:
       - publish-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: commit
@@ -989,7 +989,7 @@ jobs:
       - publish-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: commit
@@ -1058,7 +1058,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: commit

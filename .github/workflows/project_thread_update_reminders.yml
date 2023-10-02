@@ -9,7 +9,7 @@ jobs:
   send-reminders:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
