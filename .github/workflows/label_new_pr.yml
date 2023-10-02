@@ -26,7 +26,7 @@ jobs:
           wait_time: 5 # check every 5 seconds
           max_time: 120 # timeout after 2 minutes
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Add default label in case of failure
         uses: actions-ecosystem/action-add-labels@v1
         if: ${{ failure() }}
