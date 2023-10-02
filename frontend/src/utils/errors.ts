@@ -54,10 +54,11 @@ export const parseFetchingError = (
   return fetchingError
 }
 
-export const handledClientSide = (error: FetchingError) => {
+const NON_RETRYABLE_ERROR_CODES = [429, 500, 404] as const
+const isNonRetryableErrorStatusCode = (statusCode: number | undefined) => {
   return (
-    !(error.statusCode && [429, 500, 404].includes(error.statusCode)) &&
-    (clientSideErrorCodes as readonly string[]).includes(error.code)
+    statusCode &&
+    (NON_RETRYABLE_ERROR_CODES as readonly number[]).includes(statusCode)
   )
 }
 
@@ -76,8 +77,12 @@ const isValidErrorCode = (
  */
 export const isRetriable = (error: FetchingError) => {
   const { statusCode, code } = error
-  return !(
-    (statusCode && [429, 404, 500].includes(statusCode)) ||
-    code === NO_RESULT
+  return !(isNonRetryableErrorStatusCode(statusCode) || code === NO_RESULT)
+}
+
+export const handledClientSide = (error: FetchingError) => {
+  return (
+    !isNonRetryableErrorStatusCode(error.statusCode) &&
+    (clientSideErrorCodes as readonly string[]).includes(error.code)
   )
 }
