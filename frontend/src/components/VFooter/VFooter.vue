@@ -147,7 +147,7 @@ export default defineComponent({
   /*
   We set the number of rows in JS to have 2 equally distributed link columns.
   */
-  grid-template-rows: repeat(var(--link-col-height, 3), auto);
+  grid-template-rows: repeat(var(--link-col-height, 4), auto);
 }
 
 .footer-lg .nav-list {
