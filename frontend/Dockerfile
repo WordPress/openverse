@@ -48,9 +48,6 @@ ENV NODE_ENV=production
 ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
 
 ARG API_URL
-ARG SEMANTIC_VERSION
-
-RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /home/node/frontend/src/static/version.json
 
 RUN pnpm build:only
 
@@ -84,3 +81,22 @@ ENV PORT=8443
 EXPOSE 8443
 
 ENTRYPOINT [ "npm", "start", "--" ]
+
+#########
+# NGINX #
+#########
+
+FROM docker.io/nginx:1.25.2-alpine as nginx
+
+LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
+
+WORKDIR /app
+
+COPY nginx.conf.template /etc/nginx/templates/openverse-frontend.conf.template
+
+# Only environment variables with this prefix will be available in the template
+ENV NGINX_ENVSUBST_FILTER="OPENVERSE_NGINX_"
+ENV OPENVERSE_NGINX_ENVIRONMENT="local"
+# Add the release version to the docker container
+ARG SEMANTIC_VERSION
+ENV OPENVERSE_NGINX_GIT_REVISION=$SEMANTIC_VERSION
