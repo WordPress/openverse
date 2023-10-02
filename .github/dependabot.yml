@@ -120,8 +120,7 @@ updates:
       - dependencies
 
   - package-ecosystem: "github-actions"
-    ddirectory: /actions/load-img
-    irectory: /actions/setup-env
+    directory: /actions/setup-env
     schedule:
       interval: "monthly"
     labels:
