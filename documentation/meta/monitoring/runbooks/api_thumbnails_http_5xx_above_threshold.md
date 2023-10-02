@@ -6,7 +6,7 @@ Status: **Unstable**
 Maintainer: @krysaldb
 
 Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Thumbnails+Production+2XX+responses+count+above+threshold?>
+- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Thumbnails+Production+HTTP+5XX+responses+count+under+threshold?>
 ```
 
 ## Severity Guide
