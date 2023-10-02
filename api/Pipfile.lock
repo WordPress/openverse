@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fdf5f159c3500253dc2f7deaccab322f19ce93b4145076cc83fbfe7eb003fb97"
+            "sha256": "9d4fca2b657151e90f65e47d1cdfde72bca4d82f9d506d6b97be20f8e8566725"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1348,12 +1348,12 @@
         },
         "fakeredis": {
             "hashes": [
-                "sha256:bc7a82e9caec80096659fd9a810b72d21f833574be26ff7b97955db626d60bac",
-                "sha256:f9c18d3dba81a470953cc042868b411e334109e065cde53a7a82beef6702a1de"
+                "sha256:83dbf922d07244d114103843d8d4e760fa25119a5fc88cfc21b4548ea2d6353c",
+                "sha256:e136cd13bddd7e7f71270cc7c4693d14f975d929135eb0f8625ef55f204eee25"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.7' and python_version < '4.0'",
-            "version": "==2.18.0"
+            "version": "==2.19.0"
         },
         "freezegun": {
             "hashes": [
@@ -1390,11 +1390,11 @@
         },
         "jedi": {
             "hashes": [
-                "sha256:bcf9894f1753969cbac8022a8c2eaee06bfa3724e4192470aaffe7eb6272b0c4",
-                "sha256:cb8ce23fbccff0025e9386b5cf85e892f94c9b822378f8da49970471335ac64e"
+                "sha256:cf0496f3651bc65d7174ac1b7d043eff454892c708a87d1b683e57b569927ffd",
+                "sha256:e983c654fe5c02867aef4cdfce5a2fbb4a50adc0af145f70504238f18ef5e7e0"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==0.19.0"
+            "version": "==0.19.1"
         },
         "jsonschema": {
             "hashes": [
