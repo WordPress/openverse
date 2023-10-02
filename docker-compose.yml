@@ -323,8 +323,7 @@ services:
       - frontend
     build:
       context: ./frontend/
-      additional_contexts:
-        repo_root: .
+      dockerfile: Dockerfile.nginx
       target: nginx
       args: # Automatically inferred from env vars, unless specified
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
@@ -334,6 +333,7 @@ services:
       - "50290:8080"
     environment:
       OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS}:8443
+      OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
 
 volumes:
   api-postgres:
