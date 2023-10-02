@@ -57,7 +57,7 @@ if "frontend" in changes:
 
 build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
 
-for item in build_matrix:
+for item in build_matrix["include"]:
     if "context" not in item:
         item["context"] = item["image"]
 
