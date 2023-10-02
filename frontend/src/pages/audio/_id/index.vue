@@ -1,6 +1,11 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <template v-if="audio">
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="px-6 py-10 lg:px-10"
+    />
+    <template v-else-if="audio">
       <VSafetyWall v-if="isHidden" :media="audio" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="audio" />
@@ -33,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import {
   defineComponent,
   useContext,
@@ -83,6 +88,9 @@ export default defineComponent({
     const route = useRoute()
 
     const audio = ref<AudioDetail | null>(singleResultStore.audio)
+    const fetchingError = computed(
+      () => singleResultStore.fetchState.fetchingError
+    )
 
     const { error: nuxtError } = useContext()
 
@@ -121,6 +129,7 @@ export default defineComponent({
 
     return {
       audio,
+      fetchingError,
 
       sendAudioEvent,
 

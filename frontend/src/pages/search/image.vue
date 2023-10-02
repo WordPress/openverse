@@ -17,8 +17,6 @@ import type { FetchState } from "~/types/fetch-state"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
-import type { NuxtError } from "@nuxt/types"
-
 export default defineComponent({
   name: "ImageSearch",
   components: { VImageGrid },
@@ -28,7 +26,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState<NuxtError> | FetchState>,
+      type: Object as PropType<FetchState>,
       required: true,
     },
     searchTerm: {

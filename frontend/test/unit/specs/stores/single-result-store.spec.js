@@ -1,3 +1,5 @@
+import { AxiosError } from "axios"
+
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
@@ -170,8 +172,11 @@ describe("Media Item Store", () => {
           Promise.reject(new Error(errorMessage))
         )
         const expectedError = {
-          message: `Error fetching single ${type} item with id foo`,
-          statusCode: 404,
+          message: "error",
+          code: "ERR_UNKNOWN",
+          details: { id: "foo" },
+          requestKind: "single-result",
+          searchType: type,
         }
 
         await singleResultStore.fetchMediaItem(type, "foo")
@@ -185,14 +190,30 @@ describe("Media Item Store", () => {
     it.each(supportedMediaTypes)(
       "fetchMediaItem on 404 sets fetchingError and throws a new error",
       async (type) => {
-        const errorResponse = { response: { status: 404 } }
+        const errorResponse = new AxiosError(
+          "Not found",
+          AxiosError.ERR_BAD_REQUEST,
+          {},
+          {},
+          {
+            data: {},
+            status: 404,
+            statusText: "Not found",
+            headers: {},
+            config: {},
+          }
+        )
 
         mocks[type].mockImplementationOnce(() => Promise.reject(errorResponse))
         const id = "foo"
 
         const expectedError = {
-          message: `Error fetching single ${type} item with id ${id}`,
+          message: "Not found",
           statusCode: errorResponse.response.status,
+          code: errorResponse.code,
+          requestKind: "single-result",
+          searchType: type,
+          details: { id },
         }
         expect(await singleResultStore.fetch(type, id)).toEqual(null)
         expect(singleResultStore.fetchState.fetchingError).toEqual(

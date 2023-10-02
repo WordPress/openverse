@@ -1,6 +1,11 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <template v-if="image">
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="px-6 py-10 lg:px-10"
+    />
+    <template v-else-if="image">
       <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="image" />
@@ -114,6 +119,7 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
+import { isRetriable } from "~/utils/errors"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
@@ -153,6 +159,9 @@ export default defineComponent({
     const route = useRoute()
 
     const image = ref<ImageDetail | null>(singleResultStore.image)
+    const fetchingError = computed(
+      () => singleResultStore.fetchState.fetchingError
+    )
 
     /**
      * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
@@ -168,7 +177,9 @@ export default defineComponent({
       const imageId = route.value.params.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
-        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+        if (fetchingError.value && !isRetriable(fetchingError.value)) {
+          nuxtError(fetchingError.value)
+        }
       } else {
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
@@ -279,6 +290,7 @@ export default defineComponent({
 
     return {
       image,
+      fetchingError,
       imageWidth,
       imageHeight,
       imageSrc,

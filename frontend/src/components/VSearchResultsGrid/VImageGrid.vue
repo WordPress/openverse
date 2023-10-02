@@ -14,9 +14,6 @@
         :related-to="relatedTo"
       />
     </ol>
-    <h5 v-if="isError && !fetchState.isFinished" class="py-4">
-      {{ fetchState.fetchingError }}
-    </h5>
     <footer v-if="!isSinglePage" class="pt-4">
       <VLoadMore />
     </footer>
@@ -43,8 +40,6 @@ import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
-import type { NuxtError } from "@nuxt/types"
-
 export default defineComponent({
   name: "ImageGrid",
   components: { VGridSkeleton, VLoadMore, VImageCell },
@@ -64,7 +59,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState | FetchState<NuxtError>>,
+      type: Object as PropType<FetchState>,
       required: true,
     },
     imageGridLabel: {
@@ -76,13 +71,12 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const searchTerm = computed(() => searchStore.searchTerm)
-    const isError = computed(() => props.fetchState.fetchingError !== null)
 
     const relatedTo = computed(() => {
       return props.isSinglePage ? useRelatedMediaStore().mainMediaId : null
     })
 
-    return { isError, searchTerm, relatedTo }
+    return { searchTerm, relatedTo }
   },
 })
 </script>
