@@ -96,6 +96,7 @@ updates:
       - "🟩 priority: low"
       - "🧱 stack: mgmt"
       - dependencies
+
   - package-ecosystem: "github-actions"
     directory: /actions/build-docs
     schedule:
