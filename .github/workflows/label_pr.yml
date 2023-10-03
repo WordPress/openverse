@@ -1,9 +1,11 @@
 name: Label PR
 
 on:
-  repository_dispatch:
+  pull_request_target:
     types:
-      - label_pr
+      # Only set labels when the PR is created, this should fire `labeled`
+      # events that will trigger the checks defined in `pr_label_check.yml`.
+      - opened
 
 env:
   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Can't use GITHUB_TOKEN to access PRs in other repos
@@ -31,3 +33,9 @@ jobs:
         run: |
           pipenv run python label_pr.py \
             --pr-url "$PR_URL"
+
+      - name: Add default label in case of failure
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ failure() }}
+        with:
+          labels: "🚦 status: awaiting triage"
