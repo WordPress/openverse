@@ -85,8 +85,53 @@ updates:
       - "🧱 stack: mgmt"
       - dependencies
 
+  # Enable version updates in github-actions
   - package-ecosystem: "github-actions"
     directory: /
+    schedule:
+      interval: "monthly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🧱 stack: mgmt"
+      - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: /actions/build-docs
+    schedule:
+      interval: "monthly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🧱 stack: mgmt"
+      - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: /actions/get-changes
+    schedule:
+      interval: "monthly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🧱 stack: mgmt"
+      - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: /actions/load-img
+    schedule:
+      interval: "monthly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🧱 stack: mgmt"
+      - dependencies
+
+  - package-ecosystem: "github-actions"
+    directory: /actions/setup-env
     schedule:
       interval: "monthly"
     labels:
