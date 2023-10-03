@@ -399,11 +399,12 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:13abf37382ea2ce6fb744d4dad67838eec857c9f4f57009891805e0b5e123594",
-                "sha256:ef16afa8ba34a1f989db38e1dbbe0c302e4289a47856990d0682e374563ce35e"
+                "sha256:7a7c7003b000adf9e7ca2a377c9688bbc54ed41b985789ed576570342a375cd2",
+                "sha256:b19e1a85d206b56d7df1d5e683df4a7725252a964e3993648dd0fb5a1c157564"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.7'",
-            "version": "==2.0.5"
+            "version": "==2.0.6"
         },
         "webencodings": {
             "hashes": [
@@ -535,11 +536,11 @@
         },
         "jedi": {
             "hashes": [
-                "sha256:bcf9894f1753969cbac8022a8c2eaee06bfa3724e4192470aaffe7eb6272b0c4",
-                "sha256:cb8ce23fbccff0025e9386b5cf85e892f94c9b822378f8da49970471335ac64e"
+                "sha256:cf0496f3651bc65d7174ac1b7d043eff454892c708a87d1b683e57b569927ffd",
+                "sha256:e983c654fe5c02867aef4cdfce5a2fbb4a50adc0af145f70504238f18ef5e7e0"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==0.19.0"
+            "version": "==0.19.1"
         },
         "matplotlib-inline": {
             "hashes": [
