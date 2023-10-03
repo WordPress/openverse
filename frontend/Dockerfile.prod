@@ -1,0 +1,21 @@
+ARG FRONTEND_NODE_VERSION
+
+FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine as app
+
+LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
+
+# Install CURL for the production healthcheck
+RUN apk --no-cache add curl
+
+WORKDIR /home/node/
+
+USER node
+
+COPY --chown=node:node node_modules ./node_modules/
+COPY --chown=node:node frontend ./frontend/
+
+WORKDIR frontend
+
+EXPOSE 8443
+
+CMD ["npm", "run", "start", "--", "-H", "0.0.0.0"]

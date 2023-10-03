@@ -1,0 +1,9 @@
+*
+
+!frontend/src
+!frontend/nuxt.config.ts
+!frontend/feat
+!frontend/.nuxt
+!frontend/package.json
+!frontend/node_modules
+!node_modules

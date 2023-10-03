@@ -182,14 +182,25 @@ jobs:
           just versions
           just versions >> "$GITHUB_OUTPUT"
 
-      # ℹ️Step only applies for frontend image.
+      # Step only applies for frontend image.
       # This step
       # - downloads translation strings from GlotPress so that they can be
       #   bundled inside the Docker image
-      - name: Prepare frontend for building
+      # - Removes all `node_modules` directory to clear the way for only
+      #   installing runtime dependencies of the frontend
+      # - Installs frontend runtime dependencies
+      # - Runs `nuxt build` with the correct environment variables in scope
+      - name: Prepare frontend
         if: matrix.image == 'frontend'
+        env:
+          SENTRY_DSN: https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
+          NODE_ENV: production
+          NUXT_TELEMETRY_DISABLED: 1
         run: |
-          just frontend/run i18n
+          just p frontend i18n
+          pnpm m -w exec rm -rf node_modules
+          pnpm install --filter frontend --prod
+          just p frontend build:only
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -207,7 +218,6 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
-          build-contexts: ${{ matrix.build-contexts || '' }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
@@ -215,7 +225,6 @@ jobs:
             API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
             INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
-            FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3
