@@ -87,6 +87,16 @@ updates:
 
   # Enable version updates in github-actions
   - package-ecosystem: "github-actions"
+    directory: /
+    schedule:
+      interval: "monthly"
+    labels:
+      - "💻 aspect: code"
+      - "🧰 goal: internal improvement"
+      - "🟩 priority: low"
+      - "🧱 stack: mgmt"
+      - dependencies
+  - package-ecosystem: "github-actions"
     directory: /actions/build-docs
     schedule:
       interval: "monthly"
