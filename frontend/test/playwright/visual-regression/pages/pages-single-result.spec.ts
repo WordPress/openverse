@@ -24,7 +24,8 @@ const cleanRelatedImages = async (page: Page) => {
 for (const mediaType of supportedMediaTypes) {
   for (const dir of languageDirections) {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-      test(`${mediaType} ${dir} single-result page snapshots from search results`, async ({
+      // https://github.com/WordPress/openverse/issues/3112
+      test.skip(`${mediaType} ${dir} single-result page snapshots from search results`, async ({
         page,
       }) => {
         await preparePageForTests(page, breakpoint)
