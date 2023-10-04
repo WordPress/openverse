@@ -135,12 +135,22 @@ repos:
             "frontend/test/locales/*.json",
             "-S",
             "pnpm-lock.yaml",
+            "-S",
+            "styles/**",
             # Write changes in place
             "-w",
           ]
         additional_dependencies:
           # Support pyproject.toml configuration
           - tomli
+
+  # Use Vale to ensure documentation has a consistent style guide.
+  - repo: https://github.com/errata-ai/vale
+    rev: v2.29.0
+    hooks:
+      - id: vale
+        name: vale
+        files: ^documentation/.*$
 
   - repo: local # More local hooks are defined at the top.
     hooks:
