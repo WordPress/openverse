@@ -32,7 +32,7 @@ class MediaService<T extends Media> {
    * @param data - search result data
    */
   transformResults(data: MediaResult<T[]>): MediaResult<Record<string, T>> {
-    const mediaResults = <T[]>data.results
+    const mediaResults = <T[]>data.results ?? []
     return {
       ...data,
       results: mediaResults.reduce((acc, item) => {
