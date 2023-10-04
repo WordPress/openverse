@@ -9,6 +9,7 @@ on:
 jobs:
   renovate:
     runs-on: ubuntu-latest
+    if: github.repository == 'WordPress/openverse'
     steps:
       - uses: actions/checkout@v4
       - uses: renovatebot/github-action@v39.0.5
