@@ -47,9 +47,9 @@ category.
 
 - It would be ideal to have this under a feature flag in the API. We could
   perform deployments and testing on our staging setup with the flag enabled,
-  but still make other deployments to production with the flag disabled. We
+  but still make other deployments to production with the flag inactive. We
   should be able to run the API for images & audio successfully with the feature
-  flag disabled AND without having run the migrations.
+  flag inactive AND without having run the migrations.
 - As we work through this on both the catalog and the API, we should begin
   compiling information for a document describing the process for adding a **new
   media type**. This will be useful for future media types we are sure to add!

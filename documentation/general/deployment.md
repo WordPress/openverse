@@ -37,7 +37,7 @@ Container Service. Both are encapsulated into single ECS services per
 environment. The overall approach of deployments is to generate a new _task
 definition_ and to associate that task definition with the ECS Service. This
 causes the service to deploy the new task definition as a newly running _task_.
-Once the service has determined the new task to be healthy, it will redirect all
+Once the service has determined the new task to be active, it will redirect all
 traffic to the new task away from the old task. This is called _draining_. Once
 the old task is drained, it is spun down and the only task left running is the
 new one. The same process is followed when there are multiple tasks and each
@@ -89,11 +89,11 @@ these logs per environment.
 
 If any of the steps described above fails, including the new task spin up and
 switch over, the deployment is deemed a failure. If the failure occurs while
-trying to start a new healthy task, the ECS service will automatically rollback
+trying to start a new active task, the ECS service will automatically rollback
 to the previous task definition revision. Remember that the previous task is not
-drained and removed until the new task is determined to be healthy, so this
+drained and removed until the new task is determined to be active, so this
 rollback has zero downtime. Automated rollbacks do not create a new task
-definition revision, the service just uses the last healthy revision.
+definition revision, the service just uses the last active revision.
 
 If the docker build fails then there is nothing to rollback. The failure needs
 to be investigated and the issue fixed for deployments to be possible again.

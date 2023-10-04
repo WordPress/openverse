@@ -38,7 +38,7 @@ install the runtime needed by a job.
 
 By default, it also runs `just install` so that the core dependencies needed on
 the system are installed. This recipe can be customised via the `install_recipe`
-input (or even disabled with a blank string, to speed up the process in case no
+input (or even inactive with a blank string, to speed up the process in case no
 host dependencies are needed).
 
 ```typescript

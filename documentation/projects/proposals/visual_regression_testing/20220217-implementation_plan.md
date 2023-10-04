@@ -68,7 +68,7 @@ visual regression testing.
 However, we also need a way of easily reviewing the diffed images. Luckily,
 [GitHub already has this functionality built into it's PR diff previews](https://docs.github.com/en/repositories/working-with-files/using-files/working-with-non-code-files#viewing-differences).
 This means when an existing screenshot is replaced we'd be able to review and
-approve this change as a normal part of our PR review process, just like we
+approve this change as a standard part of our PR review process, just like we
 review code.
 
 ### Alternative/additional tooling
