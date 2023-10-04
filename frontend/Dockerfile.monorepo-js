@@ -1,0 +1,69 @@
+# syntax=docker/dockerfile:1
+
+# Automatically build image using Node.js version specified in `package.json`.
+ARG FRONTEND_NODE_VERSION
+
+FROM node:${FRONTEND_NODE_VERSION}-alpine AS base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
+# Install node-gyp support packages
+RUN apk add --no-cache --virtual .gyp python3 make g++
+
+USER node
+
+# Dockerfile.monorepo-js.dockerignore takes care of targeting the required files
+COPY --chown=node . /app
+WORKDIR /app
+
+
+###
+# Frontend production dependencies
+###
+FROM base AS frontend-prod-deps
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
+  --filter frontend \
+  --prod \
+  --frozen-lockfile
+
+
+###
+# Frontend build
+###
+FROM base AS frontend-build
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
+  --filter frontend \
+  --frozen-lockfile
+
+ENV NUXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
+
+ARG API_URL
+
+RUN pnpm run --filter frontend build:only
+
+
+###
+# Frontend output target
+###
+FROM frontend-prod-deps AS frontend
+# Frontend build and runtime dependencies are essentially 1:1
+# Differences do exist (typescript configuration isn't necessary for
+# runtime), but the files are trivial in size and not worth complicating
+# this stage to exclude
+COPY --from=frontend-build /app/frontend/.nuxt frontend/.nuxt
+
+ARG SEMANTIC_VERSION
+
+RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /app/frontend/src/static/version.json
+
+ENV PORT=8443
+EXPOSE 8443
+
+ENTRYPOINT [ "pnpm", "run", "--filter", "frontend", "start", "-H", "0.0.0.0"]
