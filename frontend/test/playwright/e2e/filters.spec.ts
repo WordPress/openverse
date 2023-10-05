@@ -37,10 +37,11 @@ const assertCheckboxCount = async (
   await expect(page.locator(locatorString)).toHaveCount(count, { timeout: 200 })
 }
 
+// Note that this includes two switches for sensitive content preferences.
 const FILTER_COUNTS = {
-  [ALL_MEDIA]: 10,
-  [AUDIO]: 31,
-  [IMAGE]: 71,
+  [ALL_MEDIA]: 12,
+  [AUDIO]: 33,
+  [IMAGE]: 73,
 }
 
 breakpoints.describeMobileAndDesktop(() => {
