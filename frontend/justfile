@@ -59,7 +59,7 @@ up *flags:
 
 # Wait for all profile services to be up
 wait-up: up
-    echo "🚧 TODO"
+    just wait
 
 # Set up user and test site in Plausible
 init: wait-up
@@ -71,3 +71,19 @@ run *args:
 
 types:
     cd .. && pnpm exec vue-tsc -p frontend --noEmit
+
+##########
+# Health #
+##########
+
+# Check the health of the service
+@health host="localhost:50288":
+    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/api/health'
+
+# Wait for the service to be healthy
+@wait host="localhost:50288":
+    # The just command on the second line is executed in the context of the
+    # parent directory and so must be prefixed with `api/`.
+    just ../_loop \
+    '"$(just frontend/health {{ host }})" != "200"' \
+    "Waiting for the frontend to be healthy..."
