@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-09-12T07:05:47+00:00\n"
+"POT-Creation-Date: 2023-10-05T07:13:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -843,6 +843,167 @@ msgctxt "feedback.aria.report"
 msgid "report a bug form"
 msgstr ""
 
+#: src/pages/sensitive-content.vue:4
+#: src/pages/sensitive-content.vue:143
+msgctxt "sensitive.title"
+msgid "Sensitive content"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:7
+msgctxt "sensitive.description.content"
+msgid "###openverse### operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible. Therefore, ###openverse### only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on ###openverse###.org and in the ###openverse### API. In adherence to ###wpCoc### and its ###deiStatement###, ###openverse### holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project. Similarly, ###openverse### holds the expectation that the results returned from the API or displayed on the ###openverse###.org website should be accessible by default. Everyone, regardless of background, should feel safe and included in ###openverse###, whether they are a contributor to the technical aspects of the ###openverse### services, a creator whose works are included in ###openverse###, or an ###openverse### user. ###openverse### recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:12
+msgctxt "sensitive.description.wpCoc"
+msgid "WordPress’s Community Code of Conduct"
+msgstr ""
+
+#: src/pages/sensitive-content.vue:18
+msgctxt "sensitive.description.deiStatement"
+msgid "diversity, equity, and inclusion statement"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:23
+msgctxt "sensitive.sensitivity.what"
+msgid "###openverse### uses the term \"sensitive\" rather than \"mature\", \"NSFW\" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion. This means that some content is designated \"sensitive\" that would not fall into a category of what is generally understood to be \"mature\" content (in other words, content specifically for an adult audience). The designation does not, however, imply that ###openverse### or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement. We consider \"sensitive\" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people."
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:24
+msgctxt "sensitive.sensitivity.how"
+msgid "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise. ###openverse### relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms. These are described in more detail below."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:27
+msgctxt "sensitive.onOff.title"
+msgid "Turning sensitive content on and off"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:31
+msgctxt "sensitive.onOff.sensitiveResults"
+msgid "By default, ###openverse### does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:35
+msgctxt "sensitive.onOff.blurSensitive"
+msgid "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure. Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:39
+msgctxt "sensitive.onOff.where"
+msgid "Both these toggles are available in the filter sidebar (on desktops) and in the “Filter” tab of the search settings pane (on mobile devices) on the search results page."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:43
+msgctxt "sensitive.designations.title"
+msgid "Sensitive content designations"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:47
+msgctxt "sensitive.designations.description"
+msgid "###openverse### designates sensitive content in the API and on the ###openverse###.org website using two methods: reports from ###openverse### users and automated sensitive textual content detection. These designations are not exclusive of each other and a single work may have one or both applied to it."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:51
+msgctxt "sensitive.designations.userReported.title"
+msgid "User reported sensitivity"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:54
+msgctxt "sensitive.designations.userReported.description"
+msgid "###openverse### users are invited to report sensitive content via the ###openverse###.org website and the ###openverse### API. Some tools and apps that integrate with the ###openverse### API, like the ###gutenbergMediaInserter###, also allow their users to report sensitive content. An individual work’s page includes the ability to report content as sensitive (or to report rights violations). ###openverse### moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from ###openverse###’s services."
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:60
+msgctxt "sensitive.designations.userReported.gutenbergMediaInserter"
+msgid "Gutenberg editor’s ###openverse### media inserter"
+msgstr ""
+
+#: src/pages/sensitive-content.vue:69
+msgctxt "sensitive.designations.sensitiveText.title"
+msgid "Sensitive textual content"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:72
+msgctxt "sensitive.designations.sensitiveText.description"
+msgid "###openverse### scans some of the textual metadata related to works as provided by our sources for sensitive terms. ###openverse###’s ###sensitiveTermsList### is open source and contributions and input from the community are welcome and invited. Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature. The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive. For more context on why we’ve chosen this approach despite that, refer to the ###imperfect### of our project planning document related to this feature."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:76
+msgctxt "sensitive.designations.sensitiveText.sensitiveTermsList"
+msgid "sensitive terms list"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:83
+msgctxt "sensitive.designations.sensitiveText.imperfect"
+msgid "\"###sectionName###\" section"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:91
+msgctxt "sensitive.designations.sensitiveText.metadata"
+msgid "It is important to note that some textual metadata for a work is ###notAvailable### through the ###openverse### API or the ###openverse###.org website. However, such metadata is still scanned for sensitive terms and is not treated as a special case. If ###openverse###’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through ###openverse###. ###openverse### takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works. As above, ###openverse### understands that this is not perfect."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:95
+msgctxt "sensitive.designations.sensitiveText.notAvailable"
+msgid "not available"
+msgstr ""
+
+#: src/pages/sensitive-content.vue:101
+msgctxt "sensitive.faq.title"
+msgid "Frequently asked questions"
+msgstr ""
+
+#: src/pages/sensitive-content.vue:105
+msgctxt "sensitive.faq.one.question"
+msgid "I’ve found content I think is sensitive that does not have a sensitivity designation. What should I do?"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:107
+msgctxt "sensitive.faq.one.answer"
+msgid "Please report sensitive content by visiting the individual work’s page on the ###openverse###.org website and using the “report this content” button below the attribution information and above the tags. ###openverse### moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:111
+msgctxt "sensitive.faq.two.question"
+msgid "I disagree with the sensitivity designation on a work. Can you please remove it?"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:113
+msgctxt "sensitive.faq.two.answerPt1"
+msgid "For text-based designations, ###openverse### does not at the moment have a method for removing the designation. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature."
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:115
+msgctxt "sensitive.faq.two.answerPt2"
+msgid "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:119
+msgctxt "sensitive.faq.three.question"
+msgid "I’ve found content on ###openverse### that may be illegal. Besides reporting it to ###openverse###, are there any other steps I can take?"
+msgstr ""
+
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:122
+msgctxt "sensitive.faq.three.answer"
+msgid "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
+msgstr ""
+
 msgctxt "error.occurred"
 msgid "An error occurred"
 msgstr ""
@@ -1380,7 +1541,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:162
+#: src/components/VImageCell/VImageCell.vue:169
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -1392,7 +1553,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/VSearchResultsGrid/VAllResultsGrid.vue:36
-#: src/pages/search/audio.vue:43
+#: src/pages/search/audio.vue:41
 #: src/pages/search/image.vue:7
 msgctxt "browsePage.aria.results"
 msgid "Search results for ###query###."
@@ -1548,7 +1709,7 @@ msgid "read more about the tool"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:66
+#: src/pages/image/_id/index.vue:71
 msgctxt "mediaDetails.aria.creatorUrl"
 msgid "author ###name###"
 msgstr ""
@@ -1673,12 +1834,12 @@ msgid "Back to results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:61
+#: src/pages/image/_id/index.vue:66
 msgctxt "imageDetails.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/pages/image/_id/index.vue:55
+#: src/pages/image/_id/index.vue:60
 msgctxt "imageDetails.weblink"
 msgid "Get this image"
 msgstr ""
@@ -2266,9 +2427,9 @@ msgctxt "report.imageDetails"
 msgid "See image details"
 msgstr ""
 
-#: src/components/VImageCell/VImageCell.vue:29
-#: src/components/VImageCell/VImageCell.vue:45
-#: src/components/VImageCell/VImageCell.vue:161
+#: src/components/VImageCell/VImageCell.vue:30
+#: src/components/VImageCell/VImageCell.vue:49
+#: src/components/VImageCell/VImageCell.vue:168
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
