@@ -135,11 +135,7 @@ def index_settings(media_type: MediaType):
             "size": {"type": "keyword"},
         },
         "audio": {
-            "bit_rate": {"type": "integer"},
-            "sample_rate": {"type": "integer"},
-            "duration": {"type": "integer"},
             # Keyword fields
-            "genres": {"type": "keyword"},
             "length": {"type": "keyword"},
         },
     }
