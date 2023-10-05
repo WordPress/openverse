@@ -133,7 +133,7 @@ import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
 export default defineComponent({
-  name: "AboutPage",
+  name: "SensitiveContent",
   components: { VLink, VContentPage },
   layout: "content-layout",
   setup() {
