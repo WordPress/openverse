@@ -19,13 +19,12 @@ USER node
 COPY --chown=node . /app
 WORKDIR /app
 
-
 ###
 # Frontend production dependencies
 ###
 FROM base AS frontend-prod-deps
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store,sharing=locked pnpm install \
   --filter frontend \
   --prod \
   --frozen-lockfile
@@ -36,7 +35,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 ###
 FROM base AS frontend-build
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store,sharing=locked pnpm install \
   --filter frontend \
   --frozen-lockfile
 
@@ -50,13 +49,22 @@ RUN pnpm run --filter frontend build:only
 
 
 ###
+# Frontend dev
+###
+FROM base as frontend-dev
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store,sharing=locked pnpm install \
+  --filter frontend \
+  --frozen-lockfile
+
+CMD ["pnpm", "run", "--filter", "frontend", "dev"]
+
+
+###
 # Frontend output target
 ###
 FROM frontend-prod-deps AS frontend
-# Frontend build and runtime dependencies are essentially 1:1
-# Differences do exist (typescript configuration isn't necessary for
-# runtime), but the files are trivial in size and not worth complicating
-# this stage to exclude
+
 COPY --from=frontend-build /app/frontend/.nuxt frontend/.nuxt
 
 ARG SEMANTIC_VERSION
