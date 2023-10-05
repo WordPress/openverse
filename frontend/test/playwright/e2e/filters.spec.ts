@@ -116,7 +116,7 @@ breakpoints.describeMobileAndDesktop(() => {
     await changeSearchType(page, ALL_MEDIA)
 
     await filters.open(page)
-    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(2)
+    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(3)
 
     await expect(page).toHaveURL(
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"
