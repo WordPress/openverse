@@ -1,4 +1,4 @@
-# Project directory `index.md` template
+# Template: Project Directory `index.md`
 
 ````md
 # {Project title}
