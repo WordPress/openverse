@@ -66,81 +66,43 @@ def index_settings(media_type: MediaType):
         },
     }
     common_mappings = {
+        "dynamic": False,  # extra fields are stored in ``_source`` but not indexed
         "properties": {
             "id": {"type": "long"},
-            "identifier": {
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                "type": "text",
-            },
+            "created_on": {"type": "date"},
+            "mature": {"type": "boolean"},
+            # Keyword fields
+            "identifier": {"type": "keyword"},
+            "extension": {"type": "keyword"},
+            "license": {"type": "keyword"},
+            "provider": {"type": "keyword"},
+            "source": {"type": "keyword"},
+            "filetype": {"type": "keyword"},
+            "category": {"type": "keyword"},
+            # Text-based fields
             "title": {
                 "type": "text",
+                "analyzer": "custom_english",
                 "similarity": "boolean",
                 "fields": {
                     "keyword": {"type": "keyword", "ignore_above": 256},
                     "raw": {"type": "text", "index": True},
                 },
-                "analyzer": "custom_english",
-            },
-            "foreign_landing_url": {
-                "fields": {"keyword": {"ignore_above": 256, "type": "keyword"}},
-                "type": "text",
             },
             "description": {
-                "fields": {
-                    "keyword": {"type": "keyword", "similarity": "boolean"},
-                    "raw": {"type": "text", "index": True},
-                },
                 "type": "text",
                 "analyzer": "custom_english",
+                "similarity": "boolean",
+                "fields": {
+                    "keyword": {"type": "keyword", "ignore_above": 256},
+                    "raw": {"type": "text", "index": True},
+                },
             },
             "creator": {
                 "type": "text",
                 "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
             },
-            "url": {
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                "type": "text",
-            },
-            "extension": {
-                "fields": {"keyword": {"ignore_above": 8, "type": "keyword"}},
-                "type": "text",
-            },
-            "license": {
-                "fields": {"keyword": {"ignore_above": 256, "type": "keyword"}},
-                "type": "text",
-            },
-            "license_version": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
-            "license_url": {
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                "type": "text",
-            },
-            "provider": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-            },
-            "source": {
-                "fields": {"keyword": {"ignore_above": 256, "type": "keyword"}},
-                "type": "text",
-            },
-            "filetype": {"type": "keyword"},
-            "created_on": {"type": "date"},
-            "tags": {
-                "properties": {
-                    "accuracy": {"type": "float"},
-                    "name": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {"type": "keyword", "ignore_above": 256},
-                            "raw": {"type": "text", "index": True},
-                        },
-                        "analyzer": "custom_english",
-                    },
-                }
-            },
-            "mature": {"type": "boolean"},
+            # Rank feature fields
             "standardized_popularity": {"type": "rank_feature"},
             "authority_boost": {"type": "rank_feature"},
             "authority_penalty": {
@@ -149,22 +111,35 @@ def index_settings(media_type: MediaType):
             },
             "max_boost": {"type": "rank_feature"},
             "min_boost": {"type": "rank_feature"},
-            "category": {"type": "keyword"},
-        }
+            # Nested fields
+            "tags": {
+                "properties": {
+                    "accuracy": {"type": "float"},
+                    # Text-based fields
+                    "name": {
+                        "type": "text",
+                        "analyzer": "custom_english",
+                        "fields": {
+                            "keyword": {"type": "keyword", "ignore_above": 256},
+                            "raw": {"type": "text", "index": True},
+                        },
+                    },
+                }
+            },
+        },
     }
     media_properties = {
         "image": {
-            "aspect_ratio": {
-                "fields": {"keyword": {"type": "keyword"}},
-                "type": "text",
-            },
-            "size": {"fields": {"keyword": {"type": "keyword"}}, "type": "text"},
+            # Keyword fields
+            "aspect_ratio": {"type": "keyword"},
+            "size": {"type": "keyword"},
         },
         "audio": {
             "bit_rate": {"type": "integer"},
             "sample_rate": {"type": "integer"},
-            "genres": {"fields": {"keyword": {"type": "keyword"}}, "type": "text"},
             "duration": {"type": "integer"},
+            # Keyword fields
+            "genres": {"type": "keyword"},
             "length": {"type": "keyword"},
         },
     }
