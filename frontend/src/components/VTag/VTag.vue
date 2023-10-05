@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
 
 import VButton from "~/components/VButton.vue"
 
@@ -18,7 +18,10 @@ export default defineComponent({
   name: "VTag",
   components: { VButton },
   props: {
-    title: { type: String },
+    title: {
+      type: String,
+      required: true,
+    },
     href: {
       type: String,
       required: true,
@@ -26,5 +29,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped></style>
