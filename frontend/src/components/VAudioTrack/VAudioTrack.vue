@@ -38,8 +38,9 @@
 
       <template #play-pause="playPauseProps">
         <VAudioControl
-          v-if="layout === 'full'"
+          v-if="layout === 'full' && additionalSearchViews"
           ref="playPauseRef"
+          size="medium"
           :status="status"
           v-bind="playPauseProps"
           @toggle="handleToggle"
@@ -79,6 +80,7 @@ import {
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { AUDIO } from "~/constants/media"
 import {
@@ -581,6 +583,11 @@ export default defineComponent({
       }
     }
 
+    const featureFlagStore = useFeatureFlagStore()
+    const additionalSearchViews = computed(() =>
+      featureFlagStore.isOn("additional_search_views")
+    )
+
     return {
       status,
       message,
@@ -607,6 +614,8 @@ export default defineComponent({
 
       playPauseRef,
       waveformRef,
+
+      additionalSearchViews,
     }
   },
 })
