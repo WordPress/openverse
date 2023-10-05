@@ -93,10 +93,7 @@ def index_settings(media_type: MediaType):
                 "type": "text",
                 "analyzer": "custom_english",
                 "similarity": "boolean",
-                "fields": {
-                    "keyword": {"type": "keyword", "ignore_above": 256},
-                    "raw": {"type": "text", "index": True},
-                },
+                "fields": {"raw": {"type": "text", "index": True}},
             },
             "creator": {
                 "type": "text",
