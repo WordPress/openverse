@@ -140,9 +140,7 @@ export default defineComponent({
     const i18n = useI18n()
 
     useMeta({
-      title: `${i18n.t("about.title", {
-        openverse: "Openverse",
-      })} | Openverse`,
+      title: `${i18n.t("sensitive.title")} | Openverse`,
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
   },
