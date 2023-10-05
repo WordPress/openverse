@@ -1,14 +1,14 @@
 # `no-unexplained-disabled-test`
 
-Ensures that disabled tests have an issue comment with a GitHub link preceding
+Ensures that `disabled` tests have an issue comment with a GitHub link preceding
 them.
 
 Enforces the following conventions:
 
-- Checks for disabled tests marked with functions skipped functions such as
+- Checks for `disabled` tests marked with functions skipped functions such as
   `test.skip`, `test.todo`, `it.skip`, `it.each.skip`, `describe.skip`, etc.,
-- Verifies that each disabled test has an issue comment with a valid GitHub link
-  preceding it
+- Verifies that each `disabled` test has an issue comment with a valid GitHub
+  link preceding it
 
 ## Rule Details
 

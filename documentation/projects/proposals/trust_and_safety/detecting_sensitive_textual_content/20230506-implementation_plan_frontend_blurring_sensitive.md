@@ -94,7 +94,7 @@ These features are needed to support the new feature flag
 ### Step 3: New feature flags
 
 ```{caution}
-Observe the difference between on/off and enabled/disabled. The former refers to
+Observe the difference between `on/off` and `enabled/disabled`. The former refers to
 the position/value of the toggle, while the latter refers to whether the toggle
 can be interacted with and flipped.
 ```
@@ -118,15 +118,15 @@ This is the main, real feature flag that enables the entire feature of being
 able to get (or avoid) mature content and then see or blur it. This flag will
 determine whether the two switches even appear in the sidebar.
 
-It will be set to 'enabled' in development, 'switchable' in staging and
-'disabled' in production till launch, post which it will be 'enabled'
+It will be set to 'enabled' in development, `switchable` in staging and
+`disabled` in production till launch, post which it will be `enabled`
 everywhere.
 
 #### What about the blur toggle?
 
 The second toggle in the mockups that determines whether to blur the sensitive
 results (let's refer to as `blur_sensitive`) is an ephemeral toggle that is
-off + disabled when `fetch_sensitive` is off and enabled only when
+off + `disabled` when `fetch_sensitive` is off and enabled only when
 `fetch_sensitive` is on.
 
 It will be stored in Pinia so that it can be accessed by the components of
@@ -136,7 +136,7 @@ the UI store, it would not be persisted to a cookie and instead would be reset
 on a hard refresh.
 
 Note that the hide button that appears on an unblurred single result page is
-gone if the user has completely disabled blurring from the search sidebar.
+gone if the user has completely inactive blurring from the search sidebar.
 
 ### Step 3: Updating search store
 
@@ -278,7 +278,7 @@ sensitive content.
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
 Since the work will be behind a feature flag, rollback can be achieved by
-disabling the feature.
+deactivating the feature.
 
 ## Prior art
 

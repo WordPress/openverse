@@ -43,8 +43,8 @@ disqualified.
    1. Allow code for both live and in-dev features to coexist.
    1. Deployments to prod such as fixes should not be blocked.
 1. Keep the code separate from the feature visibility configuration[^separate].
-1. Toggle the state (enabled, disabled, switchable) of features based on the
-   environment.
+1. Toggle the state (`enabled`, `disabled`, `switchable`) of features based on
+   the environment.
 
 [^separate]:
     Separate not in the sense of being placed somewhere else, just being
@@ -70,17 +70,17 @@ instead of `v1/` to sufficiently mark unstable endpoints.
 
 Each flag can have 3 statuses.
 
-- **enabled**
+- **`enabled`**
 
   There is no fencing, everyone can access the feature, even if they don't like
   or want it.
 
-- **disabled**
+- **`disabled`**
 
   The feature is not visible and accessible, and trying to access it should
   yield an error message.
 
-- **switchable**
+- **`switchable`**
 
   The feature can be turned on or off by the user. Preferences may be recorded
   in a cookie.
@@ -92,15 +92,15 @@ the user (if status is switchable), the feature can have two states.
 
   When either
 
-  - status is "enabled"
-  - status is "switchable" and preference is "on"
+  - status is `enabled`
+  - status is `switchable` and preference is `on`
 
 - **off**
 
   When either
 
-  - status is "disabled"
-  - status is "switchable" and preference is "off"
+  - status is `disabled`
+  - status is `switchable` and preference is `off`
 
 ### Sources
 

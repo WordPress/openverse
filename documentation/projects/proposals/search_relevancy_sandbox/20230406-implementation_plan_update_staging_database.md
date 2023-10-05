@@ -163,7 +163,7 @@ This can be done by
 and adding a notice to the top of the page. Since the DAG is intended to be run
 `@monthly`, a countdown to the next run can be calculated and displayed for
 maintainers. We will also want to provide instructions or a link to instructions
-for how to disable the staging database recreation using the aforementioned
+for how to toggle the staging database recreation using the aforementioned
 Airflow Variable.
 
 ## Dependencies
@@ -244,7 +244,7 @@ the following reasons:
   elongations to the project timeline at this step could also affect the
   timeline for drafting and implementing those plans as well.
 - The DAG described here does not present any **permanent, lasting, and
-  irreversible** changes; it can be disabled and replaced at any time in favor
+  irreversible** changes; it can be inactive and replaced at any time in favor
   of a more thorough update approach down the line.
 
 It is intended to be explored further in

@@ -83,8 +83,8 @@ fields, `status`, `description` and `defaultState`.
 ##### `status`
 
 It is a mapping of different environments with the status of the flag in that
-environment. For example, a feature that's in development may be 'switchable' in
-'staging' but 'disabled' in 'production'.
+environment. For example, a feature that's in development may be `switchable` in
+`staging` but `disabled` in `production`.
 
 ##### `defaultState`
 
