@@ -33,11 +33,6 @@
       "description": "Record custom events and page views.",
       "storage": "cookie"
     },
-    "sensitive_content": {
-      "status": "enabled",
-      "description": "Turn on sensitive content fetching and blurring.",
-      "storage": "cookie"
-    },
     "fetch_sensitive": {
       "status": "switchable",
       "defaultState": "off",
