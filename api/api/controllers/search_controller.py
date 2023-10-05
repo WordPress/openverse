@@ -283,7 +283,8 @@ def _exclude_filtered(s: Search):
             key=filter_cache_key, timeout=FILTER_CACHE_TIMEOUT, value=filtered_providers
         )
     to_exclude = [f["provider_identifier"] for f in filtered_providers]
-    s = s.exclude("terms", provider=to_exclude)
+    if to_exclude:
+        s = s.exclude("terms", provider=to_exclude)
     return s
 
 
@@ -495,7 +496,7 @@ def search(
     return results, page_count, result_count, search_context.asdict()
 
 
-def related_media(uuid, index, filter_dead):
+def related_media(uuid: str, index: str, filter_dead: bool) -> tuple[list[Hit], int]:
     """Given a UUID, find related search results."""
 
     search_client = Search(index=index)
@@ -508,14 +509,12 @@ def related_media(uuid, index, filter_dead):
     s = search_client
     s = s.query(
         MoreLikeThis(
-            fields=["tags.name", "title", "creator"],
+            fields=["tags.name", "title"],
             like={"_index": index, "_id": _id},
             min_term_freq=1,
             max_query_terms=50,
         )
     )
-    # Never show mature content in recommendations.
-    s = s.exclude("term", mature=True)
     s = _exclude_filtered(s)
     page_size = 10
     page = 1
@@ -526,12 +525,7 @@ def related_media(uuid, index, filter_dead):
 
     result_count, _ = _get_result_and_page_count(response, results, page_size, page)
 
-    if not results:
-        results = []
-
-    result_ids = [result.identifier for result in results]
-    search_context = SearchContext.build(result_ids, index)
-    return results, result_count, search_context.asdict()
+    return results or [], result_count
 
 
 def get_sources(index):

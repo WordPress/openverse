@@ -158,9 +158,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            results, num_results, search_context = search_controller.related_media(
+            index = f"{self.default_index}-filtered"
+            results, num_results = search_controller.related_media(
                 uuid=identifier,
-                index=self.default_index,
+                index=index,
                 filter_dead=True,
             )
             self.paginator.result_count = num_results
@@ -173,7 +174,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
         except IndexError:
             raise APIException("Could not find items.", 404)
 
-        serializer_context = search_context | self.get_serializer_context()
+        serializer_context = self.get_serializer_context()
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
