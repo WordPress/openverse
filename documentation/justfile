@@ -20,7 +20,7 @@ install:
 ##########
 
 # Create a new project with proposal and, optionally, implementation plans
-init-project project_name *ip_names:
+create-project project_name *ip_names:
     #!/usr/bin/env bash
     set -eo pipefail
     TIMESTAMP=$(date '+%Y%m%d')

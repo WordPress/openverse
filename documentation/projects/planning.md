@@ -42,12 +42,12 @@ For each project, planning documents should be kept in the
 Refer to the existing projects for reference.
 
 ````{tip}
-You can initialise a new project using the `just` recipe `init-project`. It
+You can initialise a new project using the `just` recipe `create-project`. It
 accepts one argument as the project name, followed optionally by any number of
 implementation plans.
 
 ```bash
-$ just documentation/init-project 'Project name' 'First IP' 'Second IP'
+$ just documentation/create-project 'Project name' 'First IP' 'Second IP'
 ```
 
 This will create the directory structure for your project with the specified
