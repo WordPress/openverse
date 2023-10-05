@@ -1,9 +1,4 @@
-from ingestion_server.constants.media_types import (
-    AUDIO_TYPE,
-    IMAGE_TYPE,
-    MODEL_3D_TYPE,
-    MediaType,
-)
+from ingestion_server.constants.media_types import AUDIO_TYPE, IMAGE_TYPE, MediaType
 
 
 def index_settings(media_type: MediaType):
@@ -17,7 +12,6 @@ def index_settings(media_type: MediaType):
     number_of_shards: dict[MediaType, int] = {
         IMAGE_TYPE: 18,
         AUDIO_TYPE: 1,
-        MODEL_3D_TYPE: 1,
     }
 
     settings = {
