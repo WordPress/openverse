@@ -1,13 +1,28 @@
-def index_settings(table_name):
+from ingestion_server.constants.media_types import (
+    AUDIO_TYPE,
+    IMAGE_TYPE,
+    MODEL_3D_TYPE,
+    MediaType,
+)
+
+
+def index_settings(media_type: MediaType):
     """
     Return the Elasticsearch mapping for a given table in the database.
 
-    :param table_name: The name of the table in the upstream database.
-    :return:
+    :param media_type: The name of the table in the upstream database.
+    :return: the settings for the ES mapping
     """
+
+    number_of_shards: dict[MediaType, int] = {
+        IMAGE_TYPE: 18,
+        AUDIO_TYPE: 1,
+        MODEL_3D_TYPE: 1,
+    }
+
     settings = {
         "index": {
-            "number_of_shards": 18,
+            "number_of_shards": number_of_shards[media_type],
             "number_of_replicas": 0,
             "refresh_interval": "-1",
         },
@@ -154,6 +169,6 @@ def index_settings(table_name):
         },
     }
     media_mappings = common_mappings.copy()
-    media_mappings["properties"].update(media_properties[table_name])
+    media_mappings["properties"].update(media_properties[media_type])
     result = {"settings": settings.copy(), "mappings": media_mappings}
     return result
