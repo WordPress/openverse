@@ -561,7 +561,7 @@ def get_sources(index):
         aggs = {
             "unique_sources": {
                 "terms": {
-                    "field": "source.keyword",
+                    "field": "source",
                     "size": size,
                     "order": {"_key": "desc"},
                 }
