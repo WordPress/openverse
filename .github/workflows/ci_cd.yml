@@ -207,7 +207,6 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
-          build-contexts: ${{ matrix.build-contexts || '' }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
@@ -215,7 +214,6 @@ jobs:
             API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
             INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
-            FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
 
       - name: Upload image `${{ matrix.image }}`
         uses: actions/upload-artifact@v3

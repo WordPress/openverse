@@ -335,6 +335,21 @@ services:
       OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS}:8443
       OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
 
+  frontend:
+    profiles:
+      - frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile.monorepo-js
+      target: frontend-dev
+      args:
+        - SEMANTIC_VERSION=local
+        - FRONTEND_NODE_VERSION
+    ports:
+      - "50291:8443"
+    volumes:
+      - ./frontend:/app/frontend
+
 volumes:
   api-postgres:
   catalog-postgres:

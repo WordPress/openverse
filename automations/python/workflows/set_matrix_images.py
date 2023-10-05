@@ -31,7 +31,12 @@ includes = {
     "ingestion_server": {"image": "ingestion_server", "target": "ing"},
     "api": {"image": "api", "target": "api"},
     "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
-    "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
+    "frontend": {
+        "image": "frontend",
+        "target": "frontend",
+        "context": ".",
+        "file": "frontend/Dockerfile.monorepo-js",
+    },
     "frontend_nginx": {
         "image": "frontend_nginx",
         "context": "frontend",

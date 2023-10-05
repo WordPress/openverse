@@ -32,18 +32,17 @@ export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'
 # This section exists because the frontend is not a part of the Docker-based setup
 # and cannot be built easily like `just dc build <service>`.
 
-# Build the frontend Docker image
-build-img tag="openverse-frontend:local" target="app":
+# Build the production frontend Docker image
+build-prod tag="openverse-frontend:local":
     docker build \
-      --target {{ target }} \
-      --build-context 'repo_root=..' \
+      --target frontend \
       --build-arg FRONTEND_NODE_VERSION=$(just node-version) \
-      --build-arg FRONTEND_PNPM_VERSION=$(just pnpm-version) \
       --tag {{ tag }} \
-      .
+      --file ./Dockerfile.monorepo-js \
+      ..
 
-# Run the frontend Docker image
-run-img tag="openverse-frontend:local":
+# Run the production frontend Docker image
+run-prod tag="openverse-frontend:local":
     docker run \
       --rm \
       --publish 8443:8443 \
@@ -68,6 +67,3 @@ init: wait-up
 # Run a package.json script via pnpm
 run *args:
     pnpm run {{ args }}
-
-types:
-    cd .. && pnpm exec vue-tsc -p frontend --noEmit

@@ -4,7 +4,7 @@
   "private": true,
   "version": "2.2.1",
   "scripts": {
-    "predev": "pnpm install && pnpm i18n:no-get",
+    "predev": "pnpm install --filter frontend  && pnpm i18n:no-get",
     "dev": "run-p dev:only 'i18n:en --watch'",
     "dev:only": "nuxt --hostname 0.0.0.0",
     "dev:secure": "LOCAL_SSL=enabled pnpm dev",

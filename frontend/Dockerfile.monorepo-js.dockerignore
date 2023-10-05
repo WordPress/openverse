@@ -1,0 +1,27 @@
+# Context is repo root
+# Ignore everything and only add back build dependencies
+*
+
+# Generic/workspace
+!package.json
+!pnpm-lock.yaml
+!.pnpmfile.cjs
+!.npmrc
+!pnpm-workspace.yaml
+!tsconfig.base.json
+
+# Packages ignored for now; only need to be added if build dependency
+# for a `monorepo-js` target. `pnpm` happily ignores missing workspace
+# directories as long as you filter commands.
+
+# Frontend
+!frontend/package.json
+!frontend/nuxt.config.ts
+!frontend/tsconfig.json
+!frontend/src
+!frontend/feat
+!frontend/nuxt-template-overrides
+!frontend/typings
+!frontend/tailwind.config.ts
+!frontend/tailwind.safelist.txt
+!frontend/.babelrc
