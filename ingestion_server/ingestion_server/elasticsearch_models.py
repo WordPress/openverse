@@ -97,6 +97,9 @@ class Media(SyncableDocType):
         # cleanup tests in CI: test/unit_tests/test_cleanup.py
         category = row[schema["category"]] if "category" in schema else None
 
+        provider = row[schema["provider"]]
+        authority_boost = Media.get_authority_boost(meta, provider)
+
         return {
             "_id": row[schema["id"]],
             "id": row[schema["id"]],
@@ -110,13 +113,16 @@ class Media(SyncableDocType):
             "license": row[schema["license"]].lower(),
             "license_version": row[schema["license_version"]],
             "license_url": Media.get_license_url(meta),
-            "provider": row[schema["provider"]],
+            "provider": provider,
             "source": row[schema["source"]],
             "category": category,
             "created_on": row[schema["created_on"]],
             "tags": Media.parse_detailed_tags(row[schema["tags"]]),
             "mature": Media.get_maturity(meta, row[schema["mature"]]),
             "standardized_popularity": popularity,
+            "authority_boost": authority_boost,
+            "max_boost": max(popularity or 1, authority_boost or 1),
+            "min_boost": min(popularity or 1, authority_boost or 1),
         }
 
     @staticmethod
@@ -230,27 +236,16 @@ class Image(Media):
     @staticmethod
     def database_row_to_elasticsearch_doc(row, schema):
         extension = Image.get_extension(row[schema["url"]])
-
         height = row[schema["height"]]
         width = row[schema["width"]]
         aspect_ratio = Image.get_aspect_ratio(height, width)
         size = Image.get_size(height, width)
-
-        meta = row[schema["meta_data"]]
-        provider = row[schema["provider"]]
-        authority_boost = Image.get_authority_boost(meta, provider)
-
         attrs = Image.get_instance_attrs(row, schema)
-        attrs["category"] = attrs["category"]
-        popularity = attrs["standardized_popularity"]
 
         return Image(
             aspect_ratio=aspect_ratio,
             extension=extension,
             size=size,
-            authority_boost=authority_boost,
-            max_boost=max(popularity or 1, authority_boost or 1),
-            min_boost=min(popularity or 1, authority_boost or 1),
             **attrs,
         )
 
@@ -318,23 +313,13 @@ class Audio(Media):
         alt_files = row[schema["alt_files"]]
         filetype = row[schema["filetype"]]
         extension = Audio.get_extensions(filetype, alt_files)
-
-        meta = row[schema["meta_data"]]
-        provider = row[schema["provider"]]
-        authority_boost = Audio.get_authority_boost(meta, provider)
-
         attrs = Audio.get_instance_attrs(row, schema)
-        popularity = attrs["standardized_popularity"]
-
         length = Audio.get_length(row[schema["duration"]])
 
         return Audio(
             length=length,
             filetype=filetype,
             extension=extension,
-            authority_boost=authority_boost,
-            max_boost=max(popularity or 1, authority_boost or 1),
-            min_boost=min(popularity or 1, authority_boost or 1),
             **attrs,
         )
 
