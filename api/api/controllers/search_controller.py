@@ -515,6 +515,9 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> tuple[list[Hit], 
             max_query_terms=50,
         )
     )
+    # Prevent the items that users set as `mature` from showing up in
+    # recommendations.
+    s = s.exclude("term", mature=True)
     s = _exclude_filtered(s)
     page_size = 10
     page = 1
