@@ -501,19 +501,21 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
 
     # Search the default index for the item itself as it might be sensitive.
     item_search = Search(index=index)
-
-    # Get the item's title and tags.
     item_hit = item_search.query("match", identifier=uuid).execute().hits[0]
+
+    # Match related using title.
     title = item_hit.title
-    tags = ",".join([tag.name for tag in item_hit.tags])
+    title_query = SimpleQueryString(query=title, fields=["title"])
+    related_query = title_query
+
+    # Match related using tags, if the item has any.
+    if tags := getattr(item_hit, "tags", None):
+        tags = ",".join([tag.name for tag in tags])
+        tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
+        related_query |= tags_query
 
     # Search the filtered index for related items.
     s = Search(index=f"{index}-filtered")
-
-    # Match the title or tags
-    title_query = SimpleQueryString(query=title, fields=["title"])
-    tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
-    related_query = title_query | tags_query
 
     # Exclude the current item and mature content.
     # TODO: remove `__keyword` after
