@@ -245,7 +245,6 @@ class Image(Media):
         popularity = attrs["standardized_popularity"]
 
         return Image(
-            thumbnail=row[schema["thumbnail"]],
             aspect_ratio=aspect_ratio,
             extension=extension,
             size=size,
@@ -330,10 +329,6 @@ class Audio(Media):
         length = Audio.get_length(row[schema["duration"]])
 
         return Audio(
-            bit_rate=row[schema["bit_rate"]],
-            sample_rate=row[schema["sample_rate"]],
-            genres=row[schema["genres"]],
-            duration=row[schema["duration"]],
             length=length,
             filetype=filetype,
             extension=extension,
