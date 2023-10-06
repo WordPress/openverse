@@ -510,7 +510,8 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
 
     # Match related using tags, if the item has any.
     if tags := getattr(item_hit, "tags", None):
-        tags = ",".join([tag.name for tag in tags])
+        # Only use the first 10 tags
+        tags = ",".join([tag.name for tag in tags[:10]])
         tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
         related_query |= tags_query
 
