@@ -158,10 +158,9 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            index = f"{self.default_index}-filtered"
             results = search_controller.related_media(
                 uuid=identifier,
-                index=index,
+                index=self.default_index,
                 filter_dead=True,
             )
             self.paginator.page_count = 1

@@ -499,16 +499,16 @@ def search(
 def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     """Given a UUID, find related search results based on title and tags."""
 
-    search_client = Search(index=index)
+    # Search the default index for the item itself as it might be sensitive.
+    item_search = Search(index=index)
 
-    # Convert UUID to sequential ID.
-    item = search_client
-    item_query = item.query("match", identifier=uuid)
-    item_hit = item_query.execute().hits[0]
+    # Get the item's title and tags.
+    item_hit = item_search.query("match", identifier=uuid).execute().hits[0]
     title = item_hit.title
     tags = ",".join([tag.name for tag in item_hit.tags])
 
-    s = search_client
+    # Search the filtered index for related items.
+    s = Search(index=f"{index}-filtered")
 
     # Match the title or tags
     title_query = SimpleQueryString(query=title, fields=["title"])
@@ -516,6 +516,8 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     related_query = title_query | tags_query
 
     # Exclude the current item and mature content.
+    # TODO: remove `__keyword` after
+    #  https://github.com/WordPress/openverse/pull/3143 is merged.
     s = s.query(related_query & ~Match(identifier__keyword=uuid) & ~Term(mature=True))
     # Exclude the dynamically disabled sources.
     s = _exclude_filtered(s)
@@ -574,7 +576,7 @@ def _get_result_and_page_count(
     response_obj: Response, results: list[Hit] | None, page_size: int, page: int
 ) -> tuple[int, int]:
     """
-    Adjust related page count because ES disallows deep pagination of ranked queries.
+    Adjust page count because ES disallows deep pagination of ranked queries.
 
     :param response_obj: The original Elasticsearch response object.
     :param results: The list of filtered result Hits.
