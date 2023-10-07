@@ -50,7 +50,22 @@
             media-type="image"
             class="mb-4 !w-full flex-initial md:mb-0 md:!w-max"
           />
-          <div class="description-bold flex flex-1 flex-col justify-center">
+          <div
+            v-if="additionalSearchViews"
+            class="flex w-full max-w-full flex-1 flex-col gap-y-3 sm:gap-y-1"
+          >
+            <h1 class="heading-6 line-clamp-2">{{ image.title }}</h1>
+            <VByLine
+              :creator="image.creator"
+              :source-slug="image.source ?? ''"
+              :source-name="image.sourceName ?? ''"
+              media-type="image"
+            />
+          </div>
+          <div
+            v-else
+            class="description-bold flex flex-1 flex-col justify-center"
+          >
             <h1 class="description-bold md:heading-5 line-clamp-2">
               {{ image.title }}
             </h1>
@@ -109,8 +124,9 @@ import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
-
 import { isRetriable } from "~/utils/errors"
+
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
@@ -123,12 +139,16 @@ import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
+import VByLine from "~/components/VMediaInfo/VByLine/VByLine.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VErrorSection,
+    VByLine,
     VGetMediaButton,
     VMediaDetails,
     VSingleResultControls,
@@ -145,6 +165,7 @@ export default defineComponent({
   // handled by the `singleResultMiddleware`.
   fetchOnServer: false,
   setup() {
+    const featureFlagStore = useFeatureFlagStore()
     const singleResultStore = useSingleResultStore()
 
     const route = useRoute()
@@ -279,6 +300,10 @@ export default defineComponent({
       title: pageTitle.value,
     }))
 
+    const additionalSearchViews = computed(() =>
+      featureFlagStore.isOn("additional_search_views")
+    )
+
     return {
       image,
       fetchingError,
@@ -302,6 +327,8 @@ export default defineComponent({
       isHidden,
       reveal,
       hide,
+
+      additionalSearchViews,
     }
   },
   // Necessary for useMeta

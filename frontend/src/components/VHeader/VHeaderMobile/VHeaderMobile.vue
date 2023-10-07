@@ -29,7 +29,7 @@
             />
             <VSearchBarButton
               v-show="searchBarIsActive"
-              icon="chevron-left"
+              icon="chevron-back"
               :label="$t('header.backButton')"
               :rtl-flip="true"
               variant="filled-gray"
