@@ -35,12 +35,10 @@ class SearchContext:
             # Use `identifier` rather than the document `id` due to
             # `id` instability between refreshes:
             # https://github.com/WordPress/openverse/issues/2306
-            # `identifier` is mapped as `text` which will match fuzzily.
-            # Use `identifier.keyword` to match _exactly_
-            # cf: https://github.com/WordPress/openverse/issues/2154
+            # `identifier` is a keyword field which will match exactly.
             Q(
                 "terms",
-                **{"identifier.keyword": all_result_identifiers},
+                **{"identifier": all_result_identifiers},
             )
         )
 

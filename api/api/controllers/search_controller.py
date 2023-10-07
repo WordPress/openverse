@@ -349,12 +349,14 @@ def search(
         ("extension", None),
         ("category", None),
         ("categories", "category"),
+        ("source", None),
+        ("license", None),
+        ("license_type", "license"),
+        # Audio-specific filters
         ("length", None),
+        # Image-specific filters
         ("aspect_ratio", None),
         ("size", None),
-        ("source", None),
-        ("license", "license__keyword"),
-        ("license_type", "license__keyword"),
     ]
     for serializer_field, es_field in filters:
         if serializer_field in search_params.data:
@@ -559,7 +561,7 @@ def get_sources(index):
         aggs = {
             "unique_sources": {
                 "terms": {
-                    "field": "source.keyword",
+                    "field": "source",
                     "size": size,
                     "order": {"_key": "desc"},
                 }
