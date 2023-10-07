@@ -11,7 +11,7 @@ from django.core.cache import cache
 
 from elasticsearch.exceptions import BadRequestError, NotFoundError
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY, MoreLikeThis, Query
+from elasticsearch_dsl.query import EMPTY_QUERY, Match, Query, SimpleQueryString, Term
 from elasticsearch_dsl.response import Hit, Response
 
 import api.models as models
@@ -496,39 +496,42 @@ def search(
     return results, page_count, result_count, search_context.asdict()
 
 
-def related_media(uuid: str, index: str, filter_dead: bool) -> tuple[list[Hit], int]:
-    """Given a UUID, find related search results."""
+def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
+    """Given a UUID, find related search results based on title and tags."""
 
-    search_client = Search(index=index)
+    # Search the default index for the item itself as it might be sensitive.
+    item_search = Search(index=index)
+    item_hit = item_search.query("match", identifier=uuid).execute().hits[0]
 
-    # Convert UUID to sequential ID.
-    item = search_client
-    item = item.query("match", identifier=uuid)
-    _id = item.execute().hits[0].id
+    # Match related using title.
+    title = item_hit.title
+    title_query = SimpleQueryString(query=title, fields=["title"])
+    related_query = title_query
 
-    s = search_client
-    s = s.query(
-        MoreLikeThis(
-            fields=["tags.name", "title"],
-            like={"_index": index, "_id": _id},
-            min_term_freq=1,
-            max_query_terms=50,
-        )
-    )
-    # Prevent the items that users set as `mature` from showing up in
-    # recommendations.
-    s = s.exclude("term", mature=True)
+    # Match related using tags, if the item has any.
+    if tags := getattr(item_hit, "tags", None):
+        # Only use the first 10 tags
+        tags = ",".join([tag.name for tag in tags[:10]])
+        tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
+        related_query |= tags_query
+
+    # Search the filtered index for related items.
+    s = Search(index=f"{index}-filtered")
+
+    # Exclude the current item and mature content.
+    # TODO: remove `__keyword` after
+    #  https://github.com/WordPress/openverse/pull/3143 is merged.
+    s = s.query(related_query & ~Match(identifier__keyword=uuid) & ~Term(mature=True))
+    # Exclude the dynamically disabled sources.
     s = _exclude_filtered(s)
-    page_size = 10
-    page = 1
+
+    page, page_size = 1, 10
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
+
     response = s.execute()
     results = _post_process_results(s, start, end, page_size, response, filter_dead)
-
-    result_count, _ = _get_result_and_page_count(response, results, page_size, page)
-
-    return results or [], result_count
+    return results or []
 
 
 def get_sources(index):
@@ -576,7 +579,7 @@ def _get_result_and_page_count(
     response_obj: Response, results: list[Hit] | None, page_size: int, page: int
 ) -> tuple[int, int]:
     """
-    Adjust related page count because ES disallows deep pagination of ranked queries.
+    Adjust page count because ES disallows deep pagination of ranked queries.
 
     :param response_obj: The original Elasticsearch response object.
     :param results: The list of filtered result Hits.
