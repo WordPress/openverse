@@ -56,10 +56,7 @@
           :show-filter-header="false"
           :change-tab-order="false"
         />
-        <VSafeBrowsing
-          v-if="isSensitiveContentEnabled"
-          class="border-t border-dark-charcoal-20 px-6 pt-6"
-        />
+        <VSafeBrowsing class="border-t border-dark-charcoal-20 px-6 pt-6" />
       </VTabPanel>
     </VTabs>
     <footer
@@ -83,7 +80,6 @@
 import { computed, defineComponent, PropType, ref } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import useSearchType from "~/composables/use-search-type"
 
@@ -167,14 +163,7 @@ export default defineComponent({
       searchStore.clearFilters()
     }
 
-    const featureStore = useFeatureFlagStore()
-    const isSensitiveContentEnabled = computed(() =>
-      featureStore.isOn("sensitive_content")
-    )
-
     return {
-      isSensitiveContentEnabled,
-
       searchType,
 
       selectedTab,

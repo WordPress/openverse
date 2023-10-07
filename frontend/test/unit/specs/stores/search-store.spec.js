@@ -48,7 +48,6 @@ describe("Search Store", () => {
       "returns correct filter status for $query and searchType $searchType",
       ({ sensitivityFlag, query, searchType, filterCount }) => {
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("sensitive_content", sensitivityFlag)
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
@@ -149,7 +148,6 @@ describe("Search Store", () => {
       "returns correct searchQueryParams and filter status for $query and searchType $searchType",
       ({ sensitivityFlag, query, expectedQueryParams, searchType }) => {
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("sensitive_content", sensitivityFlag)
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         const searchStore = useSearchStore()
         // It should discard the values that are not applicable for the search type:
@@ -210,7 +208,6 @@ describe("Search Store", () => {
       "`setSearchStateFromUrl` should set '$searchType' from query $query and path '$path'",
       ({ sensitivityFlag, query, path, searchType }) => {
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("sensitive_content", sensitivityFlag)
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         const searchStore = useSearchStore()
         const expectedQuery = { ...searchStore.searchQueryParams, ...query }
