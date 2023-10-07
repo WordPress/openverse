@@ -66,23 +66,11 @@ def index_settings(media_type: MediaType):
             "created_on": {"type": "date"},
             "mature": {"type": "boolean"},
             # Keyword fields
-            "identifier": {
-                # TODO: Remove subfield when API is updated
-                "fields": {"keyword": {"type": "keyword"}},
-                "type": "keyword",
-            },
+            "identifier": {"type": "keyword"},
             "extension": {"type": "keyword"},
-            "license": {
-                # TODO: Remove subfield when API is updated
-                "fields": {"keyword": {"type": "keyword"}},
-                "type": "keyword",
-            },
+            "license": {"type": "keyword"},
             "provider": {"type": "keyword"},
-            "source": {
-                # TODO: Remove subfield when API is updated
-                "fields": {"keyword": {"type": "keyword"}},
-                "type": "keyword",
-            },
+            "source": {"type": "keyword"},
             "filetype": {"type": "keyword"},
             "category": {"type": "keyword"},
             # Text-based fields
