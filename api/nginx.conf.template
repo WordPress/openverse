@@ -42,6 +42,8 @@ upstream django {
 }
 
 server {
+    access_log  /var/log/nginx/access.log  json_combined;
+
     listen          8080;
     server_name     _;
     charset        utf-8;
