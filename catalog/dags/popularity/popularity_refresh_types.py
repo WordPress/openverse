@@ -66,6 +66,8 @@ class PopularityRefresh:
 POPULARITY_REFRESH_CONFIGS = [
     PopularityRefresh(
         media_type="image",
+        # Poke every fifteen minute, instead of every thirty minutes
+        poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15)),
         refresh_metrics_timeout=timedelta(hours=24),
         popularity_metrics={
             "flickr": {"metric": "views"},
