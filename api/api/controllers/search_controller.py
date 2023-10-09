@@ -497,23 +497,43 @@ def search(
 
 
 def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
-    """Given a UUID, find related search results based on title and tags."""
+    """
+    Given a UUID, finds 10 related search results based on title and tags.
+
+    Uses Match query for title or SimpleQueryString for tags.
+    If the item has no title and no tags, returns items by the same creator.
+    If the item has no title, no tags or no creator, returns empty list.
+
+    :param uuid: The UUID of the item to find related results for.
+    :param index: The Elasticsearch index to search (e.g. 'image')
+    :param filter_dead: Whether dead links should be removed.
+    :return: List of related results.
+    """
 
     # Search the default index for the item itself as it might be sensitive.
     item_search = Search(index=index)
-    item_hit = item_search.query("match", identifier=uuid).execute().hits[0]
+    # TODO: remove `__keyword` after
+    #  https://github.com/WordPress/openverse/pull/3143 is merged.
+    item_hit = item_search.query(Term(identifier__keyword=uuid)).execute().hits[0]
 
     # Match related using title.
     title = item_hit.title
-    title_query = SimpleQueryString(query=title, fields=["title"])
-    related_query = title_query
+    tags = getattr(item_hit, "tags", None)
+    creator = item_hit.creator
 
-    # Match related using tags, if the item has any.
-    if tags := getattr(item_hit, "tags", None):
-        # Only use the first 10 tags
-        tags = ",".join([tag.name for tag in tags[:10]])
-        tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
-        related_query |= tags_query
+    if not title and not tags:
+        if not creator:
+            return []
+        related_query = Term(creator__keyword=creator)
+    else:
+        related_query = None if not title else Match(title=title)
+
+        # Match related using tags, if the item has any.
+        if tags:
+            # Only use the first 10 tags
+            tags = " | ".join([tag.name for tag in tags[:10]])
+            tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
+            related_query = related_query | tags_query if related_query else tags_query
 
     # Search the filtered index for related items.
     s = Search(index=f"{index}-filtered")
@@ -521,7 +541,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     # Exclude the current item and mature content.
     # TODO: remove `__keyword` after
     #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    s = s.query(related_query & ~Match(identifier__keyword=uuid) & ~Term(mature=True))
+    s = s.query(related_query & ~Term(identifier__keyword=uuid) & ~Term(mature=True))
     # Exclude the dynamically disabled sources.
     s = _exclude_filtered(s)
 
