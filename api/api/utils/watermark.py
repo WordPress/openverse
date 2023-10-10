@@ -5,13 +5,12 @@ from io import BytesIO
 from textwrap import wrap
 
 from django.conf import settings
-
-import requests
-from PIL import Image, ImageDraw, ImageFont
-from sentry_sdk import capture_exception
-
 from rest_framework import status
 from rest_framework.exceptions import APIException
+
+import requests
+from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
+from sentry_sdk import capture_exception
 
 
 parent_logger = logging.getLogger(__name__)
@@ -27,14 +26,14 @@ HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Watermark")
 }
 
+
 class UpstreamWatermarkException(APIException):
-    status_code = (
-        status.HTTP_424_FAILED_DEPENDENCY
-    )
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
     default_detail = (
         "Could not render watermarked image due to upstream provider error."
     )
     default_code = "upstream_watermark_failure"
+
 
 class Dimension(Flag):
     """This enum represents the two dimensions of an image."""
@@ -183,10 +182,10 @@ def _open_image(url):
         response.raise_for_status()
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
-    except requests.exceptions.RequestException as e:
+    except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
         capture_exception(e)
         logger.error(f"Error loading image data: {e}")
-        raise UpstreamWatermarkException(f"Error: {e}")
+        raise UpstreamWatermarkException(f"{e}")
 
     return img, img.getexif()
 
