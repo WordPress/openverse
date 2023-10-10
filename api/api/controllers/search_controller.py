@@ -519,7 +519,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     # Match related using title.
     title = item_hit.title
     tags = getattr(item_hit, "tags", None)
-    creator = item_hit.creator
+    creator = getattr(item_hit, "creator", None)
 
     if not title and not tags:
         if not creator:
