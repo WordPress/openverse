@@ -9,7 +9,7 @@ from typing import Literal
 from django.conf import settings
 from django.core.cache import cache
 
-from elasticsearch.exceptions import NotFoundError, RequestError
+from elasticsearch.exceptions import BadRequestError, NotFoundError
 from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.query import EMPTY_QUERY, MoreLikeThis, Query
 from elasticsearch_dsl.response import Hit, Response
@@ -447,7 +447,7 @@ def search(
 
         if settings.VERBOSE_ES_RESPONSE:
             log.info(pprint.pprint(search_response.to_dict()))
-    except (RequestError, NotFoundError) as e:
+    except (BadRequestError, NotFoundError) as e:
         raise ValueError(e)
 
     results = _post_process_results(
