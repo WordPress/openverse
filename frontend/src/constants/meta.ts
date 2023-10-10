@@ -16,11 +16,6 @@ export const meta = [
   // search, content and home pages.
   { hid: "robots", name: "robots", content: "noindex" },
   {
-    vmid: "monetization",
-    name: "monetization",
-    content: "$ilp.uphold.com/edR8erBDbRyq",
-  },
-  {
     hid: "theme-color",
     name: "theme-color",
     content: "#ffffff",

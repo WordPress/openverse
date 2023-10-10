@@ -1,7 +1,7 @@
-# Project Proposal Template
+# Template: Project Proposal
 
 ```md
-# {YYYY-MM-DD} Project Proposal
+# {YYYY-MM-DD} Project Proposal: {Project proposal title}
 
 **Author**: @username
 

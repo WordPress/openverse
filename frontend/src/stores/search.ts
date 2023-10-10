@@ -96,11 +96,7 @@ function computeQueryParams(
 
   // `INCLUDE_SENSITIVE_QUERY_PARAM` is used in the API params, but not shown on the frontend.
   const ffStore = useFeatureFlagStore()
-  if (
-    mode === "API" &&
-    ffStore.isOn("sensitive_content") &&
-    ffStore.isOn("fetch_sensitive")
-  ) {
+  if (mode === "API" && ffStore.isOn("fetch_sensitive")) {
     search_query[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
   }
 
@@ -484,7 +480,7 @@ export const useSearchStore = defineStore("search", {
       const ffStore = useFeatureFlagStore()
       const query = queryDictionaryToQueryParams({
         ...urlQuery,
-        ...(ffStore.isOn("sensitive_content") && ffStore.isOn("fetch_sensitive")
+        ...(ffStore.isOn("fetch_sensitive")
           ? { [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }
           : {}),
       })

@@ -199,7 +199,7 @@ class Media(SyncableDocType):
     @staticmethod
     def parse_detailed_tags(json_tags):
         if not json_tags:
-            return None
+            return []
         parsed_tags = []
         for tag in json_tags:
             if "name" in tag:
