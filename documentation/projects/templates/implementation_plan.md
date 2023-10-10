@@ -1,7 +1,7 @@
-# Implementation Plan Template
+# Template: Implementation Plan
 
 ```md
-# {YYYY-MM-DD} Implementation Plan: {Piece of project or project being implemented}
+# {YYYY-MM-DD} Implementation Plan: {Implementation plan title}
 
 **Author**: @username
 
@@ -20,7 +20,7 @@
 <!-- Enumerate any references to other documents/pages, including milestones and other plans -->
 
 - [Project Thread]()
-- [Project Proposal]()
+- [Project Proposal]({Project proposal path})
 
 ## Overview
 

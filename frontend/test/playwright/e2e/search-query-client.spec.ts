@@ -108,9 +108,6 @@ test.describe("search query on CSR", () => {
       await page.goto("/preferences")
       // Feature flag labels are not translated
       await page
-        .getByLabel(/Turn on sensitive content fetching and blurring/i)
-        .check()
-      await page
         .getByLabel(/Mark 50% of results as sensitive to test content safety./i)
         .check()
 

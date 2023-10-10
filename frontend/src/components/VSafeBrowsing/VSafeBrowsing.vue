@@ -63,7 +63,7 @@ export default defineComponent({
   setup() {
     const { app } = useContext()
 
-    const sensitivityPath = computed(() => app.localePath("/about")) // TODO: Issue#2550
+    const sensitivityPath = computed(() => app.localePath("/sensitive-content"))
 
     const featureFlagStore = useFeatureFlagStore()
     const { sendCustomEvent } = useAnalytics()
