@@ -64,6 +64,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
+import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -106,6 +107,10 @@ export default defineComponent({
     aspectRatio: {
       type: String as PropType<AspectRatio>,
       default: "square",
+    },
+    kind: {
+      type: String as PropType<ResultKind>,
+      default: "search",
     },
     relatedTo: {
       type: [String, null] as PropType<string | null>,
@@ -175,6 +180,7 @@ export default defineComponent({
     const sendSelectSearchResultEvent = () => {
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: props.image.id,
+        kind: props.kind,
         mediaType: IMAGE,
         provider: props.image.provider,
         query: props.searchTerm || "",
