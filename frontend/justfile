@@ -78,12 +78,12 @@ types:
 
 # Check the health of the service
 @health host="localhost:50288":
-    python3 plausible_health_check.py {{host}}
+    -curl -s 'http://localhost:50288/api/health' --fail | grep -v -c 'error'
 
 # Wait for the service to be healthy
 @wait host="localhost:50288":
     # The just command on the second line is executed in the context of the
     # parent directory and so must be prefixed with `api/`.
     just ../_loop \
-    '"$(just frontend/health {{ host }})" != "true"' \
+    '"$(just frontend/health {{ host }})" != "1" ' \
     "Waiting for the frontend to be healthy..."
