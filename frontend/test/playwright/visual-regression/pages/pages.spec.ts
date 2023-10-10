@@ -18,6 +18,7 @@ const contentPages = [
   "search-help",
   "non-existent",
   "sources",
+  "sensitive-content",
 ]
 for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
