@@ -136,7 +136,7 @@ class VerifyEmail(APIView):
 
 
 @extend_schema(tags=["auth"])
-class TokenView(BaseTokenView, APIView):
+class TokenView(APIView, BaseTokenView):
     @token
     def post(self, *args, **kwargs):
         """
