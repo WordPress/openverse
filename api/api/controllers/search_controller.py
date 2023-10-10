@@ -514,9 +514,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
 
     # Search the default index for the item itself as it might be sensitive.
     item_search = Search(index=index)
-    # TODO: remove `__keyword` after
-    #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    item_hit = item_search.query(Term(identifier__keyword=uuid)).execute().hits[0]
+    item_hit = item_search.query(Term(identifier=uuid)).execute().hits[0]
 
     # Match related using title.
     title = item_hit.title
@@ -541,9 +539,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     s = Search(index=f"{index}-filtered")
 
     # Exclude the current item and mature content.
-    # TODO: remove `__keyword` after
-    #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    s = s.query(related_query & ~Term(identifier__keyword=uuid) & ~Term(mature=True))
+    s = s.query(related_query & ~Term(identifier=uuid) & ~Term(mature=True))
     # Exclude the dynamically disabled sources.
     s = _exclude_filtered(s)
 
