@@ -7,7 +7,6 @@ import {
 } from "@storybook/addon-docs"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import { image } from "~~/test/unit/fixtures/image"
-import { base64Image } from "~~/test/unit/fixtures/base64Image"
 
 <Meta title="Components/VImageCell" components={VImageCell} />
 
@@ -49,7 +48,7 @@ export const Template = (args, { argTypes }) => ({
     }}
     args={{
       aspectRatio: "intrinsic",
-      image: { ...image, url: base64Image },
+      image: { ...image, thumbnail: "/openverse-default.jpg" },
     }}
   >
     {Template.bind({})}

@@ -78,7 +78,11 @@ import VLink from "~/components/VLink.vue"
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 const toAbsolutePath = (url: string, prefix = "https://") => {
-  if (url.indexOf("http://") >= 0 || url.indexOf("https://") >= 0) {
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url === "/openverse-default.jpg"
+  ) {
     return url
   }
   return `${prefix}${url}`
