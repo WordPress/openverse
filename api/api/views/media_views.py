@@ -158,22 +158,23 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            results, num_results, search_context = search_controller.related_media(
+            results = search_controller.related_media(
                 uuid=identifier,
                 index=self.default_index,
                 filter_dead=True,
             )
-            self.paginator.result_count = num_results
             self.paginator.page_count = 1
             # `page_size` refers to the maximum number of related images to return.
             self.paginator.page_size = 10
+            # `result_count` is hard-coded and is equal to the page size.
+            self.paginator.result_count = 10
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
         # If there are no hits in the search controller
         except IndexError:
             raise APIException("Could not find items.", 404)
 
-        serializer_context = search_context | self.get_serializer_context()
+        serializer_context = self.get_serializer_context()
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
