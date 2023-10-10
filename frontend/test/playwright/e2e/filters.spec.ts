@@ -37,10 +37,11 @@ const assertCheckboxCount = async (
   await expect(page.locator(locatorString)).toHaveCount(count, { timeout: 200 })
 }
 
+// Note that this includes two switches for sensitive content preferences.
 const FILTER_COUNTS = {
-  [ALL_MEDIA]: 10,
-  [AUDIO]: 31,
-  [IMAGE]: 71,
+  [ALL_MEDIA]: 12,
+  [AUDIO]: 33,
+  [IMAGE]: 73,
 }
 
 breakpoints.describeMobileAndDesktop(() => {
@@ -115,7 +116,7 @@ breakpoints.describeMobileAndDesktop(() => {
     await changeSearchType(page, ALL_MEDIA)
 
     await filters.open(page)
-    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(2)
+    await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(3)
 
     await expect(page).toHaveURL(
       "/search/?q=cat&license_type=commercial&license=cc0&searchBy=creator"
