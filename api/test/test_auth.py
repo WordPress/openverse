@@ -53,6 +53,17 @@ def test_auth_token_exchange(client, test_auth_tokens_registration):
 
 
 @pytest.mark.django_db
+@pytest.fixture
+def test_auth_token_exchange_unsupported_method(client):
+    res = client.get(
+        "/v1/auth_tokens/register/",
+        verify=False,
+    )
+    assert res.status_code == 405
+    assert res.json()["detail"] == 'Method "GET" not allowed.'
+
+
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     "rate_limit_model",
     [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
