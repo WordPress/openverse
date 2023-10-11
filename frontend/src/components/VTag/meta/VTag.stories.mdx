@@ -1,6 +1,11 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs"
+import { Description, Canvas, Meta, Story } from "@storybook/addon-docs"
 
 import VTag from "~/components/VTag/VTag.vue"
+
+<Meta
+  title="Components/VTag"
+  component={VTag}
+/>
 
 export const Template = (args) => ({
   template: `<VTag v-bind="args"/>`,
@@ -9,9 +14,10 @@ export const Template = (args) => ({
     return { args }
   },
 })
-
-<Meta title="Components/VTag" component={VTag} />
+<Description of={VTag} />
 
 <Canvas>
-  <Story name="default">{Template.bind({})}</Story>
+  <Story name="default" args={{ href: "#", title: "cat" }}>
+    {Template.bind({})}
+  </Story>
 </Canvas>

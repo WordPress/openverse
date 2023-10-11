@@ -1,13 +1,13 @@
 <template>
-  <ul v-if="tags.length" class="flex flex-wrap gap-2">
-    <div v-if="additionalSearchViews">
+  <ul v-if="tags.length && additionalSearchViews" class="flex flex-wrap gap-2">
       <VTag
         v-for="(tag, index) in tags"
         :key="index"
         href="/"
         :title="tag.name"
       />
-    </div>
+  </ul>
+  <ul v-else>
     <VMediaTag v-for="(tag, index) in tags" :key="index" tag="li">{{
       tag.name
     }}</VMediaTag>
