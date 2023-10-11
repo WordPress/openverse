@@ -1,4 +1,4 @@
-import { useWindowSize, watchThrottled } from "@vueuse/core"
+import { useWindowSize, watchDebounced } from "@vueuse/core"
 
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
@@ -24,13 +24,13 @@ export function useLayout() {
     uiStore.updateBreakpoint(widthToBreakpoint(width.value))
   }
 
-  watchThrottled(
+  watchDebounced(
     width,
     (newWidth) => {
       const newBp = widthToBreakpoint(newWidth)
       uiStore.updateBreakpoint(newBp)
     },
-    { throttle: 100 }
+    { debounce: 100 }
   )
 
   return {
