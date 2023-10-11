@@ -548,3 +548,37 @@ def test_ignores_created_at_and_pings_if_urgent_ready_for_review_event_exists(
     post_reminders("not_set", dry_run=False)
 
     assert pull["number"] in github["posted_comments"]
+
+
+def test_falls_back_to_main_on_multiple_branch_levels(
+    github,
+):
+    # No need to parametrize this, only need to test the one case
+    # Make branch protection rules for a branch one-off main
+    github["branch_protection"]["openverse"]["non_main"] = {}
+    past_due_pull = make_pull(Urgency.LOW, old=True, base_branch="not_main")
+    past_due_pull["requested_reviewers"] = [
+        make_requested_reviewer(f"reviewer-due-{i}") for i in range(2)
+    ]
+
+    min_required_approvals = 4
+
+    # Always use `main` to exercise fallback for non-main branches
+    _setup_branch_protection_for_branch(
+        github,
+        repo="openverse",
+        branch="main",
+        min_required_approvals=min_required_approvals,
+    )
+
+    github["pulls"] += [past_due_pull]
+    github["pull_reviews"][past_due_pull["number"]] = [
+        make_review("APPROVED"),
+    ] * min_required_approvals
+    github["events"][past_due_pull["number"]] = make_urgent_events(
+        Urgency.LOW, ["review_requested"]
+    )
+
+    post_reminders("not_set", dry_run=False)
+
+    assert past_due_pull["number"] not in github["posted_comments"]

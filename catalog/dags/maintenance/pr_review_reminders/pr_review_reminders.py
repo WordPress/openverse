@@ -181,6 +181,12 @@ def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
         else:
             raise e
 
+    if "required_pull_request_reviews" not in branch_protection_rules:
+        # This can happen in the rare case where a PR is multiple branches deep,
+        # e.g. it depends on a branch which depends on a branch which depends on main.
+        # In that case, default to the rules for `main` as a safe default.
+        branch_protection_rules = get_branch_protection(gh, repo, "main")
+
     return branch_protection_rules["required_pull_request_reviews"][
         "required_approving_review_count"
     ]
