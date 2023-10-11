@@ -517,7 +517,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     item_hit = item_search.query(Term(identifier__keyword=uuid)).execute().hits[0]
 
     # Match related using title.
-    title = item_hit.title
+    title = getattr(item_hit, "title", None)
     tags = getattr(item_hit, "tags", None)
     creator = getattr(item_hit, "creator", None)
 
