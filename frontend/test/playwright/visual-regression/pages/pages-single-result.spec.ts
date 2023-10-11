@@ -7,6 +7,7 @@ import {
   openFirstResult,
   pathWithDir,
   preparePageForTests,
+  setCookies,
 } from "~~/test/playwright/utils/navigation"
 
 import { supportedMediaTypes } from "~/constants/media"
@@ -21,30 +22,35 @@ const cleanRelatedImages = async (page: Page) => {
   await page.waitForTimeout(200)
 }
 
-for (const mediaType of supportedMediaTypes) {
-  for (const dir of languageDirections) {
-    breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-      // https://github.com/WordPress/openverse/issues/3112
-      test.skip(`${mediaType} ${dir} single-result page snapshots from search results`, async ({
-        page,
-      }) => {
-        await preparePageForTests(page, breakpoint)
-
-        await goToSearchTerm(page, "birds", { dir })
-        // This will include the "Back to results" link.
-        await openFirstResult(page, mediaType)
-        await cleanRelatedImages(page)
-
-        await expectSnapshot(
-          `${mediaType}-${dir}-from-search-results`,
+for (const isOn of [true, false]) {
+  for (const mediaType of supportedMediaTypes) {
+    for (const dir of languageDirections) {
+      breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
+        test(`${mediaType} ${dir} single-result page snapshots from search results, additional search views ${isOn}`, async ({
           page,
-          {
-            fullPage: true,
-          },
-          { maxDiffPixelRatio: 0.01 }
-        )
+        }) => {
+          await setCookies(page.context(), {
+            features: { additional_search_views: isOn ? "on" : "off" },
+          })
+          await preparePageForTests(page, breakpoint)
+
+          await goToSearchTerm(page, "birds", { dir, mode: "SSR" })
+
+          // This will include the "Back to results" link.
+          await openFirstResult(page, mediaType)
+          await cleanRelatedImages(page)
+
+          await expectSnapshot(
+            `${mediaType}-${dir}-from-search-results${
+              isOn ? "-with-additional-search-views" : ""
+            }`,
+            page,
+            { fullPage: true },
+            { maxDiffPixelRatio: 0.01 }
+          )
+        })
       })
-    })
+    }
   }
 }
 
