@@ -139,7 +139,7 @@ class VerifyEmail(APIView):
 @extend_schema(tags=["auth"])
 class TokenView(APIView, BaseTokenView):
     @token
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         """
         Get an access token using client credentials.
 
