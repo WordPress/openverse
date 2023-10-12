@@ -31,7 +31,7 @@
         <VGetMediaButton
           :media="audio"
           media-type="audio"
-          class="col-start-2 flex-shrink-0"
+          class="col-start-2 !w-full px-0 sm:!w-auto sm:flex-shrink-0"
         />
       </div>
       <slot v-else name="play-pause" :size="isSmall ? 'small' : 'large'" />
@@ -44,7 +44,14 @@
             : 'order-2 lg:order-1',
         ]"
       >
-        <h1 class="description-bold lg:heading-5 lg:line-clamp-2">
+        <h1
+          class="lg:line-clamp-2"
+          :class="
+            additionalSearchViews
+              ? 'heading-6'
+              : 'description-bold lg:heading-5'
+          "
+        >
           {{ audio.title }}
         </h1>
         <div
