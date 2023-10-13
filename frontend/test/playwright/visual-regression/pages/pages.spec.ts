@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
@@ -18,6 +18,7 @@ const contentPages = [
   "search-help",
   "non-existent",
   "sources",
+  "sensitive-content",
 ]
 for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
@@ -46,14 +47,6 @@ for (const contentPage of contentPages) {
   }
 }
 
-const cleanImageResults = async (page: Page) => {
-  await page.addStyleTag({
-    content: ".results-grid img { filter: brightness(0%); }",
-  })
-  // eslint-disable-next-line playwright/no-wait-for-timeout
-  await page.waitForTimeout(500)
-}
-
 test.describe("Layout color is set correctly", () => {
   breakpoints.describeLg(() => {
     test.beforeEach(async ({ page }) => {
@@ -63,13 +56,11 @@ test.describe("Layout color is set correctly", () => {
     test("Change language on homepage and search", async ({ page }) => {
       await page.goto("/")
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
-
       await page.getByPlaceholder("البحث عن محتوى").fill("cat")
-
       await page.getByRole("button", { name: "يبحث" }).click()
-      await page.waitForURL(/ar\/search/)
 
-      await cleanImageResults(page)
+      await page.waitForURL(/ar\/search/)
+      await expect(page.getByRole("heading", { name: "Cat" })).toBeVisible()
 
       expect(await page.screenshot()).toMatchSnapshot("search-page-rtl-lg.png")
     })

@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test"
+import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
@@ -13,34 +13,35 @@ import { supportedMediaTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
-const cleanRelatedImages = async (page: Page) => {
-  await page.addStyleTag({
-    content: ".image-grid img { filter: brightness(0%); }",
-  })
-  // eslint-disable-next-line playwright/no-wait-for-timeout
-  await page.waitForTimeout(200)
-}
-
 for (const mediaType of supportedMediaTypes) {
   for (const dir of languageDirections) {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-      // https://github.com/WordPress/openverse/issues/3112
-      test.skip(`${mediaType} ${dir} single-result page snapshots from search results`, async ({
+      test(`${mediaType} ${dir} single-result page snapshots from search results`, async ({
         page,
       }) => {
         await preparePageForTests(page, breakpoint)
+        await page.route("**", (route) => {
+          const url = route.request().url()
+          // For audio, use the generated image instead of requesting the
+          // thumbnail.
+          if (
+            url.endsWith(".jpg") ||
+            (url.endsWith("/thumb/") && url.includes("/audio/"))
+          ) {
+            route.abort()
+          } else {
+            route.continue()
+          }
+        })
 
-        await goToSearchTerm(page, "birds", { dir })
+        await goToSearchTerm(page, "birds", { dir, mode: "SSR" })
+
         // This will include the "Back to results" link.
         await openFirstResult(page, mediaType)
-        await cleanRelatedImages(page)
-
         await expectSnapshot(
           `${mediaType}-${dir}-from-search-results`,
           page,
-          {
-            fullPage: true,
-          },
+          { fullPage: true },
           { maxDiffPixelRatio: 0.01 }
         )
       })

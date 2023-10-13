@@ -25,6 +25,7 @@ import type { AudioInteractionData } from "~/types/analytics"
 import type { AudioLayout, AudioSize } from "~/constants/audio"
 import type { AudioTrackClickEvent } from "~/types/events"
 import type { AudioDetail } from "~/types/media"
+import type { ResultKind } from "~/types/result"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
@@ -48,9 +49,9 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    isRelated: {
-      type: Boolean,
-      required: true,
+    kind: {
+      type: String as PropType<ResultKind>,
+      default: "search",
     },
   },
   setup(props) {
@@ -69,6 +70,7 @@ export default defineComponent({
       useAudioSnackbar().hide()
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: audio.id,
+        kind: props.kind,
         mediaType: AUDIO,
         query: props.searchTerm,
         provider: audio.provider,
@@ -80,11 +82,12 @@ export default defineComponent({
     const sendInteractionEvent = (
       data: Omit<AudioInteractionData, "component">
     ) => {
-      const component = props.isRelated
-        ? "VRelatedAudio"
-        : props.layout === "box"
-        ? "VAllResultsGrid"
-        : "AudioSearch"
+      const component =
+        props.kind === "related"
+          ? "VRelatedAudio"
+          : props.layout === "box"
+          ? "VAllResultsGrid"
+          : "AudioSearch"
       sendCustomEvent("AUDIO_INTERACTION", { ...data, component })
     }
 
