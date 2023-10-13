@@ -6,7 +6,7 @@
     <VAudioCollection
       :results="media"
       :fetch-state="fetchState"
-      :is-related="true"
+      kind="related"
       :collection-label="$t('audioDetails.relatedAudios').toString()"
       class="mb-12"
     />

@@ -1,7 +1,7 @@
 <template>
   <VAudioCollection
     :results="results"
-    :is-related="false"
+    kind="search"
     :fetch-state="fetchState"
     :collection-label="collectionLabel"
   />

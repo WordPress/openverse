@@ -18,10 +18,10 @@
     </VSnackbar>
     <VAudioList
       :collection-label="collectionLabel"
-      :is-related="isRelated"
+      :kind="kind"
       :results="results"
     />
-    <footer v-if="!isRelated" class="mt-4">
+    <footer v-if="kind !== 'related'" class="mt-4">
       <VLoadMore />
     </footer>
   </section>
@@ -32,6 +32,7 @@ import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
+import type { ResultKind } from "~/types/result"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 
 import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
@@ -59,8 +60,8 @@ export default defineComponent({
     /**
      * If used for Related audio, do not show the Load more button.
      */
-    isRelated: {
-      type: Boolean,
+    kind: {
+      type: String as PropType<ResultKind>,
       required: true,
     },
     fetchState: {

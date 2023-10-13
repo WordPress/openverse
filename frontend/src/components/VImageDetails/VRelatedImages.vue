@@ -4,8 +4,8 @@
       {{ $t("imageDetails.relatedImages") }}
     </h2>
     <VImageGrid
-      :images="media"
-      :is-single-page="true"
+      kind="related"
+      :results="media"
       :fetch-state="fetchState"
       :image-grid-label="$t('imageDetails.relatedImages').toString()"
     />
