@@ -7,7 +7,7 @@
       :title="tag.name"
     />
   </ul>
-  <ul v-else>
+  <ul v-else class="flex flex-wrap gap-2">
     <VMediaTag v-for="(tag, index) in tags" :key="index" tag="li">{{
       tag.name
     }}</VMediaTag>
