@@ -1,0 +1,48 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VTag from "~/components/VTag/VTag.vue"
+
+<Meta
+  title="Components/VTag"
+  component={VTag}
+  argTypes={{
+    title: {
+      type: "text",
+    },
+    href: {
+      type: "text",
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VTag v-bind="args"/>`,
+  components: { VTag },
+  setup() {
+    return { args }
+  },
+})
+
+# VTag
+
+<Description of={VTag} />
+
+<ArgsTable of={VTag} />
+
+<Canvas>
+  <Story
+    name="default"
+    args={{
+      title: "cat",
+      href: "#",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
