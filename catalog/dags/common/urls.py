@@ -17,6 +17,10 @@ from requests.exceptions import RequestException
 logger = logging.getLogger(__name__)
 
 
+class SpaceInURLError(Exception):
+    pass
+
+
 def validate_url_string(url_string, strip_slash: bool = True):
     """
     Determine whether the given `url_string` is a valid URL with an https scheme.
@@ -33,6 +37,9 @@ def validate_url_string(url_string, strip_slash: bool = True):
     strip_slash: Flag (bool) decides whether to strip slashes in URL or not,
     Default value is `True`
     """
+    if " " in url_string:
+        raise SpaceInURLError("space is present in URL")
+
     logger.debug(f"Validating_url {url_string}")
     if not type(url_string) == str or not url_string:
         return
