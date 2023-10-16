@@ -61,7 +61,8 @@ class DataRefresh:
     create_materialized_view_timeout: timedelta = timedelta(hours=1)
     create_filtered_index_timeout: timedelta = timedelta(days=1)
     index_readiness_timeout: timedelta = timedelta(days=1)
-    poke_interval: int = REFRESH_POKE_INTERVAL
+    data_refresh_poke_interval: int = REFRESH_POKE_INTERVAL
+    filtered_index_poke_interval: int = REFRESH_POKE_INTERVAL
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
@@ -75,12 +76,16 @@ DATA_REFRESH_CONFIGS = [
         refresh_matview_timeout=timedelta(hours=72),
         create_pop_constants_view_timeout=timedelta(hours=24),
         create_materialized_view_timeout=timedelta(hours=72),
-        # Poke every fifteen minute, instead of every thirty minutes
-        poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 15)),
+        data_refresh_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
+        filtered_index_poke_interval=int(
+            os.getenv("FILTERED_INDEX_POKE_INTERVAL", 60 * 30)
+        ),
     ),
     DataRefresh(
         media_type="audio",
-        # Poke every minute, instead of every thirty minutes
-        poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
+        data_refresh_poke_interval=int(
+            os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
+        ),
+        filtered_index_poke_interval=int(os.getenv("FILTERED_INDEX_POKE_INTERVAL", 60)),
     ),
 ]
