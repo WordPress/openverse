@@ -37,7 +37,7 @@ def validate_url_string(url_string, strip_slash: bool = True):
     strip_slash: Flag (bool) decides whether to strip slashes in URL or not,
     Default value is `True`
     """
-    if " " in url_string:
+    if url_string and " " in url_string:
         raise SpaceInURLError("space is present in URL")
 
     logger.debug(f"Validating_url {url_string}")
