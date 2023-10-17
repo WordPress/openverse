@@ -37,14 +37,15 @@ def validate_url_string(url_string, strip_slash: bool = True):
     strip_slash: Flag (bool) decides whether to strip slashes in URL or not,
     Default value is `True`
     """
-    if url_string and " " in url_string:
-        raise SpaceInUrlError("space is present in URL")
 
     logger.debug(f"Validating_url {url_string}")
     if not type(url_string) == str or not url_string:
         return
-    else:
-        upgraded_url = _add_best_scheme(url_string, strip_slash)
+
+    if url_string and " " in url_string:
+        raise SpaceInUrlError(f"space is present in URL: {url_string}")
+
+    upgraded_url = _add_best_scheme(url_string, strip_slash)
 
     parse_result = urlparse(upgraded_url)
     tld = tldextract.extract(upgraded_url)
