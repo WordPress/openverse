@@ -67,7 +67,7 @@ test.describe("Page metadata", () => {
       const metaDescription = page.locator('meta[name="description"]')
       await expect(metaDescription).toHaveAttribute("content", DESCRIPTION)
 
-      const metaRobots = page.locator('meta[property="robots"]')
+      const metaRobots = page.locator('meta[name="robots"]')
       await expect(metaRobots).toHaveAttribute("content", openversePage.robots)
 
       const metaOgImage = page.locator('meta[property="og:image"]')

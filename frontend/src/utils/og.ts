@@ -1,5 +1,5 @@
 import type { MetaInfo } from "vue-meta"
-import type { MetaPropertyProperty } from "vue-meta/types/vue-meta"
+import type { MetaPropertyName, MetaPropertyProperty } from "vue-meta/types/vue-meta"
 
 export const createDetailPageMeta = ({
   title,
@@ -15,10 +15,10 @@ export const createDetailPageMeta = ({
   const meta = [
     {
       hid: "robots",
-      property: "robots",
+      name: "robots",
       content: "noindex",
     },
-  ] as MetaPropertyProperty[]
+  ] as MetaPropertyName|MetaPropertyProperty[]
   if (title) {
     meta.push({
       hid: "og:title",
