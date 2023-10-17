@@ -44,9 +44,12 @@ class DataRefresh:
     index_readiness_timeout:           timedelta expressing amount of time it may take
                                        to await a healthy ES index after reindexing
     doc_md:                            str used for the DAG's documentation markdown
-    poke_interval:                     int number of seconds to wait between
+    data_refresh_poke_interval:        int number of seconds to wait between
                                        checks to see if the batched updates have
                                        completed.
+    filtered_index_poke_interval:      int number of seconds to wait between
+                                       checks to see if the filtered batched updates
+                                       have completed.
     """
 
     dag_id: str = field(init=False)
@@ -78,7 +81,7 @@ DATA_REFRESH_CONFIGS = [
         create_materialized_view_timeout=timedelta(hours=72),
         data_refresh_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
         filtered_index_poke_interval=int(
-            os.getenv("FILTERED_INDEX_POKE_INTERVAL", 60 * 30)
+            os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
         ),
     ),
     DataRefresh(
@@ -86,6 +89,6 @@ DATA_REFRESH_CONFIGS = [
         data_refresh_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
         ),
-        filtered_index_poke_interval=int(os.getenv("FILTERED_INDEX_POKE_INTERVAL", 60)),
+        filtered_index_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
     ),
 ]

@@ -101,8 +101,6 @@ def create_data_refresh_task_group(
 
     target_alias = data_refresh.media_type  # TODO: Change when using versioned aliases
 
-    # Retrieve the correct poke amount for media_type
-
     with TaskGroup(group_id="data_refresh") as data_refresh_group:
         tasks = []
         # Wait to ensure that no other Data Refresh DAGs are running.
