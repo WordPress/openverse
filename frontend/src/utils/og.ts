@@ -18,7 +18,7 @@ export const createDetailPageMeta = ({
       name: "robots",
       content: "noindex",
     },
-  ] as MetaPropertyName|MetaPropertyProperty[]
+  ] as (MetaPropertyName|MetaPropertyProperty)[]
   if (title) {
     meta.push({
       hid: "og:title",
