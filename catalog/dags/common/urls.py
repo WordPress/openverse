@@ -17,7 +17,7 @@ from requests.exceptions import RequestException
 logger = logging.getLogger(__name__)
 
 
-class SpaceInURLError(Exception):
+class SpaceInUrlError(Exception):
     pass
 
 
@@ -38,7 +38,7 @@ def validate_url_string(url_string, strip_slash: bool = True):
     Default value is `True`
     """
     if url_string and " " in url_string:
-        raise SpaceInURLError("space is present in URL")
+        raise SpaceInUrlError("space is present in URL")
 
     logger.debug(f"Validating_url {url_string}")
     if not type(url_string) == str or not url_string:
