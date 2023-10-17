@@ -1,6 +1,5 @@
 import type { MetaInfo } from "vue-meta"
-import type { MetaPropertyName } from "vue-meta/types/vue-meta"
-import type { MetaPropertyProperty } from "vue-meta/types/vue-meta"
+import type { MetaPropertyName, MetaPropertyProperty } from "vue-meta/types/vue-meta"
 
 export const createDetailPageMeta = ({
   title,
