@@ -10,7 +10,6 @@ from urllib.parse import urlparse
 
 import falcon
 import sentry_sdk
-from decouple import config
 from falcon.media.validators import jsonschema
 from sentry_sdk.integrations.falcon import FalconIntegration
 
@@ -153,12 +152,6 @@ class TaskResource(BaseTaskResource):
         destination_index_suffix = body.get("destination_index_suffix")
         alias = body.get("alias")
         force_delete = body.get("force_delete", False)
-        # The elasticsearch environment to connect to
-        es_environment = body.get(
-            "es_environment",
-            # Default to the environment of the ingestion server
-            config("ENVIRONMENT", default="local"),
-        )
 
         # Shared memory
         progress = Value("d", 0.0)
@@ -174,7 +167,6 @@ class TaskResource(BaseTaskResource):
                 "model": model,
                 "action": action,
                 "callback_url": callback_url,
-                "es_environment": es_environment,
                 "progress": progress,
                 "finish_time": finish_time,
                 "active_workers": active_workers,
@@ -197,7 +189,6 @@ class TaskResource(BaseTaskResource):
             model=model,
             action=action,
             callback_url=callback_url,
-            es_environment=es_environment,
             progress=progress,
             finish_time=finish_time,
             active_workers=active_workers,

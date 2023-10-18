@@ -15,7 +15,7 @@ class Stat(NamedTuple):
     alt_names: str | list[str] | None
 
 
-def elasticsearch_connect(es_environment: str, timeout: int = 300) -> Elasticsearch:
+def elasticsearch_connect(timeout: int = 300) -> Elasticsearch:
     """
     Repeatedly try to connect to Elasticsearch until successful.
 
@@ -25,7 +25,7 @@ def elasticsearch_connect(es_environment: str, timeout: int = 300) -> Elasticsea
 
     while timeout > 0:
         try:
-            return _elasticsearch_connect(es_environment)
+            return _elasticsearch_connect()
         except EsConnectionError as err:
             log.exception(err)
             log.error("Reconnecting to Elasticsearch in 5 seconds...")
@@ -34,7 +34,7 @@ def elasticsearch_connect(es_environment: str, timeout: int = 300) -> Elasticsea
             continue
 
 
-def _elasticsearch_connect(es_environment: str) -> Elasticsearch:
+def _elasticsearch_connect() -> Elasticsearch:
     """
     Connect to an Elasticsearch indices at the configured domain.
 
@@ -45,23 +45,10 @@ def _elasticsearch_connect(es_environment: str) -> Elasticsearch:
     """
 
     es_scheme = config("ELASTICSEARCH_SCHEME", default="http://")
-    es_url = config(
-        "ELASTICSEARCH_URL"
-        if es_environment == "prod"
-        else "ELASTICSEARCH_STAGING_URL",
-        default="localhost",
-    )
-    es_port = config(
-        "ELASTICSEARCH_PORT"
-        if es_environment == "prod"
-        else "ELASTICSEARCH_STAGING_PORT",
-        default=9200,
-        cast=int,
-    )
+    es_url = config("ELASTICSEARCH_URL", default="localhost")
+    es_port = config("ELASTICSEARCH_PORT", default=9200, cast=int)
 
     es_endpoint = f"{es_scheme}{es_url}:{es_port}"
-
-    log.info(f"Connecting to {es_endpoint}")
 
     timeout = 12  # hours
 
