@@ -1,10 +1,4 @@
-<img src="https://github.com/WordPress/openverse/raw/main/brand/banner.svg" width="100%"/>
-
-<p align="center">
-  <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> | <a href="https://make.wordpress.org/openverse/">Community Site</a> | <a href="https://make.wordpress.org/chat/">#openverse @ Slack</a> | <a href="https://make.wordpress.org/openverse/handbook/">Handbook</a> | <a href="https://www.figma.com/file/w60dl1XPUvSaRncv1Utmnb/Openverse-Releases">Figma Mockups</a>  | <a href="https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library">Figma Design Library</a>
-</p>
-
-# Openverse Catalog
+# Quickstart
 
 This repository contains the methods used to identify over 1.4 billion Creative
 Commons licensed works. The challenge is that these works are dispersed
@@ -22,7 +16,7 @@ the internet.
 ### API Workflows
 
 To view more information about all the available workflows (DAGs) within the
-project, see [DAGs.md](catalog/DAGs.md).
+project, see [DAGs.md](../reference/DAGs.md).
 
 See each provider API script's notes in their respective [handbook][ov-handbook]
 entry.
@@ -64,7 +58,8 @@ The steps above were performed in [`ExtractCCLinks.py`][ex_cc_links].
 This method was retired in 2021.
 
 [ccrawl_doc]: https://commoncrawl.org/the-data/get-started/
-[ex_cc_links]: archive/ExtractCCLinks.py
+[ex_cc_links]:
+  https://github.com/WordPress/openverse/blob/c20262cad8944d324b49176678b16b230bc57e2e/archive/ExtractCCLinks.py
 
 ## Development setup for Airflow and API puller scripts
 
@@ -75,9 +70,10 @@ different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
 For instructions geared specifically towards production deployments, see
-[DEPLOYMENT.md](DEPLOYMENT.md)
+[DEPLOYMENT.md](https://github.com/WordPress/openverse/blob/main/catalog/DEPLOYMENT.md)
 
-[api_scripts]: catalog/dags/providers/provider_api_scripts
+[api_scripts]:
+  https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_api_scripts
 
 ### Requirements
 
@@ -226,9 +222,10 @@ just recreate
 > `DC_USER=root` environment variable for `just` recipes. For example, see the
 > [generate-dag-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L126).
 
-[justfile]: justfile
-[dockercompose]: catalog/docker-compose.yml
-[cc_airflow]: catalog/
+[justfile]: https://github.com/WordPress/openverse/blob/main/catalog/justfile
+[dockercompose]:
+  https://github.com/WordPress/openverse/blob/main/docker-compose.yml
+[cc_airflow]: https://github.com/WordPress/openverse/tree/main/catalog
 
 ## Directory Structure
 
@@ -291,13 +288,6 @@ previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w,
 along with their
 [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
 
-## License
-
-- [`LICENSE`](LICENSE) (Expat/[MIT][mit] License)
-
-[mit]:
-  http://www.opensource.org/licenses/MIT
-  "The MIT License | Open Source Initiative"
 [wp_slack]: https://make.wordpress.org/chat/
 [cc]: https://creativecommons.org
 [cc_community]: https://opensource.creativecommons.org/community/community-team/
