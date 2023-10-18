@@ -18,7 +18,7 @@ for (const isOn of [true, false]) {
   for (const mediaType of supportedMediaTypes) {
     for (const dir of languageDirections) {
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-        test(`${mediaType} ${dir} single-result page snapshots from search results`, async ({
+        test(`${mediaType} ${dir} single-result page snapshots from search results, additional search views: ${isOn}`, async ({
           page,
         }) => {
           await setCookies(page.context(), {
