@@ -121,6 +121,7 @@ class TaskTracker:
             "active": active,
             "model": task_info["model"],
             "action": str(task_info["action"]),
+            "es_environment": task_info["es_environment"],
             "progress": progress,
             "start_timestamp": start_time,
             "start_time": _time_fmt(start_time),
@@ -202,6 +203,7 @@ def perform_task(
     model: MediaType,
     action: TaskTypes,
     callback_url: str | None,
+    es_environment: str,
     progress: Value,
     finish_time: Value,
     active_workers: Value,
@@ -223,7 +225,7 @@ def perform_task(
     :param is_bad_request: shared memory that flags tasks that fail due to bad requests
     """
 
-    elasticsearch = elasticsearch_connect()
+    elasticsearch = elasticsearch_connect(es_environment)
     indexer = TableIndexer(
         elasticsearch,
         task_id,
