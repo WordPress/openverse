@@ -562,7 +562,6 @@ describe("Search Store", () => {
     it("should not set sensitive query param if mode is `frontend`", () => {
       const searchStore = useSearchStore()
       const featureFlagStore = useFeatureFlagStore()
-      featureFlagStore.toggleFeature("sensitive_content", "on")
       featureFlagStore.toggleFeature("fetch_sensitive", "on")
 
       const params = computeQueryParams(
@@ -573,19 +572,21 @@ describe("Search Store", () => {
       )
       expect(params).toEqual({ q: "cat" })
     })
-    it("should set sensitive query param if mode is `api`", () => {
+    it("should set sensitive query param if mode is `API`", () => {
       const searchStore = useSearchStore()
       const featureFlagStore = useFeatureFlagStore()
-      featureFlagStore.toggleFeature("sensitive_content", "on")
       featureFlagStore.toggleFeature("fetch_sensitive", "on")
 
       const params = computeQueryParams(
         IMAGE,
         searchStore.filters,
         "cat",
-        "api"
+        "API"
       )
-      expect(params).toEqual({ q: "cat" })
+      expect(params).toEqual({
+        q: "cat",
+        unstable__include_sensitive_results: "true",
+      })
     })
   })
 })
