@@ -41,8 +41,8 @@
           <div class="relative">
             <VIconButton
               :label="getLicenseExplanationCloseAria(item.code)"
-              :icon-props="{ name: 'close-small' }"
-              variant="filled-white"
+              :icon-props="{ name: 'close' }"
+              variant="transparent-gray"
               size="small"
               class="!absolute end-1 top-1"
               @click="close"

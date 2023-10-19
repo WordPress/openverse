@@ -37,8 +37,8 @@
         />
         <VIconButton
           :label="$t('modal.closeContentSettings')"
-          :icon-props="{ name: 'close-small' }"
-          variant="filled-white"
+          :icon-props="{ name: 'close' }"
+          variant="transparent-gray"
           size="large"
           class="ms-auto self-center"
           @click="close"

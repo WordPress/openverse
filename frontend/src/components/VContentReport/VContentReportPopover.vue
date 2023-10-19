@@ -13,9 +13,9 @@
       <div class="grid w-80 items-stretch justify-stretch">
         <VIconButton
           :label="$t('modal.close')"
-          :icon-props="{ name: 'close-small' }"
-          variant="filled-white"
-          size="medium"
+          :icon-props="{ name: 'close' }"
+          variant="transparent-gray"
+          size="small"
           class="z-10 col-start-1 row-start-1 me-1 mt-1 self-start justify-self-end"
           @click="close"
         />
