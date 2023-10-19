@@ -71,10 +71,10 @@ test.describe("Page metadata", () => {
       await expect(metaRobots).toHaveAttribute("content", openversePage.robots)
 
       const metaOgImage = page.locator('meta[property="og:image"]')
-      await expect(metaOgImage).toHaveAttributeContaining(
-        "content",
-        openversePage.ogImage
-      )
+      const ogImageAttribute = await metaOgImage.getAttribute("content");
+      if (!ogImageAttribute.includes(openversePage.ogImage)) {
+        throw new Error(`Expected "${ogImageAttribute}" to contain "${openversePage.ogImage}"`);
+      }
 
       const metaOgTitle = page.locator('meta[property="og:title"]')
       await expect(metaOgTitle).toHaveAttribute(
