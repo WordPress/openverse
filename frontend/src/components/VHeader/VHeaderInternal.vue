@@ -53,11 +53,13 @@
           <template #top-bar>
             <div class="flex h-20 w-full justify-between px-2 py-4">
               <VHomeLink variant="light" />
-              <VCloseButton
-                variant="black"
-                icon-size="medium"
+              <VIconButton
+                variant="transparent-tx"
+                size="large"
+                :icon-props="{ name: 'close' }"
+                class="text-white focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10"
                 :label="$t('modal.closePagesMenu')"
-                @close="closePageMenu"
+                @click="closePageMenu"
               />
             </div>
           </template>
@@ -92,7 +94,6 @@ import usePages from "~/composables/use-pages"
 
 import { useUiStore } from "~/stores/ui"
 
-import VCloseButton from "~/components/VCloseButton.vue"
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
@@ -104,7 +105,6 @@ export default defineComponent({
   name: "VHeaderInternal",
   components: {
     VIconButton,
-    VCloseButton,
     VModalContent,
     VPopoverContent,
     VHomeLink,
