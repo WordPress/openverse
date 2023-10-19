@@ -339,7 +339,8 @@ class TableIndexer:
 
     def point_alias(self, model_name: str, index_suffix: str, alias: str, **_):
         """
-        Map the given index to the given alias.
+        Map the given index to the given alias. If the alias is in use by another
+        index, it will first be unlinked from that index.
 
         :param model_name: the name of the media type
         :param index_suffix: the suffix of the index for which to assign the alias
