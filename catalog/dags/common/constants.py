@@ -36,6 +36,7 @@ POSTGRES_API_STAGING_CONN_ID = "postgres_openledger_api_staging"
 AWS_CONN_ID = "aws_default"
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
 ES_PROD_HTTP_CONN_ID = "elasticsearch_http_production"
+ES_STAGING_HTTP_CONN_ID = "elasticsearch_http_staging"
 REFRESH_POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))
 
 
