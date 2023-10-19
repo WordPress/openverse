@@ -70,21 +70,17 @@ test.describe("Page metadata", () => {
       const metaRobots = page.locator('meta[name="robots"]')
       await expect(metaRobots).toHaveAttribute("content", openversePage.robots)
 
+      const metaOgImage = page.locator('meta[property="og:image"]')
+      await expect(metaOgImage).toHaveAttribute(
+        "content",
+        openversePage.ogImage
+      )
+
       const metaOgTitle = page.locator('meta[property="og:title"]')
       await expect(metaOgTitle).toHaveAttribute(
         "content",
         openversePage.ogTitle
       )
-
-      test(`Check og:image attribute for ${openversePage.url}`, async () => {
-        const metaOgImage = page.locator('meta[property="og:image"]');
-        const ogImageAttribute = await metaOgImage.getAttribute("content");
-
-        // Check if the attribute matches the regular expression
-        const regex = new RegExp(openversePage.ogImage);
-        expect(regex.test(ogImageAttribute)).toBe(true);
-      });
-      
     })
   }
 })
