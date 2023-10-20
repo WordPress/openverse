@@ -20,6 +20,7 @@ import requests
 from decouple import config
 
 from ingestion_server.state import register_indexing_job
+from ingestion_server.utils.config import get_record_limit
 
 
 client = boto3.client("ec2", region_name=config("AWS_REGION", default="us-east-1"))
@@ -40,7 +41,10 @@ def _assign_work(db_conn, workers, model_name, table_name, target_index):
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
         estimated_records = cur.fetchone()[0]
-    records_per_worker = math.floor(estimated_records / len(workers))
+
+    records_per_worker = math.floor(
+        min(estimated_records, get_record_limit()) / len(workers)
+    )
 
     worker_url_template = "http://{}:8002"
     # Wait for the workers to start.
