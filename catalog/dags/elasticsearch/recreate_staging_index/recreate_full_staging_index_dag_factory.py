@@ -97,7 +97,7 @@ def recreate_full_staging_index_dag_factory(media_type: MediaType):
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2023, 4, 1),
-        tags=["data_refresh"],  # TODO update
+        tags=["database"],
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
