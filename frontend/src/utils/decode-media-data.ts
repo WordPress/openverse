@@ -1,11 +1,10 @@
-import { title as titleCase } from "case"
-
 import { decodeData as decodeString } from "~/utils/decode-data"
 import type { ApiMedia, Media, Tag } from "~/types/media"
 import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
 import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { titleCase } from "~/utils/case"
 import { getFakeSensitivities } from "~/utils/content-safety"
 
 const mediaTypeExtensions: Record<MediaType, string[]> = {

@@ -1,7 +1,7 @@
-import { capital } from "case"
 import { defineStore } from "pinia"
 import { ssrRef } from "@nuxtjs/composition-api"
 
+import { capitalCase } from "~/utils/case"
 import { env } from "~/utils/env"
 import { parseFetchingError } from "~/utils/errors"
 import {
@@ -102,7 +102,7 @@ export const useProviderStore = defineStore("provider", {
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
       const provider = this._getProvider(providerCode, mediaType)
-      return provider?.display_name || capital(providerCode)
+      return provider?.display_name || capitalCase(providerCode)
     },
 
     /**
