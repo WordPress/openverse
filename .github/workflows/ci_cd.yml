@@ -250,8 +250,6 @@ jobs:
           setup_nodejs: false
           # Node.js is not needed to run the tests.
           install_recipe: ""
-          # Deps not needed to run the tests.
-          install_deps: false
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
@@ -368,8 +366,6 @@ jobs:
           setup_nodejs: false
           # Node.js is not needed to run API tests.
           install_recipe: ""
-          # Deps not needed to run the tests.
-          install_deps: false
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
@@ -434,7 +430,6 @@ jobs:
           setup_nodejs: false
           # Node.js is not needed to run API tests.
           install_recipe: ""
-          install_deps: false
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
