@@ -3,7 +3,6 @@ import { defineStore } from "pinia"
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import { isRetriable, parseFetchingError } from "~/utils/errors"
-import prepareSearchQueryParams from "~/utils/prepare-search-query-params"
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -24,6 +23,8 @@ import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
+
+import { PaginatedSearchQuery } from "~/types/search"
 
 export type MediaStoreResult = {
   count: number
@@ -442,19 +443,13 @@ export const useMediaStore = defineStore("media", {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
     }) {
-      const queryParams = prepareSearchQueryParams({
-        ...useSearchStore().searchQueryParams,
-      })
-      let page = 1
-      if (shouldPersistMedia) {
-        /**
-         * If `shouldPersistMedia` is true, then we increment the page that was set by a previous
-         * fetch. Normally, if `shouldPersistMedia` is true, `page` should have been set to 1 by the
-         * previous fetch.
-         */
-        page = this.results[mediaType].page + 1
-        queryParams.page = `${page}`
+      let page = this.results[mediaType].page + 1
+      const queryParams: PaginatedSearchQuery = {
+        ...useSearchStore().apiSearchQueryParams,
+        // Don't need to set `page` parameter for the first page.
+        page: shouldPersistMedia ? `${page}` : undefined,
       }
+
       this._updateFetchState(mediaType, "start")
       try {
         const accessToken = this.$nuxt.$openverseApiToken
@@ -467,7 +462,7 @@ export const useMediaStore = defineStore("media", {
          * In such cases, we show the "No results" client error page.
          */
         if (!mediaCount) {
-          page = 0
+          page = 1
           errorData = {
             message: `No results found for ${queryParams.q}`,
             code: NO_RESULT,

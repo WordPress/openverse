@@ -22,7 +22,6 @@ export interface Filters {
   sizes: FilterItem[]
   audioProviders: FilterItem[]
   imageProviders: FilterItem[]
-  searchBy: FilterItem[]
 }
 export type FilterCategory = keyof Filters
 
@@ -40,7 +39,6 @@ export const mediaFilterKeys = deepFreeze<Record<SearchType, FilterCategory[]>>(
       "aspectRatios",
       "sizes",
       "imageProviders",
-      "searchBy",
     ],
     [AUDIO]: [
       "licenseTypes",
@@ -49,11 +47,10 @@ export const mediaFilterKeys = deepFreeze<Record<SearchType, FilterCategory[]>>(
       "audioExtensions",
       "lengths",
       "audioProviders",
-      "searchBy",
     ],
     [VIDEO]: [],
     [MODEL_3D]: [],
-    [ALL_MEDIA]: ["licenseTypes", "licenses", "searchBy"],
+    [ALL_MEDIA]: ["licenseTypes", "licenses"],
   }
 )
 
@@ -96,7 +93,6 @@ const filterCodesPerCategory = deepFreeze<Record<FilterCategory, string[]>>({
   sizes: ["small", "medium", "large"],
   audioProviders: [],
   imageProviders: [],
-  searchBy: ["creator"],
 })
 /**
  * Converts the filterCodesPerCategory object into the format that's used by the filter store.

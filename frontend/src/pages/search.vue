@@ -101,7 +101,7 @@ export default defineComponent({
     const {
       searchTerm,
       searchType,
-      searchQueryParams: query,
+      apiSearchQueryParams: query,
       searchTypeIsSupported: supported,
     } = storeToRefs(searchStore)
 
