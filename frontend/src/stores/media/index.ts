@@ -443,18 +443,13 @@ export const useMediaStore = defineStore("media", {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
     }) {
-      const queryParams = useSearchStore()
-        .searchQueryParams as PaginatedSearchQuery
-      let page = 1
-      if (shouldPersistMedia) {
-        /**
-         * If `shouldPersistMedia` is true, then we increment the page that was set by a previous
-         * fetch. Normally, if `shouldPersistMedia` is true, `page` should have been set to 1 by the
-         * previous fetch.
-         */
-        page = this.results[mediaType].page + 1
-        queryParams.page = `${page}`
+      let page = this.results[mediaType].page + 1
+      const queryParams: PaginatedSearchQuery = {
+        ...useSearchStore().apiSearchQueryParams,
+        // Don't need to set `page` parameter for the first page.
+        page: shouldPersistMedia ? `${page}` : undefined,
       }
+
       this._updateFetchState(mediaType, "start")
       try {
         const accessToken = this.$nuxt.$openverseApiToken
@@ -467,7 +462,7 @@ export const useMediaStore = defineStore("media", {
          * In such cases, we show the "No results" client error page.
          */
         if (!mediaCount) {
-          page = 0
+          page = 1
           errorData = {
             message: `No results found for ${queryParams.q}`,
             code: NO_RESULT,

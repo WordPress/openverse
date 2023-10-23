@@ -64,6 +64,7 @@ export interface SearchState {
  * Builds the search query parameters for the given search type, filters, and search term.
  * `q` parameter is always included as the first query parameter.
  * If the search type is not supported, only the `q` parameter is included.
+ * This is used, for instance, for content switcher links for `video`/`model_3d` search pages.
  * Only the filters that are relevant for the search type and have a value are included.
  *
  * `INCLUDE_SENSITIVE_QUERY_PARAM` is never added to the frontend search query. It is added
@@ -75,12 +76,13 @@ export function computeQueryParams(
   searchTerm: string,
   mode: "frontend" | "API"
 ) {
+  const q = searchTerm.trim()
   if (!isSearchTypeSupported(searchType)) {
-    return { q: searchTerm.trim() }
+    return { q }
   }
   // Ensure that `q` always comes first in the frontend URL.
-  const search_query: SearchQuery = {
-    q: searchTerm.trim(),
+  const searchQuery: SearchQuery = {
+    q,
     // The filters object is converted to a Record<string, string> object.
     // e.g., { licenseTypes: [{ code: "commercial", checked: true }] }
     // => { license_type: "commercial" }
@@ -90,10 +92,10 @@ export function computeQueryParams(
   // `INCLUDE_SENSITIVE_QUERY_PARAM` is used in the API params, but not shown on the frontend.
   const ffStore = useFeatureFlagStore()
   if (mode === "API" && ffStore.isOn("fetch_sensitive")) {
-    search_query[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
+    searchQuery[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
   }
 
-  return search_query
+  return searchQuery
 }
 
 export const useSearchStore = defineStore("search", {
@@ -116,26 +118,15 @@ export const useSearchStore = defineStore("search", {
 
     /**
      * Returns the search query parameters for API request.
+     * The main difference between api and frontend query parameters is that
+     * the API query parameters include the `include_sensitive_results` parameter.
      */
-    searchQueryParams(state) {
+    apiSearchQueryParams(state) {
       return computeQueryParams(
         state.searchType,
         state.filters,
         state.searchTerm,
         "API"
-      )
-    },
-
-    /**
-     * Returns the frontend search query parameters for the current search state.
-     * If the search type is not supported, returns only the `q` parameter.
-     */
-    frontendSearchUrlParams(state) {
-      return computeQueryParams(
-        state.searchType,
-        state.filters,
-        state.searchTerm,
-        "frontend"
       )
     },
 
@@ -207,30 +198,28 @@ export const useSearchStore = defineStore("search", {
      *
      * If search type is not provided, returns the path for the current search type.
      * If query is not provided, returns current query parameters.
+     * If only the search type is provided, the query is computed for this search type.
      */
     getSearchPath({
       type,
       query,
     }: { type?: SearchType; query?: PaginatedSearchQuery } = {}): string {
-      const searchType = type || this.searchType
-      let queryParams = query
-      if (queryParams === undefined) {
-        queryParams =
-          searchType === undefined
-            ? this.frontendSearchUrlParams
-            : computeQueryParams(
-                searchType,
-                this.filters,
-                this.searchTerm,
-                "frontend"
-              )
-      }
+      const searchType = type ?? this.searchType
+      const queryParams =
+        query ??
+        computeQueryParams(
+          searchType,
+          this.filters,
+          this.searchTerm,
+          "frontend"
+        )
 
       return this.$nuxt.localePath({
         path: searchPath(searchType),
         query: queryParams as unknown as Dictionary<string>,
       })
     },
+
     setSearchType(type: SearchType) {
       const featureFlagStore = useFeatureFlagStore()
       if (
@@ -483,7 +472,7 @@ export const useSearchStore = defineStore("search", {
     isFilterDisabled(
       item: FilterItem,
       filterCategory: FilterCategory
-    ): boolean | undefined {
+    ): boolean {
       if (!["licenseTypes", "licenses"].includes(filterCategory)) {
         return false
       }

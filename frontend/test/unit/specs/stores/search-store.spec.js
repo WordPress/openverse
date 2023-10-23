@@ -150,7 +150,7 @@ describe("Search Store", () => {
       ${"off"}        | ${{ q: "cat", extension: "svg" }}                | ${{ q: "cat" }}                                                         | ${AUDIO}
       ${"off"}        | ${{ q: ["cat", "dog"], license: ["by", "cc0"] }} | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
     `(
-      "returns correct searchQueryParams and filter status for $query and searchType $searchType",
+      "returns correct apiSearchQueryParams and filter status for $query and searchType $searchType",
       ({ sensitivityFlag, query, expectedQueryParams, searchType }) => {
         const featureFlagStore = useFeatureFlagStore()
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
@@ -162,7 +162,7 @@ describe("Search Store", () => {
           urlQuery: query,
         })
 
-        expect(searchStore.searchQueryParams).toEqual(expectedQueryParams)
+        expect(searchStore.apiSearchQueryParams).toEqual(expectedQueryParams)
       }
     )
   })
@@ -234,7 +234,7 @@ describe("Search Store", () => {
         const featureFlagStore = useFeatureFlagStore()
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         const searchStore = useSearchStore()
-        const expectedQuery = { ...searchStore.searchQueryParams, ...query }
+        const expectedQuery = { ...searchStore.apiSearchQueryParams, ...query }
         // The values that are not applicable for the search type should be discarded
         if (searchType === IMAGE) {
           delete expectedQuery.length
@@ -243,7 +243,7 @@ describe("Search Store", () => {
         searchStore.setSearchStateFromUrl({ path: path, urlQuery: query })
 
         expect(searchStore.searchType).toEqual(searchType)
-        expect(searchStore.searchQueryParams).toEqual(expectedQuery)
+        expect(searchStore.apiSearchQueryParams).toEqual(expectedQuery)
       }
     )
 
@@ -252,7 +252,7 @@ describe("Search Store", () => {
       searchStore.updateSearchPath({ type: "audio", searchTerm: "cat" })
 
       expect(searchStore.searchType).toEqual("audio")
-      expect(searchStore.searchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
       expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
         path: "/search/audio",
         query: { q: "cat" },
@@ -266,7 +266,7 @@ describe("Search Store", () => {
       searchStore.updateSearchPath()
 
       expect(searchStore.searchType).toEqual("audio")
-      expect(searchStore.searchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
       expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
         path: "/search/audio",
         query: { q: "cat" },
@@ -286,7 +286,7 @@ describe("Search Store", () => {
           const [filterType, code] = filterItem
           searchStore.toggleFilter({ filterType, code })
         }
-        expect(searchStore.searchQueryParams[query[0]]).toEqual(query[1])
+        expect(searchStore.apiSearchQueryParams[query[0]]).toEqual(query[1])
       }
     )
 
@@ -306,10 +306,12 @@ describe("Search Store", () => {
         })
         if (supportedSearchTypes.includes(searchType)) {
           // eslint-disable-next-line jest/no-conditional-expect
-          expect(searchStore.query).not.toEqual(expectedQueryParams)
+          expect(searchStore.apiSearchQueryParams).not.toEqual(
+            expectedQueryParams
+          )
         }
         searchStore.clearFilters()
-        expect(searchStore.searchQueryParams).toEqual(expectedQueryParams)
+        expect(searchStore.apiSearchQueryParams).toEqual(expectedQueryParams)
       }
     )
 
