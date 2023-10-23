@@ -57,7 +57,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
-from common.constants import REFRESH_POKE_INTERVAL, XCOM_PULL_TEMPLATE
+from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import get_most_recent_dag_run
 from data_refresh.data_refresh_types import DataRefresh
@@ -108,7 +108,7 @@ def create_data_refresh_task_group(
             task_id="wait_for_data_refresh",
             external_dag_ids=external_dag_ids,
             check_existence=True,
-            poke_interval=REFRESH_POKE_INTERVAL,
+            poke_interval=data_refresh.data_refresh_poke_interval,
             mode="reschedule",
             pool=DATA_REFRESH_POOL,
         )
@@ -131,7 +131,7 @@ def create_data_refresh_task_group(
             # Wait for the whole DAG, not just a part of it
             external_task_id=None,
             check_existence=False,
-            poke_interval=REFRESH_POKE_INTERVAL,
+            poke_interval=data_refresh.filtered_index_poke_interval,
             execution_date_fn=lambda _: get_most_recent_dag_run(
                 create_filtered_index_dag_id
             ),
