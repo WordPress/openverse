@@ -24,7 +24,7 @@ jsonschema = "~=4.19"
 psycopg2 = "~=2.9"
 python-decouple = "~=3.8"
 PyYAML = "~=6.0"
-tldextract = "~=3.4"
+tldextract = "~=5.0"
 sentry-sdk = {extras = ["falcon"], version = "*"}
 
 [requires]

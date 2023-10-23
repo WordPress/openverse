@@ -199,10 +199,11 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v5
         with:
-          context: ${{ matrix.context || matrix.image }}
+          context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
+          file: ${{ matrix.file }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar

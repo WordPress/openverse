@@ -37,7 +37,16 @@
       </template>
 
       <template #play-pause="playPauseProps">
+        <VAudioControl
+          v-if="layout === 'full' && additionalSearchViews"
+          ref="playPauseRef"
+          size="medium"
+          :status="status"
+          v-bind="playPauseProps"
+          @toggle="handleToggle"
+        />
         <VPlayPause
+          v-else
           ref="playPauseRef"
           :status="status"
           v-bind="playPauseProps"
@@ -71,6 +80,7 @@ import {
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { AUDIO } from "~/constants/media"
 import {
@@ -88,6 +98,7 @@ import { defineEvent } from "~/types/emits"
 
 import type { AudioTrackClickEvent } from "~/types/events"
 
+import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
@@ -104,6 +115,7 @@ import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 export default defineComponent({
   name: "VAudioTrack",
   components: {
+    VAudioControl,
     VPlayPause,
     VWaveform,
     VLink,
@@ -571,6 +583,11 @@ export default defineComponent({
       }
     }
 
+    const featureFlagStore = useFeatureFlagStore()
+    const additionalSearchViews = computed(() =>
+      featureFlagStore.isOn("additional_search_views")
+    )
+
     return {
       status,
       message,
@@ -597,6 +614,8 @@ export default defineComponent({
 
       playPauseRef,
       waveformRef,
+
+      additionalSearchViews,
     }
   },
 })
