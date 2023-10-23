@@ -350,12 +350,14 @@ def search(
         ("extension", None),
         ("category", None),
         ("categories", "category"),
+        ("source", None),
+        ("license", None),
+        ("license_type", "license"),
+        # Audio-specific filters
         ("length", None),
+        # Image-specific filters
         ("aspect_ratio", None),
         ("size", None),
-        ("source", None),
-        ("license", "license__keyword"),
-        ("license_type", "license__keyword"),
     ]
     for serializer_field, es_field in filters:
         if serializer_field in search_params.data:
@@ -512,9 +514,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
 
     # Search the default index for the item itself as it might be sensitive.
     item_search = Search(index=index)
-    # TODO: remove `__keyword` after
-    #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    item_hit = item_search.query(Term(identifier__keyword=uuid)).execute().hits[0]
+    item_hit = item_search.query(Term(identifier=uuid)).execute().hits[0]
 
     # Match related using title.
     title = getattr(item_hit, "title", None)
@@ -539,9 +539,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     s = Search(index=f"{index}-filtered")
 
     # Exclude the current item and mature content.
-    # TODO: remove `__keyword` after
-    #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    s = s.query(related_query & ~Term(identifier__keyword=uuid) & ~Term(mature=True))
+    s = s.query(related_query & ~Term(identifier=uuid) & ~Term(mature=True))
     # Exclude the dynamically disabled sources.
     s = _exclude_filtered(s)
 
@@ -579,7 +577,7 @@ def get_sources(index):
         aggs = {
             "unique_sources": {
                 "terms": {
-                    "field": "source.keyword",
+                    "field": "source",
                     "size": size,
                     "order": {"_key": "desc"},
                 }

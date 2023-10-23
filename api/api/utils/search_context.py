@@ -35,13 +35,7 @@ class SearchContext:
             # Use `identifier` rather than the document `id` due to
             # `id` instability between refreshes:
             # https://github.com/WordPress/openverse/issues/2306
-            # `identifier` is mapped as `text` which will match fuzzily.
-            # Use `identifier.keyword` to match _exactly_
-            # cf: https://github.com/WordPress/openverse/issues/2154
-            Q(
-                "terms",
-                **{"identifier.keyword": all_result_identifiers},
-            )
+            Q("terms", identifier=all_result_identifiers)
         )
 
         # The default query size is 10, so we need to slice the query
