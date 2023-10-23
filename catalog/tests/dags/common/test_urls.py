@@ -188,3 +188,9 @@ def test_add_url_scheme_leaves_nonprefix_scheme():
     actual_url = urls.add_url_scheme(url_stub, scheme="https")
     expect_url = "https://hreativecommons.org/?referer=https://abc.com"
     assert actual_url == expect_url
+
+
+def test_validate_url_string_contain_space():
+    with pytest.raises(urls.SpaceInUrlError):
+        url_string = "https://wordpress.org/photos/photo/526283 9486/"
+        urls.validate_url_string(url_string)
