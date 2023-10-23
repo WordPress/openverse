@@ -24,5 +24,8 @@ Nothing registered to date.
 
 ## Related incident reports
 
+- 2023-09-26 at 14:38 UTC: API Thumbnail service overwhelmed (traffic analysis
+  example)
+- 2023-09-25 at 16:23 UTC: API Thumbnails unhealthy hosts
 - 2023-09-05 at 22:15 UTC: Unhealthy thumbnail tasks restarted
 - 2023-07-27 at 19:14 UTC: API Thumbnails unhealthy hosts
