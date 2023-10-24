@@ -1,0 +1,168 @@
+[
+  {
+    "_index": "collectionsonline-2022-05-04-1",
+    "_type": "_doc",
+    "_id": "http://api.aucklandmuseum.com/id/naturalsciences/object/923361",
+    "_score": 2.0630994,
+    "_source": {
+      "copyright": ["© Auckland Museum CC BY"],
+      "notes": [],
+      "references": [
+        {
+          "person": {
+            "secondary_maker": [],
+            "primary_maker": [],
+            "classified": ["http://api.aucklandmuseum.com/id/person/18160"],
+            "collected": ["http://api.aucklandmuseum.com/id/person/18160"],
+            "_all": ["http://api.aucklandmuseum.com/id/person/18160"],
+            "referred": []
+          }
+        },
+        { "object": { "childOf": [], "_all": [], "referred": [] } }
+      ],
+      "documentType": [],
+      "geoSubject": [],
+      "language": [],
+      "type": "ecrm:E20_Biological_Object",
+      "content": [],
+      "localityDescription": ["New Caledonia, near Touaourou"],
+      "acquisitionStatement": [],
+      "recordScore": 40,
+      "responsibility": [],
+      "dc_contributor": ["John Taylor"],
+      "isTaonga": false,
+      "place": {
+        "found": { "_all": [] },
+        "made": { "_all": [] },
+        "associated": { "_all": [] },
+        "captured": { "_all": [] },
+        "published": { "_all": [] },
+        "acquired": { "_all": ["New Caledonia"] },
+        "_all": ["New Caledonia"]
+      },
+      "appellation": {
+        "Common Name": [],
+        "Classification Display Value": ["Blechnum obtusatum"],
+        "Primary Title": ["Blechnum obtusatum (Labill.) Mett."],
+        "Other Title": [],
+        "_all_suggest": {
+          "input": [
+            "obtusatum",
+            "Blechnum obtusatum",
+            "Blechnum obtusatum (Labill.) Mett."
+          ],
+          "contexts": { "type_context": "ecrm:E20_Biological_Object" }
+        },
+        "Maori Name": [],
+        "Classification Value": ["obtusatum"],
+        "_all": [
+          "obtusatum",
+          "Blechnum obtusatum",
+          "Blechnum obtusatum (Labill.) Mett."
+        ]
+      },
+      "keyword": [],
+      "department": ["Botany"],
+      "dc_identifier": ["AK379487"],
+      "process": [],
+      "period": {
+        "made": [{ "exact": "2020-02-05T00:00:00.000Z" }],
+        "associated": [],
+        "published": [],
+        "accession": [
+          {
+            "end": "2020-02-05T00:00:00.000Z",
+            "text": "05 Feb 2020",
+            "begin": "2020-02-05T00:00:00.000Z"
+          }
+        ],
+        "acquired": [
+          {
+            "end": "1973-08-19T00:00:00.000Z",
+            "text": "19 Aug 1973",
+            "begin": "1973-08-19T00:00:00.000Z"
+          }
+        ],
+        "time_period": [],
+        "_all": [
+          {
+            "end": "1973-08-19T00:00:00.000Z",
+            "text": "19 Aug 1973",
+            "begin": "1973-08-19T00:00:00.000Z"
+          },
+          { "exact": "2020-02-05T00:00:00.000Z" },
+          {
+            "end": "2020-02-05T00:00:00.000Z",
+            "text": "05 Feb 2020",
+            "begin": "2020-02-05T00:00:00.000Z"
+          }
+        ]
+      },
+      "subjectStatus": [],
+      "geopos": ["-22.2409166666667, 167.009111111111"],
+      "primaryRepresentation": "http://api.aucklandmuseum.com/id/media/v/801545",
+      "dc_date": ["1973"],
+      "typeStatus": [],
+      "collection": [],
+      "classification": [
+        {
+          "object": [
+            {
+              "Kingdom": "Linnaean",
+              "Genus": "Linnaean",
+              "Linnaean System": "Linnaean",
+              "Family": "Linnaean",
+              "Species": "Linnaean",
+              "_all": [
+                "Obtusatum",
+                "Blechnum",
+                "Blechnaceae",
+                "Plantae",
+                "Linnaean",
+                "Obtusatum",
+                "Blechnum",
+                "Blechnaceae",
+                "Plantae",
+                "Linnaean",
+                "Obtusatum",
+                "Blechnum",
+                "Blechnaceae",
+                "Plantae",
+                "Linnaean",
+                "Obtusatum",
+                "Blechnum",
+                "Blechnaceae",
+                "Plantae",
+                "Linnaean",
+                "Obtusatum",
+                "Blechnum",
+                "Blechnaceae",
+                "Plantae",
+                "Linnaean"
+              ]
+            }
+          ]
+        },
+        { "material": [] },
+        { "place": [] }
+      ],
+      "subjectCategory": [],
+      "lastModifiedOn": ["2022-04-28T09:52:10.256Z"],
+      "tags": { "official": [], "user": [], "_all": [] },
+      "dc_place": ["New Caledonia"],
+      "kindOfSpecimen": ["1F- Foreign dry"],
+      "unit": [],
+      "culturalOrigin": [],
+      "isSensitive": false,
+      "series": [],
+      "dc_title": [
+        "obtusatum",
+        "Blechnum obtusatum",
+        "Blechnum obtusatum (Labill.) Mett."
+      ],
+      "location": [],
+      "isInLibrary": false,
+      "support": []
+    }
+  }
+]
