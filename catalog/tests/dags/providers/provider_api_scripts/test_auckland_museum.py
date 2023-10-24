@@ -5,44 +5,49 @@ You may also need to update the given test names to be more specific.
 
 Run your tests locally with `just test -k auckland_museum`
 """
-
 import json
 from pathlib import Path
 
+from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
+from common.licenses import get_license_info
 from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIngester
 
 
 # TODO: API responses used for testing can be added to this directory
 RESOURCES = Path(__file__).parent / "resources/auckland_museum"
+CC_BY_4_0 = get_license_info("https://creativecommons.org/licenses/by/4.0/")
 
 # Set up test class
 ingester = AucklandMuseumDataIngester()
+_get_resource_json = make_resource_json_func("aucklandmuseum")
 
 
 def test_get_next_query_params_default_response():
-    actual_result = ingester.get_next_query_params(None)
-    expected_result = {
-        # TODO: Fill out expected default query params
+    actual_param = ingester.get_next_query_params(None)
+    expected_param = {
+        "q": "_exists_:primaryRepresentation+copyright:CC",
+        "size": "100",
+        "from": ingester.from_start,
     }
-    assert actual_result == expected_result
+    assert actual_param == expected_param
 
 
 def test_get_next_query_params_updates_parameters():
     previous_query_params = {
-        # TODO: Fill out a realistic set of previous query params
+        "q": "_exists_:primaryRepresentation+copyright:CC",
+        "size": "100",
+        "from": ingester.from_start,
     }
     actual_result = ingester.get_next_query_params(previous_query_params)
 
     expected_result = {
-        # TODO: Fill out what the next set of query params should be,
-        # incrementing offsets or page numbers if necessary
+        "q": "_exists_:primaryRepresentation+copyright:CC",
+        "size": "100",
+        "from": ingester.from_start + 100,
     }
     assert actual_result == expected_result
-
-
-def test_get_media_type():
-    # TODO: Test the correct media type is returned for each possible media type.
-    pass
 
 
 def test_get_record_data():
@@ -55,13 +60,24 @@ def test_get_record_data():
     # your provider.
 
     # Sample code for loading in the sample json
+
     with open(RESOURCES / "single_item.json") as f:
         resource_json = json.load(f)
 
     actual_data = ingester.get_record_data(resource_json)
-
+    meta_data = {
+        "type": "ecrm:E20_Biological_Object",
+        "geopos": "",
+        "department": "botany",
+    }
     expected_data = {
-        # TODO: Fill out the expected data which will be saved to the Catalog
+        "url": "http://api.aucklandmuseum.com/id/media/v/214749",
+        "license_info": CC_BY_4_0,
+        "thumbnail_url": "http://api.aucklandmuseum.com/id/media/v/214749?rendering=thumbnail.jpg",
+        "filesize": "2484439",
+        "creator": "R. O. Gardner",
+        "title": "Cypholophus macrocephalus mollis (Blume) Wedd. var. mollis (Wedd.) Wedd.",
+        "meta_data": meta_data,
     }
 
     assert actual_data == expected_data
