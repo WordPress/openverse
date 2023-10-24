@@ -14,6 +14,7 @@ Notes:                  https://api.aucklandmuseum.com/
 """
 import logging
 
+from common.constants import IMAGE
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -27,9 +28,11 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
     This is a template for a ProviderDataIngester.
 
     Methods are shown with example implementations. Adjust them to suit your API.
+    Resource:
+    - https://api.aucklandmuseum.com/
+    - https://github.com/AucklandMuseum/API/wiki/Tutorial
     """
 
-    # TODO: Add the provider constants to `common.loader.provider_details.py`
     providers = {
         "image": prov.AUCKLAND_MUSEUM_IMAGE_PROVIDER,
     }
@@ -37,6 +40,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
 
     delay = 4
     from_start = 0
+    total_amount_of_data = 10000
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
@@ -61,16 +65,22 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
     def get_batch_data(self, response_json):
         # Takes the raw API response from calling `get` on the endpoint, and returns
         # the list of records to process.
-        # TODO: Update based on your API.
         if response_json:
-            return response_json.get("results")
+            return response_json.get("hits").get("hits")
         return None
 
+    def get_should_continue(self, response_json):
+        # Do not continue if we have exceeded the total amount of data
+        if self.from_start >= self.total_amount_of_data:
+            logger.info(
+                "The final amount of data has been processed. Halting ingestion."
+            )
+            return False
+
+        return True
+
     def get_media_type(self, record: dict):
-        # For a given record json, return the media type it represents.
-        # TODO: Update based on your API. TIP: May be hard-coded if the provider only
-        # returns records of one type, eg `return constants.IMAGE`
-        return record["media_type"]
+        return IMAGE
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         # Parse out the necessary info from the record data into a dictionary.
