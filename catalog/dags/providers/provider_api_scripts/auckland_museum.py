@@ -37,10 +37,11 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         "image": prov.AUCKLAND_MUSEUM_IMAGE_PROVIDER,
     }
     endpoint = "https://api.aucklandmuseum.com/search/collectionsonline/_search"
-
+    license_url = "https://creativecommons.org/licenses/by/4.0/"
     delay = 4
     from_start = 0
     total_amount_of_data = 10000
+    DEFAULT_LICENSE_INFO = get_license_info(license_url=license_url)
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
@@ -83,75 +84,49 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         return IMAGE
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
-        # Parse out the necessary info from the record data into a dictionary.
-        # TODO: Update based on your API.
-        # TODO: Important! Refer to the most up-to-date documentation about the
-        # available fields in `openverse_catalog/docs/data_models.md`
+        information = data.get("_source")
 
-        # REQUIRED FIELDS:
-        # - foreign_identifier
-        # - foreign_landing_url
-        # - license_info
-        # - url
-        #
-        # If a required field is missing, return early to prevent unnecessary
-        # processing.
-        if not (foreign_identifier := data.get("foreign_id")):
-            return None
+        url = information.get("primaryRepresentation")
+        thumbnail_url = f"{url}?rendering=thumbnail.jpg"
+        license_info = self.DEFAULT_LICENSE_INFO
+        filesize = self._get_file_info(url)
 
-        if not (foreign_landing_url := data.get("foreign_landing_url")):
-            return None
+        if information.get("dc_contributor")[0]:
+            creator = information.get("dc_contributor")[0]
+        else:
+            creator = ""
 
-        if not (url := data.get("url")):
-            return None
-
-        # Use the `get_license_info` utility to get license information from a URL.
-        license_url = data.get("license")
-        license_info = get_license_info(license_url)
-        if license_info is None:
-            return None
-
-        # OPTIONAL FIELDS
-        # Obtain as many optional fields as possible.
-        thumbnail_url = data.get("thumbnail")
-        filesize = data.get("filesize")
-        filetype = data.get("filetype")
-        creator = data.get("creator")
-        creator_url = data.get("creator_url")
-        title = data.get("title")
-        meta_data = data.get("meta_data")
-        raw_tags = data.get("tags")
-        watermarked = data.get("watermarked")
-
-        # MEDIA TYPE-SPECIFIC FIELDS
-        # Each Media type may also have its own optional fields. See documentation.
-        # TODO: Populate media type-specific fields.
-        # If your provider supports more than one media type, you'll need to first
-        # determine the media type of the record being processed.
-        #
-        # Example:
-        # media_type = self.get_media_type(data)
-        # media_type_specific_fields = self.get_media_specific_fields(media_type, data)
-        #
-        # If only one media type is supported, simply extract the fields here.
+        creator = information.get("dc_contributor")[0]
+        title = information.get("appellation").get("Primary Title")[0]
+        meta_data = self._get_meta_data(information)
+        data.get("tags")
 
         return {
-            "foreign_landing_url": foreign_landing_url,
             "url": url,
             "license_info": license_info,
-            # Optional fields
-            "foreign_identifier": foreign_identifier,
             "thumbnail_url": thumbnail_url,
             "filesize": filesize,
-            "filetype": filetype,
             "creator": creator,
-            "creator_url": creator_url,
             "title": title,
             "meta_data": meta_data,
-            "raw_tags": raw_tags,
-            "watermarked": watermarked,
-            # TODO: Remember to add any media-type specific fields here
         }
+
+    def _get_meta_data(self, object_json: dict) -> dict | None:
+        metadata = {
+            "type": object_json.get("type"),
+            "geopos": object_json.get("geopos")[0],
+            "department": object_json.get("department")[0],
+        }
+
+        metadata = {k: v for k, v in metadata.items() if v is not None}
+        return metadata
+
+    def _get_file_info(self, url) -> int | None:
+        """Get the image size in bytes."""
+        resp = self.delayed_requester.head(url)
+        if resp:
+            filesize = int(resp.headers.get("Content-Length", 0))
+            return filesize if filesize != 0 else None
 
 
 def main():
