@@ -22,7 +22,13 @@ export class MediaProviderService<T extends Media> {
     if (res.data && Array.isArray(res.data)) {
       return res.data
     } else {
-      warn(`Invalid response from provider stats endpoint: ${res}`)
+      warn(
+        `Invalid response from provider stats endpoint: ${JSON.stringify(
+          res,
+          null,
+          2
+        )}`
+      )
       return []
     }
   }
