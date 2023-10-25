@@ -1,8 +1,4 @@
 """
-TODO: This doc string will be used to generate documentation for the DAG in
-DAGs.md. Update it to include any relevant information that you'd like to
-be documented.
-
 Content Provider:       AucklandMuseum
 
 ETL Process:            Use the API to identify all CC licensed media.
@@ -11,6 +7,9 @@ Output:                 TSV file containing the media and the
                         respective meta-data.
 
 Notes:                  https://api.aucklandmuseum.com/
+
+Resource:               https://api.aucklandmuseum.com/
+                        https://github.com/AucklandMuseum/API/wiki/Tutorial
 """
 import logging
 
@@ -24,15 +23,6 @@ logger = logging.getLogger(__name__)
 
 
 class AucklandMuseumDataIngester(ProviderDataIngester):
-    """
-    This is a template for a ProviderDataIngester.
-
-    Methods are shown with example implementations. Adjust them to suit your API.
-    Resource:
-    - https://api.aucklandmuseum.com/
-    - https://github.com/AucklandMuseum/API/wiki/Tutorial
-    """
-
     providers = {
         "image": prov.AUCKLAND_MUSEUM_IMAGE_PROVIDER,
     }
@@ -91,12 +81,12 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         license_info = self.DEFAULT_LICENSE_INFO
         filesize = self._get_file_info(url)
 
-        if information.get("dc_contributor")[0]:
-            creator = information.get("dc_contributor")[0]
-        else:
-            creator = ""
+        creator = (
+            information.get("dc_contributor")[0]
+            if information.get("dc_contributor")
+            else ""
+        )
 
-        creator = information.get("dc_contributor")[0]
         title = information.get("appellation").get("Primary Title")[0]
         meta_data = self._get_meta_data(information)
         data.get("tags")

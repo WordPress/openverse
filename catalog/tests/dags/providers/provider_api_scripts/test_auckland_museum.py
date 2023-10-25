@@ -1,5 +1,5 @@
 """
-TODO: Add additional tests for any methods you added in your subclass.
+
 Try to test edge cases (missing keys, different data types returned, Nones, etc).
 You may also need to update the given test names to be more specific.
 
@@ -18,11 +18,9 @@ from common.licenses import get_license_info
 from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIngester
 
 
-# TODO: API responses used for testing can be added to this directory
 RESOURCES = Path(__file__).parent / "resources/aucklandmuseum"
 CC_BY_4_0 = get_license_info("https://creativecommons.org/licenses/by/4.0/")
 
-# Set up test class
 ingester = AucklandMuseumDataIngester()
 _get_resource_json = make_resource_json_func("aucklandmuseum")
 
