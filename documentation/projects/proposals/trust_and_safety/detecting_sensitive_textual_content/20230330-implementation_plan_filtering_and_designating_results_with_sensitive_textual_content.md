@@ -363,7 +363,7 @@ and `audio_filtered_index_creation` DAGs.
 
 We must add a new boolean query parameter to the search query serialiser,
 `unstable__include_sensitive_results`. This parameter will default to the
-inactive state. We will remove the `unstable` designation during the wrap-up of
+disabled state. We will remove the `unstable` designation during the wrap-up of
 this implementation plan. This parameter should also reflect the state of the
 `mature` parameter: when `mature` is enabled, the new parameter should also be
 enabled. This prepares us to deprecate the `mature` parameter when we remove the

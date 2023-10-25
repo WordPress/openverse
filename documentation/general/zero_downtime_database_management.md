@@ -58,10 +58,11 @@ application one-by-one. As a result, we are able to verify the health of the
 instances running the new version, before fully replacing our entire cluster of
 application instances with the new version. At all times during a successful
 deployment process, both versions of the application must be fully operable and
-able to handle requests. During deployment, the load-balancer will send requests
-to both the previous and new versions of the application during the entire time
-of the deployment, which can be several minutes. This requires both versions of
-the application to be strictly compatible with the underlying database schema.
+healthy and able to handle requests. During deployment, the load-balancer will
+send requests to both the previous and new versions of the application during
+the entire time of the deployment, which can be several minutes. This requires
+both versions of the application to be strictly compatible with the underlying
+database schema.
 
 ## What causes downtime during a deployment?
 

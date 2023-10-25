@@ -16,7 +16,7 @@ Openverse legal. It is also about accessibility. If Openverse users are
 confronted with sensitive materials without their consent, then Openverse is not
 an accessible platform. Likewise, Openverse is used by a diverse set of people,
 including children in educational environments. Consider that the age and other
-intersectionalities of a user will influence how they're influenced by content
+intersectionalities of a user will influence how they're affected by content
 moderation policies (both successes and failures).
 
 ### The relevance of scanning for known illegal materials

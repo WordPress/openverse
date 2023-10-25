@@ -120,9 +120,9 @@ and [outstanding questions](#outstanding-questions) sections below.
 Sensitive results on the search results page are blurred. Users can unblur and
 reblur individual results through a simple and clear interaction on the search
 results page. In addition to being able to opt-in to having sensitive results
-included in their query, users can deactivate blurring by default. This
-parameter is stored in the application state. If users deactivate blurring by
-default, there is not an option to "reblur" images.
+included in their query, users can disable blurring by default. This parameter
+is stored in the application state. If users disable blurring by default, there
+is not an option to "reblur" images.
 
 Results unblurred by the user on the search results page are also unblurred if
 they visit the single result page for that result. Results that have not been
@@ -130,7 +130,7 @@ unblurred remain blurred upon navigating to the single results page.
 
 If a user lands directly on a single result page for a result with sensitive
 textual content, the result is always blurred by default. This is true
-regardless of whether the user has inactive blurring by default on the search
+regardless of whether the user has disabled blurring by default on the search
 results page, but only applies to page navigation _directly_ to a single results
 page rather than a client side navigation.
 

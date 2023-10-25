@@ -43,8 +43,8 @@ following criteria:
 5. When popularity constants and standardized scores are being updated, the data
    refresh runtime should not be affected.
 6. There must be no 'down-time' in the Catalog, where writes to the media tables
-   are locked (i.e., ingestion workflows should be able to continue as standard
-   at all times).
+   are locked (i.e., ingestion workflows should be able to continue as normal at
+   all times).
 7. Query time in the API must not be increased.
 
 Ideally, we should have no regression in the regularity with which popularity

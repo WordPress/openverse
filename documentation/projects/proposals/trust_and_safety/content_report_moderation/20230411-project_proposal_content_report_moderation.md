@@ -167,7 +167,7 @@ to take the action for. Each of the actions will trigger the creation or
 deletion of corresponding `AbstractDeletedMedia` or `AbstractSensitiveMedia`
 (renamed as part of requirement 1 from `AbstractMatureMedia`) for each work
 returned by the subclass method. The subclasses must also implement some way of
-tracking all the works influenced by the action.
+tracking all the works affected by the action.
 
 For the bulk actions list view, the subclass should have a related join table
 tying the bulk action instance identifier to the result identifiers. For the
