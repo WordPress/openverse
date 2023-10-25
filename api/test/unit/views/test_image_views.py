@@ -85,11 +85,15 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
 @pytest.mark.django_db
 def test_watermark_raises_424_for_invalid_image(api_client):
     image = ImageFactory.create()
-    with patch(
-        "PIL.Image.open", side_effect=UnidentifiedImageError("bad image")
-    ), pytest.raises(UpstreamWatermarkException):
+    expected_error_message = (
+        "cannot identify image file <_io.BytesIO object at 0xffff86d8fec0>"
+    )
+
+    with patch("PIL.Image.open") as mock_open:
+        mock_open.side_effect = UnidentifiedImageError(expected_error_message)
         res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
     assert res.status_code == 424
+    assert res.data["detail"] == expected_error_message
 
 
 @pytest.mark.django_db
