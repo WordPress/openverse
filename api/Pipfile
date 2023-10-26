@@ -15,7 +15,7 @@ remote-pdb = "~=2.1"
 pgcli = "~=3.5"
 freezegun = "~=1.2.2"
 pytest-sugar = "~=0.9"
-pook = {ref = "add/binary-body-support", git = "git+https://github.com/sarayourfriend/pook.git"}
+pook = {ref = "master", git = "git+https://github.com/h2non/pook.git"}
 
 [packages]
 aiohttp = "~=3.8"
