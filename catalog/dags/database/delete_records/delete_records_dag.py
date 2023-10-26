@@ -61,7 +61,7 @@ logger = logging.getLogger(__name__)
     tags=["database"],
     dagrun_timeout=constants.DAGRUN_TIMEOUT,
     doc_md=__doc__,
-    default_args=DAG_DEFAULT_ARGS,
+    default_args={**DAG_DEFAULT_ARGS, "retries": 0},
     render_template_as_native_obj=True,
     params={
         "table_name": Param(
