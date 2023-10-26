@@ -44,6 +44,7 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
 | [`batched_update`](#batched_update)                                               | `None`            |
+| [`delete_records`](#delete_records)                                               | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
@@ -126,6 +127,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
+1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
 1.  [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow)
