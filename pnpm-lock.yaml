@@ -160,7 +160,7 @@ importers:
         specifier: ^8.3.2
         version: 8.3.2
       vue:
-        specifier: ^2.7.15
+        specifier: ^2.7.14
         version: 2.7.15
       vue-i18n:
         specifier: ^8.26.7
@@ -305,10 +305,10 @@ importers:
         specifier: ^15.10.0
         version: 15.10.0(babel-core@7.0.0-bridge.0)(css-loader@5.2.7)(vue-template-compiler@2.7.15)(webpack@4.46.0)
       vue-server-renderer:
-        specifier: ^2.7.15
+        specifier: ^2.7.14
         version: 2.7.15
       vue-template-compiler:
-        specifier: ^2.7.15
+        specifier: ^2.7.14
         version: 2.7.15
       vue-tsc:
         specifier: 1.2.0
