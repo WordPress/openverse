@@ -15,9 +15,11 @@
       </template>
 
       <template #play-pause="playPauseProps">
-        <VPlayPause
+        <VAudioControl
           v-bind="playPauseProps"
           :status="status"
+          layout="global"
+          size="medium"
           @toggle="handleToggle"
         />
       </template>
@@ -40,7 +42,7 @@ import type { AudioInteraction } from "~/types/analytics"
 import type { AudioDetail } from "~/types/media"
 import type { AudioStatus } from "~/constants/audio"
 
-import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
+import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 import VGlobalLayout from "~/components/VAudioTrack/layouts/VGlobalLayout.vue"
 
@@ -51,7 +53,7 @@ import VGlobalLayout from "~/components/VAudioTrack/layouts/VGlobalLayout.vue"
 export default defineComponent({
   name: "VGlobalAudioTrack",
   components: {
-    VPlayPause,
+    VAudioControl,
     VWaveform,
     VGlobalLayout,
   },

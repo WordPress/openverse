@@ -13,10 +13,8 @@
         <Nuxt class="flex-grow" />
         <VFooter mode="internal" class="bg-yellow" />
       </div>
-
-      <VModalTarget class="modal" />
-      <VGlobalAudioSection />
     </div>
+    <VModalTarget class="modal" />
   </div>
 </template>
 <script lang="ts">
@@ -28,7 +26,6 @@ import { useUiStore } from "~/stores/ui"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
-import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
 import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
@@ -42,7 +39,6 @@ export default defineComponent({
     VSkipToContentButton,
     VBanners,
     VFooter,
-    VGlobalAudioSection,
     VHeaderInternal,
     VModalTarget,
   },

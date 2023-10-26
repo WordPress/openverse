@@ -54,7 +54,7 @@ const statusIconMap = {
 
 const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
   row: "end",
-  global: "all",
+  global: "top-end",
   box: "none",
   full: "none",
 } as const

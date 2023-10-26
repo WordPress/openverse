@@ -2,19 +2,20 @@
   <div class="global-track flex w-full flex-row">
     <div class="flex-shrink-0">
       <VAudioThumbnail :audio="audio" />
-      <slot name="play-pause" size="large" layout="global" />
+      <slot name="play-pause" size="medium" layout="global" />
     </div>
 
-    <div class="relative flex-grow">
-      <VLink
-        :href="`/audio/${audio.id}`"
-        class="hover-underline absolute inset-x-0 top-[10.5px] z-10 line-clamp-2 flex flex-row items-center justify-between px-4 pe-12 text-sr font-semibold text-dark-charcoal"
-        :class="{ 'blur-text': shouldBlur }"
-      >
-        {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
-      </VLink>
-
-      <slot name="controller" :usable-frac="0.5" />
+    <div class="relative flex-grow overflow-hidden bg-white">
+      <div class="flex h-12 items-center justify-between">
+        <VLink
+          :href="`/audio/${audio.id}`"
+          class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-dark-charcoal"
+          :class="{ 'blur-text': shouldBlur }"
+        >
+          {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
+        </VLink>
+      </div>
+      <div class="h-12"><slot name="controller" :usable-frac="1" /></div>
     </div>
   </div>
 </template>
@@ -54,7 +55,7 @@ export default defineComponent({
 
 <style>
 .global-track .thumbnail {
-  @apply h-14 w-14;
+  @apply h-12 w-12;
 }
 
 .global-track .waveform {

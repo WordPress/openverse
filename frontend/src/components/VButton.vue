@@ -393,6 +393,9 @@ a.button {
 .connection-end {
   @apply rounded-e-none;
 }
+.connection-top-end {
+  @apply rounded-ee-none rounded-se-none rounded-ss-none;
+}
 .connection-all {
   @apply rounded-none;
 }

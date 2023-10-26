@@ -1,14 +1,19 @@
 <template>
-  <div class="global-audio sticky bottom-0 z-global-audio sm:hidden">
-    <VGlobalAudioTrack v-if="audio" :audio="audio" />
-    <VCloseButton
-      v-if="audio"
-      class="!absolute end-0 top-0 z-30"
-      variant="transparent-dark"
-      size="large"
-      :label="$t('audioTrack.close')"
-      @close="handleClose"
-    />
+  <div
+    class="global-audio sticky z-global-audio rounded-sm bg-white sm:hidden"
+    :class="{ 'mx-2 mb-2 border border-dark-charcoal-20': !!audio }"
+  >
+    <template v-if="audio">
+      <VGlobalAudioTrack :audio="audio" />
+      <VIconButton
+        class="!absolute end-0 top-0 z-30 m-2"
+        variant="transparent-gray"
+        :icon-props="{ name: 'close-small' }"
+        size="small"
+        :label="$t('audioTrack.close')"
+        @click="handleClose"
+      />
+    </template>
   </div>
 </template>
 
@@ -26,13 +31,13 @@ import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
 
-import VCloseButton from "~/components/VCloseButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
 
 export default defineComponent({
   name: "VGlobalAudioSection",
   components: {
-    VCloseButton,
+    VIconButton,
     VGlobalAudioTrack,
   },
   setup() {
@@ -143,8 +148,8 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .global-audio {
-  grid-area: global-audio;
+  bottom: 0.5rem;
 }
 </style>
