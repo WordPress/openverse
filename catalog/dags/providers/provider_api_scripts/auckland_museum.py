@@ -21,6 +21,10 @@ from providers.provider_api_scripts.provider_data_ingester import ProviderDataIn
 
 logger = logging.getLogger(__name__)
 
+LANDING_URL = (
+    "https://www.aucklandmuseum.com/collections-research/collections/record/am_"
+)
+
 
 class AucklandMuseumDataIngester(ProviderDataIngester):
     providers = {
@@ -74,9 +78,15 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         return IMAGE
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
+        url_parameter = data.get("_id").split("id/")[-1].replace("/", "-")
+        foreign_landing_url = f"{LANDING_URL}{url_parameter}"
+
+        foreign_identifier = data.get("_id").split("/")[-1]
+
         information = data.get("_source")
 
         url = information.get("primaryRepresentation")
+
         thumbnail_url = f"{url}?rendering=thumbnail.jpg"
         license_info = self.DEFAULT_LICENSE_INFO
         filesize = self._get_file_info(url)
@@ -92,6 +102,8 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         data.get("tags")
 
         return {
+            "foreign_landing_url": foreign_landing_url,
+            "foreign_identifier": foreign_identifier,
             "url": url,
             "license_info": license_info,
             "thumbnail_url": thumbnail_url,

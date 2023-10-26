@@ -79,6 +79,8 @@ def test_get_record_data(file_size_patch):
         "department": "botany",
     }
     expected_data = {
+        "foreign_landing_url": "https://www.aucklandmuseum.com/collections-research/collections/record/am_naturalsciences-object-691102",
+        "foreign_identifier": "691102",
         "url": "http://api.aucklandmuseum.com/id/media/v/214749",
         "license_info": CC_BY_4_0,
         "thumbnail_url": "http://api.aucklandmuseum.com/id/media/v/214749?rendering=thumbnail.jpg",
