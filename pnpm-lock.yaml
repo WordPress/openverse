@@ -57,7 +57,7 @@ importers:
       '@pinia/nuxt': 0.2.1
       '@pinia/testing': ^0.0.15
       '@playwright/test': 1.30.0
-      '@popperjs/core': ^2.11.2
+      '@popperjs/core': ^2.11.8
       '@tailwindcss/typography': ^0.5.9
       '@testing-library/dom': ^8.13.0
       '@testing-library/jest-dom': ^5.16.1
@@ -136,7 +136,7 @@ importers:
       '@nuxtjs/sitemap': 2.4.0
       '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1_pinia@2.0.33+vue@2.7.14
-      '@popperjs/core': 2.11.2
+      '@popperjs/core': 2.11.8
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.1
       '@vueuse/core': 10.2.1_vue@2.7.14
       '@wordpress/is-shallow-equal': 4.8.0
@@ -4238,8 +4238,8 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: false
 
-  /@popperjs/core/2.11.2:
-    resolution: {integrity: sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==}
+  /@popperjs/core/2.11.8:
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
   /@sentry-internal/tracing/7.57.0:
