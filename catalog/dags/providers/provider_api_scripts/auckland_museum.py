@@ -10,6 +10,11 @@ Notes:                  https://api.aucklandmuseum.com/
 
 Resource:               https://api.aucklandmuseum.com/
                         https://github.com/AucklandMuseum/API/wiki/Tutorial
+
+Resource | Requests per second | Requests per day
+-- | -- | --
+/search, /id | 10 | 1000
+/id/media | 10 | 1000
 """
 import logging
 
@@ -32,10 +37,14 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
     }
     endpoint = "https://api.aucklandmuseum.com/search/collectionsonline/_search"
     license_url = "https://creativecommons.org/licenses/by/4.0/"
-    delay = 4
-    from_start = 0
     total_amount_of_data = 10000
+
     DEFAULT_LICENSE_INFO = get_license_info(license_url=license_url)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.delay = 4
+        self.batch_start = 0
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
@@ -48,10 +57,11 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             return {
                 "q": "_exists_:primaryRepresentation+copyright:CC",
                 "size": "100",
-                "from": self.from_start,
+                "from": self.batch_start,
             }
         else:
             # Increment `from` by 100.
+            self.batch_start += 100
             return {
                 **prev_query_params,
                 "from": prev_query_params["from"] + 100,
@@ -61,7 +71,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         # Takes the raw API response from calling `get` on the endpoint, and returns
         # the list of records to process.
         if response_json:
-            return response_json.get("hits").get("hits")
+            return response_json.get("hits", {}).get("hits")
         return None
 
     def get_should_continue(self, response_json):
@@ -78,14 +88,21 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         return IMAGE
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
+        # check if _id is empty then foreign_landing_url and
+        # foreign_identifier doesn't exist
+
+        if not data.get("_id"):
+            return None
+
         url_parameter = data.get("_id").split("id/")[-1].replace("/", "-")
         foreign_landing_url = f"{LANDING_URL}{url_parameter}"
 
         foreign_identifier = data.get("_id").split("/")[-1]
 
-        information = data.get("_source")
+        information = data.get("_source", {})
 
-        url = information.get("primaryRepresentation")
+        if not (url := information.get("primaryRepresentation")):
+            return None
 
         thumbnail_url = f"{url}?rendering=thumbnail.jpg"
         license_info = self.DEFAULT_LICENSE_INFO
@@ -93,13 +110,16 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
 
         creator = (
             information.get("dc_contributor")[0]
-            if information.get("dc_contributor")
+            if information.get("dc_contributor", [])
             else ""
         )
 
-        title = information.get("appellation").get("Primary Title")[0]
+        title = (
+            information.get("appellation").get("Primary Title")[0]
+            if information.get("appellation", [])
+            else ""
+        )
         meta_data = self._get_meta_data(information)
-        data.get("tags")
 
         return {
             "foreign_landing_url": foreign_landing_url,
@@ -114,11 +134,17 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         }
 
     def _get_meta_data(self, object_json: dict) -> dict | None:
-        geopos = object_json.get("geopos")[0] if object_json.get("geopos") else ""
+        geopos = object_json.get("geopos")[0] if object_json.get("geopos", []) else ""
+        department = (
+            object_json.get("department")[0]
+            if object_json.get("department", [])
+            else ""
+        )
+
         metadata = {
             "type": object_json.get("type"),
             "geopos": geopos,
-            "department": object_json.get("department")[0],
+            "department": department,
         }
 
         metadata = {k: v for k, v in metadata.items() if v is not None}

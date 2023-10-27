@@ -1,11 +1,3 @@
-"""
-
-Try to test edge cases (missing keys, different data types returned, Nones, etc).
-You may also need to update the given test names to be more specific.
-
-Run your tests locally with `just test -k auckland_museum`
-"""
-
 from pathlib import Path
 from unittest.mock import patch
 

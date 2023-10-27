@@ -194,7 +194,7 @@ class ProviderWorkflow:
 
 PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
-        start_date=datetime(2023, 11, 1),
+        start_date=datetime(2023, 10, 1),
         ingester_class=AucklandMuseumDataIngester,
     ),
     ProviderWorkflow(
