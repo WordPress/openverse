@@ -79,7 +79,7 @@
     "core-js": "^3.27.2",
     "express-prom-bundle": "^6.4.1",
     "express-useragent": "^1.0.15",
-    "focus-trap": "^7.1.0",
+    "focus-trap": "^7.5.4",
     "focus-visible": "^5.2.0",
     "glob": "^8.0.1",
     "node-html-parser": "^5.3.3",
