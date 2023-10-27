@@ -31,7 +31,7 @@ import type { TranslateResult } from "vue-i18n"
 
 /**
  * The buttons placed inside the mobile search bar in the header.
- * They are based on the VOldIconButton, look like they have a smallish focus area
+ * They are based on the VButton, look like they have a smallish focus area
  * (32x32px), but actually have a larger tappable area of 48x48px to comply with
  * accessibility requirements.
  */
