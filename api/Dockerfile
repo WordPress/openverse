@@ -32,7 +32,7 @@ ENV PATH="/venv/bin:$PATH"
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
 RUN apt-get update \
-  && apt-get install -y python3-dev \
+  && apt-get install -y python3-dev git \
   && rm -rf /var/lib/apt/lists/* \
   && python -m venv /venv \
   && pip install --upgrade pipenv

@@ -39,7 +39,7 @@ const mockData = [
   },
 ]
 
-const mockImplementation = () => Promise.resolve({ data: [...mockData] })
+const mockImplementation = () => Promise.resolve([...mockData])
 const mock = jest.fn().mockImplementation(mockImplementation)
 jest.mock("~/data/media-provider-service", () => ({
   initProviderServices: {

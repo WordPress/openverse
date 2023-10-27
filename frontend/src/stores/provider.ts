@@ -142,7 +142,7 @@ export const useProviderStore = defineStore("provider", {
           this.$nuxt?.$config?.apiAccessToken
         )
         const res = await service.getProviderStats()
-        sortedProviders = sortProviders(res.data)
+        sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
         const errorData = parseFetchingError(error, mediaType, "provider")
