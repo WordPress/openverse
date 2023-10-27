@@ -182,7 +182,11 @@ def _open_image(url):
         response.raise_for_status()
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
-    except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
+    except requests.exceptions.RequestException as e:
+        capture_exception(e)
+        logger.error(f"Error requesting image: {e}")
+        raise UpstreamWatermarkException(f"{e}")
+    except UnidentifiedImageError as e:
         capture_exception(e)
         logger.error(f"Error loading image data: {e}")
         raise UpstreamWatermarkException(f"{e}")
