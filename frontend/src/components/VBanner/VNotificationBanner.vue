@@ -13,12 +13,16 @@
     </p>
 
     <slot name="end">
-      <VCloseButton
-        :variant="variant === 'dark' ? 'black' : 'transparent-gray'"
-        size="close"
-        icon-size="small"
+      <VIconButton
+        :variant="variant === 'dark' ? 'transparent-tx' : 'transparent-gray'"
+        :icon-props="{ name: 'close-small' }"
+        size="small"
         :label="closeButtonLabel || $t('modal.closeBanner')"
-        @close="$emit('close')"
+        :class="{
+          'focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10':
+            variant === 'dark',
+        }"
+        @click="$emit('close')"
       />
     </slot>
   </section>
@@ -32,7 +36,7 @@ import { defineEvent } from "~/types/emits"
 import type { BannerId } from "~/types/banners"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VCloseButton from "~/components/VCloseButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 import type { TranslateResult } from "vue-i18n"
 
@@ -43,8 +47,8 @@ import type { TranslateResult } from "vue-i18n"
 export default defineComponent({
   name: "VNotificationBanner",
   components: {
+    VIconButton,
     VIcon,
-    VCloseButton,
   },
   props: {
     /**
