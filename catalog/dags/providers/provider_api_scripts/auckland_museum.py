@@ -38,34 +38,24 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
     endpoint = "https://api.aucklandmuseum.com/search/collectionsonline/_search"
     license_url = "https://creativecommons.org/licenses/by/4.0/"
     total_amount_of_data = 10000
-
     DEFAULT_LICENSE_INFO = get_license_info(license_url=license_url)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.delay = 4
         self.batch_start = 0
+        self.batch_limit = 100
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
-        # On the first request, `prev_query_params` will be `None`. We can detect this
-        # and return our default params.
-        if not prev_query_params:
-            # Return default query params on the first request
-            # primaryRepresentation contain a image url for each data
-            # "+" is a query string syntax for must be present
-            # copyright:CC state Creative Commons Attribution 4.0
-            return {
-                "q": "_exists_:primaryRepresentation+copyright:CC",
-                "size": "100",
-                "from": self.batch_start,
-            }
-        else:
-            # Increment `from` by 100.
-            self.batch_start += 100
-            return {
-                **prev_query_params,
-                "from": prev_query_params["from"] + 100,
-            }
+        # Return default query params on the first request
+        # primaryRepresentation contain a image url for each data
+        # "+" is a query string syntax for must be present
+        # copyright:CC state Creative Commons Attribution 4.0
+        return {
+            "q": "_exists_:primaryRepresentation+copyright:CC",
+            "size": "100",
+            "from": self.batch_start,
+        }
 
     def get_batch_data(self, response_json):
         # Takes the raw API response from calling `get` on the endpoint, and returns
@@ -76,7 +66,8 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
 
     def get_should_continue(self, response_json):
         # Do not continue if we have exceeded the total amount of data
-        if self.from_start >= self.total_amount_of_data:
+        self.batch_start += self.batch_limit
+        if self.batch_start >= self.total_amount_of_data:
             logger.info(
                 "The final amount of data has been processed. Halting ingestion."
             )
