@@ -39,6 +39,9 @@
       "allowedVersions": {
         "babel-core": "7.0.0-bridge.0"
       }
+    },
+    "patchedDependencies": {
+      "@nuxtjs/svg-sprite@1.0.2": "patches/@nuxtjs__svg-sprite@1.0.2.patch"
     }
   }
 }
