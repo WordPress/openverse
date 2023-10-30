@@ -80,7 +80,6 @@ importers:
       babel-core: ^7.0.0-bridge.0
       babel-jest: ^26.6.3
       babel-loader: 8.2.5
-      case: ^1.6.3
       chokidar: ^3.5.3
       clipboard: ^2.0.11
       comment-json: ^4.2.3
@@ -142,7 +141,6 @@ importers:
       async-mutex: 0.3.2
       axios: 0.27.2
       axios-mock-adapter: 1.20.0_axios@0.27.2
-      case: 1.6.3
       clipboard: 2.0.11
       cookie-universal-nuxt: 2.1.5
       core-js: 3.27.2
@@ -8674,11 +8672,6 @@ packages:
     resolution: {integrity: sha512-roIFONhcxog0JSSWbvVAh3OocukmSgpqOH6YpMkCvav/ySIV3JKg4Dc8vYtQjYi/UxpNE36r/9v+VqTQqgkYmw==}
     engines: {node: '>=4'}
     dev: true
-
-  /case/1.6.3:
-    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
-    engines: {node: '>= 0.8.0'}
-    dev: false
 
   /ccount/1.1.0:
     resolution: {integrity: sha512-vlNK021QdI7PNeiUh/lKkC/mNHHfV0m/Ad5JoI0TYtlBnJAslM/JIkm/tGC88bkLIwO6OQ5uV6ztS6kVAtCDlg==}
