@@ -379,8 +379,8 @@ def create_search_query(
     if settings.USE_RANK_FEATURES:
         search_queries["should"].extend(create_ranking_queries(search_params))
 
-    # If there are no must query clauses, only the results that match
-    # the`should` clause are returned. To avoid this, we add an empty
+    # If there are no `must` query clauses, only the results that match
+    # the `should` clause are returned. To avoid this, we add an empty
     # query clause to the `must` list.
     if not search_queries["must"]:
         search_queries["must"].append(EMPTY_QUERY)
