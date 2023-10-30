@@ -11,7 +11,7 @@ from django.core.cache import cache
 
 from elasticsearch.exceptions import BadRequestError, NotFoundError
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY, Match, SimpleQueryString, Term, Terms
+from elasticsearch_dsl.query import EMPTY_QUERY, Match, SimpleQueryString, Term
 from elasticsearch_dsl.response import Hit, Response
 
 import api.models as models
@@ -232,7 +232,7 @@ def _post_process_results(
     return results[:page_size]
 
 
-def get_dynamically_excluded_providers():
+def get_excluded_providers_query() -> Q | None:
     """
     Hide data sources from the catalog dynamically.
     To exclude a provider, set ``filter_content`` to ``True`` in the
@@ -248,7 +248,9 @@ def get_dynamically_excluded_providers():
         cache.set(
             key=filter_cache_key, timeout=FILTER_CACHE_TIMEOUT, value=filtered_providers
         )
-    return [f["provider_identifier"] for f in filtered_providers]
+    if provider_list := [f["provider_identifier"] for f in filtered_providers]:
+        return Q("terms", provider=provider_list)
+    return None
 
 
 def _resolve_index(
@@ -335,8 +337,8 @@ def create_search_query(
     if not search_params.validated_data["include_sensitive_results"]:
         search_queries["must_not"].append(Q("term", mature=True))
     # Exclude dynamically disabled sources (see Redis cache)
-    if excluded_providers := get_dynamically_excluded_providers():
-        search_queries["must_not"].append(Q("terms", provider=excluded_providers))
+    if excluded_providers_query := get_excluded_providers_query():
+        search_queries["must_not"].append(excluded_providers_query)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
@@ -544,8 +546,8 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     # Exclude the current item and mature content.
     s = s.query(related_query & ~Term(identifier=uuid) & ~Term(mature=True))
     # Exclude the dynamically disabled sources.
-    excluded_providers = get_dynamically_excluded_providers()
-    s = s.exclude(Terms(provider=excluded_providers))
+    if excluded_providers_query := get_excluded_providers_query():
+        s = s.exclude(excluded_providers_query)
 
     page, page_size = 1, 10
     start, end = _get_query_slice(s, page_size, page, filter_dead)
