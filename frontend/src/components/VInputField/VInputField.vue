@@ -10,11 +10,12 @@
           connectionSides.includes('end'),
       },
       sizeClass,
+      $attrs.class,
     ]"
   >
     <input
       :id="fieldId"
-      v-bind="$attrs"
+      v-bind="nonClassAttrs"
       ref="inputEl"
       :type="type"
       class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus:outline-none md:text-base"
@@ -110,6 +111,12 @@ export default defineComponent({
     }
     const sizeClass = computed(() => FIELD_SIZES[props.size])
 
+    const nonClassAttrs = computed(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { class: _, ...rest } = attrs
+      return rest
+    })
+
     return {
       inputEl,
 
@@ -119,6 +126,7 @@ export default defineComponent({
       type,
 
       sizeClass,
+      nonClassAttrs,
       updateModelValue,
     }
   },

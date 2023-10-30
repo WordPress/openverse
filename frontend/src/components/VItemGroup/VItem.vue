@@ -3,6 +3,7 @@
     class="flex"
     :class="[
       contextProps.direction,
+      $attrs.class,
       {
         [`${contextProps.direction}-bordered`]: contextProps.bordered,
         [`${contextProps.direction}-popover-item`]: isInPopover,
@@ -34,7 +35,7 @@
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
       :aria-checked="selected"
       :tabindex="tabIndex"
-      v-bind="$attrs"
+      v-bind="nonClassAttrs"
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"
@@ -105,16 +106,7 @@ export default defineComponent({
       validator: (val: string) => ["button", "VLink"].includes(val),
     },
   },
-  /**
-   * Setting `inheritAttrs` to false ensures that the $attrs are only passed to VButton component,
-   * and not the outer div. In Vue 3 this will also stops native events such as `click` from
-   * going up the tree. Adding `emits` should fix this:
-   * https://v3.vuejs.org/guide/migration/v-on-native-modifier-removed.html#_3-x-syntax
-   * However, with current Vue 2 setup, if VItem is a link (a or NuxtLink), it is
-   * necessary to add native modifier to handle click event: `@click.native='handler'`.
-   */
-  emits: ["click"],
-  setup(props) {
+  setup(props, { attrs }) {
     const focusContext = inject(VItemGroupFocusContextKey)
     const isFocused = ref(false)
     const isInPopover = inject(VPopoverContentContextKey, false)
@@ -162,12 +154,18 @@ export default defineComponent({
       return -1
     })
 
+    const nonClassAttrs = computed(() => {
+      const { class: _, ...rest } = attrs
+      return rest
+    })
+
     return {
       contextProps,
       isInPopover,
       isFocused,
       tabIndex,
       focusContext,
+      nonClassAttrs,
     }
   },
 })
