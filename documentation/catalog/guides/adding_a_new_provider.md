@@ -8,7 +8,7 @@ automated by
 [Airflow DAGs](https://airflow.apache.org/docs/apache-airflow/stable/concepts/dags.html)
 generated for each provider. A simple provider DAG looks like this:
 
-![Example DAG](assets/provider_dags/simple_dag.png)
+![Example DAG](/_static/simple_dag.png)
 
 At a high level the steps are:
 
@@ -24,7 +24,7 @@ When a provider supports multiple media types (for example, `audio` _and_
 `images`), the `pull` step consumes data of all types, but separate `load` steps
 are generated:
 
-![Example Multi-Media DAG](assets/provider_dags/multi_media_dag.png)
+![Example Multi-Media DAG](/_static/multi_media_dag.png)
 
 ## Adding a New Provider
 
