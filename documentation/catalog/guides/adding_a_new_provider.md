@@ -92,7 +92,8 @@ generated files to implement behavior specific to your API.
 
 Some APIs may not fit perfectly into the established `ProviderDataIngester`
 pattern. For advanced use cases and examples of how to modify the ingestion
-flow, see the [`ProviderDataIngester` FAQ](provider_data_ingester_faq.md).
+flow, see the
+[`ProviderDataIngester` FAQ](https://github.com/WordPress/openverse/blob/main/catalog/docs/provider_data_ingester_faq.md).
 
 ### Add a `ProviderWorkflow` configuration class
 
