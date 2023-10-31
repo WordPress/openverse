@@ -5,5 +5,5 @@
 
 quickstart
 deploy
-adding a new provider
+adding_a_new_provider
 ```
