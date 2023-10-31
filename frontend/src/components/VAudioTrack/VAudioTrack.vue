@@ -141,7 +141,7 @@ export default defineComponent({
      */
     layout: {
       type: String as PropType<AudioLayout>,
-      default: "full",
+      required: true,
     },
     /**
      * the size of the component; Both 'box' and 'row' layouts offer multiple
