@@ -39,20 +39,20 @@ provider DAG, you need to:
 
 We call the code that pulls data from our provider APIs "Provider API scripts".
 You can find examples in
-[`provider_api_scripts` folder](../../../catalog/dags/providers/provider_api_scripts).
+[`provider_api_scripts` folder](https://github.com/WordPress/openverse/tree/main/catalog/dags/providers/provider_api_scripts).
 This code will be run during the `pull` steps of the provider DAG.
 
 At a high level, a provider script should iteratively request batches of records
 from the provider API, extract data in the format required by Openverse, and
 commit it to local storage. Much of this logic is implemented in a
-[`ProviderDataIngester` base class](../../../catalog/dags/providers/provider_api_scripts/provider_data_ingester.py)
+[`ProviderDataIngester` base class](https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_api_scripts/provider_data_ingester.py)
 (which also provides additional testing features _<TODO: link to documentation
 for testing features like ingestion_limit, skip_ingestion_errors etc>_). To add
 a new provider, extend this class and implement its abstract methods.
 
 We provide a
-[script](../../../catalog/dags/templates/create_provider_ingester.py) that can
-be used to generate the files you'll need and get you started:
+[script](https://github.com/WordPress/openverse/blob/main/catalog/templates/create_provider_ingester.py)
+that can be used to generate the files you'll need and get you started:
 
 ```
 # PROVIDER_NAME: The name of the provider
@@ -86,7 +86,7 @@ NOTE: You will also need to add a new ProviderWorkflow dataclass configuration t
 
 This generates a provider script with a templated `ProviderDataIngester` for you
 in the
-[`provider_api_scripts` folder](../../../catalog/dags/providers/provider_api_scripts),
+[`provider_api_scripts` folder](https://github.com/WordPress/openverse/tree/main/catalog/dags/providers/provider_api_scripts),
 as well as a corresponding test file. Complete the TODOs detailed in the
 generated files to implement behavior specific to your API.
 
@@ -100,7 +100,7 @@ Now that you have an ingester class, you're ready to wire up a provider DAG in
 Airflow to automatically pull data and load it into our Catalog database. This
 is done by defining a `ProviderWorkflow` configuration dataclass and adding it
 to the `PROVIDER_WORKFLOWS` list in
-[`provider_workflows.py`](../../../catalog/dags/providers/provider_workflows.py).
+[`provider_workflows.py`](https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_workflows.py).
 Our DAG factories will pick up the configuration and generate a complete new DAG
 in Airflow!
 
