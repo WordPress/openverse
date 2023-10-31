@@ -61,7 +61,7 @@ const layoutConnectionsMap: Record<AudioLayout, readonly ButtonConnections[]> =
   } as const
 
 /**
- * The mapping of play-pause control sizes to the VIconButton sizes
+ * The mapping of audio control sizes to the VIconButton sizes
  * and the sizes of the contained icon.
  */
 const sizes = {
@@ -111,7 +111,7 @@ export default defineComponent({
         (audioLayouts as readonly string[]).includes(val),
     },
     /**
-     * Whether the play-pause button can be focused by using the `Tab` key
+     * Whether the audio control button can be focused by using the `Tab` key
      */
     isTabbable: {
       type: Boolean,
@@ -142,7 +142,7 @@ export default defineComponent({
         : [...layoutConnectionsMap[props.layout]]
     })
 
-    /** Convert the `play-pause` sizes to `VIconButton` sizes */
+    /** Convert the `audio-control` sizes to `VIconButton` sizes */
     const buttonSize = computed(() => sizes[props.size].button)
 
     const iSize = computed(() => sizes[props.size].icon)

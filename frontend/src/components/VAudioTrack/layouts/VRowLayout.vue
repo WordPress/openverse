@@ -4,76 +4,78 @@
     class="row-track flex flex-row p-2 hover:bg-dark-charcoal-06 md:p-4"
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
-    <div
-      class="relative flex-shrink-0 overflow-hidden rounded-sm"
-      :class="isLarge ? 'me-6 w-30' : 'me-4 w-20'"
-    >
-      <VAudioThumbnail :audio="audio" />
-      <div v-show="isSmall" class="absolute bottom-0 ltr:right-0 rtl:left-0">
-        <slot name="play-pause" size="tiny" layout="row" :is-tabbable="false" />
+    <div class="thumbnail grid flex-none overflow-hidden rounded-sm">
+      <VAudioThumbnail :audio="audio" class="col-span-full row-span-full" />
+      <div
+        v-show="isSmall"
+        class="z-10 col-span-full row-span-full self-end justify-self-start"
+      >
+        <slot
+          name="audio-control"
+          size="small"
+          layout="row"
+          :is-tabbable="false"
+        />
       </div>
     </div>
 
     <div
       class="flex-grow"
       :class="{
-        'flex flex-row gap-8': isMedium,
-        'flex flex-col justify-between': isLarge,
+        'flex flex-row gap-8': isLarge,
+        'flex flex-col justify-between': isMedium,
       }"
     >
-      <div class="flex-shrink-0" :class="{ 'w-70': isMedium }">
-        <div
-          class="decoration-inherit font-heading line-clamp-2 block rounded-sm p-px font-semibold text-dark-charcoal hover:text-dark-charcoal focus:outline-none focus:ring focus:ring-pink group-hover:underline md:line-clamp-1"
-          :class="{
-            'text-2xl': isMedium || isLarge,
-            'leading-snug': isSmall,
-            'blur-text': shouldBlur,
-          }"
+      <div
+        class="flex flex-shrink-0 flex-col gap-1"
+        :class="{ 'w-70': isLarge }"
+        role="document"
+      >
+        <h2
+          class="decoration-inherit line-clamp-1 block rounded-sm text-dark-charcoal hover:text-dark-charcoal group-hover:underline"
+          :class="[
+            { 'blur-text': shouldBlur },
+            isSmall ? 'label-bold' : 'description-bold',
+          ]"
         >
           {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
-        </div>
+        </h2>
 
         <div
-          class="mt-2 flex text-dark-charcoal-70"
-          :class="{
-            'text-sr': isSmall,
-            'leading-snug': isMedium || isLarge,
-            'flex-col gap-2': isSmall || isMedium,
-            'flex-row items-center': isLarge,
-          }"
+          class="flex text-dark-charcoal-70"
+          :class="[
+            isSmall ? 'caption-regular' : 'label-regular',
+            isMedium ? 'flex-row items-center' : 'flex-col gap-1',
+          ]"
         >
-          <div class="part-a">
-            <i18n
-              tag="span"
-              path="audioTrack.creator"
-              :class="{ 'blur-text': shouldBlur }"
-            >
-              <template #creator>{{
-                shouldBlur ? $t("sensitiveContent.creator") : audio.creator
-              }}</template> </i18n
-            ><span v-show="isLarge" class="mx-2" aria-hidden="true">{{
-              $t("interpunct")
-            }}</span>
+          <i18n
+            tag="div"
+            path="audioTrack.creator"
+            class="flex"
+            :class="{ 'blur-text': shouldBlur, 'dot-after': isMedium }"
+          >
+            <template #creator>{{
+              shouldBlur ? $t("sensitiveContent.creator") : audio.creator
+            }}</template>
+          </i18n>
+          <!-- Small layout only -->
+          <div v-if="isSmall" class="flex flex-col gap-1">
+            <div class="flex flex-row">
+              <span class="flex" :class="{ 'dot-after': !!audio.category }">{{
+                timeFmt(audio.duration || 0, true)
+              }}</span
+              ><span v-if="audio.category">{{
+                $t(`filters.audioCategories.${audio.category}`)
+              }}</span>
+            </div>
+            <VLicense :hide-name="true" :license="audio.license" />
           </div>
-
-          <div class="part-b inline-flex flex-row items-center">
-            <span v-show="isSmall">
-              <span
-                class="inline-block rounded-sm bg-dark-charcoal-06 p-1 font-semibold text-dark-charcoal"
-                >{{ timeFmt(audio.duration || 0, true) }}</span
-              ><span class="mx-2" aria-hidden="true">{{
-                $t("interpunct")
-              }}</span>
-            </span>
-
-            <span v-if="audio.category">
-              <span>{{ $t(`filters.audioCategories.${audio.category}`) }}</span
-              ><span class="mx-2" aria-hidden="true">{{
-                $t("interpunct")
-              }}</span>
-            </span>
-
-            <VLicense :hide-name="isSmall" :license="audio.license" />
+          <!-- Medium and large layouts -->
+          <div v-else class="flex flex-row">
+            <span v-if="audio.category" class="dot-after">{{
+              $t(`filters.audioCategories.${audio.category}`)
+            }}</span>
+            <VLicense :hide-name="false" :license="audio.license" />
           </div>
         </div>
       </div>
@@ -81,14 +83,12 @@
       <div
         v-show="!isSmall"
         class="flex flex-row"
-        :class="{
-          'flex-grow': isMedium,
-        }"
+        :class="{ 'flex-grow': isLarge }"
       >
         <slot
-          name="play-pause"
-          :size="isLarge ? 'large' : 'extra-large'"
-          :layout="'row'"
+          name="audio-control"
+          :size="isLarge ? 'large' : 'medium'"
+          layout="row"
           :is-tabbable="false"
         />
         <slot
@@ -159,9 +159,9 @@ export default defineComponent({
 })
 </script>
 
-<style>
-.row-track .play-pause {
-  @apply flex-shrink-0 rounded-es-sm rounded-ss-sm;
+<style scoped>
+.row-track .audio-control {
+  @apply flex-none rounded-es-sm rounded-ss-sm;
 }
 
 .row-track .waveform {
@@ -174,10 +174,25 @@ export default defineComponent({
 }
 
 .row-track.size-m .waveform {
-  @apply h-20;
+  @apply h-12;
 }
 
 .row-track.size-l .waveform {
-  @apply h-14;
+  @apply h-16;
+}
+
+.dot-after {
+  @apply relative me-5;
+  @apply after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-dark-charcoal-70;
+}
+
+.size-l .thumbnail {
+  @apply me-4 w-16;
+}
+.size-m .thumbnail {
+  @apply me-6 w-[95px];
+}
+.size-s .thumbnail {
+  @apply me-4 w-20;
 }
 </style>
