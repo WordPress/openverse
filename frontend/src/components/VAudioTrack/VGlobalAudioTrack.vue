@@ -1,5 +1,9 @@
 <template>
-  <div class="audio-track" :aria-label="ariaLabel" role="region">
+  <div
+    class="audio-track relative rounded border border-dark-charcoal border-opacity-20"
+    :aria-label="ariaLabel"
+    role="region"
+  >
     <VGlobalLayout :audio="audio">
       <template #controller="waveformProps">
         <VWaveform
@@ -14,12 +18,11 @@
         />
       </template>
 
-      <template #play-pause="playPauseProps">
+      <template #audio-control="{ size, layout }">
         <VAudioControl
-          v-bind="playPauseProps"
+          :size="size"
+          :layout="layout"
           :status="status"
-          layout="global"
-          size="medium"
           @toggle="handleToggle"
         />
       </template>

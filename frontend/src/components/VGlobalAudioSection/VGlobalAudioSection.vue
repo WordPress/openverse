@@ -1,9 +1,7 @@
 <template>
   <div
-    class="global-audio sticky z-global-audio rounded bg-white sm:hidden"
-    :class="{
-      'mx-2 mb-2 border border-dark-charcoal border-opacity-20': !!audio,
-    }"
+    class="global-audio sticky z-global-audio rounded sm:hidden"
+    :class="{ 'mx-2 mb-2': !!audio }"
   >
     <template v-if="audio">
       <VGlobalAudioTrack :audio="audio" />

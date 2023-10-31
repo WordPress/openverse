@@ -1,7 +1,7 @@
 <template>
   <VIconButton
     :tabindex="isTabbable ? 0 : -1"
-    class="play-pause"
+    class="audio-control"
     :size="buttonSize"
     variant="filled-dark"
     :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
