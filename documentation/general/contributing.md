@@ -98,7 +98,7 @@ existing problem labeled with
 [Needs Design](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22needs+design%22),
 or share an idea if you think it meets Openverse's goals.
 
-The [WordPress Design team](http://make.wordpress.org/design/) uses
+The [WordPress Design team](https://make.wordpress.org/design/) uses
 [Figma](https://www.figma.com/) to collaborate and share work for all WordPress
 projects. If you are not familiar with designing for WordPress, please carefully
 read the [design handbook](https://make.wordpress.org/design/handbook/). Once
@@ -142,7 +142,7 @@ An overview of Openverse translations is here:
 [https://translate.wordpress.org/projects/meta/openverse/](https://translate.wordpress.org/projects/meta/openverse/)
 
 A getting started guide for translating on GlotPress (the software behind
-[translate.wordpress.org](http://translate.wordpress.org)) is here:
+[translate.wordpress.org](https://translate.wordpress.org)) is here:
 [https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started](https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started)
 
 ### Providers
