@@ -334,6 +334,10 @@ services:
     environment:
       OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS}:8443
       OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
+      # Set to Docker network resolver to be able to resolve the `plausible` container.
+      # This would be the default but Nginx requires it to be explicitly set when
+      # making outgoing requests (e.g., to plausible.io)
+      OPENVERSE_NGINX_DNS_RESOLVER: 127.0.0.11
 
 volumes:
   api-postgres:
