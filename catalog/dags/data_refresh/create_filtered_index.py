@@ -120,8 +120,10 @@ def create_filtered_index_creation_task_groups(
     with TaskGroup(group_id="create_filtered_index") as create_filtered_index_group:
         # If a destination index suffix isn't provided, we need to generate
         # one so that we know where to point the alias
-        final_destination_index_suffix = ingestion_server.generate_index_suffix(
-            destination_index_suffix
+        final_destination_index_suffix = (
+            ingestion_server.generate_index_suffix.override(
+                task_id="generate_filtered_index_suffix"
+            )(destination_index_suffix)
         )
 
         get_current_index_if_exists = ingestion_server.get_current_index(target_alias)
