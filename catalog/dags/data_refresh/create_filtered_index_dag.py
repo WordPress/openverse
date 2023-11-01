@@ -141,7 +141,9 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
         },
         render_template_as_native_obj=True,
     ) as dag:
-        prevent_concurrency = prevent_concurrency_with_data_refresh()
+        prevent_concurrency = prevent_concurrency_with_data_refresh.override(
+            retries=0
+        )()
 
         # Once the concurrency check has passed, actually create the filtered
         # index.
