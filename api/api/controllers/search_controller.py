@@ -558,7 +558,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     return results or []
 
 
-def get_sources(index):
+def get_sources(index) -> dict[str, int]:
     """
     Given an index, find all available data sources and return their counts.
 
@@ -573,24 +573,29 @@ def get_sources(index):
         cache_fetch_failed = True
         sources = None
         log.warning("Source cache fetch failed due to corruption")
-    if type(sources) == list or cache_fetch_failed:
+    if cache_fetch_failed:
         # Invalidate old provider format.
         cache.delete(key=source_cache_name)
     if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
-        aggs = {
-            "unique_sources": {
-                "terms": {
-                    "field": "source",
-                    "size": size,
-                    "order": {"_key": "desc"},
+        aggs_query = {
+            "size": 0,  # Don't return any hits, only the unique sources.
+            "aggs": {
+                "unique_sources": {
+                    "terms": {
+                        "field": "source",
+                        "size": size,
+                        "order": {"_key": "desc"},
+                    }
                 }
-            }
+            },
         }
         try:
-            results = settings.ES.search(index=index, aggs=aggs, request_cache=True)
+            results = settings.ES.search(
+                index=index, body=aggs_query, request_cache=True
+            )
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
