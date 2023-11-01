@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 
 def test_create_search_query_empty(media_type_config):
     serializer = media_type_config.search_request_serializer(data={})
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -26,7 +26,7 @@ def test_create_search_query_empty(media_type_config):
 def test_create_search_query_empty_no_ranking(media_type_config, settings):
     settings.USE_RANK_FEATURES = False
     serializer = media_type_config.search_request_serializer(data={})
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -38,7 +38,7 @@ def test_create_search_query_empty_no_ranking(media_type_config, settings):
 
 def test_create_search_query_q_search_no_filters(media_type_config):
     serializer = media_type_config.search_request_serializer(data={"q": "cat"})
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -70,7 +70,7 @@ def test_create_search_query_q_search_with_quotes_adds_exact_suffix(media_type_c
     serializer = media_type_config.search_request_serializer(
         data={"q": '"The cutest cat"'}
     )
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -114,7 +114,7 @@ def test_create_search_query_q_search_with_filters(image_media_type_config):
             "unstable__include_sensitive_results": True,
         }
     )
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -156,7 +156,7 @@ def test_create_search_query_non_q_query(image_media_type_config):
             "tags": "cute",
         }
     )
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -187,7 +187,7 @@ def test_create_search_query_q_search_license_license_type_creates_2_terms_filte
             "license_type": "commercial",
         }
     )
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     search_query = search_controller.create_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
 
@@ -223,7 +223,7 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     cache.set(key="filtered_providers", timeout=1, value=[excluded])
 
     serializer = image_media_type_config.search_request_serializer(data={})
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
 
     search_query = search_controller.create_search_query(serializer)
 
