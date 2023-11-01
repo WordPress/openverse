@@ -438,7 +438,8 @@ def search(
     s.extra(track_scores=True)
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
-    s = s.params(preference=str(ip), request_timeout=7)
+    # TODO: Re-add 7s request_timeout when ES stability is restored
+    s = s.params(preference=str(ip))
 
     # Sort by new
     if search_params.validated_data["sort_by"] == INDEXED_ON:
