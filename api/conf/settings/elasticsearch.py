@@ -22,8 +22,10 @@ def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
 
     _es = Elasticsearch(
         es_endpoint,
-        request_timeout=10,
-        max_retries=1,
+        # TODO: Return to default timeout of 10s and 1 retry once
+        # TODO: Elasticsearch response time has been stabilized
+        request_timeout=12,
+        max_retries=3,
         retry_on_timeout=True,
     )
     _es.info()
