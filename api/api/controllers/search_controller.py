@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging as log
 import pprint
+import time
 from itertools import accumulate
 from math import ceil
 from typing import Literal
@@ -447,16 +448,7 @@ def search(
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
-    try:
-        if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(s.to_dict()))
-
-        search_response = s.execute()
-
-        if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(search_response.to_dict()))
-    except (BadRequestError, NotFoundError) as e:
-        raise ValueError(e)
+    search_response = get_es_response(s, "search")
 
     results = _post_process_results(
         s, start, end, page_size, search_response, filter_dead
@@ -501,6 +493,30 @@ def search(
     search_context = SearchContext.build(result_ids, origin_index)
 
     return results, page_count, result_count, search_context.asdict()
+
+
+def get_es_response(s, search_query=None):
+    try:
+        if settings.VERBOSE_ES_RESPONSE:
+            log.info(pprint.pprint(s.to_dict()))
+
+        start_time = time.time()
+        search_response = s.execute()
+
+        response_time_in_ms = int((time.time() - start_time) * 1000)
+        es_time_in_ms = search_response.took
+        log.info(
+            {
+                "response_time": response_time_in_ms,
+                "es_time": es_time_in_ms,
+                "search_query": search_query,
+            }
+        )
+        if settings.VERBOSE_ES_RESPONSE:
+            log.info(pprint.pprint(search_response.to_dict()))
+    except (BadRequestError, NotFoundError) as e:
+        raise ValueError(e)
+    return search_response
 
 
 def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
@@ -553,7 +569,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
 
-    response = s.execute()
+    response = get_es_response(s, "related_media")
     results = _post_process_results(s, start, end, page_size, response, filter_dead)
     return results or []
 
