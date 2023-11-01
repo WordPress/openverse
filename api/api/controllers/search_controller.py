@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import logging as log
-import pprint
-import time
 from itertools import accumulate
 from math import ceil
 from typing import Literal
@@ -10,7 +8,7 @@ from typing import Literal
 from django.conf import settings
 from django.core.cache import cache
 
-from elasticsearch.exceptions import BadRequestError, NotFoundError
+from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.query import EMPTY_QUERY, Match, SimpleQueryString, Term
 from elasticsearch_dsl.response import Hit, Response
@@ -18,6 +16,7 @@ from elasticsearch_dsl.response import Hit, Response
 import api.models as models
 from api.constants.media_types import OriginIndex
 from api.constants.sorting import INDEXED_ON
+from api.controllers.elasticsearch.helpers import get_es_response, get_raw_es_response
 from api.serializers import media_serializers
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
@@ -224,7 +223,7 @@ def _post_process_results(
                 end = search_results.hits.total.value
 
             s = s[start:end]
-            search_response = s.execute()
+            search_response = get_es_response(s, "postprocess_search")
 
             return _post_process_results(
                 s, start, end, page_size, search_response, filter_dead
@@ -495,30 +494,6 @@ def search(
     return results, page_count, result_count, search_context.asdict()
 
 
-def get_es_response(s, search_query=None):
-    try:
-        if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(s.to_dict()))
-
-        start_time = time.time()
-        search_response = s.execute()
-
-        response_time_in_ms = int((time.time() - start_time) * 1000)
-        es_time_in_ms = search_response.took
-        log.info(
-            {
-                "response_time": response_time_in_ms,
-                "es_time": es_time_in_ms,
-                "search_query": search_query,
-            }
-        )
-        if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(search_response.to_dict()))
-    except (BadRequestError, NotFoundError) as e:
-        raise ValueError(e)
-    return search_response
-
-
 def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     """
     Given a UUID, finds 10 related search results based on title and tags.
@@ -592,21 +567,26 @@ def get_sources(index):
     if type(sources) == list or cache_fetch_failed:
         # Invalidate old provider format.
         cache.delete(key=source_cache_name)
-    if not sources:
+    if not sources or sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
-        aggs = {
-            "unique_sources": {
-                "terms": {
-                    "field": "source",
-                    "size": size,
-                    "order": {"_key": "desc"},
+        body = {
+            "size": 0,
+            "aggs": {
+                "unique_sources": {
+                    "terms": {
+                        "field": "source",
+                        "size": size,
+                        "order": {"_key": "desc"},
+                    }
                 }
-            }
+            },
         }
         try:
-            results = settings.ES.search(index=index, aggs=aggs, request_cache=True)
+            results = get_raw_es_response(
+                index=index, body=body, search_query="sources", request_cache=True
+            )
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
