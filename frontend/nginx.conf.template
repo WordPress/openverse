@@ -1,0 +1,85 @@
+# The following variables are substituted into the environment using envsubst.
+# This occurs automatically as part of the nginx image startup.
+# See: https://github.com/nginxinc/docker-nginx/blob/456bf337ceb922a207651aa7c6077a316c3e368c/entrypoint/20-envsubst-on-templates.sh#L17
+# - OPENVERSE_NGINX_UPSTREAM_URL
+# - OPENVERSE_NGINX_GIT_REVISION
+# - OPENVERSE_NGINX_ENVIRONMENT
+# - OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL
+# - OPENVERSE_NGINX_DNS_RESOLVER
+
+error_log /var/log/nginx/error.log;
+
+log_format json_combined escape=json
+    '{'
+    '"time_local":"$time_local",'
+    '"remote_addr":"$remote_addr",'
+    '"remote_user":"$remote_user",'
+    '"request":"$request",'
+    '"status": "$status",'
+    '"host_header": "$host",'
+    '"body_bytes_sent":$body_bytes_sent,'
+    '"request_time":"$request_time",'
+    '"http_referrer":"$http_referer",'
+    '"http_user_agent":"$http_user_agent",'
+    '"upstream_response_time":$upstream_response_time,'
+    '"http_x_forwarded_for":"$http_x_forwarded_for"'
+    '}';
+
+access_log  /var/log/nginx/access.log  json_combined;
+
+tcp_nopush          on;
+tcp_nodelay         on;
+types_hash_max_size 2048;
+
+# Compress large responses to save bandwidth and improve latency
+gzip on;
+gzip_min_length 860;
+gzip_vary on;
+gzip_proxied expired private auth;
+gzip_types application/json text/plain application/javascript;
+gzip_disable "MSIE [1-6]\.";
+
+upstream ov_service {
+    server          $OPENVERSE_NGINX_UPSTREAM_URL;
+}
+
+server {
+    access_log  /var/log/nginx/access.log  json_combined;
+
+    listen          $OPENVERSE_NGINX_LISTEN_PORT;
+    server_name     _;
+    charset        utf-8;
+    client_max_body_size 75M;
+    error_page 500 /500.json;
+    absolute_redirect off;
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass http://ov_service;
+        error_page 500 /500.json;
+    }
+
+    location /version {
+        default_type "application/json";
+        return 200 '{"release": "$OPENVERSE_NGINX_GIT_REVISION", "environment": "$OPENVERSE_NGINX_ENVIRONMENT"}';
+    }
+
+    # This is Docker's internal DNS resolver
+    # In localhost it will resolve the local Plausible and forward anything else to the host
+    # In production, AWS replaces
+    resolver $OPENVERSE_NGINX_DNS_RESOLVER;
+    set $plausible_event_url $OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL;
+    location = /api/event {
+        proxy_pass $plausible_event_url;
+        proxy_set_header Host plausible.io;
+        proxy_buffering on;
+        proxy_http_version 1.1;
+
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+    }
+}

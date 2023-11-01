@@ -32,6 +32,12 @@ includes = {
     "api": {"image": "api", "target": "api"},
     "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
     "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
+    "frontend_nginx": {
+        "image": "frontend_nginx",
+        "context": "frontend",
+        "file": "frontend/Dockerfile.nginx",
+        "target": "nginx",
+    },
 }
 
 if "ci_cd" in changes:
@@ -46,10 +52,17 @@ if "api" in changes:
     build_matrix["image"] |= {"upstream_db", "ingestion_server", "api", "api_nginx"}
     publish_matrix["image"] |= {"api", "api_nginx"}
 if "frontend" in changes:
-    build_matrix["image"].add("frontend")
-    publish_matrix["image"].add("frontend")
+    build_matrix["image"] |= {"frontend", "frontend_nginx"}
+    publish_matrix["image"] |= {"frontend", "frontend_nginx"}
 
 build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
+
+for item in build_matrix["include"]:
+    if "context" not in item:
+        item["context"] = item["image"]
+
+    if "file" not in item:
+        item["file"] = f"{item['context']}/Dockerfile"
 
 do_build = "true" if len(build_matrix["image"]) else "false"
 do_publish = "true" if len(publish_matrix["image"]) else "false"

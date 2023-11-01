@@ -64,6 +64,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
+import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -78,7 +79,11 @@ import VLink from "~/components/VLink.vue"
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 const toAbsolutePath = (url: string, prefix = "https://") => {
-  if (url.indexOf("http://") >= 0 || url.indexOf("https://") >= 0) {
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url === "/openverse-default.jpg"
+  ) {
     return url
   }
   return `${prefix}${url}`
@@ -106,6 +111,10 @@ export default defineComponent({
     aspectRatio: {
       type: String as PropType<AspectRatio>,
       default: "square",
+    },
+    kind: {
+      type: String as PropType<ResultKind>,
+      default: "search",
     },
     relatedTo: {
       type: [String, null] as PropType<string | null>,
@@ -175,6 +184,7 @@ export default defineComponent({
     const sendSelectSearchResultEvent = () => {
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: props.image.id,
+        kind: props.kind,
         mediaType: IMAGE,
         provider: props.image.provider,
         query: props.searchTerm || "",

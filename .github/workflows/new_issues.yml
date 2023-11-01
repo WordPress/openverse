@@ -19,7 +19,7 @@ jobs:
           project-url: https://github.com/orgs/WordPress/projects/75
           github-token: ${{ secrets.ACCESS_TOKEN }}
           # Exclude the issues with the following labels
-          labeled: project
+          labeled: "🧭 project: thread"
           label-operator: NOT
           label-map: |
             { "Priority": [
