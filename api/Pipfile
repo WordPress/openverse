@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 factory-boy = "~=3.2"
 fakeredis = "==2.19.0"
-ipython = "~=8.16"
+ipython = "~=8.17"
 pycodestyle = "~=2.10"
 pytest = "~=7.4"
 pytest-django = "~=4.6"
