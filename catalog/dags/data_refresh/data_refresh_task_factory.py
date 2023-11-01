@@ -231,7 +231,7 @@ def create_data_refresh_task_group(
             model=data_refresh.media_type,
             data={
                 "index_suffix": XCOM_PULL_TEMPLATE.format(
-                    generate_index_suffix.task_id, "return_value"
+                    get_current_index.task_id, "return_value"
                 ),
             },
         )
