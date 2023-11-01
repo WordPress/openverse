@@ -12,7 +12,7 @@ jobs:
     if: github.repository == 'WordPress/openverse'
     steps:
       - uses: actions/checkout@v4
-      - uses: renovatebot/github-action@v39.0.5
+      - uses: renovatebot/github-action@v39.1.1
         with:
           configurationFile: .github/renovate.json
           token: ${{ secrets.ACCESS_TOKEN }}
