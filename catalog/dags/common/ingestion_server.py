@@ -1,8 +1,10 @@
 import logging
 import os
+import uuid
 from datetime import timedelta
 from urllib.parse import urlparse
 
+from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
@@ -84,6 +86,11 @@ def response_check_index_readiness_check(response: Response) -> bool:
     )
 
     return hits >= THRESHOLD_RESULT_COUNT
+
+
+@task
+def generate_index_suffix(default_suffix: str | None = None) -> str:
+    return default_suffix or uuid.uuid4().hex
 
 
 def get_current_index(target_alias: str) -> SimpleHttpOperator:
