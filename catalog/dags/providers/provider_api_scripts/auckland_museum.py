@@ -97,7 +97,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
 
         thumbnail_url = f"{url}?rendering=thumbnail.jpg"
         license_info = self.DEFAULT_LICENSE_INFO
-        # filesize = self._get_file_info(url)
 
         creator = (
             information.get("dc_contributor")[0]
@@ -119,7 +118,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             "url": url,
             "license_info": license_info,
             "thumbnail_url": thumbnail_url,
-            # "filesize": filesize,
             "creator": creator,
             "title": title,
             "meta_data": meta_data,
