@@ -44,7 +44,7 @@ class SearchContext:
         # results.
         filtered_index_slice = filtered_index_search[: len(all_result_identifiers)]
         results_in_filtered_index = get_es_response(
-            filtered_index_slice, "filtered_index_context"
+            filtered_index_slice, es_query="filtered_index_context"
         )
         filtered_index_identifiers = {
             result.identifier for result in results_in_filtered_index
