@@ -1,6 +1,6 @@
 <template>
   <div
-    class="audio-track relative rounded border border-dark-charcoal border-opacity-20"
+    class="audio-track relative rounded"
     :aria-label="ariaLabel"
     role="region"
   >

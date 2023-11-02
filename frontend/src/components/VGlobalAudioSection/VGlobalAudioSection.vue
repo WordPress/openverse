@@ -1,7 +1,7 @@
 <template>
   <div
-    class="global-audio sticky z-global-audio rounded sm:hidden"
-    :class="{ 'mx-2 mb-2': !!audio }"
+    class="global-audio sticky z-global-audio sm:hidden"
+    :class="{ 'bottom-2 mx-2': !!audio }"
   >
     <template v-if="audio">
       <VGlobalAudioTrack :audio="audio" />
@@ -147,9 +147,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-.global-audio {
-  bottom: 0.5rem;
-}
-</style>

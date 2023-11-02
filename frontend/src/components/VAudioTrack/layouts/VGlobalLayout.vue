@@ -1,8 +1,10 @@
 <template>
   <div
-    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded"
+    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring ring-dark-charcoal ring-opacity-20"
   >
-    <div class="h-12 w-12 rounded-ss"><VAudioThumbnail :audio="audio" /></div>
+    <div class="h-12 w-12 rounded-ss">
+      <VAudioThumbnail class="rounded-ss" :audio="audio" />
+    </div>
 
     <div class="flex h-12 items-center justify-between rounded-se bg-white">
       <VLink
@@ -51,16 +53,18 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .global-track .thumbnail {
   @apply h-12 w-12 rounded-ss;
 }
-.global-track .thumbnail img {
+.global-track .thumbnail img,
+.global-track .thumbnail ~ svg {
   @apply rounded-ss;
 }
 
 .global-track .waveform {
   @apply h-full rounded-ee;
+  --waveform-background-color: theme("colors.white");
 }
 .global-track .audio-control {
   @apply rounded-es;
