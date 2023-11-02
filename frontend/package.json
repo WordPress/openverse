@@ -62,7 +62,7 @@
     "@nuxtjs/i18n": "^7.3.1",
     "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/redirect-module": "^0.3.1",
-    "@nuxtjs/sentry": "^7.3.0",
+    "@nuxtjs/sentry": "^7.5.0",
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/svg-sprite": "0.5.2",
     "@pinia/nuxt": "0.2.1",
