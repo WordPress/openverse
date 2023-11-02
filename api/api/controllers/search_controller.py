@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging as log
-from itertools import accumulate
 from math import ceil
 from typing import Literal
 
@@ -10,128 +9,33 @@ from django.core.cache import cache
 
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY, Match, SimpleQueryString, Term
+from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
 
 import api.models as models
 from api.constants.media_types import OriginIndex
 from api.constants.sorting import INDEXED_ON
-from api.controllers.elasticsearch.helpers import get_es_response, get_raw_es_response
+from api.controllers.elasticsearch.helpers import (
+    ELASTICSEARCH_MAX_RESULT_WINDOW,
+    get_es_response,
+    get_query_slice,
+    get_raw_es_response,
+)
 from api.serializers import media_serializers
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
-from api.utils.dead_link_mask import get_query_hash, get_query_mask
+from api.utils.dead_link_mask import get_query_hash
 from api.utils.search_context import SearchContext
 
 
-ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
-DEAD_LINK_RATIO = 1 / 2
 THUMBNAIL = "thumbnail"
 URL = "url"
 PROVIDER = "provider"
-DEEP_PAGINATION_ERROR = "Deep pagination is not allowed."
 QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
 DEFAULT_BOOST = 10000
 DEFAULT_SEARCH_FIELDS = ["title", "description", "tags.name"]
-
-
-def _unmasked_query_end(page_size, page):
-    """
-    Calculate the upper index of results to retrieve from Elasticsearch.
-
-    Used to retrieve the upper index of results to retrieve from Elasticsearch under the
-    following conditions:
-    1. There is no query mask
-    2. The lower index is beyond the scope of the existing query mask
-    3. The lower index is within the scope of the existing query mask
-    but the upper index exceeds it
-
-    In all these cases, the query mask is not used to calculate the upper index.
-    """
-    return ceil(page_size * page / (1 - DEAD_LINK_RATIO))
-
-
-def _paginate_with_dead_link_mask(
-    s: Search, page_size: int, page: int
-) -> tuple[int, int]:
-    """
-    Return the start and end of the results slice, given the query, page and page size.
-
-    In almost all cases the ``DEAD_LINK_RATIO`` will effectively double
-    the page size (given the current configuration of 0.5).
-
-    The "branch X" labels are for cross-referencing with the tests.
-
-    :param s: The elasticsearch Search object
-    :param page_size: How big the page should be.
-    :param page: The page number.
-    :return: Tuple of start and end.
-    """
-    query_hash = get_query_hash(s)
-    query_mask = get_query_mask(query_hash)
-    if not query_mask:  # branch 1
-        start = 0
-        end = _unmasked_query_end(page_size, page)
-    elif page_size * (page - 1) > sum(query_mask):  # branch 2
-        start = len(query_mask)
-        end = _unmasked_query_end(page_size, page)
-    else:  # branch 3
-        # query_mask is a list of 0 and 1 where 0 indicates the result position
-        # for the given query will be an invalid link. If we accumulate a query
-        # mask you end up, at each index, with the number of live results you
-        # will get back when you query that deeply.
-        # We then query for the start and end index _of the results_ in ES based
-        # on the number of results that we think will be valid based on the query mask.
-        # If we're requesting `page=2 page_size=3` and the mask is [0, 1, 0, 1, 0, 1],
-        # then we know that we have to _start_ with at least the sixth result of the
-        # overall query to skip the first page of 3 valid results. The "end" of the
-        # query will then follow the same pattern to reach the number of valid results
-        # required to fill the requested page. If the mask is not deep enough to
-        # account for the entire range, then we follow the typical assumption when
-        # a mask is not available that the end should be `page * page_size / 0.5`
-        # (i.e., double the page size)
-        accu_query_mask = list(accumulate(query_mask))
-        start = 0
-        if page > 1:
-            try:  # branch 3_start_A
-                # find the index at which we can skip N valid results where N = all
-                # the results that would be skipped to arrive at the start of the
-                # requested page
-                # This will effectively be the index at which we have the number of
-                # previous valid results + 1 because we don't want to include the
-                # last valid result from the previous page
-                start = accu_query_mask.index(page_size * (page - 1) + 1)
-            except ValueError:  # branch 3_start_B
-                # Cannot fail because of the check on branch 2 which verifies that
-                # the query mask already includes at least enough masked valid
-                # results to fulfill the requested page size
-                start = accu_query_mask.index(page_size * (page - 1)) + 1
-        # else:  branch 3_start_C
-        # Always start page=1 queries at 0
-
-        if page_size * page > sum(query_mask):  # branch 3_end_A
-            end = _unmasked_query_end(page_size, page)
-        else:  # branch 3_end_B
-            end = accu_query_mask.index(page_size * page) + 1
-    return start, end
-
-
-def _get_query_slice(
-    s: Search, page_size: int, page: int, filter_dead: bool | None = False
-) -> tuple[int, int]:
-    """Select the start and end of the search results for this query."""
-
-    if filter_dead:
-        start_slice, end_slice = _paginate_with_dead_link_mask(s, page_size, page)
-    else:
-        # Paginate search query.
-        start_slice = page_size * (page - 1)
-        end_slice = page_size * page
-    if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
-        raise ValueError(DEEP_PAGINATION_ERROR)
-    return start_slice, end_slice
 
 
 def _quote_escape(query_string):
@@ -223,7 +127,7 @@ def _post_process_results(
                 end = search_results.hits.total.value
 
             s = s[start:end]
-            search_response = get_es_response(s, es_query="postprocess_search")
+            search_response = get_es_response(s, "postprocess_search")
 
             return _post_process_results(
                 s, start, end, page_size, search_response, filter_dead
@@ -446,7 +350,7 @@ def search(
         s = s.sort({"created_on": {"order": search_params.validated_data["sort_dir"]}})
 
     # Paginate
-    start, end = _get_query_slice(s, page_size, page, filter_dead)
+    start, end = get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
     search_response = get_es_response(s, es_query="search")
 
@@ -493,61 +397,6 @@ def search(
     search_context = SearchContext.build(result_ids, origin_index)
 
     return results, page_count, result_count, search_context.asdict()
-
-
-def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
-    """
-    Given a UUID, finds 10 related search results based on title and tags.
-
-    Uses Match query for title or SimpleQueryString for tags.
-    If the item has no title and no tags, returns items by the same creator.
-    If the item has no title, no tags or no creator, returns empty list.
-
-    :param uuid: The UUID of the item to find related results for.
-    :param index: The Elasticsearch index to search (e.g. 'image')
-    :param filter_dead: Whether dead links should be removed.
-    :return: List of related results.
-    """
-
-    # Search the default index for the item itself as it might be sensitive.
-    item_search = Search(index=index)
-    item_hit = item_search.query(Term(identifier=uuid)).execute().hits[0]
-
-    # Match related using title.
-    title = getattr(item_hit, "title", None)
-    tags = getattr(item_hit, "tags", None)
-    creator = getattr(item_hit, "creator", None)
-
-    if not title and not tags:
-        if not creator:
-            return []
-        related_query = Term(creator__keyword=creator)
-    else:
-        related_query = None if not title else Match(title=title)
-
-        # Match related using tags, if the item has any.
-        if tags:
-            # Only use the first 10 tags
-            tags = " | ".join([tag.name for tag in tags[:10]])
-            tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
-            related_query = related_query | tags_query if related_query else tags_query
-
-    # Search the filtered index for related items.
-    s = Search(index=f"{index}-filtered")
-
-    # Exclude the current item and mature content.
-    s = s.query(related_query & ~Term(identifier=uuid) & ~Term(mature=True))
-    # Exclude the dynamically disabled sources.
-    if excluded_providers_query := get_excluded_providers_query():
-        s = s.exclude(excluded_providers_query)
-
-    page, page_size = 1, 10
-    start, end = _get_query_slice(s, page_size, page, filter_dead)
-    s = s[start:end]
-
-    response = get_es_response(s, es_query="related_media")
-    results = _post_process_results(s, start, end, page_size, response, filter_dead)
-    return results or []
 
 
 def get_sources(index):

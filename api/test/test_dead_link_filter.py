@@ -8,7 +8,7 @@ import pytest
 import requests
 from fakeredis import FakeRedis
 
-from api.controllers.search_controller import DEAD_LINK_RATIO
+from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
 
 
 @pytest.fixture(autouse=True)
