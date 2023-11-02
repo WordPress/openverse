@@ -6,6 +6,7 @@ from django.conf import settings
 from elasticsearch_dsl import Q, Search
 
 from api.constants.media_types import OriginIndex
+from api.controllers.elasticsearch.helpers import get_es_response
 
 
 @dataclass
@@ -41,9 +42,10 @@ class SearchContext:
         # The default query size is 10, so we need to slice the query
         # to change the size to be big enough to encompass all the
         # results.
-        results_in_filtered_index = filtered_index_search[
-            : len(all_result_identifiers)
-        ].execute()
+        filtered_index_slice = filtered_index_search[: len(all_result_identifiers)]
+        results_in_filtered_index = get_es_response(
+            filtered_index_slice, "filtered_index_context"
+        )
         filtered_index_identifiers = {
             result.identifier for result in results_in_filtered_index
         }
