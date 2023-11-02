@@ -44,7 +44,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self.delay = 4
         self.batch_start = 0
-        self.batch_limit = 100
+        self.batch_limit = 2000
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # Return default query params on the first request
@@ -53,7 +53,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         # copyright:CC state Creative Commons Attribution 4.0
         return {
             "q": "_exists_:primaryRepresentation+copyright:CC",
-            "size": "100",
+            "size": "2000",
             "from": self.batch_start,
         }
 
@@ -97,7 +97,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
 
         thumbnail_url = f"{url}?rendering=thumbnail.jpg"
         license_info = self.DEFAULT_LICENSE_INFO
-        filesize = self._get_file_info(url)
+        # filesize = self._get_file_info(url)
 
         creator = (
             information.get("dc_contributor")[0]
@@ -108,6 +108,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         title = (
             information.get("appellation").get("Primary Title")[0]
             if information.get("appellation", [])
+            and information.get("appellation").get("Primary Title", [])
             else ""
         )
         meta_data = self._get_meta_data(information)
@@ -118,7 +119,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             "url": url,
             "license_info": license_info,
             "thumbnail_url": thumbnail_url,
-            "filesize": filesize,
+            # "filesize": filesize,
             "creator": creator,
             "title": title,
             "meta_data": meta_data,
