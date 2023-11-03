@@ -64,7 +64,8 @@ class OpenverseASGIHandler(ASGIHandler):
     async def shutdown(self):
         live_handlers = 0
 
-        for handler_ref in self._on_shutdown:
+        while self._on_shutdown:
+            handler_ref = self._on_shutdown.pop()
             if not (handler := handler_ref()):
                 self.logger.debug("Reference dead, skipping handler")
                 continue
