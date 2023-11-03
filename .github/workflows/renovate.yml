@@ -69,7 +69,7 @@ jobs:
 
       - uses: renovatebot/github-action@v39.1.1
         with:
-          configurationFile: .github/renovate-config.js
+          configurationFile: .github/renovate.json
           token: ${{ secrets.ACCESS_TOKEN }}
         env:
           # This enables the cache -- if this is set, it's not necessary to add it to renovate.json.
