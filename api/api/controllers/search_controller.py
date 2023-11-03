@@ -586,7 +586,10 @@ def get_sources(index):
         }
         try:
             results = get_raw_es_response(
-                index=index, body=body, search_query="sources", request_cache=True
+                index=index,
+                body=body,
+                request_cache=True,
+                es_query="sources",
             )
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
