@@ -141,7 +141,6 @@ export default defineComponent({
     return {
       audio,
 
-      handleError,
       handleClose,
     }
   },
