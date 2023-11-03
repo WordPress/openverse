@@ -8,6 +8,7 @@ from unittest.mock import ANY, patch
 from django.http import HttpResponse
 
 import pytest
+from PIL import UnidentifiedImageError
 from requests import Request, Response
 
 from api.views.image_views import ImageViewSet
@@ -79,3 +80,31 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
         thumb_call.return_value = mock_response
         api_client.get(f"/v1/images/{image.identifier}/thumb/")
     thumb_call.assert_called_once_with(ANY, image, expected_thumb_url)
+
+
+@pytest.mark.django_db
+def test_watermark_raises_424_for_invalid_image(api_client):
+    image = ImageFactory.create()
+    expected_error_message = (
+        "cannot identify image file <_io.BytesIO object at 0xffff86d8fec0>"
+    )
+
+    with patch("PIL.Image.open") as mock_open:
+        mock_open.side_effect = UnidentifiedImageError(expected_error_message)
+        res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+    assert res.status_code == 424
+    assert res.data["detail"] == expected_error_message
+
+
+@pytest.mark.django_db
+def test_watermark_raises_424_for_404_image(api_client):
+    image = ImageFactory.create()
+
+    with patch("requests.get") as mock_get:
+        mock_get.return_value = Response()
+        mock_get.return_value.status_code = 404
+        mock_get.return_value.url = image.url
+        mock_get.return_value.reason = "Not Found"
+        res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+    assert res.status_code == 424
+    assert res.data["detail"] == f"404 Client Error: Not Found for url: {image.url}"
