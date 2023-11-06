@@ -60,18 +60,18 @@ that can be used to generate the files you'll need and get you started:
 # MEDIA: Optionally, a space-delineated list of media types ingested by this provider
 #        (and supported by Openverse). If not provided, defaults to "image".
 
-> just add-provider <PROVIDER_NAME> <ENDPOINT> <MEDIA>
+> just catalog/add-provider <PROVIDER_NAME> <ENDPOINT> <MEDIA>
 
 # Example usages:
 
 # Creates a provider that supports just audio
-> just add-provider TestProvider https://test.test/search audio
+> just catalog/add-provider TestProvider https://test.test/search audio
 
 # Creates a provider that supports images and audio
-> just add-provider "Foobar Museum" https://foobar.museum.org/api/v1 image audio
+> just catalog/add-provider "Foobar Museum" https://foobar.museum.org/api/v1 image audio
 
 # Creates a provider that supports the default, just image
-> just add-provider TestProvider https://test.test/search
+> just catalog/add-provider TestProvider https://test.test/search
 ```
 
 You should see output similar to this:
