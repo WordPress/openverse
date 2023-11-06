@@ -121,7 +121,7 @@ CMD ["gunicorn"]
 # NGINX #
 #########
 
-FROM docker.io/nginx:1.25.2-alpine as nginx
+FROM docker.io/nginx:1.25.3-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
