@@ -99,7 +99,7 @@ class MatureImage(AbstractMatureMedia):
         db_constraint=False,
         db_column="identifier",
         related_name="mature_image",
-        help_text="The reference to the mature image.",
+        help_text="The reference to the sensitive image.",
     )
 
 
