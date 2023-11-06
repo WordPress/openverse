@@ -171,3 +171,10 @@ repos:
         entry: bash -c 'just automations/js/render-release-drafter'
         language: system
         pass_filenames: false
+
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 37.43.1
+    hooks:
+      - id: renovate-config-validator
+        args:
+          - --strict
