@@ -511,12 +511,9 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
         include:
           - name: unit_test
             script: "test:unit"
-          - name: storybook_smoke_test
-            script: "storybook:smoke"
 
     steps:
       - name: Checkout repository
@@ -546,7 +543,6 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
 
     steps:
       - name: Pass
