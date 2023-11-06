@@ -32,18 +32,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # This third party action allows you to download the cache artifact from different workflow runs
-      # Note that actions/cache doesn't work well because the cache key would need to be computed from
-      # a file within the cache, meaning there would never be any data to restore. With other keys, the
-      # cache wouldn't necessarily upload when it changes. actions/download-artifact also doesn't work
-      # because it only handles artifacts uploaded in the same run, and we want to restore from the
-      # previous successful run.
-      - uses: dawidd6/action-download-artifact@v2
+      - uses: actions/cache@v3
         if: github.event.inputs.repoCache != 'disabled'
         continue-on-error: true
         with:
-          name: ${{ env.cache_key }}
           path: cache-download
+          key: ${{ env.cache_key }}
 
       # Using tar to compress and extract the archive isn't strictly necessary, but it can improve
       # performance significantly when uploading artifacts with lots of files.
