@@ -125,10 +125,6 @@ class Media(SyncableDocType):
             "tags": Media.parse_detailed_tags(row[schema["tags"]]),
             # Extra fields, not indexed
             "url": row[schema["url"]],
-            "foreign_landing_url": row[schema["foreign_landing_url"]],
-            "creator_url": row[schema["creator_url"]],
-            "license_version": row[schema["license_version"]],
-            "license_url": Media.get_license_url(meta),
         }
 
     @staticmethod
@@ -252,8 +248,6 @@ class Image(Media):
             aspect_ratio=aspect_ratio,
             extension=extension,
             size=size,
-            # Extra fields, not indexed
-            thumbnail=row[schema["thumbnail"]],
             **attrs,
         )
 
@@ -328,11 +322,6 @@ class Audio(Media):
             length=length,
             filetype=filetype,
             extension=extension,
-            # Extra fields, not indexed
-            bit_rate=row[schema["bit_rate"]],
-            sample_rate=row[schema["sample_rate"]],
-            genres=row[schema["genres"]],
-            duration=row[schema["duration"]],
             **attrs,
         )
 
