@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Match, Q, SimpleQueryString, Term
+from elasticsearch_dsl.query import Match, Q, Term
 from elasticsearch_dsl.response import Hit
 
 from api.controllers.elasticsearch.helpers import get_es_response, get_query_slice
@@ -47,11 +47,10 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
             related_query["should"].append(Match(title=title))
 
         # Match related using tags, if the item has any.
+        # Only use the first 10 tags
         if tags:
-            # Only use the first 10 tags
-            tags = " | ".join([tag.name for tag in tags[:10]])
-            tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
-            related_query["should"].append(tags_query)
+            tags = [tag["name"] for tag in tags[:10]]
+            related_query["should"].append(Q("terms", tags__name=tags))
 
     # Exclude the dynamically disabled sources.
     if excluded_providers_query := get_excluded_providers_query():
@@ -69,6 +68,6 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     start, end = get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
 
-    response = get_es_response(s, "related_media")
+    response = get_es_response(s, es_query="related_media")
     results = _post_process_results(s, start, end, page_size, response, filter_dead)
     return results or []

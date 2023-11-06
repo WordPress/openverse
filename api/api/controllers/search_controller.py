@@ -127,7 +127,7 @@ def _post_process_results(
                 end = search_results.hits.total.value
 
             s = s[start:end]
-            search_response = get_es_response(s, "postprocess_search")
+            search_response = get_es_response(s, es_query="postprocess_search")
 
             return _post_process_results(
                 s, start, end, page_size, search_response, filter_dead
