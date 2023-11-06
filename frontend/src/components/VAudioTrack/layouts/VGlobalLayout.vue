@@ -1,6 +1,6 @@
 <template>
   <div
-    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring ring-dark-charcoal ring-opacity-20"
+    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring-1 ring-dark-charcoal ring-opacity-20"
   >
     <div class="h-12 w-12 rounded-ss">
       <VAudioThumbnail class="rounded-ss" :audio="audio" />
