@@ -36,11 +36,5 @@ export type ButtonSize = (typeof buttonSizes)[number]
 export const buttonTypes = ["button", "submit", "reset"] as const
 export type ButtonType = (typeof buttonTypes)[number]
 
-export const buttonConnections = [
-  "start",
-  "end",
-  "top-end",
-  "none",
-  "all",
-] as const
+export const buttonConnections = ["start", "end", "top", "bottom"] as const
 export type ButtonConnections = (typeof buttonConnections)[number]

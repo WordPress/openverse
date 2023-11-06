@@ -52,12 +52,13 @@ const statusIconMap = {
   loading: undefined,
 } as const
 
-const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
-  row: "end",
-  global: "top-end",
-  box: "none",
-  full: "none",
-} as const
+const layoutConnectionsMap: Record<AudioLayout, readonly ButtonConnections[]> =
+  {
+    row: ["end"],
+    global: ["top", "end"],
+    box: [],
+    full: [],
+  } as const
 
 /**
  * The mapping of play-pause control sizes to the VIconButton sizes
@@ -137,7 +138,7 @@ export default defineComponent({
      */
     const connections = computed(() => {
       return props.layout === "row" && props.size === "small"
-        ? "none"
+        ? []
         : layoutConnectionsMap[props.layout]
     })
 

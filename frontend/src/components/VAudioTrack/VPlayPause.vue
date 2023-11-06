@@ -45,12 +45,13 @@ const statusIconMap = {
   loading: undefined,
 } as const
 
-const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
-  row: "end",
-  global: "all",
-  box: "none",
-  full: "none",
-} as const
+const layoutConnectionsMap: Record<AudioLayout, readonly ButtonConnections[]> =
+  {
+    row: ["end"],
+    global: ["top", "end"],
+    box: [],
+    full: [],
+  } as const
 
 /**
  * Displays the control for switching between the playing and paused states of
