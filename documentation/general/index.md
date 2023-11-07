@@ -13,5 +13,6 @@ zero_downtime_database_management
 deployment
 logging
 https
+retired
 
 ```

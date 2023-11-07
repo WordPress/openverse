@@ -21,45 +21,7 @@ project, see [DAGs.md](../reference/DAGs.md).
 See each provider API script's notes in their respective [handbook][ov-handbook]
 entry.
 
-[ov-handbook]: https://make.wordpress.org/openverse/handbook/openverse-handbook/
-
-## Web Crawl Data (retired)
-
-The Common Crawl Foundation provides an open repository of petabyte-scale web
-crawl data. A new dataset is published at the end of each month comprising over
-200 TiB of uncompressed data.
-
-The data is available in three file formats:
-
-- WARC (Web ARChive): the entire raw data, including HTTP response metadata,
-  WARC metadata, etc.
-- WET: extracted plaintext from each webpage.
-- WAT: extracted html metadata, e.g. HTTP headers and hyperlinks, etc.
-
-For more information about these formats, please see the [Common Crawl
-documentation][ccrawl_doc].
-
-Openverse Catalog used AWS Data Pipeline service to automatically create an
-Amazon EMR cluster of 100 c4.8xlarge instances that parsed the WAT archives to
-identify all domains that link to creativecommons.org. Due to the volume of
-data, Apache Spark was also used to streamline the processing. The output of
-this methodology was a series of parquet files that contain:
-
-- the domains and its respective content path and query string (i.e. the exact
-  webpage that links to creativecommons.org)
-- the CC referenced hyperlink (which may indicate a license),
-- HTML meta data in JSON format which indicates the number of images on each
-  webpage and other domains that they reference,
-- the location of the webpage in the WARC file so that the page contents can be
-  found.
-
-The steps above were performed in [`ExtractCCLinks.py`][ex_cc_links].
-
-This method was retired in 2021.
-
-[ccrawl_doc]: https://commoncrawl.org/the-data/get-started/
-[ex_cc_links]:
-  https://github.com/WordPress/openverse/blob/c20262cad8944d324b49176678b16b230bc57e2e/archive/ExtractCCLinks.py
+[ov-handbook]: https://make.wordpress.org/openverse/handbook/
 
 ## Development setup for Airflow and API puller scripts
 
@@ -70,7 +32,7 @@ different environment than the PySpark portion of the project, and so have their
 own dependency requirements.
 
 For instructions geared specifically towards production deployments, see
-[DEPLOYMENT.md](https://github.com/WordPress/openverse/blob/main/catalog/DEPLOYMENT.md)
+[DEPLOYMENT.md](https://github.com/WordPress/openverse/blob/main/documentation/catalog/guides/deployment.md)
 
 [api_scripts]:
   https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_api_scripts
@@ -90,7 +52,7 @@ To set up the local python environment along with the pre-commit hook, run:
 ```shell
 python3 -m venv venv
 source venv/bin/activate
-just install
+just catalog/install
 ```
 
 The containers will be built when starting the stack up for the first time. If
@@ -105,7 +67,7 @@ just build
 To set up environment variables run:
 
 ```shell
-just dotenv
+just env
 ```
 
 This will generate a `.env` file which is used by the containers.
@@ -128,7 +90,7 @@ There is a [`docker-compose.yml`][dockercompose] provided in the
 [`catalog`][cc_airflow] directory, so from that directory, run
 
 ```shell
-just up
+just catalog/up
 ```
 
 This results, among other things, in the following running containers:
@@ -160,10 +122,10 @@ The various services can be accessed using these links:
 At this stage, you can run the tests via:
 
 ```shell
-just test
+just catalog/test
 
 # Alternatively, run all tests including longer-running ones
-just test --extended
+just catalog/test --extended
 ```
 
 Edits to the source files or tests can be made on your local machine, then tests
@@ -172,7 +134,7 @@ can be run in the container via the above command to see the effects.
 If you'd like, it's possible to login to the webserver container via:
 
 ```shell
-just shell
+just catalog/shell
 ```
 
 If you just need to run an airflow command, you can use the `airflow` recipe.
@@ -192,7 +154,7 @@ To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database
 container, run:
 
 ```shell
-just db-shell
+just catalog/pgcli
 ```
 
 If you'd like to bring down the containers, run
@@ -230,36 +192,27 @@ just recreate
 ## Directory Structure
 
 ```text
-openverse-catalog
-├── .github/                                # Templates for GitHub
-├── archive/                                # Files related to the previous CommonCrawl parsing implementation
-├── docker/                                 # Dockerfiles and supporting files
-│   └── upstream_db/                        #   - Docker image for development Postgres database
-├── catalog/                                # Primary code directory
-│   ├── dags/                               # DAGs & DAG support code
-│   │   ├── common/                         #   - Shared modules used across DAGs
-│   │   ├── data_refresh/                   #   - DAGs & code related to the data refresh process
-│   │   ├── database/                       #   - DAGs related to database actions (matview refresh, cleaning, etc.)
-│   │   ├── maintenance/                    #   - DAGs related to airflow/infrastructure maintenance
-│   │   ├── oauth2/                         #   - DAGs & code for Oauth2 key management
-│   │   ├── providers/                      #   - DAGs & code for provider ingestion
-│   │   │   ├── provider_api_scripts/       #       - API access code specific to providers
-│   │   │   ├── provider_csv_load_scripts/  #       - Schema initialization SQL definitions for SQL-based providers
+
+catalog/                                # Primary code directory
+├── dags/                               # DAGs & DAG support code
+│   ├── common/                         #   - Shared modules used across DAGs
+│   ├── data_refresh/                   #   - DAGs & code related to the data refresh process
+│   ├── database/                       #   - DAGs related to database actions (matview refresh, cleaning, etc.)
+│   ├── maintenance/                    #   - DAGs related to airflow/infrastructure maintenance
+│   ├── oauth2/                         #   - DAGs & code for Oauth2 key management
+│   ├── providers/                      #   - DAGs & code for provider ingestion
+│   │   ├── provider_api_scripts/       #       - API access code specific to providers
+│   │   ├── provider_csv_load_scripts/  #       - Schema initialization SQL definitions for SQL-based providers
 │   │   │   └── *.py                        #       - DAG definition files for providers
 │   │   └── retired/                        #   - DAGs & code that is no longer needed but might be a useful guide for the future
-│   └── templates/                          # Templates for generating new provider code
-└── *                                       # Documentation, configuration files, and project requirements
+│   ├── templates/                          # Templates for generating new provider code
+|   ├── *                                       # Documentation, configuration files, and project requirements
 ```
 
 ## Publishing
 
 The docker image for the catalog (Airflow) is published to
 ghcr.io/WordPress/openverse-catalog.
-
-## Contributing
-
-Pull requests are welcome! Feel free to [join us on Slack][wp_slack] and discuss
-the project with the engineers and community members on #openverse.
 
 ## Additional Resources
 
@@ -277,17 +230,3 @@ For additional context see:
   [Welcome to Openverse – Openverse — WordPress.org](https://make.wordpress.org/openverse/2021/05/11/hello-world/)
 - 2021-12-13:
   [Dear Users of CC Search, Welcome to Openverse - Creative Commons](https://creativecommons.org/2021/12/13/dear-users-of-cc-search-welcome-to-openverse/)
-
-## Acknowledgments
-
-Openverse, previously known as CC Search, was conceived and built at
-[Creative Commons](https://creativecommons.org). We thank them for their
-commitment to open source and openly licensed content, with particular thanks to
-previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w,
-@kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar,
-along with their
-[community of volunteers](https://opensource.creativecommons.org/community/community-team/).
-
-[wp_slack]: https://make.wordpress.org/chat/
-[cc]: https://creativecommons.org
-[cc_community]: https://opensource.creativecommons.org/community/community-team/
