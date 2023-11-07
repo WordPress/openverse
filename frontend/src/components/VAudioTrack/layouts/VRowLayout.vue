@@ -1,10 +1,13 @@
 <template>
   <!-- `pages/search/audio` has negative margin `-mx-4` to compensate for this padding. -->
   <article
-    class="row-track flex flex-row p-2 hover:bg-dark-charcoal-06 md:p-4"
+    class="row-track grid p-2 hover:bg-dark-charcoal-06 md:p-4"
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
-    <div class="thumbnail grid flex-none overflow-hidden rounded-sm">
+    <div
+      class="thumbnail grid overflow-hidden rounded-sm"
+      :class="{ 'h-20 w-20': isSmall }"
+    >
       <VAudioThumbnail :audio="audio" class="col-span-full row-span-full" />
       <div
         v-show="isSmall"
@@ -20,84 +23,79 @@
     </div>
 
     <div
-      class="flex-grow"
-      :class="{
-        'flex flex-row gap-8': isLarge,
-        'flex flex-col justify-between': isMedium,
-      }"
+      role="document"
+      class="flex min-w-0 flex-shrink-0 flex-col gap-1"
+      :class="{ 'ms-2': isMedium }"
     >
-      <div
-        class="flex flex-shrink-0 flex-col gap-1"
-        :class="{ 'w-70': isLarge }"
-        role="document"
+      <h2
+        class="decoration-inherit line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm text-dark-charcoal hover:text-dark-charcoal group-hover:underline"
+        :class="[
+          { 'blur-text': shouldBlur },
+          isSmall ? 'label-bold' : 'description-bold',
+        ]"
       >
-        <h2
-          class="decoration-inherit line-clamp-1 block rounded-sm text-dark-charcoal hover:text-dark-charcoal group-hover:underline"
-          :class="[
-            { 'blur-text': shouldBlur },
-            isSmall ? 'label-bold' : 'description-bold',
-          ]"
-        >
-          {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
-        </h2>
+        {{
+          shouldBlur
+            ? $t("sensitiveContent.title.audio")
+            : audio.title +
+              "very very very long string to force line break in a large row layout track"
+        }}
+      </h2>
 
-        <div
-          class="flex text-dark-charcoal-70"
-          :class="[
-            isSmall ? 'caption-regular' : 'label-regular',
-            isMedium ? 'flex-row items-center' : 'flex-col gap-1',
-          ]"
+      <div
+        class="flex text-dark-charcoal-70"
+        :class="[
+          isSmall ? 'caption-regular' : 'label-regular',
+          isMedium ? 'flex-row items-center' : 'flex-col gap-1',
+        ]"
+      >
+        <i18n
+          tag="div"
+          path="audioTrack.creator"
+          class="line-clamp-1 inline-block overflow-hidden text-ellipsis whitespace-nowrap"
+          :class="{ 'blur-text': shouldBlur }"
         >
-          <i18n
-            tag="div"
-            path="audioTrack.creator"
-            class="flex"
-            :class="{ 'blur-text': shouldBlur, 'dot-after': isMedium }"
-          >
-            <template #creator>{{
-              shouldBlur ? $t("sensitiveContent.creator") : audio.creator
-            }}</template>
-          </i18n>
-          <!-- Small layout only -->
-          <div v-if="isSmall" class="flex flex-col gap-1">
-            <div class="flex flex-row">
-              <span class="flex" :class="{ 'dot-after': !!audio.category }">{{
-                timeFmt(audio.duration || 0, true)
-              }}</span
-              ><span v-if="audio.category">{{
-                $t(`filters.audioCategories.${audio.category}`)
-              }}</span>
-            </div>
-            <VLicense :hide-name="true" :license="audio.license" />
-          </div>
-          <!-- Medium and large layouts -->
-          <div v-else class="flex flex-row">
-            <span v-if="audio.category" class="dot-after">{{
+          <template #creator>{{
+            shouldBlur ? $t("sensitiveContent.creator") : audio.creator
+          }}</template>
+        </i18n>
+        <!-- Small layout only -->
+        <div v-if="isSmall" class="flex flex-col gap-1">
+          <div class="flex flex-row">
+            <span class="flex">{{ timeFmt(audio.duration || 0, true) }}</span
+            ><span v-if="audio.category" class="dot-before">{{
               $t(`filters.audioCategories.${audio.category}`)
             }}</span>
-            <VLicense :hide-name="false" :license="audio.license" />
           </div>
+          <VLicense :hide-name="true" :license="audio.license" />
+        </div>
+        <!-- Medium and large layouts -->
+        <div v-else class="flex flex-shrink-0 flex-row">
+          <span v-if="audio.category" :class="{ 'dot-before': isMedium }">{{
+            $t(`filters.audioCategories.${audio.category}`)
+          }}</span>
+          <VLicense
+            :hide-name="!isMd"
+            :license="audio.license"
+            class="dot-before"
+          />
         </div>
       </div>
+    </div>
 
-      <div
-        v-show="!isSmall"
-        class="flex flex-row"
-        :class="{ 'flex-grow': isLarge }"
-      >
-        <slot
-          name="audio-control"
-          :size="isLarge ? 'large' : 'medium'"
-          layout="row"
-          :is-tabbable="false"
-        />
-        <slot
-          name="controller"
-          :features="audioFeatures"
-          :feature-notices="featureNotices"
-          :is-tabbable="false"
-        />
-      </div>
+    <div v-show="!isSmall" class="controller ms-2 flex flex-row">
+      <slot
+        name="audio-control"
+        :size="isLarge ? 'large' : 'medium'"
+        layout="row"
+        :is-tabbable="false"
+      />
+      <slot
+        name="controller"
+        :features="audioFeatures"
+        :feature-notices="featureNotices"
+        :is-tabbable="false"
+      />
     </div>
   </article>
 </template>
@@ -110,6 +108,8 @@ import type { AudioDetail } from "~/types/media"
 import { audioFeatures, AudioSize } from "~/constants/audio"
 
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+
+import { useUiStore } from "~/stores/ui"
 
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
@@ -143,6 +143,9 @@ export default defineComponent({
 
     const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 
+    const uiStore = useUiStore()
+    const isMd = computed(() => uiStore.isBreakpoint("md"))
+
     return {
       timeFmt,
 
@@ -152,6 +155,7 @@ export default defineComponent({
       isSmall,
       isMedium,
       isLarge,
+      isMd,
 
       shouldBlur,
     }
@@ -165,12 +169,37 @@ export default defineComponent({
 }
 
 .row-track .waveform {
-  @apply flex-grow;
+  @apply w-full;
   --waveform-background-color: theme("colors.tx");
 }
 
 .row-track .waveform {
   @apply rounded-ee-sm rounded-se-sm;
+}
+
+.row-track.size-s {
+  grid-template-columns: 5rem 1fr;
+  grid-template-rows: repeat(4, auto);
+  @apply gap-x-4;
+  grid-template-areas: "thumbnail info-1" "thumbnail info-2" "thumbnail info-3" "thumbnail controller";
+}
+.row-track.size-m {
+  grid-template-columns: 5.9375rem 1fr;
+  grid-template-rows: auto auto 3rem;
+  column-gap: 1.5rem;
+  grid-template-areas: "thumbnail info-1" "thumbnail info-2" "thumbnail controller";
+}
+.row-track.size-l {
+  grid-template-columns: 4rem 17.5rem 1fr;
+  grid-template-rows: auto auto auto;
+  column-gap: 1.5rem;
+  grid-template-areas: "thumbnail info-1 controller" "thumbnail info-2 controller" "thumbnail info-3 controller";
+}
+.row-track .thumbnail {
+  grid-area: thumbnail;
+}
+.row-track .controller {
+  grid-area: controller;
 }
 
 .row-track.size-m .waveform {
@@ -186,13 +215,8 @@ export default defineComponent({
   @apply after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-dark-charcoal-70;
 }
 
-.size-l .thumbnail {
-  @apply me-4 w-16;
-}
-.size-m .thumbnail {
-  @apply me-6 w-[95px];
-}
-.size-s .thumbnail {
-  @apply me-4 w-20;
+.dot-before {
+  @apply relative ms-5;
+  @apply before:absolute before:-start-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full before:bg-dark-charcoal-70;
 }
 </style>
