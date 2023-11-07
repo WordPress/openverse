@@ -85,6 +85,10 @@ import { useSearchStore } from "~/stores/search"
 
 import useSearchType from "~/composables/use-search-type"
 
+import { defineEvent } from "~/types/emits"
+
+import { SearchType } from "~/constants/media"
+
 import VButton from "~/components/VButton.vue"
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -137,6 +141,9 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+  },
+  emits: {
+    select: defineEvent<[SearchType]>(),
   },
   setup(props) {
     const searchStore = useSearchStore()
