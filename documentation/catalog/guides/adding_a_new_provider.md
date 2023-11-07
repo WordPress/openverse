@@ -153,11 +153,11 @@ manually turn the DAG on in production.
 
    ```console
    $ just catalog/test-session
-   $ pytest -k <provider-name>
+   $ pytest -k <provider_name>
    ```
 
 ### Alternative
 
 1. ```console
-   $ just catalog/test -k <provider-name>
+   $ just catalog/test -k <provider_name>
    ```
