@@ -144,7 +144,7 @@ manually turn the DAG on in production.
 
 ## Testing guide
 
-## Steps
+### Steps
 
 1. Ensure you've gone through the [quickstart guide](/api/guides/quickstart.md).
    Ensure that the Docker daemon is running.
@@ -153,13 +153,10 @@ manually turn the DAG on in production.
 
    ```console
    $ just catalog/test-session
+   $ pytest -k <provider-name>
    ```
 
-   ```console
-   pytest -k <provider-name>
-   ```
-
-## Alternative
+### Alternative
 
 1. ```console
    $ just catalog/test -k <provider-name>
