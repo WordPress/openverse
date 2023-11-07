@@ -34,12 +34,7 @@
           isSmall ? 'label-bold' : 'description-bold',
         ]"
       >
-        {{
-          shouldBlur
-            ? $t("sensitiveContent.title.audio")
-            : audio.title +
-              "very very very long string to force line break in a large row layout track"
-        }}
+        {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
       </h2>
 
       <div
