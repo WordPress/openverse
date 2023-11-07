@@ -8,4 +8,5 @@ config
 mapping
 test
 deploy
+troubleshoot
 ```
