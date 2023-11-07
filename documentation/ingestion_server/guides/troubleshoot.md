@@ -9,10 +9,10 @@ The ingestion server performs indexing using indexer workers, whose primary
 purpose it is to create documents from the API database and index them in
 Elasticsearch.
 
-They are EC2 instances that are stopped by default when indexing is not taking
-place. The indexer server raises them up, provides them with the necessary
-information to perform the indexing and once they report back to the ingestion
-server with a completion message, they are shut down again.
+Indexer workers are EC2 instances that are stopped by default when indexing is
+not taking place. The indexer server raises them up, provides them with the
+necessary information to perform the indexing and once they report back to the
+ingestion server with a completion message, they are shut down again.
 
 Sometimes it is necessary to manually interrupt indexing, for example to limit
 the size of a test/staging index. To do so, follow these steps.

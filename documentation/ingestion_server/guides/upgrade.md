@@ -23,7 +23,7 @@ differences.
    - `audio`
    - `audio-filtered`
 
-   This information is useful, to know what index to use if a rollback is needed
+   This information is useful to know what index to use if a rollback is needed
    and to know what index to delete once the upgrade is complete. You can use
    [Elasticvue](https://elasticvue.com) for this.
 
@@ -72,7 +72,7 @@ differences.
    - `audio`
    - `audio-filtered`
 
-   This information is useful, to know what index to use if a rollback is needed
+   This information is useful to know what index to use if a rollback is needed
    and to know what index to delete once the upgrade is complete. You can use
    [Elasticvue](https://elasticvue.com) for this.
 

@@ -28,11 +28,13 @@ involve code changes in both the ingestion server and the API. Examples:
 - changing the type to an incompatible type
 - renaming of a field
 
-Such kinds of changes need us to precisely deploy the API when the new index is
-promoted because of these reasons:
+Such kinds of changes need us to precisely deploy the API simultaneously with
+the promotion of new index because of these reasons:
 
-- If we deploy a little late, the old field the API wants will disappear.
-- If we deploy a little early, the new field the API wants will not be present.
+- If the API deployment lags behind index promotion, the old field that the API
+  uses will disappear.
+- If the API deployment leads ahead of index promotion, the new field the API
+  uses will not be present.
 
 This runbook documents guidelines and processes for API-involved migrations.
 
@@ -51,17 +53,23 @@ deployed independently.
    is purely additive, keeping the old fields unchanged and creating new fields
    that contain the data the API will need.
 
-   This PR should only make changes within the `ingestion_server/` directory.
+   This PR should make changes only within the `ingestion_server/` directory,
+   more specifically the following two files concerned with ES mappings and
+   document schemas:
 
-2. Change the ES fields referenced by the API to use the new fields added in the
+   - [`es_mappings.py`](https://github.com/WordPress/openverse/tree/main/ingestion_server/ingestion_server/es_mapping.py)
+   - [`elasticsearch_models.py`](https://github.com/WordPress/openverse/tree/main/ingestion_server/ingestion_server/elasticsearch_models.py)
+
+2. Update the API code to reference and use the new ES fields added in the
    previous step. Ensure that the old fields become unreferenced.
 
-   The PR should only make changes within the `api/` directory.
+   The PR should make changes only within the `api/` directory.
 
 3. Change the ES index mapping in the ingestion server to remove the old,
    now-unreferenced fields.
 
-   This PR should only make changes within the `ingestion_server/` directory.
+   Like PR number 1, this PR should also make changes only within the
+   `ingestion_server/` directory.
 
 ```{tip}
 Get the PRs reviewed in advance so that the entire process has been vetted by
