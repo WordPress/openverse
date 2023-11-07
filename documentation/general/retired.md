@@ -1,6 +1,6 @@
-## Retired
+# Retired
 
-### Web Crawl Data (retired)
+## Web Crawl Data (retired)
 
 The Common Crawl Foundation provides an open repository of petabyte-scale web
 crawl data. A new dataset is published at the end of each month comprising over
