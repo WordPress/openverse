@@ -45,7 +45,7 @@ differences.
 
    Wait for the indices to be replicated (and status green) before proceeding.
 
-4. [Point aliases](/ingestion_server/reference/task_api.md#point-alias) (both
+4. [Point aliases](/ingestion_server/reference/task_api.md#point_alias) (both
    default and filtered) for each media type to the new index.
 
    - `image` &rarr; `image-abcd`
@@ -84,13 +84,13 @@ differences.
    Wait for the indices to be replicated (and status green) before proceeding.
 
 4. Perform
-   [creation of filtered indices](/ingestion_server/reference/task_api.md#create-and-populate-filtered-index)
+   [creation of filtered indices](/ingestion_server/reference/task_api.md#create_and_populate_filtered_index)
    for all media types. New filtered indices for each media type, like
    `image-abcd-filtered` and `audio-abcd-filtered`, will be created.
 
    Wait for the indices to be replicated (and status green) before proceeding.
 
-5. [Point aliases](/ingestion_server/reference/task_api.md#point-alias) for each
+5. [Point aliases](/ingestion_server/reference/task_api.md#point_alias) for each
    media type to the new default and filtered indices.
 
    - `image` &rarr; `image-abcd`
