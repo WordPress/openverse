@@ -146,7 +146,7 @@ manually turn the DAG on in production.
 
 ### Steps
 
-1. Ensure you've gone through the [quickstart guide](/api/guides/quickstart.md).
+1. Ensure you've gone through the [quickstart](/catalog/guides/quickstart.md).
    Ensure that the Docker daemon is running.
 
 2. Run individual test.
