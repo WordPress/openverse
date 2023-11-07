@@ -139,7 +139,7 @@ export default defineComponent({
     const connections = computed(() => {
       return props.layout === "row" && props.size === "small"
         ? []
-        : layoutConnectionsMap[props.layout]
+        : [...layoutConnectionsMap[props.layout]]
     })
 
     /** Convert the `play-pause` sizes to `VIconButton` sizes */

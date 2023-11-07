@@ -110,7 +110,7 @@ export default defineComponent({
     const buttonProps = computed(() => {
       const variant = "plain--avoid" as ButtonVariant
 
-      return { variant, connections: layoutConnectionsMap[props.layout] }
+      return { variant, connections: [...layoutConnectionsMap[props.layout]] }
     })
 
     const handleMouseDown = (event: MouseEvent) => {
