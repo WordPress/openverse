@@ -1,4 +1,7 @@
 // Copied from https://github.com/blakeembrey/change-case
+// Case-related utility functions are vendored in because `case` package
+// cannot be used in Nuxt 3 which requires ESM compatibility.
+
 // Regexps involved with splitting words in various case formats.
 const SPLIT_LOWER_UPPER_RE = /([\p{Ll}\d])(\p{Lu})/gu
 const SPLIT_UPPER_UPPER_RE = /(\p{Lu})([\p{Lu}][\p{Ll}])/gu
@@ -9,17 +12,10 @@ const DEFAULT_STRIP_REGEXP = /[^\p{L}\d]+/giu
 // The replacement value for splits.
 const SPLIT_REPLACE_VALUE = "$1\0$2"
 
-// The default characters to keep after transforming case.
-const TOKENS = /\S+|./g
-const IS_MANUAL_CASE = /\p{Ll}(?=[\p{Lu}])|\.\p{L}/u // iPhone, example.com, U.N., etc.
-const ALPHANUMERIC_PATTERN = /[\p{L}\d]+/gu
-
-const WORD_SEPARATORS = new Set(["—", "–", "-", "―", "/"])
-
 /**
  * Split any cased input strings into an array of words.
  */
-export function split(input: string) {
+function split(input: string) {
   let result = input.trim()
 
   result = result
@@ -72,29 +68,4 @@ export function camelCase(input: string) {
  */
 export function capitalCase(input: string) {
   return split(input).map(capitalCaseTransformFactory()).join(" ")
-}
-
-export function titleCase(input: string) {
-  let result = ""
-  let m: RegExpExecArray | null
-
-  while ((m = TOKENS.exec(input)) !== null) {
-    const { 0: token, index } = m
-
-    // Ignore already capitalized words.
-    if (IS_MANUAL_CASE.test(token)) {
-      result += token
-    } else {
-      result += token.replace(ALPHANUMERIC_PATTERN, (m, i) => {
-        // Only capitalize words after a valid word separator.
-        if (i > 1 && !WORD_SEPARATORS.has(input.charAt(index + i - 1))) {
-          return m
-        }
-
-        return m.charAt(0).toUpperCase() + m.slice(1)
-      })
-    }
-  }
-
-  return result
 }
