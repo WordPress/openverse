@@ -45,12 +45,13 @@ const statusIconMap = {
   loading: undefined,
 } as const
 
-const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
-  row: "end",
-  global: "all",
-  box: "none",
-  full: "none",
-} as const
+const layoutConnectionsMap: Record<AudioLayout, readonly ButtonConnections[]> =
+  {
+    row: ["end"],
+    global: ["top", "end"],
+    box: [],
+    full: [],
+  } as const
 
 /**
  * Displays the control for switching between the playing and paused states of
@@ -109,7 +110,7 @@ export default defineComponent({
     const buttonProps = computed(() => {
       const variant = "plain--avoid" as ButtonVariant
 
-      return { variant, connections: layoutConnectionsMap[props.layout] }
+      return { variant, connections: [...layoutConnectionsMap[props.layout]] }
     })
 
     const handleMouseDown = (event: MouseEvent) => {
