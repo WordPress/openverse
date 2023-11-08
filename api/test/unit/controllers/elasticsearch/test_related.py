@@ -9,25 +9,21 @@ from unittest import mock
 import pook
 import pytest
 
-from api.controllers import search_controller
+from api.controllers.elasticsearch import related
 
 
 pytestmark = pytest.mark.django_db
 
 
 @mock.patch(
-    "api.controllers.search_controller.related_media",
-    wraps=search_controller.related_media,
+    "api.controllers.elasticsearch.related.related_media",
+    wraps=related.related_media,
 )
 @pook.on
 def test_related_media(
     wrapped_related_results,
     image_media_type_config,
     settings,
-    # request the redis mock to auto-clean Redis between each test run
-    # otherwise the dead link query mask causes test details to leak
-    # between each run
-    redis,
 ):
     image = ImageFactory.create()
 
@@ -62,14 +58,13 @@ def test_related_media(
         "from": 0,
         "query": {
             "bool": {
-                "minimum_should_match": 1,
                 "must_not": [
-                    {"term": {"identifier": image.identifier}},
                     {"term": {"mature": True}},
+                    {"term": {"identifier": image.identifier}},
                 ],
                 "should": [
                     {"match": {"title": "Bird Nature Photo"}},
-                    {"simple_query_string": {"fields": ["tags.name"], "query": "bird"}},
+                    {"terms": {"tags.name": ["bird"]}},
                 ],
             }
         },
@@ -85,7 +80,7 @@ def test_related_media(
         .mock
     )
 
-    results = search_controller.related_media(
+    results = related.related_media(
         uuid=image.identifier,
         index=image_media_type_config.origin_index,
         filter_dead=True,
