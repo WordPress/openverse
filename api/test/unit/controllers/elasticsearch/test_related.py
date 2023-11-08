@@ -6,6 +6,8 @@ from test.factory.es_http import (
 from test.factory.models import ImageFactory
 from unittest import mock
 
+from django.core.cache import cache
+
 import pook
 import pytest
 
@@ -13,6 +15,18 @@ from api.controllers.elasticsearch import related
 
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def excluded_providers_cache():
+    cache_key = "filtered_providers"
+    excluded_provider = "excluded_provider"
+    cache_value = [{"provider_identifier": excluded_provider}]
+    cache.set(cache_key, cache_value, timeout=1)
+
+    yield excluded_provider
+
+    cache.delete(cache_key)
 
 
 @mock.patch(
@@ -24,6 +38,7 @@ def test_related_media(
     wrapped_related_results,
     image_media_type_config,
     settings,
+    excluded_providers_cache,
 ):
     image = ImageFactory.create()
 
@@ -59,6 +74,7 @@ def test_related_media(
         "query": {
             "bool": {
                 "must_not": [
+                    {"terms": {"provider": [excluded_providers_cache]}},
                     {"term": {"mature": True}},
                     {"term": {"identifier": image.identifier}},
                 ],
