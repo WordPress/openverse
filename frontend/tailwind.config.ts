@@ -119,6 +119,7 @@ export default {
     ringWidth: {
       DEFAULT: "1.5px", // aka slim
       bold: "3.0px",
+      1: "1px",
       0: "0",
     },
     borderWidth: {

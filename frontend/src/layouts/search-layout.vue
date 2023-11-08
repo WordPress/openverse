@@ -2,7 +2,7 @@
   <div>
     <VSkipToContentButton />
     <div
-      class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr,auto] bg-white"
+      class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
       :class="[
         isDesktopLayout ? 'desktop' : 'mobile',
         breakpoint,
@@ -44,10 +44,9 @@
           class="border-t border-dark-charcoal-20 bg-white"
         />
       </div>
-
-      <VModalTarget class="modal" />
       <VGlobalAudioSection />
     </div>
+    <VModalTarget class="modal" />
   </div>
 </template>
 <script lang="ts">
@@ -179,7 +178,7 @@ export default defineComponent({
   width: var(--filter-sidebar-width);
 }
 .app {
-  grid-template-areas: "header" "main" "global-audio";
+  grid-template-areas: "header" "main";
 }
 .header-el {
   grid-area: header;

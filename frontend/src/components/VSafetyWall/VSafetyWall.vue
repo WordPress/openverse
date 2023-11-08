@@ -12,7 +12,7 @@
       </p>
       <p v-for="reason in media.sensitivity" :key="reason">
         {{
-          $t(`sensitiveContent.reasons.${camel(reason)}`, {
+          $t(`sensitiveContent.reasons.${camelCase(reason)}`, {
             openverse: "Openverse",
           })
         }}
@@ -57,10 +57,10 @@
 
 <script lang="ts">
 import { PropType, computed, defineComponent } from "@nuxtjs/composition-api"
-import { camel } from "case"
 
 import { useSearchStore } from "~/stores/search"
 import { useAnalytics } from "~/composables/use-analytics"
+import { camelCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VLink from "~/components/VLink.vue"
@@ -99,7 +99,7 @@ export default defineComponent({
       backToSearchPath,
       handleBack,
       handleShow,
-      camel,
+      camelCase,
     }
   },
 })

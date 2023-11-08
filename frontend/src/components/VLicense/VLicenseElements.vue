@@ -22,11 +22,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
-import { camel } from "case"
 
 import type { License } from "~/constants/license"
 import { useI18n } from "~/composables/use-i18n"
 import { useUiStore } from "~/stores/ui"
+import { camelCase } from "~/utils/case"
 import { getElements } from "~/utils/license"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -62,7 +62,7 @@ export default defineComponent({
     const isMobile = computed(() => !uiStore.isDesktopLayout)
 
     const getLicenseDescription = (element: string) => {
-      return i18n.t(`browsePage.licenseDescription.${camel(element)}`)
+      return i18n.t(`browsePage.licenseDescription.${camelCase(element)}`)
     }
 
     return {

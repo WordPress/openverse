@@ -12,7 +12,7 @@ from elasticsearch import BadRequestError, NotFoundError
 
 def log_timing_info(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, es_query, **kwargs):
         start_time = time.time()
 
         # Call the original function
@@ -22,12 +22,12 @@ def log_timing_info(func):
         if hasattr(result, "took"):
             es_time_in_ms = result.took
         else:
-            es_time_in_ms = result["took"]
+            es_time_in_ms = result.get("took")
         log.info(
             {
                 "response_time": response_time_in_ms,
                 "es_time": es_time_in_ms,
-                "search_query": kwargs.get("search_query"),
+                "es_query": es_query,
             }
         )
 
@@ -37,7 +37,7 @@ def log_timing_info(func):
 
 
 @log_timing_info
-def get_es_response(s, search_query=None):
+def get_es_response(s, *args, **kwargs):
     if settings.VERBOSE_ES_RESPONSE:
         log.info(pprint.pprint(s.to_dict()))
 
@@ -53,5 +53,5 @@ def get_es_response(s, search_query=None):
 
 
 @log_timing_info
-def get_raw_es_response(index, body, search_query=None, **kwargs):
-    return settings.ES.search(index=index, body=body, **kwargs)
+def get_raw_es_response(index, body, *args, **kwargs):
+    return settings.ES.search(index=index, body=body, *args, **kwargs)

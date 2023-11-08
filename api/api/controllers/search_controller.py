@@ -223,7 +223,7 @@ def _post_process_results(
                 end = search_results.hits.total.value
 
             s = s[start:end]
-            search_response = get_es_response(s, "postprocess_search")
+            search_response = get_es_response(s, es_query="postprocess_search")
 
             return _post_process_results(
                 s, start, end, page_size, search_response, filter_dead
@@ -448,7 +448,7 @@ def search(
     # Paginate
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
-    search_response = get_es_response(s, "search")
+    search_response = get_es_response(s, es_query="search")
 
     results = _post_process_results(
         s, start, end, page_size, search_response, filter_dead
@@ -545,7 +545,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
     start, end = _get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
 
-    response = get_es_response(s, "related_media")
+    response = get_es_response(s, es_query="related_media")
     results = _post_process_results(s, start, end, page_size, response, filter_dead)
     return results or []
 
@@ -586,7 +586,10 @@ def get_sources(index):
         }
         try:
             results = get_raw_es_response(
-                index=index, body=body, search_query="sources", request_cache=True
+                index=index,
+                body=body,
+                request_cache=True,
+                es_query="sources",
             )
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:

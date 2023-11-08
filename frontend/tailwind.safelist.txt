@@ -13,6 +13,11 @@ h-6
 h-8
 h-12
 
+rounded-ee
+rounded-es
+rounded-se
+rounded-ss
+
 z-auto
 z-10
 z-20
