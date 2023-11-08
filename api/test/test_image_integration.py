@@ -149,5 +149,5 @@ def test_image_related(image_fixture):
     related(image_fixture)
 
 
-def test_audio_sensitive_search_and_detail():
+def test_image_sensitive_search_and_detail():
     sensitive_search_and_detail("images")

@@ -151,8 +151,12 @@ def uuid_validation(media_type, identifier):
 
 def related(fixture):
     related_url = fixture["results"][0]["related_url"]
-    response = requests.get(related_url)
-    assert response.status_code == 200
+    raw_response = requests.get(related_url)
+    response = raw_response.json()
+
+    assert raw_response.status_code == 200
+    assert response["result_count"] == len(response["results"]) == 10
+    assert response["page_count"] == 1
 
 
 def sensitive_search_and_detail(media_type):
