@@ -114,8 +114,7 @@ EXPOSE 8000
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]
 
-# gunicorn configuration in gunicorn.conf.py
-CMD ["gunicorn"]
+CMD ["python", "run.py"]
 
 #########
 # NGINX #

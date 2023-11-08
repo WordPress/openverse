@@ -236,7 +236,6 @@ services:
       - api/.env
     stdin_open: true
     tty: true
-    command: gunicorn --reload -w 1
 
   ingestion_server:
     profiles:
