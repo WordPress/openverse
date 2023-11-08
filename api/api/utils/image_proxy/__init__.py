@@ -61,10 +61,10 @@ def get_request_params_for_extension(
 def get(
     image_url: str,
     media_identifier: str,
+    media_provider: str,
     accept_header: str = "image/*",
     is_full_size: bool = False,
     is_compressed: bool = True,
-    media_provider: str = None,
 ) -> HttpResponse:
     """
     Proxy an image through Photon if its file type is supported, else return the
@@ -102,11 +102,10 @@ def get(
             f"thumbnail_response_code_by_domain:{domain}:"
             f"{month}:{upstream_response.status_code}"
         )
-        if media_provider:
-            tallies.incr(
-                f"thumbnail_response_code_by_provider:{media_provider}:"
-                f"{month}:{upstream_response.status_code}"
-            )
+        tallies.incr(
+            f"thumbnail_response_code_by_provider:{media_provider}:"
+            f"{month}:{upstream_response.status_code}"
+        )
         upstream_response.raise_for_status()
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
