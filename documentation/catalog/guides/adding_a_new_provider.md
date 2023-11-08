@@ -150,7 +150,7 @@ manually turn the DAG on in production.
    Ensure that the Docker daemon is running.
 
 2. Run individual test by creating a testing session within Docker, then
-   selecting only the tests associated with the provider
+   selecting only the tests associated with the provider.
 
    ```console
    $ just catalog/test-session
