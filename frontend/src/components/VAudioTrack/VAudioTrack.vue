@@ -38,7 +38,7 @@
 
       <template #audio-control="audioControlProps">
         <VAudioControl
-          ref="playPauseRef"
+          ref="audioControlRef"
           :status="status"
           v-bind="audioControlProps"
           @toggle="handleToggle"
@@ -400,7 +400,7 @@ export default defineComponent({
         : ""
     )
 
-    /* Interface with VPlayPause */
+    /* Interface with VAudioControl */
 
     /**
      * This function can safely ignore the `loading` status because
@@ -478,7 +478,7 @@ export default defineComponent({
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
      */
-    const playPauseRef = ref<{ $el: HTMLElement } | null>(null)
+    const audioControlRef = ref<{ $el: HTMLElement } | null>(null)
 
     /**
      * A ref used on the waveform, so we can capture mousedown on the
@@ -595,7 +595,7 @@ export default defineComponent({
       isComposite,
       containerAttributes,
 
-      playPauseRef,
+      audioControlRef,
       waveformRef,
     }
   },

@@ -196,7 +196,7 @@ export default defineComponent({
       () => activeMediaStore.message ?? undefined
     )
 
-    /* Interface with VPlayPause */
+    /* Interface with VAudioControl */
 
     const sendAudioInteractionEvent = (event: AudioInteraction) => {
       sendCustomEvent("AUDIO_INTERACTION", {

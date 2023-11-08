@@ -97,7 +97,6 @@ describe("AudioTrack", () => {
     async ({ errorType, errorText }) => {
       options.propsData.audio.url = "bad.url"
       options.propsData.layout = "row"
-      options.stubs.VPlayPause = false
       options.stubs.VWaveform = false
       options.stubs.VAudioThumbnail = true
 
