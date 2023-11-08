@@ -414,7 +414,7 @@ jobs:
           - name: validate_openapi
             recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
           - name: check_migrations
-            recipe: api/dj makemigrations --check --noinput --merge
+            recipe: api/dj makemigrations --check
           - name: test_doc
             recipe: api/doc-test
 
