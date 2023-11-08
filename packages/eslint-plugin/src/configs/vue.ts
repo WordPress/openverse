@@ -16,11 +16,11 @@ export = {
   ],
   plugins: ["vue", "vuejs-accessibility", "@intlify/vue-i18n"],
   rules: {
-    // Disable these rules after the Nuxt 3 migration
+    // Enable these rules after the Nuxt 3 migration
     "vue/no-deprecated-dollar-listeners-api": "off",
     "vue/no-v-for-template-key-on-child": "off",
     "vue/no-deprecated-v-on-native-modifier": "off",
-    // TODO: disable after https://github.com/WordPress/openverse/issues/3268 is fixed
+    // TODO: enable after https://github.com/WordPress/openverse/issues/3268 is fixed
     "vue/no-deprecated-props-default-this": "off",
 
     "vue/max-attributes-per-line": "off",
