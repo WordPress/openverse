@@ -163,8 +163,8 @@ manually turn the DAG on in production.
    $ just catalog/test -k <provider_name>
    ```
 
-Note: Using `just catalog/test-session` opens Docker to access a shell which is
-set up to run tests. This allows conveniences to run tests again while
+_NOTE_: Using `just catalog/test-session` opens Docker to access a shell which
+is set up to run tests. This allows conveniences to run tests again while
 potentially modifying the code without having to open the Docker container up
 each time the tests need to be run. Running the tests on Docker directly (e.g.
 using `just catalog/test`) will spin up the container, run the selected tests
