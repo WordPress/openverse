@@ -152,21 +152,23 @@ def uuid_validation(media_type, identifier):
 def related(fixture):
     item = fixture["results"][0]
 
-    def get_terms_set(item):
-        return set([t["name"] for t in item["tags"]] + item["title"].split(" "))
+    response = requests.get(item["related_url"]).json()
+    results = response["results"]
 
-    terms_set = get_terms_set(item)
-    related_url = item["related_url"]
-    raw_response = requests.get(related_url)
-    response = raw_response.json()
-
-    assert raw_response.status_code == 200
-    assert response["result_count"] == len(response["results"]) == 10
+    assert response["result_count"] == len(results) == 10
     assert response["page_count"] == 1
 
-    # Make sure each result has at least one word in common with the original item
-    for result in response["results"]:
-        assert len(terms_set.intersection(get_terms_set(result))) > 0
+    def get_terms_set(res):
+        return set([t["name"] for t in res["tags"]] + res["title"].split(" "))
+
+    terms_set = get_terms_set(item)
+    # Make sure each result has at least one word in common with the original item,
+    # or is by the same creator.
+    for result in results:
+        assert (
+            len(terms_set.intersection(get_terms_set(result))) > 0
+            or result["creator"] == item["creator"]
+        )
 
 
 def sensitive_search_and_detail(media_type):
