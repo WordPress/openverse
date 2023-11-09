@@ -206,7 +206,7 @@ catalog/                                # Primary code directory
 │   │   │   └── *.py                    #       - DAG definition files for providers
 │   │   └── retired/                    #   - DAGs & code that is no longer needed but might be a useful guide for the future
 │   ├── templates/                      # Templates for generating new provider code
-|   ├── *                               # Documentation, configuration files, and project requirements
+└── *                                   # Documentation, configuration files, and project requirements
 ```
 
 ## Publishing
