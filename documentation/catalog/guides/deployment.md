@@ -23,9 +23,10 @@ occur automatically and will need to be manually initiated.
 
 Currently the webserver, scheduler, and worker(s) are all run within a single
 docker container on the EC2 instance as defined by
-[the Airflow `Dockerfile` and related files](./docker/airflow). The
-[`docker-compose.yml`](docker-compose.yml) is used to spin up Airflow in
-production.
+[the Airflow `Dockerfile`](https://github.com/WordPress/openverse/blob/main/catalog/Dockerfile).
+The
+[`docker-compose.yml`](https://github.com/WordPress/openverse/blob/main/docker-compose.yml)
+is used to spin up Airflow in production.
 
 **Note**: Service deployments are only necessary in the following conditions:
 
@@ -61,8 +62,10 @@ This means that we can update the python code in-place and the next DAG run or
 task in a currently running DAG will use the updated code. In these cases, a new
 EC2 instance _does not_ need to be deployed.
 
-The [`dag-sync.sh`](../dag-sync.sh) script is used in production to regularly
-update the repository (and thus the DAG files) on the running EC2 instance.
+The
+[`dag-sync.sh`](https://github.com/WordPress/openverse/blob/main/dag-sync.sh)
+script is used in production to regularly update the repository (and thus the
+DAG files) on the running EC2 instance.
 
 ### Deployment workflow
 
@@ -89,4 +92,4 @@ out to the maintainers if you're interested).
 
 Any migrations to the Catalog database must either be performed by hand or as
 part of a DAG's normal operation (see:
-[iNaturalist](dags/providers/provider_api_scripts/inaturalist.py)).
+[iNaturalist](https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_api_scripts/inaturalist.py)).
