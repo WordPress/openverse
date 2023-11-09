@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from api.controllers import search_controller
+from api.controllers.elasticsearch.related import related_media
 from api.models import ContentProvider
 from api.models.media import AbstractMedia
 from api.serializers.provider_serializers import ProviderSerializer
@@ -158,7 +159,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            results = search_controller.related_media(
+            results = related_media(
                 uuid=identifier,
                 index=self.default_index,
                 filter_dead=True,

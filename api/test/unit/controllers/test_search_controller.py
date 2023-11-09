@@ -16,6 +16,7 @@ from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
 from api.controllers import search_controller
+from api.controllers.elasticsearch import helpers as es_helpers
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
@@ -150,7 +151,7 @@ def test_paginate_with_dead_link_mask_new_search(
     """
     start = 0
 
-    assert search_controller._paginate_with_dead_link_mask(
+    assert es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     ) == (start, expected_end)
 
@@ -260,7 +261,7 @@ def test_paginate_with_dead_link_mask_query_mask_is_not_large_enough(
     """
     start = mask_size
     create_mask(s=unique_search, mask_size=mask_size, liveness_count=liveness_count)
-    assert search_controller._paginate_with_dead_link_mask(
+    assert es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     ) == (start, expected_end)
 
@@ -383,7 +384,7 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
         create_mask_kwargs.update(mask=mask_or_mask_size)
 
     create_mask(**create_mask_kwargs)
-    actual_range = search_controller._paginate_with_dead_link_mask(
+    actual_range = es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     )
     assert (
