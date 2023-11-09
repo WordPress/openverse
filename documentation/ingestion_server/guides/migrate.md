@@ -15,9 +15,13 @@ API. As such they do not need any migration process. Examples:
 - removal of fields that are not referenced or used by the API
 - changing the type to another compatible type (like `text` &harr; `keyword` )
 
-For API-free changes, we deploy the ingestion server and let a data-refresh to
-occur. The indexes will be updated to the new schema without manual intervention
-and will be made available to the API.
+For API-free changes, we deploy the ingestion server and perform one of the two:
+
+- standard data-refresh (either triggered manually or as scheduled)
+- [manual index upgrade](/ingestion_server/guides/upgrade.md)
+
+The indices will be updated to the new schema and will be made available to the
+API.
 
 ### API-involved
 
@@ -28,7 +32,7 @@ involve code changes in both the ingestion server and the API. Examples:
 - changing the type to an incompatible type
 - renaming of a field
 
-Such kinds of changes need us to precisely deploy the API simultaneously with
+Such kinds of changes need us to precisely deploy the API in coordination with
 the promotion of new index because of these reasons:
 
 - If the API deployment lags behind index promotion, the old field that the API
@@ -85,10 +89,9 @@ chain so that CI continues to pass for each PR.
 ### Example
 
 Assume we have a field `foo` with type `text` in the index. It has a subfield
-`keyword` with type `keyword`. The API uses `foo.keyword` for all purposes.
-
-One PR that does these 3 things would be an API-involved change. So we split
-them into 3 PRs.
+`keyword` with type `keyword`. The API uses `foo.keyword` for all purposes. We
+want the `foo` field to have type `keyword` and for the API to use `foo` instead
+of `foo.keyword`. To accomplish this without downtime, we need three PRs:
 
 1. Changing `foo` to type `keyword` would be an API-free change because it is a
    type change between two compatible types and does not affect the nested field

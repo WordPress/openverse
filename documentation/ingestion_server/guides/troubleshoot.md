@@ -10,7 +10,7 @@ purpose it is to create documents from the API database and index them in
 Elasticsearch.
 
 Indexer workers are EC2 instances that are stopped by default when indexing is
-not taking place. The indexer server raises them up, provides them with the
+not taking place. The ingestion server raises them up, provides them with the
 necessary information to perform the indexing and once they report back to the
 ingestion server with a completion message, they are shut down again.
 

@@ -28,7 +28,7 @@ differences.
    [Elasticvue](https://elasticvue.com) for this.
 
    ```{tip}
-   In staging, the filtered indices most likely also point to the default index.
+   In staging, the filtered indices may also point to the default index.
    ```
 
 3. Perform [reindexing](/ingestion_server/reference/task_api.md#reindex) of all
@@ -37,8 +37,8 @@ differences.
    created.
 
    ```{caution}
-   Staging indices are supposed to be smaller and should not the full size of
-   the production dataset. You can
+   Staging indices are supposed to be smaller and should not have the same
+   number of documents as the production dataset. You can
    [interrupt the indexing process](/ingestion_server/guides/troubleshoot.md#interrupt-indexing)
    once a satisfactory fraction (like ~50%) has been indexed.
    ```
