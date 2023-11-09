@@ -63,7 +63,7 @@ suffix.
 $ curl \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"model": "image", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "kw"}' \
+  -d '{"model": "image", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "20231106"}' \
   http://localhost:8001/task
 ```
 
@@ -91,5 +91,35 @@ $ curl \
   -X POST \
   -H 'Content-Type: application/json' \
   -d '{"model": "image", "action": "POINT_ALIAS", "index_suffix": "20231106", "alias": "image-filtered"}' \
+  http://localhost:8001/task
+```
+
+## DELETE_INDEX
+
+This endpoint deletes the given index for a given media type.
+
+```{danger}
+Index deletion is an irreversible destructive operation. Please ensure that you
+do not delete an index that is currently in use as the default or filtered index
+for a media type.
+```
+
+### Body
+
+```typescript
+{
+  model: "image" | "audio"
+  action: "DELETE_INDEX"
+  index_suffix: string
+}
+```
+
+### Example
+
+```console
+$ curl \
+  -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{"model": "image", "action": "DELETE_INDEX", "index_suffix": "20231106"}' \
   http://localhost:8001/task
 ```

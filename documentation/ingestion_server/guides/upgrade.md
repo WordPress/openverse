@@ -57,7 +57,9 @@ differences.
 
    - If the staging API reports errors, immediately switch back the aliases to
      the old indices.
-   - If the staging API works, delete the old indices to recover the free space.
+   - If the staging API works,
+     [delete the old indices](/ingestion_server/reference/task_api.md#delete_index)
+     to recover the free space.
 
 ### Production deployment
 
@@ -102,8 +104,9 @@ differences.
 
    - If the production API reports errors, immediately switch back the aliases
      to the old indices.
-   - If the production API works, delete the old indices to recover the free
-     space.
+   - If the production API works,
+     [delete the old indices](/ingestion_server/reference/task_api.md#delete_index)
+     to recover the free space.
 
 ## Rollback
 
