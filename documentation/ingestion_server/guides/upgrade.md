@@ -16,7 +16,7 @@ differences.
 1. [Deploy the ingestion server](/ingestion_server/guides/deploy.md) to staging.
    This step ensures that the latest schema will be used for the new indices.
 
-2. Determine the real names of the indexes behind the following aliases.
+2. Determine the real names of the indices behind the following aliases.
 
    - `image`
    - `image-filtered`
@@ -65,7 +65,7 @@ differences.
    production. This step ensures that the latest schema will be used for the new
    indices.
 
-2. Determine the real names of the indexes behind the following aliases.
+2. Determine the real names of the indices behind the following aliases.
 
    - `image`
    - `image-filtered`
