@@ -7,4 +7,5 @@ elasticsearch
 safety
 notifications
 data_refresh
+task_api
 ```
