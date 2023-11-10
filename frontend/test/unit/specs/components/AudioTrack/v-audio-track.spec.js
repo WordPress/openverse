@@ -137,6 +137,7 @@ describe("AudioTrack", () => {
   it("has blurred title in box layout when audio is sensitive", async () => {
     options.propsData.audio.isSensitive = true
     options.propsData.layout = "box"
+    options.propsData.size = "large"
     const { getByText } = render(VAudioTrack, options, configureVue)
     const h2 = getByText("This audio track may contain sensitive content.")
     expect(h2).toHaveClass("blur-text")
