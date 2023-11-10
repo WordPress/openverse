@@ -11,8 +11,15 @@ from api.models.models import ContentProvider
 @pytest.mark.django_db
 def test_list_query_count(api_client, media_type_config):
     num_results = 20
+
+    # Since controller returns a list of ``Hit``s, not model instances, we must
+    # set the ``meta`` param on each of them to match the shape of ``Hit``.
+    results = media_type_config.model_factory.create_batch(size=num_results)
+    for result in results:
+        result.meta = None
+
     controller_ret = (
-        media_type_config.model_factory.create_batch(size=num_results),  # results
+        results,
         1,  # num_pages
         num_results,
         {},  # search_context

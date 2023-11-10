@@ -68,15 +68,11 @@ def _post_process_results(
     :param filter_dead: Whether images should be validated.
     :return: List of results.
     """
-    results = []
-    to_validate = []
-    for res in search_results:
-        if hasattr(res.meta, "highlight"):
-            res.fields_matched = dir(res.meta.highlight)
-        to_validate.append(res.url)
-        results.append(res)
+
+    results = list(search_results)
 
     if filter_dead:
+        to_validate = [res.url for res in search_results]
         query_hash = get_query_hash(s)
         check_dead_links(query_hash, start, results, to_validate)
 
