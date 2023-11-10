@@ -331,7 +331,7 @@ services:
     ports:
       - "50290:8080"
     environment:
-      OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS}:8443
+      OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS:-172.17.0.1}:8443
       OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
       # Set to Docker network resolver to be able to resolve the `plausible` container.
       # This would be the default but Nginx requires it to be explicitly set when
