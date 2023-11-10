@@ -1,9 +1,20 @@
 <template>
-  <div class="px-6 lg:px-10"></div>
+  <div class="px-6 lg:px-10">
+    <VCollectionHeader
+      v-if="collectionParams && collectionParams.collection"
+      :title="collectionTitle"
+      results-label="Lots of results"
+      :collection="collectionParams.collection"
+    />
+    <h1>{{ strategy }}</h1>
+    <pre>{{ collectionParams }}</pre>
+    <pre>{{ results }}</pre>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { computed, ref } from "vue"
+import { defineComponent, useFetch } from "@nuxtjs/composition-api"
 
 import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
@@ -11,6 +22,8 @@ import { isSupportedMediaType, SupportedMediaType } from "~/constants/media"
 import type { Collection, CollectionParams } from "~/types/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { warn } from "~/utils/console"
+import { useMediaStore } from "~/stores/media"
+import { Media } from "~/types/media"
 
 export default defineComponent({
   name: "VCollectionPage",
@@ -84,7 +97,46 @@ export default defineComponent({
     const searchStore = useSearchStore($pinia)
     searchStore.setStrategy(collection, collectionParams)
     searchStore.setSearchType(mediaType)
+
     return true
+  },
+  setup() {
+    const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
+
+    const strategy = computed(() => searchStore.strategy)
+    const collectionParams = computed(() => searchStore.collectionParams)
+
+    const collectionTitle = computed(() => {
+      if (!collectionParams.value) return ""
+      const collection = collectionParams.value.collection
+      if (collection === "tag") {
+        return collectionParams.value.tag
+      } else if (collection === "source") {
+        return collectionParams.value.source
+      } else if (collection === "creator") {
+        return collectionParams.value.creator
+      } else {
+        return ""
+      }
+    })
+
+    const results = ref<Media[]>([])
+
+    useFetch(async () => {
+      if (isSupportedMediaType(mediaStore._searchType)) {
+        await mediaStore.fetchMedia()
+        results.value = mediaStore.resultItems[mediaStore._searchType]
+      }
+    })
+
+    return {
+      strategy,
+      collectionParams,
+      collectionTitle,
+
+      results,
+    }
   },
 })
 </script>
