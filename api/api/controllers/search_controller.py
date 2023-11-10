@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import logging as log
 from math import ceil
 from typing import Literal
@@ -7,6 +8,7 @@ from typing import Literal
 from django.conf import settings
 from django.core.cache import cache
 
+from decouple import config
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.query import EMPTY_QUERY
@@ -28,6 +30,10 @@ from api.utils.dead_link_mask import get_query_hash
 from api.utils.search_context import SearchContext
 
 
+module_logger = logging.getLogger(__name__)
+
+
+NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
 THUMBNAIL = "thumbnail"
@@ -49,7 +55,7 @@ def _quote_escape(query_string):
 
 
 def _post_process_results(
-    s, start, end, page_size, search_results, filter_dead
+    s, start, end, page_size, search_results, filter_dead, nesting=0
 ) -> list[Hit] | None:
     """
     Perform some steps on results fetched from the backend.
@@ -68,6 +74,18 @@ def _post_process_results(
     :param filter_dead: Whether images should be validated.
     :return: List of results.
     """
+
+    logger = module_logger.getChild("_post_process_results")
+    if nesting > NESTING_THRESHOLD:
+        logger.debug(
+            {
+                "message": "Nesting threshold breached",
+                "nesting": nesting,
+                "start": start,
+                "end": end,
+                "page_size": page_size,
+            }
+        )
 
     results = list(search_results)
 
@@ -126,7 +144,7 @@ def _post_process_results(
             search_response = get_es_response(s, es_query="postprocess_search")
 
             return _post_process_results(
-                s, start, end, page_size, search_response, filter_dead
+                s, start, end, page_size, search_response, filter_dead, nesting + 1
             )
 
     return results[:page_size]
