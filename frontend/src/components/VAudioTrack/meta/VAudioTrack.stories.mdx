@@ -6,6 +6,7 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import { computed } from "vue"
+import { audioLayouts, audioSizes } from "~/constants/audio"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
@@ -25,12 +26,12 @@ import wavWaveform from "./wav-waveform.json"
     },
     layout: {
       defaultValue: "full",
-      options: ["full", "box", "row", "global"],
+      options: audioLayouts,
       control: "select",
     },
     size: {
       defaultValue: "m",
-      options: ["s", "m", "l"],
+      options: audioSizes,
       control: "select",
     },
     audio: {
@@ -192,8 +193,7 @@ The component can be rendered in a multiple different layouts, by specifying a
 
 #### Sizes L and M (default)
 
-Box sizes L and M are identical with the only difference being the `width`
-dimension.
+There is no M size in box layout.
 
 <Canvas>
   <Story
@@ -209,7 +209,7 @@ dimension.
     name="Box (medium)"
     args={{
       layout: "box",
-      // size: 'm', (default)
+      size: "l",
     }}
   >
     {Template.bind({})}

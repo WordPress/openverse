@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="player flex h-12 flex-row items-end gap-x-2">
+      <div class="player flex h-12 flex-row items-end">
         <div class="flex-none p-2">
           <slot
             name="audio-control"
@@ -67,7 +67,7 @@ export default defineComponent({
     },
     size: {
       type: String as PropType<Extract<AudioSize, "s" | "l">>,
-      required: false,
+      required: true,
     },
   },
   setup(props) {
@@ -94,9 +94,5 @@ export default defineComponent({
 .box-track .waveform {
   @apply h-10 flex-grow;
   --waveform-background-color: theme("colors.yellow");
-}
-
-.box-track .audio-control {
-  @apply border-yellow bg-yellow text-dark-charcoal focus:border-pink;
 }
 </style>

@@ -3,7 +3,7 @@
     :tabindex="isTabbable ? 0 : -1"
     class="audio-control"
     :size="buttonSize"
-    variant="filled-dark"
+    :variant="layout === 'box' ? 'transparent-dark' : 'filled-dark'"
     :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
     :label="$t(label)"
     :connections="connections"
