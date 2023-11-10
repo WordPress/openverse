@@ -46,9 +46,11 @@ At a high level, a provider script should iteratively request batches of records
 from the provider API, extract data in the format required by Openverse, and
 commit it to local storage. Much of this logic is implemented in a
 [`ProviderDataIngester` base class](https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_api_scripts/provider_data_ingester.py)
-(which also provides additional testing features _<TODO: link to documentation
-for testing features like ingestion_limit, skip_ingestion_errors etc>_). To add
-a new provider, extend this class and implement its abstract methods.
+(which also provides additional testing features).
+
+<!-- TODO: link to documentation for testing features like ingestion_limit, skip_ingestion_errors etc-->
+
+To add a new provider, extend this class and implement its abstract methods.
 
 We provide a
 [script](https://github.com/WordPress/openverse/blob/main/catalog/templates/create_provider_ingester.py)
@@ -128,12 +130,47 @@ PROVIDER_WORKFLOWS = [
 There are many other options that allow you to tweak the `schedule` (when and
 how often your DAG is run), timeouts for individual steps of the DAG, and more.
 These are documented in the definition of the `ProviderWorkflow` dataclass.
-_<TODO: add docs for other options.>_
+
+<!--TODO: add docs for other options.-->
 
 After adding your configuration, run `just up` and you should now have a fully
-functioning provider DAG! _<TODO: add and link to docs for how to run provider
-DAGs locally, preferably with images.>_
+functioning provider DAG!
 
-_NOTE_: when your code is merged, the DAG will become available in production
+<!--TODO: add and link to docs for how to run provider DAGs locally, preferably with images.-->
+
+```{note}
+When your code is merged, the DAG will become available in production
 but will be disabled by default. A contributor with Airflow access will need to
 manually turn the DAG on in production.
+```
+
+## Testing guide
+
+### Steps
+
+1. Ensure you've gone through the [quickstart](/catalog/guides/quickstart.md).
+   Ensure that the Docker daemon is running.
+
+2. Run individual test by creating a testing session within Docker, then
+   selecting only the tests associated with the provider.
+
+   ```console
+   $ just catalog/test-session
+   $ pytest -k <provider_name>
+   ```
+
+   Alternatively, the test selection can be run in Docker directly with:
+
+   ```console
+   $ just catalog/test -k <provider_name>
+   ```
+
+```{note}
+Using `just catalog/test-session` opens Docker to access a shell which is set up to run
+tests. This allows one to run tests repeatedly while potentially modifying the code,
+without having to start the Docker container up each time the tests need to be run.
+Running the tests on Docker directly (e.g. using `just catalog/test`) will spin up the
+container, run the selected tests if any are provided (or all by default) and then stop
+and remove the container. That can be useful for ensuring that all tests pass if one
+does not need to iterate and check the test failures repeatedly.
+```
