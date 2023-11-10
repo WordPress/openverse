@@ -26,6 +26,46 @@ def search_by_category(media_path, category, fixture):
     assert all(audio_item["category"] == category for audio_item in results)
 
 
+def tag_collection(media_path):
+    response = requests.get(f"{API_URL}/v1/{media_path}/tag/cat")
+    assert response.status_code == 200
+
+    results = response.json()["results"]
+    for r in results:
+        tag_names = [tag["name"] for tag in r["tags"]]
+        assert "cat" in tag_names
+
+
+def source_collection(media_path):
+    source = requests.get(f"{API_URL}/v1/{media_path}/stats").json()[0]["source_name"]
+
+    response = requests.get(f"{API_URL}/v1/{media_path}/source/{source}")
+    assert response.status_code == 200
+
+    results = response.json()["results"]
+    assert all(result["source"] == source for result in results)
+
+
+def creator_collection(media_path):
+    source = requests.get(f"{API_URL}/v1/{media_path}/stats").json()[0]["source_name"]
+
+    first_res = requests.get(f"{API_URL}/v1/{media_path}/source/{source}").json()[
+        "results"
+    ][0]
+    if not (creator := first_res.get("creator")):
+        raise AttributeError(f"No creator in {first_res}")
+
+    response = requests.get(
+        f"{API_URL}/v1/{media_path}/source/{source}/creator/{creator}"
+    )
+    assert response.status_code == 200
+
+    results = response.json()["results"]
+    assert all(
+        r["creator"] == "creator" and results["source"] == source for r in results
+    )
+
+
 def search_all_excluded(media_path, excluded_source):
     response = requests.get(
         f"{API_URL}/v1/{media_path}?q=test&excluded_source={','.join(excluded_source)}"
