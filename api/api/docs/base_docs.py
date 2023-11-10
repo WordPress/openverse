@@ -140,13 +140,13 @@ def get_collection_description(media_type, collection):
         return f"""
 Get a collection of {media_type} with a specific tag.
 
-This endpoint returns only the exact matches. To search within the
-tag values, or to match several tags, use the `search` endpoint
-with `tags` query parameter instead of `q` parameter.
+This endpoint returns only the exact matches, case-insensitive matches for the
+specified tag. For example, 'birds' and 'birding' are not matches for 'bird'.
+To search within the tag values, or to match several tags, use the `search` endpoint
+with `tags` query parameter instead of `q` parameter. In this case, the matches will
+ not be exact, so 'cat' would match both 'cat' and 'cats'.
 
-The returned results are ordered primarily based on their popularity
-and authority. However, note that the exact order may vary over time
-or across requests.
+The returned results are ordered based on the time when they were added to Openverse.
     """
     elif collection == "source":
         return f"""
@@ -168,8 +168,7 @@ this endpoint only returns the items from the specified source. To search within
 the creator value, use the `search` endpoint with `source` query parameter
 instead of `q`.
 
-The order in the results is not guaranteed to stay the same. Most likely, the images
-in the collection will be sorted by the order in which they were added to Openverse.
+The items will be sorted by the date when they were added to Openverse.
     """
 
 
