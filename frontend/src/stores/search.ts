@@ -109,13 +109,13 @@ export function computeQueryParams(
 export function collectionToPath(collectionParams: CollectionParams) {
   switch (collectionParams.collection) {
     case "tag": {
-      return `tag/${collectionParams.tag}`
+      return `tag/${collectionParams.tag}/`
     }
     case "creator": {
-      return `source/${collectionParams.source}/creator/${collectionParams.creator}`
+      return `source/${collectionParams.source}/creator/${collectionParams.creator}/`
     }
     case "source": {
-      return `source/${collectionParams.source}`
+      return `source/${collectionParams.source}/`
     }
   }
 }
@@ -276,7 +276,7 @@ export const useSearchStore = defineStore("search", {
       type: SupportedMediaType
       collectionParams: CollectionParams
     }) {
-      const path = `/${type}/${collectionToPath(collectionParams)}/`
+      const path = `/${type}/${collectionToPath(collectionParams)}`
       return this.$nuxt.localePath(path)
     },
 
