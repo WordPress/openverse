@@ -448,6 +448,47 @@ There are two mechanisms that prevent this from happening:
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
 
+### `delete_records`
+
+#### Delete Records DAG
+
+This DAG is used to delete records from the Catalog media tables, after creating
+a corresponding record in the associated `deleted_<media_type>` table for each
+record to be deleted. It is important to note that records deleted by this DAG
+will still be available in the API until the next data refresh runs.
+
+Required Dagrun Configuration parameters:
+
+- table_name: the name of the table to delete from. Must be a valid media table
+- select_query: a SQL `WHERE` clause used to select the rows that will be
+  deleted
+- reason: a string explaining the reason for deleting the records. Ex
+  ('deadlink')
+
+An example dag_run configuration used to delete all records for the "foo" image
+provider due to deadlinks would look like this:
+
+```
+{
+    "table_name": "image",
+    "select_query": "WHERE provider='foo'",
+    "reason": "deadlink"
+}
+```
+
+##### Warnings
+
+Presently, there is no logic to prevent records that have an entry in a Deleted
+Media table from simply being reingested during provider ingestion. Therefore in
+its current state, the DAG should _only_ be used to delete records that we can
+guarantee will not be reingested (for example, because the provider is
+archived).
+
+This DAG does not have automated handling for deadlocks, so you must be certain
+that records selected for deletion in this DAG are not also being written to by
+a provider DAG, for instance. The simplest way to do this is to ensure that any
+affected provider DAGs are not currently running.
+
 ### `europeana_workflow`
 
 Content Provider: Europeana
