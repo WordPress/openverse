@@ -22,11 +22,7 @@
       </div>
     </div>
 
-    <div
-      role="document"
-      class="flex min-w-0 flex-shrink-0 flex-col gap-1"
-      :class="{ 'ms-2': isMedium }"
-    >
+    <div role="document" class="flex min-w-0 flex-shrink-0 flex-col gap-1">
       <h2
         class="decoration-inherit line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm text-dark-charcoal hover:text-dark-charcoal group-hover:underline"
         :class="[
@@ -72,13 +68,17 @@
           <VLicense
             :hide-name="!isMd"
             :license="audio.license"
-            class="dot-before"
+            :class="{ 'dot-before': isMedium || (isLarge && audio.category) }"
           />
         </div>
       </div>
     </div>
 
-    <div v-show="!isSmall" class="controller ms-2 flex flex-row">
+    <div
+      v-show="!isSmall"
+      class="controller flex flex-row"
+      :class="{ 'ms-2': isLarge }"
+    >
       <slot
         name="audio-control"
         :size="isLarge ? 'large' : 'medium'"
@@ -181,13 +181,13 @@ export default defineComponent({
 .row-track.size-m {
   grid-template-columns: 5.9375rem 1fr;
   grid-template-rows: auto auto 3rem;
-  column-gap: 1.5rem;
+  @apply gap-x-6;
   grid-template-areas: "thumbnail info-1" "thumbnail info-2" "thumbnail controller";
 }
 .row-track.size-l {
   grid-template-columns: 4rem 17.5rem 1fr;
   grid-template-rows: auto auto auto;
-  column-gap: 1.5rem;
+  @apply gap-x-4;
   grid-template-areas: "thumbnail info-1 controller" "thumbnail info-2 controller" "thumbnail info-3 controller";
 }
 .row-track .thumbnail {
