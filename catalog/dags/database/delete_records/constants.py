@@ -19,4 +19,3 @@ DELETE_RECORDS_QUERY = """
     DELETE FROM {table}
     {select_query}
     """
-RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731

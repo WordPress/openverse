@@ -6,7 +6,7 @@ from airflow.models.abstractoperator import AbstractOperator
 
 from common import slack
 from common.constants import POSTGRES_CONN_ID
-from common.sql import PostgresHook
+from common.sql import RETURN_ROW_COUNT, PostgresHook
 from common.storage.columns import DELETED_ON, Column
 from common.storage.db_columns import (
     setup_db_columns_for_media_type,
@@ -24,7 +24,7 @@ def run_sql(
     postgres_conn_id: str = POSTGRES_CONN_ID,
     task: AbstractOperator = None,
     timeout: timedelta = None,
-    handler: callable = constants.RETURN_ROW_COUNT,
+    handler: callable = RETURN_ROW_COUNT,
     **kwargs,
 ):
     query = sql_template.format(**kwargs)
