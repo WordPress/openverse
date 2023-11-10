@@ -77,7 +77,7 @@ def _post_process_results(
 
     logger = module_logger.getChild("_post_process_results")
     if nesting > NESTING_THRESHOLD:
-        logger.debug(
+        logger.info(
             {
                 "message": "Nesting threshold breached",
                 "nesting": nesting,
