@@ -138,9 +138,11 @@ functioning provider DAG!
 
 <!--TODO: add and link to docs for how to run provider DAGs locally, preferably with images.-->
 
-_NOTE_: when your code is merged, the DAG will become available in production
+```{note}
+When your code is merged, the DAG will become available in production
 but will be disabled by default. A contributor with Airflow access will need to
 manually turn the DAG on in production.
+```
 
 ## Testing guide
 
@@ -163,11 +165,12 @@ manually turn the DAG on in production.
    $ just catalog/test -k <provider_name>
    ```
 
-_NOTE_: Using `just catalog/test-session` opens Docker to access a shell which
-is set up to run tests. This allows conveniences to run tests again while
-potentially modifying the code without having to open the Docker container up
-each time the tests need to be run. Running the tests on Docker directly (e.g.
-using `just catalog/test`) will spin up the container, run the selected tests
-(or all by default) and then stop and remove the container. That can be useful
-for ensuring that all tests pass if one does not need to iterate and check the
-test failures repeatedly.
+```{note}
+Using `just catalog/test-session` opens Docker to access a shell which is set up to run
+tests. This allows one to run tests repeatedly while potentially modifying the code,
+without having to start the Docker container up each time the tests need to be run.
+Running the tests on Docker directly (e.g. using `just catalog/test`) will spin up the
+container, run the selected tests if any are provided (or all by default) and then stop
+and remove the container. That can be useful for ensuring that all tests pass if one
+does not need to iterate and check the test failures repeatedly.
+```
