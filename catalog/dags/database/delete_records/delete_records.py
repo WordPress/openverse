@@ -18,7 +18,6 @@ from database.delete_records import constants
 logger = logging.getLogger(__name__)
 
 
-@task
 def run_sql(
     sql_template: str,
     postgres_conn_id: str = POSTGRES_CONN_ID,
@@ -47,8 +46,8 @@ def create_deleted_records(
     select_query: str,
     deleted_reason: str,
     media_type: str,
-    db_columns: list[Column],
-    deleted_db_columns: list[Column],
+    db_columns: list[Column] = None,
+    deleted_db_columns: list[Column] = None,
     task: AbstractOperator = None,
     postgres_conn_id: str = POSTGRES_CONN_ID,
 ):
@@ -67,7 +66,7 @@ def create_deleted_records(
     # `deleted_reason` is set to the given string
     source_cols += f", '{deleted_reason}'"
 
-    return run_sql.function(
+    return run_sql(
         sql_template=constants.CREATE_RECORDS_QUERY,
         postgres_conn_id=postgres_conn_id,
         task=task,
@@ -84,7 +83,7 @@ def delete_records_from_media_table(
     table: str, select_query: str, postgres_conn_id: str = POSTGRES_CONN_ID
 ):
     """Delete records matching the select_query from the given media table."""
-    return run_sql.function(
+    return run_sql(
         sql_template=constants.DELETE_RECORDS_QUERY,
         table=table,
         select_query=select_query,
