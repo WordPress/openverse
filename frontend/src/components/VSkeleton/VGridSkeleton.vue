@@ -28,7 +28,7 @@
  * loaded in the results views.
  */
 import { defineComponent, PropType } from "vue"
-
+import { computed } from 'vue'; // Import computed
 import type { SupportedSearchType } from "~/constants/media"
 
 import VAudioTrackSkeleton from "~/components/VSkeleton/VAudioTrackSkeleton.vue"
@@ -44,19 +44,23 @@ export default defineComponent({
     },
     numElems: {
       type: Number,
-      default: function () {
-        if (this.isForTab === "all") return 20
-        if (this.isForTab === "image") return 30
-        return 8
-      },
+      default: 0,
     },
   },
-  setup() {
+  setup(props: { numElems: any; isForTab: string; }) {
     function getRandomSize(max = 300, min = 100) {
       return Math.floor(Math.random() * (max - min) + min)
     }
 
-    return { getRandomSize }
+    // Calculate the default element count based on isForTab
+    const elementCount = computed(() => {
+        if (props.numElems) return props.numElems;
+        if (props.isForTab === "all") return 20;
+        if (props.isForTab === "image") return 30;
+        return 8;
+      });
+
+    return { getRandomSize, elementCount }
   },
 })
 </script>
