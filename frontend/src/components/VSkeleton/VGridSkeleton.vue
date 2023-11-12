@@ -46,7 +46,7 @@ export default defineComponent({
       type: Number,
     },
   },
-  setup(props: { numElems: any; isForTab: string; }) {
+  setup(props) {
     function getRandomSize(max = 300, min = 100) {
       return Math.floor(Math.random() * (max - min) + min)
     }
