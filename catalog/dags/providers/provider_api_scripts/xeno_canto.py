@@ -37,11 +37,26 @@ class XenoCantoDataIngester(ProviderDataIngester):
     endpoint = "https://xeno-canto.org/api/2/recordings"
     delay = 1
     retries = 3
+    licenses = [
+        "PD",
+        "CC0",
+        "BY",
+        "BY-NC",
+        "BY-SA",
+        "BY-NC-SA",
+        "BY-NC-ND",
+    ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.num_pages = None
         self.current_page = 1
+
+    def ingest_records(self, **kwargs):
+        for lic in self.licenses:
+            logger.info(f"Obtaining images with {lic} license")
+            self.current_page = 1
+            super().ingest_records(license=lic)
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
@@ -51,6 +66,7 @@ class XenoCantoDataIngester(ProviderDataIngester):
             params = {
                 "year": run_date.year,
                 "month": run_date.month,
+                "query": f"lic:{kwargs['license']}",
             }
         else:
             # On subsequent requests, increment the page by one and return the params
@@ -60,12 +76,8 @@ class XenoCantoDataIngester(ProviderDataIngester):
         return {**params, "page": self.current_page}
 
     def get_should_continue(self, response_json):
-        # Do not continue if we've hit the total pages
-        logger.info(
-            f"Current page: {response_json['page']}, Total pages: {self.num_pages}"
-        )
         if self.num_pages:
-            return response_json["page"] <= self.num_pages
+            return response_json.get("page", 1) <= self.num_pages
         return True
 
     def get_batch_data(self, response_json):
@@ -73,7 +85,7 @@ class XenoCantoDataIngester(ProviderDataIngester):
         # the list of records to process.
         if response_json:
             self.num_pages = response_json.get("numPages", 1)
-            return response_json.get("results")
+            return response_json.get("recordings")
         return None
 
     def get_media_type(self, record: dict):
@@ -109,10 +121,8 @@ class XenoCantoDataIngester(ProviderDataIngester):
         return int(duration.total_seconds() * 1000)
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
-        # Parse out the necessary info from the record data into a dictionary.
-
-        # If a required field is missing, return early to prevent unnecessary
-        # processing.
+        # TODO: remove the logging after testing
+        logger.info(f"Processing record: {data}\n")
         if not (foreign_identifier := data.get("id")):
             return None
 
@@ -151,7 +161,7 @@ class XenoCantoDataIngester(ProviderDataIngester):
         #
         # If only one media type is supported, simply extract the fields here.
 
-        return {
+        res = {
             "foreign_landing_url": foreign_landing_url,
             "url": url,
             "license_info": license_info,
@@ -164,6 +174,9 @@ class XenoCantoDataIngester(ProviderDataIngester):
             "sample_rate": sample_rate,
             "duration": duration,
         }
+        # TODO: remove the logging after testing
+        logger.info(f"Processed record: {res}")
+        return res
 
 
 def main():
