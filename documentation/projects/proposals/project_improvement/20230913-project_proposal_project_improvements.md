@@ -43,8 +43,8 @@ The following are requirements & success criteria for the project automations:
 The following are requirements & success criteria for the project views:
 
 - views are created based on clear utility in helping maintainers track work
-- views are clearly labelled and it's known which view to use for what purpose
-- all views and their utility is documented
+- views are clearly labelled, and it's known which view to use for what purpose
+- all views, and their utilities, are documented
 
 ## Participants
 
