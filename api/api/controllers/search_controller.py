@@ -354,6 +354,7 @@ def build_collection_query(
     )
     if not include_sensitive_by_params:
         search_query["must_not"].append({"term": {"mature": True}})
+
     if excluded_providers_query := get_excluded_providers_query():
         search_query["must_not"].append(excluded_providers_query)
 
