@@ -1,16 +1,16 @@
-# Implementation plan: Project automations
+# 2023-09-14 Implementation plan: Project automations
 
 **Author**: @dhruvkb
 
 ## Reviewers
 
-- [ ] TBD
+- [x] @AetherUnbound
 - [ ] TBD
 
 ## Project links
 
 - [Project Thread](https://github.com/WordPress/openverse/issues/1931)
-- [Project Proposal](/projects/proposals/project_improvement/20230914-project_proposal_project_improvements.md)
+- [Project Proposal](/projects/proposals/project_improvement/20230913-project_proposal_project_improvements.md)
 
 ## Overview
 
@@ -48,6 +48,16 @@ categories.
    The backlog board uses an emoji for each column. None of the other boards do.
    Personally I appreciate them and would like all boards to use them but
    wouldn't mind dropping them from the backlog board for consistency's sake.
+
+   **For emoji:**
+
+   - @dhruvkb
+   - @AetherUnbound
+   - &lt;add your name here&gt;
+
+   **Against emoji:**
+
+   - &lt;add your name here&gt;
 
 2. Column changes
 
@@ -113,7 +123,8 @@ categories.
    When an issue is
    [connected](https://docs.github.com/en/rest/overview/issue-event-types?apiVersion=2022-11-28#connected)
    to a PR, the issue should move from "📋 Backlog" or "📅 To do" to the "🏗 In
-   Progress" column.
+   Progress" column. If the issue is labeled as "⛔ status: blocked", that label
+   should be dropped.
 
    Unfortunately, the `connected` event does not trigger workflows. So this can
    be implemented using a combination of multiple workflows.

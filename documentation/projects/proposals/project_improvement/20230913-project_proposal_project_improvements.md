@@ -1,10 +1,10 @@
-# Project proposal: Project board improvements
+# 2023-09-13 Project proposal: Project board improvements
 
 **Author**: @dhruvkb
 
 ## Reviewers
 
-- [ ] TBD
+- [x] @AetherUnbound
 - [ ] TBD
 
 ## Project summary
@@ -22,11 +22,11 @@ workflows are consistent, well-tested and maintainable.
 
 ## Goals
 
-The project both
+This project should do both of the following things:
 
-- enhances our productivity by reducing a lot of work required to keep these
+- enhance our productivity by reducing a lot of work required to keep these
   projects up to date
-- increases our accountability by helping us stay on top of our work and also
+- increase our accountability by helping us stay on top of our work and also
   being aware of what others in the team are working on
 
 ## Requirements and success
@@ -36,6 +36,7 @@ The following are requirements & success criteria for the project automations:
 - all issues and PRs are automatically added to the relevant project boards
 - all cards are in the right columns as per their status
 - rarely, if ever, do we need to manually move cards to the right columns
+  (except for moving cards from "📋 Backlog" to "📅 To do" to prioritise them)
 - all custom automations are in a single place and are easy to maintain
 - all automations are documented
 
@@ -49,18 +50,18 @@ The following are requirements & success criteria for the project views:
 
 The boards are primarily an internal tool for maintainers and to some extent, an
 external tools for contributors (to find potential inroads to contribute) and
-managers (to gauge activity and progress).
+project leadership (to gauge activity and progress).
 
 ### Expectation for maintainers
 
 - Knowing what issues everyone, including themselves, is working on at a given
   time.
-- Having a clear idea of what issues needs to be worked on after the current
+- Having a clear idea of what issues need to be worked on after the current
   issues on hand are resolved.
 - Being able to find critical or high priority issues that haven't been
   addressed.
 - Knowing the status of their own PRs.
-- Identifying PRs that need reviews to be merged.
+- Identifying PRs that require additional reviews.
 
 ### Expectation for contributors
 
@@ -69,11 +70,12 @@ managers (to gauge activity and progress).
 - Knowing that their PRs will be noticed, reviewed and merged in a timely
   manner.
 
-### Expectation for managers
+### Expectation for project leadership
 
-- While managers are not directly concerned with the day-to-day issues and PRs,
-  they should be able to see a steady movement of cards from left-to-right.
-- The project discussion boards are more relevant to the management.
+- While project leadership are not directly concerned with the day-to-day issues
+  and PRs, they should be able to see a steady movement of cards from
+  left-to-right.
+- The project discussion boards are more relevant to the leadership.
 
 ## Miscellaneous
 
