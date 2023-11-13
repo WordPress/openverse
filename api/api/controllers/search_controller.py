@@ -29,11 +29,19 @@ from api.utils.check_dead_links import check_dead_links
 from api.utils.dead_link_mask import get_query_hash
 from api.utils.search_context import SearchContext
 
+
+# Using TYPE_CHECKING to avoid circular imports when importing types
 if TYPE_CHECKING:
     from api.serializers.audio_serializers import AudioCollectionRequestSerializer
     from api.serializers.media_serializers import (
         MediaSearchRequestSerializer,
         PaginatedRequestSerializer,
+    )
+
+    MediaListRequestSerializer = (
+        AudioCollectionRequestSerializer
+        | MediaSearchRequestSerializer
+        | PaginatedRequestSerializer
     )
 
 module_logger = logging.getLogger(__name__)
