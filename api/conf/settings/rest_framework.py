@@ -58,4 +58,6 @@ if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
     )
     del REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
 
-NUM_PROXIES = config("NUM_PROXIES", default=3, cast=int)
+# https://www.django-rest-framework.org/api-guide/throttling/#how-clients-are-identified
+# We override this in live environments to an appropriate number based on our deployment
+NUM_PROXIES = config("NUM_PROXIES", default=0, cast=int)
