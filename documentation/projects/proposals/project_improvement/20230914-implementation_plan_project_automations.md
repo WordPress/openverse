@@ -157,7 +157,7 @@ categories.
    [`issues` event](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#issues)
    can trigger workflows to do this.
 
-   The priority field in the project board issues can also be synced to the
+   The priority field in the project board issues should also be synced to the
    priority label using the same workflow. Additionally, critical issues can
    directly be added to the "📅 To do" column instead of the "📋 Backlog" column
    to prioritise their resolution.

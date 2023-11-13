@@ -10,7 +10,12 @@ this board are tied to events occurring for issues.
 ### Issue is created
 
 If a new issue is created, it is automatically added to the project board
-provided it does not contain the any label with the text "project".
+provided it does not contain any label with the text "project".
+
+```{note}
+This workflow also sets the Priority custom field in the issue so that we can
+create a kanban-board view based on priority.
+```
 
 - [Custom workflow](https://github.com/WordPress/openverse/blob/main/.github/workflows/new_issues.yml)
 
