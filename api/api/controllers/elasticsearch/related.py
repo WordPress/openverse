@@ -50,7 +50,7 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
         # Only use the first 10 tags
         if tags:
             tags = [tag["name"] for tag in tags[:10]]
-            related_query["should"].append(Q("terms", tags__name=tags))
+            related_query["should"].append(Q("terms", tags__name__keyword=tags))
 
     # Exclude the dynamically disabled sources.
     if excluded_providers_query := get_excluded_providers_query():

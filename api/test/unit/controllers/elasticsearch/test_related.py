@@ -80,7 +80,7 @@ def test_related_media(
                 ],
                 "should": [
                     {"match": {"title": "Bird Nature Photo"}},
-                    {"terms": {"tags.name": ["bird"]}},
+                    {"terms": {"tags.name.keyword": ["bird"]}},
                 ],
             }
         },
