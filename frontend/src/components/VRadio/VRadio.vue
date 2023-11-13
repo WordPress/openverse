@@ -23,6 +23,8 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
+import { defineEvent } from "~/types/emits"
+
 import VSvg from "~/components/VSvg/VSvg.vue"
 /**
  * Renders a radio input field, useful for choosing one of a few options that
@@ -63,6 +65,9 @@ export default defineComponent({
       type: String,
       default: "",
     },
+  },
+  emits: {
+    change: defineEvent<[string]>(),
   },
   setup(props, { emit }) {
     const isChecked = computed(() => props.value_ === props.modelValue)

@@ -63,6 +63,8 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { camelCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
+import { defineEvent } from "~/types/emits"
+
 import VLink from "~/components/VLink.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -79,6 +81,9 @@ export default defineComponent({
       type: Object as PropType<AudioDetail | ImageDetail>,
       required: true,
     },
+  },
+  emits: {
+    reveal: defineEvent(),
   },
   setup(props, { emit }) {
     const searchStore = useSearchStore()

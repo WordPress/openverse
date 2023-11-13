@@ -20,6 +20,8 @@
 <script lang="ts">
 import type { Metadata } from "~/types/media"
 
+import { defineEvent } from "~/types/emits"
+
 import VLink from "~/components/VLink.vue"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -34,6 +36,9 @@ export default {
       type: Object as PropType<Metadata>,
       required: true,
     },
+  },
+  emits: {
+    click: defineEvent<[string | undefined]>(),
   },
 }
 </script>
