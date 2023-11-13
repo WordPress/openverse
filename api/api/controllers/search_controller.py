@@ -369,6 +369,16 @@ def build_collection_query(
     return Q("bool", **search_query)
 
 
+def build_query(
+    strategy: SearchStrategy,
+    search_params: MediaListRequestSerializer,
+    collection_params: dict[str, str] | None,
+) -> Q:
+    if strategy == "collection":
+        return build_collection_query(search_params, collection_params)
+    return build_search_query(search_params)
+
+
 def query_media(
     strategy: SearchStrategy,
     search_params: MediaListRequestSerializer,
@@ -405,10 +415,7 @@ def query_media(
     """
     index = get_index(exact_index, origin_index, search_params)
 
-    if strategy == "collection":
-        query = build_collection_query(search_params, collection_params)
-    else:
-        query = build_search_query(search_params)
+    query = build_query(strategy, search_params, collection_params)
 
     s = Search(index=index).query(query)
 
@@ -426,8 +433,8 @@ def query_media(
 
     # Sort by `created_on` if the parameter is set or if `strategy` is `collection`.
     sort_by = search_params.validated_data.get("sort_by")
-    sort_dir = search_params.validated_data.get("sort_dir", "desc")
     if strategy == "collection" or sort_by == INDEXED_ON:
+        sort_dir = search_params.validated_data.get("sort_dir", "desc")
         s = s.sort({"created_on": {"order": sort_dir}})
 
     # Execute paginated search and tally results
