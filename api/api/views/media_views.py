@@ -83,7 +83,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
         results = list(self.get_queryset().filter(identifier__in=identifiers))
         results.sort(key=lambda x: identifiers.index(str(x.identifier)))
         for result, hit in zip(results, hits):
-            result.fields_matched = getattr(hit, "fields_matched", None)
+            result.fields_matched = getattr(hit.meta, "highlight", None)
 
         return results
 
