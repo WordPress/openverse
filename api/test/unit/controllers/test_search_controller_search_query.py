@@ -256,12 +256,12 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     [
         pytest.param(
             {"tag": "art"},
-            [{"term": {"tags.name": "art"}}],
+            [{"term": {"tags.name.keyword": "art"}}],
             id="filter_by_tag",
         ),
         pytest.param(
             {"tag": "art, photography"},
-            [{"term": {"tags.name": "art, photography"}}],
+            [{"term": {"tags.name.keyword": "art, photography"}}],
             id="filter_by_tag_treats_punctuation_as_part_of_tag",
         ),
         pytest.param(

@@ -3,8 +3,6 @@ import random
 import re
 from collections.abc import Callable
 from enum import Enum, auto
-
-from api.serializers.media_serializers import PaginatedRequestSerializer
 from test.factory.es_http import (
     MOCK_DEAD_RESULT_URL_PREFIX,
     MOCK_LIVE_RESULT_URL_PREFIX,
@@ -809,63 +807,3 @@ def test_excessive_recursion_in_post_process(
             filter_dead=True,
         )
     assert "Nesting threshold breached" in caplog.text
-
-
-@pytest.mark.parametrize(
-    ("data", "expected_query"),
-    [
-        pytest.param(
-            {"unstable__include_sensitive_results": False, "tag": "art"},
-            Q(
-                "bool",
-                filter=[{"terms": {"tags.name.keyword": ["art"]}}],
-                must_not=[{"term": {"mature": True}}],
-            ),
-            id="filter_by_tag_without_sensitive",
-        ),
-        pytest.param(
-            {"unstable__include_sensitive_results": True, "tag": "art"},
-            Q(
-                "bool",
-                filter=[{"terms": {"tags.name.keyword": ["art"]}}],
-            ),
-            id="filter_by_tag_with_sensitive",
-        ),
-        pytest.param(
-            {"unstable__include_sensitive_results": False, "source": "flickr"},
-            Q(
-                "bool",
-                filter=[{"terms": {"source.keyword": ["flickr"]}}],
-                must_not=[{"term": {"mature": True}}],
-            ),
-            id="filter_by_source_without_sensitive",
-        ),
-        pytest.param(
-            {
-                "unstable__include_sensitive_results": False,
-                "source": "flickr",
-                "creator": "nasa",
-            },
-            Q(
-                "bool",
-                filter=[
-                    {"terms": {"source.keyword": ["flickr"]}},
-                    {"terms": {"creator.keyword": ["nasa"]}},
-                ],
-                must_not=[{"term": {"mature": True}}],
-            ),
-            id="filter_by_creator_without_sensitive",
-        ),
-    ],
-)
-@mock.patch("api.controllers.search_controller.Search", wraps=Search)
-def test_build_collection_query(mock_search_class, data, expected_query):
-    # Setup
-    mock_search = mock_search_class.return_value
-
-    # Action
-    build_collection_query(mock_search, data)
-    actual_query = mock_search.query.call_args[0][0]
-
-    # Validate
-    assert actual_query == expected_query
