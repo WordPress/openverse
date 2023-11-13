@@ -20,8 +20,6 @@ export = {
     "vue/no-deprecated-dollar-listeners-api": "off",
     "vue/no-v-for-template-key-on-child": "off",
     "vue/no-deprecated-v-on-native-modifier": "off",
-    // TODO: enable after https://github.com/WordPress/openverse/issues/3268 is fixed
-    "vue/no-deprecated-props-default-this": "off",
 
     "vue/max-attributes-per-line": "off",
     "vue/require-prop-types": "off",
