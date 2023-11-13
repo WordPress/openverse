@@ -337,7 +337,7 @@ def build_collection_query(
     # names are identical.
     filters = [
         # Collection filters allow a single value.
-        ("tag", "tags.name"),
+        ("tag", "tags.name.keyword"),
         ("source", None),
         ("creator", None),
     ]
