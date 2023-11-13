@@ -1,5 +1,3 @@
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "getByText"] }] */
-
 import { fireEvent } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
@@ -21,7 +19,6 @@ jest.mock("~/composables/use-match-routes", () => ({
 }))
 
 const stubs = {
-  VPlayPause: true,
   VLicense: true,
   VWaveform: true,
   VAudioThumbnail: true,
@@ -60,28 +57,33 @@ describe("AudioTrack", () => {
   })
 
   it("should render the full audio track component even without duration", () => {
+    options.propsData.layout = "full"
     const { getByText } = render(VAudioTrack, options, configureVue)
-    getByText(props.audio.creator)
+    const creator = getByText(props.audio.creator)
+    expect(creator).toBeInstanceOf(HTMLAnchorElement)
   })
 
-  it("should render the row audio track component even without duration", () => {
-    options.propsData.layout = "row"
-    const { getByText } = render(VAudioTrack, options, configureVue)
-    getByText("by " + props.audio.creator)
-  })
-
-  it("should show audio title as main page title", () => {
+  it("should show audio title as main page title in full layout", () => {
+    options.propsData.layout = "full"
     const { getByText } = render(VAudioTrack, options, configureVue)
     // Title text appears multiple times in the track, so need to specify selector
     const element = getByText(props.audio.title, { selector: "H1" })
     expect(element).toBeInTheDocument()
   })
 
-  it("should show audio creator with link", () => {
+  it("should show audio creator in a full layout with link", () => {
+    options.propsData.layout = "full"
     const { getByText } = render(VAudioTrack, options, configureVue)
     const element = getByText(props.audio.creator)
     expect(element).toBeInstanceOf(HTMLAnchorElement)
     expect(element).toHaveAttribute("href", props.audio.creator_url)
+  })
+
+  it("should render the row audio track component even without duration", () => {
+    options.propsData.layout = "row"
+    const { getByText } = render(VAudioTrack, options, configureVue)
+    const creator = getByText("by " + props.audio.creator)
+    expect(creator).toBeTruthy()
   })
 
   it.each`
@@ -95,7 +97,6 @@ describe("AudioTrack", () => {
     async ({ errorType, errorText }) => {
       options.propsData.audio.url = "bad.url"
       options.propsData.layout = "row"
-      options.stubs.VPlayPause = false
       options.stubs.VWaveform = false
       options.stubs.VAudioThumbnail = true
 
@@ -136,6 +137,7 @@ describe("AudioTrack", () => {
   it("has blurred title in box layout when audio is sensitive", async () => {
     options.propsData.audio.isSensitive = true
     options.propsData.layout = "box"
+    options.propsData.size = "large"
     const { getByText } = render(VAudioTrack, options, configureVue)
     const h2 = getByText("This audio track may contain sensitive content.")
     expect(h2).toHaveClass("blur-text")
