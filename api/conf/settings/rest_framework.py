@@ -57,3 +57,5 @@ if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
         **{k: None for k, _ in REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"].items()}
     )
     del REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
+
+NUM_PROXIES = config("NUM_PROXIES", default=3, cast=int)
