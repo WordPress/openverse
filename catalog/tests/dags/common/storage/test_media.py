@@ -596,7 +596,7 @@ def test_MediaStore_get_image_enriches_multiple_tags():
         creator_url=None,
         title=None,
         meta_data=None,
-        raw_tags=["tagone", "tag2", "tag3"],
+        raw_tags=["tag-one", "TAG 2", "Tag3"],
         category=None,
         watermarked=None,
         source=None,
@@ -604,9 +604,47 @@ def test_MediaStore_get_image_enriches_multiple_tags():
     )
 
     assert actual_image.tags == [
-        {"name": "tagone", "provider": "test_provider"},
-        {"name": "tag2", "provider": "test_provider"},
+        {"name": "tag-one", "provider": "test_provider"},
+        {"name": "tag 2", "provider": "test_provider"},
         {"name": "tag3", "provider": "test_provider"},
+    ]
+
+
+def test_MediaStore_get_image_lowercases_tag():
+    image_store = image.ImageStore("test_provider")
+    actual_image = image_store._get_image(
+        license_info=get_license_info(
+            license_url="https://license/url",
+            license_="by",
+            license_version="4.0",
+        ),
+        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
+        url=TEST_IMAGE_URL,
+        thumbnail_url=None,
+        filetype=None,
+        filesize=None,
+        foreign_identifier="02",
+        width=None,
+        height=None,
+        creator=None,
+        creator_url=None,
+        title=None,
+        meta_data=None,
+        raw_tags=[
+            {"name": "Tag-One", "provider": "test_provider"},
+            {"name": "TAG 2", "provider": "test_provider"},
+            {"name": "taG 3", "provider": "test_provider"},
+        ],
+        category=None,
+        watermarked=None,
+        source=None,
+        ingestion_type=None,
+    )
+
+    assert actual_image.tags == [
+        {"name": "tag-one", "provider": "test_provider"},
+        {"name": "tag 2", "provider": "test_provider"},
+        {"name": "tag 3", "provider": "test_provider"},
     ]
 
 

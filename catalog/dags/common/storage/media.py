@@ -298,10 +298,11 @@ class MediaStore(metaclass=abc.ABCMeta):
     def _format_raw_tag(self, tag):
         if type(tag) == dict and tag.get("name") and tag.get("provider"):
             logger.debug(f"Tag already enriched: {tag}")
+            tag["name"] = tag["name"].lower()
             return tag
         else:
             logger.debug(f"Enriching tag: {tag}")
-            return {"name": tag, "provider": self.provider}
+            return {"name": tag.lower(), "provider": self.provider}
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """
