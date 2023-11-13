@@ -53,3 +53,11 @@ CREATE UNIQUE INDEX image_identifier_key
 CREATE UNIQUE INDEX image_url_key
     ON public.image
     USING btree (url);
+
+
+CREATE TABLE public.deleted_image (
+    LIKE public.image,
+    deleted_on timestamp with time zone NOT NULL,
+    deleted_reason character varying(80)
+);
+ALTER TABLE public.deleted_image OWNER TO deploy;

@@ -767,3 +767,13 @@ AUDIO_SET_FOREIGN_IDENTIFIER = StringColumn(
     size=1000,
     truncate=False,
 )
+
+# Columns used by the Deleted Media tables
+
+DELETED_ON = TimestampColumn(
+    name="deleted_on", required=True, upsert_strategy=UpsertStrategy.no_change
+)
+
+DELETED_REASON = StringColumn(
+    name="deleted_reason", required=True, size=80, truncate=True
+)

@@ -26,6 +26,7 @@ DAG_PATHS = [
     "data_refresh/create_filtered_index_dag.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
+    "database/delete_records/delete_records_dag.py",
 ]
 
 # Expected count from the DagBag once a file has been parsed
