@@ -51,13 +51,13 @@ export default defineComponent({
       return Math.floor(Math.random() * (max - min) + min)
     }
 
-    // Calculate the default element count based on isForTab
     const elementCount = computed(() => {
-          if (props.numElems) return props.numElems;
-          if (props.isForTab === "all") return 20;
-          if (props.isForTab === "image") return 30;
-          return 8;
-        });
+      // Calculate the default element count based on isForTab
+      if (props.numElems) return props.numElems
+      if (props.isForTab === "all") return 20
+      if (props.isForTab === "image") return 30
+      return 8
+    })
 
     return { getRandomSize, elementCount }
   },
