@@ -72,6 +72,7 @@ def _post_process_results(
     :param search_results: The Elasticsearch response object containing search
     results.
     :param filter_dead: Whether images should be validated.
+    :param nesting: the level of nesting at which this function is being called
     :return: List of results.
     """
 
