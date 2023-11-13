@@ -32,6 +32,7 @@ from providers.provider_api_scripts.wikimedia_commons import (
     WikimediaCommonsDataIngester,
 )
 from providers.provider_api_scripts.wordpress import WordPressDataIngester
+from providers.provider_api_scripts.xeno_canto import XenoCantoDataIngester
 
 
 logger = logging.getLogger(__name__)
@@ -296,6 +297,12 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         ingester_class=WordPressDataIngester,
+        pull_timeout=timedelta(hours=12),
+    ),
+    ProviderWorkflow(
+        ingester_class=XenoCantoDataIngester,
+        dated=True,
+        schedule_string="@daily",
         pull_timeout=timedelta(hours=12),
     ),
 ]
