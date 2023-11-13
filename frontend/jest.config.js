@@ -12,6 +12,7 @@ module.exports = {
     "^~~/(.*)$": "<rootDir>/$1",
     "^vue$": "vue/dist/vue.common.js",
     "(.*svg)(\\?inline)$": "<rootDir>/test/unit/test-utils/svgTransform.js",
+    axios: "axios/dist/node/axios.cjs",
   },
   setupFiles: ["<rootDir>/test/unit/setup.js"],
   setupFilesAfterEnv: ["<rootDir>/test/unit/setup-after-env.js"],
