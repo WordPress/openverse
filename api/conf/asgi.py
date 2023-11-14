@@ -20,3 +20,13 @@ application = get_asgi_application()
 
 if settings.ENVIRONMENT == "local":
     static_files_application = ASGIStaticFilesHandler(application)
+
+
+if settings.GC_DEBUG_LOGGING:
+    import gc
+
+    setting = 0
+    for flag in settings.GC_DEBUG_LOGGING:
+        setting |= getattr(gc, flag)
+
+    gc.set_debug(setting)
