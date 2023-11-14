@@ -62,9 +62,9 @@ def creator_collection(media_path):
     assert response.status_code == 200
 
     results = response.json()["results"]
-    assert all(
-        r["creator"] == "creator" and results["source"] == source for r in results
-    )
+    for result in results:
+        assert result["source"] == source, f"{result['source']} != {source}"
+        assert result["creator"] == creator, f"{result['creator']} != {creator}"
 
 
 def search_all_excluded(media_path, excluded_source):
