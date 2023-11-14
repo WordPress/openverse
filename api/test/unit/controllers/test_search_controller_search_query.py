@@ -273,7 +273,7 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
             {"source": "flickr", "creator": "nasa"},
             [
                 {"term": {"source": "flickr"}},
-                {"term": {"creator": "nasa"}},
+                {"term": {"creator.keyword": "nasa"}},
             ],
             id="filter_by_creator",
         ),

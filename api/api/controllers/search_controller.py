@@ -347,7 +347,7 @@ def build_collection_query(
         # Collection filters allow a single value.
         ("tag", "tags.name.keyword"),
         ("source", None),
-        ("creator", None),
+        ("creator", "creator.keyword"),
     ]
     for serializer_field, es_field in filters:
         if serializer_field in collection_params:
