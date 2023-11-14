@@ -8,8 +8,7 @@ import {
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
-import { NO_RESULT } from "~/constants/errors"
-import { useSearchStore } from "@/stores/search"
+import { ECONNABORTED, ERR_UNKNOWN, NO_RESULT } from "~/constants/errors"
 
 <Meta title="Components/VErrorSection" component={VErrorSection} />
 
@@ -27,10 +26,6 @@ export const ErrorPageTemplate = (args) => ({
   template: `<VErrorSection v-bind="args" />`,
   components: { VErrorSection },
   setup() {
-    const searchStore = useSearchStore()
-    searchStore.setSearchTerm(
-      args.fetchingError.details?.searchTerm ?? "sad person"
-    )
     return { args }
   },
 })
@@ -40,7 +35,7 @@ export const ErrorPageTemplate = (args) => ({
     name="No result"
     args={{
       fetchingError: {
-        message: NO_RESULT,
+        code: NO_RESULT,
         requestKind: "search",
         searchType: "image",
         details: { searchTerm: "sad person" },
@@ -60,7 +55,7 @@ This result appears when an API request times out.
     name="Server timeout"
     args={{
       fetchingError: {
-        message: "server timeout",
+        code: ECONNABORTED,
         requestKind: "search",
         searchType: "image",
       },
@@ -74,15 +69,17 @@ This result appears when an API request times out.
 
 This page is shown when there is some other error.
 
-<Story
-  name="Unknown error"
-  args={{
-    fetchingError: {
-      message: "Unknown error",
-      requestKind: "search",
-      searchType: "image",
-    },
-  }}
->
-  {ErrorPageTemplate.bind({})}
-</Story>
+<Canvas>
+  <Story
+    name="Unknown error"
+    args={{
+      fetchingError: {
+        code: ERR_UNKNOWN,
+        requestKind: "search",
+        searchType: "image",
+      },
+    }}
+  >
+    {ErrorPageTemplate.bind({})}
+  </Story>
+</Canvas>

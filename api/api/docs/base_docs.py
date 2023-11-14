@@ -5,12 +5,6 @@ from drf_spectacular.openapi import AutoSchema, OpenApiResponse
 from drf_spectacular.utils import OpenApiExample, extend_schema
 
 
-refer_curl = (
-    "You can refer to the cURL request samples "
-    "for examples on how to consume this endpoint."
-)
-
-
 def fields_to_md(field_names):
     """
     Create a Markdown representation of the given list of names to use in Swagger docs.
@@ -30,7 +24,7 @@ def custom_extend_schema(**kwargs):
     description = kwargs.pop("desc", None)
     if description:
         description = dedent(description)
-        extend_args["description"] = f"{description}\n\n{refer_curl}"
+        extend_args["description"] = f"{description}"
 
     parameters = kwargs.pop("params", [])
     if not isinstance(parameters, list):
@@ -73,7 +67,7 @@ class MediaSchema(AutoSchema):
     """
 
     def get_description(self) -> str:
-        return f"""{super().get_description()}\n\n{refer_curl}"""
+        return f"""{super().get_description()}"""
 
     def get_operation_id(self) -> str:
         operation_tokens = super().get_operation_id().split("_")[0:-1]

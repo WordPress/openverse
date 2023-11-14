@@ -40,7 +40,7 @@ jobs:
       packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get changes
         id: paths-filter
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set matrix images
         id: set-matrix
@@ -95,7 +95,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -163,7 +163,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Sets up `just` and Node.js.
       # Node.js is needed for the frontend to download translations.
@@ -192,17 +192,18 @@ jobs:
           just frontend/run i18n
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           install: true
 
       - name: Build image `${{ matrix.image }}`
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
-          context: ${{ matrix.context || matrix.image }}
+          context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
+          file: ${{ matrix.file }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
@@ -239,7 +240,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -271,7 +272,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -307,7 +308,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -355,7 +356,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -413,13 +414,13 @@ jobs:
           - name: validate_openapi
             recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
           - name: check_migrations
-            recipe: api/dj makemigrations --check --noinput --merge
+            recipe: api/dj makemigrations --check
           - name: test_doc
             recipe: api/doc-test
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -485,7 +486,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -510,16 +511,13 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
         include:
           - name: unit_test
             script: "test:unit"
-          - name: storybook_smoke_test
-            script: "storybook:smoke"
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -545,7 +543,6 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
 
     steps:
       - name: Pass
@@ -573,7 +570,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -632,7 +629,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -749,7 +746,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -811,13 +808,13 @@ jobs:
           mkdir openverse
 
       - name: Checkout repository at `gh-pages` branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: gh-pages
 
       - name: Checkout automations from repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: automation-checkout
 
@@ -867,7 +864,7 @@ jobs:
           body: ${{ steps.preview_diff.outputs.body }}
 
       - name: Checkout repository # again, to enable cleaning
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: success() || failure()
 
   #################
@@ -904,10 +901,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Log in to GitHub Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
           username: ${{ github.actor }}
@@ -949,7 +946,7 @@ jobs:
       - publish-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: commit
@@ -989,7 +986,7 @@ jobs:
       - publish-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: commit
@@ -1058,7 +1055,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: commit

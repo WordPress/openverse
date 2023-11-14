@@ -15,7 +15,6 @@
       "@pinia/nuxt",
       "@sentry/core"
     ],
-    "typeRoots": ["./typings", "./node_modules/@types"],
     "paths": {
       "~/*": ["./src/*"],
       "~~/*": ["./*"]

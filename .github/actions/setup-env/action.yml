@@ -10,10 +10,6 @@ inputs:
     default: "true"
     description: Whether to set up Node.js and dependencies
 
-  install_deps:
-    default: "true"
-    description: Whether to install dependencies using Just
-
   install_recipe:
     default: "install"
     description: The recipe to use to install dependencies
@@ -65,7 +61,7 @@ runs:
 
     # Install dependencies
     - name: Install dependencies
-      if: inputs.install_deps == 'true'
+      if: inputs.install_recipe != ''
       shell: bash
       run: |
         just ${{ inputs.install_recipe }}

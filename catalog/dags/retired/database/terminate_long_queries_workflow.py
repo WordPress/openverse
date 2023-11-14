@@ -17,9 +17,8 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
-from common.loader.sql import RETURN_ROW_COUNT
 from common.slack import send_message
-from common.sql import PostgresHook
+from common.sql import PostgresHook, RETURN_ROW_COUNT
 
 
 logger = logging.getLogger(__name__)

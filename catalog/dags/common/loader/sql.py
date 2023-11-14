@@ -7,7 +7,7 @@ from psycopg2.errors import InvalidTextRepresentation
 from common.constants import IMAGE, MediaType, SQLInfo
 from common.loader import provider_details as prov
 from common.loader.paths import _extract_media_type
-from common.sql import PostgresHook
+from common.sql import RETURN_ROW_COUNT, PostgresHook
 from common.storage import columns as col
 from common.storage.columns import NULL, Column, UpsertStrategy
 from common.storage.db_columns import setup_db_columns_for_media_type
@@ -40,7 +40,6 @@ OLDEST_PER_PROVIDER = {
 }
 
 CURRENT_TSV_VERSION = "001"
-RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731
 
 
 def create_column_definitions(table_columns: list[Column], is_loading=True):

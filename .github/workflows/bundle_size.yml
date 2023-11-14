@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get changes
         id: paths-filter
@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -58,4 +58,4 @@ jobs:
 
       - name: Checkout repository # again, to enable cleaning
         if: always()
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4

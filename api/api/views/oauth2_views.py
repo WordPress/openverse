@@ -1,3 +1,4 @@
+import json
 import logging as log
 import secrets
 import smtplib
@@ -136,9 +137,9 @@ class VerifyEmail(APIView):
 
 
 @extend_schema(tags=["auth"])
-class TokenView(BaseTokenView, APIView):
+class TokenView(APIView, BaseTokenView):
     @token
-    def post(self, *args, **kwargs):
+    def post(self, request):
         """
         Get an access token using client credentials.
 
@@ -154,7 +155,9 @@ class TokenView(BaseTokenView, APIView):
         endpoint.
         """
 
-        return super().post(*args, **kwargs)
+        res = super().post(request._request)
+        data = json.loads(res.content)
+        return Response(data, status=res.status_code)
 
 
 @extend_schema(tags=["auth"])

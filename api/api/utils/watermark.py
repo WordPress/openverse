@@ -5,9 +5,11 @@ from io import BytesIO
 from textwrap import wrap
 
 from django.conf import settings
+from rest_framework import status
+from rest_framework.exceptions import APIException
 
 import requests
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 from sentry_sdk import capture_exception
 
 
@@ -23,6 +25,14 @@ TEXT_COLOR = "#000"  # Black text
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Watermark")
 }
+
+
+class UpstreamWatermarkException(APIException):
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
+    default_detail = (
+        "Could not render watermarked image due to upstream provider error."
+    )
+    default_code = "upstream_watermark_failure"
 
 
 class Dimension(Flag):
@@ -169,12 +179,17 @@ def _open_image(url):
     logger = parent_logger.getChild("_open_image")
     try:
         response = requests.get(url, headers=HEADERS)
+        response.raise_for_status()
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
     except requests.exceptions.RequestException as e:
         capture_exception(e)
+        logger.error(f"Error requesting image: {e}")
+        raise UpstreamWatermarkException(f"{e}")
+    except UnidentifiedImageError as e:
+        capture_exception(e)
         logger.error(f"Error loading image data: {e}")
-        return None, None
+        raise UpstreamWatermarkException(f"{e}")
 
     return img, img.getexif()
 

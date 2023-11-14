@@ -23,6 +23,7 @@ from ingestion_server.state import register_indexing_job
 
 
 client = boto3.client("ec2", region_name=config("AWS_REGION", default="us-east-1"))
+worker_limit = config("INDEXER_WORKER_LIMIT", default=0, cast=int)
 
 
 def schedule_distributed_index(db_conn, model_name, table_name, target_index, task_id):
@@ -87,6 +88,13 @@ def _prepare_workers():
         servers.append(server)
         ids.append(_id)
     log.info(f"Selected worker instances {servers}")
+
+    if worker_limit > 0:
+        log.info(f"Truncating worker instances under limit {worker_limit}")
+        servers = servers[:worker_limit]
+        ids = ids[:worker_limit]
+        log.info(f"Truncated worker instances {servers}")
+
     client.start_instances(InstanceIds=ids)
     return servers
 

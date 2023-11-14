@@ -12,7 +12,7 @@ describe("useImageCellSize", () => {
     expect(imgHeight.value).toEqual(250)
     expect(imgWidth.value).toEqual(250)
     expect(isPanorama.value).toEqual(false)
-    expect(styles.value).toEqual({ container: "", figure: "", iPadding: "" })
+    expect(styles.value).toEqual({})
   })
 
   it("Should return correct values for intrinsic panorama image", () => {
@@ -27,9 +27,9 @@ describe("useImageCellSize", () => {
     expect(imgWidth.value).toEqual(WIDTH)
     expect(isPanorama.value).toEqual(true)
     expect(styles.value).toEqual({
-      container: "width: 450px;flex-grow: 450",
-      figure: "width: 675%; top: 0%; left:-287.5%;",
-      iPadding: "padding-bottom:56.25%",
+      "--container-grow": 250,
+      "--container-width": "250px",
+      "--img-aspect-ratio": 1.7777777777777777,
     })
   })
 
@@ -45,9 +45,9 @@ describe("useImageCellSize", () => {
     expect(imgWidth.value).toEqual(WIDTH)
     expect(isPanorama.value).toEqual(false)
     expect(styles.value).toEqual({
-      container: "width: 189.84375px;flex-grow: 189.84375",
-      figure: "width: 100%; top: -711.1111111111111%; left:0%;",
-      iPadding: "padding-bottom:133.33333333333331%",
+      "--container-grow": 105,
+      "--container-width": "105px",
+      "--img-aspect-ratio": 0.75,
     })
   })
 
@@ -63,9 +63,9 @@ describe("useImageCellSize", () => {
     expect(imgWidth.value).toEqual(WIDTH)
     expect(isPanorama.value).toEqual(false)
     expect(styles.value).toEqual({
-      container: "width: 253.125px;flex-grow: 253.125",
-      figure: "width: 100%; top: 0%; left:0%;",
-      iPadding: "padding-bottom:100%",
+      "--container-grow": 141,
+      "--container-width": "141px",
+      "--img-aspect-ratio": 1,
     })
   })
 })

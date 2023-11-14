@@ -5,7 +5,14 @@
   "onboarding": false,
   "platform": "github",
   "repositories": ["WordPress/openverse"],
-  "extends": ["config:base", ":preserveSemverRanges", "schedule:monthly"],
+  "extends": [
+    "config:recommended",
+    ":preserveSemverRanges",
+    ":automergeMinor",
+    ":automergePr",
+    "schedule:monthly",
+    "group:monorepos"
+  ],
   "prCommitsPerRunLimit": 3,
   "labels": [
     "dependencies",
@@ -16,9 +23,66 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "labels": ["🐳 tech: docker"]
+      "addLabels": ["🐳 tech: docker"]
+    },
+    {
+      "groupName": "workflows",
+      "matchFileNames": [
+        ".github/{actions,workflows}/**",
+        "automations/**",
+        ".pre-commit-config.yaml"
+      ],
+      "matchManagers": ["pre-commit", "github-actions"],
+      "addLabels": ["🧱 stack: mgmt"]
+    },
+    {
+      "matchDatasources": ["pypi"],
+      "addLabels": ["🐍 tech: python"]
+    },
+    {
+      "matchDatasources": ["npm"],
+      "addLabels": ["🟨 tech: javascript"]
+    },
+    {
+      "matchFileNames": ["{frontend,packages}/**"],
+      "addLabels": ["🧱 stack: frontend"]
+    },
+    {
+      "matchFileNames": ["api/**"],
+      "addLabels": ["🧱 stack: api"]
+    },
+    {
+      "matchFileNames": ["ingestion_server/**"],
+      "addLabels": ["🧱 stack: ingestion server"]
+    },
+    {
+      "matchFileNames": ["catalog/**"],
+      "addLabels": ["🧱 stack: catalog"]
+    },
+    {
+      "matchFileNames": ["documentation/**"],
+      "addLabels": ["🧱 stack: documentation"]
+    },
+    {
+      "groupName": "python dev dependencies",
+      "matchDepTypes": ["dev-packages"],
+      "matchManagers": ["pipenv"],
+      "matchFileNames": ["api/**", "ingestion_server/**", "documentation/**"]
+    },
+    {
+      "groupName": "@openverse/eslint-plugin",
+      "matchFileNames": ["packages/eslint-plugin/**"]
+    },
+    {
+      "groupName": "tailwind",
+      "matchPackagePatterns": ["tailwindcss"]
+    },
+    {
+      "groupName": "@testing-library",
+      "matchPackagePrefixes": ["@testing-library"]
     }
   ],
-  "ignorePaths": ["package.json"],
-  "includeForks": false
+  "forkProcessing": "disabled",
+  "allowScripts": true,
+  "pre-commit": { "enabled": true }
 }

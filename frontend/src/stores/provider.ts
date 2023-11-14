@@ -1,20 +1,19 @@
-import { capital } from "case"
 import { defineStore } from "pinia"
 import { ssrRef } from "@nuxtjs/composition-api"
-import axios from "axios"
 
+import { capitalCase } from "~/utils/case"
 import { env } from "~/utils/env"
+import { parseFetchingError } from "~/utils/errors"
 import {
   AUDIO,
   IMAGE,
   SupportedMediaType,
   supportedMediaTypes,
 } from "~/constants/media"
-import { warn } from "~/utils/console"
 import { initProviderServices } from "~/data/media-provider-service"
 
 import type { MediaProvider } from "~/types/media-provider"
-import type { FetchState } from "~/types/fetch-state"
+import type { FetchingError, FetchState } from "~/types/fetch-state"
 
 import type { Ref } from "vue"
 
@@ -60,7 +59,7 @@ export const useProviderStore = defineStore("provider", {
   }),
 
   actions: {
-    _endFetching(mediaType: SupportedMediaType, error?: string) {
+    _endFetching(mediaType: SupportedMediaType, error?: FetchingError) {
       this.fetchState[mediaType].fetchingError = error || null
       if (error) {
         this.fetchState[mediaType].isFinished = true
@@ -78,7 +77,7 @@ export const useProviderStore = defineStore("provider", {
     _updateFetchState(
       mediaType: SupportedMediaType,
       action: "start" | "end",
-      option?: string
+      option?: FetchingError
     ) {
       action === "start"
         ? this._startFetching(mediaType)
@@ -103,7 +102,7 @@ export const useProviderStore = defineStore("provider", {
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
       const provider = this._getProvider(providerCode, mediaType)
-      return provider?.display_name || capital(providerCode)
+      return provider?.display_name || capitalCase(providerCode)
     },
 
     /**
@@ -143,19 +142,15 @@ export const useProviderStore = defineStore("provider", {
           this.$nuxt?.$config?.apiAccessToken
         )
         const res = await service.getProviderStats()
-        sortedProviders = sortProviders(res.data)
+        sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
-        let errorMessage = `There was an error fetching media providers for ${mediaType}`
-        if (error instanceof Error) {
-          errorMessage = axios.isAxiosError(error)
-            ? `${errorMessage}: ${error.code}`
-            : `${errorMessage}: ${error.message}`
-        }
-        warn(errorMessage)
+        const errorData = parseFetchingError(error, mediaType, "provider")
+
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
-        this._updateFetchState(mediaType, "end", errorMessage)
+        this._updateFetchState(mediaType, "end", errorData)
+        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
       } finally {
         this.providers[mediaType] = sortedProviders
       }

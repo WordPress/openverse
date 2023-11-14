@@ -7,7 +7,7 @@ ARG INGESTION_PY_VERSION
 # Python builder #
 ##################
 
-FROM python:${INGESTION_PY_VERSION} as builder
+FROM docker.io/python:${INGESTION_PY_VERSION} as builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -36,7 +36,7 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM python:${INGESTION_PY_VERSION}-slim as ing
+FROM docker.io/python:${INGESTION_PY_VERSION}-slim as ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -61,7 +61,7 @@ COPY --from=builder /venv /venv
 #   - libpq-dev: required by `psycopg2`
 # - Create directory for holding worker state
 RUN apt-get update \
-      && apt-get install -y curl libpq-dev \
+      && apt-get install -y curl libpq-dev libc-bin=2.36-9+deb12u3 libc6=2.36-9+deb12u3 \
       && rm -rf /var/lib/apt/lists/* \
       && mkdir /worker_state
 

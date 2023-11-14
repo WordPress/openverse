@@ -5,7 +5,9 @@ MOCK_LIVE_RESULT_URL_PREFIX = "https://example.com/openverse-live-image-result-u
 MOCK_DEAD_RESULT_URL_PREFIX = "https://example.com/openverse-dead-image-result-url"
 
 
-def create_mock_es_http_image_hit(_id: str, index: str, live: bool = True):
+def create_mock_es_http_image_hit(
+    _id: str, index: str, live: bool = True, identifier: str | None = None
+):
     return {
         "_index": index,
         "_type": "_doc",
@@ -20,7 +22,7 @@ def create_mock_es_http_image_hit(_id: str, index: str, live: bool = True):
             "max_boost": 85,
             "min_boost": 1,
             "id": _id,
-            "identifier": str(uuid4()),
+            "identifier": identifier or str(uuid4()),
             "title": "Bird Nature Photo",
             "foreign_landing_url": "https://example.com/photo/LYTN21EBYO",
             "creator": "Nature's Beauty",
@@ -77,5 +79,28 @@ def create_mock_es_http_image_search_response(
             "total": {"value": total_hits, "relation": "eq"},
             "max_score": 11.0007305,
             "hits": base_hits + live_hits + dead_hits,
+        },
+    }
+
+
+def create_mock_es_http_image_response_with_identifier(
+    index: str,
+    identifier: str,
+):
+    return {
+        "took": 3,
+        "timed_out": False,
+        "_shards": {"total": 18, "successful": 18, "skipped": 0, "failed": 0},
+        "hits": {
+            "total": {"value": 1, "relation": "eq"},
+            "max_score": 11.0007305,
+            "hits": [
+                create_mock_es_http_image_hit(
+                    _id="1",
+                    index=index,
+                    live=True,
+                    identifier=identifier,
+                )
+            ],
         },
     }

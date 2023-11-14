@@ -96,7 +96,7 @@ export default defineComponent({
     },
     hasNoResults: {
       type: Boolean,
-      required: true,
+      default: true,
     },
   },
   emits: {

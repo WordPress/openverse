@@ -57,9 +57,12 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
-from common.constants import REFRESH_POKE_INTERVAL, XCOM_PULL_TEMPLATE
+from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import get_most_recent_dag_run
+from data_refresh.create_filtered_index import (
+    create_filtered_index_creation_task_groups,
+)
 from data_refresh.data_refresh_types import DataRefresh
 
 
@@ -108,7 +111,7 @@ def create_data_refresh_task_group(
             task_id="wait_for_data_refresh",
             external_dag_ids=external_dag_ids,
             check_existence=True,
-            poke_interval=REFRESH_POKE_INTERVAL,
+            poke_interval=data_refresh.data_refresh_poke_interval,
             mode="reschedule",
             pool=DATA_REFRESH_POOL,
         )
@@ -131,7 +134,7 @@ def create_data_refresh_task_group(
             # Wait for the whole DAG, not just a part of it
             external_task_id=None,
             check_existence=False,
-            poke_interval=REFRESH_POKE_INTERVAL,
+            poke_interval=data_refresh.filtered_index_poke_interval,
             execution_date_fn=lambda _: get_most_recent_dag_run(
                 create_filtered_index_dag_id
             ),
@@ -181,8 +184,33 @@ def create_data_refresh_task_group(
         )
         tasks.append(index_readiness_check)
 
+        # Create the TaskGroups for creating and promoting the filtered index. The
+        # promotion task group will not be run until later.
+        (
+            create_filtered_index,
+            promote_filtered_index,
+        ) = create_filtered_index_creation_task_groups(
+            data_refresh=data_refresh,
+            origin_index_suffix=XCOM_PULL_TEMPLATE.format(
+                generate_index_suffix.task_id, "return_value"
+            ),
+            # Match origin and destination suffixes so we can tell which
+            # filtered indexes were created as part of a data refresh.
+            destination_index_suffix=XCOM_PULL_TEMPLATE.format(
+                generate_index_suffix.task_id, "return_value"
+            ),
+        )
+
+        # Add the task group for triggering the filtered index creation and awaiting its
+        # completion, once `ingest_upstream` has finished creating the new media index
+        # but before it is promoted. This prevents the filtered index creation from
+        # running against an index that is already promoted in production.
+        tasks.append(create_filtered_index)
+
         # Trigger the `promote` task on the ingestion server and await its completion.
-        # This task promotes the newly created API DB table and elasticsearch index.
+        # This task promotes the newly created API DB table and elasticsearch index. It
+        # does not include promotion of the filtered index, which must be promoted
+        # separately.
         with TaskGroup(group_id="promote") as promote_tasks:
             ingestion_server.trigger_and_wait_for_task(
                 action="promote",
@@ -209,12 +237,17 @@ def create_data_refresh_task_group(
         )
         tasks.append(delete_old_index)
 
+        # Finally, promote the filtered index.
+        tasks.append(promote_filtered_index)
+
         # ``tasks`` contains the following tasks and task groups:
         # wait_for_data_refresh
         # └─ get_current_index
         #    └─ ingest_upstream (trigger_ingest_upstream + wait_for_ingest_upstream)
-        #       └─ promote (trigger_promote + wait_for_promote)
-        #          └─ delete_old_index
+        #       └─ create_filtered_index
+        #          └─ promote (trigger_promote + wait_for_promote)
+        #             └─ delete_old_index
+        #                └─ promote_filtered_index (including delete filtered index)
         chain(*tasks)
 
     return data_refresh_group

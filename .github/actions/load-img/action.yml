@@ -18,7 +18,7 @@ runs:
         # We just need to be able to use `pnpm`. `npm` will fail on
         # any `workspace:*` dependency which we have in the root `package.json`
         setup_python: false
-        install_deps: false
+        install_recipe: ""
 
     - name: Install `@actions/artifact`
       shell: bash

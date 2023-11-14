@@ -30,7 +30,7 @@ services:
     profiles:
       - ingestion_server
       - api
-    image: postgres:13.10-alpine
+    image: docker.io/postgres:13.10-alpine
     ports:
       - "50254:5432"
     volumes:
@@ -65,7 +65,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: minio/minio:latest
+    image: docker.io/minio/minio:latest
     ports:
       - "5010:5000"
       - "5011:5001"
@@ -88,7 +88,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: minio/mc:latest
+    image: docker.io/minio/mc:latest
     env_file:
       - .env
       - docker/minio/.env
@@ -112,7 +112,7 @@ services:
       - "8793" # Used for fetching logs
     environment:
       # Upgrade the DB on startup
-      _AIRFLOW_DB_UPGRADE: "true"
+      _AIRFLOW_DB_MIGRATE: "true"
       _AIRFLOW_WWW_USER_CREATE: "true"
       _AIRFLOW_WWW_USER_USERNAME: airflow
       _AIRFLOW_WWW_USER_PASSWORD: airflow
@@ -145,7 +145,7 @@ services:
   plausible_db:
     profiles:
       - frontend
-    image: postgres:13.10-alpine
+    image: docker.io/postgres:13.10-alpine
     expose:
       - "5432"
     volumes:
@@ -158,7 +158,7 @@ services:
   plausible_ch:
     profiles:
       - frontend
-    image: clickhouse/clickhouse-server:23.4-alpine
+    image: docker.io/clickhouse/clickhouse-server:23.4-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
       - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
@@ -184,7 +184,7 @@ services:
   cache:
     profiles:
       - api
-    image: redis:4.0.14
+    image: docker.io/redis:4.0.14
     ports:
       - "50263:6379"
 
@@ -236,7 +236,6 @@ services:
       - api/.env
     stdin_open: true
     tty: true
-    command: gunicorn --reload -w 1
 
   ingestion_server:
     profiles:
@@ -306,7 +305,7 @@ services:
   proxy:
     profiles:
       - api
-    image: nginx:alpine
+    image: docker.io/nginx:alpine
     ports:
       - "50200:9080"
       - "50243:9443"
@@ -317,6 +316,27 @@ services:
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates
       - ./docker/nginx/certs:/etc/nginx/certs
+
+  frontend_nginx:
+    profiles:
+      - frontend
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.nginx
+      target: nginx
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - FRONTEND_NODE_VERSION
+        - FRONTEND_PNPM_VERSION
+    ports:
+      - "50290:8080"
+    environment:
+      OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS:-172.17.0.1}:8443
+      OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
+      # Set to Docker network resolver to be able to resolve the `plausible` container.
+      # This would be the default but Nginx requires it to be explicitly set when
+      # making outgoing requests (e.g., to plausible.io)
+      OPENVERSE_NGINX_DNS_RESOLVER: 127.0.0.11
 
 volumes:
   api-postgres:

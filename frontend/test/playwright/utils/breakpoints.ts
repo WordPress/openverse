@@ -155,6 +155,7 @@ const describeEachMobileWithoutMd = describeEachBreakpoint(
   mobileBreakpoints.filter((b) => b !== "md")
 )
 const describeMobileAndDesktop = describeEachBreakpoint(["sm", "xl"])
+const describeMobileXsAndDesktop = describeEachBreakpoint(["xs", "xl"])
 
 export default {
   ...breakpointTests,
@@ -168,4 +169,6 @@ export default {
   // For testing functionality in e2e tests, we need to test mobile and desktop screens.
   // Having two breakpoints should be enough and should save testing time.
   describeMobileAndDesktop,
+  // All tests
+  describeMobileXsAndDesktop,
 }

@@ -25,6 +25,7 @@ test.describe("all results grid analytics test", () => {
     expectEventPayloadToMatch(selectSearchResultEvent, {
       mediaType: AUDIO,
       query: "birds",
+      kind: "search",
       relatedTo: null,
       id: "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
       provider: "jamendo",
@@ -45,6 +46,7 @@ test.describe("all results grid analytics test", () => {
 
     expectEventPayloadToMatch(selectSearchResultEvent, {
       id: "da5cb478-c093-4d62-b721-cda18797e3fb",
+      kind: "search",
       mediaType: IMAGE,
       query: "birds",
       provider: "flickr",

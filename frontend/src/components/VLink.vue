@@ -48,6 +48,8 @@ import { useContext } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
+import { defineEvent } from "~/types/emits"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 
 type InternalLinkProps = { to: string }
@@ -92,6 +94,13 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+  },
+  emits: {
+    mousedown: defineEvent<[MouseEvent]>(),
+    click: defineEvent<[MouseEvent]>(),
+    blur: defineEvent<[FocusEvent]>(),
+    focus: defineEvent<[FocusEvent]>(),
+    keydown: defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
     const { app } = useContext()

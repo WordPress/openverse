@@ -58,12 +58,12 @@ import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { NO_RESULT } from "~/constants/errors"
 import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
 
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { areQueriesEqual } from "~/utils/search-query-transform"
+import { handledClientSide, isRetriable } from "~/utils/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
@@ -101,7 +101,7 @@ export default defineComponent({
     const {
       searchTerm,
       searchType,
-      searchQueryParams: query,
+      apiSearchQueryParams: query,
       searchTypeIsSupported: supported,
     } = storeToRefs(searchStore)
 
@@ -130,29 +130,23 @@ export default defineComponent({
     ) => {
       /**
        * If the fetch has already started in the middleware,
-       * and there is an error or no results were found, don't re-fetch.
+       * and there is an error status that will not change if retried, don't re-fetch.
        */
       const shouldNotRefetch =
-        mediaStore.fetchState.fetchingError?.message &&
-        mediaStore.fetchState.hasStarted
+        mediaStore.fetchState.hasStarted &&
+        fetchingError.value !== null &&
+        !isRetriable(fetchingError.value)
       if (shouldNotRefetch) return
 
-      const results = await mediaStore.fetchMedia(payload)
-      if (!results) {
-        const error = mediaStore.fetchState.fetchingError
-        /**
-         * NO_RESULT error is handled by the VErrorSection component in the child pages.
-         * For all other errors, show the Nuxt error page.
-         */
-        if (
-          error !== null &&
-          !error?.message?.toLowerCase().includes(NO_RESULT) &&
-          !error?.message?.toLowerCase().includes("timeout")
-        ) {
-          return nuxtError(error)
-        }
+      await mediaStore.fetchMedia(payload)
+
+      if (
+        fetchingError.value === null ||
+        handledClientSide(fetchingError.value)
+      ) {
+        return null
       }
-      return null
+      return nuxtError(fetchingError.value)
     }
 
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)

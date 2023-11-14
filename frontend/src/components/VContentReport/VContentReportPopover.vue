@@ -11,10 +11,13 @@
     </template>
     <template #default="{ close }">
       <div class="grid w-80 items-stretch justify-stretch">
-        <VCloseButton
+        <VIconButton
           :label="$t('modal.close')"
-          class="z-10 col-start-1 row-start-1 self-start justify-self-end"
-          @close="close"
+          :icon-props="{ name: 'close' }"
+          variant="transparent-gray"
+          size="small"
+          class="z-10 col-start-1 row-start-1 me-1 mt-1 self-start justify-self-end"
+          @click="close"
         />
         <VContentReportForm
           class="col-start-1 row-start-1 p-6"
@@ -32,15 +35,15 @@ import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
-import VCloseButton from "~/components/VCloseButton.vue"
 import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 export default defineComponent({
   name: "VContentReportPopover",
   components: {
-    VCloseButton,
+    VIconButton,
     VContentReportButton,
     VContentReportForm,
     VPopover,

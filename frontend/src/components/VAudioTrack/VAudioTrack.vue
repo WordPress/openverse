@@ -36,11 +36,11 @@
         />
       </template>
 
-      <template #play-pause="playPauseProps">
-        <VPlayPause
-          ref="playPauseRef"
+      <template #audio-control="audioControlProps">
+        <VAudioControl
+          ref="audioControlRef"
           :status="status"
-          v-bind="playPauseProps"
+          v-bind="audioControlProps"
           @toggle="handleToggle"
         />
       </template>
@@ -88,7 +88,7 @@ import { defineEvent } from "~/types/emits"
 
 import type { AudioTrackClickEvent } from "~/types/events"
 
-import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
+import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
 import VRowLayout from "~/components/VAudioTrack/layouts/VRowLayout.vue"
@@ -104,7 +104,7 @@ import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 export default defineComponent({
   name: "VAudioTrack",
   components: {
-    VPlayPause,
+    VAudioControl,
     VWaveform,
     VLink,
     VWarningSuppressor,
@@ -129,7 +129,7 @@ export default defineComponent({
      */
     layout: {
       type: String as PropType<AudioLayout>,
-      default: "full",
+      required: true,
     },
     /**
      * the size of the component; Both 'box' and 'row' layouts offer multiple
@@ -400,7 +400,7 @@ export default defineComponent({
         : ""
     )
 
-    /* Interface with VPlayPause */
+    /* Interface with VAudioControl */
 
     /**
      * This function can safely ignore the `loading` status because
@@ -478,7 +478,7 @@ export default defineComponent({
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
      */
-    const playPauseRef = ref<{ $el: HTMLElement } | null>(null)
+    const audioControlRef = ref<{ $el: HTMLElement } | null>(null)
 
     /**
      * A ref used on the waveform, so we can capture mousedown on the
@@ -595,7 +595,7 @@ export default defineComponent({
       isComposite,
       containerAttributes,
 
-      playPauseRef,
+      audioControlRef,
       waveformRef,
     }
   },

@@ -1,3 +1,4 @@
+import logging
 import random
 import re
 from collections.abc import Callable
@@ -16,6 +17,7 @@ from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 
 from api.controllers import search_controller
+from api.controllers.elasticsearch import helpers as es_helpers
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
@@ -150,7 +152,7 @@ def test_paginate_with_dead_link_mask_new_search(
     """
     start = 0
 
-    assert search_controller._paginate_with_dead_link_mask(
+    assert es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     ) == (start, expected_end)
 
@@ -260,7 +262,7 @@ def test_paginate_with_dead_link_mask_query_mask_is_not_large_enough(
     """
     start = mask_size
     create_mask(s=unique_search, mask_size=mask_size, liveness_count=liveness_count)
-    assert search_controller._paginate_with_dead_link_mask(
+    assert es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     ) == (start, expected_end)
 
@@ -383,7 +385,7 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
         create_mask_kwargs.update(mask=mask_or_mask_size)
 
     create_mask(**create_mask_kwargs)
-    actual_range = search_controller._paginate_with_dead_link_mask(
+    actual_range = es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     )
     assert (
@@ -759,3 +761,37 @@ def test_post_process_results_recurses_as_needed(
     }
 
     assert wrapped_post_process_results.call_count == 2
+
+
+@mock.patch(
+    "api.controllers.search_controller.check_dead_links",
+)
+def test_excessive_recursion_in_post_process(
+    mock_check_dead_links,
+    image_media_type_config,
+    redis,
+    caplog,
+):
+    def _delete_all_results_but_first(_, __, results, ___):
+        results[1:] = []
+
+    mock_check_dead_links.side_effect = _delete_all_results_but_first
+
+    serializer = image_media_type_config.search_request_serializer(
+        # This query string does not matter, ultimately, as pook is mocking
+        # the ES response regardless of the input
+        data={"q": "bird perched"}
+    )
+    serializer.is_valid()
+
+    with caplog.at_level(logging.INFO):
+        results, _, _, _ = search_controller.search(
+            search_params=serializer,
+            ip=0,
+            origin_index=image_media_type_config.origin_index,
+            exact_index=True,
+            page=1,
+            page_size=2,
+            filter_dead=True,
+        )
+    assert "Nesting threshold breached" in caplog.text

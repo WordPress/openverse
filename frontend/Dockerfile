@@ -7,7 +7,7 @@ ARG FRONTEND_NODE_VERSION
 # Node.js builder #
 ###################
 
-FROM node:${FRONTEND_NODE_VERSION}-alpine as builder
+FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine as builder
 
 # Automatically use the right version of pnpm.
 ARG FRONTEND_PNPM_VERSION
@@ -48,9 +48,6 @@ ENV NODE_ENV=production
 ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
 
 ARG API_URL
-ARG SEMANTIC_VERSION
-
-RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /home/node/frontend/src/static/version.json
 
 RUN pnpm build:only
 
@@ -58,7 +55,7 @@ RUN pnpm build:only
 # Nuxt app #
 ############
 
-FROM node:${FRONTEND_NODE_VERSION}-alpine as app
+FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine as app
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 

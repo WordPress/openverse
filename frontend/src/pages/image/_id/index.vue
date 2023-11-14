@@ -1,6 +1,11 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <template v-if="image">
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="px-6 py-10 lg:px-10"
+    />
+    <template v-else-if="image">
       <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="image" />
@@ -40,20 +45,11 @@
           id="title-button"
           class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
         >
-          <VButton
-            as="VLink"
-            :href="image.foreign_landing_url"
-            variant="filled-pink"
-            class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
-            show-external-icon
-            :external-icon-size="6"
-            has-icon-end
-            size="large"
-            :send-external-link-click-event="false"
-            @click="sendGetMediaEvent"
-          >
-            {{ $t("imageDetails.weblink") }}
-          </VButton>
+          <VGetMediaButton
+            :media="image"
+            media-type="image"
+            class="mb-4 !w-full flex-initial md:mb-0 md:!w-max"
+          />
           <div class="description-bold flex flex-1 flex-col justify-center">
             <h1 class="description-bold md:heading-5 line-clamp-2">
               {{ image.title }}
@@ -114,11 +110,11 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
+import { isRetriable } from "~/utils/errors"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
-import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
@@ -126,17 +122,18 @@ import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
+import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VGetMediaButton,
     VMediaDetails,
     VSingleResultControls,
     VSafetyWall,
     VBone,
-    VButton,
     VLink,
     VMediaReuse,
     VRelatedImages,
@@ -153,6 +150,9 @@ export default defineComponent({
     const route = useRoute()
 
     const image = ref<ImageDetail | null>(singleResultStore.image)
+    const fetchingError = computed(
+      () => singleResultStore.fetchState.fetchingError
+    )
 
     /**
      * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
@@ -168,7 +168,9 @@ export default defineComponent({
       const imageId = route.value.params.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
-        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+        if (fetchingError.value && !isRetriable(fetchingError.value)) {
+          nuxtError(fetchingError.value)
+        }
       } else {
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
@@ -279,6 +281,7 @@ export default defineComponent({
 
     return {
       image,
+      fetchingError,
       imageWidth,
       imageHeight,
       imageSrc,

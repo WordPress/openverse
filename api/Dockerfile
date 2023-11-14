@@ -7,7 +7,7 @@ ARG API_PY_VERSION
 # Audio waveform #
 ##################
 
-FROM realies/audiowaveform:latest AS awf
+FROM docker.io/realies/audiowaveform:latest AS awf
 
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
@@ -18,7 +18,7 @@ RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
 # Python builder #
 ##################
 
-FROM python:${API_PY_VERSION} AS builder
+FROM docker.io/python:${API_PY_VERSION} AS builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -32,7 +32,7 @@ ENV PATH="/venv/bin:$PATH"
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
 RUN apt-get update \
-  && apt-get install -y python3-dev \
+  && apt-get install -y python3-dev git \
   && rm -rf /var/lib/apt/lists/* \
   && python -m venv /venv \
   && pip install --upgrade pipenv
@@ -47,7 +47,7 @@ RUN pipenv install --system --deploy --dev
 # API #
 #######
 
-FROM python:${API_PY_VERSION}-slim AS api
+FROM docker.io/python:${API_PY_VERSION}-slim AS api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -80,10 +80,9 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 
 # - Install system packages needed for running Python dependencies
 #   - libexempi8: required for watermarking
-#   - libpq-dev: required by `psycopg2`
 # - Create directory for dumping API logs
 RUN apt-get update \
-  && apt-get install -y curl libpq-dev libexempi8 postgresql-client \
+  && apt-get install -y curl libexempi8 postgresql-client libc-bin=2.36-9+deb12u3 libc6=2.36-9+deb12u3 \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 
@@ -115,14 +114,13 @@ EXPOSE 8000
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]
 
-# gunicorn configuration in gunicorn.conf.py
-CMD ["gunicorn"]
+CMD ["python", "run.py"]
 
 #########
 # NGINX #
 #########
 
-FROM nginx:1.25.2-alpine as nginx
+FROM docker.io/nginx:1.25.3-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 

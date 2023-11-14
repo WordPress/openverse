@@ -1,3 +1,5 @@
+import { AxiosError } from "axios"
+
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { warn } from "~/utils/console"
@@ -6,10 +8,6 @@ import { useSearchStore } from "~/stores/search"
 import { useProviderStore } from "~/stores/provider"
 import { initProviderServices } from "~/data/media-provider-service"
 
-jest.mock("axios", () => ({
-  ...jest.requireActual("axios"),
-  isAxiosError: jest.fn((obj) => "response" in obj),
-}))
 jest.mock("@nuxtjs/composition-api", () => ({
   ssrRef: (v) => jest.fn(v),
 }))
@@ -41,7 +39,7 @@ const mockData = [
   },
 ]
 
-const mockImplementation = () => Promise.resolve({ data: [...mockData] })
+const mockImplementation = () => Promise.resolve([...mockData])
 const mock = jest.fn().mockImplementation(mockImplementation)
 jest.mock("~/data/media-provider-service", () => ({
   initProviderServices: {
@@ -108,17 +106,35 @@ describe("Provider Store", () => {
   it("fetchMediaProviders on error", async () => {
     for (const mediaType of supportedMediaTypes) {
       initProviderServices[mediaType] = () => ({
-        getProviderStats: jest
-          .fn()
-          .mockImplementation(() => Promise.reject(new Error("Not found"))),
+        getProviderStats: jest.fn().mockImplementation(() =>
+          Promise.reject(
+            new AxiosError(
+              "Not found",
+              AxiosError.ERR_BAD_REQUEST,
+              {},
+              {},
+              {
+                data: { detail: "Not found" },
+                status: 404,
+                statusText: "Not found",
+                headers: {},
+                config: {},
+              }
+            )
+          )
+        ),
       })
     }
     const searchStore = useSearchStore()
     await providerStore.fetchMediaProviders()
     for (const mediaType of supportedMediaTypes) {
-      expect(providerStore.fetchState[mediaType].fetchingError).toEqual(
-        `There was an error fetching media providers for ${mediaType}: Not found`
-      )
+      expect(providerStore.fetchState[mediaType].fetchingError).toEqual({
+        code: AxiosError.ERR_BAD_REQUEST,
+        message: "Not found",
+        requestKind: "provider",
+        searchType: mediaType,
+        statusCode: 404,
+      })
       expect(providerStore.providers[mediaType]).toEqual([])
       expect(searchStore.filters[`${mediaType}Providers`]).toEqual([])
     }

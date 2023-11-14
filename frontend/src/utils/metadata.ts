@@ -1,5 +1,4 @@
-import { title } from "case"
-
+import { capitalCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 import { AUDIO, IMAGE } from "~/constants/media"
 
@@ -95,7 +94,7 @@ export const getMediaMetadata = (
     if (media.genres && media.genres.length > 0) {
       metadata.push({
         label: "audioDetails.table.genre",
-        value: media.genres.map((genre) => title(genre)).join(", "),
+        value: media.genres.map((genre) => capitalCase(genre)).join(", "),
       })
     }
 

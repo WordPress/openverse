@@ -1,5 +1,4 @@
 import logging
-import uuid
 
 import psycopg2
 import pytest
@@ -7,7 +6,6 @@ from airflow.models import Variable
 
 from catalog.tests.test_utils import sql
 from common.storage import columns as col
-from common.storage.db_columns import IMAGE_TABLE_COLUMNS
 from database.batched_update import constants
 from database.batched_update.batched_update import (
     get_expected_update_count,
@@ -76,15 +74,6 @@ def postgres_with_image_and_temp_table(batch_start_var, image_table, temp_table)
     conn.close()
 
 
-def _get_insert_query(image_table, values: dict):
-    # Append the required identifier
-    values[col.IDENTIFIER.db_name] = uuid.uuid4()
-
-    query_values = sql.create_query_values(values, columns=IMAGE_TABLE_COLUMNS)
-
-    return f"INSERT INTO {image_table} VALUES({query_values});"
-
-
 def _load_sample_data_into_image_table(image_table, postgres):
     DEFAULT_COLS = {
         col.LICENSE.db_name: LICENSE,
@@ -112,17 +101,9 @@ def _load_sample_data_into_image_table(image_table, postgres):
         },
     ]
 
-    for record in sample_records:
-        load_data_query = _get_insert_query(
-            image_table,
-            {
-                **record,
-                **DEFAULT_COLS,
-            },
-        )
-        postgres.cursor.execute(load_data_query)
-
-    postgres.connection.commit()
+    sql.load_sample_data_into_image_table(
+        image_table, postgres, [{**record, **DEFAULT_COLS} for record in sample_records]
+    )
 
 
 @pytest.mark.parametrize(

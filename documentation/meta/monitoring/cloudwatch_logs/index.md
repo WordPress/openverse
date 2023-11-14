@@ -184,7 +184,7 @@ outputs stack traces, for example, this means that stack traces will be split
 across multiple lines. Take the following, real stack trace:
 
 ```
-2023-06-04T00:32:12.485Z	2023-06-04 00:32:12,485 ERROR tasks.py:220 - Error processing task `CREATE_AND_POPULATE_FILTERED_INDEX` for `audio`: RequestError(400, 'search_phase_execution_exception', 'too_many_clauses: maxClauseCount is set to 1024')
+2023-06-04T00:32:12.485Z	2023-06-04 00:32:12,485 ERROR tasks.py:220 - Error processing task `CREATE_AND_POPULATE_FILTERED_INDEX` for `audio`: BadRequestError(400, 'search_phase_execution_exception', 'too_many_clauses: maxClauseCount is set to 1024')
 2023-06-04T00:32:12.539Z	Process Process-5:
 2023-06-04T00:32:12.541Z	Traceback (most recent call last):
 2023-06-04T00:32:12.541Z	File "/usr/local/lib/python3.11/multiprocessing/process.py", line 314, in _bootstrap
@@ -211,7 +211,7 @@ across multiple lines. Take the following, real stack trace:
 2023-06-04T00:32:12.541Z	self._raise_error(response.status_code, raw_data)
 2023-06-04T00:32:12.541Z	File "/venv/lib/python3.11/site-packages/elasticsearch/connection/base.py", line 328, in _raise_error
 2023-06-04T00:32:12.541Z	raise HTTP_EXCEPTIONS.get(status_code, TransportError)(
-2023-06-04T00:32:12.541Z	elasticsearch.exceptions.RequestError: RequestError(400, 'search_phase_execution_exception', 'too_many_clauses: maxClauseCount is set to 1024')
+2023-06-04T00:32:12.541Z	elasticsearch.exceptions.BadRequestError: BadRequestError(400, 'search_phase_execution_exception', 'too_many_clauses: maxClauseCount is set to 1024')
 ```
 
 Each line (prepended with a timestamp), is a separate log event. The implication

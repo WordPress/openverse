@@ -12,41 +12,23 @@ import {
   supportedSearchTypes,
 } from "~/constants/media"
 import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
-import { getParameterByName } from "~/utils/url-params"
 import { deepClone } from "~/utils/clone"
+
+import {
+  SearchFilterKeys,
+  PaginatedSearchQuery,
+  SearchFilterQuery,
+} from "~/types/search"
 
 import type { Context } from "@nuxt/types"
 import type { Dictionary } from "vue-router/types/router"
-
-export interface ApiQueryParams {
-  q?: string
-  license?: string
-  license_type?: string
-  extension?: string
-  size?: string
-  aspect_ratio?: string
-  searchBy?: string
-  category?: string
-  source?: string
-  length?: string
-  [INCLUDE_SENSITIVE_QUERY_PARAM]?: string
-  page?: string
-  /**
-   * A conditional to show audio waveform data.
-   * TODO:  We'll need new ApiQueryParams types that accept a media type to allow media-specific params
-   */
-  peaks?: string
-}
-
-export type ApiQueryFilters = Omit<ApiQueryParams, "q">
-export type ApiQueryKeys = keyof ApiQueryFilters
 
 /**
  * This maps properties in the search store state to the corresponding API query
  * parameters. The convention is that filter property names are plural, and API query
  * parameters are singular.
  */
-const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
+const filterPropertyMappings: Record<FilterCategory, SearchFilterKeys> = {
   licenses: "license",
   licenseTypes: "license_type",
   audioCategories: "category",
@@ -58,7 +40,6 @@ const filterPropertyMappings: Record<FilterCategory, ApiQueryKeys> = {
   sizes: "size",
   audioProviders: "source",
   imageProviders: "source",
-  searchBy: "searchBy",
 }
 
 const getMediaFilterTypes = (searchType: SearchType) => {
@@ -92,7 +73,7 @@ export const filtersToQueryData = (
   filters: Filters,
   searchType: Parameters<typeof getMediaFilterTypes>[0] = ALL_MEDIA,
   hideEmpty = true
-): ApiQueryFilters => {
+) => {
   const mediaFilterTypes = getMediaFilterTypes(searchType)
 
   return mediaFilterTypes.reduce((query, filterCategory) => {
@@ -102,7 +83,7 @@ export const filtersToQueryData = (
       query[queryKey] = queryValue
     }
     return query
-  }, {} as ApiQueryFilters)
+  }, {} as SearchFilterQuery)
 }
 
 /**
@@ -110,11 +91,11 @@ export const filtersToQueryData = (
  * of the path after `/search/`, or `all` by default.
  * `/search/`: all
  * `/search/image`: image
- * @param queryString - the query path string from the url
+ * @param path - the path string from the url
  */
-export const queryStringToSearchType = (queryString: string): SearchType => {
+export const pathToSearchType = (path: string): SearchType => {
   const searchTypePattern = new RegExp(`/search/(${mediaTypes.join("|")})`)
-  const matchedType = queryString.match(searchTypePattern)
+  const matchedType = path.match(searchTypePattern)
   return matchedType === null ? ALL_MEDIA : (matchedType[1] as SearchType)
 }
 
@@ -221,40 +202,16 @@ export const queryToFilterData = ({
 }
 
 /**
- * converts the url query string to the data format accepted by the API.
- *
- * this is slightly different from filtersToQueryData as this converts the
- * query string and that converts the filter data.
- *
- * TODO: we might be able to refactor to eliminate the need for these two
- * separate functions.
- */
-export const queryStringToQueryData = (queryString: string) => {
-  const queryDataObject = {} as ApiQueryParams
-  const searchType = queryStringToSearchType(queryString)
-  const filterTypes = getMediaFilterTypes(searchType)
-  filterTypes.forEach((filterDataKey) => {
-    const queryDataKey = filterPropertyMappings[filterDataKey]
-    queryDataObject[queryDataKey] = getParameterByName(
-      queryDataKey,
-      queryString
-    )
-  })
-
-  queryDataObject.q = getParameterByName("q", queryString)
-
-  return queryDataObject
-}
-
-/**
  * Compares two API queries, excluding the search term (`q`) parameter.
  */
 export const areQueriesEqual = (
-  newQuery: ApiQueryParams,
-  oldQuery: ApiQueryParams
+  newQuery: PaginatedSearchQuery,
+  oldQuery: PaginatedSearchQuery
 ): boolean => {
-  const queryKeys = (query: ApiQueryParams) =>
-    Object.keys(query).filter((k) => k !== "q") as (keyof ApiQueryParams)[]
+  const queryKeys = (query: PaginatedSearchQuery) =>
+    Object.keys(query).filter(
+      (k) => k !== "q"
+    ) as (keyof PaginatedSearchQuery)[]
   const oldQueryKeys = queryKeys(oldQuery)
   const newQueryKeys = queryKeys(newQuery)
   if (oldQueryKeys.length !== newQueryKeys.length) return false
@@ -268,8 +225,8 @@ export const areQueriesEqual = (
 }
 
 /**
- * The URL query string can contain multiple values for the same parameter.
- * This function converts the query string to a dictionary where the values
+ * The vue-router's query can have values of a string or an array of strings.
+ * This function converts the query to a dictionary where the values
  * are always strings. If the parameter has multiple values, the first value
  * is used.
  * * @param queryDictionary - the query param dictionary provided by Vue router

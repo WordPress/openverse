@@ -27,7 +27,7 @@
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 
 import type { SupportedSearchType } from "~/constants/media"
 
@@ -44,19 +44,22 @@ export default defineComponent({
     },
     numElems: {
       type: Number,
-      default: function () {
-        if (this.isForTab === "all") return 20
-        if (this.isForTab === "image") return 30
-        return 8
-      },
     },
   },
-  setup() {
+  setup(props) {
     function getRandomSize(max = 300, min = 100) {
       return Math.floor(Math.random() * (max - min) + min)
     }
 
-    return { getRandomSize }
+    const elementCount = computed(() => {
+      // Calculate the default element count based on isForTab
+      if (props.numElems) return props.numElems
+      if (props.isForTab === "all") return 20
+      if (props.isForTab === "image") return 30
+      return 8
+    })
+
+    return { getRandomSize, elementCount }
   },
 })
 </script>

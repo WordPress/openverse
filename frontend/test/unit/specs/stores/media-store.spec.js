@@ -1,10 +1,8 @@
-import { AxiosError } from "axios"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { deepClone } from "~/utils/clone"
 
-import { initialResults, useMediaStore, getNuxtErrorData } from "~/stores/media"
+import { initialResults, useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { ALL_MEDIA, AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 
@@ -173,8 +171,8 @@ describe("Media Store", () => {
 
     it.each`
       searchType   | fetchState
-      ${ALL_MEDIA} | ${{ fetchingError: "Error", hasStarted: true, isFetching: true, isFinished: false }}
-      ${AUDIO}     | ${{ fetchingError: "Error", hasStarted: true, isFetching: false, isFinished: true }}
+      ${ALL_MEDIA} | ${{ fetchingError: { requestKind: "search", statusCode: 429, searchType: ALL_MEDIA }, hasStarted: true, isFetching: true, isFinished: false }}
+      ${AUDIO}     | ${{ fetchingError: { requestKind: "search", statusCode: 429, searchType: AUDIO }, hasStarted: true, isFetching: false, isFinished: true }}
       ${IMAGE}     | ${{ fetchingError: null, hasStarted: true, isFetching: true, isFinished: false }}
     `(
       "fetchState for $searchType returns $fetchState",
@@ -182,7 +180,11 @@ describe("Media Store", () => {
         const mediaStore = useMediaStore()
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
-        mediaStore._updateFetchState(AUDIO, "end", "Error")
+        mediaStore._updateFetchState(AUDIO, "end", {
+          requestKind: "search",
+          statusCode: 429,
+          searchType: AUDIO,
+        })
         mediaStore._updateFetchState(IMAGE, "start")
 
         expect(mediaStore.fetchState).toEqual(fetchState)
@@ -199,12 +201,16 @@ describe("Media Store", () => {
       mediaStore._updateFetchState(IMAGE, "end", {
         message: "Error",
         statusCode: 500,
+        requestKind: "search",
+        searchType: IMAGE,
       })
 
       expect(mediaStore.fetchState).toEqual({
         fetchingError: {
           message: "Error",
           statusCode: 500,
+          requestKind: "search",
+          searchType: IMAGE,
         },
         hasStarted: true,
         isFetching: false,
@@ -336,7 +342,11 @@ describe("Media Store", () => {
       })
 
       expect(mediaStore.mediaFetchState["image"].fetchingError).toEqual({
-        message: "NO_RESULT: image.",
+        code: "NO_RESULT",
+        details: { searchTerm: "cat" },
+        message: "No results found for cat",
+        requestKind: "search",
+        searchType: "image",
       })
     })
 
@@ -420,53 +430,6 @@ describe("Media Store", () => {
         ...existingMediaItem,
         hasLoaded,
       })
-    })
-  })
-
-  // Add a test for getNuxtErrorData
-  describe("getNuxtErrorData", () => {
-    it.each`
-      status | message
-      ${500} | ${"Internal server error"}
-      ${429} | ${"Too many requests"}
-    `(
-      "returns the correct error data for axios errors",
-      ({ status, message }) => {
-        const error = new AxiosError(
-          "",
-          "ERR_BAD_RESPONSE",
-          {},
-          {},
-          {
-            status,
-            data: { detail: message },
-          }
-        )
-        const expectedErrorData = {
-          statusCode: status,
-          message: `Error fetching image results. Request failed with status code: ${status}`,
-        }
-        const actualErrorData = getNuxtErrorData(error, IMAGE)
-        expect(actualErrorData).toEqual(expectedErrorData)
-      }
-    )
-
-    it("returns the correct error data for Axios error without a response", () => {
-      const error = new AxiosError("", "ERR_BAD_REQUEST", {}, {})
-      const expectedErrorData = {
-        message:
-          "Error fetching image results. No response received from the server",
-      }
-      const actualErrorData = getNuxtErrorData(error, IMAGE)
-      expect(actualErrorData).toEqual(expectedErrorData)
-    })
-    it("returns the correct error data for non-Axios errors", () => {
-      const error = new Error("Some error")
-      const expectedErrorData = {
-        message: "Error fetching image results. Unknown error",
-      }
-      const actualErrorData = getNuxtErrorData(error, IMAGE)
-      expect(actualErrorData).toEqual(expectedErrorData)
     })
   })
 })

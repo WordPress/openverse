@@ -1,11 +1,10 @@
-import { title as titleCase } from "case"
-
 import { decodeData as decodeString } from "~/utils/decode-data"
 import type { ApiMedia, Media, Tag } from "~/types/media"
 import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
 import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { capitalCase } from "~/utils/case"
 import { getFakeSensitivities } from "~/utils/content-safety"
 
 const mediaTypeExtensions: Record<MediaType, string[]> = {
@@ -68,7 +67,7 @@ const mediaTitle = (
   media: ApiMedia,
   mediaType: MediaType
 ): { title: string; originalTitle: string } => {
-  const originalTitle = decodeString(media.title) || titleCase(mediaType)
+  const originalTitle = decodeString(media.title) || capitalCase(mediaType)
   return {
     originalTitle,
     title: stripExtension(originalTitle, mediaType, media),

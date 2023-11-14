@@ -83,10 +83,7 @@ class ImageViewSet(MediaViewSet):
 
         context = self.get_serializer_context()
 
-        url = params.validated_data["url"]
-        if url.endswith("/"):
-            url = url[:-1]
-        identifier = url.rsplit("/", 1)[1]
+        identifier = params.validated_data["url"]
         image = get_object_or_404(Image, identifier=identifier)
         if not (image.height and image.width):
             image_file = requests.get(image.url, headers=self.OEMBED_HEADERS)

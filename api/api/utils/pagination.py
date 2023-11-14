@@ -31,16 +31,23 @@ class StandardPagination(PageNumberPagination):
         """
 
         field_descriptions = {
-            "result_count": "The total number of items returned by search result.",
-            "page_count": "The total number of pages returned by search result.",
-            "page_size": "The number of items per page.",
-            "page": "The current page number returned in the response.",
+            "result_count": (
+                "The total number of items returned by search result.",
+                10000,
+            ),
+            "page_count": ("The total number of pages returned by search result.", 20),
+            "page_size": ("The number of items per page.", 20),
+            "page": ("The current page number returned in the response.", 1),
         }
         return {
             "type": "object",
             "properties": {
-                field: {"type": "integer", "description": description}
-                for field, description in field_descriptions.items()
+                field: {
+                    "type": "integer",
+                    "description": description,
+                    "example": example,
+                }
+                for field, (description, example) in field_descriptions.items()
             }
             | {"results": schema},
         }

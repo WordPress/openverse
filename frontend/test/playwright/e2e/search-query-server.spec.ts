@@ -34,7 +34,7 @@ test.describe("search query on SSR", () => {
 
     test("q query parameter is set as the search term", async ({ page }) => {
       await goToSearchTerm(page, "cat", {
-        query: "license=cc0&license_type=commercial&searchBy=creator",
+        query: "license=cc0&license_type=commercial",
       })
 
       const searchInput = page.locator('input[type="search"]')
@@ -66,7 +66,7 @@ test.describe("search query on SSR", () => {
       page,
     }) => {
       await goToSearchTerm(page, "cat", {
-        query: "license=cc0&license_type=commercial&searchBy=creator",
+        query: "license=cc0&license_type=commercial",
       })
 
       await filters.open(page)
@@ -83,7 +83,7 @@ test.describe("search query on SSR", () => {
     }) => {
       await goToSearchTerm(page, "cat", {
         searchType: IMAGE,
-        query: "searchBy=creator&extension=jpg,png,gif,svg",
+        query: "extension=jpg,png,gif,svg",
       })
       await filters.open(page)
       const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]

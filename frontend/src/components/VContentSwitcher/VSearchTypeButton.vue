@@ -22,6 +22,8 @@ import type { SearchType } from "~/constants/media"
 
 import { warn } from "~/utils/console"
 
+import { defineEvent } from "~/types/emits"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
@@ -51,6 +53,9 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  emits: {
+    click: defineEvent(),
   },
   setup(_, { attrs }) {
     if (!attrs["aria-haspopup"] || attrs["aria-expanded"] === undefined) {

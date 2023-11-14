@@ -5,6 +5,7 @@ import type {
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 import type { FilterCategory } from "~/constants/filters"
+import { ResultKind } from "~/types/result"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -254,6 +255,8 @@ export type Events = {
     id: string
     /** If the result is a related result, provide the ID of the 'original' result */
     relatedTo: string | null
+    /** Kind of the result selected: search/related/collection */
+    kind: ResultKind
     /** The media type being searched */
     mediaType: SearchType
     /** The slug (not the prettified name) of the provider */
