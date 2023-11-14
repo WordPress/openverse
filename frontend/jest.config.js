@@ -12,7 +12,7 @@ module.exports = {
     "^~~/(.*)$": "<rootDir>/$1",
     "^vue$": "vue/dist/vue.common.js",
     "(.*svg)(\\?inline)$": "<rootDir>/test/unit/test-utils/svgTransform.js",
-    axios: "axios/dist/node/axios.cjs",
+    "^axios$": "axios/dist/node/axios.cjs",
   },
   setupFiles: ["<rootDir>/test/unit/setup.js"],
   setupFilesAfterEnv: ["<rootDir>/test/unit/setup-after-env.js"],
@@ -23,7 +23,7 @@ module.exports = {
     "^.+\\.svg$": "<rootDir>/test/unit/svg-transform.js",
   },
   testPathIgnorePatterns: ["/playwright/", "/storybook/", ".remake"],
-  collectCoverage: true,
+  collectCoverage: false,
   coverageDirectory: "<rootDir>/test/unit/coverage",
   collectCoverageFrom: [
     "<rootDir>/src/**/*.vue",
