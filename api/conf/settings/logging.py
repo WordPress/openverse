@@ -13,6 +13,9 @@ def health_check_filter(record: LogRecord) -> bool:
 
 LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
 DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
+GC_DEBUG_LOGGING = config(
+    "GC_DEBUG_LOGGING", cast=lambda x: x.split("|") if x else [], default=""
+)
 
 # https://github.com/dabapps/django-log-request-id#logging-all-requests
 LOG_REQUESTS = True
