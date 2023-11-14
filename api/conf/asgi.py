@@ -25,12 +25,8 @@ if settings.ENVIRONMENT == "local":
 if settings.GC_DEBUG_LOGGING:
     import gc
 
-    flags = []
-    for flag_name in settings.GC_DEBUG_LOGGING:
-        flags.append(getattr(gc, flag_name))
-
-    setting = flags[0]
-    for flag in flags[1:]:
-        setting |= flag
+    setting = 0
+    for flag in settings.GC_DEBUG_LOGGING:
+        setting |= getattr(gc, flag)
 
     gc.set_debug(setting)
