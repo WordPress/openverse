@@ -197,16 +197,6 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
-    setStrategy(
-      strategy: SearchStrategy,
-      collectionParams: CollectionParams | null
-    ) {
-      this.strategy = strategy
-      this.collectionParams = collectionParams
-      if (strategy !== "default") {
-        this.clearFilters()
-      }
-    },
     getSearchUrlParts(mediaType: SupportedMediaType) {
       const query: PaginatedSearchQuery | PaginatedCollectionQuery =
         this.strategy === "default"
@@ -491,6 +481,15 @@ export const useSearchStore = defineStore("search", {
         this.filters[filterCategory] = newFilterData[filterCategory]
       })
     },
+    setCollectionState(
+      collectionParams: CollectionParams,
+      mediaType: SupportedMediaType
+    ) {
+      this.collectionParams = collectionParams
+      this.strategy = collectionParams?.collection
+      this.setSearchType(mediaType)
+      this.clearFilters()
+    },
     /**
      * Called when a /search path is server-rendered.
      */
@@ -510,6 +509,8 @@ export const useSearchStore = defineStore("search", {
           ? { [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }
           : {}),
       })
+
+      this.strategy = "default"
 
       this.setSearchTerm(query.q)
       this.searchType = pathToSearchType(path)
