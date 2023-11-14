@@ -194,6 +194,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
         return image_proxy.get(
             image_url,
             media_obj.identifier,
+            media_obj.provider,
             accept_header=request.headers.get("Accept", "image/*"),
             **serializer.validated_data,
         )
