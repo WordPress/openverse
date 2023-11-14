@@ -5,6 +5,7 @@ These are not tests and cannot be invoked.
 """
 
 import json
+import re
 from test.constants import API_URL
 
 import requests
@@ -199,7 +200,9 @@ def related(fixture):
     assert response["page_count"] == 1
 
     def get_terms_set(res):
-        return set([t["name"] for t in res["tags"]] + res["title"].split(" "))
+        # The title is analyzed in ES, we try to mimic it here.
+        terms = [t["name"] for t in res["tags"]] + re.split(" |-", res["title"])
+        return {t.lower() for t in terms}
 
     terms_set = get_terms_set(item)
     # Make sure each result has at least one word in common with the original item,
@@ -208,7 +211,7 @@ def related(fixture):
         assert (
             len(terms_set.intersection(get_terms_set(result))) > 0
             or result["creator"] == item["creator"]
-        )
+        ), f"{terms_set} {get_terms_set(result)}/{result['creator']}-{item['creator']}"
 
 
 def sensitive_search_and_detail(media_type):
