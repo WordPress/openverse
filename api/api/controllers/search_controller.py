@@ -14,7 +14,6 @@ from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
 
-import api.models as models
 from api.constants.media_types import OriginIndex
 from api.constants.sorting import INDEXED_ON
 from api.controllers.elasticsearch.helpers import (
@@ -151,27 +150,6 @@ def _post_process_results(
     return results[:page_size]
 
 
-def get_excluded_providers_query() -> Q | None:
-    """
-    Hide data sources from the catalog dynamically.
-    To exclude a provider, set ``filter_content`` to ``True`` in the
-    ``ContentProvider`` model in Django admin.
-    """
-
-    filter_cache_key = "filtered_providers"
-    filtered_providers = cache.get(key=filter_cache_key)
-    if not filtered_providers:
-        filtered_providers = models.ContentProvider.objects.filter(
-            filter_content=True
-        ).values("provider_identifier")
-        cache.set(
-            key=filter_cache_key, timeout=FILTER_CACHE_TIMEOUT, value=filtered_providers
-        )
-    if provider_list := [f["provider_identifier"] for f in filtered_providers]:
-        return Q("terms", provider=provider_list)
-    return None
-
-
 def _resolve_index(
     index: Literal["image", "audio"],
     search_params: media_serializers.MediaSearchRequestSerializer,
@@ -255,9 +233,6 @@ def create_search_query(
     # Exclude mature content
     if not search_params.validated_data["include_sensitive_results"]:
         search_queries["must_not"].append(Q("term", mature=True))
-    # Exclude dynamically disabled sources (see Redis cache)
-    if excluded_providers_query := get_excluded_providers_query():
-        search_queries["must_not"].append(excluded_providers_query)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
