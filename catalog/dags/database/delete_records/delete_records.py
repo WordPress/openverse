@@ -91,8 +91,12 @@ def delete_records_from_media_table(
 
 
 @task
-def notify_slack(text: str) -> str:
+def notify_slack(deleted_records_count: int, table_name: str, select_query: str) -> str:
     """Send a message to Slack."""
+    text = (
+        f"Deleted {deleted_records_count:,} records from the"
+        f" {table_name} table matching query: `{select_query}`"
+    )
     slack.send_message(
         text,
         username=constants.SLACK_USERNAME,
