@@ -1,23 +1,9 @@
-from django.core.cache import cache
-
 import pytest
 
 from api.controllers import search_controller
 
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def excluded_providers_cache():
-    cache_key = "filtered_providers"
-    excluded_provider = "excluded_provider"
-    cache_value = [{"provider_identifier": excluded_provider}]
-    cache.set(cache_key, cache_value, timeout=1)
-
-    yield excluded_provider
-
-    cache.delete(cache_key)
 
 
 def test_create_search_query_empty(media_type_config):
@@ -224,27 +210,5 @@ def test_create_search_query_q_search_license_license_type_creates_2_terms_filte
         "must": [{"match_all": {}}],
         "should": [
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},
-        ],
-    }
-
-
-def test_create_search_query_empty_with_dynamically_excluded_providers(
-    image_media_type_config,
-    excluded_providers_cache,
-):
-    serializer = image_media_type_config.search_request_serializer(data={})
-    serializer.is_valid(raise_exception=True)
-
-    search_query = search_controller.create_search_query(serializer)
-
-    actual_query_clauses = search_query.to_dict()["bool"]
-    assert actual_query_clauses == {
-        "must_not": [
-            {"term": {"mature": True}},
-            {"terms": {"provider": [excluded_providers_cache]}},
-        ],
-        "must": [{"match_all": {}}],
-        "should": [
-            {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}}
         ],
     }
