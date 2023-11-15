@@ -18,18 +18,13 @@ TEST_START_DATE = datetime(2022, 2, 1, 0, 0, 0)
 TEST_DAG_ID = "api_healthcheck_test_dag"
 
 
-@pytest.fixture(autouse=True)
-def clean_db():
-    with create_session() as session:
-        # synchronize_session='fetch' required here to refresh models
-        # https://stackoverflow.com/a/51222378 CC BY-SA 4.0
-        session.query(DagRun).filter(DagRun.dag_id.startswith(TEST_DAG_ID)).delete(
-            synchronize_session="fetch"
-        )
-        session.query(TaskInstance).filter(
-            TaskInstance.dag_id.startswith(TEST_DAG_ID)
-        ).delete(synchronize_session="fetch")
+@pytest.fixture()
+def get_test_dag_id():
+    return TEST_DAG_ID
 
+@pytest.fixture()
+def isTaskInstance():
+    return True
 
 @pytest.fixture()
 def index_readiness_dag():

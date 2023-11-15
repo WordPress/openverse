@@ -19,20 +19,21 @@ TEST_POOL = "single_run_external_dags_sensor_test_pool"
 DEV_NULL = "/dev/null"
 DAG_PREFIX = "sreds"  # single_run_external_dags_sensor
 
+@pytest.fixture()
+def get_test_pool():
+    return TEST_POOL
 
-@pytest.fixture(autouse=True)
-def clean_db():
-    with create_session() as session:
-        # synchronize_session='fetch' required here to refresh models
-        # https://stackoverflow.com/a/51222378 CC BY-SA 4.0
-        session.query(DagRun).filter(DagRun.dag_id.startswith(DAG_PREFIX)).delete(
-            synchronize_session="fetch"
-        )
-        session.query(TaskInstance).filter(
-            TaskInstance.dag_id.startswith(DAG_PREFIX)
-        ).delete(synchronize_session="fetch")
-        session.query(Pool).filter(id == TEST_POOL).delete()
+@pytest.fixture()
+def get_test_dag_id():
+    return DAG_PREFIX
 
+@pytest.fixture()
+def isTaskInstance():
+    return False
+
+@pytest.fixture()
+def isPool():
+    return True
 
 def run_sensor(sensor):
     sensor.run(start_date=DEFAULT_DATE, end_date=DEFAULT_DATE, ignore_ti_state=True)

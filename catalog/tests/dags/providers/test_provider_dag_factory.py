@@ -21,21 +21,15 @@ from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
 from providers.provider_workflows import ProviderWorkflow
 
 
-DAG_ID = "test_provider_dag_factory"
-
-
-def _clean_dag_from_db():
-    with create_session() as session:
-        session.query(DagRun).filter(DagRun.dag_id == DAG_ID).delete()
-        session.query(TaskInstance).filter(TaskInstance.dag_id == DAG_ID).delete()
-
+TEST_DAG_ID = "test_provider_dag_factory"
 
 @pytest.fixture()
-def clean_db():
-    _clean_dag_from_db()
-    yield
-    _clean_dag_from_db()
+def get_test_dag_id():
+    return TEST_DAG_ID
 
+@pytest.fixture()
+def isTaskInstance():
+    return True
 
 @mark_extended
 @pytest.mark.parametrize(

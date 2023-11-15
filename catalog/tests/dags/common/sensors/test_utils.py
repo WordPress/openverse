@@ -14,12 +14,9 @@ from common.sensors.utils import get_most_recent_dag_run
 TEST_DAG_ID = "data_refresh_dag_factory_test_dag"
 TEST_DAG = DAG(TEST_DAG_ID, default_args={"owner": "airflow"})
 
-
-@pytest.fixture(autouse=True)
-def clean_db():
-    with create_session() as session:
-        session.query(DagRun).filter(DagRun.dag_id == TEST_DAG_ID).delete()
-
+@pytest.fixture()
+def get_test_dag_id():
+    return TEST_DAG_ID
 
 def _create_dagrun(start_date, conf={}):
     return TEST_DAG.create_dagrun(
