@@ -41,8 +41,6 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs
 USER root
 RUN apt-get update \
     && apt-get -yqq install \
-      libc-bin=2.31-13+deb11u7 \
-      libc6=2.31-13+deb11u7 \
       build-essential \
       libpq-dev \
       libffi-dev \

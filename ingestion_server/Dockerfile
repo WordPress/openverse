@@ -61,7 +61,7 @@ COPY --from=builder /venv /venv
 #   - libpq-dev: required by `psycopg2`
 # - Create directory for holding worker state
 RUN apt-get update \
-      && apt-get install -y curl libpq-dev libc-bin=2.36-9+deb12u3 libc6=2.36-9+deb12u3 \
+      && apt-get install -y curl libpq-dev \
       && rm -rf /var/lib/apt/lists/* \
       && mkdir /worker_state
 

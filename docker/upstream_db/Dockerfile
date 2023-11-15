@@ -18,8 +18,6 @@ RUN apt-get update \
     && apt-get -yqq install \
       python3-boto3 \
       postgresql-plpython3-13 \
-      libc-bin=2.31-13+deb11u7 \
-      libc6=2.31-13+deb11u7 \
       python3-pip \
       libpq-dev \
     && apt-get autoremove -y \

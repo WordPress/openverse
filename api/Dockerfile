@@ -82,7 +82,7 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 #   - libexempi8: required for watermarking
 # - Create directory for dumping API logs
 RUN apt-get update \
-  && apt-get install -y curl libexempi8 postgresql-client libc-bin=2.36-9+deb12u3 libc6=2.36-9+deb12u3 \
+  && apt-get install -y curl libexempi8 postgresql-client \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 
