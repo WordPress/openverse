@@ -3,9 +3,8 @@ import unittest
 
 import pytest
 from airflow.exceptions import AirflowException
-from airflow.models import DagBag, DagRun, Pool, TaskInstance
+from airflow.models import DagBag, Pool
 from airflow.models.dag import DAG
-from airflow.utils.session import create_session
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType

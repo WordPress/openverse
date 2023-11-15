@@ -1,9 +1,7 @@
 from datetime import timedelta
 
 import pytest
-from airflow.models import DagRun
 from airflow.models.dag import DAG
-from airflow.utils.session import create_session
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType

@@ -5,9 +5,7 @@ import pytest
 from airflow import DAG
 from airflow.exceptions import AirflowSkipException, BackfillUnfinished
 from airflow.executors.debug_executor import DebugExecutor
-from airflow.models import DagRun, TaskInstance
 from airflow.operators.empty import EmptyOperator
-from airflow.utils.session import create_session
 from pendulum import now
 
 from catalog.tests.conftest import mark_extended

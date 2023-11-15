@@ -4,7 +4,6 @@ from unittest import mock
 import pytest
 import requests
 from airflow.exceptions import AirflowSkipException
-from airflow.models import DagRun, TaskInstance
 from airflow.models.dag import DAG
 from airflow.utils.session import create_session
 from airflow.utils.state import DagRunState, TaskInstanceState
