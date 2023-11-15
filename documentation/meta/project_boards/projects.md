@@ -13,7 +13,7 @@ interpretation when the issue is a project thread.
 ### Thread is created
 
 If a new issue is created with the label "🧭 project: thread", it is
-automatically added to the project board.
+automatically added to the project tracker project board.
 
 - [Built-in workflow](https://github.com/orgs/WordPress/projects/70/workflows/6730708)
 

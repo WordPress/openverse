@@ -1,6 +1,6 @@
 # Project boards
 
-Openverse project management consists of three project boards,
+Openverse project management consists of four project boards,
 [one for issues](https://github.com/orgs/WordPress/projects/75),
 [one for PRs](https://github.com/orgs/WordPress/projects/98),
 [one for project threads](https://github.com/orgs/WordPress/projects/70) and

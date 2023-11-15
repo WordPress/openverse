@@ -9,8 +9,10 @@ this board are tied to events occurring for issues.
 
 ### Issue is created
 
-If a new issue is created, it is automatically added to the project board
-provided it does not contain any label with the text "project".
+If a new issue is created in the
+[`WordPress/openverse`](https://github.com/WordPress/openverse/) repository, it
+is automatically added to the project board provided it does not contain any
+label with the text "project".
 
 ```{note}
 This workflow also sets the Priority custom field in the issue so that we can
@@ -29,7 +31,8 @@ by whether it was closed as resolved or as discarded.
 ### Issue is reopened
 
 If a previously closed issue is reopened, it goes back to the "📋 Backlog"
-column. That is because it needs to be prioritised again.
+column. That is because it will need to be re-prioritized alongside other
+ongoing work and moved to "📅 To do" when it can be worked on again.
 
 - [Built-in workflow](https://github.com/orgs/WordPress/projects/75/workflows/8193212)
 
