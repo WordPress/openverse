@@ -12,9 +12,11 @@ from common.sensors.utils import get_most_recent_dag_run
 TEST_DAG_ID = "data_refresh_dag_factory_test_dag"
 TEST_DAG = DAG(TEST_DAG_ID, default_args={"owner": "airflow"})
 
+
 @pytest.fixture()
 def get_test_dag_id():
     return TEST_DAG_ID
+
 
 def _create_dagrun(start_date, conf={}):
     return TEST_DAG.create_dagrun(

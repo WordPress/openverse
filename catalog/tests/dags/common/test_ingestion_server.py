@@ -5,7 +5,6 @@ import pytest
 import requests
 from airflow.exceptions import AirflowSkipException
 from airflow.models.dag import DAG
-from airflow.utils.session import create_session
 from airflow.utils.state import DagRunState, TaskInstanceState
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType
@@ -21,9 +20,11 @@ TEST_DAG_ID = "api_healthcheck_test_dag"
 def get_test_dag_id():
     return TEST_DAG_ID
 
+
 @pytest.fixture()
 def isTaskInstance():
     return True
+
 
 @pytest.fixture()
 def index_readiness_dag():

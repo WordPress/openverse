@@ -21,13 +21,16 @@ from providers.provider_workflows import ProviderWorkflow
 
 TEST_DAG_ID = "test_provider_dag_factory"
 
+
 @pytest.fixture()
 def get_test_dag_id():
     return TEST_DAG_ID
 
+
 @pytest.fixture()
 def isTaskInstance():
     return True
+
 
 @mark_extended
 @pytest.mark.parametrize(

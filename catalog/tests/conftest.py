@@ -1,6 +1,6 @@
 import pytest
-from airflow.utils.session import create_session
 from airflow.models import DagRun, Pool, TaskInstance
+from airflow.utils.session import create_session
 
 
 def pytest_addoption(parser):
@@ -27,20 +27,26 @@ def pytest_addoption(parser):
 # run on CI only
 mark_extended = pytest.mark.skipif("not config.getoption('extended')")
 
+
 @pytest.fixture()
 def get_test_dag_id():
     return ""
 
+
 @pytest.fixture()
 def get_test_pool():
     return ""
+
+
 @pytest.fixture()
 def isTaskInstance():
     return False
 
+
 @pytest.fixture()
 def isPool():
     return False
+
 
 @pytest.fixture(autouse=True)
 def clean_db(get_test_dag_id, get_test_pool, isTaskInstance, isPool):

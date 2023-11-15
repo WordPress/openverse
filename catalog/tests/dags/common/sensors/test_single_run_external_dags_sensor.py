@@ -18,21 +18,26 @@ TEST_POOL = "single_run_external_dags_sensor_test_pool"
 DEV_NULL = "/dev/null"
 DAG_PREFIX = "sreds"  # single_run_external_dags_sensor
 
+
 @pytest.fixture()
 def get_test_pool():
     return TEST_POOL
+
 
 @pytest.fixture()
 def get_test_dag_id():
     return DAG_PREFIX
 
+
 @pytest.fixture()
 def isTaskInstance():
     return False
 
+
 @pytest.fixture()
 def isPool():
     return True
+
 
 def run_sensor(sensor):
     sensor.run(start_date=DEFAULT_DATE, end_date=DEFAULT_DATE, ignore_ti_state=True)
