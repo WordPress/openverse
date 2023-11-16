@@ -22,8 +22,8 @@ from api.docs.image_docs import (
     source_collection,
     stats,
     tag_collection,
-    thumbnail as thumbnail_docs,
 )
+from api.docs.image_docs import thumbnail as thumbnail_docs
 from api.docs.image_docs import watermark as watermark_doc
 from api.models import Image
 from api.serializers.image_serializers import (
@@ -34,11 +34,7 @@ from api.serializers.image_serializers import (
     OembedSerializer,
     WatermarkRequestSerializer,
 )
-from api.serializers.media_serializers import (
-    MediaThumbnailRequestSerializer,
-    PaginatedRequestSerializer,
-)
-from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
+from api.serializers.media_serializers import PaginatedRequestSerializer
 from api.utils.image_proxy import ImageProxyMediaInfo
 from api.utils.watermark import watermark
 from api.views.media_views import MediaViewSet

@@ -7,12 +7,12 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from api.constants.media_types import MediaType
-from api.constants.search import SearchStrategy
 from adrf.views import APIView as AsyncAPIView
 from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
 from asgiref.sync import sync_to_async
 
+from api.constants.media_types import MediaType
+from api.constants.search import SearchStrategy
 from api.controllers import search_controller
 from api.controllers.elasticsearch.related import related_media
 from api.models import ContentProvider
