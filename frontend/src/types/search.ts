@@ -39,3 +39,16 @@ export type SearchQuery = SearchFilterQuery & SearchRequestQuery
 export type PaginatedSearchQuery = SearchRequestQuery &
   PaginatedParams &
   SearchFilterQuery
+
+export type TagCollection = { collection: "tag"; tag: string }
+export type CreatorCollection = {
+  collection: "creator"
+  source: string
+  creator: string
+}
+export type SourceCollection = { collection: "source"; source: string }
+
+export type CollectionParams =
+  | TagCollection
+  | CreatorCollection
+  | SourceCollection
