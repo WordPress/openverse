@@ -69,6 +69,7 @@ def plot_votes(
     output_file = output_path / f"{column.split()[0]}_{year}.png"
     print(f"Saving file {output_file}")
     plt.savefig(output_file)
+    plt.close()
 
 
 @click.command()
