@@ -26,49 +26,66 @@ def get_columns_by_members(
     projects: pd.Series,
     column: str,
 ):
+    """
+    Create a new DataFrame which pulls out the provided column from each of the member
+    sheets, and sets the index to the project names.
+    """
     data = pd.DataFrame([frames[name][column] for name in members], index=members)
+    # The data is transposed here because the DataFrame constructor creates a DataFrame
+    # with the projects as the columns, and the members as the index, whereas we want
+    # the projects as the index.
     return data.T.set_index(projects)
 
 
 def plot_votes(
     data: pd.DataFrame, color_by: pd.Series, column: str, year: int, output_path: Path
 ):
+    """
+    Create and save a box plot of the provided data, with the boxes colored by the
+    provided color_by data.
+    """
+    # Create the box plot
     ax, bp = data.T.boxplot(
+        # Specify a large figure size to both increase the resolution of the image, and
+        # provide enough space for the x-axis labels.
         figsize=(10, 10),
-        showfliers=False,
+        # Specific parameter needed in order to color the boxes
         patch_artist=True,
+        # Return both the axes and boxplot objects, rather than just the axes
         return_type="both",
     )
-    # Set the x-axis labels vertically
+    # Set the x-axis labels (project names) vertically to prevent collision
     ax.set_xticklabels(ax.get_xmajorticklabels(), rotation=90)
-    # Only show the labeled values on the y-axis
+    # Only show the Fibonacci values labeled on the y-axis
     plt.yticks([2, 3, 5, 8, 13])
-    # Set the title
+    # Set the title of the graph
     ax.set_title(f"Vote Distribution: {column} - {year}")
-    # Create a colormap that transitions from red to green
+    # Create a colormap that transitions from red to green (lime is used specifically
+    # because it creates a more vibrant green than green does).
     cmap = mcolors.LinearSegmentedColormap.from_list("", ["red", "lime"])
-    # Create a color normalizer.
+    # Create a color normalizer (confidence values are between 1 and 3)
     norm = mcolors.Normalize(vmin=1, vmax=3)
     # Apply colors to each box plot.
     for i, color_value in enumerate(color_by.values):
+        # Compute the color using the colormap and normalizer
         color = cmap(norm(color_value))
         # Get current box
         box = bp["boxes"][i]
         # Set box face color
         box.set_facecolor(color)
-        # Change color of the whiskers
-        for whisker in bp["whiskers"][i * 2 : (i + 1) * 2]:
-            whisker.set_color(color)
-            whisker.set_linewidth(2)
-        # Change color of the caps
-        for cap in bp["caps"][i * 2 : (i + 1) * 2]:
-            cap.set_color(color)
-            cap.set_linewidth(2)
+        # Change color of the whiskers & caps (the actual list of each is twice as long
+        # as # the number of boxes, because there are two each per box)
+        for aspect_name in ["whiskers", "caps"]:
+            for aspect in bp[aspect_name][i * 2 : (i + 1) * 2]:
+                aspect.set_color(color)
+                aspect.set_linewidth(2)
 
+    # This is required in order to ensure nothing is cut off
     plt.tight_layout()
     output_file = output_path / f"{column.split()[0]}_{year}.png"
     print(f"Saving file {output_file}")
     plt.savefig(output_file)
+    # Clear the figure so the next one starts fresh
     plt.close()
 
 
@@ -86,12 +103,25 @@ def plot_votes(
     default=INPUT_FILE,
 )
 def main(output: Path, input_file: Path):
+    # Ensure the output folder exists
     output.mkdir(parents=True, exist_ok=True)
 
     print(f"Reading input file: {input_file}")
-    frames = pd.read_excel(input_file, sheet_name=None, header=0, skiprows=5)
+    # Read the input file
+    frames = pd.read_excel(
+        input_file,
+        # Include all sheets
+        sheet_name=None,
+        # Skip the first 5 rows, which are the instructional text
+        skiprows=5,
+        # Use the first row as the header
+        header=0,
+    )
+    # Pull the project names out of the template sheet
     projects = frames["Template"]["Name"]
+    # Use the name of the frames as the list of voting members
     members = list(frames.keys())[1:]
+    # This is planning for the *next* year, e.g. one beyond the current one
     planning_year = datetime.now().year + 1
 
     effort = get_columns_by_members(frames, members, projects, COLUMN_EFFORT)
