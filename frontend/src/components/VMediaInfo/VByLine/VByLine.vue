@@ -213,11 +213,11 @@ export default defineComponent({
 <style scoped>
 .faded-overflow-e:dir(ltr),
 .faded-overflow-s:dir(rtl) {
-  mask-image: linear-gradient(to left, transparent, white 20%);
+  mask-image: linear-gradient(90deg, transparent 85%, white);
 }
 .faded-overflow-e:dir(rtl),
 .faded-overflow-s:dir(ltr) {
-  mask-image: linear-gradient(to right, transparent, white 20%);
+  mask-image: linear-gradient(90deg, white 15%, transparent);
 }
 .buttons::-webkit-scrollbar {
   width: 0 !important;
