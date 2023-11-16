@@ -97,7 +97,14 @@ class AudioViewSet(MediaViewSet):
             image_url=image_url,
         )
 
-    thumbnail = thumbnail_docs(MediaViewSet.thumbnail)
+    @thumbnail_docs
+    @action(detail=True, url_path="thumb", url_name="thumb")
+    def thumbnail(self, *args, **kwargs):
+        """
+        Retrieve the scaled down and compressed thumbnail of the artwork of an
+        audio track or its audio set.
+        """
+        super().thumbnail(*args, **kwargs)
 
     @waveform
     @action(
