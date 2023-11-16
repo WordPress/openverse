@@ -1,5 +1,5 @@
 <template>
-  <ul v-if="tags.length && additionalSearchViews" class="flex flex-wrap gap-2">
+  <ul v-if="tags.length && additionalSearchViews" class="flex flex-wrap gap-3">
     <VTag
       v-for="(tag, index) in tags"
       :key="index"
