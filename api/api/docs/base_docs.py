@@ -140,11 +140,27 @@ def get_collection_description(media_type, collection):
         return f"""
 Get a collection of {media_type} with a specific tag.
 
-This endpoint returns only the exact matches, case-insensitive matches for the
-specified tag. For example, 'birds' and 'birding' are not matches for 'bird'.
-To search within the tag values, or to match several tags, use the `search` endpoint
-with `tags` query parameter instead of `q` parameter. In this case, the matches will
- not be exact, so 'cat' would match both 'cat' and 'cats'.
+This endpoint matches a single tag, exactly and entirely.
+
+Differences that will cause tags to not match are:
+- upper and lower case letters
+- diacritical marks
+- hyphenation
+- spacing
+- multi-word tags where the query is only one of the words in the tag
+- multi-word tags where the words are in a different order
+
+Examples of tags that **do not** match:
+- "Low-Quality" and "low-quality"
+- "jalapeño" and "jalapeno"
+- "Saint Pierre des Champs" and "Saint-Pierre-des-Champs"
+- "dog walking" and "dog  walking" (where the latter has two spaces between the
+last two words, as in a typographical error)
+- "runner" and "marathon runner"
+- "exclaiming loudly" and "loudly exclaiming"
+
+For non-exact or multi-tag matching, using the `search` endpoint's `tags` query
+parameter.
 
 The returned results are ordered based on the time when they were added to Openverse.
     """
