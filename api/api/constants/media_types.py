@@ -6,7 +6,9 @@ AUDIO_TYPE = "audio"
 IMAGE_TYPE = "image"
 
 MEDIA_TYPES = [AUDIO_TYPE, IMAGE_TYPE]
+MediaType = Literal["audio", "image"]
 
 MEDIA_TYPE_CHOICES = [(AUDIO_TYPE, "Audio"), (IMAGE_TYPE, "Image")]
 
-OriginIndex = Literal["image", "audio"]
+OriginIndex = MediaType
+SearchIndex = Literal["image", "image-filtered", "audio", "audio-filtered"]

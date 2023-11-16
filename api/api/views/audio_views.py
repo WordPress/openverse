@@ -7,16 +7,20 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from api.constants.media_types import AUDIO_TYPE
 from api.docs.audio_docs import (
+    creator_collection,
     detail,
     related,
     report,
     search,
+    source_collection,
     stats,
+    tag_collection,
     thumbnail,
     waveform,
 )
 from api.models import Audio
 from api.serializers.audio_serializers import (
+    AudioCollectionRequestSerializer,
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
@@ -38,15 +42,43 @@ class AudioViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to audio."""
 
     model_class = Audio
+    media_type = AUDIO_TYPE
     query_serializer_class = AudioSearchRequestSerializer
     default_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
 
     serializer_class = AudioSerializer
+    collection_serializer_class = AudioCollectionRequestSerializer
 
     def get_queryset(self):
         return super().get_queryset().select_related("mature_audio", "audioset")
 
     # Extra actions
+    @creator_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
+    )
+    def creator_collection(self, request, source, creator):
+        return super().creator_collection(request, source, creator)
+
+    @source_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)",
+    )
+    def source_collection(self, request, source):
+        return super().source_collection(request, source)
+
+    @tag_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="tag/(?P<tag>[^/.]+)",
+    )
+    def tag_collection(self, request, tag, *_, **__):
+        return super().tag_collection(request, tag, *_, **__)
 
     @thumbnail
     @action(

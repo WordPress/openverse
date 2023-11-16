@@ -8,6 +8,7 @@ Run with the `pytest -s` command from this directory.
 import json
 from test.constants import API_URL
 from test.media_integration import (
+    creator_collection,
     detail,
     license_filter_case_insensitivity,
     related,
@@ -20,7 +21,9 @@ from test.media_integration import (
     search_source_and_excluded,
     search_special_chars,
     sensitive_search_and_detail,
+    source_collection,
     stats,
+    tag_collection,
     uuid_validation,
 )
 from urllib.parse import urlencode
@@ -143,6 +146,18 @@ def test_image_uuid_validation():
     uuid_validation("images", "123456789123456789123456789123456789")
     uuid_validation("images", "12345678-1234-5678-1234-1234567891234")
     uuid_validation("images", "abcd")
+
+
+def test_image_tag_collection():
+    tag_collection("images")
+
+
+def test_image_source_collection():
+    source_collection("images")
+
+
+def test_image_creator_collection():
+    creator_collection("images")
 
 
 def test_image_related(image_fixture):

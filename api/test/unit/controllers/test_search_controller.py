@@ -456,8 +456,10 @@ def test_search_tallies_pages_less_than_5(
     )
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -495,8 +497,10 @@ def test_search_tallies_handles_empty_page(
     serializer = media_type_config.search_request_serializer(data={"q": "dogs"})
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -538,8 +542,10 @@ def test_resolves_index(
     )
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=origin_index,
         exact_index=False,
@@ -605,8 +611,10 @@ def test_no_post_process_results_recursion(
         data={"q": "bird perched"}
     )
     serializer.is_valid()
-    results, _, _, _ = search_controller.search(
+    results, _, _, _ = search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -743,8 +751,10 @@ def test_post_process_results_recurses_as_needed(
         data={"q": "bird perched"}
     )
     serializer.is_valid()
-    results, _, _, _ = search_controller.search(
+    results, _, _, _ = search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -785,8 +795,10 @@ def test_excessive_recursion_in_post_process(
     serializer.is_valid()
 
     with caplog.at_level(logging.INFO):
-        results, _, _, _ = search_controller.search(
+        results, _, _, _ = search_controller.query_media(
+            strategy="search",
             search_params=serializer,
+            collection_params=None,
             ip=0,
             origin_index=image_media_type_config.origin_index,
             exact_index=True,

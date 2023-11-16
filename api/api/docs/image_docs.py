@@ -1,6 +1,6 @@
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from api.docs.base_docs import custom_extend_schema, fields_to_md
+from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
 from api.examples import (
     image_complain_201_example,
     image_complain_curl,
@@ -40,7 +40,7 @@ search = custom_extend_schema(
 
         By using this endpoint, you can obtain search results based on specified
         query and optionally filter results by
-        {fields_to_md(ImageSearchRequestSerializer.fields_names)}.
+        {fields_to_md(ImageSearchRequestSerializer.field_names)}.
 
         Results are ranked in order of relevance and paginated on the basis of the
         `page` param. The `page_size` param controls the total number of pages.
@@ -121,4 +121,17 @@ oembed = custom_extend_schema(
 
 watermark = custom_extend_schema(
     deprecated=True,
+)
+
+source_collection = collection_schema(
+    media_type="images",
+    collection="source",
+)
+creator_collection = collection_schema(
+    media_type="images",
+    collection="creator",
+)
+tag_collection = collection_schema(
+    media_type="images",
+    collection="tag",
 )
