@@ -148,7 +148,9 @@ def get(
                 f"thumbnail_http_error:{domain}:{month}:{code}:{exc.response.text}"
             )
             logger.warning(
-                f"Failed to render thumbnail {upstream_url=} {code=} {media_provider=}"
+                f"Failed to render thumbnail "
+                f"{upstream_url=} {code=} "
+                f"{media_info.media_provider=}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
 

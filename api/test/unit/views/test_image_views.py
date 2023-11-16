@@ -3,6 +3,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from test.factory.models.image import ImageFactory
+from unittest.mock import patch
 
 import pook
 import pytest
@@ -73,12 +74,20 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
         url="http://iip.smk.dk/image.jpg",
         thumbnail=thumb_url,
     )
-<<<<<<< HEAD
-    with patch("api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
-        mock_response = HttpResponse("mock_response")
-        thumb_call.return_value = mock_response
-        api_client.get(f"/v1/images/{image.identifier}/thumb/")
-    thumb_call.assert_called_once_with(ANY, image, expected_thumb_url)
+
+    with pook.use():
+        mock_get = (
+            # Pook interprets a trailing slash on the URL as the path,
+            # so strip that so the `path` matcher works
+            pook.get(settings.PHOTON_ENDPOINT[:-1])
+            .path(expected_thumb_url.replace("http://", "/"))
+            .response(200)
+        ).mock
+
+        response = api_client.get(f"/v1/images/{image.identifier}/thumb/")
+
+    assert response.status_code == 200
+    assert mock_get.matched is True
 
 
 @pytest.mark.django_db
@@ -88,9 +97,13 @@ def test_watermark_raises_424_for_invalid_image(api_client):
         "cannot identify image file <_io.BytesIO object at 0xffff86d8fec0>"
     )
 
-    with patch("PIL.Image.open") as mock_open:
-        mock_open.side_effect = UnidentifiedImageError(expected_error_message)
-        res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+    with pook.use():
+        pook.get(image.url).reply(200)
+
+        with patch("PIL.Image.open") as mock_open:
+            mock_open.side_effect = UnidentifiedImageError(expected_error_message)
+            res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+
     assert res.status_code == 424
     assert res.data["detail"] == expected_error_message
 
@@ -107,19 +120,3 @@ def test_watermark_raises_424_for_404_image(api_client):
         res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
     assert res.status_code == 424
     assert res.data["detail"] == f"404 Client Error: Not Found for url: {image.url}"
-=======
-
-    with pook.use():
-        mock_get = (
-            # Pook interprets a trailing slash on the URL as the path,
-            # so strip that so the `path` matcher works
-            pook.get(settings.PHOTON_ENDPOINT[:-1])
-            .path(expected_thumb_url.replace("http://", "/"))
-            .response(200)
-        ).mock
-
-        response = api_client.get(f"/v1/images/{image.identifier}/thumb/")
-
-    assert response.status_code == 200
-    assert mock_get.matched is True
->>>>>>> dc44ee8b7 (Add ADRF and make the thumbnail view async)

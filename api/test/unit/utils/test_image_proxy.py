@@ -29,7 +29,7 @@ TEST_MEDIA_PROVIDER = "foo"
 TEST_MEDIA_INFO = ImageProxyMediaInfo(
     media_identifier=TEST_MEDIA_IDENTIFIER,
     media_provider=TEST_MEDIA_PROVIDER,
-    image_url=TEST_IMAGE_URL
+    image_url=TEST_IMAGE_URL,
 )
 
 UA_HEADER = HEADERS["User-Agent"]
@@ -455,7 +455,11 @@ def test__get_extension_from_url(image_url, expected_ext):
 def test_photon_get_raises_by_not_allowed_types(image_type):
     image_url = TEST_IMAGE_URL.replace(".jpg", f".{image_type}")
     image = ImageFactory.create(url=image_url)
-    media_info = ImageProxyMediaInfo(image.identifier, image_url)
+    media_info = ImageProxyMediaInfo(
+        media_identifier=image.identifier,
+        media_provider=image.provider,
+        image_url=image_url,
+    )
 
     with pytest.raises(UnsupportedMediaType):
         photon_get(media_info)
@@ -472,8 +476,11 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
 def test_photon_get_saves_image_type_to_cache(redis, headers, expected_cache_val):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
-    media_info = ImageProxyMediaInfo(image.identifier, image_url)
-
+    media_info = ImageProxyMediaInfo(
+        media_identifier=image.identifier,
+        media_provider=image.provider,
+        image_url=image_url,
+    )
     with pook.use():
         pook.head(image_url, reply=200, response_headers=headers)
         with pytest.raises(UnsupportedMediaType):
