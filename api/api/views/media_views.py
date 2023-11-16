@@ -40,7 +40,7 @@ class InvalidSource(APIException):
     default_code = "invalid_source"
 
 
-image_proxy_aget = sync_to_async(image_proxy.get, thread_sensitive=True)
+image_proxy_aget = sync_to_async(image_proxy.get)
 
 
 class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
