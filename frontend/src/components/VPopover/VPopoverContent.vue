@@ -1,24 +1,18 @@
 <template>
   <div
     v-show="visible"
-    class="h-0 w-0"
+    ref="popoverRef"
+    role="dialog"
+    aria-modal="true"
+    class="popover-content w-max-content absolute left-0 top-0 overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
+    :class="[`z-${zIndex}`, width]"
+    :style="{ ...heightProperties, ...style }"
+    :tabindex="-1"
     :aria-hidden="!visible"
-    v-on="$listeners"
+    @blur="onBlur"
     @keydown="onKeyDown"
   >
-    <div
-      ref="popoverRef"
-      role="dialog"
-      aria-modal="true"
-      class="popover-content overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
-      :class="[`z-${zIndex}`, width]"
-      :style="heightProperties"
-      :tabindex="-1"
-      v-bind="$attrs"
-      @blur="onBlur"
-    >
-      <slot />
-    </div>
+    <slot />
   </div>
 </template>
 
@@ -37,7 +31,7 @@ import { defineEvent } from "~/types/emits"
 
 import { zIndexValidator } from "~/constants/z-indices"
 
-import type { Placement, PositioningStrategy } from "@popperjs/core"
+import type { Placement, Strategy } from "@floating-ui/dom"
 
 import type { SetupContext } from "vue"
 
@@ -47,7 +41,6 @@ export const VPopoverContentContextKey = Symbol(
 
 export default defineComponent({
   name: "VPopoverContent",
-  inheritAttrs: false,
   props: {
     visible: {
       type: Boolean,
@@ -84,7 +77,7 @@ export default defineComponent({
       default: "bottom-end",
     },
     strategy: {
-      type: String as PropType<PositioningStrategy>,
+      type: String as PropType<Strategy>,
       default: "absolute",
     },
     zIndex: {
@@ -119,14 +112,14 @@ export default defineComponent({
     const propsRefs = toRefs(props)
     const popoverRef = ref<HTMLElement | null>(null)
 
-    const { onKeyDown, onBlur, heightProperties } = usePopoverContent({
+    const { onKeyDown, onBlur, heightProperties, style } = usePopoverContent({
       popoverRef,
       popoverPropsRefs: propsRefs,
       emit: emit as SetupContext["emit"],
       attrs,
     })
 
-    return { popoverRef, onKeyDown, onBlur, heightProperties }
+    return { popoverRef, onKeyDown, onBlur, heightProperties, style }
   },
 })
 </script>

@@ -56,6 +56,7 @@
     "create:component": "./bin/create-component.sh"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.5.3",
     "@nuxt/components": "^2.2.1",
     "@nuxt/vue-app": "^2.17.2",
     "@nuxtjs/composition-api": "^0.33.1",
@@ -66,7 +67,6 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/svg-sprite": "0.5.2",
     "@pinia/nuxt": "0.2.1",
-    "@popperjs/core": "^2.11.8",
     "@vueuse/core": "^10.2.1",
     "@wordpress/is-shallow-equal": "^4.6.0",
     "async-mutex": "^0.3.2",

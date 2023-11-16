@@ -54,7 +54,7 @@ import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 
-import type { Placement, PositioningStrategy } from "@popperjs/core"
+import type { Placement, Strategy } from "@floating-ui/dom"
 
 export default defineComponent({
   name: "VPopover",
@@ -93,9 +93,9 @@ export default defineComponent({
     autoFocusOnHide: { type: Boolean, default: undefined },
     /**
      * The placement of the popover relative to the trigger. Should be one of the options
-     * for `placement` passed to popper.js.
+     * for `placement` passed to floating-ui.
      *
-     * @see https://popper.js.org/docs/v2/constructors/#options
+     * @see https://floating-ui.com/docs/tutorial#placements
      *
      * @default 'bottom'
      */
@@ -106,12 +106,12 @@ export default defineComponent({
      * The positioning strategy of the popover. If your reference element is in a fixed container
      * use the fixed strategy; otherwise use the default, absolute strategy.
      *
-     * @see https://popper.js.org/docs/v2/constructors/#strategy
+     * @see https://floating-ui.com/docs/computeposition#strategy
      *
      * @default 'absolute'
      */
     strategy: {
-      type: String as PropType<PositioningStrategy>,
+      type: String as PropType<Strategy>,
     },
     /**
      * The label of the popover content. Must be provided if `labelledBy` is empty.
@@ -169,8 +169,8 @@ export default defineComponent({
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerRef = computed(() =>
-      triggerContainerRef.value?.firstChild
-        ? (triggerContainerRef.value.firstChild as HTMLElement)
+      triggerContainerRef.value?.firstElementChild
+        ? (triggerContainerRef.value.firstElementChild as HTMLElement)
         : undefined
     )
 
