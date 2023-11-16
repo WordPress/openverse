@@ -39,7 +39,7 @@
     </div>
     <div
       v-if="shouldScroll"
-      class="absolute z-10 h-8 w-8 bg-white"
+      class="absolute z-10 h-8 w-12 bg-white"
       :class="scrollButton.style"
     >
       <VIconButton
@@ -154,9 +154,9 @@ export default defineComponent({
 
     const scrollButton = computed(() => {
       if (scrollButtonPosition.value === "e") {
-        return { style: "end-0 ms-2", icon: "chevron-forward" }
+        return { style: "end-0 ps-3", icon: "chevron-forward" }
       } else {
-        return { style: "start-0 me-2", icon: "chevron-back" }
+        return { style: "start-0 pe-3", icon: "chevron-back" }
       }
     })
 
