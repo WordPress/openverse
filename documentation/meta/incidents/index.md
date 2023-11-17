@@ -27,7 +27,7 @@ public relations or community nature. Here are some example incidents:
   maintainer
 - Openverse.org is completely offline
 - Production resource usage is skyrocketing and could lead to downtime, but
-  there aren’t any actual issues yet
+  users are not impacted yet
 
 All of these scenarios suggest that **Openverse behavior normally depended on or
 expected by regular users is not behaving as it should.**
@@ -45,7 +45,10 @@ user reports, or through manual checks by maintainers. The Mini Support Rotation
 
 While the MSR runner should be monitoring our communication channels closely,
 **any online maintainer who sees something that might be an incident should
-follow the incident recording process outlined here.**
+follow the incident recording process outlined here.** This does not mean that
+the reporting maintainer is responsible for stabilizing the incident or acting
+as the incident lead. It simply means that they are responsible for making the
+initial report on the incident.
 
 ## How do we _classify_ incidents?
 
@@ -57,18 +60,19 @@ Incidents are classified in two ways:
 ### Severity
 
 Incidents should be classified using one of three levels of severity. It is
-important to note that regardless of severity, working to resolve incidents
-always **takes priority over regular project work and MSR duties.** Once service
-is stabilized, any ongoing investigations, preventative measures, or
-documentation changes will be prioritized by the team alongside our other work.
+important to note that regardless of severity, working to stabilize services (or
+whatever harm mitigation is relevant for the incident) always **takes priority
+over regular project work and MSR duties.** Once service is stabilized, any
+ongoing investigations, preventative measures, or documentation changes will be
+prioritized by the team alongside our other work.
 
 This severity scale is intentionally distinct from our GitHub priority scale.
 Any GitHub issues created to _stabilize_ a Severity 1 or Severity 2 incident
 should be marked as "critical" in GitHub. Other issues should be prioritized at
 your own discretion.
 
-- **Severity 1**: Critical issue affecting all users and all functionalities of
-  Openverse.
+- **Severity 1**: Critical issue affecting all/most users and all/most
+  functionalities of Openverse.
 - **Severity 2**: Major issue affecting a large number of users or critical
   functionality of Openverse.
 - **Severity 3**: Minor issue affecting a limited number of users or
@@ -122,7 +126,7 @@ There are four main steps to handling production incidents:
 | 3 | Resolve | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement. | Under investigation |
 | 4 | Review | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys. | Under investigation OR Resolved (as appropriate) |
 
-All maintainers are required to report incidents they encounter. **Crucially,
+All maintainers are required to record incidents they encounter. **Crucially,
 maintainers who record incidents are not _inherently_ responsible for
 stabilizing them.** Their only required job is to record the incident. Every
 incident has a **Lead** who is the person responsible for providing updates on
@@ -131,10 +135,12 @@ retrospective after the incident is resolved.
 
 ### How do we determine the lead?
 
-By default, this is the week’s MSR runner. If it is outside of the MSR runner’s
-working hours or they are unresponsive (with later explanation, ideally) someone
-else will need to be the lead. It is the recorder’s job to find this lead or act
-as this lead. Factors which should be considered in finding a lead are
+By default, this is the week’s MSR runner. If it is outside the MSR runner’s
+working hours, or they are unresponsive (with later explanation, ideally)
+someone else will need to be the lead. It is the recorder’s job to find this
+lead or act as this lead; although for incidents that have a severity <= 2,
+stabilizing the service may be the highest priority and take precedence over
+finding a lead. Factors which should be considered in finding a lead are
 availability and expertise. Is anyone online uniquely qualified to take this
 work on? Alternatively, has one person been handling most incidents and this
 time, someone new should take on? Consulting the threads for past incidents will
