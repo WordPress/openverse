@@ -119,12 +119,12 @@ explanation behind the steps in the
 There are four main steps to handling production incidents:
 
 <!-- prettier-ignore -->
-| # | Name | Goal | Status After |
-|---|------|------|--------------|
-| 1 | Record | Visibly acknowledge the incident and create the communication threads necessary for ongoing discussion and investigation. Understand how bad the situation is based on our severity definitions. | Stabilization pending OR Stabilized (as appropriate)
-| 2 | Stabilize |<p>If there is a total or partial outage, identify service stabilization options and action them. | Stabilized |
-| 3 | Resolve | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement. | Under investigation |
-| 4 | Review | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys. | Under investigation OR Resolved (as appropriate) |
+| # | Name      | Goal                                                                                                                                                                                             | Status After                                         | Tag                  |
+|---|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|----------------------|
+| 1 | Record    | Visibly acknowledge the incident and create the communication threads necessary for ongoing discussion and investigation. Understand how bad the situation is based on our severity definitions. | Stabilization pending OR Stabilized (as appropriate) | `#status-recorded`   |
+| 2 | Stabilize | <p>If there is a total or partial outage, identify service stabilization options and action them.                                                                                                | Stabilized                                           | `#status-stabilized` |
+| 3 | Resolve   | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement.                                                                    | Under investigation                                  | `#status-resolved`   |
+| 4 | Review    | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys.                                    | Under investigation OR Resolved (as appropriate)     | `#status-reviewed`   |
 
 All maintainers are required to record incidents they encounter. **Crucially,
 maintainers who record incidents are not _inherently_ responsible for

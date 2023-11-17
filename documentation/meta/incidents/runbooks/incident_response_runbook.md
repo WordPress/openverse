@@ -7,12 +7,12 @@
 ## 1. Record the incident
 
 When you observe a potential incident, you are responsible for recording it. Run
-the `/Incident Report` command in the maintainer’s #openverse Slack channel.
+the `/Incident Report` command in the maintainer’s `#openverse` Slack channel.
 This command will prompt for some basic information about the incident and then
 guide you into creating an incident report in the maintainer P2 blog.
 
 The command can also be run with a bookmarked "Report an Incident" link inside
-of Slack, which is found at the top of all #openverse- maintainer channels.
+of Slack, which is found at the top of all `#openverse-` maintainer channels.
 
 ### Determining an estimated severity
 
@@ -82,13 +82,18 @@ incident.
    5. If something is related to a 3rd party API, like a provider or SaaS
       offering used in Openverse, contact them as soon as possible.
    6. Start a Slack huddle if real time audio would be useful.
-4. When the incident seems resolved, update the status of the P2 page as
-   "Resolved", leave a P2 comment summarizing the solution, adding any relevant
-   points to the timeline, and unpin the Slack thread.
-5. Update all comms postings, editing them so that the incident is clearly
+4. When the service has become stable again, update the status tag of the P2 to
+   `#status-stabilized` and leave a comment summarizing the mitigation. Usually
+   at this time the urgency of the incident will be reduced, and time may be
+   required to observe that the incident is fully resolved.
+5. Once enough time has passed without disturbance that the incident seems
+   resolved, update the status tag of the P2 to `#status-resolved`, leave a P2
+   comment summarizing the solution, adding any relevant points to the timeline,
+   and unpin the Slack thread.
+6. Update all comms postings, editing them so that the incident is clearly
    resolved in the title and body of the post. This includes the Make post for
    Severity 1 incidents along with any other outreach.
-6. Create any follow-up issues, with a GitHub project if extensive. This can be
+7. Create any follow-up issues, with a GitHub project if extensive. This can be
    done the next time you are online if you have been working for an extended
    period or outside your regular work hours.
 
@@ -102,4 +107,8 @@ incident. Postmortems should be blameless, and we typically use the
 causes of the incident and/or gaps in the incident response process.
 [Here is a recent example.](https://docs.google.com/document/d/1VGCWR85ipt_grLbDu_mKN31RAPTNEL_emvqDj1vcg20/edit)
 The postmortem process should generate action items and follow-up work that must
-be managed and prioritized appropriately.
+be managed and prioritized appropriately. The team may not have capacity to
+perform a postmortem on each incident, but should do so for any incident that is
+particularly severe or has a high likelihood of recurrence. Once a postmortem
+has been completed, the status tag of the P2 should be updated to
+`#status-reviewed`.
