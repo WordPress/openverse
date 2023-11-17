@@ -1,7 +1,7 @@
 import pytest
 from asgiref.sync import async_to_sync
 
-from conf.asgi import application
+from conf.asgi import APPLICATION_LIFECYCLE
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -16,4 +16,4 @@ def call_application_shutdown():
     fine here, so it's not a problem.
     """
     yield
-    async_to_sync(application.shutdown)()
+    async_to_sync(APPLICATION_LIFECYCLE.shutdown)()

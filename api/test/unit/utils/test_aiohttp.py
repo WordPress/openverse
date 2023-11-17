@@ -4,7 +4,7 @@ import pytest
 from asgiref.sync import async_to_sync
 
 from api.utils.aiohttp import get_aiohttp_session
-from conf.asgi import application
+from conf.asgi import APPLICATION_LIFECYCLE
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +18,7 @@ def get_new_loop():
 
     yield _get_new_loop
 
-    async_to_sync(application.shutdown)()
+    async_to_sync(APPLICATION_LIFECYCLE.shutdown)()
     for loop in loops:
         loop.close()
 
@@ -56,9 +56,9 @@ def test_multiple_loops_reuse_separate_sessions(get_new_loop):
 
 
 def test_registers_shutdown_cleanup(get_new_loop):
-    assert len(application._on_shutdown) == 0
+    assert len(APPLICATION_LIFECYCLE._on_shutdown) == 0
 
     loop = get_new_loop()
     loop.run_until_complete(get_aiohttp_session())
 
-    assert len(application._on_shutdown) == 1
+    assert len(APPLICATION_LIFECYCLE._on_shutdown) == 1

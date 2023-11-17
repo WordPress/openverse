@@ -4,7 +4,7 @@ import weakref
 
 import aiohttp
 
-from conf.asgi import application
+from conf.asgi import APPLICATION_LIFECYCLE
 
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ async def get_aiohttp_session() -> aiohttp.ClientSession:
 
         if create_session:
             session = aiohttp.ClientSession()
-            application.register_shutdown_handler(session.close)
+            APPLICATION_LIFECYCLE.register_shutdown_handler(session.close)
             _SESSIONS[loop] = session
 
         return _SESSIONS[loop]
