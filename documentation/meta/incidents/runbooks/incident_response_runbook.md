@@ -46,8 +46,10 @@ point, reporting the incident is complete.
 **Stabilize the incident.** Hello, point person. It’s time to begin triaging the
 incident.
 
-1. Complete any necessary comms work. For Severity 1, this means a Make post
-   announcing the outage is being investigated.
+1. Complete any necessary comms work. For Severity 1, this means messaging the
+   maintainers via Signal that an outage is occurring. Depending on the
+   severity, a Make post announcing that the outage is being investigated may
+   also be warranted.
    1. If the incident was discovered by a user in a communication channel,
       please reply to them and thank them for their report. Let them know the
       team is investigating the issue.
