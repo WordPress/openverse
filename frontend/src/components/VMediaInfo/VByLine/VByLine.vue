@@ -6,12 +6,14 @@
   >
     <div
       class="buttons-container max-w-full"
-      :class="{ [`m${scrollButtonPosition}-10`]: shouldScroll }"
+      :class="{
+        [`m${scrollButtonPosition}-10 faded-overflow-${scrollButtonPosition}`]:
+          shouldScroll,
+      }"
     >
       <div
         ref="buttonsRef"
         class="buttons flex justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
-        :class="{ [`faded-overflow-${scrollButtonPosition}`]: shouldScroll }"
       >
         <VButton
           v-if="showCreator"
@@ -213,11 +215,19 @@ export default defineComponent({
 <style scoped>
 .faded-overflow-e:dir(ltr),
 .faded-overflow-s:dir(rtl) {
-  mask-image: linear-gradient(90deg, transparent 85%, white);
+  mask-image: linear-gradient(
+    to right,
+    black calc(100% - 130px),
+    transparent 100%
+  );
 }
 .faded-overflow-e:dir(rtl),
 .faded-overflow-s:dir(ltr) {
-  mask-image: linear-gradient(90deg, white 15%, transparent);
+  mask-image: linear-gradient(
+    to left,
+    black calc(100% - 130px),
+    transparent 100%
+  );
 }
 .buttons::-webkit-scrollbar {
   width: 0 !important;
