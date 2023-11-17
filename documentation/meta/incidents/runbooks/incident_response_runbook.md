@@ -84,6 +84,10 @@ incident.
    5. If something is related to a 3rd party API, like a provider or SaaS
       offering used in Openverse, contact them as soon as possible.
    6. Start a Slack huddle if real time audio would be useful.
+   7. For incidents that may last several hours, consider silencing any AWS
+      alarms that are actively being investigated - the extra noise can distract
+      and detract from the stabilization work. For any AWS alarms, this can be
+      done by setting the "Alarm action" to "Disabled" in the AWS UI.
 4. When the service has become stable again, update the status tag of the P2 to
    `#status-stabilized` and leave a comment summarizing the mitigation. Usually
    at this time the urgency of the incident will be reduced, and time may be
@@ -91,7 +95,7 @@ incident.
 5. Once enough time has passed without disturbance that the incident seems
    resolved, update the status tag of the P2 to `#status-resolved`, leave a P2
    comment summarizing the solution, adding any relevant points to the timeline,
-   and unpin the Slack thread.
+   and unpin the Slack thread. Re-enable any alarms that were disabled.
 6. Update all comms postings, editing them so that the incident is clearly
    resolved in the title and body of the post. This includes the Make post for
    Severity 1 incidents along with any other outreach.
