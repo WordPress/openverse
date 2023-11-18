@@ -2,6 +2,8 @@ import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+test.describe.configure({ mode: "parallel" })
+
 test.describe("VCollectionHeader", () => {
   breakpoints.describeEvery(({ expectSnapshot }) => {
     for (const languageDirection of ["ltr", "rtl"]) {

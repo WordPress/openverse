@@ -2,12 +2,13 @@ import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-format
 import { useI18n } from "~/composables/use-i18n"
 import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
+import { Collection } from "~/types/search"
 
 /**
  * Not using dynamically-generated keys to ensure that
  * correct line is shown in the 'po' locale files
  */
-const i18nKeys = {
+const searchResultKeys = {
   [ALL_MEDIA]: {
     noResult: "browsePage.allNoResults",
     result: "browsePage.allResultCount",
@@ -24,6 +25,52 @@ const i18nKeys = {
     more: "browsePage.contentLink.audio.countMore",
   },
 }
+const collectionKeys = {
+  source: {
+    [IMAGE]: {
+      noResult: "collection.resultCountLabel.source.image.zero",
+      result: "collection.resultCountLabel.source.image.count",
+      more: "collection.resultCountLabel.source.image.countMore",
+    },
+    [AUDIO]: {
+      noResult: "collection.resultCountLabel.source.audio.zero",
+      result: "collection.resultCountLabel.source.audio.count",
+      more: "collection.resultCountLabel.source.audio.countMore",
+    },
+  },
+  creator: {
+    [IMAGE]: {
+      noResult: "collection.resultCountLabel.creator.image.zero",
+      result: "collection.resultCountLabel.creator.image.count",
+      more: "collection.resultCountLabel.creator.image.countMore",
+    },
+    [AUDIO]: {
+      noResult: "collection.resultCountLabel.creator.audio.zero",
+      result: "collection.resultCountLabel.creator.audio.count",
+      more: "collection.resultCountLabel.creator.audio.countMore",
+    },
+  },
+  tag: {
+    [IMAGE]: {
+      noResult: "collection.resultCountLabel.tag.image.zero",
+      result: "collection.resultCountLabel.tag.image.count",
+      more: "collection.resultCountLabel.tag.image.countMore",
+    },
+    [AUDIO]: {
+      noResult: "collection.resultCountLabel.tag.audio.zero",
+      result: "collection.resultCountLabel.tag.audio.count",
+      more: "collection.resultCountLabel.tag.audio.countMore",
+    },
+  },
+}
+
+function getCountKey(resultsCount: number) {
+  return resultsCount === 0
+    ? "noResult"
+    : resultsCount >= 10000
+    ? "more"
+    : "result"
+}
 
 /**
  * Returns the localized text for the number of search results.
@@ -38,13 +85,8 @@ export function useI18nResultsCount() {
     resultsCount: number,
     searchType: SupportedSearchType
   ) => {
-    const countKey =
-      resultsCount === 0
-        ? "noResult"
-        : resultsCount >= 10000
-        ? "more"
-        : "result"
-    return i18nKeys[searchType][countKey]
+    const countKey = getCountKey(resultsCount)
+    return searchResultKeys[searchType][countKey]
   }
 
   /**
@@ -62,6 +104,20 @@ export function useI18nResultsCount() {
       mediaType,
     })
   }
+  const getI18nCollectionResultCountLabel = (
+    resultCount: number,
+    mediaType: SupportedMediaType,
+    collectionType: Collection,
+    params: Record<string, string> | undefined = undefined
+  ) => {
+    const key =
+      collectionKeys[collectionType][mediaType][getCountKey(resultCount)]
+    return i18n.tc(key, resultCount, {
+      localeCount: getLocaleFormattedNumber(resultCount),
+      ...params,
+    })
+  }
+
   /**
    * Returns the localized text for the number of search results, using corresponding
    * pluralization rules and decimal separators.
@@ -76,6 +132,7 @@ export function useI18nResultsCount() {
   return {
     getI18nCount,
     getI18nContentLinkLabel,
+    getI18nCollectionResultCountLabel,
     getLoading,
   }
 }
