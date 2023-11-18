@@ -95,7 +95,7 @@ def test_create_search_query_q_search_with_quotes_adds_exact_suffix(media_type_c
                     "default_operator": "AND",
                     "fields": ["title", "description", "tags.name"],
                     "query": '"The cutest cat"',
-                    "quote_field_suffix": ".exact",
+                    "quote_field_suffix": ".raw",
                 }
             }
         ],
