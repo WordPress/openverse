@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-10-06T14:25:32+00:00\n"
+"POT-Creation-Date: 2023-11-18T07:17:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1333,7 +1333,7 @@ msgid "Hide filters"
 msgstr ""
 
 #: src/components/VFilters/VSearchGridFilter.vue:18
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:76
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:75
 msgctxt "filterList.clear"
 msgid "Clear filters"
 msgstr ""
@@ -1411,7 +1411,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:119
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:120
 msgctxt "browsePage.fetchingError"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -1441,7 +1441,7 @@ msgctxt "browsePage.searchForm.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:118
+#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:119
 msgctxt "browsePage.searchForm.audio"
 msgid "audio"
 msgstr ""
@@ -1531,7 +1531,7 @@ msgstr ""
 
 #: src/components/VFilters/VFilterChecklist.vue:26
 #: src/components/VFilters/VFilterChecklist.vue:34
-#: src/components/VFilters/VFilterChecklist.vue:132
+#: src/components/VFilters/VFilterChecklist.vue:135
 msgctxt "browsePage.aria.licenseExplanation"
 msgid "license explanation"
 msgstr ""
@@ -1541,7 +1541,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:169
+#: src/components/VImageCell/VImageCell.vue:178
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -1709,7 +1709,7 @@ msgid "read more about the tool"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:71
+#: src/pages/image/_id/index.vue:62
 msgctxt "mediaDetails.aria.creatorUrl"
 msgid "author ###name###"
 msgstr ""
@@ -1834,12 +1834,11 @@ msgid "Back to results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:66
+#: src/pages/image/_id/index.vue:57
 msgctxt "imageDetails.creator"
 msgid "by ###name###"
 msgstr ""
 
-#: src/pages/image/_id/index.vue:60
 msgctxt "imageDetails.weblink"
 msgid "Get this image"
 msgstr ""
@@ -1894,7 +1893,6 @@ msgctxt "audioDetails.table.genre"
 msgid "Genre"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:66
 msgctxt "audioDetails.weblink"
 msgid "Get this audio"
 msgstr ""
@@ -2045,7 +2043,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/VAudioTrack/VAudioTrack.vue:523
-#: src/components/VAudioTrack/VGlobalAudioTrack.vue:74
+#: src/components/VAudioTrack/VGlobalAudioTrack.vue:79
 msgctxt "audioTrack.ariaLabel"
 msgid "Audio: ###title###"
 msgstr ""
@@ -2090,13 +2088,13 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:32
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:46
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:37
+#: src/components/VAudioTrack/layouts/VRowLayout.vue:43
 msgctxt "audioTrack.creator"
 msgid "by ###creator###"
 msgstr ""
 
-#: src/components/VGlobalAudioSection/VGlobalAudioSection.vue:9
+#: src/components/VGlobalAudioSection/VGlobalAudioSection.vue:13
 msgctxt "audioTrack.close"
 msgid "Close the audio player"
 msgstr ""
@@ -2182,10 +2180,6 @@ msgctxt "downloadButton.download"
 msgid "Download"
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:47
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:55
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:65
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:72
 msgctxt "interpunct"
 msgid "•"
 msgstr ""
@@ -2202,7 +2196,7 @@ msgid "Close the modal"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFilters/VFilterChecklist.vue:131
+#: src/components/VFilters/VFilterChecklist.vue:134
 msgctxt "modal.closeNamed"
 msgid "Close ###name###"
 msgstr ""
@@ -2212,7 +2206,7 @@ msgctxt "modal.closeContentSettings"
 msgid "Close the content settings menu"
 msgstr ""
 
-#: src/components/VHeader/VHeaderInternal.vue:59
+#: src/components/VHeader/VHeaderInternal.vue:61
 msgctxt "modal.closePagesMenu"
 msgid "Close the pages menu"
 msgstr ""
@@ -2429,20 +2423,20 @@ msgstr ""
 
 #: src/components/VImageCell/VImageCell.vue:30
 #: src/components/VImageCell/VImageCell.vue:49
-#: src/components/VImageCell/VImageCell.vue:168
+#: src/components/VImageCell/VImageCell.vue:177
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
 
 #: src/components/VAudioThumbnail/VAudioThumbnail.vue:69
-#: src/components/VAudioTrack/layouts/VBoxLayout.vue:13
-#: src/components/VAudioTrack/layouts/VGlobalLayout.vue:14
+#: src/components/VAudioTrack/layouts/VBoxLayout.vue:11
+#: src/components/VAudioTrack/layouts/VGlobalLayout.vue:15
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:33
 msgctxt "sensitiveContent.title.audio"
 msgid "This audio track may contain sensitive content."
 msgstr ""
 
-#: src/components/VAudioTrack/layouts/VRowLayout.vue:52
+#: src/components/VAudioTrack/layouts/VRowLayout.vue:50
 msgctxt "sensitiveContent.creator"
 msgid "Creator"
 msgstr ""
@@ -2499,4 +2493,102 @@ msgstr ""
 
 msgctxt "collection.link.creator"
 msgid "Open creator page"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.creator.audio.zero"
+msgid "No audio files by this creator in ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.creator.audio.count"
+msgid "###count### audio file by this creator in ###source###"
+msgid_plural "###count### audio files by this creator in ###source###"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.creator.audio.countMore"
+msgid "Over ###count### audio files by this creator in ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.creator.image.zero"
+msgid "No images by this creator in ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.creator.image.count"
+msgid "###count### image by this creator in ###source###"
+msgid_plural "###count### images by this creator in ###source###"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.creator.image.countMore"
+msgid "Over ###count### images by this creator in ###source###"
+msgstr ""
+
+msgctxt "collection.resultCountLabel.source.audio.zero"
+msgid "No audio files provided by this source"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.source.audio.count"
+msgid "###count### audio file provided by this source."
+msgid_plural "###count### audio files provided by this source"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.source.audio.countMore"
+msgid "Over ###count### audio files provided by this source"
+msgstr ""
+
+msgctxt "collection.resultCountLabel.source.image.zero"
+msgid "No images provided by this source"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.source.image.count"
+msgid "###count### image provided by this source."
+msgid_plural "###count### images provided by this source"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.source.image.countMore"
+msgid "Over ###count### images provided by this source"
+msgstr ""
+
+msgctxt "collection.resultCountLabel.tag.audio.zero"
+msgid "No audio files with the selected tag"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.tag.audio.count"
+msgid "###count### audio file with the selected tag."
+msgid_plural "###count### audio files with the selected tag"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.tag.audio.countMore"
+msgid "Over ###count### audio files with the selected tag"
+msgstr ""
+
+msgctxt "collection.resultCountLabel.tag.image.zero"
+msgid "No images with the selected tag"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.tag.image.count"
+msgid "###count### image with the selected tag."
+msgid_plural "###count### images with the selected tag"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.resultCountLabel.tag.image.countMore"
+msgid "Over ###count### images with the selected tag"
 msgstr ""
