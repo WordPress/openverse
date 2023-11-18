@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const { Octokit } = require('@octokit/rest')
+const { Octokit } = require('octokit')
 
 // TODO: add auth token
 const octokit = new Octokit({

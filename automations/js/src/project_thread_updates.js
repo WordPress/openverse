@@ -57,7 +57,7 @@ const GET_PROJECT_CARDS = `
  * if not notify the project lead.
  *
  * @param {Object} options
- * @param {import('@octokit/rest').Octokit} options.github
+ * @param {import('octokit').Octokit} options.github
  * @param {import('@actions/core')} options.core
  */
 module.exports = async ({ github, core }) => {
