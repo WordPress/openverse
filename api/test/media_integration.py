@@ -7,27 +7,8 @@ These are not tests and cannot be invoked.
 import json
 import re
 from test.constants import API_URL
-from test.factory.models import ImageFactory
 
-import pytest
 import requests
-
-
-pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture(autouse=True)
-def turn_off_db_read(monkeypatch):
-    """
-    Prevent DB lookup for ES results because DB is empty.
-
-    Since ImageSerializer has set ``needs_db`` to ``True``, all results from ES will be
-    mapped to DB models. Since the test DB is empty, results array will be empty. By
-    patching ``needs_db`` to ``False``, we can test the dead link filtering process
-    without needing to populate the test DB.
-    """
-
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
 
 
 def search(fixture):
@@ -110,17 +91,21 @@ def search_quotes(media_path, q="test"):
 
 def search_quotes_exact(media_path, q):
     """Return only exact matches for the given query."""
-    titles = ["dancing penguins", "dancing penguin", "dance penguins"]
-    for title in titles:
-        ImageFactory.create(title=title, with_hit=True)
 
-    url_format = f"{API_URL}/v1/{media_path}?q={{q}}"
+    url_format = (
+        f"{API_URL}/v1/{media_path}?q={{q}}&unstable__include_sensitive_results=true"
+    )
     unquoted_response = requests.get(url_format.format(q=q), verify=False)
     assert unquoted_response.status_code == 200
     unquoted_result_count = unquoted_response.json()["result_count"]
     assert unquoted_result_count > 0
     unquoted_results = unquoted_response.json()["results"]
-    assert len([1 for res in unquoted_results if q in res["title"]])
+    titles = [res["title"] for res in unquoted_results]
+    exact_match_count = sum([1 for t in titles if q in t])
+    assert exact_match_count > 0, f"No results contain `{q}` in title: {titles}"
+    assert exact_match_count < len(
+        titles
+    ), f"Unquoted search returned only exact matches: {titles}"
 
     quoted_response = requests.get(url_format.format(q=f'"{q}"'), verify=False)
     assert quoted_response.status_code == 200
@@ -133,8 +118,10 @@ def search_quotes_exact(media_path, q):
     # Above we check that the results are not 0 to confirm that we do still get results back.
     assert quoted_result_count < unquoted_result_count
 
-    quoted_results = quoted_response.json()["results"]
-    assert all([q in res["title"] for res in quoted_results])
+    quoted_result_titles = [res["title"] for res in quoted_response.json()["results"]]
+    assert all(
+        [q in title for title in quoted_result_titles]
+    ), f"Not all titles contain exact match for `{q}`: {quoted_result_titles}"
 
 
 def search_special_chars(media_path, q="test"):

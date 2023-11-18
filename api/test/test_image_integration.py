@@ -60,7 +60,7 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``dog pet`` returns different results when quoted vs unquoted
+    # ``dancing penguins`` returns different results when quoted vs unquoted
     search_quotes_exact("images", "dancing penguins")
 
 

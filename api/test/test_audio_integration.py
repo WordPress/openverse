@@ -109,7 +109,7 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``field recording`` returns different results when quoted vs unquoted
+    # ``dancing penguins`` returns different results when quoted vs unquoted
     search_quotes_exact("audio", "dancing penguins")
 
 
