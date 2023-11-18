@@ -8,29 +8,24 @@ import { resolve } from 'path'
 
 import yaml from 'js-yaml'
 import axios from 'axios'
-import { Octokit } from '@octokit/rest'
 
 import { escapeHtml } from './html.mjs'
+import { getOctokit } from './utils/octokit.mjs'
 
 /* Environment variables */
 
-/** the personal access token for the GitHub API */
-const pat = process.env.ACCESS_TOKEN
 /** the username for the Make site account making the post */
 const username = process.env.MAKE_USERNAME
 /** the application password, not login password, for the Make site */
 const password = process.env.MAKE_PASSWORD
 
-if (!pat) {
-  console.log('GitHub personal access token "ACCESS_TOKEN" is required.')
-}
 if (!username) {
   console.log('Make site username "MAKE_USERNAME" is required.')
 }
 if (!password) {
   console.log('Make site application password "MAKE_PASSWORD" is required.')
 }
-if (!(pat && username && password)) process.exit(1)
+if (!(username && password)) process.exit(1)
 
 /* Read GitHub information from the data files */
 
@@ -51,7 +46,7 @@ const [startDate] = new Date(new Date().getTime() - msInWeeks(1))
 
 /* GitHub API */
 
-const octokit = new Octokit({ auth: pat })
+const octokit = getOctokit()
 const mergedPrsQ = (repo) =>
   `repo:${org}/${repo} is:pr is:merged merged:>=${startDate}`
 const closedIssuesQ = (repo) =>
