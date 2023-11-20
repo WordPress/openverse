@@ -17,9 +17,11 @@
     </div>
     <div
       v-if="additionalSearchViews"
-      class="mx-auto grid grid-cols-1 grid-rows-[auto,1fr] gap-y-6 p-6 pb-0 sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:items-center sm:gap-x-6 lg:mb-6 lg:max-w-5xl"
+      class="mx-auto grid grid-cols-1 grid-rows-[auto,1fr] gap-y-6 p-6 pb-0 sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6 lg:mb-6 lg:max-w-5xl"
     >
-      <div class="row-start-1 flex justify-between gap-x-6 sm:col-start-2">
+      <div
+        class="row-start-1 flex justify-between gap-x-6 sm:col-start-2 sm:mt-1"
+      >
         <slot name="audio-control" layout="full" size="medium" />
         <VGetMediaButton
           :media="audio"

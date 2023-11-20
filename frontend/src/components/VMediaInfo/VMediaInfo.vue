@@ -1,6 +1,6 @@
 <template>
   <div class="w-full lg:w-auto">
-    <h1 class="heading-6 mb-3 sm:mb-1 lg:line-clamp-2">{{ media.title }}</h1>
+    <h1 class="heading-6 mb-3 sm:mb-1">{{ media.title }}</h1>
     <VByLine
       :media-type="media.frontendMediaType"
       :source-slug="source"

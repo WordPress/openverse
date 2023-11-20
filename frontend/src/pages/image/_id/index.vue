@@ -43,14 +43,13 @@
 
         <section
           v-if="isAdditionalSearchView"
-          id="title-button"
           class="grid grid-cols-1 grid-rows-[auto,1fr] sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6"
         >
           <VMediaInfo :media="image" class="min-w-0 sm:col-start-1" />
           <VGetMediaButton
             :media="image"
             media-type="image"
-            class="row-start-1 mb-4 !w-full flex-initial self-center sm:col-start-2 md:mb-0 md:!w-max"
+            class="row-start-1 mb-4 !w-full flex-initial sm:col-start-2 sm:mb-0 sm:mt-1 sm:!w-auto"
           />
         </section>
         <section
