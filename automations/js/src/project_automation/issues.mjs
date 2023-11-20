@@ -33,6 +33,8 @@ const syncPriority = async () => {
   )?.name
   if (priority)
     await backlogBoard.setCustomChoiceField(card.id, 'Priority', priority)
+  if (priority === '🟥 priority: critical')
+    await backlogBoard.moveCard(card.id, columns.ToDo)
 }
 
 switch (eventAction) {
