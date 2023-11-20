@@ -18,6 +18,7 @@ const pr = new PullRequest(
   eventPayload.pull_request.base.repo.name,
   eventPayload.pull_request.number
 )
+await pr.init()
 
 const prBoard = await getBoard('PRs')
 const columns = prBoard.columns // computed property
@@ -29,8 +30,8 @@ const card = await prBoard.addCard(eventPayload.pull_request.node_id)
  * Move the PR to the right column based on the number of reviews.
  */
 const syncReviews = async () => {
-  const reviewDecision = await pr.getReviewDecision()
-  const reviewCounts = await pr.getReviewCounts()
+  const reviewDecision = pr.reviewDecision
+  const reviewCounts = pr.reviewCounts
 
   if (reviewDecision === 'APPROVED')
     await prBoard.moveCard(card.id, columns.Approved)
