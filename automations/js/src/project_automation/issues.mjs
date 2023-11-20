@@ -7,33 +7,10 @@
  * - the event payload in the `EVENT_PAYLOAD` JSON file in the project root
  */
 
-import yargs from 'yargs'
-import { hideBin } from 'yargs/helpers'
-
 import { getBoard } from '../utils/projects.mjs'
-import { getEventData } from '../utils/event.mjs'
+import { getEvent } from '../utils/event.mjs'
 
-const { event_name: eventName, event_action: eventAction } = yargs(
-  hideBin(process.argv)
-)
-  .help()
-  .version(false)
-  .option('event_name', {
-    type: 'string',
-    description: 'the GitHub event that triggered the workflow',
-    demandOption: true,
-  })
-  .option('event_action', {
-    type: 'string',
-    description: 'the GitHub event action that triggered the workflow',
-    demandOption: true,
-  })
-  .parse()
-console.log('Received event name:', eventName)
-console.log('Received event action:', eventAction)
-
-// Get more information about the issue from the event payload.
-const eventPayload = getEventData()
+const { eventAction, eventPayload } = getEvent()
 
 if (
   eventPayload.issue.labels.some((label) => label.name === '🧭 project: thread')
@@ -80,7 +57,7 @@ switch (eventAction) {
 
   case 'assigned':
     if (card.status === columns.Backlog)
-      await backlogBoard.moveCard(card.id, columns.Todo)
+      await backlogBoard.moveCard(card.id, columns.ToDo)
     break
 
   case 'labeled':
