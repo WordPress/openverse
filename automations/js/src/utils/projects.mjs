@@ -24,7 +24,7 @@ class Project {
   get columns() {
     return Object.fromEntries(
       Object.keys(this.fields['Status'].options).map((key) => [
-        key.replace(/\W/g, '').trim(),
+        key.replace(/\W/g, '').replace(/^\d*/, '').trim(),
         key,
       ])
     )
