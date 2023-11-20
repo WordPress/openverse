@@ -14,5 +14,8 @@
   "devDependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
+  },
+  "scripts": {
+    "issues": "node src/project_automation/issues.mjs"
   }
 }

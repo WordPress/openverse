@@ -1,0 +1,26 @@
+# Runs all automations related to issue events
+name: Issue automations
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - closed
+      - assigned
+      - labeled
+      - unlabeled
+
+jobs:
+  run:
+    name: Perform issue automations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform issue automations
+        run: |
+          echo "$EVENT_PAYLOAD" > event.json
+          pnpm issues --event-name ${{ github.event.action }}
+          rm event.json
+        env:
+          EVENT_PAYLOAD: ${{ toJson(github.event) }}M
+        working-directory: automations/js

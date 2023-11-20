@@ -12,8 +12,8 @@ group:
       - source: automations/data/
         dest: automations/data/
       # Synced workflows
-      - source: .github/workflows/new_issues.yml
-        dest: .github/workflows/new_issues.yml
+      - source: .github/workflows/issue_automations.yml
+        dest: .github/workflows/issue_automations.yml
       - source: .github/workflows/new_prs.yml
         dest: .github/workflows/new_prs.yml
       - source: .github/workflows/label_new_pr.yml
