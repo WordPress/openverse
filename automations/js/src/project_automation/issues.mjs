@@ -4,7 +4,7 @@
  * Invoke it from the CLI with
  * - the event name as the `--event_name` argument
  * - the event action as the `--event_action` argument
- * - the event payload in the `EVENT_PAYLOAD` JSON file in the project root
+ * - the event payload in the `event.json` file in the project root
  */
 
 import { getBoard } from '../utils/projects.mjs'
