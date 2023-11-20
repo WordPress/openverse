@@ -11,6 +11,7 @@ from api.serializers.media_serializers import (
     MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
     MediaSerializer,
+    PaginatedRequestSerializer,
     get_hyperlinks_serializer,
     get_search_request_source_serializer,
 )
@@ -24,14 +25,31 @@ from api.serializers.media_serializers import (
 AudioSearchRequestSourceSerializer = get_search_request_source_serializer("audio")
 
 
+class AudioCollectionRequestSerializer(PaginatedRequestSerializer):
+    field_names = [
+        *PaginatedRequestSerializer.field_names,
+        "peaks",
+    ]
+
+    peaks = serializers.BooleanField(
+        help_text="Whether to include the waveform peaks or not",
+        required=False,
+        default=False,
+    )
+
+    @property
+    def needs_db(self) -> bool:
+        return super().needs_db or self.data["peaks"]
+
+
 class AudioSearchRequestSerializer(
     AudioSearchRequestSourceSerializer,
     MediaSearchRequestSerializer,
 ):
     """Parse and validate search query string parameters."""
 
-    fields_names = [
-        *MediaSearchRequestSerializer.fields_names,
+    field_names = [
+        *MediaSearchRequestSerializer.field_names,
         *AudioSearchRequestSourceSerializer.field_names,
         "category",
         "length",
@@ -62,8 +80,7 @@ class AudioSearchRequestSerializer(
         return super().needs_db or self.data["peaks"]
 
     def validate_internal__index(self, value):
-        index = super().validate_internal__index(value)
-        if index is None:
+        if not (index := super().validate_internal__index(value)):
             return None
         if not index.startswith(AUDIO_TYPE):
             raise serializers.ValidationError(f"Invalid index name `{value}`.")

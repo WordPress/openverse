@@ -261,6 +261,7 @@ const config: NuxtConfig = {
       // Enables use of IDE debuggers
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
     },
+    transpile: [({ isLegacy }) => (isLegacy ? "axios" : undefined)],
   },
   typescript: {
     typeCheck: {

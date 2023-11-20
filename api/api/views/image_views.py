@@ -13,12 +13,15 @@ from PIL import Image as PILImage
 
 from api.constants.media_types import IMAGE_TYPE
 from api.docs.image_docs import (
+    creator_collection,
     detail,
     oembed,
     related,
     report,
     search,
+    source_collection,
     stats,
+    tag_collection,
     thumbnail,
 )
 from api.docs.image_docs import watermark as watermark_doc
@@ -31,7 +34,10 @@ from api.serializers.image_serializers import (
     OembedSerializer,
     WatermarkRequestSerializer,
 )
-from api.serializers.media_serializers import MediaThumbnailRequestSerializer
+from api.serializers.media_serializers import (
+    MediaThumbnailRequestSerializer,
+    PaginatedRequestSerializer,
+)
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 from api.utils.watermark import watermark
 from api.views.media_views import MediaViewSet
@@ -48,10 +54,12 @@ class ImageViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to images."""
 
     model_class = Image
+    media_type = IMAGE_TYPE
     query_serializer_class = ImageSearchRequestSerializer
     default_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
 
     serializer_class = ImageSerializer
+    collection_serializer_class = PaginatedRequestSerializer
 
     OEMBED_HEADERS = {
         "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="OEmbed"),
@@ -61,6 +69,32 @@ class ImageViewSet(MediaViewSet):
         return super().get_queryset().select_related("mature_image")
 
     # Extra actions
+    @creator_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
+    )
+    def creator_collection(self, request, source, creator):
+        return super().creator_collection(request, source, creator)
+
+    @source_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)",
+    )
+    def source_collection(self, request, source, *_, **__):
+        return super().source_collection(request, source)
+
+    @tag_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="tag/(?P<tag>[^/.]+)",
+    )
+    def tag_collection(self, request, tag, *_, **__):
+        return super().tag_collection(request, tag, *_, **__)
 
     @oembed
     @action(

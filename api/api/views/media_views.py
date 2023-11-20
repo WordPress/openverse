@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 
 from rest_framework import status
 from rest_framework.decorators import action
@@ -6,10 +7,13 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from api.constants.media_types import MediaType
+from api.constants.search import SearchStrategy
 from api.controllers import search_controller
 from api.controllers.elasticsearch.related import related_media
 from api.models import ContentProvider
 from api.models.media import AbstractMedia
+from api.serializers import audio_serializers, media_serializers
 from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
@@ -17,6 +21,18 @@ from api.utils.search_context import SearchContext
 
 
 logger = logging.getLogger(__name__)
+
+MediaListRequestSerializer = Union[
+    audio_serializers.AudioCollectionRequestSerializer,
+    media_serializers.PaginatedRequestSerializer,
+    media_serializers.MediaSearchRequestSerializer,
+]
+
+
+class InvalidSource(APIException):
+    status_code = 400
+    default_detail = "Invalid source."
+    default_code = "invalid_source"
 
 
 class MediaViewSet(ReadOnlyModelViewSet):
@@ -30,13 +46,16 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
     # Populate these in the corresponding subclass
     model_class: type[AbstractMedia] = None
+    media_type: MediaType | None = None
     query_serializer_class = None
+    collection_serializer_class = None
     default_index = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         required_fields = [
             self.model_class,
+            self.media_type,
             self.query_serializer_class,
             self.default_index,
         ]
@@ -101,12 +120,64 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
     def list(self, request, *_, **__):
         params = self._get_request_serializer(request)
+        return self.get_media_results(request, "search", params)
 
+    def _validate_source(self, source):
+        valid_sources = search_controller.get_sources(self.media_type)
+        if source not in valid_sources:
+            valid_string = ", ".join([f"'{k}'" for k in valid_sources.keys()])
+            raise InvalidSource(
+                detail=f"Invalid source '{source}'. Valid sources are: {valid_string}.",
+            )
+
+    def collection(self, request, tag, source, creator, *_, **__):
+        if tag:
+            collection_params = {"tag": tag}
+        elif creator:
+            collection_params = {"creator": creator, "source": source}
+        else:
+            collection_params = {"source": source}
+        if source:
+            self._validate_source(source)
+
+        params = self.collection_serializer_class(
+            data=request.query_params, context={"request": request}
+        )
+        params.is_valid(raise_exception=True)
+
+        return self.get_media_results(request, "collection", params, collection_params)
+
+    @action(detail=False, methods=["get"], url_path="tag/(?P<tag>[^/.]+)")
+    def tag_collection(self, request, tag, *_, **__):
+        tag_lower = tag.lower()
+        return self.collection(request, tag_lower, None, None)
+
+    @action(detail=False, methods=["get"], url_path="source/(?P<source>[^/.]+)")
+    def source_collection(self, request, source, *_, **__):
+        return self.collection(request, None, source, None)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
+    )
+    def creator_collection(self, request, source, creator):
+        return self.collection(request, None, source, creator)
+
+    # Common functionality for search and collection views
+
+    def get_media_results(
+        self,
+        request,
+        strategy: SearchStrategy,
+        params: MediaListRequestSerializer,
+        collection_params: dict[str, str] | None = None,
+    ):
         page_size = self.paginator.page_size = params.data["page_size"]
         page = self.paginator.page = params.data["page"]
 
         hashed_ip = hash(self._get_user_ip(request))
-        filter_dead = params.validated_data["filter_dead"]
+        filter_dead = params.validated_data.get("filter_dead", True)
 
         if pref_index := params.validated_data.get("index"):
             logger.info(f"Using preferred index {pref_index} for media.")
@@ -118,8 +189,15 @@ class MediaViewSet(ReadOnlyModelViewSet):
             exact_index = False
 
         try:
-            results, num_pages, num_results, search_context = search_controller.search(
+            (
+                results,
+                num_pages,
+                num_results,
+                search_context,
+            ) = search_controller.query_media(
+                strategy,
                 params,
+                collection_params,
                 search_index,
                 exact_index,
                 page_size,
