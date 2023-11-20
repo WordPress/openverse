@@ -19,7 +19,7 @@ jobs:
       - name: Perform issue automations
         run: |
           echo "$EVENT_PAYLOAD" > event.json
-          pnpm issues --event-name ${{ github.event.action }}
+          pnpm issues --event_name ${{ github.event_name }} --event_action ${{ github.event.action }}
           rm event.json
         env:
           EVENT_PAYLOAD: ${{ toJson(github.event) }}M
