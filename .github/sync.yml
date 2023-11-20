@@ -14,8 +14,8 @@ group:
       # Synced workflows
       - source: .github/workflows/issue_automations.yml
         dest: .github/workflows/issue_automations.yml
-      - source: .github/workflows/new_prs.yml
-        dest: .github/workflows/new_prs.yml
+      - source: .github/workflows/pr_automations.yml
+        dest: .github/workflows/pr_automations.yml
       - source: .github/workflows/label_new_pr.yml
         dest: .github/workflows/label_new_pr.yml
       - source: .github/workflows/pr_label_check.yml
