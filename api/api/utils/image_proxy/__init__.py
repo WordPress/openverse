@@ -3,7 +3,7 @@ from typing import Literal
 from urllib.parse import urlparse
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from rest_framework.exceptions import UnsupportedMediaType
 
 import django_redis
@@ -65,7 +65,7 @@ def get(
     accept_header: str = "image/*",
     is_full_size: bool = False,
     is_compressed: bool = True,
-) -> HttpResponse:
+) -> StreamingHttpResponse:
     """
     Proxy an image through Photon if its file type is supported, else return the
     original image if the file type is SVG. Otherwise, raise an exception.
@@ -96,6 +96,7 @@ def get(
             timeout=15,
             params=params,
             headers=headers,
+            stream=True,
         )
         tallies.incr(f"thumbnail_response_code:{month}:{upstream_response.status_code}")
         tallies.incr(
@@ -143,8 +144,8 @@ def get(
         f"Image proxy response status: {res_status}, content-type: {content_type}"
     )
 
-    return HttpResponse(
-        upstream_response.content,
+    return StreamingHttpResponse(
+        upstream_response.iter_content(),
         status=res_status,
         content_type=content_type,
     )
