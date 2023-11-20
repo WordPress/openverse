@@ -13,7 +13,11 @@ import { PullRequest } from '../utils/pr.mjs'
 
 const { eventName, eventAction, eventPayload } = getEvent()
 
-const pr = new PullRequest(eventPayload.pull_request)
+const pr = new PullRequest(
+  eventPayload.pull_request.base.repo.owner.login,
+  eventPayload.pull_request.base.repo.name,
+  eventPayload.pull_request.number
+)
 
 const prBoard = await getBoard('PRs')
 const columns = prBoard.columns // computed property
@@ -25,15 +29,16 @@ const card = await prBoard.addCard(eventPayload.pull_request.node_id)
  * Move the PR to the right column based on the number of reviews.
  */
 const syncReviews = async () => {
-  const reviewCounts = await pr.reviewCounts()
-  if (reviewCounts.CHANGES_REQUESTED > 0) return // Handled by built-in automations.
+  const reviewDecision = await pr.getReviewDecision()
+  const reviewCounts = await pr.getReviewCounts()
 
-  if (reviewCounts.APPROVED === 0)
-    await prBoard.moveCard(card.id, columns.Needs2Reviews)
+  if (reviewDecision === 'APPROVED')
+    await prBoard.moveCard(card.id, columns.Approved)
+  else if (reviewDecision === 'CHANGES_REQUESTED')
+    await prBoard.moveCard(card.id, columns.ChangesRequested)
   else if (reviewCounts.APPROVED === 1)
     await prBoard.moveCard(card.id, columns.Needs1Review)
-  else if (reviewCounts.APPROVED >= 2)
-    await prBoard.moveCard(card.id, columns.Approved)
+  else await prBoard.moveCard(card.id, columns.Needs2Reviews)
 }
 
 if (eventName === 'pull_request_review') {

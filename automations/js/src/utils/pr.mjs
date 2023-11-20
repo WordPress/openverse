@@ -1,9 +1,34 @@
 import { getOctokit } from './octokit.mjs'
 
 export class PullRequest {
-  constructor(pullRequest) {
+  constructor(owner, repo, number) {
     this.octokit = getOctokit()
-    this.pullRequest = pullRequest
+    this.owner = owner
+    this.repo = repo
+    this.number = number
+  }
+
+  /**
+   * Get the review decision for the given PR.
+   *
+   * @returns {Promise<string>} one of 'APPROVED', 'CHANGES_REQUESTED' or 'REVIEW_REQUIRED'
+   */
+  async getReviewDecision() {
+    const res = await this.octokit.graphql(
+      `query getReviewDecision($owner: String!, $repo: String!, $number: Int!) {
+        repository(owner: $owner, name: $repo) {
+          pullRequest(number: $number) {
+            reviewDecision
+          }
+        }
+      }`,
+      {
+        owner: this.owner,
+        repo: this.repo,
+        number: this.number,
+      }
+    )
+    return res.repository.pullRequest.reviewDecision
   }
 
   /**
@@ -11,7 +36,7 @@ export class PullRequest {
    *
    * @returns {Promise<{APPROVED: number, COMMENTED: number, CHANGES_REQUESTED: number}>} the PR review counts
    */
-  async reviewCounts() {
+  async getReviewCounts() {
     const reviewCounts = {
       APPROVED: 0,
       COMMENTED: 0,
@@ -19,9 +44,9 @@ export class PullRequest {
     }
 
     const { data: reviews } = await this.octokit.rest.pulls.listReviews({
-      owner: this.pullRequest.base.user.login,
-      repo: this.pullRequest.base.repo.name,
-      pull_number: this.pullRequest.number,
+      owner: this.owner,
+      repo: this.repo,
+      pull_number: this.number,
     })
     for (let review of reviews) {
       reviewCounts[review.state] += 1
