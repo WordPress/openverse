@@ -282,13 +282,14 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
             "Subclasses must implement `get_image_proxy_media_info`"
         )
 
-    @action(
+    thumbnail_action = action(
         detail=True,
         url_path="thumb",
         url_name="thumb",
         serializer_class=media_serializers.MediaThumbnailRequestSerializer,
         throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
+
     async def thumbnail(self, request, *_, **__):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)

@@ -98,13 +98,13 @@ class AudioViewSet(MediaViewSet):
         )
 
     @thumbnail_docs
-    @action(detail=True, url_path="thumb", url_name="thumb")
-    def thumbnail(self, *args, **kwargs):
+    @MediaViewSet.thumbnail_action
+    async def thumbnail(self, *args, **kwargs):
         """
         Retrieve the scaled down and compressed thumbnail of the artwork of an
         audio track or its audio set.
         """
-        super().thumbnail(*args, **kwargs)
+        return await super().thumbnail(*args, **kwargs)
 
     @waveform
     @action(
