@@ -74,9 +74,9 @@ categories.
 
 ### Improvements to existing automations
 
-1. [Issues/Issue is created](/meta/project_boards/issues.md#issue-is-created)
+1. [Issues/Issue is created](/meta/project_boards/issues.md#issue-is-openedreopened)
    and
-   [Issues/Issue is added to the project](/meta/project_boards/issues.md#issue-is-added-to-the-project)
+   [Issues/Issue is added to the project](/meta/project_boards/issues.md#issue-is-openedreopened)
 
    The issue should be added to the project board under the appropriate column,
    "📋 Backlog" or "⛔ Blocked" depending on the issue labels.
@@ -102,14 +102,15 @@ categories.
    all items in the "✅ Done" and "🗑️ Discarded" columns weekly (preferably
    immediately after the chat).
 
-4. [PRs/PR is created](/meta/project_boards/prs.md#pr-is-created) and
-   [PRs/PR is added to project](/meta/project_boards/prs.md#pr-is-added-to-the-project)
+4. [PRs/PR is created](/meta/project_boards/prs.md#pr-is-openedreopened) and
+   [PRs/PR is added to project](/meta/project_boards/prs.md#pr-is-openedreopened)
 
    The PR should be added to the project board under the appropriate column, "In
    Progress" or "Needs &lt;x&gt; Review(s)" depending on the PR's draft or
    ready-for-review state and the number of existing reviews.
 
-5. [PRs/PR is closed or merged](/meta/project_boards/prs.md#pr-is-closed-or-merged)
+5. PRs/PR is [closed](/meta/project_boards/prs.md#pr-is-closed) or
+   [merged](/meta/project_boards/prs.md#pr-is-merged)
 
    The PR should be moved to the "✅ Done" column only if it was merged. If it
    was closed without merge, it should be moved to a new "🗑️ Discarded" column.
