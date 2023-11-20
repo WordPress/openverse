@@ -1,0 +1,26 @@
+# Runs all automations related to PR events
+name: PR automations
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - edited
+      - converted_to_draft
+      - ready_for_review
+  pull_request_review:
+
+jobs:
+  run:
+    name: Perform PR automations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform PR automations
+        run: |
+          echo "$EVENT_PAYLOAD" > event.json
+          pnpm prs --event_name ${{ github.event_name }} -- event_action ${{ github.event.action }}
+          rm event.json
+        env:
+          EVENT_PAYLOAD: ${{ toJson(github.event) }}
+        working-directory: automations/js
