@@ -14,29 +14,11 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 
 DEFAULT_DATE = datetime(2022, 1, 1)
 TEST_TASK_ID = "wait_task"
-TEST_POOL = "single_run_external_dags_sensor_test_pool"
+TEST_POOL = (
+    "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_pool"
+)
 DEV_NULL = "/dev/null"
-DAG_PREFIX = "sreds"  # single_run_external_dags_sensor
-
-
-@pytest.fixture()
-def get_test_pool():
-    return TEST_POOL
-
-
-@pytest.fixture()
-def get_test_dag_id():
-    return DAG_PREFIX
-
-
-@pytest.fixture()
-def isTaskInstance():
-    return False
-
-
-@pytest.fixture()
-def isPool():
-    return True
+DAG_PREFIX = "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_dag"  # single_run_external_dags_sensor
 
 
 def run_sensor(sensor):
@@ -80,6 +62,7 @@ def create_dagrun(dag, dag_state):
     )
 
 
+@pytest.mark.usefixtures("clean_db")
 # This appears to be coming from Airflow internals during testing as a result of
 # loading the example DAGs:
 # /opt/airflow/.local/lib/python3.10/site-packages/airflow/example_dags/example_subdag_operator.py:43: RemovedInAirflow3Warning  # noqa: E501

@@ -13,27 +13,15 @@ from common import ingestion_server
 
 
 TEST_START_DATE = datetime(2022, 2, 1, 0, 0, 0)
-TEST_DAG_ID = "api_healthcheck_test_dag"
 
 
 @pytest.fixture()
-def get_test_dag_id():
-    return TEST_DAG_ID
-
-
-@pytest.fixture()
-def isTaskInstance():
-    return True
-
-
-@pytest.fixture()
-def index_readiness_dag():
+def index_readiness_dag(get_test_dag_id, clean_db):
     # Create a DAG that just has an index_readiness_check task
-    with DAG(dag_id=TEST_DAG_ID, schedule=None, start_date=TEST_START_DATE) as dag:
+    with DAG(dag_id=get_test_dag_id, schedule=None, start_date=TEST_START_DATE) as dag:
         ingestion_server.index_readiness_check(
             media_type="image", index_suffix="my_test_suffix", timeout=timedelta(days=1)
         )
-
     return dag
 
 
