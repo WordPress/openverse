@@ -23,6 +23,9 @@ await pr.init()
 const prBoard = await getBoard('PRs')
 const columns = prBoard.columns // computed property
 
+const backlogBoard = await getBoard('Backlog')
+const backlogColumns = backlogBoard.columns
+
 // Create new, or get the existing, card for the current pull request.
 const card = await prBoard.addCard(eventPayload.pull_request.node_id)
 
@@ -42,6 +45,16 @@ const syncReviews = async () => {
   else await prBoard.moveCard(card.id, columns.Needs2Reviews)
 }
 
+/**
+ * Move all linked issues to the specified column.
+ */
+const syncIssues = async (destColumn) => {
+  for (let linkedIssue of pr.linkedIssues) {
+    const card = await backlogBoard.addCard(linkedIssue)
+    await backlogBoard.moveCard(card.id, destColumn)
+  }
+}
+
 if (eventName === 'pull_request_review') {
   await syncReviews()
 } else if (eventName === 'pull_request_target') {
@@ -51,10 +64,11 @@ if (eventName === 'pull_request_review') {
       if (eventPayload.pull_request.draft)
         await prBoard.moveCard(card.id, columns.Draft)
       else await syncReviews()
+      await syncIssues(backlogColumns.InProgress)
       break
 
     case 'edited':
-      // TODO: Handle issue/PR connections.
+      await syncIssues(backlogColumns.InProgress)
       break
 
     case 'converted_to_draft':
@@ -63,6 +77,11 @@ if (eventName === 'pull_request_review') {
 
     case 'ready_for_review':
       await syncReviews()
+      break
+
+    case 'closed':
+      if (!eventPayload.pull_request.merged)
+        await syncIssues(backlogColumns.Backlog)
       break
   }
 }
