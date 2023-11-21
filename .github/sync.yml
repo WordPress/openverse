@@ -16,6 +16,8 @@ group:
         dest: .github/workflows/issue_automations.yml
       - source: .github/workflows/pr_automations.yml
         dest: .github/workflows/pr_automations.yml
+      - source: .github/workflows/pr_automations_init.yml
+        dest: .github/workflows/pr_automations_init.yml
       - source: .github/workflows/label_new_pr.yml
         dest: .github/workflows/label_new_pr.yml
       - source: .github/workflows/pr_label_check.yml

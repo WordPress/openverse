@@ -1,0 +1,35 @@
+# Initialises all automations related to PR events
+name: PR automations init
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - edited
+      - converted_to_draft
+      - ready_for_review
+      - closed
+  pull_request_review:
+
+jobs:
+  run:
+    name: Save event info # This info will be used by the real workflow.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save event info
+        run: |
+          mkdir -p ./pr
+          echo "$EVENT_PAYLOAD" > ./pr/event.json
+          echo "export EVENT_NAME=$EVENT_NAME" > ./pr/event_info.env
+          echo "export EVENT_ACTION=$EVENT_ACTION" >> ./pr/event_info.env
+        env:
+          EVENT_PAYLOAD: ${{ toJson(github.event) }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+
+      - name: Upload event info as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: event_info
+          path: pr/
