@@ -284,7 +284,7 @@ def build_search_query(
         }
 
         if '"' in query:
-            base_query_kwargs["quote_field_suffix"] = ".exact"
+            base_query_kwargs["quote_field_suffix"] = ".raw"
 
         search_queries["must"].append(Q("simple_query_string", **base_query_kwargs))
         # Boost exact matches on the title

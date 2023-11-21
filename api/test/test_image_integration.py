@@ -60,8 +60,8 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``dog pet`` returns different results when quoted vs unquoted
-    search_quotes_exact("images", "dog pet")
+    # ``dancing penguins`` returns different results when quoted vs unquoted
+    search_quotes_exact("images", "dancing penguins")
 
 
 def test_search_with_special_characters():

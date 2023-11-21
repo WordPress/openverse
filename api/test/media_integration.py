@@ -92,11 +92,20 @@ def search_quotes(media_path, q="test"):
 def search_quotes_exact(media_path, q):
     """Return only exact matches for the given query."""
 
-    url_format = f"{API_URL}/v1/{media_path}?q={{q}}"
+    url_format = (
+        f"{API_URL}/v1/{media_path}?q={{q}}&unstable__include_sensitive_results=true"
+    )
     unquoted_response = requests.get(url_format.format(q=q), verify=False)
     assert unquoted_response.status_code == 200
     unquoted_result_count = unquoted_response.json()["result_count"]
     assert unquoted_result_count > 0
+    unquoted_results = unquoted_response.json()["results"]
+    titles = [res["title"] for res in unquoted_results]
+    exact_match_count = sum([1 for t in titles if q in t])
+    assert exact_match_count > 0, f"No results contain `{q}` in title: {titles}"
+    assert exact_match_count < len(
+        titles
+    ), f"Unquoted search returned only exact matches: {titles}"
 
     quoted_response = requests.get(url_format.format(q=f'"{q}"'), verify=False)
     assert quoted_response.status_code == 200
@@ -108,6 +117,11 @@ def search_quotes_exact(media_path, q):
     # strict causing it to return fewer results.
     # Above we check that the results are not 0 to confirm that we do still get results back.
     assert quoted_result_count < unquoted_result_count
+
+    quoted_result_titles = [res["title"] for res in quoted_response.json()["results"]]
+    assert all(
+        [q in title for title in quoted_result_titles]
+    ), f"Not all titles contain exact match for `{q}`: {quoted_result_titles}"
 
 
 def search_special_chars(media_path, q="test"):
