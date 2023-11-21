@@ -3,13 +3,17 @@ from decouple import config
 
 def get_record_limit():
     """
-    Get the limit on records to ingest or index, if applicable. If there is no
-    limit, return 0.
+    Check and retrieve the limit of records to ingest for the environment.
+
+    If a limit is explicitly configured, it is always used. Otherwise, production
+    defaults to no limit, and all other environments default to 100,000.
     """
-    limit_default = 100_000
+    configured_limit = config("DATA_REFRESH_LIMIT", default=None)
+    if configured_limit is not None:
+        return int(configured_limit)
 
     environment = config("ENVIRONMENT", default="local").lower()
     if environment in {"prod", "production"}:
-        # If we're in production, turn off limits unless it's explicitly provided
-        limit_default = 0
-    return config("DATA_REFRESH_LIMIT", cast=int, default=limit_default)
+        return 0
+
+    return 100_000
