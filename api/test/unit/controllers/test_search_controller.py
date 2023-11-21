@@ -11,19 +11,36 @@ from test.factory.es_http import (
 from unittest import mock
 from uuid import uuid4
 
+from django.core.cache import cache
+
 import pook
 import pytest
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
+from elasticsearch_dsl.query import Terms
 
 from api.controllers import search_controller
 from api.controllers.elasticsearch import helpers as es_helpers
+from api.controllers.search_controller import FILTERED_PROVIDERS_CACHE_KEY
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
 
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture()
+def cache_setter():
+    keys = []
+
+    def _cache_setter(key, value):
+        keys.append(key)
+        cache.set(key, value, timeout=1)
+
+    yield _cache_setter
+    for key in keys:
+        cache.delete(key)
 
 
 @pytest.mark.parametrize(
@@ -807,3 +824,14 @@ def test_excessive_recursion_in_post_process(
             filter_dead=True,
         )
     assert "Nesting threshold breached" in caplog.text
+
+
+def test_get_excluded_providers_query_returns_None_when_no_provider_is_excluded():
+    assert search_controller.get_excluded_providers_query() is None
+
+
+def test_get_excluded_providers_query_returns_when_cache_is_set(cache_setter):
+    cache_setter(FILTERED_PROVIDERS_CACHE_KEY, ["provider1", "provider2"])
+    assert search_controller.get_excluded_providers_query() == Terms(
+        provider=["provider1", "provider2"]
+    )

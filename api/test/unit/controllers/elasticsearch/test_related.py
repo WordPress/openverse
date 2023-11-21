@@ -21,7 +21,7 @@ pytestmark = pytest.mark.django_db
 def excluded_providers_cache():
     cache_key = "filtered_providers"
     excluded_provider = "excluded_provider"
-    cache_value = [{"provider_identifier": excluded_provider}]
+    cache_value = [excluded_provider]
     cache.set(cache_key, cache_value, timeout=1)
 
     yield excluded_provider
