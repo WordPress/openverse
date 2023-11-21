@@ -49,7 +49,7 @@ export class PullRequest {
     const pr = res.repository.pullRequest
     return {
       reviewDecision: pr.reviewDecision,
-      linkedIssues: pr.closingIssueReferences.nodes.map((node) => node.id),
+      linkedIssues: pr.closingIssuesReferences.nodes.map((node) => node.id),
       reviewStates: pr.reviews.nodes.map((node) => node.state),
     }
   }
