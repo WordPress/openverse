@@ -123,12 +123,9 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import { isRetriable } from "~/utils/errors"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
-
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-
-import { useProviderStore } from "~/stores/provider"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VLink from "~/components/VLink.vue"
@@ -141,11 +138,14 @@ import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
 
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VErrorSection,
     VMediaInfo,
     VGetMediaButton,
     VMediaDetails,
@@ -295,23 +295,12 @@ export default defineComponent({
     }))
 
     const featureFlagStore = useFeatureFlagStore()
-
     const isAdditionalSearchView = computed(() => {
       return featureFlagStore.isOn("additional_search_views")
-    })
-    const providerStore = useProviderStore()
-    const sourceName = computed(() => {
-      return image.value
-        ? providerStore.getProviderName(
-            image.value.source ?? image.value.provider,
-            "image"
-          )
-        : ""
     })
 
     return {
       isAdditionalSearchView,
-      sourceName,
 
       image,
       fetchingError,
