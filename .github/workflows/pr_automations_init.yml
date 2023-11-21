@@ -1,4 +1,23 @@
-# Initialises all automations related to PR events
+# Initialises all automations related to PR events.
+#
+# See `issue_automations_init.yml` for the corresponding implementation for
+# issues.
+#
+# The automations for PR events are a little more complex than those for issues
+# because PRs are a less secure environment. To avoid leaking secrets, we need
+# to run automations with code as it appears on `main`.
+#
+# `pull_request_target` serves this purpose but there is no corresponding
+# `_target` version for `pull_request_review`. So we take this roundabout
+# approach:
+#
+# 1. This workflow runs for the events and their subtypes we are interested in.
+# 2. It saves the event payload to a JSON file and the event name and action to
+#    an environment file.
+# 3. It uploads the JSON file and the environment files as artifacts.
+#
+# continued in `pr_automations.yml`...
+
 name: PR automations init
 
 on:
@@ -14,7 +33,7 @@ on:
 
 jobs:
   run:
-    name: Save event info # This info will be used by the real workflow.
+    name: Save event info
     runs-on: ubuntu-latest
     steps:
       - name: Save event info

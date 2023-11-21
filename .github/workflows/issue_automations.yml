@@ -1,4 +1,7 @@
-# Runs all automations related to issue events
+# Runs all automations related to issue events.
+#
+# See `pr_automations_init.yml` and `pr_automations.yml` for the corresponding
+# implementation for PRs.
 name: Issue automations
 
 on:

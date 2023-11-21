@@ -1,4 +1,25 @@
-# Runs all automations related to PR events
+# Runs all automations related to PR events.
+#
+# See `issue_automations_init.yml` for the corresponding implementation for
+# issues.
+#
+# The automations for PR events are a little more complex than those for issues
+# because PRs are a less secure environment. To avoid leaking secrets, we need
+# to run automations with code as it appears on `main`.
+#
+# `pull_request_target` serves this purpose but there is no corresponding
+# `_target` version for `pull_request_review`. So we take this roundabout
+# approach:
+#
+# This workflow waits for the `pr_automations_init.yml` workflow to complete and
+# then uses its exports to run automations from main, with access to secrets.
+#
+# ...continued from `pr_automations_init.yml`
+#
+# 4. This workflow runs after `pr_automations_init.yml` workflow completes.
+# 5. It downloads the artifacts from that workflow run.
+# 6. It extracts the files, loads the env vars and runs the automation script.
+
 name: PR automations
 
 on:
