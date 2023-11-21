@@ -262,7 +262,7 @@ export default defineComponent({
   mask-image: linear-gradient(
     to left,
     transparent 0,
-    transparent 32px,
+    transparent 44px,
     #000 98px,
     #000 100%
   );
@@ -272,7 +272,7 @@ export default defineComponent({
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    transparent 32px,
+    transparent 44px,
     #000 98px,
     #000 100%
   );
@@ -282,7 +282,7 @@ export default defineComponent({
   mask-image: linear-gradient(
       to right,
       transparent 0,
-      transparent 32px,
+      transparent 44px,
       #000 98px,
       #000 50%,
       transparent 50%,
@@ -291,7 +291,7 @@ export default defineComponent({
     linear-gradient(
       to left,
       transparent 0,
-      transparent 32px,
+      transparent 44px,
       #000 98px,
       #000 50%,
       transparent 50%,
