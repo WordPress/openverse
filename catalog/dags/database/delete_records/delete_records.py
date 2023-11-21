@@ -95,7 +95,7 @@ def notify_slack(deleted_records_count: int, table_name: str, select_query: str)
     """Send a message to Slack."""
     text = (
         f"Deleted {deleted_records_count:,} records from the"
-        f" {table_name} table matching query: `{select_query}`"
+        f" `{table_name}` table matching query: `{select_query}`"
     )
     slack.send_message(
         text,

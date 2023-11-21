@@ -252,6 +252,6 @@ def test_delete_no_records_from_media_table(
 def test_notify_slack():
     message = notify_slack.function(123456789, "audio", "WHERE provider='foo';")
     assert message == (
-        "Deleted 123,456,789 records from the audio table matching query: "
+        "Deleted 123,456,789 records from the `audio` table matching query: "
         "`WHERE provider='foo';`"
     )
