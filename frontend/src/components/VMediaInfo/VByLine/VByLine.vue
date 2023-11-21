@@ -13,8 +13,8 @@
         ref="buttonsRef"
         class="buttons flex justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
         :class="{
-          'ms-10': showScrollButton.start,
-          'me-10': showScrollButton.end,
+          'ms-11': showScrollButton.start,
+          'me-11': showScrollButton.end,
         }"
       >
         <VButton
