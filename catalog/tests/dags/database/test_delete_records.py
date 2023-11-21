@@ -9,6 +9,7 @@ from common.storage.db_columns import DELETED_IMAGE_TABLE_COLUMNS, IMAGE_TABLE_C
 from database.delete_records.delete_records import (
     create_deleted_records,
     delete_records_from_media_table,
+    notify_slack,
 )
 
 
@@ -246,3 +247,11 @@ def test_delete_no_records_from_media_table(
 
     # All three records are left in the image table
     assert len(actual_rows) == 3
+
+
+def test_notify_slack():
+    message = notify_slack.function(123456789, "audio", "WHERE provider='foo';")
+    assert message == (
+        "Deleted 123,456,789 records from the `audio` table matching query: "
+        "`WHERE provider='foo';`"
+    )
