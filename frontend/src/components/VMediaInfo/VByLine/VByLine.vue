@@ -1,19 +1,21 @@
 <template>
-  <div
-    ref="containerRef"
-    class="relative flex max-w-full sm:-ms-1"
-    :class="buttonsMargin"
-  >
+  <div ref="containerRef" class="relative flex max-w-full sm:-ms-1">
     <div
-      class="buttons-container max-w-full"
-      :class="{
-        [`m${scrollButtonPosition}-10 faded-overflow-${scrollButtonPosition}`]:
-          shouldScroll,
-      }"
+      class="max-w-full"
+      :class="[
+        {
+          'faded-overflow-s': showScrollButton.start,
+          'faded-overflow-e': showScrollButton.end,
+        },
+      ]"
     >
       <div
         ref="buttonsRef"
         class="buttons flex justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
+        :class="{
+          'ms-10': showScrollButton.start,
+          'me-10': showScrollButton.end,
+        }"
       >
         <VButton
           v-if="showCreator"
@@ -40,23 +42,42 @@
       </div>
     </div>
     <div
-      v-if="shouldScroll"
-      class="absolute z-10 h-8 w-12 bg-white"
-      :class="scrollButton.style"
+      v-show="showScrollButton.start"
+      class="absolute start-0 z-10 h-8 w-8 flex-none"
     >
       <VIconButton
-        :icon-props="{ name: scrollButton.icon, rtlFlip: true }"
+        :icon-props="{ name: 'chevron-back', rtlFlip: true }"
         label="scroll"
         variant="transparent-gray"
         size="small"
-        @click="scroll"
+        @click="scroll('toStart')"
+      />
+    </div>
+
+    <div
+      v-show="showScrollButton.end"
+      class="absolute end-0 z-10 h-8 w-8 flex-none"
+    >
+      <VIconButton
+        :icon-props="{ name: 'chevron-forward', rtlFlip: true }"
+        label="scroll"
+        variant="transparent-gray"
+        size="small"
+        @click="scroll('toEnd')"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  reactive,
+  ref,
+} from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
 import { useUiStore } from "~/stores/ui"
@@ -101,66 +122,83 @@ export default defineComponent({
     )
 
     const showCreator = computed(() => {
-      return props.creator && props.creator !== "Unidentified"
+      return props.creator && props.creator.toLowerCase() !== "unidentified"
     })
 
-    const shouldScroll = ref(false)
-    const { x } = useScroll(buttonsRef)
+    const i18n = useI18n()
+    const dir = computed(() => i18n.localeProperties.dir ?? "ltr")
 
+    const scrollStep = 80 // px to scroll on each click
+    const scrollThreshold = 40 // px, distance from edge to show scroll buttons
+    const shouldScroll = ref(false)
+
+    const { x } = useScroll(buttonsRef)
     const { width: containerWidth } = useElementSize(containerRef)
-    const { width: buttonsWidth } = useElementSize(buttonsRef)
+
+    const showScrollButton = reactive({
+      start: false,
+      end: false,
+    })
+    const setScrollable = () => {
+      shouldScroll.value = true
+      showScrollButton.start = false
+      showScrollButton.end = true
+    }
+
     watchDebounced(
-      [buttonsWidth, containerWidth],
-      () => {
-        shouldScroll.value = buttonsWidth.value >= containerWidth.value
+      containerWidth,
+      (cWidth) => {
+        const buttonsScrollWidth = buttonsRef.value?.scrollWidth ?? 0
+        const hasOverflow = buttonsScrollWidth >= cWidth
+        if (hasOverflow && !shouldScroll.value) {
+          setScrollable()
+        } else if (!hasOverflow && shouldScroll.value) {
+          shouldScroll.value = false
+          showScrollButton.start = false
+          showScrollButton.end = false
+        }
       },
       { debounce: 500 }
     )
 
-    const i18n = useI18n()
-    const dir = computed(() => i18n.localeProperties.dir ?? "ltr")
-    // end, start
-    const scrollButtonPosition = ref<"e" | "s">("e")
+    onMounted(() => {
+      if (!buttonsRef.value || !containerRef.value) return
+      if (buttonsRef.value?.scrollWidth > containerRef.value.scrollWidth) {
+        setScrollable()
+      }
+    })
 
-    const scroll = () => {
-      let scrollValue = x.value ? 0 : buttonsWidth.value
+    const scroll = (to: "toStart" | "toEnd") => {
+      if (!buttonsRef.value) return
+      if (to === "toEnd") {
+        showScrollButton.start = true
+      }
+      if (to === "toStart") {
+        showScrollButton.end = true
+      }
+      const buttons = buttonsRef.value
+      let scrollValue = to === "toStart" ? -scrollStep : scrollStep
       if (dir.value === "rtl") {
         scrollValue = -scrollValue
       }
-      buttonsRef.value?.scroll({
-        left: scrollValue,
-        behavior: "smooth",
-      })
-      scrollButtonPosition.value =
-        scrollButtonPosition.value === "e" ? "s" : "e"
+      buttons.scrollBy({ left: scrollValue, behavior: "smooth" })
     }
 
     watchDebounced(
       x,
       (xValue) => {
+        if (!buttonsRef.value) return
+        // This is necessary for handling both RTL and LTR.
         const distFromStart = Math.abs(xValue)
         const distFromEnd =
-          (buttonsRef.value?.scrollWidth ?? 0) -
+          buttonsRef.value.scrollWidth -
           distFromStart -
-          containerWidth.value
-        if (distFromEnd < 1) {
-          scrollButtonPosition.value = "s"
-        } else if (distFromStart < 1) scrollButtonPosition.value = "e"
+          buttonsRef.value.clientWidth
+        showScrollButton.start = distFromStart > scrollThreshold
+        showScrollButton.end = distFromEnd > scrollThreshold
       },
       { debounce: 100 }
     )
-
-    const buttonsMargin = computed(() => {
-      return shouldScroll.value ? `p${scrollButtonPosition.value}-8` : ""
-    })
-
-    const scrollButton = computed(() => {
-      if (scrollButtonPosition.value === "e") {
-        return { style: "end-0 ps-3", icon: "chevron-forward" }
-      } else {
-        return { style: "start-0 pe-3", icon: "chevron-back" }
-      }
-    })
 
     // TODO: implement this function in the search store.
     const getCollectionPath = ({
@@ -198,10 +236,8 @@ export default defineComponent({
 
       buttonVariant,
       showCreator,
-      buttonsMargin,
       shouldScroll,
-      scrollButton,
-      scrollButtonPosition,
+      showScrollButton,
 
       creatorHref,
       sourceHref,
@@ -213,27 +249,53 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.faded-overflow-e:dir(ltr),
-.faded-overflow-s:dir(rtl) {
-  mask-image: linear-gradient(
-    to right,
-    black calc(100% - 130px),
-    transparent 100%
-  );
-}
-.faded-overflow-e:dir(rtl),
-.faded-overflow-s:dir(ltr) {
-  mask-image: linear-gradient(
-    to left,
-    black calc(100% - 130px),
-    transparent 100%
-  );
-}
 .buttons::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
 }
 .buttons {
   scrollbar-width: none;
+}
+
+.faded-overflow-e:dir(ltr),
+.faded-overflow-s:dir(rtl) {
+  mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    transparent 32px,
+    #000 98px,
+    #000 100%
+  );
+}
+.faded-overflow-e:dir(rtl),
+.faded-overflow-s:dir(ltr) {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    transparent 32px,
+    #000 98px,
+    #000 100%
+  );
+}
+
+.faded-overflow-e.faded-overflow-s {
+  mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      transparent 32px,
+      #000 98px,
+      #000 50%,
+      transparent 50%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to left,
+      transparent 0,
+      transparent 32px,
+      #000 98px,
+      #000 50%,
+      transparent 50%,
+      transparent 100%
+    );
 }
 </style>
