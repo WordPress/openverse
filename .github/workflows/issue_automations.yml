@@ -16,6 +16,15 @@ jobs:
     name: Perform issue automations
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
       - name: Perform issue automations
         run: |
           echo "$EVENT_PAYLOAD" > event.json
