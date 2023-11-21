@@ -183,14 +183,10 @@ def create_data_refresh_task_group(
             promote_filtered_index,
         ) = create_filtered_index_creation_task_groups(
             data_refresh=data_refresh,
-            origin_index_suffix=XCOM_PULL_TEMPLATE.format(
-                generate_index_suffix.task_id, "return_value"
-            ),
+            origin_index_suffix=generate_index_suffix,
             # Match origin and destination suffixes so we can tell which
             # filtered indexes were created as part of a data refresh.
-            destination_index_suffix=XCOM_PULL_TEMPLATE.format(
-                generate_index_suffix.task_id, "return_value"
-            ),
+            destination_index_suffix=generate_index_suffix,
         )
 
         # Add the task group for triggering the filtered index creation and awaiting its
