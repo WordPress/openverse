@@ -62,7 +62,7 @@ if (eventName === 'pull_request_review') {
 } else if (eventName === 'pull_request_target') {
   switch (eventAction) {
     case 'opened':
-    case 'reopened':
+    case 'reopened': {
       if (eventPayload.pull_request.draft) {
         await prBoard.moveCard(card.id, columns.Draft)
       } else {
@@ -70,23 +70,28 @@ if (eventName === 'pull_request_review') {
       }
       await syncIssues(backlogColumns.InProgress)
       break
+    }
 
-    case 'edited':
+    case 'edited': {
       await syncIssues(backlogColumns.InProgress)
       break
+    }
 
-    case 'converted_to_draft':
+    case 'converted_to_draft': {
       await prBoard.moveCard(card.id, columns.Draft)
       break
+    }
 
-    case 'ready_for_review':
+    case 'ready_for_review': {
       await syncReviews()
       break
+    }
 
-    case 'closed':
+    case 'closed': {
       if (!eventPayload.pull_request.merged) {
         await syncIssues(backlogColumns.Backlog)
       }
       break
+    }
   }
 }

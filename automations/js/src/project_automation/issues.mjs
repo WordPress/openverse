@@ -42,7 +42,7 @@ const syncPriority = async () => {
 
 switch (eventAction) {
   case 'opened':
-  case 'reopened':
+  case 'reopened': {
     if (
       eventPayload.issue.labels.some(
         (label) => label.name === '⛔ status: blocked'
@@ -55,33 +55,38 @@ switch (eventAction) {
 
     await syncPriority()
     break
+  }
 
-  case 'closed':
+  case 'closed': {
     if (eventPayload.issue.state_reason === 'completed') {
       await backlogBoard.moveCard(card.id, columns.Done)
     } else {
       await backlogBoard.moveCard(card.id, columns.Discarded)
     }
     break
+  }
 
-  case 'assigned':
+  case 'assigned': {
     if (card.status === columns.Backlog) {
       await backlogBoard.moveCard(card.id, columns.ToDo)
     }
     break
+  }
 
-  case 'labeled':
+  case 'labeled': {
     if (eventPayload.label.name === '⛔ status: blocked') {
       await backlogBoard.moveCard(card.id, columns.Blocked)
     }
     await syncPriority()
     break
+  }
 
-  case 'unlabeled':
+  case 'unlabeled': {
     if (eventPayload.label.name === '⛔ status: blocked') {
       // TODO: Move back to the column it came from.
       await backlogBoard.moveCard(card.id, columns.Backlog)
     }
     await syncPriority()
     break
+  }
 }
