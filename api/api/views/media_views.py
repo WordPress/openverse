@@ -277,7 +277,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    async def get_image_proxy_media_info(self) -> image_proxy.ImageProxyMediaInfo:
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
         raise NotImplementedError(
             "Subclasses must implement `get_image_proxy_media_info`"
         )
@@ -298,7 +298,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         return await image_proxy_aget(
             media_info,
-            proxy_config=image_proxy.ImageProxyConfig(
+            request_config=image_proxy.RequestConfig(
                 accept_header=request.headers.get("Accept", "image/*"),
                 **serializer.validated_data,
             ),

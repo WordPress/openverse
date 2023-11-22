@@ -35,7 +35,7 @@ from api.serializers.image_serializers import (
     WatermarkRequestSerializer,
 )
 from api.serializers.media_serializers import PaginatedRequestSerializer
-from api.utils.image_proxy import ImageProxyMediaInfo
+from api.utils import image_proxy
 from api.utils.watermark import watermark
 from api.views.media_views import MediaViewSet
 
@@ -127,7 +127,7 @@ class ImageViewSet(MediaViewSet):
         serializer = self.get_serializer(image, context=context)
         return Response(data=serializer.data)
 
-    async def get_image_proxy_media_info(self) -> ImageProxyMediaInfo:
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
         image = await self.aget_object()
         image_url = image.url
         # Hotfix to use thumbnails for SMK images
@@ -135,7 +135,7 @@ class ImageViewSet(MediaViewSet):
         if "iip.smk.dk" in image_url and image.thumbnail:
             image_url = image.thumbnail
 
-        return ImageProxyMediaInfo(
+        return image_proxy.MediaInfo(
             media_identifier=image.identifier,
             media_provider=image.provider,
             image_url=image_url,

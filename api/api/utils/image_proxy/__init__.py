@@ -35,14 +35,14 @@ THUMBNAIL_STRATEGY = Literal["photon_proxy", "original"]
 
 
 @dataclass
-class ImageProxyMediaInfo:
+class MediaInfo:
     media_provider: str
     media_identifier: str
     image_url: str
 
 
 @dataclass
-class ImageProxyConfig:
+class RequestConfig:
     accept_header: str = "image/*"
     is_full_size: bool = False
     is_compressed: bool = True
@@ -53,7 +53,7 @@ def get_request_params_for_extension(
     headers: dict[str, str],
     image_url: str,
     parsed_image_url: urlparse,
-    proxy_config: ImageProxyConfig,
+    request_config: RequestConfig,
 ) -> tuple[str, dict[str, str], dict[str, str]]:
     """
     Get the request params (url, params, headers) for the thumbnail proxy.
@@ -64,8 +64,8 @@ def get_request_params_for_extension(
     if ext in PHOTON_TYPES:
         return get_photon_request_params(
             parsed_image_url,
-            proxy_config.is_full_size,
-            proxy_config.is_compressed,
+            request_config.is_full_size,
+            request_config.is_compressed,
             headers,
         )
     elif ext in ORIGINAL_TYPES:
@@ -76,8 +76,8 @@ def get_request_params_for_extension(
 
 
 def get(
-    media_info: ImageProxyMediaInfo,
-    proxy_config: ImageProxyConfig = ImageProxyConfig(),
+    media_info: MediaInfo,
+    request_config: RequestConfig = RequestConfig(),
 ) -> HttpResponse:
     """
     Proxy an image through Photon if its file type is supported, else return the
@@ -92,7 +92,7 @@ def get(
 
     image_extension = get_image_extension(image_url, media_identifier)
 
-    headers = {"Accept": proxy_config.accept_header} | HEADERS
+    headers = {"Accept": request_config.accept_header} | HEADERS
 
     parsed_image_url = urlparse(image_url)
     domain = parsed_image_url.netloc
@@ -102,7 +102,7 @@ def get(
         headers,
         image_url,
         parsed_image_url,
-        proxy_config,
+        request_config,
     )
 
     try:

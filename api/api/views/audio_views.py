@@ -26,7 +26,7 @@ from api.serializers.audio_serializers import (
     AudioSerializer,
     AudioWaveformSerializer,
 )
-from api.utils.image_proxy import ImageProxyMediaInfo
+from api.utils import image_proxy
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 from api.views.media_views import MediaViewSet
 
@@ -80,7 +80,7 @@ class AudioViewSet(MediaViewSet):
     def tag_collection(self, request, tag, *_, **__):
         return super().tag_collection(request, tag, *_, **__)
 
-    async def get_image_proxy_media_info(self) -> ImageProxyMediaInfo:
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
         audio = await self.aget_object()
 
         image_url = None
@@ -91,7 +91,7 @@ class AudioViewSet(MediaViewSet):
         if not image_url:
             raise NotFound("Could not find artwork.")
 
-        return ImageProxyMediaInfo(
+        return image_proxy.MediaInfo(
             media_identifier=audio.identifier,
             media_provider=audio.provider,
             image_url=image_url,

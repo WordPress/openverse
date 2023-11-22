@@ -12,8 +12,8 @@ import requests
 
 from api.utils.image_proxy import (
     HEADERS,
-    ImageProxyConfig,
-    ImageProxyMediaInfo,
+    MediaInfo,
+    RequestConfig,
     UpstreamThumbnailException,
     extension,
 )
@@ -26,7 +26,7 @@ TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "ht
 TEST_MEDIA_IDENTIFIER = "123"
 TEST_MEDIA_PROVIDER = "foo"
 
-TEST_MEDIA_INFO = ImageProxyMediaInfo(
+TEST_MEDIA_INFO = MediaInfo(
     media_identifier=TEST_MEDIA_IDENTIFIER,
     media_provider=TEST_MEDIA_PROVIDER,
     image_url=TEST_IMAGE_URL,
@@ -143,7 +143,7 @@ def test_get_successful_no_auth_key_not_compressed(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_MEDIA_INFO, ImageProxyConfig(is_compressed=False))
+    res = photon_get(TEST_MEDIA_INFO, RequestConfig(is_compressed=False))
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -166,7 +166,7 @@ def test_get_successful_no_auth_key_full_size(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_MEDIA_INFO, ImageProxyConfig(is_full_size=True))
+    res = photon_get(TEST_MEDIA_INFO, RequestConfig(is_full_size=True))
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -186,7 +186,7 @@ def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
 
     res = photon_get(
         TEST_MEDIA_INFO,
-        ImageProxyConfig(is_full_size=True, is_compressed=False),
+        RequestConfig(is_full_size=True, is_compressed=False),
     )
 
     assert res.content == MOCK_BODY.encode()
@@ -211,7 +211,7 @@ def test_get_successful_no_auth_key_png_only(mock_image_data):
         .mock
     )
 
-    res = photon_get(TEST_MEDIA_INFO, ImageProxyConfig(accept_header="image/png"))
+    res = photon_get(TEST_MEDIA_INFO, RequestConfig(accept_header="image/png"))
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
@@ -455,7 +455,7 @@ def test__get_extension_from_url(image_url, expected_ext):
 def test_photon_get_raises_by_not_allowed_types(image_type):
     image_url = TEST_IMAGE_URL.replace(".jpg", f".{image_type}")
     image = ImageFactory.create(url=image_url)
-    media_info = ImageProxyMediaInfo(
+    media_info = MediaInfo(
         media_identifier=image.identifier,
         media_provider=image.provider,
         image_url=image_url,
@@ -476,7 +476,7 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
 def test_photon_get_saves_image_type_to_cache(redis, headers, expected_cache_val):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
-    media_info = ImageProxyMediaInfo(
+    media_info = MediaInfo(
         media_identifier=image.identifier,
         media_provider=image.provider,
         image_url=image_url,
