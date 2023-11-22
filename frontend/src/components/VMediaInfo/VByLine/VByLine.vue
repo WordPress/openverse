@@ -1,71 +1,49 @@
 <template>
-  <div ref="containerRef" class="relative flex max-w-full sm:-ms-1">
+  <div
+    ref="containerRef"
+    class="relative -my-1.5px flex max-w-full sm:-ms-1"
+    :class="{ 'pointer-events-none': !isInteractive }"
+  >
     <div
       class="max-w-full"
-      :class="[
-        {
-          'faded-overflow-s': showScrollButton.start,
-          'faded-overflow-e': showScrollButton.end,
-        },
-      ]"
+      :class="{
+        'faded-overflow-s': showScrollButton.start,
+        'faded-overflow-e': showScrollButton.end,
+      }"
     >
       <div
         ref="buttonsRef"
-        class="buttons flex snap-x justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
+        class="buttons flex snap-x justify-start gap-x-3 overflow-x-scroll p-1.5px sm:gap-x-1"
         :class="{
           'ms-11': showScrollButton.start,
           'me-11': showScrollButton.end,
         }"
       >
-        <VButton
-          v-if="showCreator"
-          as="VLink"
-          size="small"
-          has-icon-start
-          class="label-bold m-1.5px snap-start !bg-dark-charcoal-10 hover:!bg-dark-charcoal hover:text-white sm:!bg-tx"
-          variant="transparent-gray"
+        <VSourceCreatorButton
+          v-if="showCreator && creatorHref && creator"
           :href="creatorHref"
-        >
-          <VIcon name="person" /><span class="w-max">{{ creator }}</span>
-        </VButton>
-        <VButton
-          as="VLink"
-          size="small"
-          has-icon-start
-          class="label-bold m-1.5px snap-start !bg-dark-charcoal-10 hover:!bg-dark-charcoal hover:text-white sm:!bg-tx"
-          variant="transparent-gray"
+          icon-name="person"
+          :title="creator"
+        />
+        <VSourceCreatorButton
           :href="sourceHref"
-          ><VIcon name="institution" /><span class="w-max">{{
-            sourceName
-          }}</span>
-        </VButton>
+          icon-name="institution"
+          :title="sourceName"
+        />
       </div>
     </div>
-    <div
+    <VScroller
       v-show="showScrollButton.start"
-      class="absolute start-0 z-10 h-8 w-8 flex-none"
-    >
-      <VIconButton
-        :icon-props="{ name: 'chevron-back', rtlFlip: true }"
-        label="scroll"
-        variant="transparent-gray"
-        size="small"
-        @click="scroll('start')"
-      />
-    </div>
-
-    <div
+      class="start-0"
+      direction="back"
+      @click="scroll('start')"
+    />
+    <VScroller
       v-show="showScrollButton.end"
-      class="absolute end-0 z-10 h-8 w-8 flex-none"
-    >
-      <VIconButton
-        :icon-props="{ name: 'chevron-forward', rtlFlip: true }"
-        label="scroll"
-        variant="transparent-gray"
-        size="small"
-        @click="scroll('end')"
-      />
-    </div>
+      class="end-0"
+      direction="forward"
+      @click="scroll('end')"
+    />
   </div>
 </template>
 
@@ -83,16 +61,18 @@ import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 import { useI18n } from "~/composables/use-i18n"
 import type { SupportedMediaType } from "~/constants/media"
 
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VSourceCreatorButton from "~/components/VMediaInfo/VByLine/VSourceCreatorButton.vue"
+import VScroller from "~/components/VMediaInfo/VByLine/VScroller.vue"
 
 /**
  * A link to a collection page, either a source or a creator.
  */
 export default defineComponent({
   name: "VByLine",
-  components: { VIconButton, VIcon, VButton },
+  components: {
+    VScroller,
+    VSourceCreatorButton,
+  },
   props: {
     creator: {
       type: String,
@@ -137,6 +117,15 @@ export default defineComponent({
       showScrollButton.start = false
       showScrollButton.end = true
     }
+
+    const hideScrollButton = (side: "start" | "end") => {
+      showScrollButton[side] = false
+      isInteractive.value = false
+      setTimeout(() => {
+        isInteractive.value = true
+      }, 500)
+    }
+    const isInteractive = ref(true)
 
     watchDebounced(
       containerWidth,
@@ -192,7 +181,7 @@ export default defineComponent({
 
       const isLastScroll = distToSide - scrollMargin <= scrollStep
       if (isLastScroll) {
-        showScrollButton[to] = false
+        hideScrollButton(to)
         adjustedScrollStep = to === "start" ? distToSide : buttons.scrollWidth
       }
       if (dir.value === "rtl") {
@@ -261,6 +250,7 @@ export default defineComponent({
       sourceHref,
 
       scroll,
+      isInteractive,
     }
   },
 })
