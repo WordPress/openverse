@@ -1,3 +1,14 @@
+/**
+ * the final decision on the PR from combining all reviews
+ * @typedef {'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED'} ReviewDecision
+ *
+ * the state of a particular review left on a PR
+ * @typedef {'APPROVED' | 'CHANGES_REQUESTED' | 'COMMENTED' | 'DISMISSED' | 'PENDING'} ReviewState
+ *
+ * the additional information about the PR obtained from a GraphQL query
+ * @typedef {{reviewDecision: ReviewDecision, linkedIssues: string[], reviewStates: ReviewState[]}} PrDetails
+ */
+
 export class PullRequest {
   /**
    * Create a new `PullRequest` instance using owner and repo names and PR
@@ -31,7 +42,7 @@ export class PullRequest {
    * Get additional information about the PR such as the linked issues and the
    * review decision, as well the states of all submitted reviews.
    *
-   * @returns {Promise<{reviewDecision: 'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED', linkedIssues: string[], reviewStates: ('APPROVED' | 'CHANGES_REQUESTED' | 'COMMENTED' | 'DISMISSED' | 'PENDING')[]}>}
+   * @returns {Promise<PrDetails>}
    */
   async getPrDetails() {
     const res = await this.octokit.graphql(
@@ -69,7 +80,7 @@ export class PullRequest {
   /**
    * Get the count of each type of PR reviews.
    *
-   * @returns {{APPROVED: number, COMMENTED: number, CHANGES_REQUESTED: number, DISMISSED: number, PENDING: number}} the PR review counts
+   * @returns {{[p: ReviewState]: number}} the PR review counts
    */
   get reviewCounts() {
     const reviewCounts = {

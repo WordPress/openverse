@@ -10,7 +10,7 @@ if (!pat) {
 /**
  * Get an authenticated instance of `Octokit` to make GitHub API calls.
  *
- * @returns {Octokit} an authenticated instance of `Octokit`
+ * @returns {import('octokit').Octokit} an authenticated instance of `Octokit`
  */
 export function getOctokit() {
   return new Octokit({ auth: pat })

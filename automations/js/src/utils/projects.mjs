@@ -1,4 +1,13 @@
-import { getOctokit } from './octokit.mjs'
+/**
+ * a representation of an issue or PR on a project board
+ * @typedef {{id: string, status: string}} Card
+ *
+ * a custom variable on a project board
+ * @typedef {{id: string, options: {[p: string]: string}}} Field
+ *
+ * the additional information about the project obtained from a GraphQL query
+ * @typedef {{projectId: string, fields: {[p: string]: Field}}} ProjectDetails
+ */
 
 const PROJECT_NUMBERS = {
   Backlog: 75,
@@ -14,7 +23,8 @@ class Project {
    * of which can be found in the project URL. For example,
    *
    * https://github.com/orgs/WordPress/projects/75/views/1
-   *                         ^^^^^^^^^owner     ^^number
+   *                         ^^^^^^^^^          ^^
+   *                         owner              number
    *
    * @param octokit {import('octokit').Octokit} the Octokit instance to use
    * @param owner {string} the login of the owner (org) of the project
@@ -113,7 +123,7 @@ class Project {
    * an existing card with no side effects.
    *
    * @param issueId {string} the ID of the issue/PR to add
-   * @returns {Promise<{id: string, status: string}>} the info of the added card
+   * @returns {Promise<Card>} the info of the added card
    */
   async addCard(issueId) {
     const res = await this.octokit.graphql(
