@@ -6,7 +6,7 @@ import { PullRequest } from '../utils/pr.mjs'
 /**
  * This is the entrypoint of the script.
  *
- * @param octokit {import('octokit').Octokit} the Octokit instance to use
+ * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  */
 export const main = async (octokit) => {
   const { eventName, eventAction } = JSON.parse(

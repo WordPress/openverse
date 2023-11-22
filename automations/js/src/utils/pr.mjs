@@ -18,7 +18,7 @@ export class PullRequest {
    *                    ^^^^^^^^^ ^^^^^^^^^^     ^^^^
    *                    owner     repo           number
    *
-   * @param octokit {import('octokit').Octokit} the Octokit instance to use
+   * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
    * @param owner {string} the login of the owner (org) of the project
    * @param repo {string} the name of the repository
    * @param number {number} the number of the project

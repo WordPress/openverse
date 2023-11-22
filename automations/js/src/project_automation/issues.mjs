@@ -3,7 +3,7 @@ import { getBoard } from '../utils/projects.mjs'
 /**
  * This is the entrypoint of the script.
  *
- * @param octokit {import('octokit').Octokit} the Octokit instance to use
+ * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  * @param context {import('@actions/github').context} info about the current event
  */
 export const main = async (octokit, context) => {

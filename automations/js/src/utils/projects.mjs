@@ -26,7 +26,7 @@ class Project {
    *                         ^^^^^^^^^          ^^
    *                         owner              number
    *
-   * @param octokit {import('octokit').Octokit} the Octokit instance to use
+   * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
    * @param owner {string} the login of the owner (org) of the project
    * @param number {number} the number of the project
    */
@@ -212,7 +212,7 @@ class Project {
 /**
  * Get the `Project` instance for the project board with the given name.
  *
- * @param octokit {import('octokit').Octokit} the Octokit instance to use
+ * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  * @param name {string} the name of the project (without the 'Openverse' prefix)
  * @returns {Project} the `Project` instance to interact with the project board
  */
