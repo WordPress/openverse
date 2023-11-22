@@ -42,6 +42,7 @@ from airflow.decorators import dag
 from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
 from elasticsearch.recreate_staging_index.recreate_full_staging_index import (
+    DAG_ID,
     create_index,
     get_target_alias,
     point_alias,
@@ -51,9 +52,6 @@ from elasticsearch.recreate_staging_index.recreate_full_staging_index import (
 
 from common import ingestion_server, slack
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES, XCOM_PULL_TEMPLATE
-
-
-DAG_ID = "recreate_full_staging_index"
 
 
 @dag(

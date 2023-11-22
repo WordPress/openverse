@@ -13,6 +13,9 @@ from database.staging_database_restore.constants import (
 )
 
 
+DAG_ID = "recreate_full_staging_index"
+
+
 @task(retries=0)
 def prevent_concurrency_with_staging_database_restore(**context):
     wait_for_dag = ExternalTaskSensor(
