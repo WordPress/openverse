@@ -68,7 +68,6 @@ jobs:
       - name: Unzip artifact
         run: |
           unzip event_info.zip
-          mv event_info.json /tmp/event_info.json
           mv event.json /tmp/event.json
 
       - name: Perform PR automations

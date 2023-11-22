@@ -9,12 +9,11 @@ import { PullRequest } from '../utils/pr.mjs'
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  */
 export const main = async (octokit) => {
-  const { eventName, eventAction } = JSON.parse(
-    readFileSync('/tmp/event_info.json', 'utf-8')
+  const { eventName, eventAction, prNodeId } = JSON.parse(
+    readFileSync('/tmp/event.json', 'utf-8')
   )
-  const eventPayload = JSON.parse(readFileSync('/tmp/event.json', 'utf-8'))
 
-  const pr = new PullRequest(octokit, eventPayload.pull_request.node_id)
+  const pr = new PullRequest(octokit, prNodeId)
   await pr.init()
 
   const prBoard = await getBoard(octokit, 'PRs')

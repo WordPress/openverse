@@ -37,16 +37,14 @@ jobs:
     steps:
       - name: Save event info
         run: |
-          mkdir -p ./pr
-          echo "$EVENT_PAYLOAD" > ./pr/event.json
-          echo '{"eventName": "'"$EVENT_NAME"'", "eventAction": "'"$EVENT_ACTION"'"}' > ./pr/event_info.json
+          echo '{"eventName": "'"$EVENT_NAME"'", "eventAction": "'"$EVENT_ACTION"'", "prNodeId": "'"$PR_NODE_ID"'"}' > /tmp/event.json
         env:
-          EVENT_PAYLOAD: ${{ toJson(github.event) }}
           EVENT_NAME: ${{ github.event_name }}
           EVENT_ACTION: ${{ github.event.action }}
+          PR_NODE_ID: ${{ github.event.pull_request.node_id }}
 
       - name: Upload event info as artifact
         uses: actions/upload-artifact@v3
         with:
           name: event_info
-          path: pr/
+          path: /tmp/event.json
