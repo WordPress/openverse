@@ -14,13 +14,7 @@ export const main = async (octokit) => {
   )
   const eventPayload = JSON.parse(readFileSync('/tmp/event.json', 'utf-8'))
 
-  const pullRequest = eventPayload.pull_request
-  const pr = new PullRequest(
-    octokit,
-    pullRequest.base.repo.owner.login,
-    pullRequest.base.repo.name,
-    pullRequest.number
-  )
+  const pr = new PullRequest(octokit, eventPayload.pull_request.node_id)
   await pr.init()
 
   const prBoard = await getBoard(octokit, 'PRs')
@@ -30,7 +24,7 @@ export const main = async (octokit) => {
   const backlogColumns = backlogBoard.columns
 
   // Create new, or get the existing, card for the current pull request.
-  const card = await prBoard.addCard(pullRequest.node_id)
+  const card = await prBoard.addCard(pr.nodeId)
 
   /**
    * Move the PR to the right column based on the number of reviews.
@@ -66,7 +60,7 @@ export const main = async (octokit) => {
     switch (eventAction) {
       case 'opened':
       case 'reopened': {
-        if (pullRequest.draft) {
+        if (pr.isDraft) {
           await prBoard.moveCard(card.id, prColumns.Draft)
         } else {
           await syncReviews()
@@ -91,7 +85,7 @@ export const main = async (octokit) => {
       }
 
       case 'closed': {
-        if (!pullRequest.merged) {
+        if (!pr.isMerged) {
           await syncIssues(backlogColumns.Backlog)
         }
         break

@@ -11,24 +11,16 @@
 
 export class PullRequest {
   /**
-   * Create a new `PullRequest` instance using owner and repo names and PR
-   * number, all three of which can be found in the PR URL.
-   *
-   * https://github.com/WordPress/openverse/pull/3375
-   *                    ^^^^^^^^^ ^^^^^^^^^^     ^^^^
-   *                    owner     repo           number
+   * Create a new `PullRequest` instance. This takes the `node_id` of the PR
+   * as opposed to the conventional `id` or `number` fields.
    *
    * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
-   * @param owner {string} the login of the owner (org) of the project
-   * @param repo {string} the name of the repository
-   * @param number {number} the number of the project
+   * @param nodeId {boolean} the `node_id` of the PR for GraphQL requests
    */
-  constructor(octokit, owner, repo, number) {
+  constructor(octokit, nodeId) {
     this.octokit = octokit
 
-    this.owner = owner
-    this.repo = repo
-    this.number = number
+    this.nodeId = nodeId
   }
 
   async init() {
@@ -36,6 +28,8 @@ export class PullRequest {
     this.linkedIssues = prDetails.linkedIssues
     this.reviewDecision = prDetails.reviewDecision
     this.reviewStates = prDetails.reviewStates
+    this.isDraft = prDetails.isDraft
+    this.isMerged = prDetails.isMerged
   }
 
   /**
@@ -46,9 +40,11 @@ export class PullRequest {
    */
   async getPrDetails() {
     const res = await this.octokit.graphql(
-      `query getPrDetails($owner: String!, $repo: String!, $number: Int!) {
-        repository(owner: $owner, name: $repo) {
-          pullRequest(number: $number) {
+      `query getPrDetails($id: ID!) {
+        node(id: $id) {
+          ... on PullRequest {
+            isDraft
+            merged
             reviewDecision
             closingIssuesReferences(first: 10) {
               nodes {
@@ -64,13 +60,13 @@ export class PullRequest {
         }
       }`,
       {
-        owner: this.owner,
-        repo: this.repo,
-        number: this.number,
+        id: this.nodeId,
       }
     )
-    const pr = res.repository.pullRequest
+    const pr = res.node
     return {
+      isMerged: pr.isMerged,
+      isDraft: pr.merged,
       reviewDecision: pr.reviewDecision,
       linkedIssues: pr.closingIssuesReferences.nodes.map((node) => node.id),
       reviewStates: pr.reviews.nodes.map((node) => node.state),
