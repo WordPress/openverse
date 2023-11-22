@@ -2,15 +2,14 @@ import os
 
 from django.conf import settings
 from django.contrib.staticfiles.handlers import ASGIStaticFilesHandler
-from django.core.asgi import get_asgi_application
 
-from conf.lifecycle_handler import ASGILifecycleHandler
+from django_asgi_lifespan.asgi import get_asgi_application
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "conf.settings")
 
 
-application = APPLICATION_LIFECYCLE = ASGILifecycleHandler(get_asgi_application())
+application = get_asgi_application()
 
 
 if settings.ENVIRONMENT == "local":

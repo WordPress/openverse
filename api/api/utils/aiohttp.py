@@ -3,8 +3,8 @@ import logging
 import weakref
 
 import aiohttp
-
-from conf.asgi import APPLICATION_LIFECYCLE
+import sentry_sdk
+from django_asgi_lifespan.signals import asgi_shutdown
 
 
 logger = logging.getLogger(__name__)
@@ -17,6 +17,24 @@ _SESSIONS: weakref.WeakKeyDictionary[
 _LOCKS: weakref.WeakKeyDictionary[
     asyncio.AbstractEventLoop, asyncio.Lock
 ] = weakref.WeakKeyDictionary()
+
+
+@asgi_shutdown.connect
+async def _close_sessions(sender, **kwargs):
+    logger.debug("Closing aiohttp sessions on application shutdown")
+
+    closed_sessions = 0
+
+    while _SESSIONS:
+        loop, session = _SESSIONS.popitem()
+        try:
+            await session.close()
+            closed_sessions += 1
+        except BaseException as exc:
+            logger.error(exc)
+            sentry_sdk.capture_exception(exc)
+
+    logger.debug("Successfully closed %s session(s)", closed_sessions)
 
 
 async def get_aiohttp_session() -> aiohttp.ClientSession:
@@ -56,7 +74,6 @@ async def get_aiohttp_session() -> aiohttp.ClientSession:
 
         if create_session:
             session = aiohttp.ClientSession()
-            APPLICATION_LIFECYCLE.register_shutdown_handler(session.close)
             _SESSIONS[loop] = session
 
         return _SESSIONS[loop]

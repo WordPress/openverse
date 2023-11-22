@@ -1,8 +1,8 @@
 import asyncio
-from unittest import mock
 
 import pook
 import pytest
+from aiohttp.client import ClientSession
 
 from api.utils.check_dead_links import HEADERS, check_dead_links
 
@@ -30,7 +30,7 @@ def test_sends_user_agent():
         assert url in requested_urls
 
 
-def test_handles_timeout():
+def test_handles_timeout(monkeypatch):
     """
     Test that case where timeout occurs.
 
@@ -42,13 +42,11 @@ def test_handles_timeout():
     image_urls = [f"https://example.org/{i}" for i in range(len(results))]
     start_slice = 0
 
-    def raise_timeout_error(*args, **kwargs):
+    async def raise_timeout_error(*args, **kwargs):
         raise asyncio.TimeoutError()
 
-    with mock.patch(
-        "aiohttp.client.ClientSession._request", side_effect=raise_timeout_error
-    ):
-        check_dead_links(query_hash, start_slice, results, image_urls)
+    monkeypatch.setattr(ClientSession, "_request", raise_timeout_error)
+    check_dead_links(query_hash, start_slice, results, image_urls)
 
     # `check_dead_links` directly modifies the results list
     # if the results are timing out then they're considered dead and discarded

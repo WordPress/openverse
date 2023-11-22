@@ -36,13 +36,13 @@ def _get_expiry(status, default):
 _timeout = aiohttp.ClientTimeout(total=2)
 
 
-async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
+async def _head(url: str) -> tuple[str, int]:
     try:
-        request = session.head(
+        session = await get_aiohttp_session()
+        response = await session.head(
             url, allow_redirects=False, headers=HEADERS, timeout=_timeout
         )
-        async with request as response:
-            return url, response.status
+        return url, response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
         _log_validation_failure(exception)
         return url, -1
@@ -52,8 +52,7 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
 @async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
     tasks = []
-    session = await get_aiohttp_session()
-    tasks = [asyncio.ensure_future(_head(url, session)) for url in urls]
+    tasks = [asyncio.ensure_future(_head(url)) for url in urls]
     responses = asyncio.gather(*tasks)
     await responses
     return responses.result()
