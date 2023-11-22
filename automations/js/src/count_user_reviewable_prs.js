@@ -4,7 +4,7 @@
  * Return their Slack username and PR count, if found.
  *
  * @param {Object} options
- * @param {import('octokit').Octokit} options.github
+ * @param {import('@octokit/rest').Octokit} options.github
  * @param {import('@actions/github')['context']} options.context
  * @param {import('@actions/core')} options.core
  */
