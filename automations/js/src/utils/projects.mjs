@@ -19,8 +19,9 @@ class Project {
    * Initialise the project and populate fields that require API call to GitHub.
    */
   async init() {
-    this.projectId = await this.getProjectId()
-    this.fields = await this.getFields()
+    const projectDetails = await this.getProjectDetails()
+    this.projectId = projectDetails.projectId
+    this.fields = projectDetails.fields
   }
 
   /**
@@ -39,43 +40,20 @@ class Project {
   }
 
   /**
-   * Get the ID of the project from the owner name and project number. Both of
-   * these fields can be found in the project URL. For example,
+   * Get additional information about the project such as node ID and custom
+   * fields.
    *
-   * https://github.com/orgs/WordPress/projects/75/views/1
-   *                         ^^^^^^^^^owner     ^^number
+   * This function currently only supports `ProjectV2SingleSelectField` because
+   * that's all we currently have.
    *
-   * @returns {Promise<string>} the ID of the project
+   * @returns {Promise<ProjectDetails>} the ID of the project
    */
-  async getProjectId() {
+  async getProjectDetails() {
     const res = await this.octokit.graphql(
       `query getProjectId($login: String!, $number: Int!) {
         organization(login: $login) {
           projectV2(number: $number) {
             id
-          }
-        }
-      }`,
-      {
-        login: this.owner,
-        number: this.number,
-      }
-    )
-    return res.organization.projectV2.id
-  }
-
-  /**
-   * Get a mapping of field names to field IDs defined for this project. This
-   * function currently only supports `ProjectV2SingleSelectField` because
-   * that's all we currently have.
-   *
-   * @returns {Promise<{[p: string]: string}>} a mapping of field names to IDs
-   */
-  async getFields() {
-    const res = await this.octokit.graphql(
-      `query getFields($projectId: ID!) {
-        node(id: $projectId) {
-          ... on ProjectV2 {
             fields(first: 20) {
               nodes {
                 ... on ProjectV2SingleSelectField {
@@ -92,21 +70,27 @@ class Project {
         }
       }`,
       {
-        projectId: this.projectId,
+        login: this.owner,
+        number: this.number,
       }
     )
-    let fields = {}
-    for (let field of res.node.fields.nodes) {
-      if (field.options) {
-        fields[field.name] = {
-          id: field.id,
-          options: Object.fromEntries(
-            field.options.map((option) => [option.name, option.id])
-          ),
-        }
-      }
+    const project = res.organization.projectV2
+    return {
+      projectId: project.id,
+      fields: Object.fromEntries(
+        project.fields.nodes
+          .filter((field) => field.options)
+          .map((field) => [
+            field.name,
+            {
+              id: field.id,
+              options: Object.fromEntries(
+                field.options.map((option) => [option.name, option.id])
+              ),
+            },
+          ])
+      ),
     }
-    return fields
   }
 
   /**
