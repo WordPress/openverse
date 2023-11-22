@@ -202,12 +202,11 @@ class Project {
 /**
  * Get the `Project` instance for the project board with the given name.
  *
+ * @param octokit {import('octokit').Octokit} the Octokit instance to use
  * @param name {string} the name of the project (without the 'Openverse' prefix)
  * @returns {Project} the `Project` instance to interact with the project board
  */
-export async function getBoard(name) {
-  const octokit = getOctokit()
-
+export async function getBoard(octokit, name) {
   const projectNumber = PROJECT_NUMBERS[name]
   if (!projectNumber) {
     throw new Error(`Unknown project board "${name}".`)
