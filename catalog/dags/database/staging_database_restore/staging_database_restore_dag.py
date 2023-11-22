@@ -28,13 +28,20 @@ from textwrap import dedent as d
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.utils.state import State
 from airflow.utils.trigger_rule import TriggerRule
+from elasticsearch.recreate_staging_index.recreate_full_staging_index_dag import (
+    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
+)
 
 from common.constants import (
     AWS_RDS_CONN_ID,
     DAG_DEFAULT_ARGS,
     POSTGRES_API_STAGING_CONN_ID,
+    REFRESH_POKE_INTERVAL,
 )
+from common.sensors.utils import get_most_recent_dag_run
 from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
@@ -70,9 +77,26 @@ log = logging.getLogger(__name__)
     render_template_as_native_obj=True,
 )
 def restore_staging_database():
+    # If the `recreate_full_staging_index` DAG was manually triggered prior
+    # to the database restoration starting, we should wait for it to
+    # finish.
+    wait_for_recreate_full_staging_index = ExternalTaskSensor(
+        task_id="wait_for_recreate_full_staging_index",
+        external_dag_id=RECREATE_STAGING_INDEX_DAG_ID,
+        # Wait for the whole DAG, not just a part of it
+        external_task_id=None,
+        check_existence=False,
+        poke_interval=REFRESH_POKE_INTERVAL,
+        execution_date_fn=lambda _: get_most_recent_dag_run(
+            RECREATE_STAGING_INDEX_DAG_ID
+        ),
+        mode="reschedule",
+        # Any "finished" state is sufficient for us to continue.
+        allowed_states=[State.SUCCESS, State.FAILED],
+    )
     should_skip = skip_restore()
     latest_snapshot = get_latest_prod_snapshot()
-    should_skip >> latest_snapshot
+    wait_for_recreate_full_staging_index >> should_skip >> latest_snapshot
 
     ensure_snapshot_ready = RdsSnapshotExistenceSensor(
         task_id="ensure_snapshot_ready",

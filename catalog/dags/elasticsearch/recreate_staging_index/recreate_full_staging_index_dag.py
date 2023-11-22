@@ -12,11 +12,16 @@ staging elasticsearch cluster for the given media type, suffixed by the current
 timestamp. The DAG awaits the completion of the index creation and then points
 the `<media_type>-full` alias to the newly created index.
 
-Optionally, the `target_alias_override` param can be used to override the target
-alias that is pointed to the new index. When the alias is assigned, it is removed
-from any other index to which it previously pointed. The `delete_old_index` param
-can optionally be enabled in order to delete the index previously pointed to by
-the alias, if applicable.
+Required Dagrun Configuration parameters:
+
+* media_type: the media type for which to create a new index.
+
+Optional params:
+
+* target_alias_override: Override the alias that is pointed to the new index. By
+                         default this is `<media_type>-full`.
+* delete_old_index:      Whether to delete the index previously pointed to by the
+                         target alias, if applicable. Defaults to False.
 
 ## When this DAG runs
 
@@ -27,6 +32,9 @@ This DAG is on a `None` schedule and is run manually.
 Because this DAG runs on the staging ingestion server and staging elasticsearch
 cluster, it does _not_ interfere with the `data_refresh` or
 `create_filtered_index` DAGs.
+
+However, the DAG will exit immediately if the `staging_database_restore` DAG is
+running, as it operates on the staging API database.
 """
 from datetime import datetime
 
@@ -37,6 +45,7 @@ from elasticsearch.recreate_staging_index.recreate_full_staging_index import (
     create_index,
     get_target_alias,
     point_alias,
+    prevent_concurrency_with_staging_database_restore,
     should_delete_index,
 )
 
@@ -84,6 +93,8 @@ DAG_ID = "recreate_full_staging_index"
     render_template_as_native_obj=True,
 )
 def recreate_full_staging_index():
+    prevent_concurrency = prevent_concurrency_with_staging_database_restore()
+
     target_alias = get_target_alias(
         media_type="{{ params.media_type }}",
         target_alias_override="{{ params.target_alias_override }}",
@@ -145,7 +156,8 @@ def recreate_full_staging_index():
     )
 
     # Set up dependencies
-    target_alias >> get_current_index_if_exists >> new_index_suffix
+    prevent_concurrency >> target_alias >> get_current_index_if_exists
+    get_current_index_if_exists >> new_index_suffix
     new_index_suffix >> do_create_index >> do_point_alias
     do_point_alias >> check_if_should_delete_index
     check_if_should_delete_index >> [delete_old_index, notify_complete]
