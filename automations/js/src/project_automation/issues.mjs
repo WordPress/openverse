@@ -1,6 +1,26 @@
 import { getBoard } from '../utils/projects.mjs'
 
 /**
+ * Set the "Priority" custom field based on the issue's labels. Also move
+ * the card for critical issues directly to the "📅 To Do" column.
+ *
+ * @param issue {import('@octokit/rest')}
+ * @param board {import('../utils/projects.mjs').Project}
+ * @param card {import('../utils/projects.mjs').Card}
+ */
+async function syncPriority(issue, board, card) {
+  const priority = issue.labels.find((label) =>
+    label.name.includes('priority')
+  )?.name
+  if (priority) {
+    await board.setCustomChoiceField(card.id, 'Priority', priority)
+  }
+  if (priority === '🟥 priority: critical') {
+    await board.moveCard(card.id, board.columns.ToDo)
+  }
+}
+
+/**
  * This is the entrypoint of the script.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
@@ -18,70 +38,53 @@ export const main = async (octokit, context) => {
   }
 
   const backlogBoard = await getBoard(octokit, 'Backlog')
-  const columns = backlogBoard.columns // computed property
 
   // Create new, or get the existing, card for the current issue.
   const card = await backlogBoard.addCard(issue.node_id)
-
-  /**
-   * Set the "Priority" custom field based on the issue's labels. Also move
-   * the card for critical issues directly to the "📅 To Do" column.
-   */
-  const syncPriority = async () => {
-    const priority = issue.labels.find((label) =>
-      label.name.includes('priority')
-    )?.name
-    if (priority) {
-      await backlogBoard.setCustomChoiceField(card.id, 'Priority', priority)
-    }
-    if (priority === '🟥 priority: critical') {
-      await backlogBoard.moveCard(card.id, columns.ToDo)
-    }
-  }
 
   switch (eventAction) {
     case 'opened':
     case 'reopened': {
       if (issue.labels.some((label) => label.name === '⛔ status: blocked')) {
-        await backlogBoard.moveCard(card.id, columns.Blocked)
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
       } else {
-        await backlogBoard.moveCard(card.id, columns.Backlog)
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
       }
 
-      await syncPriority()
+      await syncPriority(issue, backlogBoard, card)
       break
     }
 
     case 'closed': {
       if (issue.state_reason === 'completed') {
-        await backlogBoard.moveCard(card.id, columns.Done)
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.Done)
       } else {
-        await backlogBoard.moveCard(card.id, columns.Discarded)
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.Discarded)
       }
       break
     }
 
     case 'assigned': {
-      if (card.status === columns.Backlog) {
-        await backlogBoard.moveCard(card.id, columns.ToDo)
+      if (card.status === backlogBoard.columns.Backlog) {
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.ToDo)
       }
       break
     }
 
     case 'labeled': {
       if (label.name === '⛔ status: blocked') {
-        await backlogBoard.moveCard(card.id, columns.Blocked)
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
       }
-      await syncPriority()
+      await syncPriority(issue, backlogBoard, card)
       break
     }
 
     case 'unlabeled': {
       if (label.name === '⛔ status: blocked') {
         // TODO: Move back to the column it came from.
-        await backlogBoard.moveCard(card.id, columns.Backlog)
+        await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
       }
-      await syncPriority()
+      await syncPriority(issue, backlogBoard, card)
       break
     }
   }
