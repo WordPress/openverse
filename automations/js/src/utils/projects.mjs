@@ -44,6 +44,7 @@ class Project {
     const projectDetails = await this.getProjectDetails()
     this.projectId = projectDetails.projectId
     this.fields = projectDetails.fields
+    this.columns = this.getColumns()
   }
 
   /**
@@ -52,7 +53,7 @@ class Project {
    *
    * @returns {{[p: string]: string}} mapping of "Status" slugs to choices
    */
-  get columns() {
+  getColumns() {
     return Object.fromEntries(
       Object.keys(this.fields['Status'].options).map((key) => [
         key.replace(/\W/g, '').replace(/^\d*/, '').trim(),
