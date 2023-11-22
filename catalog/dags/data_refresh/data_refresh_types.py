@@ -9,7 +9,7 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
-from common.constants import REFRESH_POKE_INTERVAL
+from common.constants import AUDIO, IMAGE, REFRESH_POKE_INTERVAL
 
 
 @dataclass
@@ -71,8 +71,8 @@ class DataRefresh:
         self.dag_id = f"{self.media_type}_data_refresh"
 
 
-DATA_REFRESH_CONFIGS = [
-    DataRefresh(
+DATA_REFRESH_CONFIGS = {
+    IMAGE: DataRefresh(
         media_type="image",
         data_refresh_timeout=timedelta(days=4),
         refresh_metrics_timeout=timedelta(hours=24),
@@ -84,11 +84,11 @@ DATA_REFRESH_CONFIGS = [
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
         ),
     ),
-    DataRefresh(
+    AUDIO: DataRefresh(
         media_type="audio",
         data_refresh_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
         ),
         filtered_index_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
     ),
-]
+}
