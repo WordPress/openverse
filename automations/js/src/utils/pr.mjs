@@ -1,8 +1,7 @@
-import { getOctokit } from './octokit.mjs'
-
 export class PullRequest {
-  constructor(owner, repo, number) {
-    this.octokit = getOctokit()
+  constructor(octokit, owner, repo, number) {
+    this.octokit = octokit
+
     this.owner = owner
     this.repo = repo
     this.number = number
