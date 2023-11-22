@@ -11,87 +11,90 @@ import { getBoard } from '../utils/projects.mjs'
 import { getEvent } from '../utils/event.mjs'
 import { PullRequest } from '../utils/pr.mjs'
 
-const { eventName, eventAction, eventPayload } = getEvent()
+export const main = async (octokit) => {
+  const { eventName, eventAction, eventPayload } = getEvent()
 
-const pr = new PullRequest(
-  eventPayload.pull_request.base.repo.owner.login,
-  eventPayload.pull_request.base.repo.name,
-  eventPayload.pull_request.number
-)
-await pr.init()
+  const pr = new PullRequest(
+    octokit,
+    eventPayload.pull_request.base.repo.owner.login,
+    eventPayload.pull_request.base.repo.name,
+    eventPayload.pull_request.number
+  )
+  await pr.init()
 
-const prBoard = await getBoard('PRs')
-const columns = prBoard.columns // computed property
+  const prBoard = await getBoard(octokit, 'PRs')
+  const columns = prBoard.columns // computed property
 
-const backlogBoard = await getBoard('Backlog')
-const backlogColumns = backlogBoard.columns
+  const backlogBoard = await getBoard(octokit, 'Backlog')
+  const backlogColumns = backlogBoard.columns
 
-// Create new, or get the existing, card for the current pull request.
-const card = await prBoard.addCard(eventPayload.pull_request.node_id)
+  // Create new, or get the existing, card for the current pull request.
+  const card = await prBoard.addCard(eventPayload.pull_request.node_id)
 
-/**
- * Move the PR to the right column based on the number of reviews.
- */
-const syncReviews = async () => {
-  const reviewDecision = pr.reviewDecision
-  const reviewCounts = pr.reviewCounts
+  /**
+   * Move the PR to the right column based on the number of reviews.
+   */
+  const syncReviews = async () => {
+    const reviewDecision = pr.reviewDecision
+    const reviewCounts = pr.reviewCounts
 
-  if (reviewDecision === 'APPROVED') {
-    await prBoard.moveCard(card.id, columns.Approved)
-  } else if (reviewDecision === 'CHANGES_REQUESTED') {
-    await prBoard.moveCard(card.id, columns.ChangesRequested)
-  } else if (reviewCounts.APPROVED === 1) {
-    await prBoard.moveCard(card.id, columns.Needs1Review)
-  } else {
-    await prBoard.moveCard(card.id, columns.Needs2Reviews)
+    if (reviewDecision === 'APPROVED') {
+      await prBoard.moveCard(card.id, columns.Approved)
+    } else if (reviewDecision === 'CHANGES_REQUESTED') {
+      await prBoard.moveCard(card.id, columns.ChangesRequested)
+    } else if (reviewCounts.APPROVED === 1) {
+      await prBoard.moveCard(card.id, columns.Needs1Review)
+    } else {
+      await prBoard.moveCard(card.id, columns.Needs2Reviews)
+    }
   }
-}
 
-/**
- * Move all linked issues to the specified column.
- */
-const syncIssues = async (destColumn) => {
-  for (let linkedIssue of pr.linkedIssues) {
-    const card = await backlogBoard.addCard(linkedIssue)
-    await backlogBoard.moveCard(card.id, destColumn)
+  /**
+   * Move all linked issues to the specified column.
+   */
+  const syncIssues = async (destColumn) => {
+    for (let linkedIssue of pr.linkedIssues) {
+      const card = await backlogBoard.addCard(linkedIssue)
+      await backlogBoard.moveCard(card.id, destColumn)
+    }
   }
-}
 
-if (eventName === 'pull_request_review') {
-  await syncReviews()
-} else if (eventName === 'pull_request_target') {
-  switch (eventAction) {
-    case 'opened':
-    case 'reopened': {
-      if (eventPayload.pull_request.draft) {
+  if (eventName === 'pull_request_review') {
+    await syncReviews()
+  } else if (eventName === 'pull_request_target') {
+    switch (eventAction) {
+      case 'opened':
+      case 'reopened': {
+        if (eventPayload.pull_request.draft) {
+          await prBoard.moveCard(card.id, columns.Draft)
+        } else {
+          await syncReviews()
+        }
+        await syncIssues(backlogColumns.InProgress)
+        break
+      }
+
+      case 'edited': {
+        await syncIssues(backlogColumns.InProgress)
+        break
+      }
+
+      case 'converted_to_draft': {
         await prBoard.moveCard(card.id, columns.Draft)
-      } else {
+        break
+      }
+
+      case 'ready_for_review': {
         await syncReviews()
+        break
       }
-      await syncIssues(backlogColumns.InProgress)
-      break
-    }
 
-    case 'edited': {
-      await syncIssues(backlogColumns.InProgress)
-      break
-    }
-
-    case 'converted_to_draft': {
-      await prBoard.moveCard(card.id, columns.Draft)
-      break
-    }
-
-    case 'ready_for_review': {
-      await syncReviews()
-      break
-    }
-
-    case 'closed': {
-      if (!eventPayload.pull_request.merged) {
-        await syncIssues(backlogColumns.Backlog)
+      case 'closed': {
+        if (!eventPayload.pull_request.merged) {
+          await syncIssues(backlogColumns.Backlog)
+        }
+        break
       }
-      break
     }
   }
 }
