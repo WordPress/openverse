@@ -29,7 +29,8 @@ export const main = async (octokit) => {
   const card = await backlogBoard.addCard(eventPayload.issue.node_id)
 
   /**
-   * Set the "Priority" custom field based on the issue's labels.
+   * Set the "Priority" custom field based on the issue's labels. Also move
+   * the card for critical issues directly to the "📅 To Do" column.
    */
   const syncPriority = async () => {
     const priority = eventPayload.issue.labels.find((label) =>
