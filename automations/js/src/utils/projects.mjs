@@ -9,8 +9,20 @@ const PROJECT_NUMBERS = {
 }
 
 class Project {
+  /**
+   * Create a new `Project` instance using owner name and project number, both
+   * of which can be found in the project URL. For example,
+   *
+   * https://github.com/orgs/WordPress/projects/75/views/1
+   *                         ^^^^^^^^^owner     ^^number
+   *
+   * @param octokit {import('octokit').Octokit} the Octokit instance to use
+   * @param owner {string} the login of the owner (org) of the project
+   * @param number {number} the number of the project
+   */
   constructor(octokit, owner, number) {
     this.octokit = octokit
+
     this.owner = owner
     this.number = number
   }

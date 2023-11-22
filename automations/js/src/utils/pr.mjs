@@ -1,4 +1,17 @@
 export class PullRequest {
+  /**
+   * Create a new `PullRequest` instance using owner and repo names and PR
+   * number, all three of which can be found in the PR URL.
+   *
+   * https://github.com/WordPress/openverse/pull/3375
+   *                    ^^^^^^^^^ ^^^^^^^^^^     ^^^^
+   *                    owner     repo           number
+   *
+   * @param octokit {import('octokit').Octokit} the Octokit instance to use
+   * @param owner {string} the login of the owner (org) of the project
+   * @param repo {string} the name of the repository
+   * @param number {number} the number of the project
+   */
   constructor(octokit, owner, repo, number) {
     this.octokit = octokit
 
