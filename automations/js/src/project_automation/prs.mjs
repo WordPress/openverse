@@ -23,7 +23,7 @@ export const main = async (octokit) => {
   await pr.init()
 
   const prBoard = await getBoard(octokit, 'PRs')
-  const columns = prBoard.columns // computed property
+  const prColumns = prBoard.columns // computed property
 
   const backlogBoard = await getBoard(octokit, 'Backlog')
   const backlogColumns = backlogBoard.columns
@@ -39,13 +39,13 @@ export const main = async (octokit) => {
     const reviewCounts = pr.reviewCounts
 
     if (reviewDecision === 'APPROVED') {
-      await prBoard.moveCard(card.id, columns.Approved)
+      await prBoard.moveCard(card.id, prColumns.Approved)
     } else if (reviewDecision === 'CHANGES_REQUESTED') {
-      await prBoard.moveCard(card.id, columns.ChangesRequested)
+      await prBoard.moveCard(card.id, prColumns.ChangesRequested)
     } else if (reviewCounts.APPROVED === 1) {
-      await prBoard.moveCard(card.id, columns.Needs1Review)
+      await prBoard.moveCard(card.id, prColumns.Needs1Review)
     } else {
-      await prBoard.moveCard(card.id, columns.Needs2Reviews)
+      await prBoard.moveCard(card.id, prColumns.Needs2Reviews)
     }
   }
 
@@ -66,7 +66,7 @@ export const main = async (octokit) => {
       case 'opened':
       case 'reopened': {
         if (eventPayload.pull_request.draft) {
-          await prBoard.moveCard(card.id, columns.Draft)
+          await prBoard.moveCard(card.id, prColumns.Draft)
         } else {
           await syncReviews()
         }
@@ -80,7 +80,7 @@ export const main = async (octokit) => {
       }
 
       case 'converted_to_draft': {
-        await prBoard.moveCard(card.id, columns.Draft)
+        await prBoard.moveCard(card.id, prColumns.Draft)
         break
       }
 
