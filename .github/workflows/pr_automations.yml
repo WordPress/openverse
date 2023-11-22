@@ -1,7 +1,6 @@
 # Runs all automations related to PR events.
 #
-# See `issue_automations_init.yml` for the corresponding implementation for
-# issues.
+# See `issue_automations.yml` for the corresponding implementation for issues.
 #
 # The automations for PR events are a little more complex than those for issues
 # because PRs are a less secure environment. To avoid leaking secrets, we need
