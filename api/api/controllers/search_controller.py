@@ -177,10 +177,10 @@ def get_excluded_providers_query() -> Q | None:
 
     filtered_providers = cache.get(key=FILTERED_PROVIDERS_CACHE_KEY)
     if not filtered_providers:
-        providers = models.ContentProvider.objects.filter(filter_content=True).values(
-            "provider_identifier"
-        )
-        filtered_providers = [p["provider_identifier"] for p in providers]
+        filtered_providers = list(models.ContentProvider.objects.filter(filter_content=True).values_list(
+            "provider_identifier",
+            flat=True,
+        ))
         cache.set(
             key=FILTERED_PROVIDERS_CACHE_KEY,
             timeout=FILTER_CACHE_TIMEOUT,
