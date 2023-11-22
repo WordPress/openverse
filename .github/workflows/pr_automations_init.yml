@@ -39,8 +39,7 @@ jobs:
         run: |
           mkdir -p ./pr
           echo "$EVENT_PAYLOAD" > ./pr/event.json
-          echo "export EVENT_NAME=$EVENT_NAME" > ./pr/event_info.env
-          echo "export EVENT_ACTION=$EVENT_ACTION" >> ./pr/event_info.env
+          echo '{"eventName": "'"$EVENT_NAME"'", "eventAction": "'"$EVENT_ACTION"'"}' > ./pr/event_info.json
         env:
           EVENT_PAYLOAD: ${{ toJson(github.event) }}
           EVENT_NAME: ${{ github.event_name }}

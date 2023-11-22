@@ -45,7 +45,7 @@ jobs:
       # This step was copied from the GitHub docs.
       # Ref: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#using-data-from-the-triggering-workflow
       - name: Download artifact
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -65,13 +65,15 @@ jobs:
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/event_info.zip`, Buffer.from(download.data));
 
-      - name: Perform PR automations
+      - name: Unzip artifact
         run: |
           unzip event_info.zip
-          source event_info.env
-          pnpm prs --event_name "$EVENT_NAME" --event_action "$EVENT_ACTION"
-          rm event_info.env
-          rm event.json
-        env:
-          EVENT_PAYLOAD: ${{ toJson(github.event) }}
-        working-directory: automations/js
+          mv event_info.json /tmp/event_info.json
+          mv event.json /tmp/event.json
+
+      - name: Perform PR automations
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { main } = await import('./automations/js/project_automation/prs.mjs')
+            await main(github)

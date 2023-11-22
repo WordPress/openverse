@@ -1,24 +1,25 @@
-/**
- * This module handles all events related to pull requests.
- *
- * Invoke it from the CLI with
- * - the event name as the `--event_name` argument
- * - the event action as the `--event_action` argument
- * - the event payload in the `event.json` file in the project root
- */
+import { readFileSync } from 'fs'
 
 import { getBoard } from '../utils/projects.mjs'
-import { getEvent } from '../utils/event.mjs'
 import { PullRequest } from '../utils/pr.mjs'
 
+/**
+ * This is the entrypoint of the script.
+ *
+ * @param octokit {import('octokit').Octokit} the Octokit instance to use
+ */
 export const main = async (octokit) => {
-  const { eventName, eventAction, eventPayload } = getEvent()
+  const { eventName, eventAction } = JSON.parse(
+    readFileSync('/tmp/event_info.json', 'utf-8')
+  )
+  const eventPayload = JSON.parse(readFileSync('/tmp/event.json', 'utf-8'))
 
+  const pullRequest = eventPayload.pull_request
   const pr = new PullRequest(
     octokit,
-    eventPayload.pull_request.base.repo.owner.login,
-    eventPayload.pull_request.base.repo.name,
-    eventPayload.pull_request.number
+    pullRequest.base.repo.owner.login,
+    pullRequest.base.repo.name,
+    pullRequest.number
   )
   await pr.init()
 
@@ -29,7 +30,7 @@ export const main = async (octokit) => {
   const backlogColumns = backlogBoard.columns
 
   // Create new, or get the existing, card for the current pull request.
-  const card = await prBoard.addCard(eventPayload.pull_request.node_id)
+  const card = await prBoard.addCard(pullRequest.node_id)
 
   /**
    * Move the PR to the right column based on the number of reviews.
@@ -65,7 +66,7 @@ export const main = async (octokit) => {
     switch (eventAction) {
       case 'opened':
       case 'reopened': {
-        if (eventPayload.pull_request.draft) {
+        if (pullRequest.draft) {
           await prBoard.moveCard(card.id, prColumns.Draft)
         } else {
           await syncReviews()
@@ -90,7 +91,7 @@ export const main = async (octokit) => {
       }
 
       case 'closed': {
-        if (!eventPayload.pull_request.merged) {
+        if (!pullRequest.merged) {
           await syncIssues(backlogColumns.Backlog)
         }
         break
