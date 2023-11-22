@@ -60,7 +60,7 @@ export const main = async (octokit) => {
 
   if (eventName === 'pull_request_review') {
     await syncReviews(pr, prBoard, prCard)
-  } else if (eventName === 'pull_request_target') {
+  } else {
     switch (eventAction) {
       case 'opened':
       case 'reopened': {
