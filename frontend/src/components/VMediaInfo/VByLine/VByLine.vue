@@ -11,7 +11,7 @@
     >
       <div
         ref="buttonsRef"
-        class="buttons flex justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
+        class="buttons flex snap-x justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
         :class="{
           'ms-11': showScrollButton.start,
           'me-11': showScrollButton.end,
@@ -22,7 +22,7 @@
           as="VLink"
           size="small"
           has-icon-start
-          class="label-bold"
+          class="label-bold snap-start"
           :variant="buttonVariant"
           :href="creatorHref"
         >
@@ -32,7 +32,7 @@
           as="VLink"
           size="small"
           has-icon-start
-          class="label-bold"
+          class="label-bold snap-start"
           :variant="buttonVariant"
           :href="sourceHref"
           ><VIcon name="institution" /><span class="w-max">{{
@@ -50,7 +50,7 @@
         label="scroll"
         variant="transparent-gray"
         size="small"
-        @click="scroll('toStart')"
+        @click="scroll('start')"
       />
     </div>
 
@@ -63,7 +63,7 @@
         label="scroll"
         variant="transparent-gray"
         size="small"
-        @click="scroll('toEnd')"
+        @click="scroll('end')"
       />
     </div>
   </div>
@@ -128,8 +128,8 @@ export default defineComponent({
     const i18n = useI18n()
     const dir = computed(() => i18n.localeProperties.dir ?? "ltr")
 
-    const scrollStep = 80 // px to scroll on each click
-    const scrollThreshold = 40 // px, distance from edge to show scroll buttons
+    const scrollStep = 150 // px to scroll on each click
+    const scrollMargin = 44 // px, button + margin
     const shouldScroll = ref(false)
 
     const { x } = useScroll(buttonsRef)
@@ -168,20 +168,46 @@ export default defineComponent({
       }
     })
 
-    const scroll = (to: "toStart" | "toEnd") => {
+    const getScrollEnd = (el: HTMLElement, dir: "ltr" | "rtl" | "auto") => {
+      return (
+        el.scrollWidth -
+        el.clientWidth -
+        (dir === "rtl" ? -el.scrollLeft : el.scrollLeft)
+      )
+    }
+    const getScrollStart = (el: HTMLElement) => {
+      return Math.abs(el.scrollLeft)
+    }
+
+    const getDistToSide = (
+      to: "start" | "end",
+      dir: "ltr" | "rtl" | "auto",
+      el: HTMLElement
+    ) => {
+      return to === "start" ? getScrollStart(el) : getScrollEnd(el, dir)
+    }
+
+    const scroll = (to: "start" | "end") => {
       if (!buttonsRef.value) return
-      if (to === "toEnd") {
-        showScrollButton.start = true
-      }
-      if (to === "toStart") {
-        showScrollButton.end = true
-      }
+      showScrollButton[to === "start" ? "end" : "start"] = true
+
       const buttons = buttonsRef.value
-      let scrollValue = to === "toStart" ? -scrollStep : scrollStep
-      if (dir.value === "rtl") {
-        scrollValue = -scrollValue
+
+      let distToSide = getDistToSide(to, dir.value, buttons)
+
+      let adjustedScrollStep = scrollStep
+
+      const isLastScroll = distToSide - scrollMargin <= scrollStep
+      if (isLastScroll) {
+        showScrollButton[to] = false
+        adjustedScrollStep = to === "start" ? distToSide : buttons.scrollWidth
       }
-      buttons.scrollBy({ left: scrollValue, behavior: "smooth" })
+      if (dir.value === "rtl") {
+        adjustedScrollStep = -adjustedScrollStep
+      }
+
+      let left = to === "start" ? -adjustedScrollStep : adjustedScrollStep
+      buttons.scrollBy({ left, behavior: "smooth" })
     }
 
     watchDebounced(
@@ -194,8 +220,8 @@ export default defineComponent({
           buttonsRef.value.scrollWidth -
           distFromStart -
           buttonsRef.value.clientWidth
-        showScrollButton.start = distFromStart > scrollThreshold
-        showScrollButton.end = distFromEnd > scrollThreshold
+        showScrollButton.start = distFromStart >= scrollMargin
+        showScrollButton.end = distFromEnd >= scrollMargin
       },
       { debounce: 100 }
     )
