@@ -22,8 +22,8 @@
           as="VLink"
           size="small"
           has-icon-start
-          class="label-bold snap-start"
-          :variant="buttonVariant"
+          class="label-bold m-1.5px snap-start !bg-dark-charcoal-10 hover:!bg-dark-charcoal hover:text-white sm:!bg-tx"
+          variant="transparent-gray"
           :href="creatorHref"
         >
           <VIcon name="person" /><span class="w-max">{{ creator }}</span>
@@ -32,8 +32,8 @@
           as="VLink"
           size="small"
           has-icon-start
-          class="label-bold snap-start"
-          :variant="buttonVariant"
+          class="label-bold m-1.5px snap-start !bg-dark-charcoal-10 hover:!bg-dark-charcoal hover:text-white sm:!bg-tx"
+          variant="transparent-gray"
           :href="sourceHref"
           ><VIcon name="institution" /><span class="w-max">{{
             sourceName
@@ -80,7 +80,6 @@ import {
 } from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
-import { useUiStore } from "~/stores/ui"
 import { useI18n } from "~/composables/use-i18n"
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -114,12 +113,6 @@ export default defineComponent({
   setup(props) {
     const containerRef = ref<HTMLElement | null>(null)
     const buttonsRef = ref<HTMLElement | null>(null)
-
-    const uiStore = useUiStore()
-
-    const buttonVariant = computed(() =>
-      uiStore.isBreakpoint("sm") ? "transparent-gray" : "filled-gray"
-    )
 
     const showCreator = computed(() => {
       return props.creator && props.creator.toLowerCase() !== "unidentified"
@@ -260,7 +253,6 @@ export default defineComponent({
       containerRef,
       buttonsRef,
 
-      buttonVariant,
       showCreator,
       shouldScroll,
       showScrollButton,
