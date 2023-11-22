@@ -1,5 +1,13 @@
 import { getOctokit } from './octokit.mjs'
 
+const PROJECT_NUMBERS = {
+  Backlog: 75,
+  PRs: 98,
+  Todos: 59,
+  Discussions: 79,
+  'Project Tracker': 70,
+}
+
 class Project {
   constructor(octokit, owner, number) {
     this.octokit = octokit
@@ -204,26 +212,12 @@ class Project {
 export async function getBoard(name) {
   const octokit = getOctokit()
 
-  let project
-  switch (name) {
-    case 'Backlog':
-      project = new Project(octokit, 'WordPress', 75)
-      break
-    case 'PRs':
-      project = new Project(octokit, 'WordPress', 98)
-      break
-    case 'Todos':
-      project = new Project(octokit, 'WordPress', 59)
-      break
-    case 'Discussions':
-      project = new Project(octokit, 'WordPress', 79)
-      break
-    case 'Project Tracker':
-      project = new Project(octokit, 'WordPress', 70)
-      break
-    default:
-      throw new Error(`Unknown project board "${name}".`)
+  const projectNumber = PROJECT_NUMBERS[name]
+  if (!projectNumber) {
+    throw new Error(`Unknown project board "${name}".`)
   }
+
+  const project = new Project(octokit, 'WordPress', projectNumber)
   await project.init()
   return project
 }
