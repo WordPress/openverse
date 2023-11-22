@@ -41,7 +41,7 @@ from datetime import datetime
 from airflow.decorators import dag
 from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
-from elasticsearch.recreate_staging_index.recreate_full_staging_index import (
+from es.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID,
     create_index,
     get_target_alias,
@@ -59,7 +59,7 @@ from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES, XCOM_PULL_TEM
     default_args=DAG_DEFAULT_ARGS,
     schedule=None,
     start_date=datetime(2023, 4, 1),
-    tags=["database"],
+    tags=["database", "elasticsearch"],
     max_active_runs=1,
     catchup=False,
     doc_md=__doc__,

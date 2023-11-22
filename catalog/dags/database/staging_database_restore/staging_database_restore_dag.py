@@ -31,7 +31,7 @@ from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.utils.state import State
 from airflow.utils.trigger_rule import TriggerRule
-from elasticsearch.recreate_staging_index.recreate_full_staging_index import (
+from es.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
 

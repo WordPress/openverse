@@ -24,7 +24,7 @@ DAG_PATHS = [
     "popularity/popularity_refresh_dag_factory.py",
     "data_refresh/dag_factory.py",
     "data_refresh/create_filtered_index_dag.py",
-    "elasticsearch/recreate_staging_index/recreate_full_staging_index_dag.py",
+    "es/recreate_staging_index/recreate_full_staging_index_dag.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
     "database/delete_records/delete_records_dag.py",
