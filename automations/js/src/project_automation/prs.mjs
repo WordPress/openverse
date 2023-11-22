@@ -36,13 +36,15 @@ const syncReviews = async () => {
   const reviewDecision = pr.reviewDecision
   const reviewCounts = pr.reviewCounts
 
-  if (reviewDecision === 'APPROVED')
+  if (reviewDecision === 'APPROVED') {
     await prBoard.moveCard(card.id, columns.Approved)
-  else if (reviewDecision === 'CHANGES_REQUESTED')
+  } else if (reviewDecision === 'CHANGES_REQUESTED') {
     await prBoard.moveCard(card.id, columns.ChangesRequested)
-  else if (reviewCounts.APPROVED === 1)
+  } else if (reviewCounts.APPROVED === 1) {
     await prBoard.moveCard(card.id, columns.Needs1Review)
-  else await prBoard.moveCard(card.id, columns.Needs2Reviews)
+  } else {
+    await prBoard.moveCard(card.id, columns.Needs2Reviews)
+  }
 }
 
 /**
@@ -61,9 +63,11 @@ if (eventName === 'pull_request_review') {
   switch (eventAction) {
     case 'opened':
     case 'reopened':
-      if (eventPayload.pull_request.draft)
+      if (eventPayload.pull_request.draft) {
         await prBoard.moveCard(card.id, columns.Draft)
-      else await syncReviews()
+      } else {
+        await syncReviews()
+      }
       await syncIssues(backlogColumns.InProgress)
       break
 
@@ -80,8 +84,9 @@ if (eventName === 'pull_request_review') {
       break
 
     case 'closed':
-      if (!eventPayload.pull_request.merged)
+      if (!eventPayload.pull_request.merged) {
         await syncIssues(backlogColumns.Backlog)
+      }
       break
   }
 }

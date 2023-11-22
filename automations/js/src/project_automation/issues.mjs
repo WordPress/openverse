@@ -14,9 +14,10 @@ const { eventAction, eventPayload } = getEvent()
 
 if (
   eventPayload.issue.labels.some((label) => label.name === '🧭 project: thread')
-)
+) {
   // Do not add project threads to the Backlog board.
   process.exit(0)
+}
 
 const backlogBoard = await getBoard('Backlog')
 const columns = backlogBoard.columns // computed property
@@ -31,10 +32,12 @@ const syncPriority = async () => {
   const priority = eventPayload.issue.labels.find((label) =>
     label.name.includes('priority')
   )?.name
-  if (priority)
+  if (priority) {
     await backlogBoard.setCustomChoiceField(card.id, 'Priority', priority)
-  if (priority === '🟥 priority: critical')
+  }
+  if (priority === '🟥 priority: critical') {
     await backlogBoard.moveCard(card.id, columns.ToDo)
+  }
 }
 
 switch (eventAction) {
@@ -44,34 +47,41 @@ switch (eventAction) {
       eventPayload.issue.labels.some(
         (label) => label.name === '⛔ status: blocked'
       )
-    )
+    ) {
       await backlogBoard.moveCard(card.id, columns.Blocked)
-    else await backlogBoard.moveCard(card.id, columns.Backlog)
+    } else {
+      await backlogBoard.moveCard(card.id, columns.Backlog)
+    }
 
     await syncPriority()
     break
 
   case 'closed':
-    if (eventPayload.issue.state_reason === 'completed')
+    if (eventPayload.issue.state_reason === 'completed') {
       await backlogBoard.moveCard(card.id, columns.Done)
-    else await backlogBoard.moveCard(card.id, columns.Discarded)
+    } else {
+      await backlogBoard.moveCard(card.id, columns.Discarded)
+    }
     break
 
   case 'assigned':
-    if (card.status === columns.Backlog)
+    if (card.status === columns.Backlog) {
       await backlogBoard.moveCard(card.id, columns.ToDo)
+    }
     break
 
   case 'labeled':
-    if (eventPayload.label.name === '⛔ status: blocked')
+    if (eventPayload.label.name === '⛔ status: blocked') {
       await backlogBoard.moveCard(card.id, columns.Blocked)
+    }
     await syncPriority()
     break
 
   case 'unlabeled':
-    if (eventPayload.label.name === '⛔ status: blocked')
+    if (eventPayload.label.name === '⛔ status: blocked') {
       // TODO: Move back to the column it came from.
       await backlogBoard.moveCard(card.id, columns.Backlog)
+    }
     await syncPriority()
     break
 }
