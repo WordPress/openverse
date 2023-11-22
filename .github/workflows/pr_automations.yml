@@ -17,7 +17,8 @@
 #
 # 4. This workflow runs after `pr_automations_init.yml` workflow completes.
 # 5. It downloads the artifacts from that workflow run.
-# 6. It extracts the files, loads the env vars and runs the automation script.
+# 6. It extracts the JSON file from the ZIP to `/tmp`.
+# 7. It runs the automations as a script, which can access secrets.
 
 name: PR automations
 

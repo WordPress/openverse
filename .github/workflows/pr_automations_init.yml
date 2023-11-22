@@ -11,9 +11,9 @@
 # approach:
 #
 # 1. This workflow runs for the events and their subtypes we are interested in.
-# 2. It saves the event payload to a JSON file and the event name and action to
-#    an environment file.
-# 3. It uploads the JSON file and the environment files as artifacts.
+# 2. It saves the event name, action and PR node ID to a JSON file.
+# 3. It uploads the JSON file as an artifact.
+# 4. Its completion triggers the `pr_automations.yml` workflow.
 #
 # continued in `pr_automations.yml`...
 
