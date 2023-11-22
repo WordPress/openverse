@@ -7,6 +7,10 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from adrf.views import APIView as AsyncAPIView
+from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
+from asgiref.sync import sync_to_async
+
 from api.constants.media_types import MediaType
 from api.constants.search import SearchStrategy
 from api.controllers import search_controller
@@ -18,6 +22,7 @@ from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
+from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +40,12 @@ class InvalidSource(APIException):
     default_code = "invalid_source"
 
 
-class MediaViewSet(ReadOnlyModelViewSet):
+image_proxy_aget = sync_to_async(image_proxy.get)
+
+
+class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
+    view_is_async = True
+
     lookup_field = "identifier"
     # TODO: https://github.com/encode/django-rest-framework/pull/6789
     lookup_value_regex = (
@@ -78,6 +88,8 @@ class MediaViewSet(ReadOnlyModelViewSet):
                 filter_content=True
             ).values_list("provider_identifier")
         )
+
+    aget_object = sync_to_async(ReadOnlyModelViewSet.get_object)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -265,16 +277,31 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def thumbnail(self, request, media_obj, image_url):
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
+        raise NotImplementedError(
+            "Subclasses must implement `get_image_proxy_media_info`"
+        )
+
+    thumbnail_action = action(
+        detail=True,
+        url_path="thumb",
+        url_name="thumb",
+        serializer_class=media_serializers.MediaThumbnailRequestSerializer,
+        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
+    )
+
+    async def thumbnail(self, request, *_, **__):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        return image_proxy.get(
-            image_url,
-            media_obj.identifier,
-            media_obj.provider,
-            accept_header=request.headers.get("Accept", "image/*"),
-            **serializer.validated_data,
+        media_info = await self.get_image_proxy_media_info()
+
+        return await image_proxy_aget(
+            media_info,
+            request_config=image_proxy.RequestConfig(
+                accept_header=request.headers.get("Accept", "image/*"),
+                **serializer.validated_data,
+            ),
         )
 
     # Helper functions
