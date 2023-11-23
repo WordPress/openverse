@@ -36,5 +36,5 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { main } = await import('./automations/js/project_automation/issues.mjs')
+            const { main } = await import('./automations/js/src/project_automation/issues.mjs')
             await main(github, context)
