@@ -2,6 +2,8 @@ import { OpenverseRule } from "../utils/rule-creator"
 
 import type { TSESTree } from "@typescript-eslint/utils"
 
+import { noSingleLineBrace } from "./no-single-line-brace"
+
 type Options = readonly [
   {
     reservedPropNames: string[]
@@ -212,6 +214,17 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
         node.parent.typeAnnotation.members.forEach((m) => {
           if (m.type === "TSPropertySignature") validateCustomEvent(m)
         })
+      },
+      "IfStatement, SwitchCase"(node) {
+        const tokens = context.getTokens(node)
+
+        if (tokens.length === 1 && tokens[0].value === "{") {
+          // One-line if or case without braces
+          context.report({
+            node,
+            messageId: "missingBraces",
+          })
+        }
       },
     }
   },
