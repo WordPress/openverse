@@ -22,12 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup CI env
-        uses: ./.github/actions/setup-env
-        with:
-          setup_python: false
-          install_recipe: node-install
-
       - name: Perform issue automations
         uses: actions/github-script@v7
         env:
@@ -36,5 +30,5 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { main } = await import('./automations/js/src/project_automation/issues.mjs')
+            const { main } = await import('${{ github.workspace }}/automations/js/src/project_automation/issues.mjs')
             await main(github, context)
