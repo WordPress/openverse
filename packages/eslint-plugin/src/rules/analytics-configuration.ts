@@ -16,6 +16,7 @@ const messages = {
     "Events with empty payloads must use `never` for the payload type.",
   invalidPayloadFormat:
     "Payloads must be specific key-value pairs where keys are strings and values are either string, boolean, or number.",
+  requireBraces: 'Braces are required for one-line if-else statements and switch case blocks.',
 } as const
 
 type MessageIds = keyof typeof messages
@@ -195,6 +196,33 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
       })
     }
 
+    const validateIfElseStatement = (node: TSESTree.IfStatement) => {
+      const { consequent, alternate } = node;
+
+      if (!consequent || !alternate) {
+        return;
+      }
+
+      const isConsequentOneLine = consequent.type === 'ExpressionStatement';
+      const isAlternateOneLine = alternate.type === 'ExpressionStatement';
+
+      if (isConsequentOneLine || isAlternateOneLine) {
+        context.report({
+          messageId: 'requireBraces',
+          node,
+        });
+      }
+    };
+
+    const validateSwitchCase = (node: TSESTree.SwitchCase) => {
+      if (node.consequent.length === 1 && node.consequent[0].type === 'ExpressionStatement') {
+        context.report({
+          messageId: 'requireBraces',
+          node,
+        });
+      }
+    };
+
     return {
       "ExportNamedDeclaration > TSTypeAliasDeclaration > Identifier[name='Events']"(
         node: TSESTree.Identifier
@@ -213,6 +241,8 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
           if (m.type === "TSPropertySignature") validateCustomEvent(m)
         })
       },
+      IfStatement: validateIfElseStatement,
+      SwitchCase: validateSwitchCase,
     }
   },
 })
