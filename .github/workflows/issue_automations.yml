@@ -28,7 +28,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_ACTION: ${{ github.event.action }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
             const { main } = await import('${{ github.workspace }}/automations/js/src/project_automation/issues.mjs')
             await main(github, context)
