@@ -1,0 +1,74 @@
+# Runs all automations related to PR events.
+#
+# See `issue_automations.yml` for the corresponding implementation for issues.
+#
+# The automations for PR events are a little more complex than those for issues
+# because PRs are a less secure environment. To avoid leaking secrets, we need
+# to run automations with code as it appears on `main`.
+#
+# `pull_request_target` serves this purpose but there is no corresponding
+# `_target` version for `pull_request_review`. So we take this roundabout
+# approach:
+#
+# This workflow waits for the `pr_automations_init.yml` workflow to complete and
+# then uses its exports to run automations from main, with access to secrets.
+#
+# ...continued from `pr_automations_init.yml`
+#
+# 4. This workflow runs after `pr_automations_init.yml` workflow completes.
+# 5. It downloads the artifacts from that workflow run.
+# 6. It extracts the JSON file from the ZIP to `/tmp`.
+# 7. It runs the automations as a script, which can access secrets.
+
+name: PR automations
+
+on:
+  workflow_run:
+    workflows:
+      - PR automations init
+    types:
+      - completed
+
+jobs:
+  run:
+    name: Perform PR automations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # This step was copied from the GitHub docs.
+      # Ref: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#using-data-from-the-triggering-workflow
+      - name: Download artifact
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "event_info"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/event_info.zip`, Buffer.from(download.data));
+
+      - name: Unzip artifact
+        run: |
+          unzip event_info.zip
+          mv event.json /tmp/event.json
+
+      - name: Perform PR automations
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { main } = await import('${{ github.workspace }}/automations/js/src/project_automation/prs.mjs')
+            await main(github)

@@ -4,4 +4,5 @@
 :titlesonly:
 
 python_scripts
+project_automations
 ```
