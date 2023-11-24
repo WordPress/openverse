@@ -76,7 +76,6 @@ importers:
       autoprefixer: ^10.4.16
       axios: ^1.0.0
       axios-mock-adapter: ^1.20.0
-      axios-rate-limit: ^1.3.0
       babel-core: ^7.0.0-bridge.0
       babel-jest: ^26.6.3
       babel-loader: 8.2.5
@@ -186,7 +185,6 @@ importers:
       '@vue/test-utils': 1.1.3_5bwbnhtkovckcydjgad3t2muke
       adm-zip: 0.5.10
       autoprefixer: 10.4.16_postcss@8.4.31
-      axios-rate-limit: 1.3.0_axios@1.6.1
       babel-core: 7.0.0-bridge.0_@babel+core@7.22.5
       babel-jest: 26.6.3_@babel+core@7.22.5
       babel-loader: 8.2.5_rf5mwho5nu3s3spznxs3423x5y
@@ -9131,14 +9129,6 @@ packages:
       is-buffer: 2.0.5
     dev: false
 
-  /axios-rate-limit/1.3.0_axios@1.6.1:
-    resolution: {integrity: sha512-cKR5wTbU/CeeyF1xVl5hl6FlYsmzDVqxlN4rGtfO5x7J83UxKDckudsW0yW21/ZJRcO0Qrfm3fUFbhEbWTLayw==}
-    peerDependencies:
-      axios: '*'
-    dependencies:
-      axios: 1.6.1
-    dev: true
-
   /axios/1.6.1:
     resolution: {integrity: sha512-vfBmhDpKafglh0EldBEbVuoe7DyAavGSLWhuSm5ZSEKQnHhBf0xAAwybbNH1IkrJNGnS/VG4I5yxig1pCEXE4g==}
     dependencies:
@@ -9147,6 +9137,7 @@ packages:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
+    dev: false
 
   /babel-code-frame/6.26.0:
     resolution: {integrity: sha512-XqYMR2dfdGMW+hd0IUZ2PwK+fGeFkOxZJ0wY+JaQAHzt1Zx8LcvpiZD2NiGkEG8qx0CfkAOr5xt76d1e8vG90g==}
@@ -13014,6 +13005,7 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
 
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -13100,6 +13092,7 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
+    dev: false
 
   /forwarded/0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
@@ -18957,6 +18950,7 @@ packages:
 
   /proxy-from-env/1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+    dev: false
 
   /prr/1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
