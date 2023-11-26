@@ -13,7 +13,7 @@
     >
       <div
         ref="buttonsRef"
-        class="buttons flex snap-x justify-start gap-x-3 overflow-x-scroll p-1.5px sm:gap-x-1"
+        class="buttons flex justify-start gap-x-3 overflow-x-scroll p-1.5px sm:gap-x-1"
         :class="{
           'ms-11': showScrollButton.start,
           'me-11': showScrollButton.end,
@@ -171,18 +171,23 @@ export default defineComponent({
 
     const scroll = (to: "start" | "end") => {
       if (!buttonsRef.value) return
-      showScrollButton[to === "start" ? "end" : "start"] = true
-
       const buttons = buttonsRef.value
 
-      let distToSide = getDistToSide(to, dir.value, buttons)
+      showScrollButton[to === "start" ? "end" : "start"] = true
 
+      let distToSide = getDistToSide(to, dir.value, buttons)
       let adjustedScrollStep = scrollStep
 
+      // If the scroll step is larger than the distance to the side, scroll
+      // to the side and hide the scroll button.
+      // If the distance to the side is less than twice the scroll step, scroll
+      // half the distance to the side to prevent a very small scroll at the end.
       const isLastScroll = distToSide - scrollMargin <= scrollStep
       if (isLastScroll) {
         hideScrollButton(to)
         adjustedScrollStep = to === "start" ? distToSide : buttons.scrollWidth
+      } else if (distToSide < scrollStep * 2) {
+        adjustedScrollStep = distToSide / 2
       }
       if (dir.value === "rtl") {
         adjustedScrollStep = -adjustedScrollStep
