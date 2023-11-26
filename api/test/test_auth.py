@@ -62,23 +62,32 @@ def test_auth_token_exchange_unsupported_method(client):
     assert res.json()["detail"] == 'Method "GET" not allowed.'
 
 
+def _integration_verify_most_recent_token(client):
+    verify = OAuth2Verification.objects.last()
+    code = verify.code
+    path = reverse("verify-email", args=[code])
+    return client.get(path)
+
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     "rate_limit_model",
     [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
 )
+@pytest.mark.skipif(
+    API_URL != "http://localhost:8000",
+    reason=(
+        "This test needs to cheat by looking in the database,"
+        " so it needs to skip in non-local environments where"
+        " that isn't possible."
+    ),
+)
 def test_auth_email_verification(client, rate_limit_model, test_auth_token_exchange):
-    # This test needs to cheat by looking in the database, so it will be
-    # skipped in non-local environments.
-    if API_URL == "http://localhost:8000":
-        verify = OAuth2Verification.objects.last()
-        code = verify.code
-        path = reverse("verify-email", args=[code])
-        res = client.get(path)
-        assert res.status_code == 200
-        test_auth_rate_limit_reporting(
-            client, rate_limit_model, test_auth_token_exchange, verified=True
-        )
+    res = _integration_verify_most_recent_token(client)
+    assert res.status_code == 200
+    test_auth_rate_limit_reporting(
+        client, rate_limit_model, test_auth_token_exchange, verified=True
+    )
 
 
 @pytest.mark.django_db
@@ -104,6 +113,35 @@ def test_auth_rate_limit_reporting(
     else:
         assert res_data["rate_limit_model"] == rate_limit_model
         assert res_data["verified"] is False
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "verified",
+    (True, False),
+)
+def test_auth_response_headers(
+    client, verified, test_auth_tokens_registration, test_auth_token_exchange
+):
+    if verified:
+        _integration_verify_most_recent_token(client)
+
+    token = test_auth_token_exchange["access_token"]
+
+    res = client.get("/v1/images/", HTTP_AUTHORIZATION=f"Bearer {token}")
+
+    assert (
+        res.headers["x-ov-client-application-name"]
+        == test_auth_tokens_registration["name"]
+    )
+    assert res.headers["x-ov-client-application-verified"] == str(verified)
+
+
+def test_unauthed_response_headers(client):
+    res = client.get("/v1/images")
+
+    assert "x-ov-client-application-name" not in res.headers
+    assert "x-ov-client-application-verified" not in res.headers
 
 
 @pytest.mark.django_db
