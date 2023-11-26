@@ -50,6 +50,7 @@ module_logger = logging.getLogger(__name__)
 NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
+FILTERED_PROVIDERS_CACHE_KEY = "filtered_providers"
 THUMBNAIL = "thumbnail"
 URL = "url"
 PROVIDER = "provider"
@@ -170,19 +171,24 @@ def get_excluded_providers_query() -> Q | None:
     Hide data sources from the catalog dynamically.
     To exclude a provider, set ``filter_content`` to ``True`` in the
     ``ContentProvider`` model in Django admin.
+    The list of ``provider_identifier``s is cached in Redis with
+    `:1:FILTER_CACHE_KEY` key.
     """
 
-    filter_cache_key = "filtered_providers"
-    filtered_providers = cache.get(key=filter_cache_key)
+    filtered_providers = cache.get(key=FILTERED_PROVIDERS_CACHE_KEY)
     if not filtered_providers:
-        filtered_providers = models.ContentProvider.objects.filter(
-            filter_content=True
-        ).values("provider_identifier")
-        cache.set(
-            key=filter_cache_key, timeout=FILTER_CACHE_TIMEOUT, value=filtered_providers
+        filtered_providers = list(
+            models.ContentProvider.objects.filter(filter_content=True).values_list(
+                "provider_identifier", flat=True
+            )
         )
-    if provider_list := [f["provider_identifier"] for f in filtered_providers]:
-        return Q("terms", provider=provider_list)
+        cache.set(
+            key=FILTERED_PROVIDERS_CACHE_KEY,
+            timeout=FILTER_CACHE_TIMEOUT,
+            value=filtered_providers,
+        )
+    if filtered_providers:
+        return Q("terms", provider=filtered_providers)
     return None
 
 

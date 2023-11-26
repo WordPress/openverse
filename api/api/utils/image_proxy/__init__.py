@@ -1,4 +1,5 @@
 import logging
+from dataclasses import dataclass
 from typing import Literal
 from urllib.parse import urlparse
 
@@ -33,13 +34,26 @@ ORIGINAL = "original"
 THUMBNAIL_STRATEGY = Literal["photon_proxy", "original"]
 
 
+@dataclass
+class MediaInfo:
+    media_provider: str
+    media_identifier: str
+    image_url: str
+
+
+@dataclass
+class RequestConfig:
+    accept_header: str = "image/*"
+    is_full_size: bool = False
+    is_compressed: bool = True
+
+
 def get_request_params_for_extension(
     ext: str,
     headers: dict[str, str],
     image_url: str,
     parsed_image_url: urlparse,
-    is_full_size: bool,
-    is_compressed: bool,
+    request_config: RequestConfig,
 ) -> tuple[str, dict[str, str], dict[str, str]]:
     """
     Get the request params (url, params, headers) for the thumbnail proxy.
@@ -49,7 +63,10 @@ def get_request_params_for_extension(
     """
     if ext in PHOTON_TYPES:
         return get_photon_request_params(
-            parsed_image_url, is_full_size, is_compressed, headers
+            parsed_image_url,
+            request_config.is_full_size,
+            request_config.is_compressed,
+            headers,
         )
     elif ext in ORIGINAL_TYPES:
         return image_url, {}, headers
@@ -59,24 +76,23 @@ def get_request_params_for_extension(
 
 
 def get(
-    image_url: str,
-    media_identifier: str,
-    media_provider: str,
-    accept_header: str = "image/*",
-    is_full_size: bool = False,
-    is_compressed: bool = True,
+    media_info: MediaInfo,
+    request_config: RequestConfig = RequestConfig(),
 ) -> HttpResponse:
     """
     Proxy an image through Photon if its file type is supported, else return the
     original image if the file type is SVG. Otherwise, raise an exception.
     """
+    image_url = media_info.image_url
+    media_identifier = media_info.media_identifier
+
     logger = parent_logger.getChild("get")
     tallies = django_redis.get_redis_connection("tallies")
     month = get_monthly_timestamp()
 
     image_extension = get_image_extension(image_url, media_identifier)
 
-    headers = {"Accept": accept_header} | HEADERS
+    headers = {"Accept": request_config.accept_header} | HEADERS
 
     parsed_image_url = urlparse(image_url)
     domain = parsed_image_url.netloc
@@ -86,8 +102,7 @@ def get(
         headers,
         image_url,
         parsed_image_url,
-        is_full_size,
-        is_compressed,
+        request_config,
     )
 
     try:
@@ -103,7 +118,7 @@ def get(
             f"{month}:{upstream_response.status_code}"
         )
         tallies.incr(
-            f"thumbnail_response_code_by_provider:{media_provider}:"
+            f"thumbnail_response_code_by_provider:{media_info.media_provider}:"
             f"{month}:{upstream_response.status_code}"
         )
         upstream_response.raise_for_status()
@@ -133,7 +148,9 @@ def get(
                 f"thumbnail_http_error:{domain}:{month}:{code}:{exc.response.text}"
             )
             logger.warning(
-                f"Failed to render thumbnail {upstream_url=} {code=} {media_provider=}"
+                f"Failed to render thumbnail "
+                f"{upstream_url=} {code=} "
+                f"{media_info.media_provider=}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
 

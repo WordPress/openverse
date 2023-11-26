@@ -15,9 +15,9 @@ from api.docs.audio_docs import (
     source_collection,
     stats,
     tag_collection,
-    thumbnail,
-    waveform,
 )
+from api.docs.audio_docs import thumbnail as thumbnail_docs
+from api.docs.audio_docs import waveform
 from api.models import Audio
 from api.serializers.audio_serializers import (
     AudioCollectionRequestSerializer,
@@ -26,7 +26,7 @@ from api.serializers.audio_serializers import (
     AudioSerializer,
     AudioWaveformSerializer,
 )
-from api.serializers.media_serializers import MediaThumbnailRequestSerializer
+from api.utils import image_proxy
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 from api.views.media_views import MediaViewSet
 
@@ -80,21 +80,8 @@ class AudioViewSet(MediaViewSet):
     def tag_collection(self, request, tag, *_, **__):
         return super().tag_collection(request, tag, *_, **__)
 
-    @thumbnail
-    @action(
-        detail=True,
-        url_path="thumb",
-        url_name="thumb",
-        serializer_class=MediaThumbnailRequestSerializer,
-        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
-    )
-    def thumbnail(self, request, *_, **__):
-        """
-        Retrieve the scaled down and compressed thumbnail of the artwork of an
-        audio track or its audio set.
-        """
-
-        audio = self.get_object()
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
+        audio = await self.aget_object()
 
         image_url = None
         if audio_thumbnail := audio.thumbnail:
@@ -104,7 +91,20 @@ class AudioViewSet(MediaViewSet):
         if not image_url:
             raise NotFound("Could not find artwork.")
 
-        return super().thumbnail(request, audio, image_url)
+        return image_proxy.MediaInfo(
+            media_identifier=audio.identifier,
+            media_provider=audio.provider,
+            image_url=image_url,
+        )
+
+    @thumbnail_docs
+    @MediaViewSet.thumbnail_action
+    async def thumbnail(self, *args, **kwargs):
+        """
+        Retrieve the scaled down and compressed thumbnail of the artwork of an
+        audio track or its audio set.
+        """
+        return await super().thumbnail(*args, **kwargs)
 
     @waveform
     @action(
