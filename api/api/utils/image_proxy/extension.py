@@ -7,7 +7,7 @@ import sentry_sdk
 from asgiref.sync import sync_to_async
 
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.asyncio import fire_and_forget
+from api.utils.asyncio import do_not_wait_for
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
@@ -37,7 +37,7 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
             else:
                 ext = None
 
-            fire_and_forget(sync_to_async(cache.set)(key, ext if ext else "unknown"))
+            do_not_wait_for(sync_to_async(cache.set)(key, ext if ext else "unknown"))
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
             raise UpstreamThumbnailException(

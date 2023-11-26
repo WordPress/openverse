@@ -6,23 +6,23 @@ from collections.abc import Awaitable
 parent_logger = logging.getLogger(__name__)
 
 
-_fire_and_forget_logger = parent_logger.getChild("fire_and_forget")
+_do_not_wait_for_logger = parent_logger.getChild("do_not_wait_for")
 
 
-def fire_and_forget(awaitable: Awaitable) -> None:
+def do_not_wait_for(awaitable: Awaitable) -> None:
     """
     Consume an awaitable without waiting for it to finish.
 
-    This allows us to "fire and forget" an async function that
-    we don't care about the result of. This is useful, for example,
-    if some operation creates a side effect that isn't necessary for
-    the response we're processing (e.g., Redis tallying).
+    This allows us to call an async function that we don't care about
+    the result of, without needing to wait for it to complete. This is
+    useful, for example, if some operation creates a side effect that
+    isn't necessary for the response we're processing (e.g., Redis tallying).
     """
     try:
         loop = asyncio.get_running_loop()
     except RuntimeError as exc:
-        _fire_and_forget_logger.error(
-            "`fire_and_forget` must be called inside a running" " event loop."
+        _do_not_wait_for_logger.error(
+            "`do_not_wait_for` must be called inside a running event loop."
         )
         raise exc
 

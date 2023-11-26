@@ -16,7 +16,7 @@ from asgiref.sync import sync_to_async
 from sentry_sdk import push_scope, set_context
 
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.asyncio import fire_and_forget
+from api.utils.asyncio import do_not_wait_for
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
 from api.utils.image_proxy.photon import get_photon_request_params
@@ -150,7 +150,7 @@ async def get(
             params=params,
             headers=headers,
         )
-        fire_and_forget(
+        do_not_wait_for(
             _tally_response(tallies, media_info, month, domain, upstream_response)
         )
         upstream_response.raise_for_status()
@@ -189,7 +189,7 @@ async def get(
                 sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):
             code = exc.response.status_code
-            fire_and_forget(
+            do_not_wait_for(
                 tallies_incr(
                     f"thumbnail_http_error:{domain}:{month}:{code}:{exc.response.text}"
                 )
