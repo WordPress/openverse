@@ -112,7 +112,7 @@ async def get(
     request_config: RequestConfig = RequestConfig(),
 ) -> HttpResponse:
     """
-    Retrieve proxied image from site accelerator.
+    Retrieve the proxied image.
 
     Proxy an image through Photon if its file type is supported, else return the
     original image if the file type is SVG. Otherwise, raise an exception.
@@ -141,7 +141,6 @@ async def get(
     )
 
     try:
-        # todo: refactor to use aiohttp shared session
         session = await get_aiohttp_session()
 
         upstream_response = await session.get(
