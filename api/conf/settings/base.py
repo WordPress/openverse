@@ -22,7 +22,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "api.middleware.client_application_middleware.client_application_middleware",
+    "api.middleware.response_headers_middleware.response_headers_middleware",
 ]
 
 # Storage

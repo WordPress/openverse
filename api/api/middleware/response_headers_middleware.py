@@ -1,7 +1,16 @@
 from api.utils.oauth2_helper import get_token_info
 
 
-def client_application_middleware(get_response):
+def response_headers_middleware(get_response):
+    """
+    Add standard response headers used by Nginx logging.
+
+    These headers help Openverse more easily and directly connect
+    individual requests to each other. This is particularly useful
+    when evaluating traffic patterns from individual source IPs
+    to identify malicious requesters or request patterns.
+    """
+
     def middleware(request):
         response = get_response(request)
 
