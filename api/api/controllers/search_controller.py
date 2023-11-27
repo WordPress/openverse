@@ -173,7 +173,7 @@ def get_excluded_providers_query() -> Q | None:
     To exclude a provider, set ``filter_content`` to ``True`` in the
     ``ContentProvider`` model in Django admin.
     The list of ``provider_identifier``s is cached in Redis with
-    `:<version>:FILTER_CACHE_KEY` key.
+    `:FILTERED_PROVIDERS_CACHE_VERSION:FILTERED_PROVIDERS_CACHE_KEY` key.
     """
 
     filtered_providers = cache.get(
