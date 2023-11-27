@@ -1,5 +1,5 @@
 <template>
-  <div class="px-6 lg:px-10">
+  <div class="p-6 lg:p-10">
     <VCollectionHeader
       v-if="collectionParams"
       :collection-params="collectionParams"
