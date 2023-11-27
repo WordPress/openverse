@@ -18,7 +18,7 @@ import { computed, defineComponent, onMounted, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
 
-import { useRoute } from "@nuxtjs/composition-api"
+import { useRoute, useRouter } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
@@ -35,6 +35,7 @@ export default defineComponent({
   setup() {
     const loadMoreSectionRef = ref(null)
     const route = useRoute()
+    const router = useRouter()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -46,19 +47,26 @@ export default defineComponent({
       storeToRefs(mediaStore)
     const { searchTerm } = storeToRefs(searchStore)
 
+    const searchStarted = computed(() =>
+      searchStore.strategy === "default"
+        ? searchTerm.value !== ""
+        : searchStore.collectionParams !== null
+    )
+
     /**
      * Whether we should show the "Load more" button.
      * If the user has entered a search term, there is at least 1 page of results,
      * there has been no fetching error, and there are more results to fetch,
      * we show the button.
      */
-    const canLoadMore = computed(
-      () =>
-        searchTerm.value !== "" &&
-        !fetchState.value.fetchingError &&
-        !fetchState.value.isFinished &&
-        resultCount.value > 0
-    )
+    const canLoadMore = computed(() => {
+      return Boolean(
+        searchStarted.value &&
+          !fetchState.value.fetchingError &&
+          !fetchState.value.isFinished &&
+          resultCount.value > 0
+      )
+    })
 
     const reachResultEndEventSent = ref(false)
     /**
@@ -76,6 +84,14 @@ export default defineComponent({
         query: searchStore.searchTerm,
         searchType: searchStore.searchType,
         resultPage: currentPage.value || 1,
+      })
+
+      router.push({
+        path: route.value.path,
+        query: {
+          ...route.value.query,
+          page: `${currentPage.value + 1}`,
+        },
       })
 
       await mediaStore.fetchMedia({
