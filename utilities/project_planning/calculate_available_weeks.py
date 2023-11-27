@@ -11,7 +11,7 @@ Assumes the following:
 
 programmers_with_reduced_availability = {
     # _ is part-time (safer to assume that isn't going to change)
-    "_": (52 / 2) * 0.6,
+    "_": 52 * 0.6,
     # __ is on parental leave for the first quarter of the year
     "__": 52 - (52 / 4),
     # assume whoever is lead at any point probably has 1/3rd availability for dev work
