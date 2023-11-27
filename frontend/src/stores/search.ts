@@ -294,6 +294,8 @@ export const useSearchStore = defineStore("search", {
       if (this.searchTerm === formattedTerm) return
       this.searchTerm = formattedTerm
       this.localSearchTerm = formattedTerm
+      this.collectionParams = null
+      this.strategy = "default"
 
       this.addRecentSearch(formattedTerm)
 
