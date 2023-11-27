@@ -4,7 +4,10 @@ import pytest
 from elasticsearch_dsl import Q
 
 from api.controllers import search_controller
-from api.controllers.search_controller import DEFAULT_SQS_FLAGS, FILTERED_PROVIDERS_CACHE_KEY
+from api.controllers.search_controller import (
+    DEFAULT_SQS_FLAGS,
+    FILTERED_PROVIDERS_CACHE_KEY,
+)
 
 
 pytestmark = pytest.mark.django_db

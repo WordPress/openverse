@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import logging as log
+import re
 from math import ceil
 from typing import TYPE_CHECKING
 
@@ -45,7 +46,6 @@ if TYPE_CHECKING:
     )
 
 module_logger = logging.getLogger(__name__)
-
 
 NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
@@ -284,9 +284,11 @@ def build_search_query(
     # individual field-level queries specified.
     if "q" in search_params.data:
         query = _quote_escape(search_params.data["q"])
+        sqs_flags = extract_flags_from_query(query, query_name="q")
+
         base_query_kwargs = {
             "query": query,
-            "flags": DEFAULT_SQS_FLAGS,
+            "flags": sqs_flags,
             "fields": DEFAULT_SEARCH_FIELDS,
             "default_operator": "AND",
         }
@@ -299,7 +301,7 @@ def build_search_query(
         quotes_stripped = query.replace('"', "")
         exact_match_boost = Q(
             "simple_query_string",
-            flags=DEFAULT_SQS_FLAGS,
+            flags=sqs_flags,
             fields=["title"],
             query=f"{quotes_stripped}",
             boost=10000,
@@ -312,10 +314,11 @@ def build_search_query(
             ("tags", "tags.name"),
         ]:
             if field_value := search_params.data.get(field):
+                sqs_flags = extract_flags_from_query(field_value, query_name="field")
                 search_queries["must"].append(
                     Q(
                         "simple_query_string",
-                        flags=DEFAULT_SQS_FLAGS,
+                        flags=sqs_flags,
                         query=_quote_escape(field_value),
                         fields=[field_name],
                     )
@@ -337,6 +340,21 @@ def build_search_query(
         must=search_queries["must"],
         should=search_queries["should"],
     )
+
+
+def extract_flags_from_query(query: str, query_name) -> str:
+    sqs_flags = DEFAULT_SQS_FLAGS
+    flags = [
+        ("PRECEDENCE", r"\(.*\)"),
+        ("ESCAPE", r"\\"),
+        ("FUZZY|SLOP", r"~\d"),
+        ("PREFIX", r"\*"),
+    ]
+    for flag, pattern in flags:
+        if bool(re.search(pattern, query)):
+            log.info(f"Special feature in `{query_name}` query string. {flag}: {query}")
+            sqs_flags += f"|{flag}"
+    return sqs_flags
 
 
 def build_collection_query(
