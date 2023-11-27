@@ -1,22 +1,14 @@
 <template>
-  <VCollectionPage
-    v-if="collectionParams"
-    :collection-params="collectionParams"
-    :results="results"
-    media-type="image"
-  />
+  <VCollectionPage media-type="image" />
 </template>
 
 <script lang="ts">
-import { computed, ref } from "vue"
 import { defineComponent, useFetch } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
-import { IMAGE } from "~/constants/media"
+import { useSearchStore } from "~/stores/search"
 import { validateCollectionParams } from "~/utils/validate-collection-params"
-
-import type { Results } from "~/types/result"
+import { IMAGE } from "~/constants/media"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
@@ -46,22 +38,10 @@ export default defineComponent({
   },
   setup() {
     const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
-
-    const collectionParams = computed(() => searchStore.collectionParams)
-
-    const results = ref<Results>({ type: IMAGE, items: [] })
 
     useFetch(async () => {
       await mediaStore.fetchMedia()
-      results.value.items = mediaStore.resultItems[IMAGE]
     })
-
-    return {
-      collectionParams,
-
-      results,
-    }
   },
 })
 </script>

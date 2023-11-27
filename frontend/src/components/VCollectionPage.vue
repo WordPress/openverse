@@ -8,63 +8,64 @@
       class="mb-6"
     />
     <VAudioCollection
-      v-if="results.type === 'audio'"
+      v-if="mediaType === 'audio'"
       collection-label="audio collection"
       :fetch-state="fetchState"
       kind="collection"
-      :results="results.items"
+      :results="results.audio"
     />
     <VImageGrid
-      v-if="results.type === 'image'"
+      v-if="mediaType === 'image'"
       image-grid-label="image collection"
       :fetch-state="fetchState"
       kind="collection"
-      :results="results.items"
+      :results="results.image"
     />
   </div>
 </template>
 <script lang="ts">
-import { computed, PropType } from "vue"
-
-import { CollectionParams } from "~/types/search"
-import { SupportedMediaType } from "~/constants/media"
+import { computed, defineComponent, PropType } from "vue"
 
 import { useMediaStore } from "~/stores/media"
-
-import { Results } from "~/types/result"
+import { useSearchStore } from "~/stores/search"
+import type { SupportedMediaType } from "~/constants/media"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
-export default {
+export default defineComponent({
   name: "VCollectionPage",
   components: { VAudioCollection, VImageGrid, VCollectionHeader },
   props: {
-    results: {
-      type: Object as PropType<Results>,
-      required: true,
-    },
-    collectionParams: {
-      type: Object as PropType<CollectionParams>,
-      required: true,
-    },
     mediaType: {
       type: String as PropType<SupportedMediaType>,
       required: true,
     },
-    creatorUrl: {
-      type: String,
-    },
   },
-  setup() {
+  setup(props) {
     const mediaStore = useMediaStore()
 
     const fetchState = computed(() => mediaStore.fetchState)
+    const results = computed(() => ({
+      audio: mediaStore.resultItems.audio,
+      image: mediaStore.resultItems.image,
+    }))
+
+    const creatorUrl = computed(() => {
+      const media = results.value[props.mediaType]
+      return media.length > 0 ? media[0].creator_url : undefined
+    })
+
+    const searchStore = useSearchStore()
+    const collectionParams = computed(() => searchStore.collectionParams)
 
     return {
       fetchState,
+      results,
+      creatorUrl,
+      collectionParams,
     }
   },
-}
+})
 </script>

@@ -1,22 +1,14 @@
 <template>
-  <VCollectionPage
-    v-if="collectionParams"
-    :collection-params="collectionParams"
-    :results="results"
-    media-type="audio"
-  />
+  <VCollectionPage media-type="audio" />
 </template>
 
 <script lang="ts">
-import { computed, ref } from "vue"
 import { defineComponent, useFetch } from "@nuxtjs/composition-api"
 
-import { useSearchStore } from "~/stores/search"
-import { AUDIO } from "~/constants/media"
 import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
 import { validateCollectionParams } from "~/utils/validate-collection-params"
-
-import { Results } from "~/types/result"
+import { AUDIO } from "~/constants/media"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
@@ -42,22 +34,10 @@ export default defineComponent({
   },
   setup() {
     const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
-
-    const collectionParams = computed(() => searchStore.collectionParams)
-
-    const results = ref<Results>({ type: AUDIO, items: [] })
 
     useFetch(async () => {
       await mediaStore.fetchMedia()
-      results.value.items = mediaStore.resultItems[AUDIO]
     })
-
-    return {
-      collectionParams,
-
-      results,
-    }
   },
 })
 </script>
