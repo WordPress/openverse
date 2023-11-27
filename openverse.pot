@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-11-18T07:17:25+00:00\n"
+"POT-Creation-Date: 2023-11-27T06:49:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1571,6 +1571,14 @@ msgctxt "mediaDetails.information.category"
 msgid "Category"
 msgstr ""
 
+msgctxt "mediaDetails.scroll.forward"
+msgid "Scroll forward"
+msgstr ""
+
+msgctxt "mediaDetails.scroll.back"
+msgid "Scroll backward"
+msgstr ""
+
 #: src/components/VMediaInfo/VMediaReuse.vue:3
 #: src/components/VMediaInfo/VMediaReuse.vue:7
 msgctxt "mediaDetails.reuse.title"
@@ -1709,7 +1717,7 @@ msgid "read more about the tool"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:62
+#: src/pages/image/_id/index.vue:74
 msgctxt "mediaDetails.aria.creatorUrl"
 msgid "author ###name###"
 msgstr ""
@@ -1834,7 +1842,7 @@ msgid "Back to results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:57
+#: src/pages/image/_id/index.vue:69
 msgctxt "imageDetails.creator"
 msgid "by ###name###"
 msgstr ""
@@ -2088,7 +2096,7 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:37
+#: src/components/VAudioTrack/layouts/VFullLayout.vue:54
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:43
 msgctxt "audioTrack.creator"
 msgid "by ###creator###"
