@@ -181,12 +181,19 @@ class CheckRates(APIView):
             return Response(status=403, data="Forbidden")
 
         access_token = str(request.auth)
-        client_id, rate_limit_model, verified = get_token_info(access_token)
+        token_info = get_token_info(access_token)
+
+        if not token_info:
+            # This shouldn't happen if `request.auth` was true above,
+            # but better safe than sorry
+            return Response(status=403, data="Forbidden")
+
+        client_id = token_info.client_id
 
         if not client_id:
             return Response(status=403, data="Forbidden")
 
-        throttle_type = rate_limit_model
+        throttle_type = token_info.rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
         if throttle_type == "standard":
             sustained_throttle_key = throttle_key.format(
@@ -223,7 +230,7 @@ class CheckRates(APIView):
                 "requests_this_minute": burst_requests,
                 "requests_today": sustained_requests,
                 "rate_limit_model": throttle_type,
-                "verified": verified,
+                "verified": token_info.verified,
             }
         )
         return Response(status=200, data=response_data.data)
