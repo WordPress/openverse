@@ -503,6 +503,10 @@
       unknown: "Unknown",
       category: "Category",
     },
+    scroll: {
+      forward: "Scroll forward",
+      back: "Scroll backward",
+    },
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
