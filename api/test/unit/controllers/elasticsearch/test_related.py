@@ -12,7 +12,6 @@ import pook
 import pytest
 
 from api.controllers.elasticsearch import related
-from api.controllers.search_controller import FILTERED_PROVIDERS_CACHE_KEY
 
 
 pytestmark = pytest.mark.django_db
@@ -20,13 +19,14 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture
 def excluded_providers_cache():
+    cache_key = "filtered_providers"
     excluded_provider = "excluded_provider"
-    cache_value = [excluded_provider]
-    cache.set(FILTERED_PROVIDERS_CACHE_KEY, cache_value, timeout=1)
+    cache_value = [{"provider_identifier": excluded_provider}]
+    cache.set(cache_key, cache_value, timeout=1)
 
     yield excluded_provider
 
-    cache.delete(FILTERED_PROVIDERS_CACHE_KEY)
+    cache.delete(cache_key)
 
 
 @mock.patch(
