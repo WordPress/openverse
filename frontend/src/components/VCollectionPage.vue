@@ -8,18 +8,18 @@
       class="mb-6"
     />
     <VAudioCollection
-      v-if="mediaType === 'audio'"
+      v-if="results.type === 'audio'"
       collection-label="audio collection"
       :fetch-state="fetchState"
       kind="collection"
-      :results="results.audio"
+      :results="results.items"
     />
     <VImageGrid
-      v-if="mediaType === 'image'"
+      v-if="results.type === 'image'"
       image-grid-label="image collection"
       :fetch-state="fetchState"
       kind="collection"
-      :results="results.image"
+      :results="results.items"
     />
   </div>
 </template>
@@ -29,6 +29,8 @@ import { computed, defineComponent, PropType } from "vue"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import type { SupportedMediaType } from "~/constants/media"
+
+import { Results } from "~/types/result"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
@@ -47,13 +49,15 @@ export default defineComponent({
     const mediaStore = useMediaStore()
 
     const fetchState = computed(() => mediaStore.fetchState)
-    const results = computed(() => ({
-      audio: mediaStore.resultItems.audio,
-      image: mediaStore.resultItems.image,
-    }))
+    const results = computed<Results>(() => {
+      return {
+        type: props.mediaType,
+        items: mediaStore.resultItems[props.mediaType],
+      } as Results
+    })
 
     const creatorUrl = computed(() => {
-      const media = results.value[props.mediaType]
+      const media = results.value.items
       return media.length > 0 ? media[0].creator_url : undefined
     })
 
