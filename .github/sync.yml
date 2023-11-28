@@ -11,6 +11,10 @@ group:
         dest: automations/python/
       - source: automations/data/
         dest: automations/data/
+      - source: automations/js/src/project_automation/
+        dest: automations/js/src/project_automation/
+      - source: automations/js/src/utils/
+        dest: automations/js/src/utils/
       # Synced workflows
       - source: .github/workflows/issue_automations.yml
         dest: .github/workflows/issue_automations.yml
