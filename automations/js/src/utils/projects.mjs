@@ -208,8 +208,10 @@ class Project {
    * @param cardId {string} the ID of the card to move
    * @param destColumn {string} the name of the column where to move it
    * @returns {Promise<string>} the ID of the card that was moved
+   * @param core {import('@actions/core')} for logging
    */
-  async moveCard(cardId, destColumn) {
+  async moveCard(cardId, destColumn, core = null) {
+    if (core) core.debug(`Moving card to '${destColumn}'`)
     return await this.setCustomChoiceField(cardId, 'Status', destColumn)
   }
 }
@@ -219,7 +221,7 @@ class Project {
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  * @param name {string} the name of the project (without the 'Openverse' prefix)
- * @returns {Project} the `Project` instance to interact with the project board
+ * @returns {Promise<Project>} the `Project` instance to interact with the project board
  */
 export async function getBoard(octokit, name) {
   const projectNumber = PROJECT_NUMBERS[name]

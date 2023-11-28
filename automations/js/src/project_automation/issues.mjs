@@ -1,7 +1,5 @@
 import { getBoard } from '../utils/projects.mjs'
 
-import { debug } from '@actions/core'
-
 /**
  * Set the "Priority" custom field based on the issue's labels. Also move
  * the card for critical issues directly to the "📅 To Do" column.
@@ -9,9 +7,10 @@ import { debug } from '@actions/core'
  * @param issue {import('@octokit/rest')}
  * @param board {import('../utils/projects.mjs').Project}
  * @param card {import('../utils/projects.mjs').Card}
+ * @param core {import('@actions/core')} for logging
  */
-async function syncPriority(issue, board, card) {
-  debug('Starting syncPriority for issue:', issue.number)
+async function syncPriority(issue, board, card, core) {
+  core.debug(`Starting syncPriority for issue: ${issue.number}`)
   const priority = issue.labels.find((label) =>
     label.name.includes('priority')
   )?.name
@@ -20,9 +19,7 @@ async function syncPriority(issue, board, card) {
     await board.setCustomChoiceField(card.id, 'Priority', priority)
   }
   if (priority === '🟥 priority: critical') {
-    console.log("::debug::Moving card to 'To Do' for critical priority issue")
-    await board.moveCard(card.id, board.columns.ToDo)
-    console.log("::debug::Card moved to 'To Do' column")
+    await board.moveCard(card.id, board.columns.ToDo, core)
   }
 }
 
@@ -31,82 +28,92 @@ async function syncPriority(issue, board, card) {
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  * @param context {import('@actions/github').context} info about the current event
+ * @param core {import('@actions/core')} Core functions for setting results, logging, registering secrets and exporting variables across actions
  */
-export const main = async (octokit, context) => {
+export const main = async (octokit, context, core) => {
   const { EVENT_ACTION: eventAction } = process.env
-  console.log('::debug::Event action received:', eventAction)
+
+  core.debug(`Event action received: ${eventAction}`)
 
   const issue = context.payload.issue
   const label = context.payload.label
-  console.log('::debug::Issue details:', issue)
+  core.info('Issue details:', issue)
 
   if (issue.labels.some((label) => label.name === '🧭 project: thread')) {
-    console.log('::debug::Issue is a project thread. Exiting.')
+    core.warning('Issue is a project thread. Exiting.')
     process.exit(0)
   }
 
-  const backlogBoard = await getBoard(octokit, 'Backlog')
-  console.log('::debug::Backlog board fetched')
+  await core.group('Processing Issue or PR', async () => {
+    core.debug('Getting instance for the project')
+    const backlogBoard = await getBoard(octokit, 'Backlog')
 
-  const card = await backlogBoard.addCard(issue.node_id)
-  console.log('::debug::Card created or fetched for the issue:', card.id)
+    core.debug('Adding the issue or PR to the project')
+    const card = await backlogBoard.addCard(issue.node_id)
 
-  switch (eventAction) {
-    case 'opened':
-    case 'reopened': {
-      console.log('::debug::Issue opened or reopened')
-      if (issue.labels.some((label) => label.name === '⛔ status: blocked')) {
-        console.log(
-          "::debug::Issue is blocked. Moving card to 'Blocked' column"
-        )
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
-      } else {
-        console.log("::debug::Moving card to 'Backlog'")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
-      }
-      await syncPriority(issue, backlogBoard, card)
-      break
+    switch (eventAction) {
+      case 'opened':
+      case 'reopened':
+        core.info('Issue opened or reopened')
+        if (issue.labels.some((label) => label.name === '⛔ status: blocked')) {
+          await backlogBoard.moveCard(
+            card.id,
+            backlogBoard.columns.Blocked,
+            core
+          )
+        } else {
+          await backlogBoard.moveCard(
+            card.id,
+            backlogBoard.columns.Backlog,
+            core
+          )
+        }
+        await syncPriority(issue, backlogBoard, card, core)
+        break
+
+      case 'closed':
+        core.info('Issue closed')
+        if (issue.state_reason === 'completed') {
+          await backlogBoard.moveCard(card.id, backlogBoard.columns.Done, core)
+        } else {
+          await backlogBoard.moveCard(
+            card.id,
+            backlogBoard.columns.Discarded,
+            core
+          )
+        }
+        break
+
+      case 'assigned':
+        core.info('Issue assigned')
+        if (card.status === backlogBoard.columns.Backlog) {
+          await backlogBoard.moveCard(card.id, backlogBoard.columns.ToDo, core)
+        }
+        break
+
+      case 'labeled':
+        core.info(`Issue labeled: ${label.name}`)
+        if (label.name === '⛔ status: blocked') {
+          await backlogBoard.moveCard(
+            card.id,
+            backlogBoard.columns.Blocked,
+            core
+          )
+        }
+        await syncPriority(issue, backlogBoard, card, core)
+        break
+
+      case 'unlabeled':
+        core.info(`Label removed: ${label.name}`)
+        if (label.name === '⛔ status: blocked') {
+          await backlogBoard.moveCard(
+            card.id,
+            backlogBoard.columns.Backlog,
+            core
+          )
+        }
+        await syncPriority(issue, backlogBoard, card, core)
+        break
     }
-    case 'closed': {
-      console.log('::debug::Issue closed')
-      if (issue.state_reason === 'completed') {
-        console.log("::debug::Issue completed. Moving card to 'Done'")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Done)
-      } else {
-        console.log("::debug::Issue not completed. Moving card to 'Discarded'")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Discarded)
-      }
-      break
-    }
-    case 'assigned': {
-      console.log('::debug::Issue assigned')
-      if (card.status === backlogBoard.columns.Backlog) {
-        console.log("::debug::Moving card to 'To Do'")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.ToDo)
-      }
-      break
-    }
-    case 'labeled': {
-      console.log('::debug::Issue labeled:', label.name)
-      if (label.name === '⛔ status: blocked') {
-        console.log(
-          "::debug::Issue is blocked. Moving card to 'Blocked' column"
-        )
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
-      }
-      await syncPriority(issue, backlogBoard, card)
-      break
-    }
-    case 'unlabeled': {
-      console.log('::debug::Label removed:', label.name)
-      if (label.name === '⛔ status: blocked') {
-        console.log(
-          "::debug::'Blocked' label removed. Moving card to 'Backlog'"
-        )
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
-      }
-      await syncPriority(issue, backlogBoard, card)
-      break
-    }
-  }
+  })
 }

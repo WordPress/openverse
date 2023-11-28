@@ -3,49 +3,43 @@ import { readFileSync } from 'fs'
 import { getBoard } from '../utils/projects.mjs'
 import { PullRequest } from '../utils/pr.mjs'
 
-/**
- * Move the PR to the right column based on the number of reviews.
- *
- * @param pr {PullRequest}
- * @param prBoard {Project}
- * @param prCard {Card}
- */
-async function syncReviews(pr, prBoard, prCard) {
-  console.log('::debug::Synchronizing reviews for PR:', pr.nodeId)
+async function syncReviews(pr, prBoard, prCard, core) {
+  core.debug(`Synchronizing reviews for PR: ${pr.nodeId}`)
   const reviewDecision = pr.reviewDecision
-  console.log('::debug::Review decision:', reviewDecision)
+  core.debug(`Review decision: ${reviewDecision}`)
 
-  if (reviewDecision === 'APPROVED') {
-    console.log("::debug::Moving PR to 'Approved'")
-    await prBoard.moveCard(prCard.id, prBoard.columns.Approved)
-  } else if (reviewDecision === 'CHANGES_REQUESTED') {
-    console.log(
-      "::debug::Changes requested for PR. Moving to 'ChangesRequested'"
-    )
-    await prBoard.moveCard(prCard.id, prBoard.columns.ChangesRequested)
-  } else if (pr.reviewCounts.APPROVED === 1) {
-    console.log("::debug::PR needs 1 more review. Moving to 'Needs1Review'")
-    await prBoard.moveCard(prCard.id, prBoard.columns.Needs1Review)
-  } else {
-    console.log("::debug::PR needs 2 more reviews. Moving to 'Needs2Reviews'")
-    await prBoard.moveCard(prCard.id, prBoard.columns.Needs2Reviews)
-  }
+  await core.group(
+    `Handling review decision for PR: ${pr.nodeId}`,
+    async () => {
+      if (reviewDecision === 'APPROVED') {
+        await prBoard.moveCard(prCard.id, prBoard.columns.Approved, core)
+      } else if (reviewDecision === 'CHANGES_REQUESTED') {
+        await prBoard.moveCard(
+          prCard.id,
+          prBoard.columns.ChangesRequested,
+          core
+        )
+      } else if (pr.reviewCounts.APPROVED === 1) {
+        await prBoard.moveCard(prCard.id, prBoard.columns.Needs1Review, core)
+      } else {
+        await prBoard.moveCard(prCard.id, prBoard.columns.Needs2Reviews, core)
+      }
+    }
+  )
 }
 
-/**
- * Move all linked issues to the specified column.
- *
- * @param pr {PullRequest}
- * @param backlogBoard {Project}
- * @param destColumn {string}
- */
-async function syncIssues(pr, backlogBoard, destColumn) {
-  console.log('::debug::Synchronizing linked issues for PR:', pr.nodeId)
+async function syncIssues(pr, backlogBoard, destColumn, core) {
+  core.debug(`Synchronizing linked issues for PR: ${pr.nodeId}`)
   for (let linkedIssue of pr.linkedIssues) {
-    console.log('::debug::Processing linked issue:', linkedIssue)
-    const issueCard = await backlogBoard.addCard(linkedIssue)
-    console.log('::debug::Moving linked issue to column:', destColumn)
-    await backlogBoard.moveCard(issueCard.id, backlogBoard.columns[destColumn])
+    await core.group(`Processing linked issue: ${linkedIssue}`, async () => {
+      core.debug('Adding linked issue to board')
+      const issueCard = await backlogBoard.addCard(linkedIssue)
+      await backlogBoard.moveCard(
+        issueCard.id,
+        backlogBoard.columns[destColumn],
+        core
+      )
+    })
   }
 }
 
@@ -53,20 +47,17 @@ async function syncIssues(pr, backlogBoard, destColumn) {
  * This is the entrypoint of the script.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+ * @param context {import('@actions/github').context} info about the current event
+ * @param core {import('@actions/core')} Core functions for setting results, logging, registering secrets and exporting variables across actions
  */
-export const main = async (octokit) => {
-  console.log('::debug::Starting PR script')
+export const main = async (octokit, context, core) => {
+  core.debug('Starting PR script')
 
   const { eventName, eventAction, prNodeId } = JSON.parse(
     readFileSync('/tmp/event.json', 'utf-8')
   )
-  console.log(
-    '::debug::Event details - Name:',
-    eventName,
-    ', Action:',
-    eventAction,
-    ', PR Node ID:',
-    prNodeId
+  core.debug(
+    `Event details - Name: ${eventName}, Action: ${eventAction}, PR Node ID: ${prNodeId}`
   )
 
   const pr = new PullRequest(octokit, prNodeId)
@@ -76,49 +67,45 @@ export const main = async (octokit) => {
   const backlogBoard = await getBoard(octokit, 'Backlog')
 
   const prCard = await prBoard.addCard(pr.nodeId)
-  console.log('::debug::PR card created or fetched:', prCard.id)
+  core.debug(`PR card created or fetched: ${prCard.id}`)
 
-  if (eventName === 'pull_request_review') {
-    await syncReviews(pr, prBoard, prCard)
-  } else {
-    switch (eventAction) {
-      case 'opened':
-      case 'reopened': {
-        console.log('::debug::PR opened or reopened')
-        if (pr.isDraft) {
-          console.log("::debug::PR is a draft. Moving to 'Draft'")
-          await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
-        } else {
+  await core.group('Processing PR based on event action', async () => {
+    if (eventName === 'pull_request_review') {
+      await syncReviews(pr, prBoard, prCard)
+    } else {
+      switch (eventAction) {
+        case 'opened':
+        case 'reopened': {
+          core.debug('PR opened or reopened')
+          if (pr.isDraft) {
+            await prBoard.moveCard(prCard.id, prBoard.columns.Draft, core)
+          } else {
+            await syncReviews(pr, prBoard, prCard)
+          }
+          await syncIssues(pr, backlogBoard, 'InProgress')
+          break
+        }
+        case 'edited': {
+          await syncIssues(pr, backlogBoard, 'InProgress')
+          break
+        }
+        case 'converted_to_draft': {
+          await prBoard.moveCard(prCard.id, prBoard.columns.Draft, core)
+          break
+        }
+        case 'ready_for_review': {
+          core.debug('PR ready for review')
           await syncReviews(pr, prBoard, prCard)
+          break
         }
-        await syncIssues(pr, backlogBoard, 'InProgress')
-        break
-      }
-      case 'edited': {
-        console.log('::debug::PR edited')
-        await syncIssues(pr, backlogBoard, 'InProgress')
-        break
-      }
-      case 'converted_to_draft': {
-        console.log('::debug::PR converted to draft')
-        await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
-        break
-      }
-      case 'ready_for_review': {
-        console.log('::debug::PR ready for review')
-        await syncReviews(pr, prBoard, prCard)
-        break
-      }
-      case 'closed': {
-        console.log('::debug::PR closed')
-        if (!pr.isMerged) {
-          console.log(
-            "::debug::PR not merged. Moving linked issues to 'Backlog'"
-          )
-          await syncIssues(pr, backlogBoard, 'Backlog')
+        case 'closed': {
+          core.debug('PR closed')
+          if (!pr.isMerged) {
+            await syncIssues(pr, backlogBoard, 'Backlog')
+          }
+          break
         }
-        break
       }
     }
-  }
+  })
 }
