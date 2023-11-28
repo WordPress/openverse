@@ -217,18 +217,19 @@ export default defineComponent({
     )
 
     const searchStore = useSearchStore()
+
     const creatorHref = computed(() => {
-      return showCreator.value && props.creator
-        ? searchStore.getCollectionPath({
-            type: props.mediaType,
-            collectionParams: {
-              collection: "creator",
-              source: props.sourceSlug,
-              creator: props.creator,
-            },
-          })
-        : undefined
+      if (!props.creator) return undefined
+      return searchStore.getCollectionPath({
+        type: props.mediaType,
+        collectionParams: {
+          collection: "creator",
+          source: props.sourceSlug,
+          creator: props.creator,
+        },
+      })
     })
+
     const sourceHref = computed(() => {
       return searchStore.getCollectionPath({
         type: props.mediaType,
