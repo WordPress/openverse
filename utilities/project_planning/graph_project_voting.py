@@ -11,6 +11,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import sheet_utils
 
 INPUT_FILE = Path(__file__).parent / "data" / "votes.xlsx"
 OUTPUT_PATH = Path(__file__).parent / "output"
@@ -18,23 +19,6 @@ OUTPUT_PATH = Path(__file__).parent / "output"
 COLUMN_EFFORT = "Effort (fib)"
 COLUMN_IMPACT = "Impact (fib)"
 COLUMN_CONFIDENCE = "Confidence (1-3)"
-
-
-def get_columns_by_members(
-    frames: dict[str, pd.DataFrame],
-    members: list[str],
-    projects: pd.Series,
-    column: str,
-):
-    """
-    Create a new DataFrame which pulls out the provided column from each of the member
-    sheets, and sets the index to the project names.
-    """
-    data = pd.DataFrame([frames[name][column] for name in members], index=members)
-    # The data is transposed here because the DataFrame constructor creates a DataFrame
-    # with the projects as the columns, and the members as the index, whereas we want
-    # the projects as the index.
-    return data.T.set_index(projects)
 
 
 def plot_votes(
@@ -106,27 +90,22 @@ def main(output: Path, input_file: Path):
     # Ensure the output folder exists
     output.mkdir(parents=True, exist_ok=True)
 
-    print(f"Reading input file: {input_file}")
-    # Read the input file
-    frames = pd.read_excel(
-        input_file,
-        # Include all sheets
-        sheet_name=None,
-        # Skip the first 5 rows, which are the instructional text
-        skiprows=5,
-        # Use the first row as the header
-        header=0,
-    )
-    # Pull the project names out of the template sheet
-    projects = frames["Template"]["Name"]
+    frames, projects = sheet_utils.read_file(input_file)
+
     # Use the name of the frames as the list of voting members
     members = list(frames.keys())[1:]
     # This is planning for the *next* year, e.g. one beyond the current one
     planning_year = datetime.now().year + 1
 
-    effort = get_columns_by_members(frames, members, projects, COLUMN_EFFORT)
-    impact = get_columns_by_members(frames, members, projects, COLUMN_IMPACT)
-    confidence = get_columns_by_members(frames, members, projects, COLUMN_CONFIDENCE)
+    effort = sheet_utils.get_columns_by_members(
+        frames, members, projects, COLUMN_EFFORT
+    )
+    impact = sheet_utils.get_columns_by_members(
+        frames, members, projects, COLUMN_IMPACT
+    )
+    confidence = sheet_utils.get_columns_by_members(
+        frames, members, projects, COLUMN_CONFIDENCE
+    )
     average_confidence = confidence.mean(axis=1)
 
     plot_votes(effort, average_confidence, COLUMN_EFFORT, planning_year, output)
