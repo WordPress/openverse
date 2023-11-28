@@ -267,6 +267,10 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         serializer_context = self.get_serializer_context()
 
+        serializer_class = self.get_serializer()
+        if serializer_class.needs_db:
+            results = self.get_db_results(results)
+
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
 
