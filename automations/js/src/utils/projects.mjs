@@ -9,8 +9,6 @@
  * @typedef {{projectId: string, fields: {[p: string]: Field}}} ProjectDetails
  */
 
-import { debug } from '@actions/core'
-
 const PROJECT_NUMBERS = {
   Backlog: 75,
   PRs: 98,
@@ -165,8 +163,8 @@ class Project {
    * @param optionName {string} the updated value of the field
    * @returns {Promise<string>} the ID of the card that was updated
    */
-  async setCustomChoiceField(cardId, fieldName, optionName) {
-    debug('Setting priority:', priority, 'for card:', card.id)
+  async setCustomChoiceField(cardId, fieldName, optionName, core) {
+    core.debug('Setting priority:', priority, 'for card:', card.id)
     // Preliminary validation
     if (!this.fields[fieldName]) {
       throw new Error(`Unknown field name "${fieldName}".`)
@@ -197,7 +195,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
-    debug('Priority set for card:', card.id)
+    core.debug(`Priority set for card: ${card.id}`)
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }
 
@@ -210,9 +208,9 @@ class Project {
    * @returns {Promise<string>} the ID of the card that was moved
    * @param core {import('@actions/core')} for logging
    */
-  async moveCard(cardId, destColumn, core = null) {
-    if (core) core.debug(`Moving card to '${destColumn}'`)
-    return await this.setCustomChoiceField(cardId, 'Status', destColumn)
+  async moveCard(cardId, destColumn, core) {
+    core.debug(`Moving card to '${destColumn}'`)
+    return await this.setCustomChoiceField(cardId, 'Status', destColumn, core)
   }
 }
 

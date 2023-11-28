@@ -16,7 +16,7 @@ async function syncPriority(issue, board, card, core) {
   )?.name
 
   if (priority) {
-    await board.setCustomChoiceField(card.id, 'Priority', priority)
+    await board.setCustomChoiceField(card.id, 'Priority', priority, core)
   }
   if (priority === '🟥 priority: critical') {
     await board.moveCard(card.id, board.columns.ToDo, core)
