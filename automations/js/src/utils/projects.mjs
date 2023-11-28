@@ -9,6 +9,8 @@
  * @typedef {{projectId: string, fields: {[p: string]: Field}}} ProjectDetails
  */
 
+import { debug } from '@actions/core'
+
 const PROJECT_NUMBERS = {
   Backlog: 75,
   PRs: 98,
@@ -164,6 +166,7 @@ class Project {
    * @returns {Promise<string>} the ID of the card that was updated
    */
   async setCustomChoiceField(cardId, fieldName, optionName) {
+    debug('Setting priority:', priority, 'for card:', card.id)
     // Preliminary validation
     if (!this.fields[fieldName]) {
       throw new Error(`Unknown field name "${fieldName}".`)
@@ -194,6 +197,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
+    debug('Priority set for card:', card.id)
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }
 
