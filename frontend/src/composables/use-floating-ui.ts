@@ -12,24 +12,17 @@ import {
   Strategy,
 } from "@floating-ui/dom"
 
-export type PopoverContentProps = {
+export type UseFloatingProps = {
   visible: boolean
-  hide: () => void
-  hideOnEsc: boolean
-  hideOnClickOutside: boolean
-  autoFocusOnShow: boolean
-  autoFocusOnHide: boolean
   triggerElement: HTMLElement | null
   placement: Placement
   strategy: Strategy
   clippable: boolean
-  trapFocus: boolean
-  zIndex: number | string
 }
 
 type Props = {
   floatingElRef: Ref<HTMLElement | null>
-  floatingPropsRefs: ToRefs<PopoverContentProps>
+  floatingPropsRefs: ToRefs<UseFloatingProps>
 }
 
 // A constant offset to ensure there's a gap between

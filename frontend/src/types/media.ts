@@ -131,6 +131,7 @@ export const isMediaDetail = <T extends SupportedMediaType>(
 }
 
 export type Metadata = {
+  name?: string
   label: string
   url?: string
   value: string

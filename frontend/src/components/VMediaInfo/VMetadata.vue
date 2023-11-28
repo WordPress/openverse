@@ -1,7 +1,15 @@
 <template>
   <dl v-if="isSm" class="metadata grid gap-8" :style="columnCount">
-    <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt class="label-regular mb-1 ps-1">{{ $t(datum.label) }}</dt>
+    <div v-for="datum in metadata" :key="datum.label">
+      <VSourceProviderTooltip
+        v-if="tooltipId(datum)"
+        :describedby="tooltipId(datum)"
+        class="label-regular mb-1 flex flex-row ps-1"
+        :datum="datum"
+      />
+      <dt v-else class="label-regular mb-1 flex flex-row ps-1">
+        {{ $t(datum.label) }}
+      </dt>
       <VMetadataValue
         :datum="datum"
         @click="sendVisitSourceLinkEvent(datum.source)"
@@ -10,7 +18,19 @@
   </dl>
   <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2">
     <template v-for="datum in metadata">
-      <dt :key="`${datum.label}`" class="label-regular pt-1">
+      <VSourceProviderTooltip
+        v-if="tooltipId(datum)"
+        :key="datum.label"
+        :describedby="tooltipId(datum)"
+        class="label-regular flex flex-row pt-1"
+        :datum="datum"
+      />
+      <dt
+        v-else
+        :id="datum.label"
+        :key="datum.label"
+        class="label-regular flex flex-row pt-1"
+      >
         {{ $t(datum.label) }}
       </dt>
       <VMetadataValue
@@ -30,10 +50,11 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useUiStore } from "~/stores/ui"
 
 import VMetadataValue from "~/components/VMediaInfo/VMetadataValue.vue"
+import VSourceProviderTooltip from "~/components/VMediaInfo/VSourceProviderTooltip.vue"
 
 export default defineComponent({
   name: "VMetadata",
-  components: { VMetadataValue },
+  components: { VSourceProviderTooltip, VMetadataValue },
   props: {
     metadata: {
       type: Array as PropType<Metadata[]>,
@@ -45,6 +66,15 @@ export default defineComponent({
     const uiStore = useUiStore()
 
     const isSm = computed(() => uiStore.isBreakpoint("sm"))
+    const tooltipId = (datum: Metadata): "source" | "provider" | "" => {
+      if (
+        datum.name &&
+        (datum.name === "source" || datum.name === "provider")
+      ) {
+        return datum.name
+      }
+      return ""
+    }
 
     const columnCount = computed(() => ({
       "--column-count": props.metadata.length,
@@ -63,6 +93,7 @@ export default defineComponent({
 
     return {
       sendVisitSourceLinkEvent,
+      tooltipId,
       isSm,
       columnCount,
     }

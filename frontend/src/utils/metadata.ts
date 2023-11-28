@@ -41,6 +41,7 @@ export const getMediaMetadata = (
   const metadata: Metadata[] = []
   if (media.source && media.providerName !== media.sourceName) {
     metadata.push({
+      name: "provider",
       label: "mediaDetails.providerLabel",
       value: media.providerName || media.provider,
     })
@@ -51,6 +52,7 @@ export const getMediaMetadata = (
   )
   const sourceName = media.sourceName ?? media.providerName ?? media.provider
   metadata.push({
+    name: "source",
     label: "mediaDetails.sourceLabel",
     source: media.source ?? media.provider,
     url: sourceUrl,

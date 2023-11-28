@@ -486,6 +486,8 @@
     },
     providerLabel: "Provider",
     sourceLabel: "Source",
+    providerDescription: "Website where the content is hosted",
+    sourceDescription: "Organization that created or owns the original content",
     loading: "Loading...",
     relatedError: "Error fetching related media",
     aria: {
