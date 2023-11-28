@@ -18,7 +18,7 @@ import { computed, defineComponent, onMounted, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
 
-import { useRoute, useRouter } from "@nuxtjs/composition-api"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
@@ -35,7 +35,6 @@ export default defineComponent({
   setup() {
     const loadMoreSectionRef = ref(null)
     const route = useRoute()
-    const router = useRouter()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -84,14 +83,6 @@ export default defineComponent({
         query: searchStore.searchTerm,
         searchType: searchStore.searchType,
         resultPage: currentPage.value || 1,
-      })
-
-      router.push({
-        path: route.value.path,
-        query: {
-          ...route.value.query,
-          page: `${currentPage.value + 1}`,
-        },
       })
 
       await mediaStore.fetchMedia({
