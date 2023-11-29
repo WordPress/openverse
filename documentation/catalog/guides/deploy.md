@@ -3,8 +3,15 @@
 ## Setup
 
 1. Check
-   [Airflow](https://airflow.openverse.engineering/dagrun/list/?_flt_3_state=running)
-   to make sure no DAGs are running.
+   [the running DAGs](https://airflow.openverse.engineering/home?status=running)
+   in Airflow to make sure no DAGs are running.
+
+   ```{caution}
+   It is possible to perform a deploy if the image and audio refresh DAGs are
+   running, but only if they are on an `HttpSensor` step. If that is the case,
+   you should pause the DAG, complete the deploy, and then unpause it back.
+   ```
+
 1. Visit the
    [Catalog Docker image](https://github.com/WordPress/openverse/pkgs/container/openverse-catalog)
    page and copy the SHA of the image tagged `latest`.
