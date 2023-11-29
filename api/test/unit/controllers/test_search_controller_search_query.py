@@ -4,6 +4,10 @@ import pytest
 from elasticsearch_dsl import Q
 
 from api.controllers import search_controller
+from api.controllers.search_controller import (
+    FILTERED_PROVIDERS_CACHE_KEY,
+    FILTERED_PROVIDERS_CACHE_VERSION,
+)
 
 
 pytestmark = pytest.mark.django_db
@@ -11,14 +15,18 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture
 def excluded_providers_cache():
-    cache_key = "filtered_providers"
     excluded_provider = "excluded_provider"
-    cache_value = [{"provider_identifier": excluded_provider}]
-    cache.set(cache_key, cache_value, timeout=1)
+    cache_value = [excluded_provider]
+    cache.set(
+        key=FILTERED_PROVIDERS_CACHE_KEY,
+        version=FILTERED_PROVIDERS_CACHE_VERSION,
+        value=cache_value,
+        timeout=1,
+    )
 
     yield excluded_provider
 
-    cache.delete(cache_key)
+    cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
 
 
 def test_create_search_query_empty(media_type_config):
