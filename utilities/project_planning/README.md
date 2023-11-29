@@ -40,7 +40,7 @@ for that project.
 
 The input file is an Excel spreadsheet which looks like the following:
 
-![Excel spreadsheet](./_docs/example_spreadsheet_screenshot.png)
+![Excel spreadsheet](./_docs/example_effort_spreadsheet.png)
 
 The input file should have one "sheet" per voter, with each sheet's title being
 the member's name. Each sheet should be a copy of the first sheet, named
@@ -51,3 +51,34 @@ The output is two box plots, one for effort and one for impact, which look like
 the following:
 
 ![Box plot for effort](./_docs/example_effort.png)
+
+## Average Weeks of Work Calculation
+
+In addition to voting on effort and impact, maintainers also vote on the number
+of weeks a prospective project might take. Instructions provided to the
+maintainers are as follows:
+
+> **Instructions**:
+>
+> Provide each project in the sheet a value for each category. The scales >
+> aren't a perfect, measurable thing, so use your best judgement and > instinct.
+> A notes field is also provided, please use this for notes to > yourself after
+> all the values are combined when discussion occurs. All of the projects also
+> link back to the description provided for them by the project author.
+>
+> \# of IPs is defined for you based on the initial project plan, and total
+> weeks is calculated automatically. Please fill out how many weeks of worth you
+> believe the implementation of the project would take one person working on it
+> full time. You can use fractional values like 0.5 or 2.5.
+
+The script is used to ingest the output of the voting and produce two CSV files
+for average weeks and weighted average weeks. The weighted average weeks uses
+the confidence value as the weight for the average (although some special
+considerations had to be made when performing the actual calculation because not
+all projects had votes in all 3 confidence levels).
+
+The input file is an Excel spreadsheet which looks like the following:
+
+![Excel spreadsheet](_docs/example_weeks_spreadsheet.png)
+
+The output CSVs will have two columns: the project name and the computed weeks.
