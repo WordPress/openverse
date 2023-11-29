@@ -6,6 +6,10 @@
       ref="triggerContainerRef"
       class="flex w-min items-stretch whitespace-nowrap"
       @click="onTriggerClick"
+      @mouseenter="onTriggerMouseEnter"
+      @focusin="onTriggerMouseEnter"
+      @mouseleave="onTriggerMouseLeave"
+      @focusout="onTriggerMouseLeave"
     >
       <!--
         @slot The trigger, should be a button 99.99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the popover will not open
@@ -64,6 +68,10 @@ export default defineComponent({
    * default for each of them can take over.
    */
   props: {
+    /**
+     * Whether the popover should show when the trigger is hovered on.
+     */
+    activateOnHover: { type: Boolean, default: undefined },
     /**
      * Whether the popover should hide when the <kbd>Escape</kbd> key is pressed.
      *
@@ -164,7 +172,7 @@ export default defineComponent({
      */
     "close",
   ],
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const visibleRef = ref(false)
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
@@ -179,6 +187,17 @@ export default defineComponent({
       emit: emit as SetupContext["emit"],
     })
 
+    const onTriggerMouseEnter = () => {
+      if (props.activateOnHover) {
+        open()
+      }
+    }
+    const onTriggerMouseLeave = () => {
+      if (props.activateOnHover) {
+        close()
+      }
+    }
+
     return {
       open,
       close,
@@ -186,6 +205,8 @@ export default defineComponent({
       triggerContainerRef,
       triggerRef,
       onTriggerClick,
+      onTriggerMouseEnter,
+      onTriggerMouseLeave,
       triggerA11yProps,
     }
   },
