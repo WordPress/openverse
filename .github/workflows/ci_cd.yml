@@ -134,11 +134,12 @@ jobs:
           # - list of stack filters: `.github/filters.yml`
           # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
           script: |
-            const labels = await octokit.rest.issues.listLabelsOnIssue({
+            const labels = await github.rest.issues.listLabelsOnIssue({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
+            console.log(labels.data)
             if (labels.data.some(label => label.name.startsWith("🧱 stack: "))) {
               console.log("Stack label already applied, skipping.")
             } else {
