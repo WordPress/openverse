@@ -10,8 +10,8 @@ import click
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import pandas as pd
-
 import sheet_utils
+
 
 INPUT_FILE = Path(__file__).parent / "data" / "votes.xlsx"
 OUTPUT_PATH = Path(__file__).parent / "output"
