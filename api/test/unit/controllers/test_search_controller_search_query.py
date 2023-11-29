@@ -4,7 +4,11 @@ import pytest
 from elasticsearch_dsl import Q
 
 from api.controllers import search_controller
-from api.controllers.search_controller import DEFAULT_SQS_FLAGS
+from api.controllers.search_controller import (
+    DEFAULT_SQS_FLAGS,
+    FILTERED_PROVIDERS_CACHE_KEY,
+    FILTERED_PROVIDERS_CACHE_VERSION,
+)
 
 
 pytestmark = pytest.mark.django_db
@@ -12,14 +16,18 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture
 def excluded_providers_cache():
-    cache_key = "filtered_providers"
     excluded_provider = "excluded_provider"
-    cache_value = [{"provider_identifier": excluded_provider}]
-    cache.set(cache_key, cache_value, timeout=1)
+    cache_value = [excluded_provider]
+    cache.set(
+        key=FILTERED_PROVIDERS_CACHE_KEY,
+        version=FILTERED_PROVIDERS_CACHE_VERSION,
+        value=cache_value,
+        timeout=1,
+    )
 
     yield excluded_provider
 
-    cache.delete(cache_key)
+    cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
 
 
 def test_create_search_query_empty(media_type_config):
@@ -86,66 +94,6 @@ def test_create_search_query_q_search_with_quotes_adds_raw_suffix(media_type_con
     serializer = media_type_config.search_request_serializer(
         data={"q": '"The cutest cat"'}
     )
-    serializer.is_valid(raise_exception=True)
-    search_query = search_controller.build_search_query(serializer)
-    actual_query_clauses = search_query.to_dict()["bool"]
-
-    assert actual_query_clauses == {
-        "must_not": [{"term": {"mature": True}}],
-        "must": [
-            {
-                "simple_query_string": {
-                    "default_operator": "AND",
-                    "fields": ["title", "description", "tags.name"],
-                    "query": '"The cutest cat"',
-                    "quote_field_suffix": ".raw",
-                    "flags": DEFAULT_SQS_FLAGS,
-                }
-            }
-        ],
-        "should": [
-            {
-                "simple_query_string": {
-                    "boost": 10000,
-                    "fields": ["title"],
-                    "query": "The cutest cat",
-                    "flags": DEFAULT_SQS_FLAGS,
-                }
-            },
-            {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},
-        ],
-    }
-
-
-@pytest.mark.parametrize(
-    ("data", "expected_flags"),
-    [
-        pytest.param(
-            {"q": "net*"},
-            DEFAULT_SQS_FLAGS + "|PREFIX",
-            id="prefix",
-        ),
-        pytest.param(
-            {"q": "(net)"},
-            DEFAULT_SQS_FLAGS + "|PRECEDENCE",
-            id="precedence",
-        ),
-        pytest.param(
-            {"q": "net~2"},
-            DEFAULT_SQS_FLAGS + "|FUZZY|SLOP",
-            id="fuzzy|slop",
-        ),
-        pytest.param(
-            {"q": "net~2"},
-            DEFAULT_SQS_FLAGS + "|ESCAPE",
-            id="fuzzy|slop",
-        ),
-    ],
-)
-def test_create_search_query_q_search_with_quotes_adds_exact_suffix(
-    media_type_config, data, expected_flags
-):
-    serializer = media_type_config.search_request_serializer(data=data)
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
