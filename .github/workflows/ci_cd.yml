@@ -134,20 +134,31 @@ jobs:
           # - list of stack filters: `.github/filters.yml`
           # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
           script: |
-            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
-            const labels = JSON
-              .parse('${{ needs.get-changes.outputs.changes }}')
-              .filter(change => stacks.includes(change))
-              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
-            if (!labels.length) {
-              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
-            }
-            github.rest.issues.addLabels({
+            const labels = await github.rest.issues.listLabelsOnIssue({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels,
             })
+            console.log(labels.data)
+            if (labels.data.some(label => label.name.startsWith("🧱 stack: "))) {
+              console.log("Stack label already applied, skipping.")
+            } else {
+              const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
+              const labels = JSON
+                .parse('${{ needs.get-changes.outputs.changes }}')
+                .filter(change => stacks.includes(change))
+                .map(change => `🧱 stack: ${change.replace("_", " ")}`)
+              if (!labels.length) {
+                console.log("Couldn't determine stack, applying triage labels.")
+                labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+              }
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels,
+              })
+            }
 
   build-images:
     name: Build Docker images
