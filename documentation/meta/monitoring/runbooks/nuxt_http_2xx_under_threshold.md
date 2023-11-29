@@ -1,4 +1,4 @@
-# Run Book: Nuxt 2XX request count under threshold
+# Run Book: Nuxt 2XX responses count under threshold
 
 ```{admonition} Metadata
 Status: **Unstable**
