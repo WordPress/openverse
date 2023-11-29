@@ -47,6 +47,7 @@ if TYPE_CHECKING:
 
 module_logger = logging.getLogger(__name__)
 
+
 NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
@@ -288,11 +289,11 @@ def build_search_query(
     # individual field-level queries specified.
     if "q" in search_params.data:
         query = _quote_escape(search_params.data["q"])
-        sqs_flags = extract_flags_from_query(query, query_name="q")
+        log_query_features(query, query_name="q")
 
         base_query_kwargs = {
             "query": query,
-            "flags": sqs_flags,
+            "flags": DEFAULT_SQS_FLAGS,
             "fields": DEFAULT_SEARCH_FIELDS,
             "default_operator": "AND",
         }
@@ -305,7 +306,7 @@ def build_search_query(
         quotes_stripped = query.replace('"', "")
         exact_match_boost = Q(
             "simple_query_string",
-            flags=sqs_flags,
+            flags=DEFAULT_SQS_FLAGS,
             fields=["title"],
             query=f"{quotes_stripped}",
             boost=10000,
@@ -318,11 +319,11 @@ def build_search_query(
             ("tags", "tags.name"),
         ]:
             if field_value := search_params.data.get(field):
-                sqs_flags = extract_flags_from_query(field_value, query_name="field")
+                log_query_features(field_value, query_name="field")
                 search_queries["must"].append(
                     Q(
                         "simple_query_string",
-                        flags=sqs_flags,
+                        flags=DEFAULT_SQS_FLAGS,
                         query=_quote_escape(field_value),
                         fields=[field_name],
                     )
@@ -346,8 +347,7 @@ def build_search_query(
     )
 
 
-def extract_flags_from_query(query: str, query_name) -> str:
-    sqs_flags = DEFAULT_SQS_FLAGS
+def log_query_features(query: str, query_name) -> None:
     flags = [
         ("PRECEDENCE", r"\(.*\)"),
         ("ESCAPE", r"\\"),
@@ -357,8 +357,6 @@ def extract_flags_from_query(query: str, query_name) -> str:
     for flag, pattern in flags:
         if bool(re.search(pattern, query)):
             log.info(f"Special feature in `{query_name}` query string. {flag}: {query}")
-            sqs_flags += f"|{flag}"
-    return sqs_flags
 
 
 def build_collection_query(
