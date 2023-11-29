@@ -139,7 +139,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
-            if labels.data.some(label => label.name.startsWith("🧱 stack: ")) {
+            if (labels.data.some(label => label.name.startsWith("🧱 stack: "))) {
               console.log("Stack label already applied, skipping.")
             } else {
               const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
