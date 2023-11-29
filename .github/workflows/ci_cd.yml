@@ -112,6 +112,8 @@ jobs:
           key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Run pre-commit to lint files
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           just precommit
           just lint
