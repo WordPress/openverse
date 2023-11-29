@@ -1,4 +1,4 @@
-# Run Book: Nuxt Production Average Response Time above threshold
+# Run Book: Nuxt Production P99 Response Time above threshold
 
 ```{admonition} Metadata
 Status: **Unstable**
