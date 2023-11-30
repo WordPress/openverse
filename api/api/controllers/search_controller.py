@@ -60,6 +60,12 @@ QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
 DEFAULT_BOOST = 10000
 DEFAULT_SEARCH_FIELDS = ["title", "description", "tags.name"]
 DEFAULT_SQS_FLAGS = "AND|NOT|PHRASE|WHITESPACE"
+UNUSED_SQS_FLAGS = [
+    ("PRECEDENCE", r"\(.*\)"),
+    ("ESCAPE", r"\\"),
+    ("FUZZY|SLOP", r"~\d"),
+    ("PREFIX", r"\*"),
+]
 
 
 def _quote_escape(query_string):
@@ -348,15 +354,19 @@ def build_search_query(
 
 
 def log_query_features(query: str, query_name) -> None:
-    flags = [
-        ("PRECEDENCE", r"\(.*\)"),
-        ("ESCAPE", r"\\"),
-        ("FUZZY|SLOP", r"~\d"),
-        ("PREFIX", r"\*"),
-    ]
-    for flag, pattern in flags:
+    query_flags = []
+    for flag, pattern in UNUSED_SQS_FLAGS:
         if bool(re.search(pattern, query)):
-            log.info(f"Special feature in `{query_name}` query string. {flag}: {query}")
+            query_flags.append(flag)
+    if query_flags:
+        log.info(
+            {
+                "log_message": "Special features present in query",
+                "query_name": query_name,
+                "query": query,
+                "flags": query_flags,
+            }
+        )
 
 
 def build_collection_query(
