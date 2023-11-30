@@ -181,17 +181,26 @@ export default defineComponent({
     })
 
     const { sendCustomEvent } = useAnalytics()
-    const sendSelectSearchResultEvent = () => {
-      sendCustomEvent("SELECT_SEARCH_RESULT", {
-        id: props.image.id,
-        kind: props.kind,
-        mediaType: IMAGE,
-        provider: props.image.provider,
-        query: props.searchTerm || "",
-        relatedTo: props.relatedTo,
-        sensitivities: props.image.sensitivity?.join(",") ?? "",
-        isBlurred: shouldBlur.value,
-      })
+
+    /**
+     * If the user left clicks on a search result, send
+     * the SELECT_SEARCH_RESULT custom event
+     * @param event - the mouse click event
+     */
+    const sendSelectSearchResultEvent = (event: MouseEvent) => {
+        if (event.button !== 1) return 
+
+        sendCustomEvent("SELECT_SEARCH_RESULT", {
+          id: props.image.id,
+          kind: props.kind,
+          mediaType: IMAGE,
+          provider: props.image.provider,
+          query: props.searchTerm || "",
+          relatedTo: props.relatedTo,
+          sensitivities: props.image.sensitivity?.join(",") ?? "",
+          isBlurred: shouldBlur.value,
+        })
+
     }
 
     const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
