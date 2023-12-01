@@ -46,11 +46,11 @@ export default defineComponent({
       storeToRefs(mediaStore)
     const { searchTerm } = storeToRefs(searchStore)
 
-    const searchStarted = computed(() =>
-      searchStore.strategy === "default"
+    const searchStarted = computed(() => {
+      return searchStore.strategy === "default"
         ? searchTerm.value !== ""
         : searchStore.collectionParams !== null
-    )
+    })
 
     /**
      * Whether we should show the "Load more" button.

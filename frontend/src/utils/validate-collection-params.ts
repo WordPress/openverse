@@ -11,6 +11,18 @@ import { useProviderStore } from "~/stores/provider"
 import { warn } from "~/utils/console"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
+/**
+ * Validate the params for a collection page.
+ *
+ * @param firstParam - The first param in the path, either "tag" or "source".
+ * If the first param is "source", the collection is either a source collection
+ * or a creator collection.
+ * @param mediaType - The media type of the collection.
+ * @param params - `params.pathMatch` is the part of the path after the collection name:
+ * `/sourceName` or `/sourceName/creator/creatorName`.
+ * @param $pinia - Pinia instance, necessary to check the feature flag, and validate the
+ * sources using providerStore.
+ */
 export function validateCollectionParams({
   firstParam,
   mediaType,
