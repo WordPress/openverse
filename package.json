@@ -19,7 +19,7 @@
     "pnpm": ">= 7.17.1"
   },
   "volta": {
-    "node": "18.16.0"
+    "node": "18.19.0"
   },
   "devDependencies": {
     "@openverse/eslint-plugin": "workspace:0.0.0",
