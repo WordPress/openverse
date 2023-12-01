@@ -55,7 +55,7 @@ importers:
       '@nuxtjs/storybook': ^4.3.2
       '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1
-      '@pinia/testing': ^0.0.15
+      '@pinia/testing': ^0.1.0
       '@playwright/test': 1.30.0
       '@popperjs/core': ^2.11.8
       '@tailwindcss/typography': ^0.5.10
@@ -170,7 +170,7 @@ importers:
       '@nuxt/types': 2.17.2
       '@nuxt/typescript-build': 3.0.1_y67xwut7amwh3x3b7rqky24ygu
       '@nuxtjs/storybook': 4.3.2_ctd42e6ccltq5shvrwm6z3lmy4
-      '@pinia/testing': 0.0.15_pinia@2.0.33+vue@2.7.15
+      '@pinia/testing': 0.1.3_pinia@2.0.33+vue@2.7.15
       '@playwright/test': 1.30.0
       '@tailwindcss/typography': 0.5.10_tailwindcss@3.3.5
       '@testing-library/dom': 8.13.0
@@ -5541,10 +5541,10 @@ packages:
       - vue
     dev: false
 
-  /@pinia/testing/0.0.15_pinia@2.0.33+vue@2.7.15:
-    resolution: {integrity: sha512-Ykz5sPUVDphDMssA27+ExPSzxqfn7Y3jax77KA0AChDB6ODu31CnXIwoiUG+U5WA6ey7gzHkZh8wlnAtzVnB8g==}
+  /@pinia/testing/0.1.3_pinia@2.0.33+vue@2.7.15:
+    resolution: {integrity: sha512-D2Ds2s69kKFaRf2KCcP1NhNZEg5+we59aRyQalwRm7ygWfLM25nDH66267U3hNvRUOTx8ofL24GzodZkOmB5xw==}
     peerDependencies:
-      pinia: '>=2.0.31'
+      pinia: '>=2.1.5'
     dependencies:
       pinia: 2.0.33_tjwovdcl2yyditmwnrhcyphvm4
       vue-demi: 0.14.6_vue@2.7.15

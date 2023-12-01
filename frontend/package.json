@@ -103,7 +103,7 @@
     "@nuxt/types": "^2.17.2",
     "@nuxt/typescript-build": "^3.0.1",
     "@nuxtjs/storybook": "^4.3.2",
-    "@pinia/testing": "^0.0.15",
+    "@pinia/testing": "^0.1.0",
     "@playwright/test": "1.30.0",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/dom": "^8.13.0",
