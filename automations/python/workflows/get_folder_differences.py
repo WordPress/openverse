@@ -87,6 +87,24 @@ def convert_file_path_to_url(path: str) -> str:
     return f"{BASE_URL}{path}"
 
 
+def convert_file_or_dir_path_to_url(path: str) -> list[str]:
+    """
+    Convert a file or directory path to URLs.
+
+    This function applies the transformation ``convert_file_path_to_url`` to the
+    given file or every descendant file in the given directory.
+
+    :param path: the file or directory path to transform
+    :return: the list of transformed file paths
+    """
+
+    if (path_obj := Path(path)).is_dir():
+        paths = [str(item) for item in path_obj.rglob("*") if item.is_file()]
+    else:
+        paths = [path]
+    return list(map(convert_file_path_to_url, paths))
+
+
 def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
     """
     Parse the output of the `diff` utility and create two lists of files:
@@ -107,10 +125,10 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
             if PR_NUMBER not in line:
                 continue
             # e.g. Only in /tmp/gh-pages/_preview/2647/_sources/meta: examplefile.md.txt
+            # Note that the new addition could be a directory.
             added = line.replace(": ", "/").split()[2]
-            converted = convert_file_path_to_url(added)
-            if converted.endswith("html"):
-                new.append(converted)
+            converted = convert_file_or_dir_path_to_url(added)
+            new.extend(item for item in converted if item.endswith("html"))
     return changed, new
 
 
