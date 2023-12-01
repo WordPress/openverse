@@ -8,8 +8,9 @@
 
    ```{caution}
    It is possible to perform a deploy if the image and audio refresh DAGs are
-   running, but only if they are on an `HttpSensor` step. If that is the case,
-   you should pause the DAG, complete the deploy, and then unpause it back.
+   running, but only if they are currently waiting on an `HttpSensor` step. If
+   that is the case, you should pause the DAG, complete the deploy, and then
+   unpause it back.
    ```
 
 1. Visit the
