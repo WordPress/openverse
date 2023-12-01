@@ -68,11 +68,15 @@ def run_diff() -> str:
     return completed.stdout
 
 
-def convert_path_to_url(path: str) -> str:
+def convert_file_path_to_url(path: str) -> str:
     """
-    Convert a path to a URL that can be used to view the file on the docs
+    Convert a file path to a URL that can be used to view the file on the docs
     preview site.
+
+    :param path: the file path to transform
+    :return: the transformed file path
     """
+
     # Remove the piece of the path before _preview
     path = "/_preview/" + path.split("/_preview/")[1]
     # Remove the _sources subfolder
@@ -96,7 +100,7 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
         if line.startswith("Files"):
             # e.g.: Files /tmp/gh-pages-for-diff/_sources/meta/index.md.txt and /tmp/gh-pages/_preview/2647/_sources/meta/index.md.txt differ  # noqa: E501
             updated = line.split()[3]
-            converted = convert_path_to_url(updated)
+            converted = convert_file_path_to_url(updated)
             if converted.endswith("html"):
                 changed.append(converted)
         elif line.startswith("Only in"):
@@ -104,7 +108,7 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
                 continue
             # e.g. Only in /tmp/gh-pages/_preview/2647/_sources/meta: examplefile.md.txt
             added = line.replace(": ", "/").split()[2]
-            converted = convert_path_to_url(added)
+            converted = convert_file_path_to_url(added)
             if converted.endswith("html"):
                 new.append(converted)
     return changed, new
