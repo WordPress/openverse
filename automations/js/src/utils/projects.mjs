@@ -165,20 +165,24 @@ class Project {
    * @param optionName {string} the updated value of the field
    * @returns {Promise<string>} the ID of the card that was updated
    */
-  async setCustomChoiceField(cardId, fieldName, optionName, core) {
-    core.debug('Setting priority:', priority, 'for card:', card.id)
+  async setCustomChoiceField(cardId, fieldName, optionName) {
+    this.core.info(
+      `Setting field "${fieldName}" to value "${optionName}" for card "${cardId}".`
+    )
     // Preliminary validation
     if (!this.fields[fieldName]) {
-      throw new Error(`Unknown field name "${fieldName}".`)
+      const msg = `Unknown field name "${fieldName}".`
+      this.core.error(msg)
+      throw new Error(msg)
     }
     if (!this.fields[fieldName].options[optionName]) {
-      throw new Error(
-        `Unknown option name "${optionName}" for field "${fieldName}".`
-      )
+      const msg = `Unknown option name "${optionName}" for field "${fieldName}".`
+      this.core.error(msg)
+      throw new Error(msg)
     }
 
     const res = await this.octokit.graphql(
-      `mutation setCustomField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+      `mutation setCustomChoiceField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
         updateProjectV2ItemFieldValue(input: {
           projectId: $projectId,
           itemId: $itemId,
@@ -197,7 +201,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
-    core.debug(`Priority set for card: ${card.id}`)
+    this.core.debug('setCustomChoiceField response:', JSON.stringify(res))
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }
 
@@ -208,11 +212,10 @@ class Project {
    * @param cardId {string} the ID of the card to move
    * @param destColumn {string} the name of the column where to move it
    * @returns {Promise<string>} the ID of the card that was moved
-   * @param core {import('@actions/core')} for logging
    */
-  async moveCard(cardId, destColumn, core) {
-    core.debug(`Moving card to '${destColumn}'`)
-    return await this.setCustomChoiceField(cardId, 'Status', destColumn, core)
+  async moveCard(cardId, destColumn) {
+    this.core.info(`Moving card "${cardId}" to column "${destColumn}".`)
+    return await this.setCustomChoiceField(cardId, 'Status', destColumn)
   }
 }
 
