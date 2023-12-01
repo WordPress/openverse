@@ -120,12 +120,12 @@ class SmkDataIngester(ProviderDataIngester):
         url = (
             SmkDataIngester._get_image_url(iiif_id)
             if iiif_id
-            else data.get("image_native")
+            else data.get("image_native", "").replace(" ", "%20")
         )
         if not url:
             return None
 
-        thumbnail_url = data.get("image_thumbnail")
+        thumbnail_url = data.get("image_thumbnail", "").replace(" ", "%20")
         height = data.get("image_height")
         width = data.get("image_width")
         filesize = data.get("image_size") or data.get("size")
