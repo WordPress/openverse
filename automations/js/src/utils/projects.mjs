@@ -27,11 +27,13 @@ class Project {
    *                         owner              number
    *
    * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+   * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
    * @param owner {string} the login of the owner (org) of the project
    * @param number {number} the number of the project
    */
-  constructor(octokit, owner, number) {
+  constructor(octokit, core, owner, number) {
     this.octokit = octokit
+    this.core = core
 
     this.owner = owner
     this.number = number
@@ -218,16 +220,17 @@ class Project {
  * Get the `Project` instance for the project board with the given name.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+ * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  * @param name {string} the name of the project (without the 'Openverse' prefix)
  * @returns {Promise<Project>} the `Project` instance to interact with the project board
  */
-export async function getBoard(octokit, name) {
+export async function getBoard(octokit, core, name) {
   const projectNumber = PROJECT_NUMBERS[name]
   if (!projectNumber) {
     throw new Error(`Unknown project board "${name}".`)
   }
 
-  const project = new Project(octokit, 'WordPress', projectNumber)
+  const project = new Project(octokit, core, 'WordPress', projectNumber)
   await project.init()
   return project
 }
