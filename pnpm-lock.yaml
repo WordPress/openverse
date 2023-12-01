@@ -5,14 +5,14 @@ importers:
   .:
     specifiers:
       '@openverse/eslint-plugin': workspace:0.0.0
-      prettier: 2.8.3
+      prettier: 2.8.8
       prettier-plugin-tailwindcss: 0.4.1
       typescript: 5.2.2
       vue-tsc: 1.8.22
     devDependencies:
       '@openverse/eslint-plugin': link:packages/eslint-plugin
-      prettier: 2.8.3
-      prettier-plugin-tailwindcss: 0.4.1_prettier@2.8.3
+      prettier: 2.8.8
+      prettier-plugin-tailwindcss: 0.4.1_prettier@2.8.8
       typescript: 5.2.2
       vue-tsc: 1.8.22_typescript@5.2.2
 
@@ -18727,7 +18727,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /prettier-plugin-tailwindcss/0.4.1_prettier@2.8.3:
+  /prettier-plugin-tailwindcss/0.4.1_prettier@2.8.8:
     resolution: {integrity: sha512-hwn2EiJmv8M+AW4YDkbjJ6HlZCTzLyz1QlySn9sMuKV/Px0fjwldlB7tol8GzdgqtkdPtzT3iJ4UzdnYXP25Ag==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -18779,17 +18779,11 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.8.3
+      prettier: 2.8.8
     dev: true
 
   /prettier/2.3.0:
     resolution: {integrity: sha512-kXtO4s0Lz/DW/IJ9QdWhAf7/NmPWQXkFr/r/WkR3vyI+0v8amTDxiaQSLzs8NBlytfLWX/7uQUMIW677yLKl4w==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    dev: true
-
-  /prettier/2.8.3:
-    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -18799,7 +18793,6 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
     requiresBuild: true
-    optional: true
 
   /pretty-bytes/5.6.0:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
