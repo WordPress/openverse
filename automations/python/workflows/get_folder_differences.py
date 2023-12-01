@@ -99,7 +99,12 @@ def convert_file_or_dir_path_to_url(path: str) -> list[str]:
     """
 
     if (path_obj := Path(path)).is_dir():
-        paths = [str(item) for item in path_obj.rglob("*") if item.is_file()]
+        paths = [
+            str(item)
+            for item in path_obj.rglob("*")
+            if item.is_file()
+            and not any(item.match(exclusion) for exclusion in EXCLUSIONS)
+        ]
     else:
         paths = [path]
     return list(map(convert_file_path_to_url, paths))
