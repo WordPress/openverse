@@ -61,6 +61,7 @@ FLICKR_SUB_PROVIDERS = {
     "east_riding": {"138361426@N08"},  # East Riding Archives
     "archief_alkmaar": {"98304311@N03"},  # Regionaal Archief Alkmaar Commons
     "bib_gulbenkian": {"26577438@N06"},  # Gulbenkian Art Library
+    "internet_archive_book_images": {"126377022@N07"},  # Internet Archive Book Images
 }
 
 FLICKR_PHOTO_URL_BASE = "https://www.flickr.com/photos/"
