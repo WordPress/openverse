@@ -49,7 +49,9 @@ def run_diff() -> str:
     command = " ".join(
         [
             "diff",
-            "-qbr",
+            "--brief",
+            "--ignore-space-change",
+            "--recursive",
             *exclusion_args,
             str(OUTPUT_FOLDER),
             str(ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER)),
