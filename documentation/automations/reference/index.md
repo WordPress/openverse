@@ -5,5 +5,4 @@
 
 python_scripts
 project_automations
-deleteme/index
 ```
