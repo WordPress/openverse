@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-11-27T06:49:11+00:00\n"
+"POT-Creation-Date: 2023-12-01T11:03:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -550,7 +550,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:3
-#: src/pages/search-help.vue:192
+#: src/pages/search-help.vue:62
 msgctxt "searchGuide.title"
 msgid "###openverse### Syntax Guide"
 msgstr ""
@@ -578,232 +578,33 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/search-help.vue:7
 msgctxt "searchGuide.exact.content"
-msgid "Put a word or phrase inside quotes. For example, ###link###."
+msgid "To search for an exact word or phrase, put it inside quotes. For example, ###link###."
 msgstr ""
 
 #: src/pages/search-help.vue:18
-msgctxt "searchGuide.combine.title"
-msgid "Combining terms"
+msgctxt "searchGuide.negate.title"
+msgid "Excluding terms"
 msgstr ""
 
-#: src/pages/search-help.vue:20
-msgctxt "searchGuide.combine.description"
-msgid "If you want to combine terms, you can use the following operators to perform more complex queries"
+#: src/pages/search-help.vue:24
+msgctxt "searchGuide.negate.operatorName"
+msgid "minus operator"
 msgstr ""
 
-#. Do not translate words between ### ###.
-msgctxt "searchGuide.combine.and"
-msgid "###symbol### signifies AND operation"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "searchGuide.combine.or"
-msgid "###symbol### signifies OR operation"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "searchGuide.combine.not"
-msgid "###symbol### negates a single token"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "searchGuide.combine.prefix"
-msgid "###symbol### at the end of a term signifies a prefix query"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "searchGuide.combine.precedence"
-msgid "###symbol### signify precedence"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "searchGuide.combine.fuzziness"
-msgid "###symbol### after a word signifies edit distance (fuzziness)"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.fuzziness"
-msgid "tilde N"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.open"
-msgid "open parenthesis"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.close"
-msgid "close parenthesis"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.star"
-msgid "star symbol"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.not"
-msgid "minus symbol"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.and"
-msgid "plus symbol"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.or"
-msgid "vertical bar symbol"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.prefix"
-msgid "asterisk symbol"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.verticalBar"
-msgid "vertical bar symbol"
-msgstr ""
-
-msgctxt "searchGuide.combine.ariaLabels.precedence"
-msgid "parentheses"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:22
-msgctxt "searchGuide.example.and.description"
-msgid "Example: ###link######br### This will search for images related to both dog and cat."
-msgstr ""
-
-#: src/pages/search-help.vue:42
-msgctxt "searchGuide.example.and.ariaLabel"
-msgid "dog plus cat"
-msgstr ""
-
-#: src/pages/search-help.vue:45
-msgctxt "searchGuide.example.and.example"
-msgid "dog+cat"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:51
-msgctxt "searchGuide.example.or.description"
-msgid "Example: ###link######br### This will search for images related to dog or cat, but not necessarily both."
-msgstr ""
-
-#: src/pages/search-help.vue:54
-msgctxt "searchGuide.example.or.ariaLabel"
-msgid "dog vertical bar cat"
-msgstr ""
-
-#: src/pages/search-help.vue:57
-msgctxt "searchGuide.example.or.example"
-msgid "dog|cat"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:65
-msgctxt "searchGuide.example.negate.description"
-msgid "You can use the ###operator### to exclude a search term from the results."
-msgstr ""
-
-#: src/pages/search-help.vue:71
-msgctxt "searchGuide.example.negate.operatorName"
-msgid "operator (signifies NOT)"
-msgstr ""
-
-#: src/pages/search-help.vue:69
-msgctxt "searchGuide.example.negate.operatorAriaLabel"
-msgid "minus operator (signifies NOT)"
-msgstr ""
-
-#: src/pages/search-help.vue:79
-msgctxt "searchGuide.example.negate.ariaLabel"
+#: src/pages/search-help.vue:30
+msgctxt "searchGuide.negate.ariaLabel"
 msgid "dog minus pug"
 msgstr ""
 
-#: src/pages/search-help.vue:82
-msgctxt "searchGuide.example.negate.example"
+#: src/pages/search-help.vue:33
+msgctxt "searchGuide.negate.example"
 msgid "dog -pug"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/search-help.vue:76
-msgctxt "searchGuide.example.negate.content"
-msgid "Example: ###link######br### This will search for images related to dog but won't include results related to 'pug'"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:90
-msgctxt "searchGuide.example.prefix.description"
-msgid "You can use the ###operatorName### to mark a prefix term. This will match anything after the *."
-msgstr ""
-
-#: src/pages/search-help.vue:93
-msgctxt "searchGuide.example.prefix.operatorName"
-msgid "operator (wildcard)"
-msgstr ""
-
-msgctxt "searchGuide.example.prefix.operatorAriaLabel"
-msgid "star operator (wildcard)"
-msgstr ""
-
-#: src/pages/search-help.vue:92
-#: src/pages/search-help.vue:101
-msgctxt "searchGuide.example.prefix.ariaLabel"
-msgid "net star symbol"
-msgstr ""
-
-#: src/pages/search-help.vue:104
-msgctxt "searchGuide.example.prefix.example"
-msgid "net*"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:98
-msgctxt "searchGuide.example.prefix.content"
-msgid "Example: ###link######br### This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc."
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:112
-msgctxt "searchGuide.example.precedence.description"
-msgid "You can use parentheses ###highlight### to specify precedence of terms or combine more complex queries."
-msgstr ""
-
-#: src/pages/search-help.vue:121
-msgctxt "searchGuide.example.precedence.ariaLabel"
-msgid "dogs plus open parenthesis corgis vertical bar labrador close parenthesis"
-msgstr ""
-
-#: src/pages/search-help.vue:124
-msgctxt "searchGuide.example.precedence.example"
-msgid "dogs + (corgis | labrador)"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:118
-msgctxt "searchGuide.example.precedence.content"
-msgid "Example: ###link######br### This will search for images that match dogs that are either corgis or labrador."
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:132
-msgctxt "searchGuide.example.fuzziness.description"
-msgid "You can use ###highlight### to specify some fuzzy logic to the term according to the ###link### — the number of one character changes that need to be made to one string to make it the same as another string."
-msgstr ""
-
-#: src/pages/search-help.vue:138
-msgctxt "searchGuide.example.fuzziness.linkText"
-msgid "Levenshtein Edit Distance"
-msgstr ""
-
-#: src/pages/search-help.vue:146
-msgctxt "searchGuide.example.fuzziness.ariaLabel"
-msgid "theatre tilde 1"
-msgstr ""
-
-#: src/pages/search-help.vue:149
-msgctxt "searchGuide.example.fuzziness.example"
-msgid "theatre~1"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/search-help.vue:143
-msgctxt "searchGuide.example.fuzziness.content"
-msgid "Example: ###link######br### This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'."
+#: src/pages/search-help.vue:20
+msgctxt "searchGuide.negate.content"
+msgid "To exclude a term from your results, put the ###operator### in front of it. Example: ###link######br### This will search for media related to \"dog\" but won't include results related to \"pug\"."
 msgstr ""
 
 #: src/pages/feedback.vue:4
