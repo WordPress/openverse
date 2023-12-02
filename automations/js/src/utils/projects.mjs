@@ -27,12 +27,13 @@ class Project {
    *                         owner              number
    *
    * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+   * @param core {import('@actions/core')} for logging
    * @param owner {string} the login of the owner (org) of the project
    * @param number {number} the number of the project
    */
-  constructor(octokit, owner, number) {
+  constructor(octokit, core, owner, number) {
     this.octokit = octokit
-
+    this.core = core
     this.owner = owner
     this.number = number
   }
@@ -163,8 +164,8 @@ class Project {
    * @param optionName {string} the updated value of the field
    * @returns {Promise<string>} the ID of the card that was updated
    */
-  async setCustomChoiceField(cardId, fieldName, optionName, core) {
-    core.debug('Setting priority:', priority, 'for card:', card.id)
+  async setCustomChoiceField(cardId, fieldName, optionName) {
+    this.core.debug('Setting priority:', priority, 'for card:', card.id)
     // Preliminary validation
     if (!this.fields[fieldName]) {
       throw new Error(`Unknown field name "${fieldName}".`)
@@ -195,7 +196,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
-    core.debug(`Priority set for card: ${card.id}`)
+    this.core.debug(`Priority set for card: ${card.id}`)
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }
 
@@ -206,11 +207,10 @@ class Project {
    * @param cardId {string} the ID of the card to move
    * @param destColumn {string} the name of the column where to move it
    * @returns {Promise<string>} the ID of the card that was moved
-   * @param core {import('@actions/core')} for logging
    */
-  async moveCard(cardId, destColumn, core) {
-    core.debug(`Moving card to '${destColumn}'`)
-    return await this.setCustomChoiceField(cardId, 'Status', destColumn, core)
+  async moveCard(cardId, destColumn) {
+    this.core.debug(`Moving card to '${destColumn}'`)
+    return await this.setCustomChoiceField(cardId, 'Status', destColumn)
   }
 }
 
@@ -221,13 +221,13 @@ class Project {
  * @param name {string} the name of the project (without the 'Openverse' prefix)
  * @returns {Promise<Project>} the `Project` instance to interact with the project board
  */
-export async function getBoard(octokit, name) {
+export async function getBoard(octokit, name, core) {
   const projectNumber = PROJECT_NUMBERS[name]
   if (!projectNumber) {
     throw new Error(`Unknown project board "${name}".`)
   }
 
-  const project = new Project(octokit, 'WordPress', projectNumber)
+  const project = new Project(octokit, core, 'WordPress', projectNumber)
   await project.init()
   return project
 }
