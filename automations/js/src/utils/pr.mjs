@@ -115,6 +115,7 @@ export class PullRequest {
    * @returns {Promise<Label[]>} the final list of labels on the PR
    */
   async addLabels(labelIds) {
+    this.core.info(`Adding labels with IDs ${labelIds} to PR.`)
     const res = await this.octokit.graphql(
       `mutation addLabels($labelableId: ID!, $labelIds: [ID!]!) {
         addLabelsToLabelable(input: {
@@ -136,6 +137,7 @@ export class PullRequest {
         labelIds,
       }
     )
+    this.core.debug('addLabels response:', JSON.stringify(res))
     return res.addLabelsToLabelable.labelable.labels.nodes
   }
 
