@@ -28,10 +28,6 @@ group:
         dest: .github/workflows/pr_label_check.yml
       - source: .github/workflows/pr_ping.yml
         dest: .github/workflows/pr_ping.yml
-      - source: .github/workflows/actionlint.yml
-        dest: .github/workflows/actionlint.yml
-      - source: .github/actionlint-matcher.json
-        dest: .github/actionlint-matcher.json
       - source: .github/workflows/subscribe_to_label.yml
         dest: .github/workflows/subscribe_to_label.yml
       - source: .github/subscribe-to-label.json
