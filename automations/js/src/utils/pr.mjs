@@ -104,6 +104,42 @@ export class PullRequest {
   }
 
   /**
+   * Add the given list of labels to the PR, leaving all existing labels
+   * unaffected by this change.
+   *
+   * This call is idempotent in that once a specific label is added by this
+   * method, any subsequent calls, with or without that ID, will not remove the
+   * label.
+   *
+   * @param labelIds {string[]} the list of label IDs to add to the PR
+   * @returns {Promise<Label[]>} the final list of labels on the PR
+   */
+  async addLabels(labelIds) {
+    const res = await this.octokit.graphql(
+      `mutation addLabels($labelableId: ID!, $labelIds: [ID!]!) {
+        addLabelsToLabelable(input: {
+          labelableId: $labelableId,
+          labelIds: $labelIds
+        }) {
+          labelable {
+            labels(first: 20) {
+              nodes {
+                id
+                name
+              }
+            }
+          }
+        }
+      }`,
+      {
+        labelableId: this.nodeId,
+        labelIds,
+      }
+    )
+    return res.addLabelsToLabelable.labelable.labels.nodes
+  }
+
+  /**
    * Get the count of each type of PR reviews.
    *
    * @returns {{[p: ReviewState]: number}} the PR review counts
