@@ -34,7 +34,7 @@ async function syncReviews(pr, prBoard, prCard) {
  */
 async function syncIssues(pr, backlogBoard, destColumn) {
   for (let linkedIssue of pr.linkedIssues) {
-    const issueCard = await backlogBoard.addCard(linkedIssue)
+    const issueCard = await backlogBoard.addCard(linkedIssue.id)
     await backlogBoard.moveCard(issueCard.id, backlogBoard.columns[destColumn])
   }
 }

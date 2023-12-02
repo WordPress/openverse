@@ -5,8 +5,21 @@
  * the state of a particular review left on a PR
  * @typedef {'APPROVED' | 'CHANGES_REQUESTED' | 'COMMENTED' | 'DISMISSED' | 'PENDING'} ReviewState
  *
+ * a tag applied to an issue or a PR
+ * @typedef {{id: string, name: string}} Label
+ *
+ * the linked issue of a PR
+ * @typedef {{id: string, labels: Label[]}} Issue
+ *
  * the additional information about the PR obtained from a GraphQL query
- * @typedef {{reviewDecision: ReviewDecision, linkedIssues: string[], reviewStates: ReviewState[]}} PrDetails
+ * @typedef {{
+ *   isMerged: boolean,
+ *   isDraft: boolean,
+ *   reviewDecision: ReviewDecision,
+ *   linkedIssues: Issue[],
+ *   reviewStates: ReviewState[],
+ *   labels: Label[],
+ * }} PrDetails
  */
 
 export class PullRequest {
@@ -45,9 +58,21 @@ export class PullRequest {
             isDraft
             merged
             reviewDecision
+            labels(first: 20) {
+              nodes {
+                id
+                name
+              }
+            }
             closingIssuesReferences(first: 10) {
               nodes {
                 id
+                labels(first: 20) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
               }
             }
             reviews(first: 100) {
@@ -67,8 +92,12 @@ export class PullRequest {
       isMerged: pr.isMerged,
       isDraft: pr.merged,
       reviewDecision: pr.reviewDecision,
-      linkedIssues: pr.closingIssuesReferences.nodes.map((node) => node.id),
+      linkedIssues: pr.closingIssuesReferences.nodes.map((node) => ({
+        id: node.id,
+        labels: node.labels.nodes,
+      })),
       reviewStates: pr.reviews.nodes.map((node) => node.state),
+      labels: pr.labels.nodes,
     }
   }
 
