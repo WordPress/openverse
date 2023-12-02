@@ -42,8 +42,7 @@ class Project {
    */
   async init() {
     const projectDetails = await this.getProjectDetails()
-    this.projectId = projectDetails.projectId
-    this.fields = projectDetails.fields
+    Object.assign(this, projectDetails)
     this.columns = this.getColumns()
   }
 

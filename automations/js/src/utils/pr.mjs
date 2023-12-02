@@ -23,13 +23,12 @@ export class PullRequest {
     this.nodeId = nodeId
   }
 
+  /**
+   * Initialise the PR and populate fields that require API call to GitHub.
+   */
   async init() {
     const prDetails = await this.getPrDetails()
-    this.linkedIssues = prDetails.linkedIssues
-    this.reviewDecision = prDetails.reviewDecision
-    this.reviewStates = prDetails.reviewStates
-    this.isDraft = prDetails.isDraft
-    this.isMerged = prDetails.isMerged
+    Object.assign(this, prDetails)
   }
 
   /**
