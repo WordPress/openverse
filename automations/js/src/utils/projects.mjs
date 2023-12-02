@@ -165,13 +165,15 @@ class Project {
    * @returns {Promise<string>} the ID of the card that was updated
    */
   async setCustomChoiceField(cardId, fieldName, optionName) {
-    this.core.debug('Setting priority:', priority, 'for card:', card.id)
+    this.core.info(
+      `Setting field "${fieldName}" to value "${optionName}" for card "${cardId}".`
+    )
     // Preliminary validation
     if (!this.fields[fieldName]) {
-      throw new Error(`Unknown field name "${fieldName}".`)
+      this.core.error(`Unknown field name "${fieldName}".`)
     }
     if (!this.fields[fieldName].options[optionName]) {
-      throw new Error(
+      this.core.error(
         `Unknown option name "${optionName}" for field "${fieldName}".`
       )
     }
@@ -196,6 +198,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
+    this.core.debug('setCustomChoiceField response:', JSON.stringify(res))
     this.core.debug(`Priority set for card: ${card.id}`)
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }

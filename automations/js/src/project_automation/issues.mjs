@@ -53,8 +53,7 @@ export const main = async (octokit, context, core) => {
 
     switch (eventAction) {
       case 'opened':
-      case 'reopened':
-        core.info('Issue opened or reopened')
+      case 'reopened': {
         if (issue.labels.some((label) => label.name === '⛔ status: blocked')) {
           await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
         } else {
@@ -62,38 +61,39 @@ export const main = async (octokit, context, core) => {
         }
         await syncPriority(issue, backlogBoard, card, core)
         break
+      }
 
-      case 'closed':
-        core.info('Issue closed')
+      case 'closed': {
         if (issue.state_reason === 'completed') {
           await backlogBoard.moveCard(card.id, backlogBoard.columns.Done)
         } else {
           await backlogBoard.moveCard(card.id, backlogBoard.columns.Discarded)
         }
         break
+      }
 
-      case 'assigned':
-        core.info('Issue assigned')
+      case 'assigned': {
         if (card.status === backlogBoard.columns.Backlog) {
           await backlogBoard.moveCard(card.id, backlogBoard.columns.ToDo)
         }
         break
+      }
 
-      case 'labeled':
-        core.info(`Issue labeled: ${label.name}`)
+      case 'labeled': {
         if (label.name === '⛔ status: blocked') {
           await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
         }
         await syncPriority(issue, backlogBoard, card, core)
         break
+      }
 
-      case 'unlabeled':
-        core.info(`Label removed: ${label.name}`)
+      case 'unlabeled': {
         if (label.name === '⛔ status: blocked') {
           await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
         }
         await syncPriority(issue, backlogBoard, card, core)
         break
+      }
     }
   })
 }
