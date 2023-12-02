@@ -65,8 +65,8 @@ export class PullRequest {
     )
     const pr = res.node
     return {
-      isMerged: pr.isMerged,
-      isDraft: pr.merged,
+      isMerged: pr.merged,
+      isDraft: pr.isDraft,
       reviewDecision: pr.reviewDecision,
       linkedIssues: pr.closingIssuesReferences.nodes.map((node) => node.id),
       reviewStates: pr.reviews.nodes.map((node) => node.state),
