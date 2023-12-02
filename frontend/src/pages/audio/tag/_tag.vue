@@ -3,12 +3,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useFetch } from "@nuxtjs/composition-api"
+import { defineComponent, useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { validateCollectionParams } from "~/utils/validate-collection-params"
 import { AUDIO } from "~/constants/media"
+import type { TagCollection } from "~/types/search"
+import { collectionMiddleware } from "~/middleware/collection"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
@@ -16,28 +17,21 @@ export default defineComponent({
   name: "VAudioTagPage",
   components: { VCollectionPage },
   layout: "content-layout",
-  /**
-   * Validate the dynamic path parameters and update the search store.
-   * Shows an error page if `validate` returns `false`.
-   */
-  validate({ params, $pinia }): boolean {
-    const mediaType = AUDIO
-    const collectionParams = validateCollectionParams({
-      firstParam: "tag",
-      mediaType,
-      params,
-      $pinia,
-    })
-    if (!collectionParams) return false
-    useSearchStore($pinia).setCollectionState(collectionParams, mediaType)
-    return true
-  },
+  middleware: collectionMiddleware,
   setup() {
+    const route = useRoute()
+    const collectionParams: TagCollection = {
+      tag: route.value.params.tag,
+      collection: "tag",
+    }
+    useSearchStore().setCollectionState(collectionParams, AUDIO)
+
     const mediaStore = useMediaStore()
 
     useFetch(async () => {
       await mediaStore.fetchMedia()
     })
+    return {}
   },
 })
 </script>

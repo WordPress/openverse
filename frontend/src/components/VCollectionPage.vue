@@ -9,14 +9,14 @@
     />
     <VAudioCollection
       v-if="results.type === 'audio'"
-      collection-label="audio collection"
+      :collection-label="collectionLabel"
       :fetch-state="fetchState"
       kind="collection"
       :results="results.items"
     />
     <VImageGrid
       v-if="results.type === 'image'"
-      image-grid-label="image collection"
+      :image-grid-label="collectionLabel"
       :fetch-state="fetchState"
       kind="collection"
       :results="results.items"
@@ -32,6 +32,8 @@ import type { SupportedMediaType } from "~/constants/media"
 
 import { Results } from "~/types/result"
 
+import { useI18n } from "~/composables/use-i18n"
+
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
@@ -46,6 +48,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const i18n = useI18n()
     const mediaStore = useMediaStore()
 
     const fetchState = computed(() => mediaStore.fetchState)
@@ -64,11 +67,39 @@ export default defineComponent({
     const searchStore = useSearchStore()
     const collectionParams = computed(() => searchStore.collectionParams)
 
+    const collectionLabel = computed(() => {
+      const collection = collectionParams.value?.collection
+      switch (collection) {
+        case "tag":
+          return i18n
+            .t(`collection.ariaLabel.tag.${props.mediaType}`, {
+              tag: collectionParams.value?.tag,
+            })
+            .toString()
+        case "source":
+          return i18n
+            .t(`collection.ariaLabel.source.${props.mediaType}`, {
+              source: collectionParams.value?.source,
+            })
+            .toString()
+        case "creator":
+          return i18n
+            .t(`collection.ariaLabel.creator.${props.mediaType}`, {
+              creator: collectionParams.value?.creator,
+              source: collectionParams.value?.source,
+            })
+            .toString()
+        default:
+          return ""
+      }
+    })
+
     return {
       fetchState,
       results,
       creatorUrl,
       collectionParams,
+      collectionLabel,
     }
   },
 })

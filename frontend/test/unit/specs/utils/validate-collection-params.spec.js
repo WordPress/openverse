@@ -1,14 +1,8 @@
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
-import { validateCollectionParams } from "~/utils/validate-collection-params"
+import { parseCollectionPath } from "~/utils/parse-collection-path"
 import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { AUDIO, IMAGE } from "~/constants/media"
-import { warn } from "~/utils/console"
-
-jest.mock("~/utils/console", () => ({
-  warn: jest.fn(),
-}))
 
 describe("validateCollectionParams", () => {
   /** @type { import("pinia").Pinia } **/
@@ -21,59 +15,34 @@ describe("validateCollectionParams", () => {
     useFeatureFlagStore().toggleFeature("additional_search_views", "on")
   })
 
-  it("returns null if feature flag is off", () => {
-    useFeatureFlagStore().toggleFeature("additional_search_views", "off")
+  it("returns source collection", () => {
+    const collection = parseCollectionPath("/flickr")
 
-    const result = validateCollectionParams({
-      firstParam: "tag",
-      mediaType: IMAGE,
-      params: { tag: "nature" },
-      $pinia: pinia,
-    })
-
-    expect(result).toBeNull()
+    expect(collection).toEqual({ source: "flickr", collection: "source" })
   })
 
-  it.each`
-    firstParam  | mediaType | params                                                                                  | expected
-    ${"tag"}    | ${IMAGE}  | ${{ tag: "nature" }}                                                                    | ${{ collection: "tag", tag: "nature" }}
-    ${"source"} | ${IMAGE}  | ${{ source: "flickr", pathMatch: "/flickr" }}                                           | ${{ collection: "source", source: "flickr" }}
-    ${"source"} | ${AUDIO}  | ${{ source: "freesound", pathMatch: "/freesound" }}                                     | ${{ collection: "source", source: "freesound" }}
-    ${"source"} | ${IMAGE}  | ${{ source: "flickr", pathMatch: "/flickr/creator/creatorName" }}                       | ${{ collection: "creator", source: "flickr", creator: "creatorName" }}
-    ${"source"} | ${IMAGE}  | ${{ source: "flickr", pathMatch: "/flickr/creator/http%3A%2F%2FcreatorName.com%2Fme" }} | ${{ collection: "creator", source: "flickr", creator: "http%3A%2F%2FcreatorName.com%2Fme" }}
-  `(
-    "returns $expected for $firstParam and $mediaType",
-    ({ firstParam, mediaType, params, expected }) => {
-      const result = validateCollectionParams({
-        firstParam,
-        mediaType,
-        params,
-        $pinia: pinia,
-      })
+  it("returns null if `creator` parameter is blank", () => {
+    const collection = parseCollectionPath("/flickr/creator/")
 
-      expect(result).toEqual(expected)
-    }
-  )
-  it.each`
-    firstParam  | mediaType | params
-    ${"source"} | ${IMAGE}  | ${{ source: "flickr", pathMatch: "/invalidSourceName/creator/creatorName" }}
-    ${"source"} | ${AUDIO}  | ${{ source: "invalidSourceName", pathMatch: "/invalidSourceName" }}
-  `(
-    "returns `null` for invalid source name",
-    ({ firstParam, mediaType, params }) => {
-      useProviderStore().isSourceNameValid = jest.fn(() => false)
+    expect(collection).toBeNull()
+  })
+  it("returns creator collection without trailing slash", () => {
+    const collection = parseCollectionPath("/flickr/creator/me")
 
-      const result = validateCollectionParams({
-        firstParam,
-        mediaType,
-        params,
-        $pinia: pinia,
-      })
+    expect(collection).toEqual({
+      source: "flickr",
+      creator: "me",
+      collection: "creator",
+    })
+  })
 
-      expect(result).toBeNull()
-      expect(warn).toHaveBeenCalledWith(
-        'Invalid source name "invalidSourceName" for a creator collection page.'
-      )
-    }
-  )
+  it("returns creator collection with trailing slash", () => {
+    const collection = parseCollectionPath("/flickr/creator/me/")
+
+    expect(collection).toEqual({
+      source: "flickr",
+      creator: "me",
+      collection: "creator",
+    })
+  })
 })

@@ -3,12 +3,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useFetch } from "@nuxtjs/composition-api"
+import { defineComponent, useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { validateCollectionParams } from "~/utils/validate-collection-params"
 import { IMAGE } from "~/constants/media"
+import { collectionMiddleware } from "~/middleware/collection"
+import type { TagCollection } from "~/types/search"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
@@ -16,32 +17,21 @@ export default defineComponent({
   name: "VImageTagPage",
   components: { VCollectionPage },
   layout: "content-layout",
-  /**
-   * Validate the dynamic path parameters.
-   *
-   * Shows an error page if `validate` returns `false`.
-   *
-   * @param params - the path parameters: `mediaType`, `collection` and `pathMatch` for the rest.
-   * @param $pinia - passed to update the store with the validated data.
-   */
-  validate({ params, $pinia }): boolean {
-    const mediaType = IMAGE
-    const collectionParams = validateCollectionParams({
-      firstParam: "tag",
-      mediaType,
-      params,
-      $pinia,
-    })
-    if (!collectionParams) return false
-    useSearchStore($pinia).setCollectionState(collectionParams, mediaType)
-    return true
-  },
+  middleware: collectionMiddleware,
   setup() {
+    const route = useRoute()
+    const collectionParams: TagCollection = {
+      tag: route.value.params.tag,
+      collection: "tag",
+    }
+    useSearchStore().setCollectionState(collectionParams, IMAGE)
+
     const mediaStore = useMediaStore()
 
     useFetch(async () => {
       await mediaStore.fetchMedia()
     })
+    return {}
   },
 })
 </script>
