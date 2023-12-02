@@ -43,13 +43,14 @@ async function syncIssues(pr, backlogBoard, destColumn) {
  * This is the entrypoint of the script.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+ * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  */
-export const main = async (octokit) => {
+export const main = async (octokit, core) => {
   const { eventName, eventAction, prNodeId } = JSON.parse(
     readFileSync('/tmp/event.json', 'utf-8')
   )
 
-  const pr = new PullRequest(octokit, prNodeId)
+  const pr = new PullRequest(octokit, core, prNodeId)
   await pr.init()
 
   const prBoard = await getBoard(octokit, 'PRs')

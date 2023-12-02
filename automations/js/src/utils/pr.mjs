@@ -28,10 +28,12 @@ export class PullRequest {
    * as opposed to the conventional `id` or `number` fields.
    *
    * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+   * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
    * @param nodeId {boolean} the `node_id` of the PR for GraphQL requests
    */
-  constructor(octokit, nodeId) {
+  constructor(octokit, core, nodeId) {
     this.octokit = octokit
+    this.core = core
 
     this.nodeId = nodeId
   }
