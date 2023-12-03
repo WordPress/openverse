@@ -1,23 +1,4 @@
-import asyncio
-
-import pytest
-
 from api.utils.aiohttp import get_aiohttp_session
-
-
-@pytest.fixture(autouse=True)
-def get_new_loop():
-    loops: list[asyncio.AbstractEventLoop] = []
-
-    def _get_new_loop():
-        loop = asyncio.new_event_loop()
-        loops.append(loop)
-        return loop
-
-    yield _get_new_loop
-
-    for loop in loops:
-        loop.close()
 
 
 def test_reuses_session_within_same_loop(get_new_loop):

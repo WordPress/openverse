@@ -40,9 +40,6 @@ class InvalidSource(APIException):
     default_code = "invalid_source"
 
 
-image_proxy_aget = sync_to_async(image_proxy.get)
-
-
 class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
     view_is_async = True
 
@@ -312,7 +309,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         media_info = await self.get_image_proxy_media_info()
 
-        return await image_proxy_aget(
+        return await image_proxy.get(
             media_info,
             request_config=image_proxy.RequestConfig(
                 accept_header=request.headers.get("Accept", "image/*"),

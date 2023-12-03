@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import replace
 from test.factory.models.image import ImageFactory
 from unittest.mock import MagicMock
@@ -6,6 +7,7 @@ from urllib.parse import urlencode
 from django.conf import settings
 from rest_framework.exceptions import UnsupportedMediaType
 
+import aiohttp
 import pook
 import pytest
 import requests
@@ -17,7 +19,7 @@ from api.utils.image_proxy import (
     UpstreamThumbnailException,
     extension,
 )
-from api.utils.image_proxy import get as photon_get
+from api.utils.image_proxy import get as _photon_get
 from api.utils.tallies import get_monthly_timestamp
 
 
@@ -56,8 +58,26 @@ def auth_key():
     settings.PHOTON_AUTH_KEY = None
 
 
+@pytest.fixture
+def photon_get(session_loop):
+    """
+    Run ``image_proxy.get`` and wait for all tasks to finish.
+    """
+
+    def do(*args, **kwargs):
+        try:
+            res = session_loop.run_until_complete(_photon_get(*args, **kwargs))
+            return res
+        finally:
+            tasks = asyncio.all_tasks(session_loop)
+            for task in tasks:
+                session_loop.run_until_complete(task)
+
+    yield do
+
+
 @pook.on
-def test_get_successful_no_auth_key_default_args(mock_image_data):
+def test_get_successful_no_auth_key_default_args(photon_get, mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -81,7 +101,9 @@ def test_get_successful_no_auth_key_default_args(mock_image_data):
 
 
 @pook.on
-def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
+def test_get_successful_original_svg_no_auth_key_default_args(
+    photon_get, mock_image_data
+):
     mock_get: pook.Mock = (
         pook.get(TEST_IMAGE_URL.replace(".jpg", ".svg"))
         .header("User-Agent", UA_HEADER)
@@ -103,7 +125,9 @@ def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
 
 
 @pook.on
-def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
+def test_get_successful_with_auth_key_default_args(
+    photon_get, mock_image_data, auth_key
+):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -128,7 +152,7 @@ def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
 
 
 @pook.on
-def test_get_successful_no_auth_key_not_compressed(mock_image_data):
+def test_get_successful_no_auth_key_not_compressed(photon_get, mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -151,7 +175,7 @@ def test_get_successful_no_auth_key_not_compressed(mock_image_data):
 
 
 @pook.on
-def test_get_successful_no_auth_key_full_size(mock_image_data):
+def test_get_successful_no_auth_key_full_size(photon_get, mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -174,7 +198,9 @@ def test_get_successful_no_auth_key_full_size(mock_image_data):
 
 
 @pook.on
-def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
+def test_get_successful_no_auth_key_full_size_not_compressed(
+    photon_get, mock_image_data
+):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .header("User-Agent", UA_HEADER)
@@ -195,7 +221,7 @@ def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
 
 
 @pook.on
-def test_get_successful_no_auth_key_png_only(mock_image_data):
+def test_get_successful_no_auth_key_png_only(photon_get, mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -219,7 +245,7 @@ def test_get_successful_no_auth_key_png_only(mock_image_data):
 
 
 @pook.on
-def test_get_successful_forward_query_params(mock_image_data):
+def test_get_successful_forward_query_params(photon_get, mock_image_data):
     params = urlencode({"hello": "world", 1: 2, "beep": "boop"})
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
@@ -249,18 +275,18 @@ def test_get_successful_forward_query_params(mock_image_data):
 
 
 @pytest.fixture
-def setup_requests_get_exception(monkeypatch):
+def setup_request_exception(monkeypatch):
     def do(exc):
-        def raise_exc(*args, **kwargs):
+        async def raise_exc(*args, **kwargs):
             raise exc
 
-        monkeypatch.setattr("requests.get", raise_exc)
+        monkeypatch.setattr(aiohttp.ClientSession, "get", raise_exc)
 
     yield do
 
 
 @pook.on
-def test_get_successful_records_response_code(mock_image_data, redis):
+def test_get_successful_records_response_code(photon_get, mock_image_data, redis):
     (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -317,15 +343,16 @@ alert_count_params = pytest.mark.parametrize(
 )
 @alert_count_params
 def test_get_exception_handles_error(
+    photon_get,
     exc,
     exc_name,
     count_start,
     should_alert,
     capture_exception,
-    setup_requests_get_exception,
+    setup_request_exception,
     redis,
 ):
-    setup_requests_get_exception(exc)
+    setup_request_exception(exc)
     month = get_monthly_timestamp()
     key = f"thumbnail_error:{exc_name}:subdomain.example.com:{month}"
     redis.set(key, count_start)
@@ -353,19 +380,20 @@ def test_get_exception_handles_error(
     ],
 )
 def test_get_http_exception_handles_error(
+    photon_get,
     status_code,
     text,
     count_start,
     should_alert,
     capture_exception,
-    setup_requests_get_exception,
+    setup_request_exception,
     redis,
 ):
     mock_response = MagicMock(spec=requests.Response)
     mock_response.status_code = status_code
     mock_response.text = text
     exc = requests.HTTPError(response=mock_response)
-    setup_requests_get_exception(exc)
+    setup_request_exception(exc)
 
     month = get_monthly_timestamp()
     key = f"thumbnail_error:requests.exceptions.HTTPError:subdomain.example.com:{month}"
@@ -392,7 +420,9 @@ def test_get_http_exception_handles_error(
 
 
 @pook.on
-def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
+def test_get_successful_https_image_url_sends_ssl_parameter(
+    photon_get, mock_image_data
+):
     https_url = TEST_IMAGE_URL.replace("http://", "https://")
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
@@ -420,7 +450,7 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
 
 
 @pook.on
-def test_get_unsuccessful_request_raises_custom_exception():
+def test_get_unsuccessful_request_raises_custom_exception(photon_get):
     mock_get: pook.Mock = pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
 
     with pytest.raises(
@@ -452,7 +482,7 @@ def test__get_extension_from_url(image_url, expected_ext):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("image_type", ["apng", "tiff", "bmp"])
-def test_photon_get_raises_by_not_allowed_types(image_type):
+def test_photon_get_raises_by_not_allowed_types(photon_get, image_type):
     image_url = TEST_IMAGE_URL.replace(".jpg", f".{image_type}")
     image = ImageFactory.create(url=image_url)
     media_info = MediaInfo(
@@ -473,7 +503,9 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
         ({"Content-Type": "unknown"}, b"unknown"),
     ],
 )
-def test_photon_get_saves_image_type_to_cache(redis, headers, expected_cache_val):
+def test_photon_get_saves_image_type_to_cache(
+    photon_get, redis, headers, expected_cache_val
+):
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
     media_info = MediaInfo(
