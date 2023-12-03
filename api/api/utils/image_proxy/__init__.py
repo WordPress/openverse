@@ -1,5 +1,4 @@
 import logging
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 from urllib.parse import urlparse
