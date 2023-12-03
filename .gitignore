@@ -65,3 +65,5 @@ ingestion_server.log
 *.tsbuildinfo
 
 dist
+
+api/.hypothesis
