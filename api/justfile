@@ -128,7 +128,7 @@ doc-test: wait-up
 # Run the API schema tests using schemathesis
 test-schema: wait-up
     just doc-test
-    python -m pip install schemathesis && st run --checks response_headers_conformance openapi.json --base-url http://localhost:50280
+    python -m pip install schemathesis && st run --checks response_headers_conformance openapi.json --base-url http://localhost:50280 && st run --checks not_a_server_error openapi.json --base-url http://localhost:50280
 
 #########
 # NGINX #
