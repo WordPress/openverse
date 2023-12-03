@@ -56,7 +56,7 @@ class Register(APIView):
         # Store the registration information the developer gave us.
         serialized = OAuth2RegistrationSerializer(data=request.data)
         if not serialized.is_valid():
-            return Response(status=400, data=serialized.errors)
+            return Response(status=400, data={"detail": serialized.errors})
         else:
             serialized.save()
 
@@ -150,7 +150,7 @@ class TokenView(APIView, BaseTokenView):
 
         To authenticate your requests to the Openverse API, you need to provide
         an access token as a bearer token in the `Authorization` header of your
-        requests. This endpoints takes your client ID and secret, and issues an
+        requests. This endpoint takes your client ID and secret, and issues an
         access token.
 
         > **NOTE:** This endpoint only accepts data as
