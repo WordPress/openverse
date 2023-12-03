@@ -19,6 +19,7 @@ from api.examples import (
     image_stats_200_example,
     image_stats_curl,
 )
+from api.examples.image_responses import image_oembed_400_example
 from api.serializers.error_serializers import (
     InputErrorSerializer,
     NotFoundErrorSerializer,
@@ -115,6 +116,7 @@ oembed = custom_extend_schema(
     res={
         200: (OembedSerializer, image_oembed_200_example),
         404: (NotFoundErrorSerializer, image_oembed_404_example),
+        400: (InputErrorSerializer, image_oembed_400_example),
     },
     eg=[image_oembed_curl],
 )
