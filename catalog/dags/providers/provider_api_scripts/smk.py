@@ -120,12 +120,14 @@ class SmkDataIngester(ProviderDataIngester):
         url = (
             SmkDataIngester._get_image_url(iiif_id)
             if iiif_id
-            else data.get("image_native", "").replace(" ", "%20")
+            else data.get("image_native")
         )
         if not url:
             return None
 
-        thumbnail_url = data.get("image_thumbnail", "").replace(" ", "%20")
+        thumbnail_url = data.get("image_thumbnail")
+        if thumbnail_url:
+            thumbnail_url = thumbnail_url.replace(" ", "%20")
         height = data.get("image_height")
         width = data.get("image_width")
         filesize = data.get("image_size") or data.get("size")
@@ -135,7 +137,7 @@ class SmkDataIngester(ProviderDataIngester):
             "foreign_landing_url": foreign_landing_url,
             "license_info": license_info,
             "title": self._get_title(data),
-            "url": url,
+            "url": url.replace(" ", "%20"),
             "thumbnail_url": thumbnail_url,
             "height": height,
             "width": width,
