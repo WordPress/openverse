@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import logging as log
+import re
 from math import ceil
 from typing import TYPE_CHECKING
 
@@ -58,6 +59,13 @@ PROVIDER = "provider"
 QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
 DEFAULT_BOOST = 10000
 DEFAULT_SEARCH_FIELDS = ["title", "description", "tags.name"]
+DEFAULT_SQS_FLAGS = "AND|NOT|PHRASE|WHITESPACE"
+UNUSED_SQS_FLAGS = [
+    ("PRECEDENCE", r"\(.*\)"),
+    ("ESCAPE", r"\\"),
+    ("FUZZY|SLOP", r"~\d"),
+    ("PREFIX", r"\*"),
+]
 
 
 def _quote_escape(query_string):
@@ -287,8 +295,11 @@ def build_search_query(
     # individual field-level queries specified.
     if "q" in search_params.data:
         query = _quote_escape(search_params.data["q"])
+        log_query_features(query, query_name="q")
+
         base_query_kwargs = {
             "query": query,
+            "flags": DEFAULT_SQS_FLAGS,
             "fields": DEFAULT_SEARCH_FIELDS,
             "default_operator": "AND",
         }
@@ -301,6 +312,7 @@ def build_search_query(
         quotes_stripped = query.replace('"', "")
         exact_match_boost = Q(
             "simple_query_string",
+            flags=DEFAULT_SQS_FLAGS,
             fields=["title"],
             query=f"{quotes_stripped}",
             boost=10000,
@@ -313,9 +325,11 @@ def build_search_query(
             ("tags", "tags.name"),
         ]:
             if field_value := search_params.data.get(field):
+                log_query_features(field_value, query_name="field")
                 search_queries["must"].append(
                     Q(
                         "simple_query_string",
+                        flags=DEFAULT_SQS_FLAGS,
                         query=_quote_escape(field_value),
                         fields=[field_name],
                     )
@@ -337,6 +351,22 @@ def build_search_query(
         must=search_queries["must"],
         should=search_queries["should"],
     )
+
+
+def log_query_features(query: str, query_name) -> None:
+    query_flags = []
+    for flag, pattern in UNUSED_SQS_FLAGS:
+        if bool(re.search(pattern, query)):
+            query_flags.append(flag)
+    if query_flags:
+        log.info(
+            {
+                "log_message": "Special features present in query",
+                "query_name": query_name,
+                "query": query,
+                "flags": query_flags,
+            }
+        )
 
 
 def build_collection_query(

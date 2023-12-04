@@ -7,11 +7,15 @@ from django.conf import settings
 from django.http import HttpResponse
 from rest_framework.exceptions import UnsupportedMediaType
 
+import aiohttp
 import django_redis
 import requests
 import sentry_sdk
+from asgiref.sync import sync_to_async
 from sentry_sdk import push_scope, set_context
 
+from api.utils.aiohttp import get_aiohttp_session
+from api.utils.asyncio import do_not_wait_for
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
 from api.utils.image_proxy.photon import get_photon_request_params
@@ -75,11 +79,40 @@ def get_request_params_for_extension(
     )
 
 
-def get(
+@sync_to_async
+def _tally_response(
+    tallies,
+    media_info: MediaInfo,
+    month: str,
+    domain: str,
+    response: aiohttp.ClientResponse,
+):
+    """
+    Tally image proxy response without waiting for Redis to respond.
+
+    Pulled into a separate function to help reduce overload when skimming
+    the `get` function, which is complex enough as is.
+    """
+    tallies.incr(f"thumbnail_response_code:{month}:{response.status}"),
+    tallies.incr(
+        f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{response.status}"
+    )
+    tallies.incr(
+        f"thumbnail_response_code_by_provider:{media_info.media_provider}:"
+        f"{month}:{response.status}"
+    )
+
+
+_UPSTREAM_TIMEOUT = aiohttp.ClientTimeout(15)
+
+
+async def get(
     media_info: MediaInfo,
     request_config: RequestConfig = RequestConfig(),
 ) -> HttpResponse:
     """
+    Retrieve the proxied image.
+
     Proxy an image through Photon if its file type is supported, else return the
     original image if the file type is SVG. Otherwise, raise an exception.
     """
@@ -88,9 +121,10 @@ def get(
 
     logger = parent_logger.getChild("get")
     tallies = django_redis.get_redis_connection("tallies")
+    tallies_incr = sync_to_async(tallies.incr)
     month = get_monthly_timestamp()
 
-    image_extension = get_image_extension(image_url, media_identifier)
+    image_extension = await get_image_extension(image_url, media_identifier)
 
     headers = {"Accept": request_config.accept_header} | HEADERS
 
@@ -106,26 +140,35 @@ def get(
     )
 
     try:
-        upstream_response = requests.get(
+        session = await get_aiohttp_session()
+
+        upstream_response = await session.get(
             upstream_url,
-            timeout=15,
+            timeout=_UPSTREAM_TIMEOUT,
             params=params,
             headers=headers,
         )
-        tallies.incr(f"thumbnail_response_code:{month}:{upstream_response.status_code}")
-        tallies.incr(
-            f"thumbnail_response_code_by_domain:{domain}:"
-            f"{month}:{upstream_response.status_code}"
-        )
-        tallies.incr(
-            f"thumbnail_response_code_by_provider:{media_info.media_provider}:"
-            f"{month}:{upstream_response.status_code}"
+        do_not_wait_for(
+            _tally_response(tallies, media_info, month, domain, upstream_response)
         )
         upstream_response.raise_for_status()
+        status_code = upstream_response.status
+        content_type = upstream_response.headers.get("Content-Type")
+        logger.debug(
+            "Image proxy response status: %s, content-type: %s",
+            status_code,
+            content_type,
+        )
+        content = await upstream_response.content.read()
+        return HttpResponse(
+            content,
+            status=status_code,
+            content_type=content_type,
+        )
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
-        count = tallies.incr(key)
+        count = await tallies_incr(key)
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
             count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
@@ -144,8 +187,10 @@ def get(
                 sentry_sdk.capture_exception(exc)
         if isinstance(exc, requests.exceptions.HTTPError):
             code = exc.response.status_code
-            tallies.incr(
-                f"thumbnail_http_error:{domain}:{month}:{code}:{exc.response.text}"
+            do_not_wait_for(
+                tallies_incr(
+                    f"thumbnail_http_error:{domain}:{month}:{code}:{exc.response.text}"
+                )
             )
             logger.warning(
                 f"Failed to render thumbnail "
@@ -153,15 +198,3 @@ def get(
                 f"{media_info.media_provider=}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
-
-    res_status = upstream_response.status_code
-    content_type = upstream_response.headers.get("Content-Type")
-    logger.debug(
-        f"Image proxy response status: {res_status}, content-type: {content_type}"
-    )
-
-    return HttpResponse(
-        upstream_response.content,
-        status=res_status,
-        content_type=content_type,
-    )

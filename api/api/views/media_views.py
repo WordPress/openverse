@@ -40,9 +40,6 @@ class InvalidSource(APIException):
     default_code = "invalid_source"
 
 
-image_proxy_aget = sync_to_async(image_proxy.get)
-
-
 class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
     view_is_async = True
 
@@ -105,6 +102,18 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         return req_serializer
 
     def get_db_results(self, results):
+        """
+        Map ES hits to ORM model instances.
+
+        ORM instances have all necessary info needed for serializers whereas ES
+        hits only contain the subset of fields needed for indexing and search.
+        This function issues one query to the DB, using the ``identifier`` field
+        which is both unique and indexed, so it's quite performant.
+
+        :param results: the list of ES hits
+        :return: the corresponding list of ORM model instances
+        """
+
         identifiers = []
         hits = []
         for hit in results:
@@ -267,6 +276,10 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         serializer_context = self.get_serializer_context()
 
+        serializer_class = self.get_serializer()
+        if serializer_class.needs_db:
+            results = self.get_db_results(results)
+
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
 
@@ -296,7 +309,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         media_info = await self.get_image_proxy_media_info()
 
-        return await image_proxy_aget(
+        return await image_proxy.get(
             media_info,
             request_config=image_proxy.RequestConfig(
                 accept_header=request.headers.get("Accept", "image/*"),
