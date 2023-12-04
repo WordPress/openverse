@@ -177,3 +177,12 @@ def test_get_record_data_returns_none_with_falsy_required_property(property_name
         item[prop] = ""
 
     assert smk.get_record_data(item) is None
+
+
+def test_get_record_data_with_spaces_in_urls():
+    item = _get_resource_json("image_data_spaces.json")
+    expected_image_data = _get_resource_json("expected_image_data_spaces.json")
+    expected_record_data = {**expected_image_data, "license_info": CC0_SMK}
+    actual_record_data = smk.get_record_data(item)
+
+    assert actual_record_data == expected_record_data
