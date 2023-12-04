@@ -115,8 +115,3 @@ export const main = async (octokit, core) => {
   // add the new IDs we provide, no existing label will be changed.
   await pr.addLabels(Array.from(finalLabels.ids))
 }
-
-import { Octokit } from '@octokit/rest'
-let octokit = new Octokit({ auth: process.env.ACCESS_TOKEN })
-let core = { info: console.log }
-await main(octokit, core)
