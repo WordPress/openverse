@@ -7,6 +7,7 @@ from textwrap import dedent
 from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.db import DataError
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -28,6 +29,12 @@ from api.utils.throttle import OnePerSecond, TenPerDay
 
 
 module_logger = log.getLogger(__name__)
+
+
+class InvalidCredentials(APIException):
+    status_code = 400
+    default_detail = "Invalid credentials"
+    default_code = "invalid_credentials"
 
 
 @extend_schema(tags=["auth"])
@@ -160,7 +167,10 @@ class TokenView(APIView, BaseTokenView):
         endpoint.
         """
 
-        res = super().post(request._request)
+        try:
+            res = super().post(request._request)
+        except DataError as e:
+            raise InvalidCredentials(e)
         data = json.loads(res.content)
         return Response(data, status=res.status_code)
 
