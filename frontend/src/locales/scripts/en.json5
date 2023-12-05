@@ -804,24 +804,24 @@
       source: {
         audio: {
           zero: "No audio files provided by this source",
-          count: "{count} audio file provided by this source.|{count} audio files provided by this source",
+          count: "{count} audio file provided by this source.|{count} audio files provided by this source.",
           countMore: "Over {count} audio files provided by this source",
         },
         image: {
           zero: "No images provided by this source",
-          count: "{count} image provided by this source.|{count} images provided by this source",
+          count: "{count} image provided by this source.|{count} images provided by this source.",
           countMore: "Over {count} images provided by this source",
         },
       },
       tag: {
         audio: {
           zero: "No audio files with the selected tag",
-          count: "{count} audio file with the selected tag.|{count} audio files with the selected tag",
+          count: "{count} audio file with the selected tag.|{count} audio files with the selected tag.",
           countMore: "Over {count} audio files with the selected tag",
         },
         image: {
           zero: "No images with the selected tag",
-          count: "{count} image with the selected tag.|{count} images with the selected tag",
+          count: "{count} image with the selected tag.|{count} images with the selected tag.",
           countMore: "Over {count} images with the selected tag",
         },
       },
