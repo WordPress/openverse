@@ -15,6 +15,8 @@ group:
         dest: automations/js/src/project_automation/
       - source: automations/js/src/utils/
         dest: automations/js/src/utils/
+      - source: automations/js/src/label_pr.mjs
+        dest: automations/js/src/label_pr.mjs
       # Synced workflows
       - source: .github/workflows/issue_automations.yml
         dest: .github/workflows/issue_automations.yml
@@ -22,16 +24,10 @@ group:
         dest: .github/workflows/pr_automations.yml
       - source: .github/workflows/pr_automations_init.yml
         dest: .github/workflows/pr_automations_init.yml
-      - source: .github/workflows/label_new_pr.yml
-        dest: .github/workflows/label_new_pr.yml
       - source: .github/workflows/pr_label_check.yml
         dest: .github/workflows/pr_label_check.yml
       - source: .github/workflows/pr_ping.yml
         dest: .github/workflows/pr_ping.yml
-      - source: .github/workflows/actionlint.yml
-        dest: .github/workflows/actionlint.yml
-      - source: .github/actionlint-matcher.json
-        dest: .github/actionlint-matcher.json
       - source: .github/workflows/subscribe_to_label.yml
         dest: .github/workflows/subscribe_to_label.yml
       - source: .github/subscribe-to-label.json

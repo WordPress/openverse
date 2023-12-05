@@ -10,7 +10,7 @@ import yaml from 'js-yaml'
 import axios from 'axios'
 import { Octokit } from '@octokit/rest'
 
-import { escapeHtml } from './html.mjs'
+import { escapeHtml } from './utils/html.mjs'
 
 /* Environment variables */
 
