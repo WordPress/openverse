@@ -28,7 +28,6 @@ class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
         contains the limit and the number of requests left in the limit. Since multiple
         rate limits can apply concurrently, the suffix identifies each pair uniquely.
         """
-
         prefix = "X-RateLimit"
         suffix = self.scope or self.__class__.__name__.lower()
         if hasattr(self, "history"):
@@ -53,8 +52,8 @@ class AbstractAnonRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
         logger = self.logger.getChild("get_cache_key")
         # Do not apply anonymous throttle to request with valid tokens.
         if request.auth:
-            client_id, _, verified = get_token_info(str(request.auth))
-            if client_id and verified:
+            token_info = get_token_info(str(request.auth))
+            if token_info and token_info.valid:
                 return None
 
         ident = self.get_ident(request)
@@ -113,14 +112,14 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMe
     def get_cache_key(self, request, view):
         # Find the client ID associated with the access token.
         auth = str(request.auth)
-        client_id, rate_limit_model, verified = get_token_info(auth)
-        if client_id and rate_limit_model == self.applies_to_rate_limit_model:
-            ident = client_id
-        else:
-            # Return None, fallback to the anonymous rate limiting
+        token_info = get_token_info(auth)
+        if not (token_info and token_info.valid):
             return None
 
-        return self.cache_format % {"scope": self.scope, "ident": ident}
+        if token_info.rate_limit_model != self.applies_to_rate_limit_model:
+            return None
+
+        return self.cache_format % {"scope": self.scope, "ident": token_info.client_id}
 
 
 class OAuth2IdThumbnailRateThrottle(AbstractOAuth2IdRateThrottle):

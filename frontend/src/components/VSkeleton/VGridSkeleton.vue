@@ -4,12 +4,12 @@
       v-if="isForTab === 'all'"
       class="grid grid-cols-2 gap-4 lg:grid-cols-5"
     >
-      <VBone v-for="idx in numElems" :key="idx" class="square" />
+      <VBone v-for="idx in elementCount" :key="idx" class="square" />
     </div>
 
     <div v-if="isForTab === 'image'" class="masonry">
       <VBone
-        v-for="idx in numElems"
+        v-for="idx in elementCount"
         :key="idx"
         class="mb-4"
         :style="{ height: `${getRandomSize()}px` }"
@@ -17,7 +17,7 @@
     </div>
 
     <template v-if="isForTab === 'audio'">
-      <VAudioTrackSkeleton v-for="idx in numElems" :key="idx" />
+      <VAudioTrackSkeleton v-for="idx in elementCount" :key="idx" />
     </template>
   </section>
 </template>

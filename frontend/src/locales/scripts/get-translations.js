@@ -11,7 +11,6 @@ const chokidar = require("chokidar")
 const { parseJson } = require("./read-i18n")
 
 const bulkDownload = require("./bulk-download")
-const separateDownload = require("./separate-download")
 
 /**
  * Write `en.json` from `en.json5`.
@@ -37,16 +36,11 @@ if (process.argv.includes("--watch")) {
 }
 
 if (!process.argv.includes("--en-only")) {
-  bulkDownload()
-    .catch((err) => {
-      console.error(err)
-      return separateDownload()
-    })
-    .catch((err) => {
-      console.error(err)
-      console.error(":'-( Downloading translations failed.")
-      if (process.argv.includes("--require-complete")) {
-        process.exitCode = 1
-      }
-    })
+  bulkDownload().catch((err) => {
+    console.error(err)
+    console.error(":'-( Downloading translations failed.")
+    if (process.argv.includes("--require-complete")) {
+      process.exitCode = 1
+    }
+  })
 }

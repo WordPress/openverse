@@ -7,6 +7,10 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from adrf.views import APIView as AsyncAPIView
+from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
+from asgiref.sync import sync_to_async
+
 from api.constants.media_types import MediaType
 from api.constants.search import SearchStrategy
 from api.controllers import search_controller
@@ -18,6 +22,7 @@ from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
+from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +40,9 @@ class InvalidSource(APIException):
     default_code = "invalid_source"
 
 
-class MediaViewSet(ReadOnlyModelViewSet):
+class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
+    view_is_async = True
+
     lookup_field = "identifier"
     # TODO: https://github.com/encode/django-rest-framework/pull/6789
     lookup_value_regex = (
@@ -79,6 +86,8 @@ class MediaViewSet(ReadOnlyModelViewSet):
             ).values_list("provider_identifier")
         )
 
+    aget_object = sync_to_async(ReadOnlyModelViewSet.get_object)
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         req_serializer = self._get_request_serializer(self.request)
@@ -93,6 +102,18 @@ class MediaViewSet(ReadOnlyModelViewSet):
         return req_serializer
 
     def get_db_results(self, results):
+        """
+        Map ES hits to ORM model instances.
+
+        ORM instances have all necessary info needed for serializers whereas ES
+        hits only contain the subset of fields needed for indexing and search.
+        This function issues one query to the DB, using the ``identifier`` field
+        which is both unique and indexed, so it's quite performant.
+
+        :param results: the list of ES hits
+        :return: the corresponding list of ORM model instances
+        """
+
         identifiers = []
         hits = []
         for hit in results:
@@ -255,6 +276,10 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         serializer_context = self.get_serializer_context()
 
+        serializer_class = self.get_serializer()
+        if serializer_class.needs_db:
+            results = self.get_db_results(results)
+
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
 
@@ -265,16 +290,31 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def thumbnail(self, request, media_obj, image_url):
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
+        raise NotImplementedError(
+            "Subclasses must implement `get_image_proxy_media_info`"
+        )
+
+    thumbnail_action = action(
+        detail=True,
+        url_path="thumb",
+        url_name="thumb",
+        serializer_class=media_serializers.MediaThumbnailRequestSerializer,
+        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
+    )
+
+    async def thumbnail(self, request, *_, **__):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        return image_proxy.get(
-            image_url,
-            media_obj.identifier,
-            media_obj.provider,
-            accept_header=request.headers.get("Accept", "image/*"),
-            **serializer.validated_data,
+        media_info = await self.get_image_proxy_media_info()
+
+        return await image_proxy.get(
+            media_info,
+            request_config=image_proxy.RequestConfig(
+                accept_header=request.headers.get("Accept", "image/*"),
+                **serializer.validated_data,
+            ),
         )
 
     # Helper functions

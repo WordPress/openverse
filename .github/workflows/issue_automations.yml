@@ -1,0 +1,34 @@
+# Runs all automations related to issue events.
+#
+# See `pr_automations_init.yml` and `pr_automations.yml` for the corresponding
+# implementation for PRs.
+name: Issue automations
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - closed
+      - assigned
+      - labeled
+      - unlabeled
+
+jobs:
+  run:
+    name: Perform issue automations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Perform issue automations
+        uses: actions/github-script@v7
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { main } = await import('${{ github.workspace }}/automations/js/src/project_automation/issues.mjs')
+            await main(github, context)

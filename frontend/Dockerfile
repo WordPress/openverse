@@ -71,6 +71,9 @@ COPY --from=builder --chown=node:node /home/node/frontend ./frontend/
 
 WORKDIR /home/node/frontend/
 
+ARG SEMANTIC_VERSION
+ENV SENTRY_RELEASE=$SEMANTIC_VERSION
+
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0
 

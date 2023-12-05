@@ -11,11 +11,17 @@ group:
         dest: automations/python/
       - source: automations/data/
         dest: automations/data/
+      - source: automations/js/src/project_automation/
+        dest: automations/js/src/project_automation/
+      - source: automations/js/src/utils/
+        dest: automations/js/src/utils/
       # Synced workflows
-      - source: .github/workflows/new_issues.yml
-        dest: .github/workflows/new_issues.yml
-      - source: .github/workflows/new_prs.yml
-        dest: .github/workflows/new_prs.yml
+      - source: .github/workflows/issue_automations.yml
+        dest: .github/workflows/issue_automations.yml
+      - source: .github/workflows/pr_automations.yml
+        dest: .github/workflows/pr_automations.yml
+      - source: .github/workflows/pr_automations_init.yml
+        dest: .github/workflows/pr_automations_init.yml
       - source: .github/workflows/label_new_pr.yml
         dest: .github/workflows/label_new_pr.yml
       - source: .github/workflows/pr_label_check.yml

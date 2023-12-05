@@ -48,6 +48,11 @@ REST_FRAMEWORK = {
     },
     "EXCEPTION_HANDLER": "api.utils.exceptions.exception_handler",
     "DEFAULT_SCHEMA_CLASS": "api.docs.base_docs.MediaSchema",
+    # https://www.django-rest-framework.org/api-guide/throttling/#how-clients-are-identified
+    # Live environments should configure this to an appropriate number
+    "NUM_PROXIES": config(
+        "NUM_PROXIES", default=None, cast=lambda x: int(x) if x is not None else None
+    ),
 }
 
 if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
@@ -57,7 +62,3 @@ if config("DISABLE_GLOBAL_THROTTLING", default=True, cast=bool):
         **{k: None for k, _ in REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"].items()}
     )
     del REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
-
-# https://www.django-rest-framework.org/api-guide/throttling/#how-clients-are-identified
-# We override this in live environments to an appropriate number based on our deployment
-NUM_PROXIES = config("NUM_PROXIES", default=0, cast=int)

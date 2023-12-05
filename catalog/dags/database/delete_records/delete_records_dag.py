@@ -102,10 +102,9 @@ def delete_records():
     )(table="{{ params.table_name }}", select_query="{{ params.select_query }}")
 
     notify_complete = notify_slack(
-        text=(
-            f"Deleted {delete_records} records from the"
-            " {{ params.table_name }} table matching query: `{{ params.select_query }}`"
-        ),
+        deleted_records_count=delete_records,
+        table_name="{{ params.table_name }}",
+        select_query="{{ params.select_query }}",
     )
 
     insert_into_deleted_media_table >> delete_records >> notify_complete
