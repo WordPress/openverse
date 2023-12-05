@@ -44,7 +44,9 @@ export const main = async (octokit, core) => {
     eventName !== 'pull_request' ||
     !['opened', 'edited'].includes(eventAction)
   ) {
-    core.info('This is not an event where a PR should be labelled.')
+    core.info(
+      `Event "${eventName}"/"${eventAction}" is not an event where a PR should be labelled.`
+    )
     return
   }
 
