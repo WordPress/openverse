@@ -809,7 +809,7 @@
         },
         image: {
           zero: "No images provided by this source",
-          count: "{count} image provided by this source.|{count} images provided by this source.",
+          count: "{count} image provided by this source|{count} images provided by this source",
           countMore: "Over {count} images provided by this source",
         },
       },
