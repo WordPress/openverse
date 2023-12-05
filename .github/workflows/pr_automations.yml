@@ -75,6 +75,7 @@ jobs:
 
       - name: Perform PR automations
         uses: actions/github-script@v7
+        if: success() || failure()
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
