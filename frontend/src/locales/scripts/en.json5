@@ -821,7 +821,7 @@
         },
         image: {
           zero: "No images with the selected tag",
-          count: "{count} image with the selected tag.|{count} images with the selected tag.",
+          count: "{count} image with the selected tag|{count} images with the selected tag",
           countMore: "Over {count} images with the selected tag",
         },
       },
