@@ -88,10 +88,26 @@ def test_audio_report(image_fixture):
 @pytest.mark.parametrize(
     "url, expected_status_code",
     [
-        (f"https://any.domain/any/path/{identifier}", 200),  # no trailing slash
-        (f"https://any.domain/any/path/{identifier}/", 200),  # trailing slash
-        ("https://any.domain/any/path/00000000-0000-0000-0000-000000000000", 400),
-        ("https://any.domain/any/path/not-a-valid-uuid", 400),
+        pytest.param(
+            f"https://any.domain/any/path/{identifier}",
+            200,
+            id="OK; no trailing slash",
+        ),
+        pytest.param(
+            f"https://any.domain/any/path/{identifier}/",
+            200,
+            id="OK; with trailing slash",
+        ),  # trailing slash
+        pytest.param(
+            "https://any.domain/any/path/00000000-0000-0000-0000-000000000000",
+            404,
+            id="Valid UUID but no matching identifier",
+        ),
+        pytest.param(
+            "https://any.domain/any/path/not-a-valid-uuid",
+            400,
+            id="not a valid UUID",
+        ),
     ],
 )
 def test_oembed_endpoint(url, expected_status_code):
