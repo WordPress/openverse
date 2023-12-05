@@ -58,13 +58,13 @@ def main(input_file: Path):
     few_no_voted = votes[votes <= 1].sort_values(ascending=False)
 
     # Print results
-    print("\n==Projects everyone voted for==")
+    print("\n### Projects everyone voted for")
     _print_series(all_voted)
-    print("\n==Projects most voted for (4-6)==")
+    print("\n### Projects most voted for (4-6)")
     _print_series(most_voted)
-    print("\n==Projects some voted for (2-3)==")
+    print("\n### Projects some voted for (2-3)")
     _print_series(some_voted)
-    print("\n==Projects 1 or nobody voted for (0-1)==")
+    print("\n### Projects 1 or nobody voted for (0-1)")
     _print_series(few_no_voted)
 
 
