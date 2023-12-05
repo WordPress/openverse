@@ -281,14 +281,14 @@ export default defineComponent({
       if (localAudio) {
         return localAudio.duration
       }
-      if (typeof props.audio?.duration === "number"){
+      if (typeof props.audio?.duration === "number") {
         return props.audio.duration / 1e3
       }
       return 0
     })
     const setDuration = () => {
-      if (localAudio){
-       duration.value = localAudio.duration
+      if (localAudio) {
+        duration.value = localAudio.duration
       }
     }
 
@@ -314,8 +314,7 @@ export default defineComponent({
      * `localAudio` variable. This is the earliest in
      * `setup` that this can be called.
      */
-    if (localAudio)
-    {
+    if (localAudio) {
       initLocalAudio()
     }
 
@@ -361,7 +360,9 @@ export default defineComponent({
 
     const play = () => {
       // Delay initializing the local audio element until playback is requested
-      if (!localAudio) { initLocalAudio() }
+      if (!localAudio) {
+        initLocalAudio()
+      }
 
       const playPromise = localAudio?.play()
       // Check if the audio can be played successfully
@@ -420,13 +421,15 @@ export default defineComponent({
       let event: AudioInteraction | undefined = undefined
       if (!state) {
         switch (status.value) {
-          case "playing":
+          case "playing": {
             state = "paused"
             break
+          }
           case "paused":
-          case "played":
+          case "played": {
             state = "playing"
             break
+          }
         }
       }
 
@@ -444,7 +447,9 @@ export default defineComponent({
     }
 
     const emitInteracted = (event?: AudioInteraction) => {
-      if (!event) { return }
+      if (!event) {
+        return
+      }
       snackbar.dismiss()
       emit("interacted", {
         event,
@@ -456,7 +461,9 @@ export default defineComponent({
     /* Interface with VWaveform */
 
     const handleSeeked = (frac: number) => {
-      if (!localAudio) { initLocalAudio() }
+      if (!localAudio) {
+        initLocalAudio()
+      }
       /**
        * Calling initLocalAudio will guarantee localAudio
        * to be an HTMLAudioElement, but we can't prove that

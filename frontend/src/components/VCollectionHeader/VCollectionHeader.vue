@@ -135,7 +135,9 @@ export default defineComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const sendAnalyticsEvent = () => {
-      if (props.collectionParams.collection === "tag") return
+      if (props.collectionParams.collection === "tag") {
+        return
+      }
 
       const eventName =
         props.collectionParams.collection === "creator"
