@@ -39,7 +39,7 @@ from api.serializers.media_serializers import (
     PaginatedRequestSerializer,
 )
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
-from api.utils.watermark import watermark
+from api.utils.watermark import UpstreamWatermarkException, watermark
 from api.views.media_views import MediaViewSet
 
 
@@ -169,6 +169,10 @@ class ImageViewSet(MediaViewSet):
 
         image = self.get_object()
         image_url = image.url
+        
+        if image_url.endswith(".svg") or getattr(image, "filetype") == "svg":
+            raise UpstreamWatermarkException("Unsupported media type: SVG images are not supported for watermarking.")
+        
         image_info = {
             attr: getattr(image, attr)
             for attr in ["title", "creator", "license", "license_version"]
