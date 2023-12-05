@@ -443,5 +443,10 @@ export const setBreakpointCookie = async (page: Page, breakpoint: string) => {
 
 export const turnOnAnalytics = async (page: Page) => {
   await page.goto("/preferences")
-  await page.getByLabel("Record custom events and page views.").click()
+  const analyticsCheckbox = page.getByLabel(
+    "Record custom events and page views."
+  )
+  if (!(await analyticsCheckbox.isChecked())) {
+    await analyticsCheckbox.click()
+  }
 }

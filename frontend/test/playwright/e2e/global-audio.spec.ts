@@ -16,7 +16,7 @@ test.describe("Global Audio", () => {
       // Navigate to the details page of the playing audio track
       await firstAudioRow.click()
       // and confirm is still playing (or loading to play)
-      const mainPlayerButton = page.locator(".main-track >> button")
+      const mainPlayerButton = page.locator(".main-track >> button").first()
       await sleep(600) // Doesn't seem to make a difference for the status
       await expect(mainPlayerButton).toHaveAttribute(
         "aria-label",
@@ -53,8 +53,11 @@ test.describe("Global Audio", () => {
       const secondAudioRow = await audio.getNthAudioRow(page, 1)
       await secondAudioRow.click()
       // and confirm is not playing
-      const mainPlayerButton = page.locator(".main-track >> button")
-      await expect(mainPlayerButton).toHaveAttribute("aria-label", "Play")
+      await expect(
+        page
+          .locator(".main-track")
+          .getByRole("button", { name: t("playPause.play") })
+      ).toBeVisible()
     })
   })
 })
