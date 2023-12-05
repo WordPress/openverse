@@ -2,6 +2,10 @@ import asyncio
 import logging
 from collections.abc import Awaitable
 
+from rest_framework.generics import get_object_or_404
+
+from asgiref.sync import sync_to_async
+
 
 parent_logger = logging.getLogger(__name__)
 
@@ -27,3 +31,6 @@ def do_not_wait_for(awaitable: Awaitable) -> None:
         raise exc
 
     loop.create_task(awaitable)
+
+
+aget_object_or_404 = sync_to_async(get_object_or_404)
