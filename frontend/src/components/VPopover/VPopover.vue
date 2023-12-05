@@ -25,7 +25,6 @@
     <VPopoverContent
       v-if="triggerRef"
       :z-index="zIndex"
-      :width="width"
       :visible="visibleRef"
       :trigger-element="triggerRef"
       :placement="placement"
@@ -155,12 +154,6 @@ export default defineComponent({
      * @default true
      */
     trapFocus: { type: Boolean, default: undefined },
-    /**
-     * Optional Tailwind class for fixed width popover content.
-     *
-     * @default undefined
-     */
-    width: { type: String },
   },
   emits: [
     /**
