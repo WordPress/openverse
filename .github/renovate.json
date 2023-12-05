@@ -66,8 +66,12 @@
     {
       "groupName": "python dev dependencies",
       "matchDepTypes": ["dev-packages"],
-      "matchManagers": ["pipenv"],
-      "matchFileNames": ["api/**", "ingestion_server/**", "documentation/**"]
+      "matchFileNames": [
+        "api/**",
+        "catalog/**",
+        "ingestion_server/**",
+        "documentation/**"
+      ]
     },
     {
       "groupName": "@openverse/eslint-plugin",
