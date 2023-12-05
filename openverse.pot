@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-12-01T11:03:52+00:00\n"
+"POT-Creation-Date: 2023-12-05T15:08:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1201,12 +1201,12 @@ msgctxt "browsePage.contentLink.audio.countMore"
 msgid "See over ###localeCount### audio found for ###query###."
 msgstr ""
 
-#: src/components/VLoadMore.vue:101
+#: src/components/VLoadMore.vue:108
 msgctxt "browsePage.load"
 msgid "Load more results"
 msgstr ""
 
-#: src/components/VLoadMore.vue:100
+#: src/components/VLoadMore.vue:107
 msgctxt "browsePage.loading"
 msgid "Loading..."
 msgstr ""
@@ -2302,6 +2302,36 @@ msgstr ""
 
 msgctxt "collection.link.creator"
 msgid "Open creator page"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.ariaLabel.creator.audio"
+msgid "Audio files by ###creator### in ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.ariaLabel.creator.image"
+msgid "Images by ###creator### in ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.ariaLabel.source.audio"
+msgid "Audio files from ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.ariaLabel.source.image"
+msgid "Images from ###source###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.ariaLabel.tag.audio"
+msgid "Audio files with the tag ###tag###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "collection.ariaLabel.tag.image"
+msgid "Images with the tag ###tag###"
 msgstr ""
 
 #. Do not translate words between ### ###.
