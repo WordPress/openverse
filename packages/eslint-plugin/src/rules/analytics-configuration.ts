@@ -16,6 +16,8 @@ const messages = {
     "Events with empty payloads must use `never` for the payload type.",
   invalidPayloadFormat:
     "Payloads must be specific key-value pairs where keys are strings and values are either string, boolean, or number.",
+  missingBraces: 
+    "Missing Braces",
 } as const
 
 type MessageIds = keyof typeof messages
