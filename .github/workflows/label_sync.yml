@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Sync labels from to infra
+      - name: Sync labels from monorepo to infra
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
