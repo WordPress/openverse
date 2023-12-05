@@ -166,7 +166,9 @@ export default defineComponent({
 
     const initLocalAudio = () => {
       // Preserve existing local audio if we plucked it from the global active audio
-      if (!localAudio) localAudio = new Audio(props.audio.url)
+      if (!localAudio) {
+        localAudio = new Audio(props.audio.url)
+      }
 
       Object.entries(eventMap).forEach(([name, fn]) =>
         /**
