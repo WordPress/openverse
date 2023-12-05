@@ -5,7 +5,7 @@
     role="dialog"
     aria-modal="true"
     class="popover-content w-max-content absolute left-0 top-0 overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-white shadow"
-    :class="[`z-${zIndex}`, width]"
+    :class="`z-${zIndex}`"
     :style="{ ...heightProperties, ...style }"
     :tabindex="-1"
     :aria-hidden="!visible"
@@ -93,12 +93,6 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-    /**
-     * Optional Tailwind class for fixed width.
-     */
-    width: {
-      type: String,
-    },
   },
   /**
    * This is the only documented emitted event but in reality we pass through `$listeners`
@@ -126,7 +120,5 @@ export default defineComponent({
 <style>
 .popover-content {
   height: var(--popover-height, auto);
-  scrollbar-gutter: stable;
-  overflow-x: hidden;
 }
 </style>
