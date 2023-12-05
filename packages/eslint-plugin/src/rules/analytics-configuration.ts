@@ -213,6 +213,35 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
           if (m.type === "TSPropertySignature") validateCustomEvent(m)
         })
       },
+
+      IfStatement(node: TSESTree.IfStatement) {
+        if (!node.consequent || node.consequent.type !== 'BlockStatement') {
+          context.report({
+            node,
+            messageId: 'missingBraces',
+          });
+        }
+
+        if (node.alternate && node.alternate.type !== 'BlockStatement') {
+          context.report({
+            node,
+            messageId: 'missingBraces',
+          });
+        }
+      },
+
+      SwitchStatement(node: TSESTree.SwitchStatement) {
+        if (node.cases) {
+          for (const switchCase of node.cases) {
+            if (!switchCase.consequent || switchCase.consequent.length === 0) {
+              context.report({
+                node: switchCase,
+                messageId: 'missingBraces',
+              });
+            }
+          }
+        }
+      },
     }
   },
 })

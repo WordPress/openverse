@@ -117,6 +117,42 @@ tester.run(
             errors: [{ messageId: "invalidPayloadFormat" }],
           } as const)
       ),
+    {
+        ...baseTestCase,
+        name: "Disallow one-line if-else statements without braces",
+        code: `
+          export type Events = {
+            EVENT_NAME: {
+              prop: string;
+              // Incorrect one-line if-else statement without braces
+              someCondition ? doSomething() : doSomethingElse();
+            }
+          }
+        `,
+        errors: [{ messageId: "missingBraces" }],
+      },
+
+      // Add test cases for case blocks inside switch without braces
+      {
+        ...baseTestCase,
+        name: "Disallow case blocks inside switch without braces",
+        code: `
+          export type Events = {
+            EVENT_NAME: {
+              prop: string;
+              // Incorrect case block inside switch without braces
+              switch (someVariable) {
+                case 'value':
+                  doSomething();
+                  break;
+                default:
+                  doSomethingElse();
+              }
+            }
+          }
+        `,
+        errors: [{ messageId: "missingBraces" }],
+      },
     ],
     valid: [
       ...validEventNames.map(
