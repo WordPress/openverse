@@ -804,7 +804,7 @@
       source: {
         audio: {
           zero: "No audio files provided by this source",
-          count: "{count} audio file provided by this source.|{count} audio files provided by this source.",
+          count: "{count} audio file provided by this source|{count} audio files provided by this source",
           countMore: "Over {count} audio files provided by this source",
         },
         image: {
