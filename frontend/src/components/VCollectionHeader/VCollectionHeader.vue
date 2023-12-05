@@ -75,6 +75,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const mediaStore = useMediaStore()
     const providerStore = useProviderStore()
     const uiStore = useUiStore()
 
@@ -114,7 +115,10 @@ export default defineComponent({
     const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
 
     const resultsLabel = computed(() => {
-      const resultsCount = useMediaStore().results[props.mediaType].count
+      if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
+        return ""
+      }
+      const resultsCount = mediaStore.results[props.mediaType].count
       if (props.collectionParams.collection === "creator") {
         return getI18nCollectionResultCountLabel(
           resultsCount,

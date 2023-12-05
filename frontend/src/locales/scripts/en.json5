@@ -774,6 +774,20 @@
       source: "Open source site",
       creator: "Open creator page",
     },
+    ariaLabel: {
+      creator: {
+        audio: "Audio files by {creator} in {source}",
+        image: "Images by {creator} in {source}",
+      },
+      source: {
+        audio: "Audio files from {source}",
+        image: "Images from {source}",
+      },
+      tag: {
+        audio: "Audio files with the tag {tag}",
+        image: "Images with the tag {tag}",
+      },
+    },
     resultCountLabel: {
       creator: {
         audio: {

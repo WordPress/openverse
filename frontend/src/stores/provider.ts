@@ -26,6 +26,10 @@ export interface ProviderState {
     audio: FetchState
     image: FetchState
   }
+  sourceNames: {
+    audio: string[]
+    image: string[]
+  }
 }
 
 /**
@@ -55,6 +59,10 @@ export const useProviderStore = defineStore("provider", {
     fetchState: {
       [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },
       [IMAGE]: { isFetching: false, hasStarted: false, fetchingError: null },
+    },
+    sourceNames: {
+      [AUDIO]: [],
+      [IMAGE]: [],
     },
   }),
 
@@ -153,7 +161,18 @@ export const useProviderStore = defineStore("provider", {
         this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
       } finally {
         this.providers[mediaType] = sortedProviders
+        this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)
       }
+    },
+
+    /**
+     * Returns true if the given source name exists in the given media type sources list.
+     */
+    isSourceNameValid(
+      mediaType: SupportedMediaType,
+      sourceName: string
+    ): boolean {
+      return this.sourceNames[mediaType].includes(sourceName)
     },
   },
 
