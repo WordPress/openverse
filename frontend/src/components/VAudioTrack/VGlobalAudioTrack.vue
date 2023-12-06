@@ -211,25 +211,29 @@ export default defineComponent({
     ) => {
       if (!state) {
         switch (status.value) {
-          case "playing":
+          case "playing": {
             state = "paused"
             break
+          }
           case "paused":
-          case "played":
+          case "played": {
             state = "playing"
             break
+          }
         }
       }
       let event: AudioInteraction | undefined = undefined
       switch (state) {
-        case "playing":
+        case "playing": {
           play()
           event = "play"
           break
-        case "paused":
+        }
+        case "paused": {
           pause()
           event = "pause"
           break
+        }
       }
       if (event) {
         sendAudioInteractionEvent(event)

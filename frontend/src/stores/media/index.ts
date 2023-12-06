@@ -330,18 +330,22 @@ export const useMediaStore = defineStore("media", {
       error?: FetchingError
     ) {
       switch (action) {
-        case "reset":
+        case "reset": {
           this._resetFetchState()
           break
-        case "start":
+        }
+        case "start": {
           this._startFetching(mediaType)
           break
-        case "end":
+        }
+        case "end": {
           this._endFetching(mediaType, error)
           break
-        case "finish":
+        }
+        case "finish": {
           this._finishFetchingForQuery(mediaType)
           break
+        }
       }
     },
 

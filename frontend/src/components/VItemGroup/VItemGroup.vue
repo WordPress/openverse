@@ -149,19 +149,22 @@ export default defineComponent({
 
       switch (event.key) {
         case keycodes.ArrowUp:
-        case resolveArrow(keycodes.ArrowLeft, keycodes.ArrowRight):
+        case resolveArrow(keycodes.ArrowLeft, keycodes.ArrowRight): {
           if (targetIndex === 0) {
             return ensureFocus(items[items.length - 1])
           }
           return ensureFocus(items[targetIndex - 1])
+        }
         case keycodes.ArrowDown:
-        case resolveArrow(keycodes.ArrowRight, keycodes.ArrowLeft):
+        case resolveArrow(keycodes.ArrowRight, keycodes.ArrowLeft): {
           if (targetIndex === items.length - 1) {
             return ensureFocus(items[0])
           }
           return ensureFocus(items[targetIndex + 1])
-        default:
+        }
+        default: {
           return
+        }
       }
     }
 

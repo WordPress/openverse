@@ -359,18 +359,22 @@ export default defineComponent({
         playPromise.catch((err) => {
           let message: string
           switch (err.name) {
-            case "NotAllowedError":
+            case "NotAllowedError": {
               message = "err_unallowed"
               break
-            case "NotSupportedError":
+            }
+            case "NotSupportedError": {
               message = "err_unsupported"
               break
-            case "AbortError":
+            }
+            case "AbortError": {
               message = "err_aborted"
               break
-            default:
+            }
+            default: {
               message = "err_unknown"
               $sentry.captureException(err)
+            }
           }
           activeMediaStore.setMessage({ message })
           localAudio?.pause()
@@ -410,25 +414,29 @@ export default defineComponent({
       let event: AudioInteraction | undefined = undefined
       if (!state) {
         switch (status.value) {
-          case "playing":
+          case "playing": {
             state = "paused"
             break
+          }
           case "paused":
-          case "played":
+          case "played": {
             state = "playing"
             break
+          }
         }
       }
 
       switch (state) {
-        case "playing":
+        case "playing": {
           play()
           event = "play"
           break
-        case "paused":
+        }
+        case "paused": {
           pause()
           event = "pause"
           break
+        }
       }
       emitInteracted(event)
     }

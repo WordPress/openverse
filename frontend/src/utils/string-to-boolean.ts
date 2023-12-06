@@ -20,13 +20,16 @@ export const stringToBoolean = (value: string | boolean): boolean => {
   switch (value) {
     case "true":
     case "yes":
-    case "1":
+    case "1": {
       return true
+    }
     case "false":
     case "no":
-    case "0":
+    case "0": {
       return false
-    default:
+    }
+    default: {
       return Boolean(value)
+    }
   }
 }

@@ -101,10 +101,12 @@ class Entry {
 const parseKey = (keyNode) => {
   if (keyNode === undefined) return ""
   switch (keyNode.type) {
-    case "StringLiteral":
+    case "StringLiteral": {
       return keyNode.value
-    case "Identifier":
+    }
+    case "Identifier": {
       return keyNode.name
+    }
   }
 }
 
@@ -117,13 +119,15 @@ const parseKey = (keyNode) => {
  */
 const parseComment = (commentNode) => {
   switch (commentNode.type) {
-    case "CommentLine":
+    case "CommentLine": {
       return commentNode.value.trim()
-    case "CommentBlock":
+    }
+    case "CommentBlock": {
       return commentNode.value
         .replace(/\n|\*+/g, "")
         .replace(/\s+/, " ")
         .trim()
+    }
   }
 }
 
@@ -136,14 +140,16 @@ const parseComment = (commentNode) => {
  */
 const parseValue = (entry, valueNode) => {
   switch (valueNode.type) {
-    case "StringLiteral":
+    case "StringLiteral": {
       entry.value = valueNode.value
       break
-    case "ObjectExpression":
+    }
+    case "ObjectExpression": {
       valueNode.properties.map(parseObjProperty).forEach((child) => {
         entry.addChild(child)
       })
       break
+    }
   }
 }
 
