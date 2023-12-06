@@ -16,6 +16,8 @@ const messages = {
     "Events with empty payloads must use `never` for the payload type.",
   invalidPayloadFormat:
     "Payloads must be specific key-value pairs where keys are strings and values are either string, boolean, or number.",
+  missingBraces: 
+    "Missing Braces",
 } as const
 
 type MessageIds = keyof typeof messages
@@ -212,6 +214,35 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
         node.parent.typeAnnotation.members.forEach((m) => {
           if (m.type === "TSPropertySignature") validateCustomEvent(m)
         })
+      },
+
+      IfStatement(node: TSESTree.IfStatement) {
+        if (!node.consequent || node.consequent.type !== 'BlockStatement') {
+          context.report({
+            node,
+            messageId: 'missingBraces',
+          });
+        }
+
+        if (node.alternate && node.alternate.type !== 'BlockStatement') {
+          context.report({
+            node,
+            messageId: 'missingBraces',
+          });
+        }
+      },
+
+      SwitchStatement(node: TSESTree.SwitchStatement) {
+        if (node.cases) {
+          for (const switchCase of node.cases) {
+            if (!switchCase.consequent || switchCase.consequent.length === 0) {
+              context.report({
+                node: switchCase,
+                messageId: 'missingBraces',
+              });
+            }
+          }
+        }
       },
     }
   },

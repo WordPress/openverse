@@ -77,7 +77,7 @@ export default defineComponent({
         return
       }
       const error = event.target.error
-      if (!error) return
+      if (!error) { return }
       let errorMsg
       switch (error.code) {
         case error.MEDIA_ERR_ABORTED:
@@ -101,7 +101,7 @@ export default defineComponent({
     watch(
       activeAudio.obj,
       (audio, _, onInvalidate) => {
-        if (!audio) return
+        if (!audio) { return }
         audio.addEventListener("error", handleError)
 
         onInvalidate(() => {
