@@ -1,0 +1,109 @@
+{
+  "upload_id": 69420,
+  "upload_name": "Test Music",
+  "upload_extra": {
+    "usertags": "instrumental",
+    "ccud": "remix,media,bpm_090_095",
+    "systags": "non_commercial,audio,mp3,flac,zip,44k,stereo,CBR,VBR",
+    "bpm": 94,
+    "relative_dir": "content/testuser",
+    "featuring": "Other Test User, Another Test User",
+    "nsfw": false
+  },
+  "user_name": "testuser",
+  "upload_tags": ",remix,media,bpm_090_095,non_commercial,audio,mp3,flac,zip,44k,stereo,CBR,VBR,instrumental,",
+  "file_page_url": "https://ccmixter.org/files/testuser/69420",
+  "user_real_name": "Test User",
+  "artist_page_url": "https://ccmixter.org/people/testuser",
+  "license_logo_url": "https://ccmixter.org/ccskins/shared/images/lics/small-by-nc-3.png",
+  "license_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "license_name": "Attribution Noncommercial (4.0)",
+  "upload_date_format": "Wed, Dec 6, 2023 @ 4:47 AM",
+  "files": [
+    {
+      "file_id": 694201,
+      "file_upload": 69420,
+      "file_name": "testuser_-_Test_Music.zip",
+      "file_nicname": "Instruments",
+      "file_format_info": {
+        "media-type": "archive",
+        "format-name": "archive-zip-",
+        "default-ext": "zip",
+        "mime_type": "application/zip",
+        "zipdir": {
+          "files": [
+            "/Sax.flac  (11.78MB)",
+            "/Bagpipes.flac  (17.65MB)",
+            "/Sitar.flac  (9.74MB)"
+          ]
+        }
+      },
+      "file_extra": {
+        "sha1": "D73BDA58A34B029F63CF7A5CE8C36914"
+      },
+      "file_filesize": " (10.63MB)",
+      "file_order": 0,
+      "file_is_remote": 0,
+      "file_num_download": 0,
+      "download_url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.zip",
+      "local_path": "/var/www/ccmixter/content/testuser/testuser_-_Test_Music.zip",
+      "file_rawsize": 11150278
+    },
+    {
+      "file_id": 694202,
+      "file_upload": 69420,
+      "file_name": "testuser_-_Test_Music.flac",
+      "file_nicname": "flac",
+      "file_format_info": {
+        "media-type": "audio",
+        "format-name": "audio-flac-flac",
+        "default-ext": "flac",
+        "mime_type": "audio/x-flac",
+        "sr": "44k",
+        "ch": "stereo",
+        "ps": "1:05:46",
+        "br": "VBR"
+      },
+      "file_extra": {
+        "ccud": "sample,media",
+        "type": "samples",
+        "sha1": "65A8E27D8879283831B664BD8B7F0AD4"
+      },
+      "file_filesize": " (106.34MB)",
+      "file_order": 0,
+      "file_is_remote": 0,
+      "file_num_download": 0,
+      "download_url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.flac",
+      "local_path": "/var/www/ccmixter/content/testuser/testuser_-_Test_Music.flac",
+      "file_rawsize": 111502780
+    },
+    {
+      "file_id": 694203,
+      "file_upload": 69420,
+      "file_name": "testuser_-_Test_Music.mp3",
+      "file_nicname": "mp3",
+      "file_format_info": {
+        "media-type": "audio",
+        "format-name": "audio-mp3-mp3",
+        "default-ext": "mp3",
+        "mime_type": "audio/mpeg",
+        "sr": "44.1k",
+        "ch": "mono",
+        "ps": "5:46",
+        "br": "VBR"
+      },
+      "file_extra": {
+        "sha1": "C2B9A98D0CA61853B0ED8ED89DC6D9C3"
+      },
+      "file_filesize": " (10.63MB)",
+      "file_order": 0,
+      "file_is_remote": 0,
+      "file_num_download": 0,
+      "download_url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.mp3",
+      "local_path": "/var/www/ccmixter/content/testuser/testuser_-_Test_Music.mp3",
+      "file_rawsize": 11150278
+    }
+  ],
+  "upload_description_plain": "Thanks to:\r\nOther Test User – sax\r\nAnother Test User – bagpipes and sitar",
+  "upload_description_html": "Thanks to:<br />\r\nOther Test User – sax<br />\r\nAnother Test User – bagpipes and sitar"
+}
