@@ -5,8 +5,21 @@
  * the state of a particular review left on a PR
  * @typedef {'APPROVED' | 'CHANGES_REQUESTED' | 'COMMENTED' | 'DISMISSED' | 'PENDING'} ReviewState
  *
+ * a tag applied to an issue or a PR
+ * @typedef {{id: string, name: string}} Label
+ *
+ * the linked issue of a PR
+ * @typedef {{id: string, labels: Label[]}} Issue
+ *
  * the additional information about the PR obtained from a GraphQL query
- * @typedef {{reviewDecision: ReviewDecision, linkedIssues: string[], reviewStates: ReviewState[]}} PrDetails
+ * @typedef {{
+ *   isMerged: boolean,
+ *   isDraft: boolean,
+ *   reviewDecision: ReviewDecision,
+ *   linkedIssues: Issue[],
+ *   reviewStates: ReviewState[],
+ *   labels: Label[],
+ * }} PrDetails
  */
 
 export class PullRequest {
@@ -15,21 +28,22 @@ export class PullRequest {
    * as opposed to the conventional `id` or `number` fields.
    *
    * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+   * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
    * @param nodeId {boolean} the `node_id` of the PR for GraphQL requests
    */
-  constructor(octokit, nodeId) {
+  constructor(octokit, core, nodeId) {
     this.octokit = octokit
+    this.core = core
 
     this.nodeId = nodeId
   }
 
+  /**
+   * Initialise the PR and populate fields that require API call to GitHub.
+   */
   async init() {
     const prDetails = await this.getPrDetails()
-    this.linkedIssues = prDetails.linkedIssues
-    this.reviewDecision = prDetails.reviewDecision
-    this.reviewStates = prDetails.reviewStates
-    this.isDraft = prDetails.isDraft
-    this.isMerged = prDetails.isMerged
+    Object.assign(this, prDetails)
   }
 
   /**
@@ -46,9 +60,21 @@ export class PullRequest {
             isDraft
             merged
             reviewDecision
+            labels(first: 20) {
+              nodes {
+                id
+                name
+              }
+            }
             closingIssuesReferences(first: 10) {
               nodes {
                 id
+                labels(first: 20) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
               }
             }
             reviews(first: 100) {
@@ -65,12 +91,54 @@ export class PullRequest {
     )
     const pr = res.node
     return {
-      isMerged: pr.isMerged,
-      isDraft: pr.merged,
+      isMerged: pr.merged,
+      isDraft: pr.isDraft,
       reviewDecision: pr.reviewDecision,
-      linkedIssues: pr.closingIssuesReferences.nodes.map((node) => node.id),
+      linkedIssues: pr.closingIssuesReferences.nodes.map((node) => ({
+        id: node.id,
+        labels: node.labels.nodes,
+      })),
       reviewStates: pr.reviews.nodes.map((node) => node.state),
+      labels: pr.labels.nodes,
     }
+  }
+
+  /**
+   * Add the given list of labels to the PR, leaving all existing labels
+   * unaffected by this change.
+   *
+   * This call is idempotent in that once a specific label is added by this
+   * method, any subsequent calls, with or without that ID, will not remove the
+   * label.
+   *
+   * @param labelIds {string[]} the list of label IDs to add to the PR
+   * @returns {Promise<Label[]>} the final list of labels on the PR
+   */
+  async addLabels(labelIds) {
+    this.core.info(`Adding labels with IDs ${labelIds} to PR.`)
+    const res = await this.octokit.graphql(
+      `mutation addLabels($labelableId: ID!, $labelIds: [ID!]!) {
+        addLabelsToLabelable(input: {
+          labelableId: $labelableId,
+          labelIds: $labelIds
+        }) {
+          labelable {
+            labels(first: 20) {
+              nodes {
+                id
+                name
+              }
+            }
+          }
+        }
+      }`,
+      {
+        labelableId: this.nodeId,
+        labelIds,
+      }
+    )
+    this.core.debug('addLabels response:', JSON.stringify(res))
+    return res.addLabelsToLabelable.labelable.labels.nodes
   }
 
   /**

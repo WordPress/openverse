@@ -59,7 +59,7 @@ def api_client():
 
 
 @pytest.fixture(autouse=True)
-def capture_exception(monkeypatch):
+def sentry_capture_exception(monkeypatch):
     mock = MagicMock()
     monkeypatch.setattr("sentry_sdk.capture_exception", mock)
 

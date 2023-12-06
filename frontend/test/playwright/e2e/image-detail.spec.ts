@@ -1,7 +1,11 @@
 import { test, expect, Page } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-import { t } from "~~/test/playwright/utils/navigation"
+import {
+  setCookies,
+  t,
+  turnOnAnalytics,
+} from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
@@ -26,6 +30,9 @@ test.beforeEach(async ({ context }) => {
 })
 
 test("shows the author and title of the image", async ({ page }) => {
+  await setCookies(page.context(), {
+    features: { additional_search_views: "off" },
+  })
   await goToCustomImagePage(page)
   const author = page.locator('a[aria-label^="author"]')
   await expect(author).toBeVisible()
@@ -69,6 +76,7 @@ test.describe("analytics", () => {
     context,
     page,
   }) => {
+    await turnOnAnalytics(page)
     const analyticsEvents = collectAnalyticsEvents(context)
 
     await goToCustomImagePage(page)
@@ -90,6 +98,7 @@ test.describe("analytics", () => {
     context,
     page,
   }) => {
+    await turnOnAnalytics(page)
     const analyticsEvents = collectAnalyticsEvents(context)
 
     await goToCustomImagePage(page)

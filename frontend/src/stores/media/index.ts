@@ -24,8 +24,6 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
-import { PaginatedSearchQuery } from "~/types/search"
-
 export type MediaStoreResult = {
   count: number
   pageCount: number
@@ -443,18 +441,19 @@ export const useMediaStore = defineStore("media", {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
     }) {
+      const searchStore = useSearchStore()
+      const { pathSlug, query: queryParams } =
+        searchStore.getSearchUrlParts(mediaType)
       let page = this.results[mediaType].page + 1
-      const queryParams: PaginatedSearchQuery = {
-        ...useSearchStore().apiSearchQueryParams,
-        // Don't need to set `page` parameter for the first page.
-        page: shouldPersistMedia ? `${page}` : undefined,
+      if (shouldPersistMedia) {
+        queryParams.page = `${page}`
       }
 
       this._updateFetchState(mediaType, "start")
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
-        const data = await service.search(queryParams)
+        const data = await service.search(queryParams, pathSlug)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

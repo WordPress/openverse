@@ -227,6 +227,10 @@ def related(fixture):
             or result["creator"] == item["creator"]
         ), f"{terms_set} {get_terms_set(result)}/{result['creator']}-{item['creator']}"
 
+        assert result["license_version"] is not None
+        assert result["attribution"] is not None
+        assert result["creator_url"] is not None
+
 
 def sensitive_search_and_detail(media_type):
     search_res = requests.get(

@@ -177,70 +177,14 @@
       title: "Search for an exact match",
       ariaLabel: "quote unquote Claude Monet",
       claudeMonet: '"Claude Monet"',
-      content: "Put a word or phrase inside quotes. For example, {link}.",
+      content: "To search for an exact word or phrase, put it inside quotes. For example, {link}.",
     },
-    combine: {
-      title: "Combining terms",
-      description: "If you want to combine terms, you can use the following operators to perform more complex queries",
-      and: "{symbol} signifies AND operation",
-      or: "{symbol} signifies OR operation",
-      not: "{symbol} negates a single token",
-      prefix: "{symbol} at the end of a term signifies a prefix query",
-      precedence: "{symbol} signify precedence",
-      fuzziness: "{symbol} after a word signifies edit distance (fuzziness)",
-      ariaLabels: {
-        fuzziness: "tilde N",
-        open: "open parenthesis",
-        close: "close parenthesis",
-        star: "star symbol",
-        not: "minus symbol",
-        and: "plus symbol",
-        or: "vertical bar symbol",
-        prefix: "asterisk symbol",
-        verticalBar: "vertical bar symbol",
-        precedence: "parentheses",
-      },
-    },
-    example: {
-      and: {
-        description: "Example: {link}{br} This will search for images related to both dog and cat.",
-        ariaLabel: "dog plus cat",
-        example: "dog+cat",
-      },
-      or: {
-        description: "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
-        ariaLabel: "dog vertical bar cat",
-        example: "dog|cat",
-      },
-      negate: {
-        description: "You can use the {operator} to exclude a search term from the results.",
-        operatorName: "operator (signifies NOT)",
-        operatorAriaLabel: "minus operator (signifies NOT)",
-        ariaLabel: "dog minus pug",
-        example: "dog -pug",
-        content: "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'",
-      },
-      prefix: {
-        description: "You can use the {operatorName} to mark a prefix term. This will match anything after the *.",
-        operatorName: "operator (wildcard)",
-        operatorAriaLabel: "star operator (wildcard)",
-        ariaLabel: "net star symbol",
-        example: "net*",
-        content: "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.",
-      },
-      precedence: {
-        description: "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries.",
-        ariaLabel: "dogs plus open parenthesis corgis vertical bar labrador close parenthesis",
-        example: "dogs + (corgis | labrador)",
-        content: "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador.",
-      },
-      fuzziness: {
-        description: "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string.",
-        linkText: "Levenshtein Edit Distance",
-        ariaLabel: "theatre tilde 1",
-        example: "theatre~1",
-        content: "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'.",
-      },
+    negate: {
+      title: "Excluding terms",
+      operatorName: "minus operator",
+      ariaLabel: "dog minus pug",
+      example: "dog -pug",
+      content: 'To exclude a term from your results, put the {operator} in front of it. Example: {link}{br} This will search for media related to "dog" but won\'t include results related to "pug".',
     },
   },
   feedback: {
@@ -830,6 +774,20 @@
       source: "Open source site",
       creator: "Open creator page",
     },
+    ariaLabel: {
+      creator: {
+        audio: "Audio files by {creator} in {source}",
+        image: "Images by {creator} in {source}",
+      },
+      source: {
+        audio: "Audio files from {source}",
+        image: "Images from {source}",
+      },
+      tag: {
+        audio: "Audio files with the tag {tag}",
+        image: "Images with the tag {tag}",
+      },
+    },
     resultCountLabel: {
       creator: {
         audio: {
@@ -846,24 +804,24 @@
       source: {
         audio: {
           zero: "No audio files provided by this source",
-          count: "{count} audio file provided by this source.|{count} audio files provided by this source",
+          count: "{count} audio file provided by this source|{count} audio files provided by this source",
           countMore: "Over {count} audio files provided by this source",
         },
         image: {
           zero: "No images provided by this source",
-          count: "{count} image provided by this source.|{count} images provided by this source",
+          count: "{count} image provided by this source|{count} images provided by this source",
           countMore: "Over {count} images provided by this source",
         },
       },
       tag: {
         audio: {
           zero: "No audio files with the selected tag",
-          count: "{count} audio file with the selected tag.|{count} audio files with the selected tag",
+          count: "{count} audio file with the selected tag|{count} audio files with the selected tag",
           countMore: "Over {count} audio files with the selected tag",
         },
         image: {
           zero: "No images with the selected tag",
-          count: "{count} image with the selected tag.|{count} images with the selected tag",
+          count: "{count} image with the selected tag|{count} images with the selected tag",
           countMore: "Over {count} images with the selected tag",
         },
       },

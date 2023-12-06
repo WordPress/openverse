@@ -7,6 +7,10 @@ import { AUDIO, IMAGE } from "~/constants/media"
 
 import type { Middleware } from "@nuxt/types"
 
+const isSearchPath = (path: string) => path.includes("/search/")
+const isSearchOrCollectionPath = (path: string) =>
+  isSearchPath(path) || path.includes("/source/") || path.includes("/tag/")
+
 export const singleResultMiddleware: Middleware = async ({
   route,
   from,
@@ -31,16 +35,18 @@ export const singleResultMiddleware: Middleware = async ({
     // Client-side rendering
     singleResultStore.setMediaById(mediaType, route.params.id)
 
-    if (from && from.path.includes("/search/")) {
+    if (from && isSearchOrCollectionPath(from.path)) {
       const searchStore = useSearchStore($pinia)
       searchStore.setBackToSearchPath(from.fullPath)
 
-      const searchTerm = Array.isArray(route.query.q)
-        ? route.query.q[0]
-        : route.query.q
+      if (isSearchPath(from.path)) {
+        const searchTerm = Array.isArray(route.query.q)
+          ? route.query.q[0]
+          : route.query.q
 
-      if (searchTerm) {
-        searchStore.setSearchTerm(searchTerm)
+        if (searchTerm) {
+          searchStore.setSearchTerm(searchTerm)
+        }
       }
     }
   }

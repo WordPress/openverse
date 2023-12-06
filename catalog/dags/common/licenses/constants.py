@@ -79,7 +79,6 @@ _SPECIAL_CASE_LICENSE_PATHS = {
     # set the license and/or version manually, and for which we can
     # recover the path from a valid license_, license_version pair.
     "licenses/by-nd-nc/1.0": ("by-nc-nd", "1.0"),
-    "licenses/by-nd-nc/2.0/jp": ("by-nc-nd", "2.0"),
     "licenses/publicdomain": ("publicdomain", NO_VERSION),
     "publicdomain/mark/1.0": ("pdm", "1.0"),
     "publicdomain/zero/1.0": ("cc0", "1.0"),
