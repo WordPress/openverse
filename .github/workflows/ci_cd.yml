@@ -975,7 +975,7 @@ jobs:
           owner: WordPress
           repo: openverse-infrastructure
           token: ${{ secrets.ACCESS_TOKEN }}
-          event_type: deploy_staging_nuxt
+          event_type: deploy_staging_frontend
           client_payload: |
             {
               "actor": "${{ github.actor }}",
