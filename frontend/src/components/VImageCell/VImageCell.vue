@@ -188,19 +188,18 @@ export default defineComponent({
      * @param event - the mouse click event
      */
     const sendSelectSearchResultEvent = (event: MouseEvent) => {
-        if (event.button !== 0) return 
+      if (event.button !== 0) return
 
-        sendCustomEvent("SELECT_SEARCH_RESULT", {
-          id: props.image.id,
-          kind: props.kind,
-          mediaType: IMAGE,
-          provider: props.image.provider,
-          query: props.searchTerm || "",
-          relatedTo: props.relatedTo,
-          sensitivities: props.image.sensitivity?.join(",") ?? "",
-          isBlurred: shouldBlur.value,
-        })
-
+      sendCustomEvent("SELECT_SEARCH_RESULT", {
+        id: props.image.id,
+        kind: props.kind,
+        mediaType: IMAGE,
+        provider: props.image.provider,
+        query: props.searchTerm || "",
+        relatedTo: props.relatedTo,
+        sensitivities: props.image.sensitivity?.join(",") ?? "",
+        isBlurred: shouldBlur.value,
+      })
     }
 
     const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
