@@ -46,19 +46,26 @@ export default defineComponent({
       storeToRefs(mediaStore)
     const { searchTerm } = storeToRefs(searchStore)
 
+    const searchStarted = computed(() => {
+      return searchStore.strategy === "default"
+        ? searchTerm.value !== ""
+        : searchStore.collectionParams !== null
+    })
+
     /**
      * Whether we should show the "Load more" button.
      * If the user has entered a search term, there is at least 1 page of results,
      * there has been no fetching error, and there are more results to fetch,
      * we show the button.
      */
-    const canLoadMore = computed(
-      () =>
-        searchTerm.value !== "" &&
-        !fetchState.value.fetchingError &&
-        !fetchState.value.isFinished &&
-        resultCount.value > 0
-    )
+    const canLoadMore = computed(() => {
+      return Boolean(
+        searchStarted.value &&
+          !fetchState.value.fetchingError &&
+          !fetchState.value.isFinished &&
+          resultCount.value > 0
+      )
+    })
 
     const reachResultEndEventSent = ref(false)
     /**

@@ -59,6 +59,7 @@ import {
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
 import { useI18n } from "~/composables/use-i18n"
+import { useSearchStore } from "~/stores/search"
 import type { SupportedMediaType } from "~/constants/media"
 
 import VSourceCreatorButton from "~/components/VMediaInfo/VByLine/VSourceCreatorButton.vue"
@@ -95,7 +96,9 @@ export default defineComponent({
     const buttonsRef = ref<HTMLElement | null>(null)
 
     const showCreator = computed(() => {
-      return props.creator && props.creator.toLowerCase() !== "unidentified"
+      return Boolean(
+        props.creator && props.creator.toLowerCase() !== "unidentified"
+      )
     })
 
     const i18n = useI18n()
@@ -213,33 +216,27 @@ export default defineComponent({
       { debounce: 100 }
     )
 
-    // TODO: implement this function in the search store.
-    const getCollectionPath = ({
-      type,
-      source,
-      creator,
-    }: {
-      type: SupportedMediaType
-      source: string
-      creator?: string
-    }) => {
-      let path = `/${type}/source/${source}/`
-      if (creator) path += `creator/${encodeURIComponent(creator)}/`
-      return path
-    }
+    const searchStore = useSearchStore()
+
     const creatorHref = computed(() => {
-      return showCreator.value
-        ? getCollectionPath({
-            type: props.mediaType,
-            source: props.sourceSlug,
-            creator: props.creator,
-          })
-        : undefined
-    })
-    const sourceHref = computed(() => {
-      return getCollectionPath({
+      if (!props.creator) return undefined
+      return searchStore.getCollectionPath({
         type: props.mediaType,
-        source: props.sourceSlug,
+        collectionParams: {
+          collection: "creator",
+          source: props.sourceSlug,
+          creator: props.creator,
+        },
+      })
+    })
+
+    const sourceHref = computed(() => {
+      return searchStore.getCollectionPath({
+        type: props.mediaType,
+        collectionParams: {
+          collection: "source",
+          source: props.sourceSlug,
+        },
       })
     })
 

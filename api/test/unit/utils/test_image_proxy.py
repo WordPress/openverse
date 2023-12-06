@@ -1,7 +1,6 @@
 import asyncio
 from dataclasses import replace
 from test.factory.models.image import ImageFactory
-from unittest.mock import MagicMock
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -10,7 +9,8 @@ from rest_framework.exceptions import UnsupportedMediaType
 import aiohttp
 import pook
 import pytest
-import requests
+from aiohttp import client_exceptions
+from aiohttp.client_reqrep import ConnectionKey
 
 from api.utils.image_proxy import (
     HEADERS,
@@ -23,7 +23,10 @@ from api.utils.image_proxy import get as _photon_get
 from api.utils.tallies import get_monthly_timestamp
 
 
-PHOTON_URL_FOR_TEST_IMAGE = f"{settings.PHOTON_ENDPOINT}subdomain.example.com/path_part1/part2/image_dot_jpg.jpg"
+TEST_IMAGE_DOMAIN = "subdomain.example.com"
+PHOTON_URL_FOR_TEST_IMAGE = (
+    f"{settings.PHOTON_ENDPOINT}{TEST_IMAGE_DOMAIN}/path_part1/part2/image_dot_jpg.jpg"
+)
 TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "http://")
 TEST_MEDIA_IDENTIFIER = "123"
 TEST_MEDIA_PROVIDER = "foo"
@@ -36,10 +39,6 @@ TEST_MEDIA_INFO = MediaInfo(
 
 UA_HEADER = HEADERS["User-Agent"]
 
-# cannot use actual image response because I kept running into some issue with
-# requests not being able to decode the content
-# I will come back to try to sort it out later but for now
-# this will get the tests working.
 MOCK_BODY = "mock response body"
 
 SVG_BODY = """<?xml version="1.0" encoding="UTF-8"?>
@@ -306,9 +305,7 @@ def test_get_successful_records_response_code(photon_get, mock_image_data, redis
     month = get_monthly_timestamp()
     assert redis.get(f"thumbnail_response_code:{month}:200") == b"1"
     assert (
-        redis.get(
-            f"thumbnail_response_code_by_domain:subdomain.example.com:{month}:200"
-        )
+        redis.get(f"thumbnail_response_code_by_domain:{TEST_IMAGE_DOMAIN}:{month}:200")
         == b"1"
     )
 
@@ -328,17 +325,37 @@ alert_count_params = pytest.mark.parametrize(
     ],
 )
 
+MOCK_CONNECTION_KEY = ConnectionKey(
+    host="https://localhost",
+    port=None,
+    is_ssl=False,
+    ssl=None,
+    proxy=None,
+    proxy_auth=None,
+    proxy_headers_hash=None,
+)
+
 
 @pytest.mark.parametrize(
     "exc, exc_name",
     [
         (ValueError("whoops"), "builtins.ValueError"),
-        (requests.ConnectionError("whoops"), "requests.exceptions.ConnectionError"),
-        (requests.ConnectTimeout("whoops"), "requests.exceptions.ConnectTimeout"),
-        (requests.ReadTimeout("whoops"), "requests.exceptions.ReadTimeout"),
-        (requests.Timeout("whoops"), "requests.exceptions.Timeout"),
-        (requests.exceptions.SSLError("whoops"), "requests.exceptions.SSLError"),
-        (OSError("whoops"), "builtins.OSError"),
+        (
+            client_exceptions.ClientConnectionError("whoops"),
+            "aiohttp.client_exceptions.ClientConnectionError",
+        ),
+        (
+            client_exceptions.ServerTimeoutError("whoops"),
+            "aiohttp.client_exceptions.ServerTimeoutError",
+        ),
+        (
+            client_exceptions.ClientSSLError(MOCK_CONNECTION_KEY, OSError()),
+            "aiohttp.client_exceptions.ClientSSLError",
+        ),
+        (
+            client_exceptions.ClientOSError("whoops"),
+            "aiohttp.client_exceptions.ClientOSError",
+        ),
     ],
 )
 @alert_count_params
@@ -348,22 +365,22 @@ def test_get_exception_handles_error(
     exc_name,
     count_start,
     should_alert,
-    capture_exception,
+    sentry_capture_exception,
     setup_request_exception,
     redis,
 ):
     setup_request_exception(exc)
     month = get_monthly_timestamp()
-    key = f"thumbnail_error:{exc_name}:subdomain.example.com:{month}"
+    key = f"thumbnail_error:{exc_name}:{TEST_IMAGE_DOMAIN}:{month}"
     redis.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
         photon_get(TEST_MEDIA_INFO)
 
     assert_func = (
-        capture_exception.assert_called_once
+        sentry_capture_exception.assert_called_once
         if should_alert
-        else capture_exception.assert_not_called
+        else sentry_capture_exception.assert_not_called
     )
     assert_func()
     assert redis.get(key) == str(count_start + 1).encode()
@@ -385,36 +402,29 @@ def test_get_http_exception_handles_error(
     text,
     count_start,
     should_alert,
-    capture_exception,
-    setup_request_exception,
+    sentry_capture_exception,
     redis,
 ):
-    mock_response = MagicMock(spec=requests.Response)
-    mock_response.status_code = status_code
-    mock_response.text = text
-    exc = requests.HTTPError(response=mock_response)
-    setup_request_exception(exc)
-
     month = get_monthly_timestamp()
-    key = f"thumbnail_error:requests.exceptions.HTTPError:subdomain.example.com:{month}"
+    key = f"thumbnail_error:aiohttp.client_exceptions.ClientResponseError:{TEST_IMAGE_DOMAIN}:{month}"
     redis.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
-        photon_get(TEST_MEDIA_INFO)
+        with pook.use():
+            pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text).mock
+            photon_get(TEST_MEDIA_INFO)
 
     assert_func = (
-        capture_exception.assert_called_once
+        sentry_capture_exception.assert_called_once
         if should_alert
-        else capture_exception.assert_not_called
+        else sentry_capture_exception.assert_not_called
     )
     assert_func()
     assert redis.get(key) == str(count_start + 1).encode()
 
     # Assertions about the HTTP error specific message
     assert (
-        redis.get(
-            f"thumbnail_http_error:subdomain.example.com:{month}:{status_code}:{text}"
-        )
+        redis.get(f"thumbnail_http_error:{TEST_IMAGE_DOMAIN}:{month}:{status_code}")
         == b"1"
     )
 
@@ -467,7 +477,7 @@ def test_get_unsuccessful_request_raises_custom_exception(photon_get):
         ("example.com/image.jpg", "jpg"),
         ("www.example.com/image.JPG", "jpg"),
         ("http://example.com/image.jpeg", "jpeg"),
-        ("https://subdomain.example.com/image.svg", "svg"),
+        ("https://example.com/image.svg", "svg"),
         ("https://example.com/image.png?foo=1&bar=2#fragment", "png"),
         ("https://example.com/possibleimagewithoutext", ""),
         (
