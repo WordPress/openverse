@@ -6,11 +6,11 @@ import type { Ref } from "vue"
 function getOwnerDocument<T extends Element | Ref<Element | null>>(
   element: T | null | undefined
 ) {
-  if (typeof window === "undefined") return null
-  if (element instanceof Node) return element.ownerDocument
+  if (typeof window === "undefined") {return null}
+  if (element instanceof Node) {return element.ownerDocument}
   if (element && Object.prototype.hasOwnProperty.call(element, "value")) {
     const domElement = getDomElement(element)
-    if (domElement) return domElement.ownerDocument
+    if (domElement) {return domElement.ownerDocument}
   }
 
   return document
@@ -69,12 +69,12 @@ export const Direction = Object.freeze({ Next: 1, Previous: -1 })
 export function getFocusableElements(
   container: HTMLElement | null = document.body
 ) {
-  if (container == null) return []
+  if (container == null) {return []}
   return Array.from(container.querySelectorAll<HTMLElement>(focusableSelector))
 }
 
 export function isFocusableElement(element: HTMLElement) {
-  if (element === getOwnerDocument(element)?.body) return false
+  if (element === getOwnerDocument(element)?.body) {return false}
   return element.matches(focusableSelector)
 }
 
@@ -99,12 +99,12 @@ export function sortByDomNode<T>(
     const a = resolveKey(aItem)
     const z = resolveKey(zItem)
 
-    if (a === null || z === null) return 0
+    if (a === null || z === null) {return 0}
 
     const position = a.compareDocumentPosition(z)
 
-    if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1
-    if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1
+    if (position & Node.DOCUMENT_POSITION_FOLLOWING) {return -1}
+    if (position & Node.DOCUMENT_POSITION_PRECEDING) {return 1}
     return 0
   })
 }
@@ -123,8 +123,8 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
   const active = ownerDocument.activeElement as HTMLElement
 
   const direction = (() => {
-    if (focus & (Focus.First | Focus.Next)) return Direction.Next
-    if (focus & (Focus.Previous | Focus.Last)) return Direction.Previous
+    if (focus & (Focus.First | Focus.Next)) {return Direction.Next}
+    if (focus & (Focus.Previous | Focus.Last)) {return Direction.Previous}
 
     throw new Error(
       "Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last"
@@ -132,10 +132,10 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
   })()
 
   const startIndex = (() => {
-    if (focus & Focus.First) return 0
-    if (focus & Focus.Previous) return Math.max(0, elements.indexOf(active)) - 1
-    if (focus & Focus.Next) return Math.max(0, elements.indexOf(active)) + 1
-    if (focus & Focus.Last) return elements.length - 1
+    if (focus & Focus.First) {return 0}
+    if (focus & Focus.Previous) {return Math.max(0, elements.indexOf(active)) - 1}
+    if (focus & Focus.Next) {return Math.max(0, elements.indexOf(active)) + 1}
+    if (focus & Focus.Last) {return elements.length - 1}
 
     throw new Error(
       "Missing Focus.First, Focus.Previous, Focus.Next or Focus.Last"
@@ -147,15 +147,15 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
   let next = undefined
   do {
     // Guard against infinite loops
-    if (offset >= total || offset + total <= 0) return FocusResult.Error
+    if (offset >= total || offset + total <= 0) {return FocusResult.Error}
 
     let nextIdx = startIndex + offset
 
     if (focus & Focus.WrapAround) {
       nextIdx = (nextIdx + total) % total
     } else {
-      if (nextIdx < 0) return FocusResult.Underflow
-      if (nextIdx >= total) return FocusResult.Overflow
+      if (nextIdx < 0) {return FocusResult.Underflow}
+      if (nextIdx >= total) {return FocusResult.Overflow}
     }
 
     next = elements[nextIdx]

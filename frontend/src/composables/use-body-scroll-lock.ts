@@ -18,7 +18,7 @@ export function useBodyScrollLock({
   watch(
     nodeRef,
     (node) => {
-      if (node && locked.value) lock()
+      if (node && locked.value) {lock()}
     },
     {
       immediate: true,

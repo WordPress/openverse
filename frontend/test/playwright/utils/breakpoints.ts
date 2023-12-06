@@ -138,7 +138,7 @@ const describeEachBreakpoint =
           bp.replace("describe", "").toLowerCase() as Breakpoint
         )
       )
-        describe(blockOrOptions, block)
+        {describe(blockOrOptions, block)}
     })
   }
 

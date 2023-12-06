@@ -227,7 +227,7 @@ export default defineComponent({
      * @param event - the image load event.
      */
     const onImageLoaded = (event: Event) => {
-      if (!(event.target instanceof HTMLImageElement) || !image.value) return
+      if (!(event.target instanceof HTMLImageElement) || !image.value) {return}
 
       isLoadingThumbnail.value = false
 

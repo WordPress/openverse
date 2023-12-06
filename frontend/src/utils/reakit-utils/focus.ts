@@ -124,10 +124,10 @@ export function getFirstTabbableIn(
  */
 export function hasFocus(element: Element) {
   const activeElement = getActiveElement(element)
-  if (!activeElement) return false
-  if (activeElement === element) return true
+  if (!activeElement) {return false}
+  if (activeElement === element) {return true}
   const activeDescendant = activeElement.getAttribute("aria-activedescendant")
-  if (!activeDescendant) return false
+  if (!activeDescendant) {return false}
   return activeDescendant === element.id
 }
 
@@ -139,12 +139,12 @@ export function hasFocus(element: Element) {
  */
 export function hasFocusWithin(element: Node | Element) {
   const activeElement = getActiveElement(element)
-  if (!activeElement) return false
-  if (contains(element, activeElement)) return true
+  if (!activeElement) {return false}
+  if (contains(element, activeElement)) {return true}
   const activeDescendant = activeElement.getAttribute("aria-activedescendant")
-  if (!activeDescendant) return false
-  if (!("id" in element)) return false
-  if (activeDescendant === element.id) return true
+  if (!activeDescendant) {return false}
+  if (!("id" in element)) {return false}
+  if (activeDescendant === element.id) {return true}
   return !!element.querySelector(`#${CSS.escape(activeDescendant)}`)
 }
 
@@ -173,11 +173,11 @@ export function ensureFocus(
   const element = el as HTMLElement
   // TODO: Try to use queueMicrotask before requestAnimationFrame and dispatch
   // focus events if the element is not focusable?
-  if (isActive(element)) return -1
+  if (isActive(element)) {return -1}
   element.focus({ preventScroll })
-  if (isActive(element)) return -1
+  if (isActive(element)) {return -1}
   return requestAnimationFrame(() => {
-    if (isActive(element)) return
+    if (isActive(element)) {return}
     element.focus({ preventScroll })
   })
 }

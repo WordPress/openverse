@@ -214,7 +214,7 @@ export const areQueriesEqual = (
     ) as (keyof PaginatedSearchQuery)[]
   const oldQueryKeys = queryKeys(oldQuery)
   const newQueryKeys = queryKeys(newQuery)
-  if (oldQueryKeys.length !== newQueryKeys.length) return false
+  if (oldQueryKeys.length !== newQueryKeys.length) {return false}
 
   for (const key of oldQueryKeys) {
     if (oldQuery[key] !== newQuery[key]) {

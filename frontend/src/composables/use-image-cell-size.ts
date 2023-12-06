@@ -11,8 +11,8 @@ const squareSize = 250
 const defaultImgSize = 100
 
 const getImgAspectRatio = (aspect: number) => {
-  if (aspect > maxAspect) return maxAspect
-  if (aspect < minAspect) return minAspect
+  if (aspect > maxAspect) {return maxAspect}
+  if (aspect < minAspect) {return minAspect}
   return aspect
 }
 

@@ -78,7 +78,7 @@ export default defineComponent({
     const isSelected = computed(() => tabContext.selectedId.value === props.id)
 
     const handleFocus = () => {
-      if (props.disabled) return
+      if (props.disabled) {return}
       if (tabContext.activation.value === "auto") {
         tabContext.setSelectedId(props.id)
       }
@@ -86,7 +86,7 @@ export default defineComponent({
     }
 
     const handleSelection = () => {
-      if (props.disabled) return
+      if (props.disabled) {return}
       getDomElement(internalTabRef)?.focus()
       tabContext.setSelectedId(props.id)
     }

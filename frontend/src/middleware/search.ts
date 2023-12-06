@@ -28,7 +28,7 @@ export const searchMiddleware: Middleware = async ({
    * `prepare-search-query-params`.
    * Note that the search by creator is not displayed in the UI.
    */
-  if (!q) return redirect("/")
+  if (!q) {return redirect("/")}
 
   const searchStore = useSearchStore($pinia)
 

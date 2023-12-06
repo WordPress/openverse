@@ -15,7 +15,7 @@ export const useSingleResultPageMeta = (
   const i18n = useI18n()
 
   const titles = () => {
-    if (!media.value) return { genericTitle: "", sensitiveTitle: "" }
+    if (!media.value) {return { genericTitle: "", sensitiveTitle: "" }}
     return {
       genericTitle: `${i18n.t(
         `mediaDetails.reuse.${media.value.frontendMediaType}`
@@ -30,7 +30,7 @@ export const useSingleResultPageMeta = (
 
   // Do not show sensitive content title in the social preview cards.
   const getMediaTitle = () => {
-    if (!media.value) return ""
+    if (!media.value) {return ""}
     return isSensitive.value
       ? titles().sensitiveTitle
       : media.value.title ?? titles().genericTitle

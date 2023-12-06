@@ -72,10 +72,10 @@ export const useFocusOnShow = ({
     ] as const,
     ([dialog, visible, autoFocusOnShow, initialFocusElement], _, onCleanup) => {
       if (!dialog || !visible) {
-        if (trap?.hasFocus) deactivateFocusTrap()
+        if (trap?.hasFocus) {deactivateFocusTrap()}
         return
       }
-      if (!autoFocusOnShow) return
+      if (!autoFocusOnShow) {return}
 
       nextTick(() => {
         const isActive = () => hasFocusWithin(dialog)

@@ -25,7 +25,7 @@ function useMouseDownTargetRef({
   watch(
     [visibleRef, hideOnClickOutsideRef, dialogRef] as const,
     ([visible, hideOnClickOutside, popover], _, onInvalidate) => {
-      if (!(visible && hideOnClickOutside)) return
+      if (!(visible && hideOnClickOutside)) {return}
 
       const document = getDocument(popover)
       const onMouseDown = (event: MouseEvent) =>

@@ -27,9 +27,9 @@ function split(input: string) {
   let end = result.length
 
   // Trim the delimiter from around the output string.
-  while (result.charAt(start) === "\0") start++
-  if (start === end) return []
-  while (result.charAt(end - 1) === "\0") end--
+  while (result.charAt(start) === "\0") {start++}
+  if (start === end) {return []}
+  while (result.charAt(end - 1) === "\0") {end--}
 
   return result.slice(start, end).split(/\0/g)
 }
@@ -57,7 +57,7 @@ export function camelCase(input: string) {
   const transform = pascalCaseTransformFactory()
   return split(input)
     .map((word, index) => {
-      if (index === 0) return word.toLowerCase()
+      if (index === 0) {return word.toLowerCase()}
       return transform(word, index)
     })
     .join("")

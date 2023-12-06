@@ -136,7 +136,7 @@ export default defineComponent({
         mediaStore.fetchState.hasStarted &&
         fetchingError.value !== null &&
         !isRetriable(fetchingError.value)
-      if (shouldNotRefetch) return
+      if (shouldNotRefetch) {return}
 
       await mediaStore.fetchMedia(payload)
 

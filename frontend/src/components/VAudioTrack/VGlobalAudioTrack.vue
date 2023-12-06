@@ -83,7 +83,7 @@ export default defineComponent({
     const currentTime = ref(0)
     const duration = defaultRef(() => {
       if (typeof props.audio?.duration === "number")
-        return props.audio.duration / 1e3
+        {return props.audio.duration / 1e3}
       return 0
     })
 
@@ -108,7 +108,7 @@ export default defineComponent({
       }
     }
     const setDuration = () => {
-      if (activeAudio.obj.value) duration.value = activeAudio.obj.value.duration
+      if (activeAudio.obj.value) {duration.value = activeAudio.obj.value.duration}
     }
 
     const updateTimeLoop = () => {
@@ -145,7 +145,7 @@ export default defineComponent({
     watch(
       activeAudio.obj,
       (audio, _, onInvalidate) => {
-        if (!audio) return
+        if (!audio) {return}
 
         Object.entries(eventMap).forEach(([name, fn]) =>
           audio.addEventListener(name, fn)

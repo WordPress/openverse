@@ -11,13 +11,13 @@ type Props = {
 }
 
 function hidByFocusingAnotherElement(popover: HTMLElement) {
-  if (!popover) return false
+  if (!popover) {return false}
 
   const activeElement = getActiveElement(popover)
 
-  if (!activeElement) return false
-  if (contains(popover, activeElement)) return false
-  if (isTabbable(activeElement)) return true
+  if (!activeElement) {return false}
+  if (contains(popover, activeElement)) {return false}
+  if (isTabbable(activeElement)) {return true}
 
   return activeElement.getAttribute("data-popover") === "true"
 }
@@ -38,11 +38,11 @@ export const useFocusOnHide = ({
       const shouldFocus =
         autoFocusOnHide && !visible && visible !== previousVisible
 
-      if (!shouldFocus) return
+      if (!shouldFocus) {return}
 
-      if (!dialog || hidByFocusingAnotherElement(dialog)) return
+      if (!dialog || hidByFocusingAnotherElement(dialog)) {return}
 
-      if (triggerElement) ensureFocus(triggerElement)
+      if (triggerElement) {ensureFocus(triggerElement)}
     }
   )
 }

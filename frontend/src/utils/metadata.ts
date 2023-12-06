@@ -21,7 +21,7 @@ const getImageType = (
 
 const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
   if (!audio.alt_files)
-    return audio.filetype ?? i18n.t("mediaDetails.information.unknown")
+    {return audio.filetype ?? i18n.t("mediaDetails.information.unknown")}
   const altFormats = audio.alt_files
     .map((altFile) => altFile.filetype)
     .filter((filetype) => filetype !== audio.filetype)

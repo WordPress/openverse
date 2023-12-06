@@ -291,7 +291,7 @@ export const useSearchStore = defineStore("search", {
      */
     setSearchTerm(q: string | undefined | null) {
       const formattedTerm = q ? q.trim() : ""
-      if (this.searchTerm === formattedTerm) return
+      if (this.searchTerm === formattedTerm) {return}
       this.searchTerm = formattedTerm
       this.localSearchTerm = formattedTerm
       this.collectionParams = null
@@ -516,7 +516,7 @@ export const useSearchStore = defineStore("search", {
 
       this.setSearchTerm(query.q)
       this.searchType = pathToSearchType(path)
-      if (!isSearchTypeSupported(this.searchType)) return
+      if (!isSearchTypeSupported(this.searchType)) {return}
 
       const newFilterData = queryToFilterData({
         query,

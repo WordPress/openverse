@@ -67,7 +67,7 @@ export const mockCreateApiService = (
   })
   createApiService.mockImplementation((options) => {
     // Only ever generate the mock once
-    if (apiService) return apiService
+    if (apiService) {return apiService}
 
     apiService = originalApiService.createApiService(
       options

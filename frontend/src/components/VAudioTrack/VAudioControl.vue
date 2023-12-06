@@ -148,7 +148,7 @@ export default defineComponent({
     const iSize = computed(() => sizes[props.size].icon)
 
     const handleMouseDown = (event: MouseEvent) => {
-      if (!props.isTabbable) event.preventDefault() // to prevent focus
+      if (!props.isTabbable) {event.preventDefault()} // to prevent focus
     }
     const handleClick = () => {
       emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")

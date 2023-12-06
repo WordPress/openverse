@@ -139,18 +139,18 @@ export default defineComponent({
 
     const tabIndex = computed(() => {
       // If outside a radiogroup then everything can be tabbable in order
-      if (contextProps.type !== "radiogroup") return 0
+      if (contextProps.type !== "radiogroup") {return 0}
       // If no items are selected then all can be tabbable to ensure it is possible to enter into the group
       if (
         focusContext.selectedCount.value === 0 &&
         props.isFirst &&
         !focusContext.isGroupFocused.value
       )
-        return 0
+        {return 0}
       // If this one is focused then it should be the tabbable item
-      if (isFocused.value) return 0
+      if (isFocused.value) {return 0}
       // If the group is not focused but this is the selected item, then this should be the focusable item when focusing into the group
-      if (!focusContext.isGroupFocused.value && props.selected) return 0
+      if (!focusContext.isGroupFocused.value && props.selected) {return 0}
 
       // Otherwise, the item should not be tabbable. The logic above guarantees that at least one other item in the group will be tabbable.
       return -1

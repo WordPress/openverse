@@ -52,7 +52,7 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
     const sendVisitSourceLinkEvent = (source?: string) => {
-      if (!source) return
+      if (!source) {return}
       sendCustomEvent("VISIT_SOURCE_LINK", {
         id: route.value.params.id,
         source,

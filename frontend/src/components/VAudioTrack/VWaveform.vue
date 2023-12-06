@@ -368,7 +368,7 @@ export default defineComponent({
       isDragging.value ? seekTimestamp.value : props.currentTime
     )
     const isProgressTimestampCutoff = computed(() => {
-      if (!progressTimestampEl.value) return false
+      if (!progressTimestampEl.value) {return false}
       const barWidth = progressBarWidth.value
       const timestampWidth = progressTimestampEl.value.offsetWidth
       return barWidth < timestampWidth + 2
@@ -399,7 +399,7 @@ export default defineComponent({
       seekFrac.value ? seekFrac.value * props.duration : props.duration
     )
     const isSeekTimestampCutoff = computed(() => {
-      if (!seekTimestampEl.value) return false
+      if (!seekTimestampEl.value) {return false}
       const barWidth = seekBarWidth.value
       const timestampWidth = seekTimestampEl.value.offsetWidth
       return barWidth < timestampWidth + 2
@@ -443,7 +443,7 @@ export default defineComponent({
     let startPos: null | number = null
     const isDragging = ref(false)
     const handleMouseDown = (event: MouseEvent) => {
-      if (!props.isTabbable) event.preventDefault() // to prevent focus
+      if (!props.isTabbable) {event.preventDefault()} // to prevent focus
       isDragging.value = false
       startPos = getPosition(event)
       setSeekProgress(event)

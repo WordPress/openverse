@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 const executeSearches = async (page: Page) => {
   const searches = ["honey", "galah"] // in that order
-  for (const term of searches) await searchFromHeader(page, term)
+  for (const term of searches) {await searchFromHeader(page, term)}
   return searches
 }
 

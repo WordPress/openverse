@@ -67,6 +67,6 @@ export function isVisible(element: Element) {
 
 export function isInDocument(target: Element) {
   const document = getDocument(target)
-  if (target.tagName === "HTML") return true
+  if (target.tagName === "HTML") {return true}
   return contains(document.body, target)
 }

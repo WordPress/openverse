@@ -164,7 +164,7 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
         })
       }
 
-      if (!customEventNode.typeAnnotation) return
+      if (!customEventNode.typeAnnotation) {return}
 
       if (isTypeAnnotationEmpty(customEventNode)) {
         context.report({
@@ -202,15 +202,15 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
         const isAnalyticsFile = context
           .getFilename()
           .endsWith("types/analytics.ts")
-        if (!isAnalyticsFile) return
+        if (!isAnalyticsFile) {return}
 
         if (
           node.parent?.type !== "TSTypeAliasDeclaration" ||
           node.parent?.typeAnnotation.type !== "TSTypeLiteral"
         )
-          return
+          {return}
         node.parent.typeAnnotation.members.forEach((m) => {
-          if (m.type === "TSPropertySignature") validateCustomEvent(m)
+          if (m.type === "TSPropertySignature") {validateCustomEvent(m)}
         })
       },
     }

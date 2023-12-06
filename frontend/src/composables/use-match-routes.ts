@@ -23,7 +23,7 @@ export const useMatchRoute = (
    * @param route - the localized route name (e.g. `search__en`)
    */
   const routeNameMatches = (route: string | null | undefined) => {
-    if (!route) return false
+    if (!route) {return false}
     return routes.includes(route.split("__")[0])
   }
 

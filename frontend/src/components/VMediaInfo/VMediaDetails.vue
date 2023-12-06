@@ -55,7 +55,7 @@ export default defineComponent({
     const i18n = useI18n()
 
     const metadata = computed<null | Metadata[]>(() => {
-      if (!props.media) return null
+      if (!props.media) {return null}
       return getMediaMetadata(props.media, i18n, {
         width: props.imageWidth,
         height: props.imageHeight,
