@@ -448,8 +448,9 @@ export default defineComponent({
     const isDragging = ref(false)
     const handleMouseDown = (event: MouseEvent) => {
       if (!props.isTabbable) {
+        // to prevent focus
         event.preventDefault()
-      } // to prevent focus
+      }
       isDragging.value = false
       startPos = getPosition(event)
       setSeekProgress(event)

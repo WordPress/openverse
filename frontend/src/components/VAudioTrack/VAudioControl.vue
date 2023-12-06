@@ -149,8 +149,9 @@ export default defineComponent({
 
     const handleMouseDown = (event: MouseEvent) => {
       if (!props.isTabbable) {
+        // to prevent focus
         event.preventDefault()
-      } // to prevent focus
+      }
     }
     const handleClick = () => {
       emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")
