@@ -1,7 +1,7 @@
 # Run Book: Nuxt Production P99 Response Time above threshold
 
 ```{admonition} Metadata
-Status: **Unstable**
+Status: **Disabled** until Nuxt request logging is added.
 
 Maintainer: @obulat
 
