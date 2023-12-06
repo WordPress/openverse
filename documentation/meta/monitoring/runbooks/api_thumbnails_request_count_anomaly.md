@@ -2,7 +2,9 @@
 
 ```{admonition} Metadata
 Status: **Unstable**
+
 Maintainer: @krysaldb
+
 Alarm link:
 - <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Thumbnails+Production+Request+Count+anomalously+high>
 ```
