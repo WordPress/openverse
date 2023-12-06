@@ -56,7 +56,9 @@ export default function useSearchType() {
   const searchTypes = [...supportedSearchTypes]
 
   const setActiveType = (searchType: SearchType) => {
-    if (previousSearchType.value === searchType) {return}
+    if (previousSearchType.value === searchType) {
+      return
+    }
 
     analytics.sendCustomEvent("CHANGE_CONTENT_TYPE", {
       previous: previousSearchType.value,

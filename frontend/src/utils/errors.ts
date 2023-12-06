@@ -65,7 +65,9 @@ const isNonRetryableErrorStatusCode = (statusCode: number | undefined) => {
 const isValidErrorCode = (
   code: string | undefined | null
 ): code is ErrorCode => {
-  if (!code) {return false}
+  if (!code) {
+    return false
+  }
   return (errorCodes as readonly string[]).includes(code)
 }
 

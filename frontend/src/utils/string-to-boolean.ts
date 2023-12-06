@@ -12,9 +12,13 @@
 export const stringToBoolean = (value: string | boolean): boolean => {
   // In case the string is already a boolean, return as-is.
   // If `.env` vars are auto-cast to booleans, this will catch that.
-  if (typeof value === "boolean") {return value}
+  if (typeof value === "boolean") {
+    return value
+  }
 
-  if (!value) {return false}
+  if (!value) {
+    return false
+  }
 
   value = value.toLowerCase().trim()
   switch (value) {

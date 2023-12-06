@@ -120,8 +120,12 @@ export default defineComponent({
         field1 = cleanSourceUrlForPresentation(field1 as string)
         field2 = cleanSourceUrlForPresentation(field2 as string)
       }
-      if (field1 > field2) {return 1}
-      if (field1 < field2) {return -1}
+      if (field1 > field2) {
+        return 1
+      }
+      if (field1 < field2) {
+        return -1
+      }
       return 0
     }
 

@@ -43,21 +43,30 @@ export const useEventListenerOutside = ({
         document.removeEventListener(eventType, boundEventRef.value)
       }
 
-      if (!shouldListen) {return}
+      if (!shouldListen) {
+        return
+      }
 
       boundEventRef.value = (event: Event) => {
-        if (!listener || !container || !(event.target instanceof Element))
-          {return}
+        if (!listener || !container || !(event.target instanceof Element)) {
+          return
+        }
         const target = event.target
 
         // When an element is unmounted right after it receives focus, the focus
         // event is triggered after that, when the element isn't part of the
         // current document anymore. So we ignore it.
-        if (!isInDocument(target)) {return}
+        if (!isInDocument(target)) {
+          return
+        }
         // Event inside the container
-        if (contains(container, target)) {return}
+        if (contains(container, target)) {
+          return
+        }
         // Event on the trigger
-        if (trigger && contains(trigger, target)) {return}
+        if (trigger && contains(trigger, target)) {
+          return
+        }
 
         listener(event)
       }

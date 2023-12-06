@@ -135,8 +135,9 @@ const getBodyUtil = (tape) =>
  * @type {TalkbackOptions['tapeDecorator']}
  */
 const tapeDecorator = (tape) => {
-  if (!tape.res || tape.req.url.endsWith("/thumb/") || tape.res.status >= 399)
-    {return tape}
+  if (!tape.res || tape.req.url.endsWith("/thumb/") || tape.res.status >= 399) {
+    return tape
+  }
 
   const bodyUtil = getBodyUtil(tape)
   const responseBody = bodyUtil.read(tape.res.body).toString()

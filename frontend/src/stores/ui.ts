@@ -153,8 +153,9 @@ export const useUiStore = defineStore("ui", {
       if (
         cookies.uiBreakpoint &&
         Object.keys(ALL_SCREEN_SIZES).includes(cookies.uiBreakpoint)
-      )
-        {breakpoint = cookies.uiBreakpoint}
+      ) {
+        breakpoint = cookies.uiBreakpoint
+      }
       this.updateBreakpoint(breakpoint)
 
       if (typeof cookies.uiIsFilterDismissed === "boolean") {

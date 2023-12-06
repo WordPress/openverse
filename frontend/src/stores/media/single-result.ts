@@ -108,7 +108,9 @@ export const useSingleResultStore = defineStore("single-result", {
      * itself later.
      */
     setMediaById(type: SupportedMediaType, id: string) {
-      if (this.mediaId === id && isMediaDetail(this.mediaItem, type)) {return}
+      if (this.mediaId === id && isMediaDetail(this.mediaItem, type)) {
+        return
+      }
       const existingItem = useMediaStore().getItemById(type, id)
       if (existingItem) {
         this.setMediaItem(existingItem)

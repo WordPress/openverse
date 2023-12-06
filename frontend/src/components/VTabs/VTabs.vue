@@ -97,23 +97,33 @@ export default defineComponent({
       tabs,
       panels,
       setSelectedId(id: string) {
-        if (selectedId.value === id) {return}
+        if (selectedId.value === id) {
+          return
+        }
         selectedId.value = id
         emit("change", id)
       },
       registerTab(tab: (typeof tabs)["value"][number]) {
-        if (!tabs.value.includes(tab)) {tabs.value.push(tab)}
+        if (!tabs.value.includes(tab)) {
+          tabs.value.push(tab)
+        }
       },
       unregisterTab(tab: (typeof tabs)["value"][number]) {
         let idx = tabs.value.indexOf(tab)
-        if (idx !== -1) {tabs.value.splice(idx, 1)}
+        if (idx !== -1) {
+          tabs.value.splice(idx, 1)
+        }
       },
       registerPanel(panel: (typeof panels)["value"][number]) {
-        if (!panels.value.includes(panel)) {panels.value.push(panel)}
+        if (!panels.value.includes(panel)) {
+          panels.value.push(panel)
+        }
       },
       unregisterPanel(panel: (typeof panels)["value"][number]) {
         let idx = panels.value.indexOf(panel)
-        if (idx !== -1) {panels.value.splice(idx, 1)}
+        if (idx !== -1) {
+          panels.value.splice(idx, 1)
+        }
       },
     }
     provide(tabsContextKey, tabGroupContext)

@@ -26,7 +26,9 @@ const isFiletypeMatching = (extension: string, filetype?: string) => {
   if (filetype === extension) {
     return true
   }
-  if (!filetype) {return false}
+  if (!filetype) {
+    return false
+  }
   return matchers.some((matcher) =>
     Boolean(filetype.match(matcher) && extension.match(matcher))
   )

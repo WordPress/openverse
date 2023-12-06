@@ -55,7 +55,9 @@ export function useSensitiveMedia(
 
   function hide() {
     const media = unref(rawMedia)
-    if (!media) {return}
+    if (!media) {
+      return
+    }
     const index = uiStore.revealedSensitiveResults.indexOf(media.id)
     if (index > -1) {
       uiStore.revealedSensitiveResults.splice(index, 1)

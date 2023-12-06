@@ -147,7 +147,9 @@ export default defineComponent({
      * Hide recent searches on blur and click outside.
      */
     const handleSearchBlur = () => {
-      if (!entries.value.length) {hideRecentSearches()}
+      if (!entries.value.length) {
+        hideRecentSearches()
+      }
     }
     onClickOutside(searchBarEl, hideRecentSearches)
 
@@ -164,7 +166,9 @@ export default defineComponent({
       const { key, altKey } = event
 
       showRecentSearches()
-      if (altKey) {return}
+      if (altKey) {
+        return
+      }
 
       // Shift selection (if Alt was not pressed with arrow keys)
       let defaultValue: number
@@ -187,9 +191,10 @@ export default defineComponent({
     const handleOtherKeys = (event: KeyboardEvent) => {
       const { key } = event
 
-      if (key === keycodes.Enter && selectedIdx.value)
+      if (key === keycodes.Enter && selectedIdx.value) {
         // If a recent search is selected, populate its value into the input.
-        {modelMedium.value = entries.value[selectedIdx.value]}
+        modelMedium.value = entries.value[selectedIdx.value]
+      }
 
       // Hide the recent searches popover when the user presses Enter, Escape or Shift+Tab on the input.
       if (

@@ -182,7 +182,9 @@ export default defineComponent({
          * Without `nextTick`, the search bar is not focused on click in Firefox
          */
         nextTick(() => {
-          if (searchInputRef.value) {ensureFocus(searchInputRef.value)}
+          if (searchInputRef.value) {
+            ensureFocus(searchInputRef.value)
+          }
         })
       } else {
         isRecentSearchesModalOpen.value = false
@@ -220,7 +222,9 @@ export default defineComponent({
       const { key, altKey } = event
       // Show the recent searches.
       isRecentSearchesModalOpen.value = true
-      if (altKey) {return}
+      if (altKey) {
+        return
+      }
       // Shift selection (if Alt was not pressed with arrow keys)
       let defaultValue: number
       let offset: number
@@ -240,12 +244,14 @@ export default defineComponent({
     }
     const handleOtherKeys = (event: KeyboardEvent) => {
       const { key } = event
-      if (key === keycodes.Enter && selectedIdx.value)
+      if (key === keycodes.Enter && selectedIdx.value) {
         // If a recent search is selected, populate its value into the input.
-        {searchTerm.value = entries.value[selectedIdx.value]}
-      if (([keycodes.Escape] as string[]).includes(key))
+        searchTerm.value = entries.value[selectedIdx.value]
+      }
+      if (([keycodes.Escape] as string[]).includes(key)) {
         // Hide the recent searches.
-        {isRecentSearchesModalOpen.value = false}
+        isRecentSearchesModalOpen.value = false
+      }
       selectedIdx.value = undefined // Lose visual focus from entries.
     }
     const handleKeydown = (event: KeyboardEvent) => {

@@ -79,13 +79,18 @@ class Entry {
    */
   toJSON() {
     // This is a string-string entry, will be handled by parent.
-    if (this.value) {return {}}
+    if (this.value) {
+      return {}
+    }
 
     /** @type {SimJson} */
     const pojo = {}
     for (const child of this.children) {
-      if (child.value) {pojo[child.key] = child.value}
-      else {pojo[child.key] = child.toJSON()}
+      if (child.value) {
+        pojo[child.key] = child.value
+      } else {
+        pojo[child.key] = child.toJSON()
+      }
     }
     return pojo
   }
@@ -99,7 +104,9 @@ class Entry {
  * @return {string} the text content of the key
  */
 const parseKey = (keyNode) => {
-  if (keyNode === undefined) {return ""}
+  if (keyNode === undefined) {
+    return ""
+  }
   switch (keyNode.type) {
     case "StringLiteral": {
       return keyNode.value

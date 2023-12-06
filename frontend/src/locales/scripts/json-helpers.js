@@ -35,7 +35,9 @@ function readPaths(obj, path = "") {
       result.push(fullPath)
       continue
     }
-    if (value === obj) {continue}
+    if (value === obj) {
+      continue
+    }
     stack.push([fullPath, value])
   }
   return [result, stack]

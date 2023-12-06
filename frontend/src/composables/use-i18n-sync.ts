@@ -14,7 +14,9 @@ export function useI18nSync() {
   })
 
   const needsTranslationBanner = computed(() => {
-    if (!currentLocale.value || currentLocale.value.code === "en") {return false}
+    if (!currentLocale.value || currentLocale.value.code === "en") {
+      return false
+    }
 
     return (currentLocale.value?.translated ?? 100) <= 90
   })

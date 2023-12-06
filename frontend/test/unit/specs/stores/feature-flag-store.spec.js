@@ -82,10 +82,11 @@ describe("Feature flag store", () => {
     ({ doCookieInit, featureState }) => {
       const flagName = "feat_switchable_optout"
       const featureFlagStore = useFeatureFlagStore()
-      if (doCookieInit)
-        {featureFlagStore.initFromCookies({
+      if (doCookieInit) {
+        featureFlagStore.initFromCookies({
           feat_switchable_optout: OFF,
-        })}
+        })
+      }
       expect(featureFlagStore.featureState(flagName)).toEqual(featureState)
       expect(featureFlagStore.isOn(flagName)).toEqual(featureState === "on")
     }

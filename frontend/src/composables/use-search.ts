@@ -57,8 +57,12 @@ export const useSearch = (
    * to run and fetch new media.
    */
   const updateSearchState = () => {
-    if (searchTerm.value === "") {return}
-    if (!searchTermChanged.value && isSearchRoute.value) {return}
+    if (searchTerm.value === "") {
+      return
+    }
+    if (!searchTermChanged.value && isSearchRoute.value) {
+      return
+    }
 
     sendCustomEvent("SUBMIT_SEARCH", {
       searchType: searchStore.searchType,
@@ -80,8 +84,12 @@ export const useSearch = (
    * Shows the loading state or result count.
    */
   const searchStatus = computed(() => {
-    if (searchStore.searchTerm === "") {return ""}
-    if (isFetching.value) {return getLoading()}
+    if (searchStore.searchTerm === "") {
+      return ""
+    }
+    if (isFetching.value) {
+      return getLoading()
+    }
     return getI18nCount(resultsCount.value)
   })
 

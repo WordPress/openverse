@@ -6,7 +6,9 @@ const os = require("os")
  */
 function kebabToCamel(input) {
   const split = input.split("-")
-  if (split.length === 1) {return input}
+  if (split.length === 1) {
+    return input
+  }
 
   for (let i = 1; i < split.length; i++) {
     split[i] = split[i][0].toUpperCase() + split[i].slice(1)
@@ -30,7 +32,9 @@ exports.setToValue = function setValue(obj, path, value) {
   var o = obj
   while (a.length - 1) {
     var n = a.shift()
-    if (!(n in o)) {o[n] = {}}
+    if (!(n in o)) {
+      o[n] = {}
+    }
     o = o[n]
   }
   o[a[0]] = value

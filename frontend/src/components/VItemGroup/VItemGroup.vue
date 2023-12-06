@@ -134,7 +134,9 @@ export default defineComponent({
     }
 
     const onItemKeyPress = (event: KeyboardEvent): undefined | number => {
-      if (!(arrows as string[]).includes(event.key) || !nodeRef.value) {return}
+      if (!(arrows as string[]).includes(event.key) || !nodeRef.value) {
+        return
+      }
 
       event.preventDefault()
 
@@ -175,8 +177,12 @@ export default defineComponent({
      * @param previousSelected
      */
     const setSelected = (selected: boolean, previousSelected: boolean) => {
-      if (previousSelected && !selected) {selectedCount.value -= 1}
-      if (!previousSelected && selected) {selectedCount.value += 1}
+      if (previousSelected && !selected) {
+        selectedCount.value -= 1
+      }
+      if (!previousSelected && selected) {
+        selectedCount.value += 1
+      }
     }
 
     const focusContext = {

@@ -147,7 +147,9 @@ export default defineComponent({
     )
 
     onMounted(() => {
-      if (!buttonsRef.value || !containerRef.value) {return}
+      if (!buttonsRef.value || !containerRef.value) {
+        return
+      }
       if (buttonsRef.value?.scrollWidth > containerRef.value.scrollWidth) {
         setScrollable()
       }
@@ -173,7 +175,9 @@ export default defineComponent({
     }
 
     const scroll = (to: "start" | "end") => {
-      if (!buttonsRef.value) {return}
+      if (!buttonsRef.value) {
+        return
+      }
       const buttons = buttonsRef.value
 
       showScrollButton[to === "start" ? "end" : "start"] = true
@@ -203,7 +207,9 @@ export default defineComponent({
     watchDebounced(
       x,
       (xValue) => {
-        if (!buttonsRef.value) {return}
+        if (!buttonsRef.value) {
+          return
+        }
         // This is necessary for handling both RTL and LTR.
         const distFromStart = Math.abs(xValue)
         const distFromEnd =
@@ -219,7 +225,9 @@ export default defineComponent({
     const searchStore = useSearchStore()
 
     const creatorHref = computed(() => {
-      if (!props.creator) {return undefined}
+      if (!props.creator) {
+        return undefined
+      }
       return searchStore.getCollectionPath({
         type: props.mediaType,
         collectionParams: {

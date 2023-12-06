@@ -34,7 +34,7 @@ export const project: TSESLint.Linter.Config = {
     "no-console": "off",
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
     "unicorn/switch-case-braces": ["error"],
-    "curly": ["error", "all"]
+    curly: ["error", "all"],
   },
   overrides: [
     {

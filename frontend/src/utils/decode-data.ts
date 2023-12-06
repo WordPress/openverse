@@ -6,7 +6,9 @@
  * @param data - the string to unescape so that it can be rendered
  */
 export const decodeData = (data = ""): string => {
-  if (!data) {return ""}
+  if (!data) {
+    return ""
+  }
 
   try {
     const regexes = [

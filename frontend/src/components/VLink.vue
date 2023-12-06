@@ -138,7 +138,9 @@ export default defineComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const handleExternalClick = () => {
-      if (!checkHref(props) || !props.sendExternalLinkClickEvent) {return}
+      if (!checkHref(props) || !props.sendExternalLinkClickEvent) {
+        return
+      }
       sendCustomEvent("EXTERNAL_LINK_CLICK", {
         url: props.href,
       })
