@@ -46,11 +46,9 @@ https://github.com/WordPress/openverse-catalog/issues/353)
 """
 import logging
 import os
-import uuid
 from collections.abc import Sequence
 
 from airflow.models.baseoperator import chain
-from airflow.operators.python import PythonOperator
 from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
@@ -150,11 +148,9 @@ def create_data_refresh_task_group(
         tasks.append(get_current_index)
 
         # Generate a UUID suffix that will be used by the newly created index.
-        generate_index_suffix = PythonOperator(
-            task_id="generate_index_suffix",
-            python_callable=lambda: uuid.uuid4().hex,
+        generate_index_suffix = ingestion_server.generate_index_suffix.override(
             trigger_rule=TriggerRule.NONE_FAILED,
-        )
+        )()
         tasks.append(generate_index_suffix)
 
         # Trigger the 'ingest_upstream' task on the ingestion server and await its
@@ -166,9 +162,7 @@ def create_data_refresh_task_group(
                 action="ingest_upstream",
                 model=data_refresh.media_type,
                 data={
-                    "index_suffix": XCOM_PULL_TEMPLATE.format(
-                        generate_index_suffix.task_id, "return_value"
-                    ),
+                    "index_suffix": generate_index_suffix,
                 },
                 timeout=data_refresh.data_refresh_timeout,
             )
@@ -177,9 +171,7 @@ def create_data_refresh_task_group(
         # Await healthy results from the newly created elasticsearch index.
         index_readiness_check = ingestion_server.index_readiness_check(
             media_type=data_refresh.media_type,
-            index_suffix=XCOM_PULL_TEMPLATE.format(
-                generate_index_suffix.task_id, "return_value"
-            ),
+            index_suffix=generate_index_suffix,
             timeout=data_refresh.index_readiness_timeout,
         )
         tasks.append(index_readiness_check)
@@ -191,14 +183,10 @@ def create_data_refresh_task_group(
             promote_filtered_index,
         ) = create_filtered_index_creation_task_groups(
             data_refresh=data_refresh,
-            origin_index_suffix=XCOM_PULL_TEMPLATE.format(
-                generate_index_suffix.task_id, "return_value"
-            ),
+            origin_index_suffix=generate_index_suffix,
             # Match origin and destination suffixes so we can tell which
             # filtered indexes were created as part of a data refresh.
-            destination_index_suffix=XCOM_PULL_TEMPLATE.format(
-                generate_index_suffix.task_id, "return_value"
-            ),
+            destination_index_suffix=generate_index_suffix,
         )
 
         # Add the task group for triggering the filtered index creation and awaiting its
@@ -216,9 +204,7 @@ def create_data_refresh_task_group(
                 action="promote",
                 model=data_refresh.media_type,
                 data={
-                    "index_suffix": XCOM_PULL_TEMPLATE.format(
-                        generate_index_suffix.task_id, "return_value"
-                    ),
+                    "index_suffix": generate_index_suffix,
                     "alias": target_alias,
                 },
                 timeout=data_refresh.data_refresh_timeout,
