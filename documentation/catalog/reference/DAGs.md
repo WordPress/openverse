@@ -85,6 +85,7 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
 | --------------------------------------------------------------- | ----------------- | ------- | ------------- |
 | `brooklyn_museum_workflow`                                      | `@monthly`        | `False` | image         |
+| [`cc_mixter_workflow`](#cc_mixter_workflow)                     | `@monthly`        | `False` | audio         |
 | `cleveland_museum_workflow`                                     | `@monthly`        | `False` | image         |
 | [`europeana_workflow`](#europeana_workflow)                     | `@daily`          | `True`  | image         |
 | [`finnish_museums_workflow`](#finnish_museums_workflow)         | `@daily`          | `True`  | image         |
@@ -124,6 +125,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
+1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
@@ -312,6 +314,18 @@ with an existing temp table matching the `query_id`. This option should only be
 used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step.
+
+### `cc_mixter_workflow`
+
+Content Provider: ccMixter
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: Documentation: https://ccmixter.org/query-api ccMixter sends bad JSON and
+extremely huge headers, both of which need workarounds that are handled by this
+DAG.
 
 ### `check_silenced_dags`
 
