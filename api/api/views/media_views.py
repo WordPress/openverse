@@ -22,7 +22,11 @@ from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
-from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
+from api.utils.throttle import (
+    AnonThumbnailRateThrottle,
+    OAuth2IdThumbnailRateThrottle,
+    OpenverseReferrerAnonThumbnailRateThrottle,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -300,7 +304,11 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         url_path="thumb",
         url_name="thumb",
         serializer_class=media_serializers.MediaThumbnailRequestSerializer,
-        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
+        throttle_classes=[
+            AnonThumbnailRateThrottle,
+            OpenverseReferrerAnonThumbnailRateThrottle,
+            OAuth2IdThumbnailRateThrottle,
+        ],
     )
 
     async def thumbnail(self, request, *_, **__):
