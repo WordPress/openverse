@@ -5,7 +5,6 @@ from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
 import pytest
-from fakeredis import FakeRedis
 
 from api.models.oauth import ThrottledApplication
 from api.utils.throttle import (
@@ -14,19 +13,6 @@ from api.utils.throttle import (
     BurstRateThrottle,
     TenPerDay,
 )
-
-
-@pytest.fixture(autouse=True)
-def redis(monkeypatch) -> FakeRedis:
-    fake_redis = FakeRedis()
-
-    def get_redis_connection(*args, **kwargs):
-        return fake_redis
-
-    monkeypatch.setattr("api.utils.throttle.get_redis_connection", get_redis_connection)
-
-    yield fake_redis
-    fake_redis.client().close()
 
 
 @pytest.fixture
@@ -61,20 +47,6 @@ def test_anon_rate_throttle_ignores_authed_requests(
 ):
     throttle = throttle_class()
     assert throttle.get_cache_key(view.initialize_request(authed_request), view) is None
-
-
-@pytest.mark.parametrize(
-    "throttle_class",
-    AbstractAnonRateThrottle.__subclasses__(),
-)
-@pytest.mark.django_db
-def test_anon_rate_throttle_ignores_exempted_ips(
-    throttle_class, redis, request_factory, view
-):
-    request = request_factory.get("/")
-    redis.sadd("ip-whitelist", request.META["REMOTE_ADDR"])
-    throttle = throttle_class()
-    assert throttle.get_cache_key(view.initialize_request(request), view) is None
 
 
 @pytest.mark.parametrize(
