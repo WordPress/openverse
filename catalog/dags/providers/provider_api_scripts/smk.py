@@ -89,13 +89,13 @@ class SmkDataIngester(ProviderDataIngester):
         if created_date := item.get("created"):
             meta_data["created_date"] = created_date
         collection = item.get("collection")
-        if type(collection) == list:
+        if isinstance(collection, list):
             meta_data["collection"] = ",".join(collection)
         techniques = item.get("techniques")
-        if type(techniques) == list:
+        if isinstance(techniques, list):
             meta_data["techniques"] = ",".join(techniques)
         colors = item.get("colors")
-        if type(colors) == list:
+        if isinstance(colors, list):
             meta_data["colors"] = ",".join(colors)
         return meta_data
 

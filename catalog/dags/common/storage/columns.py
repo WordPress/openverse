@@ -172,7 +172,7 @@ class Column(ABC):
             )
 
     def __enforce_char_limit(self, string, limit, truncate=True):
-        if not type(string) == str:
+        if not isinstance(string, str):
             logger.debug(
                 f"Cannot limit characters on non-string type {type(string)}."
                 f"Input was {string}."

@@ -51,7 +51,7 @@ def setup_env(monkeypatch):
 
 def test_AudioStore_includes_provider_in_output_file_string():
     audio_store = audio.AudioStore("test_provider")
-    assert type(audio_store.output_path) == str
+    assert isinstance(audio_store.output_path, str)
     assert "test_provider" in audio_store.output_path
 
 

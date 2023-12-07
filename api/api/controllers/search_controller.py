@@ -567,7 +567,7 @@ def get_sources(index):
         cache_fetch_failed = True
         sources = None
         log.warning("Source cache fetch failed due to corruption")
-    if type(sources) == list or cache_fetch_failed:
+    if isinstance(sources, list) or cache_fetch_failed:
         # Invalidate old provider format.
         cache.delete(key=source_cache_name)
     if not sources or sources:
