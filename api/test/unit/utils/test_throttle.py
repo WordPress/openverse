@@ -1,18 +1,47 @@
+from test.factory.models.image import ImageFactory
 from test.factory.models.oauth2 import AccessTokenFactory
 
 from django.core.cache import cache
+from rest_framework.settings import api_settings
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
 import pytest
 
-from api.models.oauth import ThrottledApplication
-from api.utils.throttle import (
-    AbstractAnonRateThrottle,
-    AbstractOAuth2IdRateThrottle,
-    BurstRateThrottle,
-    TenPerDay,
-)
+from api.utils import throttle
+from api.views.media_views import MediaViewSet
+
+
+@pytest.fixture(autouse=True)
+def enable_throttles(settings):
+    # Stash current settings so we can revert them after the test
+    original_default_throttle_rates = api_settings.DEFAULT_THROTTLE_RATES
+
+    # Put settings into base Django settings from which DRF reads
+    # settings when we call `api_settings.reload()`
+    settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = settings.DEFAULT_THROTTLE_RATES
+    settings.REST_FRAMEWORK[
+        "DEFAULT_THROTTLE_CLASSES"
+    ] = settings.DEFAULT_THROTTLE_CLASSES
+
+    # Reload the settings and read them from base Django settings
+    # Also handles importing classes from class strings, etc
+    api_settings.reload()
+
+    # Put the parsed/imported default throttle classes onto the base media view set
+    # to emulate the application startup. Without this, MediaViewSet has cached the
+    # initial setting and won't re-retrieve it after we've called `api_settings.reload`
+    MediaViewSet.throttle_classes = api_settings.DEFAULT_THROTTLE_CLASSES
+    throttle.SimpleRateThrottle.THROTTLE_RATES = api_settings.DEFAULT_THROTTLE_RATES
+
+    yield
+
+    # Set everything back as it was before and reload settings again
+    del settings.REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"]
+    settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = original_default_throttle_rates
+    api_settings.reload()
+    MediaViewSet.throttle_classes = api_settings.DEFAULT_THROTTLE_CLASSES
+    throttle.SimpleRateThrottle.THROTTLE_RATES = api_settings.DEFAULT_THROTTLE_RATES
 
 
 @pytest.fixture
@@ -37,66 +66,153 @@ def view():
     return APIView()
 
 
-@pytest.mark.parametrize(
-    "throttle_class",
-    AbstractAnonRateThrottle.__subclasses__(),
-)
+def _gather_applied_rate_limit_scopes(api_response):
+    scopes = set()
+    for header in api_response.headers:
+        if "X-RateLimit-Limit" in header:
+            scopes.add(header.replace("X-RateLimit-Limit-", ""))
+
+    return scopes
+
+
 @pytest.mark.django_db
-def test_anon_rate_throttle_ignores_authed_requests(
-    throttle_class, authed_request, view
-):
-    throttle = throttle_class()
-    assert throttle.get_cache_key(view.initialize_request(authed_request), view) is None
+def test_anon_rate_limit_used_default_throttles(api_client):
+    res = api_client.get("/v1/images/")
+    applied_scopes = _gather_applied_rate_limit_scopes(res)
+
+    anon_scopes = {
+        throttle.BurstRateThrottle.scope,
+        throttle.SustainedRateThrottle.scope,
+    }
+
+    assert anon_scopes == applied_scopes
 
 
-@pytest.mark.parametrize(
-    "throttle_class",
-    AbstractAnonRateThrottle.__subclasses__(),
-)
 @pytest.mark.django_db
-def test_anon_rate_throttle_returns_formatted_cache_key_for_anonymous_request(
-    throttle_class, request_factory, view
-):
-    request = request_factory.get("/")
-    throttle = throttle_class()
-    assert throttle.get_cache_key(view.initialize_request(request), view) is not None
+def test_anon_frontend_referrer_used_default_throttles(api_client):
+    res = api_client.get("/v1/images/", headers={"Referrer": "openverse.org"})
+    applied_scopes = _gather_applied_rate_limit_scopes(res)
+
+    ov_referrer_scopes = {
+        throttle.OpenverseReferrerBurstRateThrottle.scope,
+        throttle.OpenverseReferrerSustainedRateThrottle.scope,
+    }
+
+    assert ov_referrer_scopes == applied_scopes
 
 
-@pytest.mark.parametrize(
-    "throttle_class",
-    AbstractOAuth2IdRateThrottle.__subclasses__(),
-)
 @pytest.mark.django_db
-def test_abstract_oauth2_id_rate_throttle_applies_if_token_app_rate_limit_model_matches(
-    access_token, authed_request, view, throttle_class
+@pytest.mark.parametrize(
+    "rate_limit_model, expected_scopes",
+    (
+        pytest.param(
+            "standard",
+            {
+                throttle.OAuth2IdBurstRateThrottle.scope,
+                throttle.OAuth2IdSustainedRateThrottle.scope,
+            },
+            id="standard",
+        ),
+        pytest.param(
+            "enhanced",
+            {
+                throttle.EnhancedOAuth2IdBurstRateThrottle.scope,
+                throttle.EnhancedOAuth2IdSustainedRateThrottle.scope,
+            },
+            id="enhanced",
+        ),
+        pytest.param(
+            "exempt",
+            # Exempted requests have _no_ throttle class applied to them
+            # This is a safe test because otherwise the anon scopes would apply
+            # No scopes _must_ mean an exempt token, so long as the anon tests
+            # are also working
+            set(),
+            id="exempt",
+        ),
+    ),
+)
+def test_oauth_rate_limit_used_default_throttles(
+    rate_limit_model, expected_scopes, api_client, access_token
 ):
-    throttle = throttle_class()
-    access_token.application.rate_limit_model = (
-        throttle_class.applies_to_rate_limit_model
-    )
+    access_token.application.rate_limit_model = rate_limit_model
     access_token.application.save()
-    assert (
-        throttle.get_cache_key(view.initialize_request(authed_request), view)
-        is not None
+
+    res = api_client.get(
+        "/v1/images/", headers={"Authorization": f"Bearer {access_token.token}"}
     )
+    applied_scopes = _gather_applied_rate_limit_scopes(res)
+
+    assert expected_scopes == applied_scopes
 
 
-@pytest.mark.parametrize(
-    "throttle_class",
-    AbstractOAuth2IdRateThrottle.__subclasses__(),
-)
 @pytest.mark.django_db
-def test_abstract_oauth2_id_rate_throttle_does_not_apply_if_token_app_rate_limit_model_differs(
-    access_token, authed_request, view, throttle_class
-):
-    throttle = throttle_class()
-    access_token.application.rate_limit_model = next(
-        m[0]
-        for m in ThrottledApplication.RATE_LIMIT_MODELS
-        if m[0] != throttle_class.applies_to_rate_limit_model
+def test_anon_rate_limit_used_thumbnail(api_client):
+    image = ImageFactory.create()
+    res = api_client.get(f"/v1/images/{image.identifier}/thumb/")
+    applied_scopes = _gather_applied_rate_limit_scopes(res)
+
+    anon_scopes = {
+        throttle.AnonThumbnailRateThrottle.scope,
+    }
+
+    assert anon_scopes == applied_scopes
+
+
+@pytest.mark.django_db
+def test_anon_frontend_referrer_used_thumbnail(api_client):
+    image = ImageFactory.create()
+    res = api_client.get(
+        f"/v1/images/{image.identifier}/thumb/", headers={"Referrer": "openverse.org"}
     )
+    applied_scopes = _gather_applied_rate_limit_scopes(res)
+
+    ov_referrer_scopes = {
+        throttle.OpenverseReferrerAnonThumbnailRateThrottle.scope,
+    }
+
+    assert ov_referrer_scopes == applied_scopes
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "rate_limit_model, expected_scopes",
+    (
+        pytest.param(
+            "standard",
+            {throttle.OAuth2IdThumbnailRateThrottle.scope},
+            id="standard",
+        ),
+        pytest.param(
+            "enhanced",
+            {throttle.OAuth2IdThumbnailRateThrottle.scope},
+            id="enhanced",
+        ),
+        pytest.param(
+            "exempt",
+            # See note on test_oauth_rate_limit_used_default_throttles's
+            # `exempt` entry. The same applies here. Exempt tokens should
+            # have _no_ scopes applied.
+            set(),
+            id="exempt",
+        ),
+    ),
+)
+def test_oauth_rate_limit_used_thumbnail(
+    rate_limit_model, expected_scopes, api_client, access_token
+):
+    # All oauth token scopes use the base oauth thumbnail rate limit
+    access_token.application.rate_limit_model = rate_limit_model
     access_token.application.save()
-    assert throttle.get_cache_key(view.initialize_request(authed_request), view) is None
+    image = ImageFactory.create()
+
+    res = api_client.get(
+        f"/v1/images/{image.identifier}/thumb/",
+        headers={"Authorization": f"Bearer {access_token.token}"},
+    )
+    applied_scopes = _gather_applied_rate_limit_scopes(res)
+
+    assert expected_scopes == applied_scopes
 
 
 @pytest.mark.django_db
@@ -104,7 +220,7 @@ def test_rate_limit_headers(request_factory):
     cache.delete_pattern("throttle_*")
     limit = 2
 
-    class DummyThrottle(BurstRateThrottle):
+    class DummyThrottle(throttle.BurstRateThrottle):
         THROTTLE_RATES = {"anon_burst": f"{limit}/hour"}
 
     class ThrottledView(APIView):
@@ -133,7 +249,7 @@ def test_rate_limit_headers_when_no_scope(request_factory):
     cache.delete_pattern("throttle_*")
 
     class ThrottledView(APIView):
-        throttle_classes = [TenPerDay]
+        throttle_classes = [throttle.TenPerDay]
 
     view = ThrottledView().as_view()
     request = request_factory.get("/")
