@@ -121,7 +121,7 @@ def create_data_refresh_task_group(
         # filtered index creation. However, it is safer to avoid the possibility
         # of the race condition altogether.
         # ``execution_date_fn`` is used to find the most recent run because
-        # the filtered index createion DAGs are unscheduled so we can't derive
+        # the filtered index creation DAGs are unscheduled so we can't derive
         # anything from the execution date of the current data refresh DAG.
         create_filtered_index_dag_id = (
             f"create_filtered_{data_refresh.media_type}_index"

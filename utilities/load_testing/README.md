@@ -4,7 +4,7 @@ This directory contains a collection of locust files for load testing the
 Openverse application. Currently, only an API load test exists but in the future
 we can also create load tests for the frontend or any other service we stand up.
 These exist in this repository rather than one of the service specific ones for
-this reason. We can re-use the base docker image we create for all our load
+this reason. We can reuse the base docker image we create for all our load
 testing scripts.
 
 **Note:** Production is throttled, so these scripts cannot be used as a shortcut

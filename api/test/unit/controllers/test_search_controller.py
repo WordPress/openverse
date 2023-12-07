@@ -63,7 +63,7 @@ def cache_setter():
         (0, 100, 10, 1, (0, 0)),
         # Evenly divisible number of pages
         (25, 5, 5, 1, (25, 5)),
-        # An edge case that previously did not behave as expected with evenly divisble numbers of pages
+        # An edge case that previously did not behave as expected with evenly divisible numbers of pages
         (20, 5, 5, 1, (20, 4)),
         # Unevenly divisible number of pages
         (21, 5, 5, 1, (21, 5)),

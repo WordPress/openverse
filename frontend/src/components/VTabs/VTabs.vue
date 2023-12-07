@@ -35,7 +35,7 @@ export default defineComponent({
     /**
      * Accessible name label to use for the tablist.
      *
-     * Re-use an existing element as a label by passing its `id` starting with `#`.
+     * Reuse an existing element as a label by passing its `id` starting with `#`.
      * The tablist's `aria-labelledby` will be set to this element.
      *
      * If there are no existing elements that can be used as a label, pass a translated

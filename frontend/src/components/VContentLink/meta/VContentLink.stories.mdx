@@ -12,6 +12,7 @@ import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
 export const contentLinkArgTypes = {
   mediaType: { options: ["audio", "image"], control: { type: "radio" } },
+  searchTerm: { control: { type: "string" } },
   resultsCount: { control: { type: "number" } },
   isSelected: { control: { type: "boolean" } },
   layout: { options: ["stacked", "horizontal"], control: { type: "radio" } },
@@ -33,7 +34,7 @@ export const VContentLinkHorizontalStory = (args) => ({
   },
 })
 
-export const TwoVContentLinkStory = (agrs) => ({
+export const TwoVContentLinkStory = (args) => ({
   template: `
   <div class="grid grid-cols-2 gap-4">
     <VContentLink
@@ -41,6 +42,7 @@ export const TwoVContentLinkStory = (agrs) => ({
       :key="key"
       :media-type="type.mediaType"
       :results-count="type.resultsCount"
+      search-term="cat"
     />
   </div>
   `,

@@ -215,9 +215,9 @@ The audio page should be updated to match the image page: the
 
 ### 4. Nuxt store and API request changes
 
-We can re-use the search store as is for these pages. Currently, the frontend
-can perform searches by `source` parameter. If `searchBy` value is set, then the
-`q` parameter is replaced with the `<searchBy>=<searchTerm>` query parameter.
+We can reuse the search store as is for these pages. Currently, the frontend can
+perform searches by `source` parameter. If `searchBy` value is set, then the `q`
+parameter is replaced with the `<searchBy>=<searchTerm>` query parameter.
 
 For this project, we should add new values to the `searchBy` filter.
 

@@ -15,7 +15,7 @@ Alarm links:
 
 ```{note}
 This run book is shared between all unhealthy host count alarms _for ECS services_.
-Our infrastructure is slightly different for non-ECS services so do not re-use this
+Our infrastructure is slightly different for non-ECS services so do not reuse this
 run book for anything not deployed using ECS (though feel free to reference relevant
 parts of it).
 ```
