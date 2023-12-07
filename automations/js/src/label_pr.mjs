@@ -27,6 +27,23 @@ function getIsFullyLabeled(labels) {
 }
 
 /**
+ * Get the `Label` instance from a label's name.
+ *
+ * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+ * @param repository {string} the full name of the repository, including owner
+ * @param name {string} the name of the label for which to get node ID
+ * @returns {Label} the label with the `id` and `name` fields
+ */
+async function getLabel(octokit, repository, name) {
+  const [owner, repo] = repository.split('/')
+  const res = await octokit.issues.getLabel({ owner, repo, name })
+  return {
+    id: res.data.node_id,
+    name,
+  }
+}
+
+/**
  * Apply labels to a PR based on the PR's linked issues.
  *
  * Note that this function does not concern itself with the management of stack
@@ -36,6 +53,7 @@ function getIsFullyLabeled(labels) {
  * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  */
 export const main = async (octokit, core) => {
+  const { GITHUB_REPOSITORY } = process.env
   const { eventName, eventAction, prNodeId } = JSON.parse(
     readFileSync('/tmp/event.json', 'utf-8')
   )
@@ -109,17 +127,12 @@ export const main = async (octokit, core) => {
   if (!getIsFullyLabeled(finalLabels.items)) {
     let attnLabel
     if (isTriaged) {
-      attnLabel = {
-        id: 'MDU6TGFiZWwzMDI5NTEyMjMw',
-        name: '🏷 status: label work required',
-      }
+      attnLabel = '🏷 status: label work required'
     } else {
-      attnLabel = {
-        id: 'MDU6TGFiZWwzMDI5NTEyMjc1',
-        name: '🚦 status: awaiting triage',
-      }
+      attnLabel = '🚦 status: awaiting triage'
     }
     core.info(`Pull not fully labelled so adding "${attnLabel}".`)
+    attnLabel = await getLabel(octokit, GITHUB_REPOSITORY, attnLabel)
     finalLabels.add(attnLabel)
   }
 
