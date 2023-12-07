@@ -3,7 +3,6 @@
     ref="contentMenuPopover"
     :label="$t('searchType.label').toString()"
     placement="bottom-end"
-    width="w-66"
     :clippable="true"
     :trap-focus="false"
   >

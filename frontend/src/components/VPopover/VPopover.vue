@@ -6,6 +6,10 @@
       ref="triggerContainerRef"
       class="flex w-min items-stretch whitespace-nowrap"
       @click="onTriggerClick"
+      @mouseenter="onTriggerMouseEnter"
+      @focusin="onTriggerMouseEnter"
+      @mouseleave="onTriggerMouseLeave"
+      @focusout="onTriggerMouseLeave"
     >
       <!--
         @slot The trigger, should be a button 99.99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the popover will not open
@@ -21,7 +25,6 @@
     <VPopoverContent
       v-if="triggerRef"
       :z-index="zIndex"
-      :width="width"
       :visible="visibleRef"
       :trigger-element="triggerRef"
       :placement="placement"
@@ -54,7 +57,7 @@ import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 
-import type { Placement, PositioningStrategy } from "@popperjs/core"
+import type { Placement, Strategy } from "@floating-ui/dom"
 
 export default defineComponent({
   name: "VPopover",
@@ -64,6 +67,10 @@ export default defineComponent({
    * default for each of them can take over.
    */
   props: {
+    /**
+     * Whether the popover should show when the trigger is hovered on.
+     */
+    activateOnHover: { type: Boolean, default: undefined },
     /**
      * Whether the popover should hide when the <kbd>Escape</kbd> key is pressed.
      *
@@ -93,9 +100,9 @@ export default defineComponent({
     autoFocusOnHide: { type: Boolean, default: undefined },
     /**
      * The placement of the popover relative to the trigger. Should be one of the options
-     * for `placement` passed to popper.js.
+     * for `placement` passed to floating-ui.
      *
-     * @see https://popper.js.org/docs/v2/constructors/#options
+     * @see https://floating-ui.com/docs/tutorial#placements
      *
      * @default 'bottom'
      */
@@ -106,12 +113,12 @@ export default defineComponent({
      * The positioning strategy of the popover. If your reference element is in a fixed container
      * use the fixed strategy; otherwise use the default, absolute strategy.
      *
-     * @see https://popper.js.org/docs/v2/constructors/#strategy
+     * @see https://floating-ui.com/docs/computeposition#strategy
      *
      * @default 'absolute'
      */
     strategy: {
-      type: String as PropType<PositioningStrategy>,
+      type: String as PropType<Strategy>,
     },
     /**
      * The label of the popover content. Must be provided if `labelledBy` is empty.
@@ -147,12 +154,6 @@ export default defineComponent({
      * @default true
      */
     trapFocus: { type: Boolean, default: undefined },
-    /**
-     * Optional Tailwind class for fixed width popover content.
-     *
-     * @default undefined
-     */
-    width: { type: String },
   },
   emits: [
     /**
@@ -164,13 +165,13 @@ export default defineComponent({
      */
     "close",
   ],
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const visibleRef = ref(false)
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerRef = computed(() =>
-      triggerContainerRef.value?.firstChild
-        ? (triggerContainerRef.value.firstChild as HTMLElement)
+      triggerContainerRef.value?.firstElementChild
+        ? (triggerContainerRef.value.firstElementChild as HTMLElement)
         : undefined
     )
 
@@ -179,6 +180,17 @@ export default defineComponent({
       emit: emit as SetupContext["emit"],
     })
 
+    const onTriggerMouseEnter = () => {
+      if (props.activateOnHover) {
+        open()
+      }
+    }
+    const onTriggerMouseLeave = () => {
+      if (props.activateOnHover) {
+        close()
+      }
+    }
+
     return {
       open,
       close,
@@ -186,6 +198,8 @@ export default defineComponent({
       triggerContainerRef,
       triggerRef,
       onTriggerClick,
+      onTriggerMouseEnter,
+      onTriggerMouseLeave,
       triggerA11yProps,
     }
   },

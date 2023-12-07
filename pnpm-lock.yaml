@@ -41,6 +41,7 @@ importers:
       '@babel/parser': ^7.22.5
       '@babel/preset-env': ^7.22.5
       '@babel/preset-typescript': ^7.22.5
+      '@floating-ui/dom': ^1.5.3
       '@itsjonq/remake': ^2.0.0
       '@nuxt/components': ^2.2.1
       '@nuxt/types': ^2.17.2
@@ -57,7 +58,6 @@ importers:
       '@pinia/nuxt': 0.2.1
       '@pinia/testing': ^0.1.0
       '@playwright/test': 1.30.0
-      '@popperjs/core': ^2.11.8
       '@tailwindcss/typography': ^0.5.10
       '@testing-library/dom': ^8.13.0
       '@testing-library/jest-dom': ^5.16.1
@@ -124,6 +124,7 @@ importers:
       vue-tsc: 1.8.22
       webpack: ^4.46.0
     dependencies:
+      '@floating-ui/dom': 1.5.3
       '@nuxt/components': 2.2.1
       '@nuxt/vue-app': 2.17.2
       '@nuxtjs/composition-api': 0.33.1_j25mhj5aambesoof37dkoeldru
@@ -134,7 +135,6 @@ importers:
       '@nuxtjs/sitemap': 2.4.0
       '@nuxtjs/svg-sprite': 0.5.2
       '@pinia/nuxt': 0.2.1_pinia@2.0.33+vue@2.7.15
-      '@popperjs/core': 2.11.8
       '@vueuse/core': 10.2.1_vue@2.7.15
       '@wordpress/is-shallow-equal': 4.8.0
       async-mutex: 0.3.2
@@ -3864,6 +3864,23 @@ packages:
     resolution: {integrity: sha512-ZSjtmelB7IJfWD2Fvb7+Z+ChTIKWq6kjda95fLcQKNS5aheVHn4IkfgRQE3sIIzTcSLwLcLZUD9UBt+V7+h+Pw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  /@floating-ui/core/1.5.0:
+    resolution: {integrity: sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==}
+    dependencies:
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
+  /@floating-ui/dom/1.5.3:
+    resolution: {integrity: sha512-ClAbQnEqJAKCJOEbbLo5IUlZHkNszqhuxS4fHAVxRPXPya6Ysf2G8KypnYcOTpx6I8xcgF9bbHb6g/2KpbV8qA==}
+    dependencies:
+      '@floating-ui/core': 1.5.0
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
+  /@floating-ui/utils/0.1.6:
+    resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
+    dev: false
+
   /@gar/promisify/1.1.2:
     resolution: {integrity: sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==}
 
@@ -5564,10 +5581,6 @@ packages:
 
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
-    dev: false
-
-  /@popperjs/core/2.11.8:
-    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
   /@sentry-internal/tracing/7.77.0:
