@@ -73,7 +73,7 @@ export const main = async (octokit, core) => {
   // Then we compile all the labels of all the linked issues into a pool. This
   // will be used to find the labels that satisfy the requirements.
   const labelPool = pr.linkedIssues.flatMap((issue) => issue.labels)
-  core.debug(`Label pool: ${labelPool}`)
+  core.debug(`Label pool: ${labelPool.map((label) => label.name).join(',')}`)
 
   // For each label that we only need one of, we check if the PR already has
   // such a label. If not, we check if the label pool contains any valid labels
@@ -94,7 +94,11 @@ export const main = async (octokit, core) => {
   // from the label pool. Our ID set implementation will weed out duplicates.
   for (let rule of atleastOne) {
     const validLabels = labelPool.filter((label) => label.name.includes(rule))
-    core.info(`Adding labels "${validLabels}" to PR.`)
+    core.info(
+      `Adding labels "${validLabels
+        .map((label) => label.name)
+        .join(',')}" to PR.`
+    )
     validLabels.forEach((label) => {
       finalLabels.add(label)
     })
@@ -105,9 +109,15 @@ export const main = async (octokit, core) => {
   if (!getIsFullyLabeled(finalLabels.items)) {
     let attnLabel
     if (isTriaged) {
-      attnLabel = '🏷 status: label work required'
+      attnLabel = {
+        id: 'MDU6TGFiZWwzMDI5NTEyMjMw',
+        name: '🏷 status: label work required',
+      }
     } else {
-      attnLabel = '🚦 status: awaiting triage'
+      attnLabel = {
+        id: 'MDU6TGFiZWwzMDI5NTEyMjc1',
+        name: '🚦 status: awaiting triage',
+      }
     }
     core.info(`Pull not fully labelled so adding "${attnLabel}".`)
     finalLabels.add(attnLabel)
