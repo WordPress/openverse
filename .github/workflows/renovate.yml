@@ -15,7 +15,7 @@ on:
     # Run every 30 minutes:
     - cron: "0,30 * * * *"
 
-# Adding these as env variables makes it easy to re-use them in different steps and in bash.
+# Adding these as env variables makes it easy to reuse them in different steps and in bash.
 env:
   cache_archive: renovate_cache.tar.gz
   # This is the dir renovate provides -- if we set our own directory via cacheDir, we can run into permissions issues.
@@ -61,7 +61,7 @@ jobs:
           sudo chown -R runneradmin:root /tmp/renovate/
           ls -R "$cache_dir"
 
-      - uses: renovatebot/github-action@v39.1.1
+      - uses: renovatebot/github-action@v39.2.1
         with:
           configurationFile: .github/renovate.json
           token: ${{ secrets.ACCESS_TOKEN }}

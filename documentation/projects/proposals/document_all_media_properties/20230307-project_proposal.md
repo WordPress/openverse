@@ -46,13 +46,13 @@ The project will be considered successful when:
   process for automatically updating or encouraging the maintainers to update it
   on relevant code changes is created.
 
-### Implementors
+### Implementers
 
 @rwidom - creator of the
 [image table](https://docs.google.com/spreadsheets/d/1gaVsvFnsYby2iwzRm0Ta9IPhvNixCpQdHByGLo1r_pg/edit?usp=sharing)
 ("image table ddl" tab)
 
-@obulat - main implementor @openverse-team - reviewers
+@obulat - main implementer @openverse-team - reviewers
 
 ### Implementation details
 

@@ -62,7 +62,7 @@ package will be reflected in other packages that depend on it.
 ````{note}
 If a package depends on another, you must add the depended package's build
 routine into the dependent package's build. For example, if the frontend
-dependended on the `@openverse/license-parsing` package, we would need to
+depended on the `@openverse/license-parsing` package, we would need to
 add a watcher to build that package in the frontend's `dev` and `build` scripts.
 This can be facilitated using `npm-run-all`'s `run-p`. e.g.:
 

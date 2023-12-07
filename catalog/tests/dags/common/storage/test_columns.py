@@ -77,7 +77,7 @@ def test_Column_sanitize_string_casts_to_strings():
     sc = SanitizeStringColumn()
     input_list = [1, False]
     for i in input_list:
-        assert type(sc._Column__sanitize_string(i)) == str
+        assert isinstance(sc._Column__sanitize_string(i), str)
 
 
 def test_Column_sanitize_string_leaves_nonetype_unchanged():

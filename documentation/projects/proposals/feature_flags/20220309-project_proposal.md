@@ -193,7 +193,7 @@ The component is shown if the flag is
 - enabled
 - switchable (with the user having chosen to enable it)
 
-It internally intefaces with the utility to evaluate whether the component is
+It internally interfaces with the utility to evaluate whether the component is
 rendered or not. Here is
 [some code](https://github.com/mblarsen/vue-browser-acl/blob/4e3bb90d2ba4fcc3edd30b27737f4531dc464329/index.js#L136-L163)
 that can be used to avoid rendering.

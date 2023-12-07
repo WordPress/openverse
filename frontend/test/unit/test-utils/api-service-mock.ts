@@ -37,7 +37,7 @@ const createApiService = apiService.createApiService as jest.Mock<
  * twice, the mock adapter is not re-applied and the second registered
  * response still works as expected.
  *
- * With the particual way this mock creation function works,
+ * With the particular way this mock creation function works,
  * even if `createApiService` is called several times during
  * the lifecycle of a particular test context, the same `apiService`
  * instance will be reused for each call. This is done to preserve
