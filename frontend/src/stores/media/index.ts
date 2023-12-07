@@ -94,7 +94,9 @@ export const useMediaStore = defineStore("media", {
     getItemById: (state) => {
       return (mediaType: SupportedMediaType, id: string): Media | undefined => {
         const itemFromSearchResults = state.results[mediaType].items[id]
-        if (itemFromSearchResults) return itemFromSearchResults
+        if (itemFromSearchResults) {
+          return itemFromSearchResults
+        }
         return useRelatedMediaStore().getItemById(id)
       }
     },
@@ -264,7 +266,9 @@ export const useMediaStore = defineStore("media", {
           )
 
           // Prevent the bunching of audio results at the end.
-          if (nonImageIndex > newResults.length) break
+          if (nonImageIndex > newResults.length) {
+            break
+          }
         }
       }
 
@@ -330,18 +334,22 @@ export const useMediaStore = defineStore("media", {
       error?: FetchingError
     ) {
       switch (action) {
-        case "reset":
+        case "reset": {
           this._resetFetchState()
           break
-        case "start":
+        }
+        case "start": {
           this._startFetching(mediaType)
           break
-        case "end":
+        }
+        case "end": {
           this._endFetching(mediaType, error)
           break
-        case "finish":
+        }
+        case "finish": {
           this._finishFetchingForQuery(mediaType)
           break
+        }
       }
     },
 

@@ -74,7 +74,9 @@ export function useFloatingUi({ floatingElRef, floatingPropsRefs }: Props) {
         cleanup.value?.()
         return
       }
-      if (!visible) return
+      if (!visible) {
+        return
+      }
 
       cleanup.value = buildAutoUpdate(triggerElement, floatingElement)
 
@@ -92,7 +94,9 @@ export function useFloatingUi({ floatingElRef, floatingPropsRefs }: Props) {
   const detectMaxHeight = {
     name: "detectMaxHeight",
     async fn(state: MiddlewareState) {
-      if (!floatingPropsRefs.clippable.value) return {}
+      if (!floatingPropsRefs.clippable.value) {
+        return {}
+      }
       const overflow = await detectOverflow(state, { padding: FloatingOffset })
       const verticalOverflow = Math.max(overflow.top, overflow.bottom)
 

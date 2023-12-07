@@ -75,7 +75,9 @@ export default defineComponent({
      *
      */
     const onLoadMore = async () => {
-      if (fetchState.value.isFetching) return
+      if (fetchState.value.isFetching) {
+        return
+      }
 
       reachResultEndEventSent.value = false
 
