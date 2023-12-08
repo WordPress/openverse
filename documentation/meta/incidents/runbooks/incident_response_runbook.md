@@ -4,6 +4,10 @@
 **Recording** an incident is a standalone task which can be performed by any maintainer. This recorder may not stabilize the service or continue to work on incident triage.
 ```
 
+```{note}
+This runbook is intended to be used by Openverse maintainers, and references some resources that only Openverse staff have access to.
+```
+
 ## 1. Record the incident
 
 When you observe a potential incident, you are responsible for recording it. Run
@@ -79,11 +83,11 @@ incident.
       illuminating.
    4. Record _everything_. Keep a local file as a scratchpad for notes, post
       them to the Slack thread. The more retained raw information the better.
-      Before deleting, or restarting anything, take screenshots or copy/paste
-      important text wherever you can.
+      Before deleting or restarting anything: make backups, take screenshots or
+      copy/paste important text wherever you can.
    5. If something is related to a 3rd party API, like a provider or SaaS
       offering used in Openverse, contact them as soon as possible.
-   6. Start a Slack huddle if real time audio would be useful.
+   6. Start a Slack huddle if real time audio or video would be useful.
    7. For incidents that may last several hours, consider silencing any AWS
       alarms that are actively being investigated - the extra noise can distract
       and detract from the stabilization work. For any AWS alarms, this can be
