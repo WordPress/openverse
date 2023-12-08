@@ -92,18 +92,38 @@ incident.
    `#status-stabilized` and leave a comment summarizing the mitigation. Usually
    at this time the urgency of the incident will be reduced, and time may be
    required to observe that the incident is fully resolved.
-5. Once enough time has passed without disturbance that the incident seems
+
+```{note}
+Once services are stabilized, the urgency of the incident is usually reduced. The next steps can happen asynchronously and with priority commenserate to incident severity.
+```
+
+## 3. Investigate or resolve
+
+Depending on the nature of the incident, services may be stable but require
+further investigation into a root cause. If a root cause is already known,
+resolved, or no additional action can/should be taken, the incident can be
+marked as resolved.
+
+**Investigating**:
+
+1. If more investigation is required, update the status tag of the P2 to
+   `#status-investigating`. Share the outcome of the investigation in the P2 and
+   any issues that were created as a result of it.
+2. Prioritize the work on the created issues alongside existing workstreams, and
+   complete as appropriate.
+3. Once the related issues are complete, move on to resolving the incident.
+
+**Resolving**:
+
+1. Once enough time has passed without disturbance that the incident seems
    resolved, update the status tag of the P2 to `#status-resolved`, leave a P2
    comment summarizing the solution, adding any relevant points to the timeline,
    and unpin the Slack thread. Re-enable any alarms that were disabled.
-6. Update all comms postings, editing them so that the incident is clearly
-   resolved in the title and body of the post. This includes the Make post for
-   Severity 1 incidents along with any other outreach.
-7. Create any follow-up issues, with a GitHub project if extensive. This can be
-   done the next time you are online if you have been working for an extended
-   period or outside your regular work hours.
+2. Update all communication postings, editing them so that the incident is
+   clearly resolved in the title and body of the post. This includes the Make
+   post for Severity 1 incidents along with any other outreach.
 
-## 3. Review the incident
+## 4. Review the incident
 
 Once the incident is resolved, the point person should host a retrospective as
 soon as possible. The closer to the actual incident, the better. Make sure

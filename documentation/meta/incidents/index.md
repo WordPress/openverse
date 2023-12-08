@@ -7,30 +7,32 @@ please [file a bug report](https://github.com/WordPress/openverse/issues/new?tem
 channel.
 ```
 
-This document defines the policy for handling production incidents that occur
-within Openverse. The goal is to ensure that user-facing service disruptions are
-handled promptly, efficiently, and effectively, mitigating impact on our users
-and maintaining the highest level of service availability possible.
+This document defines the policy for handling technical production incidents
+that occur within Openverse. The goal is to ensure that user-facing service
+disruptions are handled promptly, efficiently, and effectively, mitigating
+impact on our users and maintaining the highest level of service availability
+possible.
 
 ## What is an incident?
 
-An **incident** is any event which compromises or could compromise the goals of
-the Openverse project. While commonly technical problems with our services
-(Openverse.org, the Openverse API, and "official" integrations like the WP core
-integration and pattern directory integrations) these can also be incidents of a
-public relations or community nature. Here are some example incidents:
+An **incident** in the context of these documents is any event which affects the
+ability of Openverse to behave normally in a way that is depended on or expected
+by regular users. This document and the referenced runbooks refer to incidents
+as technical problems with our services (Openverse.org, the Openverse API, and
+"official" integrations like the WP core integration and pattern directory
+integrations). Here are some example incidents:
 
 - The API is serving slower-than-typical responses which occasionally time out
 - Openverse.org has a critical bug preventing search for mobile users using RTL
-  languages
-- A user has posted public comments using hateful language towards an Openverse
-  maintainer
+  languages maintainer
 - Openverse.org is completely offline
 - Production resource usage is skyrocketing and could lead to downtime, but
   users are not impacted yet
 
-All of these scenarios suggest that **Openverse behavior normally depended on or
-expected by regular users is not behaving as it should.**
+```{note}
+There may be other issues that Openverse and its maintainers face that are of a public relations or community nature.
+Those issues require a different approach which is not described in the scope of this document.
+```
 
 It is crucial to be proactive here; if something _might_ be an incident, but
 you’re not certain, it is better to record it than to ignore it. Do not assume
@@ -81,15 +83,18 @@ your own discretion.
 ### Status
 
 - **Stabilization pending** - The incident is actively disrupting service
-- **Stabilized** - The incident is no longer directly disrupting service. root
-  causes may
+- **Stabilized** - The incident is no longer directly disrupting service. Root
+  causes may still be unknown.
 - **Under investigation** - The root causes of the incident are being
-  researched. Stabilized but not yet resolved
+  researched. Stabilized but not yet resolved.
 - **Resolved** - The incident is stable, and long-term fixes to prevent future
   occurrences or other mitigations have been identified.
+- **Reviewed** - A retrospective has been completed for the incident.
 
 As you might expect, incidents can be _destabilized_ if they reoccur, and the
-state should rollback to "Stabilization pending":
+state should roll back to "Stabilization pending". Some incidents may not
+require further investigation once they are stabilized and can be immediately
+resolved.
 
 ```{mermaid}
 graph LR
@@ -103,6 +108,7 @@ graph LR
     B --> A
     C --> A
     C --> D
+    B --> D
     D --> A
 ```
 
@@ -119,19 +125,22 @@ explanation behind the steps in the
 There are four main steps to handling production incidents:
 
 <!-- prettier-ignore -->
-| # | Name      | Goal                                                                                                                                                                                             | Status After                                         | Tag                  |
-|---|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|----------------------|
-| 1 | Record    | Visibly acknowledge the incident and create the communication threads necessary for ongoing discussion and investigation. Understand how bad the situation is based on our severity definitions. | Stabilization pending OR Stabilized (as appropriate) | `#status-recorded`   |
-| 2 | Stabilize | <p>If there is a total or partial outage, identify service stabilization options and action them.                                                                                                | Stabilized                                           | `#status-stabilized` |
-| 3 | Resolve   | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement.                                                                    | Under investigation                                  | `#status-resolved`   |
-| 4 | Review    | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys.                                    | Under investigation OR Resolved (as appropriate)     | `#status-reviewed`   |
+| # | Name        | Goal                                                                                                                                                                                             | Tag                     | Status After                                         |
+|---|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|------------------------------------------------------|
+| 1 | Record      | Visibly acknowledge the incident and create the communication threads necessary for ongoing discussion and investigation. Understand how bad the situation is based on our severity definitions. | `#status-recorded`      | Stabilization pending OR Stabilized (as appropriate) |
+| 2 | Stabilize   | If there is a total or partial outage, identify service stabilization options and action them.                                                                                                   | `#status-stabilized`    | Stabilized                                           |
+| 3 | Investigate | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement.                                                                    | `#status-investigating` | Under investigation OR Resolved (as appropriate)     |
+| 4 | Resolve     | Complete the immediately necessary work to prevent this issue from recurring in the future.                                                                                                      | `#status-resolved`      | Review (if needed)                                   |
+| 4 | Review      | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys.                                    | `#status-reviewed`      | |
 
 All maintainers are required to record incidents they encounter. **Crucially,
 maintainers who record incidents are not _inherently_ responsible for
-stabilizing them.** Their only required job is to record the incident. Every
-incident has a **Lead** who is the person responsible for providing updates on
-the incident and delegating tasks. The Lead is also responsible for hosting the
-retrospective after the incident is resolved.
+stabilizing them.** Their only required job is to record the incident.
+Additionally, maintainers who stabilize services may not be the ones to perform
+the investigation after stabilization has been reached. Every incident has a
+**Lead** who is the person responsible for providing updates on the incident and
+delegating tasks. The Lead is also responsible for hosting the retrospective
+after the incident is resolved.
 
 ### How do we determine the lead?
 
