@@ -32,7 +32,7 @@ integrations). Here are some example incidents:
 
 ```{note}
 There may be other issues that Openverse and its maintainers face related to its reputation or the community.
-Those issues require a different approach which is not described in the scope of this document.
+Those issues require a different approach which is not covered in the scope of this document.
 ```
 
 It is crucial to be proactive here; if something _might_ be an incident, but
@@ -53,9 +53,10 @@ reporting maintainer is inherently responsible for stabilizing the incident or
 investigating the root cause. It only means that they are responsible for making
 the initial report on the incident. Additionally, maintainers who stabilize
 services may not be the ones to perform the investigation after stabilization
-has been reached. Every incident has a **Lead** who is the person responsible
-for providing updates on the incident and delegating tasks. The Lead is also
-responsible for hosting the retrospective after the incident is resolved.
+has been reached. Every incident has a [**Lead**](#how-do-we-determine-the-lead)
+who is the person responsible for providing updates on the incident and
+delegating tasks. The Lead is also responsible for hosting the retrospective
+after the incident is resolved.
 
 ## How do we _classify_ incidents?
 
@@ -87,7 +88,7 @@ discretion.
 
 ### Status
 
-- **Stabilization pending** - The incident is actively disrupting service
+- **Stabilization pending** - The incident is actively disrupting service.
 - **Stabilized** - The incident is no longer directly disrupting service. Root
   causes may still be unknown.
 - **Under investigation** - The root causes of the incident are being
@@ -127,7 +128,7 @@ This section addresses the philosophy of our approach to incident management and
 explanation behind the steps in the
 [runbook](/meta/incidents/runbooks/incident_response_runbook).
 
-There are four main steps to handling production incidents:
+There are five main steps to handling production incidents:
 
 <!-- prettier-ignore -->
 | # | Name        | Goal                                                                                                                                                                                             | Tag                     | Status After                                         |
@@ -136,7 +137,7 @@ There are four main steps to handling production incidents:
 | 2 | Stabilize   | If there is a total or partial outage, identify service stabilization options and action them.                                                                                                   | `#status-stabilized`    | Stabilized                                           |
 | 3 | Investigate | Identify outstanding improvements to the service that would mitigate the issue in the future and create tickets to implement.                                                                    | `#status-investigating` | Under investigation OR Resolved (as appropriate)     |
 | 4 | Resolve     | Complete the immediately necessary work to prevent this issue from recurring in the future.                                                                                                      | `#status-resolved`      | Review (if needed)                                   |
-| 4 | Review      | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys.                                    | `#status-reviewed`      | |
+| 5 | Review      | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys.                                    | `#status-reviewed`      | |
 
 ### How do we determine the lead?
 

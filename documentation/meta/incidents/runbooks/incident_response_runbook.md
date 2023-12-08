@@ -1,10 +1,10 @@
 # Incident Response Runbook
 
 ```{note}
-**Recording** an incident is a standalone task which can be performed by any maintainer. This recorder may not stabilize the service or continue to work on incident triage.
+**Recording** an incident is a standalone task which can be performed by any maintainer. This recorder is not necessarily the one to stabilize the service or continue to work on incident triage.
 ```
 
-```{note}
+```{warning}
 This runbook is intended to be used by Openverse maintainers, and references some resources that only Openverse staff have access to.
 ```
 
@@ -47,15 +47,12 @@ point, reporting the incident is complete.
 
 ## 2. Stabilize service
 
-**Stabilize the incident.** Hello, point person. It’s time to begin triaging the
-incident.
-
-1. Complete any necessary comms work. For Severity 1, this means messaging the
-   maintainers via Signal that an outage is occurring. Depending on the
-   severity, a Make post announcing that the outage is being investigated may
-   also be warranted.
+1. Complete any necessary communication work. For Severity 1, this means
+   messaging the maintainers via Signal that an outage is occurring. Depending
+   on the severity, a Make post announcing that the outage is being investigated
+   may also be warranted.
    1. If the incident was discovered by a user in a communication channel,
-      please reply to them and thank them for their report. Let them know the
+      please reply to them, and thank them for their report. Let them know the
       team is investigating the issue.
 2. The point person should always have an up-to-date understanding of the
    situation. Post updates to P2 regularly depending on severity (ideally hourly
