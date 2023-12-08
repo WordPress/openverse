@@ -2,7 +2,8 @@
 
 ```{note}
 Currently experiencing an issue with Openverse? For maintainers, please jump to the [Incident Response Runbook](/meta/incidents/runbooks/incident_response_runbook). Otherwise,
-please [file a bug report](https://github.com/WordPress/openverse/issues/new?template=bug_report.md&title=Production+Incident:+Describe+the+incident) in GitHub or send a message in the
+please [file a bug report](https://github.com/WordPress/openverse/issues/new?template=bug_report.md&title=Production+Incident:+Describe+the+incident) in GitHub,
+[submit a security advisory](https://github.com/WordPress/openverse/security/advisories/new), or send a message in the
 [Making WordPress Chat](https://make.wordpress.org/chat/), to the `#openverse`
 channel.
 ```
@@ -30,7 +31,7 @@ integrations). Here are some example incidents:
   users are not impacted yet
 
 ```{note}
-There may be other issues that Openverse and its maintainers face that are of a public relations or community nature.
+There may be other issues that Openverse and its maintainers face related to its reputation or the community.
 Those issues require a different approach which is not described in the scope of this document.
 ```
 
@@ -41,37 +42,41 @@ using the process defined here.
 
 ## How do we _identify_ incidents?
 
-Incidents can be detected through various channels such as automated alerts,
-user reports, or through manual checks by maintainers. The Mini Support Rotation
+Incidents are detected through various channels such as automated alerts, user
+reports, or through manual checks by maintainers. The Mini Support Rotation
 (MSR) runner makes these checks as part of their daily responsibilities.
 
-While the MSR runner should be monitoring our communication channels closely,
-**any online maintainer who sees something that might be an incident should
-follow the incident recording process outlined here.** This does not mean that
-the reporting maintainer is responsible for stabilizing the incident or acting
-as the incident lead. It simply means that they are responsible for making the
-initial report on the incident.
+While the MSR runner monitors our communication channels closely, **any online
+maintainer who sees something that might be an incident should follow the
+incident recording process outlined here.** This does not mean that the
+reporting maintainer is inherently responsible for stabilizing the incident or
+investigating the root cause. It only means that they are responsible for making
+the initial report on the incident. Additionally, maintainers who stabilize
+services may not be the ones to perform the investigation after stabilization
+has been reached. Every incident has a **Lead** who is the person responsible
+for providing updates on the incident and delegating tasks. The Lead is also
+responsible for hosting the retrospective after the incident is resolved.
 
 ## How do we _classify_ incidents?
 
 Incidents are classified in two ways:
 
-- **Severity** - How impactful the incident is
+- **Severity** - The impact of the incident
 - **Status** - The current state of the incident
 
 ### Severity
 
-Incidents should be classified using one of three levels of severity. It is
-important to note that regardless of severity, working to stabilize services (or
-whatever harm mitigation is relevant for the incident) always **takes priority
-over regular project work and MSR duties.** Once service is stabilized, any
-ongoing investigations, preventative measures, or documentation changes will be
+Incidents are classified using one of three levels of severity. It is important
+to note that regardless of severity, working to stabilize services (or whatever
+harm mitigation is relevant for the incident) always **takes priority over
+regular project work and MSR duties.** Once services are stabilized, any ongoing
+investigations, preventative measures, or documentation changes will be
 prioritized by the team alongside our other work.
 
 This severity scale is intentionally distinct from our GitHub priority scale.
-Any GitHub issues created to _stabilize_ a Severity 1 or Severity 2 incident
-should be marked as "critical" in GitHub. Other issues should be prioritized at
-your own discretion.
+Any GitHub issues created to _stabilize_ a Severity 1 or Severity 2 incident are
+marked as "critical" in GitHub. Other issues are prioritized at your own
+discretion.
 
 - **Severity 1**: Critical issue affecting all/most users and all/most
   functionalities of Openverse.
@@ -133,32 +138,26 @@ There are four main steps to handling production incidents:
 | 4 | Resolve     | Complete the immediately necessary work to prevent this issue from recurring in the future.                                                                                                      | `#status-resolved`      | Review (if needed)                                   |
 | 4 | Review      | Identify process improvements. If the underlying cause is still unknown, identify further steps to resolve or continue investigation of the issue via 5-whys.                                    | `#status-reviewed`      | |
 
-All maintainers are required to record incidents they encounter. **Crucially,
-maintainers who record incidents are not _inherently_ responsible for
-stabilizing them.** Their only required job is to record the incident.
-Additionally, maintainers who stabilize services may not be the ones to perform
-the investigation after stabilization has been reached. Every incident has a
-**Lead** who is the person responsible for providing updates on the incident and
-delegating tasks. The Lead is also responsible for hosting the retrospective
-after the incident is resolved.
-
 ### How do we determine the lead?
 
-By default, this is the week’s MSR runner. If it is outside the MSR runner’s
-working hours, or they are unresponsive (with later explanation, ideally)
+The current MSR runner is the default incident lead. If it is outside the MSR
+runner’s working hours, or they are unable to lead the incident response, then
 someone else will need to be the lead. It is the recorder’s job to find this
-lead or act as this lead; although for incidents that have a severity <= 2,
-stabilizing the service may be the highest priority and take precedence over
-finding a lead. Factors which should be considered in finding a lead are
-availability and expertise. Is anyone online uniquely qualified to take this
-work on? Alternatively, has one person been handling most incidents and this
-time, someone new should take on? Consulting the threads for past incidents will
-make it easier to see the distribution of incident leadership so we can easily
-find who hasn’t done it recently.
+lead or act as this lead; for incidents that are severity 1 or 2, stabilizing
+the service may be the highest priority and take precedence over finding a lead.
+Factors which should be considered in finding a lead are:
 
-We can use our discretion in making these decisions, and if we find that the
-distribution of Lead responsibilities is inequitably distributed we can consider
-formal processes for finding them.
+- Availability
+  - Has one person been handling most incidents and this time, someone new
+    should take on?
+  - Consult threads for past incidents to see the distribution of recent
+    incident leadership and find someone who hasn’t recently lead an incident.
+- Expertise. Is anyone online uniquely qualified to guide the resolution?
+
+This process is intentionally flexible to allow for the rapidly evolving nature
+of incidents and to avoid too much rigidity. If the distribution of lead
+responsibilities is inequitably distributed, we will develop alternative
+processes for assigning leads.
 
 ## Runbooks
 
