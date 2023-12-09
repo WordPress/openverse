@@ -51,8 +51,8 @@ the last 90 days
 _Note:
 [GitHub's documentation provides screenshots for the various steps](https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch)_
 
-1. Navigate to the `openverse-api` "Actions" tab in GitHub:
-   [github.com/WordPress/openverse-api/actions](https://github.com/WordPress/openverse-api/actions).
+1. Navigate to the `openverse` "Actions" tab in GitHub:
+   [github.com/WordPress/openverse/actions](https://github.com/WordPress/openverse/actions).
 2. Select the "Publish Docker images on-demand" workflow.
 3. Click the "Run workflow" button.
    1. (Optional) change the branch _that the workflow is running from_ (this
