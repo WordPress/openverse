@@ -48,7 +48,12 @@ class CcMixterDelayedRequester(DelayedRequester):
         else:
             logger.warning("JSON had bad octals, substitutions were made.")
         try:
-            response_json = json.loads(cleaned_json)
+            # WORKAROUND!
+            #
+            # ccMixter sends JSON that can contain control characters which
+            # break JSON parsing, unless we use non-strict mode that can handle
+            # such malformed data as well.
+            response_json = json.loads(cleaned_json, strict=False)
         except json.JSONDecodeError as e:
             logger.warning(f"Could not get response_json.\n{e}")
             response_json = None
