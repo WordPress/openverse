@@ -48,7 +48,7 @@ export const main = async (octokit, core) => {
   // We assume that both repos have < 100 labels and do not paginate.
 
   /** @type {Label[]} */
-  const { data: monoLabels } = await octokit.issues.listLabelsForRepo({
+  const { data: monoLabels } = await octokit.rest.issues.listLabelsForRepo({
     ...monoRepo,
     per_page: 100,
   })
@@ -56,7 +56,7 @@ export const main = async (octokit, core) => {
   core.info(`Found ${monoLabels.length} labels in the monorepo.`)
 
   /** @type {Label[]} */
-  const { data: infraLabels } = await octokit.issues.listLabelsForRepo({
+  const { data: infraLabels } = await octokit.rest.issues.listLabelsForRepo({
     ...infraRepo,
     per_page: 100,
   })
@@ -87,11 +87,11 @@ export const main = async (octokit, core) => {
       if (diff.length) {
         const diffs = diff.join(', ')
         core.info(`Label "${label.name}" differs in ${diffs}. Updating.`)
-        await octokit.issues.updateLabel(newLabel)
+        await octokit.rest.issues.updateLabel(newLabel)
       }
     } else {
       core.info(`Label "${label.name}" does not exist. Creating.`)
-      await octokit.issues.createLabel(newLabel)
+      await octokit.rest.issues.createLabel(newLabel)
     }
   }
 }

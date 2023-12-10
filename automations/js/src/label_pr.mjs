@@ -36,7 +36,7 @@ function getIsFullyLabeled(labels) {
  */
 async function getLabel(octokit, repository, name) {
   const [owner, repo] = repository.split('/')
-  const res = await octokit.issues.getLabel({ owner, repo, name })
+  const res = await octokit.rest.issues.getLabel({ owner, repo, name })
   return {
     id: res.data.node_id,
     name,
