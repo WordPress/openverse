@@ -235,6 +235,7 @@ class CcMixterDataIngester(ProviderDataIngester):
         meta_data = {
             "description": data.get("upload_description_plain"),
             "description_html": data.get("upload_description_html"),
+            "upload_num_scores": data.get("upload_num_scores", 0),
         }
 
         # ccMixter tags are comma-separated, and there is a leading and trailing

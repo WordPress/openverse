@@ -12,7 +12,8 @@
   "title": "Test Music",
   "meta_data": {
     "description": "Thanks to:\r\nOther Test User – sax\r\nAnother Test User – bagpipes and sitar",
-    "description_html": "Thanks to:<br />\r\nOther Test User – sax<br />\r\nAnother Test User – bagpipes and sitar"
+    "description_html": "Thanks to:<br />\r\nOther Test User – sax<br />\r\nAnother Test User – bagpipes and sitar",
+    "upload_num_scores": 420
   },
   "raw_tags": [
     "remix",
