@@ -247,7 +247,12 @@ class CcMixterDataIngester(ProviderDataIngester):
             "meta_data": meta_data,
             "raw_tags": raw_tags,
             "alt_files": alt_files,
-            # contains fields ``url``, ``filesize``, ``filetype``, ``sample_rate``
+            # ``main_file`` contains the following fields:
+            # - ``url``
+            # - ``filesize``
+            # - ``filetype``
+            # - ``sample_rate``
+            # - ``duration``
             **main_file,
         }
 
