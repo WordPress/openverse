@@ -198,6 +198,10 @@ PROVIDER_WORKFLOWS = [
         ingester_class=BrooklynMuseumDataIngester,
     ),
     ProviderWorkflow(
+        start_date=datetime(2023, 12, 10),
+        ingester_class=CcMixterDataIngester,
+    ),
+    ProviderWorkflow(
         ingester_class=ClevelandDataIngester,
         start_date=datetime(2020, 1, 15),
         pull_timeout=timedelta(hours=12),
@@ -298,8 +302,5 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         ingester_class=WordPressDataIngester,
         pull_timeout=timedelta(hours=12),
-    ),
-    ProviderWorkflow(
-        ingester_class=CcMixterDataIngester,
     ),
 ]
