@@ -27,10 +27,10 @@ async function syncPriority(issue, board, card, core) {
  * This is the entrypoint of the script.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+ * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  * @param context {import('@actions/github').context} info about the current event
- * @param core {import('@actions/core')} Core functions for setting results, logging, registering secrets and exporting variables across actions
  */
-export const main = async (octokit, context, core) => {
+export const main = async (octokit, core, context) => {
   const { EVENT_ACTION: eventAction } = process.env
 
   core.debug(`Event action received: ${eventAction}`)
@@ -46,7 +46,7 @@ export const main = async (octokit, context, core) => {
 
   await core.group('Processing Issue or PR', async () => {
     core.debug('Getting instance for the project')
-    const backlogBoard = await getBoard(octokit, 'Backlog', core)
+    const backlogBoard = await getBoard(octokit, core, 'Backlog')
 
     core.debug('Adding the issue or PR to the project')
     const card = await backlogBoard.addCard(issue.node_id)

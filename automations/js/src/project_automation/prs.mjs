@@ -47,10 +47,9 @@ async function syncIssues(pr, backlogBoard, destColumn, core) {
  * This is the entrypoint of the script.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
- * @param context {import('@actions/github').context} info about the current event
- * @param core {import('@actions/core')} Core functions for setting results, logging, registering secrets and exporting variables across actions
+ * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  */
-export const main = async (octokit, context, core) => {
+export const main = async (octokit, core) => {
   core.debug('Starting PR script')
 
   const { eventName, eventAction, prNodeId } = JSON.parse(
@@ -63,8 +62,8 @@ export const main = async (octokit, context, core) => {
   const pr = new PullRequest(octokit, prNodeId)
   await pr.init()
 
-  const prBoard = await getBoard(octokit, 'PRs')
-  const backlogBoard = await getBoard(octokit, 'Backlog')
+  const prBoard = await getBoard(octokit, core, 'PRs')
+  const backlogBoard = await getBoard(octokit, core, 'Backlog')
 
   const prCard = await prBoard.addCard(pr.nodeId)
   core.debug(`PR card created or fetched: ${prCard.id}`)
