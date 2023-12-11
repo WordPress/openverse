@@ -2,7 +2,6 @@ import io
 
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
-from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -111,11 +110,9 @@ class ImageViewSet(MediaViewSet):
 
         params = OembedRequestSerializer(data=request.query_params)
         params.is_valid(raise_exception=True)
-
+        image = params.validated_data["image"]
         context = self.get_serializer_context()
 
-        identifier = params.validated_data["url"]
-        image = get_object_or_404(Image, identifier=identifier)
         if not (image.height and image.width):
             image_file = requests.get(image.url, headers=self.OEMBED_HEADERS)
             width, height = PILImage.open(io.BytesIO(image_file.content)).size
