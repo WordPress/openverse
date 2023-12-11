@@ -129,9 +129,14 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
     """
 
     scope: str
-    # The name of the scope. Used to retrieve the rate limit from settings.
-    applies_to_rate_limit_model: str
-    # The ``ThrottledApplication.rate_limit_model`` to which the scope applies.
+    """The name of the scope. Used to retrieve the rate limit from settings."""
+    applies_to_rate_limit_model: set[str]
+    """
+    The set of ``ThrottledApplication.rate_limit_model`` to which the scope applies.
+
+    Use a ``set`` specifically to make checks O(1). All default throttles run on
+    almost every single request and must be performant.
+    """
 
     def get_cache_key(self, request, view):
         # Find the client ID associated with the access token.
@@ -147,30 +152,30 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
 
 
 class OAuth2IdThumbnailRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = ["standard", "enhanced"]
+    applies_to_rate_limit_model = {"standard", "enhanced"}
     scope = "oauth2_client_credentials_thumbnail"
 
 
 class OAuth2IdSustainedRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "standard"
+    applies_to_rate_limit_model = {"standard"}
     scope = "oauth2_client_credentials_sustained"
 
 
 class OAuth2IdBurstRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "standard"
+    applies_to_rate_limit_model = {"standard"}
     scope = "oauth2_client_credentials_burst"
 
 
 class EnhancedOAuth2IdSustainedRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "enhanced"
+    applies_to_rate_limit_model = {"enhanced"}
     scope = "enhanced_oauth2_client_credentials_sustained"
 
 
 class EnhancedOAuth2IdBurstRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "enhanced"
+    applies_to_rate_limit_model = {"enhanced"}
     scope = "enhanced_oauth2_client_credentials_burst"
 
 
 class ExemptOAuth2IdRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "exempt"
+    applies_to_rate_limit_model = {"exempt"}
     scope = "exempt_oauth2_client_credentials"
