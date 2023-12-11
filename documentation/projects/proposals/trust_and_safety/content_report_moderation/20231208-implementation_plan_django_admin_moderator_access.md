@@ -1,4 +1,4 @@
-# {2023-12-D08} Implementation Plan: Django admin tools and access control for moderators
+# 2023-12-08 Implementation Plan: Django admin tools and access control for moderators
 
 **Author**: @sarayourfriend
 
@@ -30,8 +30,8 @@ There are two broad aspects of this implementation plan:
 
 1. Access control for moderator users (in other words, users who should only
    have access to moderation tools and nothing else)
-1. Improvements and additions to Django admin tools for the content report
-   models
+1. Improvements and additions to Django admin tools for working through content
+   reports
 
 There is also a significant bug that needs addressing: If a media object has
 multiple sensitivity reports, only one can be saved as confirmed because there
@@ -40,8 +40,8 @@ is a
 and the report model admin does not handle this. The likelihood of this should
 be all but eliminated by the process and tooling changes in this implementation
 plan (because moderation reports will be handled in a single unified view for a
-given work) but we'll solve this bug by just not creating the mature media
-object on save.
+given work). However, we'll solve this bug directly anyway by not creating the
+mature media object on save if one already exists for the work.
 
 ### Additional tools and improvements
 
@@ -61,45 +61,55 @@ relationship with the _media_ and tracks the history of moderation decisions
 made for the media, including explanatory notes from moderators. It is not
 possible to use `LogEntry`, like the project plan suggests to do, because
 `LogEntry`'s `object_id` column is not indexed, and querying it to find all the
-decisions for a given record would not scale.
+changes to all content reports for a given work would not scale.
 
 This table anticipates additional abilities for moderators in the future
 including reversing previous decisions (currently impossible, but needed if
 users and especially creators can contest decisions) or explicitly marking works
-as "not sensitive" (for example, if the work was sensitive because of erroneous
-sensitive text detection). Right now the data model and approach to sensitivity
-and deindexing don't make these possible. It is outside the scope of this
-project to add those features, but this new table, especially its `action`
+as "not sensitive" (for example, if the work was only marked sensitive because
+of erroneous sensitive text detection). Right now the data model and approach to
+sensitivity and deindexing don't make these possible. It is outside the scope of
+this project to add those features, but this new table, especially its `action`
 column, is intentionally flexible to allow for these kinds of things in the
-future.
+future. This is also why it isn't just a new `explanation` column on the content
+report models: because we want to preserve a _record_ of moderation decisions in
+chronological order, and describes the progressive changes of a work's
+sensitivity designation (or de-indexing). It also separates the moderation
+decision (and metadata) from the report, which has its own important metadata
+that should not be confused with the moderation decision metadata.
 
 It will have the following columns:
 
 - `id` - basic auto-incrementing id
+- `created_on` - the date the moderation decision was created, in other words,
+  the date the decision was made
+  - Provided by `OpenLedgerModel`
 - `moderator_id` - a foreign key relationship with moderator who made the
   decision
 - `media_identifier` - a one-to-one relationship to the media the decision is
   related to
   - Because deindexing media removes them from the API database, this needs to
-    be a non-constrained column, so not a foreign key
-- `explanation` - moderator notes explaining the decision
+    be a non-constrained column, so not a foreign key, just an indexed
+    _non-unique_ UUID column
+- `explanation` - moderator notes explaining the decision; optional
 - `action` - slug column of the action taken
   - `confirmed_sensitive` (marked a work as sensitive)
   - `deindexed` (deindexed the work from Openverse search)
-  - `rejected_report` (marked as `no_action` when the work is not already marked
-    sensitive)
-  - `duplicate` (marked a report `no_action` when the work is already marked
-    sensitive; i.e., a re-report that did not result in deindexing)
+  - `rejected_report` (marked pending report(s) `no_action` when the work is not
+    already marked sensitive)
+  - `duplicate` (marked pending report(s) `no_action` when the work is already
+    marked sensitive; i.e., a re-report that did not result in deindexing)
 
-Additionally, the report models will be expanded with an additional column,
-`decision_id` that ties the report to a specific moderation decision. A single
-moderation decision can happen as a result of multiple pending reports, so this
-facilitates the many-to-one relationship between a report and the moderation
-decision. See
-[the moderation view section below for additional information regarding this](#media-moderation-view)
+Additionally, the report models will be expanded with an additional nullable
+column, `decision_id` that ties the report to a specific moderation decision. A
+single moderation decision can happen as a result of multiple pending reports,
+so this facilitates the many-to-one relationship between a report and the
+moderation decision. See
+[the moderation view section below for additional information regarding this](#media-moderation-view).
 
 There will not be a new admin view for `ModerationDecision`. Instead, moderation
-decisions should show up on an individual media item's admin description page.
+decisions will
+[show up on an individual media item's admin description page](#media-moderation-view).
 The only part of a `ModerationDecision` moderators can manually interact with is
 the explanation on the decision. Everything else is handled by the report and
 media model admins.
@@ -133,7 +143,7 @@ works with "pending" reports, with the option to include other statuses if
 moderators choose. This creates a queue to work through progressively, from top
 to bottom. Remove any manual sorting options for now. We can add those back if
 we get feedback that moderators want them, but for now they just clutter and
-confuse the interface.
+confuse the interface, and make the foundational feature more complex.
 
 #### Media moderation view
 
@@ -150,17 +160,18 @@ Clicking on single report should show the following:
 - A chronological list of all moderation decisions for the work
 - A chronological list of all reports for the work regardless of status
 
-It is possible that to make displaying the work easier, we could iframe the
-Openverse.org view of the work into Django admin. However, that would probably
-take a lot longer to load, and I'm not sure if the website still handles being
-in an iframe very well. It would also make it harder to blur the work if it
-isn't already marked sensitive.
+The idea here is that the report view is not focused on taking an action for a
+single _report_, but rather showing all relevant information for a single work
+to make a moderation decision based on all pending reports for a work and
+historical moderation decisions for the work (if any).
 
-The idea here is that the report view is less focused on taking an action for a
-single _report_, but rather all relevant information for a single work.
+In the future, we could try to include links that open tables to show all
+moderation decisions for works by the same creator, etc, in case there is useful
+information, particularly for identifying potential bulk moderation actions.
+These kinds of additional views are out of scope for this current project,
+however.
 
-The view should have the following context-sensitive action buttons, all of
-which require a populated "explanation" free-text field:
+The expanded view should have the following context-sensitive actions:
 
 - "Mark sensitive: confirm a sensitive content report and mark the work as
   sensitive"
@@ -369,50 +380,58 @@ For each step description, ensure the heading includes an obvious reference to t
 
 [See "Media moderation view" for rationale](#media-moderation-view)
 
-- Create a new media view to replace the existing view
-  - Use the basic model admin but with only "view" settings for all model fields
-  - We'll need to expand the rendered fields to include things like the rendered
-    (interactive) thumbnail and audio player
-  - It should display (and not allow editing) the following:
-    - title
-    - description
-    - tags
-    - creator with link to creator landing page on source (if applicable)
-    - source/provider
-    - the work's thumbnail itself, blurred if the moderator has not turned off
-      blurring
-      - clicking on the thumbnail should un-blur the work
-    - if an audio work, show the basic HTML5 audio player
-    - links to the foreign landing URL and Openverse.org page of the work
-    - whether sensitive text detection matched on the work
-      - check if the work is in the filtered index, if not, then it has
-        sensitive text
+This is in two separate issues:
+
+1. Create a new media view to replace the existing view
+
+- Use the basic model admin but with only "view" settings for all model fields
+- We'll need to expand the rendered fields to include things like the rendered
+  (interactive) thumbnail and audio player
+- It should display (and not allow editing) the following:
+  - title
+  - description
+  - tags
+  - creator with link to creator landing page on source (if applicable)
+  - source/provider
+  - the work's thumbnail itself, blurred if the moderator has not turned off
+    blurring
+    - clicking on the thumbnail should un-blur the work
+  - if an audio work, show the basic HTML5 audio player
+  - links to the foreign landing URL and Openverse.org page of the work
+  - whether sensitive text detection matched on the work
+    - check if the work is in the filtered index, if not, then it has sensitive
+      text
 - Show chronolical lists of all moderation decisions and reports for the work
   - Do this using an
     [`TabularInline`](https://docs.djangoproject.com/en/4.2/ref/contrib/admin/#inlinemodeladmin-objects)
     for each
-- If the user has content moderation permissions, add the relevant actions for
-  the work based on it
-  - See the
-    [relevant overview section for described actions](#media-moderation-view)
-    and the conditions for when to show them
-  - Add an free text form field "explanation" to collect for the moderation
-    decision
-  - For any action taken, we only need to update/save a single report with the
-    new status. The `AbstractMediaReport` class already handles updating any
-    other pending reports in it's `save` method without creating
-    duplicate/conflicting mature or deleted media objects.
-  - For each of these actions, set the following new status:
-    - `confirmed_sensitive` -> `mature_filtered`
-    - `deindexed` -> `deindexed`
-    - `rejected_report` or `duplicate` -> `no_action`
 
-```{note}
-This looks like a lot of work, but most of it is handled entirely by Django admin's
-model admin and inline model admin classes, with careful configuration of their
-respective options. Most of the actual effort for this will be in the actions and
-permissions.
-```
+2. If the user viewing the page has content moderation permissions, add the
+   relevant actions for the work based on it
+
+- See the
+  [relevant overview section for described actions](#media-moderation-view) and
+  the conditions for when to show them
+- Add an free text form field "explanation" to collect for the moderation
+  decision
+- For any action taken, we only need to update/save a single report with the new
+  status. The `AbstractMediaReport` class already handles updating any other
+  pending reports in it's `save` method without creating duplicate/conflicting
+  mature or deleted media objects.
+- For each of these actions, set the following new status:
+  - `confirmed_sensitive` -> `mature_filtered`
+  - `deindexed` -> `deindexed`
+  - `rejected_report` or `duplicate` -> `no_action`
+- Prevent the race condition described in the rational section for this step by
+  setting a hidden form field with the list of pending report IDs at page load.
+  Instead of erroring when that list does not match the list of pending reports
+  at save, which would slow down the moderation workflow, just make sure that
+  only those report IDs _at load_ are the ones that are modified. To do this,
+  update the report `save` method to only bulk update reports _older_ than the
+  one being saved. Then, in the admin action, only update the oldest report of
+  the ones the moderator is known to have seen. The next time moderators come
+  past the work they'll have the most recent decision to work off of and can
+  action on the new report then.
 
 ### 6. Finalise access control
 
@@ -423,6 +442,10 @@ permissions.
   in the Terraform access module
   - Preferably, only stage this change for once we're ready to actually give
     people access and test this
+- Add the necessary permissions to the "Content Moderator" group in Django admin
+  so that content moderators can only view the new report table view, the
+  expanded individual work view with the moderation and report chronology, and
+  can issue moderation decisions on that page.
 
 ## Dependencies
 
@@ -431,7 +454,7 @@ permissions.
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
 Small infrastructure change to add new GitHub team and allow access through
-Cloudflare Access
+Cloudflare Access.
 
 ### Other projects or work
 
