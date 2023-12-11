@@ -10,6 +10,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from adrf.views import APIView as AsyncAPIView
 from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
 from asgiref.sync import sync_to_async
+from elasticsearch_dsl.response import Hit
 
 from api.constants.media_types import MediaType
 from api.constants.search import SearchStrategy
@@ -101,7 +102,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         req_serializer.is_valid(raise_exception=True)
         return req_serializer
 
-    def get_db_results(self, results):
+    def get_db_results(self, results: list[Hit]) -> list[AbstractMedia]:
         """
         Map ES hits to ORM model instances.
 

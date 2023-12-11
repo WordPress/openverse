@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from api.admin.site import openverse_admin
 from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
-from api.models.media import AbstractDeletedMedia, AbstractMatureMedia
+from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 
 
 admin.site = openverse_admin
@@ -72,7 +72,7 @@ class MediaSubreportAdmin(admin.ModelAdmin):
 
 
 for klass in [
-    *AbstractMatureMedia.__subclasses__(),
+    *AbstractSensitiveMedia.__subclasses__(),
     *AbstractDeletedMedia.__subclasses__(),
 ]:
     admin.site.register(klass, MediaSubreportAdmin)

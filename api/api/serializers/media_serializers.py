@@ -13,7 +13,7 @@ from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
-from api.models.media import AbstractMedia
+from api.models.media import MATURE_FILTERED, SENSITIVE_FILTERED, AbstractMedia
 from api.serializers.base import BaseModelSerializer
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
@@ -396,6 +396,7 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
         """
 
         data["reason"] = self._map_reason(data.get("reason"))
+        data["status"] = self._map_status(data.get("status"))
         return super().to_internal_value(data)
 
     def validate(self, attrs):
@@ -409,7 +410,15 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def _map_reason(self, value):
+    @staticmethod
+    def _map_status(value):
+        """Map `mature_filtered` to `sensitive_filtered` for compatibility."""
+        if value == MATURE_FILTERED:
+            return SENSITIVE_FILTERED
+        return value
+
+    @staticmethod
+    def _map_reason(value):
         """
         Map `sensitive` to `mature` for forwards compatibility.
 

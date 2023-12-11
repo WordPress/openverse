@@ -13,6 +13,7 @@ from api.models.media import (
     AbstractMedia,
     AbstractMediaList,
     AbstractMediaReport,
+    AbstractSensitiveMedia,
 )
 from api.models.mixins import FileMixin, ForeignIdentifierMixin, MediaMixin
 from api.utils.waveform import generate_peaks
@@ -190,7 +191,8 @@ class Audio(AudioFileMixin, AbstractMedia):
 
     @property
     def mature(self) -> bool:
-        return hasattr(self, "mature_audio")
+        # TODO: Remove ``mature_audio`` check after db migration.
+        return hasattr(self, "mature_audio") or hasattr(self, "sensitive_audio")
 
     @property
     def alternative_files(self):
@@ -260,6 +262,32 @@ class DeletedAudio(AbstractDeletedMedia):
         verbose_name_plural = "Deleted audio"
 
 
+class SensitiveAudio(AbstractSensitiveMedia):
+    """
+    Stores all audio tracks that have been flagged as 'sensitive'.
+
+    Do not create instances of this model manually. Create an ``AudioReport`` instance
+    instead.
+    """
+
+    media_class = Audio
+    es_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
+
+    media_obj = models.OneToOneField(
+        to="Audio",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="sensitive_audio",
+        help_text="The reference to the sensitive audio.",
+    )
+
+    class Meta:
+        verbose_name_plural = "Sensitive audio"
+
+
 class MatureAudio(AbstractMatureMedia):
     """
     Stores all audio tracks that have been flagged as 'mature'.
@@ -288,7 +316,7 @@ class MatureAudio(AbstractMatureMedia):
 
 class AudioReport(AbstractMediaReport):
     media_class = Audio
-    mature_class = MatureAudio
+    sensitive_class = SensitiveAudio
     deleted_class = DeletedAudio
 
     media_obj = models.ForeignKey(
@@ -298,6 +326,26 @@ class AudioReport(AbstractMediaReport):
         db_constraint=False,
         db_column="identifier",
         related_name="audio_report",
+        help_text="The reference to the audio being reported.",
+    )
+
+    @property
+    def audio_url(self):
+        return super().url("audio")
+
+
+class NsfwReportAudio(AbstractMediaReport):
+    media_class = Audio
+    sensitive_class = MatureAudio
+    deleted_class = DeletedAudio
+
+    media_obj = models.ForeignKey(
+        to="Audio",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="nsfw_audio_report",
         help_text="The reference to the audio being reported.",
     )
 

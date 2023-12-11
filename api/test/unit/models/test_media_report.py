@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,9 +12,9 @@ from api.models.media import (
     DEINDEXED,
     DMCA,
     MATURE,
-    MATURE_FILTERED,
     OTHER,
     PENDING,
+    SENSITIVE_FILTERED,
     AbstractDeletedMedia,
     AbstractMatureMedia,
 )
@@ -42,18 +43,24 @@ def test_pending_reports_have_no_subreport_models(
     report = media_type_config.report_factory.create(media_obj=media, reason=reason)
 
     assert report.status == PENDING
-    assert not media_type_config.mature_class.objects.filter(media_obj=media).exists()
+    assert not media_type_config.sensitive_class.objects.filter(
+        media_obj=media
+    ).exists()
     assert not media_type_config.deleted_class.objects.filter(media_obj=media).exists()
 
 
-def test_mature_filtering_creates_mature_image_instance(media_type_config, settings):
+def test_mature_filtering_creates_sensitive_image_instance(media_type_config, settings):
     media = media_type_config.model_factory.create()
 
     media_type_config.report_factory.create(
-        media_obj=media, reason=MATURE, status=MATURE_FILTERED
+        media_obj=media, reason=MATURE, status=SENSITIVE_FILTERED
     )
 
-    assert media_type_config.mature_class.objects.filter(media_obj=media).exists()
+    logging.info(
+        f"media_type_config.sensitive_class: {media_type_config.sensitive_class}, media: {media}, "
+        f"{media_type_config.sensitive_class.objects.filter(media_obj=media).all()}"
+    )
+    assert media_type_config.sensitive_class.objects.filter(media_obj=media).exists()
 
     for index in media_type_config.indexes:
         doc = settings.ES.get(
@@ -74,10 +81,10 @@ def test_deleting_mature_image_instance_resets_mature_flag(media_type_config, se
     media = media_type_config.model_factory.create()
     # Mark as mature.
     media_type_config.report_factory.create(
-        media_obj=media, reason=MATURE, status=MATURE_FILTERED
+        media_obj=media, reason=MATURE, status=SENSITIVE_FILTERED
     )
     # Delete mature instance.
-    media_type_config.mature_class.objects.get(media_obj=media).delete()
+    media_type_config.sensitive_class.objects.get(media_obj=media).delete()
 
     # Assert the media are back to mature=False
     # The previous test asserts they get set to mature=True
@@ -238,7 +245,7 @@ def test_mature_media_ignores_elasticsearch_404_errors(
         )
 
     # This should pass despite the 404 enforced above
-    media_type_config.mature_factory.create(
+    media_type_config.sensitive_factory.create(
         media_obj=media,
     )
 
@@ -262,7 +269,7 @@ def test_mature_media_reraises_elasticsearch_400_errors(settings, media_type_con
 
     # This should fail due to the 400 enforced above
     with pytest.raises(BadRequestError):
-        media_type_config.mature_factory.create(
+        media_type_config.sensitive_factory.create(
             media_obj=media,
         )
 

@@ -7,8 +7,18 @@ from api.models.audio import (
     AudioSet,
     DeletedAudio,
     MatureAudio,
+    NsfwReportAudio,
+    SensitiveAudio,
 )
-from api.models.image import DeletedImage, Image, ImageList, ImageReport, MatureImage
+from api.models.image import (
+    DeletedImage,
+    Image,
+    ImageList,
+    ImageReport,
+    MatureImage,
+    NsfwReport,
+    SensitiveImage,
+)
 from api.models.media import (
     DEINDEXED,
     DMCA,

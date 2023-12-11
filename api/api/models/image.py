@@ -10,6 +10,7 @@ from api.models.media import (
     AbstractMedia,
     AbstractMediaList,
     AbstractMediaReport,
+    AbstractSensitiveMedia,
 )
 from api.models.mixins import FileMixin
 
@@ -54,7 +55,8 @@ class Image(ImageFileMixin, AbstractMedia):
 
     @property
     def mature(self) -> bool:
-        return hasattr(self, "mature_image")
+        # TODO: Remove ``mature_image`` check after db migration.
+        return hasattr(self, "mature_image") or hasattr(self, "sensitive_image")
 
 
 class DeletedImage(AbstractDeletedMedia):
@@ -77,6 +79,29 @@ class DeletedImage(AbstractDeletedMedia):
         db_column="identifier",
         related_name="deleted_image",
         help_text="The reference to the deleted image.",
+    )
+
+
+class SensitiveImage(AbstractSensitiveMedia):
+    """
+    Stores all images that have been flagged as 'sensitive'.
+
+    Do not create instances of this model manually. Create an ``ImageReport`` instance
+    instead.
+    """
+
+    media_class = Image
+    es_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
+
+    media_obj = models.OneToOneField(
+        to="Image",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="sensitive_image",
+        help_text="The reference to the sensitive image.",
     )
 
 
@@ -105,7 +130,7 @@ class MatureImage(AbstractMatureMedia):
 
 class ImageReport(AbstractMediaReport):
     media_class = Image
-    mature_class = MatureImage
+    sensitive_class = SensitiveImage
     deleted_class = DeletedImage
 
     media_obj = models.ForeignKey(
@@ -115,6 +140,26 @@ class ImageReport(AbstractMediaReport):
         db_constraint=False,
         db_column="identifier",
         related_name="image_report",
+        help_text="The reference to the image being reported.",
+    )
+
+    @property
+    def image_url(self):
+        return super().url("images")
+
+
+class NsfwReport(AbstractMediaReport):
+    media_class = Image
+    sensitive_class = MatureImage
+    deleted_class = DeletedImage
+
+    media_obj = models.ForeignKey(
+        to="Image",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="nsfw_image_report",
         help_text="The reference to the image being reported.",
     )
 

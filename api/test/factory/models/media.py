@@ -37,8 +37,8 @@ class MediaFactory(DjangoModelFactory):
     )
 
     # Sub-factories must set this to their corresponding
-    # ``AbstractMatureMedia`` subclass
-    _mature_factory = None
+    # ``AbstractSensitiveMedia`` subclass
+    _sensitive_factory = None
 
     _highest_pre_existing_pk = None
 
@@ -77,8 +77,8 @@ class MediaFactory(DjangoModelFactory):
             see the factory-behaviour specific kwargs below.
 
         :Keyword Arguments:
-            * *mature_reported* (``bool``) --
-                Create a mature report for this media.
+            * *sensitive_reported* (``bool``) --
+                Create a sensitive report for this media.
             * *provider_marked_mature* (``bool``) --
                 Set ``mature=true`` on the Elasticsearch document.
             * *sensitive_text* (``bool``) --
@@ -90,7 +90,9 @@ class MediaFactory(DjangoModelFactory):
                 Whether to return the Elasticsearch ``Hit`` along with the
                 created media object.
         """
-        mature_reported = kwargs.pop("mature_reported", False)
+        sensitive_reported = kwargs.pop("sensitive_reported", False) or kwargs.pop(
+            "mature_reported", False
+        )
         provider_marked_mature = kwargs.pop("provider_marked_mature", False)
         sensitive_text = kwargs.pop("sensitive_text", False)
         skip_es = kwargs.pop("skip_es", False)
@@ -120,13 +122,13 @@ class MediaFactory(DjangoModelFactory):
             hit = cls._save_model_to_es(
                 model,
                 add_to_filtered_index=not sensitive_text,
-                mature=provider_marked_mature or mature_reported,
+                mature=provider_marked_mature or sensitive_reported,
             )
         else:
             hit = None
 
-        if mature_reported:
-            cls._mature_factory.create(media_obj=model)
+        if sensitive_reported:
+            cls._sensitive_factory.create(media_obj=model)
 
         if pook_active:
             # Reactivate pook if it was active

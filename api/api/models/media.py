@@ -16,10 +16,12 @@ from api.utils.licenses import get_license_url
 
 PENDING = "pending_review"
 MATURE_FILTERED = "mature_filtered"
+SENSITIVE_FILTERED = "sensitive_filtered"
 DEINDEXED = "deindexed"
 NO_ACTION = "no_action"
 
 MATURE = "mature"
+SENSITIVE = "sensitive"
 DMCA = "dmca"
 OTHER = "other"
 
@@ -133,25 +135,29 @@ class AbstractMediaReport(models.Model):
     """
     Generic model from which to inherit all reported media classes.
 
-    'Reported' here refers to content reports such as mature, copyright-violating or
-    deleted content. Subclasses must populate ``media_class``, ``mature_class`` and
+    'Reported' here refers to content reports such as sensitive, copyright-violating or
+    deleted content. Subclasses must populate ``media_class``, ``sensitive_class`` and
     ``deleted_class`` fields.
     """
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
-    mature_class: type[models.Model] = None
-    """the class storing mature media e.g. ``MatureImage`` or ``MatureAudio``"""
+    sensitive_class: type[models.Model] = None
+    """the class storing sensitive media e.g. ``SensitiveImage`` or ``MatureAudio``"""
     deleted_class: type[models.Model] = None
     """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
     BASE_URL = settings.BASE_URL
 
-    REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
+    REPORT_CHOICES = [
+        (SENSITIVE, SENSITIVE),
+        (DMCA, DMCA),
+        (OTHER, OTHER),
+    ]
 
     STATUS_CHOICES = [
         (PENDING, PENDING),
-        (MATURE_FILTERED, MATURE_FILTERED),
+        (SENSITIVE_FILTERED, SENSITIVE_FILTERED),
         (DEINDEXED, DEINDEXED),
         (NO_ACTION, NO_ACTION),
     ]
@@ -213,18 +219,18 @@ class AbstractMediaReport(models.Model):
         Extend the built-in ``save()`` functionality of Django with Elasticsearch
         integration to update records and refresh indices.
 
-        Media marked as mature or deleted also leads to instantiation of their
-        corresponding mature or deleted classes.
+        Media marked as sensitive or deleted also leads to instantiation of their
+        corresponding sensitive or deleted classes.
         """
 
         self.clean()
 
         super().save(*args, **kwargs)
 
-        if self.status == MATURE_FILTERED:
+        if self.status == SENSITIVE_FILTERED:
             # Create an instance of the mature class for this media. This will
             # automatically set the ``mature`` field in the ES document.
-            self.mature_class.objects.create(media_obj=self.media_obj)
+            self.sensitive_class.objects.create(media_obj=self.media_obj)
         elif self.status == DEINDEXED:
             # Create an instance of the deleted class for this media, so that we don't
             # reindex it later. This will automatically delete the ES document and the
@@ -351,6 +357,60 @@ class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
         db_constraint=False,
         db_column="identifier",
         related_name="mature_abstract_media",
+        help_text="The reference to the sensitive media.",
+    )
+    """
+    Sub-classes must override this field to point to a concrete sub-class of
+    ``AbstractMedia``.
+    """
+
+    class Meta:
+        abstract = True
+
+    def _update_es(self, is_mature: bool, raise_errors: bool):
+        """
+        Update the Elasticsearch document associated with the given model.
+
+        :param is_mature: whether to mark the media item as mature
+        :param raise_errors: whether to raise an error if the no media item is found
+        """
+        self._perform_index_update(
+            "update",
+            raise_errors,
+            doc={"mature": is_mature},
+        )
+
+    def save(self, *args, **kwargs):
+        self._update_es(True, True)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self._update_es(False, False)
+        super().delete(*args, **kwargs)
+
+
+class AbstractSensitiveMedia(PerformIndexUpdateMixin, models.Model):
+    """
+    Generic model from which to inherit all sensitive media classes.
+
+    Subclasses must populate ``media_class`` and ``es_index`` fields.
+    """
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+    es_index: str = None
+    """the name of the ES index from ``settings.MEDIA_INDEX_MAPPING``"""
+
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    media_obj = models.OneToOneField(
+        to="AbstractMedia",
+        to_field="identifier",
+        on_delete=models.DO_NOTHING,
+        primary_key=True,
+        db_constraint=False,
+        db_column="identifier",
+        related_name="sensitive_abstract_media",
         help_text="The reference to the sensitive media.",
     )
     """

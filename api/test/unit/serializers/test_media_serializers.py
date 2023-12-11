@@ -1,3 +1,4 @@
+import logging
 import random
 import uuid
 from test.factory.models.oauth2 import AccessTokenFactory
@@ -119,6 +120,7 @@ def test_media_serializer_sensitivity(
         mature_reported=has_confirmed_report,
         with_hit=True,
     )
+    logging.info(f"Created model: {model}, {model.mature}\nhit: {hit}, {hit.mature}")
 
     other_result_ids = [str(uuid.uuid4()) for _ in range(6)]
     context = {
@@ -137,6 +139,12 @@ def test_media_serializer_sensitivity(
         expected_sensitivity.add(sensitivity.TEXT)
     if has_confirmed_report:
         expected_sensitivity.add(sensitivity.USER_REPORTED)
+
+    logging.info(f"Serializer data: {serializer.data}")
+    logging.info(
+        f"Expected sensitivity: {expected_sensitivity}\nActual sensitivity: "
+        f"{serializer.data['unstable__sensitivity']}"
+    )
 
     assert set(serializer.data["unstable__sensitivity"]) == expected_sensitivity
 

@@ -4,18 +4,18 @@ from test.factory.models.media import IdentifierFactory, MediaFactory
 import factory
 from factory.django import DjangoModelFactory
 
-from api.models.audio import Audio, AudioAddOn, AudioReport, MatureAudio
+from api.models.audio import Audio, AudioAddOn, AudioReport, SensitiveAudio
 
 
-class MatureAudioFactory(DjangoModelFactory):
+class SensitiveAudioFactory(DjangoModelFactory):
     class Meta:
-        model = MatureAudio
+        model = SensitiveAudio
 
     media_obj = factory.SubFactory("test.factory.models.audio.AudioFactory")
 
 
 class AudioFactory(MediaFactory):
-    _mature_factory = MatureAudioFactory
+    _sensitive_factory = SensitiveAudioFactory
 
     class Meta:
         model = Audio
