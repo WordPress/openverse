@@ -1,8 +1,21 @@
 from django.contrib import admin
 
 from api.admin.site import openverse_admin
-from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
-from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
+from api.models import (
+    PENDING,
+    Audio,
+    AudioReport,
+    ContentProvider,
+    Image,
+    ImageReport,
+    NsfwReport,
+    NsfwReportAudio,
+)
+from api.models.media import (
+    AbstractDeletedMedia,
+    AbstractMatureMedia,
+    AbstractSensitiveMedia,
+)
 
 
 admin.site = openverse_admin
@@ -56,8 +69,18 @@ class ImageReportAdmin(MediaReportAdmin):
     media_specific_list_display = ("image_url",)
 
 
+@admin.register(NsfwReport)
+class NsfwReportAdmin(MediaReportAdmin):
+    media_specific_list_display = ("image_url",)
+
+
 @admin.register(AudioReport)
 class AudioReportAdmin(MediaReportAdmin):
+    media_specific_list_display = ("audio_url",)
+
+
+@admin.register(NsfwReportAudio)
+class NsfwReportAudioAdmin(MediaReportAdmin):
     media_specific_list_display = ("audio_url",)
 
 
@@ -72,6 +95,7 @@ class MediaSubreportAdmin(admin.ModelAdmin):
 
 
 for klass in [
+    *AbstractMatureMedia.__subclasses__(),
     *AbstractSensitiveMedia.__subclasses__(),
     *AbstractDeletedMedia.__subclasses__(),
 ]:
