@@ -10,7 +10,7 @@
 ## Project links
 
 - [Project thread](https://github.com/WordPress/openverse/issues/383)
-- [Relevant project proposal section](/projects/proposals/trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html#volunteer-moderator-django-admin-tools-and-access-control-requirement-2)
+- [Relevant project proposal section](/projects/proposals/trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.md#volunteer-moderator-django-admin-tools-and-access-control-requirement-2)
 
 ## Overview
 
