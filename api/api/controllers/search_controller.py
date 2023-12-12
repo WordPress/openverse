@@ -570,7 +570,7 @@ def get_sources(index):
     if isinstance(sources, list) or cache_fetch_failed:
         # Invalidate old provider format.
         cache.delete(key=source_cache_name)
-    if not sources or sources:
+    if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
