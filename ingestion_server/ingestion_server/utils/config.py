@@ -14,6 +14,6 @@ def get_record_limit():
 
     environment = config("ENVIRONMENT", default="local").lower()
     if environment in {"prod", "production"}:
-        return 0
+        return None
 
     return 100_000
