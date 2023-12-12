@@ -42,9 +42,11 @@ def _assign_work(db_conn, workers, model_name, table_name, target_index):
         cur.execute(est_records_query)
         estimated_records = cur.fetchone()[0]
 
-    records_per_worker = math.floor(
-        min(estimated_records, get_record_limit()) / len(workers)
-    )
+    # If a record_limit has been set, cap the number of records to be indexed.
+    if record_limit := get_record_limit():
+        estimated_records = min(estimated_records, record_limit)
+
+    records_per_worker = math.floor(estimated_records / len(workers))
 
     worker_url_template = "http://{}:8002"
     # Wait for the workers to start.
