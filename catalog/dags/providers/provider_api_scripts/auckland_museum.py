@@ -17,11 +17,19 @@ Resource | Requests per second | Requests per day
 /id/media | 10 | 1000
 """
 import logging
+from datetime import datetime, timedelta
 
 from common.constants import IMAGE
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
+
+
+def convert_date_format(date_obj) -> str:
+    date = str(date_obj)
+    date = date.replace(" ", "T")
+    date = date + "Z"
+    return date
 
 
 logger = logging.getLogger(__name__)
@@ -45,6 +53,27 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         self.delay = 4
         self.batch_start = 0
         self.batch_limit = 2000
+        self.headers = {"Content-Type": "application/json"}
+        self.date_from = convert_date_format(datetime.now() - timedelta(days=1))
+        self.date_to = convert_date_format(datetime.now())
+        self.data = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {"wildcard": {"copyright": {"value": "Auckland"}}},
+                        {"exists": {"field": "primaryRepresentation"}},
+                        {
+                            "range": {
+                                "lastModifiedOn": {
+                                    "from": self.date_from,
+                                    "to": self.date_to,
+                                }
+                            }
+                        },
+                    ]
+                }
+            }
+        }
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # Return default query params on the first request
@@ -52,7 +81,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         # "+" is a query string syntax for must be present
         # copyright:CC state Creative Commons Attribution 4.0
         return {
-            "q": "_exists_:primaryRepresentation+copyright:CC",
             "size": "2000",
             "from": self.batch_start,
         }
@@ -146,6 +174,25 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         if resp:
             filesize = int(resp.headers.get("Content-Length", 0))
             return filesize if filesize != 0 else None
+
+    def get_response_json(
+        self, query_params: dict, endpoint: str | None = None, **kwargs
+    ):
+        """
+        Make the actual API requests needed to ingest a batch.
+
+        This can be overridden in order to support APIs that require multiple requests,
+        for example.
+        """
+        return self.delayed_requester.get_response_json(
+            endpoint or self.endpoint,
+            self.retries,
+            query_params,
+            headers=self.headers,
+            requestMethod="post",
+            json=self.data,
+            **kwargs,
+        )
 
 
 def main():

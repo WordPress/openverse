@@ -122,20 +122,38 @@ class DelayedRequester:
         """
         return self._make_request(self.session.head, url, **kwargs)
 
+    def post(self, url, params=None, **kwargs):
+        """
+        Make a POST request, and return the response object if it exists.
+
+        Required Arguments:
+
+        url:      URL to make the request as a string.
+        params:   Dictionary of query string params.
+        **kwargs: Optional arguments that will be passed to `requests.get`.
+        """
+        return self._make_request(self.session.post, url, params=params, **kwargs)
+
     def _delay_processing(self):
         wait = self._DELAY - (time.time() - self._last_request)
         if wait >= 0:
             logging.debug(f"Waiting {wait} second(s)")
             time.sleep(wait)
 
-    def get_response_json(self, endpoint, retries=0, query_params=None, **kwargs):
+    def get_response_json(
+        self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs
+    ):
         response_json = None
-
+        response = None
         if retries < 0:
             logger.error("No retries remaining.  Failure.")
             raise RetriesExceeded("Retries exceeded")
 
-        response = self.get(endpoint, params=query_params, **kwargs)
+        if requestMethod == "get":
+            response = self.get(endpoint, params=query_params, **kwargs)
+        elif requestMethod == "post":
+            response = self.post(endpoint, params=query_params, **kwargs)
+
         if response is not None and response.status_code == 200:
             try:
                 response_json = response.json()
