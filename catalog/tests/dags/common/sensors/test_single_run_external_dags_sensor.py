@@ -14,10 +14,13 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 
 DEFAULT_DATE = datetime(2022, 1, 1)
 TEST_TASK_ID = "wait_task"
+DEV_NULL = "/dev/null"
+
+# unittest.TestCase only allow auto-use fixture which can't retrieve the declared fixtures on conftest.py
+# TODO: TEST_POOL/DAG_PREFIX constants can be remove after unittest.TestCase are converted to pytest.
 TEST_POOL = (
     "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_pool"
 )
-DEV_NULL = "/dev/null"
 DAG_PREFIX = "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_dag"  # single_run_external_dags_sensor
 
 
