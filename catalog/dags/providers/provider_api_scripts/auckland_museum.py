@@ -1,5 +1,5 @@
 """
-Content Provider:       AucklandMuseum
+Content Provider:       Auckland War Memorial Museum Tāmaki Paenga Hira
 
 ETL Process:            Use the API to identify all CC licensed media.
 
@@ -129,14 +129,14 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         creator = (
             information.get("dc_contributor")[0]
             if information.get("dc_contributor", [])
-            else ""
+            else None
         )
 
+        appellation = information.get("appellation", {})
         title = (
-            information.get("appellation").get("Primary Title")[0]
-            if information.get("appellation", [])
-            and information.get("appellation").get("Primary Title", [])
-            else ""
+            appellation.get("Primary Title")[0]
+            if appellation.get("Primary Title")
+            else None
         )
         meta_data = self._get_meta_data(information)
 
@@ -156,7 +156,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         department = (
             object_json.get("department")[0]
             if object_json.get("department", [])
-            else ""
+            else None
         )
 
         metadata = {
