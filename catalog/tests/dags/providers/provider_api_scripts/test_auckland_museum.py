@@ -17,7 +17,6 @@ _get_resource_json = make_resource_json_func("aucklandmuseum")
 def test_get_next_query_params_default_response():
     actual_param = ingester.get_next_query_params(None)
     expected_param = {
-        "q": "_exists_:primaryRepresentation+copyright:CC",
         "size": "2000",
         "from": ingester.batch_start,
     }
