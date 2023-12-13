@@ -1,8 +1,11 @@
-import fallbackLocale from "~/locales/scripts/locale-fallback.json"
+import { defineI18nConfig } from "#imports"
 
-export default () => {
+// import fallbackLocale from "~/locales/scripts/locale-fallback.json"
+
+export default defineI18nConfig(() => {
   return {
-    fallbackLocale,
+    legacy: false,
+    // fallbackLocale,
     silentFallbackWarn: true,
     pluralizationRules: {
       /**
@@ -32,4 +35,4 @@ export default () => {
       },
     },
   }
-}
+})

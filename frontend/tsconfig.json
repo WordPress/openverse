@@ -1,47 +1,6 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "jsx": "preserve",
-    "target": "ES2018",
-    "module": "ESNext",
-    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
-    /* Module Resolution Options */
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "types": [
-      "@types/jest",
-      "@nuxt/types",
-      "@nuxtjs/i18n",
-      "@pinia/nuxt",
-      "@sentry/core"
-    ],
-    "paths": {
-      "~/*": ["./src/*"],
-      "~~/*": ["./*"]
-    },
-    "rootDirs": ["/src"],
-    "baseUrl": "."
-  },
-  "include": [
-    "**/*.ts",
-    "./test/proxy.js",
-    "./src/components/**/*.vue",
-    "./src/pages/**/*.vue",
-    /**
-     * Some files from this section cannot be converted to TypeScript because they are
-     * used in non-TS contexts. Therefore, they're left as "vanilla JavaScript" with
-     * JSDoc based type annotations. This allows us to check them with TypeScript
-     * without introducing syntax changes that are not compatible with other tools
-     * we rely on.
-     */
-    "./src/constants/**/*",
-    "./src/server-middleware/healthcheck.js",
-    "./src/constants/user-agent.js",
-    /** End of non TypeScript files section */
-    "./**/*.json"
-  ],
-  "exclude": ["node_modules"],
-  "vueCompilerOptions": {
-    "target": 2.7
+    "verbatimModuleSyntax": false
   }
 }
