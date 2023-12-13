@@ -1,4 +1,4 @@
-import { ref } from "@nuxtjs/composition-api"
+import { ref } from "vue"
 
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 
