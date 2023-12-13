@@ -39,18 +39,7 @@ For DAG updates and code-only changes, see the
 
 ### Deployment workflow
 
-The "🔒" icon below notes that the action must be performed by a core maintainer
-with infrastructure access.
-
-1. [Cut a new release on GitHub](https://github.com/WordPress/openverse-catalog/releases).
-2. After the release GitHub action has run,
-   [check that the new Docker tag corresponding to the release exists on ghcr.io](https://github.com/wordpress/openverse-catalog/pkgs/container/openverse-catalog).
-3. Ensure that there are
-   [no actively running DAGs](https://airflow.openverse.engineering/dagrun/list/?_flt_3_state=running).
-4. 🔒 Update the catalog version in the infrastructure repo by running
-   `just bump prod catalog-airflow`
-5. 🔒 Initiate the deployment via `just plan prod catalog-airflow` (and
-   subsequently `just apply prod catalog-airflow` if the plan looks correct).
+See the [deployment runbook](/catalog/guides/deploy.md).
 
 ## DAG deployments
 
