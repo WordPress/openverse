@@ -39,6 +39,7 @@ from api.utils import image_proxy
 from api.utils.watermark import UpstreamWatermarkException, watermark
 from api.views.media_views import MediaViewSet
 
+
 @extend_schema(tags=["images"])
 @extend_schema_view(
     list=search,
@@ -165,10 +166,12 @@ class ImageViewSet(MediaViewSet):
 
         image = self.get_object()
         image_url = image.url
-        
+
         if image_url.endswith(".svg") or getattr(image, "filetype") == "svg":
-            raise UpstreamWatermarkException("Unsupported media type: SVG images are not supported for watermarking.")
-        
+            raise UpstreamWatermarkException(
+                "Unsupported media type: SVG images are not supported for watermarking."
+            )
+
         image_info = {
             attr: getattr(image, attr)
             for attr in ["title", "creator", "license", "license_version"]
