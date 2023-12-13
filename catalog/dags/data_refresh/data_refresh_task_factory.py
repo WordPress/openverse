@@ -54,8 +54,8 @@ from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
 from common.constants import XCOM_PULL_TEMPLATE
-from common.sensors.external_dag_sensor import ExternalDAGSensor
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
+from common.sensors.utils import wait_for_external_dag
 from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
@@ -118,8 +118,7 @@ def create_data_refresh_task_group(
         # filtered index creation process, even if it was triggered immediately after
         # filtered index creation. However, it is safer to avoid the possibility
         # of the race condition altogether.
-        wait_for_filtered_index_creation = ExternalDAGSensor(
-            task_id="wait_for_create_and_populate_filtered_index",
+        wait_for_filtered_index_creation = wait_for_external_dag(
             external_dag_id=f"create_filtered_{data_refresh.media_type}_index",
         )
         tasks.append([wait_for_data_refresh, wait_for_filtered_index_creation])

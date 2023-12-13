@@ -38,7 +38,7 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     POSTGRES_API_STAGING_CONN_ID,
 )
-from common.sensors.external_dag_sensor import ExternalDAGSensor
+from common.sensors.utils import wait_for_external_dag
 from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
@@ -77,8 +77,7 @@ def restore_staging_database():
     # If the `recreate_full_staging_index` DAG was manually triggered prior
     # to the database restoration starting, we should wait for it to
     # finish.
-    wait_for_recreate_full_staging_index = ExternalDAGSensor(
-        task_id="wait_for_recreate_full_staging_index",
+    wait_for_recreate_full_staging_index = wait_for_external_dag(
         external_dag_id=RECREATE_STAGING_INDEX_DAG_ID,
     )
     should_skip = skip_restore()
