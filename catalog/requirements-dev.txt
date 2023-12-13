@@ -1,6 +1,6 @@
 # Note: Unpinned packages have their versions determined by the Airflow constraints file
 
--r requirements_prod.txt
+-r requirements-prod.txt
 
 flaky==3.7.0
 ipython
