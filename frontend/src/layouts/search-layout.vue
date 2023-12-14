@@ -1,59 +1,52 @@
 <template>
-  <div>
-    <VSkipToContentButton />
-    <div
-      class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
-      :class="[
-        isDesktopLayout ? 'desktop' : 'mobile',
-        breakpoint,
-        { 'has-sidebar': isSidebarVisible },
-        isSidebarVisible
-          ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
-          : 'grid-cols-1',
-      ]"
-    >
-      <div class="header-el bg-white">
-        <VBanners />
-        <VHeaderDesktop
-          v-if="isDesktopLayout"
-          class="h-20 border-b bg-white"
-          :class="headerBorder"
-        />
-        <VHeaderMobile
-          v-else
-          class="h-20 border-b bg-white"
-          :class="headerBorder"
-        />
-      </div>
-
-      <aside
-        v-if="isSidebarVisible"
-        class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
-      >
-        <VSearchGridFilter class="px-10 py-8" />
-        <VSafeBrowsing class="border-t border-dark-charcoal-20 px-10 py-8" />
-      </aside>
-
-      <div
-        id="main-page"
-        class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
-      >
-        <Nuxt />
-        <VFooter
-          mode="content"
-          class="border-t border-dark-charcoal-20 bg-white"
-        />
-      </div>
-      <VGlobalAudioSection />
+  <div
+    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
+    :class="[
+      { 'has-sidebar': isSidebarVisible },
+      isSidebarVisible
+        ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
+        : 'grid-cols-1',
+    ]"
+  >
+    <div class="header-el bg-white">
+      <VBanners />
+      <VHeaderDesktop
+        v-if="isDesktopLayout"
+        class="h-20 border-b bg-white"
+        :class="headerBorder"
+      />
+      <VHeaderMobile
+        v-else
+        class="h-20 border-b bg-white"
+        :class="headerBorder"
+      />
     </div>
-    <VModalTarget class="modal" />
+
+    <aside
+      v-if="isSidebarVisible"
+      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
+    >
+      <VSearchGridFilter class="px-10 py-8" />
+      <VSafeBrowsing class="border-t border-dark-charcoal-20 px-10 py-8" />
+    </aside>
+
+    <div
+      id="main-page"
+      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
+    >
+      <slot />
+      <VFooter
+        mode="content"
+        class="border-t border-dark-charcoal-20 bg-white"
+      />
+    </div>
+
+    <VGlobalAudioSection />
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
 import { useScroll } from "@vueuse/core"
-
-import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
@@ -66,11 +59,11 @@ import {
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
-import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
+import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
+import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -80,15 +73,12 @@ export default defineComponent({
   name: "SearchLayout",
   components: {
     VSafeBrowsing,
-    VSkipToContentButton,
     VBanners,
-    VHeaderDesktop: () => import("~/components/VHeader/VHeaderDesktop.vue"),
-    VHeaderMobile: () =>
-      import("~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"),
     VFooter,
-    VModalTarget,
     VGlobalAudioSection,
     VSearchGridFilter,
+    VHeaderDesktop,
+    VHeaderMobile,
   },
   setup() {
     const headerRef = ref<HTMLElement | null>(null)
@@ -97,19 +87,7 @@ export default defineComponent({
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
 
-    const { updateBreakpoint } = useLayout()
-
-    /**
-     * Update the breakpoint value in the cookie on mounted.
-     * The Pinia state might become different from the cookie state if, for example, the cookies were saved when the screen was `sm`,
-     * and then a page is opened on SSR on a `lg` screen.
-     */
-    onMounted(() => {
-      updateBreakpoint()
-    })
-
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
-    const breakpoint = computed(() => uiStore.breakpoint)
 
     /**
      * Filters sidebar is visible only on desktop layouts
@@ -159,16 +137,9 @@ export default defineComponent({
       isHeaderScrolled,
       isDesktopLayout,
       isSidebarVisible,
-      breakpoint,
 
       headerBorder,
     }
-  },
-  head() {
-    return this.$nuxtI18nHead({
-      addSeoAttributes: true,
-      addDirAttribute: true,
-    })
   },
 })
 </script>

@@ -15,7 +15,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, navigateTo, useHead } from "#imports"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  navigateTo,
+  useHead,
+} from "#imports"
 
 import { computed, onMounted, ref } from "vue"
 
@@ -27,7 +32,6 @@ import {
   supportedSearchTypes,
 } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
-import { useLayout } from "~/composables/use-layout"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -45,6 +49,9 @@ export default defineNuxtComponent({
     VHomepageContent,
   },
   setup() {
+    definePageMeta({
+      layout: "default",
+    })
     const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -59,16 +66,12 @@ export default defineNuxtComponent({
       ],
     })
 
-    const { updateBreakpoint } = useLayout()
-
     /**
      * Reset the search type, search term and filters when the user navigates [back] to the homepage.
      */
     onMounted(() => {
       searchStore.$reset()
       mediaStore.$reset()
-
-      updateBreakpoint()
     })
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))

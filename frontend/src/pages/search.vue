@@ -15,7 +15,7 @@
           searchTerm
         }}</VSearchResultsTitle>
       </header>
-      <NuxtChild
+      <NuxtPage
         :key="$route.path"
         :results="
           isSupportedMediaType(searchType) ? resultItems[searchType] : null

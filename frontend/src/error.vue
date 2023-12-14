@@ -1,5 +1,7 @@
 <template>
-  <VFourOhFour :error="error" />
+  <NuxtLayout name="default">
+    <VFourOhFour :error="error" />
+  </NuxtLayout>
 </template>
 
 <script>
