@@ -3,10 +3,10 @@
 ```{admonition} Metadata
 Status: **stable**
 
-Maintainer: @krysaldb
-
-Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+2XX+responses+count+above+threshold?>
+Alarm links:
+- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+HTTP+5XX+responses+count+over+threshold?>
+- [ECS-Production-Dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/ECS-Production-Dashboard)
+- [Production Database + Elasticsearch dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/Service-Overview)
 ```
 
 ## Severity Guide
