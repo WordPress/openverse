@@ -97,6 +97,7 @@ class Project {
         number: this.number,
       }
     )
+    this.core.debug(`getProjectId response: ${JSON.stringify(res, null, 2)}`)
     const project = res.organization.projectV2
     return {
       projectId: project.id,
@@ -127,6 +128,7 @@ class Project {
    * @returns {Promise<Card>} the info of the added card
    */
   async addCard(issueId) {
+    this.core.info(`Adding card for issue/PR "${issueId}".`)
     const res = await this.octokit.graphql(
       `mutation addCard($projectId: ID!, $contentId: ID!) {
         addProjectV2ItemById(input: {
@@ -148,6 +150,7 @@ class Project {
         contentId: issueId,
       }
     )
+    this.core.debug(`addCard response: ${JSON.stringify(res, null, 2)}`)
     const card = res.addProjectV2ItemById.item
     return {
       id: card.id,

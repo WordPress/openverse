@@ -89,6 +89,7 @@ export class PullRequest {
         id: this.nodeId,
       }
     )
+    this.core.debug(`getPrDetails response: ${JSON.stringify(res, null, 2)}`)
     const pr = res.node
     return {
       isMerged: pr.merged,
@@ -137,7 +138,7 @@ export class PullRequest {
         labelIds,
       }
     )
-    this.core.debug('addLabels response:', JSON.stringify(res))
+    this.core.debug(`addLabels response: ${JSON.stringify(res, null, 2)}`)
     return res.addLabelsToLabelable.labelable.labels.nodes
   }
 
