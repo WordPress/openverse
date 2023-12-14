@@ -1,5 +1,6 @@
+import { useTrackEvent } from "#imports"
+
 import { computed, onMounted } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
@@ -7,12 +8,7 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { log } from "~/utils/console"
 
-/**
- * The `ctx` parameter must be supplied if using this composable outside the
- * bounds of the composition API.
- */
 export const useAnalytics = () => {
-  const { $plausible } = useContext()
   const uiStore = useUiStore()
   const featureFlagStore = useFeatureFlagStore()
 
@@ -53,7 +49,7 @@ export const useAnalytics = () => {
     payload: Events[T]
   ) => {
     log(`Analytics event: ${name}`, payload)
-    $plausible.trackEvent(name, {
+    useTrackEvent(name, {
       props: {
         ...isomorphicProps.value,
         ...windowProps.value,
