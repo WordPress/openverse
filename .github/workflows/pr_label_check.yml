@@ -44,7 +44,7 @@ jobs:
       - name: Check aspect label
         uses: docker://agilepathway/pull-request-label-checker:v1.6.11
         with:
-          one_of: ${{ needs.get_label_groups.outputs.aspect }}
+          any_of: ${{ needs.get_label_groups.outputs.aspect }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   # List of goal labels: https://github.com/WordPress/openverse/labels?q=goal
