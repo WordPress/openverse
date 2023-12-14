@@ -46,8 +46,10 @@
 </template>
 
 <script lang="ts">
+import { useRouter } from "#imports"
+
 import { computed, defineComponent, PropType, ref } from "vue"
-import { useContext, useRouter } from "@nuxtjs/composition-api"
+import { useContext } from "@nuxtjs/composition-api"
 
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 import { useAnalytics } from "~/composables/use-analytics"

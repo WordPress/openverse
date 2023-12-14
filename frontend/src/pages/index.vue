@@ -15,11 +15,9 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, navigateTo, useHead } from "#imports"
 
 import { computed, onMounted, ref } from "vue"
-
-import { useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
@@ -47,8 +45,6 @@ export default defineNuxtComponent({
     VHomepageContent,
   },
   setup() {
-    const router = useRouter()
-
     const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -96,7 +92,7 @@ export default defineNuxtComponent({
         query: searchTerm,
       })
 
-      router.push(
+      return navigateTo(
         searchStore.updateSearchPath({
           type: searchType.value,
           searchTerm,
