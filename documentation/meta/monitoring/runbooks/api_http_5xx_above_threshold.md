@@ -1,7 +1,7 @@
 # Run Book: API Production HTTP 5XX responses count above threshold
 
 ```{admonition} Metadata
-Status: **Unstable**
+Status: **stable**
 
 Maintainer: @krysaldb
 
