@@ -20,10 +20,13 @@ async function syncReviews(core, pr, prBoard, prCard) {
   core.debug(`PR reviews decision: ${reviewDecision}`)
 
   if (reviewDecision === 'APPROVED') {
+    core.info('Moving PR on the basis of review decision.')
     await prBoard.moveCard(prCard.id, prBoard.columns.Approved)
   } else if (reviewDecision === 'CHANGES_REQUESTED') {
+    core.info('Moving PR on the basis of review decision.')
     await prBoard.moveCard(prCard.id, prBoard.columns.ChangesRequested)
   } else if (reviewCounts.APPROVED === 1) {
+    core.info('Moving PR on the basis of 1 approval.')
     await prBoard.moveCard(prCard.id, prBoard.columns.Needs1Review)
   } else {
     await prBoard.moveCard(prCard.id, prBoard.columns.Needs2Reviews)
@@ -42,6 +45,9 @@ async function syncIssues(core, pr, backlogBoard, destColumn) {
   core.info(`Synchronizing issues for PR ${pr.nodeId}.`)
 
   for (let linkedIssue of pr.linkedIssues) {
+    core.info(`Syncing issue ${linkedIssue.id}.`)
+
+    // Create new, or get the existing, card for the current issue.
     const issueCard = await backlogBoard.addCard(linkedIssue.id)
     core.debug(`Issue card ID: ${issueCard.id}`)
 
