@@ -1,6 +1,9 @@
-import Vue from "vue"
+import { useCookie } from "#imports"
+
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
+
+import { LocationQuery } from "vue-router"
 
 import featureData from "~~/feat/feature-flags.json"
 
@@ -21,7 +24,7 @@ import {
 } from "~/constants/feature-flag"
 import { LOCAL, DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
-import type { Dictionary } from "vue-router/types/router"
+import type { OpenverseCookieState } from "~/types/cookies"
 
 type FlagName = keyof (typeof featureData)["features"]
 
@@ -132,7 +135,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       Object.entries(cookies).forEach(([name, state]) => {
         const flag = this.flags[name as FlagName]
         if (flag && getFlagStatus(flag) === SWITCHABLE) {
-          Vue.set(flag, "preferredState", state)
+          flag.preferredState = state
         }
       })
     },
@@ -141,11 +144,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      this.$nuxt.$cookies.set(
+      const featuresCookie = useCookie<OpenverseCookieState["features"]>(
         "features",
-        this.flagStateMap(COOKIE),
         cookieOptions
       )
+      featuresCookie.value = this.flagStateMap(COOKIE)
     },
     /**
      * Write the current state of the switchable flags to the session cookie.
@@ -155,10 +158,13 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * and will be deleted by the browser after the session.
      */
     writeToSession() {
-      this.$nuxt.$cookies.set("sessionFeatures", this.flagStateMap(SESSION), {
+      const sessionFeaturesCookie = useCookie<
+        OpenverseCookieState["sessionFeatures"]
+      >("sessionFeatures", {
         ...cookieOptions,
         maxAge: undefined,
       })
+      sessionFeaturesCookie.value = this.flagStateMap(SESSION)
     },
     /**
      * Set the value of flag entries from the query parameters. Only those
@@ -169,7 +175,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      *
      * @param query - values for the feature flags
      */
-    initFromQuery(query: Dictionary<string | (string | null)[]>) {
+    initFromQuery(query: LocationQuery) {
       const isValidName = (name: string): name is `ff_${FlagName}` =>
         name.startsWith("ff_") && name.replace("ff_", "") in this.flags
       const isValidValue = (
@@ -191,7 +197,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
             getFlagStatus(flag) === SWITCHABLE &&
             flag.supportsQuery !== false
           ) {
-            Vue.set(flag, "preferredState", state)
+            flag.preferredState = state
           }
         })
     },
