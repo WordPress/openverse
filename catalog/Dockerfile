@@ -39,7 +39,9 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs
 
 
 USER root
-RUN apt-get update \
+# FIXME: Remove this exclusion once the mysql PGP key is no longer expired
+RUN rm /etc/apt/sources.list.d/mysql.list \
+    && apt-get update \
     && apt-get -yqq install \
       build-essential \
       libpq-dev \
