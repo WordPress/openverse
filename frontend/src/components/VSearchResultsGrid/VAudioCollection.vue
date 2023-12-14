@@ -8,9 +8,10 @@
       <i18n-t keypath="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
+          :key="keyboardKey"
           #[keyboardKey]
         >
-          <kbd :key="keyboardKey" class="font-sans">{{
+          <kbd class="font-sans">{{
             $t(`audioResults.snackbar.${keyboardKey}`)
           }}</kbd>
         </template>

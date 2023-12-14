@@ -9,7 +9,6 @@ export = {
   plugins: ["vue", "vuejs-accessibility", "@intlify/vue-i18n"],
   rules: {
     // Enable these rules after the Nuxt 3 migration
-    "vue/no-v-for-template-key-on-child": "off",
     "vue/no-deprecated-v-on-native-modifier": "off",
     // Vue i18n rules
     "@intlify/vue-i18n/no-deprecated-i18n-component": "error",
