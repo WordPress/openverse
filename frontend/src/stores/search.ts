@@ -1,6 +1,10 @@
+import { useLocalePath } from "#imports"
+
 import { defineStore } from "pinia"
 
 import { useStorage } from "@vueuse/core"
+
+import { LocationQuery } from "vue-router"
 
 import { env } from "~/utils/env"
 import { deepClone } from "~/utils/clone"
@@ -47,9 +51,6 @@ import {
 } from "~/types/search"
 
 import type { Ref } from "vue"
-
-import type { Dictionary } from "vue-router/types/router"
-import type { Context } from "@nuxt/types"
 
 export const isSearchTypeSupported = (
   st: SearchType
@@ -248,10 +249,9 @@ export const useSearchStore = defineStore("search", {
           this.searchTerm,
           "frontend"
         )
-
-      return this.$nuxt.localePath({
+      return useLocalePath()({
         path: searchPath(searchType),
-        query: queryParams as unknown as Dictionary<string>,
+        query: queryParams as unknown as LocationQuery,
       })
     },
 
@@ -267,7 +267,7 @@ export const useSearchStore = defineStore("search", {
       collectionParams: CollectionParams
     }) {
       const path = `/${type}/${collectionToPath(collectionParams)}`
-      return this.$nuxt.localePath(path)
+      return useLocalePath()(path)
     },
 
     setSearchType(type: SearchType) {
@@ -502,7 +502,7 @@ export const useSearchStore = defineStore("search", {
       urlQuery,
     }: {
       path: string
-      urlQuery: Context["query"]
+      urlQuery: LocationQuery
     }) {
       // Update `fetch_sensitive` from the feature flag store because
       // the value is not present in the URL.
