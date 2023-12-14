@@ -76,7 +76,9 @@ export default defineComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const sendAnalyticsEvent = (event: MouseEvent) => {
-      if (!event.currentTarget) return
+      if (!event.currentTarget) {
+        return
+      }
 
       const url = (event.currentTarget as HTMLAnchorElement).href
       sendCustomEvent("EXTERNAL_LINK_CLICK", { url })

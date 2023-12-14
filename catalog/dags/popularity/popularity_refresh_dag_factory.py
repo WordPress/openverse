@@ -43,16 +43,6 @@ logger = logging.getLogger(__name__)
 
 
 @task
-def notify_slack(text: str, media_type: str, dag_id: str) -> None:
-    slack.send_message(
-        text,
-        username=f"{media_type.capitalize()} Popularity Refresh",
-        icon_emoji=":database:",
-        dag_id=dag_id,
-    )
-
-
-@task
 def get_last_updated_time():
     """
     Return the current utc datetime, which will be used when building the batched
@@ -78,6 +68,10 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
 
     popularity_refresh: dataclass containing configuration information for the DAG
     """
+
+    SLACK_USERNAME = f"{popularity_refresh.media_type.capitalize()} Popularity Refresh"
+    SLACK_EMOJI = ":database:"
+
     default_args = {
         **DAG_DEFAULT_ARGS,
         **popularity_refresh.default_args,
@@ -108,12 +102,13 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             " to the metrics table."
         )
 
-        update_metrics_status = notify_slack.override(
+        update_metrics_status = slack.notify_slack.override(
             task_id="report_update_popularity_metrics_status"
         )(
             text="Popularity metrics update complete | _Next: popularity"
             " constants update_",
-            media_type=popularity_refresh.media_type,
+            username=SLACK_USERNAME,
+            icon_emoji=SLACK_EMOJI,
             dag_id=popularity_refresh.dag_id,
         )
 
@@ -136,12 +131,13 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             " popularity scores."
         )
 
-        update_constants_status = notify_slack.override(
+        update_constants_status = slack.notify_slack.override(
             task_id="report_update_popularity_metrics_status"
         )(
             text="Popularity constants update complete | _Next: refresh"
             " popularity scores_",
-            media_type=popularity_refresh.media_type,
+            username=SLACK_USERNAME,
+            icon_emoji=SLACK_EMOJI,
             dag_id=popularity_refresh.dag_id,
         )
 
@@ -169,12 +165,13 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             )
         )
 
-        notify_complete = notify_slack(
+        notify_complete = slack.notify_slack(
             text=(
                 f"{popularity_refresh.media_type.capitalize()} Popularity Refresh"
                 " Complete"
             ),
-            media_type=popularity_refresh.media_type,
+            username=SLACK_USERNAME,
+            icon_emoji=SLACK_EMOJI,
             dag_id=popularity_refresh.dag_id,
         )
 

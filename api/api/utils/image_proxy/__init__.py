@@ -9,8 +9,8 @@ from rest_framework.exceptions import UnsupportedMediaType
 
 import aiohttp
 import django_redis
-import requests
 import sentry_sdk
+from aiohttp.client_exceptions import ClientResponseError
 from asgiref.sync import sync_to_async
 from sentry_sdk import push_scope, set_context
 
@@ -185,16 +185,15 @@ async def get(
                     "occurrences", settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY
                 )
                 sentry_sdk.capture_exception(exc)
-        if isinstance(exc, requests.exceptions.HTTPError):
-            code = exc.response.status_code
+        if isinstance(exc, ClientResponseError):
+            status = exc.status
             do_not_wait_for(
-                tallies_incr(
-                    f"thumbnail_http_error:{domain}:{month}:{code}:{exc.response.text}"
-                )
+                tallies_incr(f"thumbnail_http_error:{domain}:{month}:{status}")
             )
             logger.warning(
                 f"Failed to render thumbnail "
-                f"{upstream_url=} {code=} "
-                f"{media_info.media_provider=}"
+                f"{upstream_url=} {status=} "
+                f"{media_info.media_provider=} "
+                f"{exc.message=}"
             )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")

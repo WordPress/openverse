@@ -101,7 +101,9 @@ export function useFocusTrap(
   const stopWatcher = watch(
     () => unrefElement(target),
     (el) => {
-      if (!el) return
+      if (!el) {
+        return
+      }
 
       trap = createFocusTrap(el, {
         ...focusTrapOptions,
@@ -109,18 +111,24 @@ export function useFocusTrap(
           hasFocus.value = true
 
           // Apply if user provided onActivate option
-          if (options.onActivate) options.onActivate()
+          if (options.onActivate) {
+            options.onActivate()
+          }
         },
         onDeactivate() {
           hasFocus.value = false
 
           // Apply if user provided onDeactivate option
-          if (options.onDeactivate) options.onDeactivate()
+          if (options.onDeactivate) {
+            options.onDeactivate()
+          }
         },
       })
 
       // Focus if immediate is set to true
-      if (immediate) activate()
+      if (immediate) {
+        activate()
+      }
     },
     { flush: "post" }
   )

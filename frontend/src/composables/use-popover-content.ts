@@ -1,6 +1,9 @@
 import { computed, ref } from "vue"
 
-import { PopoverContentProps, usePopper } from "~/composables/use-popper"
+import {
+  PopoverContentProps,
+  useFloatingUi,
+} from "~/composables/use-floating-ui"
 
 import { useDialogContent } from "~/composables/use-dialog-content"
 
@@ -40,9 +43,9 @@ export function usePopoverContent({
     attrs,
   })
 
-  const { maxHeightRef } = usePopper({
-    popoverRef,
-    popoverPropsRefs,
+  const { style, maxHeightRef } = useFloatingUi({
+    floatingElRef: popoverRef,
+    floatingPropsRefs: popoverPropsRefs,
   })
 
   const heightProperties = computed(() => {
@@ -54,5 +57,5 @@ export function usePopoverContent({
       : ({} as CSSProperties)
   })
 
-  return { onKeyDown, onBlur, heightProperties }
+  return { onKeyDown, onBlur, style, heightProperties }
 }

@@ -134,7 +134,9 @@ export default defineComponent({
     }
 
     const onItemKeyPress = (event: KeyboardEvent): undefined | number => {
-      if (!(arrows as string[]).includes(event.key) || !nodeRef.value) return
+      if (!(arrows as string[]).includes(event.key) || !nodeRef.value) {
+        return
+      }
 
       event.preventDefault()
 
@@ -149,19 +151,22 @@ export default defineComponent({
 
       switch (event.key) {
         case keycodes.ArrowUp:
-        case resolveArrow(keycodes.ArrowLeft, keycodes.ArrowRight):
+        case resolveArrow(keycodes.ArrowLeft, keycodes.ArrowRight): {
           if (targetIndex === 0) {
             return ensureFocus(items[items.length - 1])
           }
           return ensureFocus(items[targetIndex - 1])
+        }
         case keycodes.ArrowDown:
-        case resolveArrow(keycodes.ArrowRight, keycodes.ArrowLeft):
+        case resolveArrow(keycodes.ArrowRight, keycodes.ArrowLeft): {
           if (targetIndex === items.length - 1) {
             return ensureFocus(items[0])
           }
           return ensureFocus(items[targetIndex + 1])
-        default:
+        }
+        default: {
           return
+        }
       }
     }
 
@@ -172,8 +177,12 @@ export default defineComponent({
      * @param previousSelected
      */
     const setSelected = (selected: boolean, previousSelected: boolean) => {
-      if (previousSelected && !selected) selectedCount.value -= 1
-      if (!previousSelected && selected) selectedCount.value += 1
+      if (previousSelected && !selected) {
+        selectedCount.value -= 1
+      }
+      if (!previousSelected && selected) {
+        selectedCount.value += 1
+      }
     }
 
     const focusContext = {

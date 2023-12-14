@@ -161,5 +161,5 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
     return dag
 
 
-for data_refresh in DATA_REFRESH_CONFIGS:
+for data_refresh in DATA_REFRESH_CONFIGS.values():
     create_filtered_index_dag = create_filtered_index_creation_dag(data_refresh)

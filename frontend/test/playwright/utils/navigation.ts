@@ -141,7 +141,9 @@ export const setContentSwitcherState = async (
   const shouldBePressed = state === "open"
 
   if (isDesktop) {
-    if (isPressed === shouldBePressed) return null
+    if (isPressed === shouldBePressed) {
+      return null
+    }
     return await buttonLocator.click()
   }
 
@@ -175,7 +177,9 @@ export const searchTypes = {
 
 export const isPageDesktop = (page: Page) => {
   const pageWidth = page.viewportSize()?.width
-  if (!pageWidth) return false
+  if (!pageWidth) {
+    return false
+  }
   const desktopMinWidth = 1024
   return pageWidth >= desktopMinWidth
 }
@@ -443,5 +447,10 @@ export const setBreakpointCookie = async (page: Page, breakpoint: string) => {
 
 export const turnOnAnalytics = async (page: Page) => {
   await page.goto("/preferences")
-  await page.getByLabel("Record custom events and page views.").click()
+  const analyticsCheckbox = page.getByLabel(
+    "Record custom events and page views."
+  )
+  if (!(await analyticsCheckbox.isChecked())) {
+    await analyticsCheckbox.click()
+  }
 }

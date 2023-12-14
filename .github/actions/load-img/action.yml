@@ -23,7 +23,7 @@ runs:
     - name: Install `@actions/artifact`
       shell: bash
       run: |
-        pnpm install @actions/artifact -w
+        pnpm install @actions/artifact@1 -w
 
     - name: Download images
       uses: actions/github-script@v6

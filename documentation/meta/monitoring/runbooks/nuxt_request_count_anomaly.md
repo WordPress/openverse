@@ -1,4 +1,4 @@
-# Run Book: Nuxt request count above threshold
+# Run Book: Nuxt Request Count anomalously high
 
 ```{admonition} Metadata
 Status: **Unstable**
@@ -6,7 +6,7 @@ Status: **Unstable**
 Maintainer: @dhruvkb
 
 Alarm link:
-- [production-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+request+count+above+threshold)
+- [production-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+Request+Count+anomalously+high)
 ```
 
 ## Severity guide

@@ -166,7 +166,9 @@ export default defineComponent({
      * @param event - the load event.
      */
     const getImgDimension = (event: Event) => {
-      if (props.aspectRatio === "square") return
+      if (props.aspectRatio === "square") {
+        return
+      }
       const element = event.target as HTMLImageElement
       imgHeight.value = element.naturalHeight
       imgWidth.value = element.naturalWidth

@@ -85,40 +85,21 @@ def test_audio_report(image_fixture):
     report("images", image_fixture)
 
 
-def test_oembed_endpoint_with_non_existent_image():
-    params = {
-        "url": "https://any.domain/any/path/00000000-0000-0000-0000-000000000000",
-    }
-    response = requests.get(
-        f"{API_URL}/v1/images/oembed?{urlencode(params)}", verify=False
-    )
-    assert response.status_code == 404
-
-
-def test_oembed_endpoint_with_bad_identifier():
-    params = {
-        "url": "https://any.domain/any/path/not-a-valid-uuid",
-    }
-    response = requests.get(
-        f"{API_URL}/v1/images/oembed?{urlencode(params)}", verify=False
-    )
-    assert response.status_code == 400
-
-
 @pytest.mark.parametrize(
-    "url",
+    "url, expected_status_code",
     [
-        f"https://any.domain/any/path/{identifier}",  # no trailing slash
-        f"https://any.domain/any/path/{identifier}/",  # trailing slash
-        identifier,  # just identifier instead of URL
+        (f"https://any.domain/any/path/{identifier}", 200),  # no trailing slash
+        (f"https://any.domain/any/path/{identifier}/", 200),  # trailing slash
+        ("https://any.domain/any/path/00000000-0000-0000-0000-000000000000", 400),
+        ("https://any.domain/any/path/not-a-valid-uuid", 400),
     ],
 )
-def test_oembed_endpoint_with_fuzzy_input(url):
+def test_oembed_endpoint(url, expected_status_code):
     params = {"url": url}
     response = requests.get(
         f"{API_URL}/v1/images/oembed?{urlencode(params)}", verify=False
     )
-    assert response.status_code == 200
+    assert response.status_code == expected_status_code
 
 
 def test_oembed_endpoint_for_json():

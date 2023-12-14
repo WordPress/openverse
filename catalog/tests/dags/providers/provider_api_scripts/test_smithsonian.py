@@ -215,7 +215,7 @@ def test_check_type_with_truthy_good_inputs(required_type, good_input):
     "required_type,good_indices,default",
     [
         (str, (0, 1), ""),
-        (int, (2, 3), 0),
+        (int, (2, 3, 16), 0),  # Boolean value is treated as an int
         (float, (4, 5), 0.0),
         (complex, (6, 7), 0j),
         (list, (8, 9), []),

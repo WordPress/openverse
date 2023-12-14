@@ -13,7 +13,7 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -47,21 +47,21 @@ repos:
           - --lines-after-imports=2
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.15.0
     hooks:
       - id: pyupgrade
         args:
           - --py310-plus
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.261"
+    rev: "v0.1.7"
     hooks:
       - id: ruff
         args:
           - --fix
 
   - repo: https://github.com/ambv/black
-    rev: 23.3.0
+    rev: 23.11.0
     hooks:
       - id: black
         args:
@@ -85,7 +85,7 @@ repos:
 
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.6.0
+    rev: v2.7.1
     hooks:
       - id: prettier
         additional_dependencies:
@@ -104,12 +104,12 @@ repos:
       - id: shfmt-docker
 
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.6.24
+    rev: v1.6.26
     hooks:
       - id: actionlint-docker
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
       - id: codespell
         args: [
@@ -173,7 +173,7 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 37.43.1
+    rev: 37.89.2
     hooks:
       - id: renovate-config-validator
         args:

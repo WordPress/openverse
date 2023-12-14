@@ -65,8 +65,17 @@ jobs:
           unzip event_info.zip
           mv event.json /tmp/event.json
 
+      - name: Perform PR labelling
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const { main } = await import('${{ github.workspace }}/automations/js/src/label_pr.mjs')
+            await main(github, core)
+
       - name: Perform PR automations
         uses: actions/github-script@v7
+        if: success() || failure()
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |

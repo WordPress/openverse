@@ -39,7 +39,7 @@ def validate_url_string(url_string, strip_slash: bool = True):
     """
 
     logger.debug(f"Validating_url {url_string}")
-    if not type(url_string) == str or not url_string:
+    if not isinstance(url_string, str) or not url_string:
         return
 
     if url_string and " " in url_string:

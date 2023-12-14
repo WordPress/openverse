@@ -53,9 +53,15 @@ export default defineComponent({
 
     const elementCount = computed(() => {
       // Calculate the default element count based on isForTab
-      if (props.numElems) return props.numElems
-      if (props.isForTab === "all") return 20
-      if (props.isForTab === "image") return 30
+      if (props.numElems) {
+        return props.numElems
+      }
+      if (props.isForTab === "all") {
+        return 20
+      }
+      if (props.isForTab === "image") {
+        return 30
+      }
       return 8
     })
 

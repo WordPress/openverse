@@ -116,8 +116,8 @@ toggle analytics tracking:
 
 ### Events
 
-Below I've created a TypeScript type for all the proposed anlytics events, and a
-simple function for sending events. For each event you'll see the payload
+Below I've created a TypeScript type for all the proposed analytics events, and
+a simple function for sending events. For each event you'll see the payload
 alongside the default values which will be passed to _all_ events.
 
 ```ts

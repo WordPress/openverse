@@ -4,7 +4,6 @@
     :hide-on-click-outside="false"
     :label="$t('mediaDetails.contentReport.long').toString()"
     placement="bottom-end"
-    width="w-80"
   >
     <template #trigger="{ a11yProps }">
       <VContentReportButton v-bind="a11yProps" />

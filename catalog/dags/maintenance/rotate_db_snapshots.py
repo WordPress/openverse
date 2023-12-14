@@ -6,7 +6,7 @@ this for us.
 
 It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
 
-The DAG will automatically delete the oldest snapshots when more snaphots
+The DAG will automatically delete the oldest snapshots when more snapshots
 exist than it is configured to retain.
 
 Requires two variables:

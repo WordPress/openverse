@@ -4,7 +4,6 @@
     :size="size"
     :bordered="bordered"
     type="radiogroup"
-    :class="{ 'w-66': size === 'small' }"
   >
     <div
       v-for="(category, index) in contentTypeGroups"

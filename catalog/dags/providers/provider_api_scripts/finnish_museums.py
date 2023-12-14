@@ -164,7 +164,7 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         authors = []
         for author_type in ["primary", "secondary", "corporate"]:
             author = authors_raw.get(author_type)
-            if author is None or type(author) != dict:
+            if not isinstance(author, dict):
                 continue
             author = "; ".join(list(author.keys()))
             authors.append(author)

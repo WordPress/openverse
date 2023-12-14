@@ -37,7 +37,9 @@ const checkStringForVars = (str) =>
  * @return {string} the translation string with all placeholders marked
  */
 const replaceVarsPlaceholders = (str) => {
-  if (!containsCurlyWord(str)) return str
+  if (!containsCurlyWord(str)) {
+    return str
+  }
 
   const variable = /\{(?<variable>[a-zA-Z-]*)}/g
   return str.replace(variable, `###$<variable>###`)
@@ -93,15 +95,21 @@ const getComment = (entry) => {
   const comment = []
 
   // comments given by the programmer, directed at the translator (#.)
-  if (entry.doc) comment.push(`#. ${entry.doc}`)
+  if (entry.doc) {
+    comment.push(`#. ${entry.doc}`)
+  }
 
   // comments given by the programmer, directed at the translator (#.)
   let vars = checkStringForVars(entry.value)
-  if (vars) comment.push(vars)
+  if (vars) {
+    comment.push(vars)
+  }
 
   // comments containing references to the program’s source code (#:)
   let refComments = getRefComments(entry.lineage)
-  if (refComments.length) comment.push(...refComments)
+  if (refComments.length) {
+    comment.push(...refComments)
+  }
 
   return comment.map((item) => `${item}`).join("\n")
 }
@@ -122,7 +130,9 @@ const toPot = (entry) => {
   // string-string type mapping
   let poEntry = []
   let comment = getComment(entry)
-  if (comment) poEntry.push(comment)
+  if (comment) {
+    poEntry.push(comment)
+  }
   poEntry.push(`msgctxt "${entry.lineage}"`)
   if (entry.value.includes("|") && /(count|time)/i.test(entry.value)) {
     const pluralizedValues = entry.value.split("|")

@@ -12,13 +12,13 @@ that can be a good resource when writing a new one.
 ```{toctree}
 :titlesonly:
 
-api_request_count_above_threshold
 api_http_2xx_under_threshold
 api_http_5xx_above_threshold
 api_avg_response_time_above_threshold
 api_avg_response_time_anomaly
 api_p99_response_time_above_threshold
 api_p99_response_time_anomaly
+api_request_count_anomaly
 api_thumbnails_http_2xx_under_threshold
 api_thumbnails_http_5xx_above_threshold
 api_thumbnails_request_count_anomaly
@@ -26,10 +26,12 @@ api_thumbnails_avg_response_time_above_threshold
 api_thumbnails_avg_response_time_anomaly
 api_thumbnails_p99_response_time_above_threshold
 api_thumbnails_p99_response_time_anomaly
-nuxt_request_count
-nuxt_2xx_under_threshold
-nuxt_5xx_above_threshold
+nuxt_http_2xx_under_threshold
+nuxt_http_5xx_above_threshold
 nuxt_avg_response_time_above_threshold
+nuxt_avg_response_time_anomaly
 nuxt_p99_response_time_above_threshold
+nuxt_p99_response_time_anomaly
+nuxt_request_count_anomaly
 unhealthy_ecs_hosts
 ```
