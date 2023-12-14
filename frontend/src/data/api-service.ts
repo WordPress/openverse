@@ -1,9 +1,9 @@
+import { useRuntimeConfig } from "#imports"
+
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import { warn } from "~/utils/console"
 import { AUDIO, IMAGE } from "~/constants/media"
-
-import { userAgent } from "~/constants/user-agent"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
@@ -94,14 +94,19 @@ export interface ApiService {
 }
 
 export const createApiService = ({
-  baseUrl = process.env.apiUrl,
   accessToken = undefined,
   isVersioned = true,
 }: ApiServiceConfig = {}): ApiService => {
+  const {
+    public: { apiUrl: baseUrl },
+  } = useRuntimeConfig()
   const axiosParams: OpenverseAxiosRequestConfig = {
     baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
-    headers: { "User-Agent": userAgent },
+    headers: {
+      "User-Agent":
+        "Openverse/0.1 (https://openverse.org; openverse@wordpress.org)",
+    },
   }
 
   if (accessToken) {
