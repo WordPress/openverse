@@ -1,5 +1,4 @@
 import { defineStore } from "pinia"
-import { ssrRef } from "@nuxtjs/composition-api"
 
 import { capitalCase } from "~/utils/case"
 import { env } from "~/utils/env"
@@ -15,9 +14,11 @@ import { initProviderServices } from "~/data/media-provider-service"
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
-import type { Ref } from "vue"
-
 export interface ProviderState {
+  /**
+   * Timestamp is used to limit the update frequency to one every 60 minutes per request.
+   */
+  lastUpdated: null | Date
   providers: {
     audio: MediaProvider[]
     image: MediaProvider[]
@@ -43,15 +44,12 @@ const sortProviders = (data: MediaProvider[]): MediaProvider[] => {
     return nameA.localeCompare(nameB)
   })
 }
-/**
- * Timestamp is used to limit the update frequency to one every 60 minutes per request.
- */
-const lastUpdated: Ref<Date | null> = ssrRef(null)
 
 const updateFrequency = parseInt(env.providerUpdateFrequency, 10)
 
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
+    lastUpdated: null,
     providers: {
       [AUDIO]: [],
       [IMAGE]: [],
@@ -132,7 +130,7 @@ export const useProviderStore = defineStore("provider", {
             this.fetchMediaTypeProviders(mediaType)
           )
         )
-        lastUpdated.value = new Date()
+        this.lastUpdated = new Date()
       }
     },
 
@@ -185,12 +183,12 @@ export const useProviderStore = defineStore("provider", {
       const noData = supportedMediaTypes.some(
         (mediaType) => !state.providers[mediaType].length
       )
-      if (noData || !lastUpdated.value) {
+      if (noData || !state.lastUpdated) {
         return true
       }
 
       const timeSinceLastUpdate =
-        new Date().getTime() - new Date(lastUpdated.value).getTime()
+        new Date().getTime() - new Date(state.lastUpdated).getTime()
       return timeSinceLastUpdate > updateFrequency
     },
   },
