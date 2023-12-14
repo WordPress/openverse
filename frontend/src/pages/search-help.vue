@@ -41,9 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useI18n } from "#imports"
-
-import { useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, useHead, useI18n } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -58,7 +56,7 @@ export default defineNuxtComponent({
     const i18n = useI18n()
     const searchStore = useSearchStore()
 
-    useMeta({
+    useHead({
       title: `${i18n.t("searchGuide.title", {
         openverse: "Openverse",
       })} | Openverse`,
@@ -72,6 +70,5 @@ export default defineNuxtComponent({
     }
     return { pathFromQuery }
   },
-  head: {},
 })
 </script>

@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, useHead } from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
@@ -50,7 +50,6 @@ import { storeToRefs } from "pinia"
 import {
   useContext,
   useFetch,
-  useMeta,
   useRoute,
   useRouter,
 } from "@nuxtjs/composition-api"
@@ -119,7 +118,7 @@ export default defineNuxtComponent({
       pageTitle.value = `${searchTerm.value} | Openverse`
     })
 
-    useMeta(() => ({
+    useHead(() => ({
       title: pageTitle.value,
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     }))
@@ -225,6 +224,5 @@ export default defineNuxtComponent({
       skipToContentTargetId,
     }
   },
-  head: {},
 })
 </script>

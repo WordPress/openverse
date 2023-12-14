@@ -63,10 +63,9 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useI18n } from "#imports"
+import { defineNuxtComponent, useHead, useI18n } from "#imports"
 
 import { computed } from "vue"
-import { useMeta } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON, OFF } from "~/constants/feature-flag"
@@ -83,7 +82,7 @@ export default defineNuxtComponent({
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()
 
-    useMeta({
+    useHead({
       title: `${i18n.t("privacy.title", {
         openverse: "Openverse",
       })} | Openverse`,
@@ -103,6 +102,5 @@ export default defineNuxtComponent({
       handleChange,
     }
   },
-  head: {},
 })
 </script>

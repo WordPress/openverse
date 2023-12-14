@@ -39,9 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useI18n } from "#imports"
-
-import { useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, useHead, useI18n } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -67,7 +65,7 @@ export default defineNuxtComponent({
   setup() {
     const i18n = useI18n()
 
-    useMeta({
+    useHead({
       title: `${i18n.t("feedback.title")} | Openverse`,
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
@@ -77,6 +75,5 @@ export default defineNuxtComponent({
       tabs,
     }
   },
-  head: {},
 })
 </script>
