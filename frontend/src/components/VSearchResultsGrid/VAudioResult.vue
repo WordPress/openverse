@@ -6,7 +6,6 @@
       :size="size"
       :search-term="searchTerm"
       v-bind="$attrs"
-      v-on="$listeners"
       @interacted="sendInteractionEvent"
       @mousedown="sendSelectSearchResultEvent(audio, $event)"
     />

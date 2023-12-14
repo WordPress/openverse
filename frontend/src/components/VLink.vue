@@ -3,8 +3,7 @@
   <NuxtLink
     v-if="isInternal"
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
-    v-bind="linkProps"
-    v-on="$listeners"
+    v-bind="{ ...linkProps, ...$attrs }"
     @mousedown.native="$emit('mousedown', $event)"
     @click.native="$emit('click', $event)"
     @blur.native="$emit('blur', $event)"
@@ -16,11 +15,10 @@
   <a
     v-else
     :href="href"
-    v-bind="linkProps"
+    v-bind="{ ...linkProps, ...$attrs }"
     :aria-disabled="!href"
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
     @click="handleExternalClick"
-    v-on="$listeners"
   >
     <slot /><VIcon
       v-if="showExternalIcon && !isInternal"

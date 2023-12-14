@@ -16,7 +16,6 @@
       :name="fieldName"
       v-bind="$attrs"
       :aria-label="labelText"
-      v-on="$listeners"
     >
       <option v-if="blankText" disabled value="">{{ blankText }}</option>
       <option v-for="choice in choices" :key="choice.key" :value="choice.key">

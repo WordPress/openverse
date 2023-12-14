@@ -35,7 +35,6 @@
       :aria-checked="selected"
       :tabindex="tabIndex"
       v-bind="$attrs"
-      v-on="$listeners"
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"

@@ -34,7 +34,6 @@
         ]"
         role="dialog"
         aria-modal="true"
-        v-on="$listeners"
         @keydown="onKeyDown"
         @blur="onBlur"
       >

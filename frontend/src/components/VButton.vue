@@ -20,7 +20,6 @@
     :aria-disabled="ariaDisabled"
     :disabled="disabledAttribute"
     v-bind="$attrs"
-    v-on="$listeners"
   >
     <!--
       @slot The content of the button
