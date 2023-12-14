@@ -1,7 +1,6 @@
-import { useRouter } from "#imports"
+import { useRoute, useRouter } from "#imports"
 
 import { ref, Ref } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { ALL_MEDIA, searchTypes, supportedSearchTypes } from "~/constants/media"
 import usePages from "~/composables/use-pages"
@@ -31,7 +30,7 @@ export const useMatchRoute = (
     return routes.includes(route.split("__")[0])
   }
 
-  const matches = ref(routeNameMatches(route.value.name))
+  const matches = ref(routeNameMatches(route.name))
 
   router.beforeEach((to, _from, next) => {
     matches.value = routeNameMatches(to.name)

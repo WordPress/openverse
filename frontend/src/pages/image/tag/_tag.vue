@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, useRoute } from "#imports"
 
-import { useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -23,7 +23,7 @@ export default defineNuxtComponent({
   setup() {
     const route = useRoute()
     const collectionParams: TagCollection = {
-      tag: route.value.params.tag,
+      tag: route.params.tag,
       collection: "tag",
     }
     useSearchStore().setCollectionState(collectionParams, IMAGE)

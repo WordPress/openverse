@@ -1,5 +1,7 @@
+import { useRoute } from "#imports"
+
 import { computed } from "vue"
-import { useContext, useRoute } from "@nuxtjs/composition-api"
+import { useContext } from "@nuxtjs/composition-api"
 
 export default function usePages() {
   const { app } = useContext()
@@ -53,7 +55,7 @@ export default function usePages() {
    * We need to remove the locale suffix to match the page id.
    */
   const currentPageId = computed<string>(
-    () => route.value?.name?.split("__")[0] ?? ""
+    () => route?.name?.split("__")[0] ?? ""
   )
 
   return { all: pages, current: currentPageId }

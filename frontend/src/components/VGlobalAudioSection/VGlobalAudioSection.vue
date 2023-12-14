@@ -18,8 +18,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { watch, computed, defineComponent } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { useActiveAudio } from "~/composables/use-active-audio"
@@ -133,7 +134,7 @@ export default defineComponent({
      * and on desktop, only if the next route is the 'audio-id' page of the
      * track currently playing, or the original search result page.
      */
-    const routeValue = computed(() => route.value)
+    const routeValue = computed(() => route)
     watch(routeValue, (newRouteVal, oldRouteVal) => {
       if (
         (oldRouteVal.name?.includes("audio") &&

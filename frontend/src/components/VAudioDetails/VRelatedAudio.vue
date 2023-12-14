@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, watch } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 

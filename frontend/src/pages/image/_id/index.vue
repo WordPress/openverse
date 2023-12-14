@@ -108,12 +108,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, useHead, useRoute } from "#imports"
 
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useContext, useFetch } from "@nuxtjs/composition-api"
 
 import { IMAGE, isAdditionalSearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -180,7 +180,7 @@ export default defineNuxtComponent({
     const { error: nuxtError } = useContext()
 
     useFetch(async () => {
-      const imageId = route.value.params.id
+      const imageId = route.params.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
         if (fetchingError.value && !isRetriable(fetchingError.value)) {

@@ -41,13 +41,13 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, navigateTo, useHead } from "#imports"
+import { defineNuxtComponent, navigateTo, useHead, useRoute } from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
-import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useContext, useFetch } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"

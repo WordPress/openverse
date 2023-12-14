@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { useI18n, useRoute } from "#imports"
 
 import {
   computed,
@@ -59,7 +59,7 @@ import {
   ref,
   watch,
 } from "vue"
-import { useContext, useRoute } from "@nuxtjs/composition-api"
+import { useContext } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
@@ -330,8 +330,7 @@ export default defineComponent({
       const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
 
       if (
-        (isSingleResultRoute.value &&
-          route.value?.params?.id === props.audio.id) ||
+        (isSingleResultRoute.value && route.params.id === props.audio.id) ||
         (isSearchRoute.value && mediaStore.getItemById(AUDIO, props.audio.id))
       ) {
         /**
