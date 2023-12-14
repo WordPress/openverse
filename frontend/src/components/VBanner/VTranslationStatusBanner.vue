@@ -1,6 +1,5 @@
 <template>
   <VNotificationBanner
-    v-bind="$attrs"
     :id="bannerKey"
     nature="warning"
     data-testid="banner-translation"
@@ -21,11 +20,11 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { BannerId } from "~/types/banners"
-
-import { useUiStore } from "~/stores/ui"
 
 import { createTranslationLink } from "~/utils/translation-banner"
 
@@ -40,7 +39,6 @@ export default defineComponent({
     VLink,
     VNotificationBanner,
   },
-  inheritAttrs: false,
   props: {
     bannerKey: {
       type: String as PropType<BannerId>,
@@ -51,13 +49,11 @@ export default defineComponent({
     close: defineEvent(),
   },
   setup() {
-    const uiStore = useUiStore()
-
     /**
      * Returns the link to the GlotPress project for the current locale and the locale native name.
      */
     const currentLocale = computed(() => {
-      const localeObject = uiStore.currentLocale
+      const localeObject = useI18n().localeProperties
 
       return {
         link: createTranslationLink(localeObject),
