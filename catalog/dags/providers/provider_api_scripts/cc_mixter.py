@@ -44,7 +44,7 @@ class CcMixterDelayedRequester(DelayedRequester):
         raw_json = response.text
         cleaned_json = JSON_OCTALS.sub(r":\g<num>\g<sep>", raw_json)
         if cleaned_json == raw_json:
-            logger.info("JSON was clean, no substitutions were made.")
+            logger.debug("JSON was clean, no substitutions were made.")
         else:
             logger.warning("JSON had bad octals, substitutions were made.")
         try:
