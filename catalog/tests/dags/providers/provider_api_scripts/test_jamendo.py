@@ -89,6 +89,7 @@ def test_get_record_data():
             "listens": 5616,
             "playlists": 0,
             "release_date": "2005-04-12",
+            "audiodownload_allowed": True,
         },
         "raw_tags": ["instrumental", "speed_medium"],
         "audio_set_foreign_identifier": "119",
