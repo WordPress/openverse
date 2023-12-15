@@ -69,6 +69,14 @@ def patch_http_client():
 
     We work around it by patching the ``_read_headers`` function to ignore the
     line length limit.
+
+    .. seealso::
+
+        StackOverflow
+            `Answer with this approach <https://stackoverflow.com/a/63158213/2601645>`_
+
+        ``_read_headers()``
+            `Original implementation <https://github.com/python/cpython/blob/8b6ee5b/Lib/http/client.py#L206>`_
     """
 
     import http.client
