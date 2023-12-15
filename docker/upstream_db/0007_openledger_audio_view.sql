@@ -12,7 +12,8 @@ INSERT INTO public.audio_popularity_metrics (
 ) VALUES
   ('wikimedia_audio', 'global_usage_count', 0.85),
   ('jamendo', 'listens', 0.85),
-  ('freesound', 'num_downloads', 0.85);
+  ('freesound', 'num_downloads', 0.85),
+  ('ccmixter', 'upload_num_scores', 0.85);
 
 
 CREATE FUNCTION audio_popularity_percentile(
