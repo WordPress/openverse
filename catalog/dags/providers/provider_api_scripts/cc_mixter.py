@@ -175,6 +175,10 @@ class CcMixterDataIngester(ProviderDataIngester):
         The smallest audio file is assumed to be the main one, which is usually
         MP3 in the case of ccMixter.
 
+        This is because the smallest audio file takes the least time to start
+        streaming, wastes the least data if not useful and MP3 is the most
+        widely supported format.
+
         :param files: the list of files supplied by ccMixter
         :return: the main file and a list of alternative files
         """
