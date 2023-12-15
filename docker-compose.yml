@@ -17,7 +17,7 @@ x-airflow-common: &airflow-common
     context: ./catalog/
     target: cat
     args: # Automatically inferred from env vars, unless specified
-      - REQUIREMENTS_FILE=requirements_dev.txt
+      - REQUIREMENTS_FILE=requirements-dev.txt
       - CATALOG_PY_VERSION
       - CATALOG_AIRFLOW_VERSION
   volumes:
