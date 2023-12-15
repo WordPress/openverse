@@ -198,7 +198,7 @@ PROVIDER_WORKFLOWS = [
         ingester_class=BrooklynMuseumDataIngester,
     ),
     ProviderWorkflow(
-        start_date=datetime(2023, 12, 10),
+        start_date=datetime(2023, 11, 30),
         ingester_class=CcMixterDataIngester,
     ),
     ProviderWorkflow(
