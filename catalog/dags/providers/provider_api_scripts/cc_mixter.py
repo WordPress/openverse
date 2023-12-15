@@ -82,7 +82,7 @@ def patch_http_client():
             headers.append(line)
             if len(headers) > http.client._MAXHEADERS:
                 raise http.client.HTTPException(
-                    f"got more than {http.client._MAXHEADERS} headers"
+                    f"Got more than {http.client._MAXHEADERS} headers."
                 )
             if line in (b"\r\n", b"\n", b""):
                 break
