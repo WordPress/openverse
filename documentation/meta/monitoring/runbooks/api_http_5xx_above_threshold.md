@@ -1,10 +1,11 @@
 # Run Book: API Production HTTP 5XX responses count above threshold
 
 ```{admonition} Metadata
-Status: **stable**
+Status: **Stable**
 
 Alarm links:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+HTTP+5XX+responses+count+over+threshold?>
+- [Alarm details](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+HTTP+5XX+responses+count+over+threshold)
+- [API Production log group][log_group]
 - [ECS-Production-Dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/ECS-Production-Dashboard)
 - [Production Database + Elasticsearch dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/Service-Overview)
 ```
@@ -19,7 +20,20 @@ short time then the severity is low.
 
 If the issue is not related to known recurrent events and persists, the severity
 is critical. Check if dependent services –DB, Redis, Elasticsearch– are
-available to the API or if the problem is intrinsic to itself.
+available to the API or if the problem is intrinsic to itself. To gather more
+information check the [log group][log_group], use the "Logs Insights" view to
+query for requests that failed using a CloudWatch query similar to the following
+which can give more hints about where is the problem.
+
+```
+fields request, @timestamp, @message
+| filter status >= 500
+| sort @timestamp desc
+| limit 20
+```
+
+[log_group]:
+  https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups/log-group/$252Fecs$252Fproduction$252Fapi
 
 ## Historical false positives
 
