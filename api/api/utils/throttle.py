@@ -46,9 +46,12 @@ class SimpleRateThrottle(BaseSimpleRateThrottle, metaclass=abc.ABCMeta):
     def has_valid_token(self, request):
         if not request.auth:
             return False
+        
+        application = getattr(request.auth, "application", None)
+        if application is None:
+            return False
 
-        token_info = get_token_info(str(request.auth))
-        return token_info and token_info.valid
+        return application.client_id and application.verified
 
     def get_cache_key(self, request, view):
         return self.cache_format % {
@@ -146,15 +149,17 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
 
     def get_cache_key(self, request, view):
         # Find the client ID associated with the access token.
-        auth = str(request.auth)
-        token_info = get_token_info(auth)
-        if not (token_info and token_info.valid):
+        application = getattr(request.auth, "application", None)
+        if application is None:
+            return None
+        
+        if not (application.client_id and application.verified):
             return None
 
-        if token_info.rate_limit_model not in self.applies_to_rate_limit_model:
+        if application.rate_limit_model not in self.applies_to_rate_limit_model:
             return None
 
-        return self.cache_format % {"scope": self.scope, "ident": token_info.client_id}
+        return self.cache_format % {"scope": self.scope, "ident": application.client_id}
 
 
 class OAuth2IdThumbnailRateThrottle(AbstractOAuth2IdRateThrottle):

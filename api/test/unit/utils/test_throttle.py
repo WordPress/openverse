@@ -5,6 +5,9 @@ from django.http import HttpResponse
 from rest_framework.settings import api_settings
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
+from oauth2_provider.models import AccessToken
+from api.utils.oauth2_helper import get_token_info
+
 
 import pytest
 
@@ -72,6 +75,7 @@ def enable_throttles(settings):
 def access_token():
     token = AccessTokenFactory.create()
     token.application.verified = True
+    token.application.client_id = 123
     token.application.save()
     return token
 
