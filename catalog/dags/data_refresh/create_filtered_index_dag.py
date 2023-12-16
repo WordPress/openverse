@@ -80,7 +80,7 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
     media_type = data_refresh.media_type
 
     with DAG(
-        dag_id=f"create_filtered_{media_type}_index",
+        dag_id=data_refresh.filtered_index_dag_id,
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2023, 4, 1),
