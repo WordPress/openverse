@@ -13,6 +13,7 @@ NO_COLOR := "\\033[0m"
 # CLI #
 #######
 
+# Open the Redis CLI as an interactive REPL 
 cli *args:
     just ../../exec cache redis-cli {{ args }}
 
