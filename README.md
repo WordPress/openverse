@@ -21,9 +21,6 @@
 Openverse is a powerful search engine for GPL-compatible images, audio, and
 more. Openverse is live at [openverse.org](https://openverse.org).
 
-This repository contains most of the codebase, except for the Openverse catalog.
-Eventually the catalog will be merged into this repository as well.
-
 - [Catalog](catalog/) | The Apache Airflow-powered system for downloading and
   storing Openverse's metadata
 - [Ingestion server](ingestion_server/) | The mechanism for refreshing the data
