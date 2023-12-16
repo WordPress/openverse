@@ -3,8 +3,6 @@ import logging
 
 from rest_framework.throttling import SimpleRateThrottle
 
-from django_redis import get_redis_connection
-
 from api.utils.oauth2_helper import get_token_info
 
 
@@ -49,27 +47,15 @@ class AbstractAnonRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
     logger = parent_logger.getChild("AnonRateThrottle")
 
     def get_cache_key(self, request, view):
-        logger = self.logger.getChild("get_cache_key")
         # Do not apply anonymous throttle to request with valid tokens.
         if request.auth:
             token_info = get_token_info(str(request.auth))
             if token_info and token_info.valid:
                 return None
 
-        ident = self.get_ident(request)
-        redis = get_redis_connection("default", write=False)
-        if redis.sismember("ip-whitelist", ident):
-            logger.info(f"bypassing rate limiting for ident={ident}")
-            """
-            Exempt internal IP addresses. Exists as a legacy holdover and usages of this
-            should be replaced with the exempt API key as it is easier to manage via
-            Django admin and doesn't require leaky permissions in our production infra.
-            """
-            return None
-
         return self.cache_format % {
             "scope": self.scope,
-            "ident": ident,
+            "ident": self.get_ident(request),
         }
 
 

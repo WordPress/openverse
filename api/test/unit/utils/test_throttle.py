@@ -54,20 +54,6 @@ def test_anon_rate_throttle_ignores_authed_requests(
     AbstractAnonRateThrottle.__subclasses__(),
 )
 @pytest.mark.django_db
-def test_anon_rate_throttle_ignores_exempted_ips(
-    throttle_class, redis, request_factory, view
-):
-    request = request_factory.get("/")
-    redis.sadd("ip-whitelist", request.META["REMOTE_ADDR"])
-    throttle = throttle_class()
-    assert throttle.get_cache_key(view.initialize_request(request), view) is None
-
-
-@pytest.mark.parametrize(
-    "throttle_class",
-    AbstractAnonRateThrottle.__subclasses__(),
-)
-@pytest.mark.django_db
 def test_anon_rate_throttle_returns_formatted_cache_key_for_anonymous_request(
     throttle_class, request_factory, view
 ):
