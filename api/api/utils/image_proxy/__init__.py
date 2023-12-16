@@ -1,3 +1,4 @@
+import itertools
 import logging
 from dataclasses import dataclass
 from typing import Literal
@@ -12,6 +13,7 @@ import django_redis
 import sentry_sdk
 from aiohttp.client_exceptions import ClientResponseError
 from asgiref.sync import sync_to_async
+from redis.exceptions import ConnectionError
 from sentry_sdk import push_scope, set_context
 
 from api.utils.aiohttp import get_aiohttp_session
@@ -23,6 +25,8 @@ from api.utils.tallies import get_monthly_timestamp
 
 
 parent_logger = logging.getLogger(__name__)
+
+exception_iterator = itertools.count()
 
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
@@ -113,6 +117,15 @@ def _tally_response(
             )
 
 
+@sync_to_async
+def _tally_client_response_errors(tallies, month: str, domain: str, status: int):
+    logger = parent_logger.getChild("_tally_client_response_errors")
+    try:
+        tallies.incr(f"thumbnail_http_error:{domain}:{month}:{status}")
+    except ConnectionError:
+        logger.warning("Redis connect failed, thumbnail HTTP errors not tallied.")
+
+
 _UPSTREAM_TIMEOUT = aiohttp.ClientTimeout(15)
 
 
@@ -178,7 +191,13 @@ async def get(
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
-        count = await tallies_incr(key)
+        try:
+            count = await tallies_incr(key)
+        except ConnectionError:
+            logger.warning("Redis connect failed, thumbnail errors not tallied.")
+            # We will use a counter to space out Sentry logs.
+            count = next(exception_iterator)
+
         if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
             count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
         ):
@@ -198,7 +217,7 @@ async def get(
         if isinstance(exc, ClientResponseError):
             status = exc.status
             do_not_wait_for(
-                tallies_incr(f"thumbnail_http_error:{domain}:{month}:{status}")
+                _tally_client_response_errors(tallies, month, domain, status)
             )
             logger.warning(
                 f"Failed to render thumbnail "

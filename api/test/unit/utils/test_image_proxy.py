@@ -1,6 +1,8 @@
 import asyncio
+import itertools
 from dataclasses import replace
 from test.factory.models.image import ImageFactory
+from unittest.mock import patch
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -374,6 +376,7 @@ MOCK_CONNECTION_KEY = ConnectionKey(
         ),
     ],
 )
+@cache_availability_params
 @alert_count_params
 def test_get_exception_handles_error(
     photon_get,
@@ -383,14 +386,25 @@ def test_get_exception_handles_error(
     should_alert,
     sentry_capture_exception,
     setup_request_exception,
-    redis,
+    is_cache_reachable,
+    cache_name,
+    request,
+    caplog,
 ):
+    cache = request.getfixturevalue(cache_name)
+
     setup_request_exception(exc)
     month = get_monthly_timestamp()
     key = f"thumbnail_error:{exc_name}:{TEST_IMAGE_DOMAIN}:{month}"
-    redis.set(key, count_start)
+    if is_cache_reachable:
+        cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException):
+    with (
+        pytest.raises(UpstreamThumbnailException),
+        patch(
+            "api.utils.image_proxy.exception_iterator", itertools.count(count_start + 1)
+        ),
+    ):
         photon_get(TEST_MEDIA_INFO)
 
     assert_func = (
@@ -399,9 +413,14 @@ def test_get_exception_handles_error(
         else sentry_capture_exception.assert_not_called
     )
     assert_func()
-    assert redis.get(key) == str(count_start + 1).encode()
+
+    if is_cache_reachable:
+        assert cache.get(key) == str(count_start + 1).encode()
+    else:
+        assert "Redis connect failed, thumbnail errors not tallied." in caplog.text
 
 
+@cache_availability_params
 @alert_count_params
 @pytest.mark.parametrize(
     "status_code, text",
@@ -419,15 +438,23 @@ def test_get_http_exception_handles_error(
     count_start,
     should_alert,
     sentry_capture_exception,
-    redis,
+    is_cache_reachable,
+    cache_name,
+    request,
+    caplog,
 ):
+    cache = request.getfixturevalue(cache_name)
+
     month = get_monthly_timestamp()
     key = f"thumbnail_error:aiohttp.client_exceptions.ClientResponseError:{TEST_IMAGE_DOMAIN}:{month}"
-    redis.set(key, count_start)
+    if is_cache_reachable:
+        cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException):
+    with pytest.raises(UpstreamThumbnailException), patch(
+        "api.utils.image_proxy.exception_iterator", itertools.count(count_start + 1)
+    ):
         with pook.use():
-            pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text).mock
+            pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
             photon_get(TEST_MEDIA_INFO)
 
     assert_func = (
@@ -436,13 +463,21 @@ def test_get_http_exception_handles_error(
         else sentry_capture_exception.assert_not_called
     )
     assert_func()
-    assert redis.get(key) == str(count_start + 1).encode()
 
-    # Assertions about the HTTP error specific message
-    assert (
-        redis.get(f"thumbnail_http_error:{TEST_IMAGE_DOMAIN}:{month}:{status_code}")
-        == b"1"
-    )
+    if is_cache_reachable:
+        assert cache.get(key) == str(count_start + 1).encode()
+        assert (
+            cache.get(f"thumbnail_http_error:{TEST_IMAGE_DOMAIN}:{month}:{status_code}")
+            == b"1"
+        )
+    else:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, thumbnail HTTP errors not tallied.",
+                "Redis connect failed, thumbnail errors not tallied.",
+            ]
+        )
 
 
 @pook.on
