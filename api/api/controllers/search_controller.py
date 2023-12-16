@@ -14,6 +14,7 @@ from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
+from redis.exceptions import ConnectionError
 
 import api.models as models
 from api.constants.media_types import OriginIndex, SearchIndex
@@ -184,21 +185,35 @@ def get_excluded_providers_query() -> Q | None:
     `:FILTERED_PROVIDERS_CACHE_VERSION:FILTERED_PROVIDERS_CACHE_KEY` key.
     """
 
-    filtered_providers = cache.get(
-        key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
-    )
+    logger = module_logger.getChild("get_excluded_providers_query")
+    is_redis_reachable = True
+
+    try:
+        filtered_providers = cache.get(
+            key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
+        )
+    except ConnectionError:
+        logger.warning("Redis connect failed, cannot get cached filtered providers.")
+        filtered_providers = None
+        is_redis_reachable = False
+
     if not filtered_providers:
         filtered_providers = list(
             models.ContentProvider.objects.filter(filter_content=True).values_list(
                 "provider_identifier", flat=True
             )
         )
-        cache.set(
-            key=FILTERED_PROVIDERS_CACHE_KEY,
-            version=FILTERED_PROVIDERS_CACHE_VERSION,
-            timeout=FILTER_CACHE_TIMEOUT,
-            value=filtered_providers,
-        )
+
+        if is_redis_reachable:
+            cache.set(
+                key=FILTERED_PROVIDERS_CACHE_KEY,
+                version=FILTERED_PROVIDERS_CACHE_VERSION,
+                timeout=FILTER_CACHE_TIMEOUT,
+                value=filtered_providers,
+            )
+        else:
+            logger.warning("Redis connect failed, cannot cache filtered providers.")
+
     if filtered_providers:
         return Q("terms", provider=filtered_providers)
     return None

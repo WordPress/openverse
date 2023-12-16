@@ -1,3 +1,4 @@
+import datetime
 import logging
 import random
 import re
@@ -8,10 +9,9 @@ from test.factory.es_http import (
     MOCK_LIVE_RESULT_URL_PREFIX,
     create_mock_es_http_image_search_response,
 )
+from test.factory.models.content_provider import ContentProviderFactory
 from unittest import mock
 from uuid import uuid4
-
-from django.core.cache import cache
 
 import pook
 import pytest
@@ -30,17 +30,24 @@ from api.utils.search_context import SearchContext
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture()
-def cache_setter():
-    keys = []
+cache_availability_params = pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [(True, "search_con_cache"), (False, "unreachable_search_con_cache")],
+)
 
-    def _cache_setter(key, value, version=1):
-        keys.append((key, version))
-        cache.set(key, value=value, version=version, timeout=1)
 
-    yield _cache_setter
-    for key, version in keys:
-        cache.delete(key, version=version)
+@pytest.fixture(autouse=True)
+def search_con_cache(django_cache, monkeypatch):
+    cache = django_cache
+    monkeypatch.setattr("api.controllers.search_controller.cache", cache)
+    yield cache
+
+
+@pytest.fixture
+def unreachable_search_con_cache(unreachable_django_cache, monkeypatch):
+    cache = unreachable_django_cache
+    monkeypatch.setattr("api.controllers.search_controller.cache", cache)
+    yield cache
 
 
 @pytest.mark.parametrize(
@@ -826,8 +833,43 @@ def test_excessive_recursion_in_post_process(
     assert "Nesting threshold breached" in caplog.text
 
 
-def test_get_excluded_providers_query_returns_None_when_no_provider_is_excluded():
-    assert search_controller.get_excluded_providers_query() is None
+@pytest.mark.django_db
+@cache_availability_params
+@pytest.mark.parametrize(
+    "excluded_count, result",
+    [(2, Terms(provider=["provider1", "provider2"])), (0, None)],
+)
+def test_get_excluded_providers_query_returns_excluded(
+    excluded_count, result, is_cache_reachable, cache_name, request, caplog
+):
+    cache = request.getfixturevalue(cache_name)
+
+    if is_cache_reachable:
+        cache.set(
+            key=FILTERED_PROVIDERS_CACHE_KEY,
+            version=2,
+            timeout=30,
+            value=[f"provider{i + 1}" for i in range(excluded_count)],
+        )
+    else:
+        for i in range(excluded_count):
+            ContentProviderFactory.create(
+                created_on=datetime.datetime.now(),
+                provider_identifier=f"provider{i + 1}",
+                provider_name=f"Provider {i + 1}",
+                filter_content=True,
+            )
+
+    assert search_controller.get_excluded_providers_query() == result
+
+    if not is_cache_reachable:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, cannot get cached filtered providers.",
+                "Redis connect failed, cannot cache filtered providers.",
+            ]
+        )
 
 
 def test_get_excluded_providers_query_returns_when_cache_is_set(cache_setter):
