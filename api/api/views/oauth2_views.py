@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.generators import generate_client_secret
 from oauth2_provider.views import TokenView as BaseTokenView
+from redis.exceptions import ConnectionError
 
 from api.docs.oauth2_docs import key_info, register, token
 from api.models import OAuth2Verification, ThrottledApplication
@@ -23,6 +24,9 @@ from api.serializers.oauth2_serializers import (
 )
 from api.utils.oauth2_helper import get_token_info
 from api.utils.throttle import OnePerSecond, TenPerDay
+
+
+module_logger = log.getLogger(__name__)
 
 
 @extend_schema(tags=["auth"])
@@ -218,12 +222,20 @@ class CheckRates(APIView):
             # TODO: Replace 500 response with exception.
             return Response(status=500, data="Unknown API key rate limit type")
 
-        sustained_requests_list = cache.get(sustained_throttle_key)
-        sustained_requests = (
-            len(sustained_requests_list) if sustained_requests_list else None
-        )
-        burst_requests_list = cache.get(burst_throttle_key)
-        burst_requests = len(burst_requests_list) if burst_requests_list else None
+        try:
+            sustained_requests_list = cache.get(sustained_throttle_key)
+            sustained_requests = (
+                len(sustained_requests_list) if sustained_requests_list else None
+            )
+            burst_requests_list = cache.get(burst_throttle_key)
+            burst_requests = len(burst_requests_list) if burst_requests_list else None
+            status = 200
+        except ConnectionError:
+            logger = module_logger.getChild("CheckRates.get")
+            logger.warning("Redis connect failed, cannot get key usage.")
+            burst_requests = None
+            sustained_requests = None
+            status = 424
 
         response_data = OAuth2KeyInfoSerializer(
             {
@@ -233,4 +245,4 @@ class CheckRates(APIView):
                 "verified": token_info.verified,
             }
         )
-        return Response(status=200, data=response_data.data)
+        return Response(status=status, data=response_data.data)

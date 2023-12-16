@@ -11,6 +11,29 @@ from oauth2_provider.models import AccessToken
 from api.models import OAuth2Verification, ThrottledApplication
 
 
+cache_availability_params = pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [
+        (True, "oauth_cache"),
+        (False, "unreachable_oauth_cache"),
+    ],
+)
+
+
+@pytest.fixture(autouse=True)
+def oauth_cache(django_cache, monkeypatch):
+    cache = django_cache
+    monkeypatch.setattr("rest_framework.throttling.SimpleRateThrottle.cache", cache)
+    yield cache
+
+
+@pytest.fixture
+def unreachable_oauth_cache(unreachable_django_cache, monkeypatch):
+    cache = unreachable_django_cache
+    monkeypatch.setattr("api.views.oauth2_views.cache", cache)
+    yield cache
+
+
 @pytest.mark.django_db
 @pytest.fixture
 def test_auth_tokens_registration(client):
@@ -74,6 +97,7 @@ def _integration_verify_most_recent_token(client):
     "rate_limit_model",
     [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
 )
+@cache_availability_params
 @pytest.mark.skipif(
     API_URL != "http://localhost:8000",
     reason=(
@@ -82,11 +106,24 @@ def _integration_verify_most_recent_token(client):
         " that isn't possible."
     ),
 )
-def test_auth_email_verification(client, rate_limit_model, test_auth_token_exchange):
+def test_auth_email_verification(
+    request,
+    client,
+    is_cache_reachable,
+    cache_name,
+    rate_limit_model,
+    test_auth_token_exchange,
+):
     res = _integration_verify_most_recent_token(client)
     assert res.status_code == 200
     test_auth_rate_limit_reporting(
-        client, rate_limit_model, test_auth_token_exchange, verified=True
+        request,
+        client,
+        is_cache_reachable,
+        cache_name,
+        rate_limit_model,
+        test_auth_token_exchange,
+        verified=True,
     )
 
 
@@ -95,9 +132,18 @@ def test_auth_email_verification(client, rate_limit_model, test_auth_token_excha
     "rate_limit_model",
     [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
 )
+@cache_availability_params
 def test_auth_rate_limit_reporting(
-    client, rate_limit_model, test_auth_token_exchange, verified=False
+    request,
+    client,
+    is_cache_reachable,
+    cache_name,
+    rate_limit_model,
+    test_auth_token_exchange,
+    verified=False,
 ):
+    request.getfixturevalue(cache_name)
+
     # We're anonymous still, so we need to wait a second before exchanging
     # the token.
     time.sleep(1)
@@ -107,6 +153,13 @@ def test_auth_rate_limit_reporting(
     application.save()
     res = client.get("/v1/rate_limit/", HTTP_AUTHORIZATION=f"Bearer {token}")
     res_data = res.json()
+    if is_cache_reachable:
+        assert res.status_code == 200
+    else:
+        assert res.status_code == 424
+        assert res_data["requests_this_minute"] is None
+        assert res_data["requests_today"] is None
+
     if verified:
         assert res_data["rate_limit_model"] == rate_limit_model
         assert res_data["verified"] is True
