@@ -5,7 +5,6 @@ from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
 import pytest
-from fakeredis import FakeRedis
 
 from api.models.oauth import ThrottledApplication
 from api.utils.throttle import (
@@ -14,19 +13,6 @@ from api.utils.throttle import (
     BurstRateThrottle,
     TenPerDay,
 )
-
-
-@pytest.fixture(autouse=True)
-def redis(monkeypatch) -> FakeRedis:
-    fake_redis = FakeRedis()
-
-    def get_redis_connection(*args, **kwargs):
-        return fake_redis
-
-    monkeypatch.setattr("api.utils.throttle.get_redis_connection", get_redis_connection)
-
-    yield fake_redis
-    fake_redis.client().close()
 
 
 @pytest.fixture
