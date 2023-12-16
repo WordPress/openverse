@@ -5,6 +5,13 @@ from test.factory.models.media import (
     MediaFactory,
     MediaReportFactory,
 )
+from test.fixtures.asynchronous import ensure_asgi_lifecycle, get_new_loop, session_loop
+from test.fixtures.cache import (
+    django_cache,
+    redis,
+    unreachable_django_cache,
+    unreachable_redis,
+)
 from unittest.mock import MagicMock
 
 from rest_framework.test import APIClient, APIRequestFactory
@@ -158,3 +165,21 @@ def cleanup_elasticsearch_test_documents(request, settings):
         query={"match": {"tags.name": CREATED_BY_FIXTURE_MARKER}},
         refresh=True,
     )
+
+
+__all__ = [
+    "ensure_asgi_lifecycle",
+    "get_new_loop",
+    "session_loop",
+    "django_cache",
+    "redis",
+    "unreachable_django_cache",
+    "unreachable_redis",
+    "api_client",
+    "sentry_capture_exception",
+    "request_factory",
+    "image_media_type_config",
+    "audio_media_type_config",
+    "media_type_config",
+    "cleanup_elasticsearch_test_documents",
+]
