@@ -78,3 +78,40 @@ def test_403_considered_dead(provider):
 
     # All the provider's results should be filtered out, leaving only the "other" provider
     assert all([r["provider"] == other_provider for r in results])
+
+
+@pook.on
+@pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [(True, "redis"), (False, "unreachable_redis")],
+)
+def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request, caplog):
+    cache = request.getfixturevalue(cache_name)
+
+    query_hash = "test_mset_and_expiry_for_responses"
+    results = [{"identifier": i, "provider": "best_provider_ever"} for i in range(40)]
+    image_urls = [f"https://example.org/{i}" for i in range(len(results))]
+    start_slice = 0
+
+    (
+        pook.head(pook.regex(r"https://example.org/\d"))
+        .headers(HEADERS)
+        .times(len(results))
+        .reply(200)
+    )
+
+    check_dead_links(query_hash, start_slice, results, image_urls)
+
+    if is_cache_reachable:
+        for i in range(len(results)):
+            assert cache.get(f"valid:https://example.org/{i}") == b"200"
+            # TTL is 30 days for 2xx responses
+            assert cache.ttl(f"valid:https://example.org/{i}") == 2592000
+    else:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, validating all URLs without cache.",
+                "Redis connect failed, cannot cache link liveness.",
+            ]
+        )
