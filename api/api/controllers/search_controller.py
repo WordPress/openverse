@@ -576,15 +576,23 @@ def get_sources(index):
     """
     source_cache_name = "sources-" + index
     cache_fetch_failed = False
+    is_redis_reachable = True
     try:
         sources = cache.get(key=source_cache_name)
     except ValueError:
         cache_fetch_failed = True
         sources = None
         log.warning("Source cache fetch failed due to corruption")
+    except ConnectionError:
+        cache_fetch_failed = True
+        is_redis_reachable = False
+        sources = None
+        log.warning("Redis connect failed, cannot get cached sources.")
     if isinstance(sources, list) or cache_fetch_failed:
-        # Invalidate old provider format.
-        cache.delete(key=source_cache_name)
+        sources = None
+        if is_redis_reachable:
+            # Invalidate old provider format.
+            cache.delete(key=source_cache_name)
     if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
@@ -612,7 +620,13 @@ def get_sources(index):
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
         sources = {result["key"]: result["doc_count"] for result in buckets}
-        cache.set(key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources)
+        if is_redis_reachable:
+            cache.set(
+                key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources
+            )
+        else:
+            log.warning("Redis connect failed, cannot cache sources.")
+    sources = {source: int(doc_count) for source, doc_count in sources.items()}
     return sources
 
 

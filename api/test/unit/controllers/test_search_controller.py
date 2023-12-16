@@ -11,6 +11,7 @@ from test.factory.es_http import (
 )
 from test.factory.models.content_provider import ContentProviderFactory
 from unittest import mock
+from unittest.mock import patch
 from uuid import uuid4
 
 import pook
@@ -872,8 +873,38 @@ def test_get_excluded_providers_query_returns_excluded(
         )
 
 
-def test_get_excluded_providers_query_returns_when_cache_is_set(cache_setter):
-    cache_setter(FILTERED_PROVIDERS_CACHE_KEY, ["provider1", "provider2"], version=2)
-    assert search_controller.get_excluded_providers_query() == Terms(
-        provider=["provider1", "provider2"]
-    )
+@cache_availability_params
+def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, caplog):
+    cache = request.getfixturevalue(cache_name)
+
+    if is_cache_reachable:
+        cache.set(
+            "sources-multimedia", value={"provider_1": "1000", "provider_2": "1000"}
+        )
+
+    with patch(
+        "api.controllers.search_controller.get_raw_es_response",
+        return_value={
+            "aggregations": {
+                "unique_sources": {
+                    "buckets": [
+                        {"key": "provider_1", "doc_count": 1000},
+                        {"key": "provider_2", "doc_count": 1000},
+                    ]
+                }
+            }
+        },
+    ):
+        assert search_controller.get_sources("multimedia") == {
+            "provider_1": 1000,
+            "provider_2": 1000,
+        }
+
+    if not is_cache_reachable:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, cannot get cached sources.",
+                "Redis connect failed, cannot cache sources.",
+            ]
+        )
