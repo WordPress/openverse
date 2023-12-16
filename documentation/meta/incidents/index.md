@@ -16,16 +16,14 @@ possible.
 
 ## What is an incident?
 
-An **incident** in the context of these documents is any event which affects the
-ability of Openverse to behave normally in a way that is depended on or expected
-by regular users. This document and the referenced runbooks refer to incidents
-as technical problems with our services (Openverse.org, the Openverse API, and
-"official" integrations like the WP core integration and pattern directory
-integrations). Here are some example incidents:
+This document and the referenced runbooks refer to incidents as technical
+problems with our services (Openverse.org, the Openverse API, and "official"
+integrations like the WP core integration and pattern directory integrations).
+Here are some example incidents:
 
 - The API is serving slower-than-typical responses which occasionally time out
 - Openverse.org has a critical bug preventing search for mobile users using RTL
-  languages maintainer
+  languages
 - Openverse.org is completely offline
 - Production resource usage is skyrocketing and could lead to downtime, but
   users are not impacted yet
@@ -92,15 +90,19 @@ discretion.
 - **Stabilized** - The incident is no longer directly disrupting service. Root
   causes may still be unknown.
 - **Under investigation** - The root causes of the incident are being
-  researched. Stabilized but not yet resolved.
-- **Resolved** - The incident is stable, and long-term fixes to prevent future
-  occurrences or other mitigations have been identified.
+  researched. Stabilized but not yet resolved. Fixes may be identified but not
+  yet implemented.
+- **Resolved** - The incident is stable, and short-term/immediate fixes to
+  prevent future occurrences have been implemented. Long-term fixes and
+  improvements may still be open for work to be prioritized along with all other
+  work.
 - **Reviewed** - A retrospective has been completed for the incident.
 
 As you might expect, incidents can be _destabilized_ if they reoccur, and the
 state should roll back to "Stabilization pending". Some incidents may not
 require further investigation once they are stabilized and can be immediately
-resolved.
+resolved. If more than 48 hours have elapsed from the resolution of an incident
+and it recurs, a new incident should be created.
 
 ```{mermaid}
 graph LR
