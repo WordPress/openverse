@@ -81,7 +81,7 @@ def get_request_params_for_extension(
 
 @sync_to_async
 def _tally_response(
-    tallies,
+    tallies_conn,
     media_info: MediaInfo,
     month: str,
     domain: str,
@@ -93,14 +93,24 @@ def _tally_response(
     Pulled into a separate function to help reduce overload when skimming
     the `get` function, which is complex enough as is.
     """
-    tallies.incr(f"thumbnail_response_code:{month}:{response.status}"),
-    tallies.incr(
-        f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{response.status}"
-    )
-    tallies.incr(
-        f"thumbnail_response_code_by_provider:{media_info.media_provider}:"
-        f"{month}:{response.status}"
-    )
+
+    logger = parent_logger.getChild("_tally_response")
+
+    with tallies_conn.pipeline() as tallies:
+        tallies.incr(f"thumbnail_response_code:{month}:{response.status}"),
+        tallies.incr(
+            f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{response.status}"
+        )
+        tallies.incr(
+            f"thumbnail_response_code_by_provider:{media_info.media_provider}:"
+            f"{month}:{response.status}"
+        )
+        try:
+            tallies.execute()
+        except ConnectionError:
+            logger.warning(
+                "Redis connect failed, thumbnail response codes not tallied."
+            )
 
 
 _UPSTREAM_TIMEOUT = aiohttp.ClientTimeout(15)

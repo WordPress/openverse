@@ -47,6 +47,12 @@ SVG_BODY = """<?xml version="1.0" encoding="UTF-8"?>
 </svg>"""
 
 
+cache_availability_params = pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [(True, "redis"), (False, "unreachable_redis")],
+)
+
+
 @pytest.fixture
 def auth_key():
     test_key = "this is a test Photon Key boop boop, let me in"
@@ -285,7 +291,11 @@ def setup_request_exception(monkeypatch):
 
 
 @pook.on
-def test_get_successful_records_response_code(photon_get, mock_image_data, redis):
+@cache_availability_params
+def test_get_successful_records_response_code(
+    photon_get, mock_image_data, is_cache_reachable, cache_name, request, caplog
+):
+    cache = request.getfixturevalue(cache_name)
     (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -298,16 +308,22 @@ def test_get_successful_records_response_code(photon_get, mock_image_data, redis
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     photon_get(TEST_MEDIA_INFO)
     month = get_monthly_timestamp()
-    assert redis.get(f"thumbnail_response_code:{month}:200") == b"1"
-    assert (
-        redis.get(f"thumbnail_response_code_by_domain:{TEST_IMAGE_DOMAIN}:{month}:200")
-        == b"1"
-    )
+
+    keys = [
+        f"thumbnail_response_code:{month}:200",
+        f"thumbnail_response_code_by_domain:{TEST_IMAGE_DOMAIN}:{month}:200",
+    ]
+    if is_cache_reachable:
+        for key in keys:
+            assert cache.get(key) == b"1"
+    else:
+        assert (
+            "Redis connect failed, thumbnail response codes not tallied." in caplog.text
+        )
 
 
 alert_count_params = pytest.mark.parametrize(
