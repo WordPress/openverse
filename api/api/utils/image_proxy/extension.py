@@ -1,3 +1,4 @@
+import logging
 from os.path import splitext
 from urllib.parse import urlparse
 
@@ -5,16 +6,23 @@ import aiohttp
 import django_redis
 import sentry_sdk
 from asgiref.sync import sync_to_async
+from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
 from api.utils.asyncio import do_not_wait_for
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
+parent_logger = logging.getLogger(__name__)
+
+
 _HEAD_TIMEOUT = aiohttp.ClientTimeout(10)
 
 
 async def get_image_extension(image_url: str, media_identifier) -> str | None:
+    logger = parent_logger.getChild("get_image_extension")
+    is_redis_reachable = True
+
     cache = django_redis.get_redis_connection("default")
     key = f"media:{media_identifier}:thumb_type"
 
@@ -22,8 +30,12 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
 
     if not ext:
         # If the extension is not present in the URL, try to get it from the redis cache
-        ext = await sync_to_async(cache.get)(key)
-        ext = ext.decode("utf-8") if ext else None
+        try:
+            ext = await sync_to_async(cache.get)(key)
+            ext = ext.decode("utf-8") if ext else None
+        except ConnectionError:
+            logger.warning("Redis connect failed, cannot get cached image extension.")
+            is_redis_reachable = False
 
     if not ext:
         # If the extension is still not present, try getting it from the content type
@@ -37,7 +49,12 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
             else:
                 ext = None
 
-            do_not_wait_for(sync_to_async(cache.set)(key, ext if ext else "unknown"))
+            if is_redis_reachable:
+                do_not_wait_for(
+                    sync_to_async(cache.set)(key, ext if ext else "unknown")
+                )
+            else:
+                logger.warning("Redis connect failed, cannot cache image extension.")
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
             raise UpstreamThumbnailException(

@@ -529,9 +529,18 @@ def test_photon_get_raises_by_not_allowed_types(photon_get, image_type):
         ({"Content-Type": "unknown"}, b"unknown"),
     ],
 )
+@cache_availability_params
 def test_photon_get_saves_image_type_to_cache(
-    photon_get, redis, headers, expected_cache_val
+    photon_get,
+    headers,
+    expected_cache_val,
+    is_cache_reachable,
+    cache_name,
+    request,
+    caplog,
 ):
+    cache = request.getfixturevalue(cache_name)
+
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
     media_info = MediaInfo(
@@ -544,5 +553,14 @@ def test_photon_get_saves_image_type_to_cache(
         with pytest.raises(UnsupportedMediaType):
             photon_get(media_info)
 
-        key = f"media:{image.identifier}:thumb_type"
-        assert redis.get(key) == expected_cache_val
+    key = f"media:{image.identifier}:thumb_type"
+    if is_cache_reachable:
+        assert cache.get(key) == expected_cache_val
+    else:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, cannot get cached image extension.",
+                "Redis connect failed, cannot cache image extension.",
+            ]
+        )
