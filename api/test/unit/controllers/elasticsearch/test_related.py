@@ -6,8 +6,6 @@ from test.factory.es_http import (
 from test.factory.models import ImageFactory
 from unittest import mock
 
-from django.core.cache import cache
-
 import pook
 import pytest
 
@@ -22,7 +20,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def excluded_providers_cache():
+def excluded_providers_cache(django_cache, monkeypatch):
+    cache = django_cache
+    monkeypatch.setattr("api.controllers.search_controller.cache", cache)
+
     excluded_provider = "excluded_provider"
     cache_value = [excluded_provider]
     cache.set(
