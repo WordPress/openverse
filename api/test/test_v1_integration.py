@@ -24,17 +24,6 @@ def image_fixture():
     return parsed
 
 
-def test_link_shortener_create():
-    payload = {"full_url": "abcd"}
-    response = requests.post(f"{API_URL}/v1/link/", json=payload, verify=False)
-    assert response.status_code == 410
-
-
-def test_link_shortener_resolve():
-    response = requests.get(f"{API_URL}/v1/link/abc", verify=False)
-    assert response.status_code == 410
-
-
 @pytest.mark.skip(reason="Disabled feature")
 @pytest.fixture
 def test_list_create(image_fixture):
