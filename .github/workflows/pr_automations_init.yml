@@ -44,7 +44,7 @@ jobs:
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
 
       - name: Upload event info as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: event_info
           path: /tmp/event.json
