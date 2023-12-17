@@ -27,18 +27,28 @@ runs:
     - name: Install `@actions/artifact`
       shell: bash
       run: |
-        pnpm install @actions/artifact@1 -w
+        pnpm install @actions/artifact -w
 
     - name: Download images
       uses: actions/github-script@v6
       with:
         script: |
-          const artifact = require("@actions/artifact")
-          const artifactClient = artifact.create()
-          const images = "${{ inputs.setup_images }}".split(" ")
-          for (image of images) {
-            await artifactClient.downloadArtifact(image, "/tmp", { createArtifactFolder: false })
+          const { DefaultArtifactClient } = await import('@actions/artifact')
+          const artifact = new DefaultArtifactClient()
+          const images = '${{ inputs.setup_images }}'.split(' ')
+          const [repositoryOwner, repositoryName] = '${{ github.repository }}'.split('/')
+          const findBy = {
+            repositoryOwner,
+            repositoryName,
+            workflowRunId: '${{ inputs.run_id }}',
           }
+          const workflowArtifacts = await artifact.listArtifacts({ findBy })
+          await Promise.all(
+            workflowArtifacts.artifacts
+              .filter((item) => images.includes(item.name))
+              .map((item) => artifact.downloadArtifact(item.id, { findBy, path: '/tmp' }))
+          )
+          console.log('Downloaded artifacts')
 
     - name: Load images
       shell: bash
