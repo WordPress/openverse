@@ -272,6 +272,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
       - name: Run tests
@@ -303,6 +304,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
       - name: Check DAG documentation
@@ -339,6 +341,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server
 
       - name: Run ingestion-server tests
@@ -388,6 +391,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server api
 
       - name: Start API, ingest and index test data
@@ -452,6 +456,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server api
 
       - name: Run check recipe
@@ -931,6 +936,7 @@ jobs:
       - name: Load Docker image `${{ matrix.image }}`
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: ${{ matrix.image }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
