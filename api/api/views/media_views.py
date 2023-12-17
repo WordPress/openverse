@@ -101,7 +101,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         req_serializer.is_valid(raise_exception=True)
         return req_serializer
 
-    def get_db_results(self, results):
+    def get_db_results(self, hits):
         """
         Map ES hits to ORM model instances.
 
@@ -110,22 +110,27 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         This function issues one query to the DB, using the ``identifier`` field
         which is both unique and indexed, so it's quite performant.
 
-        :param results: the list of ES hits
+        :param hits: the list of ES hits
         :return: the corresponding list of ORM model instances
         """
 
-        identifiers = []
-        hits = []
-        for hit in results:
-            identifiers.append(hit.identifier)
-            hits.append(hit)
+        func_logger = logger.getChild("get_db_results")
 
-        results = list(self.get_queryset().filter(identifier__in=identifiers))
-        results.sort(key=lambda x: identifiers.index(str(x.identifier)))
-        for result, hit in zip(results, hits):
+        identifiers = [hit.identifier for hit in hits]
+        id_result_map = {
+            str(result.identifier): result
+            for result in self.get_queryset().filter(identifier__in=identifiers)
+        }
+
+        def _get_result(hit):
+            result = id_result_map.get(hit.identifier)
+            if not result:
+                func_logger.warning(f"No DB row for ES hit {hit.identifier}.")
+                result = hit  # Use the hit as fallback when no DB row is found.
             result.fields_matched = getattr(hit.meta, "highlight", None)
+            return result
 
-        return results
+        return [_get_result(hit) for hit in hits]
 
     # Standard actions
 

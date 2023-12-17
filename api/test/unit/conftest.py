@@ -38,6 +38,9 @@ from api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSerializer,
 )
+from api.views.audio_views import AudioViewSet
+from api.views.image_views import ImageViewSet
+from api.views.media_views import MediaViewSet
 
 
 @pytest.fixture()
@@ -88,6 +91,7 @@ class MediaTypeConfig:
     report_serializer: MediaReportRequestSerializer
     report_factory: MediaReportFactory
     deleted_class: AbstractDeletedMedia
+    viewset_class: MediaViewSet
 
     @property
     def indexes(self):
@@ -109,6 +113,7 @@ MEDIA_TYPE_CONFIGS = {
         report_factory=model_factories.ImageReportFactory,
         mature_class=MatureImage,
         deleted_class=DeletedImage,
+        viewset_class=ImageViewSet,
     ),
     "audio": MediaTypeConfig(
         media_type="audio",
@@ -124,6 +129,7 @@ MEDIA_TYPE_CONFIGS = {
         report_factory=model_factories.AudioReportFactory,
         mature_class=MatureAudio,
         deleted_class=DeletedAudio,
+        viewset_class=AudioViewSet,
     ),
 }
 

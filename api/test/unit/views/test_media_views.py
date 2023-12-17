@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
-from unittest.mock import MagicMock, patch
+from types import SimpleNamespace
+from unittest.mock import MagicMock, Mock, patch
 from uuid import uuid4
 
 from rest_framework.response import Response
@@ -8,6 +9,31 @@ import pytest
 import pytest_django.asserts
 
 from api.models.models import ContentProvider
+
+
+def test_hits_to_db_handles_missing_entries(api_client, media_type_config):
+    """
+    The ``get_db_results`` function should handle the case where a media entry
+    is missing from the database.
+    """
+
+    viewset = media_type_config.viewset_class()
+
+    hits = []
+    for _ in range(10):
+        hit = SimpleNamespace()
+        hit.identifier = str(uuid4())
+        hit.meta = SimpleNamespace()
+        hits.append(hit)
+
+    # When the DB has no entries for any of the identifiers...
+    with patch.object(
+        viewset, "get_queryset", return_value=Mock(filter=Mock(return_value=[]))
+    ):
+        results = viewset.get_db_results(hits)
+
+    # ...the function returns the hits.
+    assert results == hits
 
 
 @pytest.mark.django_db
