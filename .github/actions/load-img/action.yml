@@ -33,7 +33,7 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
-          const { DefaultArtifactClient } = await import('@actions/artifact')
+          const { DefaultArtifactClient } = require('@actions/artifact')
           const artifact = new DefaultArtifactClient()
           const images = '${{ inputs.setup_images }}'.split(' ')
           const [repositoryOwner, repositoryName] = '${{ github.repository }}'.split('/')
