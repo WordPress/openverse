@@ -231,10 +231,15 @@ jobs:
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
 
       - name: Upload image `${{ matrix.image }}`
-        uses: actions/upload-artifact@v3
+        id: upload-img
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
+
+      - name: Show artifact ID
+        run: |
+          echo '${{ matrix.image }} artifact ID is ${{ steps.upload-img.outputs.artifact-id }}'
 
   ###########
   # Catalog #
@@ -346,7 +351,7 @@ jobs:
 
       - name: Upload ingestion test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
@@ -399,7 +404,7 @@ jobs:
 
       - name: Upload API test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api_logs
           path: api_logs
@@ -456,7 +461,7 @@ jobs:
 
       - name: Upload schema
         if: matrix.name == 'test_doc'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: openapi.json
           path: ./api/openapi.json
@@ -653,7 +658,7 @@ jobs:
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         id: test-results
         with:
@@ -771,7 +776,7 @@ jobs:
         # Docs will be located at `/tmp/docs`.
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: /tmp/docs/
