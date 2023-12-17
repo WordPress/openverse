@@ -41,6 +41,7 @@ runs:
             repositoryOwner,
             repositoryName,
             workflowRunId: '${{ inputs.run_id }}',
+            token: '${{ github.token }}',
           }
           const workflowArtifacts = await artifact.listArtifacts({ findBy })
           await Promise.all(
