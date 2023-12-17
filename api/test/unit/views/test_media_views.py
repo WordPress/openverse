@@ -9,15 +9,24 @@ import pytest
 import pytest_django.asserts
 
 from api.models.models import ContentProvider
+from api.views.media_views import MediaViewSet
 
 
-def test_hits_to_db_handles_missing_entries(api_client, media_type_config):
+def test_hits_to_db_handles_missing_entries(api_client):
     """
     The ``get_db_results`` function should handle the case where a media entry
     is missing from the database.
     """
 
-    viewset = media_type_config.viewset_class()
+    # Can't use concrete subclasses of ``MediaViewSet`` as they inexplicably
+    # break other tests.
+    viewset = MediaViewSet(
+        model_class=Mock(),
+        media_type=Mock(),
+        query_serializer_class=Mock(),
+        collection_serializer_class=Mock(),
+        default_index=Mock(),
+    )
 
     hits = []
     for _ in range(10):
