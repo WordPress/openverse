@@ -1,11 +1,9 @@
-from test.constants import API_URL
 from unittest.mock import patch
 from uuid import uuid4
 
 from django.conf import settings
 
 import pytest
-import requests
 
 from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
 
@@ -151,7 +149,7 @@ def search_factory(client):
     """Allow passing url parameters along with a search request."""
 
     def _parameterized_search(**kwargs):
-        response = requests.get(f"{API_URL}/v1/images", params=kwargs, verify=False)
+        response = client.get("/v1/images/", kwargs)
         assert response.status_code == 200
         parsed = response.json()
         return parsed
@@ -209,10 +207,6 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
 
 
 @pytest.mark.django_db
-def test_max_page_count():
-    response = requests.get(
-        f"{API_URL}/v1/images",
-        params={"page": settings.MAX_PAGINATION_DEPTH + 1},
-        verify=False,
-    )
+def test_max_page_count(client):
+    response = client.get("/v1/images/", {"page": settings.MAX_PAGINATION_DEPTH + 1})
     assert response.status_code == 400
