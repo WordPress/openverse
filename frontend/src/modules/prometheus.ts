@@ -1,11 +1,10 @@
 import http from "http"
 
-import { register } from "prom-client"
+import { defineNuxtModule } from "@nuxt/kit"
 import promBundle from "express-prom-bundle"
 
-import { searchTypes } from "../../src/constants/media"
+import { register } from "prom-client"
 
-import type { ServerMiddleware, Module } from "@nuxt/types"
 import type { Server as ConnectServer } from "connect"
 
 let metricsServer: null | http.Server = null
@@ -39,7 +38,7 @@ const bundle = promBundle({
   includeMethod: true,
   includePath: true,
   normalizePath: [
-    ...searchTypes.map(
+    ["all", "image", "audio"].map(
       // Normalize single result pages with IDs in the path
       (t) => [`/${t}/.*`, `/${t}/#id`] as [string, string]
     ),
@@ -53,14 +52,13 @@ const bundle = promBundle({
    */
 }) as unknown as ServerMiddleware
 
-const PrometheusModule: Module = function () {
-  this.nuxt.hook("close", () => {
+export default defineNuxtModule((options, nuxt) => {
+  nuxt.hook("close", () => {
     metricsServer?.close()
     // Clear registry so that metrics can re-register when the server restarts in development
     register.clear()
   })
-
-  this.nuxt.hook("listen", () => {
+  nuxt.hook("listen", () => {
     // Serve Prometheus metrics on a separate port to allow production
     // metrics to be hidden behind security group settings
     metricsServer = http
@@ -72,8 +70,7 @@ const PrometheusModule: Module = function () {
       })
       .listen(parseFloat(process.env.METRICS_PORT || "54641"), "0.0.0.0")
   })
-
-  this.nuxt.hook("render:setupMiddleware", (app: ConnectServer) => {
+  nuxt.hook("render:setupMiddleware", (app: ConnectServer) => {
     /**
      * Register this here so that it's registered at the absolute top
      * of the middleware stack. Using server-middleware puts it
@@ -93,6 +90,4 @@ const PrometheusModule: Module = function () {
      */
     app.use(bundle)
   })
-}
-
-export default PrometheusModule
+})
