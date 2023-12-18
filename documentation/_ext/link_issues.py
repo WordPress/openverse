@@ -119,7 +119,7 @@ class IssueReferences(SphinxTransform):
                 if len(match.groups()) != 1:
                     raise ValueError(
                         "issuetracker_issue_pattern must have "
-                        "exactly one group: {!r}".format(match.groups())
+                        f"exactly one group: {match.groups()!r}"
                     )
                 # extract the text between the last issue reference and the
                 # current issue reference and put it into a new text node
