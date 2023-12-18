@@ -55,6 +55,7 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
                 )
             else:
                 logger.warning("Redis connect failed, cannot cache image extension.")
+
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
             raise UpstreamThumbnailException(
