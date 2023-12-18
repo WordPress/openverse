@@ -11,6 +11,23 @@ ignore-words = ".codespell/ignore_words.txt"
 "*__init__*" = ["F401"]
 "*settings/__init__.py" = ["F403"]
 
+[tool.ruff.lint]
+# Default for `select` is ["E4", "E7", "E9", "F"]
+# All additional rules must be added using `extend-select`.
+extend-select = [
+  "D",  # pydocstyle, https://docs.astral.sh/ruff/rules/#pydocstyle-d
+]
+ignore = [
+  "D1",  # D1xx: we do not want to force contributors to write redundant or useless docstrings
+  "D202",  # D202: additional whitespace helps with readability
+  "D205",  # D205: we don't want to always require a single line summary
+  "D211",  # D211: same as D202
+  "D400",  # D400: first line doesn't need to end in a period
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
 [tool.isort]
 profile = "black"
 
