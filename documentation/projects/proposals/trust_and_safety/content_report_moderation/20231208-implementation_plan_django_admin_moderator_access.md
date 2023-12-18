@@ -234,6 +234,10 @@ update the selected reports to set the `decision_id` to point to the new
 moderation decision. All actions rely on the selected set of reports and should
 not modify any other reports.
 
+Remove all logic from the report models `save` methods that bulk actions
+reports. That approach will no longer be valid and we will operate on specific
+reports individually following the `ModerationDecision`.
+
 ##### Multiple-decision prevention (soft-locking)
 
 To prevent multiple moderators unintentionally looking at the same report, we'll
@@ -445,6 +449,7 @@ For each step description, ensure the heading includes an obvious reference to t
 - Create the new `ModerationDecision` models
   - Create an `AbstractModerationDecision` for each media type
 - Add new `decision_id` column to report models
+- Remove bulk report updates from the report models' `save` methods
 
 ### 5. Media moderation view
 
