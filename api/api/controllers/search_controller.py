@@ -186,7 +186,6 @@ def get_excluded_providers_query() -> Q | None:
     """
 
     logger = module_logger.getChild("get_excluded_providers_query")
-    is_redis_reachable = True
 
     try:
         filtered_providers = cache.get(
@@ -195,7 +194,6 @@ def get_excluded_providers_query() -> Q | None:
     except ConnectionError:
         logger.warning("Redis connect failed, cannot get cached filtered providers.")
         filtered_providers = None
-        is_redis_reachable = False
 
     if not filtered_providers:
         filtered_providers = list(
@@ -204,14 +202,14 @@ def get_excluded_providers_query() -> Q | None:
             )
         )
 
-        if is_redis_reachable:
+        try:
             cache.set(
                 key=FILTERED_PROVIDERS_CACHE_KEY,
                 version=FILTERED_PROVIDERS_CACHE_VERSION,
                 timeout=FILTER_CACHE_TIMEOUT,
                 value=filtered_providers,
             )
-        else:
+        except ConnectionError:
             logger.warning("Redis connect failed, cannot cache filtered providers.")
 
     if filtered_providers:
@@ -576,7 +574,6 @@ def get_sources(index):
     """
     source_cache_name = "sources-" + index
     cache_fetch_failed = False
-    is_redis_reachable = True
     try:
         sources = cache.get(key=source_cache_name)
     except ValueError:
@@ -585,15 +582,16 @@ def get_sources(index):
         log.warning("Source cache fetch failed due to corruption")
     except ConnectionError:
         cache_fetch_failed = True
-        is_redis_reachable = False
         sources = None
         log.warning("Redis connect failed, cannot get cached sources.")
 
     if isinstance(sources, list) or cache_fetch_failed:
         sources = None
-        if is_redis_reachable:
+        try:
             # Invalidate old provider format.
             cache.delete(key=source_cache_name)
+        except ConnectionError:
+            log.warning("Redis connect failed, cannot invalidate cached sources.")
 
     if not sources:
         # Don't increase `size` without reading this issue first:
@@ -623,11 +621,11 @@ def get_sources(index):
             buckets = [{"key": "none_found", "doc_count": 0}]
         sources = {result["key"]: result["doc_count"] for result in buckets}
 
-        if is_redis_reachable:
+        try:
             cache.set(
                 key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources
             )
-        else:
+        except ConnectionError:
             log.warning("Redis connect failed, cannot cache sources.")
 
     sources = {source: int(doc_count) for source, doc_count in sources.items()}
