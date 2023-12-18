@@ -159,7 +159,7 @@ confuse the interface, and make the foundational feature more complex.
 
 ##### Information presentation
 
-Clicking on single report should show the following:
+Clicking on a single reported media object should show the following:
 
 - The details of the reported media:
   - title
