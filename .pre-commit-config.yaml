@@ -46,17 +46,10 @@ repos:
           - --profile=black
           - --lines-after-imports=2
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
-    hooks:
-      - id: pyupgrade
-        args:
-          - --py310-plus
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.8
     hooks:
-      - id: ruff # replaces pydocstyle
+      - id: ruff # replaces pydocstyle, pyupgrade
         args:
           - --fix
 
