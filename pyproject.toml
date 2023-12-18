@@ -29,24 +29,17 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
 
-[tool.isort]
-profile = "black"
-
-sections = [
-  "FUTURE",
-  "STDLIB",
-  "DJANGO",
-  "THIRDPARTY",
-  "FIRSTPARTY",
-  "LOCALFOLDER",
-]
-
-known_django = [
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+section-order = [
+  "future",
+  "standard-library",
   "django",
-  "rest_framework",
+  "third-party",
+  "first-party",
+  "local-folder",
 ]
-
-known_first_party = [
+known-first-party = [
   "conf",
   "api",
   "ingestion_server",
@@ -59,4 +52,5 @@ known_first_party = [
   "retired",
 ]
 
-lines_after_imports = 2
+[tool.ruff.lint.isort.sections]
+django = ["django", "rest_framework"]

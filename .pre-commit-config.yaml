@@ -35,21 +35,10 @@ repos:
       - id: check-docstring-first
       - id: requirements-txt-fixer
 
-  # Use the `.isort.cfg` file to configure additional project-specific requirements.
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        files: \.py$
-        exclude: ^build/.*$|^.tox/.*$|^venv/.*$
-        args:
-          - --profile=black
-          - --lines-after-imports=2
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.8
     hooks:
-      - id: ruff # replaces pydocstyle, pyupgrade
+      - id: ruff # replaces isort, pydocstyle, pyupgrade
         args:
           - --fix
 
