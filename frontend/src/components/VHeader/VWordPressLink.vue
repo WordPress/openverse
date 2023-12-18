@@ -7,15 +7,15 @@
     :class="mode === 'light' ? 'text-dark-charcoal' : 'text-white'"
     class="hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
   >
-    <i18n
+    <i18n-t
       tag="p"
-      path="footer.wordpressAffiliation"
+      keypath="footer.wordpressAffiliation"
       class="label-regular flex flex-row items-center gap-1"
     >
       <template #wordpress>
         <VSvg name="wordpress" class="h-6 w-6" width="24" height="24" />
       </template>
-    </i18n>
+    </i18n-t>
   </VLink>
 </template>
 <script lang="ts">

@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 
-import { useI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"

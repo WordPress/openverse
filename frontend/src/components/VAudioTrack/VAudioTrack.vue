@@ -49,6 +49,8 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import {
   computed,
   defineComponent,
@@ -61,7 +63,6 @@ import { useContext, useRoute } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
-import { useI18n } from "~/composables/use-i18n"
 import { useSeekable } from "~/composables/use-seekable"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import {

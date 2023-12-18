@@ -7,12 +7,6 @@ jest.mock("~/composables/use-analytics")
 
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 
-jest.mock("~/composables/use-i18n", () => ({
-  useI18n: jest.fn(() => ({
-    t: (key) => key,
-  })),
-}))
-
 describe("useSearchType", () => {
   const sendCustomEventMock = jest.fn()
   beforeEach(() => {

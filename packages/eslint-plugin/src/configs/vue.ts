@@ -17,11 +17,11 @@ export = {
     "@intlify/vue-i18n/no-i18n-t-path-prop": "error",
     "@intlify/vue-i18n/key-format-style": [
       "error",
-      "camelCase" | "snake_case",
+      "camelCase",
       {
-        "allowArray": false,
-        "splitByDots": false
-      }
+        allowArray: false,
+        splitByDots: false,
+      },
     ],
     "vue/max-attributes-per-line": "off",
     "vue/require-prop-types": "off",

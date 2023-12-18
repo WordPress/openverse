@@ -14,16 +14,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { useI18n } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { computed, defineComponent } from "vue"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField, {
   type Choice,
 } from "~/components/VSelectField/VSelectField.vue"
 
-import type { LocaleObject } from "@nuxtjs/i18n"
+import type { LocaleObject } from "vue-i18n-routing"
 
 /**
  * Presents a way for the users to change the app locale and use a translated
@@ -36,13 +36,13 @@ export default defineComponent({
   setup() {
     const i18n = useI18n()
     const locale = computed({
-      get: () => i18n.locale,
+      get: () => i18n.locale.value,
       set: (value) => {
         i18n.setLocale(value)
       },
     })
     const choices = computed<Choice[]>(() =>
-      (i18n.locales as LocaleObject[])
+      (i18n.locales.value as LocaleObject[])
         .map((locale: LocaleObject) => ({
           key: locale.code,
           text: locale.nativeName,

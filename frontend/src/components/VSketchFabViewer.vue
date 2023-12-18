@@ -15,10 +15,11 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { defineComponent, ref, onMounted } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 
-import { useI18n } from "~/composables/use-i18n"
 import { loadScript } from "~/utils/load-script"
 
 const sketchfabUrl =

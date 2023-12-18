@@ -61,12 +61,13 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
-import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import { IMAGE } from "~/constants/media"

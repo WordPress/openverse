@@ -24,6 +24,8 @@
   </div>
 </template>
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import { useMediaStore } from "~/stores/media"
@@ -31,8 +33,6 @@ import { useSearchStore } from "~/stores/search"
 import type { SupportedMediaType } from "~/constants/media"
 
 import { Results } from "~/types/result"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"

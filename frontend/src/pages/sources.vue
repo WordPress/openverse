@@ -10,7 +10,7 @@
     <p>
       {{ $t("sources.ccContent.content", { openverse: "Openverse" }) }}
     </p>
-    <i18n path="sources.ccContent.provider" tag="p">
+    <i18n-t keypath="sources.ccContent.provider" tag="p">
       <template #flickr>
         <VLink href="https://www.flickr.com/">Flickr</VLink>
       </template>
@@ -19,8 +19,8 @@
           $t("sources.ccContent.smithsonian")
         }}</VLink>
       </template>
-    </i18n>
-    <i18n path="sources.ccContent.europeana" tag="p">
+    </i18n-t>
+    <i18n-t keypath="sources.ccContent.europeana" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
@@ -30,7 +30,7 @@
           $t("sources.ccContent.europeanaApi")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
     <h2>
       {{ $t("sources.newContent.next") }}
@@ -69,13 +69,13 @@
       </VButton>
     </p>
 
-    <i18n path="sources.detail" tag="p">
+    <i18n-t keypath="sources.detail" tag="p">
       <template #singleName>
         <strong>
           {{ $t("sources.singleName") }}
         </strong>
       </template>
-    </i18n>
+    </i18n-t>
     <template v-for="(mediaType, i) in supportedMediaTypes">
       <h3 :key="`h3-${mediaType}`">{{ $t(`sources.heading.${mediaType}`) }}</h3>
       <VSourcesTable
@@ -89,10 +89,11 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import { supportedMediaTypes } from "~/constants/media"
-import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"

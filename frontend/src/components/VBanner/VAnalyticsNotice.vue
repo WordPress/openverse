@@ -6,13 +6,13 @@
     :close-button-label="$t('notification.analytics.close')"
     @close="$emit('close')"
   >
-    <i18n tag="span" path="notification.analytics.text">
+    <i18n-t tag="span" keypath="notification.analytics.text">
       <template #link>
         <VLink :href="privacyPath" class="text-curr underline">{{
           $t("notification.analytics.link")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
   </VNotificationBanner>
 </template>
 

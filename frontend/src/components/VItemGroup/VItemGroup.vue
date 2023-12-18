@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, ref, readonly, PropType } from "vue"
+import { useI18n } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { defineComponent, provide, ref, readonly, PropType } from "vue"
 
 import { keycodes } from "~/constants/key-codes"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -127,7 +127,7 @@ export default defineComponent({
      * @param rtl
      */
     const resolveArrow = (ltr: string, rtl: string) => {
-      return i18n.localeProperties.dir === "rtl" &&
+      return i18n.localeProperties.value.dir === "rtl" &&
         props.direction === "horizontal"
         ? rtl
         : ltr

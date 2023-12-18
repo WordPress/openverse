@@ -56,10 +56,11 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
 
 import type { FilterItem, FilterCategory } from "~/constants/filters"
 

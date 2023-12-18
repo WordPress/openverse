@@ -36,12 +36,13 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { toRefs, ref, onMounted, defineComponent, PropType } from "vue"
 
 import { rand, hash } from "~/utils/prng"
 import { lerp, dist, bezier, Point } from "~/utils/math"
 import type { AudioDetail } from "~/types/media"
-import { useI18n } from "~/composables/use-i18n"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 /**

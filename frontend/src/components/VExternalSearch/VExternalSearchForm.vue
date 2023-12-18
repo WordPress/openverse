@@ -23,12 +23,16 @@
           size="disabled"
           class="label-bold lg:description-bold h-16 w-full gap-x-2 lg:h-18"
         >
-          <i18n
+          <i18n-t
             v-if="isMd"
-            path="externalSources.form.supportedTitle"
+            keypath="externalSources.form.supportedTitle"
             tag="p"
           />
-          <i18n v-else path="externalSources.form.supportedTitleSm" tag="p" />
+          <i18n-t
+            v-else
+            keypath="externalSources.form.supportedTitleSm"
+            tag="p"
+          />
           <VIcon
             :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
             name="caret-down"

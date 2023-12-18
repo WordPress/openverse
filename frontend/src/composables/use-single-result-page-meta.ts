@@ -1,8 +1,9 @@
+import { useI18n } from "#imports"
+
 import { computed, ref, watch } from "vue"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
-import { useI18n } from "~/composables/use-i18n"
 import { createDetailPageMeta } from "~/utils/og"
 
 import type { Ref } from "vue"

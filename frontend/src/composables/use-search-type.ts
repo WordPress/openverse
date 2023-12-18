@@ -1,3 +1,5 @@
+import { useI18n } from "#imports"
+
 import { computed, ref } from "vue"
 
 import {
@@ -14,8 +16,6 @@ import {
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import { useAnalytics } from "~/composables/use-analytics"
 

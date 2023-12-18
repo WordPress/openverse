@@ -19,7 +19,7 @@
           {{ $t("404.title") }}
         </h1>
         <p class="label-bold lg:heading-6">
-          <i18n path="404.main">
+          <i18n-t keypath="404.main" tag="span">
             <template #link>
               <VLink
                 class="text-current underline hover:text-current active:text-current"
@@ -27,7 +27,7 @@
                 >Openverse</VLink
               >
             </template>
-          </i18n>
+          </i18n-t>
         </p>
         <VStandaloneSearchBar route="404" @submit="handleSearch" />
       </main>

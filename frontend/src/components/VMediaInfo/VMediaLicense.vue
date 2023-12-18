@@ -5,8 +5,8 @@
     </h3>
 
     <template v-if="isLicense">
-      <i18n
-        path="mediaDetails.reuse.attribution"
+      <i18n-t
+        keypath="mediaDetails.reuse.attribution"
         tag="span"
         class="mb-2 block text-sm md:mb-4 md:text-base"
       >
@@ -19,14 +19,14 @@
             {{ fullLicenseName }}
           </VLink>
         </template>
-      </i18n>
+      </i18n-t>
       <VLicenseElements :license="license" />
     </template>
 
     <template v-else>
       <VLicenseElements :license="license" />
-      <i18n
-        path="mediaDetails.reuse.tool.content"
+      <i18n-t
+        keypath="mediaDetails.reuse.tool.content"
         tag="span"
         class="description-bold"
       >
@@ -39,16 +39,17 @@
             >{{ $t("mediaDetails.reuse.tool.link") }}</VLink
           >
         </template>
-      </i18n>
+      </i18n-t>
     </template>
   </div>
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import { getFullLicenseName, isLicense as isLicenseFn } from "~/utils/license"
-import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import type { License, LicenseVersion } from "~/constants/license"

@@ -7,14 +7,14 @@
       {{ $t("about.description.content", { openverse: "Openverse" }) }}
     </p>
 
-    <i18n path="about.collection.content" tag="p">
+    <i18n-t keypath="about.collection.content" tag="p">
       <template #openverse>Openverse</template>
       <template #commonCrawl>
         <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
-    <i18n path="about.planning.content" tag="p">
+    <i18n-t keypath="about.planning.content" tag="p">
       <template #openverse>Openverse</template>
       <template #frontend>
         <VLink href="https://github.com/wordpress/openverse-frontend/">{{
@@ -41,9 +41,9 @@
           $t("about.planning.working")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
-    <i18n path="about.transfer.content" tag="p">
+    <i18n-t keypath="about.transfer.content" tag="p">
       <template #openverse>Openverse</template>
       <template #creativeCommons>
         <VLink
@@ -56,27 +56,27 @@
           >WordPress</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
 
-    <i18n path="about.declaration.content" tag="p">
+    <i18n-t keypath="about.declaration.content" tag="p">
       <template #openverse>Openverse</template>
       <template #terms>
         <VLink href="https://creativecommons.org/terms/">{{
           $t("about.declaration.terms", { openverse: "Openverse" })
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
     <h2 id="external-sources">
       {{ $t("externalSourcesPage.title") }}
     </h2>
 
-    <i18n path="externalSourcesPage.intro" tag="p">
+    <i18n-t keypath="externalSourcesPage.intro" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="/sources">{{ $t("externalSourcesPage.link") }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
     <p>
       {{ $t("externalSourcesPage.license", { openverse: "Openverse" }) }}
     </p>
@@ -89,7 +89,7 @@
     <h2>
       {{ $t("externalSourcesPage.new.title") }}
     </h2>
-    <i18n path="externalSourcesPage.new.content" tag="p">
+    <i18n-t keypath="externalSourcesPage.new.content" tag="p">
       <template #issue>
         <VLink
           aria-label="issue"
@@ -102,11 +102,11 @@
           $t("externalSourcesPage.new.email")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
     <h2>
       {{ $t("externalSourcesPage.why.title") }}
     </h2>
-    <i18n path="externalSourcesPage.why.content" tag="p">
+    <i18n-t keypath="externalSourcesPage.why.content" tag="p">
       <template #old>
         <VLink
           aria-label="email"
@@ -114,12 +114,12 @@
           >{{ $t("externalSourcesPage.why.old") }}</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
 
     <p>
       {{ $t("externalSourcesPage.why.new", { openverse: "Openverse" }) }}
     </p>
-    <i18n path="externalSourcesPage.why.feedbackSuggestions" tag="p">
+    <i18n-t keypath="externalSourcesPage.why.feedbackSuggestions" tag="p">
       <template #feedback>
         <VLink
           :aria-label="$t('externalSourcesPage.why.ariaLabel')"
@@ -127,14 +127,14 @@
           >{{ $t("externalSourcesPage.why.feedbackLink") }}</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
   </VContentPage>
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { useI18n } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"

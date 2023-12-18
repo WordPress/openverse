@@ -14,6 +14,8 @@
   </div>
 </template>
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, onMounted, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
@@ -23,7 +25,6 @@ import { useRoute } from "@nuxtjs/composition-api"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 

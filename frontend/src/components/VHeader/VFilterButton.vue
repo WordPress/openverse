@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { defineEvent } from "~/types/emits"
-import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"

@@ -21,10 +21,11 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License } from "~/constants/license"
-import { useI18n } from "~/composables/use-i18n"
 import { useUiStore } from "~/stores/ui"
 import { camelCase } from "~/utils/case"
 import { getElements } from "~/utils/license"

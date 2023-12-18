@@ -1,17 +1,13 @@
+import { useI18n } from "#imports"
+
 import Vue, { ref } from "vue"
 import { screen } from "@testing-library/vue"
 import userEvent from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { useI18n } from "~/composables/use-i18n"
-
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
-
-jest.mock("~/composables/use-i18n", () => ({
-  useI18n: jest.fn(),
-}))
 
 const doFocus = (element) => {
   element.focus()

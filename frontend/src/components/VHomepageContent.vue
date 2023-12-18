@@ -57,7 +57,7 @@
     </VStandaloneSearchBar>
 
     <!-- Disclaimer for large screens -->
-    <i18n path="hero.disclaimer.content" tag="p" class="mt-4 text-sr">
+    <i18n-t keypath="hero.disclaimer.content" tag="p" class="mt-4 text-sr">
       <template #openverse>Openverse</template>
       <template #license>
         <VLink
@@ -66,7 +66,7 @@
           >{{ $t("hero.disclaimer.license") }}</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
   </div>
 </template>
 <script lang="ts">

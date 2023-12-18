@@ -1,5 +1,6 @@
+import { useI18n } from "#imports"
+
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
-import { useI18n } from "~/composables/use-i18n"
 import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 import { Collection } from "~/types/search"

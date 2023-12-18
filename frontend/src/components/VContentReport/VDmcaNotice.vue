@@ -1,7 +1,7 @@
 <template>
-  <i18n
+  <i18n-t
     class="dmca-notice"
-    path="mediaDetails.contentReport.form.dmca.note"
+    keypath="mediaDetails.contentReport.form.dmca.note"
     tag="p"
   >
     <template #form>
@@ -18,7 +18,7 @@
         provider
       }}</VLink>
     </template>
-  </i18n>
+  </i18n-t>
 </template>
 
 <script>

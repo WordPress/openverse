@@ -17,12 +17,13 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import { camelCase } from "~/utils/case"
-import { useI18n } from "~/composables/use-i18n"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 

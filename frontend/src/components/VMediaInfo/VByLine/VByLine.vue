@@ -48,6 +48,8 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import {
   computed,
   defineComponent,
@@ -58,7 +60,6 @@ import {
 } from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
-import { useI18n } from "~/composables/use-i18n"
 import { useSearchStore } from "~/stores/search"
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -101,8 +102,8 @@ export default defineComponent({
       )
     })
 
-    const i18n = useI18n()
-    const dir = computed(() => i18n.localeProperties.dir ?? "ltr")
+    const i18n = useI18n({ useScope: "global" })
+    const dir = computed(() => i18n.localeProperties.value.dir ?? "ltr")
 
     const scrollStep = 150 // px to scroll on each click
     const scrollMargin = 44 // px, button + margin

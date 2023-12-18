@@ -12,11 +12,12 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License, LicenseVersion } from "~/constants/license"
 import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
-import { useI18n } from "~/composables/use-i18n"
 
 import imageInfo from "~/assets/error_images.json"
 

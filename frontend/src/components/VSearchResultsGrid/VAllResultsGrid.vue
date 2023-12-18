@@ -14,11 +14,11 @@
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="allResults.snackbar.text" tag="p">
+      <i18n-t keypath="allResults.snackbar.text" tag="p">
         <template #spacebar>
           <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
-      </i18n>
+      </i18n-t>
     </VSnackbar>
     <VGridSkeleton
       v-if="resultsLoading && allMedia.length === 0"
@@ -61,6 +61,8 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent } from "vue"
 import { storeToRefs } from "pinia"
 
@@ -69,8 +71,6 @@ import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
 

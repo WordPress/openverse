@@ -1,4 +1,4 @@
-import { useI18n } from "~/composables/use-i18n"
+import { useI18n } from "#imports"
 
 import type { Locale } from "@nuxtjs/i18n"
 

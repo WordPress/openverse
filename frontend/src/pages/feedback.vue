@@ -3,7 +3,7 @@
     <h1 id="feedback">
       {{ $t("feedback.title") }}
     </h1>
-    <i18n path="feedback.intro" tag="p">
+    <i18n-t keypath="feedback.intro" tag="p">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #slack>
@@ -15,7 +15,7 @@
         <VLink href="https://make.wordpress.org/chat/">Making WordPress</VLink>
       </template>
       <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
-    </i18n>
+    </i18n-t>
     <section>
       <VTabs label="#feedback" variant="plain" :selected-id="tabs[0]" manual>
         <template #tabs>
@@ -39,9 +39,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { useI18n } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { defineComponent, useMeta } from "@nuxtjs/composition-api"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
