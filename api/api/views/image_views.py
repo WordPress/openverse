@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
-import requests
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from PIL import Image as PILImage
 
@@ -35,6 +34,8 @@ from api.serializers.image_serializers import (
 )
 from api.serializers.media_serializers import PaginatedRequestSerializer
 from api.utils import image_proxy
+from api.utils.aiohttp import get_aiohttp_session
+from api.utils.asyncio import aget_object_or_404
 from api.utils.watermark import watermark
 from api.views.media_views import MediaViewSet
 
@@ -99,7 +100,7 @@ class ImageViewSet(MediaViewSet):
         url_name="oembed",
         serializer_class=OembedSerializer,
     )
-    def oembed(self, request, *_, **__):
+    async def oembed(self, request, *_, **__):
         """
         Retrieve the structured data for a specified image URL as per the
         [oEmbed spec](https://oembed.com/).
@@ -110,12 +111,16 @@ class ImageViewSet(MediaViewSet):
 
         params = OembedRequestSerializer(data=request.query_params)
         params.is_valid(raise_exception=True)
-        image = params.validated_data["image"]
+        identifier = params.validated_data["identifier"]
         context = self.get_serializer_context()
 
+        image = await aget_object_or_404(Image, identifier=identifier)
+
         if not (image.height and image.width):
-            image_file = requests.get(image.url, headers=self.OEMBED_HEADERS)
-            width, height = PILImage.open(io.BytesIO(image_file.content)).size
+            session = await get_aiohttp_session()
+            image_file = await session.get(image.url, headers=self.OEMBED_HEADERS)
+            image_content = await image_file.content.read()
+            width, height = PILImage.open(io.BytesIO(image_content)).size
             context |= {
                 "width": width,
                 "height": height,
