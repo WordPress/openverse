@@ -26,7 +26,7 @@ export const project: TSESLint.Linter.Config = {
   settings: {
     "vue-i18n": {
       localeDir: "./frontend/src/locales/*.{json}",
-      messageSyntaxVersion: "^8.24.3",
+      messageSyntaxVersion: "^9.0.0",
     },
   },
   rules: {
