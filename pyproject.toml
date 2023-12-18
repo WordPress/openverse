@@ -6,11 +6,6 @@
 exclude-file = ".codespell/ignore_lines.txt"
 ignore-words = ".codespell/ignore_words.txt"
 
-[tool.ruff.per-file-ignores]
-"*test*" = ["E501"]
-"*__init__*" = ["F401"]
-"*settings/__init__.py" = ["F403"]
-
 [tool.ruff.lint]
 # Default for `select` is ["E4", "E7", "E9", "F"]
 # All additional rules must be added using `extend-select`.
@@ -25,6 +20,10 @@ ignore = [
   "D211",  # D211: same as D202
   "D400",  # D400: first line doesn't need to end in a period
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"*test*" = ["E501"]  # Tests should have long, descriptive names.
+"*__init__*" = ["F401"]  # Init files usually have unused imports.
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
