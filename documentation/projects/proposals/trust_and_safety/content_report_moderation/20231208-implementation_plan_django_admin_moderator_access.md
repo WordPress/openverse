@@ -78,6 +78,16 @@ sensitivity designation (or de-indexing). It also separates the moderation
 decision (and metadata) from the report, which has its own important metadata
 that should not be confused with the moderation decision metadata.
 
+Additional, the "Bulk moderation actions" implementation plan that is also part
+of this project would have a good use case for this, with separate action types.
+When moderating all works from a particular creator, for example, we wouldn't
+need to generate reports for each of the works and action them, just a single
+`ModerationDecision` for each work with an appropriate action and consequence.
+This avoids need to create "fabricated" reports for bulk moderation actions that
+wouldn't have reports in the first place. _This is just a suggested additional
+use case and is not a specific implementation detail for that plan. The actual
+plan can and probably will have additional considerations beyond this._
+
 It will have the following columns:
 
 - `id` - basic auto-incrementing id
@@ -147,60 +157,26 @@ confuse the interface, and make the foundational feature more complex.
 
 #### Media moderation view
 
+##### Information presentation
+
 Clicking on single report should show the following:
 
 - The details of the reported media:
   - title
   - description
   - tags
-  - the work itself
+  - the work itself, in other words, the viewable image or the playable audio
   - whether sensitive text detection thought it had sensitive text
   - provider/source
   - links to foreign landing url and Openverse.org page for the work
 - A chronological list of all moderation decisions for the work
 - A chronological list of all reports for the work regardless of status
+  - Include at least the following columns: status, description, reason, date
 
-The idea here is that the report view is not focused on taking an action for a
+The idea here is that the "report view" is not focused on taking an action for a
 single _report_, but rather showing all relevant information for a single work
-to make a moderation decision based on all pending reports for a work and
-historical moderation decisions for the work (if any).
-
-In the future, we could try to include links that open tables to show all
-moderation decisions for works by the same creator, etc, in case there is useful
-information, particularly for identifying potential bulk moderation actions.
-These kinds of additional views are out of scope for this current project,
-however.
-
-The expanded view should have the following context-sensitive actions:
-
-- "Mark sensitive: confirm a sensitive content report and mark the work as
-  sensitive"
-  - Only available if a work is not already marked sensitive
-  - `confirmed_sensitive` action
-- "Deindex: entirely exclude the work from Openverse"
-  - There are no real conditions for this because deindexing can happen for
-    works that are or are not marked sensitive
-  - `deindexed` action
-- "Reject all pending reports: take no action and mark all pending reports for
-  the work as reviewed"
-  - Only available if a work is not already marked sensitive
-  - `rejected_report` action
-- "Mark all pending reports duplicates: take no action and mark all pending
-  reports for the work as duplicates"
-  - Only available if the work is already marked sensitive
-  - `duplicate` action
-
-Each of these actions should create a single `ModerationDecision` with
-explanation, action, moderator ID, and so forth populated. The admin view should
-bulk update the reports pending at the time of the decision to set the
-`decision_id` to point to the new moderation decision. We'll need to make sure
-to avoid any kind of race condition where between the moderator loading the
-media moderation view and making a decision, a new report is made. We can do
-this by adding the list of pending reports as a hidden form field to compare
-with the list pulled when the form is saved. In the case that the lists do not
-match (in other words, a new report was created between the time the form was
-loaded and when it was saved), then reject the submission with a note saying
-that a new report exists and should be included in the review.
+to make a moderation decision on the work, based on all pending and historical
+reports.
 
 We could take two approaches for this view: either create a brand new view or
 build this into the media view itself. My preference and recommendation is the
@@ -209,6 +185,97 @@ doesn't currently have much of a purpose anyway, and if we're making it possible
 to view all the metadata for a work, we might as well take advantage of the
 existing admin view for media items that already has some of that built into it.
 I'll cover more details about how we'll accomplish this in the step-by-step.
+
+##### Actions
+
+To understand the rationale in this section, keep in mind that there are
+currently three report types (sensitive, DMCA, and "other"), and that users can
+select any of these. There is little guidance beyond the report type labels
+themselves to indicate to users which one to select. This means that reports of
+different types get mixed up, and especially the "other" type ends up with
+reports that would have been better suited as sensitive or DMCA reports. This
+means there is no coherent way to handle "all pending reports". A previous
+version of this implementation plan attempted to do that, but it's far too
+complex and has so many edge cases, that it's _easier_ to handle a set number of
+reports at a time, selected by the moderator.
+
+In the future, we could try to include links that open tables to show all
+moderation decisions for works by the same creator, etc, in case there is useful
+information, particularly for identifying potential bulk moderation actions.
+These kinds of additional views are out of scope for this current project,
+however.
+
+Each pending report should have a checkbox allowing it to be selected for
+actioning. If there is only a single pending report, it should be automatically
+selected when the form loads.
+
+The expanded view should have the following context-sensitive actions:
+
+- "Mark sensitive: mark the work as sensitive based on selected reports"
+  - Only available if a work is not already marked sensitive
+  - `confirmed_sensitive` action
+- "Deindex sensitive: entirely exclude the work from Openverse due to
+  sensitivity based on selected reports"
+  - There are no real conditions for this because deindexing can happen for
+    works that are or are not marked sensitive
+  - `deindexed_sensitive` action
+- "Deindex copyright: entirely exclude the work from Openverse due to copyright
+  based on selected reports"
+  - `deindexed_copyright`
+- "Reject reports: take no action and mark all selected reports as reviewed"
+  - `rejected_reports` action
+- "Mark selected reports duplicates: take no action and mark all selected
+  reports as duplicates"
+  - `duplicate_reports` action
+
+Each of these actions should create a single `ModerationDecision` with
+explanation, action, moderator ID, and so forth populated. The admin view should
+update the selected reports to set the `decision_id` to point to the new
+moderation decision. All actions rely on the selected set of reports and should
+not modify any other reports.
+
+##### Multiple-decision prevention (soft-locking)
+
+To prevent multiple moderators unintentionally looking at the same report, we'll
+track works currently in moderation whenever a moderator loads the view using a
+soft-lock approach. The lock on the work should automatically expire after five
+minutes. It is a "soft" lock because we won't use it to _lock_ anything
+explicitly, but only to make moderators aware that someone else is already
+looking at that work. The lock will be in Redis as a set of work identifiers.
+We'll need to use the
+[sorted set approach described in the project proposal](/projects/proposals/trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.md#redis-based-cache-invalidation-strategy)
+to use for caching in order to implement a set with expiring members. To reword
+that section for this completely different use case:
+
+> Redis does not support expiring set elements, but we can use a sorted set
+> where the score is the unix timestamp of the expiration time, in other words,
+> "now plus five minutes". Whenever retrieving the list of locked works, we'll
+> remove all entries that have scores less than the current unix timestamp, and
+> then use the remaining list of identifiers as the list of locked
+> works[^workaround-kudos].
+
+[^workaround-kudos]:
+    Kudos to
+    [this old Google Groups discussion](https://web.archive.org/web/20211205091916/https://groups.google.com/g/redis-db/c/rXXMCLNkNSs)
+    for the sorted set workaround.
+
+We'll maintain an additional value per-moderator to track their currently viewed
+page. Whenever the moderator enters a work, we'll add it to the sorted set
+described above and set `currently_moderating:<moderator_id>` to the work
+identifier. When the moderator navigates back to the table view, we'll delete
+`currently_moderating:<moderator_id>`, but only after removing the identifier
+that was in that key from sorted set. The per-moderator key should have the same
+TTL as the sorted set, five minutes, in case the moderator just closes their
+browser rather than navigating back to the table view.
+
+We'll implement this list at this stage, but it will also be used to annotate
+works currently in moderation on the table view. When rendering the table view,
+retrieve a list of works in moderation by retrieving identifiers from the scored
+set that have a score higher than the current unix timestamp. For each work in
+the table, check if it's identifier is in the list of in-moderation identifiers,
+and if it is, render the table line for that work with a light orange
+background. Add a key to the page to explain what the light orange background
+indicates.
 
 #### Moderator preferences
 
@@ -328,7 +395,10 @@ others or are non-blocking.
 3. Report table view improvements (non-blocking)
 4. `ModerationDecision` (blocking media moderation view)
 5. Media moderation view
-6. Finalise access control
+6. The view itself
+7. The actions
+8. The moderation soft-lock
+9. Finalise access control
 
 ## Step details
 
@@ -380,7 +450,7 @@ For each step description, ensure the heading includes an obvious reference to t
 
 [See "Media moderation view" for rationale](#media-moderation-view)
 
-This is in two separate issues:
+This is in three separate issues:
 
 1. Create a new media view to replace the existing view
 
@@ -432,6 +502,27 @@ This is in two separate issues:
   the ones the moderator is known to have seen. The next time moderators come
   past the work they'll have the most recent decision to work off of and can
   action on the new report then.
+
+3. Implement the lock on works to prevent duplicate decisions
+
+- When loading the moderation view, add the work's identifier to the sorted set
+  `in_moderation` with a score of "now + five minutes" as a unix timestamp.
+  Additionally, set `currently_moderating:<moderator id>` to the work identifier
+  with a TTL of five minutes.
+- When loading the moderation view, check `in_moderation` (before setting
+  anything in there) for the work identifier. If it is in there, add a message
+  when the page loads to alert the moderator that someone else is also looking
+  at the work. No other changes to the page are necessary.
+- When loading the table view, check the `in_moderation` sorted set. Retrieve
+  everything with a score higher than the current unix timestamp. Eject
+  everything else from the sorted set _in Redis_. This will be our periodic
+  cleanup of the list to mimic expiration and prevent it from growing
+  indefinitely.
+- For each line of the table view, render the line with a light orange
+  background if the work is in the `in_moderation` list.
+- Add copy to the table view to explain what the light orange background
+  indicates (either as a message or as a new sidebar element where the "filters"
+  typically are).
 
 ### 6. Finalise access control
 
