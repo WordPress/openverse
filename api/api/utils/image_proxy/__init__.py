@@ -93,7 +93,7 @@ def _tally_response(
     Pulled into a separate function to help reduce overload when skimming
     the `get` function, which is complex enough as is.
     """
-    tallies.incr(f"thumbnail_response_code:{month}:{response.status}"),
+    tallies.incr(f"thumbnail_response_code:{month}:{response.status}")
     tallies.incr(
         f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{response.status}"
     )
