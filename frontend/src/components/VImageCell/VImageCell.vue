@@ -190,7 +190,9 @@ export default defineComponent({
      * @param event - the mouse click event
      */
     const sendSelectSearchResultEvent = (event: MouseEvent) => {
-      if (event.button !== 0) return
+      if (event.button !== 0) {
+        return
+      }
 
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: props.image.id,
