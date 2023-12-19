@@ -159,17 +159,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.row-track .audio-control {
+:deep(.audio-control) {
   @apply flex-none rounded-es-sm rounded-ss-sm;
 }
 
-.row-track .waveform {
-  @apply w-full;
+:deep(.waveform) {
+  @apply w-full rounded-ee-sm rounded-se-sm;
   --waveform-background-color: theme("colors.tx");
-}
-
-.row-track .waveform {
-  @apply rounded-ee-sm rounded-se-sm;
 }
 
 .row-track.size-s {
