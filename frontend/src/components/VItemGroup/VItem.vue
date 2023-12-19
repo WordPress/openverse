@@ -39,8 +39,7 @@
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"
-      @keydown.native="focusContext.onItemKeyPress"
-      @click.native="$emit('click')"
+      @click="$emit('click')"
     >
       <div
         class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
@@ -106,6 +105,7 @@ export default defineComponent({
       validator: (val: string) => ["button", "VLink"].includes(val),
     },
   },
+  emits: ["click"],
   setup(props, { attrs }) {
     const focusContext = inject(VItemGroupFocusContextKey)
     const isFocused = ref(false)

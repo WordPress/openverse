@@ -6,7 +6,7 @@
     class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
-    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
     @keydown="handleKeydown"
     @blur="handleBlur"
     @mousedown="handleMousedown"
