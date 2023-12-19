@@ -37,9 +37,5 @@ group:
         dest: .github/ISSUE_TEMPLATE/bug_report.md
       - source: .github/ISSUE_TEMPLATE/config.yml
         dest: .github/ISSUE_TEMPLATE/config.yml
-      - source: .github/ISSUE_TEMPLATE/discussion.md
-        dest: .github/ISSUE_TEMPLATE/discussion.md
       - source: .github/ISSUE_TEMPLATE/feature_request.md
         dest: .github/ISSUE_TEMPLATE/feature_request.md
-      - source: .github/ISSUE_TEMPLATE/sentry_bug.md
-        dest: .github/ISSUE_TEMPLATE/sentry_bug.md
