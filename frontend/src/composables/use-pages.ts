@@ -1,16 +1,15 @@
-import { useRoute } from "#imports"
+import { useLocalePath, useRoute } from "#imports"
 
 import { computed } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 export default function usePages() {
-  const { app } = useContext()
+  const localePath = useLocalePath()
 
   const pages = [
     {
       id: "about",
       name: "navigation.about",
-      link: app.localePath("/about"),
+      link: localePath("/about"),
     },
     {
       id: "licenses",
@@ -20,12 +19,12 @@ export default function usePages() {
     {
       id: "sources",
       name: "navigation.sources",
-      link: app.localePath("/sources"),
+      link: localePath("/sources"),
     },
     {
       id: "search-help",
       name: "navigation.searchHelp",
-      link: app.localePath("/search-help"),
+      link: localePath("/search-help"),
     },
     {
       id: "get-involved",
@@ -40,12 +39,12 @@ export default function usePages() {
     {
       id: "privacy",
       name: "navigation.privacy",
-      link: app.localePath("/privacy"),
+      link: localePath("/privacy"),
     },
     {
       id: "feedback",
       name: "navigation.feedback",
-      link: app.localePath("/feedback"),
+      link: localePath("/feedback"),
     },
   ]
 

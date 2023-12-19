@@ -72,7 +72,7 @@ export const useSearch = (
     const searchPath = searchStore.updateSearchPath({
       searchTerm: searchTerm.value,
     })
-    return  navigateTo(searchPath)
+    return navigateTo(searchPath)
   }
 
   const isFetching = computed(() => mediaStore.fetchState.isFetching)

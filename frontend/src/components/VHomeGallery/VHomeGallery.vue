@@ -46,10 +46,9 @@
 </template>
 
 <script lang="ts">
-import { useRouter } from "#imports"
+import { useLocalePath, useRouter } from "#imports"
 
 import { computed, defineComponent, PropType, ref } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -87,7 +86,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { app } = useContext()
+    const localePath = useLocalePath()
     const router = useRouter()
     const prefersReducedMotion = useReducedMotion()
 
@@ -116,7 +115,7 @@ export default defineComponent({
         ...image,
         src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
         url: router.resolve(
-          app.localePath({
+          localePath({
             name: "image-id",
             params: { id: image.id },
           })
