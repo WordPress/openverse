@@ -22,13 +22,29 @@ def image_fixture(client):
 @pytest.mark.parametrize(
     "url, expected_status_code",
     [
-        ("https://any.domain/any/path/{identifier}", 200),  # no trailing slash
-        ("https://any.domain/any/path/{identifier}/", 200),  # trailing slash
-        ("https://any.domain/any/path/00000000-0000-0000-0000-000000000000", 400),
-        ("https://any.domain/any/path/not-a-valid-uuid", 400),
+        pytest.param(
+            "https://any.domain/any/path/{identifier}",
+            200,
+            id="OK; no trailing slash",
+        ),
+        pytest.param(
+            "https://any.domain/any/path/{identifier}/",
+            200,
+            id="OK; trailing slash",
+        ),  # trailing slash
+        pytest.param(
+            "https://any.domain/any/path/00000000-0000-0000-0000-000000000000",
+            404,
+            id="not OK; valid UUID but no matching identifier",
+        ),
+        pytest.param(
+            "https://any.domain/any/path/not-a-valid-uuid",
+            400,
+            id="not OK; invalid UUID",
+        ),
     ],
 )
-def test_oembed_endpoint(image_fixture, url, expected_status_code, client):
+def test_oembed_endpoint(image_fixture, url: str, expected_status_code: int, client):
     if "{identifier}" in url:
         url = url.format(identifier=image_fixture["results"][0]["id"])
     params = {"url": url}

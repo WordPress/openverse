@@ -101,7 +101,7 @@ def _tally_response(
     logger = parent_logger.getChild("_tally_response")
 
     with tallies_conn.pipeline() as tallies:
-        tallies.incr(f"thumbnail_response_code:{month}:{response.status}"),
+        tallies.incr(f"thumbnail_response_code:{month}:{response.status}")
         tallies.incr(
             f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{response.status}"
         )
