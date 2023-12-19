@@ -1,8 +1,10 @@
 <template>
-  <VTeleport v-if="visible" to="modal">
-    <div
-      class="fixed inset-0 z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
-      :class="[
+  <ClientOnly>
+    <Teleport to="#modal">
+      <div
+        v-if="visible"
+        class="fixed inset-0 z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
+        :class="[
         {
           'bg-dark-charcoal bg-opacity-75':
             variant === 'fit-content' || variant === 'two-thirds',
@@ -10,14 +12,14 @@
         },
         contentClasses,
       ]"
-    >
-      <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
-      <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-      <div
-        ref="dialogRef"
-        v-bind="$attrs"
-        class="flex flex-col"
-        :class="[
+      >
+        <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+        <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
+        <div
+          ref="dialogRef"
+          v-bind="$attrs"
+          class="flex flex-col"
+          :class="[
           mode === 'dark'
             ? 'bg-black text-white'
             : 'bg-white text-dark-charcoal',
@@ -32,31 +34,32 @@
             'm-6 rounded sm:m-0': variant === 'centered',
           },
         ]"
-        role="dialog"
-        aria-modal="true"
-        @keydown="onKeyDown"
-        @blur="onBlur"
-      >
-        <slot name="top-bar" :close="hide">
-          <!--
-              These specific padding and margin values serve to
-              visually align the Openverse logo button in the modal
-              with the header logo button so that there isn't a
-              jarring "shifting" effect when opening the mobile modal.
-            -->
-          <div
-            v-if="variant === 'default'"
-            class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
-          >
-            <VIconButton
-              ref="closeButton"
-              :label="$t('modal.ariaClose')"
-              variant="filled-white"
-              size="small"
-              @click="hide()"
-            />
-          </div>
-        </slot>
+          role="dialog"
+          aria-modal="true"
+          @keydown="onKeyDown"
+          @blur="onBlur"
+        >
+          <slot name="top-bar" :close="hide">
+            <!--
+                These specific padding and margin values serve to
+                visually align the Openverse logo button in the modal
+                with the header logo button so that there isn't a
+                jarring "shifting" effect when opening the mobile modal.
+              -->
+            <div
+              v-if="variant === 'default'"
+              class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
+              :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
+            >
+              <VIconButton
+                ref="closeButton"
+                :label="$t('modal.ariaClose')"
+                variant="filled-white"
+                size="small"
+                @click="hide()"
+              />
+            </div>
+          </slot>
 
         <div
           class="modal-content flex w-full flex-grow flex-col"
@@ -80,13 +83,12 @@
         </div>
       </div>
     </div>
-  </VTeleport>
+  </Teleport>
+    </ClientOnly>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs, ref, computed, PropType } from "vue"
-
-import { Portal as VTeleport } from "portal-vue"
 
 import { useDialogContent } from "~/composables/use-dialog-content"
 
@@ -99,7 +101,7 @@ import VIconButton from "~/components/VIconButton/VIconButton.vue"
  */
 export default defineComponent({
   name: "VModalContent",
-  components: { VIconButton, VTeleport },
+  components: { VIconButton },
   inheritAttrs: false,
   props: {
     visible: {

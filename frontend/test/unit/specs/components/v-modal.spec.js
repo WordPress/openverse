@@ -5,11 +5,10 @@ import { default as userEvent } from "@testing-library/user-event"
 import { render } from "~~/test/unit/test-utils/render"
 
 import VModal from "~/components/VModal/VModal.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VButton from "~/components/VButton.vue"
 
 const TestWrapper = Vue.component("TestWrapper", {
-  components: { VModal, VButton, VModalTarget },
+  components: { VModal, VButton },
   props: ["useCustomInitialFocus"],
   setup(props) {
     const initialFocusElement = ref()
@@ -31,7 +30,7 @@ const TestWrapper = Vue.component("TestWrapper", {
 
         <button ref="initialFocusElement" type="button">Custom initial focus</button>
       </VModal>
-      <VModalTarget />
+      <div id="modal" />
     </div>
   `,
 })
