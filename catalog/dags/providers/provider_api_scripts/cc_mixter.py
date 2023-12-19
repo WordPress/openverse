@@ -25,7 +25,7 @@ from providers.provider_api_scripts.provider_data_ingester import ProviderDataIn
 
 logger = logging.getLogger(__name__)
 
-JSON_OCTALS = re.compile(r":\s*0(?P<num>\d+)\s*(?P<sep>[,}])")
+JSON_OCTALS = re.compile(r":\s*0+(?P<num>\d+)\s*(?P<sep>[,}])")
 
 
 class CcMixterDelayedRequester(DelayedRequester):
