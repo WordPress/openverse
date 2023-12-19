@@ -125,7 +125,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead, useI18n } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -133,8 +133,10 @@ import VContentPage from "~/components/VContentPage.vue"
 export default defineNuxtComponent({
   name: "SensitiveContent",
   components: { VLink, VContentPage },
-  layout: "content-layout",
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+    })
     const i18n = useI18n()
 
     useHead({

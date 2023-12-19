@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead, useI18n } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -100,8 +100,10 @@ import VSourcesTable from "~/components/VSourcesTable.vue"
 export default defineNuxtComponent({
   name: "SourcePage",
   components: { VButton, VContentPage, VLink, VSourcesTable },
-  layout: "content-layout",
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+    })
     const i18n = useI18n()
 
     useHead({
