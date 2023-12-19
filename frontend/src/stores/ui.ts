@@ -1,3 +1,5 @@
+import { useI18n } from "#imports"
+
 import { defineStore } from "pinia"
 
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
@@ -8,7 +10,7 @@ import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
-import type { LocaleObject } from "@nuxtjs/i18n"
+import type { LocaleObject } from "vue-i18n-routing"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
@@ -93,8 +95,9 @@ export const useUiStore = defineStore("ui", {
     /**
      * The locale object of the current locale.
      */
-    currentLocale(): LocaleObject {
-      return this.$nuxt.i18n.localeProperties
+    currentLocale() {
+      const i18n = useI18n()
+      return i18n.localeProperties.value
     },
     /**
      * The id used in the translation banner and the cookies for dismissed banners.
