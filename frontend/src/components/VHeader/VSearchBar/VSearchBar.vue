@@ -13,9 +13,7 @@
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
         class="search-field flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white focus:border-pink group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white"
-        :label-text="
-          $t('search.searchBarLabel', { openverse: 'Openverse' }).toString()
-        "
+        :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         :size="size"
         field-id="search-bar"

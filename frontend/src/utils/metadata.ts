@@ -60,9 +60,9 @@ export const getMediaMetadata = (
   if (media.category) {
     metadata.push({
       label: "mediaDetails.information.category",
-      value: i18n
-        .t(`filters.${media.frontendMediaType}Categories.${media.category}`)
-        .toString(),
+      value: i18n.t(
+        `filters.${media.frontendMediaType}Categories.${media.category}`
+      ),
     })
   }
 
@@ -72,7 +72,7 @@ export const getMediaMetadata = (
       : getAudioType(media, i18n)
   metadata.push({
     label: "mediaDetails.information.type",
-    value: mediaTypeString.toString().toUpperCase(),
+    value: mediaTypeString.toUpperCase(),
   })
 
   if (media.frontendMediaType === IMAGE) {

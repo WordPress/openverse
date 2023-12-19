@@ -6,7 +6,7 @@
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
-    :aria-label="$t('waveform.label').toString()"
+    :aria-label="$t('waveform.label')"
     v-on="eventHandlers"
   >
     <!-- Focus ring -->

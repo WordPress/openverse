@@ -39,7 +39,7 @@ export default defineNuxtComponent({
     const collectionLabel = computed(() => {
       const query = useSearchStore().searchTerm
 
-      return i18n.t("browsePage.aria.results", { query }).toString()
+      return i18n.t("browsePage.aria.results", { query })
     })
 
     return {

@@ -23,17 +23,15 @@ export const useSeekable = ({
   onSeek,
   onTogglePlayback,
 }: UseSeekableOptions) => {
-  const i18n = useI18n()
+  const { t } = useI18n()
 
   const attributes = computed(() => ({
     "aria-role": "slider",
     "aria-valuemax": duration.value,
     "aria-valuenow": currentTime.value,
-    "aria-valuetext": i18n
-      .tc("waveform.currentTime", currentTime.value, {
-        time: currentTime.value,
-      })
-      .toString(),
+    "aria-valuetext": t("waveform.currentTime", {
+      time: currentTime.value,
+    }),
     "aria-orientation": "horizontal" as const,
     "aria-valuemin": "0",
   }))

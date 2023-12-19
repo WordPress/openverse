@@ -71,26 +71,20 @@ export default defineComponent({
       const collection = collectionParams.value?.collection
       switch (collection) {
         case "tag": {
-          return i18n
-            .t(`collection.ariaLabel.tag.${props.mediaType}`, {
-              tag: collectionParams.value?.tag,
-            })
-            .toString()
+          return i18n.t(`collection.ariaLabel.tag.${props.mediaType}`, {
+            tag: collectionParams.value?.tag,
+          })
         }
         case "source": {
-          return i18n
-            .t(`collection.ariaLabel.source.${props.mediaType}`, {
-              source: collectionParams.value?.source,
-            })
-            .toString()
+          return i18n.t(`collection.ariaLabel.source.${props.mediaType}`, {
+            source: collectionParams.value?.source,
+          })
         }
         case "creator": {
-          return i18n
-            .t(`collection.ariaLabel.creator.${props.mediaType}`, {
-              creator: collectionParams.value?.creator,
-              source: collectionParams.value?.source,
-            })
-            .toString()
+          return i18n.t(`collection.ariaLabel.creator.${props.mediaType}`, {
+            creator: collectionParams.value?.creator,
+            source: collectionParams.value?.source,
+          })
         }
         default: {
           return ""

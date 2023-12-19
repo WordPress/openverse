@@ -10,9 +10,7 @@
       id="description"
       v-model="text"
       class="mt-2 h-20 w-full border border-dark-charcoal-20 p-2 placeholder-dark-charcoal-70"
-      :placeholder="
-        $t(`mediaDetails.contentReport.form.${reason}.placeholder`).toString()
-      "
+      :placeholder="$t(`mediaDetails.contentReport.form.${reason}.placeholder`)"
       :required="isRequired"
       :minlength="isRequired ? 20 : 0"
       maxlength="500"

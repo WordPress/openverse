@@ -27,8 +27,8 @@
           <iframe
             class="h-[1200px] w-full border-0"
             :src="forms[tab]"
-            :aria-label="$t(`feedback.aria.${tab}`).toString()"
-            :title="$t(`feedback.aria.${tab}`).toString()"
+            :aria-label="$t(`feedback.aria.${tab}`)"
+            :title="$t(`feedback.aria.${tab}`)"
           >
             {{ $t("feedback.loading") }}
           </iframe>

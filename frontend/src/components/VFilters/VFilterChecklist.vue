@@ -23,7 +23,7 @@
       <VPopover
         v-if="isLicense(item.code)"
         strategy="fixed"
-        :label="$t('browsePage.aria.licenseExplanation').toString()"
+        :label="$t('browsePage.aria.licenseExplanation')"
         :trap-focus="false"
       >
         <template #trigger="{ a11yProps }">

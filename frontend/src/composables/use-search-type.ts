@@ -73,7 +73,7 @@ export default function useSearchType() {
   const getSearchTypeProps = (searchType?: SearchType) => {
     const type = searchType ?? activeType.value
     return {
-      label: i18n.t(labels[type]).toString(),
+      label: i18n.t(labels[type]),
       icon: icons[type],
       searchType: type,
     }

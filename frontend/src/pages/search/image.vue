@@ -3,9 +3,7 @@
     :results="results"
     :fetch-state="fetchState"
     kind="search"
-    :image-grid-label="
-      $t('browsePage.aria.results', { query: searchTerm }).toString()
-    "
+    :image-grid-label="$t('browsePage.aria.results', { query: searchTerm })"
   />
 </template>
 

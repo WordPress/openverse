@@ -4,8 +4,8 @@
     v-model="locale"
     field-id="language"
     :choices="choices"
-    :blank-text="$t('language.language').toString()"
-    :label-text="$t('language.language').toString()"
+    :blank-text="$t('language.language')"
+    :label-text="$t('language.language')"
   >
     <template #start>
       <VIcon name="globe" />

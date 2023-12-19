@@ -20,8 +20,8 @@
     <i18n-t keypath="searchGuide.negate.content" tag="p" class="mb-4">
       <template #operator
         ><!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-        <em :aria-label="$t('searchGuide.negate.operatorAriaLabel').toString()"
-          >- {{ $t("searchGuide.negate.operatorName").toString() }}</em
+        <em :aria-label="$t('searchGuide.negate.operatorAriaLabel')"
+          >- {{ $t("searchGuide.negate.operatorName") }}</em
         >
         <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
       </template>

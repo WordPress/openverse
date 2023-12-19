@@ -7,7 +7,7 @@
       kind="related"
       :results="media"
       :fetch-state="fetchState"
-      :image-grid-label="$t('imageDetails.relatedImages').toString()"
+      :image-grid-label="$t('imageDetails.relatedImages')"
     />
   </aside>
 </template>

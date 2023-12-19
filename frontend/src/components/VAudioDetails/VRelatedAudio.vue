@@ -7,7 +7,7 @@
       :results="media"
       :fetch-state="fetchState"
       kind="related"
-      :collection-label="$t('audioDetails.relatedAudios').toString()"
+      :collection-label="$t('audioDetails.relatedAudios')"
       class="mb-12"
     />
   </section>

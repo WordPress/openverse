@@ -42,13 +42,22 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  useAsyncData,
+  useI18n,
+  useRoute,
+} from "#imports"
+
+import { ref } from "vue"
 
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { getAttribution } from "~/utils/attribution-html"
+import { firstParam } from "~/utils/query-utils"
 import type { ImageDetail } from "~/types/media"
 
 import VButton from "~/components/VButton.vue"
@@ -60,33 +69,39 @@ export default defineNuxtComponent({
     VButton,
     VContentReportForm,
   },
-  layout: "content-layout",
-  async asyncData({ route, $pinia, i18n, error: nuxtError }) {
-    const singleResultStore = useSingleResultStore($pinia)
-    const imageId = route.params.id
-    const image = await singleResultStore.fetch(IMAGE, imageId)
-    if (!image) {
-      return nuxtError({
-        statusCode: 404,
-        message: i18n
-          .t("error.imageNotFound", {
+  setup() {
+    definePageMeta({
+      layout: "content-layout",
+    })
+    const route = useRoute()
+    const singleResultStore = useSingleResultStore()
+
+    const image = ref<ImageDetail>()
+    const attributionMarkup = ref<string>()
+
+    const i18n = useI18n()
+
+    useAsyncData("image-report", async () => {
+      const imageId = firstParam(route.params.id)
+      if (imageId) {
+        image.value = await singleResultStore.fetch(IMAGE, imageId)
+        attributionMarkup.value = getAttribution(image.value, i18n, {
+          includeIcons: false,
+        })
+      } else {
+        // TODO: Handle Error
+        console.log(
+          i18n.t("error.imageNotFound", {
             id: imageId,
           })
-          .toString(),
-      })
-    }
-    const attributionMarkup = getAttribution(image, i18n, {
-      includeIcons: false,
+        )
+      }
     })
     return {
-      attributionMarkup,
       image,
+      attributionMarkup,
+      skipToContentTargetId,
     }
   },
-  data: () => ({
-    image: null as ImageDetail | null,
-    attributionMarkup: "",
-    skipToContentTargetId,
-  }),
 })
 </script>
