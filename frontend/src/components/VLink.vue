@@ -1,24 +1,15 @@
 <!-- eslint-disable vue/no-restricted-syntax -->
 <template>
   <NuxtLink
-    v-if="isInternal"
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
-    v-bind="{ ...linkProps, ...$attrs }"
-    @mousedown.native="$emit('mousedown', $event)"
-    @click.native="$emit('click', $event)"
-    @blur.native="$emit('blur', $event)"
-    @focus.native="$emit('focus', $event)"
-    @keydown.native="$emit('keydown', $event)"
-  >
-    <slot />
-  </NuxtLink>
-  <a
-    v-else
-    :href="href"
-    v-bind="{ ...linkProps, ...$attrs }"
     :aria-disabled="!href"
-    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
-    @click="handleExternalClick"
+    v-bind="linkProps"
+    :to="to"
+    @click="handleClick"
+    @mousedown="$emit('mousedown', $event)"
+    @blur="$emit('blur', $event)"
+    @focus="$emit('focus', $event)"
+    @keydown="$emit('keydown', $event)"
   >
     <slot /><VIcon
       v-if="showExternalIcon && !isInternal"
@@ -27,7 +18,7 @@
       :size="externalIconSize"
       rtl-flip
     />
-  </a>
+  </NuxtLink>
 </template>
 
 <script lang="ts">
@@ -41,8 +32,9 @@
  * External links use `a` element. If `href` does not start with `#`, they are set to
  * open in a new tab.
  */
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -50,14 +42,9 @@ import { defineEvent } from "~/types/emits"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-type InternalLinkProps = { to: string }
 type ExternalLinkProps = { target: string; rel: string }
 type DisabledLinkProps = { role: string }
-type LinkProps =
-  | InternalLinkProps
-  | ExternalLinkProps
-  | DisabledLinkProps
-  | null
+type LinkProps = ExternalLinkProps | DisabledLinkProps | null
 
 export default defineComponent({
   name: "VLink",
@@ -100,29 +87,28 @@ export default defineComponent({
     focus: defineEvent<[FocusEvent]>(),
     keydown: defineEvent<[KeyboardEvent]>(),
   },
-  setup(props) {
-    const { app } = useContext()
+  setup(props, { emit }) {
     function checkHref(p: typeof props): p is {
       href: string
       showExternalIcon: boolean
       externalIconSize: number
       sendExternalLinkClickEvent: boolean
+      onBlur: (e: FocusEvent) => void
+      onFocus: (e: FocusEvent) => void
+      onKeydown: (e: KeyboardEvent) => void
+      onMousedown: (e: MouseEvent) => void
+      onClick: (e: MouseEvent) => void
     } {
       return typeof p.href === "string" && !["", "#"].includes(p.href)
     }
+    const localePath = useLocalePath()
 
-    const hasHref = computed(() => checkHref(props))
     const isInternal = computed(
-      () => hasHref.value && props.href?.startsWith("/")
+      () => checkHref(props) && props.href.startsWith("/")
     )
-
     const linkProps = computed<LinkProps>(() => {
       if (checkHref(props)) {
-        if (props.href?.startsWith("/")) {
-          // Internal link should link to the localized page
-          return { to: app?.localePath(props.href) ?? props.href }
-        } else if (props.href?.startsWith("#")) {
-          // Anchor link for skip-to-content button
+        if (props.href.startsWith("/")) {
           return null
         } else {
           // External link should open in a new tab
@@ -132,10 +118,23 @@ export default defineComponent({
       // if href is undefined, return props that make the link disabled
       return { role: "link" }
     })
+    const to = computed(() => {
+      if (checkHref(props)) {
+        if (props.href.startsWith("/")) {
+          // Internal link should link to the localized page
+          return localePath(props.href) ?? props.href
+        } else {
+          return props.href
+        }
+      }
+      // if href is undefined, return props that make the link disabled
+      return undefined
+    })
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleExternalClick = () => {
+    const handleClick = (e: MouseEvent) => {
+      emit("click", e)
       if (!checkHref(props) || !props.sendExternalLinkClickEvent) {
         return
       }
@@ -145,10 +144,11 @@ export default defineComponent({
     }
 
     return {
+      to,
       linkProps,
       isInternal,
 
-      handleExternalClick,
+      handleClick,
     }
   },
 })
