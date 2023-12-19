@@ -54,7 +54,7 @@ export default function usePages() {
    * We need to remove the locale suffix to match the page id.
    */
   const currentPageId = computed<string>(
-    () => route?.name?.split("__")[0] ?? ""
+    () => String(route.name)?.split("__")[0] ?? ""
   )
 
   return { all: pages, current: currentPageId }

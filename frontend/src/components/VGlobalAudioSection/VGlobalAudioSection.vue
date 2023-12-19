@@ -136,11 +136,12 @@ export default defineComponent({
      */
     const routeValue = computed(() => route)
     watch(routeValue, (newRouteVal, oldRouteVal) => {
+      const oldName = oldRouteVal.name ? String(oldRouteVal.name) : ""
+      const newName = newRouteVal.name ? String(newRouteVal.name) : ""
       if (
-        (oldRouteVal.name?.includes("audio") &&
-          !newRouteVal.name?.includes("audio")) ||
+        (oldName.includes("audio") && !newName.includes("audio")) ||
         (uiStore.isDesktopLayout &&
-          newRouteVal.name?.includes("audio-id") &&
+          newName.includes("audio-id") &&
           newRouteVal.params.id != activeMediaStore.id)
       ) {
         activeAudio.obj.value?.pause()
