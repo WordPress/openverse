@@ -16,12 +16,9 @@
         }}</VSearchResultsTitle>
       </header>
       <NuxtPage
+        v-if="isAllView || isSupportedMediaType(searchType)"
         :key="$route.path"
-        :results="
-          isSupportedMediaType(searchType) ? resultItems[searchType] : null
-        "
-        :fetch-state="fetchState"
-        :search-term="query.q"
+        :search-term="searchTerm"
         :supported="supported"
         data-testid="search-results"
       />
@@ -47,10 +44,8 @@ import {
   navigateTo,
   useAsyncData,
   useHead,
-  useRoute,
 } from "#imports"
 
-import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
@@ -90,8 +85,6 @@ export default defineNuxtComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
-    const route = useRoute()
-
     // I don't know *exactly* why this is necessary, but without it
     // transitioning from the homepage to this page breaks the
     // watcher in useStorage and recent searches won't be saved
@@ -106,7 +99,7 @@ export default defineNuxtComponent({
       searchTypeIsSupported: supported,
     } = storeToRefs(searchStore)
 
-    const { resultCount, fetchState, resultItems } = storeToRefs(mediaStore)
+    const { resultCount, fetchState } = storeToRefs(mediaStore)
 
     const isAllView = computed(() => searchType.value === ALL_MEDIA)
 
@@ -155,30 +148,6 @@ export default defineNuxtComponent({
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
 
     /**
-     * Search middleware runs when the path changes. This watcher
-     * is necessary to handle the query changes.
-     *
-     * It updates the search store state from the URL query,
-     * fetches media, and scrolls to top if necessary.
-     */
-    watch(route, async (newRoute, oldRoute) => {
-      if (
-        newRoute.path !== oldRoute.path ||
-        !isShallowEqualObjects(newRoute.query, oldRoute.query)
-      ) {
-        const { query: urlQuery, path } = newRoute
-        searchStore.setSearchStateFromUrl({ urlQuery, path })
-
-        /**
-         * By default, Nuxt only scrolls to top when the path changes.
-         * This is a workaround to scroll to top when the query changes.
-         */
-        document.getElementById("main-page")?.scroll(0, 0)
-        await fetchMedia()
-      }
-    })
-
-    /**
      * This watcher fires even when the queries are equal. We update the path only
      * when the queries change.
      */
@@ -186,7 +155,16 @@ export default defineNuxtComponent({
       query,
       (newQuery, oldQuery) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {
-          return navigateTo(searchStore.getSearchPath())
+          mediaStore.clearMedia()
+          /**
+           * By default, Nuxt only scrolls to top when the path changes.
+           * This is a workaround to scroll to top when the query changes.
+           */
+          document.getElementById("main-page")?.scroll(0, 0)
+          return Promise.allSettled([
+            navigateTo(searchStore.getSearchPath()),
+            fetchMedia(),
+          ])
         }
       },
       { debounce: 800, maxWait: 5000 }
@@ -208,6 +186,7 @@ export default defineNuxtComponent({
       },
       {
         server: false,
+        watch: [shouldFetchSensitiveResults, searchTerm, searchType],
       }
     )
 
@@ -221,7 +200,6 @@ export default defineNuxtComponent({
 
       resultCount,
       fetchState,
-      resultItems,
       needsFetching,
       isSidebarVisible,
       fetchingError,

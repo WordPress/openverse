@@ -10,10 +10,9 @@
 <script lang="ts">
 import { defineNuxtComponent } from "#imports"
 
-import { PropType } from "vue"
+import { computed } from "vue"
 
-import type { ImageDetail } from "~/types/media"
-import type { FetchState } from "~/types/fetch-state"
+import { useMediaStore } from "~/stores/media"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
@@ -21,18 +20,20 @@ export default defineNuxtComponent({
   name: "ImageSearch",
   components: { VImageGrid },
   props: {
-    results: {
-      type: Array as PropType<ImageDetail[]>,
-      required: true,
-    },
-    fetchState: {
-      type: Object as PropType<FetchState>,
-      required: true,
-    },
     searchTerm: {
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const mediaStore = useMediaStore()
+    const results = computed(() => mediaStore.resultItems["image"])
+    const fetchState = computed(() => mediaStore.fetchState)
+
+    return {
+      results,
+      fetchState,
+    }
   },
 })
 </script>
