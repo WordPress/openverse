@@ -2,7 +2,7 @@ import { useI18n } from "#imports"
 
 import Vue, { ref } from "vue"
 import { screen } from "@testing-library/vue"
-import userEvent from "@testing-library/user-event"
+import { default as userEvent } from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
