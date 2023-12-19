@@ -49,15 +49,13 @@ import os
 from collections.abc import Sequence
 
 from airflow.models.baseoperator import chain
-from airflow.sensors.external_task import ExternalTaskSensor
-from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
 from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
-from common.sensors.utils import get_most_recent_dag_run
+from common.sensors.utils import wait_for_external_dag
 from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
@@ -120,27 +118,9 @@ def create_data_refresh_task_group(
         # filtered index creation process, even if it was triggered immediately after
         # filtered index creation. However, it is safer to avoid the possibility
         # of the race condition altogether.
-        # ``execution_date_fn`` is used to find the most recent run because
-        # the filtered index creation DAGs are unscheduled so we can't derive
-        # anything from the execution date of the current data refresh DAG.
-        create_filtered_index_dag_id = (
-            f"create_filtered_{data_refresh.media_type}_index"
+        wait_for_filtered_index_creation = wait_for_external_dag(
+            external_dag_id=f"create_filtered_{data_refresh.media_type}_index",
         )
-        wait_for_filtered_index_creation = ExternalTaskSensor(
-            task_id="wait_for_create_and_populate_filtered_index",
-            external_dag_id=create_filtered_index_dag_id,
-            # Wait for the whole DAG, not just a part of it
-            external_task_id=None,
-            check_existence=False,
-            poke_interval=data_refresh.filtered_index_poke_interval,
-            execution_date_fn=lambda _: get_most_recent_dag_run(
-                create_filtered_index_dag_id
-            ),
-            mode="reschedule",
-            # Any "finished" state is sufficient for us to continue.
-            allowed_states=[State.SUCCESS, State.FAILED],
-        )
-
         tasks.append([wait_for_data_refresh, wait_for_filtered_index_creation])
 
         # Get the index currently mapped to our target alias, to delete later.

@@ -46,12 +46,15 @@ from es.recreate_staging_index.recreate_full_staging_index import (
     create_index,
     get_target_alias,
     point_alias,
-    prevent_concurrency_with_staging_database_restore,
     should_delete_index,
 )
 
 from common import ingestion_server, slack
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES, XCOM_PULL_TEMPLATE
+from common.sensors.utils import prevent_concurrency_with_dag
+from database.staging_database_restore.constants import (
+    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
+)
 
 
 @dag(
@@ -91,7 +94,10 @@ from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES, XCOM_PULL_TEM
     render_template_as_native_obj=True,
 )
 def recreate_full_staging_index():
-    prevent_concurrency = prevent_concurrency_with_staging_database_restore()
+    # Fail early if the staging_db_restore DAG is running
+    prevent_concurrency = prevent_concurrency_with_dag.override(
+        task_id="prevent_concurrency_with_staging_db_restore"
+    )(external_dag_id=STAGING_DB_RESTORE_DAG_ID)
 
     target_alias = get_target_alias(
         media_type="{{ params.media_type }}",
