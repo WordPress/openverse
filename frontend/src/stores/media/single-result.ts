@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { defineStore } from "pinia"
 
 import type {
@@ -172,7 +174,12 @@ export const useSingleResultStore = defineStore("single-result", {
           id,
         })
         this._updateFetchState("end", errorData)
-        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
+        const { $sentry } = useNuxtApp()
+        if ($sentry) {
+          $sentry.captureException(error, { extra: { errorData } })
+        } else {
+          console.log("Sentry not available to capture exception", errorData)
+        }
         return null
       }
     },

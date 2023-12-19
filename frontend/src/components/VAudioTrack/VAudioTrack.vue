@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { useI18n, useRoute } from "#imports"
+import { useI18n, useNuxtApp, useRoute } from "#imports"
 
 import {
   computed,
@@ -59,7 +59,6 @@ import {
   ref,
   watch,
 } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
@@ -153,7 +152,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const i18n = useI18n()
-    const { $sentry } = useContext()
+    const { $sentry } = useNuxtApp()
 
     const activeMediaStore = useActiveMediaStore()
     const route = useRoute()
@@ -382,7 +381,11 @@ export default defineComponent({
             }
             default: {
               message = "err_unknown"
-              $sentry.captureException(err)
+              if ($sentry) {
+                $sentry.captureException(err)
+              } else {
+                console.log("Sentry not available to capture exception", err)
+              }
             }
           }
           activeMediaStore.setMessage({ message })

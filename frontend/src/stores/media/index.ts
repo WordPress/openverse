@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { defineStore } from "pinia"
 
 import { warn } from "~/utils/console"
@@ -496,9 +498,12 @@ export const useMediaStore = defineStore("media", {
 
         this._updateFetchState(mediaType, "end", errorData)
 
-        this.$nuxt.$sentry.captureException(error, {
-          extra: { errorData },
-        })
+        const { $sentry } = useNuxtApp()
+        if ($sentry) {
+          $sentry.captureException(error, { extra: { errorData } })
+        } else {
+          console.log("Sentry not available to capture exception", errorData)
+        }
         return null
       }
     },

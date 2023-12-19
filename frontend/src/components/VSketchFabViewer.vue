@@ -15,10 +15,9 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { useI18n, useNuxtApp } from "#imports"
 
 import { defineComponent, ref, onMounted } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { loadScript } from "~/utils/load-script"
 
@@ -51,12 +50,18 @@ export default defineComponent({
       .t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
       .toString()
     const node = ref<Element | undefined>()
-    const { $sentry } = useContext()
+    const { $sentry } = useNuxtApp()
 
     const initSketchfab = async () => {
       await loadScript(sketchfabUrl)
       if (typeof window.Sketchfab === "undefined") {
-        $sentry.captureMessage("Unable to find window.Sketchfab after loading")
+        if ($sentry) {
+          $sentry.captureMessage(
+            "Unable to find window.Sketchfab after loading"
+          )
+        } else {
+          console.log("Sentry not available to capture message")
+        }
         return
       }
 
