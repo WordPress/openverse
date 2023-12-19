@@ -3,9 +3,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useRoute } from "#imports"
-
-import { useFetch } from "@nuxtjs/composition-api"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  useAsyncData,
+  useRoute,
+} from "#imports"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -18,9 +21,11 @@ import VCollectionPage from "~/components/VCollectionPage.vue"
 export default defineNuxtComponent({
   name: "VAudioSourcePage",
   components: { VCollectionPage },
-  layout: "content-layout",
-  middleware: collectionMiddleware,
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+      middleware: collectionMiddleware,
+    })
     const route = useRoute()
     const collectionParams = parseCollectionPath(route.params.source)
     if (!collectionParams) {
@@ -29,7 +34,7 @@ export default defineNuxtComponent({
     useSearchStore().setCollectionState(collectionParams, AUDIO)
     const mediaStore = useMediaStore()
 
-    useFetch(async () => {
+    useAsyncData("audio-source", async () => {
       await mediaStore.fetchMedia()
     })
 

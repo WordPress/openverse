@@ -108,21 +108,26 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead, useRoute } from "#imports"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  firstParam,
+  useAsyncData,
+  useHead,
+  useRoute,
+} from "#imports"
 
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { useContext, useFetch } from "@nuxtjs/composition-api"
 
-import { IMAGE, isAdditionalSearchType } from "~/constants/media"
+import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
-import { isRetriable } from "~/utils/errors"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
@@ -157,9 +162,11 @@ export default defineNuxtComponent({
     VRelatedImages,
     VSketchFabViewer,
   },
-  layout: "content-layout",
-  middleware: singleResultMiddleware,
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+      middleware: singleResultMiddleware,
+    })
     const singleResultStore = useSingleResultStore()
 
     const route = useRoute()
@@ -177,20 +184,28 @@ export default defineNuxtComponent({
 
     const isLoadingThumbnail = ref(true)
 
-    const { error: nuxtError } = useContext()
-
-    useFetch(async () => {
-      const imageId = route.params.id
-      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
-      if (!fetchedImage) {
-        if (fetchingError.value && !isRetriable(fetchingError.value)) {
-          nuxtError(fetchingError.value)
+    useAsyncData(
+      "single-image",
+      async () => {
+        const imageId = firstParam(route.params.id)
+        if (imageId) {
+          const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
+          if (fetchedImage) {
+            image.value = fetchedImage
+            imageSrc.value = fetchedImage.thumbnail
+            return fetchedImage
+          }
         }
-      } else {
-        image.value = fetchedImage
-        imageSrc.value = fetchedImage.thumbnail
+        // TODO: handle error
+        console.log("Error: ", fetchingError.value)
+        return null
+      },
+      {
+        // Fetching on the server is disabled because it is
+        // handled by the `singleResultMiddleware`.
+        server: false,
       }
-    })
+    )
 
     const imageWidth = ref(image.value?.width ?? 0)
     const imageHeight = ref(image.value?.height ?? 0)
@@ -328,10 +343,6 @@ export default defineNuxtComponent({
       hide,
     }
   },
-  methods: { isAdditionalSearchType },
-  // Fetching on the server is disabled because it is
-  // handled by the `singleResultMiddleware`.
-  fetchOnServer: false,
 })
 </script>
 

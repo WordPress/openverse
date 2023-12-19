@@ -38,10 +38,16 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead, useRoute } from "#imports"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  firstParam,
+  useAsyncData,
+  useHead,
+  useRoute,
+} from "#imports"
 
 import { computed, ref } from "vue"
-import { useContext, useFetch } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -75,12 +81,11 @@ export default defineNuxtComponent({
     VMediaReuse,
     VRelatedAudio,
   },
-  layout: "content-layout",
-  middleware: singleResultMiddleware,
-  // Fetching on the server is disabled because it is
-  // handled by the `singleResultMiddleware`.
-  fetchOnServer: false,
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+      middleware: singleResultMiddleware,
+    })
     const singleResultStore = useSingleResultStore()
 
     const route = useRoute()
@@ -90,20 +95,27 @@ export default defineNuxtComponent({
       () => singleResultStore.fetchState.fetchingError
     )
 
-    const { error: nuxtError } = useContext()
-
-    useFetch(async () => {
-      const audioId = route.params.id
-      await singleResultStore.fetch(AUDIO, audioId)
-
-      const fetchedAudio = singleResultStore.audio
-
-      if (!fetchedAudio) {
-        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
-      } else {
-        audio.value = fetchedAudio
+    useAsyncData(
+      "single-audio",
+      async () => {
+        const audioId = firstParam(route.params.id)
+        if (audioId) {
+          await singleResultStore.fetch(AUDIO, audioId)
+          const fetchedAudio = singleResultStore.audio
+          if (fetchedAudio) {
+            audio.value = fetchedAudio
+            return fetchedAudio
+          }
+        }
+        console.log("Error: ", singleResultStore.fetchState.fetchingError ?? {})
+        return null
+      },
+      {
+        // Fetching on the server is disabled because it is
+        // handled by the `singleResultMiddleware`.
+        server: false,
       }
-    })
+    )
 
     const { sendCustomEvent } = useAnalytics()
     const sendAudioEvent = (

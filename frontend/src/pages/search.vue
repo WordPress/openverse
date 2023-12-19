@@ -41,13 +41,19 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, navigateTo, useHead, useRoute } from "#imports"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  navigateTo,
+  useAsyncData,
+  useHead,
+  useRoute,
+} from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
-import { useContext, useFetch } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -73,10 +79,11 @@ export default defineNuxtComponent({
     VExternalSearchForm,
     VScrollButton,
   },
-  layout: "search-layout",
-  middleware: searchMiddleware,
-  fetchOnServer: false,
   setup() {
+    definePageMeta({
+      layout: "search-layout",
+      middleware: searchMiddleware,
+    })
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
     const featureFlagStore = useFeatureFlagStore()
@@ -117,8 +124,6 @@ export default defineNuxtComponent({
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     }))
 
-    const { error: nuxtError } = useContext()
-
     const fetchMedia = async (
       payload: { shouldPersistMedia?: boolean } = {}
     ) => {
@@ -142,7 +147,9 @@ export default defineNuxtComponent({
       ) {
         return null
       }
-      return nuxtError(fetchingError.value)
+      // TODO: handle error
+      console.log("Error: ", fetchingError.value)
+      return null
     }
 
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
@@ -192,11 +199,17 @@ export default defineNuxtComponent({
       await fetchMedia()
     })
 
-    useFetch(async () => {
-      if (needsFetching.value) {
-        await fetchMedia()
+    useAsyncData(
+      "search",
+      async () => {
+        if (needsFetching.value) {
+          await fetchMedia()
+        }
+      },
+      {
+        server: false,
       }
-    })
+    )
 
     return {
       showScrollButton,
