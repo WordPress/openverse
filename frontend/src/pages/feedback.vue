@@ -39,9 +39,9 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { defineNuxtComponent, useI18n } from "#imports"
 
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -60,7 +60,7 @@ const forms = {
 } as const
 const tabs = Object.keys(forms) as (keyof typeof forms)[]
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "FeedbackPage",
   components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
   layout: "content-layout",

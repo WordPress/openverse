@@ -8,9 +8,9 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { defineNuxtComponent, useI18n } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import type { AudioDetail } from "~/types/media"
@@ -18,7 +18,7 @@ import type { FetchState } from "~/types/fetch-state"
 
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "AudioSearch",
   components: {
     VAudioCollection,

@@ -63,10 +63,10 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { defineNuxtComponent, useI18n } from "#imports"
 
 import { computed } from "vue"
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON, OFF } from "~/constants/feature-flag"
@@ -75,7 +75,7 @@ import VLink from "~/components/VLink.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VPrivacyPage",
   components: { VLink, VCheckbox, VContentPage },
   layout: "content-layout",

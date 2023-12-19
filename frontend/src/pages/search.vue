@@ -41,12 +41,13 @@
 </template>
 
 <script lang="ts">
+import { defineNuxtComponent } from "#imports"
+
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 import {
-  defineComponent,
   useContext,
   useFetch,
   useMeta,
@@ -70,7 +71,7 @@ import VScrollButton from "~/components/VScrollButton.vue"
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "BrowsePage",
   components: {
     VErrorSection,

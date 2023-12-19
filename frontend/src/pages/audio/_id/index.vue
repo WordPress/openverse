@@ -38,9 +38,10 @@
 </template>
 
 <script lang="ts">
+import { defineNuxtComponent } from "#imports"
+
 import { computed, ref } from "vue"
 import {
-  defineComponent,
   useContext,
   useFetch,
   useMeta,
@@ -67,7 +68,7 @@ import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "AudioDetailPage",
   components: {
     VErrorSection,

@@ -88,9 +88,9 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { defineNuxtComponent, useI18n } from "#imports"
 
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -99,7 +99,7 @@ import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 import VSourcesTable from "~/components/VSourcesTable.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "SourcePage",
   components: { VButton, VContentPage, VLink, VSourcesTable },
   layout: "content-layout",

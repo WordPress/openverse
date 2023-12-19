@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineNuxtComponent } from "#imports"
 
 import VAllResultsGrid from "~/components/VSearchResultsGrid/VAllResultsGrid.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "SearchIndex",
   components: { VAllResultsGrid },
 })

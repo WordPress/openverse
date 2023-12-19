@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineNuxtComponent } from "#imports"
 
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -54,7 +54,7 @@ import type { ImageDetail } from "~/types/media"
 import VButton from "~/components/VButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "ReportImage",
   components: {
     VButton,
