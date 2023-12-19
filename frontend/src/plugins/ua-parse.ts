@@ -1,24 +1,31 @@
-import { parse, Details as UADetails } from "express-useragent"
+import { defineNuxtPlugin, useRequestHeaders } from "#imports"
 
-import type { Plugin } from "@nuxt/types"
+import pkg from "express-useragent"
 
-const uaParsePlugin: Plugin = (context, inject) => {
+const { parse: uaParse } = pkg
+
+type UADetails = ReturnType<typeof uaParse>
+
+const uaParsePlugin = defineNuxtPlugin(() => {
   let userAgent
 
-  if (typeof context.req !== "undefined") {
-    userAgent = context.req.headers["user-agent"]
+  const headers = useRequestHeaders()
+  if (headers && headers["user-agent"]) {
+    userAgent = headers["user-agent"]
   } else if (typeof navigator !== "undefined") {
     userAgent = navigator.userAgent
   }
   let ua: UADetails | null
   if (typeof userAgent == "string") {
-    ua = parse(userAgent)
+    ua = uaParse(userAgent)
   } else {
     ua = null
   }
-
-  context.$ua = ua
-  inject("ua", ua)
-}
+  return {
+    provide: {
+      ua,
+    },
+  }
+})
 
 export default uaParsePlugin
