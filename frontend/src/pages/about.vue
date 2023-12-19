@@ -150,7 +150,7 @@ export default defineNuxtComponent({
       title: `${i18n.t("about.title", {
         openverse: "Openverse",
       })} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     })
   },
 })

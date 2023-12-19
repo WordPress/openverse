@@ -88,7 +88,7 @@ export default defineNuxtComponent({
       title: `${i18n.t("privacy.title", {
         openverse: "Openverse",
       })} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     })
 
     const isChecked = computed(

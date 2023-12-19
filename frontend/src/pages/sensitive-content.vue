@@ -141,7 +141,7 @@ export default defineNuxtComponent({
 
     useHead({
       title: `${i18n.t("sensitive.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     })
   },
 })

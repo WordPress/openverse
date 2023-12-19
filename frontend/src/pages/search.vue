@@ -121,7 +121,7 @@ export default defineNuxtComponent({
 
     useHead(() => ({
       title: pageTitle.value,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     }))
 
     const fetchMedia = async (

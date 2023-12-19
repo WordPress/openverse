@@ -108,7 +108,7 @@ export default defineNuxtComponent({
 
     useHead({
       title: `${i18n.t("sources.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     })
 
     return { supportedMediaTypes }

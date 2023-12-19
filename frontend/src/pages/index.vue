@@ -61,8 +61,8 @@ export default defineNuxtComponent({
 
     useHead({
       meta: [
-        { hid: "theme-color", name: "theme-color", content: "#ffe033" },
-        { hid: "robots", name: "robots", content: "all" },
+        { name: "theme-color", content: "#ffe033" },
+        { name: "robots", content: "all" },
       ],
     })
 

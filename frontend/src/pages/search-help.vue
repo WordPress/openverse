@@ -62,7 +62,7 @@ export default defineNuxtComponent({
       title: `${i18n.t("searchGuide.title", {
         openverse: "Openverse",
       })} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     })
 
     const pathFromQuery = (queryString: string) => {
