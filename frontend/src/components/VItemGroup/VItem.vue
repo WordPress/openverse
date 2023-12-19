@@ -155,6 +155,7 @@ export default defineComponent({
     })
 
     const nonClassAttrs = computed(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { class: _, ...rest } = attrs
       return rest
     })
