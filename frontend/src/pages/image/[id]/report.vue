@@ -91,9 +91,11 @@ export default defineNuxtComponent({
       } else {
         // TODO: Handle Error
         console.log(
-          i18n.t("error.imageNotFound", {
-            id: imageId,
-          })
+          i18n
+            .t("error.imageNotFound", {
+              id: imageId,
+            })
+            .toString()
         )
       }
     })
