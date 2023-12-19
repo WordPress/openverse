@@ -20,8 +20,9 @@ import {
   SearchFilterQuery,
 } from "~/types/search"
 
-import type { Context } from "@nuxt/types"
-import type { Dictionary } from "vue-router/types/router"
+import { firstParam } from "~/utils/query-utils"
+
+import type { LocationQuery } from "vue-router"
 
 /**
  * This maps properties in the search store state to the corresponding API query
@@ -150,7 +151,7 @@ export const queryToFilterData = ({
   searchType = "image",
   defaultFilters,
 }: {
-  query: Dictionary<string>
+  query: Record<string, string>
   searchType: SupportedSearchType
   defaultFilters: Partial<Filters>
 }) => {
@@ -234,13 +235,12 @@ export const areQueriesEqual = (
  * * @param queryDictionary - the query param dictionary provided by Vue router
  */
 export const queryDictionaryToQueryParams = (
-  queryDictionary: Context["query"]
-): Dictionary<string> => {
-  const queryParams = {} as Dictionary<string>
+  queryDictionary: LocationQuery
+): Record<string, string> => {
+  const queryParams = {} as Record<string, string>
   Object.keys(queryDictionary).forEach((key) => {
-    const value = queryDictionary[key]
     // If the parameter is an array, use the first value.
-    const parameter = Array.isArray(value) ? value[0] : value
+    const parameter = firstParam(queryDictionary[key])
     if (parameter) {
       queryParams[key] = parameter
     }
