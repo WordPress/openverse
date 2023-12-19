@@ -27,12 +27,13 @@ class Project {
    *                         owner              number
    *
    * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+   * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
    * @param owner {string} the login of the owner (org) of the project
    * @param number {number} the number of the project
    */
-  constructor(octokit, owner, number) {
+  constructor(octokit, core, owner, number) {
     this.octokit = octokit
-
+    this.core = core
     this.owner = owner
     this.number = number
   }
@@ -96,6 +97,7 @@ class Project {
         number: this.number,
       }
     )
+    this.core.debug(`getProjectId response: ${JSON.stringify(res, null, 2)}`)
     const project = res.organization.projectV2
     return {
       projectId: project.id,
@@ -126,6 +128,7 @@ class Project {
    * @returns {Promise<Card>} the info of the added card
    */
   async addCard(issueId) {
+    this.core.info(`Adding card for issue/PR "${issueId}".`)
     const res = await this.octokit.graphql(
       `mutation addCard($projectId: ID!, $contentId: ID!) {
         addProjectV2ItemById(input: {
@@ -147,6 +150,7 @@ class Project {
         contentId: issueId,
       }
     )
+    this.core.debug(`addCard response: ${JSON.stringify(res, null, 2)}`)
     const card = res.addProjectV2ItemById.item
     return {
       id: card.id,
@@ -163,18 +167,23 @@ class Project {
    * @returns {Promise<string>} the ID of the card that was updated
    */
   async setCustomChoiceField(cardId, fieldName, optionName) {
+    this.core.info(
+      `Setting field "${fieldName}" to value "${optionName}" for card "${cardId}".`
+    )
     // Preliminary validation
     if (!this.fields[fieldName]) {
-      throw new Error(`Unknown field name "${fieldName}".`)
+      const msg = `Unknown field name "${fieldName}".`
+      this.core.error(msg)
+      throw new Error(msg)
     }
     if (!this.fields[fieldName].options[optionName]) {
-      throw new Error(
-        `Unknown option name "${optionName}" for field "${fieldName}".`
-      )
+      const msg = `Unknown option name "${optionName}" for field "${fieldName}".`
+      this.core.error(msg)
+      throw new Error(msg)
     }
 
     const res = await this.octokit.graphql(
-      `mutation setCustomField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+      `mutation setCustomChoiceField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
         updateProjectV2ItemFieldValue(input: {
           projectId: $projectId,
           itemId: $itemId,
@@ -193,6 +202,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
+    this.core.debug('setCustomChoiceField response:', JSON.stringify(res))
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }
 
@@ -205,6 +215,7 @@ class Project {
    * @returns {Promise<string>} the ID of the card that was moved
    */
   async moveCard(cardId, destColumn) {
+    this.core.info(`Moving card "${cardId}" to column "${destColumn}".`)
     return await this.setCustomChoiceField(cardId, 'Status', destColumn)
   }
 }
@@ -213,16 +224,17 @@ class Project {
  * Get the `Project` instance for the project board with the given name.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
+ * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  * @param name {string} the name of the project (without the 'Openverse' prefix)
- * @returns {Project} the `Project` instance to interact with the project board
+ * @returns {Promise<Project>} the `Project` instance to interact with the project board
  */
-export async function getBoard(octokit, name) {
+export async function getBoard(octokit, core, name) {
   const projectNumber = PROJECT_NUMBERS[name]
   if (!projectNumber) {
     throw new Error(`Unknown project board "${name}".`)
   }
 
-  const project = new Project(octokit, 'WordPress', projectNumber)
+  const project = new Project(octokit, core, 'WordPress', projectNumber)
   await project.init()
   return project
 }
