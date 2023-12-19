@@ -4,6 +4,8 @@
  * backend, or open an issue to track it.
  */
 
+import { useI18n } from "#imports"
+
 import type {
   License,
   LicenseVersion,
@@ -15,8 +17,6 @@ import {
   PUBLIC_DOMAIN_MARKS,
 } from "~/constants/license"
 import { camelCase } from "~/utils/case"
-
-import type VueI18n from "vue-i18n"
 
 /**
  * Get the full name of the license in a displayable format from the license
@@ -30,7 +30,7 @@ import type VueI18n from "vue-i18n"
 export const getFullLicenseName = (
   license: License,
   licenseVersion: LicenseVersion = "", // unknown version
-  i18n: VueI18n | null = null
+  i18n: ReturnType<typeof useI18n> | null = null
 ): string => {
   let licenseName
 
