@@ -54,7 +54,7 @@
             v-model="selectedReason"
             class="mb-4"
             name="reason"
-            :value_="reason"
+            :value="reason"
           >
             {{ $t(`mediaDetails.contentReport.form.${reason}.option`) }}
           </VRadio>
@@ -123,9 +123,11 @@
 </template>
 
 <script lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { computed, defineComponent, PropType, ref } from "vue"
 
-import ReportService from "~/data/report-service"
+import { initReportService } from "~/data/report-service"
 
 import {
   reasons,
@@ -210,7 +212,12 @@ export default defineComponent({
         const mediaType = props.media.frontendMediaType
         const reason = selectedReason.value
 
-        await ReportService.sendReport({
+        const { $openverseApiToken } = useNuxtApp()
+        const accessToken =
+          typeof $openverseApiToken === "string"
+            ? $openverseApiToken
+            : undefined
+        await initReportService(accessToken).sendReport({
           mediaType,
           reason,
           identifier: props.media.id,

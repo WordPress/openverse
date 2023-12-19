@@ -146,9 +146,10 @@ export const useProviderStore = defineStore("provider", {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
       try {
-        const service = initProviderServices[mediaType](
-          this.$nuxt?.$config?.apiAccessToken
-        )
+        const { $openverseApiToken } = useNuxtApp()
+        const accessToken =
+          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
+        const service = initProviderServices[mediaType](accessToken)
         const res = await service.getProviderStats()
         sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")

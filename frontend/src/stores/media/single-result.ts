@@ -161,7 +161,9 @@ export const useSingleResultStore = defineStore("single-result", {
     ) {
       try {
         this._updateFetchState("start")
-        const accessToken = this.$nuxt.$openverseApiToken
+        const { $openverseApiToken } = useNuxtApp()
+        const accessToken =
+          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initServices[type](accessToken)
         const item = this._addProviderName(await service.getMediaDetail(id))
 

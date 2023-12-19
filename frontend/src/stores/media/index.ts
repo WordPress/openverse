@@ -461,7 +461,9 @@ export const useMediaStore = defineStore("media", {
 
       this._updateFetchState(mediaType, "start")
       try {
-        const accessToken = this.$nuxt.$openverseApiToken
+        const { $openverseApiToken } = useNuxtApp()
+        const accessToken =
+          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initServices[mediaType](accessToken)
         const data = await service.search(queryParams, pathSlug)
         const mediaCount = data.result_count
