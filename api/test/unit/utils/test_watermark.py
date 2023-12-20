@@ -14,16 +14,15 @@ _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read
 
 @pytest.fixture
 def mock_request():
-    pook.on()
-    mock = (
-        pook.get("http://example.com/")
-        .header("User-Agent", HEADERS["User-Agent"])
-        .reply(200)
-        .body(_MOCK_IMAGE_BYTES, binary=True)
-        .mock
-    )
-    yield mock
-    pook.off()
+    with pook.use():
+        mock = (
+            pook.get("http://example.com/")
+            .header("User-Agent", HEADERS["User-Agent"])
+            .reply(200)
+            .body(_MOCK_IMAGE_BYTES, binary=True)
+            .mock
+        )
+        yield mock
 
 
 def test_watermark_image_sends_ua_header(mock_request):

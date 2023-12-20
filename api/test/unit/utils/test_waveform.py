@@ -14,17 +14,16 @@ _MOCK_AUDIO_INFO = json.loads((_MOCK_AUDIO_PATH / "sample-audio-info.json").read
 
 @pytest.fixture
 def mock_request():
-    pook.on()
-    mock = (
-        pook.get("http://example.org/")
-        .header("User-Agent", UA_STRING)
-        .reply(200)
-        .headers({"Content-Type": _MOCK_AUDIO_INFO["headers"]["Content-Type"]})
-        .body(_MOCK_AUDIO_BYTES, binary=True)
-        .mock
-    )
-    yield mock
-    pook.off()
+    with pook.use():
+        mock = (
+            pook.get("http://example.org/")
+            .header("User-Agent", UA_STRING)
+            .reply(200)
+            .headers({"Content-Type": _MOCK_AUDIO_INFO["headers"]["Content-Type"]})
+            .body(_MOCK_AUDIO_BYTES, binary=True)
+            .mock
+        )
+        yield mock
 
 
 def test_download_audio_sends_ua_header(mock_request):
