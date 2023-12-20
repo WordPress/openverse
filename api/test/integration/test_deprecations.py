@@ -12,12 +12,12 @@ import pytest
         ("/v1/thumbs/{idx}", "/v1/images/{idx}/thumb/"),
     ],
 )
-def test_deprecated_endpoints_redirect_to_new(old, new, client):
+def test_deprecated_endpoints_redirect_to_new(old, new, api_client):
     idx = uuid.uuid4()
     old = old.format(idx=str(idx))
     new = new.format(idx=str(idx))
 
-    res = client.get(old)
+    res = api_client.get(old)
     assert res.status_code == 301
     assert res.headers.get("Location") == new
 
@@ -33,6 +33,6 @@ def test_deprecated_endpoints_redirect_to_new(old, new, client):
         ),
     ],
 )
-def test_deleted_endpoints_are_gone(method, path, kwargs, client):
-    res = getattr(client, method)(path, **kwargs)
+def test_deleted_endpoints_are_gone(method, path, kwargs, api_client):
+    res = getattr(api_client, method)(path, **kwargs)
     assert res.status_code == 410

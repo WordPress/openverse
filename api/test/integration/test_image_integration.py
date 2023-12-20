@@ -12,8 +12,8 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def image_fixture(client):
-    response = client.get("/v1/images/", {"q": "dog"})
+def image_fixture(api_client):
+    response = api_client.get("/v1/images/", {"q": "dog"})
     assert response.status_code == 200
     parsed = response.json()
     return parsed
@@ -44,21 +44,23 @@ def image_fixture(client):
         ),
     ],
 )
-def test_oembed_endpoint(image_fixture, url: str, expected_status_code: int, client):
+def test_oembed_endpoint(
+    image_fixture, url: str, expected_status_code: int, api_client
+):
     if "{identifier}" in url:
         url = url.format(identifier=image_fixture["results"][0]["id"])
     params = {"url": url}
-    response = client.get("/v1/images/oembed/", params)
+    response = api_client.get("/v1/images/oembed/", params)
     assert response.status_code == expected_status_code
 
 
-def test_oembed_endpoint_for_json(image_fixture, client):
+def test_oembed_endpoint_for_json(image_fixture, api_client):
     identifier = image_fixture["results"][0]["id"]
     params = {
         "url": f"https://any.domain/any/path/{identifier}",
         # 'format': 'json' is the default
     }
-    response = client.get("/v1/images/oembed/", params)
+    response = api_client.get("/v1/images/oembed/", params)
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "application/json"
 
