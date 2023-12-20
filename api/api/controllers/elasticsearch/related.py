@@ -27,6 +27,8 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
 
     # Search the default index for the item itself as it might be sensitive.
     item_search = Search(index=index)
+    # This will raise ``IndexError`` if no hits are found. This error is caught
+    # in the viewset handler function.
     item_hit = item_search.query(Term(identifier=uuid)).execute().hits[0]
 
     # Match related using title.

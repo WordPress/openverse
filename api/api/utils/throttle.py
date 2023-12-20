@@ -1,7 +1,7 @@
 import abc
 import logging
 
-from rest_framework.throttling import SimpleRateThrottle
+from rest_framework.throttling import SimpleRateThrottle as BaseSimpleRateThrottle
 
 from redis.exceptions import ConnectionError
 
@@ -11,7 +11,7 @@ from api.utils.oauth2_helper import get_token_info
 parent_logger = logging.getLogger(__name__)
 
 
-class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
+class SimpleRateThrottle(BaseSimpleRateThrottle, metaclass=abc.ABCMeta):
     """
     Extends the ``SimpleRateThrottle`` class to provide additional functionality such as
     rate-limit headers in the response.
@@ -43,27 +43,52 @@ class SimpleRateThrottleHeader(SimpleRateThrottle, metaclass=abc.ABCMeta):
         else:
             return {}
 
+    def has_valid_token(self, request):
+        if not request.auth:
+            return False
 
-class AbstractAnonRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
+        token_info = get_token_info(str(request.auth))
+        return token_info and token_info.valid
+
+    def get_cache_key(self, request, view):
+        return self.cache_format % {
+            "scope": self.scope,
+            "ident": self.get_ident(request),
+        }
+
+
+class AbstractAnonRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
     """
     Limits the rate of API calls that may be made by a anonymous users.
 
     The IP address of the request will be used as the unique cache key.
     """
 
-    logger = parent_logger.getChild("AnonRateThrottle")
+    def get_cache_key(self, request, view):
+        # Do not apply this throttle to requests with valid tokens
+        if self.has_valid_token(request):
+            return None
+
+        if request.headers.get("referrer") == "openverse.org":
+            # Use `ov_referrer` throttles instead
+            return None
+
+        return super().get_cache_key(request, view)
+
+
+class AbstractOpenverseReferrerRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
+    """Use a different limit for requests that appear to come from Openverse.org."""
 
     def get_cache_key(self, request, view):
-        # Do not apply anonymous throttle to request with valid tokens.
-        if request.auth:
-            token_info = get_token_info(str(request.auth))
-            if token_info and token_info.valid:
-                return None
+        # Do not apply this throttle to requests with valid tokens
+        if self.has_valid_token(request):
+            return None
 
-        return self.cache_format % {
-            "scope": self.scope,
-            "ident": self.get_ident(request),
-        }
+        if request.headers.get("referrer") != "openverse.org":
+            # Use regular anon throttles instead
+            return None
+
+        return super().get_cache_key(request, view)
 
 
 class BurstRateThrottle(AbstractAnonRateThrottle):
@@ -82,6 +107,18 @@ class AnonThumbnailRateThrottle(AbstractAnonRateThrottle):
     scope = "anon_thumbnail"
 
 
+class OpenverseReferrerBurstRateThrottle(AbstractOpenverseReferrerRateThrottle):
+    scope = "ov_referrer_burst"
+
+
+class OpenverseReferrerSustainedRateThrottle(AbstractOpenverseReferrerRateThrottle):
+    scope = "ov_referrer_sustained"
+
+
+class OpenverseReferrerAnonThumbnailRateThrottle(AbstractOpenverseReferrerRateThrottle):
+    scope = "ov_referrer_thumbnail"
+
+
 class TenPerDay(AbstractAnonRateThrottle):
     rate = "10/day"
 
@@ -90,7 +127,7 @@ class OnePerSecond(AbstractAnonRateThrottle):
     rate = "1/second"
 
 
-class AbstractOAuth2IdRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMeta):
+class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
     """
     Ties a particular throttling scope from ``settings.py`` to a rate limit model.
 
@@ -98,9 +135,14 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMe
     """
 
     scope: str
-    # The name of the scope. Used to retrieve the rate limit from settings.
-    applies_to_rate_limit_model: str
-    # The ``ThrottledApplication.rate_limit_model`` to which the scope applies.
+    """The name of the scope. Used to retrieve the rate limit from settings."""
+    applies_to_rate_limit_model: set[str]
+    """
+    The set of ``ThrottledApplication.rate_limit_model`` to which the scope applies.
+
+    Use a ``set`` specifically to make checks O(1). All default throttles run on
+    almost every single request and must be performant.
+    """
 
     def get_cache_key(self, request, view):
         # Find the client ID associated with the access token.
@@ -109,37 +151,37 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottleHeader, metaclass=abc.ABCMe
         if not (token_info and token_info.valid):
             return None
 
-        if token_info.rate_limit_model != self.applies_to_rate_limit_model:
+        if token_info.rate_limit_model not in self.applies_to_rate_limit_model:
             return None
 
         return self.cache_format % {"scope": self.scope, "ident": token_info.client_id}
 
 
 class OAuth2IdThumbnailRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "standard"
+    applies_to_rate_limit_model = {"standard", "enhanced"}
     scope = "oauth2_client_credentials_thumbnail"
 
 
 class OAuth2IdSustainedRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "standard"
+    applies_to_rate_limit_model = {"standard"}
     scope = "oauth2_client_credentials_sustained"
 
 
 class OAuth2IdBurstRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "standard"
+    applies_to_rate_limit_model = {"standard"}
     scope = "oauth2_client_credentials_burst"
 
 
 class EnhancedOAuth2IdSustainedRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "enhanced"
+    applies_to_rate_limit_model = {"enhanced"}
     scope = "enhanced_oauth2_client_credentials_sustained"
 
 
 class EnhancedOAuth2IdBurstRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "enhanced"
+    applies_to_rate_limit_model = {"enhanced"}
     scope = "enhanced_oauth2_client_credentials_burst"
 
 
 class ExemptOAuth2IdRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = "exempt"
+    applies_to_rate_limit_model = {"exempt"}
     scope = "exempt_oauth2_client_credentials"
