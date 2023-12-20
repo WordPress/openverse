@@ -9,6 +9,7 @@ import django_redis
 from asgiref.sync import async_to_sync
 from decouple import config
 from elasticsearch_dsl.response import Hit
+from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
 from api.utils.check_dead_links.provider_status_mappings import provider_status_mappings
@@ -25,8 +26,15 @@ HEADERS = {
 
 
 def _get_cached_statuses(redis, image_urls):
-    cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
-    return [int(b.decode("utf-8")) if b is not None else None for b in cached_statuses]
+    try:
+        cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
+        return [
+            int(b.decode("utf-8")) if b is not None else None for b in cached_statuses
+        ]
+    except ConnectionError:
+        logger = parent_logger.getChild("_get_cached_statuses")
+        logger.warning("Redis connect failed, validating all URLs without cache.")
+        return [None] * len(image_urls)
 
 
 def _get_expiry(status, default):
@@ -51,7 +59,6 @@ async def _head(url: str) -> tuple[str, int]:
 # https://stackoverflow.com/q/55259755
 @async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
-    tasks = []
     tasks = [asyncio.ensure_future(_head(url)) for url in urls]
     responses = asyncio.gather(*tasks)
     await responses
@@ -111,7 +118,10 @@ def check_dead_links(
         logger.debug(f"caching status={status} expiry={expiry}")
         pipe.expire(key, expiry)
 
-    pipe.execute()
+    try:
+        pipe.execute()
+    except ConnectionError:
+        logger.warning("Redis connect failed, cannot cache link liveness.")
 
     # Merge newly verified results with cached statuses
     for idx, url in enumerate(to_verify):

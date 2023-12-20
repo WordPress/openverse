@@ -3,6 +3,8 @@ import logging
 
 from rest_framework.throttling import SimpleRateThrottle as BaseSimpleRateThrottle
 
+from redis.exceptions import ConnectionError
+
 from api.utils.oauth2_helper import get_token_info
 
 
@@ -16,7 +18,12 @@ class SimpleRateThrottle(BaseSimpleRateThrottle, metaclass=abc.ABCMeta):
     """
 
     def allow_request(self, request, view):
-        is_allowed = super().allow_request(request, view)
+        try:
+            is_allowed = super().allow_request(request, view)
+        except ConnectionError:
+            logger = parent_logger.getChild("allow_request")
+            logger.warning("Redis connect failed, allowing request.")
+            is_allowed = True
         view.headers |= self.headers()
         return is_allowed
 
@@ -44,10 +51,9 @@ class SimpleRateThrottle(BaseSimpleRateThrottle, metaclass=abc.ABCMeta):
         return token_info and token_info.valid
 
     def get_cache_key(self, request, view):
-        ident = self.get_ident(request)
         return self.cache_format % {
             "scope": self.scope,
-            "ident": ident,
+            "ident": self.get_ident(request),
         }
 
 

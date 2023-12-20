@@ -1,7 +1,7 @@
 from test.factory.models.image import ImageFactory
 from test.factory.models.oauth2 import AccessTokenFactory
 
-from django.core.cache import cache
+from django.http import HttpResponse
 from rest_framework.settings import api_settings
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
@@ -10,6 +10,30 @@ import pytest
 
 from api.utils import throttle
 from api.views.media_views import MediaViewSet
+
+
+cache_availability_params = pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [(True, "throttle_cache"), (False, "unreachable_throttle_cache")],
+)
+# This parametrize decorator runs the test function with two scenarios:
+# - one where the API can connect to Redis
+# - one where it cannot and raises ``ConnectionError``
+# The fixtures referenced here are defined below.
+
+
+@pytest.fixture(autouse=True)
+def throttle_cache(django_cache, monkeypatch):
+    cache = django_cache
+    monkeypatch.setattr("rest_framework.throttling.SimpleRateThrottle.cache", cache)
+    yield cache
+
+
+@pytest.fixture
+def unreachable_throttle_cache(unreachable_django_cache, monkeypatch):
+    cache = unreachable_django_cache
+    monkeypatch.setattr("rest_framework.throttling.SimpleRateThrottle.cache", cache)
+    yield cache
 
 
 @pytest.fixture(autouse=True)
@@ -216,15 +240,20 @@ def test_oauth_rate_limit_used_thumbnail(
 
 
 @pytest.mark.django_db
-def test_rate_limit_headers(request_factory):
-    cache.delete_pattern("throttle_*")
-    limit = 2
+@cache_availability_params
+def test_rate_limit_headers(request_factory, is_cache_reachable, cache_name, request):
+    request.getfixturevalue(cache_name)
+
+    limit = 2  # number of allowed requests, we will go 1 above this limit
 
     class DummyThrottle(throttle.BurstRateThrottle):
         THROTTLE_RATES = {"anon_burst": f"{limit}/hour"}
 
     class ThrottledView(APIView):
         throttle_classes = [DummyThrottle]
+
+        def get(self, request):
+            return HttpResponse("ok")
 
     view = ThrottledView().as_view()
     request = request_factory.get("/")
@@ -234,29 +263,54 @@ def test_rate_limit_headers(request_factory):
         response = view(request)
         headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
 
-        # Assert that request returns 429 response if limit has been exceeded.
-        assert response.status_code == 429 if idx == limit + 1 else 200
-
-        # Assert that the 'Available' header constantly decrements, but not below zero.
-        assert [
-            ("X-RateLimit-Limit-anon_burst", f"{limit}/hour"),
-            ("X-RateLimit-Available-anon_burst", str(max(0, limit - idx))),
-        ] == headers
+        if is_cache_reachable:
+            # Assert that request returns 429 response if limit has been exceeded.
+            assert response.status_code == 429 if idx == limit + 1 else 200
+            # Assert that the 'Available' header constantly decrements, but not below zero.
+            assert [
+                ("X-RateLimit-Limit-anon_burst", f"{limit}/hour"),
+                ("X-RateLimit-Available-anon_burst", str(max(0, limit - idx))),
+            ] == headers
+        else:
+            # Throttling gets disabled if Redis cannot cache request history.
+            assert response.status_code == 200
+            # Headers are not set if Redis cannot cache request history.
+            assert not headers
 
 
 @pytest.mark.django_db
-def test_rate_limit_headers_when_no_scope(request_factory):
-    cache.delete_pattern("throttle_*")
+@cache_availability_params
+def test_rate_limit_headers_when_no_scope(
+    request_factory, is_cache_reachable, cache_name, request
+):
+    request.getfixturevalue(cache_name)
+
+    limit = 10  # number of allowed requests, we will go 1 above this limit
 
     class ThrottledView(APIView):
         throttle_classes = [throttle.TenPerDay]
 
+        def get(self, request):
+            return HttpResponse("ok")
+
     view = ThrottledView().as_view()
     request = request_factory.get("/")
 
-    response = view(request)
-    headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
-    assert [
-        ("X-RateLimit-Limit-tenperday", "10/day"),
-        ("X-RateLimit-Available-tenperday", "9"),
-    ] == headers
+    # Send limit + 1 requests. The last one should be throttled.
+    for idx in range(1, limit + 2):
+        response = view(request)
+        headers = [h for h in response.headers.items() if "X-RateLimit" in h[0]]
+
+        if is_cache_reachable:
+            # Assert that request returns 429 response if limit has been exceeded.
+            assert response.status_code == 429 if idx == limit + 1 else 200
+            # Assert that headers match the throttle class.
+            assert [
+                ("X-RateLimit-Limit-tenperday", "10/day"),
+                ("X-RateLimit-Available-tenperday", str(max(0, limit - idx))),
+            ] == headers
+        else:
+            # Throttling gets disabled if Redis cannot cache request history.
+            assert response.status_code == 200
+            # Headers are not set if Redis cannot cache request history.
+            assert not headers

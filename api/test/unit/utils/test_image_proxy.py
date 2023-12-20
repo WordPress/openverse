@@ -1,6 +1,8 @@
 import asyncio
+import itertools
 from dataclasses import replace
 from test.factory.models.image import ImageFactory
+from unittest.mock import patch
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -45,6 +47,16 @@ SVG_BODY = """<?xml version="1.0" encoding="UTF-8"?>
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
 <text x="10" y="10" fill="white">SVG</text>
 </svg>"""
+
+
+cache_availability_params = pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [(True, "redis"), (False, "unreachable_redis")],
+)
+# This parametrize decorator runs the test function with two scenarios:
+# - one where the API can connect to Redis
+# - one where it cannot and raises ``ConnectionError``
+# The fixtures referenced here are defined below.
 
 
 @pytest.fixture
@@ -283,7 +295,11 @@ def setup_request_exception(monkeypatch):
 
 
 @pook.on
-def test_get_successful_records_response_code(photon_get, mock_image_data, redis):
+@cache_availability_params
+def test_get_successful_records_response_code(
+    photon_get, mock_image_data, is_cache_reachable, cache_name, request, caplog
+):
+    cache = request.getfixturevalue(cache_name)
     (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -296,16 +312,22 @@ def test_get_successful_records_response_code(photon_get, mock_image_data, redis
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     photon_get(TEST_MEDIA_INFO)
     month = get_monthly_timestamp()
-    assert redis.get(f"thumbnail_response_code:{month}:200") == b"1"
-    assert (
-        redis.get(f"thumbnail_response_code_by_domain:{TEST_IMAGE_DOMAIN}:{month}:200")
-        == b"1"
-    )
+
+    keys = [
+        f"thumbnail_response_code:{month}:200",
+        f"thumbnail_response_code_by_domain:{TEST_IMAGE_DOMAIN}:{month}:200",
+    ]
+    if is_cache_reachable:
+        for key in keys:
+            assert cache.get(key) == b"1"
+    else:
+        assert (
+            "Redis connect failed, thumbnail response codes not tallied." in caplog.text
+        )
 
 
 alert_count_params = pytest.mark.parametrize(
@@ -356,6 +378,7 @@ MOCK_CONNECTION_KEY = ConnectionKey(
         ),
     ],
 )
+@cache_availability_params
 @alert_count_params
 def test_get_exception_handles_error(
     photon_get,
@@ -365,14 +388,25 @@ def test_get_exception_handles_error(
     should_alert,
     sentry_capture_exception,
     setup_request_exception,
-    redis,
+    is_cache_reachable,
+    cache_name,
+    request,
+    caplog,
 ):
+    cache = request.getfixturevalue(cache_name)
+
     setup_request_exception(exc)
     month = get_monthly_timestamp()
     key = f"thumbnail_error:{exc_name}:{TEST_IMAGE_DOMAIN}:{month}"
-    redis.set(key, count_start)
+    if is_cache_reachable:
+        cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException):
+    with (
+        pytest.raises(UpstreamThumbnailException),
+        patch(
+            "api.utils.image_proxy.exception_iterator", itertools.count(count_start + 1)
+        ),
+    ):
         photon_get(TEST_MEDIA_INFO)
 
     assert_func = (
@@ -381,9 +415,14 @@ def test_get_exception_handles_error(
         else sentry_capture_exception.assert_not_called
     )
     assert_func()
-    assert redis.get(key) == str(count_start + 1).encode()
+
+    if is_cache_reachable:
+        assert cache.get(key) == str(count_start + 1).encode()
+    else:
+        assert "Redis connect failed, thumbnail errors not tallied." in caplog.text
 
 
+@cache_availability_params
 @alert_count_params
 @pytest.mark.parametrize(
     "status_code, text",
@@ -401,15 +440,23 @@ def test_get_http_exception_handles_error(
     count_start,
     should_alert,
     sentry_capture_exception,
-    redis,
+    is_cache_reachable,
+    cache_name,
+    request,
+    caplog,
 ):
+    cache = request.getfixturevalue(cache_name)
+
     month = get_monthly_timestamp()
     key = f"thumbnail_error:aiohttp.client_exceptions.ClientResponseError:{TEST_IMAGE_DOMAIN}:{month}"
-    redis.set(key, count_start)
+    if is_cache_reachable:
+        cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException):
+    with pytest.raises(UpstreamThumbnailException), patch(
+        "api.utils.image_proxy.exception_iterator", itertools.count(count_start + 1)
+    ):
         with pook.use():
-            pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text).mock
+            pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
             photon_get(TEST_MEDIA_INFO)
 
     assert_func = (
@@ -418,13 +465,21 @@ def test_get_http_exception_handles_error(
         else sentry_capture_exception.assert_not_called
     )
     assert_func()
-    assert redis.get(key) == str(count_start + 1).encode()
 
-    # Assertions about the HTTP error specific message
-    assert (
-        redis.get(f"thumbnail_http_error:{TEST_IMAGE_DOMAIN}:{month}:{status_code}")
-        == b"1"
-    )
+    if is_cache_reachable:
+        assert cache.get(key) == str(count_start + 1).encode()
+        assert (
+            cache.get(f"thumbnail_http_error:{TEST_IMAGE_DOMAIN}:{month}:{status_code}")
+            == b"1"
+        )
+    else:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, thumbnail HTTP errors not tallied.",
+                "Redis connect failed, thumbnail errors not tallied.",
+            ]
+        )
 
 
 @pook.on
@@ -511,9 +566,18 @@ def test_photon_get_raises_by_not_allowed_types(photon_get, image_type):
         ({"Content-Type": "unknown"}, b"unknown"),
     ],
 )
+@cache_availability_params
 def test_photon_get_saves_image_type_to_cache(
-    photon_get, redis, headers, expected_cache_val
+    photon_get,
+    headers,
+    expected_cache_val,
+    is_cache_reachable,
+    cache_name,
+    request,
+    caplog,
 ):
+    cache = request.getfixturevalue(cache_name)
+
     image_url = TEST_IMAGE_URL.replace(".jpg", "")
     image = ImageFactory.create(url=image_url)
     media_info = MediaInfo(
@@ -526,5 +590,14 @@ def test_photon_get_saves_image_type_to_cache(
         with pytest.raises(UnsupportedMediaType):
             photon_get(media_info)
 
-        key = f"media:{image.identifier}:thumb_type"
-        assert redis.get(key) == expected_cache_val
+    key = f"media:{image.identifier}:thumb_type"
+    if is_cache_reachable:
+        assert cache.get(key) == expected_cache_val
+    else:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, cannot get cached image extension.",
+                "Redis connect failed, cannot cache image extension.",
+            ]
+        )

@@ -1,5 +1,3 @@
-from django.core.cache import cache
-
 import pytest
 from elasticsearch_dsl import Q
 
@@ -15,7 +13,10 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def excluded_providers_cache():
+def excluded_providers_cache(django_cache, monkeypatch):
+    cache = django_cache
+    monkeypatch.setattr("api.controllers.search_controller.cache", cache)
+
     excluded_provider = "excluded_provider"
     cache_value = [excluded_provider]
     cache.set(
