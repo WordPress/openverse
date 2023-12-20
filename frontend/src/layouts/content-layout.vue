@@ -22,7 +22,7 @@
 <script lang="ts">
 import { computed, defineComponent, provide, ref, watch } from "vue"
 
-import { useWindowScroll } from "~/composables/use-window-scroll"
+import { useWindowScroll } from "@vueuse/core"
 
 import { useUiStore } from "~/stores/ui"
 
@@ -51,7 +51,8 @@ export default defineComponent({
     }
 
     const isHeaderScrolled = ref(false)
-    const { isScrolled: isMainContentScrolled, y: scrollY } = useWindowScroll()
+    const { y: scrollY } = useWindowScroll()
+    const isMainContentScrolled = computed(() => scrollY.value > 0)
     watch([isMainContentScrolled], ([isMainContentScrolled]) => {
       isHeaderScrolled.value = isMainContentScrolled
     })

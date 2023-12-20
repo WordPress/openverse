@@ -8,9 +8,9 @@ import { render } from "~~/test/unit/test-utils/render"
 import VCopyButton from "~/components/VCopyButton.vue"
 
 describe("VCopyButton", () => {
-  it("should render correct contents", () => {
-    const screen = render(VCopyButton, {
-      propsData: {
+  it("should render correct contents", async () => {
+    const screen = await render(VCopyButton, {
+      props: {
         el: "#foo",
         id: "foo",
       },

@@ -78,6 +78,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/svg-sprite",
     "@nuxtjs/plausible",
+    "@nuxt/test-utils/module",
   ],
   svgSprite: {
     input: "~/assets/svg/raw",

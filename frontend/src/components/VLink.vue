@@ -2,7 +2,7 @@
 <template>
   <NuxtLink
     :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
-    :aria-disabled="!href"
+    :aria-disabled="!to"
     v-bind="linkProps"
     :to="to"
     @click="handleClick"
@@ -130,6 +130,8 @@ export default defineComponent({
       // if href is undefined, return props that make the link disabled
       return undefined
     })
+
+    console.log("to", to.value, "linkProps", linkProps.value, "isInternal", isInternal.value)
 
     const { sendCustomEvent } = useAnalytics()
 

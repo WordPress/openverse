@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest"
+
 import { timeFmt } from "~/utils/time-fmt"
 
 describe("timeFmt", () => {

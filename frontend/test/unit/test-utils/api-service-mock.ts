@@ -1,13 +1,19 @@
 import MockAdapter from "axios-mock-adapter"
 
+import { vi, afterEach } from "vitest"
+
 import * as apiService from "~/data/api-service"
 
-jest.mock("~/data/api-service", () => ({ createApiService: jest.fn() }))
-const originalApiService = jest.requireActual("~/data/api-service")
+import type { Mock } from "vitest"
 
-const createApiService = apiService.createApiService as jest.Mock<
-  ReturnType<typeof apiService.createApiService>,
-  Parameters<typeof apiService.createApiService>
+vi.mock("~/data/api-service", () => ({ createApiService: vi.fn() }))
+const originalApiService: typeof apiService = await vi.importActual(
+  "~/data/api-service"
+)
+
+const createApiService = apiService.createApiService as Mock<
+  Parameters<typeof apiService.createApiService>,
+  ReturnType<typeof apiService.createApiService>
 >
 
 /**

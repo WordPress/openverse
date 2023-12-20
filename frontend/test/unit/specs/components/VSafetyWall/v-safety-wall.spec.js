@@ -2,13 +2,7 @@ import { fireEvent, waitFor } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { useSearchStore } from "~/stores/search"
-
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
-
-jest.mock("~/stores/search", () => ({
-  useSearchStore: jest.fn(),
-}))
 
 describe("VSafetyWall.vue", () => {
   let mockStore
@@ -18,7 +12,6 @@ describe("VSafetyWall.vue", () => {
     mockStore = {
       backToSearchPath: "/somepath",
     }
-    useSearchStore.mockReturnValue(mockStore)
 
     options = {
       props: {
@@ -34,7 +27,7 @@ describe("VSafetyWall.vue", () => {
   })
 
   it("emits reveal event when showMedia method is called", async () => {
-    const { getByText, emitted } = render(VSafetyWall, options)
+    const { getByText, emitted } = await render(VSafetyWall, options)
     const showButton = getByText("Show content")
 
     await fireEvent.click(showButton)
@@ -45,7 +38,7 @@ describe("VSafetyWall.vue", () => {
   })
 
   it("backToSearchPath gets the value from the store", async () => {
-    const { findByText } = render(VSafetyWall, options)
+    const { findByText } = await render(VSafetyWall, options)
 
     const backToSearchButton = await findByText("Back to results")
     expect(backToSearchButton).toBeInTheDocument()

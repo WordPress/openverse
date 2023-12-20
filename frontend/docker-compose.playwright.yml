@@ -10,7 +10,6 @@ services:
     volumes:
       - ../node_modules:/node_modules
       - .:/frontend
-      - ${PWD}/../tsconfig.base.json:/tsconfig.base.json
     user: ${USER_ID}
     working_dir: /frontend
     command: pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-}

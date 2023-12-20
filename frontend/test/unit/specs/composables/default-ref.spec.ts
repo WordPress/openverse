@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest"
+
 import { defaultRef } from "~/composables/default-ref"
 
 describe("defaultRef", () => {

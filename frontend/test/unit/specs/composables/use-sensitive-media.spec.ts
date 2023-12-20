@@ -1,20 +1,24 @@
+import { beforeEach, describe, expect, it, vi } from "vitest"
+
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useAnalytics } from "~/composables/use-analytics"
 import type { Sensitivity } from "~/constants/content-safety"
+
+import type { Mock } from "vitest"
 
 let mockUseUiStore = {
   shouldBlurSensitive: true,
   revealedSensitiveResults: [],
 }
 
-jest.mock("~/composables/use-analytics")
+vi.mock("~/composables/use-analytics")
 
-jest.mock("~/stores/ui", () => ({
+vi.mock("~/stores/ui", () => ({
   useUiStore: () => mockUseUiStore,
 }))
 
 describe("useSensitiveMedia composable", () => {
-  const sendCustomEventMock = jest.fn()
+  const sendCustomEventMock = vi.fn()
 
   let mockMedia: {
     id: string
@@ -34,7 +38,8 @@ describe("useSensitiveMedia composable", () => {
     }
 
     sendCustomEventMock.mockClear()
-    const mockedUseAnalytics = useAnalytics as jest.Mock<
+    const mockedUseAnalytics = useAnalytics as Mock<
+      [],
       ReturnType<typeof useAnalytics>
     >
     mockedUseAnalytics.mockImplementation(() => ({
