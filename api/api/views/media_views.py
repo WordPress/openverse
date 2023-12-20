@@ -3,7 +3,7 @@ from typing import Union
 
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -22,7 +22,11 @@ from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
-from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
+from api.utils.throttle import (
+    AnonThumbnailRateThrottle,
+    OAuth2IdThumbnailRateThrottle,
+    OpenverseReferrerAnonThumbnailRateThrottle,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -272,7 +276,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
             raise APIException(getattr(e, "message", str(e)))
         # If there are no hits in the search controller
         except IndexError:
-            raise APIException("Could not find items.", 404)
+            raise NotFound
 
         serializer_context = self.get_serializer_context()
 
@@ -300,7 +304,11 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         url_path="thumb",
         url_name="thumb",
         serializer_class=media_serializers.MediaThumbnailRequestSerializer,
-        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
+        throttle_classes=[
+            AnonThumbnailRateThrottle,
+            OpenverseReferrerAnonThumbnailRateThrottle,
+            OAuth2IdThumbnailRateThrottle,
+        ],
     )
 
     async def thumbnail(self, request, *_, **__):

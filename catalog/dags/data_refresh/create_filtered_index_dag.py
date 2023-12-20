@@ -53,13 +53,10 @@ critical for the creation of the filtered indexes.
 from datetime import datetime
 
 from airflow import DAG
-from airflow.decorators import task
-from airflow.exceptions import AirflowSensorTimeout
 from airflow.models.param import Param
-from airflow.sensors.external_task import ExternalTaskSensor
 
 from common.constants import DAG_DEFAULT_ARGS
-from common.sensors.utils import get_most_recent_dag_run
+from common.sensors.utils import prevent_concurrency_with_dag
 from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
@@ -81,31 +78,6 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
     creation and promotion, preventing concurrency with the data refreshes.
     """
     media_type = data_refresh.media_type
-
-    @task(
-        task_id=f"prevent_concurrency_with_{media_type}_data_refresh",
-    )
-    def prevent_concurrency_with_data_refresh(**context):
-        data_refresh_dag_id = f"{media_type}_data_refresh"
-        wait_for_filtered_index_creation = ExternalTaskSensor(
-            task_id="check_for_running_data_refresh",
-            external_dag_id=data_refresh_dag_id,
-            # Set timeout to 0 to prevent retries. If the data refresh DAG is running,
-            # immediately fail the filtered index creation DAG.
-            timeout=0,
-            # Wait for the whole DAG, not just a part of it
-            external_task_id=None,
-            check_existence=False,
-            execution_date_fn=lambda _: get_most_recent_dag_run(data_refresh_dag_id),
-            mode="reschedule",
-        )
-        try:
-            wait_for_filtered_index_creation.execute(context)
-        except AirflowSensorTimeout:
-            raise ValueError(
-                f"{media_type} data refresh concurrency check failed. "
-                "Filtered index creation cannot start during a data refresh."
-            )
 
     with DAG(
         dag_id=f"create_filtered_{media_type}_index",
@@ -141,9 +113,10 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
         },
         render_template_as_native_obj=True,
     ) as dag:
-        prevent_concurrency = prevent_concurrency_with_data_refresh.override(
-            retries=0
-        )()
+        # Immediately fail if the associated data refresh is running.
+        prevent_concurrency = prevent_concurrency_with_dag.override(
+            task_id=f"prevent_concurrency_with_{media_type}_data_refresh"
+        )(external_dag_id=f"{media_type}_data_refresh")
 
         # Once the concurrency check has passed, actually create the filtered
         # index.

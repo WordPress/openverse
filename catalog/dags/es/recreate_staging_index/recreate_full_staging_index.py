@@ -1,44 +1,12 @@
 from datetime import timedelta
 
 from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowSensorTimeout
-from airflow.sensors.external_task import ExternalTaskSensor
-from airflow.utils.state import State
 
 from common import ingestion_server
-from common.sensors.utils import get_most_recent_dag_run
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
-from database.staging_database_restore.constants import (
-    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
-)
 
 
 DAG_ID = "recreate_full_staging_index"
-
-
-@task(retries=0)
-def prevent_concurrency_with_staging_database_restore(**context):
-    wait_for_dag = ExternalTaskSensor(
-        task_id="check_for_running_staging_db_restore",
-        external_dag_id=STAGING_DB_RESTORE_DAG_ID,
-        # Set timeout to 0 to prevent retries. If the staging DB restoration is running,
-        # immediately fail the staging index creation DAG.
-        timeout=0,
-        # Wait for the whole DAG, not just a part of it
-        external_task_id=None,
-        check_existence=False,
-        execution_date_fn=lambda _: get_most_recent_dag_run(STAGING_DB_RESTORE_DAG_ID),
-        # Any "finished" state is sufficient for us to continue.
-        allowed_states=[State.SUCCESS, State.FAILED],
-        mode="reschedule",
-    )
-    try:
-        wait_for_dag.execute(context)
-    except AirflowSensorTimeout:
-        raise ValueError(
-            "Concurrency check failed. Staging index creation cannot start"
-            " during staging DB restoration."
-        )
 
 
 @task
