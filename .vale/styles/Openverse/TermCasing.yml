@@ -1,0 +1,17 @@
+# While Vale.Terms could be used for these, it is too inflexible, and thus incapable
+# of ignoring common false-positives like GitHub usernames or GitHub team names
+extends: substitution
+message: "Incorrect casing. Use '%s' instead of '%s'."
+level: error
+ignorecase: false
+scope:
+  - paragraph
+swap:
+  # [^/.] prevents matching things that look like URLs or GitHub team mentions
+  # For example: @WordPress/openverse-maintainers
+  '[^/\.]openverse': Openverse
+  "OpenVerse": Openverse
+  '[^/\.]wordpress': WordPress
+  "Wordpress": WordPress
+  '[^/\.]github': GitHub
+  "Github": GitHub
