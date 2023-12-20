@@ -78,6 +78,7 @@ html_show_copyright = False
 
 issuetracker = "github"
 issuetracker_project = "WordPress/openverse"
+githubusermention = True
 
 # The default for this is a sensible one for ReadTheDocs but
 # our site is served directly at the root docs.openverse.org URL

@@ -93,10 +93,12 @@ def generate_index_suffix(default_suffix: str | None = None) -> str:
     return default_suffix or uuid.uuid4().hex
 
 
-def get_current_index(target_alias: str) -> SimpleHttpOperator:
+def get_current_index(
+    target_alias: str, http_conn_id: str = "data_refresh"
+) -> SimpleHttpOperator:
     return SimpleHttpOperator(
         task_id="get_current_index",
-        http_conn_id="data_refresh",
+        http_conn_id=http_conn_id,
         endpoint=f"stat/{target_alias}",
         method="GET",
         response_check=lambda response: response.status_code == 200,
@@ -108,6 +110,7 @@ def trigger_task(
     action: str,
     model: str,
     data: dict | None = None,
+    http_conn_id: str = "data_refresh",
 ) -> SimpleHttpOperator:
     data = {
         **(data or {}),
@@ -116,7 +119,7 @@ def trigger_task(
     }
     return SimpleHttpOperator(
         task_id=f"trigger_{action.lower()}",
-        http_conn_id="data_refresh",
+        http_conn_id=http_conn_id,
         endpoint="task",
         data=data,
         response_check=lambda response: response.status_code == 202,
@@ -129,10 +132,11 @@ def wait_for_task(
     task_trigger: SimpleHttpOperator,
     timeout: timedelta,
     poke_interval: int = REFRESH_POKE_INTERVAL,
+    http_conn_id: str = "data_refresh",
 ) -> HttpSensor:
     return HttpSensor(
         task_id=f"wait_for_{action.lower()}",
-        http_conn_id="data_refresh",
+        http_conn_id=http_conn_id,
         endpoint=XCOM_PULL_TEMPLATE.format(task_trigger.task_id, "return_value"),
         method="GET",
         response_check=response_check_wait_for_completion,
@@ -148,9 +152,10 @@ def trigger_and_wait_for_task(
     timeout: timedelta,
     data: dict | None = None,
     poke_interval: int = REFRESH_POKE_INTERVAL,
+    http_conn_id: str = "data_refresh",
 ) -> tuple[SimpleHttpOperator, HttpSensor]:
-    trigger = trigger_task(action, model, data)
-    waiter = wait_for_task(action, trigger, timeout, poke_interval)
+    trigger = trigger_task(action, model, data, http_conn_id)
+    waiter = wait_for_task(action, trigger, timeout, poke_interval, http_conn_id)
     trigger >> waiter
     return trigger, waiter
 

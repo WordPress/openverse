@@ -46,6 +46,7 @@ The following are DAGs grouped by their primary tag:
 | [`batched_update`](#batched_update)                                               | `None`            |
 | [`delete_records`](#delete_records)                                               | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
+| [`recreate_full_staging_index`](#recreate_full_staging_index)                     | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
@@ -85,6 +86,7 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
 | --------------------------------------------------------------- | ----------------- | ------- | ------------- |
 | `brooklyn_museum_workflow`                                      | `@monthly`        | `False` | image         |
+| [`cc_mixter_workflow`](#cc_mixter_workflow)                     | `@monthly`        | `False` | audio         |
 | `cleveland_museum_workflow`                                     | `@monthly`        | `False` | image         |
 | [`europeana_workflow`](#europeana_workflow)                     | `@daily`          | `True`  | image         |
 | [`finnish_museums_workflow`](#finnish_museums_workflow)         | `@daily`          | `True`  | image         |
@@ -124,6 +126,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
+1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
@@ -150,6 +153,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`pr_review_reminders`](#pr_review_reminders)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
 1.  [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
+1.  [`recreate_full_staging_index`](#recreate_full_staging_index)
 1.  [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)
 1.  [`report_pending_reported_media`](#report_pending_reported_media)
 1.  [`rotate_db_snapshots`](#rotate_db_snapshots)
@@ -312,6 +316,18 @@ with an existing temp table matching the `query_id`. This option should only be
 used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step.
+
+### `cc_mixter_workflow`
+
+Content Provider: ccMixter
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: Documentation: https://ccmixter.org/query-api ccMixter sends bad JSON and
+extremely huge headers, both of which need workarounds that are handled by this
+DAG.
 
 ### `check_silenced_dags`
 
@@ -802,6 +818,45 @@ popularity constants and standardized popularity scores using the new functions.
 These DAGs are not on a schedule, and should only be run manually when new SQL
 code is deployed for the calculation.
 
+### `recreate_full_staging_index`
+
+#### Recreate Full Staging Index DAG
+
+This DAG is used to fully recreate a new staging Elasticsearch index for a given
+`media_type`, using records pulled from the staging API database. It is used to
+decouple the steps of creating a new index from the rest of the data refresh
+process.
+
+Staging index creation is handled by the _staging_ ingestion server. The DAG
+triggers the ingestion server `REINDEX` action to create a new index in the
+staging elasticsearch cluster for the given media type, suffixed by the current
+timestamp. The DAG awaits the completion of the index creation and then points
+the `<media_type>-full` alias to the newly created index.
+
+Required Dagrun Configuration parameters:
+
+- media_type: the media type for which to create a new index.
+
+Optional params:
+
+- target_alias_override: Override the alias that is pointed to the new index. By
+  default this is `<media_type>-full`.
+- delete_old_index: Whether to delete the index previously pointed to by the
+  target alias, if applicable. Defaults to False.
+
+##### When this DAG runs
+
+This DAG is on a `None` schedule and is run manually.
+
+##### Race conditions
+
+Because this DAG runs on the staging ingestion server and staging elasticsearch
+cluster, it does _not_ interfere with the `data_refresh` or
+`create_filtered_index` DAGs.
+
+However, the DAG will exit immediately if the `staging_database_restore` DAG is
+running, as it operates on the staging API database.
+
 ### `recreate_image_popularity_calculation`
 
 This file generates Apache Airflow DAGs that, for the given media type,
@@ -838,7 +893,7 @@ manage this for us.
 
 It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
 
-The DAG will automatically delete the oldest snapshots when more snaphots exist
+The DAG will automatically delete the oldest snapshots when more snapshots exist
 than it is configured to retain.
 
 Requires two variables:

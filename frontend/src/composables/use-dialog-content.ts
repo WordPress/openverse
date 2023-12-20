@@ -78,9 +78,15 @@ export function useDialogContent({
   const onKeyDown = (event: KeyboardEvent) => {
     emit("keydown", event)
 
-    if (event.defaultPrevented) return
-    if (event.key !== "Escape") return
-    if (!hideOnEscRef.value) return
+    if (event.defaultPrevented) {
+      return
+    }
+    if (event.key !== "Escape") {
+      return
+    }
+    if (!hideOnEscRef.value) {
+      return
+    }
 
     event.stopPropagation()
     hideRef.value()

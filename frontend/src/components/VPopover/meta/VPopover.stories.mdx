@@ -6,10 +6,23 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
-import { placements as popoverPlacements } from "@popperjs/core"
-
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VButton from "~/components/VButton.vue"
+
+export const popoverPlacements = [
+  "top",
+  "top-start",
+  "top-end",
+  "bottom",
+  "bottom-start",
+  "bottom-end",
+  "left",
+  "left-start",
+  "left-end",
+  "right",
+  "right-start",
+  "right-end",
+]
 
 <Meta
   title="Components/VPopover"

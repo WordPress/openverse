@@ -1,6 +1,10 @@
 import { test } from "@playwright/test"
 
-import { goToSearchTerm, t } from "~~/test/playwright/utils/navigation"
+import {
+  goToSearchTerm,
+  t,
+  turnOnAnalytics,
+} from "~~/test/playwright/utils/navigation"
 
 import {
   collectAnalyticsEvents,
@@ -11,6 +15,7 @@ test("sends VIEW_EXTERNAL_SOURCES analytics events", async ({
   page,
   context,
 }) => {
+  await turnOnAnalytics(page)
   const events = collectAnalyticsEvents(context)
 
   await goToSearchTerm(page, "cat", { searchType: "image", mode: "SSR" })
@@ -33,6 +38,7 @@ test("sends SELECT_EXTERNAL_SOURCE analytics events", async ({
   page,
   context,
 }) => {
+  await turnOnAnalytics(page)
   const pagePromise = page.context().waitForEvent("page")
 
   const events = collectAnalyticsEvents(context)

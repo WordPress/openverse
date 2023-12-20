@@ -249,7 +249,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         :param tag: the tag to be verified against the blacklist
         :return: true if tag is blacklisted, else returns false
         """
-        if type(tag) == dict:  # check if the tag is already enriched
+        if isinstance(tag, dict):  # check if the tag is already enriched
             tag = tag.get("name")
         if tag in TAG_BLACKLIST:
             return True
@@ -261,7 +261,7 @@ class MediaStore(metaclass=abc.ABCMeta):
     @staticmethod
     def _enrich_meta_data(meta_data, license_url, raw_license_url) -> dict:
         """Ensure that meta_data is a dict and contains both license URLs."""
-        if type(meta_data) != dict:
+        if not isinstance(meta_data, dict):
             logger.debug(f"`meta_data` is not a dictionary: {meta_data}")
             enriched_meta_data = {
                 "license_url": license_url,
@@ -285,7 +285,7 @@ class MediaStore(metaclass=abc.ABCMeta):
             A list of 'enriched' tags:
             {"name": "tag_name", "provider": self._PROVIDER}
         """
-        if type(raw_tags) != list:
+        if not isinstance(raw_tags, list):
             logger.debug("`tags` is not a list.")
             return None
         else:
@@ -296,7 +296,7 @@ class MediaStore(metaclass=abc.ABCMeta):
             ]
 
     def _format_raw_tag(self, tag):
-        if type(tag) == dict and tag.get("name") and tag.get("provider"):
+        if isinstance(tag, dict) and tag.get("name") and tag.get("provider"):
             logger.debug(f"Tag already enriched: {tag}")
             return tag
         else:

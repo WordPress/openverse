@@ -135,9 +135,9 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
 
 
 # Generate a data refresh DAG for each DATA_REFRESH_CONFIG.
-all_data_refresh_dag_ids = {refresh.dag_id for refresh in DATA_REFRESH_CONFIGS}
+all_data_refresh_dag_ids = {refresh.dag_id for refresh in DATA_REFRESH_CONFIGS.values()}
 
-for data_refresh in DATA_REFRESH_CONFIGS:
+for data_refresh in DATA_REFRESH_CONFIGS.values():
     # Construct a set of all data refresh DAG ids other than the current DAG
     other_dag_ids = all_data_refresh_dag_ids - {data_refresh.dag_id}
 

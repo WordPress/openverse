@@ -82,3 +82,38 @@ The input file is an Excel spreadsheet which looks like the following:
 ![Excel spreadsheet](_docs/example_weeks_spreadsheet.png)
 
 The output CSVs will have two columns: the project name and the computed weeks.
+
+## Project Selection
+
+As the last step in project planning, using data compiled from the above steps,
+maintainers vote on which projects they believe should be included in the next
+year. The weeks of work estimation and total weeks of work are both used to
+calculate how many projects can be selected when the maintainers are voting.
+Instructions provided to the maintainers are as follows:
+
+> **Instructions**:
+>
+> Select which projects should be included in the year, based on the number of
+> development weeks available and the number of weeks each project is expected
+> to take.
+>
+> Number of weeks has been calculated two ways:
+>
+> 1. Straight average across all votes
+> 2. Weighted averaged based on confidence provided for each vote
+>
+> You may go slightly over the total available hours (by either count), but try
+> to keep it less than 5 off! The hours left will indicate how many are left
+> while you are voting.
+
+This final script takes all the selection votes and groups them into 4
+categories:
+
+- Projects everyone voted for
+- Projects most voted for
+- Projects only some voted for
+- Projects one or none voted for
+
+The input file is an Excel spreadsheet which looks like the following:
+
+![Excel spreadsheet](_docs/example_selection_spreadsheet.png)

@@ -14,6 +14,7 @@ from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
 from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
+from redis.exceptions import ConnectionError
 
 import api.models as models
 from api.constants.media_types import OriginIndex, SearchIndex
@@ -184,21 +185,33 @@ def get_excluded_providers_query() -> Q | None:
     `:FILTERED_PROVIDERS_CACHE_VERSION:FILTERED_PROVIDERS_CACHE_KEY` key.
     """
 
-    filtered_providers = cache.get(
-        key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
-    )
+    logger = module_logger.getChild("get_excluded_providers_query")
+
+    try:
+        filtered_providers = cache.get(
+            key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
+        )
+    except ConnectionError:
+        logger.warning("Redis connect failed, cannot get cached filtered providers.")
+        filtered_providers = None
+
     if not filtered_providers:
         filtered_providers = list(
             models.ContentProvider.objects.filter(filter_content=True).values_list(
                 "provider_identifier", flat=True
             )
         )
-        cache.set(
-            key=FILTERED_PROVIDERS_CACHE_KEY,
-            version=FILTERED_PROVIDERS_CACHE_VERSION,
-            timeout=FILTER_CACHE_TIMEOUT,
-            value=filtered_providers,
-        )
+
+        try:
+            cache.set(
+                key=FILTERED_PROVIDERS_CACHE_KEY,
+                version=FILTERED_PROVIDERS_CACHE_VERSION,
+                timeout=FILTER_CACHE_TIMEOUT,
+                value=filtered_providers,
+            )
+        except ConnectionError:
+            logger.warning("Redis connect failed, cannot cache filtered providers.")
+
     if filtered_providers:
         return Q("terms", provider=filtered_providers)
     return None
@@ -567,10 +580,20 @@ def get_sources(index):
         cache_fetch_failed = True
         sources = None
         log.warning("Source cache fetch failed due to corruption")
-    if type(sources) == list or cache_fetch_failed:
-        # Invalidate old provider format.
-        cache.delete(key=source_cache_name)
-    if not sources or sources:
+    except ConnectionError:
+        cache_fetch_failed = True
+        sources = None
+        log.warning("Redis connect failed, cannot get cached sources.")
+
+    if isinstance(sources, list) or cache_fetch_failed:
+        sources = None
+        try:
+            # Invalidate old provider format.
+            cache.delete(key=source_cache_name)
+        except ConnectionError:
+            log.warning("Redis connect failed, cannot invalidate cached sources.")
+
+    if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
@@ -597,7 +620,15 @@ def get_sources(index):
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
         sources = {result["key"]: result["doc_count"] for result in buckets}
-        cache.set(key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources)
+
+        try:
+            cache.set(
+                key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources
+            )
+        except ConnectionError:
+            log.warning("Redis connect failed, cannot cache sources.")
+
+    sources = {source: int(doc_count) for source, doc_count in sources.items()}
     return sources
 
 

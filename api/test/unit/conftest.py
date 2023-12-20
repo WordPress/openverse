@@ -12,7 +12,6 @@ from rest_framework.test import APIClient, APIRequestFactory
 import pook
 import pytest
 from elasticsearch import Elasticsearch
-from fakeredis import FakeRedis
 
 from api.models import (
     Audio,
@@ -40,26 +39,13 @@ from api.serializers.media_serializers import (
 )
 
 
-@pytest.fixture()
-def redis(monkeypatch) -> FakeRedis:
-    fake_redis = FakeRedis()
-
-    def get_redis_connection(*args, **kwargs):
-        return fake_redis
-
-    monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
-
-    yield fake_redis
-    fake_redis.client().close()
-
-
 @pytest.fixture
 def api_client():
     return APIClient()
 
 
 @pytest.fixture(autouse=True)
-def capture_exception(monkeypatch):
+def sentry_capture_exception(monkeypatch):
     mock = MagicMock()
     monkeypatch.setattr("sentry_sdk.capture_exception", mock)
 

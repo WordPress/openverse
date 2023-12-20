@@ -17,11 +17,11 @@ x-airflow-common: &airflow-common
     context: ./catalog/
     target: cat
     args: # Automatically inferred from env vars, unless specified
-      - REQUIREMENTS_FILE=requirements_dev.txt
+      - REQUIREMENTS_FILE=requirements-dev.txt
       - CATALOG_PY_VERSION
       - CATALOG_AIRFLOW_VERSION
   volumes:
-    - ./catalog:/opt/airflow/catalog
+    - ./catalog:/opt/airflow/catalog:z
     - catalog-cache:/home/airflow/.cache
 
 services:
@@ -55,7 +55,7 @@ services:
       - "50255:5432"
     volumes:
       - catalog-postgres:/var/lib/postgresql/data
-      - ./sample_data:/sample_data
+      - ./sample_data:/sample_data:z
     env_file:
       - docker/upstream_db/env.docker
     healthcheck:
@@ -76,7 +76,7 @@ services:
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
-      - ./docker/minio/s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro
+      - ./docker/minio/s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/s3_entrypoint.sh
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
@@ -97,8 +97,8 @@ services:
     volumes:
       # Buckets for testing provider data imported from s3 are subdirectories under
       # /tests/s3-data/
-      - ./catalog/tests/s3-data:/data:rw
-      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro
+      - ./catalog/tests/s3-data:/data:rw,z
+      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/load_to_s3_entrypoint.sh
 
   # Dev changes for the scheduler
@@ -161,8 +161,8 @@ services:
     image: docker.io/clickhouse/clickhouse-server:23.4-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
-      - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
-      - ./docker/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+      - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro,z
+      - ./docker/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro,z
     ulimits:
       nofile:
         soft: 262144
@@ -224,7 +224,7 @@ services:
         - API_PY_VERSION
     image: openverse-api
     volumes:
-      - ./api:/api
+      - ./api:/api:z
     ports:
       - "50280:8000" # Django
     depends_on:
@@ -255,7 +255,7 @@ services:
       - es
       - indexer_worker
     volumes:
-      - ./ingestion_server:/ingestion_server
+      - ./ingestion_server:/ingestion_server:z
     env_file:
       - ingestion_server/env.docker
       - ingestion_server/.env
@@ -280,7 +280,7 @@ services:
       - upstream_db
       - es
     volumes:
-      - ./ingestion_server:/ingestion_server
+      - ./ingestion_server:/ingestion_server:z
     env_file:
       - ingestion_server/env.docker
     stdin_open: true
@@ -314,8 +314,8 @@ services:
     depends_on:
       - web
     volumes:
-      - ./docker/nginx/templates:/etc/nginx/templates
-      - ./docker/nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/templates:/etc/nginx/templates:z
+      - ./docker/nginx/certs:/etc/nginx/certs:z
 
   frontend_nginx:
     profiles:

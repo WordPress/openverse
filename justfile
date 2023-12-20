@@ -13,6 +13,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
     just --list --unsorted
+    cd docker/cache && just
     cd docker/nginx && just
     cd docker/es && just
     cd catalog && just

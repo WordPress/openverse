@@ -104,6 +104,21 @@ describe("Search Store", () => {
       }
     )
 
+    it.each`
+      type     | collectionParams                                                | expected
+      ${IMAGE} | ${{ collection: "tag", tag: "cat" }}                            | ${"/image/tag/cat/"}
+      ${AUDIO} | ${{ collection: "creator", source: "jamendo", creator: "cat" }} | ${"/audio/source/jamendo/creator/cat/"}
+      ${IMAGE} | ${{ collection: "source", source: "flickr" }}                   | ${"/image/source/flickr/"}
+    `(
+      "getCollectionPath returns $expected for $type, $tag, $creator, $source",
+      ({ type, collectionParams, expected }) => {
+        const searchStore = useSearchStore()
+        searchStore.getCollectionPath({ type, collectionParams })
+
+        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+      }
+    )
+
     /**
      * For non-supported search types, the filters fall back to 'All content' filters.
      * Number of displayed filters is one less than the number of mediaFilterKeys

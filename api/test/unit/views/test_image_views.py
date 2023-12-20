@@ -1,6 +1,4 @@
 import json
-from collections.abc import Callable
-from dataclasses import dataclass
 from pathlib import Path
 from test.factory.models.image import ImageFactory
 from unittest.mock import patch
@@ -8,7 +6,7 @@ from unittest.mock import patch
 import pook
 import pytest
 from PIL import UnidentifiedImageError
-from requests import Request, Response
+from requests import Response
 
 from api.views.image_views import ImageViewSet
 
@@ -18,47 +16,22 @@ _MOCK_IMAGE_BYTES = (_MOCK_IMAGE_PATH / "sample-image.jpg").read_bytes()
 _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read_text())
 
 
-@dataclass
-class RequestsFixture:
-    requests: list[Request]
-    response_factory: Callable[  # noqa: E731
-        [Request], Response
-    ] = lambda x: RequestsFixture._default_response_factory(x)
-
-    @staticmethod
-    def _default_response_factory(req: Request) -> Response:
-        res = Response()
-        res.url = req.url
-        res.status_code = 200
-        res._content = _MOCK_IMAGE_BYTES
-        return res
-
-
-@pytest.fixture
-def requests(monkeypatch) -> RequestsFixture:
-    fixture = RequestsFixture([])
-
-    def requests_get(url, **kwargs):
-        req = Request(method="GET", url=url, **kwargs)
-        fixture.requests.append(req)
-        response = fixture.response_factory(req)
-        return response
-
-    monkeypatch.setattr("requests.get", requests_get)
-
-    return fixture
-
-
 @pytest.mark.django_db
-def test_oembed_sends_ua_header(api_client, requests):
+def test_oembed_sends_ua_header(api_client):
     image = ImageFactory.create()
-    res = api_client.get("/v1/images/oembed/", data={"url": f"/{image.identifier}"})
+    image.url = f"https://any.domain/any/path/{image.identifier}"
+    image.save()
+
+    with pook.use():
+        (
+            pook.get(image.url)
+            .header("User-Agent", ImageViewSet.OEMBED_HEADERS["User-Agent"])
+            .reply(200)
+            .body(_MOCK_IMAGE_BYTES, binary=True)
+        )
+        res = api_client.get("/v1/images/oembed/", data={"url": image.url})
 
     assert res.status_code == 200
-
-    assert len(requests.requests) > 0
-    for r in requests.requests:
-        assert r.headers == ImageViewSet.OEMBED_HEADERS
 
 
 @pytest.mark.django_db

@@ -77,23 +77,30 @@ export default defineComponent({
         return
       }
       const error = event.target.error
-      if (!error) return
+      if (!error) {
+        return
+      }
       let errorMsg
       switch (error.code) {
-        case error.MEDIA_ERR_ABORTED:
+        case error.MEDIA_ERR_ABORTED: {
           errorMsg = "err_aborted"
           break
-        case error.MEDIA_ERR_NETWORK:
+        }
+        case error.MEDIA_ERR_NETWORK: {
           errorMsg = "err_network"
           break
-        case error.MEDIA_ERR_DECODE:
+        }
+        case error.MEDIA_ERR_DECODE: {
           errorMsg = "err_decode"
           break
-        case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        }
+        case error.MEDIA_ERR_SRC_NOT_SUPPORTED: {
           errorMsg = "err_unsupported"
           break
-        default:
+        }
+        default: {
           errorMsg = "err_unknown"
+        }
       }
       activeMediaStore.setMessage({ message: errorMsg })
     }
@@ -101,7 +108,9 @@ export default defineComponent({
     watch(
       activeAudio.obj,
       (audio, _, onInvalidate) => {
-        if (!audio) return
+        if (!audio) {
+          return
+        }
         audio.addEventListener("error", handleError)
 
         onInvalidate(() => {

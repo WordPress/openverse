@@ -24,8 +24,6 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
-import { PaginatedSearchQuery } from "~/types/search"
-
 export type MediaStoreResult = {
   count: number
   pageCount: number
@@ -96,7 +94,9 @@ export const useMediaStore = defineStore("media", {
     getItemById: (state) => {
       return (mediaType: SupportedMediaType, id: string): Media | undefined => {
         const itemFromSearchResults = state.results[mediaType].items[id]
-        if (itemFromSearchResults) return itemFromSearchResults
+        if (itemFromSearchResults) {
+          return itemFromSearchResults
+        }
         return useRelatedMediaStore().getItemById(id)
       }
     },
@@ -266,7 +266,9 @@ export const useMediaStore = defineStore("media", {
           )
 
           // Prevent the bunching of audio results at the end.
-          if (nonImageIndex > newResults.length) break
+          if (nonImageIndex > newResults.length) {
+            break
+          }
         }
       }
 
@@ -332,18 +334,22 @@ export const useMediaStore = defineStore("media", {
       error?: FetchingError
     ) {
       switch (action) {
-        case "reset":
+        case "reset": {
           this._resetFetchState()
           break
-        case "start":
+        }
+        case "start": {
           this._startFetching(mediaType)
           break
-        case "end":
+        }
+        case "end": {
           this._endFetching(mediaType, error)
           break
-        case "finish":
+        }
+        case "finish": {
           this._finishFetchingForQuery(mediaType)
           break
+        }
       }
     },
 
@@ -443,18 +449,19 @@ export const useMediaStore = defineStore("media", {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
     }) {
+      const searchStore = useSearchStore()
+      const { pathSlug, query: queryParams } =
+        searchStore.getSearchUrlParts(mediaType)
       let page = this.results[mediaType].page + 1
-      const queryParams: PaginatedSearchQuery = {
-        ...useSearchStore().apiSearchQueryParams,
-        // Don't need to set `page` parameter for the first page.
-        page: shouldPersistMedia ? `${page}` : undefined,
+      if (shouldPersistMedia) {
+        queryParams.page = `${page}`
       }
 
       this._updateFetchState(mediaType, "start")
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
-        const data = await service.search(queryParams)
+        const data = await service.search(queryParams, pathSlug)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

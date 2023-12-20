@@ -31,6 +31,7 @@ include(
     "static.py",
     # services
     "databases.py",
+    "caches.py",
     "elasticsearch.py",
     "email.py",
     "aws.py",

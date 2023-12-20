@@ -2,20 +2,6 @@ import json
 from pathlib import Path
 
 import pytest
-from fakeredis import FakeRedis
-
-
-@pytest.fixture(autouse=True)
-def redis(monkeypatch) -> FakeRedis:
-    fake_redis = FakeRedis()
-
-    def get_redis_connection(*args, **kwargs):
-        return fake_redis
-
-    monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
-
-    yield fake_redis
-    fake_redis.client().close()
 
 
 @pytest.fixture(scope="session")

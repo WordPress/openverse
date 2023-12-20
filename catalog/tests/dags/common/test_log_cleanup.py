@@ -46,8 +46,10 @@ cutoffs_in_days = calculate_cutoffs()
 
 
 def test_log_cleaner_leaves_new_files():
-    """If all the log files are newer than the maxLogAgeInDays,
-    no log files are deleted"""
+    """
+    If all the log files are newer than the maxLogAgeInDays,
+    no log files are deleted
+    """
     log_files_count = len(list(Path.glob(logs_folder, "**/*.log")))
     assert log_files_count == INITIAL_LOG_FILE_COUNT
 
@@ -61,8 +63,10 @@ def test_log_cleaner_leaves_new_files():
 
 
 def test_log_cleaner_deletes_only_old_files():
-    """Log cleaner deletes all the log files that are older than
-    maxLogAgeInDays, but leaves the files that are newer"""
+    """
+    Log cleaner deletes all the log files that are older than
+    maxLogAgeInDays, but leaves the files that are newer
+    """
     deleted_folders = log_cleanup.clean_up(
         logs_folder, cutoffs_in_days[1], ENABLE_DELETE
     )
