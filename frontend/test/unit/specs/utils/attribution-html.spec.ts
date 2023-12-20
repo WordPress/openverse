@@ -1,14 +1,7 @@
-import Vuei18n from "vue-i18n"
+import { i18n } from "~~/test/unit/test-utils/i18n"
 
 import type { AttributableMedia } from "~/utils/attribution-html"
 import { getAttribution } from "~/utils/attribution-html"
-import enMessages from "~/locales/en.json"
-
-const i18n = new Vuei18n({
-  locale: "en",
-  fallbackLocale: "en",
-  messages: { en: enMessages },
-})
 
 const mediaItem: AttributableMedia = {
   originalTitle: "Title",

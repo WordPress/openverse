@@ -1,8 +1,8 @@
-import VueI18n from "vue-i18n"
+import { createI18n } from "vue-i18n"
 
-const messages = require("~/locales/en.json")
+import messages from "~/locales/en.json"
 
-export const i18n = new VueI18n({
+export const i18n = createI18n({
   locale: "en",
   fallbackLocale: "en",
   messages: {
