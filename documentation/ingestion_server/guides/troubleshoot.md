@@ -37,9 +37,9 @@ the size of a test/staging index. To do so, follow these steps.
 4. Repeat steps 2 and 3 for each active ingestion worker machine. Leave the SSH
    sessions open.
 
-5. Wait for a few minutes and keep an eye on the document count in the
-   Elasticsearch index that was currently being created. It may increase a
-   little because of timing effects but should stop after a few minutes.
+5. Wait for a few minutes and note the document count in the Elasticsearch index
+   that was currently being created. It may increase a little because of timing
+   effects but should stop after a few minutes.
 
 6. From each of the open SSH sessions, send a completion notification to the
    ingestion server's internal IP address.

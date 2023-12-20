@@ -119,8 +119,7 @@ in the design library file is constantly being added to and improved, some
 documentation may be missing. If you have doubts, ask on
 [#design channel](http://wordpress.slack.com/messages/design/) for
 clarification. If you discover new information that is yet to be documented,
-contributing this information back to the documentation is very much
-appreciated.
+contributing this information back to the documentation is deeply appreciated.
 
 Once you are done and ready to share your idea,
 [create an issue with the `design` label and fill in the template](https://github.com/WordPress/openverse/issues/new?assignees=&labels=🖼️+aspect%3A+design%2C✨+goal%3A+improvement%2C+🚦+status%3A+awaiting+triage&template=feature_request.md&title=<Replace+this+with+actual+title>).
@@ -139,11 +138,11 @@ discussion evolves before implementation begins.
 You can also contribute to Openverse by translating it.
 
 An overview of Openverse translations is here:
-[https://translate.wordpress.org/projects/meta/openverse/](https://translate.wordpress.org/projects/meta/openverse/)
+<https://translate.wordpress.org/projects/meta/openverse/>
 
 A getting started guide for translating on GlotPress (the software behind
-[translate.wordpress.org](https://translate.wordpress.org)) is here:
-[https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started](https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started)
+<https://translate.wordpress.org>) is here:
+<https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started>
 
 ### Providers
 
@@ -249,8 +248,7 @@ In the course of this work, you may find issues that should be
 [closed because they are no longer valid](#closing-no-longer-valid-issues).
 Please see the linked section for how to handle those issues and
 [keep in mind the important caveat with regard to reproducibility covered in that section](#reproducibility).
-See also [bug reproduction reproduction and triage](#bug-reproduction--triage)
-above.
+See also [bug reproduction and triage](#bug-reproduction--triage) above.
 
 #### Merging issues
 

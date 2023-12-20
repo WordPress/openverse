@@ -499,7 +499,7 @@ in the earlier project stages but is likely to be implemented here.
 ## Managing and working with projects
 
 We use a new
-[Github Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
+[GitHub Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
 track all of the projects in Openverse. This board gives us a single view to see
 all projects and some additional metadata:
 

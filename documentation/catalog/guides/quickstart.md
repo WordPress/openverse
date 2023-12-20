@@ -171,7 +171,7 @@ just down -v
 
 `docker volume prune` can also be useful if you've already stopped the running
 containers, but be warned that it will remove all volumes associated with
-stopped containers, not just openverse-catalog ones.
+stopped containers, not just catalog ones.
 
 To fully recreate everything from the ground up, you can use:
 
