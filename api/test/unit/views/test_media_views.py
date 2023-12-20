@@ -32,9 +32,7 @@ def test_list_query_count(api_client, media_type_config):
     ), patch(
         "api.serializers.media_serializers.search_controller",
         get_sources=MagicMock(return_value={}),
-    ), pytest_django.asserts.assertNumQueries(
-        1
-    ):
+    ), pytest_django.asserts.assertNumQueries(1):
         res = api_client.get(f"/v1/{media_type_config.url_prefix}/")
 
     assert res.status_code == 200

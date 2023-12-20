@@ -153,7 +153,7 @@ class ImageViewSet(MediaViewSet):
     @action(detail=True, url_path="watermark", url_name="watermark")
     def watermark(self, request, *_, **__):  # noqa: D401
         """
-        This endpoint is deprecated.
+        Note that this endpoint is deprecated.
 
         ---
 

@@ -1,6 +1,4 @@
-"""
-Run these tests locally with `just test -k cc_mixter`
-"""
+"""Run these tests locally with `just test -k cc_mixter`"""
 
 import json
 from pathlib import Path

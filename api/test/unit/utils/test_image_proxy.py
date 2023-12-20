@@ -59,9 +59,7 @@ def auth_key():
 
 @pytest.fixture
 def photon_get(session_loop):
-    """
-    Run ``image_proxy.get`` and wait for all tasks to finish.
-    """
+    """Run ``image_proxy.get`` and wait for all tasks to finish."""
 
     def do(*args, **kwargs):
         try:
