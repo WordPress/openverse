@@ -1,6 +1,4 @@
-"""
-Run these tests locally with `just test -k cc_mixter`
-"""
+"""Run these tests locally with `just test -k cc_mixter`"""
 
 import json
 from pathlib import Path
@@ -18,8 +16,9 @@ RESOURCES = Path(__file__).parent / "resources/cc_mixter"
 ingester = CcMixterDataIngester()
 
 
-def test_custom_requester_parses_bad_json():
-    response = Mock(text='{"value": 0123}')
+@pytest.mark.parametrize("bad_number", ["0123", "00123"])
+def test_custom_requester_parses_bad_json(bad_number):
+    response = Mock(text=f'{{"value": {bad_number}}}')
 
     with pytest.raises(json.decoder.JSONDecodeError):
         json.loads(response.text)

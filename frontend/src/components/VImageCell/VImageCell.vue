@@ -183,7 +183,17 @@ export default defineComponent({
     })
 
     const { sendCustomEvent } = useAnalytics()
-    const sendSelectSearchResultEvent = () => {
+
+    /**
+     * If the user left clicks on a search result, send
+     * the SELECT_SEARCH_RESULT custom event
+     * @param event - the mouse click event
+     */
+    const sendSelectSearchResultEvent = (event: MouseEvent) => {
+      if (event.button !== 0) {
+        return
+      }
+
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: props.image.id,
         kind: props.kind,
