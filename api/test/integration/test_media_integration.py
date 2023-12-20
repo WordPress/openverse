@@ -1,6 +1,4 @@
-"""
-This suite of tests cover common operations for all media types.
-"""
+"""This test suite covers common operations for all media types."""
 
 import re
 from dataclasses import dataclass
