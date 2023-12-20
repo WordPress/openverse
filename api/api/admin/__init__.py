@@ -82,3 +82,4 @@ for klass in [
 class ProviderAdmin(admin.ModelAdmin):
     list_display = ("provider_name", "provider_identifier", "media_type")
     search_fields = ("provider_name", "provider_identifier")
+    ordering = ("media_type", "provider_name")
