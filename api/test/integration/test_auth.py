@@ -3,7 +3,6 @@ import uuid
 from test.constants import API_URL
 
 from django.urls import reverse
-from django.utils.http import urlencode
 
 import pytest
 from oauth2_provider.models import AccessToken
@@ -37,13 +36,13 @@ def unreachable_oauth_cache(unreachable_django_cache, monkeypatch):
 
 @pytest.mark.django_db
 @pytest.fixture
-def test_auth_tokens_registration(client):
+def test_auth_tokens_registration(api_client):
     data = {
         "name": f"INTEGRATION TEST APPLICATION {uuid.uuid4()}",
         "description": "A key for testing the OAuth2 registration process.",
         "email": "example@example.org",
     }
-    res = client.post(
+    res = api_client.post(
         "/v1/auth_tokens/register/",
         data,
         verify=False,
@@ -55,20 +54,19 @@ def test_auth_tokens_registration(client):
 
 @pytest.mark.django_db
 @pytest.fixture
-def test_auth_token_exchange(client, test_auth_tokens_registration):
-    client_id = test_auth_tokens_registration["client_id"]
-    client_secret = test_auth_tokens_registration["client_secret"]
-    data = urlencode(
-        {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "grant_type": "client_credentials",
-        }
-    )
-    res = client.post(
+def test_auth_token_exchange(api_client, test_auth_tokens_registration):
+    api_client_id = test_auth_tokens_registration["client_id"]
+    api_client_secret = test_auth_tokens_registration["client_secret"]
+    data = {
+        "client_id": api_client_id,
+        "client_secret": api_client_secret,
+        "grant_type": "client_credentials",
+    }
+
+    res = api_client.post(
         "/v1/auth_tokens/token/",
         data,
-        "application/x-www-form-urlencoded",
+        "multipart",
         verify=False,
     )
     res_data = res.json()
@@ -77,8 +75,8 @@ def test_auth_token_exchange(client, test_auth_tokens_registration):
 
 
 @pytest.mark.django_db
-def test_auth_token_exchange_unsupported_method(client):
-    res = client.get(
+def test_auth_token_exchange_unsupported_method(api_client):
+    res = api_client.get(
         "/v1/auth_tokens/token/",
         verify=False,
     )
@@ -86,11 +84,11 @@ def test_auth_token_exchange_unsupported_method(client):
     assert res.json()["detail"] == 'Method "GET" not allowed.'
 
 
-def _integration_verify_most_recent_token(client):
+def _integration_verify_most_recent_token(api_client):
     verify = OAuth2Verification.objects.last()
     code = verify.code
     path = reverse("verify-email", args=[code])
-    return client.get(path)
+    return api_client.get(path)
 
 
 @pytest.mark.django_db
@@ -109,17 +107,17 @@ def _integration_verify_most_recent_token(client):
 )
 def test_auth_email_verification(
     request,
-    client,
+    api_client,
     is_cache_reachable,
     cache_name,
     rate_limit_model,
     test_auth_token_exchange,
 ):
-    res = _integration_verify_most_recent_token(client)
+    res = _integration_verify_most_recent_token(api_client)
     assert res.status_code == 200
     test_auth_rate_limit_reporting(
         request,
-        client,
+        api_client,
         is_cache_reachable,
         cache_name,
         rate_limit_model,
@@ -136,7 +134,7 @@ def test_auth_email_verification(
 @cache_availability_params
 def test_auth_rate_limit_reporting(
     request,
-    client,
+    api_client,
     is_cache_reachable,
     cache_name,
     rate_limit_model,
@@ -152,7 +150,7 @@ def test_auth_rate_limit_reporting(
     application = AccessToken.objects.get(token=token).application
     application.rate_limit_model = rate_limit_model
     application.save()
-    res = client.get("/v1/rate_limit/", HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = api_client.get("/v1/rate_limit/", HTTP_AUTHORIZATION=f"Bearer {token}")
     res_data = res.json()
     if is_cache_reachable:
         assert res.status_code == 200
@@ -175,14 +173,14 @@ def test_auth_rate_limit_reporting(
     (True, False),
 )
 def test_auth_response_headers(
-    client, verified, test_auth_tokens_registration, test_auth_token_exchange
+    api_client, verified, test_auth_tokens_registration, test_auth_token_exchange
 ):
     if verified:
-        _integration_verify_most_recent_token(client)
+        _integration_verify_most_recent_token(api_client)
 
     token = test_auth_token_exchange["access_token"]
 
-    res = client.get("/v1/images/", HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = api_client.get("/v1/images/", HTTP_AUTHORIZATION=f"Bearer {token}")
 
     assert (
         res.headers["x-ov-client-application-name"]
@@ -191,8 +189,8 @@ def test_auth_response_headers(
     assert res.headers["x-ov-client-application-verified"] == str(verified)
 
 
-def test_unauthed_response_headers(client):
-    res = client.get("/v1/images")
+def test_unauthed_response_headers(api_client):
+    res = api_client.get("/v1/images")
 
     assert "x-ov-client-application-name" not in res.headers
     assert "x-ov-client-application-verified" not in res.headers
@@ -207,7 +205,7 @@ def test_unauthed_response_headers(client):
     ],
 )
 def test_sorting_authed(
-    client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
+    api_client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
 ):
     # Prevent DB lookup for ES results because DB is empty.
     monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
@@ -215,7 +213,9 @@ def test_sorting_authed(
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {"unstable__sort_by": "indexed_on", "unstable__sort_dir": sort_dir}
-    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = api_client.get(
+        "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
+    )
     assert res.status_code == 200
 
     res_data = res.json()
@@ -232,7 +232,7 @@ def test_sorting_authed(
     ],
 )
 def test_authority_authed(
-    client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
+    api_client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
 ):
     # Prevent DB lookup for ES results because DB is empty.
     monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
@@ -244,7 +244,9 @@ def test_authority_authed(
         "unstable__authority": "true",
         "unstable__authority_boost": authority_boost,
     }
-    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = api_client.get(
+        "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
+    )
     assert res.status_code == 200
 
     res_data = res.json()
@@ -253,23 +255,27 @@ def test_authority_authed(
 
 
 @pytest.mark.django_db
-def test_page_size_limit_unauthed(client):
+def test_page_size_limit_unauthed(api_client):
     query_params = {"page_size": 20}
-    res = client.get("/v1/images/", query_params)
+    res = api_client.get("/v1/images/", query_params)
     assert res.status_code == 200
     query_params["page_size"] = 21
-    res = client.get("/v1/images/", query_params)
+    res = api_client.get("/v1/images/", query_params)
     assert res.status_code == 401
 
 
 @pytest.mark.django_db
-def test_page_size_limit_authed(client, test_auth_token_exchange):
+def test_page_size_limit_authed(api_client, test_auth_token_exchange):
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {"page_size": 21}
-    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = api_client.get(
+        "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
+    )
     assert res.status_code == 200
 
     query_params = {"page_size": 500}
-    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    res = api_client.get(
+        "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
+    )
     assert res.status_code == 200

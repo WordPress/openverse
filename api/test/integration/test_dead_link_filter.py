@@ -74,12 +74,12 @@ def patch_link_validation_dead_for_count(count):
 
 @pytest.mark.django_db
 @_patch_make_head_requests()
-def test_dead_link_filtering(mocked_map, client):
+def test_dead_link_filtering(mocked_map, api_client):
     path = "/v1/images/"
     query_params = {"q": "*", "page_size": 20}
 
     # Make a request that does not filter dead links...
-    res_with_dead_links = client.get(
+    res_with_dead_links = api_client.get(
         path,
         query_params | {"filter_dead": False},
     )
@@ -87,7 +87,7 @@ def test_dead_link_filtering(mocked_map, client):
     mocked_map.assert_not_called()
 
     # Make a request that filters dead links...
-    res_without_dead_links = client.get(
+    res_without_dead_links = api_client.get(
         path,
         query_params | {"filter_dead": True},
     )
@@ -119,7 +119,7 @@ def test_dead_link_filtering(mocked_map, client):
     ),
 )
 def test_dead_link_filtering_all_dead_links(
-    client,
+    api_client,
     filter_dead,
     page_size,
     expected_result_count,
@@ -130,7 +130,7 @@ def test_dead_link_filtering_all_dead_links(
     query_params = {"q": "*", "page_size": page_size}
 
     with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
-        response = client.get(
+        response = api_client.get(
             path,
             query_params | {"filter_dead": filter_dead},
         )
@@ -145,11 +145,11 @@ def test_dead_link_filtering_all_dead_links(
 
 
 @pytest.fixture
-def search_factory(client):
+def search_factory(api_client):
     """Allow passing url parameters along with a search request."""
 
     def _parameterized_search(**kwargs):
-        response = client.get("/v1/images/", kwargs)
+        response = api_client.get("/v1/images/", kwargs)
         assert response.status_code == 200
         parsed = response.json()
         return parsed
@@ -207,6 +207,8 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
 
 
 @pytest.mark.django_db
-def test_max_page_count(client):
-    response = client.get("/v1/images/", {"page": settings.MAX_PAGINATION_DEPTH + 1})
+def test_max_page_count(api_client):
+    response = api_client.get(
+        "/v1/images/", {"page": settings.MAX_PAGINATION_DEPTH + 1}
+    )
     assert response.status_code == 400
