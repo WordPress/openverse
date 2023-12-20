@@ -35,6 +35,10 @@ cache_availability_params = pytest.mark.parametrize(
     "is_cache_reachable, cache_name",
     [(True, "search_con_cache"), (False, "unreachable_search_con_cache")],
 )
+# This parametrize decorator runs the test function with two scenarios:
+# - one where the API can connect to Redis
+# - one where it cannot and raises ``ConnectionError``
+# The fixtures referenced here are defined below.
 
 
 @pytest.fixture(autouse=True)
