@@ -219,7 +219,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}
-          target: ${{ matrix.target }}
+          target: ${{ matrix.target || '' }}
           push: false
           tags: openverse-${{ matrix.image }}
           file: ${{ matrix.file }}

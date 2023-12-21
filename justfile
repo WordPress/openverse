@@ -89,7 +89,7 @@ precommit:
 
 # Run pre-commit to lint and reformat files
 lint hook="" *files="": precommit
-    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
+    python3 pre-commit.pyz run {{ hook }} {{ if files =~ "all-files" { "" } else if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
 
 ########
 # Init #

@@ -5,3 +5,5 @@ COPY .vale.ini .
 COPY styles styles
 
 RUN vale sync
+
+ENTRYPOINT ["vale", "--config=/vale/.vale.ini"]

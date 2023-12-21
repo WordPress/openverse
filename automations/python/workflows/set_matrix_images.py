@@ -38,6 +38,10 @@ includes = {
         "file": "frontend/Dockerfile.nginx",
         "target": "nginx",
     },
+    "vale": {
+        "image": "vale",
+        "context": ".vale",
+    },
 }
 
 if "ci_cd" in changes:
@@ -54,6 +58,9 @@ if "api" in changes:
 if "frontend" in changes:
     build_matrix["image"] |= {"frontend", "frontend_nginx"}
     publish_matrix["image"] |= {"frontend", "frontend_nginx"}
+if "vale" in changes:
+    build_matrix["image"] |= {"vale"}
+    publish_matrix["image"] |= {"vale"}
 
 build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
 

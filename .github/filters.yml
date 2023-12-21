@@ -60,6 +60,7 @@ lint:
   - .pre-commit-config.yaml
   - tsconfig.base.json
   - .codespell
+  - .vale
 mgmt:
   - .github/**
   - .devcontainer/**
@@ -68,3 +69,5 @@ mgmt:
 ci_cd:
   - .github/actions/**
   - .github/workflows/ci_cd.yml
+vale:
+  - .vale
