@@ -1,4 +1,4 @@
-from socket import gethostbyname, gethostname
+from socket import gethostbyname, gethostname, gaierror
 
 from decouple import config
 
@@ -14,10 +14,14 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")  # required
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",") + [
-    gethostname(),
-    gethostbyname(gethostname()),
-]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",")
+try:
+    hostname = gethostname()
+    ALLOWED_HOSTS.append(hostname)
+    ALLOWED_HOSTS.append(gethostbyname(hostname))
+except gaierror:
+    # Unable to get hostname and/or host by that hostname.
+    pass
 
 if lb_url := config("LOAD_BALANCER_URL", default=""):
     ALLOWED_HOSTS.append(lb_url)
