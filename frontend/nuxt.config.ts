@@ -80,6 +80,12 @@ export default defineNuxtConfig({
     "@nuxtjs/plausible",
     "@nuxt/test-utils/module",
   ],
+  routeRules: {
+    // TODO: Move photos redirect and remove the photos page after this fix:
+    // https://github.com/unjs/nitro/pull/1976
+    "/meta-search": { redirect: { to: "/about", statusCode: 301 } },
+    "/external-sources": { redirect: { to: "/about", statusCode: 301 } },
+  },
   svgSprite: {
     input: "~/assets/svg/raw",
     output: "~/assets/svg/sprite",
