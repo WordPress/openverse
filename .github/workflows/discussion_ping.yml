@@ -18,7 +18,7 @@ jobs:
       discussion_author: ${{ github.event.discussion.user.login }}
       discussion_repo: ${{ github.event.repository.full_name }}
     steps:
-      - name: New discussion notification
+      - name: Send notification for new discussion
         id: slack
         uses: slackapi/slack-github-action@1.23.0
         with:
