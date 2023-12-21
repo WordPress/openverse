@@ -21,7 +21,7 @@
   </dl>
 </template>
 <script lang="ts">
-import { useRoute } from "#imports"
+import { firstParam, useRoute } from "#imports"
 
 import { computed, defineComponent, PropType } from "vue"
 
@@ -52,11 +52,12 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
     const sendVisitSourceLinkEvent = (source?: string) => {
-      if (!source) {
+      const mediaId = firstParam(route.params.id)
+      if (!source || !mediaId) {
         return
       }
       sendCustomEvent("VISIT_SOURCE_LINK", {
-        id: route.params.id,
+        id: mediaId,
         source,
       })
     }
