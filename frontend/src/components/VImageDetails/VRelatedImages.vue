@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { useRoute } from "#imports"
+import { firstParam, useRoute } from "#imports"
 
 import { computed, defineComponent, watch } from "vue"
 
@@ -33,8 +33,9 @@ export default defineComponent({
     watch(
       route,
       async (newRoute) => {
-        if (newRoute.params.id !== relatedMediaStore.mainMediaId) {
-          await relatedMediaStore.fetchMedia("image", newRoute.params.id)
+        const mediaId = firstParam(newRoute.params.id)
+        if (mediaId && mediaId !== relatedMediaStore.mainMediaId) {
+          await relatedMediaStore.fetchMedia("image", mediaId)
         }
       },
       { immediate: true }
