@@ -59,3 +59,13 @@ def clean_db(sample_dag_id_fixture, sample_pool_fixture):
         session.query(Pool).filter(Pool.pool.startswith(sample_pool_fixture)).delete(
             synchronize_session="fetch"
         )
+
+
+@pytest.fixture
+def setup_pool(sample_pool_fixture):
+    Pool.create_or_update_pool(
+        sample_pool_fixture,
+        slots=1,
+        description="test pool",
+        include_deferred=False,
+    )

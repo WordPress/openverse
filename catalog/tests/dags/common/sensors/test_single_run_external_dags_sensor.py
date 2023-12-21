@@ -1,5 +1,4 @@
 import logging
-import unittest
 
 import pytest
 from airflow.exceptions import AirflowException
@@ -16,40 +15,35 @@ DEFAULT_DATE = datetime(2022, 1, 1)
 TEST_TASK_ID = "wait_task"
 DEV_NULL = "/dev/null"
 
-# unittest.TestCase only allow auto-use fixture which can't retrieve the declared fixtures on conftest.py
-# TODO: TEST_POOL/DAG_PREFIX constants can be remove after unittest.TestCase are converted to pytest.
-TEST_POOL = (
-    "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_pool"
-)
-DAG_PREFIX = "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_dag"  # single_run_external_dags_sensor
-
 
 def run_sensor(sensor):
     sensor.run(start_date=DEFAULT_DATE, end_date=DEFAULT_DATE, ignore_ti_state=True)
 
 
-def create_task(dag, task_id, external_dag_ids):
+def create_task(dag, task_id, sample_pool_fixture):
     return SingleRunExternalDAGsSensor(
         task_id=task_id,
         external_dag_ids=[],
         check_existence=True,
         dag=dag,
-        pool=TEST_POOL,
+        pool=sample_pool_fixture,
         poke_interval=5,
         mode="reschedule",
     )
 
 
-def create_dag(dag_id, task_id=TEST_TASK_ID):
+def create_dag(
+    dag_id, sample_dag_id_fixture, sample_pool_fixture, task_id=TEST_TASK_ID
+):
     with DAG(
-        f"{DAG_PREFIX}_{dag_id}",
+        f"{sample_dag_id_fixture}_{dag_id}",
         default_args={
             "owner": "airflow",
             "start_date": DEFAULT_DATE,
         },
     ) as dag:
         # Create a sensor task inside the DAG
-        create_task(dag, task_id, [])
+        create_task(dag, task_id, sample_pool_fixture)
 
     return dag
 
@@ -65,7 +59,7 @@ def create_dagrun(dag, dag_state):
     )
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures("clean_db", "setup_pool")
 # This appears to be coming from Airflow internals during testing as a result of
 # loading the example DAGs:
 # /opt/airflow/.local/lib/python3.10/site-packages/airflow/example_dags/example_subdag_operator.py:43: RemovedInAirflow3Warning  # noqa: E501
@@ -80,15 +74,7 @@ def create_dagrun(dag, dag_state):
     "ignore:Param `schedule_interval` is deprecated and will be removed in a future release. "
     "Please use `schedule` instead.:airflow.exceptions.RemovedInAirflow3Warning"
 )
-class TestExternalDAGsSensor(unittest.TestCase):
-    def setUp(self):
-        Pool.create_or_update_pool(
-            TEST_POOL,
-            slots=1,
-            description="test pool",
-            include_deferred=False,
-        )
-
+class TestExternalDAGsSensor:
     def test_fails_if_external_dag_does_not_exist(self):
         with pytest.raises(
             AirflowException,
@@ -145,15 +131,23 @@ class TestExternalDAGsSensor(unittest.TestCase):
 
             run_sensor(sensor)
 
-    def test_succeeds_if_no_running_dags(self):
+    def test_succeeds_if_no_running_dags(
+        self, caplog, sample_dag_id_fixture, sample_pool_fixture
+    ):
         # Create some DAGs that are not considered 'running'
-        successful_dag = create_dag("successful_dag")
+        successful_dag = create_dag(
+            "successful_dag", sample_dag_id_fixture, sample_pool_fixture
+        )
         create_dagrun(successful_dag, State.SUCCESS)
-        failed_dag = create_dag("failed_dag")
+        failed_dag = create_dag(
+            "failed_dag", sample_dag_id_fixture, sample_pool_fixture
+        )
         create_dagrun(failed_dag, State.FAILED)
 
         # DAG in the running state, but its wait task has not been started
-        queued_dag = create_dag("queued_dag")
+        queued_dag = create_dag(
+            "queued_dag", sample_dag_id_fixture, sample_pool_fixture
+        )
         create_dagrun(queued_dag, State.RUNNING)
 
         # Create the Test DAG and sensor with dependent dag Ids
@@ -170,26 +164,26 @@ class TestExternalDAGsSensor(unittest.TestCase):
             poke_interval=5,
             mode="reschedule",
             dag=dag,
-            pool=TEST_POOL,
+            pool=sample_pool_fixture,
         )
-
-        with self.assertLogs(sensor.log, level=logging.INFO) as sensor_logs:
+        with caplog.at_level(logging.INFO):
             run_sensor(sensor)
             assert (
-                "INFO:airflow.task.operators:Poking for DAGs ['successful_dag',"
-                " 'failed_dag', 'queued_dag'] ..." in sensor_logs.output
+                "Poking for DAGs ['successful_dag', 'failed_dag', 'queued_dag'] ..."
+                in caplog.text
             )
-            assert (
-                "INFO:airflow.task.operators:0 DAGs are in the running state"
-                in sensor_logs.output
-            )
+            assert "0 DAGs are in the running state" in caplog.text
 
-    def test_retries_if_running_dags_with_completed_sensor_task(self):
+    def test_retries_if_running_dags_with_completed_sensor_task(
+        self, caplog, sample_dag_id_fixture, sample_pool_fixture
+    ):
         # Create a DAG in the 'running' state
-        running_dag = create_dag("running_dag")
+        running_dag = create_dag(
+            "running_dag", sample_dag_id_fixture, sample_pool_fixture
+        )
         running_dagrun = create_dagrun(running_dag, State.RUNNING)
 
-        pool = Pool.get_pool(TEST_POOL)
+        pool = Pool.get_pool(sample_pool_fixture)
         assert pool.open_slots() == 1
 
         # Run its sensor task and ensure that it succeeds
@@ -199,7 +193,9 @@ class TestExternalDAGsSensor(unittest.TestCase):
         assert ti.state == State.SUCCESS
 
         # Create a DAG that is not in the running state
-        successful_dependent_dag = create_dag("success_dag")
+        successful_dependent_dag = create_dag(
+            "success_dag", sample_dag_id_fixture, sample_pool_fixture
+        )
         create_dagrun(successful_dependent_dag, State.SUCCESS)
 
         # Create the Test DAG and sensor and set up dependent dag Ids
@@ -213,24 +209,21 @@ class TestExternalDAGsSensor(unittest.TestCase):
         sensor = SingleRunExternalDAGsSensor(
             task_id=TEST_TASK_ID,
             external_dag_ids=[
-                f"{DAG_PREFIX}_success_dag",
-                f"{DAG_PREFIX}_running_dag",
+                f"{sample_dag_id_fixture}_success_dag",
+                f"{sample_dag_id_fixture}_running_dag",
             ],
             poke_interval=5,
             mode="reschedule",
             dag=dag,
-            pool=TEST_POOL,
+            pool=sample_pool_fixture,
         )
 
-        with self.assertLogs(sensor.log, level=logging.INFO) as sensor_logs:
+        with caplog.at_level(logging.INFO):
             run_sensor(sensor)
 
             assert (
-                f"INFO:airflow.task.operators:Poking for DAGs ['"
-                f"{DAG_PREFIX}_success_dag', '{DAG_PREFIX}_running_dag'] ..."
-                in sensor_logs.output
+                f"Poking for DAGs ['"
+                f"{sample_dag_id_fixture}_success_dag', '{sample_dag_id_fixture}_running_dag'] ..."
+                in caplog.text
             )
-            assert (
-                "INFO:airflow.task.operators:1 DAGs are in the running state"
-                in sensor_logs.output
-            )
+            assert "1 DAGs are in the running state" in caplog.text
