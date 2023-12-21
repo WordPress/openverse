@@ -37,10 +37,6 @@ def _get_cached_statuses(redis, image_urls):
         return [None] * len(image_urls)
 
 
-def _get_expiry(status, default):
-    return config(f"LINK_VALIDATION_CACHE_EXPIRY__{status}", default=default, cast=int)
-
-
 _timeout = aiohttp.ClientTimeout(total=2)
 
 
