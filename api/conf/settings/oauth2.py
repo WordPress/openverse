@@ -16,7 +16,9 @@ OAUTH2_PROVIDER = {
         "write": "Write scope",
     },
     "ACCESS_TOKEN_EXPIRE_SECONDS": config(
-        "ACCESS_TOKEN_EXPIRE_SECONDS", default=3600 * 12, cast=int
+        "ACCESS_TOKEN_EXPIRE_SECONDS",
+        default=12 * 60 * 60,  # 12 hours
+        cast=int,
     ),
 }
 
