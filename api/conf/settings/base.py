@@ -3,6 +3,7 @@ from decouple import config
 from conf.settings import BASE_DIR
 
 
+# Default value matches ``run.py``.
 ENVIRONMENT = config("ENVIRONMENT", default="local")
 
 INSTALLED_APPS = [

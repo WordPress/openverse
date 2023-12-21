@@ -1,10 +1,11 @@
-import os
+from decouple import config
 
 import uvicorn
 
 
 if __name__ == "__main__":
-    is_local = os.getenv("ENVIRONMENT") == "local"
+    # Default value matches ``conf/settings/base.py``.
+    is_local = config("ENVIRONMENT", default="local") == "local"
 
     uvicorn.run(
         "conf.asgi:application",
