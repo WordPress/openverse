@@ -49,7 +49,7 @@ export default defineComponent({
     toggle: defineEvent(),
   },
   setup() {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const searchStore = useSearchStore()
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)

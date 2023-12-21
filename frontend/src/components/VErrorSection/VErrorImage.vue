@@ -39,7 +39,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const images = Object.fromEntries(
       imageInfo.errors.map((errorItem) => {

@@ -21,7 +21,7 @@ const WESTERN_ARABIC_NUMERALS = [
 export const useGetLocaleFormattedNumber = (
   locale: string | undefined = undefined
 ) => {
-  const i18n = useI18n()
+  const i18n = useI18n({ useScope: "global" })
 
   return (n: number) => {
     const testFormat = n.toLocaleString(locale ?? i18n.locale.value)

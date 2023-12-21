@@ -31,7 +31,7 @@ export default defineComponent({
     click: defineEvent(),
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const iconName = computed(() =>
       props.direction === "forward" ? "chevron-forward" : "chevron-back"
     )

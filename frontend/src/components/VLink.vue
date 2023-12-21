@@ -131,8 +131,6 @@ export default defineComponent({
       return undefined
     })
 
-    console.log("to", to.value, "linkProps", linkProps.value, "isInternal", isInternal.value)
-
     const { sendCustomEvent } = useAnalytics()
 
     const handleClick = (e: MouseEvent) => {

@@ -34,7 +34,7 @@ export default defineComponent({
   setup() {
     const loadMoreSectionRef = ref(null)
     const route = useRoute()
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const { sendCustomEvent } = useAnalytics()

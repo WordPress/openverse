@@ -128,7 +128,7 @@ export default defineComponent({
       imageSize: { width: props.image.width, height: props.image.height },
       isSquare,
     })
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const imageUrl = computed(() => {
       // TODO: check if we have blurry panorama thumbnails

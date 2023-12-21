@@ -114,7 +114,7 @@ export default defineComponent({
     "toggle-filter": defineEvent<[toggleFilterPayload]>(),
   },
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const itemLabel = (item: FilterItem) =>
       ["audioProviders", "imageProviders"].indexOf(props.filterType) > -1

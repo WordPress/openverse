@@ -79,7 +79,7 @@ export default defineNuxtComponent({
     const image = ref<ImageDetail>()
     const attributionMarkup = ref<string>()
 
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     useAsyncData("image-report", async () => {
       const imageId = firstParam(route.params.id)

@@ -64,7 +64,7 @@ export default defineComponent({
     const { audio } = toRefs(props)
     const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const helpText = (
       shouldBlur.value
         ? i18n.t("sensitiveContent.title.audio")

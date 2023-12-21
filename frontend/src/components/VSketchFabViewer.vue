@@ -45,7 +45,7 @@ export default defineComponent({
   },
   emits: ["failure"],
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const label = i18n.t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
     const node = ref<Element | undefined>()
     const { $sentry } = useNuxtApp()

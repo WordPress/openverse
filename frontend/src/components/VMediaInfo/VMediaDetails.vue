@@ -53,7 +53,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const metadata = computed<null | Metadata[]>(() => {
       if (!props.media) {

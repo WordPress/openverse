@@ -77,7 +77,7 @@ function getCountKey(resultsCount: number) {
  * Returns the localized text for the number of search results.
  */
 export function useI18nResultsCount() {
-  const { t } = useI18n()
+  const { t } = useI18n({ useScope: "global" })
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
   const getLoading = () => t("header.loading")

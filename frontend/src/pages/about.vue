@@ -144,7 +144,7 @@ export default defineNuxtComponent({
     definePageMeta({
       layout: "content-layout",
     })
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     useHead({
       title: `${i18n.t("about.title", {

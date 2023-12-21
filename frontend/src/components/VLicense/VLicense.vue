@@ -59,7 +59,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {

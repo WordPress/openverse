@@ -4,7 +4,6 @@ import { defineStore } from "pinia"
 
 import { useStorage } from "@vueuse/core"
 
-
 import { deepClone } from "~/utils/clone"
 import type { DeepWriteable } from "~/types/utils"
 

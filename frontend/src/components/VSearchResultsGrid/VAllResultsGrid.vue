@@ -90,7 +90,7 @@ export default defineComponent({
     VContentLink,
   },
   setup() {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 

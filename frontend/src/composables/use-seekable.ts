@@ -23,7 +23,7 @@ export const useSeekable = ({
   onSeek,
   onTogglePlayback,
 }: UseSeekableOptions) => {
-  const { t } = useI18n()
+  const { t } = useI18n({ useScope: "global" })
 
   const attributes = computed(() => ({
     "aria-role": "slider",

@@ -24,7 +24,7 @@ export default defineNuxtComponent({
     VAudioCollection,
   },
   setup() {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 

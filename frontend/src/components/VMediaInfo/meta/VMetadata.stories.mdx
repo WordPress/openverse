@@ -34,7 +34,7 @@ export const Template = (args) => ({
   `,
   components: { VMetadata, VLanguageSelect },
   setup() {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     args.data = [
       {
         metadata: getMediaMetadata(testImage, i18n, {

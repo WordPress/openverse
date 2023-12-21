@@ -11,7 +11,7 @@ import type { Ref } from "vue"
 export const useSingleResultPageMeta = (
   media: Ref<AudioDetail | ImageDetail | null>
 ) => {
-  const i18n = useI18n()
+  const i18n = useI18n({ useScope: "global" })
 
   const titles = () => {
     if (!media.value) {

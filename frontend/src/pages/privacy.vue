@@ -81,7 +81,7 @@ export default defineNuxtComponent({
     definePageMeta({
       layout: "content-layout",
     })
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const featureFlagStore = useFeatureFlagStore()
 
     useHead({

@@ -73,7 +73,7 @@ export default defineComponent({
   setup() {
     const searchStore = useSearchStore()
 
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const { sendCustomEvent } = useAnalytics()
 

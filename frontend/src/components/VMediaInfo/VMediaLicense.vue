@@ -75,7 +75,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const { sendCustomEvent } = useAnalytics()
 
     const isLicense = computed(() => isLicenseFn(props.license))

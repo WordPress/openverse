@@ -38,7 +38,7 @@ const labels = {
 } as const
 
 export default function useSearchType() {
-  const i18n = useI18n()
+  const i18n = useI18n({ useScope: "global" })
   const componentName = useComponentName()
   const analytics = useAnalytics()
 

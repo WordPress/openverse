@@ -151,7 +151,7 @@ export default defineComponent({
     focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const { $sentry } = useNuxtApp()
 
     const activeMediaStore = useActiveMediaStore()

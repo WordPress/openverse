@@ -116,7 +116,7 @@ export default defineComponent({
     const isFocused = ref(false)
     provide(VItemGroupContextKey, props)
 
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     /**
      * When the item group is horizontal, we need to "reverse" the behavior of the left and right arrow keys for RTL locales

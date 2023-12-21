@@ -53,7 +53,8 @@ export default defineComponent({
      * Returns the link to the GlotPress project for the current locale and the locale native name.
      */
     const currentLocale = computed(() => {
-      const localeObject = useI18n().localeProperties
+      const localeObject = useI18n({ useScope: "global" }).localeProperties
+        .value
 
       return {
         link: createTranslationLink(localeObject),

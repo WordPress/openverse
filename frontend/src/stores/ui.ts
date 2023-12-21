@@ -96,7 +96,7 @@ export const useUiStore = defineStore("ui", {
      * The locale object of the current locale.
      */
     currentLocale() {
-      const i18n = useI18n()
+      const i18n = useI18n({ useScope: "global" })
       return i18n.localeProperties.value
     },
     /**

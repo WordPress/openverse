@@ -70,7 +70,7 @@ export default defineComponent({
   setup(props) {
     const richRef = ref<HTMLElement | null>(null)
 
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const getAttributionMarkup = (options?: AttributionOptions) =>
       getAttribution(props.media, i18n, options)
 

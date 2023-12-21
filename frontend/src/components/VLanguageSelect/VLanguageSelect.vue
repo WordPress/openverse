@@ -34,7 +34,7 @@ export default defineComponent({
   components: { VSelectField, VIcon },
   inheritAttrs: false,
   setup() {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const locale = computed({
       get: () => i18n.locale.value,
       set: (value) => {

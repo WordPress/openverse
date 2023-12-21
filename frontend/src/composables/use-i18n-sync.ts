@@ -7,7 +7,7 @@ import type { LocaleObject } from "vue-i18n-routing"
 const BASE_URL = "https://translate.wordpress.org/projects/meta/openverse/"
 
 export function useI18nSync() {
-  const i18n = useI18n()
+  const i18n = useI18n({ useScope: "global" })
   const currentLocale = computed(() => {
     return (i18n.locales.value as LocaleObject[]).find(
       (item) => item.code === i18n.locale.value
