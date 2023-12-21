@@ -138,3 +138,11 @@ repos:
       - id: renovate-config-validator
         args:
           - --strict
+
+  - repo: local
+    hooks:
+      - id: codeowners-validator
+        name: CODEOWNERS Validator
+        entry: ./codeowners-validator.sh
+        language: script
+        files: ^CODEOWNERS$
