@@ -36,16 +36,23 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
   runtimeConfig: {
-    apiClientId: "",
-    apiClientSecret: "",
+    apiClientId: process.env.NUXT_API_CLIENT_ID || "",
+    apiClientSecret: process.env.NUXT_API_CLIENT_SECRET || "",
     public: {
-      apiUrl: "https://api.openverse.engineering/",
+      apiUrl:
+        process.env.NUXT_PUBLIC_API_URL || "https://api.openverse.engineering/",
+      providerUpdateFrequency: process.env.NUXT_PUBLIC_PROVIDER_UPDATE_FREQUENCY
+        ? parseInt(process.env.NUXT_PUBLIC_PROVIDER_UPDATE_FREQUENCY)
+        : 0,
+      savedSearchCount: process.env.NUXT_PUBLIC_SAVED_SEARCH_COUNT
+        ? parseInt(process.env.NUXT_PUBLIC_SAVED_SEARCH_COUNT)
+        : 4,
       sentry: {
         dsn: "",
         environment: "development",
       },
       plausible: {
-        trackLocalhost: true, // Replace with isProdNotPw
+        trackLocalhost: true, // TODO: Replace with isProdNotPw
         // This is the current domain of the site.
         domain:
           process.env.SITE_DOMAIN ??
@@ -86,7 +93,7 @@ export default defineNuxtConfig({
   },
   svgSprite: {
     input: "~/assets/svg/raw",
-    output: "~/assets/svg/sprite",
+    output: "~/public/svg/sprite",
   },
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
@@ -110,5 +117,10 @@ export default defineNuxtConfig({
      * */
     detectBrowserLanguage: false,
     vueI18n: "./src/vue-i18n",
+  },
+  devtools: {
+    timeline: {
+      enabled: true,
+    },
   },
 })

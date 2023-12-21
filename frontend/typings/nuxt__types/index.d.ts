@@ -21,3 +21,14 @@ declare module "vue-i18n-routing" {
     translated: number
   }
 }
+
+declare module "nuxt/schema" {
+  interface RuntimeConfig {
+    apiSecret: string
+  }
+  interface PublicRuntimeConfig {
+    apiUrl: string
+    providerUpdateFrequency: number
+    savedSearchCount: number
+  }
+}
