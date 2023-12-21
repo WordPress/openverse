@@ -1,9 +1,8 @@
-import { useNuxtApp } from "#imports"
+import { useNuxtApp, useRuntimeConfig } from "#imports"
 
 import { defineStore } from "pinia"
 
 import { capitalCase } from "~/utils/case"
-import { env } from "~/utils/env"
 import { parseFetchingError } from "~/utils/errors"
 import {
   AUDIO,
@@ -46,8 +45,6 @@ const sortProviders = (data: MediaProvider[]): MediaProvider[] => {
     return nameA.localeCompare(nameB)
   })
 }
-
-const updateFrequency = parseInt(env.providerUpdateFrequency, 10)
 
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
@@ -194,10 +191,13 @@ export const useProviderStore = defineStore("provider", {
       if (noData || !state.lastUpdated) {
         return true
       }
+      const {
+        public: { providerUpdateFrequency },
+      } = useRuntimeConfig()
 
       const timeSinceLastUpdate =
         new Date().getTime() - new Date(state.lastUpdated).getTime()
-      return timeSinceLastUpdate > updateFrequency
+      return timeSinceLastUpdate > providerUpdateFrequency
     },
   },
 })

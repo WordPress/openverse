@@ -3,7 +3,6 @@ import { defineNuxtConfig } from "nuxt/config"
 import locales from "./src/locales/scripts/valid-locales.json"
 
 import { isProd } from "./src/utils/node-env"
-import { env } from "./src/utils/env"
 
 import type { LocaleObject } from "vue-i18n-routing"
 
@@ -36,7 +35,6 @@ export default defineNuxtConfig({
     autoImport: false,
   },
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
-  env, // TODO: Replace with `publicRuntimeConfig`
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
