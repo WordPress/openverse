@@ -1,11 +1,11 @@
+import { defineEventHandler } from "h3"
+
 /**
  * A simple healthcheck that is always true.
  *
  * @todo Update to a resource-sensitive version that fails when
  * memory and/or cpu usage reach a configurable threshold.
- * @type {import('@nuxt/types').ServerMiddleware}
  */
-export default function healthcheck(_, res) {
-  res.setHeader("Content-Type", "text/plain")
-  res.end("OK")
-}
+export default defineEventHandler((_) => {
+  return "OK"
+})
