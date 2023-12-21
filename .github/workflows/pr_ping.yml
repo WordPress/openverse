@@ -24,21 +24,40 @@ jobs:
     steps:
       - name: Send notification for new PR
         if: github.event.action == 'opened'
+        id: slack
+        uses: slackapi/slack-github-action@1.23.0
         env:
           pr_status: ${{ github.event.pull_request.draft && ' draft ' || ' ' }}
           pr_icon: ${{ github.event.pull_request.draft && ':pr-draft:' || ':pull-request:' }}
-        run: |
-          curl \
-            "$slack_url" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{"text":"New'"$pr_status"'PR opened by '"$pr_author"' in '"$pr_repo"': #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"'"$pr_icon"' New'"$pr_status"'PR opened by *'"$pr_author"'* in `'"$pr_repo"'`:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
-
+        with:
+          payload: | 
+            {
+              "text": "New\"$pr_status\"PR opened by \"$pr_author\" in \"$pr_repo\": #\"$pr_number\" - \"$pr_title\"",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "\"$pr_icon\" New\"$pr_status\"PR opened by *\"$pr_author\"* in `\"$pr_repo\"`:\n<\"$pr_url\"|#\"$pr_number\" - \"$pr_title\">"
+                  }
+                }
+              ]
+            }
       - name: Send notification for PR marked ready
         if: github.event.action == 'ready_for_review'
-        run: |
-          curl \
-            "$slack_url" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{"text":"PR by '"$pr_author"' in '"$pr_repo"' marked ready for review: #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: PR by *'"$pr_author"'* in `'"$pr_repo"'` marked ready for review:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
+        id: slack
+        uses: slackapi/slack-github-action@1.23.0
+        with: 
+          payload: |
+            {
+              "text": "PR by \"$pr_author\" in \"$pr_repo\" marked ready for review: #$pr_number - \"$pr_title\"",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":pull-request: PR by *$pr_author* in `$pr_repo` marked ready for review:\n<$pr_url|#$pr_number - $pr_title>"
+                  }
+                }
+              ]
+            }
