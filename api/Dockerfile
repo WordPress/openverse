@@ -25,6 +25,9 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
+# Configure Django
+ENV DJANGO_SETTINGS_MODULE="conf.settings"
+
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
