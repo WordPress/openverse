@@ -39,7 +39,6 @@ import {
   useRoute,
   useCookie,
   useLocaleHead,
-  useNuxtApp,
 } from "#imports"
 
 import { useUiStore } from "~/stores/ui"
