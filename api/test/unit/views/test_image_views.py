@@ -93,3 +93,15 @@ def test_watermark_raises_424_for_404_image(api_client):
         res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
     assert res.status_code == 424
     assert res.data["detail"] == f"404 Client Error: Not Found for url: {image.url}"
+
+
+@pytest.mark.django_db
+def test_watermark_raises_424_for_SVG_image(api_client):
+    image = ImageFactory.create(url="http://example.com/image.svg")
+
+    res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+    assert res.status_code == 424
+    assert (
+        res.data["detail"]
+        == "Unsupported media type: SVG images are not supported for watermarking."
+    )
