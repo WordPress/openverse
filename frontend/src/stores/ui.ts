@@ -40,7 +40,6 @@ export interface UiState {
   /**
    * whether the request user agent is mobile or not.
    */
-  isMobileUa: boolean
   dismissedBanners: BannerId[]
   /**
    * Whether to blur sensitive content in search and single result pages.
@@ -61,7 +60,6 @@ export const useUiStore = defineStore("ui", {
     isFilterDismissed: false,
     isDesktopLayout: false,
     breakpoint: "sm",
-    isMobileUa: true,
     dismissedBanners: [],
     shouldBlurSensitive: true,
     revealedSensitiveResults: [],
@@ -165,11 +163,6 @@ export const useUiStore = defineStore("ui", {
         this.isFilterDismissed = cookies.isFilterDismissed
       }
 
-      this.isMobileUa = false
-      if (typeof cookies.isMobileUa === "boolean") {
-        this.isMobileUa = cookies.isMobileUa
-      }
-
       this.innerFilterVisible = this.isDesktopLayout
         ? !this.isFilterDismissed
         : false
@@ -201,7 +194,6 @@ export const useUiStore = defineStore("ui", {
         instructionsSnackbarState: this.instructionsSnackbarState,
         isFilterDismissed: this.isFilterDismissed,
         breakpoint: this.breakpoint,
-        isMobileUa: this.isMobileUa,
         dismissedBanners: this.dismissedBanners,
       }
     },

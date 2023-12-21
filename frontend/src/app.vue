@@ -92,12 +92,8 @@ export default defineComponent({
     featureFlagStore.initFromQuery(route.query)
 
     /* UI store */
-    const { $ua } = useNuxtApp()
-    const isMobileUa = $ua ? $ua.isMobile : false
-
     const uiCookies = useCookie<OpenverseCookieState["ui"]>("ui")
-    const uiCookiesValue = { ...(uiCookies.value ?? {}), isMobileUa }
-    uiStore.initFromCookies(uiCookiesValue)
+    uiStore.initFromCookies(uiCookies.value ?? {})
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
     const breakpoint = computed(() => uiStore.breakpoint)

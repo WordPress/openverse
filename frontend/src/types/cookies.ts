@@ -30,10 +30,6 @@ export interface OpenverseCookieState {
      */
     breakpoint?: RealBreakpoint
     /**
-     * Whether the request user agent is mobile or not.
-     */
-    isMobileUa?: boolean
-    /**
      * The list of ids of dismissed banners.
      */
     dismissedBanners?: BannerId[]
