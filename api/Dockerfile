@@ -14,11 +14,11 @@ FROM docker.io/realies/audiowaveform:latest AS awf
 RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
   xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
 
-##################
-# Python builder #
-##################
+###############
+# Python base #
+###############
 
-FROM docker.io/python:${API_PY_VERSION} AS builder
+FROM docker.io/python:${API_PY_VERSION}-slim AS base
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -27,6 +27,12 @@ ENV PIP_NO_COLOR=1
 
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
+
+##################
+# Python builder #
+##################
+
+FROM base AS builder
 
 # - Install system packages needed for building Python dependencies
 # - Create a virtualenv inside `/venv`
@@ -47,17 +53,9 @@ RUN pipenv install --system --deploy --dev
 # API #
 #######
 
-FROM docker.io/python:${API_PY_VERSION}-slim AS api
+FROM base AS api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
-
-# Container optimizations
-ENV PYTHONUNBUFFERED=1
-ENV PIP_NO_CACHE_DIR=1
-ENV PIP_NO_COLOR=1
-
-# Activate the virtualenv
-ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /api
 
