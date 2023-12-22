@@ -55,9 +55,9 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         self.batch_limit = 2000
         self.headers = {"Content-Type": "application/json"}
         if self.date:
-            date_from = datetime.strptime(self.date, "%Y-%m-%d").date()
-            self.date_from = str(date_from)
-            self.date_to = str(date_from + timedelta(days=1))
+            date_from = datetime.strptime(self.date, "%Y-%m-%d")
+            self.date_from = date_from.isoformat()
+            self.date_to = (date_from + timedelta(days=1)).isoformat()
             logger.info(
                 f"Start timestamp: {self.date_from}, end timestamp: {self.date_to}"
             )
