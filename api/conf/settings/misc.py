@@ -1,5 +1,7 @@
 """Settings very specific to Openverse, used inside the API app."""
 
+import hashlib
+
 from decouple import config
 
 
@@ -23,8 +25,9 @@ USE_RANK_FEATURES = config("USE_RANK_FEATURES", default=True, cast=bool)
 # The scheme to use for the hyperlinks in the API responses
 API_LINK_SCHEME = config("API_LINK_SCHEME", default=None)
 
-# The version of the API. We follow the semantic version specification.
-API_VERSION = config("SEMANTIC_VERSION", default="Version not specified")
+# The version of the API. The name is a bit misleading because we do not follow
+# the semantic version specification.
+API_VERSION = config("SEMANTIC_VERSION", default=hashlib.sha1(b"openverse").hexdigest())
 
 OUTBOUND_USER_AGENT_TEMPLATE = config(
     "OUTBOUND_USER_AGENT_TEMPLATE",
