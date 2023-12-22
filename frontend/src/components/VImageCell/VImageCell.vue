@@ -201,9 +201,9 @@ export default defineComponent({
         mediaType: IMAGE,
         provider: props.image.provider,
         query: props.searchTerm || "",
-        relatedTo: props.relatedTo,
+        relatedTo: props.relatedTo ?? "null",
         sensitivities: props.image.sensitivity?.join(",") ?? "",
-        isBlurred: shouldBlur.value,
+        isBlurred: shouldBlur.value ?? "null",
       })
     }
 

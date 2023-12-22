@@ -28,7 +28,7 @@ export const useAnalytics = () => {
    * the Plausible props that work only on the client-side; This only includes
    * props that need `window`.
    */
-  const windowProps = computed(() =>
+  const windowProps = computed<{ width: number; height: number } | {}>(() =>
     window
       ? {
           width: window.innerWidth,

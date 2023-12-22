@@ -75,9 +75,9 @@ export default defineComponent({
         mediaType: AUDIO,
         query: props.searchTerm,
         provider: audio.provider,
-        relatedTo: null,
+        relatedTo: "null",
         sensitivities: audio.sensitivity?.join(",") ?? "",
-        isBlurred: shouldBlur.value,
+        isBlurred: shouldBlur.value ?? "null",
       })
     }
     const sendInteractionEvent = (

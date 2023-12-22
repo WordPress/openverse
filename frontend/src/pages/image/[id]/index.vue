@@ -280,7 +280,7 @@ export default defineNuxtComponent({
         return
       }
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
-        id: image.value.identifier,
+        id: image.value.id,
       })
     }
 
