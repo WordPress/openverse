@@ -3,7 +3,7 @@
     <h1 id="feedback">
       {{ $t("feedback.title") }}
     </h1>
-    <i18n-t keypath="feedback.intro" tag="p">
+    <i18n-t scope="global" keypath="feedback.intro" tag="p">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #slack>

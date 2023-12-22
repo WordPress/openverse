@@ -3,7 +3,6 @@ import { useCookie } from "#imports"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
-
 import featureData from "~~/feat/feature-flags.json"
 
 import { warn } from "~/utils/console"

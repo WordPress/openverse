@@ -5,6 +5,7 @@ import { defineI18nConfig } from "#imports"
 export default defineI18nConfig(() => {
   return {
     legacy: false,
+    globalInjection: true,
     // fallbackLocale,
     silentFallbackWarn: true,
     pluralizationRules: {

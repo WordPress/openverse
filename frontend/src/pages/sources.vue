@@ -10,7 +10,7 @@
     <p>
       {{ $t("sources.ccContent.content", { openverse: "Openverse" }) }}
     </p>
-    <i18n-t keypath="sources.ccContent.provider" tag="p">
+    <i18n-t scope="global" keypath="sources.ccContent.provider" tag="p">
       <template #flickr>
         <VLink href="https://www.flickr.com/">Flickr</VLink>
       </template>
@@ -20,7 +20,7 @@
         }}</VLink>
       </template>
     </i18n-t>
-    <i18n-t keypath="sources.ccContent.europeana" tag="p">
+    <i18n-t scope="global" keypath="sources.ccContent.europeana" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
@@ -69,7 +69,7 @@
       </VButton>
     </p>
 
-    <i18n-t keypath="sources.detail" tag="p">
+    <i18n-t scope="global" keypath="sources.detail" tag="p">
       <template #singleName>
         <strong>
           {{ $t("sources.singleName") }}

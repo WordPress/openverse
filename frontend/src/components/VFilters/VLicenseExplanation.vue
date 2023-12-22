@@ -19,6 +19,7 @@
     />
 
     <i18n-t
+      scope="global"
       :keypath="`filters.licenseExplanation.more.${
         isLicense(license) ? 'license' : 'mark'
       }`"

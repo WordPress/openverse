@@ -6,6 +6,7 @@
 
     <template v-if="isLicense">
       <i18n-t
+        scope="global"
         keypath="mediaDetails.reuse.attribution"
         tag="span"
         class="mb-2 block text-sm md:mb-4 md:text-base"

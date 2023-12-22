@@ -78,12 +78,9 @@ export default defineNuxtConfig({
   },
   dev: !isProd,
   /**
-   * Disable debug mode in production.
-   *
-   * Do not use `isProdNotPlaywright` for this otherwise the debug logger will log hook
-   * timings for every single request, making the Playwright logs unusable.
+   * Disable debug mode to prevent excessive timing logs.
    */
-  debug: !isProd,
+  debug: false,
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",

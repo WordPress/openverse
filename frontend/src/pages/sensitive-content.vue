@@ -4,7 +4,7 @@
       {{ $t("sensitive.title") }}
     </h1>
 
-    <i18n-t keypath="sensitive.description.content" tag="p">
+    <i18n-t scope="global" keypath="sensitive.description.content" tag="p">
       <template #openverse>Openverse</template>
       <template #wpCoc
         ><VLink
@@ -51,7 +51,11 @@
       {{ $t("sensitive.designations.userReported.title") }}
     </h3>
 
-    <i18n-t keypath="sensitive.designations.userReported.description" tag="p">
+    <i18n-t
+      scope="global"
+      keypath="sensitive.designations.userReported.description"
+      tag="p"
+    >
       <template #openverse>Openverse</template>
       <template #gutenbergMediaInserter>
         <VLink
@@ -69,7 +73,11 @@
       {{ $t("sensitive.designations.sensitiveText.title") }}
     </h3>
 
-    <i18n-t keypath="sensitive.designations.sensitiveText.description" tag="p">
+    <i18n-t
+      scope="global"
+      keypath="sensitive.designations.sensitiveText.description"
+      tag="p"
+    >
       <template #openverse>Openverse</template>
       <template #sensitiveTermsList>
         <VLink href="https://github.com/wordpress/openverse-sensitive-terms">{{
@@ -88,7 +96,11 @@
       </template>
     </i18n-t>
 
-    <i18n-t keypath="sensitive.designations.sensitiveText.metadata" tag="p">
+    <i18n-t
+      scope="global"
+      keypath="sensitive.designations.sensitiveText.metadata"
+      tag="p"
+    >
       <template #openverse>Openverse</template>
       <template #notAvailable>
         <VLink href="https://github.com/WordPress/openverse/issues/2594">{{

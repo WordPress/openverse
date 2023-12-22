@@ -19,7 +19,7 @@
           {{ $t("404.title") }}
         </h1>
         <p class="label-bold lg:heading-6">
-          <i18n-t keypath="404.main" tag="span">
+          <i18n-t scope="global" keypath="404.main" tag="span">
             <template #link>
               <VLink
                 class="text-current underline hover:text-current active:text-current"

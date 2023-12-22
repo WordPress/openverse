@@ -3,7 +3,7 @@
     <h1>
       {{ $t("privacy.title", { openverse: "Openverse" }) }}
     </h1>
-    <i18n-t keypath="privacy.intro.content" tag="p">
+    <i18n-t scope="global" keypath="privacy.intro.content" tag="p">
       <template #link>
         <VLink href="https://wordpress.org/about/privacy/">{{
           $t("privacy.intro.link")
@@ -15,7 +15,7 @@
     <h2>
       {{ $t("privacy.cookies.title") }}
     </h2>
-    <i18n-t keypath="privacy.cookies.content" tag="p">
+    <i18n-t scope="global" keypath="privacy.cookies.content" tag="p">
       <template #openverse>Openverse</template>
     </i18n-t>
 
@@ -23,7 +23,7 @@
       {{ $t("privacy.contact.title") }}
     </h2>
 
-    <i18n-t keypath="privacy.contact.content" tag="p">
+    <i18n-t scope="global" keypath="privacy.contact.content" tag="p">
       <template #openverse>Openverse</template>
       <template #email>
         <VLink href="mailto:openverse@wordpress.org"

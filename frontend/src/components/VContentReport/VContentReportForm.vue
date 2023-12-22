@@ -5,6 +5,7 @@
         {{ $t("mediaDetails.contentReport.success.title") }}
       </h2>
       <i18n-t
+        scope="global"
         keypath="mediaDetails.contentReport.success.note"
         class="text-sm"
         tag="p"

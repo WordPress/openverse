@@ -25,6 +25,7 @@
         >
           <i18n-t
             v-if="isMd"
+            scope="global"
             keypath="externalSources.form.supportedTitle"
             tag="p"
           />

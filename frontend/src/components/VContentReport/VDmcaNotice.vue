@@ -1,5 +1,6 @@
 <template>
   <i18n-t
+    scope="global"
     class="dmca-notice"
     keypath="mediaDetails.contentReport.form.dmca.note"
     tag="p"
