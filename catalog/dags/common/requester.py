@@ -146,7 +146,9 @@ class DelayedRequester:
         except JSONDecodeError as e:
             logger.warning(f"Could not get response_json.\n{e}")
 
-    def get_response_json(self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs):
+    def get_response_json(
+        self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs
+    ):
         response_json = None
         response = None
         if retries < 0:
