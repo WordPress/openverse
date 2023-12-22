@@ -10,7 +10,7 @@ from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIng
 RESOURCES = Path(__file__).parent / "resources/aucklandmuseum"
 CC_BY_4_0 = get_license_info("https://creativecommons.org/licenses/by/4.0/")
 
-ingester = AucklandMuseumDataIngester()
+ingester = AucklandMuseumDataIngester(date="2018-01-15")
 _get_resource_json = make_resource_json_func("aucklandmuseum")
 
 
