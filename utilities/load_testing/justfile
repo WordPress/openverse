@@ -14,7 +14,7 @@ api host=("http://" + DOCKER_HOST + ":8000"):
 k6 script="main.js" +extra_args="": build
     docker run \
       --rm \
-      ${API_TOKEN:+ --env API_TOKEN=$API_TOKEN} \
+      ${ACCESS_TOKEN:+ --env ACCESS_TOKEN=$ACCESS_TOKEN} \
       ${API_URL:+ --env API_URL=$API_URL} \
       --volume {{ invocation_directory() }}/k6:/app \
       {{ extra_args }} \

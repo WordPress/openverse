@@ -20,7 +20,7 @@ export const getProvider = (media_type) => {
 }
 
 export const REQUEST_HEADERS = {
-  Authorization: `Bearer ${__ENV.API_TOKEN}`,
+  Authorization: `Bearer ${__ENV.ACCESS_TOKEN}`,
   "User-Agent": "k6",
 }
 
