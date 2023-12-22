@@ -8,7 +8,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": config("DJANGO_DATABASE_HOST", default="localhost"),
-        "PORT": config("DJANGO_DATABASE_PORT", default=5432, cast=int),
+        "PORT": config("DJANGO_DATABASE_PORT", default=50254, cast=int),
         "USER": config("DJANGO_DATABASE_USER", default="deploy"),
         "PASSWORD": config("DJANGO_DATABASE_PASSWORD", default="deploy"),
         "NAME": config("DJANGO_DATABASE_NAME", default="openledger"),

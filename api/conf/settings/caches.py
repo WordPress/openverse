@@ -4,7 +4,7 @@ from decouple import config
 # Caches
 
 REDIS_HOST = config("REDIS_HOST", default="localhost")
-REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
+REDIS_PORT = config("REDIS_PORT", default=50263, cast=int)
 REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
 
 
