@@ -25,13 +25,6 @@ from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
-def convert_date_format(date_obj) -> str:
-    date = str(date_obj)
-    date = date.replace(" ", "T")
-    date = date + "Z"
-    return date
-
-
 logger = logging.getLogger(__name__)
 
 LANDING_URL = (
@@ -54,16 +47,10 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         self.batch_start = 0
         self.batch_limit = 2000
         self.headers = {"Content-Type": "application/json"}
-        if self.date:
-            date_from = datetime.strptime(self.date, "%Y-%m-%d")
-            self.date_from = date_from.isoformat()
-            self.date_to = (date_from + timedelta(days=1)).isoformat()
-            logger.info(
-                f"Start timestamp: {self.date_from}, end timestamp: {self.date_to}"
-            )
-        else:
-            self.date_from = convert_date_format(datetime.now())
-            self.date_to = convert_date_format(datetime.now() + timedelta(days=1))
+        date_from = datetime.strptime(self.date, "%Y-%m-%d")
+        self.date_from = date_from.isoformat()
+        self.date_to = (date_from + timedelta(days=1)).isoformat()
+        logger.info(f"Start timestamp: {self.date_from}, end timestamp: {self.date_to}")
         self.data = {
             "query": {
                 "bool": {
