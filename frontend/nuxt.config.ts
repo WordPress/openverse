@@ -1,8 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config"
 
-import locales from "./src/locales/scripts/valid-locales.json"
-
 import { isProd } from "./src/utils/node-env"
+import locales from "./src/locales/scripts/valid-locales.json"
 
 import type { LocaleObject } from "vue-i18n-routing"
 
