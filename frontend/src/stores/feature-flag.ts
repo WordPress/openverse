@@ -3,7 +3,6 @@ import { useCookie } from "#imports"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
-import { LocationQuery } from "vue-router"
 
 import featureData from "~~/feat/feature-flags.json"
 
@@ -25,6 +24,8 @@ import {
 import { LOCAL, DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
 import type { OpenverseCookieState } from "~/types/cookies"
+
+import type { LocationQuery, LocationQueryValue } from "vue-router"
 
 type FlagName = keyof (typeof featureData)["features"]
 
@@ -179,11 +180,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       const isValidName = (name: string): name is `ff_${FlagName}` =>
         name.startsWith("ff_") && name.replace("ff_", "") in this.flags
       const isValidValue = (
-        value: string | (string | null)[]
+        value: string | (string | null)[] | LocationQueryValue
       ): value is FeatureState =>
         typeof value === "string" && ["on", "off"].includes(value)
       const isValidEntry = (
-        entry: [string, string | (string | null)[]]
+        entry: [string, string | (string | null)[] | LocationQueryValue]
       ): entry is [`ff_${FlagName}`, FeatureState] =>
         isValidName(entry[0]) && isValidValue(entry[1])
 
