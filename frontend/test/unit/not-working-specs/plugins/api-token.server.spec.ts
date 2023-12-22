@@ -233,7 +233,7 @@ describe("api-token.server plugin", () => {
       await apiTokenPlugin(nuxtApp)
 
       expect(mockContext.$sentry.captureException).toHaveBeenCalledTimes(1)
-      expect(capturedError).not.toBeUndefined()
+      expect(capturedError).toBeDefined()
       expect((capturedError as unknown as Error).message).toMatch(
         "Unable to retrieve API token. Request failed with status code 418"
       )
@@ -255,9 +255,9 @@ describe("api-token.server plugin", () => {
       })
       const nuxtApp = useNuxtApp()
       await apiTokenPlugin(nuxtApp)
-      expect(process.tokenData.accessToken).not.toEqual("")
+      expect(process.tokenData.accessToken).not.toBe("")
       await apiTokenPlugin(nuxtApp)
-      expect(process.tokenData.accessToken).toEqual("")
+      expect(process.tokenData.accessToken).toBe("")
     })
 
     it("should properly release the mutex and allow for subsequent requests to retry the token refresh", async () => {

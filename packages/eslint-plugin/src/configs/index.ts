@@ -43,14 +43,26 @@ export const project: TSESLint.Linter.Config = {
     },
     {
       env: { jest: true },
-      files: ["packages/**/*/test", "frontend/test/unit/**"],
+      files: ["packages/**/*/test"],
       plugins: ["jest"],
       extends: ["plugin:jest/recommended"],
+      rules: {
+        // Superseded by `@openverse/no-unexplained-disabled-test`
+        "jest/no-disabled-test": "off",
+      },
+    },
+    {
+      env: {
+        "vitest/env": true,
+      },
+      files: ["frontend/test/unit/**"],
+      plugins: ["vitest"],
+      extends: ["plugin:vitest/recommended"],
       rules: {
         "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
         // Superseded by `@openverse/no-unexplained-disabled-test`
-        "jest/no-disabled-test": "off",
+        "vitest/no-disabled-test": "off",
         "no-restricted-imports": [
           "error",
           {

@@ -39,7 +39,7 @@ describe("VSearchGridFilter", () => {
   it("toggles filter", async () => {
     await render(VSearchGridFilter, options)
     const checked = screen.queryAllByRole("checkbox", { checked: true })
-    expect(checked.length).toEqual(0)
+    expect(checked.length).toBe(0)
     await fireEvent.click(
       screen.queryByRole("checkbox", { name: /use commercially/i })
     )
@@ -81,8 +81,8 @@ describe("VSearchGridFilter", () => {
       checked: false,
     })
 
-    expect(checkedFilters.length).toEqual(0)
+    expect(checkedFilters.length).toBe(0)
     // Filters are reset with the initial `filterData` for ALL_MEDIA
-    expect(uncheckedFilters.length).toEqual(10)
+    expect(uncheckedFilters.length).toBe(10)
   })
 })

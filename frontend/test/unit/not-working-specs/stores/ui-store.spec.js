@@ -114,12 +114,12 @@ describe("Ui Store", () => {
         uiIsFilterDismissed: true,
       })
 
-      expect(uiStore.instructionsSnackbarState).toEqual("not_shown")
-      expect(uiStore.breakpoint).toEqual("lg")
-      expect(uiStore.isDesktopLayout).toEqual(true)
-      expect(uiStore.isMobileUa).toEqual(false)
-      expect(uiStore.isFilterVisible).toEqual(false)
-      expect(uiStore.isFilterDismissed).toEqual(true)
+      expect(uiStore.instructionsSnackbarState).toBe("not_shown")
+      expect(uiStore.breakpoint).toBe("lg")
+      expect(uiStore.isDesktopLayout).toBe(true)
+      expect(uiStore.isMobileUa).toBe(false)
+      expect(uiStore.isFilterVisible).toBe(false)
+      expect(uiStore.isFilterDismissed).toBe(true)
     })
 
     it("initFromCookies sets initial state with a mobile cookie", () => {
@@ -129,12 +129,12 @@ describe("Ui Store", () => {
         uiIsFilterDismissed: false,
       })
 
-      expect(uiStore.instructionsSnackbarState).toEqual("not_shown")
-      expect(uiStore.isDesktopLayout).toEqual(false)
-      expect(uiStore.breakpoint).toEqual("sm")
-      expect(uiStore.isMobileUa).toEqual(true)
-      expect(uiStore.isFilterDismissed).toEqual(false)
-      expect(uiStore.isFilterVisible).toEqual(false)
+      expect(uiStore.instructionsSnackbarState).toBe("not_shown")
+      expect(uiStore.isDesktopLayout).toBe(false)
+      expect(uiStore.breakpoint).toBe("sm")
+      expect(uiStore.isMobileUa).toBe(true)
+      expect(uiStore.isFilterDismissed).toBe(false)
+      expect(uiStore.isFilterVisible).toBe(false)
     })
 
     it("initFromCookies sets initial state with a dismissed banner", () => {

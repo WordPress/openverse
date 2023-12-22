@@ -70,7 +70,7 @@ describe("VCheckbox", () => {
     await fireEvent.click(screen.queryByRole("checkbox"))
 
     // Testing the method that handles the emitted data instead of testing emitted event
-    expect(container.querySelector("span").textContent).toEqual(
+    expect(container.querySelector("span").textContent).toBe(
       "simple,simple,true"
     )
   })

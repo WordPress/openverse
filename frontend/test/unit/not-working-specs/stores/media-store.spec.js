@@ -96,7 +96,7 @@ describe("Media Store", () => {
     })
     it("getItemById returns undefined if there are no items", () => {
       const mediaStore = useMediaStore()
-      expect(mediaStore.getItemById(IMAGE, "foo")).toBe(undefined)
+      expect(mediaStore.getItemById(IMAGE, "foo")).toBeUndefined()
     })
     it("getItemById returns correct item", () => {
       const mediaStore = useMediaStore()

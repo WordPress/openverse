@@ -9,9 +9,9 @@ describe("useImageCellSize", () => {
       isSquare: ref(true),
     })
 
-    expect(imgHeight.value).toEqual(250)
-    expect(imgWidth.value).toEqual(250)
-    expect(isPanorama.value).toEqual(false)
+    expect(imgHeight.value).toBe(250)
+    expect(imgWidth.value).toBe(250)
+    expect(isPanorama.value).toBe(false)
     expect(styles.value).toEqual({})
   })
 
@@ -25,7 +25,7 @@ describe("useImageCellSize", () => {
 
     expect(imgHeight.value).toEqual(HEIGHT)
     expect(imgWidth.value).toEqual(WIDTH)
-    expect(isPanorama.value).toEqual(true)
+    expect(isPanorama.value).toBe(true)
     expect(styles.value).toEqual({
       "--container-grow": 250,
       "--container-width": "250px",
@@ -43,7 +43,7 @@ describe("useImageCellSize", () => {
 
     expect(imgHeight.value).toEqual(HEIGHT)
     expect(imgWidth.value).toEqual(WIDTH)
-    expect(isPanorama.value).toEqual(false)
+    expect(isPanorama.value).toBe(false)
     expect(styles.value).toEqual({
       "--container-grow": 105,
       "--container-width": "105px",
@@ -61,7 +61,7 @@ describe("useImageCellSize", () => {
 
     expect(imgHeight.value).toEqual(HEIGHT)
     expect(imgWidth.value).toEqual(WIDTH)
-    expect(isPanorama.value).toEqual(false)
+    expect(isPanorama.value).toBe(false)
     expect(styles.value).toEqual({
       "--container-grow": 141,
       "--container-width": "141px",

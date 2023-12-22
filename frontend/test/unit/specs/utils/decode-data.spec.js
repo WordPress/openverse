@@ -6,13 +6,13 @@ describe("decodeData", () => {
   it("returns empty string for empty string", () => {
     const data = ""
 
-    expect(decodeData(data)).toEqual("")
+    expect(decodeData(data)).toBe("")
   })
 
   it("returns empty string for undefined data", () => {
     const data = undefined
 
-    expect(decodeData(data)).toEqual("")
+    expect(decodeData(data)).toBe("")
   })
 
   it("returns decoded ASCII hexacode strings", () => {

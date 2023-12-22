@@ -1,11 +1,8 @@
 import { defineEventHandler } from "h3"
 
 /**
- * A simple healthcheck that is always true.
- *
- * @todo Update to a resource-sensitive version that fails when
- * memory and/or cpu usage reach a configurable threshold.
+ * A simple healthcheck that is always true and confirms the server is running.
  */
-export default defineEventHandler((_) => {
+export default defineEventHandler(() => {
   return "OK"
 })

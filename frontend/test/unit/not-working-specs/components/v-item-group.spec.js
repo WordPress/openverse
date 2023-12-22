@@ -57,7 +57,7 @@ describe("VItemGroup", () => {
   })
   it("should render buttons with the appropriate roles", async () => {
     await render(TestWrapper)
-    expect(screen.queryByRole("menu")).not.toBe(null)
+    expect(screen.queryByRole("menu")).not.toBeNull()
     const items = screen.queryAllByRole("menuitemcheckbox")
     expect(items).toHaveLength(4)
     expect(items.every((item) => item.tagName === "BUTTON")).toBe(true)
@@ -79,7 +79,7 @@ describe("VItemGroup", () => {
     const { container } = await render(TestWrapper, {
       attrs: { type: "radiogroup" },
     })
-    expect(screen.queryByRole("radiogroup")).not.toBe(null)
+    expect(screen.queryByRole("radiogroup")).not.toBeNull()
     const [, secondItem] = screen.queryAllByRole("radio")
     expect(
       container.querySelector('[aria-pressed="true"][aria-checked="true"]')

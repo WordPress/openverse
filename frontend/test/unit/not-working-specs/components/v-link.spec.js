@@ -63,7 +63,7 @@ describe("VLink", () => {
       localVue.component("VLink", VLink)
     })
     const linkBefore = await screen.getByRole("link")
-    expect(linkBefore.textContent).toEqual("Link Text")
+    expect(linkBefore.textContent).toBe("Link Text")
 
     await fireEvent.click(linkBefore)
     const linkAfter = await screen.findByText("Code is Poetry")

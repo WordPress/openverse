@@ -37,7 +37,7 @@ describe("Active Media Store", () => {
       activeMediaStore.setActiveMediaItem({ status })
       activeMediaStore.pauseActiveMediaItem()
 
-      expect(activeMediaStore.status).toEqual("paused")
+      expect(activeMediaStore.status).toBe("paused")
     })
     it("can eject an item", () => {
       const activeMediaStore = useActiveMediaStore()

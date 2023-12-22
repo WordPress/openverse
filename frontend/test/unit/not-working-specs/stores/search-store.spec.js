@@ -264,7 +264,7 @@ describe("Search Store", () => {
       const searchStore = useSearchStore()
       searchStore.updateSearchPath({ type: "audio", searchTerm: "cat" })
 
-      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchType).toBe("audio")
       expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
       expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
         path: "/search/audio",
@@ -278,7 +278,7 @@ describe("Search Store", () => {
       searchStore.setSearchType("audio")
       searchStore.updateSearchPath()
 
-      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchType).toBe("audio")
       expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
       expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
         path: "/search/audio",
@@ -343,7 +343,7 @@ describe("Search Store", () => {
 
         searchStore.toggleFilter({ filterType, codeIdx })
         const filterItem = searchStore.filters[filterType][codeIdx]
-        expect(filterItem.checked).toEqual(true)
+        expect(filterItem.checked).toBe(true)
       }
     )
 
@@ -356,15 +356,15 @@ describe("Search Store", () => {
       })
 
       searchStore.toggleFilter({ filterType: "imageProviders", code: "met" })
-      expect(searchStore.appliedFilterCount).toEqual(1)
-      expect(searchStore.isAnyFilterApplied).toEqual(true)
+      expect(searchStore.appliedFilterCount).toBe(1)
+      expect(searchStore.isAnyFilterApplied).toBe(true)
     })
 
     it("toggleFilter updates isFilterApplied with license type", () => {
       const searchStore = useSearchStore()
       searchStore.toggleFilter({ filterType: "licenseTypes", codeIdx: 0 })
 
-      expect(searchStore.isAnyFilterApplied).toEqual(true)
+      expect(searchStore.isAnyFilterApplied).toBe(true)
     })
 
     it("updateProviderFilters merges with existing provider filters", () => {
@@ -434,7 +434,7 @@ describe("Search Store", () => {
 
         const filterItem = searchStore.filters[filterType][idx]
 
-        expect(filterItem.checked).toEqual(true)
+        expect(filterItem.checked).toBe(true)
       }
     )
     it.each`
@@ -521,14 +521,14 @@ describe("Search Store", () => {
         filterType: "licenseTypes",
         code: "commercial",
       })
-      expect(searchStore.isAnyFilterApplied).toEqual(true)
+      expect(searchStore.isAnyFilterApplied).toBe(true)
 
       searchStore.setSearchType(VIDEO)
       searchStore.toggleFilter({
         filterType: "licenseTypes",
         code: "commercial",
       })
-      expect(searchStore.isAnyFilterApplied).toEqual(false)
+      expect(searchStore.isAnyFilterApplied).toBe(false)
     })
 
     describe("Recent searches", () => {

@@ -79,7 +79,7 @@ describe("VModal", () => {
     await userEvent.click(getCloseButton())
     await nextTick()
 
-    expect(queryDialog()).toBe(null)
+    expect(queryDialog()).toBeNull()
   })
 
   it("should scroll lock the body when modal opens and unlock when modal closes", async () => {
@@ -125,6 +125,6 @@ describe("VModal", () => {
     await userEvent.keyboard("{Escape}")
     await nextTick()
 
-    expect(queryDialog()).toBe(null)
+    expect(queryDialog()).toBeNull()
   })
 })

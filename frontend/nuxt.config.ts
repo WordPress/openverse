@@ -1,4 +1,4 @@
-import { defineNuxtConfig, NuxtConfig } from "nuxt/config"
+import { defineNuxtConfig } from "nuxt/config"
 
 import locales from "./src/locales/scripts/valid-locales.json"
 

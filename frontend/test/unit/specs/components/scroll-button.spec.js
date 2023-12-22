@@ -9,6 +9,6 @@ describe("Scroll button", () => {
     const { container } = await render(VScrollButton)
     expect(screen.getByRole("button")).toBeTruthy()
     expect(screen.getByLabelText(/scroll/i)).toBeTruthy()
-    expect(container.querySelectorAll("svg").length).toEqual(1)
+    expect(container.querySelectorAll("svg").length).toBe(1)
   })
 })

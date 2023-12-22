@@ -1,5 +1,6 @@
-import { isProd } from "~/utils/node-env"
 import { useCookie } from "#imports"
+
+import { isProd } from "~/utils/node-env"
 
 export const cookieOptions: Parameters<typeof useCookie>[1] = {
   path: "/",

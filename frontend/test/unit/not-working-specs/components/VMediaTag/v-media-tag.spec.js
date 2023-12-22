@@ -5,7 +5,7 @@ import { render } from "~~/test/unit/test-utils/render"
 
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 
-describe("VMediaTag", async () => {
+describe("VMediaTag", () => {
   let props = null
   let options = null
 
@@ -16,7 +16,7 @@ describe("VMediaTag", async () => {
 
   it("should render an span tag by default", async () => {
     const { container } = await render(VMediaTag, options)
-    expect(container.firstChild.tagName).toEqual("SPAN")
+    expect(container.firstChild.tagName).toBe("SPAN")
   })
 
   it("should render the supplied tag", async () => {
@@ -27,8 +27,8 @@ describe("VMediaTag", async () => {
     }
 
     const { container } = await render(VMediaTag, options)
-    expect(container.firstChild.tagName).toEqual("A")
-    expect(container.firstChild.href).toEqual("https://example.com/")
+    expect(container.firstChild.tagName).toBe("A")
+    expect(container.firstChild.href).toBe("https://example.com/")
   })
 
   it("should render the supplied Vue component", async () => {
@@ -42,7 +42,7 @@ describe("VMediaTag", async () => {
     }
 
     const { container } = await render(VMediaTag, options)
-    expect(container.firstChild.tagName).toEqual("A")
+    expect(container.firstChild.tagName).toBe("A")
   })
 
   it("renders slot content", async () => {

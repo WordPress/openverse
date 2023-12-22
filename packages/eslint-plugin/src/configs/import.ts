@@ -74,7 +74,11 @@ export = {
         pathGroupsExcludedImportTypes: ["builtin"],
       },
     ],
-    "import/extensions": ["error", "always", { js: "never", ts: "never" }],
+    "import/extensions": [
+      "error",
+      "always",
+      { js: "never", mjs: "never", ts: "never" },
+    ],
   },
   overrides: [
     {

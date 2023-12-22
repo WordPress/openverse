@@ -5,6 +5,7 @@ import { computed, ref, watch } from "vue"
 import { createDetailPageMeta } from "~/utils/og"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
+
 import type { Ref } from "vue"
 
 export const useSingleResultPageMeta = (

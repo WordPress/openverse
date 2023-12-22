@@ -79,8 +79,8 @@ describe("Media Item Store", () => {
         isFetching: false,
         fetchingError: null,
       })
-      expect(singleResultStore.mediaItem).toEqual(null)
-      expect(singleResultStore.mediaType).toEqual(null)
+      expect(singleResultStore.mediaItem).toBeNull()
+      expect(singleResultStore.mediaType).toBeNull()
     })
   })
 
@@ -107,7 +107,7 @@ describe("Media Item Store", () => {
         })
         expect(
           singleResultStore[mediaType === "image" ? "audio" : "image"]
-        ).toEqual(null)
+        ).toBeNull()
       }
     )
   })
@@ -125,9 +125,9 @@ describe("Media Item Store", () => {
     )
     it("setMediaItem(null) sets the media item to null", () => {
       singleResultStore.setMediaItem(null)
-      expect(singleResultStore.mediaItem).toEqual(null)
-      expect(singleResultStore.mediaType).toEqual(null)
-      expect(singleResultStore.mediaId).toEqual(null)
+      expect(singleResultStore.mediaItem).toBeNull()
+      expect(singleResultStore.mediaType).toBeNull()
+      expect(singleResultStore.mediaId).toBeNull()
     })
 
     it("setMediaById sets the media if it exists in the media store", () => {
@@ -144,7 +144,7 @@ describe("Media Item Store", () => {
       const mediaItem = detailData[AUDIO]
       singleResultStore.setMediaById(AUDIO, mediaItem.id)
 
-      expect(singleResultStore.mediaItem).toEqual(null)
+      expect(singleResultStore.mediaItem).toBeNull()
       expect(singleResultStore.mediaType).toEqual(AUDIO)
       expect(singleResultStore.mediaId).toEqual(mediaItem.id)
     })
@@ -219,7 +219,7 @@ describe("Media Item Store", () => {
           searchType: type,
           details: { id },
         }
-        expect(await singleResultStore.fetch(type, id)).toEqual(null)
+        expect(await singleResultStore.fetch(type, id)).toBeNull()
         expect(singleResultStore.fetchState.fetchingError).toEqual(
           expectedError
         )
