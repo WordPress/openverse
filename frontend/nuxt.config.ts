@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt/config"
+import { defineNuxtConfig, NuxtConfig } from "nuxt/config"
 
 import locales from "./src/locales/scripts/valid-locales.json"
 
@@ -77,6 +77,13 @@ export default defineNuxtConfig({
     },
   },
   dev: !isProd,
+  /**
+   * Disable debug mode in production.
+   *
+   * Do not use `isProdNotPlaywright` for this otherwise the debug logger will log hook
+   * timings for every single request, making the Playwright logs unusable.
+   */
+  debug: !isProd,
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",

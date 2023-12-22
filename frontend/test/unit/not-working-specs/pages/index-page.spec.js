@@ -11,6 +11,7 @@ import { useAnalytics } from "~/composables/use-analytics"
 vi.mock("~/composables/use-analytics", () => ({
   useAnalytics: vi.fn(),
 }))
+
 describe("IndexPage", () => {
   let options
   const sendCustomEventMock = vi.fn()
