@@ -19,10 +19,9 @@ import {
   searchPath,
 } from "~/constants/media"
 import {
-  ApiQueryParams,
   filtersToQueryData,
   queryDictionaryToQueryParams,
-  queryStringToSearchType,
+  pathToSearchType,
   queryToFilterData,
 } from "~/utils/search-query-transform"
 import {
@@ -39,6 +38,14 @@ import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 
+import {
+  SearchQuery,
+  SearchStrategy,
+  PaginatedSearchQuery,
+  CollectionParams,
+  PaginatedCollectionQuery,
+} from "~/types/search"
+
 import type { Ref } from "vue"
 
 import type { Dictionary } from "vue-router/types/router"
@@ -52,6 +59,8 @@ export const isSearchTypeSupported = (
 
 export interface SearchState {
   searchType: SearchType
+  strategy: SearchStrategy
+  collectionParams: CollectionParams | null
   recentSearches: Ref<string[]>
   backToSearchPath: string
   searchTerm: string
@@ -62,51 +71,61 @@ export interface SearchState {
 /**
  * Builds the search query parameters for the given search type, filters, and search term.
  * `q` parameter is always included as the first query parameter.
+ * If the search type is not supported, only the `q` parameter is included.
+ * This is used, for instance, for content switcher links for `video`/`model_3d` search pages.
  * Only the filters that are relevant for the search type and have a value are included.
  *
- * Some parameters are included in the query depending on the mode:
- * - `INCLUDE_SENSITIVE_QUERY_PARAM` is added to the API search query if the setting is `on`
- * in the featureFlagStore.
+ * `INCLUDE_SENSITIVE_QUERY_PARAM` is never added to the frontend search query. It is added
+ * to the API search query if the setting is `on` in the featureFlagStore.
  */
-function computeQueryParams(
+export function computeQueryParams(
   searchType: SearchType,
   filters: Filters,
   searchTerm: string,
   mode: "frontend" | "API"
 ) {
-  // The filters object is converted to a Record<string, string> object.
-  // e.g., { licenseTypes: [{ code: "commercial", checked: true }] }
-  // => { license_type: "commercial" }
-  const query = { ...filtersToQueryData(filters, searchType) }
-
+  const q = searchTerm.trim()
+  if (!isSearchTypeSupported(searchType)) {
+    return { q }
+  }
   // Ensure that `q` always comes first in the frontend URL.
-  const search_query: ApiQueryParams = { q: searchTerm.trim() }
-
-  // Parameters that are included in the query "as is".
-  const param_names = Object.keys(query).filter(
-    (key): key is Exclude<keyof ApiQueryParams, "q"> =>
-      !["q", INCLUDE_SENSITIVE_QUERY_PARAM].includes(key)
-  )
-
-  for (const api_param_name of param_names) {
-    if (query[api_param_name]?.length) {
-      search_query[api_param_name] = query[api_param_name]
-    }
+  const searchQuery: SearchQuery = {
+    q,
+    // The filters object is converted to a Record<string, string> object.
+    // e.g., { licenseTypes: [{ code: "commercial", checked: true }] }
+    // => { license_type: "commercial" }
+    ...filtersToQueryData(filters, searchType),
   }
 
   // `INCLUDE_SENSITIVE_QUERY_PARAM` is used in the API params, but not shown on the frontend.
   const ffStore = useFeatureFlagStore()
   if (mode === "API" && ffStore.isOn("fetch_sensitive")) {
-    search_query[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
+    searchQuery[INCLUDE_SENSITIVE_QUERY_PARAM] = "true"
   }
 
-  return search_query
+  return searchQuery
+}
+
+export function collectionToPath(collectionParams: CollectionParams) {
+  switch (collectionParams.collection) {
+    case "tag": {
+      return `tag/${collectionParams.tag}/`
+    }
+    case "creator": {
+      return `source/${collectionParams.source}/creator/${collectionParams.creator}/`
+    }
+    case "source": {
+      return `source/${collectionParams.source}/`
+    }
+  }
 }
 
 export const useSearchStore = defineStore("search", {
   state: (): SearchState => ({
     searchType: ALL_MEDIA,
     searchTerm: "",
+    strategy: "default",
+    collectionParams: null,
     backToSearchPath: "",
     localSearchTerm: "",
     recentSearches: useStorage<string[]>("recent-searches", []),
@@ -122,37 +141,17 @@ export const useSearchStore = defineStore("search", {
     },
 
     /**
-     * Returns the search query parameters for API request:
-     * drops all parameters with blank values.
+     * Returns the search query parameters for API request.
+     * The main difference between api and frontend query parameters is that
+     * the API query parameters include the `include_sensitive_results` parameter.
      */
-    searchQueryParams(state) {
-      if (isSearchTypeSupported(state.searchType)) {
-        return computeQueryParams(
-          state.searchType,
-          state.filters,
-          state.searchTerm,
-          "API"
-        )
-      } else {
-        return { q: state.searchTerm }
-      }
-    },
-
-    /**
-     * Returns the search query parameters for API request:
-     * drops all parameters with blank values.
-     */
-    frontendSearchUrlParams(state) {
-      if (isSearchTypeSupported(state.searchType)) {
-        return computeQueryParams(
-          state.searchType,
-          state.filters,
-          state.searchTerm,
-          "frontend"
-        )
-      } else {
-        return { q: state.searchTerm }
-      }
+    apiSearchQueryParams(state) {
+      return computeQueryParams(
+        state.searchType,
+        state.filters,
+        state.searchTerm,
+        "API"
+      )
     },
 
     /**
@@ -170,16 +169,12 @@ export const useSearchStore = defineStore("search", {
     /**
      * Returns the object with filters for selected search type,
      * with codes, names for i18n labels, and checked status.
-     *
-     * Excludes `searchBy` filters that we don't display.
      */
     searchFilters(state) {
-      return mediaFilterKeys[state.searchType]
-        .filter((filterKey) => filterKey !== "searchBy")
-        .reduce((obj, filterKey) => {
-          obj[filterKey] = this.filters[filterKey]
-          return obj
-        }, {} as Filters)
+      return mediaFilterKeys[state.searchType].reduce((obj, filterKey) => {
+        obj[filterKey] = this.filters[filterKey]
+        return obj
+      }, {} as Filters)
     },
 
     /**
@@ -202,6 +197,17 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
+    getSearchUrlParts(mediaType: SupportedMediaType) {
+      const query: PaginatedSearchQuery | PaginatedCollectionQuery =
+        this.strategy === "default"
+          ? computeQueryParams(mediaType, this.filters, this.searchTerm, "API")
+          : {}
+      const pathSlug =
+        this.collectionParams === null
+          ? ""
+          : collectionToPath(this.collectionParams)
+      return { query, pathSlug }
+    },
     setBackToSearchPath(path: string) {
       this.backToSearchPath = path
     },
@@ -223,37 +229,47 @@ export const useSearchStore = defineStore("search", {
       return this.getSearchPath()
     },
     /**
-     * Returns localized search path for the given search type.
+     * Returns localized frontend search path for the given search type.
      *
      * If search type is not provided, returns the path for the current search type.
      * If query is not provided, returns current query parameters.
+     * If only the search type is provided, the query is computed for this search type.
      */
     getSearchPath({
       type,
       query,
-    }: { type?: SearchType; query?: ApiQueryParams } = {}): string {
-      const searchType = type || this.searchType
-      let queryParams
-      if (!query) {
-        if (type && isSearchTypeSupported(type)) {
-          queryParams = computeQueryParams(
-            type,
-            this.filters,
-            this.searchTerm,
-            "frontend"
-          )
-        } else {
-          queryParams = this.frontendSearchUrlParams
-        }
-      } else {
-        queryParams = query
-      }
+    }: { type?: SearchType; query?: PaginatedSearchQuery } = {}): string {
+      const searchType = type ?? this.searchType
+      const queryParams =
+        query ??
+        computeQueryParams(
+          searchType,
+          this.filters,
+          this.searchTerm,
+          "frontend"
+        )
 
       return this.$nuxt.localePath({
         path: searchPath(searchType),
-        query: queryParams as Dictionary<string>,
+        query: queryParams as unknown as Dictionary<string>,
       })
     },
+
+    /**
+     * Returns localized frontend path for the given collection.
+     * Does not support query parameters for now.
+     */
+    getCollectionPath({
+      type,
+      collectionParams,
+    }: {
+      type: SupportedMediaType
+      collectionParams: CollectionParams
+    }) {
+      const path = `/${type}/${collectionToPath(collectionParams)}`
+      return this.$nuxt.localePath(path)
+    },
+
     setSearchType(type: SearchType) {
       const featureFlagStore = useFeatureFlagStore()
       if (
@@ -275,9 +291,13 @@ export const useSearchStore = defineStore("search", {
      */
     setSearchTerm(q: string | undefined | null) {
       const formattedTerm = q ? q.trim() : ""
-      if (this.searchTerm === formattedTerm) return
+      if (this.searchTerm === formattedTerm) {
+        return
+      }
       this.searchTerm = formattedTerm
       this.localSearchTerm = formattedTerm
+      this.collectionParams = null
+      this.strategy = "default"
 
       this.addRecentSearch(formattedTerm)
 
@@ -465,6 +485,15 @@ export const useSearchStore = defineStore("search", {
         this.filters[filterCategory] = newFilterData[filterCategory]
       })
     },
+    setCollectionState(
+      collectionParams: CollectionParams,
+      mediaType: SupportedMediaType
+    ) {
+      this.collectionParams = collectionParams
+      this.strategy = collectionParams?.collection
+      this.setSearchType(mediaType)
+      this.clearFilters()
+    },
     /**
      * Called when a /search path is server-rendered.
      */
@@ -485,9 +514,13 @@ export const useSearchStore = defineStore("search", {
           : {}),
       })
 
+      this.strategy = "default"
+
       this.setSearchTerm(query.q)
-      this.searchType = queryStringToSearchType(path)
-      if (!isSearchTypeSupported(this.searchType)) return
+      this.searchType = pathToSearchType(path)
+      if (!isSearchTypeSupported(this.searchType)) {
+        return
+      }
 
       const newFilterData = queryToFilterData({
         query,
@@ -506,9 +539,9 @@ export const useSearchStore = defineStore("search", {
     isFilterDisabled(
       item: FilterItem,
       filterCategory: FilterCategory
-    ): boolean | undefined {
+    ): boolean {
       if (!["licenseTypes", "licenses"].includes(filterCategory)) {
-        return
+        return false
       }
       if (item.code === "commercial" || item.code === "modification") {
         const targetCode = {
@@ -531,12 +564,6 @@ export const useSearchStore = defineStore("search", {
             dependentFilters.includes(item.code) && item.checked
         )
       }
-    },
-
-    isFilterChecked(filterCategory: FilterCategory, code: string): boolean {
-      const filterItems = this.filters[filterCategory]
-      const idx = filterItems.findIndex((f) => f.code === code)
-      return idx >= 0 && filterItems[idx].checked
     },
   },
 })

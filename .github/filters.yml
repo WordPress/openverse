@@ -64,6 +64,7 @@ mgmt:
   - .github/**
   - .devcontainer/**
   - automations/**
+  - utilities/**
 ci_cd:
   - .github/actions/**
   - .github/workflows/ci_cd.yml

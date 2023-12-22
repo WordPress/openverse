@@ -82,9 +82,29 @@ AUDIO_TABLE_COLUMNS = [
     col.AUDIO_SET_FOREIGN_IDENTIFIER,
 ]
 
+
 DB_COLUMNS_BY_MEDIA_TYPE = {AUDIO: AUDIO_TABLE_COLUMNS, IMAGE: IMAGE_TABLE_COLUMNS}
 
 
 def setup_db_columns_for_media_type(func: callable) -> callable:
     """Provide media-type-specific DB columns as a kwarg to the decorated function."""
     return setup_kwargs_for_media_type(DB_COLUMNS_BY_MEDIA_TYPE, "db_columns")(func)
+
+
+DELETED_IMAGE_TABLE_COLUMNS = IMAGE_TABLE_COLUMNS + [col.DELETED_ON, col.DELETED_REASON]
+DELETED_AUDIO_TABLE_COLUMNS = AUDIO_TABLE_COLUMNS + [col.DELETED_ON, col.DELETED_REASON]
+
+DELETED_MEDIA_DB_COLUMNS_BY_MEDIA_TYPE = {
+    AUDIO: DELETED_AUDIO_TABLE_COLUMNS,
+    IMAGE: DELETED_IMAGE_TABLE_COLUMNS,
+}
+
+
+def setup_deleted_db_columns_for_media_type(func: callable) -> callable:
+    """
+    Provide media-type-specific deleted media DB columns as a kwarg to the decorated
+    function.
+    """
+    return setup_kwargs_for_media_type(
+        DELETED_MEDIA_DB_COLUMNS_BY_MEDIA_TYPE, "deleted_db_columns"
+    )(func)

@@ -1,140 +1,72 @@
 from __future__ import annotations
 
+import logging
 import logging as log
-import pprint
-from itertools import accumulate
+import re
 from math import ceil
-from typing import Literal
+from typing import TYPE_CHECKING
 
 from django.conf import settings
 from django.core.cache import cache
 
-from elasticsearch.exceptions import BadRequestError, NotFoundError
+from decouple import config
+from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY, Match, Query, SimpleQueryString, Term
+from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
+from redis.exceptions import ConnectionError
 
 import api.models as models
-from api.constants.media_types import OriginIndex
+from api.constants.media_types import OriginIndex, SearchIndex
+from api.constants.search import SearchStrategy
 from api.constants.sorting import INDEXED_ON
-from api.serializers import media_serializers
+from api.controllers.elasticsearch.helpers import (
+    ELASTICSEARCH_MAX_RESULT_WINDOW,
+    get_es_response,
+    get_query_slice,
+    get_raw_es_response,
+)
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
-from api.utils.dead_link_mask import get_query_hash, get_query_mask
+from api.utils.dead_link_mask import get_query_hash
 from api.utils.search_context import SearchContext
 
 
-ELASTICSEARCH_MAX_RESULT_WINDOW = 10000
+# Using TYPE_CHECKING to avoid circular imports when importing types
+if TYPE_CHECKING:
+    from api.serializers.audio_serializers import AudioCollectionRequestSerializer
+    from api.serializers.media_serializers import (
+        MediaSearchRequestSerializer,
+        PaginatedRequestSerializer,
+    )
+
+    MediaListRequestSerializer = (
+        AudioCollectionRequestSerializer
+        | MediaSearchRequestSerializer
+        | PaginatedRequestSerializer
+    )
+
+module_logger = logging.getLogger(__name__)
+
+
+NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
-DEAD_LINK_RATIO = 1 / 2
+FILTERED_PROVIDERS_CACHE_KEY = "filtered_providers"
+FILTERED_PROVIDERS_CACHE_VERSION = 2
 THUMBNAIL = "thumbnail"
 URL = "url"
 PROVIDER = "provider"
-DEEP_PAGINATION_ERROR = "Deep pagination is not allowed."
 QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
 DEFAULT_BOOST = 10000
-
-
-class RankFeature(Query):
-    name = "rank_feature"
-
-
-def _unmasked_query_end(page_size, page):
-    """
-    Calculate the upper index of results to retrieve from Elasticsearch.
-
-    Used to retrieve the upper index of results to retrieve from Elasticsearch under the
-    following conditions:
-    1. There is no query mask
-    2. The lower index is beyond the scope of the existing query mask
-    3. The lower index is within the scope of the existing query mask
-    but the upper index exceeds it
-
-    In all these cases, the query mask is not used to calculate the upper index.
-    """
-    return ceil(page_size * page / (1 - DEAD_LINK_RATIO))
-
-
-def _paginate_with_dead_link_mask(
-    s: Search, page_size: int, page: int
-) -> tuple[int, int]:
-    """
-    Return the start and end of the results slice, given the query, page and page size.
-
-    In almost all cases the ``DEAD_LINK_RATIO`` will effectively double
-    the page size (given the current configuration of 0.5).
-
-    The "branch X" labels are for cross-referencing with the tests.
-
-    :param s: The elasticsearch Search object
-    :param page_size: How big the page should be.
-    :param page: The page number.
-    :return: Tuple of start and end.
-    """
-    query_hash = get_query_hash(s)
-    query_mask = get_query_mask(query_hash)
-    if not query_mask:  # branch 1
-        start = 0
-        end = _unmasked_query_end(page_size, page)
-    elif page_size * (page - 1) > sum(query_mask):  # branch 2
-        start = len(query_mask)
-        end = _unmasked_query_end(page_size, page)
-    else:  # branch 3
-        # query_mask is a list of 0 and 1 where 0 indicates the result position
-        # for the given query will be an invalid link. If we accumulate a query
-        # mask you end up, at each index, with the number of live results you
-        # will get back when you query that deeply.
-        # We then query for the start and end index _of the results_ in ES based
-        # on the number of results that we think will be valid based on the query mask.
-        # If we're requesting `page=2 page_size=3` and the mask is [0, 1, 0, 1, 0, 1],
-        # then we know that we have to _start_ with at least the sixth result of the
-        # overall query to skip the first page of 3 valid results. The "end" of the
-        # query will then follow the same pattern to reach the number of valid results
-        # required to fill the requested page. If the mask is not deep enough to
-        # account for the entire range, then we follow the typical assumption when
-        # a mask is not available that the end should be `page * page_size / 0.5`
-        # (i.e., double the page size)
-        accu_query_mask = list(accumulate(query_mask))
-        start = 0
-        if page > 1:
-            try:  # branch 3_start_A
-                # find the index at which we can skip N valid results where N = all
-                # the results that would be skipped to arrive at the start of the
-                # requested page
-                # This will effectively be the index at which we have the number of
-                # previous valid results + 1 because we don't want to include the
-                # last valid result from the previous page
-                start = accu_query_mask.index(page_size * (page - 1) + 1)
-            except ValueError:  # branch 3_start_B
-                # Cannot fail because of the check on branch 2 which verifies that
-                # the query mask already includes at least enough masked valid
-                # results to fulfill the requested page size
-                start = accu_query_mask.index(page_size * (page - 1)) + 1
-        # else:  branch 3_start_C
-        # Always start page=1 queries at 0
-
-        if page_size * page > sum(query_mask):  # branch 3_end_A
-            end = _unmasked_query_end(page_size, page)
-        else:  # branch 3_end_B
-            end = accu_query_mask.index(page_size * page) + 1
-    return start, end
-
-
-def _get_query_slice(
-    s: Search, page_size: int, page: int, filter_dead: bool | None = False
-) -> tuple[int, int]:
-    """Select the start and end of the search results for this query."""
-
-    if filter_dead:
-        start_slice, end_slice = _paginate_with_dead_link_mask(s, page_size, page)
-    else:
-        # Paginate search query.
-        start_slice = page_size * (page - 1)
-        end_slice = page_size * page
-    if start_slice + end_slice > ELASTICSEARCH_MAX_RESULT_WINDOW:
-        raise ValueError(DEEP_PAGINATION_ERROR)
-    return start_slice, end_slice
+DEFAULT_SEARCH_FIELDS = ["title", "description", "tags.name"]
+DEFAULT_SQS_FLAGS = "AND|NOT|PHRASE|WHITESPACE"
+UNUSED_SQS_FLAGS = [
+    ("PRECEDENCE", r"\(.*\)"),
+    ("ESCAPE", r"\\"),
+    ("FUZZY|SLOP", r"~\d"),
+    ("PREFIX", r"\*"),
+]
 
 
 def _quote_escape(query_string):
@@ -148,7 +80,7 @@ def _quote_escape(query_string):
 
 
 def _post_process_results(
-    s, start, end, page_size, search_results, filter_dead
+    s, start, end, page_size, search_results, filter_dead, nesting=0
 ) -> list[Hit] | None:
     """
     Perform some steps on results fetched from the backend.
@@ -165,17 +97,26 @@ def _post_process_results(
     :param search_results: The Elasticsearch response object containing search
     results.
     :param filter_dead: Whether images should be validated.
+    :param nesting: the level of nesting at which this function is being called
     :return: List of results.
     """
-    results = []
-    to_validate = []
-    for res in search_results:
-        if hasattr(res.meta, "highlight"):
-            res.fields_matched = dir(res.meta.highlight)
-        to_validate.append(res.url)
-        results.append(res)
+
+    logger = module_logger.getChild("_post_process_results")
+    if nesting > NESTING_THRESHOLD:
+        logger.info(
+            {
+                "message": "Nesting threshold breached",
+                "nesting": nesting,
+                "start": start,
+                "end": end,
+                "page_size": page_size,
+            }
+        )
+
+    results = list(search_results)
 
     if filter_dead:
+        to_validate = [res.url for res in search_results]
         query_hash = get_query_hash(s)
         check_dead_links(query_hash, start, results, to_validate)
 
@@ -226,92 +167,275 @@ def _post_process_results(
                 end = search_results.hits.total.value
 
             s = s[start:end]
-            search_response = s.execute()
+            search_response = get_es_response(s, es_query="postprocess_search")
 
             return _post_process_results(
-                s, start, end, page_size, search_response, filter_dead
+                s, start, end, page_size, search_response, filter_dead, nesting + 1
             )
 
     return results[:page_size]
 
 
-def _apply_filter(
-    s: Search,
-    search_params: media_serializers.MediaSearchRequestSerializer,
-    serializer_field: str,
-    es_field: str | None = None,
-    behaviour: Literal["filter", "exclude"] = "filter",
+def get_excluded_providers_query() -> Q | None:
+    """
+    Hide data sources from the catalog dynamically.
+    To exclude a provider, set ``filter_content`` to ``True`` in the
+    ``ContentProvider`` model in Django admin.
+    The list of ``provider_identifier``s is cached in Redis with
+    `:FILTERED_PROVIDERS_CACHE_VERSION:FILTERED_PROVIDERS_CACHE_KEY` key.
+    """
+
+    logger = module_logger.getChild("get_excluded_providers_query")
+
+    try:
+        filtered_providers = cache.get(
+            key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
+        )
+    except ConnectionError:
+        logger.warning("Redis connect failed, cannot get cached filtered providers.")
+        filtered_providers = None
+
+    if not filtered_providers:
+        filtered_providers = list(
+            models.ContentProvider.objects.filter(filter_content=True).values_list(
+                "provider_identifier", flat=True
+            )
+        )
+
+        try:
+            cache.set(
+                key=FILTERED_PROVIDERS_CACHE_KEY,
+                version=FILTERED_PROVIDERS_CACHE_VERSION,
+                timeout=FILTER_CACHE_TIMEOUT,
+                value=filtered_providers,
+            )
+        except ConnectionError:
+            logger.warning("Redis connect failed, cannot cache filtered providers.")
+
+    if filtered_providers:
+        return Q("terms", provider=filtered_providers)
+    return None
+
+
+def get_index(
+    exact_index: bool,
+    origin_index: OriginIndex,
+    search_params: MediaListRequestSerializer,
+) -> SearchIndex:
+    if exact_index:
+        return origin_index
+
+    include_sensitive_results = search_params.validated_data.get(
+        "include_sensitive_results", False
+    )
+    if settings.ENABLE_FILTERED_INDEX_QUERIES and not include_sensitive_results:
+        return f"{origin_index}-filtered"
+    return origin_index
+
+
+def create_search_filter_queries(
+    search_params: MediaListRequestSerializer,
+) -> dict[str, list[Q]]:
+    """
+    Create a list of Elasticsearch queries for filtering search results.
+    The filter values are given in the request query string.
+    We use ES filters (`filter`, `must_not`) because we don't need to
+    compute the relevance score and the queries are cached for better
+    performance.
+    """
+    queries = {"filter": [], "must_not": []}
+    # Apply term filters. Each tuple pairs a filter's parameter name in the API
+    # with its corresponding field in Elasticsearch. "None" means that the
+    # names are identical.
+    query_filters = {
+        "filter": [
+            ("extension", None),
+            ("category", None),
+            ("source", None),
+            ("license", None),
+            ("license_type", "license"),
+            # Audio-specific filters
+            ("length", None),
+            # Image-specific filters
+            ("aspect_ratio", None),
+            ("size", None),
+        ],
+        "must_not": [
+            ("excluded_source", "source"),
+        ],
+    }
+    for behaviour, filters in query_filters.items():
+        for serializer_field, es_field in filters:
+            if not (arguments := search_params.data.get(serializer_field)):
+                continue
+            arguments = arguments.split(",")
+            parameter = es_field or serializer_field
+            queries[behaviour].append(Q("terms", **{parameter: arguments}))
+    return queries
+
+
+def create_ranking_queries(
+    search_params: MediaListRequestSerializer,
+) -> list[Q]:
+    queries = [Q("rank_feature", field="standardized_popularity", boost=DEFAULT_BOOST)]
+    if search_params.data["unstable__authority"]:
+        boost = int(search_params.data["unstable__authority_boost"] * DEFAULT_BOOST)
+        authority_query = Q("rank_feature", field="authority_boost", boost=boost)
+        queries.append(authority_query)
+    return queries
+
+
+def build_search_query(
+    search_params: MediaListRequestSerializer,
+) -> Q:
+    # Apply filters from the url query search parameters.
+    url_queries = create_search_filter_queries(search_params)
+    search_queries = {
+        "filter": url_queries["filter"],
+        "must_not": url_queries["must_not"],
+        "must": [],
+        "should": [],
+    }
+
+    # Exclude mature content
+    if not search_params.validated_data["include_sensitive_results"]:
+        search_queries["must_not"].append(Q("term", mature=True))
+    # Exclude dynamically disabled sources (see Redis cache)
+    if excluded_providers_query := get_excluded_providers_query():
+        search_queries["must_not"].append(excluded_providers_query)
+
+    # Search either by generic multimatch or by "advanced search" with
+    # individual field-level queries specified.
+    if "q" in search_params.data:
+        query = _quote_escape(search_params.data["q"])
+        log_query_features(query, query_name="q")
+
+        base_query_kwargs = {
+            "query": query,
+            "flags": DEFAULT_SQS_FLAGS,
+            "fields": DEFAULT_SEARCH_FIELDS,
+            "default_operator": "AND",
+        }
+
+        if '"' in query:
+            base_query_kwargs["quote_field_suffix"] = ".raw"
+
+        search_queries["must"].append(Q("simple_query_string", **base_query_kwargs))
+        # Boost exact matches on the title
+        quotes_stripped = query.replace('"', "")
+        exact_match_boost = Q(
+            "simple_query_string",
+            flags=DEFAULT_SQS_FLAGS,
+            fields=["title"],
+            query=f"{quotes_stripped}",
+            boost=10000,
+        )
+        search_queries["should"].append(exact_match_boost)
+    else:
+        for field, field_name in [
+            ("creator", "creator"),
+            ("title", "title"),
+            ("tags", "tags.name"),
+        ]:
+            if field_value := search_params.data.get(field):
+                log_query_features(field_value, query_name="field")
+                search_queries["must"].append(
+                    Q(
+                        "simple_query_string",
+                        flags=DEFAULT_SQS_FLAGS,
+                        query=_quote_escape(field_value),
+                        fields=[field_name],
+                    )
+                )
+
+    if settings.USE_RANK_FEATURES:
+        search_queries["should"].extend(create_ranking_queries(search_params))
+
+    # If there are no `must` query clauses, only the results that match
+    # the `should` clause are returned. To avoid this, we add an empty
+    # query clause to the `must` list.
+    if not search_queries["must"]:
+        search_queries["must"].append(EMPTY_QUERY)
+
+    return Q(
+        "bool",
+        filter=search_queries["filter"],
+        must_not=search_queries["must_not"],
+        must=search_queries["must"],
+        should=search_queries["should"],
+    )
+
+
+def log_query_features(query: str, query_name) -> None:
+    query_flags = []
+    for flag, pattern in UNUSED_SQS_FLAGS:
+        if bool(re.search(pattern, query)):
+            query_flags.append(flag)
+    if query_flags:
+        log.info(
+            {
+                "log_message": "Special features present in query",
+                "query_name": query_name,
+                "query": query,
+                "flags": query_flags,
+            }
+        )
+
+
+def build_collection_query(
+    search_params: MediaListRequestSerializer,
+    collection_params: dict[str, str],
 ):
     """
-    Parse and apply a filter from the search parameters serializer.
-
-    The parameter key is assumed to have the same name as the corresponding
-    Elasticsearch property. Each parameter value is assumed to be a comma
-    separated list encoded as a string.
-
-    :param s: The ``Search`` instance to apply the filter to
-    :param search_params: the serializer instance containing user input
-    :param serializer_field: the name of the parameter field in ``search_params``
-    :param es_field: the corresponding parameter name in Elasticsearch
-    :param behaviour: whether to accept (``filter``) or reject (``exclude``) the hit
-    :return: the input ``Search`` object with the filters applied
+    Build the query to retrieve items in a collection.
+    :param collection_params: `tag`, `source` and/or `creator` values from the path.
+    :param search_params: the validated search parameters.
+    :return: the search client with the query applied.
     """
+    search_query = {"filter": [], "must": [], "should": [], "must_not": []}
+    # Apply the term filters. Each tuple pairs a filter's parameter name in the API
+    # with its corresponding field in Elasticsearch. "None" means that the
+    # names are identical.
+    filters = [
+        # Collection filters allow a single value.
+        ("tag", "tags.name.keyword"),
+        ("source", None),
+        ("creator", "creator.keyword"),
+    ]
+    for serializer_field, es_field in filters:
+        if serializer_field in collection_params:
+            if not (argument := collection_params.get(serializer_field)):
+                continue
+            parameter = es_field or serializer_field
+            search_query["filter"].append({"term": {parameter: argument}})
 
-    if serializer_field in search_params.data:
-        arguments = search_params.data.get(serializer_field)
-        if arguments is None:
-            return s
-        arguments = arguments.split(",")
-        parameter = es_field or serializer_field
-        query = Q("terms", **{parameter: arguments})
-        method = getattr(s, behaviour)
-        return method("bool", should=query)
-
-    return s
-
-
-def _exclude_filtered(s: Search):
-    """Hide data sources from the catalog dynamically."""
-
-    filter_cache_key = "filtered_providers"
-    filtered_providers = cache.get(key=filter_cache_key)
-    if not filtered_providers:
-        filtered_providers = models.ContentProvider.objects.filter(
-            filter_content=True
-        ).values("provider_identifier")
-        cache.set(
-            key=filter_cache_key, timeout=FILTER_CACHE_TIMEOUT, value=filtered_providers
-        )
-    to_exclude = [f["provider_identifier"] for f in filtered_providers]
-    if to_exclude:
-        s = s.exclude("terms", provider=to_exclude)
-    return s
-
-
-def _exclude_sensitive_by_param(s: Search, search_params):
-    if not search_params.validated_data["include_sensitive_results"]:
-        s = s.exclude("term", mature=True)
-    return s
-
-
-def _resolve_index(
-    index: Literal["image", "audio"],
-    search_params: media_serializers.MediaSearchRequestSerializer,
-) -> Literal["image", "image-filtered", "audio", "audio-filtered"]:
-    use_filtered_index = all(
-        (
-            settings.ENABLE_FILTERED_INDEX_QUERIES,
-            not search_params.validated_data["include_sensitive_results"],
-        )
+    # Exclude mature content and disabled sources
+    include_sensitive_by_params = search_params.validated_data.get(
+        "include_sensitive_results", False
     )
-    if use_filtered_index:
-        return f"{index}-filtered"
+    if not include_sensitive_by_params:
+        search_query["must_not"].append({"term": {"mature": True}})
 
-    return index
+    if excluded_providers_query := get_excluded_providers_query():
+        search_query["must_not"].append(excluded_providers_query)
+
+    return Q("bool", **search_query)
 
 
-def search(
-    search_params: media_serializers.MediaSearchRequestSerializer,
+def build_query(
+    strategy: SearchStrategy,
+    search_params: MediaListRequestSerializer,
+    collection_params: dict[str, str] | None,
+) -> Q:
+    if strategy == "collection":
+        return build_collection_query(search_params, collection_params)
+    return build_search_query(search_params)
+
+
+def query_media(
+    strategy: SearchStrategy,
+    search_params: MediaListRequestSerializer,
+    collection_params: dict[str, str] | None,
     origin_index: OriginIndex,
     exact_index: bool,
     page_size: int,
@@ -320,10 +444,17 @@ def search(
     page: int = 1,
 ) -> tuple[list[Hit], int, int, dict]:
     """
-    Perform a ranked paginated search from the set of keywords and, optionally, filters.
+    If ``strategy`` is ``search``, perform a ranked paginated search
+    from the set of keywords and, optionally, filters.
+    If `strategy` is `collection`, perform a paginated search
+    for the `tag`, `source` or `source` and `creator` combination.
 
-    :param search_params: Search parameters. See
-     :class: `ImageSearchQueryStringSerializer`.
+    :param collection_params: The path parameters for collection search, if
+    strategy is `collection`.
+    :param strategy: Whether to perform a default search or retrieve a collection.
+    :param search_params: If `strategy` is `collection`, `PaginatedRequestSerializer`
+    or `AudioCollectionRequestSerializer`. If `strategy` is `search`, search
+    query params, see :class: `MediaRequestSerializer`.
     :param origin_index: The Elasticsearch index to search (e.g. 'image')
     :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
@@ -332,133 +463,51 @@ def search(
     Elasticsearch shards.
     :param filter_dead: Whether dead links should be removed.
     :param page: The results page number.
-    :return: Tuple with a List of Hits from elasticsearch, the total count of
+    :return: Tuple with a list of Hits from elasticsearch, the total count of
     pages, the number of results, and the ``SearchContext`` as a dict.
     """
-    if not exact_index:
-        index = _resolve_index(origin_index, search_params)
-    else:
-        index = origin_index
+    index = get_index(exact_index, origin_index, search_params)
 
-    search_client = Search(index=index)
+    query = build_query(strategy, search_params, collection_params)
 
-    s = search_client
-    # Apply term filters. Each tuple pairs a filter's parameter name in the API
-    # with its corresponding field in Elasticsearch. "None" means that the
-    # names are identical.
-    filters = [
-        ("extension", None),
-        ("category", None),
-        ("categories", "category"),
-        ("length", None),
-        ("aspect_ratio", None),
-        ("size", None),
-        ("source", None),
-        ("license", "license__keyword"),
-        ("license_type", "license__keyword"),
-    ]
-    for serializer_field, es_field in filters:
-        if serializer_field in search_params.data:
-            s = _apply_filter(s, search_params, serializer_field, es_field)
+    s = Search(index=index).query(query)
 
-    exclude = [
-        ("excluded_source", "source"),
-    ]
-    for serializer_field, es_field in exclude:
-        if serializer_field in search_params.data:
-            s = _apply_filter(s, search_params, serializer_field, es_field, "exclude")
+    if strategy == "search":
+        # Use highlighting to determine which fields contribute to the selection of
+        # top results.
+        s = s.highlight(*DEFAULT_SEARCH_FIELDS)
+        s = s.highlight_options(order="score")
+        s.extra(track_scores=True)
 
-    # Exclude mature content and disabled sources
-    s = _exclude_sensitive_by_param(s, search_params)
-    s = _exclude_filtered(s)
-
-    # Search either by generic multimatch or by "advanced search" with
-    # individual field-level queries specified.
-    search_fields = ["tags.name", "title", "description"]
-    if "q" in search_params.data:
-        query = _quote_escape(search_params.data["q"])
-        base_query_kwargs = {
-            "query": query,
-            "fields": search_fields,
-            "default_operator": "AND",
-        }
-
-        if '"' in query:
-            base_query_kwargs["quote_field_suffix"] = ".exact"
-
-        s = s.query(
-            "simple_query_string",
-            **base_query_kwargs,
-        )
-        # Boost exact matches on the title
-        quotes_stripped = query.replace('"', "")
-        exact_match_boost = Q(
-            "simple_query_string",
-            fields=["title"],
-            query=f"{quotes_stripped}",
-            boost=10000,
-        )
-        s = search_client.query(Q("bool", must=s.query, should=exact_match_boost))
-    else:
-        if "creator" in search_params.data:
-            creator = _quote_escape(search_params.data["creator"])
-            s = s.query("simple_query_string", query=creator, fields=["creator"])
-        if "title" in search_params.data:
-            title = _quote_escape(search_params.data["title"])
-            s = s.query("simple_query_string", query=title, fields=["title"])
-        if "tags" in search_params.data:
-            tags = _quote_escape(search_params.data["tags"])
-            s = s.query("simple_query_string", fields=["tags.name"], query=tags)
-
-    if settings.USE_RANK_FEATURES:
-        feature_boost = {"standardized_popularity": DEFAULT_BOOST}
-        if search_params.data["unstable__authority"]:
-            feature_boost["authority_boost"] = (
-                search_params.data["unstable__authority_boost"] * DEFAULT_BOOST
-            )
-
-        rank_queries = []
-        for field, boost in feature_boost.items():
-            rank_queries.append(Q("rank_feature", field=field, boost=boost))
-        s = search_client.query(
-            Q("bool", must=s.query or EMPTY_QUERY, should=rank_queries)
-        )
-
-    # Use highlighting to determine which fields contribute to the selection of
-    # top results.
-    s = s.highlight(*search_fields)
-    s = s.highlight_options(order="score")
-    s.extra(track_scores=True)
     # Route users to the same Elasticsearch worker node to reduce
     # pagination inconsistencies and increase cache hits.
-    s = s.params(preference=str(ip), request_timeout=7)
+    # TODO: Re-add 7s request_timeout when ES stability is restored
+    s = s.params(preference=str(ip))
 
-    # Sort by new
-    if search_params.validated_data["sort_by"] == INDEXED_ON:
-        s = s.sort({"created_on": {"order": search_params.validated_data["sort_dir"]}})
+    # Sort by `created_on` if the parameter is set or if `strategy` is `collection`.
+    sort_by = search_params.validated_data.get("sort_by")
+    if strategy == "collection" or sort_by == INDEXED_ON:
+        sort_dir = search_params.validated_data.get("sort_dir", "desc")
+        s = s.sort({"created_on": {"order": sort_dir}})
 
-    # Paginate
-    start, end = _get_query_slice(s, page_size, page, filter_dead)
-    s = s[start:end]
-    try:
-        if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(s.to_dict()))
-
-        search_response = s.execute()
-
-        if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(search_response.to_dict()))
-    except (BadRequestError, NotFoundError) as e:
-        raise ValueError(e)
-
-    results = _post_process_results(
-        s, start, end, page_size, search_response, filter_dead
+    # Execute paginated search and tally results
+    page_count, result_count, results = execute_search(
+        s, page, page_size, filter_dead, index, es_query=strategy
     )
 
-    result_count, page_count = _get_result_and_page_count(
-        search_response, results, page_size, page
-    )
+    result_ids = [result.identifier for result in results]
+    search_context = SearchContext.build(result_ids, origin_index)
 
+    return results, page_count, result_count, search_context.asdict()
+
+
+def tally_results(
+    index: SearchIndex, results: list[Hit] | None, page: int, page_size: int
+) -> None:
+    """
+    Tally the number of the results from each provider in the results
+    for the search query.
+    """
     results_to_tally = results or []
     max_result_depth = page * page_size
     if max_result_depth <= 80:
@@ -487,71 +536,33 @@ def search(
         # check things like provider density for a set of queries.
         tallies.count_provider_occurrences(results_to_tally, index)
 
-    if not results:
-        results = []
 
-    result_ids = [result.identifier for result in results]
-    search_context = SearchContext.build(result_ids, origin_index)
-
-    return results, page_count, result_count, search_context.asdict()
-
-
-def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
+def execute_search(
+    s: Search,
+    page: int,
+    page_size: int,
+    filter_dead: bool,
+    index: SearchIndex,
+    es_query: str,
+) -> tuple[int, int, list[Hit]]:
     """
-    Given a UUID, finds 10 related search results based on title and tags.
-
-    Uses Match query for title or SimpleQueryString for tags.
-    If the item has no title and no tags, returns items by the same creator.
-    If the item has no title, no tags or no creator, returns empty list.
-
-    :param uuid: The UUID of the item to find related results for.
-    :param index: The Elasticsearch index to search (e.g. 'image')
-    :param filter_dead: Whether dead links should be removed.
-    :return: List of related results.
+    Execute search for the given query slice, post-processes the results,
+    and returns the results and result and page counts.
     """
-
-    # Search the default index for the item itself as it might be sensitive.
-    item_search = Search(index=index)
-    # TODO: remove `__keyword` after
-    #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    item_hit = item_search.query(Term(identifier__keyword=uuid)).execute().hits[0]
-
-    # Match related using title.
-    title = getattr(item_hit, "title", None)
-    tags = getattr(item_hit, "tags", None)
-    creator = getattr(item_hit, "creator", None)
-
-    if not title and not tags:
-        if not creator:
-            return []
-        related_query = Term(creator__keyword=creator)
-    else:
-        related_query = None if not title else Match(title=title)
-
-        # Match related using tags, if the item has any.
-        if tags:
-            # Only use the first 10 tags
-            tags = " | ".join([tag.name for tag in tags[:10]])
-            tags_query = SimpleQueryString(fields=["tags.name"], query=tags)
-            related_query = related_query | tags_query if related_query else tags_query
-
-    # Search the filtered index for related items.
-    s = Search(index=f"{index}-filtered")
-
-    # Exclude the current item and mature content.
-    # TODO: remove `__keyword` after
-    #  https://github.com/WordPress/openverse/pull/3143 is merged.
-    s = s.query(related_query & ~Term(identifier__keyword=uuid) & ~Term(mature=True))
-    # Exclude the dynamically disabled sources.
-    s = _exclude_filtered(s)
-
-    page, page_size = 1, 10
-    start, end = _get_query_slice(s, page_size, page, filter_dead)
+    start, end = get_query_slice(s, page_size, page, filter_dead)
     s = s[start:end]
 
-    response = s.execute()
-    results = _post_process_results(s, start, end, page_size, response, filter_dead)
-    return results or []
+    search_response = get_es_response(s, es_query=es_query)
+
+    results: list[Hit] = (
+        _post_process_results(s, start, end, page_size, search_response, filter_dead)
+        or []
+    )
+    result_count, page_count = _get_result_and_page_count(
+        search_response, results, page_size, page
+    )
+    tally_results(index, results, page, page_size)
+    return page_count, result_count, results
 
 
 def get_sources(index):
@@ -569,29 +580,55 @@ def get_sources(index):
         cache_fetch_failed = True
         sources = None
         log.warning("Source cache fetch failed due to corruption")
-    if type(sources) == list or cache_fetch_failed:
-        # Invalidate old provider format.
-        cache.delete(key=source_cache_name)
+    except ConnectionError:
+        cache_fetch_failed = True
+        sources = None
+        log.warning("Redis connect failed, cannot get cached sources.")
+
+    if isinstance(sources, list) or cache_fetch_failed:
+        sources = None
+        try:
+            # Invalidate old provider format.
+            cache.delete(key=source_cache_name)
+        except ConnectionError:
+            log.warning("Redis connect failed, cannot invalidate cached sources.")
+
     if not sources:
         # Don't increase `size` without reading this issue first:
         # https://github.com/elastic/elasticsearch/issues/18838
         size = 100
-        aggs = {
-            "unique_sources": {
-                "terms": {
-                    "field": "source.keyword",
-                    "size": size,
-                    "order": {"_key": "desc"},
+        body = {
+            "size": 0,
+            "aggs": {
+                "unique_sources": {
+                    "terms": {
+                        "field": "source",
+                        "size": size,
+                        "order": {"_key": "desc"},
+                    }
                 }
-            }
+            },
         }
         try:
-            results = settings.ES.search(index=index, aggs=aggs, request_cache=True)
+            results = get_raw_es_response(
+                index=index,
+                body=body,
+                request_cache=True,
+                es_query="sources",
+            )
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
         sources = {result["key"]: result["doc_count"] for result in buckets}
-        cache.set(key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources)
+
+        try:
+            cache.set(
+                key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources
+            )
+        except ConnectionError:
+            log.warning("Redis connect failed, cannot cache sources.")
+
+    sources = {source: int(doc_count) for source, doc_count in sources.items()}
     return sources
 
 

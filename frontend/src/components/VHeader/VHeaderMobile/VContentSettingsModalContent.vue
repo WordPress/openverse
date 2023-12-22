@@ -35,11 +35,13 @@
           v-if="showFilters"
           :applied-filter-count="appliedFilterCount"
         />
-        <VCloseButton
+        <VIconButton
           :label="$t('modal.closeContentSettings')"
-          variant="filled-white"
+          :icon-props="{ name: 'close' }"
+          variant="transparent-gray"
+          size="large"
           class="ms-auto self-center"
-          @close="close"
+          @click="close"
         />
       </template>
       <VTabPanel id="content-settings">
@@ -83,9 +85,11 @@ import { useSearchStore } from "~/stores/search"
 
 import useSearchType from "~/composables/use-search-type"
 
-import VButton from "~/components/VButton.vue"
-import VCloseButton from "~/components/VCloseButton.vue"
+import { defineEvent } from "~/types/emits"
 
+import { SearchType } from "~/constants/media"
+
+import VButton from "~/components/VButton.vue"
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
@@ -96,14 +100,15 @@ import VTab from "~/components/VTabs/VTab.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 type ContentSettingsTab = "content-settings" | "filters"
 
 export default defineComponent({
   name: "VContentSettingsModalContent",
   components: {
+    VIconButton,
     VSafeBrowsing,
-    VCloseButton,
     VIcon,
     VModalContent,
     VButton,
@@ -136,6 +141,9 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+  },
+  emits: {
+    select: defineEvent<[SearchType]>(),
   },
   setup(props) {
     const searchStore = useSearchStore()

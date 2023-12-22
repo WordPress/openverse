@@ -29,12 +29,16 @@ from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from airflow.utils.trigger_rule import TriggerRule
+from es.recreate_staging_index.recreate_full_staging_index import (
+    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
+)
 
 from common.constants import (
     AWS_RDS_CONN_ID,
     DAG_DEFAULT_ARGS,
     POSTGRES_API_STAGING_CONN_ID,
 )
+from common.sensors.utils import wait_for_external_dag
 from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
@@ -70,9 +74,15 @@ log = logging.getLogger(__name__)
     render_template_as_native_obj=True,
 )
 def restore_staging_database():
+    # If the `recreate_full_staging_index` DAG was manually triggered prior
+    # to the database restoration starting, we should wait for it to
+    # finish.
+    wait_for_recreate_full_staging_index = wait_for_external_dag(
+        external_dag_id=RECREATE_STAGING_INDEX_DAG_ID,
+    )
     should_skip = skip_restore()
     latest_snapshot = get_latest_prod_snapshot()
-    should_skip >> latest_snapshot
+    wait_for_recreate_full_staging_index >> should_skip >> latest_snapshot
 
     ensure_snapshot_ready = RdsSnapshotExistenceSensor(
         task_id="ensure_snapshot_ready",

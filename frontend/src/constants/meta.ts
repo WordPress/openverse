@@ -24,10 +24,10 @@ export const meta = [
     name: "description",
     content: DESCRIPTION,
   },
-  { hid: "og:title", name: "og:title", content: "Openverse" },
+  { hid: "og:title", property: "og:title", content: "Openverse" },
   {
     hid: "og:image",
-    name: "og:image",
+    property: "og:image",
     content: "/openverse-default.jpg",
   },
   {

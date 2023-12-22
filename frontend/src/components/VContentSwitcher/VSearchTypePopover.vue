@@ -3,7 +3,6 @@
     ref="contentMenuPopover"
     :label="$t('searchType.label').toString()"
     placement="bottom-end"
-    width="w-66"
     :clippable="true"
     :trap-focus="false"
   >
@@ -31,6 +30,8 @@ import useSearchType from "~/composables/use-search-type"
 
 import type { SearchType } from "~/constants/media"
 
+import { defineEvent } from "~/types/emits"
+
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
@@ -51,6 +52,9 @@ export default defineComponent({
       type: String as PropType<"header" | "searchbar">,
       default: "header",
     },
+  },
+  emits: {
+    select: defineEvent<[SearchType]>(),
   },
   setup(_, { emit }) {
     const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)

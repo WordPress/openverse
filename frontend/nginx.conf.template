@@ -5,6 +5,7 @@
 # - OPENVERSE_NGINX_GIT_REVISION
 # - OPENVERSE_NGINX_ENVIRONMENT
 # - OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL
+# - OPENVERSE_NGINX_DNS_RESOLVER
 
 error_log /var/log/nginx/error.log;
 
@@ -69,7 +70,7 @@ server {
     # This is Docker's internal DNS resolver
     # In localhost it will resolve the local Plausible and forward anything else to the host
     # In production, AWS replaces
-    resolver 127.0.0.11;
+    resolver $OPENVERSE_NGINX_DNS_RESOLVER;
     set $plausible_event_url $OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL;
     location = /api/event {
         proxy_pass $plausible_event_url;

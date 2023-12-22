@@ -195,17 +195,17 @@ def test_index_is_only_set_if_authenticated(
     mock_es.indices.exists.return_value = True
 
     request = authed_request if authenticated else anon_request
-    serializer = MediaSearchRequestSerializer(
-        data={"internal__index": "some-index"}, context={"request": request}
+    serializer = ImageSearchRequestSerializer(
+        data={"internal__index": "image-some-index"}, context={"request": request}
     )
     assert serializer.is_valid()
     assert serializer.validated_data.get("index") == (
-        "some-index" if authenticated else None
+        "image-some-index" if authenticated else None
     )
 
     if authenticated:
         # If authenticated, we should have checked that the index exists.
-        mock_es.indices.exists.assert_called_with("some-index")
+        mock_es.indices.exists.assert_called_with("image-some-index")
     else:
         # If not authenticated, the validator quickly returns ``None``.
         mock_es.indices.exists.assert_not_called()
@@ -215,12 +215,12 @@ def test_index_is_only_set_if_authenticated(
 @patch("django.conf.settings.ES")
 @pytest.mark.parametrize(
     "index, is_valid",
-    (("index-that-exists", True), ("index-that-does-not-exist", False)),
+    (("image-index-that-exists", True), ("image-index-that-does-not-exist", False)),
 )
 def test_index_is_only_set_if_valid(mock_es, index, is_valid, authed_request):
     mock_es.indices.exists = lambda index: "exists" in index
 
-    serializer = MediaSearchRequestSerializer(
+    serializer = ImageSearchRequestSerializer(
         data={"internal__index": index}, context={"request": authed_request}
     )
     assert serializer.is_valid() == is_valid

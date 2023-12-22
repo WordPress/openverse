@@ -1,0 +1,23 @@
+{
+  "alternative_images": [
+    {
+      "height": 1576,
+      "iiif_id": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2",
+      "iiif_info": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/info.json",
+      "mime_type": "image/tiff",
+      "native": "https://iip.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/full/0/native.jpg",
+      "orientation": "landscape",
+      "size": 19269857,
+      "thumbnail": "https://iip-thumb.smk.dk/iiif/jp2/KKSgb6458.tif.jp2/full/!1024,/0/default.jpg",
+      "width": 4073
+    }
+  ],
+  "id": "1170012466_object",
+  "object_number": "KKSgb5743 verso",
+  "image_height": 1059,
+  "image_native": "https://api.smk.dk/api/v1/thumbnail/KKSgb5743 verso.jpg",
+  "image_size": 11784886,
+  "image_thumbnail": "https://api.smk.dk/api/v1/thumbnail/KKSgb5743 verso.jpg",
+  "image_width": 3887,
+  "rights": "https://creativecommons.org/share-your-work/public-domain/cc0/"
+}

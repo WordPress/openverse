@@ -17,7 +17,7 @@ import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButto
         type: "select",
         default: "close-small",
       },
-      options: ["close-small", "chevron-left", "source"],
+      options: ["close-small", "chevron-back", "source"],
     },
     rtlFlip: {
       control: {
@@ -100,7 +100,7 @@ corner.
 export const activeButtonsTemplate = (args) => ({
   template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink">
   <VSearchBarButton
-    icon="chevron-left"
+    icon="chevron-back"
     :label="$t('header.back-button')"
     variant="filled-gray"
     :rtl-flip="true"

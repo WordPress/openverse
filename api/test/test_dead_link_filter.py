@@ -6,22 +6,8 @@ from django.conf import settings
 
 import pytest
 import requests
-from fakeredis import FakeRedis
 
-from api.controllers.search_controller import DEAD_LINK_RATIO
-
-
-@pytest.fixture(autouse=True)
-def redis(monkeypatch) -> FakeRedis:
-    fake_redis = FakeRedis()
-
-    def get_redis_connection(*args, **kwargs):
-        return fake_redis
-
-    monkeypatch.setattr("django_redis.get_redis_connection", get_redis_connection)
-
-    yield fake_redis
-    fake_redis.client().close()
+from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
 
 
 @pytest.fixture(autouse=True)

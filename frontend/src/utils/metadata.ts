@@ -1,5 +1,4 @@
-import { title } from "case"
-
+import { capitalCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 import { AUDIO, IMAGE } from "~/constants/media"
 
@@ -21,8 +20,9 @@ const getImageType = (
 }
 
 const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
-  if (!audio.alt_files)
+  if (!audio.alt_files) {
     return audio.filetype ?? i18n.t("mediaDetails.information.unknown")
+  }
   const altFormats = audio.alt_files
     .map((altFile) => altFile.filetype)
     .filter((filetype) => filetype !== audio.filetype)
@@ -95,7 +95,7 @@ export const getMediaMetadata = (
     if (media.genres && media.genres.length > 0) {
       metadata.push({
         label: "audioDetails.table.genre",
-        value: media.genres.map((genre) => title(genre)).join(", "),
+        value: media.genres.map((genre) => capitalCase(genre)).join(", "),
       })
     }
 

@@ -32,7 +32,7 @@ ENV PATH="/venv/bin:$PATH"
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
 RUN apt-get update \
-  && apt-get install -y python3-dev \
+  && apt-get install -y python3-dev git \
   && rm -rf /var/lib/apt/lists/* \
   && python -m venv /venv \
   && pip install --upgrade pipenv
@@ -82,7 +82,7 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 #   - libexempi8: required for watermarking
 # - Create directory for dumping API logs
 RUN apt-get update \
-  && apt-get install -y curl libexempi8 postgresql-client libc-bin=2.36-9+deb12u3 libc6=2.36-9+deb12u3 \
+  && apt-get install -y curl libexempi8 postgresql-client \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 
@@ -106,6 +106,7 @@ RUN env \
 # Add the release version to the docker container
 ARG SEMANTIC_VERSION
 ENV SEMANTIC_VERSION=$SEMANTIC_VERSION
+ENV SENTRY_RELEASE=$SEMANTIC_VERSION
 
 # Exposes
 # - 8000: Dev server for API Django app
@@ -114,14 +115,13 @@ EXPOSE 8000
 # Wait for ES to accept connections
 ENTRYPOINT ["./run.sh"]
 
-# gunicorn configuration in gunicorn.conf.py
-CMD ["gunicorn"]
+CMD ["python", "run.py"]
 
 #########
 # NGINX #
 #########
 
-FROM docker.io/nginx:1.25.2-alpine as nginx
+FROM docker.io/nginx:1.25.3-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 

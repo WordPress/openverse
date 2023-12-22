@@ -11,21 +11,23 @@ group:
         dest: automations/python/
       - source: automations/data/
         dest: automations/data/
+      - source: automations/js/src/project_automation/
+        dest: automations/js/src/project_automation/
+      - source: automations/js/src/utils/
+        dest: automations/js/src/utils/
+      - source: automations/js/src/label_pr.mjs
+        dest: automations/js/src/label_pr.mjs
       # Synced workflows
-      - source: .github/workflows/new_issues.yml
-        dest: .github/workflows/new_issues.yml
-      - source: .github/workflows/new_prs.yml
-        dest: .github/workflows/new_prs.yml
-      - source: .github/workflows/label_new_pr.yml
-        dest: .github/workflows/label_new_pr.yml
+      - source: .github/workflows/issue_automations.yml
+        dest: .github/workflows/issue_automations.yml
+      - source: .github/workflows/pr_automations.yml
+        dest: .github/workflows/pr_automations.yml
+      - source: .github/workflows/pr_automations_init.yml
+        dest: .github/workflows/pr_automations_init.yml
       - source: .github/workflows/pr_label_check.yml
         dest: .github/workflows/pr_label_check.yml
       - source: .github/workflows/pr_ping.yml
         dest: .github/workflows/pr_ping.yml
-      - source: .github/workflows/actionlint.yml
-        dest: .github/workflows/actionlint.yml
-      - source: .github/actionlint-matcher.json
-        dest: .github/actionlint-matcher.json
       - source: .github/workflows/subscribe_to_label.yml
         dest: .github/workflows/subscribe_to_label.yml
       - source: .github/subscribe-to-label.json
@@ -35,9 +37,5 @@ group:
         dest: .github/ISSUE_TEMPLATE/bug_report.md
       - source: .github/ISSUE_TEMPLATE/config.yml
         dest: .github/ISSUE_TEMPLATE/config.yml
-      - source: .github/ISSUE_TEMPLATE/discussion.md
-        dest: .github/ISSUE_TEMPLATE/discussion.md
       - source: .github/ISSUE_TEMPLATE/feature_request.md
         dest: .github/ISSUE_TEMPLATE/feature_request.md
-      - source: .github/ISSUE_TEMPLATE/sentry_bug.md
-        dest: .github/ISSUE_TEMPLATE/sentry_bug.md

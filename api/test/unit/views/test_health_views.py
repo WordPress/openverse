@@ -32,10 +32,9 @@ def test_health_check_calls__check_db(api_client):
 
 
 def test_health_check_es_timed_out(api_client):
-    mock_health_response(timed_out=True)
-    pook.on()
-    res = api_client.get("/healthcheck/", data={"check_es": True})
-    pook.off()
+    with pook.use():
+        mock_health_response(timed_out=True)
+        res = api_client.get("/healthcheck/", data={"check_es": True})
 
     assert res.status_code == 503
     assert res.json()["detail"] == "es_timed_out"
@@ -43,10 +42,9 @@ def test_health_check_es_timed_out(api_client):
 
 @pytest.mark.parametrize("status", ("yellow", "red"))
 def test_health_check_es_status_bad(status, api_client):
-    mock_health_response(status=status)
-    pook.on()
-    res = api_client.get("/healthcheck/", data={"check_es": True})
-    pook.off()
+    with pook.use():
+        mock_health_response(status=status)
+        res = api_client.get("/healthcheck/", data={"check_es": True})
 
     assert res.status_code == 503
     assert res.json()["detail"] == f"es_status_{status}"
@@ -54,9 +52,8 @@ def test_health_check_es_status_bad(status, api_client):
 
 @pytest.mark.django_db
 def test_health_check_es_all_good(api_client):
-    mock_health_response(status="green")
-    pook.on()
-    res = api_client.get("/healthcheck/", data={"check_es": True})
-    pook.off()
+    with pook.use():
+        mock_health_response(status="green")
+        res = api_client.get("/healthcheck/", data={"check_es": True})
 
     assert res.status_code == 200

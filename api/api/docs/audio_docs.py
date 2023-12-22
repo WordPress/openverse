@@ -1,6 +1,6 @@
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from api.docs.base_docs import custom_extend_schema, fields_to_md
+from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
 from api.examples import (
     audio_complain_201_example,
     audio_complain_curl,
@@ -39,7 +39,7 @@ search = custom_extend_schema(
 
         By using this endpoint, you can obtain search results based on specified
         query and optionally filter results by
-        {fields_to_md(AudioSearchRequestSerializer.fields_names)}.
+        {fields_to_md(AudioSearchRequestSerializer.field_names)}.
 
         Results are ranked in order of relevance and paginated on the basis of the
         `page` param. The `page_size` param controls the total number of pages.
@@ -115,4 +115,17 @@ waveform = custom_extend_schema(
         404: (NotFoundErrorSerializer, audio_waveform_404_example),
     },
     eg=[audio_waveform_curl],
+)
+
+source_collection = collection_schema(
+    media_type="audio",
+    collection="source",
+)
+creator_collection = collection_schema(
+    media_type="audio",
+    collection="creator",
+)
+tag_collection = collection_schema(
+    media_type="audio",
+    collection="tag",
 )

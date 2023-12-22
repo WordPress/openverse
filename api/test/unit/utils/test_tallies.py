@@ -111,3 +111,18 @@ def test_count_provider_occurrences_increments_existing_tallies(redis):
         )
         == b"1"
     )
+
+
+def test_writes_error_logs_for_redis_connection_errors(unreachable_redis, caplog):
+    provider_counts = {"flickr": 4, "stocksnap": 6}
+
+    results = [
+        {"provider": provider}
+        for provider, count in provider_counts.items()
+        for _ in range(count)
+    ]
+    now = datetime(2023, 1, 19)  # 16th is start of week
+    with freeze_time(now):
+        tallies.count_provider_occurrences(results, FAKE_MEDIA_TYPE)
+
+    assert "Redis connect failed, cannot increment provider tallies." in caplog.text

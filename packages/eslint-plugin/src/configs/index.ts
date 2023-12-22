@@ -33,6 +33,8 @@ export const project: TSESLint.Linter.Config = {
     semi: ["error", "never"],
     "no-console": "off",
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
+    "unicorn/switch-case-braces": ["error"],
+    curly: ["error", "all"],
   },
   overrides: [
     {

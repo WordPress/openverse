@@ -15,7 +15,7 @@ import {
 } from "~/constants/media"
 import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
-import { useSearchStore } from "~/stores/search"
+import { computeQueryParams, useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 describe("Search Store", () => {
@@ -31,7 +31,7 @@ describe("Search Store", () => {
   describe("getters", () => {
     /**
      * Check for some special cases:
-     * - `fetch_sensitive` feature flag and `searchBy` filter.
+     * - `fetch_sensitive` feature flag filter.
      * - several options for single filter.
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
@@ -39,7 +39,6 @@ describe("Search Store", () => {
     it.each`
       sensitivityFlag | query                                          | searchType   | filterCount
       ${"on"}         | ${{ licenses: ["by"] }}                        | ${IMAGE}     | ${1}
-      ${"off"}        | ${{ licenses: ["by"], searchBy: ["creator"] }} | ${ALL_MEDIA} | ${2}
       ${"off"}        | ${{ licenses: ["cc0", "pdm", "by", "by-nc"] }} | ${ALL_MEDIA} | ${4}
       ${"off"}        | ${{ lengths: ["medium"] }}                     | ${AUDIO}     | ${1}
       ${"off"}        | ${{ imageExtensions: ["svg"] }}                | ${IMAGE}     | ${1}
@@ -63,33 +62,58 @@ describe("Search Store", () => {
     )
 
     /**
-     * If the type is provided, search path is updated to it, and the query is
-     * kept as is if filter parameters can be used with the new type, otherwise
-     * the unused parameters are removed.
-     * - Uses the type and query from the store if type and query are undefined.
-     * Note that the search term is not added to the query either.
-     * - Replaces the type, keeps the store query if type is provided and query is undefined.
-     * Common query parameters are kept as is, and the parameters that are incompatible with
-     * the type are removed.
+     * If type or query are not provided, uses the current state values.
+     * Uses the query as is, if provided. Otherwise, uses the store state
+     * as the query, omitting parameters that are not relevant for the search type.
      */
     it.each`
-      type         | query                      | currentState                                                                                | expected
-      ${undefined} | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa", extension: "ogg" } }}
-      ${IMAGE}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/image", query: { q: "cat", license: "by,by-sa" } }}
-      ${AUDIO}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa" } }}
-      ${AUDIO}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/audio", query: { q: "cat" } }}
-      ${IMAGE}     | ${undefined}               | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/image", query: { q: "cat", extension: "svg" } }}
-      ${IMAGE}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${{ path: "/search/image", query: { q: "cat" } }}
-      ${VIDEO}     | ${undefined}               | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${{ path: "/search/video", query: { q: "cat", extension: "ogg" } }}
-      ${undefined} | ${{ param: "passedAsIs" }} | ${{ path: "/search/image", urlQuery: {} }}                                                  | ${{ path: "/search/image", query: { param: "passedAsIs" } }}
+      type         | currentState                                                                                | expected
+      ${undefined} | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa", extension: "ogg" } }}
+      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/image", query: { q: "cat", license: "by,by-sa" } }}
+      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa" } }}
+      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/audio", query: { q: "cat" } }}
+      ${IMAGE}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/image", query: { q: "cat", extension: "svg" } }}
+      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${{ path: "/search/image", query: { q: "cat" } }}
+      ${VIDEO}     | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${{ path: "/search/video", query: { q: "cat" } }}
     `(
-      "getSearchPath returns correct path $query and searchType $searchType",
+      "getSearchPath returns $expected.path, $expected.query for $type and current state $currentState.path, $currentState.urlQuery",
       ({ type, query, currentState, expected }) => {
         const searchStore = useSearchStore()
 
         searchStore.setSearchStateFromUrl(currentState)
 
         searchStore.getSearchPath({ type, query })
+
+        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+      }
+    )
+
+    it.each`
+      type         | query                          | currentState                                      | expected
+      ${undefined} | ${{ unknownParam: "dropped" }} | ${{ path: "/search/image", urlQuery: { q: "" } }} | ${{ path: "/search/image", query: { unknownParam: "dropped" } }}
+    `(
+      "getSearchPath returns $expected.path, $expected.query for query $query $type and current state $currentState.path, $currentState.urlQuery",
+      ({ type, query, currentState, expected }) => {
+        const searchStore = useSearchStore()
+
+        searchStore.setSearchStateFromUrl(currentState)
+
+        searchStore.getSearchPath({ type, query })
+
+        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+      }
+    )
+
+    it.each`
+      type     | collectionParams                                                | expected
+      ${IMAGE} | ${{ collection: "tag", tag: "cat" }}                            | ${"/image/tag/cat/"}
+      ${AUDIO} | ${{ collection: "creator", source: "jamendo", creator: "cat" }} | ${"/audio/source/jamendo/creator/cat/"}
+      ${IMAGE} | ${{ collection: "source", source: "flickr" }}                   | ${"/image/source/flickr/"}
+    `(
+      "getCollectionPath returns $expected for $type, $tag, $creator, $source",
+      ({ type, collectionParams, expected }) => {
+        const searchStore = useSearchStore()
+        searchStore.getCollectionPath({ type, collectionParams })
 
         expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
       }
@@ -115,16 +139,13 @@ describe("Search Store", () => {
         const searchStore = useSearchStore()
         searchStore.setSearchType(searchType)
         const filtersForDisplay = searchStore.searchFilters
-        // `searchBy` filter is not displayed
-        const expectedFilterCount = Math.max(0, filterTypeCount - 1)
-        expect(Object.keys(filtersForDisplay).length).toEqual(
-          expectedFilterCount
-        )
+
+        expect(Object.keys(filtersForDisplay).length).toEqual(filterTypeCount)
       }
     )
     /**
      * Check for some special cases:
-     * - `fetch_sensitive` feature flag and `searchBy` filter.
+     * - `fetch_sensitive` feature flag.
      * - several options for single filter.
      * - media specific filters that are unique (durations).
      * - media specific filters that have the same API param (extensions)
@@ -132,20 +153,19 @@ describe("Search Store", () => {
      * - more than one value for a parameter in the query (q=cat&q=dog).
      */
     it.each`
-      sensitivityFlag | query                                               | expectedQueryParams                                                     | searchType
-      ${"on"}         | ${{ q: "cat", license: "by" }}                      | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
-      ${"on"}         | ${{ license: "by" }}                                | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
-      ${"off"}        | ${{ license: "" }}                                  | ${{ q: "" }}                                                            | ${IMAGE}
-      ${"off"}        | ${{ q: "cat", license: "by", searchBy: "creator" }} | ${{ q: "cat", license: "by", searchBy: "creator" }}                     | ${ALL_MEDIA}
-      ${"off"}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
-      ${"off"}        | ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat" }}                                                         | ${IMAGE}
-      ${"off"}        | ${{ q: "cat", length: "medium" }}                   | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
-      ${"off"}        | ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
-      ${"off"}        | ${{ q: "cat", extension: "mp3" }}                   | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
-      ${"off"}        | ${{ q: "cat", extension: "svg" }}                   | ${{ q: "cat" }}                                                         | ${AUDIO}
-      ${"off"}        | ${{ q: ["cat", "dog"], license: ["by", "cc0"] }}    | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
+      sensitivityFlag | query                                            | expectedQueryParams                                                     | searchType
+      ${"on"}         | ${{ q: "cat", license: "by" }}                   | ${{ q: "cat", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }} | ${IMAGE}
+      ${"on"}         | ${{ license: "by" }}                             | ${{ q: "", license: "by", [INCLUDE_SENSITIVE_QUERY_PARAM]: "true" }}    | ${IMAGE}
+      ${"off"}        | ${{ license: "" }}                               | ${{ q: "" }}                                                            | ${IMAGE}
+      ${"off"}        | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}     | ${{ q: "cat", license: "pdm,cc0,by,by-nc" }}                            | ${ALL_MEDIA}
+      ${"off"}        | ${{ q: "cat", length: "medium" }}                | ${{ q: "cat" }}                                                         | ${IMAGE}
+      ${"off"}        | ${{ q: "cat", length: "medium" }}                | ${{ q: "cat", length: "medium" }}                                       | ${AUDIO}
+      ${"off"}        | ${{ q: "cat", extension: "svg" }}                | ${{ q: "cat", extension: "svg" }}                                       | ${IMAGE}
+      ${"off"}        | ${{ q: "cat", extension: "mp3" }}                | ${{ q: "cat", extension: "mp3" }}                                       | ${AUDIO}
+      ${"off"}        | ${{ q: "cat", extension: "svg" }}                | ${{ q: "cat" }}                                                         | ${AUDIO}
+      ${"off"}        | ${{ q: ["cat", "dog"], license: ["by", "cc0"] }} | ${{ q: "cat", license: "by" }}                                          | ${IMAGE}
     `(
-      "returns correct searchQueryParams and filter status for $query and searchType $searchType",
+      "returns correct apiSearchQueryParams and filter status for $query and searchType $searchType",
       ({ sensitivityFlag, query, expectedQueryParams, searchType }) => {
         const featureFlagStore = useFeatureFlagStore()
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
@@ -157,10 +177,11 @@ describe("Search Store", () => {
           urlQuery: query,
         })
 
-        expect(searchStore.searchQueryParams).toEqual(expectedQueryParams)
+        expect(searchStore.apiSearchQueryParams).toEqual(expectedQueryParams)
       }
     )
   })
+
   describe("actions", () => {
     it.each(["foo", ""])(
       "`setSearchTerm correctly updates the searchTerm",
@@ -180,6 +201,24 @@ describe("Search Store", () => {
         expect(searchStore.searchType).toEqual(type)
       }
     )
+    it("throws an error for additional search types if the feature flag is off", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("additional_search_types", "off")
+
+      expect(() => searchStore.setSearchType(VIDEO)).toThrow(
+        "Please enable the 'additional_search_types' flag to use the video"
+      )
+    })
+
+    it("sets an additional search types if the feature flag is on", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("additional_search_types", "on")
+
+      searchStore.setSearchType(VIDEO)
+      expect(searchStore.searchType).toEqual(VIDEO)
+    })
 
     // TODO: add support for video path
     it.each`
@@ -201,7 +240,7 @@ describe("Search Store", () => {
     it.each`
       sensitivityFlag | query                                                      | path                | searchType
       ${"off"}        | ${{ license: "cc0,by", q: "cat" }}                         | ${"/search/"}       | ${ALL_MEDIA}
-      ${"off"}        | ${{ searchBy: "creator", q: "dog" }}                       | ${"/search/image/"} | ${IMAGE}
+      ${"off"}        | ${{ q: "dog" }}                                            | ${"/search/image/"} | ${IMAGE}
       ${"on"}         | ${{ [INCLUDE_SENSITIVE_QUERY_PARAM]: "true", q: "galah" }} | ${"/search/audio/"} | ${AUDIO}
       ${"off"}        | ${{ length: "medium" }}                                    | ${"/search/image"}  | ${IMAGE}
     `(
@@ -210,7 +249,7 @@ describe("Search Store", () => {
         const featureFlagStore = useFeatureFlagStore()
         featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         const searchStore = useSearchStore()
-        const expectedQuery = { ...searchStore.searchQueryParams, ...query }
+        const expectedQuery = { ...searchStore.apiSearchQueryParams, ...query }
         // The values that are not applicable for the search type should be discarded
         if (searchType === IMAGE) {
           delete expectedQuery.length
@@ -219,15 +258,40 @@ describe("Search Store", () => {
         searchStore.setSearchStateFromUrl({ path: path, urlQuery: query })
 
         expect(searchStore.searchType).toEqual(searchType)
-        expect(searchStore.searchQueryParams).toEqual(expectedQuery)
+        expect(searchStore.apiSearchQueryParams).toEqual(expectedQuery)
       }
     )
+
+    it("updateSearchPath updates searchType and query", () => {
+      const searchStore = useSearchStore()
+      searchStore.updateSearchPath({ type: "audio", searchTerm: "cat" })
+
+      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
+        path: "/search/audio",
+        query: { q: "cat" },
+      })
+    })
+
+    it("updateSearchPath keeps searchType and query if none provided", () => {
+      const searchStore = useSearchStore()
+      searchStore.setSearchTerm("cat")
+      searchStore.setSearchType("audio")
+      searchStore.updateSearchPath()
+
+      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
+      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
+        path: "/search/audio",
+        query: { q: "cat" },
+      })
+    })
 
     it.each`
       filters                                                               | query
       ${[["licenses", "by"], ["licenses", "by-nc-sa"]]}                     | ${["license", "by,by-nc-sa"]}
       ${[["licenseTypes", "commercial"], ["licenseTypes", "modification"]]} | ${["license_type", "commercial,modification"]}
-      ${[["searchBy", "creator"]]}                                          | ${["searchBy", "creator"]}
       ${[["sizes", "large"]]}                                               | ${["size", undefined]}
     `(
       "toggleFilter updates the query values to $query",
@@ -237,7 +301,7 @@ describe("Search Store", () => {
           const [filterType, code] = filterItem
           searchStore.toggleFilter({ filterType, code })
         }
-        expect(searchStore.searchQueryParams[query[0]]).toEqual(query[1])
+        expect(searchStore.apiSearchQueryParams[query[0]]).toEqual(query[1])
       }
     )
 
@@ -257,10 +321,12 @@ describe("Search Store", () => {
         })
         if (supportedSearchTypes.includes(searchType)) {
           // eslint-disable-next-line jest/no-conditional-expect
-          expect(searchStore.query).not.toEqual(expectedQueryParams)
+          expect(searchStore.apiSearchQueryParams).not.toEqual(
+            expectedQueryParams
+          )
         }
         searchStore.clearFilters()
-        expect(searchStore.searchQueryParams).toEqual(expectedQueryParams)
+        expect(searchStore.apiSearchQueryParams).toEqual(expectedQueryParams)
       }
     )
 
@@ -270,7 +336,6 @@ describe("Search Store", () => {
       ${"licenseTypes"}    | ${0}
       ${"imageExtensions"} | ${0}
       ${"imageCategories"} | ${0}
-      ${"searchBy"}        | ${0}
       ${"aspectRatios"}    | ${0}
       ${"sizes"}           | ${0}
     `(
@@ -361,7 +426,6 @@ describe("Search Store", () => {
       ${"licenseTypes"}    | ${"modification"} | ${1}
       ${"imageExtensions"} | ${"svg"}          | ${3}
       ${"imageCategories"} | ${"photograph"}   | ${0}
-      ${"searchBy"}        | ${"creator"}      | ${0}
       ${"aspectRatios"}    | ${"tall"}         | ${0}
       ${"sizes"}           | ${"medium"}       | ${1}
     `(
@@ -389,6 +453,7 @@ describe("Search Store", () => {
       ${{ code: "commercial", filterType: "licenseTypes" }}   | ${{ filterType: "licenses", code: "by-nc-sa" }}         | ${true}
       ${{ code: "modification", filterType: "licenseTypes" }} | ${{ filterType: "licenses", code: "by-nd" }}            | ${true}
       ${{ code: "modification", filterType: "licenseTypes" }} | ${{ filterType: "licenses", code: "by-nc-nd" }}         | ${true}
+      ${{ code: "jpg", filterType: "imageExtensions" }}       | ${{ filterType: "imageExtensions", code: "png" }}       | ${false}
     `(
       "isFilterDisabled for $item.code should return $disabled when $dependency.code is checked",
       ({ item, dependency, disabled }) => {
@@ -417,12 +482,12 @@ describe("Search Store", () => {
 
     it.each`
       searchType   | nextSearchType | expectedFilterCount
-      ${AUDIO}     | ${IMAGE}       | ${24}
-      ${IMAGE}     | ${ALL_MEDIA}   | ${11}
-      ${IMAGE}     | ${AUDIO}       | ${29}
-      ${ALL_MEDIA} | ${VIDEO}       | ${11}
-      ${VIDEO}     | ${AUDIO}       | ${29}
-      ${ALL_MEDIA} | ${IMAGE}       | ${24}
+      ${AUDIO}     | ${IMAGE}       | ${23}
+      ${IMAGE}     | ${ALL_MEDIA}   | ${10}
+      ${IMAGE}     | ${AUDIO}       | ${28}
+      ${ALL_MEDIA} | ${VIDEO}       | ${10}
+      ${VIDEO}     | ${AUDIO}       | ${28}
+      ${ALL_MEDIA} | ${IMAGE}       | ${23}
     `(
       "changing searchType from $searchType clears all but $expectedFilterCount $nextSearchType filters",
       async ({ searchType, nextSearchType, expectedFilterCount }) => {
@@ -501,6 +566,43 @@ describe("Search Store", () => {
         searchStore.clearRecentSearches()
 
         expect(searchStore.recentSearches).toEqual([])
+      })
+    })
+  })
+
+  describe("computeQueryParams", () => {
+    it("should return only `q` if search type is not supported", () => {
+      const params = computeQueryParams(VIDEO, {}, "cat", "frontend")
+      expect(params).toEqual({ q: "cat" })
+    })
+
+    it("should not set sensitive query param if mode is `frontend`", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("fetch_sensitive", "on")
+
+      const params = computeQueryParams(
+        IMAGE,
+        searchStore.filters,
+        "cat",
+        "frontend"
+      )
+      expect(params).toEqual({ q: "cat" })
+    })
+    it("should set sensitive query param if mode is `API`", () => {
+      const searchStore = useSearchStore()
+      const featureFlagStore = useFeatureFlagStore()
+      featureFlagStore.toggleFeature("fetch_sensitive", "on")
+
+      const params = computeQueryParams(
+        IMAGE,
+        searchStore.filters,
+        "cat",
+        "API"
+      )
+      expect(params).toEqual({
+        q: "cat",
+        unstable__include_sensitive_results: "true",
       })
     })
   })

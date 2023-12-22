@@ -78,7 +78,9 @@ export default defineComponent({
     const isSelected = computed(() => tabContext.selectedId.value === props.id)
 
     const handleFocus = () => {
-      if (props.disabled) return
+      if (props.disabled) {
+        return
+      }
       if (tabContext.activation.value === "auto") {
         tabContext.setSelectedId(props.id)
       }
@@ -86,7 +88,9 @@ export default defineComponent({
     }
 
     const handleSelection = () => {
-      if (props.disabled) return
+      if (props.disabled) {
+        return
+      }
       getDomElement(internalTabRef)?.focus()
       tabContext.setSelectedId(props.id)
     }
@@ -141,33 +145,38 @@ export default defineComponent({
 
       switch (event.key) {
         case keycodes.Spacebar:
-        case keycodes.Enter:
+        case keycodes.Enter: {
           tabContext.setSelectedId(props.id)
           break
+        }
         case keycodes.Home:
-        case keycodes.PageUp:
+        case keycodes.PageUp: {
           focusIn(list, Focus.First)
           break
+        }
 
         case keycodes.End:
-        case keycodes.PageDown:
+        case keycodes.PageDown: {
           focusIn(list, Focus.Last)
           break
-        case keycodes.ArrowLeft:
+        }
+        case keycodes.ArrowLeft: {
           focusIn(
             list,
             getFocusDirection(keycodes.ArrowLeft, document.dir) |
               Focus.WrapAround
           )
           break
+        }
 
-        case keycodes.ArrowRight:
+        case keycodes.ArrowRight: {
           focusIn(
             list,
             getFocusDirection(keycodes.ArrowRight, document.dir) |
               Focus.WrapAround
           )
           break
+        }
       }
     }
 

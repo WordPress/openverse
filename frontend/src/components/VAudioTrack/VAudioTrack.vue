@@ -36,20 +36,11 @@
         />
       </template>
 
-      <template #play-pause="playPauseProps">
+      <template #audio-control="audioControlProps">
         <VAudioControl
-          v-if="layout === 'full' && additionalSearchViews"
-          ref="playPauseRef"
-          size="medium"
+          ref="audioControlRef"
           :status="status"
-          v-bind="playPauseProps"
-          @toggle="handleToggle"
-        />
-        <VPlayPause
-          v-else
-          ref="playPauseRef"
-          :status="status"
-          v-bind="playPauseProps"
+          v-bind="audioControlProps"
           @toggle="handleToggle"
         />
       </template>
@@ -80,7 +71,6 @@ import {
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { AUDIO } from "~/constants/media"
 import {
@@ -99,7 +89,6 @@ import { defineEvent } from "~/types/emits"
 import type { AudioTrackClickEvent } from "~/types/events"
 
 import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
-import VPlayPause from "~/components/VAudioTrack/VPlayPause.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
 import VRowLayout from "~/components/VAudioTrack/layouts/VRowLayout.vue"
@@ -116,7 +105,6 @@ export default defineComponent({
   name: "VAudioTrack",
   components: {
     VAudioControl,
-    VPlayPause,
     VWaveform,
     VLink,
     VWarningSuppressor,
@@ -141,7 +129,7 @@ export default defineComponent({
      */
     layout: {
       type: String as PropType<AudioLayout>,
-      default: "full",
+      required: true,
     },
     /**
      * the size of the component; Both 'box' and 'row' layouts offer multiple
@@ -178,7 +166,9 @@ export default defineComponent({
 
     const initLocalAudio = () => {
       // Preserve existing local audio if we plucked it from the global active audio
-      if (!localAudio) localAudio = new Audio(props.audio.url)
+      if (!localAudio) {
+        localAudio = new Audio(props.audio.url)
+      }
 
       Object.entries(eventMap).forEach(([name, fn]) =>
         /**
@@ -291,12 +281,15 @@ export default defineComponent({
       if (localAudio) {
         return localAudio.duration
       }
-      if (typeof props.audio?.duration === "number")
+      if (typeof props.audio?.duration === "number") {
         return props.audio.duration / 1e3
+      }
       return 0
     })
     const setDuration = () => {
-      if (localAudio) duration.value = localAudio.duration
+      if (localAudio) {
+        duration.value = localAudio.duration
+      }
     }
 
     const eventMap = {
@@ -321,10 +314,14 @@ export default defineComponent({
      * `localAudio` variable. This is the earliest in
      * `setup` that this can be called.
      */
-    if (localAudio) initLocalAudio()
+    if (localAudio) {
+      initLocalAudio()
+    }
 
     onUnmounted(() => {
-      if (!localAudio) return
+      if (!localAudio) {
+        return
+      }
 
       Object.entries(eventMap).forEach(([name, fn]) =>
         localAudio?.removeEventListener(name, fn)
@@ -363,7 +360,9 @@ export default defineComponent({
 
     const play = () => {
       // Delay initializing the local audio element until playback is requested
-      if (!localAudio) initLocalAudio()
+      if (!localAudio) {
+        initLocalAudio()
+      }
 
       const playPromise = localAudio?.play()
       // Check if the audio can be played successfully
@@ -371,18 +370,22 @@ export default defineComponent({
         playPromise.catch((err) => {
           let message: string
           switch (err.name) {
-            case "NotAllowedError":
+            case "NotAllowedError": {
               message = "err_unallowed"
               break
-            case "NotSupportedError":
+            }
+            case "NotSupportedError": {
               message = "err_unsupported"
               break
-            case "AbortError":
+            }
+            case "AbortError": {
               message = "err_aborted"
               break
-            default:
+            }
+            default: {
               message = "err_unknown"
               $sentry.captureException(err)
+            }
           }
           activeMediaStore.setMessage({ message })
           localAudio?.pause()
@@ -412,7 +415,7 @@ export default defineComponent({
         : ""
     )
 
-    /* Interface with VPlayPause */
+    /* Interface with VAudioControl */
 
     /**
      * This function can safely ignore the `loading` status because
@@ -422,31 +425,37 @@ export default defineComponent({
       let event: AudioInteraction | undefined = undefined
       if (!state) {
         switch (status.value) {
-          case "playing":
+          case "playing": {
             state = "paused"
             break
+          }
           case "paused":
-          case "played":
+          case "played": {
             state = "playing"
             break
+          }
         }
       }
 
       switch (state) {
-        case "playing":
+        case "playing": {
           play()
           event = "play"
           break
-        case "paused":
+        }
+        case "paused": {
           pause()
           event = "pause"
           break
+        }
       }
       emitInteracted(event)
     }
 
     const emitInteracted = (event?: AudioInteraction) => {
-      if (!event) return
+      if (!event) {
+        return
+      }
       snackbar.dismiss()
       emit("interacted", {
         event,
@@ -458,7 +467,9 @@ export default defineComponent({
     /* Interface with VWaveform */
 
     const handleSeeked = (frac: number) => {
-      if (!localAudio) initLocalAudio()
+      if (!localAudio) {
+        initLocalAudio()
+      }
       /**
        * Calling initLocalAudio will guarantee localAudio
        * to be an HTMLAudioElement, but we can't prove that
@@ -490,7 +501,7 @@ export default defineComponent({
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
      */
-    const playPauseRef = ref<{ $el: HTMLElement } | null>(null)
+    const audioControlRef = ref<{ $el: HTMLElement } | null>(null)
 
     /**
      * A ref used on the waveform, so we can capture mousedown on the
@@ -583,11 +594,6 @@ export default defineComponent({
       }
     }
 
-    const featureFlagStore = useFeatureFlagStore()
-    const additionalSearchViews = computed(() =>
-      featureFlagStore.isOn("additional_search_views")
-    )
-
     return {
       status,
       message,
@@ -612,10 +618,8 @@ export default defineComponent({
       isComposite,
       containerAttributes,
 
-      playPauseRef,
+      audioControlRef,
       waveformRef,
-
-      additionalSearchViews,
     }
   },
 })

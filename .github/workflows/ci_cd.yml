@@ -112,6 +112,8 @@ jobs:
           key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Run pre-commit to lint files
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           just precommit
           just lint
@@ -134,20 +136,31 @@ jobs:
           # - list of stack filters: `.github/filters.yml`
           # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
           script: |
-            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
-            const labels = JSON
-              .parse('${{ needs.get-changes.outputs.changes }}')
-              .filter(change => stacks.includes(change))
-              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
-            if (!labels.length) {
-              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
-            }
-            github.rest.issues.addLabels({
+            const labels = await github.rest.issues.listLabelsOnIssue({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels,
             })
+            console.log(labels.data)
+            if (labels.data.some(label => label.name.startsWith("🧱 stack: "))) {
+              console.log("Stack label already applied, skipping.")
+            } else {
+              const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
+              const labels = JSON
+                .parse('${{ needs.get-changes.outputs.changes }}')
+                .filter(change => stacks.includes(change))
+                .map(change => `🧱 stack: ${change.replace("_", " ")}`)
+              if (!labels.length) {
+                console.log("Couldn't determine stack, applying triage labels.")
+                labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+              }
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels,
+              })
+            }
 
   build-images:
     name: Build Docker images
@@ -218,10 +231,15 @@ jobs:
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
 
       - name: Upload image `${{ matrix.image }}`
-        uses: actions/upload-artifact@v3
+        id: upload-img
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
+
+      - name: Show artifact ID
+        run: |
+          echo '${{ matrix.image }} artifact ID is ${{ steps.upload-img.outputs.artifact-id }}'
 
   ###########
   # Catalog #
@@ -254,6 +272,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
       - name: Run tests
@@ -285,6 +304,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
       - name: Check DAG documentation
@@ -321,6 +341,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server
 
       - name: Run ingestion-server tests
@@ -333,7 +354,7 @@ jobs:
 
       - name: Upload ingestion test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
@@ -370,6 +391,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server api
 
       - name: Start API, ingest and index test data
@@ -386,7 +408,7 @@ jobs:
 
       - name: Upload API test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api_logs
           path: api_logs
@@ -414,7 +436,7 @@ jobs:
           - name: validate_openapi
             recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
           - name: check_migrations
-            recipe: api/dj makemigrations --check --noinput --merge
+            recipe: api/dj makemigrations --check
           - name: test_doc
             recipe: api/doc-test
 
@@ -434,6 +456,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server api
 
       - name: Run check recipe
@@ -443,7 +466,7 @@ jobs:
 
       - name: Upload schema
         if: matrix.name == 'test_doc'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: openapi.json
           path: ./api/openapi.json
@@ -511,12 +534,9 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
         include:
           - name: unit_test
             script: "test:unit"
-          - name: storybook_smoke_test
-            script: "storybook:smoke"
 
     steps:
       - name: Checkout repository
@@ -546,7 +566,6 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
 
     steps:
       - name: Pass
@@ -644,7 +663,7 @@ jobs:
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         id: test-results
         with:
@@ -762,7 +781,7 @@ jobs:
         # Docs will be located at `/tmp/docs`.
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: /tmp/docs/
@@ -800,7 +819,7 @@ jobs:
 
     steps:
       - name: Download documentation
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: documentation
           path: /tmp/docs
@@ -917,6 +936,7 @@ jobs:
       - name: Load Docker image `${{ matrix.image }}`
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: ${{ matrix.image }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
@@ -1007,22 +1027,6 @@ jobs:
           repo: openverse-infrastructure
           token: ${{ secrets.ACCESS_TOKEN }}
           event_type: deploy_staging_api
-          client_payload: |
-            {
-              "actor": "${{ github.actor }}",
-              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
-              "run_name": "${{ steps.commit.outputs.commit_message }}"
-            }
-          wait_time: 60 # check every minute
-          max_time: 1800 # allow up to 30 minutes for a deployment
-
-      - name: Deploy staging thumbnails
-        uses: felixp8/dispatch-and-wait@v0.1.0
-        with:
-          owner: WordPress
-          repo: openverse-infrastructure
-          token: ${{ secrets.ACCESS_TOKEN }}
-          event_type: deploy_staging_api_thumbnails
           client_payload: |
             {
               "actor": "${{ github.actor }}",

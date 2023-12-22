@@ -1,5 +1,8 @@
 import { decodeMediaData } from "~/utils/decode-media-data"
-import type { ApiQueryParams } from "~/utils/search-query-transform"
+import type {
+  PaginatedCollectionQuery,
+  PaginatedSearchQuery,
+} from "~/types/search"
 import type { ApiService } from "~/data/api-service"
 import type { DetailFromMediaType, Media } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
@@ -45,9 +48,11 @@ class MediaService<T extends Media> {
   /**
    * Search for media items by keyword.
    * @param params - API search query parameters
+   * @param slug - optional slug to get a collection
    */
   async search(
-    params: ApiQueryParams
+    params: PaginatedSearchQuery | PaginatedCollectionQuery,
+    slug: string = ""
   ): Promise<MediaResult<Record<string, Media>>> {
     // Add the `peaks` param to all audio searches automatically
     if (this.mediaType === AUDIO) {
@@ -56,6 +61,7 @@ class MediaService<T extends Media> {
 
     const res = await this.apiService.query<MediaResult<T[]>>(
       this.mediaType,
+      slug,
       params as unknown as Record<string, string>
     )
     return this.transformResults(res.data)
@@ -88,14 +94,11 @@ class MediaService<T extends Media> {
         `MediaService.getRelatedMedia() id parameter required to retrieve related media.`
       )
     }
-    const params: ApiQueryParams = {}
-    if (this.mediaType === AUDIO) {
-      params.peaks = "true"
-    }
+    const params = this.mediaType === AUDIO ? { peaks: "true" } : undefined
     const res = (await this.apiService.get(
       this.mediaType,
       `${id}/related`,
-      params as unknown as Record<string, string>
+      params
     )) as AxiosResponse<MediaResult<DetailFromMediaType<T>[]>>
     return {
       ...res.data,

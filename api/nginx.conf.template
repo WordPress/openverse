@@ -17,10 +17,14 @@ log_format json_combined escape=json
     '"host_header": "$host",'
     '"body_bytes_sent":$body_bytes_sent,'
     '"request_time":"$request_time",'
+    '"upstream_response_time":$upstream_response_time,'
     '"http_referrer":"$http_referer",'
     '"http_user_agent":"$http_user_agent",'
-    '"upstream_response_time":$upstream_response_time,'
-    '"http_x_forwarded_for":"$http_x_forwarded_for"'
+    '"http_x_forwarded_for":"$http_x_forwarded_for",'
+    '"http_authorization":"$http_authorization",'
+    '"request_id":"$sent_http_x_request_id",'
+    '"client_application_name":"$sent_http_x_ov_client_application_name",'
+    '"client_application_verified":"$sent_http_x_ov_client_application_verified"'
     '}';
 
 access_log  /var/log/nginx/access.log  json_combined;

@@ -27,7 +27,6 @@ from collections.abc import Sequence
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from common.constants import (
     DAG_DEFAULT_ARGS,
@@ -128,37 +127,17 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             },
         )
 
-        index_suffix = XCOM_PULL_TEMPLATE.format(
-            data_refresh_group.get_child_by_label("generate_index_suffix").task_id,
-            "return_value",
-        )
-        trigger_filtered_index_creation = TriggerDagRunOperator(
-            task_id=f"trigger_create_filtered_{data_refresh.media_type}_index",
-            trigger_dag_id=f"create_filtered_{data_refresh.media_type}_index",
-            conf={
-                # Force to skip data refresh DAG concurrency check
-                # as the data refresh DAG will clearly already be running
-                # as it is triggering the filtered index creation DAG.
-                "force": True,
-                "origin_index_suffix": index_suffix,
-                # Match origin and destination suffixes so we can tell which
-                # filtered indexes were created as part of a data refresh.
-                "destination_index_suffix": index_suffix,
-            },
-        )
-
         # Set up task dependencies
         before_record_count >> data_refresh_group
         data_refresh_group >> after_record_count >> report_counts
-        data_refresh_group >> trigger_filtered_index_creation
 
     return dag
 
 
 # Generate a data refresh DAG for each DATA_REFRESH_CONFIG.
-all_data_refresh_dag_ids = {refresh.dag_id for refresh in DATA_REFRESH_CONFIGS}
+all_data_refresh_dag_ids = {refresh.dag_id for refresh in DATA_REFRESH_CONFIGS.values()}
 
-for data_refresh in DATA_REFRESH_CONFIGS:
+for data_refresh in DATA_REFRESH_CONFIGS.values():
     # Construct a set of all data refresh DAG ids other than the current DAG
     other_dag_ids = all_data_refresh_dag_ids - {data_refresh.dag_id}
 

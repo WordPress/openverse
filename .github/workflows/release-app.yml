@@ -92,8 +92,8 @@ jobs:
         run: |
           docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
 
-          if [ "${{ inputs.app }}" = "api" ]; then
-            docker buildx imagetools create ghcr.io/wordpress/openverse-api_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-api_nginx:${{ steps.tag.outputs.image-tag }}
+          if [[ "${{ inputs.app }}" == "api" ]] || [[ "${{ inputs.app }}" == "frontend" ]]; then
+            docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}_nginx:${{ steps.tag.outputs.image-tag }}
           fi
 
       - name: Deploy production application

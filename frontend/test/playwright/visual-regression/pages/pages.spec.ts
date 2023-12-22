@@ -1,13 +1,11 @@
 import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { removeHiddenOverflow } from "~~/test/playwright/utils/page"
 import {
-  closeFiltersUsingCookies,
   dismissBannersUsingCookies,
   languageDirections,
   pathWithDir,
-  setBreakpointCookie,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -23,19 +21,11 @@ const contentPages = [
 for (const contentPage of contentPages) {
   for (const dir of languageDirections) {
     test.describe(`${contentPage} ${dir} page snapshots`, () => {
-      test.describe.configure({ retries: 2 })
-
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
-        test.beforeEach(async ({ page }) => {
-          await dismissBannersUsingCookies(page)
-          await closeFiltersUsingCookies(page)
-          await setBreakpointCookie(page, breakpoint)
+        test("full page", async ({ page }) => {
+          await preparePageForTests(page, breakpoint)
 
           await page.goto(pathWithDir(contentPage, dir))
-        })
-
-        test("full page", async ({ page }) => {
-          await removeHiddenOverflow(page)
           // Make sure header is not hovered on
           await page.mouse.move(150, 150)
           await expectSnapshot(`${contentPage}-${dir}`, page, {

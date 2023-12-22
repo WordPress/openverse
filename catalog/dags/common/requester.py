@@ -140,9 +140,13 @@ class DelayedRequester:
             logging.debug(f"Waiting {wait} second(s)")
             time.sleep(wait)
 
-    def get_response_json(
-        self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs
-    ):
+    def _get_json(self, response) -> dict | list | None:
+        try:
+            return response.json()
+        except JSONDecodeError as e:
+            logger.warning(f"Could not get response_json.\n{e}")
+
+    def get_response_json(self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs):
         response_json = None
         response = None
         if retries < 0:
@@ -155,11 +159,7 @@ class DelayedRequester:
             response = self.post(endpoint, params=query_params, **kwargs)
 
         if response is not None and response.status_code == 200:
-            try:
-                response_json = response.json()
-            except JSONDecodeError as e:
-                logger.warning(f"Could not get response_json.\n{e}")
-                response_json = None
+            response_json = self._get_json(response)
 
         if response_json is None or (
             isinstance(response_json, dict) and response_json.get("error") is not None

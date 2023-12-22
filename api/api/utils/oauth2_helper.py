@@ -1,5 +1,6 @@
 import datetime as dt
 import logging
+from dataclasses import dataclass
 
 from oauth2_provider.models import AccessToken
 
@@ -8,10 +9,22 @@ from api import models
 
 parent_logger = logging.getLogger(__name__)
 
-_no_result = (None, None, None)
+
+@dataclass
+class TokenInfo:
+    """Extracted ``models.ThrottledApplication`` metadata."""
+
+    client_id: str
+    rate_limit_model: str
+    verified: bool
+    application_name: str
+
+    @property
+    def valid(self):
+        return self.client_id and self.verified
 
 
-def get_token_info(token: str):
+def get_token_info(token: str) -> None | TokenInfo:
     """
     Recover an OAuth2 application client ID and rate limit model from an access token.
 
@@ -24,7 +37,7 @@ def get_token_info(token: str):
     try:
         token = AccessToken.objects.get(token=token)
     except AccessToken.DoesNotExist:
-        return _no_result
+        return None
 
     try:
         application = models.ThrottledApplication.objects.get(accesstoken=token)
@@ -33,7 +46,7 @@ def get_token_info(token: str):
         # In practice should never occur so long as the preceding
         # operation to retrieve the access token was successful.
         logger.critical("Failed to find application associated with access token.")
-        return _no_result
+        return None
 
     expired = token.expires < dt.datetime.now(token.expires.tzinfo)
     if expired:
@@ -42,9 +55,11 @@ def get_token_info(token: str):
             f"application.name={application.name} "
             f"application.client_id={application.client_id} "
         )
-        return _no_result
+        return None
 
-    client_id = str(application.client_id)
-    rate_limit_model = application.rate_limit_model
-    verified = application.verified
-    return client_id, rate_limit_model, verified
+    return TokenInfo(
+        client_id=str(application.client_id),
+        rate_limit_model=application.rate_limit_model,
+        verified=application.verified,
+        application_name=application.name,
+    )

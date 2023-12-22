@@ -7,9 +7,9 @@
       $style.button,
       $style[variant],
       $style[`size-${size}${iconOnly ? '-icon-only' : ''}`],
+      connectionStyles,
       {
         [$style[`${variant}-pressed`]]: isActive,
-        [$style[`connection-${connections}`]]: isConnected,
         [$style[`icon-start-${size}`]]: hasIconStart,
         [$style[`icon-end-${size}`]]: hasIconEnd,
         [$style[`icon-only`]]: iconOnly,
@@ -159,13 +159,12 @@ const VButton = defineComponent({
     /**
      * Whether the button is connected to another control and needs to have no rounded
      * borders at that edge.
-     * `all` means that the button is not rounded.
      *
-     * @default 'none'
+     * @default []
      */
     connections: {
-      type: String as PropType<ButtonConnections>,
-      default: "none",
+      type: Array as PropType<ButtonConnections[]>,
+      default: () => [] as ButtonConnections[],
     },
     /**
      * Whether the button has an icon at the inline start of the button.
@@ -203,7 +202,11 @@ const VButton = defineComponent({
     const typeRef = ref<ButtonType | undefined>(propsRef.type.value)
     const supportsDisabledAttributeRef = ref(true)
 
-    const isConnected = computed(() => props.connections !== "none")
+    const connectionStyles = computed(() =>
+      props.connections
+        .map((connection) => `connection-${connection}`)
+        .join(" ")
+    )
 
     const isActive = computed(() => {
       return (
@@ -272,7 +275,7 @@ const VButton = defineComponent({
       ariaDisabledRef,
       typeRef,
       isActive,
-      isConnected,
+      connectionStyles,
       isPlainDangerous,
       isFocusSlimFilled,
       isFocusSlimTx,
@@ -386,14 +389,19 @@ a.button {
 .dropdown-label-pressed {
   @apply border-tx bg-dark-charcoal text-white active:hover:border-white;
 }
+</style>
 
+<style scoped>
 .connection-start {
   @apply rounded-s-none;
 }
 .connection-end {
   @apply rounded-e-none;
 }
-.connection-all {
-  @apply rounded-none;
+.connection-top {
+  @apply rounded-se-none rounded-ss-none;
+}
+.connection-bottom {
+  @apply rounded-ee-none rounded-es-none;
 }
 </style>

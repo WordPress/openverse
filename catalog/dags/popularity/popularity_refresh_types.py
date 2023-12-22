@@ -84,6 +84,7 @@ POPULARITY_REFRESH_CONFIGS = [
             "jamendo": {"metric": "listens"},
             "wikimedia_audio": {"metric": "global_usage_count"},
             "freesound": {"metric": "num_downloads"},
+            "ccmixter": {"metric": "upload_num_scores"},
         },
     ),
 ]

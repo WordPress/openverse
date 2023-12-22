@@ -281,7 +281,7 @@ This PR could then be merged directly into the parent PR after the snapshot
 changes are reviewed.
 
 Additionally, subsequent pushes to the parent PR that include changes to the
-snapshots would re-use the same branch name and just force push; there'd only
+snapshots would reuse the same branch name and just force push; there'd only
 ever be a single commit in the companion branch this way and we wouldn't have to
 worry about a muddied commit history. Ideally this will simplify the
 implementation of the workflow rather than complicate it.

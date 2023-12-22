@@ -13,7 +13,7 @@ repos:
         pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -35,63 +35,23 @@ repos:
       - id: check-docstring-first
       - id: requirements-txt-fixer
 
-  # Use the `.isort.cfg` file to configure additional project-specific requirements.
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.8
     hooks:
-      - id: isort
-        files: \.py$
-        exclude: ^build/.*$|^.tox/.*$|^venv/.*$
-        args:
-          - --profile=black
-          - --lines-after-imports=2
-
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
-    hooks:
-      - id: pyupgrade
-        args:
-          - --py310-plus
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.261"
-    hooks:
-      - id: ruff
+      - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
         args:
           - --fix
-
-  - repo: https://github.com/ambv/black
-    rev: 23.3.0
-    hooks:
-      - id: black
-        args:
-          - --safe
-
-  - repo: https://github.com/pycqa/pydocstyle
-    rev: 6.3.0
-    hooks:
-      - id: pydocstyle
-        args:
-          - --convention=pep257
-          # Additional ignore reasons:
-          # D1xx: we do not want to force contributors to write redundant or useless docstrings
-          # D202: additional whitespace helps with readability
-          # D205: we don't want to always require a single line summary
-          # D211: same as D202
-          # D400: first line doesn't need to end in a period
-          # See the following documentation for what each rule does:
-          # https://www.pydocstyle.org/en/6.2.3/error_codes.html#error-codes
-          - --add-ignore=D1,D202,D205,D211,D400
+      - id: ruff-format # replaces Black
 
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.6.0
+    rev: v2.7.1
     hooks:
       - id: prettier
         additional_dependencies:
           - prettier@2.8.3
           - prettier-plugin-tailwindcss@0.3.0
-          - typescript@4.9.5
+          - typescript@5.2.2
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.9.0
@@ -104,12 +64,12 @@ repos:
       - id: shfmt-docker
 
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.6.24
+    rev: v1.6.26
     hooks:
       - id: actionlint-docker
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
       - id: codespell
         args: [
@@ -171,3 +131,10 @@ repos:
         entry: bash -c 'just automations/js/render-release-drafter'
         language: system
         pass_filenames: false
+
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 37.89.2
+    hooks:
+      - id: renovate-config-validator
+        args:
+          - --strict

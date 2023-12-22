@@ -7,22 +7,26 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from api.constants.media_types import AUDIO_TYPE
 from api.docs.audio_docs import (
+    creator_collection,
     detail,
     related,
     report,
     search,
+    source_collection,
     stats,
-    thumbnail,
-    waveform,
+    tag_collection,
 )
+from api.docs.audio_docs import thumbnail as thumbnail_docs
+from api.docs.audio_docs import waveform
 from api.models import Audio
 from api.serializers.audio_serializers import (
+    AudioCollectionRequestSerializer,
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
     AudioWaveformSerializer,
 )
-from api.serializers.media_serializers import MediaThumbnailRequestSerializer
+from api.utils import image_proxy
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 from api.views.media_views import MediaViewSet
 
@@ -38,31 +42,46 @@ class AudioViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to audio."""
 
     model_class = Audio
+    media_type = AUDIO_TYPE
     query_serializer_class = AudioSearchRequestSerializer
     default_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
 
     serializer_class = AudioSerializer
+    collection_serializer_class = AudioCollectionRequestSerializer
 
     def get_queryset(self):
         return super().get_queryset().select_related("mature_audio", "audioset")
 
     # Extra actions
-
-    @thumbnail
+    @creator_collection
     @action(
-        detail=True,
-        url_path="thumb",
-        url_name="thumb",
-        serializer_class=MediaThumbnailRequestSerializer,
-        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
     )
-    def thumbnail(self, request, *_, **__):
-        """
-        Retrieve the scaled down and compressed thumbnail of the artwork of an
-        audio track or its audio set.
-        """
+    def creator_collection(self, request, source, creator):
+        return super().creator_collection(request, source, creator)
 
-        audio = self.get_object()
+    @source_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)",
+    )
+    def source_collection(self, request, source):
+        return super().source_collection(request, source)
+
+    @tag_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="tag/(?P<tag>[^/.]+)",
+    )
+    def tag_collection(self, request, tag, *_, **__):
+        return super().tag_collection(request, tag, *_, **__)
+
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
+        audio = await self.aget_object()
 
         image_url = None
         if audio_thumbnail := audio.thumbnail:
@@ -72,7 +91,20 @@ class AudioViewSet(MediaViewSet):
         if not image_url:
             raise NotFound("Could not find artwork.")
 
-        return super().thumbnail(request, audio, image_url)
+        return image_proxy.MediaInfo(
+            media_identifier=audio.identifier,
+            media_provider=audio.provider,
+            image_url=image_url,
+        )
+
+    @thumbnail_docs
+    @MediaViewSet.thumbnail_action
+    async def thumbnail(self, *args, **kwargs):
+        """
+        Retrieve the scaled down and compressed thumbnail of the artwork of an
+        audio track or its audio set.
+        """
+        return await super().thumbnail(*args, **kwargs)
 
     @waveform
     @action(

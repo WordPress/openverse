@@ -65,8 +65,10 @@ export default defineComponent({
       { inWaveform }: AudioTrackClickEvent
     ) => {
       // Only send the event when the click navigates to the single result page.
-      // If the click is in waveform or play-pause button, it controls the audio player.
-      if (inWaveform) return
+      // If the click is in waveform or audio-control button, it controls the audio player.
+      if (inWaveform) {
+        return
+      }
       useAudioSnackbar().hide()
       sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: audio.id,

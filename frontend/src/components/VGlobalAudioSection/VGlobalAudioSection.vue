@@ -1,14 +1,19 @@
 <template>
-  <div class="global-audio sticky bottom-0 z-global-audio sm:hidden">
-    <VGlobalAudioTrack v-if="audio" :audio="audio" />
-    <VCloseButton
-      v-if="audio"
-      class="!absolute end-0 top-0 z-30"
-      variant="transparent-dark"
-      size="large"
-      :label="$t('audioTrack.close')"
-      @close="handleClose"
-    />
+  <div
+    class="global-audio sticky z-global-audio sm:hidden"
+    :class="{ 'bottom-2 mx-2': !!audio }"
+  >
+    <template v-if="audio">
+      <VGlobalAudioTrack :audio="audio" />
+      <VIconButton
+        class="!absolute end-0 top-0 z-30 m-2"
+        variant="transparent-gray"
+        :icon-props="{ name: 'close-small' }"
+        size="small"
+        :label="$t('audioTrack.close')"
+        @click="handleClose"
+      />
+    </template>
   </div>
 </template>
 
@@ -26,13 +31,13 @@ import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
 
-import VCloseButton from "~/components/VCloseButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
 
 export default defineComponent({
   name: "VGlobalAudioSection",
   components: {
-    VCloseButton,
+    VIconButton,
     VGlobalAudioTrack,
   },
   setup() {
@@ -72,23 +77,30 @@ export default defineComponent({
         return
       }
       const error = event.target.error
-      if (!error) return
+      if (!error) {
+        return
+      }
       let errorMsg
       switch (error.code) {
-        case error.MEDIA_ERR_ABORTED:
+        case error.MEDIA_ERR_ABORTED: {
           errorMsg = "err_aborted"
           break
-        case error.MEDIA_ERR_NETWORK:
+        }
+        case error.MEDIA_ERR_NETWORK: {
           errorMsg = "err_network"
           break
-        case error.MEDIA_ERR_DECODE:
+        }
+        case error.MEDIA_ERR_DECODE: {
           errorMsg = "err_decode"
           break
-        case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        }
+        case error.MEDIA_ERR_SRC_NOT_SUPPORTED: {
           errorMsg = "err_unsupported"
           break
-        default:
+        }
+        default: {
           errorMsg = "err_unknown"
+        }
       }
       activeMediaStore.setMessage({ message: errorMsg })
     }
@@ -96,7 +108,9 @@ export default defineComponent({
     watch(
       activeAudio.obj,
       (audio, _, onInvalidate) => {
-        if (!audio) return
+        if (!audio) {
+          return
+        }
         audio.addEventListener("error", handleError)
 
         onInvalidate(() => {
@@ -136,15 +150,8 @@ export default defineComponent({
     return {
       audio,
 
-      handleError,
       handleClose,
     }
   },
 })
 </script>
-
-<style>
-.global-audio {
-  grid-area: global-audio;
-}
-</style>

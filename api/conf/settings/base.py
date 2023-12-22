@@ -22,6 +22,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "api.middleware.response_headers_middleware.response_headers_middleware",
 ]
 
 # Storage
@@ -57,8 +58,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = "conf.wsgi.application"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -8,6 +8,7 @@ Run with the `pytest -s` command from this directory.
 import json
 from test.constants import API_URL
 from test.media_integration import (
+    creator_collection,
     detail,
     license_filter_case_insensitivity,
     related,
@@ -21,7 +22,9 @@ from test.media_integration import (
     search_source_and_excluded,
     search_special_chars,
     sensitive_search_and_detail,
+    source_collection,
     stats,
+    tag_collection,
     uuid_validation,
 )
 
@@ -106,8 +109,8 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``field recording`` returns different results when quoted vs unquoted
-    search_quotes_exact("audio", "field recording")
+    # ``dancing penguins`` returns different results when quoted vs unquoted
+    search_quotes_exact("audio", "dancing penguins")
 
 
 def test_search_with_special_characters():
@@ -158,6 +161,18 @@ def test_audio_uuid_validation():
 
 def test_audio_related(audio_fixture):
     related(audio_fixture)
+
+
+def test_audio_tag_collection():
+    tag_collection("audio")
+
+
+def test_audio_source_collection():
+    source_collection("audio")
+
+
+def test_audio_creator_collection():
+    creator_collection("audio")
 
 
 def test_audio_sensitive_search_and_detail():

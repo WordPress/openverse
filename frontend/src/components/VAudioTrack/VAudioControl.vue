@@ -1,9 +1,9 @@
 <template>
   <VIconButton
     :tabindex="isTabbable ? 0 : -1"
-    class="play-pause"
+    class="audio-control"
     :size="buttonSize"
-    variant="filled-dark"
+    :variant="layout === 'box' ? 'transparent-dark' : 'filled-dark'"
     :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
     :label="$t(label)"
     :connections="connections"
@@ -52,15 +52,16 @@ const statusIconMap = {
   loading: undefined,
 } as const
 
-const layoutConnectionsMap: Record<AudioLayout, ButtonConnections> = {
-  row: "end",
-  global: "all",
-  box: "none",
-  full: "none",
-} as const
+const layoutConnectionsMap: Record<AudioLayout, readonly ButtonConnections[]> =
+  {
+    row: ["end"],
+    global: ["top", "end"],
+    box: [],
+    full: [],
+  } as const
 
 /**
- * The mapping of play-pause control sizes to the VIconButton sizes
+ * The mapping of audio control sizes to the VIconButton sizes
  * and the sizes of the contained icon.
  */
 const sizes = {
@@ -110,7 +111,7 @@ export default defineComponent({
         (audioLayouts as readonly string[]).includes(val),
     },
     /**
-     * Whether the play-pause button can be focused by using the `Tab` key
+     * Whether the audio control button can be focused by using the `Tab` key
      */
     isTabbable: {
       type: Boolean,
@@ -137,17 +138,20 @@ export default defineComponent({
      */
     const connections = computed(() => {
       return props.layout === "row" && props.size === "small"
-        ? "none"
-        : layoutConnectionsMap[props.layout]
+        ? []
+        : [...layoutConnectionsMap[props.layout]]
     })
 
-    /** Convert the `play-pause` sizes to `VIconButton` sizes */
+    /** Convert the `audio-control` sizes to `VIconButton` sizes */
     const buttonSize = computed(() => sizes[props.size].button)
 
     const iSize = computed(() => sizes[props.size].icon)
 
     const handleMouseDown = (event: MouseEvent) => {
-      if (!props.isTabbable) event.preventDefault() // to prevent focus
+      if (!props.isTabbable) {
+        // to prevent focus
+        event.preventDefault()
+      }
     }
     const handleClick = () => {
       emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")

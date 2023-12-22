@@ -10,7 +10,7 @@ FROM apache/airflow:slim-${CATALOG_AIRFLOW_VERSION}-python${CATALOG_PY_VERSION} 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
 # Build-time arguments, with sensible defaults
-ARG REQUIREMENTS_FILE=requirements_prod.txt
+ARG REQUIREMENTS_FILE=requirements-prod.txt
 
 # Path configurations
 ENV AIRFLOW_HOME=/opt/airflow
@@ -41,8 +41,6 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs
 USER root
 RUN apt-get update \
     && apt-get -yqq install \
-      libc-bin=2.31-13+deb11u7 \
-      libc6=2.31-13+deb11u7 \
       build-essential \
       libpq-dev \
       libffi-dev \
@@ -59,7 +57,7 @@ USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
-COPY ${REQUIREMENTS_FILE} requirements_prod.txt ${AIRFLOW_HOME}/
+COPY ${REQUIREMENTS_FILE} requirements-prod.txt ${AIRFLOW_HOME}/
 
 # args go out of scope when a new build stage starts so it must be redeclared here
 ARG CATALOG_PY_VERSION

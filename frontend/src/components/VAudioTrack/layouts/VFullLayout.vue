@@ -17,10 +17,26 @@
     </div>
     <div
       v-if="additionalSearchViews"
+      class="mx-auto grid grid-cols-1 grid-rows-[auto,1fr] gap-y-6 p-6 pb-0 sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6 lg:mb-6 lg:max-w-5xl"
+    >
+      <div
+        class="row-start-1 flex justify-between gap-x-6 sm:col-start-2 sm:mt-1"
+      >
+        <slot name="audio-control" layout="full" size="medium" />
+        <VGetMediaButton
+          :media="audio"
+          media-type="audio"
+          class="col-start-2 !w-full px-0 sm:!w-auto sm:flex-shrink-0"
+        />
+      </div>
+      <VMediaInfo :media="audio" class="min-w-0" />
+    </div>
+    <div
+      v-else
       class="mx-auto grid grid-cols-1 grid-rows-[auto,auto] gap-6 p-6 pb-0 lg:mb-6 lg:max-w-5xl lg:flex-nowrap"
     >
       <div class="row-start-1 flex justify-between gap-x-6 sm:col-start-2">
-        <slot name="play-pause" size="medium" />
+        <slot name="audio-control" layout="full" size="medium" />
         <VGetMediaButton
           :media="audio"
           media-type="audio"
@@ -49,46 +65,6 @@
         </div>
       </div>
     </div>
-    <div
-      v-else
-      class="items-top mx-auto mt-6 flex flex-row flex-wrap gap-6 px-6 lg:max-w-5xl lg:flex-nowrap"
-    >
-      <slot name="play-pause" :size="isSmall ? 'small' : 'large'" />
-
-      <div
-        class="audio-info order-2 flex w-full flex-col justify-center lg:order-1 lg:w-auto"
-      >
-        <h1 class="description-bold lg:heading-5 lg:line-clamp-2">
-          {{ audio.title }}
-        </h1>
-        <div
-          class="subtitle mt-1 flex flex-col gap-2 text-base leading-snug lg:flex-row lg:items-center"
-        >
-          <i18n as="span" path="audioTrack.creator" class="font-semibold">
-            <template #creator>
-              <VLink
-                class="rounded-sm p-px focus:outline-none focus:ring focus:ring-pink"
-                :href="audio.creator_url"
-                :send-external-link-click-event="false"
-              >
-                {{ audio.creator }}
-              </VLink>
-            </template>
-          </i18n>
-          <span
-            class="hidden text-dark-charcoal-70 lg:block"
-            aria-hidden="true"
-            >{{ $t("interpunct") }}</span
-          >
-          <div>{{ timeFmt(audio.duration || 0, true) }}</div>
-        </div>
-      </div>
-      <VGetMediaButton
-        media-type="audio"
-        :media="audio"
-        class="order-1 my-1 ms-auto flex-shrink-0 lg:order-2"
-      />
-    </div>
   </div>
 </template>
 
@@ -97,15 +73,18 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 import { timeFmt } from "~/utils/time-fmt"
-import { AudioSize, AudioStatus, audioFeatures } from "~/constants/audio"
+import { audioFeatures, AudioSize, AudioStatus } from "~/constants/audio"
+
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useProviderStore } from "~/stores/provider"
 
 import VLink from "~/components/VLink.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
+import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
 
 export default defineComponent({
   name: "VFullLayout",
-  components: { VGetMediaButton, VLink },
+  components: { VMediaInfo, VGetMediaButton, VLink },
   props: {
     audio: {
       type: Object as PropType<AudioDetail>,
@@ -126,9 +105,16 @@ export default defineComponent({
     const isSmall = computed(() => props.size === "s")
 
     const featureFlagStore = useFeatureFlagStore()
+    const additionalSearchViews = computed(() =>
+      featureFlagStore.isOn("additional_search_views")
+    )
 
-    const additionalSearchViews = computed(() => {
-      return featureFlagStore.isOn("additional_search_views")
+    const providerStore = useProviderStore()
+    const sourceName = computed(() => {
+      return providerStore.getProviderName(
+        props.audio.source ?? props.audio.provider,
+        "audio"
+      )
     })
 
     return {
@@ -136,6 +122,8 @@ export default defineComponent({
 
       isSmall,
       audioFeatures,
+      sourceName,
+
       additionalSearchViews,
     }
   },
@@ -148,7 +136,7 @@ export default defineComponent({
   --waveform-background-color: theme("colors.white");
 }
 
-.full-track .play-pause {
+.full-track .audio-control {
   @apply rounded-sm;
 }
 </style>
