@@ -90,7 +90,7 @@ describe("VItemGroup", () => {
     ).toBe(secondItem)
   })
 
-  describe("navigation", async () => {
+  describe("navigation", () => {
     it("should render the first item tabbable when there is no default selection and none are selected", async () => {
       const { container } = await render(TestWrapper, {
         props: { hasDefaultSelection: false },

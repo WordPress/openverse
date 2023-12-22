@@ -71,7 +71,7 @@ describe("VLink", () => {
   })
 })
 
-describe("VLink custom events", async () => {
+describe("VLink custom events", () => {
   const sendCustomEventMock = vi.fn()
   const href = "https://example.com"
   useAnalytics.mockImplementation(() => ({

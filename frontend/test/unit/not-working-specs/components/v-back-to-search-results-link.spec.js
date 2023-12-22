@@ -10,7 +10,7 @@ vi.mock("~/composables/use-analytics", () => ({
   useAnalytics: vi.fn(),
 }))
 
-describe("VBackToSearchResultsLink", async () => {
+describe("VBackToSearchResultsLink", () => {
   it("should send analytics event when clicked", async () => {
     const sendCustomEventMock = vi.fn()
 
