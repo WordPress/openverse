@@ -54,8 +54,16 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         self.batch_start = 0
         self.batch_limit = 2000
         self.headers = {"Content-Type": "application/json"}
-        self.date_from = convert_date_format(datetime.now() - timedelta(days=1))
-        self.date_to = convert_date_format(datetime.now())
+        if self.date:
+            date_from = datetime.strptime(self.date, "%Y-%m-%d").date()
+            self.date_from = str(date_from)
+            self.date_to = str(date_from + timedelta(days=1))
+            logger.info(
+                f"Start timestamp: {self.date_from}, end timestamp: {self.date_to}"
+            )
+        else:
+            self.date_from = convert_date_format(datetime.now())
+            self.date_to = convert_date_format(datetime.now() + timedelta(days=1))
         self.data = {
             "query": {
                 "bool": {

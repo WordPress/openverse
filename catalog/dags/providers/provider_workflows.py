@@ -196,6 +196,8 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         start_date=datetime(2023, 10, 1),
         ingester_class=AucklandMuseumDataIngester,
+        schedule_string="@daily",
+        dated=True,
     ),
     ProviderWorkflow(
         start_date=datetime(2020, 1, 1),
