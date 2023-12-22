@@ -3,7 +3,7 @@ set dotenv-load := true
 DOCKER_HOST := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
 
 build:
-    docker build . -t openverse-load-testing:latest
+    docker build . -t openverse-load_testing:latest
 
 run script host: build
     docker run --rm -it -v {{ invocation_directory() }}:/app openverse-load-testing:latest ./{{ script }}.sh {{ host }}
@@ -11,5 +11,12 @@ run script host: build
 api host=("http://" + DOCKER_HOST + ":8000"):
     @just run api {{ host }}
 
-k6 url="https://api-dev.openverse.engineering" +extra_args="": build
-    docker run --rm -e API_TOKEN=$API_TOKEN -e API_URL={{ url }} -v {{ invocation_directory() }}/k6:/app {{ extra_args }} openverse-load-testing:latest k6 run main.js
+k6 script="main.js" +extra_args="": build
+    docker run \
+      --rm \
+      ${API_TOKEN:+ --env API_TOKEN=$API_TOKEN} \
+      ${API_URL:+ --env API_URL=$API_URL} \
+      --volume {{ invocation_directory() }}/k6:/app \
+      {{ extra_args }} \
+      openverse-load_testing:latest \
+      run {{ script }}
