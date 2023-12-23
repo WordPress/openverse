@@ -34,14 +34,11 @@ jobs:
       slack_id: ${{ needs.analyze-user-prs.outputs.slack_id }}
     steps:
       - name: Send notification
-        run: |
-          msg="Hi, Opener! \nYou currently have $pr_count Pull Request(s) open with requested reviews (totalling $((pr_count * 2)) required reviews). \nTo help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing this list of ways to contribute instead of working on new code contributions: \nhttps://docs.openverse.org/meta/maintainer_tasks.html"
-
-          curl \
-            "$slack_url" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{
-              "user": "'"$slack_id"'",
-              "message": "'"$msg"'"
-            }'
+        id: slack
+        uses: slackapi/slack-github-action@1.23.0
+        with:
+          payload: |
+            {
+                "user": "'"$slack_id"'",
+                "message": "'"$msg"'"
+            }
