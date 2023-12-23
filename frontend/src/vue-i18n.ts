@@ -6,7 +6,7 @@ export default defineI18nConfig(() => {
   return {
     legacy: false,
     globalInjection: true,
-    // fallbackLocale,
+    fallbackLocale: "en",
     silentFallbackWarn: true,
     pluralizationRules: {
       /**
