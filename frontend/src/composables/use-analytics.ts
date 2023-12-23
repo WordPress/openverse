@@ -28,13 +28,13 @@ export const useAnalytics = () => {
    * the Plausible props that work only on the client-side; This only includes
    * props that need `window`.
    */
-  const windowProps = computed<{ width: number; height: number } | {}>(() =>
+  const windowProps = computed<{ width: number; height: number } | null>(() =>
     window
       ? {
           width: window.innerWidth,
           height: window.innerHeight,
         }
-      : {}
+      : null
   )
 
   /**
@@ -52,7 +52,7 @@ export const useAnalytics = () => {
     useTrackEvent(name, {
       props: {
         ...isomorphicProps.value,
-        ...windowProps.value,
+        ...(windowProps.value ?? {}),
         ...payload,
       },
     })

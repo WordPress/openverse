@@ -302,10 +302,10 @@ describe("api-token.server plugin", () => {
 
     describe("explicitly undefined", () => {
       it("should not make any requests and fall back to tokenless", async () => {
-        const mockContext = getMockContext({
-          apiClientId: undefined,
-          apiClientSecret: undefined,
-        })
+        // const mockContext = getMockContext({
+        //   apiClientId: undefined,
+        //   apiClientSecret: undefined,
+        // })
         const nuxtApp = useNuxtApp()
         await apiTokenPlugin(nuxtApp)
 

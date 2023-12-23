@@ -1,18 +1,19 @@
 // eslint-disable-next-line no-restricted-imports
 import * as pinia from "pinia"
+import { vi } from "vitest"
 
 export const createPinia = () =>
   pinia.createPinia().use(() => ({
     $nuxt: {
       $openverseApiToken: "",
       $sentry: {
-        captureException: jest.fn(),
-        captureEvent: jest.fn(),
+        captureException: vi.fn(),
+        captureEvent: vi.fn(),
       },
       $cookies: {
-        set: jest.fn(),
-        get: jest.fn(),
-        setAll: jest.fn(),
+        set: vi.fn(),
+        get: vi.fn(),
+        setAll: vi.fn(),
       },
       i18n: {
         localeProperties: {
@@ -21,8 +22,8 @@ export const createPinia = () =>
           name: "Spanish",
         },
       },
-      error: jest.fn(),
-      localePath: jest.fn(),
+      error: vi.fn(),
+      localePath: vi.fn(),
     },
   }))
 

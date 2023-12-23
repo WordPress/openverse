@@ -3,34 +3,32 @@ import { default as userEvent } from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { useProviderStore } from "~/stores/provider"
-
 import VSourcesTableVue from "~/components/VSourcesTable.vue"
 
-const initialProviderStoreState = {
-  providers: {
-    image: [
-      {
-        source_name: "Provider_B",
-        display_name: "Provider B",
-        source_url: "http://yyy.com",
-        media_count: 1111,
-      },
-      {
-        source_name: "Provider_C",
-        display_name: "Provider C",
-        source_url: "www.xxx.com",
-        media_count: 2222,
-      },
-      {
-        source_name: "Provider_A",
-        display_name: "Provider A",
-        source_url: "https://zzz.com",
-        media_count: 3333,
-      },
-    ],
-  },
-}
+// const initialProviderStoreState = {
+//   providers: {
+//     image: [
+//       {
+//         source_name: "Provider_B",
+//         display_name: "Provider B",
+//         source_url: "http://yyy.com",
+//         media_count: 1111,
+//       },
+//       {
+//         source_name: "Provider_C",
+//         display_name: "Provider C",
+//         source_url: "www.xxx.com",
+//         media_count: 2222,
+//       },
+//       {
+//         source_name: "Provider_A",
+//         display_name: "Provider A",
+//         source_url: "https://zzz.com",
+//         media_count: 3333,
+//       },
+//     ],
+//   },
+// }
 
 const getTableData = (table) => {
   const data = [...table.rows].map((t) =>

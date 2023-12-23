@@ -44,8 +44,8 @@ const getDescriptionTextarea = () =>
     name: /Describe the issue. Required/i,
   })
 
-const mockImplementation = () => Promise.resolve()
-const mock = vi.fn().mockImplementation(mockImplementation)
+// const mockImplementation = () => Promise.resolve()
+// const mock = vi.fn().mockImplementation(mockImplementation)
 vi.mock("~/data/report-service", () => {
   const initReportService = vi.fn()
   return {
@@ -167,7 +167,7 @@ describe("VContentReportForm", () => {
   })
 
   it("submit button on other form should only be enabled if input is longer than 20 characters", async () => {
-    ReportService.sendReport = vi.fn()
+    initReportService.sendReport = vi.fn()
 
     await render(VContentReportForm, options)
     await fireEvent.click(getOtherInput())

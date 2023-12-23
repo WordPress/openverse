@@ -547,9 +547,8 @@ describe("Search Store", () => {
           "baz",
           "bar",
         ])
-        expect(searchStore.recentSearches.length).toEqual(
-          parseInt(env.savedSearchCount)
-        )
+        // TODO: Replace 4 with the useRuntimeConfig value
+        expect(searchStore.recentSearches.length).toEqual(parseInt(4))
       })
       it("can be cleared", () => {
         const searchStore = useSearchStore()

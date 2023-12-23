@@ -51,7 +51,7 @@ const TestWrapper = Vue.component("TestWrapper", {
 })
 
 describe("VItemGroup", () => {
-  let mockDir
+  // let mockDir
   afterEach(() => {
     useI18n.mockReset()
   })
@@ -188,7 +188,7 @@ describe("VItemGroup", () => {
 
       describe("rtl", () => {
         beforeEach(() => {
-          mockDir = "rtl"
+          // mockDir = "rtl"
         })
 
         describe("vertical", () => {
