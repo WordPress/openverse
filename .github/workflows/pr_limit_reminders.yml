@@ -38,7 +38,4 @@ jobs:
         uses: slackapi/slack-github-action@1.23.0
         with:
           payload: |
-            {
-                "user": "'"$slack_id"'",
-                "message": "'"$msg"'"
-            }
+            {"user": "'"$slack_id"'","message": "'"$msg"'"}

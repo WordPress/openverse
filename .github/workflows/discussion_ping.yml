@@ -23,15 +23,4 @@ jobs:
         uses: slackapi/slack-github-action@1.23.0
         with:
           payload: |
-            {
-              "text": "New discussion opened by '$discussionAuthor' in '$discussionRepo': #$discussionNumber - '$discussionTitle'",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":github: New discussion opened by *'$discussionAuthor'* in '`$discussionRepo`':\n<$discussionUrl|#$discussionNumber - '$discussionTitle'>"
-                  }
-                }
-              ]
-            }
+            {"text": "New discussion opened by '$discussionAuthor' in '$discussionRepo': #$discussionNumber - '$discussionTitle'", "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": ":github: New discussion opened by *'$discussionAuthor'* in '`$discussionRepo`':\n<$discussionUrl|#$discussionNumber - '$discussionTitle'>"}}]}
