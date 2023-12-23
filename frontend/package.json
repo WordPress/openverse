@@ -42,7 +42,7 @@
     "types": "vue-tsc -p .",
     "i18n": "pnpm i18n:create-locales-list && pnpm i18n:get-translations && pnpm i18n:update-locales",
     "i18n:en": "pnpm i18n:get-translations --en-only",
-    "i18n:copy-test-locales": "cp test/locales/*.json src/locales/",
+    "i18n:copy-test-locales": "cp test/locales/*.json src/locales/ && cp -R -n test/locales/scripts/valid-locales.json src/locales/scripts/valid-locales.json",
     "i18n:no-get": "pnpm i18n:create-locales-list && pnpm i18n:update-locales",
     "i18n:create-locales-list": "node src/locales/scripts/create-wp-locale-list",
     "i18n:get-translations": "node src/locales/scripts/get-translations",

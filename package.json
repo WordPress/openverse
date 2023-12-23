@@ -9,7 +9,7 @@
   },
   "author": "Openverse <openverse@wordpress.org>",
   "scripts": {
-    "postinstall": "pnpm --filter packages/* run build && pnpm --filter frontend run prepare-nuxt",
+    "postinstall": "pnpm --filter packages/* run build && pnpm --filter frontend run i18n:copy-test-locales && pnpm --filter frontend run prepare-nuxt",
     "preeslint": "pnpm --filter eslint-plugin run build",
     "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json"
   },
