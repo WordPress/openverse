@@ -3,6 +3,8 @@ import { useCookie } from "#imports"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
+import { CookieOptions } from "#app"
+
 import featureData from "~~/feat/feature-flags.json"
 
 import { warn } from "~/utils/console"
@@ -146,7 +148,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
     writeToCookie() {
       const featuresCookie = useCookie<OpenverseCookieState["features"]>(
         "features",
-        cookieOptions
+        cookieOptions as CookieOptions<OpenverseCookieState["features"]>
       )
       featuresCookie.value = this.flagStateMap(COOKIE)
     },
@@ -163,7 +165,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       >("sessionFeatures", {
         ...cookieOptions,
         maxAge: undefined,
-      })
+      } as CookieOptions<OpenverseCookieState["sessionFeatures"]>)
       sessionFeaturesCookie.value = this.flagStateMap(SESSION)
     },
     /**

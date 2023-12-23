@@ -2,6 +2,8 @@ import { useCookie, useI18n } from "#imports"
 
 import { defineStore } from "pinia"
 
+import { CookieOptions } from "#app"
+
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
 
@@ -177,7 +179,7 @@ export const useUiStore = defineStore("ui", {
     updateCookieValue(value: keyof OpenverseCookieState["ui"]) {
       const uiCookie = useCookie<OpenverseCookieState["ui"]>(
         "ui",
-        cookieOptions
+        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
       )
       uiCookie.value = {
         ...uiCookie.value,
@@ -188,7 +190,7 @@ export const useUiStore = defineStore("ui", {
     updateCookies() {
       const uiCookie = useCookie<OpenverseCookieState["ui"]>(
         "ui",
-        cookieOptions
+        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
       )
       uiCookie.value = {
         instructionsSnackbarState: this.instructionsSnackbarState,
