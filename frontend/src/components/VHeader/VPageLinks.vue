@@ -1,7 +1,7 @@
 <template>
   <VItemGroup
     v-if="variant === 'itemgroup'"
-    class="my-2 min-w-50 gap-y-2"
+    class="min-w-50 my-2 gap-y-2"
     :bordered="false"
     :show-check="false"
   >
