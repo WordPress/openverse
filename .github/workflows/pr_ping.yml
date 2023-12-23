@@ -45,7 +45,7 @@ jobs:
             }
       - name: Send notification for PR marked ready
         if: github.event.action == 'ready_for_review'
-        id: slack
+        id: slack-notifications
         uses: slackapi/slack-github-action@1.23.0
         with: 
           payload: |
