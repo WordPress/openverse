@@ -41,7 +41,7 @@ test.describe("search query on CSR", () => {
       await expect(page.locator('header input[type="search"]')).toHaveValue(
         "cat"
       )
-      await expect(page).toHaveURL("search/?q=cat")
+      await expect(page).toHaveURL("search?q=cat")
     })
 
     test("selecting `audio` on homepage, you can search for audio", async ({
