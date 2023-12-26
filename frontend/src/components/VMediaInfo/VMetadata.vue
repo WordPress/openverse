@@ -4,7 +4,7 @@
       <VSourceProviderTooltip
         v-if="tooltipId(datum)"
         :describedby="tooltipId(datum)"
-        class="label-regular mb-1 flex flex-row ps-1"
+        class="label-regular mb-1 flex flex-row items-center ps-1"
         :datum="datum"
       />
       <dt v-else class="label-regular mb-1 flex flex-row ps-1">
@@ -22,7 +22,7 @@
         v-if="tooltipId(datum)"
         :key="datum.label"
         :describedby="tooltipId(datum)"
-        class="label-regular flex flex-row pt-1"
+        class="label-regular flex flex-row items-center p-1 sm:py-0 sm:pe-0"
         :datum="datum"
       />
       <dt
