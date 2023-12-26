@@ -92,9 +92,9 @@ the following steps will need to be taken:
    - `AbstractMatureMedia` -> `AbstractSensitiveMedia`
    - `MatureImage` -> `SensitiveImage`
    - `MatureAudio` -> `SensitiveAudio`
-2. Add `sensitive` and `sensitive_filtered` as new statuses for the
-   `AbstractMediaReport` class. Also add `sensitive_filtered` as to the check
-   for
+2. Add `sensitive` and `sensitive_filtered` as a new status and reason
+   respectively for the `AbstractMediaReport` class. Also add
+   `sensitive_filtered` as to the check for
    [creating sensitive media records](https://github.com/WordPress/openverse/blob/aa16d4f1be7607b12c428886b9890bdd947cc71c/api/api/models/media.py#L224).
    Instance of `mature` that are supplied for the reporting endpoints should be
    converted to `sensitive`.
