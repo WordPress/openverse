@@ -44,6 +44,10 @@ sentry_sdk.init(
 class HealthResource:
     @staticmethod
     def on_get(req, resp):
+        """
+        Health check for the service. Optionally check on resources with the
+        check_deps=true parameter.
+        """
         # Set the initial response, but change it if necessary
         resp.status = falcon.HTTP_200
         resp.media = {"status": "200 OK"}
