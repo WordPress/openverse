@@ -125,8 +125,6 @@ groups:
       - name: data
         description: Concerns the data
         emoji: "📚"
-        description: Concerns the software code in the repository
-        emoji: "💻"
       - name: interface
         description: Concerns end-users' experience with the software
         emoji: "🕹"
