@@ -30,7 +30,7 @@ jobs:
           pr_status: ${{ github.event.pull_request.draft && ' draft ' || ' ' }}
           pr_icon: ${{ github.event.pull_request.draft && ':pr-draft:' || ':pull-request:' }}
         with:
-          payload: | 
+          payload: |
             {
               "text": "New\"$pr_status\"PR opened by \"$pr_author\" in \"$pr_repo\": #\"$pr_number\" - \"$pr_title\"",
               "blocks": [
@@ -47,6 +47,6 @@ jobs:
         if: github.event.action == 'ready_for_review'
         id: slack-notifications
         uses: slackapi/slack-github-action@1.23.0
-        with: 
+        with:
           payload: |
             {"text":"PR by \"$pr_author\" in \"$pr_repo\" marked ready for review: #$pr_number - \"$pr_title\"","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: PR by *$pr_author* in `$pr_repo` marked ready for review:\n<$pr_url|#$pr_number - $pr_title>"}}]}
