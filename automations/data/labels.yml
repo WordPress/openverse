@@ -123,7 +123,7 @@ groups:
         description: Concerns the software code in the repository
         emoji: "💻"
       - name: data
-        description: Concerns the data
+        description: Concerns the data in our catalog and/or databases
         emoji: "📚"
       - name: interface
         description: Concerns end-users' experience with the software
