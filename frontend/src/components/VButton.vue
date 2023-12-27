@@ -1,7 +1,7 @@
 <template>
   <Component
     :is="as"
-    :type="typeRef"
+    :type="typeAttribute"
     class="group/button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
       $style.button,
@@ -25,8 +25,8 @@
       },
     ]"
     :aria-pressed="pressed"
-    :aria-disabled="ariaDisabledRef"
-    :disabled="disabledAttributeRef"
+    :aria-disabled="ariaDisabled"
+    :disabled="disabledAttribute"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, toRefs, computed, PropType } from "vue"
+import { defineComponent, watch, computed, PropType } from "vue"
 
 import { warn } from "~/utils/console"
 
@@ -193,14 +193,9 @@ const VButton = defineComponent({
     },
   },
   setup(props, { attrs }) {
-    const propsRef = toRefs(props)
-    const disabledAttributeRef = ref<boolean | undefined>(
-      propsRef.disabled.value
+    const typeAttribute = computed<ButtonType | undefined>(() =>
+      props.as === "VLink" ? undefined : props.type
     )
-    const ariaDisabledRef = ref<boolean>()
-    const trulyDisabledRef = ref<boolean>()
-    const typeRef = ref<ButtonType | undefined>(propsRef.type.value)
-    const supportsDisabledAttributeRef = ref(true)
 
     const connectionStyles = computed(() =>
       props.connections
@@ -209,15 +204,11 @@ const VButton = defineComponent({
     )
 
     const isActive = computed(() => {
-      return (
-        propsRef.pressed.value ||
-        attrs["aria-pressed"] ||
-        attrs["aria-expanded"]
-      )
+      return props.pressed || attrs["aria-pressed"] || attrs["aria-expanded"]
     })
 
     const isPlainDangerous = computed(() => {
-      return propsRef.variant.value === "plain--avoid"
+      return props.variant === "plain--avoid"
     })
     const isFocusSlimFilled = computed(() => {
       return props.variant.startsWith("filled-")
@@ -230,29 +221,25 @@ const VButton = defineComponent({
       )
     })
 
-    watch(
-      [propsRef.disabled, propsRef.focusableWhenDisabled],
-      ([disabled, focusableWhenDisabled]) => {
-        trulyDisabledRef.value = disabled && !focusableWhenDisabled
+    const supportsDisabledAttribute = computed(() => props.as !== "VLink")
 
+    const ariaDisabled = computed<true | undefined>(
+      () =>
         // If disabled and focusable then use `aria-disabled` instead of the `disabled` attribute to allow
         // the button to still be tabbed into by screen reader users
-        if (disabled && focusableWhenDisabled) {
-          ariaDisabledRef.value = true
-        } else {
-          ariaDisabledRef.value = undefined
-        }
-      },
-      { immediate: true }
+        (props.disabled && props.focusableWhenDisabled) || undefined
     )
 
+    const disabledAttribute = computed<true | undefined>(() => {
+      const trulyDisabled = props.disabled && !props.focusableWhenDisabled
+
+      return (trulyDisabled && supportsDisabledAttribute.value) || undefined
+    })
+
     watch(
-      propsRef.as,
+      () => props.as,
       (as) => {
-        if (["VLink"].includes(as)) {
-          typeRef.value = undefined
-          supportsDisabledAttributeRef.value = false
-        } else if (["a", "NuxtLink"].includes(as)) {
+        if (["a", "NuxtLink"].includes(as)) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
           )
@@ -261,19 +248,10 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
-    watch(
-      [trulyDisabledRef, supportsDisabledAttributeRef],
-      ([trulyDisabled, supportsDisabled]) => {
-        disabledAttributeRef.value =
-          trulyDisabled && supportsDisabled ? true : undefined
-      },
-      { immediate: true }
-    )
-
     return {
-      disabledAttributeRef,
-      ariaDisabledRef,
-      typeRef,
+      disabledAttribute,
+      ariaDisabled,
+      typeAttribute,
       isActive,
       connectionStyles,
       isPlainDangerous,
