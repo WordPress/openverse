@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
-from airflow.providers.http.operators.http import SimpleHttpOperator
+from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from requests import Response
 
@@ -95,8 +95,8 @@ def generate_index_suffix(default_suffix: str | None = None) -> str:
 
 def get_current_index(
     target_alias: str, http_conn_id: str = "data_refresh"
-) -> SimpleHttpOperator:
-    return SimpleHttpOperator(
+) -> HttpOperator:
+    return HttpOperator(
         task_id="get_current_index",
         http_conn_id=http_conn_id,
         endpoint=f"stat/{target_alias}",
@@ -111,13 +111,13 @@ def trigger_task(
     model: str,
     data: dict | None = None,
     http_conn_id: str = "data_refresh",
-) -> SimpleHttpOperator:
+) -> HttpOperator:
     data = {
         **(data or {}),
         "model": model,
         "action": action.upper(),
     }
-    return SimpleHttpOperator(
+    return HttpOperator(
         task_id=f"trigger_{action.lower()}",
         http_conn_id=http_conn_id,
         endpoint="task",
@@ -129,7 +129,7 @@ def trigger_task(
 
 def wait_for_task(
     action: str,
-    task_trigger: SimpleHttpOperator,
+    task_trigger: HttpOperator,
     timeout: timedelta,
     poke_interval: int = REFRESH_POKE_INTERVAL,
     http_conn_id: str = "data_refresh",
@@ -153,7 +153,7 @@ def trigger_and_wait_for_task(
     data: dict | None = None,
     poke_interval: int = REFRESH_POKE_INTERVAL,
     http_conn_id: str = "data_refresh",
-) -> tuple[SimpleHttpOperator, HttpSensor]:
+) -> tuple[HttpOperator, HttpSensor]:
     trigger = trigger_task(action, model, data, http_conn_id)
     waiter = wait_for_task(action, trigger, timeout, poke_interval, http_conn_id)
     trigger >> waiter
