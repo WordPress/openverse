@@ -28,9 +28,6 @@ RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
 
-# Fetch dependencies, including local development tools, to the virtual store.
-RUN pnpm fetch
-
 WORKDIR /home/node/frontend
 
 # Prevent pre-commit from being installed, we don't need it here and it fails to install anyway
