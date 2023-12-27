@@ -1,11 +1,13 @@
 <template>
   <VTeleport v-if="visible" to="modal">
     <div
-      class="fixed inset-0 z-40 flex justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
+      class="fixed inset-0 z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
       :class="[
-        $style['modal-backdrop'],
-        $style[`modal-backdrop-${variant}`],
-        $style[`modal-backdrop-${mode}`],
+        {
+          'bg-dark-charcoal bg-opacity-75':
+            variant === 'fit-content' || variant === 'two-thirds',
+          'flex-col items-center': variant === 'centered',
+        },
         contentClasses,
       ]"
     >
@@ -15,7 +17,21 @@
         ref="dialogRef"
         v-bind="$attrs"
         class="flex flex-col"
-        :class="[$style[`modal-${variant}`], $style[`modal-${mode}`]]"
+        :class="[
+          mode === 'dark'
+            ? 'bg-black text-white'
+            : 'bg-white text-dark-charcoal',
+          {
+            'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
+              variant === 'default',
+            'w-full': variant === 'full',
+            'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
+              variant === 'two-thirds',
+            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+              variant === 'fit-content',
+            'm-6 rounded sm:m-0': variant === 'centered',
+          },
+        ]"
         role="dialog"
         aria-modal="true"
         v-on="$listeners"
@@ -31,8 +47,7 @@
             -->
           <div
             v-if="variant === 'default'"
-            class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
-            :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
+            class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
           >
             <VIconButton
               ref="closeButton"
@@ -45,11 +60,22 @@
         </slot>
 
         <div
-          class="flex w-full flex-grow flex-col"
-          :class="[
-            $style[`modal-content-${variant}`],
-            $style[`modal-content-${mode}`],
-          ]"
+          class="modal-content flex w-full flex-grow flex-col"
+          :class="{
+            'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
+              variant === 'default',
+            'w-auto rounded': variant === 'centered',
+            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+              variant === 'fit-content',
+            'flex w-full flex-col justify-between px-6 pb-10':
+              variant === 'full',
+            'overflow-y-hidden rounded-se-lg rounded-ss-lg':
+              variant === 'two-thirds',
+            'bg-black text-white': mode === 'dark',
+            'bg-white text-dark-charcoal': mode === 'light',
+            'fallback-padding':
+              variant === 'fit-content' || variant === 'two-thirds',
+          }"
         >
           <slot />
         </div>
@@ -167,79 +193,14 @@ export default defineComponent({
 })
 </script>
 
-<style module>
-.top-bar-default {
-  @apply flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3;
-}
-.top-bar-full {
-  @apply flex h-20 w-full shrink-0 justify-between bg-dark-charcoal px-4 py-3 md:items-stretch md:justify-start md:px-7 md:py-4;
-}
-.top-bar-two-thirds {
-  @apply bg-tx;
-}
-.modal-backdrop {
-  @apply h-[100dvh] max-h-[100dvh];
-}
-.modal-backdrop-fit-content,
-.modal-backdrop-two-thirds {
-  @apply bg-dark-charcoal bg-opacity-75;
-}
-.modal-backdrop-centered {
-  @apply flex-col items-center;
-}
-
-.modal-default {
-  @apply w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px];
-}
-.modal-full {
-  @apply w-full;
-}
-.modal-two-thirds {
-  @apply mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white;
-}
-.modal-centered {
-  @apply m-6 rounded sm:m-0;
-}
-
-.modal-dark {
-  @apply bg-black text-white;
-}
-.modal-light {
-  @apply bg-white text-dark-charcoal;
-}
-
-.modal-content-default {
-  @apply text-left align-bottom md:rounded-se-lg md:rounded-ss-lg;
-}
-.modal-content-centered {
-  @apply w-auto rounded;
-}
-.modal-fit-content {
-  @apply mt-auto w-full rounded-se-lg rounded-ss-lg bg-white;
-}
-.modal-content-full {
-  @apply flex w-full flex-col justify-between px-6 pb-10;
-}
-.modal-content-two-thirds {
-  @apply overflow-y-hidden rounded-se-lg rounded-ss-lg;
-}
-.modal-content-fit-content {
-  @apply rounded-se-lg rounded-ss-lg;
-}
-.modal-content-dark {
-  @apply bg-black text-white;
-}
-.modal-content-light {
-  @apply bg-white text-dark-charcoal;
-}
+<style scoped>
 /*
 For mobiles that do not support dvh units, we add a fallback padding
 to the modal content to make sure that no clickable elements are hidden
 by the address bar.
 */
 @supports not (height: 100dvh) {
-  .modal-content-fit-content,
-  .modal-content-two-thirds {
+  .modal-content.fallback-padding {
     @apply pb-10;
   }
 }

@@ -2,26 +2,18 @@
   <Component
     :is="as"
     :type="typeAttribute"
-    class="group/button flex appearance-none items-center justify-center rounded-sm no-underline"
+    class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
-      $style.button,
-      $style[variant],
-      $style[`size-${size}${iconOnly ? '-icon-only' : ''}`],
+      variantClass,
       connectionStyles,
+      size,
       {
-        [$style[`${variant}-pressed`]]: isActive,
-        [$style[`icon-start-${size}`]]: hasIconStart,
-        [$style[`icon-end-${size}`]]: hasIconEnd,
-        [$style[`icon-only`]]: iconOnly,
-        'gap-x-2':
-          (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
-        'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
-        // Custom tailwind classes don't work with CSS modules in Vue, so they are
-        // written here explicitly instead of accessed off of `$style`.
+        'icon-only': iconOnly,
+        'icon-start': hasIconStart,
+        'icon-end': hasIconEnd,
+        border: !isPlainDangerous,
         'focus-slim-filled': isFocusSlimFilled,
         'focus-slim-tx': isFocusSlimTx,
-        'focus-bold-filled ': variant === 'dropdown-label-pressed',
-        border: !isPlainDangerous,
       },
     ]"
     :aria-pressed="pressed"
@@ -206,6 +198,15 @@ const VButton = defineComponent({
     const isActive = computed(() => {
       return props.pressed || attrs["aria-pressed"] || attrs["aria-expanded"]
     })
+    const variantClass = computed(() => {
+      if (
+        isActive.value &&
+        ["bordered-white", "transparent-dark"].includes(props.variant)
+      ) {
+        return `${props.variant}-pressed`
+      }
+      return props.variant
+    })
 
     const isPlainDangerous = computed(() => {
       return props.variant === "plain--avoid"
@@ -217,7 +218,7 @@ const VButton = defineComponent({
       return (
         props.variant.startsWith("bordered-") ||
         props.variant.startsWith("transparent-") ||
-        ["dropdown-label", "plain"].includes(props.variant)
+        props.variant === "plain"
       )
     })
 
@@ -249,11 +250,13 @@ const VButton = defineComponent({
     )
 
     return {
+      variantClass,
+      connectionStyles,
       disabledAttribute,
       ariaDisabled,
       typeAttribute,
       isActive,
-      connectionStyles,
+
       isPlainDangerous,
       isFocusSlimFilled,
       isFocusSlimTx,
@@ -264,90 +267,50 @@ const VButton = defineComponent({
 export default VButton
 </script>
 
-<style module>
+<style scoped>
 .button[disabled="disabled"],
 .button[aria-disabled="true"] {
   @apply cursor-not-allowed;
-}
-
-.size-small {
-  @apply h-8 px-2 py-0;
-}
-.size-small-icon-only {
-  @apply h-8 w-8;
-}
-.icon-start-small {
-  @apply ps-1;
-}
-.icon-end-small {
-  @apply pe-1;
-}
-
-.size-medium {
-  @apply h-10 px-3 py-0;
-}
-.size-medium-icon-only {
-  @apply h-10 w-10;
-}
-.icon-start-medium {
-  @apply ps-2;
-}
-.icon-end-medium {
-  @apply pe-2;
-}
-
-.size-large {
-  @apply h-12 px-5 py-0;
-}
-.size-large-icon-only {
-  @apply h-12 w-12;
-}
-.icon-start-large {
-  @apply ps-4;
-}
-.icon-end-large {
-  @apply pe-4;
-}
-
-.size-larger-icon-only {
-  @apply h-16 w-16;
-}
-
-.icon-only {
-  @apply flex-none;
 }
 
 a.button {
   @apply no-underline hover:no-underline;
 }
 
+.connection-start {
+  @apply rounded-s-none;
+}
+.connection-end {
+  @apply rounded-e-none;
+}
+.connection-top {
+  @apply rounded-se-none rounded-ss-none;
+}
+.connection-bottom {
+  @apply rounded-ee-none rounded-es-none;
+}
+
 .filled-pink {
   @apply border-tx bg-pink text-white hover:bg-dark-pink hover:text-white;
 }
-
 .filled-dark {
   @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white disabled:opacity-70;
 }
-
 .filled-gray {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
-
 .filled-white {
   @apply border-tx bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
-
 .bordered-white {
   @apply border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .bordered-white-pressed {
-  @apply border border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90;
+  @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90 hover:focus-visible:border-tx;
 }
-
 .bordered-gray {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal hover:focus-visible:border-tx;
 }
-
 .transparent-tx {
   @apply border-tx;
 }
@@ -361,25 +324,52 @@ a.button {
   @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90;
 }
 
-.dropdown-label {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+.icon-only {
+  @apply flex-none;
 }
-.dropdown-label-pressed {
-  @apply border-tx bg-dark-charcoal text-white active:hover:border-white;
+.small {
+  @apply h-8 px-2 py-0;
 }
-</style>
+.small.icon-only {
+  @apply w-8 p-0;
+}
+.small.icon-start {
+  @apply gap-x-1 ps-1;
+}
+.small.icon-end {
+  @apply gap-x-1 pe-1;
+}
 
-<style scoped>
-.connection-start {
-  @apply rounded-s-none;
+.medium {
+  @apply h-10 px-3 py-0;
 }
-.connection-end {
-  @apply rounded-e-none;
+.medium.icon-only {
+  @apply w-10 p-0;
 }
-.connection-top {
-  @apply rounded-se-none rounded-ss-none;
+.medium.icon-start {
+  @apply gap-x-2 ps-2;
 }
-.connection-bottom {
-  @apply rounded-ee-none rounded-es-none;
+.medium.icon-end {
+  @apply gap-x-2 pe-2;
+}
+
+.large {
+  @apply h-12 px-5 py-0;
+}
+.large.icon-only {
+  @apply w-12 p-0;
+}
+.large.icon-start {
+  @apply gap-x-2 ps-4;
+}
+.large.icon-end {
+  @apply gap-x-2 pe-4;
+}
+
+.larger {
+  @apply h-16;
+}
+.larger.icon-only {
+  @apply w-16;
 }
 </style>
