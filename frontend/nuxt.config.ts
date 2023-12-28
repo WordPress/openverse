@@ -83,17 +83,15 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
   runtimeConfig: {
-    apiClientId: process.env.NUXT_API_CLIENT_ID || "",
-    apiClientSecret: process.env.NUXT_API_CLIENT_SECRET || "",
+    // NUXT_API_CLIENT_ID
+    apiClientId: "",
+    // NUXT_API_CLIENT_SECRET
+    apiClientSecret: "",
     public: {
-      apiUrl:
-        process.env.NUXT_PUBLIC_API_URL || "https://api.openverse.engineering/",
-      providerUpdateFrequency: process.env.NUXT_PUBLIC_PROVIDER_UPDATE_FREQUENCY
-        ? parseInt(process.env.NUXT_PUBLIC_PROVIDER_UPDATE_FREQUENCY)
-        : 0,
-      savedSearchCount: process.env.NUXT_PUBLIC_SAVED_SEARCH_COUNT
-        ? parseInt(process.env.NUXT_PUBLIC_SAVED_SEARCH_COUNT)
-        : 4,
+      // Can be overwritten by NUXT_PUBLIC_API_URL env variable
+      apiUrl: "https://api.openverse.engineering/",
+      providerUpdateFrequency: 0,
+      savedSearchCount: 4,
       sentry: {
         dsn: "",
         environment: "development",
