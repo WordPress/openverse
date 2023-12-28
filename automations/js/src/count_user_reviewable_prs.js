@@ -78,13 +78,26 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       }
     }
 
+    let should_alert = false
+    if (reviewablePRs.length >= 1) {
+      // TODO sort by open date
+      should_alert = !reviewablePRs[0].labels.nodes.some((label) =>
+        ignoredLabels.includes(label.name)
+      )
+    }
+
     const result = {
       pr_count: reviewablePRs.length,
       slack_id: slackID,
+      should_alert: should_alert,
     }
     core.info(`Current user has ${result.pr_count} PR(s).`)
+    core.info(
+      `Most recent PR should trigger alert based on labels: ${result.should_alert}`
+    )
     core.setOutput('pr_count', result.pr_count)
     core.setOutput('slack_id', result.slack_id)
+    core.setOutput('should_alert', result.should_alert)
   } catch (error) {
     core.setFailed(`Error fetching pull requests: ${error.message}`)
   }
