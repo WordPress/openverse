@@ -1,6 +1,10 @@
 import { test } from "@playwright/test"
 
-import { openFirstResult } from "~~/test/playwright/utils/navigation"
+import {
+  openFirstResult,
+  preparePageForTests,
+  turnOnAnalytics,
+} from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
@@ -10,6 +14,8 @@ import { AUDIO, IMAGE } from "~/constants/media"
 
 test.describe("all results grid analytics test", () => {
   test.beforeEach(async ({ page }) => {
+    await preparePageForTests(page, "xl")
+    await turnOnAnalytics(page)
     await page.goto("/search/?q=birds")
   })
 

@@ -18,6 +18,7 @@ test.describe("global audio", () => {
     test("track continues playing when navigating from search to details page", async ({
       page,
     }) => {
+      await preparePageForTests(page, "xs")
       await page.goto("/search/audio?q=honey&length=shortest")
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
@@ -34,6 +35,7 @@ test.describe("global audio", () => {
     })
 
     test("track can be closed while playing", async ({ page }) => {
+      await preparePageForTests(page, "xs")
       await page.goto("/search/audio?q=honey")
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
@@ -54,6 +56,7 @@ test.describe("global audio", () => {
     test("player does not reproduce an audio different that the current audio in the details page", async ({
       page,
     }) => {
+      await preparePageForTests(page, "xs")
       await page.goto("/search/audio?q=honey&length=shortest")
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
