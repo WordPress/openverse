@@ -30,7 +30,7 @@ breakpoints.describeMd(({ expectSnapshot }) => {
 
 test.describe("content report form", () => {
   // Flaky: https://github.com/WordPress/openverse/issues/2020
-  test.describe.configure({ retries: 2 })
+  // test.describe.configure({ retries: 2 })
 
   breakpoints.describeMd(({ expectSnapshot }) => {
     test("focused close button", async ({ page }) => {
