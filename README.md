@@ -52,10 +52,10 @@ You can keep in touch with the project via the following channels:
   - [Project Board](https://github.com/orgs/WordPress/projects/3)
 - [Community Site](https://make.wordpress.org/openverse/)
 - #openverse channel in the
-  [Making WordPress Slack](https://make.wordpress.org/chat/)
+  [Making WordPress Chat](https://make.wordpress.org/chat/)
   - Weekly Development Chat (@
-    [Tuesday 15:00 UTC](https://everytimezone.com/s/d1d42c7b))
-  - Monthly Prioritisation Meeting
+    [Mondays 15:00 UTC](https://everytimezone.com/s/d2e71015))
+  - Monthly Prioritisation Meeting (first Wednesday of every month @ 15:00 UTC)
 
 ## Documentation
 
