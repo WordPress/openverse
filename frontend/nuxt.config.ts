@@ -2,8 +2,28 @@ import { defineNuxtConfig } from "nuxt/config"
 
 import { isProd } from "./src/utils/node-env"
 import locales from "./src/locales/scripts/valid-locales.json"
+import { meta as commonMeta } from "./src/constants/meta"
 
 import type { LocaleObject } from "vue-i18n-routing"
+
+const favicons = [
+  // SVG favicon
+  {
+    rel: "icon",
+    href: "/openverse-logo.svg",
+  },
+  // SVG favicon for Safari
+  {
+    rel: "mask-icon",
+    href: "/opvenverse-logo.svg",
+    color: "#30272E",
+  },
+  // Fallback iPhone Icon
+  {
+    rel: "apple-touch-icon",
+    href: "/openverse-logo-180.png",
+  },
+]
 
 const openverseLocales = [
   {
@@ -25,6 +45,34 @@ const openverseLocales = [
 const isProdNotPlaywright = isProd && !(process.env.PW === "true")
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: "Openly Licensed Images, Audio and More | Openverse",
+      meta: commonMeta,
+      link: [
+        ...favicons,
+        {
+          rel: "search",
+          type: "application/opensearchdescription+xml",
+          title: "Openverse",
+          href: "/opensearch.xml",
+        },
+        {
+          rel: "dns-prefetch",
+          href:
+            process.env.NUXT_PUBLIC_API_URL ||
+            "https://api.openverse.engineering/",
+        },
+        {
+          rel: "preconnect",
+          href:
+            process.env.NUXT_PUBLIC_API_URL ||
+            "https://api.openverse.engineering/",
+          crossorigin: "",
+        },
+      ],
+    },
+  },
   srcDir: "src/",
   devServer: {
     port: 8443,
