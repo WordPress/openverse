@@ -243,7 +243,7 @@ const VButton = defineComponent({
       (as) => {
         if (
           ["a", "NuxtLink"].includes(as) &&
-          attrs.href !== `#{skipToContentTargetId}`
+          attrs.href !== `#${skipToContentTargetId}`
         ) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
