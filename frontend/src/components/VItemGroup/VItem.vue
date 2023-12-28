@@ -3,7 +3,7 @@
     class="flex"
     :class="[
       contextProps.direction,
-      $attrs.class,
+      splitAttrs.class,
       {
         [`${contextProps.direction}-bordered`]: contextProps.bordered,
         [`${contextProps.direction}-popover-item`]: isInPopover,
@@ -19,15 +19,15 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus:z-10"
+      class="relative min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
-        'p-3': contextProps.size === 'small',
-        'p-5 ps-6': contextProps.size === 'medium',
+        '!p-3': contextProps.size === 'small',
+        '!p-5 !ps-6': contextProps.size === 'medium',
         'bg-dark-charcoal-10 ring-offset-dark-charcoal-10':
           selected && contextProps.showCheck,
         'text-dark-charcoal': as === 'VLink',
-        'px-2': !contextProps.showCheck,
+        '!px-2': !contextProps.showCheck,
       }"
       variant="transparent-tx"
       size="disabled"
@@ -35,7 +35,7 @@
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
       :aria-checked="selected"
       :tabindex="tabIndex"
-      v-bind="nonClassAttrs"
+      v-bind="splitAttrs.nonClass"
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"
@@ -154,10 +154,9 @@ export default defineComponent({
       return -1
     })
 
-    const nonClassAttrs = computed(() => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { class: _, ...rest } = attrs
-      return rest
+    const splitAttrs = computed(() => {
+      const { class: classAttrs, ...rest } = attrs
+      return { class: classAttrs, nonClass: rest }
     })
 
     return {
@@ -166,7 +165,7 @@ export default defineComponent({
       isFocused,
       tabIndex,
       focusContext,
-      nonClassAttrs,
+      splitAttrs,
     }
   },
 })
