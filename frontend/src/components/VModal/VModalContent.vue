@@ -34,11 +34,12 @@
             class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             :class="[$style[`top-bar-${variant}`], $style[`top-bar-${mode}`]]"
           >
-            <VCloseButton
+            <VIconButton
               ref="closeButton"
               :label="$t('modal.ariaClose')"
               variant="filled-white"
-              @close="hide()"
+              size="small"
+              @click="hide()"
             />
           </div>
         </slot>
@@ -66,14 +67,14 @@ import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
-import VCloseButton from "~/components/VCloseButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 /**
  * Renders the inner content of a modal and manages focus.
  */
 export default defineComponent({
   name: "VModalContent",
-  components: { VCloseButton, VTeleport },
+  components: { VIconButton, VTeleport },
   inheritAttrs: false,
   props: {
     visible: {

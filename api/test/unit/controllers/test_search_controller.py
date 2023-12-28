@@ -1,3 +1,5 @@
+import datetime
+import logging
 import random
 import re
 from collections.abc import Callable
@@ -7,21 +9,50 @@ from test.factory.es_http import (
     MOCK_LIVE_RESULT_URL_PREFIX,
     create_mock_es_http_image_search_response,
 )
+from test.factory.models.content_provider import ContentProviderFactory
 from unittest import mock
+from unittest.mock import patch
 from uuid import uuid4
 
 import pook
 import pytest
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
+from elasticsearch_dsl.query import Terms
 
 from api.controllers import search_controller
+from api.controllers.elasticsearch import helpers as es_helpers
+from api.controllers.search_controller import FILTERED_PROVIDERS_CACHE_KEY
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
 
 
 pytestmark = pytest.mark.django_db
+
+
+cache_availability_params = pytest.mark.parametrize(
+    "is_cache_reachable, cache_name",
+    [(True, "search_con_cache"), (False, "unreachable_search_con_cache")],
+)
+# This parametrize decorator runs the test function with two scenarios:
+# - one where the API can connect to Redis
+# - one where it cannot and raises ``ConnectionError``
+# The fixtures referenced here are defined below.
+
+
+@pytest.fixture(autouse=True)
+def search_con_cache(django_cache, monkeypatch):
+    cache = django_cache
+    monkeypatch.setattr("api.controllers.search_controller.cache", cache)
+    yield cache
+
+
+@pytest.fixture
+def unreachable_search_con_cache(unreachable_django_cache, monkeypatch):
+    cache = unreachable_django_cache
+    monkeypatch.setattr("api.controllers.search_controller.cache", cache)
+    yield cache
 
 
 @pytest.mark.parametrize(
@@ -44,7 +75,7 @@ pytestmark = pytest.mark.django_db
         (0, 100, 10, 1, (0, 0)),
         # Evenly divisible number of pages
         (25, 5, 5, 1, (25, 5)),
-        # An edge case that previously did not behave as expected with evenly divisble numbers of pages
+        # An edge case that previously did not behave as expected with evenly divisible numbers of pages
         (20, 5, 5, 1, (20, 4)),
         # Unevenly divisible number of pages
         (21, 5, 5, 1, (21, 5)),
@@ -150,7 +181,7 @@ def test_paginate_with_dead_link_mask_new_search(
     """
     start = 0
 
-    assert search_controller._paginate_with_dead_link_mask(
+    assert es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     ) == (start, expected_end)
 
@@ -260,7 +291,7 @@ def test_paginate_with_dead_link_mask_query_mask_is_not_large_enough(
     """
     start = mask_size
     create_mask(s=unique_search, mask_size=mask_size, liveness_count=liveness_count)
-    assert search_controller._paginate_with_dead_link_mask(
+    assert es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     ) == (start, expected_end)
 
@@ -383,7 +414,7 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
         create_mask_kwargs.update(mask=mask_or_mask_size)
 
     create_mask(**create_mask_kwargs)
-    actual_range = search_controller._paginate_with_dead_link_mask(
+    actual_range = es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     )
     assert (
@@ -454,8 +485,10 @@ def test_search_tallies_pages_less_than_5(
     )
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -493,8 +526,10 @@ def test_search_tallies_handles_empty_page(
     serializer = media_type_config.search_request_serializer(data={"q": "dogs"})
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -536,8 +571,10 @@ def test_resolves_index(
     )
     serializer.is_valid()
 
-    search_controller.search(
+    search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=origin_index,
         exact_index=False,
@@ -576,22 +613,24 @@ def test_no_post_process_results_recursion(
         hit_count=hit_count,
     )
 
-    es_host = settings.ES.transport.kwargs["host"]
-    es_port = settings.ES.transport.kwargs["port"]
-
     # `origin_index` enforced by passing `exact_index=True` below.
     es_endpoint = (
-        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+        f"{settings.ES_ENDPOINT}/{image_media_type_config.origin_index}/_search"
     )
 
-    mock_search = pook.post(es_endpoint).times(1).reply(200).json(mock_es_response).mock
+    mock_search = (
+        pook.post(es_endpoint)
+        .times(1)
+        .reply(200)
+        .header("x-elastic-product", "Elasticsearch")
+        .json(mock_es_response)
+        .mock
+    )
 
     # Ensure dead link filtering does not remove any results
     pook.head(
         pook.regex(rf"{MOCK_LIVE_RESULT_URL_PREFIX}/\d"),
-    ).times(
-        hit_count
-    ).reply(200)
+    ).times(hit_count).reply(200)
 
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
@@ -599,8 +638,10 @@ def test_no_post_process_results_recursion(
         data={"q": "bird perched"}
     )
     serializer.is_valid()
-    results, _, _, _ = search_controller.search(
+    results, _, _, _ = search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -682,12 +723,9 @@ def test_post_process_results_recurses_as_needed(
         base_hits=mock_es_response_1["hits"]["hits"],
     )
 
-    es_host = settings.ES.transport.kwargs["host"]
-    es_port = settings.ES.transport.kwargs["port"]
-
     # `origin_index` enforced by passing `exact_index=True` below.
     es_endpoint = (
-        f"http://{es_host}:{es_port}/{image_media_type_config.origin_index}/_search"
+        f"{settings.ES_ENDPOINT}/{image_media_type_config.origin_index}/_search"
     )
 
     # `from` is always 0 if there is no query mask
@@ -703,6 +741,7 @@ def test_post_process_results_recurses_as_needed(
         .body(re.compile('from":0'))
         .times(1)
         .reply(200)
+        .header("x-elastic-product", "Elasticsearch")
         .json(mock_es_response_1)
         .mock
     )
@@ -714,6 +753,7 @@ def test_post_process_results_recurses_as_needed(
         .body(re.compile('from":0'))
         .times(1)
         .reply(200)
+        .header("x-elastic-product", "Elasticsearch")
         .json(mock_es_response_2)
         .mock
     )
@@ -738,8 +778,10 @@ def test_post_process_results_recurses_as_needed(
         data={"q": "bird perched"}
     )
     serializer.is_valid()
-    results, _, _, _ = search_controller.search(
+    results, _, _, _ = search_controller.query_media(
+        strategy="search",
         search_params=serializer,
+        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -756,3 +798,115 @@ def test_post_process_results_recurses_as_needed(
     }
 
     assert wrapped_post_process_results.call_count == 2
+
+
+@mock.patch(
+    "api.controllers.search_controller.check_dead_links",
+)
+def test_excessive_recursion_in_post_process(
+    mock_check_dead_links,
+    image_media_type_config,
+    redis,
+    caplog,
+):
+    def _delete_all_results_but_first(_, __, results, ___):
+        results[1:] = []
+
+    mock_check_dead_links.side_effect = _delete_all_results_but_first
+
+    serializer = image_media_type_config.search_request_serializer(
+        # This query string does not matter, ultimately, as pook is mocking
+        # the ES response regardless of the input
+        data={"q": "bird perched"}
+    )
+    serializer.is_valid()
+
+    with caplog.at_level(logging.INFO):
+        results, _, _, _ = search_controller.query_media(
+            strategy="search",
+            search_params=serializer,
+            collection_params=None,
+            ip=0,
+            origin_index=image_media_type_config.origin_index,
+            exact_index=True,
+            page=1,
+            page_size=2,
+            filter_dead=True,
+        )
+    assert "Nesting threshold breached" in caplog.text
+
+
+@pytest.mark.django_db
+@cache_availability_params
+@pytest.mark.parametrize(
+    "excluded_count, result",
+    [(2, Terms(provider=["provider1", "provider2"])), (0, None)],
+)
+def test_get_excluded_providers_query_returns_excluded(
+    excluded_count, result, is_cache_reachable, cache_name, request, caplog
+):
+    cache = request.getfixturevalue(cache_name)
+
+    if is_cache_reachable:
+        cache.set(
+            key=FILTERED_PROVIDERS_CACHE_KEY,
+            version=2,
+            timeout=30,
+            value=[f"provider{i + 1}" for i in range(excluded_count)],
+        )
+    else:
+        for i in range(excluded_count):
+            ContentProviderFactory.create(
+                created_on=datetime.datetime.now(),
+                provider_identifier=f"provider{i + 1}",
+                provider_name=f"Provider {i + 1}",
+                filter_content=True,
+            )
+
+    assert search_controller.get_excluded_providers_query() == result
+
+    if not is_cache_reachable:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, cannot get cached filtered providers.",
+                "Redis connect failed, cannot cache filtered providers.",
+            ]
+        )
+
+
+@cache_availability_params
+def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, caplog):
+    cache = request.getfixturevalue(cache_name)
+
+    if is_cache_reachable:
+        cache.set(
+            "sources-multimedia", value={"provider_1": "1000", "provider_2": "1000"}
+        )
+
+    with patch(
+        "api.controllers.search_controller.get_raw_es_response",
+        return_value={
+            "aggregations": {
+                "unique_sources": {
+                    "buckets": [
+                        {"key": "provider_1", "doc_count": 1000},
+                        {"key": "provider_2", "doc_count": 1000},
+                    ]
+                }
+            }
+        },
+    ):
+        assert search_controller.get_sources("multimedia") == {
+            "provider_1": 1000,
+            "provider_2": 1000,
+        }
+
+    if not is_cache_reachable:
+        assert all(
+            message in caplog.text
+            for message in [
+                "Redis connect failed, cannot get cached sources.",
+                "Redis connect failed, cannot cache sources.",
+            ]
+        )

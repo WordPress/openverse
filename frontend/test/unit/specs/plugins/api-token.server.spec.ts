@@ -155,7 +155,7 @@ describe("api-token.server plugin", () => {
        * to check the mutex and await on the fetching promise.
        *
        * This relies on the behavior of the Node event loop where
-       * several async functions called synchronously in succession will exectue
+       * several async functions called synchronously in succession will execute
        * up until the first blocking `await` and then return the promise. This allows
        * us to effectively get all three of the async api token plugin function
        * calls up to the first blocking await which will either be the the call to

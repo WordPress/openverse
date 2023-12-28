@@ -13,6 +13,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
     just --list --unsorted
+    cd docker/cache && just
     cd docker/nginx && just
     cd docker/es && just
     cd catalog && just
@@ -123,6 +124,10 @@ export CATALOG_PY_VERSION := `just catalog/py-version`
 export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
 export API_PY_VERSION := `just api/py-version`
 export INGESTION_PY_VERSION := `just ingestion_server/py-version`
+export FRONTEND_NODE_VERSION := `just frontend/node-version`
+export FRONTEND_PNPM_VERSION := `just frontend/pnpm-version`
+
+export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
 
 versions:
     #!/usr/bin/env bash

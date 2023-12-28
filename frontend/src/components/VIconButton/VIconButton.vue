@@ -66,7 +66,7 @@ export default defineComponent({
      * Connections to pass down to the `VButton` component nested inside the button.
      */
     connections: {
-      type: String as PropType<ButtonConnections>,
+      type: Array as PropType<ButtonConnections[]>,
     },
     /**
      * The label used for accessibility purposes.

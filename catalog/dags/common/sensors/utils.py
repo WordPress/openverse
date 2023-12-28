@@ -1,6 +1,12 @@
 from datetime import datetime
 
+from airflow.decorators import task
+from airflow.exceptions import AirflowSensorTimeout
 from airflow.models import DagRun
+from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.utils.state import State
+
+from common.constants import REFRESH_POKE_INTERVAL
 
 
 def get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
@@ -27,3 +33,43 @@ def get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
     # ``ExternalTaskSensor::get_count``, especially the handling
     # of ``dttm_filter`` for the relevant implementation details.
     return []
+
+
+def wait_for_external_dag(external_dag_id: str, task_id: str | None = None):
+    """
+    Return a Sensor task which will wait if the given external DAG is
+    running.
+    """
+    if not task_id:
+        task_id = f"wait_for_{external_dag_id}"
+
+    return ExternalTaskSensor(
+        task_id=task_id,
+        poke_interval=REFRESH_POKE_INTERVAL,
+        external_dag_id=external_dag_id,
+        # Wait for the whole DAG, not just a part of it
+        external_task_id=None,
+        check_existence=False,
+        execution_date_fn=lambda _: get_most_recent_dag_run(external_dag_id),
+        mode="reschedule",
+        # Any "finished" state is sufficient for us to continue
+        allowed_states=[State.SUCCESS, State.FAILED],
+    )
+
+
+@task(retries=0)
+def prevent_concurrency_with_dag(external_dag_id: str, **context):
+    """
+    Prevent concurrency with the given external DAG, by failing
+    immediately if that DAG is running.
+    """
+
+    wait_for_dag = wait_for_external_dag(
+        external_dag_id=external_dag_id,
+        task_id=f"check_for_running_{external_dag_id}",
+    )
+    wait_for_dag.timeout = 0
+    try:
+        wait_for_dag.execute(context)
+    except AirflowSensorTimeout:
+        raise ValueError(f"Concurrency check with {external_dag_id} failed.")

@@ -36,11 +36,18 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { useUiStore } from "~/stores/ui"
-import type { Collection } from "~/types/search"
+import type { CollectionParams } from "~/types/search"
 import { useAnalytics } from "~/composables/use-analytics"
 
-import VButton from "~/components/VButton.vue"
+import { useProviderStore } from "~/stores/provider"
+import { SupportedMediaType } from "~/constants/media"
+
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
+
+import { useMediaStore } from "~/stores/media"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
 
 const icons = {
   tag: "tag",
@@ -55,55 +62,102 @@ export default defineComponent({
   name: "VCollectionHeader",
   components: { VIcon, VButton },
   props: {
-    collection: {
-      type: String as PropType<Collection>,
+    collectionParams: {
+      type: Object as PropType<CollectionParams>,
       required: true,
     },
-    /**
-     * The name of the tag/creator/source. The source name should be the display
-     * name, not the code.
-     */
-    title: {
-      type: String,
-      required: true,
-    },
-    slug: {
+    creatorUrl: {
       type: String,
     },
-    url: {
-      type: String,
-    },
-    /**
-     * The label showing the result count, to display below the title.
-     * Should be built by the parent component.
-     */
-    resultsLabel: {
-      type: String,
+    mediaType: {
+      type: String as PropType<SupportedMediaType>,
       required: true,
     },
   },
   setup(props) {
+    const mediaStore = useMediaStore()
+    const providerStore = useProviderStore()
     const uiStore = useUiStore()
 
-    const iconName = computed(() => icons[props.collection])
+    const iconName = computed(() => icons[props.collectionParams.collection])
+    const collection = computed(() => props.collectionParams.collection)
+
+    const sourceName = computed(() => {
+      if (props.collectionParams.collection === "tag") {
+        return ""
+      }
+      return providerStore.getProviderName(
+        props.collectionParams.source,
+        props.mediaType
+      )
+    })
+
+    const title = computed(() => {
+      if (props.collectionParams.collection === "tag") {
+        return props.collectionParams.tag
+      } else if (props.collectionParams.collection === "creator") {
+        return props.collectionParams.creator
+      }
+      return sourceName.value
+    })
+
+    const url = computed(() => {
+      if (props.collectionParams.collection === "tag") {
+        return undefined
+      } else if (props.collectionParams.collection === "creator") {
+        return props.creatorUrl
+      }
+      return providerStore.getSourceUrl(
+        props.collectionParams.source,
+        props.mediaType
+      )
+    })
+    const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
+
+    const resultsLabel = computed(() => {
+      if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
+        return ""
+      }
+      const resultsCount = mediaStore.results[props.mediaType].count
+      if (props.collectionParams.collection === "creator") {
+        return getI18nCollectionResultCountLabel(
+          resultsCount,
+          props.mediaType,
+          "creator",
+          { source: sourceName.value }
+        )
+      }
+      return getI18nCollectionResultCountLabel(
+        resultsCount,
+        props.mediaType,
+        props.collectionParams.collection
+      )
+    })
 
     const isMd = computed(() => uiStore.isBreakpoint("md"))
 
     const { sendCustomEvent } = useAnalytics()
 
     const sendAnalyticsEvent = () => {
-      if (!props.url || !props.slug) return
+      if (props.collectionParams.collection === "tag") {
+        return
+      }
+
       const eventName =
-        props.collection === "creator"
+        props.collectionParams.collection === "creator"
           ? "VISIT_CREATOR_LINK"
           : "VISIT_SOURCE_LINK"
       sendCustomEvent(eventName, {
-        url: props.url,
-        source: props.slug,
+        url: url.value,
+        source: props.collectionParams.source,
       })
     }
 
     return {
+      collection,
+      title,
+      resultsLabel,
+      url,
       iconName,
       isMd,
       sendAnalyticsEvent,

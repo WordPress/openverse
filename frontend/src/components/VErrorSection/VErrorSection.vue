@@ -18,10 +18,9 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
-import { useSearchStore } from "~/stores/search"
+import { ECONNABORTED, NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
 
-import type { NuxtError } from "@nuxt/types"
+import type { FetchingError } from "~/types/fetch-state"
 
 export default defineComponent({
   components: {
@@ -30,26 +29,25 @@ export default defineComponent({
   },
   props: {
     fetchingError: {
-      type: Object as PropType<NuxtError>,
+      type: Object as PropType<FetchingError>,
       required: true,
     },
   },
   setup(props) {
-    const searchStore = useSearchStore()
-    const searchTerm = computed(() => searchStore.searchTerm)
+    const searchTerm = computed(
+      () => props.fetchingError.details?.searchTerm ?? ""
+    )
     /**
      * The code used for the error page image.
      * For now, NO_RESULT image is used for searches without result,
      * and SERVER_TIMEOUT image is used as a fall-back for all other errors.
      */
-    const errorCode = computed(() => {
-      return props.fetchingError?.message?.includes(NO_RESULT)
-        ? NO_RESULT
-        : SERVER_TIMEOUT
-    })
+    const errorCode = computed(() =>
+      props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
+    )
 
     const isTimeout = computed(() =>
-      props.fetchingError?.message?.toLowerCase().includes("timeout")
+      [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
     )
 
     return {

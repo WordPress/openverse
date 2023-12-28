@@ -33,7 +33,7 @@ _MODULE = "catalog.utilities.dag_doc_gen.dag_doc_generation"
     [
         (None, None),
         ("Sample simple doc", "Sample simple doc"),
-        ("# Big header", "### Big header"),
+        ("# Big header", "#### Big header"),
     ],
 )
 @pytest.mark.parametrize(
@@ -107,7 +107,7 @@ def test_get_dags_info(
             ),
             False,
             """
-## Special Name
+### Special Name
 
 | DAG ID | Schedule Interval |
 | --- | --- |
@@ -126,7 +126,7 @@ def test_get_dags_info(
             ),
             False,
             """
-## Special Name
+### Special Name
 
 | DAG ID | Schedule Interval |
 | --- | --- |
@@ -145,7 +145,7 @@ def test_get_dags_info(
             ),
             True,
             """
-## Special Name
+### Special Name
 
 | DAG ID | Schedule Interval | Dated | Media Type(s) |
 | --- | --- | --- | --- |
@@ -167,7 +167,7 @@ def test_generate_dag_doc():
         + """\
  1. [T1](#t1)
 
-## T1
+### T1
 
 | DAG ID | Schedule Interval |
 | --- | --- |
@@ -180,12 +180,12 @@ def test_generate_dag_doc():
  1. [`b`](#b)
 
 
-## `b`
+### `b`
 
 this one has a doc
 """
     )
-    with (mock.patch(f"{_MODULE}.get_dags_info") as get_dags_info_mock,):
+    with mock.patch(f"{_MODULE}.get_dags_info") as get_dags_info_mock:
         # Return in reverse order to ensure they show up in the correct order
         get_dags_info_mock.return_value = [
             DagInfo("b", None, "this one has a doc", "t1", False, None),

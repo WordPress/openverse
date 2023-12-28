@@ -1,20 +1,19 @@
-import { capital } from "case"
 import { defineStore } from "pinia"
 import { ssrRef } from "@nuxtjs/composition-api"
-import axios from "axios"
 
+import { capitalCase } from "~/utils/case"
 import { env } from "~/utils/env"
+import { parseFetchingError } from "~/utils/errors"
 import {
   AUDIO,
   IMAGE,
   SupportedMediaType,
   supportedMediaTypes,
 } from "~/constants/media"
-import { warn } from "~/utils/console"
 import { initProviderServices } from "~/data/media-provider-service"
 
 import type { MediaProvider } from "~/types/media-provider"
-import type { FetchState } from "~/types/fetch-state"
+import type { FetchingError, FetchState } from "~/types/fetch-state"
 
 import type { Ref } from "vue"
 
@@ -26,6 +25,10 @@ export interface ProviderState {
   fetchState: {
     audio: FetchState
     image: FetchState
+  }
+  sourceNames: {
+    audio: string[]
+    image: string[]
   }
 }
 
@@ -57,10 +60,14 @@ export const useProviderStore = defineStore("provider", {
       [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },
       [IMAGE]: { isFetching: false, hasStarted: false, fetchingError: null },
     },
+    sourceNames: {
+      [AUDIO]: [],
+      [IMAGE]: [],
+    },
   }),
 
   actions: {
-    _endFetching(mediaType: SupportedMediaType, error?: string) {
+    _endFetching(mediaType: SupportedMediaType, error?: FetchingError) {
       this.fetchState[mediaType].fetchingError = error || null
       if (error) {
         this.fetchState[mediaType].isFinished = true
@@ -78,7 +85,7 @@ export const useProviderStore = defineStore("provider", {
     _updateFetchState(
       mediaType: SupportedMediaType,
       action: "start" | "end",
-      option?: string
+      option?: FetchingError
     ) {
       action === "start"
         ? this._startFetching(mediaType)
@@ -89,6 +96,12 @@ export const useProviderStore = defineStore("provider", {
       return this.providers
     },
 
+    _getProvider(providerCode: string, mediaType: SupportedMediaType) {
+      return this.providers[mediaType].find(
+        (p) => p.source_name === providerCode
+      )
+    },
+
     /**
      * Returns the display name for provider if available, or capitalizes the given providerCode.
      *
@@ -96,10 +109,16 @@ export const useProviderStore = defineStore("provider", {
      * @param mediaType - mediaType of the provider
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
-      const provider = this.providers[mediaType].find(
-        (p) => p.source_name === providerCode
-      )
-      return provider?.display_name || capital(providerCode)
+      const provider = this._getProvider(providerCode, mediaType)
+      return provider?.display_name || capitalCase(providerCode)
+    },
+
+    /**
+     * Returns the source URL given the source code and media type.
+     */
+    getSourceUrl(providerCode: string, mediaType: SupportedMediaType) {
+      const provider = this._getProvider(providerCode, mediaType)
+      return provider?.source_url
     },
 
     /**
@@ -131,22 +150,29 @@ export const useProviderStore = defineStore("provider", {
           this.$nuxt?.$config?.apiAccessToken
         )
         const res = await service.getProviderStats()
-        sortedProviders = sortProviders(res.data)
+        sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
-        let errorMessage = `There was an error fetching media providers for ${mediaType}`
-        if (error instanceof Error) {
-          errorMessage = axios.isAxiosError(error)
-            ? `${errorMessage}: ${error.code}`
-            : `${errorMessage}: ${error.message}`
-        }
-        warn(errorMessage)
+        const errorData = parseFetchingError(error, mediaType, "provider")
+
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
-        this._updateFetchState(mediaType, "end", errorMessage)
+        this._updateFetchState(mediaType, "end", errorData)
+        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
       } finally {
         this.providers[mediaType] = sortedProviders
+        this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)
       }
+    },
+
+    /**
+     * Returns true if the given source name exists in the given media type sources list.
+     */
+    isSourceNameValid(
+      mediaType: SupportedMediaType,
+      sourceName: string
+    ): boolean {
+      return this.sourceNames[mediaType].includes(sourceName)
     },
   },
 

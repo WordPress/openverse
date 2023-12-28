@@ -39,12 +39,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='matureaudio',
             name='identifier',
-            field=models.OneToOneField(db_column="identifier", db_constraint=False, help_text='The reference to the mature audio.', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, related_name='mature_audio', serialize=False, to='api.audio', to_field='identifier'),
+            field=models.OneToOneField(db_column="identifier", db_constraint=False, help_text='The reference to the sensitive audio.', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, related_name='mature_audio', serialize=False, to='api.audio', to_field='identifier'),
         ),
         migrations.AlterField(
             model_name='matureimage',
             name='identifier',
-            field=models.OneToOneField(db_column="identifier", db_constraint=False, help_text='The reference to the mature image.', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, related_name='mature_image', serialize=False, to='api.image', to_field='identifier'),
+            field=models.OneToOneField(db_column="identifier", db_constraint=False, help_text='The reference to the sensitive image.', on_delete=django.db.models.deletion.DO_NOTHING, primary_key=True, related_name='mature_image', serialize=False, to='api.image', to_field='identifier'),
         ),
         migrations.RenameField(
             model_name="audioreport",

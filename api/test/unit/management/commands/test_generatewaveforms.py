@@ -8,8 +8,8 @@ from django.core.management import call_command
 from django.db import connections
 from django.test.utils import CaptureQueriesContext
 
-import psycopg2
 import pytest
+from psycopg.errors import NotNullViolation
 
 from api.models.audio import Audio, AudioAddOn
 
@@ -111,7 +111,7 @@ def test_paginates_audio_waveforms_to_generate(
             {"stderr": b"This is an error string"},
         ),
         (
-            psycopg2.errors.NotNullViolation,
+            NotNullViolation,
             tuple(),
             dict(),
         ),

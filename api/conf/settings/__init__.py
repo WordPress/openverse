@@ -31,13 +31,13 @@ include(
     "static.py",
     # services
     "databases.py",
+    "caches.py",
     "elasticsearch.py",
     "email.py",
     "aws.py",
     # additional packages
     "oauth2.py",
     "rest_framework.py",
-    "s3.py",
     "sentry.py",
     "spectacular.py",
     "thumbnails.py",

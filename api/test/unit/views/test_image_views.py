@@ -1,14 +1,11 @@
 import json
-from collections.abc import Callable
-from dataclasses import dataclass
 from pathlib import Path
 from test.factory.models.image import ImageFactory
-from unittest.mock import ANY, patch
+from unittest.mock import patch
 
-from django.http import HttpResponse
-
+import pook
 import pytest
-from requests import Request, Response
+from PIL import UnidentifiedImageError
 
 from api.views.image_views import ImageViewSet
 
@@ -18,47 +15,22 @@ _MOCK_IMAGE_BYTES = (_MOCK_IMAGE_PATH / "sample-image.jpg").read_bytes()
 _MOCK_IMAGE_INFO = json.loads((_MOCK_IMAGE_PATH / "sample-image-info.json").read_text())
 
 
-@dataclass
-class RequestsFixture:
-    requests: list[Request]
-    response_factory: Callable[  # noqa: E731
-        [Request], Response
-    ] = lambda x: RequestsFixture._default_response_factory(x)
-
-    @staticmethod
-    def _default_response_factory(req: Request) -> Response:
-        res = Response()
-        res.url = req.url
-        res.status_code = 200
-        res._content = _MOCK_IMAGE_BYTES
-        return res
-
-
-@pytest.fixture(autouse=True)
-def requests(monkeypatch) -> RequestsFixture:
-    fixture = RequestsFixture([])
-
-    def requests_get(url, **kwargs):
-        req = Request(method="GET", url=url, **kwargs)
-        fixture.requests.append(req)
-        response = fixture.response_factory(req)
-        return response
-
-    monkeypatch.setattr("requests.get", requests_get)
-
-    return fixture
-
-
 @pytest.mark.django_db
-def test_oembed_sends_ua_header(api_client, requests):
+def test_oembed_sends_ua_header(api_client):
     image = ImageFactory.create()
-    res = api_client.get("/v1/images/oembed/", data={"url": f"/{image.identifier}"})
+    image.url = f"https://any.domain/any/path/{image.identifier}"
+    image.save()
+
+    with pook.use():
+        (
+            pook.get(image.url)
+            .header("User-Agent", ImageViewSet.OEMBED_HEADERS["User-Agent"])
+            .reply(200)
+            .body(_MOCK_IMAGE_BYTES, binary=True)
+        )
+        res = api_client.get("/v1/images/oembed/", data={"url": image.url})
 
     assert res.status_code == 200
-
-    assert len(requests.requests) > 0
-    for r in requests.requests:
-        assert r.headers == ImageViewSet.OEMBED_HEADERS
 
 
 @pytest.mark.django_db
@@ -67,15 +39,66 @@ def test_oembed_sends_ua_header(api_client, requests):
     [(True, "http://iip.smk.dk/thumb.jpg"), (False, "http://iip.smk.dk/image.jpg")],
 )
 def test_thumbnail_uses_upstream_thumb_for_smk(
-    api_client, smk_has_thumb, expected_thumb_url
+    api_client, smk_has_thumb, expected_thumb_url, settings
 ):
     thumb_url = "http://iip.smk.dk/thumb.jpg" if smk_has_thumb else None
     image = ImageFactory.create(
         url="http://iip.smk.dk/image.jpg",
         thumbnail=thumb_url,
     )
-    with patch("api.views.media_views.MediaViewSet.thumbnail") as thumb_call:
-        mock_response = HttpResponse("mock_response")
-        thumb_call.return_value = mock_response
-        api_client.get(f"/v1/images/{image.identifier}/thumb/")
-    thumb_call.assert_called_once_with(ANY, image, expected_thumb_url)
+
+    with pook.use():
+        mock_get = (
+            # Pook interprets a trailing slash on the URL as the path,
+            # so strip that so the `path` matcher works
+            pook.get(settings.PHOTON_ENDPOINT[:-1])
+            .path(expected_thumb_url.replace("http://", "/"))
+            .response(200)
+        ).mock
+
+        response = api_client.get(f"/v1/images/{image.identifier}/thumb/")
+
+    assert response.status_code == 200
+    assert mock_get.matched is True
+
+
+@pytest.mark.django_db
+def test_watermark_raises_424_for_invalid_image(api_client):
+    image = ImageFactory.create()
+    expected_error_message = (
+        "cannot identify image file <_io.BytesIO object at 0xffff86d8fec0>"
+    )
+
+    with pook.use():
+        pook.get(image.url).reply(200)
+
+        with patch("PIL.Image.open") as mock_open:
+            mock_open.side_effect = UnidentifiedImageError(expected_error_message)
+            res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+
+    assert res.status_code == 424
+    assert res.data["detail"] == expected_error_message
+
+
+@pytest.mark.django_db
+def test_watermark_raises_424_for_404_image(api_client):
+    image = ImageFactory.create()
+
+    with pook.use():
+        pook.get(image.url).reply(404)
+
+        res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+    assert res.status_code == 424
+    assert res.data["detail"] == f"404 Client Error: Not Found for url: {image.url}"
+
+
+@pytest.mark.django_db
+def test_watermark_raises_424_for_SVG_image(api_client):
+    image = ImageFactory.create(url="http://example.com/image.svg")
+
+    res = api_client.get(f"/v1/images/{image.identifier}/watermark/")
+    assert res.status_code == 424
+    assert (
+        res.data["detail"]
+        == "Unsupported media type: SVG images are not supported for watermarking."
+    )

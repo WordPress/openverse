@@ -1,6 +1,12 @@
+import logging
+
 import django_redis
 from deepdiff import DeepHash
 from elasticsearch_dsl import Search
+from redis.exceptions import ConnectionError
+
+
+parent_logger = logging.getLogger(__name__)
 
 
 # 3 hours minutes (in seconds)
@@ -34,7 +40,12 @@ def get_query_mask(query_hash: str) -> list[int]:
     """
     redis = django_redis.get_redis_connection("default")
     key = f"{query_hash}:dead_link_mask"
-    return list(map(int, redis.lrange(key, 0, -1)))
+    try:
+        return list(map(int, redis.lrange(key, 0, -1)))
+    except ConnectionError:
+        logger = parent_logger.getChild("get_query_mask")
+        logger.warning("Redis connect failed, cannot get cached query mask.")
+        return []
 
 
 def save_query_mask(query_hash: str, mask: list):
@@ -50,4 +61,9 @@ def save_query_mask(query_hash: str, mask: list):
     redis_pipe.delete(key)
     redis_pipe.rpush(key, *mask)
     redis_pipe.expire(key, DEAD_LINK_MASK_TTL)
-    redis_pipe.execute()
+
+    try:
+        redis_pipe.execute()
+    except ConnectionError:
+        logger = parent_logger.getChild("save_query_mask")
+        logger.warning("Redis connect failed, cannot cache query mask.")

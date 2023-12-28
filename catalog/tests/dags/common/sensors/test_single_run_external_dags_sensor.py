@@ -3,9 +3,8 @@ import unittest
 
 import pytest
 from airflow.exceptions import AirflowException
-from airflow.models import DagBag, DagRun, Pool, TaskInstance
+from airflow.models import DagBag, Pool
 from airflow.models.dag import DAG
-from airflow.utils.session import create_session
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType
@@ -15,23 +14,14 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 
 DEFAULT_DATE = datetime(2022, 1, 1)
 TEST_TASK_ID = "wait_task"
-TEST_POOL = "single_run_external_dags_sensor_test_pool"
 DEV_NULL = "/dev/null"
-DAG_PREFIX = "sreds"  # single_run_external_dags_sensor
 
-
-@pytest.fixture(autouse=True)
-def clean_db():
-    with create_session() as session:
-        # synchronize_session='fetch' required here to refresh models
-        # https://stackoverflow.com/a/51222378 CC BY-SA 4.0
-        session.query(DagRun).filter(DagRun.dag_id.startswith(DAG_PREFIX)).delete(
-            synchronize_session="fetch"
-        )
-        session.query(TaskInstance).filter(
-            TaskInstance.dag_id.startswith(DAG_PREFIX)
-        ).delete(synchronize_session="fetch")
-        session.query(Pool).filter(id == TEST_POOL).delete()
+# unittest.TestCase only allow auto-use fixture which can't retrieve the declared fixtures on conftest.py
+# TODO: TEST_POOL/DAG_PREFIX constants can be remove after unittest.TestCase are converted to pytest.
+TEST_POOL = (
+    "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_pool"
+)
+DAG_PREFIX = "catalog__tests__dags__common__sensors__test_single_run_external_dags_sensor_dag"  # single_run_external_dags_sensor
 
 
 def run_sensor(sensor):
@@ -75,6 +65,7 @@ def create_dagrun(dag, dag_state):
     )
 
 
+@pytest.mark.usefixtures("clean_db")
 # This appears to be coming from Airflow internals during testing as a result of
 # loading the example DAGs:
 # /opt/airflow/.local/lib/python3.10/site-packages/airflow/example_dags/example_subdag_operator.py:43: RemovedInAirflow3Warning  # noqa: E501
@@ -185,12 +176,15 @@ class TestExternalDAGsSensor(unittest.TestCase):
         with self.assertLogs(sensor.log, level=logging.INFO) as sensor_logs:
             run_sensor(sensor)
             assert (
-                "INFO:airflow.task.operators:Poking for DAGs ['successful_dag',"
-                " 'failed_dag', 'queued_dag'] ..." in sensor_logs.output
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:Poking for DAGs "
+                "['successful_dag', 'failed_dag', 'queued_dag'] ..."
+                in sensor_logs.output
             )
             assert (
-                "INFO:airflow.task.operators:0 DAGs are in the running state"
-                in sensor_logs.output
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:0 DAGs are in the "
+                "running state" in sensor_logs.output
             )
 
     def test_retries_if_running_dags_with_completed_sensor_task(self):
@@ -235,11 +229,13 @@ class TestExternalDAGsSensor(unittest.TestCase):
             run_sensor(sensor)
 
             assert (
-                f"INFO:airflow.task.operators:Poking for DAGs ['"
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:Poking for DAGs ['"
                 f"{DAG_PREFIX}_success_dag', '{DAG_PREFIX}_running_dag'] ..."
                 in sensor_logs.output
             )
             assert (
-                "INFO:airflow.task.operators:1 DAGs are in the running state"
-                in sensor_logs.output
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:1 DAGs are in the "
+                "running state" in sensor_logs.output
             )

@@ -78,16 +78,23 @@ export const useSeekable = ({
   }
 
   const handleKeys = (event: KeyboardEvent) => {
-    if (!willBeHandled(event)) return
+    if (!willBeHandled(event)) {
+      return
+    }
 
     event.preventDefault()
 
     isSeeking.value = (seekingKeys as string[]).includes(event.key)
 
-    if ((arrowKeys as string[]).includes(event.key))
+    if ((arrowKeys as string[]).includes(event.key)) {
       return handleArrowKeys(event)
-    if (event.key === keycodes.Home) return onSeek(0)
-    if (event.key === keycodes.End) return onSeek(1)
+    }
+    if (event.key === keycodes.Home) {
+      return onSeek(0)
+    }
+    if (event.key === keycodes.End) {
+      return onSeek(1)
+    }
     if (event.key === keycodes.Spacebar) {
       return onTogglePlayback()
     }

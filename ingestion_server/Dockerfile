@@ -7,7 +7,7 @@ ARG INGESTION_PY_VERSION
 # Python builder #
 ##################
 
-FROM python:${INGESTION_PY_VERSION} as builder
+FROM docker.io/python:${INGESTION_PY_VERSION} as builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -36,7 +36,7 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM python:${INGESTION_PY_VERSION}-slim as ing
+FROM docker.io/python:${INGESTION_PY_VERSION}-slim as ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -77,5 +77,8 @@ COPY --chown=ingestionu . /ingestion_server/
 # - 8001: Gunicorn server for `ingestion_server` Falcon app
 # - 8002: Gunicorn server for `indexer_worker` Falcon app
 EXPOSE 8001 8002
+
+ARG SEMANTIC_VERSION
+ENV SENTRY_RELEASE=$SEMANTIC_VERSION
 
 CMD ["gunicorn", "--bind", "0.0.0.0:8001", "api:api"]

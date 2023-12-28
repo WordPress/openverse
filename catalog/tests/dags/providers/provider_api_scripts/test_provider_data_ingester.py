@@ -395,7 +395,7 @@ def test_ingest_records_uses_query_params_list_from_dagrun_conf():
 
 
 def test_ingest_records_raises_IngestionError():
-    with (patch.object(ingester, "get_batch") as get_batch_mock,):
+    with patch.object(ingester, "get_batch") as get_batch_mock:
         get_batch_mock.side_effect = [
             Exception("Mock exception message"),
             (EXPECTED_BATCH_DATA, True),  # Second batch should not be reached

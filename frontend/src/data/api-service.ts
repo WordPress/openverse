@@ -63,6 +63,7 @@ export interface ApiService {
   client: AxiosInstance
   query<T = unknown>(
     resource: string,
+    slug: string,
     params: Record<string, string>
   ): Promise<AxiosResponse<T>>
   get<T = unknown>(
@@ -138,19 +139,22 @@ export const createApiService = ({
 
     /**
      * @param resource - The endpoint of the resource
+     * @param slug - the optional additional endpoint, used for collections.
      * @param params - Url parameter object
      * @returns response  The API response object
      */
     query<T = unknown>(
       resource: string,
-      params: Record<string, string>
+      slug: string = "",
+      params: Record<string, string> = {}
     ): Promise<AxiosResponse<T>> {
-      return client.get(`${getResourceSlug(resource)}`, { params })
+      return client.get(`${getResourceSlug(resource)}${slug}`, { params })
     },
 
     /**
      * @param resource - The endpoint of the resource
      * @param slug - The sub-endpoint of the resource
+     * @param params - Url query parameter object
      * @returns Response The API response object
      */
     get<T = unknown>(

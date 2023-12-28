@@ -1,6 +1,11 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <template v-if="audio">
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="px-6 py-10 lg:px-10"
+    />
+    <template v-else-if="audio">
       <VSafetyWall v-if="isHidden" :media="audio" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="audio" />
@@ -33,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import {
   defineComponent,
   useContext,
@@ -60,10 +65,12 @@ import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
   components: {
+    VErrorSection,
     VAudioThumbnail,
     VSingleResultControls,
     VSafetyWall,
@@ -83,6 +90,9 @@ export default defineComponent({
     const route = useRoute()
 
     const audio = ref<AudioDetail | null>(singleResultStore.audio)
+    const fetchingError = computed(
+      () => singleResultStore.fetchState.fetchingError
+    )
 
     const { error: nuxtError } = useContext()
 
@@ -121,6 +131,7 @@ export default defineComponent({
 
     return {
       audio,
+      fetchingError,
 
       sendAudioEvent,
 
@@ -134,21 +145,3 @@ export default defineComponent({
   head: {},
 })
 </script>
-<style>
-.audio-page {
-  --wp-max-width: 940px;
-}
-.audio-page section,
-.audio-page aside {
-  max-width: var(--wp-max-width);
-  margin-right: auto;
-  margin-left: auto;
-}
-.audio-page .full-track .mx-16 {
-  @apply mt-6;
-  @apply px-4 md:px-0;
-  max-width: var(--wp-max-width);
-  margin-right: auto;
-  margin-left: auto;
-}
-</style>

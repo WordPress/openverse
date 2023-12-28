@@ -96,19 +96,19 @@ def test_MediaStore_falls_back_to_tmp_output_dir_variable(
 
 def test_MediaStore_includes_provider_in_output_file_string():
     image_store = image.ImageStore("test_provider")
-    assert type(image_store.output_path) == str
+    assert isinstance(image_store.output_path, str)
     assert "test_provider" in image_store.output_path
 
 
 def test_MediaStore_includes_media_type_in_output_file_string():
     image_store = image.ImageStore("test_provider")
-    assert type(image_store.output_path) == str
+    assert isinstance(image_store.output_path, str)
     assert "image" in image_store.output_path
 
 
 def test_MediaStore_includes_tsvsuffix_if_provided():
     image_store = image.ImageStore("test_provider", tsv_suffix="foo")
-    assert type(image_store.output_path) == str
+    assert isinstance(image_store.output_path, str)
     assert image_store.output_path.endswith("_foo.tsv")
 
 

@@ -1,7 +1,20 @@
 const { writeFile } = require("fs/promises")
 const os = require("os")
 
-const { camel } = require("case")
+/**
+ * Convert a kebab-case string (`image-title`) to camel case (`imageTitle`).
+ */
+function kebabToCamel(input) {
+  const split = input.split("-")
+  if (split.length === 1) {
+    return input
+  }
+
+  for (let i = 1; i < split.length; i++) {
+    split[i] = split[i][0].toUpperCase() + split[i].slice(1)
+  }
+  return split.join("")
+}
 
 /**
  * Mutates an object at the path with the value. If the path
@@ -19,7 +32,9 @@ exports.setToValue = function setValue(obj, path, value) {
   var o = obj
   while (a.length - 1) {
     var n = a.shift()
-    if (!(n in o)) o[n] = {}
+    if (!(n in o)) {
+      o[n] = {}
+    }
     o = o[n]
   }
   o[a[0]] = value
@@ -34,7 +49,7 @@ function replacer(_, match) {
   if (match.includes("-")) {
     console.warn("Found kebab-cased key in translation strings:", match)
   }
-  return `{${camel(match)}}`
+  return `{${kebabToCamel(match)}}`
 }
 
 /**

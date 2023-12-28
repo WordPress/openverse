@@ -4,9 +4,14 @@ import type { TSESLint } from "@typescript-eslint/utils"
  * ESLint `import` plugin configuration.
  */
 export = {
-  extends: ["plugin:import/recommended"],
+  extends: ["plugin:import/recommended", "plugin:import/typescript"],
   plugins: ["import"],
   rules: {
+    // `namespace` and `default` are handled by TypeScript
+    // There's no need to rely on ESLint for this
+    // https://github.com/import-js/eslint-plugin-import/issues/2878
+    "import/namespace": "off",
+    "import/default": "off",
     "import/newline-after-import": ["error"],
     "import/order": [
       "error",
@@ -65,6 +70,27 @@ export = {
     "import/extensions": ["error", "always", { js: "never", ts: "never" }],
   },
   overrides: [
+    {
+      files: ["frontend/**"],
+      settings: {
+        "import/resolver": {
+          typescript: {
+            project: "frontend/tsconfig.json",
+            extensions: [".js", ".ts", ".vue", ".png"],
+          },
+        },
+      },
+    },
+    {
+      files: ["packages/**"],
+      settings: {
+        "import/resolver": {
+          typescript: {
+            project: "packages/*/tsconfig.json",
+          },
+        },
+      },
+    },
     {
       files: ["frontend/.storybook/**"],
       rules: {

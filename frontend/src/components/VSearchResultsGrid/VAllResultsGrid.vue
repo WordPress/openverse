@@ -50,6 +50,7 @@
           :audio="item"
           :search-term="searchTerm"
           layout="box"
+          :size="isSm ? 'l' : 's'"
           :is-related="false"
         />
       </template>
@@ -131,6 +132,8 @@ export default defineComponent({
       isFilterVisible: isSidebarVisible,
     } = storeToRefs(uiStore)
 
+    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+
     return {
       searchTerm,
       isError,
@@ -145,6 +148,7 @@ export default defineComponent({
 
       isSidebarVisible,
       isSnackbarVisible,
+      isSm,
 
       isDetail,
     }

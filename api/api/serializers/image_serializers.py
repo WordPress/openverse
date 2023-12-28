@@ -1,3 +1,6 @@
+from typing import Literal
+from uuid import UUID
+
 from rest_framework import serializers
 
 from api.constants.field_order import field_position_map
@@ -13,7 +16,6 @@ from api.serializers.media_serializers import (
     get_hyperlinks_serializer,
     get_search_request_source_serializer,
 )
-from api.utils.url import add_protocol
 
 
 #######################
@@ -30,8 +32,8 @@ class ImageSearchRequestSerializer(
 ):
     """Parse and validate search query string parameters."""
 
-    fields_names = [
-        *MediaSearchRequestSerializer.fields_names,
+    field_names = [
+        *MediaSearchRequestSerializer.field_names,
         *ImageSearchRequestSourceSerializer.field_names,
         "category",
         "aspect_ratio",
@@ -116,13 +118,28 @@ class ImageSerializer(ImageHyperlinksSerializer, MediaSerializer):
 class OembedRequestSerializer(serializers.Serializer):
     """Parse and validate oEmbed parameters."""
 
-    url = serializers.CharField(
+    url = serializers.URLField(
+        allow_blank=False,
         help_text="The link to an image present in Openverse.",
     )
 
-    @staticmethod
-    def validate_url(value):
-        return add_protocol(value)
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+
+        url = data["url"]
+        if url.endswith("/"):
+            url = url[:-1]
+        identifier = url.rsplit("/", 1)[1]
+
+        try:
+            uuid = UUID(identifier)
+        except ValueError:
+            raise serializers.ValidationError(
+                {"Could not parse identifier from URL.": data["url"]}
+            )
+
+        data["identifier"] = uuid
+        return data
 
 
 class OembedSerializer(BaseModelSerializer):
@@ -133,14 +150,13 @@ class OembedSerializer(BaseModelSerializer):
     spec: https://oembed.com.
     """
 
-    version = serializers.ReadOnlyField(
+    version = serializers.SerializerMethodField(
         help_text="The oEmbed version number, always set to 1.0.",
-        default="1.0",
     )
-    type = serializers.ReadOnlyField(
+    type = serializers.SerializerMethodField(
         help_text="The resource type, always set to 'photo' for images.",
-        default="photo",
     )
+
     width = serializers.SerializerMethodField(
         help_text="The width of the image in pixels."
     )
@@ -155,6 +171,14 @@ class OembedSerializer(BaseModelSerializer):
         help_text="A direct link to the media creator.",  # copied from ``Image``
         source="creator_url",
     )
+
+    @staticmethod
+    def get_type(*_) -> Literal["photo"]:
+        return "photo"
+
+    @staticmethod
+    def get_version(*_) -> Literal["1.0"]:
+        return "1.0"
 
     class Meta:
         model = Image

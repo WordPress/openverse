@@ -1,6 +1,11 @@
 <template>
   <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <template v-if="image">
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="px-6 py-10 lg:px-10"
+    />
+    <template v-else-if="image">
       <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="image" />
@@ -37,23 +42,26 @@
         </figure>
 
         <section
+          v-if="isAdditionalSearchView"
+          class="grid grid-cols-1 grid-rows-[auto,1fr] sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6"
+        >
+          <VMediaInfo :media="image" class="min-w-0 sm:col-start-1" />
+          <VGetMediaButton
+            :media="image"
+            media-type="image"
+            class="row-start-1 mb-4 !w-full flex-initial sm:col-start-2 sm:mb-0 sm:mt-1 sm:!w-auto"
+          />
+        </section>
+        <section
+          v-else
           id="title-button"
           class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
         >
-          <VButton
-            as="VLink"
-            :href="image.foreign_landing_url"
-            variant="filled-pink"
-            class="description-bold mb-4 !w-full flex-initial md:mb-0 md:!w-max"
-            show-external-icon
-            :external-icon-size="6"
-            has-icon-end
-            size="large"
-            :send-external-link-click-event="false"
-            @click="sendGetMediaEvent"
-          >
-            {{ $t("imageDetails.weblink") }}
-          </VButton>
+          <VGetMediaButton
+            :media="image"
+            media-type="image"
+            class="mb-4 !w-full flex-initial md:mb-0 md:!w-max"
+          />
           <div class="description-bold flex flex-1 flex-col justify-center">
             <h1 class="description-bold md:heading-5 line-clamp-2">
               {{ image.title }}
@@ -90,7 +98,7 @@
     </template>
     <VBone
       v-else-if="isLoadingThumbnail"
-      class="me-auto ms-auto h-[500px] w-[500px]"
+      class="col-span-full row-span-full h-[500px] w-[500px] self-center"
     />
   </main>
 </template>
@@ -107,18 +115,19 @@ import {
   useRoute,
 } from "@nuxtjs/composition-api"
 
-import { IMAGE } from "~/constants/media"
+import { IMAGE, isAdditionalSearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
+import { isRetriable } from "~/utils/errors"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
-import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
@@ -126,17 +135,23 @@ import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
+import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
+import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
+
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 export default defineComponent({
   name: "VImageDetailsPage",
   components: {
+    VErrorSection,
+    VMediaInfo,
+    VGetMediaButton,
     VMediaDetails,
     VSingleResultControls,
     VSafetyWall,
     VBone,
-    VButton,
     VLink,
     VMediaReuse,
     VRelatedImages,
@@ -144,15 +159,15 @@ export default defineComponent({
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
-  // Fetching on the server is disabled because it is
-  // handled by the `singleResultMiddleware`.
-  fetchOnServer: false,
   setup() {
     const singleResultStore = useSingleResultStore()
 
     const route = useRoute()
 
     const image = ref<ImageDetail | null>(singleResultStore.image)
+    const fetchingError = computed(
+      () => singleResultStore.fetchState.fetchingError
+    )
 
     /**
      * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
@@ -168,7 +183,9 @@ export default defineComponent({
       const imageId = route.value.params.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
-        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+        if (fetchingError.value && !isRetriable(fetchingError.value)) {
+          nuxtError(fetchingError.value)
+        }
       } else {
         image.value = fetchedImage
         imageSrc.value = fetchedImage.thumbnail
@@ -210,7 +227,9 @@ export default defineComponent({
      * @param event - the image load event.
      */
     const onImageLoaded = (event: Event) => {
-      if (!(event.target instanceof HTMLImageElement) || !image.value) return
+      if (!(event.target instanceof HTMLImageElement) || !image.value) {
+        return
+      }
 
       isLoadingThumbnail.value = false
 
@@ -277,8 +296,16 @@ export default defineComponent({
       title: pageTitle.value,
     }))
 
+    const featureFlagStore = useFeatureFlagStore()
+    const isAdditionalSearchView = computed(() => {
+      return featureFlagStore.isOn("additional_search_views")
+    })
+
     return {
+      isAdditionalSearchView,
+
       image,
+      fetchingError,
       imageWidth,
       imageHeight,
       imageSrc,
@@ -303,6 +330,10 @@ export default defineComponent({
   },
   // Necessary for useMeta
   head: {},
+  methods: { isAdditionalSearchType },
+  // Fetching on the server is disabled because it is
+  // handled by the `singleResultMiddleware`.
+  fetchOnServer: false,
 })
 </script>
 

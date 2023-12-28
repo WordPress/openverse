@@ -7,7 +7,6 @@ import {
 } from "@storybook/addon-docs"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import { image } from "~~/test/unit/fixtures/image"
-import { base64Image } from "~~/test/unit/fixtures/base64Image"
 
 <Meta title="Components/VImageCell" components={VImageCell} />
 
@@ -17,7 +16,7 @@ export const Template = (args, { argTypes }) => ({
   template: `
     <ol class="flex flex-wrap gap-4">
       <VImageCell
-        :image="{ ...image, url: base64Image }"
+        :image="image"
         searchTerm="test"
         :aspect-ratio="aspectRatio"
         relatedTo="fake-uuid"
@@ -38,10 +37,6 @@ export const Template = (args, { argTypes }) => ({
     parameters={{
       viewport: { defaultViewport: "sm" },
     }}
-    args={{
-      aspectRatio: "intrinsic",
-      image: image,
-    }}
     argTypes={{
       aspectRatio: {
         options: ["square", "intrinsic"],
@@ -50,6 +45,10 @@ export const Template = (args, { argTypes }) => ({
       image: {
         control: { type: "object" },
       },
+    }}
+    args={{
+      aspectRatio: "intrinsic",
+      image: { ...image, thumbnail: "/openverse-default.jpg" },
     }}
   >
     {Template.bind({})}

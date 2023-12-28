@@ -12,20 +12,17 @@ export const project: TSESLint.Linter.Config = {
     node: true,
   },
   parser: "vue-eslint-parser",
-  parserOptions: {
-    parser: "@typescript-eslint/parser",
-  },
   extends: [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
     "plugin:eslint-comments/recommended",
     "plugin:jsonc/recommended-with-jsonc",
     require.resolve("./custom"),
     require.resolve("./vue"),
     require.resolve("./import"),
+    require.resolve("./typescript"),
     "prettier",
   ],
-  plugins: ["@typescript-eslint", "tsdoc", "unicorn"],
+  plugins: ["unicorn"],
   settings: {
     "vue-i18n": {
       localeDir: "./frontend/src/locales/*.{json}",
@@ -36,39 +33,13 @@ export const project: TSESLint.Linter.Config = {
     semi: ["error", "never"],
     "no-console": "off",
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
-    "@typescript-eslint/no-var-requires": ["off"],
+    "unicorn/switch-case-braces": ["error"],
+    curly: ["error", "all"],
   },
   overrides: [
     {
-      files: ["*.ts"],
-      rules: {
-        "tsdoc/syntax": "error",
-      },
-    },
-    {
       files: ["*.json", "*.json5", "*.jsonc"],
       parser: "jsonc-eslint-parser",
-    },
-    {
-      files: ["frontend/**"],
-      settings: {
-        "import/resolver": {
-          typescript: {
-            project: "frontend/tsconfig.json",
-            extensions: [".js", ".ts", ".vue", ".png"],
-          },
-        },
-      },
-    },
-    {
-      files: ["packages/**"],
-      settings: {
-        "import/resolver": {
-          typescript: {
-            project: "packages/*/tsconfig.json",
-          },
-        },
-      },
     },
     {
       env: { jest: true },
@@ -128,7 +99,6 @@ export const project: TSESLint.Linter.Config = {
         "unicorn/filename-case": "off",
       },
     },
-
     {
       files: ["frontend/src/components/**"],
       rules: {

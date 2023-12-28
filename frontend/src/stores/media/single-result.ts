@@ -1,8 +1,5 @@
 import { defineStore } from "pinia"
 
-import axios from "axios"
-
-import type { FetchState } from "~/types/fetch-state"
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -15,15 +12,15 @@ import type { SupportedMediaType } from "~/constants/media"
 import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
 import { useProviderStore } from "~/stores/provider"
-import { log } from "~/utils/console"
+import { parseFetchingError } from "~/utils/errors"
 
-import type { NuxtError } from "@nuxt/types"
+import type { FetchingError, FetchState } from "~/types/fetch-state"
 
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
   mediaId: string | null
   mediaItem: DetailFromMediaType<SupportedMediaType> | null
-  fetchState: FetchState<NuxtError>
+  fetchState: FetchState
 }
 
 export const useSingleResultStore = defineStore("single-result", {
@@ -50,7 +47,7 @@ export const useSingleResultStore = defineStore("single-result", {
   },
 
   actions: {
-    _endFetching(error?: NuxtError) {
+    _endFetching(error?: FetchingError) {
       this.fetchState.isFetching = false
       this.fetchState.fetchingError = error || null
     },
@@ -59,7 +56,7 @@ export const useSingleResultStore = defineStore("single-result", {
       this.fetchState.fetchingError = null
     },
 
-    _updateFetchState(action: "start" | "end", option?: NuxtError) {
+    _updateFetchState(action: "start" | "end", option?: FetchingError) {
       action === "start" ? this._startFetching() : this._endFetching(option)
     },
 
@@ -111,7 +108,9 @@ export const useSingleResultStore = defineStore("single-result", {
      * itself later.
      */
     setMediaById(type: SupportedMediaType, id: string) {
-      if (this.mediaId === id && isMediaDetail(this.mediaItem, type)) return
+      if (this.mediaId === id && isMediaDetail(this.mediaItem, type)) {
+        return
+      }
       const existingItem = useMediaStore().getItemById(type, id)
       if (existingItem) {
         this.setMediaItem(existingItem)
@@ -169,22 +168,13 @@ export const useSingleResultStore = defineStore("single-result", {
 
         return item as DetailFromMediaType<MediaType>
       } catch (error) {
-        this.reset()
-        const statusCode = getErrorStatusCode(error)
-        const message = `Error fetching single ${type} item with id ${id}`
-
-        this._updateFetchState("end", { statusCode, message })
-
-        log(`${message}. Sending error to Sentry: ${JSON.stringify(error)}`)
-        this.$nuxt.$sentry.captureException(error)
-
+        const errorData = parseFetchingError(error, type, "single-result", {
+          id,
+        })
+        this._updateFetchState("end", errorData)
+        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
         return null
       }
     },
   },
 })
-
-const getErrorStatusCode = (error: unknown) =>
-  axios.isAxiosError(error) && error.response?.status
-    ? error.response.status
-    : 404

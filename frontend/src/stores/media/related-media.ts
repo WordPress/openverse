@@ -1,17 +1,16 @@
 import { defineStore } from "pinia"
-import axios from "axios"
 
+import { parseFetchingError } from "~/utils/errors"
 import { initServices } from "~/stores/media/services"
-import type { FetchState } from "~/types/fetch-state"
+
+import type { FetchingError, FetchState } from "~/types/fetch-state"
 import type { Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
-
-import type { NuxtError } from "@nuxt/types"
 
 interface RelatedMediaState {
   mainMediaId: null | string
   media: Media[]
-  fetchState: FetchState<NuxtError>
+  fetchState: FetchState
 }
 
 export const useRelatedMediaStore = defineStore("related-media", {
@@ -29,7 +28,7 @@ export const useRelatedMediaStore = defineStore("related-media", {
   },
 
   actions: {
-    _endFetching(error?: NuxtError) {
+    _endFetching(error?: FetchingError) {
       this.fetchState.fetchingError = error || null
       this.fetchState.hasStarted = true
       this.fetchState.isFetching = false
@@ -60,13 +59,12 @@ export const useRelatedMediaStore = defineStore("related-media", {
 
         return this.media.length
       } catch (error) {
-        const message = `Could not fetch related ${mediaType} for id ${id}.`
-        const statusCode =
-          axios.isAxiosError(error) && error.response?.status
-            ? error.response.status
-            : 404
-        this._endFetching({ message, statusCode })
-        this.$nuxt.$sentry.captureException(error)
+        const errorData = parseFetchingError(error, mediaType, "related", {
+          id,
+        })
+
+        this._endFetching(errorData)
+        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
         return null
       }
     },

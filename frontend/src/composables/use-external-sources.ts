@@ -31,7 +31,7 @@ export const useExternalSources = () => {
     return IMAGE
   })
   const externalSources = computed(() => {
-    const query = searchStore.searchQueryParams
+    const query = searchStore.apiSearchQueryParams
     const type = externalSourcesType.value
     return getAdditionalSources(type, query)
   })

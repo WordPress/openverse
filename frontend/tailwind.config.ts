@@ -99,6 +99,7 @@ export default {
       8: "2.00rem",
       9: "2.25rem",
       10: "2.50rem",
+      11: "2.75rem",
       12: "3.00rem",
       14: "3.50rem",
       15: "3.75rem",
@@ -119,6 +120,7 @@ export default {
     ringWidth: {
       DEFAULT: "1.5px", // aka slim
       bold: "3.0px",
+      1: "1px",
       0: "0",
     },
     borderWidth: {
@@ -229,6 +231,7 @@ export default {
       },
       outlineWidth: {
         1.5: "1.5px",
+        3: "3px",
       },
       typography: (theme: PluginAPI["theme"]) => ({
         DEFAULT: {

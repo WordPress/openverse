@@ -56,6 +56,11 @@ class FlickrSubProviderAuditor:
         # TODO: Currently contains graphic medical imagery. Reconsider once
         # content safety progress is made.
         "61270229@N05",
+        # TODO: Internet Archive Book Images. Latest images were uploaded in
+        # 2015 and have not been previously ingested. Reconsider adding this
+        # subprovider when we have the ability to backfill these images.
+        # https://github.com/WordPress/openverse/issues/3490#issuecomment-1857072575  # noqa: E501
+        "126377022@N07",
     ]
 
     def __init__(self):

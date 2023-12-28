@@ -1,4 +1,4 @@
-import useragent, { Details as UADetails } from "express-useragent"
+import { parse, Details as UADetails } from "express-useragent"
 
 import type { Plugin } from "@nuxt/types"
 
@@ -12,7 +12,7 @@ const uaParsePlugin: Plugin = (context, inject) => {
   }
   let ua: UADetails | null
   if (typeof userAgent == "string") {
-    ua = useragent.parse(userAgent)
+    ua = parse(userAgent)
   } else {
     ua = null
   }

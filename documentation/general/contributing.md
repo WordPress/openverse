@@ -95,10 +95,10 @@ that do not involve working with code at all. Some of them are listed below.
 
 If you'd like to contribute to the design, feel free to propose a solution to an
 existing problem labeled with
-[Needs Design](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22needs+design%22),
+[Needs Design](https://github.com/WordPress/openverse/issues?q=is%3Aopen+is%3Aissue+label%3A%22design%3A+needed%22+),
 or share an idea if you think it meets Openverse's goals.
 
-The [WordPress Design team](http://make.wordpress.org/design/) uses
+The [WordPress Design team](https://make.wordpress.org/design/) uses
 [Figma](https://www.figma.com/) to collaborate and share work for all WordPress
 projects. If you are not familiar with designing for WordPress, please carefully
 read the [design handbook](https://make.wordpress.org/design/handbook/). Once
@@ -123,14 +123,14 @@ contributing this information back to the documentation is very much
 appreciated.
 
 Once you are done and ready to share your idea,
-[create an issue with the `design` label and fill in the template](https://github.com/WordPress/openverse-frontend/issues/new?assignees=&labels=🖼️+aspect%3A+design%2C✨+goal%3A+improvement%2C+🚦+status%3A+awaiting+triage&template=feature_request.md&title=<Replace+this+with+actual+title>).
+[create an issue with the `design` label and fill in the template](https://github.com/WordPress/openverse/issues/new?assignees=&labels=🖼️+aspect%3A+design%2C✨+goal%3A+improvement%2C+🚦+status%3A+awaiting+triage&template=feature_request.md&title=<Replace+this+with+actual+title>).
 Please be as specific and concise as possible and feel free to add mockups,
 prototypes, videos, sketches, and anything that makes your idea easier to
 understand.
 
 After creating the issue, it will be labeled with `aspect: design`. Please
 reference
-[existing design issues](https://github.com/WordPress/openverse-frontend/issues?q=is%3Aopen+is%3Aissue+label%3A%22%F0%9F%96%BC%EF%B8%8F+aspect%3A+design%22)
+[existing design issues](https://github.com/WordPress/openverse/issues?q=is%3Aopen+is%3Aissue+label%3A%22%F0%9F%96%BC%EF%B8%8F+aspect%3A+design%22)
 as a guide for how to describe your solution and to understand how the
 discussion evolves before implementation begins.
 
@@ -142,7 +142,7 @@ An overview of Openverse translations is here:
 [https://translate.wordpress.org/projects/meta/openverse/](https://translate.wordpress.org/projects/meta/openverse/)
 
 A getting started guide for translating on GlotPress (the software behind
-[translate.wordpress.org](http://translate.wordpress.org)) is here:
+[translate.wordpress.org](https://translate.wordpress.org)) is here:
 [https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started](https://make.wordpress.org/polyglots/handbook/translating/glotpress-translate-wordpress-org/#getting-started)
 
 ### Providers

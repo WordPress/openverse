@@ -89,13 +89,13 @@ class SmkDataIngester(ProviderDataIngester):
         if created_date := item.get("created"):
             meta_data["created_date"] = created_date
         collection = item.get("collection")
-        if type(collection) == list:
+        if isinstance(collection, list):
             meta_data["collection"] = ",".join(collection)
         techniques = item.get("techniques")
-        if type(techniques) == list:
+        if isinstance(techniques, list):
             meta_data["techniques"] = ",".join(techniques)
         colors = item.get("colors")
-        if type(colors) == list:
+        if isinstance(colors, list):
             meta_data["colors"] = ",".join(colors)
         return meta_data
 
@@ -126,6 +126,8 @@ class SmkDataIngester(ProviderDataIngester):
             return None
 
         thumbnail_url = data.get("image_thumbnail")
+        if thumbnail_url:
+            thumbnail_url = thumbnail_url.replace(" ", "%20")
         height = data.get("image_height")
         width = data.get("image_width")
         filesize = data.get("image_size") or data.get("size")
@@ -135,7 +137,7 @@ class SmkDataIngester(ProviderDataIngester):
             "foreign_landing_url": foreign_landing_url,
             "license_info": license_info,
             "title": self._get_title(data),
-            "url": url,
+            "url": url.replace(" ", "%20"),
             "thumbnail_url": thumbnail_url,
             "height": height,
             "width": width,

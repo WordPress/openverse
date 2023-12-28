@@ -40,4 +40,3 @@ UPDATE_BATCH_QUERY = """
     );
     """
 DROP_TABLE_QUERY = "DROP TABLE IF EXISTS {temp_table_name} CASCADE;"
-RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731

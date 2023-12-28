@@ -371,7 +371,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                         sql=(SCRIPT_DIR / f"{source_name}.sql").read_text(),
                         doc_md=f"Load iNaturalist {source_name} from s3 to postgres",
                         execution_timeout=timedelta(minutes=10),
-                    ),
+                    )
 
             with TaskGroup(group_id="load_image_data") as loader_tasks:
                 # Using the existing set up, but the indexes on the temporary table

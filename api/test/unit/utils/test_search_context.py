@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 def test_no_results(media_type_config):
     search_context = SearchContext.build([], media_type_config.origin_index)
 
-    assert search_context == SearchContext(set(), set())
+    assert search_context == SearchContext(list(), set())
 
 
 @pytest.mark.parametrize(
@@ -48,27 +48,25 @@ def test_sensitive_text(
     )
 
     results = [maybe_sensitive_text_hit] + [hit for _, hit in clear_results]
+    result_ids = [result.identifier for result in results]
 
     if not setting_enabled:
-        es_host = settings.ES.transport.kwargs["host"]
-        es_port = settings.ES.transport.kwargs["port"]
-
         with pook.post(
-            f"http://{es_host}:{es_port}/{media_type_config.filtered_index}/_search",
+            f"{settings.ES_ENDPOINT}/{media_type_config.filtered_index}/_search",
             reply=500,
         ) as mock:
             search_context = SearchContext.build(
-                results, media_type_config.origin_index
+                result_ids, media_type_config.origin_index
             )
             assert (
                 mock.total_matches == 0
             ), "There should be zero requests to ES if the setting is disabled"
         pook.off()
     else:
-        search_context = SearchContext.build(results, media_type_config.origin_index)
+        search_context = SearchContext.build(result_ids, media_type_config.origin_index)
 
     assert search_context == SearchContext(
-        {r.identifier for r in results},
+        [r.identifier for r in results],
         {maybe_sensitive_text_model.identifier}
         if has_sensitive_text and setting_enabled
         else set(),

@@ -10,11 +10,17 @@ const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(
 export = {
   extends: [
     "plugin:vue/recommended",
+    "plugin:vue/vue3-recommended",
     "plugin:vuejs-accessibility/recommended",
     "plugin:@intlify/vue-i18n/recommended",
   ],
   plugins: ["vue", "vuejs-accessibility", "@intlify/vue-i18n"],
   rules: {
+    // Enable these rules after the Nuxt 3 migration
+    "vue/no-deprecated-dollar-listeners-api": "off",
+    "vue/no-v-for-template-key-on-child": "off",
+    "vue/no-deprecated-v-on-native-modifier": "off",
+
     "vue/max-attributes-per-line": "off",
     "vue/require-prop-types": "off",
     "vue/require-default-prop": "off",

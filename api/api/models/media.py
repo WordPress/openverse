@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import format_html
 
-from elasticsearch import Elasticsearch, TransportError
+from elasticsearch import Elasticsearch, NotFoundError
 
 from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
@@ -275,16 +275,14 @@ class PerformIndexUpdateMixin:
                     refresh=True,
                     **es_method_args,
                 )
-            except TransportError as e:
-                if e.status_code == 404:
-                    # This is expected for the filtered index, but we should still
-                    # log, just in case.
-                    logger.warning(
-                        f"Document with _id {document_id} not found "
-                        f"in {index} index. No update performed."
-                    )
-                else:
-                    raise e
+            except NotFoundError:
+                # This is expected for the filtered index, but we should still
+                # log, just in case.
+                logger.warning(
+                    f"Document with _id {document_id} not found "
+                    f"in {index} index. No update performed."
+                )
+                continue
 
 
 class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
@@ -353,7 +351,7 @@ class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
         db_constraint=False,
         db_column="identifier",
         related_name="mature_abstract_media",
-        help_text="The reference to the mature media.",
+        help_text="The reference to the sensitive media.",
     )
     """
     Sub-classes must override this field to point to a concrete sub-class of

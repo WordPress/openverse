@@ -1,9 +1,9 @@
-from test.factory.models.media import MediaFactory
+from test.factory.models.media import MediaFactory, MediaReportFactory
 
 import factory
 from factory.django import DjangoModelFactory
 
-from api.models.image import Image, MatureImage
+from api.models.image import Image, ImageReport, MatureImage
 
 
 class MatureImageFactory(DjangoModelFactory):
@@ -18,3 +18,10 @@ class ImageFactory(MediaFactory):
 
     class Meta:
         model = Image
+
+
+class ImageReportFactory(MediaReportFactory):
+    class Meta:
+        model = ImageReport
+
+    media_obj = factory.SubFactory(ImageFactory)

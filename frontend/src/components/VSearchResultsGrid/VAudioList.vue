@@ -3,7 +3,7 @@
   <ol
     :aria-label="collectionLabel"
     class="-mx-2 flex flex-col md:-mx-4"
-    :class="isRelated ? 'gap-4' : 'gap-2 md:gap-1'"
+    :class="kind === 'related' ? 'gap-4' : 'gap-2 md:gap-1'"
   >
     <VAudioResult
       v-for="audio in results"
@@ -12,7 +12,7 @@
       :audio="audio"
       layout="row"
       :size="audioTrackSize"
-      :is-related="isRelated"
+      :kind="kind"
     />
   </ol>
 </template>
@@ -21,6 +21,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
+import type { ResultKind } from "~/types/result"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
@@ -37,8 +38,8 @@ export default defineComponent({
       type: Array as PropType<AudioDetail[]>,
       default: () => [],
     },
-    isRelated: {
-      type: Boolean,
+    kind: {
+      type: String as PropType<ResultKind>,
       required: true,
     },
     /**
@@ -53,12 +54,12 @@ export default defineComponent({
     const uiStore = useUiStore()
 
     const audioTrackSize = computed(() => {
-      if (props.isRelated) {
-        return uiStore.isBreakpoint("md") ? "l" : "s"
+      if (props.kind === "related") {
+        return uiStore.isBreakpoint("sm") ? "m" : "s"
       } else {
-        return !uiStore.isDesktopLayout
+        return !uiStore.isBreakpoint("sm")
           ? "s"
-          : uiStore.isFilterVisible
+          : uiStore.isBreakpoint("xl")
           ? "l"
           : "m"
       }

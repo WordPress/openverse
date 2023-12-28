@@ -10,12 +10,18 @@
     "esModuleInterop": true,
     /* Strict Type-Checking Options */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@openverse/*": ["./packages/*/src"]
-    }
+    },
+
+    /**
+     * Disable these in favour of more flexible ESLint rule.
+     *
+     * https://typescript-eslint.io/rules/no-unused-vars/#benefits-over-typescript
+     */
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   }
 }

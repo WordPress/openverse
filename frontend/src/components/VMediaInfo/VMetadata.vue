@@ -1,70 +1,79 @@
 <template>
-  <dl :class="media.frontendMediaType">
+  <dl v-if="isSm" class="metadata grid gap-8" :style="columnCount">
     <div v-for="datum in metadata" :key="`${datum.label}`">
-      <dt>{{ $t(datum.label) }}</dt>
-      <dd>
-        <VLink v-if="datum.url" :href="datum.url" class="text-pink">{{
-          datum.value
-        }}</VLink>
-        <span v-else>{{ datum.value }}</span>
-      </dd>
+      <dt class="label-regular mb-1 ps-1">{{ $t(datum.label) }}</dt>
+      <VMetadataValue
+        :datum="datum"
+        @click="sendVisitSourceLinkEvent(datum.source)"
+      />
     </div>
+  </dl>
+  <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2">
+    <template v-for="datum in metadata">
+      <dt :key="`${datum.label}`" class="label-regular pt-1">
+        {{ $t(datum.label) }}
+      </dt>
+      <VMetadataValue
+        :key="`${datum.label}-value`"
+        :datum="datum"
+        @click="sendVisitSourceLinkEvent(datum.source)"
+      />
+    </template>
   </dl>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { computed, defineComponent, PropType } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
-import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
+import type { Metadata } from "~/types/media"
+import { useAnalytics } from "~/composables/use-analytics"
+import { useUiStore } from "~/stores/ui"
 
-import VLink from "~/components/VLink.vue"
+import VMetadataValue from "~/components/VMediaInfo/VMetadataValue.vue"
 
 export default defineComponent({
   name: "VMetadata",
-  components: { VLink },
+  components: { VMetadataValue },
   props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
     metadata: {
       type: Array as PropType<Metadata[]>,
       required: true,
     },
   },
+  setup(props) {
+    const route = useRoute()
+    const uiStore = useUiStore()
+
+    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+
+    const columnCount = computed(() => ({
+      "--column-count": props.metadata.length,
+    }))
+
+    const { sendCustomEvent } = useAnalytics()
+    const sendVisitSourceLinkEvent = (source?: string) => {
+      if (!source) {
+        return
+      }
+      sendCustomEvent("VISIT_SOURCE_LINK", {
+        id: route.value.params.id,
+        source,
+      })
+    }
+
+    return {
+      sendVisitSourceLinkEvent,
+      isSm,
+      columnCount,
+    }
+  },
 })
 </script>
 
 <style scoped>
-dl.image {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  grid-gap: 1rem;
-}
-
-.image dt,
-.image dd {
-  @apply text-sm md:text-base;
-}
-
-.image dd {
-  @apply mt-2 font-semibold;
-}
-
-dl.audio {
-  @apply grid gap-4 lg:gap-5;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-}
-dl.audio div {
-  display: flex;
-  flex-direction: column;
-}
-
-.audio dt {
-  @apply text-base font-normal;
-  display: inline-block;
-}
-
-.audio dd {
-  @apply pt-2 text-base font-semibold capitalize leading-snug;
+@screen sm {
+  .metadata {
+    grid-template-columns: repeat(var(--column-count, 4), fit-content(10rem));
+  }
 }
 </style>

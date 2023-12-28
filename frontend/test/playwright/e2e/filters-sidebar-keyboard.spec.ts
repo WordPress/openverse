@@ -35,9 +35,8 @@ for (const dir of languageDirections) {
       await setBreakpointCookie(page, "lg")
       /**
        * To simplify finding the last focusable element in the filters sidebar,
-       * we use the image search page. After the removal of the "searchBy" filter,
-       * the last element on the all media search page is the "license explanation"
-       * button, not a checkbox.
+       * we use the image search page. The last element on the all media search
+       * page is the "license explanation" button, not a checkbox.
        */
       await page.goto(pathWithDir("/search/image?q=birds", dir))
     })

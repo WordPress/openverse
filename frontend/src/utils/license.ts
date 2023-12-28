@@ -3,7 +3,6 @@
  * For any changes made here, please make the corresponding changes in the
  * backend, or open an issue to track it.
  */
-import { camel } from "case"
 
 import type {
   License,
@@ -15,6 +14,7 @@ import {
   DEPRECATED_CC_LICENSES,
   PUBLIC_DOMAIN_MARKS,
 } from "~/constants/license"
+import { camelCase } from "~/utils/case"
 
 import type VueI18n from "vue-i18n"
 
@@ -36,7 +36,9 @@ export const getFullLicenseName = (
 
   // PDM has no abbreviation
   if (license === "pdm" && i18n) {
-    licenseName = i18n.t(`licenseReadableNames.${camel(license)}`).toString()
+    licenseName = i18n
+      .t(`licenseReadableNames.${camelCase(license)}`)
+      .toString()
   } else {
     licenseName = license.toUpperCase().replace("SAMPLING", "Sampling")
   }

@@ -1,24 +1,12 @@
 import uuid
-from test.factory.models.audio import AudioFactory
-from test.factory.models.image import ImageFactory
-from typing import Literal, Union
-from unittest.mock import MagicMock, call, patch
 
 from django.core.exceptions import ObjectDoesNotExist
 
+import pook
 import pytest
-from elasticsearch import TransportError
+from elasticsearch import BadRequestError, NotFoundError
 
-from api.models import (
-    Audio,
-    AudioReport,
-    DeletedAudio,
-    DeletedImage,
-    Image,
-    ImageReport,
-    MatureAudio,
-    MatureImage,
-)
+from api.models import DeletedAudio, DeletedImage, MatureAudio, MatureImage
 from api.models.media import (
     DEINDEXED,
     DMCA,
@@ -33,158 +21,109 @@ from api.models.media import (
 
 pytestmark = pytest.mark.django_db
 
-MediaType = Union[Literal["audio"], Literal["image"]]
-
 reason_params = pytest.mark.parametrize("reason", [DMCA, MATURE, OTHER])
 
 
-@pytest.mark.parametrize(
-    "media_type, report_class", [("image", ImageReport), ("audio", AudioReport)]
-)
 @reason_params
-def test_cannot_report_invalid_identifier(media_type, report_class, reason):
+def test_cannot_report_invalid_identifier(media_type_config, reason):
     with pytest.raises(ObjectDoesNotExist):
-        report_class.objects.create(
+        media_type_config.report_factory.create(
             media_obj_id=uuid.uuid4(),
             reason=reason,
         )
 
 
-@pytest.mark.parametrize(
-    "media_type, report_class, mature_class, deleted_class, model_factory",
-    [
-        ("image", ImageReport, MatureImage, DeletedImage, ImageFactory),
-        ("audio", AudioReport, MatureAudio, DeletedAudio, AudioFactory),
-    ],
-)
 @reason_params
 def test_pending_reports_have_no_subreport_models(
-    media_type: MediaType,
-    report_class,
-    mature_class,
-    deleted_class,
+    media_type_config,
     reason,
-    model_factory,
 ):
-    media = model_factory.create()
-    report = report_class.objects.create(media_obj=media, reason=reason)
+    media = media_type_config.model_factory.create()
+    report = media_type_config.report_factory.create(media_obj=media, reason=reason)
 
     assert report.status == PENDING
-    assert not mature_class.objects.filter(media_obj=media).exists()
-    assert not deleted_class.objects.filter(media_obj=media).exists()
+    assert not media_type_config.mature_class.objects.filter(media_obj=media).exists()
+    assert not media_type_config.deleted_class.objects.filter(media_obj=media).exists()
 
 
-@pytest.mark.parametrize(
-    "media_type, report_class, mature_class, model_factory",
-    [
-        ("image", ImageReport, MatureImage, ImageFactory),
-        ("audio", AudioReport, MatureAudio, AudioFactory),
-    ],
-)
-def test_mature_filtering_creates_mature_image_instance(
-    media_type: MediaType, report_class, mature_class, model_factory
-):
-    media = model_factory.create()
-    mock_es = MagicMock()
-    with patch("django.conf.settings.ES", mock_es):
-        report_class.objects.create(
-            media_obj=media, reason=MATURE, status=MATURE_FILTERED
-        )
+def test_mature_filtering_creates_mature_image_instance(media_type_config, settings):
+    media = media_type_config.model_factory.create()
 
-    assert mature_class.objects.filter(media_obj=media).exists()
-    mock_es.update.assert_has_calls(
-        [
-            call(
-                id=media.id,
-                index=media_type,
-                doc={"mature": True},
-                refresh=True,
-            ),
-            call(
-                id=media.id,
-                index=f"{media_type}-filtered",
-                doc={"mature": True},
-                refresh=True,
-            ),
-        ]
+    media_type_config.report_factory.create(
+        media_obj=media, reason=MATURE, status=MATURE_FILTERED
     )
+
+    assert media_type_config.mature_class.objects.filter(media_obj=media).exists()
+
+    for index in media_type_config.indexes:
+        doc = settings.ES.get(
+            index=index,
+            id=media.pk,
+            # get defaults to "realtime", meaning it ignores refreshes
+            # disable it here to implicitly test that the index was refreshed
+            # when the document was updated
+            realtime=False,
+        )
+        assert doc["found"]
+        assert doc["_source"]["mature"]
+
     assert media.mature
 
 
-@pytest.mark.parametrize(
-    "media_type, report_class, mature_class, model_factory",
-    [
-        ("image", ImageReport, MatureImage, ImageFactory),
-        ("audio", AudioReport, MatureAudio, AudioFactory),
-    ],
-)
-def test_deleting_mature_image_instance_resets_mature_flag(
-    media_type: MediaType, report_class, mature_class, model_factory
-):
-    media = model_factory.create()
-    mock_es = MagicMock()
-    with patch("django.conf.settings.ES", mock_es):
-        # Mark as mature.
-        report_class.objects.create(
-            media_obj=media, reason=MATURE, status=MATURE_FILTERED
-        )
-        # Delete mature instance.
-        mature_class.objects.get(media_obj=media).delete()
-
-    mock_es.update.assert_has_calls(
-        [
-            call(
-                id=media.pk,
-                refresh=True,
-                index=media_type,
-                doc={"mature": True},
-            ),
-            call(
-                id=media.pk,
-                refresh=True,
-                index=f"{media_type}-filtered",
-                doc={"mature": True},
-            ),
-            call(
-                id=media.pk,
-                refresh=True,
-                index=media_type,
-                doc={"mature": False},
-            ),
-            call(
-                id=media.pk,
-                refresh=True,
-                index=f"{media_type}-filtered",
-                doc={"mature": False},
-            ),
-        ],
+def test_deleting_mature_image_instance_resets_mature_flag(media_type_config, settings):
+    media = media_type_config.model_factory.create()
+    # Mark as mature.
+    media_type_config.report_factory.create(
+        media_obj=media, reason=MATURE, status=MATURE_FILTERED
     )
+    # Delete mature instance.
+    media_type_config.mature_class.objects.get(media_obj=media).delete()
+
+    # Assert the media are back to mature=False
+    # The previous test asserts they get set to mature=True
+    # in the first place, so it's not necessary to add those
+    # assertions here
+    for index in media_type_config.indexes:
+        doc = settings.ES.get(
+            index=index,
+            id=media.pk,
+            # get defaults to "realtime", meaning it ignores refreshes
+            # disable it here to implicitly test that the index was refreshed
+            # when the document was updated
+            realtime=False,
+        )
+        assert doc["found"]
+        assert not doc["_source"]["mature"]
+
     media.refresh_from_db()
     assert not media.mature
 
 
-@pytest.mark.parametrize(
-    "media_type, media_class, report_class, deleted_class, model_factory",
-    [
-        ("image", Image, ImageReport, DeletedImage, ImageFactory),
-        ("audio", Audio, AudioReport, DeletedAudio, AudioFactory),
-    ],
-)
-def test_deindexing_creates_deleted_image_instance(
-    media_type: MediaType, media_class, report_class, deleted_class, model_factory
-):
-    media = model_factory.create()
+def test_deindexing_creates_deleted_image_instance(media_type_config, settings):
+    media = media_type_config.model_factory.create()
     # Extracting field values because ``media`` will be deleted.
     image_id = media.id
     identifier = media.identifier
 
-    mock_es = MagicMock()
-    with patch("django.conf.settings.ES", mock_es):
-        report_class.objects.create(media_obj=media, reason=DMCA, status=DEINDEXED)
+    media_type_config.report_factory.create(
+        media_obj=media, reason=DMCA, status=DEINDEXED
+    )
 
-    assert deleted_class.objects.filter(media_obj=media).exists()
-    assert not media_class.objects.filter(identifier=identifier).exists()
-    assert mock_es.delete.called_with(id=image_id)
+    assert media_type_config.deleted_class.objects.filter(media_obj=media).exists()
+    assert not media_type_config.model_class.objects.filter(
+        identifier=identifier
+    ).exists()
+
+    for index in media_type_config.indexes:
+        with pytest.raises(NotFoundError):
+            settings.ES.get(
+                index=index,
+                id=image_id,
+                # get defaults to "realtime", meaning it ignores refreshes
+                # disable it here to implicitly test that the index was refreshed
+                # when the document was updated
+                realtime=False,
+            )
 
 
 def test_all_deleted_media_covered():
@@ -205,202 +144,132 @@ def test_all_mature_media_covered():
     assert set(AbstractMatureMedia.__subclasses__()) == {MatureAudio, MatureImage}
 
 
-@pytest.mark.parametrize(
-    ("model_factory", "deleted_media_class", "indexes"),
-    (
-        (ImageFactory, DeletedImage, ("image", "image-filtered")),
-        (AudioFactory, DeletedAudio, ("audio", "audio-filtered")),
-    ),
-)
 def test_deleted_media_deletes_from_all_indexes(
-    settings, model_factory, deleted_media_class, indexes
+    media_type_config,
+    settings,
 ):
-    settings.ES = MagicMock()
-    media = model_factory.create()
+    media = media_type_config.model_factory.create()
     # Need to retrieve this here because the creation of the
     # deleted media class below will delete this object, rendering
     # the pk empty by the time we assert the calls
     media_id = media.pk
 
-    instance = deleted_media_class(
+    instance = media_type_config.deleted_class(
         media_obj=media,
     )
 
     instance.save()
 
-    settings.ES.delete.assert_has_calls(
-        (call(index=index, id=media_id, refresh=True) for index in indexes),
-        # The order does not matter
-        any_order=True,
-    )
-
-
-@pytest.mark.parametrize(
-    ("model_factory", "deleted_media_class", "indexes"),
-    (
-        (ImageFactory, DeletedImage, ("image", "image-filtered")),
-        (AudioFactory, DeletedAudio, ("audio", "audio-filtered")),
-    ),
-)
-def test_deleted_media_ignores_elasticsearch_404_errors(
-    settings, model_factory, deleted_media_class, indexes
-):
-    settings.ES = MagicMock()
-    error = TransportError(404, "Whoops, no document!", {})
-    settings.ES.delete.side_effect = [None, error]
-    media = model_factory.create()
-    # Need to retrieve this here because the creation of the
-    # deleted media class below will delete this object, rendering
-    # the pk empty by the time we assert the calls
-    media_id = media.pk
-
-    instance = deleted_media_class(
-        media_obj=media,
-    )
-
-    instance.save()
-
-    settings.ES.delete.assert_has_calls(
-        (call(index=index, id=media_id, refresh=True) for index in indexes),
-        # The order does not matter
-        any_order=True,
-    )
-
-
-@pytest.mark.parametrize(
-    ("model_factory", "deleted_media_class", "indexes"),
-    (
-        (ImageFactory, DeletedImage, ("image", "image-filtered")),
-        (AudioFactory, DeletedAudio, ("audio", "audio-filtered")),
-    ),
-)
-def test_deleted_media_raises_elasticsearch_400_errors(
-    settings, model_factory, deleted_media_class, indexes
-):
-    settings.ES = MagicMock()
-    error = TransportError(400, "Terrible request, no thanks", {})
-    settings.ES.delete.side_effect = [None, error]
-    media = model_factory.create()
-    # Need to retrieve this here because the creation of the
-    # deleted media class below will delete this object, rendering
-    # the pk empty by the time we assert the calls
-
-    instance = deleted_media_class(
-        media_obj=media,
-    )
-
-    with pytest.raises(TransportError):
-        instance.save()
-
-    settings.ES.delete.assert_has_calls(
-        (call(index=index, id=media.pk, refresh=True) for index in indexes),
-        # The order does not matter
-        any_order=True,
-    )
-
-
-@pytest.mark.parametrize(
-    ("model_factory", "mature_media_class", "indexes"),
-    (
-        (ImageFactory, MatureImage, ("image", "image-filtered")),
-        (AudioFactory, MatureAudio, ("audio", "audio-filtered")),
-    ),
-)
-def test_mature_media_updates_all_indexes(
-    settings, model_factory, mature_media_class, indexes
-):
-    settings.ES = MagicMock()
-    media = model_factory.create()
-
-    instance = mature_media_class(
-        media_obj=media,
-    )
-
-    instance.save()
-
-    settings.ES.update.assert_has_calls(
-        (
-            call(
+    for index in media_type_config.indexes:
+        with pytest.raises(NotFoundError):
+            settings.ES.get(
                 index=index,
-                id=media.id,
-                doc={"mature": True},
-                refresh=True,
+                id=media_id,
+                realtime=False,
             )
-            for index in indexes
-        ),
-        # The order does not matter
-        any_order=True,
+
+
+@pook.on
+def test_deleted_media_ignores_elasticsearch_404_errors(settings, media_type_config):
+    media = media_type_config.model_factory.create()
+
+    es_mocks = []
+    for index in media_type_config.indexes:
+        es_mocks.append(
+            pook.delete(settings.ES_ENDPOINT)
+            .path(f"/{index}/_doc/{media.pk}")
+            .param("refresh", "true")
+            .reply(404)
+            .mock
+        )
+
+    # This should succeed despite the 404s forced above
+    media_type_config.deleted_class.objects.create(
+        media_obj=media,
     )
 
+    for mock in es_mocks:
+        assert mock.matched, f"{repr(mock.matchers)} did not match!"
 
-@pytest.mark.parametrize(
-    ("model_factory", "mature_media_class", "indexes"),
-    (
-        (ImageFactory, MatureImage, ("image", "image-filtered")),
-        (AudioFactory, MatureAudio, ("audio", "audio-filtered")),
-    ),
-)
+
+@pook.on
+def test_deleted_media_raises_elasticsearch_400_errors(settings, media_type_config):
+    media = media_type_config.model_factory.create()
+
+    es_mocks: list[pook.Mock] = []
+    for index in media_type_config.indexes:
+        es_mocks.append(
+            pook.delete(settings.ES_ENDPOINT)
+            .path(f"/{index}/_doc/{media.pk}")
+            .param("refresh", "true")
+            .reply(400)
+            .mock
+        )
+
+    with pytest.raises(BadRequestError):
+        media_type_config.deleted_class.objects.create(
+            media_obj=media,
+        )
+
+    # Because we're causing a 400, and because that re-raises
+    # in the update, only one of the requests ever gets sent
+    # Therefore, one should remain pending and at least one
+    # should have matched
+    # Take this approach to avoid being concerned with the
+    # order of the requests, which doesn't matter
+    assert len([m for m in es_mocks if m.matched]) == 1
+
+
+@pook.on
 def test_mature_media_ignores_elasticsearch_404_errors(
-    settings, model_factory, mature_media_class, indexes
+    settings,
+    media_type_config,
 ):
-    settings.ES = MagicMock()
-    error = TransportError(404, "Whoops, no document!", {})
-    settings.ES.update.side_effect = [None, error]
-    media = model_factory.create()
+    media = media_type_config.model_factory.create()
 
-    instance = mature_media_class(
+    es_mocks = []
+    for index in media_type_config.indexes:
+        es_mocks.append(
+            pook.post(settings.ES_ENDPOINT)
+            .path(f"/{index}/_update/{media.pk}")
+            .param("refresh", "true")
+            .reply(404)
+            .mock
+        )
+
+    # This should pass despite the 404 enforced above
+    media_type_config.mature_factory.create(
         media_obj=media,
     )
 
-    instance.save()
-
-    settings.ES.update.assert_has_calls(
-        (
-            call(
-                index=index,
-                id=media.id,
-                doc={"mature": True},
-                refresh=True,
-            )
-            for index in indexes
-        ),
-        # The order does not matter
-        any_order=True,
-    )
+    for mock in es_mocks:
+        assert mock.matched, f"{repr(mock.matchers)} did not match!"
 
 
-@pytest.mark.parametrize(
-    ("model_factory", "mature_media_class", "indexes"),
-    (
-        (ImageFactory, MatureImage, ("image", "image-filtered")),
-        (AudioFactory, MatureAudio, ("audio", "audio-filtered")),
-    ),
-)
-def test_mature_media_reraises_elasticsearch_400_errors(
-    settings, model_factory, mature_media_class, indexes
-):
-    settings.ES = MagicMock()
-    error = TransportError(400, "Terrible request, no thanks.", {})
-    settings.ES.update.side_effect = [None, error]
-    media = model_factory.create()
+@pook.on
+def test_mature_media_reraises_elasticsearch_400_errors(settings, media_type_config):
+    media = media_type_config.model_factory.create()
 
-    instance = mature_media_class(
-        media_obj=media,
-    )
+    es_mocks = []
+    for index in media_type_config.indexes:
+        es_mocks.append(
+            pook.post(settings.ES_ENDPOINT)
+            .path(f"/{index}/_update/{media.pk}")
+            .param("refresh", "true")
+            .reply(400)
+            .mock
+        )
 
-    with pytest.raises(TransportError):
-        instance.save()
+    # This should fail due to the 400 enforced above
+    with pytest.raises(BadRequestError):
+        media_type_config.mature_factory.create(
+            media_obj=media,
+        )
 
-    settings.ES.update.assert_has_calls(
-        (
-            call(
-                index=index,
-                id=media.id,
-                doc={"mature": True},
-                refresh=True,
-            )
-            for index in indexes
-        ),
-        # The order does not matter
-        any_order=True,
-    )
+    # Because we're causing a 400, and because that re-raises
+    # in the update, only one of the requests ever gets sent
+    # Therefore, one should remain pending and at least one
+    # should have matched
+    # Take this approach to avoid being concerned with the
+    # order of the requests, which doesn't matter
+    assert len([m for m in es_mocks if m.matched]) == 1

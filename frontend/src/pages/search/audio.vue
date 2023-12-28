@@ -1,7 +1,7 @@
 <template>
   <VAudioCollection
     :results="results"
-    :is-related="false"
+    kind="search"
     :fetch-state="fetchState"
     :collection-label="collectionLabel"
   />
@@ -17,8 +17,6 @@ import type { FetchState } from "~/types/fetch-state"
 
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 
-import type { NuxtError } from "@nuxt/types"
-
 export default defineComponent({
   name: "AudioSearch",
   components: {
@@ -30,7 +28,7 @@ export default defineComponent({
       required: true,
     },
     fetchState: {
-      type: Object as PropType<FetchState<NuxtError> | FetchState>,
+      type: Object as PropType<FetchState>,
       required: true,
     },
   },

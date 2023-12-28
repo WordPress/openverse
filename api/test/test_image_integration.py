@@ -8,6 +8,7 @@ Run with the `pytest -s` command from this directory.
 import json
 from test.constants import API_URL
 from test.media_integration import (
+    creator_collection,
     detail,
     license_filter_case_insensitivity,
     related,
@@ -19,7 +20,10 @@ from test.media_integration import (
     search_quotes_exact,
     search_source_and_excluded,
     search_special_chars,
+    sensitive_search_and_detail,
+    source_collection,
     stats,
+    tag_collection,
     uuid_validation,
 )
 from urllib.parse import urlencode
@@ -56,8 +60,8 @@ def test_search_quotes():
 
 
 def test_search_quotes_exact():
-    # ``dog pet`` returns different results when quoted vs unquoted
-    search_quotes_exact("images", "dog pet")
+    # ``dancing penguins`` returns different results when quoted vs unquoted
+    search_quotes_exact("images", "dancing penguins")
 
 
 def test_search_with_special_characters():
@@ -81,30 +85,37 @@ def test_audio_report(image_fixture):
     report("images", image_fixture)
 
 
-def test_oembed_endpoint_with_non_existent_image():
-    params = {
-        "url": "https://any.domain/any/path/00000000-0000-0000-0000-000000000000",
-    }
-    response = requests.get(
-        f"{API_URL}/v1/images/oembed?{urlencode(params)}", verify=False
-    )
-    assert response.status_code == 404
-
-
 @pytest.mark.parametrize(
-    "url",
+    "url, expected_status_code",
     [
-        f"https://any.domain/any/path/{identifier}",  # no trailing slash
-        f"https://any.domain/any/path/{identifier}/",  # trailing slash
-        identifier,  # just identifier instead of URL
+        pytest.param(
+            f"https://any.domain/any/path/{identifier}",
+            200,
+            id="OK; no trailing slash",
+        ),
+        pytest.param(
+            f"https://any.domain/any/path/{identifier}/",
+            200,
+            id="OK; with trailing slash",
+        ),  # trailing slash
+        pytest.param(
+            "https://any.domain/any/path/00000000-0000-0000-0000-000000000000",
+            404,
+            id="Valid UUID but no matching identifier",
+        ),
+        pytest.param(
+            "https://any.domain/any/path/not-a-valid-uuid",
+            400,
+            id="not a valid UUID",
+        ),
     ],
 )
-def test_oembed_endpoint_with_fuzzy_input(url):
+def test_oembed_endpoint(url, expected_status_code):
     params = {"url": url}
     response = requests.get(
         f"{API_URL}/v1/images/oembed?{urlencode(params)}", verify=False
     )
-    assert response.status_code == 200
+    assert response.status_code == expected_status_code
 
 
 def test_oembed_endpoint_for_json():
@@ -134,5 +145,21 @@ def test_image_uuid_validation():
     uuid_validation("images", "abcd")
 
 
+def test_image_tag_collection():
+    tag_collection("images")
+
+
+def test_image_source_collection():
+    source_collection("images")
+
+
+def test_image_creator_collection():
+    creator_collection("images")
+
+
 def test_image_related(image_fixture):
     related(image_fixture)
+
+
+def test_image_sensitive_search_and_detail():
+    sensitive_search_and_detail("images")
