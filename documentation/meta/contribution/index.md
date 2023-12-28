@@ -1,7 +1,7 @@
 # Contributing to Openverse
 
 We have the basic outlines of contributing to the project defined in our
-[welcome page](/general/contributing.md). The blow documents provide more
+[welcome page](/general/contributing.md). The documents below provide more
 exhaustive information about contributing beyond the basics.
 
 ```{toctree}
