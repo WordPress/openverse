@@ -38,6 +38,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
           }
         }
         isDraft
+        createdAt
       }
     }
   }
@@ -49,12 +50,15 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
     '🟥 priority: critical',
   ]
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
+  const isValidPR = (pr) =>
+    pr.author.login === context.actor &&
+    !pr.isDraft &&
+    !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
 
   try {
     let hasNextPage = true
     let cursor = null
     let reviewablePRs = []
-
     while (hasNextPage) {
       const result = await github.graphql(GET_PULL_REQUESTS, {
         repoOwner: owner,
@@ -63,12 +67,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       })
 
       const { nodes, pageInfo } = result.repository.pullRequests
-      const validPRs = nodes.filter(
-        (pr) =>
-          pr.author.login === context.actor &&
-          !pr.isDraft &&
-          !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
-      )
+      const validPRs = nodes.filter(isValidPR)
       reviewablePRs.push(...validPRs)
 
       if (pageInfo.hasNextPage) {
@@ -80,9 +79,9 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
 
     let should_alert = false
     if (reviewablePRs.length >= 1) {
-      // TODO sort by open date
-      should_alert = !reviewablePRs[0].labels.nodes.some((label) =>
-        ignoredLabels.includes(label.name)
+      // Get the most recently created PR, then determine if it's valid
+      should_alert = isValidPR(
+        reviewablePRs.sort((a, b) => a.createdAt.localeCompare(b.createdAt))[0]
       )
     }
 
