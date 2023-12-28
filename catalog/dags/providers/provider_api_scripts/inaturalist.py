@@ -391,13 +391,13 @@ class INaturalistDataIngester(ProviderDataIngester):
                     task_id="get_batches",
                     python_callable=INaturalistDataIngester.get_batches,
                     op_kwargs={
-                        "batch_length": 2_000_000,
+                        "batch_length": 1_000_000,
                     },
                     execution_timeout=timedelta(minutes=1),
                 )
 
-                # In testing this locally, the longest full iteration took 39 minutes,
-                # median was 18 minutes.
+                # In testing this locally with batch length 2_000_000, the longest full
+                # iteration took 39 minutes, median was 18 minutes.
                 load_transformed_data = PythonOperator.partial(
                     task_id="load_transformed_data",
                     python_callable=INaturalistDataIngester.load_transformed_data,
