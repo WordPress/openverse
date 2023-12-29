@@ -85,6 +85,7 @@
             />
             <VContentSettingsModalContent
               v-show="!searchBarIsActive"
+              variant="two-thirds"
               :visible="contentSettingsOpen"
               :is-fetching="isFetching"
               :close="closeContentSettings"
