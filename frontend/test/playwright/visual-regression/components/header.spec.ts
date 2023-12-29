@@ -5,6 +5,7 @@ import breakpoints, {
 } from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
+  dismissAnalyticsBanner,
   filters,
   goToSearchTerm,
   languageDirections,
@@ -24,6 +25,7 @@ for (const dir of languageDirections) {
         await preparePageForTests(page, breakpoint, { dismissFilter: false })
 
         await goToSearchTerm(page, "birds", { dir })
+        await dismissAnalyticsBanner(page)
       })
 
       test("filters open", async ({ page }) => {
