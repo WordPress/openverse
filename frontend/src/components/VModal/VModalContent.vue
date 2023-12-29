@@ -5,13 +5,13 @@
         v-if="visible"
         class="fixed inset-0 z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
         :class="[
-        {
-          'bg-dark-charcoal bg-opacity-75':
-            variant === 'fit-content' || variant === 'two-thirds',
-          'flex-col items-center': variant === 'centered',
-        },
-        contentClasses,
-      ]"
+          {
+            'bg-dark-charcoal bg-opacity-75':
+              variant === 'fit-content' || variant === 'two-thirds',
+            'flex-col items-center': variant === 'centered',
+          },
+          contentClasses,
+        ]"
       >
         <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
         <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
@@ -20,20 +20,20 @@
           v-bind="$attrs"
           class="flex flex-col"
           :class="[
-          mode === 'dark'
-            ? 'bg-black text-white'
-            : 'bg-white text-dark-charcoal',
-          {
-            'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
-              variant === 'default',
-            'w-full': variant === 'full',
-            'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
-              variant === 'two-thirds',
-            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
-              variant === 'fit-content',
-            'm-6 rounded sm:m-0': variant === 'centered',
-          },
-        ]"
+            mode === 'dark'
+              ? 'bg-black text-white'
+              : 'bg-white text-dark-charcoal',
+            {
+              'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
+                variant === 'default',
+              'w-full': variant === 'full',
+              'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
+                variant === 'two-thirds',
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+                variant === 'fit-content',
+              'm-6 rounded sm:m-0': variant === 'centered',
+            },
+          ]"
           role="dialog"
           aria-modal="true"
           @keydown="onKeyDown"
@@ -61,30 +61,30 @@
             </div>
           </slot>
 
-        <div
-          class="modal-content flex w-full flex-grow flex-col"
-          :class="{
-            'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
-              variant === 'default',
-            'w-auto rounded': variant === 'centered',
-            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
-              variant === 'fit-content',
-            'flex w-full flex-col justify-between px-6 pb-10':
-              variant === 'full',
-            'overflow-y-hidden rounded-se-lg rounded-ss-lg':
-              variant === 'two-thirds',
-            'bg-black text-white': mode === 'dark',
-            'bg-white text-dark-charcoal': mode === 'light',
-            'fallback-padding':
-              variant === 'fit-content' || variant === 'two-thirds',
-          }"
-        >
-          <slot />
+          <div
+            class="modal-content flex w-full flex-grow flex-col"
+            :class="{
+              'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
+                variant === 'default',
+              'w-auto rounded': variant === 'centered',
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+                variant === 'fit-content',
+              'flex w-full flex-col justify-between px-6 pb-10':
+                variant === 'full',
+              'overflow-y-hidden rounded-se-lg rounded-ss-lg':
+                variant === 'two-thirds',
+              'bg-black text-white': mode === 'dark',
+              'bg-white text-dark-charcoal': mode === 'light',
+              'fallback-padding':
+                variant === 'fit-content' || variant === 'two-thirds',
+            }"
+          >
+            <slot />
+          </div>
         </div>
       </div>
-    </div>
-  </Teleport>
-    </ClientOnly>
+    </Teleport>
+  </ClientOnly>
 </template>
 
 <script lang="ts">
