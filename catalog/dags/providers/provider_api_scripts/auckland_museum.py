@@ -144,6 +144,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             "meta_data": meta_data,
         }
 
+    @staticmethod
     def _get_meta_data(self, object_json: dict) -> dict | None:
         geopos = object_json.get("geopos")[0] if object_json.get("geopos", []) else ""
         department = (
