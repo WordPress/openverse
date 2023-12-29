@@ -105,7 +105,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         # check if _id is empty then foreign_landing_url and
         # foreign_identifier doesn't exist
 
-        if not data.get("_id"):
+        if not (identifier := data.get("_id")):
             return None
 
         url_parameter = data.get("_id").split("id/")[-1].replace("/", "-")
