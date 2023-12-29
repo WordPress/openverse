@@ -446,8 +446,8 @@ export const setCookies = async (
 }
 
 export const closeAnalyticsBanner = async (page: Page) => {
-  const bannerCloseButton = page.getByText(/close the analytics/i)
-  if (await bannerCloseButton.isVisible()) {
-    await bannerCloseButton.click()
+  const banner = page.getByTestId("banner-analytics")
+  if (await banner.isVisible()) {
+    await banner.getByRole("button").click()
   }
 }
