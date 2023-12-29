@@ -260,9 +260,11 @@ export const preparePageForTests = async (
   }
   await setCookies(page.context(), {
     features: featuresCookie,
-    uiDismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
-    uiIsFilterDismissed: dismissFilter ?? false,
-    uiBreakpoint: breakpoint,
+    ui: {
+      dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
+      isFilterDismissed: dismissFilter ?? false,
+      breakpoint,
+    }
   })
 }
 
@@ -391,14 +393,6 @@ export interface CookieMap {
   [key: string]: string | boolean | string[] | CookieMap
 }
 
-export const getCookies = async (
-  context: BrowserContext,
-  name: string
-): Promise<string> => {
-  const cookies = await context.cookies()
-  return cookies.find((cookie) => cookie.name === name)?.value ?? "[]"
-}
-
 export const setCookies = async (
   context: BrowserContext,
   cookies: CookieMap
@@ -443,11 +437,4 @@ export const setCookies = async (
     }
   })
   await context.addCookies(cookiesToSet)
-}
-
-export const closeAnalyticsBanner = async (page: Page) => {
-  const banner = page.getByTestId("banner-analytics")
-  if (await banner.isVisible()) {
-    await banner.getByRole("button").click()
-  }
 }
