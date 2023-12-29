@@ -203,6 +203,7 @@ jobs:
         if: matrix.image == 'frontend'
         run: |
           just frontend/run i18n
+          just frontend/run nuxt-prepare
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
