@@ -111,7 +111,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         url_parameter = identifier.split("id/")[-1].replace("/", "-")
         foreign_landing_url = f"{LANDING_URL}{url_parameter}"
 
-        foreign_identifier = data.get("_id").split("/")[-1]
+        foreign_identifier = identifier.split("/")[-1]
 
         information = data.get("_source", {})
 
