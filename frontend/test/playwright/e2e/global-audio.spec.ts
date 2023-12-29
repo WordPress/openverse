@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 import {
+  dismissAnalyticsBanner,
   preparePageForTests,
   sleep,
   t,
@@ -20,6 +21,7 @@ test.describe("global audio", () => {
     }) => {
       await preparePageForTests(page, "xs")
       await page.goto("/search/audio?q=honey&length=shortest")
+      await dismissAnalyticsBanner(page)
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
       await audio.play(firstAudioRow)
