@@ -118,7 +118,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
         if not (url := information.get("primaryRepresentation")):
             return None
 
-        thumbnail_url = f"{url}?rendering=thumbnail.jpg"
         license_info = self.DEFAULT_LICENSE_INFO
 
         creator = (
