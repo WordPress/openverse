@@ -30,7 +30,7 @@ test.describe.configure({ mode: "parallel" })
 const allContentConfig = {
   id: "all",
   name: "All content",
-  url: "/search/?q=birds",
+  url: "/search?q=birds",
   canLoadMore: true,
 } as const
 
