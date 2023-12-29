@@ -444,3 +444,10 @@ export const setCookies = async (
   })
   await context.addCookies(cookiesToSet)
 }
+
+export const closeAnalyticsBanner = async (page: Page) => {
+  const bannerCloseButton = page.getByText(/close the analytics/i)
+  if (await bannerCloseButton.isVisible()) {
+    await bannerCloseButton.click()
+  }
+}
