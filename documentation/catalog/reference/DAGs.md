@@ -45,6 +45,7 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
 | [`batched_update`](#batched_update)                                               | `None`            |
+| [`catalog_cleaner`](#catalog_cleaner)                                             | `None`            |
 | [`delete_records`](#delete_records)                                               | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                     | `None`            |
@@ -136,6 +137,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
+1.  [`catalog_cleaner`](#catalog_cleaner)
 1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
@@ -346,6 +348,13 @@ with an existing temp table matching the `query_id`. This option should only be
 used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step.
+
+### `catalog_cleaner`
+
+Catalog Data Cleaner DAG
+
+Use CSV files created during the clean step of the ingestion process to bring
+the changes into the catalog.
 
 ### `cc_mixter_workflow`
 
