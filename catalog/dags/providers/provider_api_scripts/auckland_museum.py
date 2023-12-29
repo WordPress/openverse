@@ -139,7 +139,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             "foreign_identifier": foreign_identifier,
             "url": url,
             "license_info": license_info,
-            "thumbnail_url": thumbnail_url,
             "creator": creator,
             "title": title,
             "meta_data": meta_data,
