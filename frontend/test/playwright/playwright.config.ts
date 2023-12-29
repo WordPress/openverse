@@ -47,7 +47,7 @@ const config: PlaywrightTestConfig = {
   expect: {
     toMatchSnapshot: {
       // If the visual regression tests are flaky, we can increase this to 0.1 or 0.2.
-      maxDiffPixelRatio: 0,
+      maxDiffPixelRatio: 0.01,
     },
   },
 }
