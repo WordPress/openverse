@@ -21,24 +21,26 @@ jobs:
       pr_title: ${{ github.event.pull_request.title }}
       pr_author: ${{ github.event.pull_request.user.login }}
       pr_repo: ${{ github.event.pull_request.base.repo.full_name }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
       - name: Send notification for new PR
         if: github.event.action == 'opened'
         id: slack
-        uses: slackapi/slack-github-action@1.23.0
+        uses: slackapi/slack-github-action@1.24.0
         env:
           pr_status: ${{ github.event.pull_request.draft && ' draft ' || ' ' }}
           pr_icon: ${{ github.event.pull_request.draft && ':pr-draft:' || ':pull-request:' }}
         with:
           payload: |
             {
-              "text": "New\"$pr_status\"PR opened by \"$pr_author\" in \"$pr_repo\": #\"$pr_number\" - \"$pr_title\"",
+              "text": "New\"${{pr_status}}\"PR opened by \"${{pr_author}}\" in \"${{pr_repo}}\": #\"${{pr_number}}\" - \"${{pr_title}}\"",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "\"$pr_icon\" New\"$pr_status\"PR opened by *\"$pr_author\"* in `\"$pr_repo\"`:\n<\"$pr_url\"|#\"$pr_number\" - \"$pr_title\">"
+                    "text": "\"${{pr_icon}}\" New\"${{pr_status}}\"PR opened by *\"${{pr_author}}\"* in `\"${{pr_repo}}\"`:\n<\"$pr_url\"|#\"${{pr_number}}\" - \"${{pr_title}}\">"
                   }
                 }
               ]
@@ -46,7 +48,18 @@ jobs:
       - name: Send notification for PR marked ready
         if: github.event.action == 'ready_for_review'
         id: slack-notifications
-        uses: slackapi/slack-github-action@1.23.0
+        uses: slackapi/slack-github-action@1.24.0
         with:
           payload: |
-            {"text":"PR by \"$pr_author\" in \"$pr_repo\" marked ready for review: #$pr_number - \"$pr_title\"","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: PR by *$pr_author* in `$pr_repo` marked ready for review:\n<$pr_url|#$pr_number - $pr_title>"}}]}
+            {
+             "text": "PR by \"${{pr_author}}\" in \"${{pr_repo}}\" marked ready for review: #${{pr_number}} - \"${{pr_title}}\"",
+             "blocks": [
+               {
+                 "type": "section",
+                 "text": {
+                   "type": "mrkdwn",
+                   "text": ":pull-request: PR by *${{pr_author}}* in `${{pr_repo}}` marked ready for review:\n<$pr_url|#${{pr_number}} - ${{pr_title}}>"
+                 }
+               }
+             ]
+            }
