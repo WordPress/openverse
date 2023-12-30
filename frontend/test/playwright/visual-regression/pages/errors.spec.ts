@@ -82,12 +82,14 @@ const searchCSRErrorStatuses = [429, 500]
 
 for (const searchType of supportedSearchTypes) {
   breakpoints.describeMobileAndDesktop(({ breakpoint, expectSnapshot }) => {
+    test.beforeEach(async ({ page }) => {
+      await preparePageForTests(page, breakpoint)
+    })
     for (const dir of languageDirections) {
       for (const errorStatus of searchCSRErrorStatuses) {
         test(`${errorStatus} error on ${dir} ${searchType} search on CSR`, async ({
           page,
         }) => {
-          await preparePageForTests(page, breakpoint)
           await goToSearchTerm(page, `SearchPage${errorStatus}error`, {
             mode: "CSR",
             searchType,
@@ -100,8 +102,6 @@ for (const searchType of supportedSearchTypes) {
       test(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
-        await preparePageForTests(page, breakpoint)
-
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
 
         await setViewportToFullHeight(page)
@@ -117,8 +117,6 @@ for (const searchType of supportedSearchTypes) {
       })
 
       test(`Timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
-        await preparePageForTests(page, breakpoint)
-
         await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
           route.abort("timedout")
         })

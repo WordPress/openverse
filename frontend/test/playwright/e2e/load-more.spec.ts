@@ -46,8 +46,9 @@ const openSingleMediaView = async (
  */
 
 test.describe("Load more button", () => {
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, page }) => {
     await mockProviderApis(context)
+    await preparePageForTests(page, "xl")
   })
 
   test("Clicking sends 2 requests on All view with enough results", async ({
@@ -144,7 +145,6 @@ test.describe("Load more button", () => {
       page,
       context,
     }) => {
-      await preparePageForTests(page, "xl")
       const analyticsEvents = collectAnalyticsEvents(context)
 
       await page.goto("/search/?q=cat")

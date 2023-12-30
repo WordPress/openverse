@@ -4,6 +4,7 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   openFirstResult,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
 import { supportedMediaTypes } from "~/constants/media"
@@ -104,6 +105,7 @@ supportedMediaTypes.forEach((mediaType) => {
       page,
       context,
     }) => {
+      await preparePageForTests(page, "xl")
       await goToSearchTerm(page, "cat", { searchType: mediaType })
       await openFirstResult(page, mediaType)
       await openReportModal(page)
