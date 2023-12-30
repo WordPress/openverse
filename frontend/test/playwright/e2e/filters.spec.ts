@@ -33,7 +33,7 @@ const assertCheckboxCount = async (
     notChecked: ":not(:checked)",
     total: "",
   }[checked]
-  const locatorString = `input[type="checkbox"]${checkedString}`
+  const locatorString = `#filters input[type="checkbox"]${checkedString}`
   await expect(page.locator(locatorString)).toHaveCount(count, { timeout: 200 })
 }
 
