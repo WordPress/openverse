@@ -5,6 +5,7 @@ import {
   languageDirections,
   pathWithDir,
   preparePageForTests,
+  t,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -50,8 +51,11 @@ test.describe("layout color is set correctly", () => {
     test("change language on homepage and search", async ({ page }) => {
       await page.goto("/")
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
-      await page.getByPlaceholder("البحث عن محتوى").fill("cat")
-      await page.getByRole("button", { name: "يبحث" }).click()
+      const searchBar = page.getByPlaceholder(
+        t("hero.search.placeholder", "rtl")
+      )
+      await searchBar.fill("cat")
+      await searchBar.press("Enter")
 
       await expect(
         page.getByRole("heading", { level: 1, name: "Cat" })
@@ -65,9 +69,13 @@ test.describe("layout color is set correctly", () => {
       page,
     }) => {
       await page.goto("/ar")
-      await page.getByRole("combobox", { name: "لغة" }).selectOption("en")
+      await page
+        .getByRole("combobox", { name: t("language.language", "rtl") })
+        .selectOption("en")
 
-      await page.getByRole("link", { name: "About" }).click()
+      await page
+        .getByRole("link", { name: t("navigation.about", "rtl") })
+        .click()
       await page.mouse.move(100, 100)
 
       expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
