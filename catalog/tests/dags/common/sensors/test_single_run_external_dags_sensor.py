@@ -176,12 +176,15 @@ class TestExternalDAGsSensor(unittest.TestCase):
         with self.assertLogs(sensor.log, level=logging.INFO) as sensor_logs:
             run_sensor(sensor)
             assert (
-                "INFO:airflow.task.operators:Poking for DAGs ['successful_dag',"
-                " 'failed_dag', 'queued_dag'] ..." in sensor_logs.output
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:Poking for DAGs "
+                "['successful_dag', 'failed_dag', 'queued_dag'] ..."
+                in sensor_logs.output
             )
             assert (
-                "INFO:airflow.task.operators:0 DAGs are in the running state"
-                in sensor_logs.output
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:0 DAGs are in the "
+                "running state" in sensor_logs.output
             )
 
     def test_retries_if_running_dags_with_completed_sensor_task(self):
@@ -226,11 +229,13 @@ class TestExternalDAGsSensor(unittest.TestCase):
             run_sensor(sensor)
 
             assert (
-                f"INFO:airflow.task.operators:Poking for DAGs ['"
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:Poking for DAGs ['"
                 f"{DAG_PREFIX}_success_dag', '{DAG_PREFIX}_running_dag'] ..."
                 in sensor_logs.output
             )
             assert (
-                "INFO:airflow.task.operators:1 DAGs are in the running state"
-                in sensor_logs.output
+                "INFO:airflow.task.operators.common.sensors.single_run_external"
+                "_dags_sensor.SingleRunExternalDAGsSensor:1 DAGs are in the "
+                "running state" in sensor_logs.output
             )
