@@ -1,4 +1,4 @@
-import { defineNuxtRouteMiddleware } from "#imports"
+import { defineNuxtRouteMiddleware, showError } from "#imports"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
@@ -31,8 +31,7 @@ export const singleResultMiddleware = defineNuxtRouteMiddleware(
         const fetchingError = singleResultStore.fetchState.fetchingError
 
         if (fetchingError && !isRetriable(fetchingError)) {
-          // TODO: handle error
-          console.log("Error: ", fetchingError)
+          return showError(fetchingError)
         }
       }
     } else {

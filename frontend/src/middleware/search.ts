@@ -1,4 +1,9 @@
-import { navigateTo, defineNuxtRouteMiddleware, firstParam } from "#imports"
+import {
+  navigateTo,
+  defineNuxtRouteMiddleware,
+  firstParam,
+  showError,
+} from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
@@ -42,8 +47,7 @@ export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
     const results = await mediaStore.fetchMedia()
     const fetchingError = mediaStore.fetchState.fetchingError
     if (!results && fetchingError && !handledClientSide(fetchingError)) {
-      // TODO: handle error
-      console.log("Error: ", fetchingError)
+      return showError(fetchingError)
     }
   }
 })

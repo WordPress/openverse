@@ -42,6 +42,7 @@ import {
   defineNuxtComponent,
   definePageMeta,
   navigateTo,
+  showError,
   useAsyncData,
   useHead,
 } from "#imports"
@@ -59,7 +60,7 @@ import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { areQueriesEqual } from "~/utils/search-query-transform"
-import { handledClientSide, isRetriable } from "~/utils/errors"
+import { handledClientSide, isFetchingError, isRetriable } from "~/utils/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
@@ -132,17 +133,15 @@ export default defineNuxtComponent({
         return
       }
 
-      await mediaStore.fetchMedia(payload)
-
-      if (
-        fetchingError.value === null ||
-        handledClientSide(fetchingError.value)
-      ) {
-        return null
+      try {
+        await mediaStore.fetchMedia(payload)
+      } catch (error) {
+        if (isFetchingError(error) && handledClientSide(error)) {
+          return
+        }
+        const errorArg = isFetchingError(error) ? error : "fetchingError"
+        return showError(errorArg)
       }
-      // TODO: handle error
-      console.log("Error: ", fetchingError.value)
-      return null
     }
 
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)

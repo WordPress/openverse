@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="default">
-    <VFourOhFour :error="error" />
+    <VFourOhFour class="flex-grow" :error="error" />
   </NuxtLayout>
 </template>
 

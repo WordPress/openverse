@@ -42,6 +42,9 @@ import {
   defineNuxtComponent,
   definePageMeta,
   firstParam,
+  handledClientSide,
+  isFetchingError,
+  showError,
   useAsyncData,
   useHead,
   useRoute,
@@ -100,15 +103,16 @@ export default defineNuxtComponent({
       async () => {
         const audioId = firstParam(route.params.id)
         if (audioId) {
-          await singleResultStore.fetch(AUDIO, audioId)
-          const fetchedAudio = singleResultStore.audio
-          if (fetchedAudio) {
-            audio.value = fetchedAudio
-            return fetchedAudio
+          try {
+            audio.value = await singleResultStore.fetch(AUDIO, audioId)
+          } catch (error) {
+            if (isFetchingError(error) && handledClientSide(error)) {
+              return
+            }
+            const errorArg = isFetchingError(error) ? error : "fetchingError"
+            return showError(errorArg)
           }
         }
-        console.log("Error: ", singleResultStore.fetchState.fetchingError ?? {})
-        return null
       },
       {
         // Fetching on the server is disabled because it is

@@ -114,6 +114,9 @@ import {
   defineNuxtComponent,
   definePageMeta,
   firstParam,
+  handledClientSide,
+  isFetchingError,
+  showError,
   useAsyncData,
   useHead,
   useRoute,
@@ -191,16 +194,18 @@ export default defineNuxtComponent({
       async () => {
         const imageId = firstParam(route.params.id)
         if (imageId) {
-          const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
-          if (fetchedImage) {
+          try {
+            const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
             image.value = fetchedImage
             imageSrc.value = fetchedImage.thumbnail
-            return fetchedImage
+          } catch (error) {
+            if (isFetchingError(error) && handledClientSide(error)) {
+              return
+            }
+            const errorArg = isFetchingError(error) ? error : "fetchingError"
+            return showError(errorArg)
           }
         }
-        // TODO: handle error
-        console.log("Error: ", fetchingError.value)
-        return null
       },
       {
         // Fetching on the server is disabled because it is

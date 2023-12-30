@@ -88,3 +88,13 @@ export const handledClientSide = (error: FetchingError) => {
     (clientSideErrorCodes as readonly string[]).includes(error.code)
   )
 }
+
+export const isFetchingError = (error: unknown): error is FetchingError => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "requestKind" in error &&
+    "code" in error &&
+    "searchType" in error
+  )
+}

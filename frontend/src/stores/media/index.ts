@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { createError, useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -421,9 +421,7 @@ export const useMediaStore = defineStore("media", {
           this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-      const resultCount = resultCounts.includes(null)
-        ? null
-        : (resultCounts as number[]).reduce((a, b) => a + b, 0)
+      const resultCount = resultCounts.reduce((a, b) => a + b, 0)
 
       this.currentPage =
         mediaType === ALL_MEDIA
@@ -506,7 +504,7 @@ export const useMediaStore = defineStore("media", {
         } else {
           console.log("Sentry not available to capture exception", errorData)
         }
-        return null
+        throw createError(errorData)
       }
     },
 
