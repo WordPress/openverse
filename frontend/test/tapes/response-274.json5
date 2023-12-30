@@ -1,0 +1,119 @@
+{
+    meta: {
+        createdAt: '2023-12-30T07:59:44.050Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/stats/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Sat, 30 Dec 2023 07:59:44 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept, Authorization, origin, Accept-Encoding',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '19',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '198',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'x-request-id': [
+                '0469f053c6d74dbf9cd5a735cddde8a4',
+            ],
+            'cache-control': [
+                'max-age=259200',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '486',
+            ],
+            'last-modified': [
+                'Sat, 30 Dec 2023 07:51:38 GMT',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '83d8bebd9a207339-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: [
+          {
+            source_name: 'jamendo',
+            display_name: 'Jamendo',
+            source_url: 'https://www.jamendo.com/start',
+            logo_url: null,
+            media_count: 47262,
+          },
+          {
+            source_name: 'wikimedia_audio',
+            display_name: 'Wikimedia Commons',
+            source_url: 'https://commons.wikimedia.org/wiki/Main_Page',
+            logo_url: null,
+            media_count: 1238,
+          },
+          {
+            source_name: 'freesound',
+            display_name: 'Freesound',
+            source_url: 'https://freesound.org/',
+            logo_url: null,
+            media_count: 47458,
+          }
+        ],
+    },
+}

@@ -1,0 +1,73 @@
+{
+    meta: {
+        createdAt: '2023-12-30T07:57:21.020Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/stats/',
+        method: 'OPTIONS',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Sat, 30 Dec 2023 07:57:21 GMT',
+            ],
+            'content-type': [
+                'text/html; charset=utf-8',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'origin',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'access-control-allow-headers': [
+                'accept, authorization, content-type, user-agent, x-csrftoken, x-requested-with',
+            ],
+            'access-control-allow-methods': [
+                'DELETE, GET, OPTIONS, PATCH, POST, PUT',
+            ],
+            'access-control-max-age': [
+                '86400',
+            ],
+            'x-request-id': [
+                '9b5d1c5b822a4d87845495b267804b28',
+            ],
+            'cf-cache-status': [
+                'DYNAMIC',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '83d8bb3f88be733b-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: '',
+    },
+}
