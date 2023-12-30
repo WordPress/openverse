@@ -26,15 +26,17 @@ export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
     return navigateTo("/")
   }
 
+  const searchStore = useSearchStore()
+
+  searchStore.setSearchStateFromUrl({
+    path: to.path,
+    urlQuery: to.query,
+  })
+
   // Fetch results before rendering the page on the server.
   if (process.server) {
-    const searchStore = useSearchStore()
-
     await searchStore.initProviderFilters()
-    searchStore.setSearchStateFromUrl({
-      path: to.path,
-      urlQuery: to.query,
-    })
+
     const mediaStore = useMediaStore()
 
     const results = await mediaStore.fetchMedia()
