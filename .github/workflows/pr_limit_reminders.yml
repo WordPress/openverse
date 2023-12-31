@@ -32,10 +32,15 @@ jobs:
       slack_url: ${{ secrets.SLACK_DM_WEBHOOK_URL }}
       pr_count: ${{ needs.analyze-user-prs.outputs.pr_count }}
       slack_id: ${{ needs.analyze-user-prs.outputs.slack_id }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
       - name: Send notification
         id: slack
-        uses: slackapi/slack-github-action@1.23.0
+        uses: slackapi/slack-github-action@1.24.0
         with:
           payload: |
-            {"user": "'"$slack_id"'","message": "'"$msg"'"}
+            {
+              "user": "${{env.slack_id}}",
+              "message": "Hi, Opener! \nYou currently have ${{env.pr_count}} Pull Request(s) open with requested reviews (totalling ${{((env.pr_count * 2))}} required reviews). \nTo help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing this list of ways to contribute instead of working on new code contributions: \nhttps://docs.openverse.org/meta/maintainer_tasks.html"
+            }
