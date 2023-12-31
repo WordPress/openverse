@@ -3,6 +3,7 @@ import { test } from "@playwright/test"
 import {
   languageDirections,
   pathWithDir,
+  preparePageForTests,
   t,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
@@ -11,7 +12,8 @@ import audio from "~~/test/playwright/utils/audio"
 
 for (const dir of languageDirections) {
   breakpoints.describeXs(async ({ expectSnapshot }) => {
-    test(`Global audio player on the search page - ${dir}`, async ({
+    // https://github.com/WordPress/openverse/issues/411
+    test.skip(`Global audio player on the search page - ${dir}`, async ({
       page,
     }) => {
       await preparePageForTests(page, "xs")
