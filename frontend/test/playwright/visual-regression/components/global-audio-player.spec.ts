@@ -5,7 +5,6 @@ import {
   pathWithDir,
   preparePageForTests,
   t,
-  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"

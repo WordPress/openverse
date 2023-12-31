@@ -5,10 +5,7 @@ import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-import {
-  preparePageForTests,
-  turnOnAnalytics,
-} from "~~/test/playwright/utils/navigation"
+import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 const goToCustomAudioPage = async (page: Page) => {
   // Test in a custom audio detail page, it should apply the same for any audio.
@@ -42,8 +39,7 @@ test.describe("analytics", () => {
     provider: "jamendo",
   }
   test.beforeEach(async ({ page }) => {
-    await preparePageForTests(page, "xl")
-    await turnOnAnalytics(page)
+    await preparePageForTests(page, "xl", { features: { analytics: "on" } })
   })
   test("sends GET_MEDIA event on CTA button click", async ({
     context,

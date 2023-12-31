@@ -113,7 +113,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
     await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(3)
 
     await expect(page).toHaveURL(
-      "/search/?q=cat&license_type=commercial&license=cc0"
+      "/search?q=cat&license_type=commercial&license=cc0"
     )
   })
 

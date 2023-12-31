@@ -1,7 +1,6 @@
 import { test } from "@playwright/test"
 
 import {
-  closeAnalyticsBanner,
   filters,
   languageDirections,
   pathWithDir,
@@ -23,7 +22,6 @@ for (const dir of languageDirections) {
       test.beforeEach(async ({ page }) => {
         await preparePageForTests(page, breakpoint)
         await page.goto(pathWithDir("/search/?q=birds", dir))
-        await closeAnalyticsBanner(page)
         await filters.open(page, dir)
       })
       test(`filters modal none selected - ${dir}`, async ({ page }) => {

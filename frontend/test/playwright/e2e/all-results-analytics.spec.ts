@@ -3,7 +3,6 @@ import { test } from "@playwright/test"
 import {
   openFirstResult,
   preparePageForTests,
-  turnOnAnalytics,
 } from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
@@ -15,7 +14,6 @@ import { AUDIO, IMAGE } from "~/constants/media"
 test.describe("all results grid analytics test", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl")
-    await turnOnAnalytics(page)
     await page.goto("/search/?q=birds")
   })
 

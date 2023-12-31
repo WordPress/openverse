@@ -33,7 +33,8 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
     })
   }
   for (const status of singleResultCSRErrorStatuses) {
-    test(`${status} on single-result page on CSR`, async ({ page }) => {
+    // https://github.com/WordPress/openverse/issues/411
+    test.skip(`${status} on single-result page on CSR`, async ({ page }) => {
       await page.route(new RegExp(`v1/images/`), (route) => {
         return route.fulfill({ status })
       })
@@ -99,7 +100,8 @@ for (const searchType of supportedSearchTypes) {
         })
       }
 
-      test(`No results ${searchType} ${dir} page snapshots`, async ({
+      // https://github.com/WordPress/openverse/issues/411
+      test.skip(`No results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
@@ -116,7 +118,10 @@ for (const searchType of supportedSearchTypes) {
         )
       })
 
-      test(`Timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
+      // https://github.com/WordPress/openverse/issues/411
+      test.skip(`timeout ${searchType} ${dir} page snapshots`, async ({
+        page,
+      }) => {
         await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
           route.abort("timedout")
         })

@@ -262,7 +262,7 @@ export const preparePageForTests = async (
       dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
       isFilterDismissed: dismissFilter ?? false,
       breakpoint,
-    }
+    },
   })
 }
 

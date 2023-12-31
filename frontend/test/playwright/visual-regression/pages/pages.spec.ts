@@ -74,7 +74,7 @@ test.describe("layout color is set correctly", () => {
         .selectOption("en")
 
       await page
-        .getByRole("link", { name: t("navigation.about", "rtl") })
+        .getByRole("link", { name: t("navigation.about", "ltr") })
         .click()
       await page.mouse.move(100, 100)
 
