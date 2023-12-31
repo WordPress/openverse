@@ -201,9 +201,7 @@ export const isDialogOpen = async (page: Page) => {
 export const changeSearchType = async (page: Page, to: SupportedSearchType) => {
   await searchTypes.open(page)
 
-  const changedUrl = new RegExp(
-    to === ALL_MEDIA ? `/search/?` : `/search/${to}`
-  )
+  const changedUrl = new RegExp(to === ALL_MEDIA ? `/search?` : `/search/${to}`)
   await page.getByRole("radio", { name: searchTypeNames.ltr[to] }).click()
   await page.waitForURL(changedUrl)
 
