@@ -35,4 +35,6 @@ jobs:
                    "text": ":github: New discussion opened by *'${{env.discussionAuthor}}'* in '`${{env.discussionRepo}}`':\n<${{env.discussionUrl}}|#${{env.discussionNumber}} - '${{env.discussionTitle}}'>"
                  }
                }
-             ]}
+             ]
+            }
+            
