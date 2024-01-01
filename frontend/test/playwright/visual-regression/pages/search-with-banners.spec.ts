@@ -1,13 +1,13 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { setBreakpointCookie } from "~~/test/playwright/utils/navigation"
+import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
 breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
   test.beforeEach(async ({ page }) => {
-    await setBreakpointCookie(page, breakpoint)
+    await preparePageForTests(page, breakpoint, { dismissBanners: false })
     await page.goto("/ru/search/?q=birds&referrer=creativecommons.org")
   })
 

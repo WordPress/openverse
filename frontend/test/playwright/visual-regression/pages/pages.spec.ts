@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
-  dismissBannersUsingCookies,
   languageDirections,
   pathWithDir,
   preparePageForTests,
@@ -37,13 +36,13 @@ for (const contentPage of contentPages) {
   }
 }
 
-test.describe("Layout color is set correctly", () => {
+test.describe("layout color is set correctly", () => {
   breakpoints.describeLg(() => {
     test.beforeEach(async ({ page }) => {
-      await dismissBannersUsingCookies(page)
+      await preparePageForTests(page, "lg")
     })
 
-    test("Change language on homepage and search", async ({ page }) => {
+    test("change language on homepage and search", async ({ page }) => {
       await page.goto("/")
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
       await page.getByPlaceholder("البحث عن محتوى").fill("cat")
@@ -57,7 +56,7 @@ test.describe("Layout color is set correctly", () => {
       expect(await page.screenshot()).toMatchSnapshot("search-page-rtl-lg.png")
     })
 
-    test("Change language on homepage and go to content page", async ({
+    test("change language on homepage and go to content page", async ({
       page,
     }) => {
       await page.goto("/ar")
@@ -71,7 +70,7 @@ test.describe("Layout color is set correctly", () => {
       )
     })
 
-    test("Nonexistent `image` page", async ({ page }) => {
+    test("nonexistent `image` page", async ({ page }) => {
       await page.goto("/image/non-existent")
 
       expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(

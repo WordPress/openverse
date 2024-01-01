@@ -1,6 +1,6 @@
 import { Page, test } from "@playwright/test"
 
-import { t } from "~~/test/playwright/utils/navigation"
+import { preparePageForTests, t } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 const imageUrl = "/image/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b"
@@ -19,6 +19,7 @@ const getReportForm = (page: Page) => {
 
 breakpoints.describeMd(({ expectSnapshot }) => {
   test("unfocused close button", async ({ page }) => {
+    await preparePageForTests(page, "md")
     await page.goto(imageUrl)
 
     await getReportButton(page).click()
@@ -33,6 +34,7 @@ test.describe("content report form", () => {
 
   breakpoints.describeMd(({ expectSnapshot }) => {
     test("focused close button", async ({ page }) => {
+      await preparePageForTests(page, "md")
       await page.goto(imageUrl)
 
       await getReportButton(page).click()

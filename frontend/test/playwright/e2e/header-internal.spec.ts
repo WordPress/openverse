@@ -5,7 +5,6 @@ import {
   LanguageDirection,
   preparePageForTests,
   scrollToBottom,
-  setBreakpointCookie,
   t,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
@@ -110,7 +109,7 @@ test.describe("Header internal", () => {
     test("can open and close the popover on sm breakpoint", async ({
       page,
     }) => {
-      await setBreakpointCookie(page, "sm")
+      await preparePageForTests(page, "sm")
       await page.goto("/about")
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(true)

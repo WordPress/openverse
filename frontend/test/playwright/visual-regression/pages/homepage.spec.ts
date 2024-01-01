@@ -3,10 +3,9 @@ import { test, Page } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
-  dismissTranslationBanner,
-  dismissAnalyticsBanner,
   languageDirections,
   pathWithDir,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -26,11 +25,12 @@ const cleanImageCarousel = async (page: Page) => {
 
 for (const dir of languageDirections) {
   test.describe(`${dir} homepage snapshots`, () => {
-    const path = pathWithDir("/?ff_additional_search_types=off", dir)
+    const path = pathWithDir("/", dir)
     test.beforeEach(async ({ page }) => {
+      await preparePageForTests(page, "xl", {
+        features: { additional_search_types: "off" },
+      })
       await page.goto(path)
-      await dismissTranslationBanner(page)
-      await dismissAnalyticsBanner(page)
       await cleanImageCarousel(page)
       await page.mouse.move(0, 0)
     })
@@ -68,7 +68,13 @@ for (const dir of languageDirections) {
         test("content switcher with external sources open", async ({
           page,
         }) => {
-          await page.goto(pathWithDir("/?ff_additional_search_types=on", dir))
+          await preparePageForTests(page, "xl", {
+            features: {
+              additional_search_types: "on",
+            },
+          })
+
+          await page.goto(path)
           await cleanImageCarousel(page)
 
           await page.locator("#search-type-button").click()
