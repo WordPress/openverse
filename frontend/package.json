@@ -19,7 +19,7 @@
     "start:playwright": "pnpm i18n:copy-test-locales && pnpm start",
     "prod": "pnpm build:only && pnpm start",
     "prod:playwright": "pnpm i18n:copy-test-locales && pnpm prod",
-    "storybook": "nuxt storybook --port=54000",
+    "storybook": "NODE_OPTIONS=--openssl-legacy-provider nuxt storybook --port=54000",
     "storybook:build": "nuxt storybook build",
     "storybook:build-for-docs": "NODE_OPTIONS=--openssl-legacy-provider nuxt storybook build",
     "talkback": "node ./test/proxy.js",
