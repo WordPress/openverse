@@ -315,7 +315,7 @@ export const goToSearchTerm = async (
     }
     // Type search term
     const searchInput = page.locator('main input[type="search"]')
-    await searchInput.type(term)
+    await searchInput.fill(term)
     // Click search button
     // Wait for navigation
     await page.getByRole("button", { name: t("search.search", dir) }).click()
