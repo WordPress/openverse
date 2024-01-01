@@ -18,7 +18,9 @@ test("can open tags collection page from image page", async ({ page }) => {
     page.getByRole("button", { name: t("browsePage.load") })
   ).toBeEnabled()
 
-  await expect(page.getByRole("heading", { name: /cat/i })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { level: 1, name: /cat/i })
+  ).toBeVisible()
   expect(await page.locator("figure").count()).toEqual(20)
   expect(page.url()).toMatch(/image\/tag\/cat/)
 })
@@ -31,7 +33,9 @@ test("can open source collection page from image page", async ({ page }) => {
     page.getByRole("button", { name: t("browsePage.load") })
   ).toBeEnabled()
 
-  await expect(page.getByRole("heading", { name: sourcePattern })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { level: 1, name: sourcePattern })
+  ).toBeVisible()
 
   expect(await page.locator("figure").count()).toEqual(20)
 
@@ -46,7 +50,7 @@ test("can open creator collection page from image page", async ({ page }) => {
   ).toBeEnabled()
 
   await expect(
-    page.getByRole("heading", { name: creatorPattern })
+    page.getByRole("heading", { level: 1, name: creatorPattern })
   ).toBeVisible()
 
   expect(await page.locator("figure").count()).toEqual(20)

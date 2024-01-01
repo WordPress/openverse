@@ -49,7 +49,9 @@ test.describe("Layout color is set correctly", () => {
       await page.getByPlaceholder("البحث عن محتوى").fill("cat")
       await page.getByRole("button", { name: "يبحث" }).click()
 
-      await expect(page.getByRole("heading", { name: "Cat" })).toBeVisible()
+      await expect(
+        page.getByRole("heading", { level: 1, name: "Cat" })
+      ).toBeVisible()
       await page.waitForURL(/ar\/search/)
 
       expect(await page.screenshot()).toMatchSnapshot("search-page-rtl-lg.png")
