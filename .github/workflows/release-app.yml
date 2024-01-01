@@ -81,43 +81,6 @@ jobs:
             echo "image-tag=rel-$formatted_date";
           } >> "$GITHUB_OUTPUT"
 
-      - name: Log in to GitHub Docker Registry
-        uses: docker/login-action@v3
-        with:
-          registry: https://ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add new tag to existing docker image
-        run: |
-          docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
-
-          if [[ "${{ inputs.app }}" == "api" ]] || [[ "${{ inputs.app }}" == "frontend" ]]; then
-            docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}_nginx:${{ steps.tag.outputs.image-tag }}
-          fi
-
-      - name: Deploy production application
-        if: inputs.app == 'frontend' || inputs.app == 'api'
-        uses: felixp8/dispatch-and-wait@v0.1.0
-        with:
-          owner: WordPress
-          repo: openverse-infrastructure
-          token: ${{ secrets.ACCESS_TOKEN }}
-          event_type: deploy_production_${{ inputs.app == 'frontend' && 'nuxt' || inputs.app }}
-          client_payload: |
-            {
-              "actor": "${{ github.actor }}",
-              "tag": "${{ steps.tag.outputs.image-tag }}"
-            }
-          wait_time: 60 # check every minute
-          max_time: 1800 # allow up to 30 minutes for a deployment
-          # max_time can't easily be configured per application
-          # without duplicating information between our infrastructure
-          # and this workflow. The upstream workflows already have
-          # timeouts appropriately configured and will all fail before 30
-          # minutes is reached. On the other hand, we do want to wait
-          # so that there is a record of the successful deployment.
-
       - name: Create and publish release
         uses: release-drafter/release-drafter@v5
         id: release-drafter
