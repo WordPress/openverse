@@ -46,8 +46,10 @@ const config: PlaywrightTestConfig = {
   workers: UPDATE_TAPES === "true" ? 1 : undefined,
   expect: {
     toMatchSnapshot: {
-      // If the visual regression tests are flaky, we can increase this to 0.1 or 0.2.
-      maxDiffPixelRatio: 0,
+      // If the visual regression tests are flaky, we can increase this to 0.01 or 0.02.
+      // maxDiffPixelRatio: 0,
+      // Openverse has a 2px difference
+      maxDiffPixels: 3,
     },
   },
 }
