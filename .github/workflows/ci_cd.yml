@@ -631,7 +631,7 @@ jobs:
       needs.get-changes.outputs.frontend == 'true' ||
       needs.get-changes.outputs.ci_cd == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     needs:
       - get-changes
       - lint
