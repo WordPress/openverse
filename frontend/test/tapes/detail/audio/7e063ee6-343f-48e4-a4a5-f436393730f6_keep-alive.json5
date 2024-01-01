@@ -1,0 +1,153 @@
+{
+    meta: {
+        createdAt: '2024-01-01T05:20:51.097Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 01 Jan 2024 05:20:51 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '19',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '199',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                'eed2401b9d0d42c6b34c5444dce1965d',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Mon, 01 Jan 2024 05:20:51 GMT',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '83e850bfba1e68af-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: '7e063ee6-343f-48e4-a4a5-f436393730f6',
+            title: 'I Love My Dog You Love your Cat',
+            indexed_on: '2022-08-01T21:56:38.264750Z',
+            foreign_landing_url: 'https://www.jamendo.com/track/1037750',
+            url: 'https://prod-1.storage.jamendo.com/?trackid=1037750&format=mp32',
+            creator: 'Micaroni and Vulcano',
+            creator_url: 'https://www.jamendo.com/artist/434110/Micaroni_and_Vulcano',
+            license: 'by-nc-nd',
+            license_version: '3.0',
+            license_url: 'https://creativecommons.org/licenses/by-nc-nd/3.0/',
+            provider: 'jamendo',
+            source: 'jamendo',
+            category: 'music',
+            genres: [
+                'country',
+            ],
+            filesize: null,
+            filetype: 'mp32',
+            tags: [
+                {
+                    name: 'cat',
+                    accuracy: null,
+                },
+                {
+                    name: 'male',
+                    accuracy: null,
+                },
+                {
+                    name: 'nature',
+                    accuracy: null,
+                },
+                {
+                    name: 'speed_medium',
+                    accuracy: null,
+                },
+                {
+                    name: 'vocal',
+                    accuracy: null,
+                },
+            ],
+            alt_files: null,
+            attribution: '"I Love My Dog You Love your Cat" by Micaroni and Vulcano is licensed under CC BY-NC-ND 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/3.0/.',
+            fields_matched: [],
+            mature: false,
+            audio_set: {
+                title: 'I Love My Dog You Love Your Cat',
+                foreign_landing_url: 'https://www.jamendo.com/album/122192/i-love-my-dog-you-love-your-cat',
+                creator: 'Micaroni and Vulcano',
+                creator_url: 'https://www.jamendo.com/artist/434110/Micaroni_and_Vulcano',
+                url: null,
+                filesize: null,
+                filetype: null,
+            },
+            duration: 193000,
+            bit_rate: null,
+            sample_rate: null,
+            thumbnail: 'http://localhost:49153/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/',
+            detail_url: 'http://localhost:49153/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/',
+            related_url: 'http://localhost:49153/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/related/',
+            waveform: 'http://localhost:49153/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/waveform/',
+            unstable__sensitivity: [],
+        },
+    },
+}
