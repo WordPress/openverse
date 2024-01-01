@@ -34,7 +34,7 @@
     "test:playwright:update-tapes": "UPDATE_TAPES=true pnpm test:playwright",
     "test:playwright:gen": "playwright codegen localhost:8443/",
     "test:playwright:faststart": "FASTSTART=true pnpm test:playwright",
-    "test:storybook": "TEST_COMMAND=test:storybook:local ./bin/playwright.sh",
+    "test:storybook": "NODE_OPTIONS=--openssl-legacy-provider TEST_COMMAND=test:storybook:local ./bin/playwright.sh",
     "test:storybook:local": "playwright test -c test/storybook",
     "test:storybook:debug": "PWDEBUG=1 pnpm test:storybook:local",
     "test:storybook:gen": "playwright codegen localhost:54000/",
