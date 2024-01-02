@@ -28,9 +28,6 @@ RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
 
-# Fetch dependencies, including local development tools, to the virtual store.
-RUN pnpm fetch
-
 WORKDIR /home/node/frontend
 
 # Prevent pre-commit from being installed, we don't need it here and it fails to install anyway
@@ -38,9 +35,8 @@ ENV SKIP_PRE_COMMIT=true
 
 # Get rid of the lockfile as it won't be accurate for the build without workspace.
 # Then install dependencies, and in the process:
-#   - use only dependencies present in the virtual-store
 #   - fix the missing lockfile by writing a new one
-RUN pnpm install --offline
+RUN pnpm install
 
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
