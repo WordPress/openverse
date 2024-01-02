@@ -197,7 +197,7 @@ export default {
       2: "2",
     },
     fontFamily: {
-      mono: ['"JetBrains Mono"', "monospace"],
+      mono: ["JetBrains Mono", "monospace"],
       sans: ["Inter", ...defaultTheme.fontFamily.sans],
       serif: [...defaultTheme.fontFamily.serif],
     },
