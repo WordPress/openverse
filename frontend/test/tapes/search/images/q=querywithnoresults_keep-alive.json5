@@ -1,12 +1,13 @@
 {
     meta: {
-        createdAt: '2023-07-10T06:54:31.443Z',
+        createdAt: '2024-01-02T06:13:18.279Z',
         host: 'https://api.openverse.engineering',
         resHumanReadable: true,
+        resUncompressed: true,
     },
     req: {
         headers: {
-            connection: 'close',
+            connection: 'keep-alive',
         },
         url: '/v1/images/?q=querywithnoresults',
         method: 'GET',
@@ -16,40 +17,34 @@
         status: 200,
         headers: {
             date: [
-                'Mon, 10 Jul 2023 06:54:32 GMT',
+                'Tue, 02 Jan 2024 06:13:18 GMT',
             ],
             'content-type': [
                 'application/json',
             ],
-            'content-length': [
-                '70',
+            'transfer-encoding': [
+                'chunked',
             ],
             connection: [
-                'close',
+                'keep-alive',
             ],
             vary: [
-                'Accept, Authorization, origin',
+                'Accept, Authorization, origin, Accept-Encoding',
             ],
             allow: [
                 'GET, HEAD, OPTIONS',
             ],
             'x-ratelimit-limit-anon_burst': [
-                '5/hour',
+                '20/min',
             ],
             'x-ratelimit-available-anon_burst': [
-                '4',
+                '19',
             ],
             'x-ratelimit-limit-anon_sustained': [
-                '100/day',
+                '200/day',
             ],
             'x-ratelimit-available-anon_sustained': [
-                '99',
-            ],
-            'x-ratelimit-limit-anon_thumbnail': [
-                '150/minute',
-            ],
-            'x-ratelimit-available-anon_thumbnail': [
-                '149',
+                '199',
             ],
             'x-frame-options': [
                 'DENY',
@@ -63,17 +58,20 @@
             'cross-origin-opener-policy': [
                 'same-origin',
             ],
+            'x-request-id': [
+                '5d810909aa7e41a59dff8fc0fae1bfbb',
+            ],
             'cache-control': [
                 'max-age=14400',
             ],
             'cf-cache-status': [
-                'MISS',
+                'HIT',
+            ],
+            age: [
+                '6190',
             ],
             'last-modified': [
-                'Mon, 10 Jul 2023 06:54:32 GMT',
-            ],
-            'accept-ranges': [
-                'bytes',
+                'Tue, 02 Jan 2024 04:30:08 GMT',
             ],
             'strict-transport-security': [
                 'max-age=15552000; includeSubDomains; preload',
@@ -82,7 +80,10 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '7e46e558af1e0534-OTP',
+                '83f0daf688be68af-BUD',
+            ],
+            'content-encoding': [
+                'br',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400',
