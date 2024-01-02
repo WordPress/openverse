@@ -38,6 +38,19 @@ class JamendoDataIngester(ProviderDataIngester):
     batch_limit = 200
     headers = {"Accept": "application/json"}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Keep track of the number of records which are not ingested due
+        # to downloads being disabled
+        self.download_disabled_count = 0
+
+    def ingest_records(self, **kwargs):
+        super().ingest_records(**kwargs)
+        logger.info(
+            f"Discarded {self.download_disabled_count} records with"
+            " `audiodownload_allowed` = False."
+        )
+
     def get_media_type(self, record):
         return constants.AUDIO
 
@@ -155,7 +168,6 @@ class JamendoDataIngester(ProviderDataIngester):
             "downloads": stats.get("rate_download_total", 0),
             "listens": stats.get("rate_listened_total", 0),
             "playlists": stats.get("rate_playlisted_total", 0),
-            "audiodownload_allowed": data.get("audiodownload_allowed", True),
         }
         return {k: v for k, v in metadata.items() if v is not None}
 
@@ -189,6 +201,10 @@ class JamendoDataIngester(ProviderDataIngester):
             return None
 
         if not (license_info := get_license_info(data.get("license_ccurl"))):
+            return None
+
+        if data.get("audiodownload_allowed") is False:
+            self.download_disabled_count += 1
             return None
 
         if duration := data.get("duration"):
