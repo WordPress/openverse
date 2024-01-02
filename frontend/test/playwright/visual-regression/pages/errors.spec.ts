@@ -97,7 +97,7 @@ for (const searchType of supportedSearchTypes) {
         })
       }
 
-      test(`No results ${searchType} ${dir} page snapshots`, async ({
+      test(`no results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
         await preparePageForTests(page, breakpoint)
@@ -116,7 +116,7 @@ for (const searchType of supportedSearchTypes) {
         )
       })
 
-      test(`Timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
+      test(`timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
         await preparePageForTests(page, breakpoint)
 
         await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
