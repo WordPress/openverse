@@ -282,7 +282,7 @@ In all of these cases it is important to ping the author of the issue and the
 people discussing it. For clarification on whether an issue is still desired, it
 is especially helpful to ping the
 [communication alias](/meta/contribution/communication_aliases.md) relevant for
-the part of the stack in question. Please heed
+the part of the stack in question.
 
 ```{warning}
 ##### Reproducibility
