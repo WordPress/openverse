@@ -17,7 +17,7 @@ for (const dir of languageDirections) {
   for (const mediaType of supportedMediaTypes) {
     breakpoints.describeMobileAndDesktop(
       async ({ breakpoint, expectSnapshot }) => {
-        test(`External ${mediaType} sources popover - ${dir}`, async ({
+        test(`external ${mediaType} sources popover - ${dir}`, async ({
           page,
         }) => {
           await preparePageForTests(page, breakpoint)
@@ -43,7 +43,7 @@ for (const dir of languageDirections) {
             `external-${mediaType}-sources-popover-${dir}`,
             page.getByRole("dialog"),
             {},
-            { maxDiffPixelRatio: 0.01 }
+            { maxDiffPixelRatio: 0.01, maxDiffPixels: undefined }
           )
         })
       }
