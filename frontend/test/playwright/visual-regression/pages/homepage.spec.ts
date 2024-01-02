@@ -6,6 +6,7 @@ import {
   languageDirections,
   pathWithDir,
   preparePageForTests,
+  setCookies,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -24,25 +25,24 @@ const cleanImageCarousel = async (page: Page) => {
 }
 
 for (const dir of languageDirections) {
-  test.describe(`${dir} homepage snapshots`, () => {
-    const path = pathWithDir("/", dir)
-    test.beforeEach(async ({ page }) => {
-      await preparePageForTests(page, "xl", {
-        features: { additional_search_types: "off" },
-      })
-      await page.goto(path)
-      await cleanImageCarousel(page)
-      await page.mouse.move(0, 0)
-    })
+  const path = pathWithDir("/", dir)
 
-    breakpoints.describeEvery(({ expectSnapshot }) =>
+  breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
+    test.describe(`${dir} homepage`, () => {
+      test.beforeEach(async ({ page }) => {
+        await preparePageForTests(page, breakpoint, {
+          features: { additional_search_types: "off" },
+        })
+        await page.goto(path)
+        await cleanImageCarousel(page)
+        await page.mouse.move(0, 0)
+      })
+
       test(`${dir} full page`, async ({ page }) => {
         await expectSnapshot(`index-${dir}`, page)
       })
-    )
 
-    test.describe("search input", () => {
-      breakpoints.describeEvery(({ expectSnapshot }) => {
+      test.describe("search input", () => {
         test("unfocused", async ({ page }) => {
           await expectSnapshot(
             `unfocused-search-${dir}`,
@@ -68,10 +68,8 @@ for (const dir of languageDirections) {
         test("content switcher with external sources open", async ({
           page,
         }) => {
-          await preparePageForTests(page, "xl", {
-            features: {
-              additional_search_types: "on",
-            },
+          await setCookies(page.context(), {
+            features: { additional_search_types: "on" },
           })
 
           await page.goto(path)
