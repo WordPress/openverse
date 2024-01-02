@@ -7,7 +7,10 @@ test.describe.configure({ mode: "parallel" })
 
 breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
   test.beforeEach(async ({ page }) => {
-    await preparePageForTests(page, breakpoint, { dismissBanners: false })
+    await preparePageForTests(page, breakpoint, {
+      dismissBanners: false,
+      dismissFilter: false,
+    })
     await page.goto("/ru/search/?q=birds&referrer=creativecommons.org")
   })
 

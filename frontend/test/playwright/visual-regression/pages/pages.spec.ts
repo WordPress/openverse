@@ -39,7 +39,7 @@ for (const contentPage of contentPages) {
 test.describe("layout color is set correctly", () => {
   breakpoints.describeLg(() => {
     test.beforeEach(async ({ page }) => {
-      await preparePageForTests(page, "lg")
+      await preparePageForTests(page, "lg", { dismissFilter: false })
     })
 
     test("change language on homepage and search", async ({ page }) => {
