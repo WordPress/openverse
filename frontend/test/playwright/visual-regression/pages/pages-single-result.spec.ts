@@ -48,7 +48,7 @@ for (const isOn of [true, false]) {
             }`,
             page,
             { fullPage: true },
-            { maxDiffPixelRatio: 0.01 }
+            { maxDiffPixelRatio: 0.01, maxDiffPixels: undefined }
           )
         })
       })
