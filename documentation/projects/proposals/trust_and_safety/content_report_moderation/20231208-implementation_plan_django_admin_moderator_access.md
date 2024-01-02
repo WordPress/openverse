@@ -143,7 +143,7 @@ in the columns list above.
 
 #### Table view improvements
 
-We will scrap the existing report table. Instead of showing a list of reports,
+We will scrap the existing reports view. Instead of showing a list of reports,
 we'll show a list of reported media, sorted by the total number of pending
 reports, and then by the age of the oldest pending report. This will have the
 effect of sorting re-reported works to the top of the list, under the assumption
@@ -170,8 +170,8 @@ Clicking on a single reported media object should show the following:
   - provider/source
   - links to foreign landing url and Openverse.org page for the work
 - A chronological list of all moderation decisions for the work
-- A chronological list of all reports for the work regardless of status
-  - Include at least the following columns: status, description, reason, date
+- A chronological list of all reports for the work
+  - Include at least the following columns: description, reason, date
 
 The idea here is that the "report view" is not focused on taking an action for a
 single _report_, but rather showing all relevant information for a single work
@@ -399,10 +399,10 @@ others or are non-blocking.
 3. Report table view improvements (non-blocking)
 4. `ModerationDecision` (blocking media moderation view)
 5. Media moderation view
-6. The view itself
-7. The actions
-8. The moderation soft-lock
-9. Finalise access control
+   1. The view itself
+   2. The actions
+   3. The moderation soft-lock
+6. Finalise access control
 
 ## Step details
 
@@ -459,75 +459,61 @@ This is in three separate issues:
 
 1. Create a new media view to replace the existing view
 
-- Use the basic model admin but with only "view" settings for all model fields
-- We'll need to expand the rendered fields to include things like the rendered
-  (interactive) thumbnail and audio player
-- It should display (and not allow editing) the following:
-  - title
-  - description
-  - tags
-  - creator with link to creator landing page on source (if applicable)
-  - source/provider
-  - the work's thumbnail itself, blurred if the moderator has not turned off
-    blurring
-    - clicking on the thumbnail should un-blur the work
-  - if an audio work, show the basic HTML5 audio player
-  - links to the foreign landing URL and Openverse.org page of the work
-  - whether sensitive text detection matched on the work
-    - check if the work is in the filtered index, if not, then it has sensitive
-      text
-- Show chronolical lists of all moderation decisions and reports for the work
-  - Do this using an
-    [`TabularInline`](https://docs.djangoproject.com/en/4.2/ref/contrib/admin/#inlinemodeladmin-objects)
-    for each
+   - Use the basic model admin but with only "view" settings for all model
+     fields
+   - We'll need to expand the rendered fields to include things like the
+     rendered (interactive) thumbnail and audio player
+   - It should display (and not allow editing) the following:
+     - title
+     - description
+     - tags
+     - creator with link to creator landing page on source (if applicable)
+     - source/provider
+     - the work's thumbnail itself, blurred if the moderator has not turned off
+       blurring
+       - clicking on the thumbnail should un-blur the work
+     - if an audio work, show the basic HTML5 audio player
+     - links to the foreign landing URL and Openverse.org page of the work
+     - whether sensitive text detection matched on the work
+       - check if the work is in the filtered index, if not, then it has
+         sensitive text
+   - Show chronolical lists of all moderation decisions and reports for the work
+     - Do this using an
+       [`TabularInline`](https://docs.djangoproject.com/en/4.2/ref/contrib/admin/#inlinemodeladmin-objects)
+       for each
 
 2. If the user viewing the page has content moderation permissions, add the
    relevant actions for the work based on it
 
-- See the
-  [relevant overview section for described actions](#media-moderation-view) and
-  the conditions for when to show them
-- Add an free text form field "explanation" to collect for the moderation
-  decision
-- For any action taken, we only need to update/save a single report with the new
-  status. The `AbstractMediaReport` class already handles updating any other
-  pending reports in it's `save` method without creating duplicate/conflicting
-  mature or deleted media objects.
-- For each of these actions, set the following new status:
-  - `confirmed_sensitive` -> `mature_filtered`
-  - `deindexed` -> `deindexed`
-  - `rejected_report` or `duplicate` -> `no_action`
-- Prevent the race condition described in the rational section for this step by
-  setting a hidden form field with the list of pending report IDs at page load.
-  Instead of erroring when that list does not match the list of pending reports
-  at save, which would slow down the moderation workflow, just make sure that
-  only those report IDs _at load_ are the ones that are modified. To do this,
-  update the report `save` method to only bulk update reports _older_ than the
-  one being saved. Then, in the admin action, only update the oldest report of
-  the ones the moderator is known to have seen. The next time moderators come
-  past the work they'll have the most recent decision to work off of and can
-  action on the new report then.
+   - See the
+     [relevant overview section for described actions](#media-moderation-view)
+     and the conditions for when to show them
+   - Add an free text form field "explanation" to collect for the moderation
+     decision
+   - For each of these actions, set the following new status:
+     - `confirmed_sensitive` -> `mature_filtered`
+     - `deindexed` -> `deindexed`
+     - `rejected_report` or `duplicate` -> `no_action`
 
 3. Implement the lock on works to prevent duplicate decisions
-
-- When loading the moderation view, add the work's identifier to the sorted set
-  `in_moderation` with a score of "now + five minutes" as a unix timestamp.
-  Additionally, set `currently_moderating:<moderator id>` to the work identifier
-  with a TTL of five minutes.
-- When loading the moderation view, check `in_moderation` (before setting
-  anything in there) for the work identifier. If it is in there, add a message
-  when the page loads to alert the moderator that someone else is also looking
-  at the work. No other changes to the page are necessary.
-- When loading the table view, check the `in_moderation` sorted set. Retrieve
-  everything with a score higher than the current unix timestamp. Eject
-  everything else from the sorted set _in Redis_. This will be our periodic
-  cleanup of the list to mimic expiration and prevent it from growing
-  indefinitely.
-- For each line of the table view, render the line with a light orange
-  background if the work is in the `in_moderation` list.
-- Add copy to the table view to explain what the light orange background
-  indicates (either as a message or as a new sidebar element where the "filters"
-  typically are).
+   - When loading the moderation view, add the work's identifier to the sorted
+     set `in_moderation` with a score of "now + five minutes" as a unix
+     timestamp. Additionally, set `currently_moderating:<moderator id>` to the
+     work identifier with a TTL of five minutes.
+   - When loading the moderation view, check `in_moderation` (before setting
+     anything in there) for the work identifier. If it is in there, add a
+     message when the page loads to alert the moderator that someone else is
+     also looking at the work. No other changes to the page are necessary.
+   - When loading the table view, check the `in_moderation` sorted set. Retrieve
+     everything with a score higher than the current unix timestamp. Eject
+     everything else from the sorted set _in Redis_. This will be our periodic
+     cleanup of the list to mimic expiration and prevent it from growing
+     indefinitely.
+   - For each line of the table view, render the line with a light orange
+     background if the work is in the `in_moderation` list.
+   - Add copy to the table view to explain what the light orange background
+     indicates (either as a message or as a new sidebar element where the
+     "filters" typically are).
 
 ### 6. Finalise access control
 
