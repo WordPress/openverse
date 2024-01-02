@@ -21,5 +21,5 @@ if __name__ == "__main__":
                 },
             },
         },
-        no_access_log=True,
+        access_log="Disable",
     )
