@@ -24,23 +24,27 @@ for (const dir of languageDirections) {
         await page.goto(pathWithDir("/search/?q=birds", dir))
         await filters.open(page, dir)
       })
-      test(`Filters modal none selected - ${dir}`, async ({ page }) => {
+      test(`filters modal none selected - ${dir}`, async ({ page }) => {
         const snapshotName = `${getFiltersName(breakpoint)}-${dir}`
 
         await expectSnapshot(
           snapshotName,
-          isDesktop ? page.locator(".sidebar") : page
+          isDesktop ? page.locator(".sidebar") : page,
+          {},
+          { maxDiffPixels: 2, maxDiffPixelRatio: undefined }
         )
       })
 
-      test(`Filters modal 1 filter selected - ${dir}`, async ({ page }) => {
+      test(`filters modal 1 filter selected - ${dir}`, async ({ page }) => {
         await page.locator('input[type="checkbox"]').first().check()
 
         const snapshotName = `${getFiltersName(breakpoint)}-checked-${dir}`
 
         await expectSnapshot(
           snapshotName,
-          isDesktop ? page.locator(".sidebar") : page
+          isDesktop ? page.locator(".sidebar") : page,
+          {},
+          { maxDiffPixels: 2, maxDiffPixelRatio: undefined }
         )
       })
     }
