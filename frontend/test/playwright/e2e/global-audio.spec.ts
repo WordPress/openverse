@@ -8,7 +8,9 @@ import {
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
 
-test.describe("Global Audio", () => {
+test.describe.configure({ mode: "parallel" })
+
+test.describe("global audio", () => {
   breakpoints.describeXs(() => {
     test.beforeEach(async ({ page }) => {
       await preparePageForTests(page, "xs")
