@@ -27,6 +27,8 @@ test.describe("VHeaderInternal", () => {
       test(`mobile-header-internal-${dir}`, async ({ page }) => {
         await page.goto(pageUrl(dir))
         await page.mouse.move(0, 150)
+        // Wait for the layout to load.
+        await sleep(500)
         await expectSnapshot(
           `mobile-header-internal-closed-${dir}`,
           page.locator(headerSelector)

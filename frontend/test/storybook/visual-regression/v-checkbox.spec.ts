@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test"
 
 test.describe.configure({ mode: "parallel" })
 
-test.describe("v-checkbox", () => {
+test.describe("VCheckbox", () => {
   test.describe("default", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto("/iframe.html?id=components-vcheckbox--default-story")

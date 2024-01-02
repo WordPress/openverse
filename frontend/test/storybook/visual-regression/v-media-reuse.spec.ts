@@ -15,7 +15,7 @@ const defaultUrl =
 const pageUrl = (dir: (typeof languageDirections)[number]) =>
   dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
-test.describe("media-reuse", () => {
+test.describe("VMediaReuse", () => {
   for (const tab of tabs) {
     for (const dir of languageDirections) {
       breakpoints.describeEvery(({ expectSnapshot }) => {
