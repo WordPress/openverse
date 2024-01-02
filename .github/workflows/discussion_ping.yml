@@ -26,13 +26,13 @@ jobs:
         with:
           payload: |
             {
-             "text": "New discussion opened by ${{ discussion_author }} in ${{ discussion_repo }}: #${{ discussion_number }} - ${{ discussion_title }}",
+             "text": "New discussion opened by ${{ env.discussion_author }} in ${{ env.discussion_repo }}: #${{ env.discussion_number }} - ${{ env.discussion_title }}",
              "blocks": [
                {
                  "type": "section",
                  "text": {
                    "type": "mrkdwn",
-                   "text": ":github: New discussion opened by *${{ discussion_author }}* in ${{ discussion_repo }}:\n<${{ discussion_url }}|#${{ discussion_number }} - ${{ discussion_title }}>"
+                   "text": ":github: New discussion opened by *${{ env.discussion_author }}* in ${{ env.discussion_repo }}:\n<${{ env.discussion_url }}|#${{ env.discussion_number }} - ${{ env.discussion_title }}>"
                  }
                }
              ]

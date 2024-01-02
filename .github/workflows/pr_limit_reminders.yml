@@ -41,6 +41,6 @@ jobs:
         with:
           payload: |
             {
-              "user": "${{ slack_id }}",
-                "message": "Hi, Opener! \nYou currently have ${{ pr_count }} Pull Request(s) open with requested reviews (totalling $((${{ pr_count }} * 2)) required reviews). \nTo help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing this list of ways to contribute instead of working on new code contributions: \nhttps://docs.openverse.org/meta/maintainer_tasks.html"
+              "user": "${{ env.slack_id }}",
+                "message": "Hi, Opener! \nYou currently have ${{ env.pr_count }} Pull Request(s) open with requested reviews (totalling $((${{ env.pr_count }} * 2)) required reviews). \nTo help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing this list of ways to contribute instead of working on new code contributions: \nhttps://docs.openverse.org/meta/maintainer_tasks.html"
             }
