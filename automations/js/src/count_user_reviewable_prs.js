@@ -50,7 +50,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
     '🟥 priority: critical',
   ]
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
-  const isValidPR = (pr) =>
+  const isRelevantPR = (pr) =>
     pr.author.login === context.actor &&
     !pr.isDraft &&
     !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
@@ -67,8 +67,8 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       })
 
       const { nodes, pageInfo } = result.repository.pullRequests
-      const validPRs = nodes.filter(isValidPR)
-      reviewablePRs.push(...validPRs)
+      const relevantPRs = nodes.filter(isRelevantPR)
+      reviewablePRs.push(...relevantPRs)
 
       if (pageInfo.hasNextPage) {
         cursor = pageInfo.endCursor
@@ -79,8 +79,8 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
 
     let shouldAlert = false
     if (reviewablePRs.length >= 1) {
-      // Get the most recently created PR, then determine if it's valid
-      shouldAlert = isValidPR(
+      // Get the most recently created PR, then determine if it's relevant
+      shouldAlert = isRelevantPR(
         reviewablePRs.sort((a, b) => a.createdAt.localeCompare(b.createdAt))[0]
       )
     }
