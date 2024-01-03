@@ -89,6 +89,7 @@ def test_get_record_data():
             "listens": 5616,
             "playlists": 0,
             "release_date": "2005-04-12",
+            "audiodownload_allowed": True,
         },
         "raw_tags": ["instrumental", "speed_medium"],
         "audio_set_foreign_identifier": "119",
@@ -207,28 +208,3 @@ def test_add_trailing_slash(url, expected):
 def test_remove_track_id_handles_data(thumbnail_url, expected):
     actual = jamendo._remove_trackid(thumbnail_url)
     assert actual == expected
-
-
-@pytest.mark.parametrize(
-    "audiodownload_allowed, should_ingest",
-    [
-        # Happy path, download is allowed
-        (True, True),
-        # Only prevent ingestion if audiodownload_allowed is explicitly False.
-        (None, True),
-        # Download disabled; prevent ingestion
-        (False, False),
-    ],
-)
-def test_get_record_data_discards_records_with_downloads_disabled(
-    audiodownload_allowed, should_ingest
-):
-    item_data = _get_resource_json("audio_data_example.json")
-    item_data["audiodownload_allowed"] = audiodownload_allowed
-
-    record_data = jamendo.get_record_data(item_data)
-
-    if should_ingest:
-        assert record_data is not None
-    else:
-        assert record_data is None
