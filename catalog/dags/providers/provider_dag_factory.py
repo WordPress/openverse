@@ -304,7 +304,7 @@ def create_ingestion_workflow(
 
         if conf.create_postingestion_tasks:
             postingestion_tasks = conf.create_postingestion_tasks()
-            pull_data >> postingestion_tasks
+            load_tasks >> postingestion_tasks
 
     ingestion_metrics = {
         "duration": XCOM_PULL_TEMPLATE.format(pull_data.task_id, "duration"),

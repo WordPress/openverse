@@ -16,8 +16,10 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         channels: 1/2
 """
 import logging
+from datetime import timedelta
 from urllib.parse import parse_qs, urlencode, urlsplit
 
+from airflow.decorators import task_group
 from airflow.models import Variable
 
 import common
@@ -25,6 +27,10 @@ from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.urls import rewrite_redirected_url
+from database.delete_records.delete_records import (
+    create_deleted_records,
+    delete_records_from_media_table,
+)
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -237,6 +243,46 @@ class JamendoDataIngester(ProviderDataIngester):
             "set_url": set_url,
             "set_thumbnail": set_thumbnail,
         }
+
+    @staticmethod
+    def create_postingestion_tasks():
+        """
+        Create postingestion tasks to delete records that have downloads
+        disabled from the audio table and preserve them in the
+        deleted_audio table.
+
+        If we instead simply discarded these records during ingestion,
+        existing records which have had their downloads disabled since their
+        last ingestion would remain in the catalog. This approach ensures
+        all records with downloads disabled are removed.
+        """
+
+        select_query = (
+            "WHERE provider='jamendo' AND meta_data->>'audiodownload_allowed'"
+            " = 'False'"
+        )
+
+        @task_group(group_id="delete_records_with_downloads_disabled")
+        def delete_download_disabled_records():
+            # Select all records with downloads disabled and copy them into
+            # the deleted_audio table
+            insert_into_deleted_media_table = create_deleted_records.override(
+                task_id="update_deleted_media_table",
+                execution_timeout=timedelta(hours=1),
+            )(
+                select_query=select_query,
+                deleted_reason="download_disabled",
+                media_type=constants.AUDIO,
+            )
+
+            # If successful, delete the records from the audio table
+            delete_records = delete_records_from_media_table.override(
+                execution_timeout=timedelta(hours=1)
+            )(table=constants.AUDIO, select_query=select_query)
+
+            insert_into_deleted_media_table >> delete_records
+
+        return delete_download_disabled_records()
 
 
 def main():
