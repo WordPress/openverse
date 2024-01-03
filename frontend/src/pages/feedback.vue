@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { useI18n } from "~/composables/use-i18n"
 
@@ -63,8 +63,8 @@ const tabs = Object.keys(forms) as (keyof typeof forms)[]
 export default defineNuxtComponent({
   name: "FeedbackPage",
   components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
-  layout: "content-layout",
   setup() {
+    definePageMeta({ layout: "content-layout" })
     const i18n = useI18n()
 
     useHead({

@@ -104,7 +104,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import axios from "axios"
 
@@ -153,9 +153,11 @@ export default defineNuxtComponent({
     VRelatedImages,
     VSketchFabViewer,
   },
-  layout: "content-layout",
-  middleware: singleResultMiddleware,
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+      middleware: singleResultMiddleware,
+    })
     const singleResultStore = useSingleResultStore()
 
     const route = useRoute()

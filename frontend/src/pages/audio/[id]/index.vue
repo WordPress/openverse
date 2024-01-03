@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { computed, ref } from "vue"
 import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
@@ -75,12 +75,14 @@ export default defineNuxtComponent({
     VMediaReuse,
     VRelatedAudio,
   },
-  layout: "content-layout",
-  middleware: singleResultMiddleware,
   // Fetching on the server is disabled because it is
   // handled by the `singleResultMiddleware`.
   fetchOnServer: false,
   setup() {
+    definePageMeta({
+      layout: "content-layout",
+      middleware: singleResultMiddleware,
+    })
     const singleResultStore = useSingleResultStore()
 
     const route = useRoute()

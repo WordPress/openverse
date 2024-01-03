@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, definePageMeta } from "#imports"
 
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -60,7 +60,10 @@ export default defineNuxtComponent({
     VButton,
     VContentReportForm,
   },
-  layout: "content-layout",
+  setup() {
+    definePageMeta({ layout: "content-layout" })
+    return {}
+  },
   async asyncData({ route, $pinia, i18n, error: nuxtError }) {
     const singleResultStore = useSingleResultStore($pinia)
     const imageId = route.params.id

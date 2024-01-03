@@ -132,7 +132,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { useI18n } from "~/composables/use-i18n"
 
@@ -142,8 +142,8 @@ import VContentPage from "~/components/VContentPage.vue"
 export default defineNuxtComponent({
   name: "AboutPage",
   components: { VLink, VContentPage },
-  layout: "content-layout",
   setup() {
+    definePageMeta({ layout: "content-layout" })
     const i18n = useI18n()
 
     useHead({

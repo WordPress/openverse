@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { computed } from "vue"
 
@@ -78,8 +78,9 @@ import VContentPage from "~/components/VContentPage.vue"
 export default defineNuxtComponent({
   name: "VPrivacyPage",
   components: { VLink, VCheckbox, VContentPage },
-  layout: "content-layout",
+
   setup() {
+    definePageMeta({ layout: "content-layout" })
     const i18n = useI18n()
     const featureFlagStore = useFeatureFlagStore()
 

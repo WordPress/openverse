@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
@@ -78,10 +78,9 @@ export default defineNuxtComponent({
     VExternalSearchForm,
     VScrollButton,
   },
-  layout: "search-layout",
-  middleware: searchMiddleware,
   fetchOnServer: false,
   setup() {
+    definePageMeta({ layout: "search-layout", middleware: searchMiddleware })
     const showScrollButton = inject(ShowScrollButtonKey)
     const isSidebarVisible = inject(IsSidebarVisibleKey)
     const featureFlagStore = useFeatureFlagStore()

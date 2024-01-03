@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, definePageMeta } from "#imports"
 
 import { computed } from "vue"
 
@@ -106,8 +106,9 @@ export default defineNuxtComponent({
     VContentPage,
     VCheckbox,
   },
-  layout: "content-layout",
+
   setup() {
+    definePageMeta({ layout: "content-layout" })
     const featureFlagStore = useFeatureFlagStore()
 
     const flags = computed(() => featureFlagStore.flags)

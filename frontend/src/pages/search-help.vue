@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -53,8 +53,9 @@ import VContentPage from "~/components/VContentPage.vue"
 export default defineNuxtComponent({
   name: "VSearchHelpPage",
   components: { VLink, VContentPage },
-  layout: "content-layout",
+
   setup() {
+    definePageMeta({ layout: "content-layout" })
     const i18n = useI18n()
     const searchStore = useSearchStore()
 

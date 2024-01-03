@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { computed, onMounted, ref } from "vue"
 
@@ -47,6 +47,9 @@ export default defineNuxtComponent({
     VHomepageContent,
   },
   setup() {
+    definePageMeta({
+      layout: "default",
+    })
     const router = useRouter()
 
     const featureFlagStore = useFeatureFlagStore()
