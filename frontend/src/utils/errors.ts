@@ -28,6 +28,7 @@ export const parseFetchingError = (
     details,
     searchType,
     code: ERR_UNKNOWN,
+    message: "FetchingError",
   }
 
   if (axios.isAxiosError(error)) {

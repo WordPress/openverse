@@ -41,13 +41,12 @@ const matchTokenDataRequestBody = new URLSearchParams({
   grant_type: "client_credentials",
 }).toString()
 
-const getMockContext = ($config: $config = defaultConfig) =>
-  ({
-    $sentry: {
-      captureException: jest.fn(),
-    },
-    $config: $config,
-  })
+const getMockContext = ($config: $config = defaultConfig) => ({
+  $sentry: {
+    captureException: jest.fn(),
+  },
+  $config: $config,
+})
 
 const mockInject = jest.fn()
 

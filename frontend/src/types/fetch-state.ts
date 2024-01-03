@@ -1,8 +1,6 @@
 import type { ErrorCode } from "~/constants/errors"
 import type { SupportedSearchType } from "~/constants/media"
 
-import type { NuxtError } from "#app"
-
 /**
  * Describes the kind of API request that was made.
  */
@@ -12,7 +10,7 @@ export type RequestKind = "search" | "single-result" | "related" | "provider"
  * This interface represents errors related to data-fetching from the API.
  * It has the information that can be used on the error page.
  */
-export interface FetchingError extends NuxtError {
+export interface FetchingError {
   /**
    * Axios error codes or custom error code like NO_RESULT.
    * @see frontend/src/constants/errors.ts
@@ -24,6 +22,8 @@ export interface FetchingError extends NuxtError {
    * Additional details about the error, e.g. the search term.
    */
   details?: Record<string, string>
+  statusCode?: number
+  message: string
 }
 
 export interface FetchState {

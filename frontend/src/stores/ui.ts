@@ -2,14 +2,11 @@ import { useCookie } from "#imports"
 
 import { defineStore } from "pinia"
 
-import { CookieOptions } from "#app"
-
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
 
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
-import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 import { useNuxtI18n } from "~/composables/use-i18n"
 

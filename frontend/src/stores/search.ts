@@ -47,10 +47,9 @@ import {
   PaginatedCollectionQuery,
 } from "~/types/search"
 
-import type { Ref } from "vue"
+import type { LocationQuery } from "vue-router"
 
-import type { Dictionary } from "vue-router/types/router"
-import type { Context } from "@nuxt/types"
+import type { Ref } from "vue"
 
 export const isSearchTypeSupported = (
   st: SearchType
@@ -251,7 +250,7 @@ export const useSearchStore = defineStore("search", {
         )
       return useLocalePath()({
         path: searchPath(searchType),
-        query: queryParams as unknown as Dictionary<string>,
+        query: queryParams as unknown as LocationQuery,
       })
     },
 
@@ -505,7 +504,7 @@ export const useSearchStore = defineStore("search", {
       urlQuery,
     }: {
       path: string
-      urlQuery: Context["query"]
+      urlQuery: LocationQuery
     }) {
       // Update `fetch_sensitive` from the feature flag store because
       // the value is not present in the URL.
