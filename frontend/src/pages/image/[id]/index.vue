@@ -108,6 +108,7 @@ import {
   createError,
   defineNuxtComponent,
   definePageMeta,
+  useAsyncData,
   useHead,
   useRoute,
 } from "#imports"
@@ -115,9 +116,8 @@ import {
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { useFetch } from "@nuxtjs/composition-api"
 
-import { IMAGE, isAdditionalSearchType } from "~/constants/media"
+import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -181,20 +181,26 @@ export default defineNuxtComponent({
 
     const isLoadingThumbnail = ref(true)
 
-    useFetch(async () => {
-      const imageId = Array.isArray(route.params.id)
-        ? route.params.id[0]
-        : route.params.id
-      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
-      if (!fetchedImage) {
-        if (fetchingError.value && !isRetriable(fetchingError.value)) {
-          throw createError(fetchingError.value)
+    useAsyncData(
+      "single-image-result",
+      async () => {
+        const imageId = Array.isArray(route.params.id)
+          ? route.params.id[0]
+          : route.params.id
+        const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
+        if (!fetchedImage) {
+          if (fetchingError.value && !isRetriable(fetchingError.value)) {
+            throw createError(fetchingError.value)
+          }
+        } else {
+          image.value = fetchedImage
+          imageSrc.value = fetchedImage.thumbnail
         }
-      } else {
-        image.value = fetchedImage
-        imageSrc.value = fetchedImage.thumbnail
-      }
-    })
+      },
+      // Fetching on the server is disabled because it is
+      // handled by the `singleResultMiddleware`.
+      { server: false }
+    )
 
     const imageWidth = ref(image.value?.width ?? 0)
     const imageHeight = ref(image.value?.height ?? 0)
@@ -333,10 +339,6 @@ export default defineNuxtComponent({
       hide,
     }
   },
-  methods: { isAdditionalSearchType },
-  // Fetching on the server is disabled because it is
-  // handled by the `singleResultMiddleware`.
-  fetchOnServer: false,
 })
 </script>
 

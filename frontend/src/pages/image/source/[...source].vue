@@ -3,9 +3,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta, useRoute } from "#imports"
-
-import { useFetch } from "@nuxtjs/composition-api"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  useAsyncData,
+  useRoute,
+} from "#imports"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -31,9 +34,13 @@ export default defineNuxtComponent({
     useSearchStore().setCollectionState(collectionParams, IMAGE)
     const mediaStore = useMediaStore()
 
-    useFetch(async () => {
-      await mediaStore.fetchMedia()
-    })
+    useAsyncData(
+      "image-source",
+      async () => {
+        await mediaStore.fetchMedia()
+      },
+      { server: false }
+    )
     return {}
   },
 })

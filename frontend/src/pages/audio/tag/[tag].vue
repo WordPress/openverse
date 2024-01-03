@@ -3,9 +3,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta, useRoute } from "#imports"
-
-import { useFetch } from "@nuxtjs/composition-api"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  useAsyncData,
+  useRoute,
+} from "#imports"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -35,9 +38,13 @@ export default defineNuxtComponent({
 
     const mediaStore = useMediaStore()
 
-    useFetch(async () => {
-      await mediaStore.fetchMedia()
-    })
+    useAsyncData(
+      "audio-tag",
+      async () => {
+        await mediaStore.fetchMedia()
+      },
+      { server: false }
+    )
     return {}
   },
 })

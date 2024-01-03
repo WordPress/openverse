@@ -42,12 +42,12 @@ import {
   createError,
   defineNuxtComponent,
   definePageMeta,
+  useAsyncData,
   useHead,
   useRoute,
 } from "#imports"
 
 import { computed, ref } from "vue"
-import { useFetch } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -81,9 +81,6 @@ export default defineNuxtComponent({
     VMediaReuse,
     VRelatedAudio,
   },
-  // Fetching on the server is disabled because it is
-  // handled by the `singleResultMiddleware`.
-  fetchOnServer: false,
   setup() {
     definePageMeta({
       layout: "content-layout",
@@ -98,20 +95,27 @@ export default defineNuxtComponent({
       () => singleResultStore.fetchState.fetchingError
     )
 
-    useFetch(async () => {
-      const audioId = Array.isArray(route.params.id)
-        ? route.params.id[0]
-        : route.params.id
-      await singleResultStore.fetch(AUDIO, audioId)
+    useAsyncData(
+      "audio-single-result",
+      async () => {
+        const audioId = Array.isArray(route.params.id)
+          ? route.params.id[0]
+          : route.params.id
+        await singleResultStore.fetch(AUDIO, audioId)
 
-      const fetchedAudio = singleResultStore.audio
+        const fetchedAudio = singleResultStore.audio
 
-      if (!fetchedAudio) {
-        throw createError(singleResultStore.fetchState.fetchingError ?? {})
-      } else {
-        audio.value = fetchedAudio
-      }
-    })
+        if (!fetchedAudio) {
+          throw createError(singleResultStore.fetchState.fetchingError ?? {})
+        } else {
+          audio.value = fetchedAudio
+        }
+      },
+
+      // Fetching on the server is disabled because it is
+      // handled by the `singleResultMiddleware`.
+      { server: false }
+    )
 
     const { sendCustomEvent } = useAnalytics()
     const sendAudioEvent = (
