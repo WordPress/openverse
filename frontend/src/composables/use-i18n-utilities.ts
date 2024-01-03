@@ -1,5 +1,5 @@
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 import { Collection } from "~/types/search"
@@ -76,7 +76,7 @@ function getCountKey(resultsCount: number) {
  * Returns the localized text for the number of search results.
  */
 export function useI18nResultsCount() {
-  const i18n = useI18n()
+  const i18n = useNuxtI18n()
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
   const getLoading = () => i18n.t("header.loading").toString()
@@ -98,7 +98,7 @@ export function useI18nResultsCount() {
     query: string,
     mediaType: SupportedMediaType
   ) => {
-    return i18n.tc(getI18nKey(resultsCount, mediaType), resultsCount, {
+    return i18n.t(getI18nKey(resultsCount, mediaType), {
       localeCount: getLocaleFormattedNumber(resultsCount),
       query,
       mediaType,
@@ -112,7 +112,8 @@ export function useI18nResultsCount() {
   ) => {
     const key =
       collectionKeys[collectionType][mediaType][getCountKey(resultCount)]
-    return i18n.tc(key, resultCount, {
+    return i18n.t(key, {
+      count: resultCount,
       localeCount: getLocaleFormattedNumber(resultCount),
       ...params,
     })
@@ -124,7 +125,8 @@ export function useI18nResultsCount() {
    * E.g. "No results", "3,567 results", "Over 10,000 results".
    */
   const getI18nCount = (resultsCount: number) => {
-    return i18n.tc(getI18nKey(resultsCount, ALL_MEDIA), resultsCount, {
+    return i18n.t(getI18nKey(resultsCount, ALL_MEDIA), {
+      count: resultsCount,
       localeCount: getLocaleFormattedNumber(resultsCount),
     })
   }

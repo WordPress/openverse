@@ -59,7 +59,7 @@
 import { defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import type { FilterItem, FilterCategory } from "~/constants/filters"
 
@@ -113,7 +113,7 @@ export default defineComponent({
     "toggle-filter": defineEvent<[toggleFilterPayload]>(),
   },
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const itemLabel = (item: FilterItem) =>
       ["audioProviders", "imageProviders"].indexOf(props.filterType) > -1

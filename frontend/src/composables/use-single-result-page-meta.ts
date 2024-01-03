@@ -2,7 +2,7 @@ import { computed, ref, watch } from "vue"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { createDetailPageMeta } from "~/utils/og"
 
 import type { Ref } from "vue"
@@ -10,7 +10,7 @@ import type { Ref } from "vue"
 export const useSingleResultPageMeta = (
   media: Ref<AudioDetail | ImageDetail | null>
 ) => {
-  const i18n = useI18n()
+  const i18n = useNuxtI18n()
 
   const titles = () => {
     if (!media.value) {

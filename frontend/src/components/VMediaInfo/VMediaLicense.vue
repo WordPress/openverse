@@ -48,7 +48,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { getFullLicenseName, isLicense as isLicenseFn } from "~/utils/license"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import type { License, LicenseVersion } from "~/constants/license"
@@ -74,7 +74,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const { sendCustomEvent } = useAnalytics()
 
     const isLicense = computed(() => isLicenseFn(props.license))

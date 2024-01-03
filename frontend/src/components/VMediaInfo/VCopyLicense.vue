@@ -48,7 +48,7 @@ import { defineComponent, onBeforeUnmount, onMounted, PropType, ref } from "vue"
 
 import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
 import type { Media } from "~/types/media"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VTabs from "~/components/VTabs/VTabs.vue"
@@ -69,7 +69,7 @@ export default defineComponent({
   setup(props) {
     const richRef = ref<HTMLElement | null>(null)
 
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const getAttributionMarkup = (options?: AttributionOptions) =>
       getAttribution(props.media, i18n, options)
 

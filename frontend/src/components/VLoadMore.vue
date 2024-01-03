@@ -23,7 +23,7 @@ import { useElementVisibility } from "@vueuse/core"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 
@@ -35,7 +35,7 @@ export default defineComponent({
   setup() {
     const loadMoreSectionRef = ref(null)
     const route = useRoute()
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
     const { sendCustomEvent } = useAnalytics()

@@ -22,7 +22,7 @@ import { computed, defineComponent, PropType } from "vue"
 import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import { camelCase } from "~/utils/case"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
@@ -58,7 +58,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {

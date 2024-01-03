@@ -23,7 +23,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
@@ -52,7 +52,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const metadata = computed<null | Metadata[]>(() => {
       if (!props.media) {

@@ -13,7 +13,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { defineEvent } from "~/types/emits"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
@@ -30,7 +30,7 @@ export default defineComponent({
     click: defineEvent(),
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const iconName = computed(() =>
       props.direction === "forward" ? "chevron-forward" : "chevron-back"
     )

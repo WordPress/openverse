@@ -23,7 +23,7 @@ import { computed, defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { defineEvent } from "~/types/emits"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
@@ -48,7 +48,7 @@ export default defineComponent({
     toggle: defineEvent(),
   },
   setup() {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const searchStore = useSearchStore()
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)

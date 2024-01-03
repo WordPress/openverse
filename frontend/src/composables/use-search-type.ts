@@ -15,7 +15,7 @@ import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -38,7 +38,7 @@ const labels = {
 } as const
 
 export default function useSearchType() {
-  const i18n = useI18n()
+  const i18n = useNuxtI18n()
   const componentName = useComponentName()
   const analytics = useAnalytics()
 

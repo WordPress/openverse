@@ -6,7 +6,7 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
 
 import { image as testImage } from "~~/test/unit/fixtures/image"
@@ -34,7 +34,7 @@ export const Template = (args) => ({
   `,
   components: { VMetadata, VLanguageSelect },
   setup() {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     args.data = [
       {
         metadata: getMediaMetadata(testImage, i18n, {

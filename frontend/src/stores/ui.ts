@@ -11,7 +11,7 @@ import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import type { LocaleObject } from "vue-i18n-routing"
 
@@ -97,7 +97,7 @@ export const useUiStore = defineStore("ui", {
      * The locale object of the current locale.
      */
     currentLocale(): LocaleObject {
-      const i18n = useI18n()
+      const i18n = useNuxtI18n()
       return i18n.localeProperties
     },
     /**

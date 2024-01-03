@@ -1,6 +1,6 @@
 import { computed, ToRefs, ref } from "vue"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { keycodes } from "~/constants/key-codes"
 
 export interface UseSeekableOptions
@@ -22,7 +22,7 @@ export const useSeekable = ({
   onSeek,
   onTogglePlayback,
 }: UseSeekableOptions) => {
-  const i18n = useI18n()
+  const i18n = useNuxtI18n()
 
   const attributes = computed(() => ({
     "aria-role": "slider",

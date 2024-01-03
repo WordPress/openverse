@@ -41,7 +41,7 @@ import { toRefs, ref, onMounted, defineComponent, PropType } from "vue"
 import { rand, hash } from "~/utils/prng"
 import { lerp, dist, bezier, Point } from "~/utils/math"
 import type { AudioDetail } from "~/types/media"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 /**
@@ -63,7 +63,7 @@ export default defineComponent({
     const { audio } = toRefs(props)
     const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const helpText = (
       shouldBlur.value
         ? i18n.t("sensitiveContent.title.audio")

@@ -67,7 +67,7 @@ import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
 import { computed } from "vue"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON, OFF } from "~/constants/feature-flag"
 
@@ -81,7 +81,7 @@ export default defineNuxtComponent({
 
   setup() {
     definePageMeta({ layout: "content-layout" })
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const featureFlagStore = useFeatureFlagStore()
 
     useHead({

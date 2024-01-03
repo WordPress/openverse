@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, provide, ref, readonly, PropType } from "vue"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import { keycodes } from "~/constants/key-codes"
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -116,7 +116,7 @@ export default defineComponent({
     const isFocused = ref(false)
     provide(VItemGroupContextKey, props)
 
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     /**
      * When the item group is horizontal, we need to "reverse" the behavior of the left and right arrow keys for RTL locales

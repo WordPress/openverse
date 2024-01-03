@@ -13,7 +13,7 @@ import { defineNuxtComponent } from "#imports"
 import { computed, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import type { AudioDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 
@@ -35,7 +35,7 @@ export default defineNuxtComponent({
     },
   },
   setup() {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const collectionLabel = computed(() => {
       const query = useSearchStore().searchTerm

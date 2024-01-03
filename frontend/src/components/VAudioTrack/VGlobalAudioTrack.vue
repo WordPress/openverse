@@ -36,7 +36,7 @@ import { computed, defineComponent, PropType, ref, watch } from "vue"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
@@ -70,7 +70,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
     const { sendCustomEvent } = useAnalytics()

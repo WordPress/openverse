@@ -1,4 +1,4 @@
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import type { Locale } from "@nuxtjs/i18n"
 
@@ -23,7 +23,7 @@ const WESTERN_ARABIC_NUMERALS = [
 export const useGetLocaleFormattedNumber = (
   locale: Locale | undefined = undefined
 ) => {
-  const i18n = useI18n()
+  const i18n = useNuxtI18n()
 
   return (n: number) => {
     const testFormat = n.toLocaleString(locale ?? i18n.locale)

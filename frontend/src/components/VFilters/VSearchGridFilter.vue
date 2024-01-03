@@ -38,7 +38,7 @@ import { storeToRefs } from "pinia"
 import { useSearchStore } from "~/stores/search"
 
 import type { FilterCategory } from "~/constants/filters"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
@@ -72,7 +72,7 @@ export default defineComponent({
   setup() {
     const searchStore = useSearchStore()
 
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const { sendCustomEvent } = useAnalytics()
 

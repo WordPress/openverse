@@ -70,7 +70,7 @@ import { useUiStore } from "~/stores/ui"
 
 import { isDetail } from "~/types/media"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -92,7 +92,7 @@ export default defineComponent({
     VContentLink,
   },
   setup() {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 

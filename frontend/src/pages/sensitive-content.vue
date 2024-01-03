@@ -127,7 +127,7 @@
 <script lang="ts">
 import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -138,7 +138,7 @@ export default defineNuxtComponent({
 
   setup() {
     definePageMeta({ layout: "content-layout" })
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     useHead({
       title: `${i18n.t("sensitive.title")} | Openverse`,

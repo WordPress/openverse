@@ -66,7 +66,7 @@ import { computed, defineComponent, PropType } from "vue"
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import { IMAGE } from "~/constants/media"
@@ -127,7 +127,7 @@ export default defineComponent({
       imageSize: { width: props.image.width, height: props.image.height },
       isSquare,
     })
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const imageUrl = computed(() => {
       // TODO: check if we have blurry panorama thumbnails

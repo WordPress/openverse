@@ -58,7 +58,7 @@ import {
 } from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useSearchStore } from "~/stores/search"
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -101,7 +101,7 @@ export default defineComponent({
       )
     })
 
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const dir = computed(() => i18n.localeProperties.dir ?? "ltr")
 
     const scrollStep = 150 // px to scroll on each click

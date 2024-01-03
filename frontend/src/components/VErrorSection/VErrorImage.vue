@@ -16,7 +16,7 @@ import { computed, defineComponent, PropType } from "vue"
 
 import type { License, LicenseVersion } from "~/constants/license"
 import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import imageInfo from "~/assets/error_images.json"
 
@@ -42,7 +42,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
 
     const images = Object.fromEntries(
       imageInfo.errors.map((errorItem) => {

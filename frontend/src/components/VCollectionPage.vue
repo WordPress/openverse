@@ -32,7 +32,7 @@ import type { SupportedMediaType } from "~/constants/media"
 
 import { Results } from "~/types/result"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
@@ -48,7 +48,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const mediaStore = useMediaStore()
 
     const fetchState = computed(() => mediaStore.fetchState)

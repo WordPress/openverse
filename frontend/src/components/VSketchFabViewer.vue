@@ -19,7 +19,7 @@ import { useNuxtApp } from "#imports"
 
 import { defineComponent, ref, onMounted } from "vue"
 
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { loadScript } from "~/utils/load-script"
 
 const sketchfabUrl =
@@ -46,7 +46,7 @@ export default defineComponent({
   },
   emits: ["failure"],
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const label = i18n
       .t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
       .toString()

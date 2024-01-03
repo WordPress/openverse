@@ -62,7 +62,7 @@ import {
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
-import { useI18n } from "~/composables/use-i18n"
+import { useNuxtI18n } from "~/composables/use-i18n"
 import { useSeekable } from "~/composables/use-seekable"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import {
@@ -152,7 +152,7 @@ export default defineComponent({
     focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const i18n = useNuxtI18n()
     const { $sentry } = useNuxtApp()
 
     const activeMediaStore = useActiveMediaStore()
