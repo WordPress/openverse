@@ -1,11 +1,11 @@
+import { defineNuxtPlugin, useNuxtApp, useRuntimeConfig } from "#imports"
+
 import { Mutex, MutexInterface } from "async-mutex"
 
 import { createApiService } from "~/data/api-service"
 import { error, log } from "~/utils/console"
 
 import type { AxiosError } from "axios"
-
-import type { Context, Plugin } from "@nuxt/types"
 
 /* Process level state */
 
@@ -114,10 +114,8 @@ process.fetchingMutex = new Mutex()
  *
  * @param context - the Nuxt context
  */
-const getApiAccessToken = async (
-  context: Context
-): Promise<string | undefined> => {
-  const { apiClientId, apiClientSecret } = context.$config
+const getApiAccessToken = async (): Promise<string | undefined> => {
+  const { apiClientId, apiClientSecret } = useRuntimeConfig()
   if (!(apiClientId || apiClientSecret)) {
     return undefined
   }
@@ -155,24 +153,24 @@ const getApiAccessToken = async (
   return process.tokenData.accessToken
 }
 
-/* Plugin */
-
-declare module "@nuxt/types" {
-  interface Context {
-    $openverseApiToken: string
-  }
-}
-
-const apiToken: Plugin = async (context, inject) => {
+const apiToken = defineNuxtPlugin(async () => {
   let openverseApiToken: string | undefined
   try {
-    openverseApiToken = await getApiAccessToken(context)
+    openverseApiToken = await getApiAccessToken()
   } catch (e) {
     // capture the exception but allow the request to continue with anonymous API requests
-    context.$sentry.captureException(e)
-  } finally {
-    inject("openverseApiToken", openverseApiToken || "")
+    const { $sentry } = useNuxtApp()
+    if ($sentry) {
+      $sentry.captureException(e)
+    } else {
+      console.log("Sentry not available to capture e", e)
+    }
   }
-}
+  return {
+    provide: {
+      openverseApiToken: openverseApiToken || "",
+    },
+  }
+})
 
 export default apiToken
