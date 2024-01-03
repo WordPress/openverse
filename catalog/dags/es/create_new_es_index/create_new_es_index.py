@@ -1,14 +1,12 @@
 import logging
 
 from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowException, AirflowSensorTimeout
+from airflow.exceptions import AirflowException
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
-from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.sensors.python import PythonSensor
-from airflow.utils.state import State
 from es.create_new_es_index.utils import merge_configurations
 
-from common.sensors.utils import get_most_recent_dag_run
+from common.sensors.utils import prevent_concurrency_with_dag
 
 
 logger = logging.getLogger(__name__)
@@ -17,34 +15,6 @@ logger = logging.getLogger(__name__)
 # Index settings that should not be copied over from the base configuration when
 # creating a new index.
 EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
-
-
-# TODO: This can be removed in favor of the utility in
-# https://github.com/WordPress/openverse/pull/3482
-@task(retries=0)
-def prevent_concurrency_with_dag(external_dag_id: str, **context):
-    """
-    Prevent concurrency with the given external DAG, by failing
-    immediately if that DAG is running.
-    """
-
-    wait_for_dag = ExternalTaskSensor(
-        task_id=f"prevent_concurrency_with_{external_dag_id}",
-        external_dag_id=external_dag_id,
-        # Wait for the whole DAG, not just a part of it
-        external_task_id=None,
-        check_existence=False,
-        execution_date_fn=lambda _: get_most_recent_dag_run(external_dag_id),
-        mode="reschedule",
-        retries=0,
-        # Any "finished" state is sufficient for us to continue
-        allowed_states=[State.SUCCESS, State.FAILED],
-    )
-    wait_for_dag.timeout = 0
-    try:
-        wait_for_dag.execute(context)
-    except AirflowSensorTimeout:
-        raise ValueError(f"Concurrency check with {external_dag_id} failed.")
 
 
 @task_group(group_id="prevent_concurrency")
