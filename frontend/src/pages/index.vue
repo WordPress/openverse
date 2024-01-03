@@ -32,7 +32,6 @@ import {
   supportedSearchTypes,
 } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
-import { useLayout } from "~/composables/use-layout"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -53,7 +52,6 @@ export default defineNuxtComponent({
     definePageMeta({
       layout: "default",
     })
-
     const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -68,16 +66,12 @@ export default defineNuxtComponent({
       ],
     })
 
-    const { updateBreakpoint } = useLayout()
-
     /**
      * Reset the search type, search term and filters when the user navigates [back] to the homepage.
      */
     onMounted(() => {
       searchStore.$reset()
       mediaStore.$reset()
-
-      updateBreakpoint()
     })
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
