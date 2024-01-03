@@ -36,7 +36,7 @@ export default defineComponent({
   setup() {
     const i18n = useNuxtI18n()
     const locale = computed({
-      get: () => i18n.locale,
+      get: () => i18n.locale.value,
       set: (value) => {
         i18n.setLocale(value)
       },
