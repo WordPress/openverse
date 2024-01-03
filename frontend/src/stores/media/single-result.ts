@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { defineStore } from "pinia"
 
 import type {
@@ -159,7 +161,9 @@ export const useSingleResultStore = defineStore("single-result", {
     ) {
       try {
         this._updateFetchState("start")
-        const accessToken = this.$nuxt.$openverseApiToken
+        const { $openverseApiToken } = useNuxtApp()
+        const accessToken =
+          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initServices[type](accessToken)
         const item = this._addProviderName(await service.getMediaDetail(id))
 
@@ -172,7 +176,12 @@ export const useSingleResultStore = defineStore("single-result", {
           id,
         })
         this._updateFetchState("end", errorData)
-        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
+        const { $sentry } = useNuxtApp()
+        if ($sentry) {
+          $sentry.captureException(error, { extra: { errorData } })
+        } else {
+          console.log("Sentry not available to capture exception", errorData)
+        }
         return null
       }
     },
