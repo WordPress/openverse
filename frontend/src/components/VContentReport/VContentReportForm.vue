@@ -125,7 +125,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 
-import ReportService from "~/data/report-service"
+import { initReportService } from "~/data/report-service"
 
 import {
   reasons,
@@ -210,7 +210,7 @@ export default defineComponent({
         const mediaType = props.media.frontendMediaType
         const reason = selectedReason.value
 
-        await ReportService.sendReport({
+        await initReportService().sendReport({
           mediaType,
           reason,
           identifier: props.media.id,
