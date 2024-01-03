@@ -104,11 +104,15 @@ It will have the following columns:
 - `explanation` - moderator notes explaining the decision; optional
 - `action` - slug column of the action taken
   - `confirmed_sensitive` (marked a work as sensitive)
-  - `deindexed` (deindexed the work from Openverse search)
-  - `rejected_report` (marked pending report(s) `no_action` when the work is not
-    already marked sensitive)
-  - `duplicate` (marked pending report(s) `no_action` when the work is already
-    marked sensitive; i.e., a re-report that did not result in deindexing)
+  - `deindexed_copyright` (deindexed the work from Openverse search due to
+    copyright)
+  - `deindexed_sensitive` (deindexed the work from Openverse search due to
+    sensitivity)
+  - `rejected_reports` (the reviewed reports were rejected)
+  - `duplicate_reports` (the reviewed reports were duplicates, in other words,
+    re-reports that did not result in deindexing but were also accurate, for
+    example, re-reports of a sensitive work that add information regarding
+    sensitivity but do not require deindexing)
 
 Additionally, the report models will be expanded with an additional nullable
 column, `decision_id` that ties the report to a specific moderation decision. A
@@ -137,9 +141,73 @@ Examples of potential future actions are:
   to submit suggested fixes to the metadata of a work
 
 Again, these are purely hypothetical. They're just meant as examples to drive home the
-_idea_ behind the action column. For now we will only implement the four actions listed
+_idea_ behind the action column. For now we will only implement the five actions listed
 in the columns list above.
 ```
+
+##### Deprecating and removing report status
+
+A final critical aspect of the introduction of `ModerationDecision` is that it
+deprecates report status.
+
+Originally I sought to keep the report status and use the moderation decision
+"action" to record additional information. However, @krysal pointed out that the
+report status was fully duplicated without any additional information recorded
+in it. In fact, attempting to maintain the report status made things more
+complicated, because it was impossible to disambiguate between different "no
+action" statuses on reports, even though the moderation decision action does do
+so. We would always have to refer back to the moderation decision to get precise
+information about a report anyway, so the report status became effectively
+useless.
+
+Therefore, we will deprecate and them remove the report status in favour of
+treating reports only in two states: pending and reviewed. The report state is
+deduced from whether `decision_id` is populated for a report. To do this, we
+will need to back fill moderation decisions for all existing reports. Luckily,
+the total number of actioned reports in production is low, so this backfill can
+happen quickly. We will follow
+[the process for zero-downtime data transformations described here](/general/zero_downtime_database_management.md#django-management-command-based-data-transformations)
+and use a management command to do the following, after we have completed the
+work to add all new functionality to the Django admin:
+
+For each report where status is not `pending` and where `decision_id` is empty,
+create a new moderation decision with the following:
+
+- `moderator_id` set to the `opener` django admin user
+- `action` set to the relevant action based on the report status and reason:
+  - For any report reason with a status `mature_filtered`, set the action to
+    `confirmed_sensitive`
+  - For any report reason with a status `no_action`, set the action to
+    `rejected_reports`
+  - For `mature` or `other` reports with a status `deindexed`, set the action to
+    `deindexed_sensitive`
+    - There is no reliable way to tell if a report with `other` reason that led
+      to deindexing was for sensitivity or copyright, so we'll just assume
+      sensitivity because it is a safer assumption than copyright
+  - For `dmca` reports with a status `deindexed`, set the action to
+    `deindexed_copyright`
+- `explanation` set to the following text to indicate it is a backfilled record:
+  `__backfilled_from_report_status`
+- `decision_id` on the report to the new moderation decision
+
+After the backfill is complete, we will drop `status` from the reports.
+
+Because we are not currently doing active moderation, we won't do anything to
+maintain the `status` column between when we add the moderation decision and
+when we remove the status column. Any moderation that needs to happen during the
+implementation of this work will always result in a valid end state. Either the
+moderation decision will not yet exist, and so the report will have a null
+`decision_id` and will get included in the above backfill logic; or, the
+moderation decision will exist, the status will be left at pending, but
+`decision_id` will not be empty, and so the backfill will ignore it.
+
+At the end of this process, we will drop the status column from the report
+tables and all actioned reports, regardless of whether they were handled by the
+backfill or happened after the moderation decision functionality was introduced
+and available, will correctly have a `decision_id` pointing to a moderation
+decision that mirrors whatever the status of the report would have been, either
+based on the backfill logic or based on the new workflow introduced by this
+plan.
 
 #### Table view improvements
 
@@ -149,11 +217,11 @@ reports, and then by the age of the oldest pending report. This will have the
 effect of sorting re-reported works to the top of the list, under the assumption
 that a work with multiple pending reports is probably higher priority, because a
 decision to report it was taken multiple times. By default, we will only show
-works with "pending" reports, with the option to include other statuses if
-moderators choose. This creates a queue to work through progressively, from top
-to bottom. Remove any manual sorting options for now. We can add those back if
-we get feedback that moderators want them, but for now they just clutter and
-confuse the interface, and make the foundational feature more complex.
+works with "pending" reports (reports where `decision_id = NULL`). This creates
+a queue to work through progressively, from top to bottom. Remove any manual
+sorting options for now. We can add those back if we get feedback that
+moderators want them, but for now they just clutter and confuse the interface,
+and make the foundational feature more complex.
 
 #### Media moderation view
 
@@ -403,6 +471,7 @@ others or are non-blocking.
    2. The actions
    3. The moderation soft-lock
 6. Finalise access control
+7. Backfill `ModerationDecision` and drop report `status`
 
 ## Step details
 
@@ -490,10 +559,6 @@ This is in three separate issues:
      and the conditions for when to show them
    - Add an free text form field "explanation" to collect for the moderation
      decision
-   - For each of these actions, set the following new status:
-     - `confirmed_sensitive` -> `mature_filtered`
-     - `deindexed` -> `deindexed`
-     - `rejected_report` or `duplicate` -> `no_action`
 
 3. Implement the lock on works to prevent duplicate decisions
    - When loading the moderation view, add the work's identifier to the sorted
@@ -528,6 +593,22 @@ This is in three separate issues:
   so that content moderators can only view the new report table view, the
   expanded individual work view with the moderation and report chronology, and
   can issue moderation decisions on that page.
+
+### 7. Backfill `ModerationDecision` and drop report `status`
+
+[See "Deprecating and removing report status" for rationale](#deprecating-and-removing-report-status)
+
+- Create the management command to backfill `ModerationDecision`
+- Run the management command in production using AWS SSM to trigger the command
+  on one of the existing tasks (`just ssm-connect` in the
+  `openverse-infrastructure` repository)
+  - It would be good not to deploy to production while this runs to avoid
+    needing to re-start the command, but the command should be idempotent and
+    transactional anyway, so if it crashes or gets restarted, there is no risk
+    to our data
+- Drop the `status` column from the report tables
+  - These tables are very small and rarely written to or read from, so there is
+    no concern about locking the table during this migration
 
 ## Dependencies
 
