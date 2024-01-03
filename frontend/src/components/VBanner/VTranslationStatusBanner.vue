@@ -1,6 +1,5 @@
 <template>
   <VNotificationBanner
-    v-bind="$attrs"
     :id="bannerKey"
     nature="warning"
     data-testid="banner-translation"
@@ -40,7 +39,6 @@ export default defineComponent({
     VLink,
     VNotificationBanner,
   },
-  inheritAttrs: false,
   props: {
     bannerKey: {
       type: String as PropType<BannerId>,
