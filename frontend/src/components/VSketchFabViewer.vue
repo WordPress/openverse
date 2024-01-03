@@ -55,7 +55,13 @@ export default defineComponent({
     const initSketchfab = async () => {
       await loadScript(sketchfabUrl)
       if (typeof window.Sketchfab === "undefined") {
-        $sentry.captureMessage("Unable to find window.Sketchfab after loading")
+        if ($sentry) {
+          $sentry.captureMessage(
+            "Unable to find window.Sketchfab after loading"
+          )
+        } else {
+          console.log("Sentry not available to capture message")
+        }
         return
       }
 
