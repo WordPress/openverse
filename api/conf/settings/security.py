@@ -4,6 +4,8 @@ from decouple import config
 
 from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
 
+from django.core.exceptions import ImproperlyConfigured
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -52,3 +54,12 @@ if config("IS_PROXIED", default=True, cast=bool):
     USE_X_FORWARDED_HOST = True
     # https://docs.djangoproject.com/en/4.0/ref/settings/#secure-proxy-ssl-header
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Adding DJANGO_SECRET_KEY check
+if (
+    config("DJANGO_SECRET_KEY") == "example_key"
+    and config("ENVIRONMENT", default="local") not in ["local", "development"]
+):
+    raise ImproperlyConfigured(
+        "DJANGO_SECRET_KEY should not be 'example_key' in local or production environment."
+    )
