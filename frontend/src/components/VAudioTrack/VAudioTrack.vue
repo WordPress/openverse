@@ -382,7 +382,11 @@ export default defineComponent({
             }
             default: {
               message = "err_unknown"
-              $sentry.captureException(err)
+              if ($sentry) {
+                $sentry.captureException(err)
+              } else {
+                console.log("Sentry not available to capture exception", err)
+              }
             }
           }
           activeMediaStore.setMessage({ message })
