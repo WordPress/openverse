@@ -149,14 +149,12 @@ export default defineComponent({
   ],
   setup(_, { emit }) {
     const nodeRef = ref<null | HTMLElement>(null)
-    const modalContentRef = ref<{
-      $el: HTMLElement
-      deactivateFocusTrap?: () => void
-    } | null>(null)
+    const modalContentRef = ref<InstanceType<typeof VModalContent> | null>(null)
     const triggerContainerRef = ref<HTMLElement | null>(null)
 
     const triggerRef = computed(
-      () => triggerContainerRef.value?.firstChild as HTMLElement | undefined
+      () =>
+        triggerContainerRef.value?.firstElementChild as HTMLElement | undefined
     )
 
     const deactivateFocusTrap = computed(
