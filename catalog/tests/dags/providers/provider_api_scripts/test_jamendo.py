@@ -1,5 +1,4 @@
 from unittest.mock import patch
-from datetime import datetime, timezone
 
 import pytest
 
@@ -90,7 +89,6 @@ def test_get_record_data():
             "listens": 5616,
             "playlists": 0,
             "release_date": "2005-04-12",
-            "audiodownload_allowed": True,
         },
         "raw_tags": ["instrumental", "speed_medium"],
         "audio_set_foreign_identifier": "119",
@@ -212,36 +210,21 @@ def test_remove_track_id_handles_data(thumbnail_url, expected):
 
 
 @pytest.mark.parametrize(
-    "audiodownload_allowed, release_date, should_ingest",
+    "audiodownload_allowed, should_ingest",
     [
-        # Always ingest if audiodownload_allowed is True
-        (True, "2024-01-01", True),
-        (True, "2020-09-04", True),
+        # Happy path, download is allowed
+        (True, True),
         # Only prevent ingestion if audiodownload_allowed is explicitly False.
-        # If None, continue to ingest.
-        (None, "2024-01-01", True),
-        (None, "2020-09-04", True),
-        # Do not prevent ingestion if the record's release_date
-        # is earlier than the end interval of the last successful DagRun
-        # (meaning this record has been previously ingested), even if
-        # downloads are disabled
-        (False, "2020-09-04", True),
-        # Prevent ingestion when downloads are disabled and the release date
-        # is later than the end interval of the last successful run
-        (False, "2024-01-01", False),
+        (None, True),
+        # Download disabled; prevent ingestion
+        (False, False),
     ],
 )
 def test_get_record_data_discards_records_with_downloads_disabled(
-    audiodownload_allowed, release_date, should_ingest
+    audiodownload_allowed, should_ingest
 ):
-    # Mock date between the test parameters
-    jamendo.cutoff_date = datetime.strptime("2023-12-31", "%Y-%m-%d").replace(
-        tzinfo=timezone.utc
-    )
-
     item_data = _get_resource_json("audio_data_example.json")
     item_data["audiodownload_allowed"] = audiodownload_allowed
-    item_data["releasedate"] = release_date
 
     record_data = jamendo.get_record_data(item_data)
 

@@ -29,7 +29,7 @@ def pull_media_wrapper(
     # Initialize the ProviderDataIngester class, which will initialize the
     # media stores and DelayedRequester.
     logger.info(f"Initializing ProviderIngester {ingester_class.__name__}")
-    ingester = ingester_class(ti, dag_run.conf, dag_run.dag_id, *args)
+    ingester = ingester_class(dag_run.conf, dag_run.dag_id, *args)
     stores: dict[MediaType, MediaStore] = ingester.media_stores
 
     # Check that the ProviderDataIngester class has a store configuration for each

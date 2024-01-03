@@ -16,13 +16,12 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         channels: 1/2
 """
 import logging
-from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from airflow.models import Variable
 
 import common
-from common import constants, slack
+from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.urls import rewrite_redirected_url
@@ -39,54 +38,18 @@ class JamendoDataIngester(ProviderDataIngester):
     batch_limit = 200
     headers = {"Accept": "application/json"}
 
-    def __init__(self, ti=None, *args, **kwargs):
-        super().__init__(ti, *args, **kwargs)
-
-        # We will not ingest new Jamendo records that have downloads disabled.
-        # However, if a record that was previously ingested has been updated
-        # to have downloads disabled, we do want to ingest it in order to
-        # process the updates. We use the date of the last successful DagRun
-        # as the cutoff date for determining whether a record is a new
-        # addition to the catalog, or if it is an update to a record that was
-        # ingested previously.
-        if ti:
-            self.cutoff_date = ti.get_template_context().get(
-                "prev_data_interval_end_success"
-            )
-            logger.info(ti.get_template_context().get("prev_start_date_success"))
-        else:
-            self.cutoff_date = datetime.utcnow()
-        logger.info(f"Using cutoff date: {self.cutoff_date}.")
-
-        # Keep track of the number of new records which were not ingested due
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Keep track of the number of records which are not ingested due
         # to downloads being disabled
-        self.download_disabled_discarded_count = 0
-
-        # Keep track of the number of existing records which _were_ ingested
-        # that now have downloads disabled. If this count is greater than 0,
-        # we will report to Slack after ingestion.
-        self.download_disabled_updated_count = 0
+        self.download_disabled_count = 0
 
     def ingest_records(self, **kwargs):
         super().ingest_records(**kwargs)
-        # Report the number of new records which were not ingested due to having
-        # downloads disabled.
         logger.info(
             f"Discarded {self.download_disabled_count} records with"
             " `audiodownload_allowed` = False."
         )
-
-        # If some pre-existing records had their downloads disabled, we will need
-        # to manually run the `delete_records` DAG to remove them.
-        if self.download_disabled_updated_count > 0:
-            message = (
-                f"{self.download_disabled_updated_count} Jamendo records have"
-                " been updated to disallow audio downloads. Please run the"
-                "`delete_records` DAG to remove them. See"
-                " https://github.com/WordPress/openverse/pull/3618 for"
-                " additional context."
-            )
-            slack.send_alert(message, dag_id=self.dag_id)
 
     def get_media_type(self, record):
         return constants.AUDIO
@@ -205,7 +168,6 @@ class JamendoDataIngester(ProviderDataIngester):
             "downloads": stats.get("rate_download_total", 0),
             "listens": stats.get("rate_listened_total", 0),
             "playlists": stats.get("rate_playlisted_total", 0),
-            "audiodownload_allowed": data.get("audiodownload_allowed", True),
         }
         return {k: v for k, v in metadata.items() if v is not None}
 
@@ -242,21 +204,8 @@ class JamendoDataIngester(ProviderDataIngester):
             return None
 
         if data.get("audiodownload_allowed") is False:
-            release_date = datetime.strptime(
-                data.get("releasedate"), "%Y-%m-%d"
-            ).replace(tzinfo=timezone.utc)
-
-            if release_date > self.cutoff_date:
-                # Do not ingest any new records with downloads disabled.
-                self.download_disabled_discarded_count += 1
-                logger.info("Discarding record")
-                return None
-            else:
-                # Previously ingested records whose downloads have been
-                # disabled need to be updated, so they can be removed
-                # from the catalog.
-                logger.info("Updating existing record with download disabled.")
-                self.download_disabled_updated_count += 1
+            self.download_disabled_count += 1
+            return None
 
         if duration := data.get("duration"):
             duration = int(duration) * 1000

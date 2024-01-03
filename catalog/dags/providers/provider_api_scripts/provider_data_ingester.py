@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import TypedDict
 
 from airflow.exceptions import AirflowException
-from airflow.models import TaskInstance, Variable
+from airflow.models import Variable
 
 from common.requester import DelayedRequester
 from common.storage.media import MediaStore
@@ -115,12 +115,10 @@ class ProviderDataIngester(ABC):
 
     def __init__(
         self,
-        ti: TaskInstance = None,
         conf: dict = None,
         dag_id: str = None,
         date: str = None,
         day_shift: int = None,
-        **kwargs,
     ):
         """
         Initialize the provider configuration.
