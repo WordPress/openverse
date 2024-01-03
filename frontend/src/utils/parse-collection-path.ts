@@ -1,17 +1,17 @@
-import { CreatorCollection, SourceCollection } from "~/types/search"
+import type { CreatorCollection, SourceCollection } from "~/types/search"
+
+import type { LocationQueryValue } from "vue-router"
 
 export function parseCollectionPath(
-  pathMatch: string | string[] | undefined
+  sourceParams: LocationQueryValue | LocationQueryValue[]
 ): SourceCollection | CreatorCollection | null {
-  // Build collection params.
-  // pathMatch is the part of the path after the collection name:
-  //`/sourceName` or `/sourceName/creator/creatorName`.
-  if (!pathMatch) {
+  if (!sourceParams) {
     return null
   }
-  const pathMatchParts = (Array.isArray(pathMatch) ? pathMatch : [pathMatch])
-    .map((part) => part.trim())
-    .filter((part) => part !== "")
+  const pathMatchParts =
+    typeof sourceParams === "string"
+      ? [sourceParams]
+      : (sourceParams.filter((part) => Boolean(part)) as string[])
 
   if (pathMatchParts.length === 1) {
     return { collection: "source", source: pathMatchParts[0] }
