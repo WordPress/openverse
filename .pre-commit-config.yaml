@@ -138,20 +138,9 @@ repos:
       # Enable this once the vale image is published
       # - id: vale
       #   name: vale
-      #   language: docker_image
-      #   # The --glob setting excludes things that should not be linted, including
-      #   # build artefacts, dependencies, and automatically generated files like
-      #   # the changelogs (without excluding `changelogs/index.md`). Project proposals
-      #   # are also excluded for want of a good way to ignore existing proposals and only
-      #   # lint _new_ proposals. Project proposals aren't "living documents" in the way
-      #   # the rest of our documentation is, so it doesn't seem right to retroactively
-      #   # edit them for mere editorial purposes (rather than, for example, to correct
-      #   # some grave inacurracy).
-      #   entry: >
-      #     ghcr.io/wordpress/openverse-vale:latest
-      #     documentation
-      #     --glob='!*{_build,_static,.venv,projects/proposals,changelogs/api,changelogs/frontend,changelogs/catalog,changelogs/ingestion_server}*'
-      #   pass_filenames: false
+      #   language: system
+      #   entry: bash -c 'just .vale/run'
+      #   pass_filesnames: false
       #   files: ^documentation.*$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks

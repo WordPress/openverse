@@ -14,6 +14,29 @@ build:
     docker build . -t openverse-vale:local
 
 
-# Run `openverse-vale:local` image using a configuration that matches pre-commit's. Pass files relative to repository root.
-run +files: build
-    docker run --rm -it -v $PWD/..:/src:rw,Z --workdir=/src openverse-vale:local {{ files }}
+# The --glob setting excludes things that should not be linted, including
+# build artefacts, dependencies, and automatically generated files like
+# the changelogs (without excluding `changelogs/index.md`). Project proposals
+# are also excluded for want of a good way to ignore existing proposals and only
+# lint _new_ proposals. Project proposals aren't "living documents" in the way
+# the rest of our documentation is, so it doesn't seem right to retroactively
+# edit them for mere editorial purposes (rather than, for example, to correct
+# some grave inacurracy).
+CI_CONFIG := (
+    "documentation " +
+    "--glob='!*{_build,_static,.venv,projects/proposals,changelogs/api,changelogs/frontend,changelogs/catalog,changelogs/ingestion_server}*'"
+)
+
+
+# Run `openverse-vale` using the specified image. Configuration defaults to what is used for CI.
+run image="ghcr.io/wordpress/openverse-vale:latest" +configuration=CI_CONFIG:
+    {{ if image == "openverse-vale:local" { "just build" } else { "" } }}
+    docker run --rm -it \
+        -v $PWD/..:/src:rw,Z \
+        --workdir=/src \
+        {{ image }} \
+        {{ configuration }}
+
+# Run `openverse-vale` using the local image. Configuration defaults to what is used for CI.
+run-local +configuration=CI_CONFIG: build
+    just run openverse-vale:local "{{ configuration }}"
