@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@nuxtjs/svg-sprite@1.0.2':
+    hash: 3g3zcc4yui3kyf7abjvqdsvrz4
+    path: patches/@nuxtjs__svg-sprite@1.0.2.patch
+
 importers:
 
   .:
@@ -56,7 +61,7 @@ importers:
         version: 1.5.3
       '@nuxtjs/svg-sprite':
         specifier: ^1.0.2
-        version: 1.0.2
+        version: 1.0.2(patch_hash=3g3zcc4yui3kyf7abjvqdsvrz4)
       '@pinia/nuxt':
         specifier: ^0.5.1
         version: 0.5.1(typescript@5.2.2)(vue@3.4.3)
@@ -2511,7 +2516,7 @@ packages:
       - supports-color
     dev: true
 
-  /@nuxtjs/svg-sprite@1.0.2:
+  /@nuxtjs/svg-sprite@1.0.2(patch_hash=3g3zcc4yui3kyf7abjvqdsvrz4):
     resolution: {integrity: sha512-BAxo+r9Ub9pgrzGEH3eRZmQZ1icGxr5hB8aKgAHtb+4YZMbrS+H+RZUiP4mn6VXLFPsWCh0Ea+wjr9LfIjOgTQ==}
     dependencies:
       '@nuxt/kit': 3.9.0
@@ -2520,6 +2525,7 @@ packages:
       - rollup
       - supports-color
     dev: false
+    patched: true
 
   /@nuxtjs/tailwindcss@6.10.3(ts-node@10.9.1):
     resolution: {integrity: sha512-AXkfAW0RLbJfPtdw0QY6+1q+N0e9790zhu6t9DezEvHqfG0ajBSwDTvuu3P48hOcxZpY3PZ+j8N0LDTqCW9X8w==}
