@@ -28,7 +28,11 @@
             keypath="externalSources.form.supportedTitle"
             tag="p"
           />
-          <i18n-t v-else keypath="externalSources.form.supportedTitleSm" tag="p" />
+          <i18n-t
+            v-else
+            keypath="externalSources.form.supportedTitleSm"
+            tag="p"
+          />
           <VIcon
             :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
             name="caret-down"

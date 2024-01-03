@@ -6,7 +6,7 @@
     class="label-regular"
     :size="size"
     v-bind="{ href }"
-    @click.native="$emit('click', item)"
+    @click="$emit('click', item)"
   >
     <VIcon :name="icon" class="h-6 w-6" />
     <span>{{ itemLabelKey }}</span>

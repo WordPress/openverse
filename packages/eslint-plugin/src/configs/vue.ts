@@ -2,7 +2,6 @@ import type { TSESLint } from "@typescript-eslint/utils"
 
 export = {
   extends: [
-    "plugin:vue/recommended",
     "plugin:vue/vue3-recommended",
     "plugin:vuejs-accessibility/recommended",
     "plugin:@intlify/vue-i18n/recommended",
@@ -20,11 +19,6 @@ export = {
         splitByDots: false,
       },
     ],
-    // Enable these rules after the Nuxt 3 migration
-    "vue/no-deprecated-dollar-listeners-api": "off",
-    "vue/no-v-for-template-key-on-child": "off",
-    "vue/no-deprecated-v-on-native-modifier": "off",
-
     "vue/max-attributes-per-line": "off",
     "vue/require-prop-types": "off",
     "vue/require-default-prop": "off",

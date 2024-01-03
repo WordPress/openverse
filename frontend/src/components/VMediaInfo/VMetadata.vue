@@ -9,12 +9,11 @@
     </div>
   </dl>
   <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2">
-    <template v-for="datum in metadata">
-      <dt :key="`${datum.label}`" class="label-regular pt-1">
+    <template v-for="datum in metadata" :key="datum.label">
+      <dt class="label-regular pt-1">
         {{ $t(datum.label) }}
       </dt>
       <VMetadataValue
-        :key="`${datum.label}-value`"
         :datum="datum"
         @click="sendVisitSourceLinkEvent(datum.source)"
       />

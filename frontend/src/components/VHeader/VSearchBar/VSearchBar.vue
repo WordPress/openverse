@@ -50,7 +50,7 @@
         :class="recentClasses"
         @select="handleSelect"
         @clear="handleClear"
-        @keydown.tab.native="hideRecentSearches"
+        @keydown.tab="hideRecentSearches"
       />
     </ClientOnly>
   </div>

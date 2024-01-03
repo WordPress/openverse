@@ -51,7 +51,12 @@
         <div
           class="subtitle mt-1 flex flex-col gap-2 text-base leading-snug lg:flex-row lg:items-center"
         >
-          <i18n-t as="span" keypath="audioTrack.creator" class="font-semibold" tag="span">
+          <i18n-t
+            as="span"
+            keypath="audioTrack.creator"
+            class="font-semibold"
+            tag="span"
+          >
             <template #creator>
               <VLink
                 class="rounded-sm p-px focus-visible:outline-none focus-visible:ring focus-visible:ring-pink"

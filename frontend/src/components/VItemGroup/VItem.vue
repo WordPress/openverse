@@ -35,12 +35,10 @@
       :aria-checked="selected"
       :tabindex="tabIndex"
       v-bind="$attrs"
-      v-on="$listeners"
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"
-      @keydown.native="focusContext.onItemKeyPress"
-      @click.native="$emit('click')"
+      @click="$emit('click')"
     >
       <div
         class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"

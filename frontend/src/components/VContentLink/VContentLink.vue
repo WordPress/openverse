@@ -7,7 +7,7 @@
     size="disabled"
     class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
     :send-external-link-click-event="false"
-    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
     <VIcon :name="mediaType" />

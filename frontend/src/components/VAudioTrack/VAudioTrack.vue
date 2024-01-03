@@ -1,12 +1,12 @@
 <template>
   <!-- eslint-disable vue/use-v-on-exact -->
   <Component
-    :is="isComposite ? 'VLink' : 'VWarningSuppressor'"
+    :is="isComposite ? 'VLink' : 'div'"
     v-bind="containerAttributes"
     class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
-    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
     @keydown="handleKeydown"
     @blur="handleBlur"
     @mousedown="handleMousedown"
@@ -96,7 +96,6 @@ import VRowLayout from "~/components/VAudioTrack/layouts/VRowLayout.vue"
 import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 import VGlobalLayout from "~/components/VAudioTrack/layouts/VGlobalLayout.vue"
 import VLink from "~/components/VLink.vue"
-import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 
 /**
  * Displays the waveform and basic information about the track, along with
@@ -108,7 +107,6 @@ export default defineComponent({
     VAudioControl,
     VWaveform,
     VLink,
-    VWarningSuppressor,
 
     // Layouts
     VFullLayout,

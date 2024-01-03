@@ -11,7 +11,6 @@
     :aria-expanded="isPressed"
     aria-controls="content-settings-modal"
     variant="filled-white"
-    v-on="$listeners"
   >
     <template #notification>
       <span

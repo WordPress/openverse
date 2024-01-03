@@ -6,7 +6,6 @@
     :connections="connections"
     class="icon-button"
     icon-only
-    v-on="$listeners"
   >
     <slot name="default" :icon-size="iconSize" />
     <VIcon

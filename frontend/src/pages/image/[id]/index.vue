@@ -66,7 +66,11 @@
             <h1 class="description-bold md:heading-5 line-clamp-2">
               {{ image.title }}
             </h1>
-            <i18n-t v-if="image.creator" keypath="imageDetails.creator" tag="span">
+            <i18n-t
+              v-if="image.creator"
+              keypath="imageDetails.creator"
+              tag="span"
+            >
               <template #name>
                 <VLink
                   v-if="image.creator_url"

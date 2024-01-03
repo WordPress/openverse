@@ -17,7 +17,11 @@
           })
         }}
       </p>
-      <i18n-t tag="p" class="mt-2" keypath="sensitiveContent.singleResult.learnMore">
+      <i18n-t
+        tag="p"
+        class="mt-2"
+        keypath="sensitiveContent.singleResult.learnMore"
+      >
         <template #openverse>Openverse</template>
         <template #link>
           <VLink class="text-pink hover:underline" href="/sensitive-content">{{

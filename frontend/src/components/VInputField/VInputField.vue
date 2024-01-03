@@ -21,7 +21,6 @@
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"
-      v-on="$listeners"
     />
 
     <!-- @slot Extra information goes here -->
