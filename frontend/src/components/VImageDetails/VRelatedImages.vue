@@ -20,6 +20,8 @@ import { computed, defineComponent, watch } from "vue"
 import type { ImageDetail } from "~/types/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
+import { firstParam } from "~/utils/query-utils"
+
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
 export default defineComponent({
@@ -33,10 +35,8 @@ export default defineComponent({
     watch(
       () => route.params.id,
       async (newRouteIdParam) => {
-        const newRouteId = Array.isArray(newRouteIdParam)
-          ? newRouteIdParam[0]
-          : newRouteIdParam
-        if (newRouteId !== relatedMediaStore.mainMediaId) {
+        const newRouteId = firstParam(newRouteIdParam)
+        if (newRouteId && newRouteId !== relatedMediaStore.mainMediaId) {
           await relatedMediaStore.fetchMedia("image", newRouteId)
         }
       },

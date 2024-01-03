@@ -19,6 +19,7 @@ import { useRoute } from "#imports"
 import { computed, defineComponent, watch } from "vue"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { firstParam } from "~/utils/query-utils"
 
 import { defineEvent } from "~/types/emits"
 import type { AudioDetail } from "~/types/media"
@@ -43,10 +44,8 @@ export default defineComponent({
     watch(
       () => route.params.id,
       async (newRouteIdParam) => {
-        const newRouteId = Array.isArray(newRouteIdParam)
-          ? newRouteIdParam[0]
-          : newRouteIdParam
-        if (newRouteId !== relatedMediaStore.mainMediaId) {
+        const newRouteId = firstParam(newRouteIdParam)
+        if (newRouteId && newRouteId !== relatedMediaStore.mainMediaId) {
           await relatedMediaStore.fetchMedia("audio", newRouteId)
         }
       },

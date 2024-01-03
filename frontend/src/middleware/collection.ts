@@ -11,6 +11,7 @@ import { useSearchStore } from "~/stores/search"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { CollectionParams } from "~/types/search"
+import { firstParam } from "~/utils/query-utils"
 
 const extractMediaType = (path: string): SupportedMediaType => {
   if (path.includes("/image/")) {
@@ -36,7 +37,7 @@ export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
 
   let collectionParams: CollectionParams | null = null
   if (to.params.tag) {
-    const tag = Array.isArray(to.params.tag) ? to.params.tag[0] : to.params.tag
+    const tag = firstParam(to.params.tag)
     if (!tag) {
       throw createError({
         statusCode: 404,

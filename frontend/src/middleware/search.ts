@@ -4,12 +4,13 @@ import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
 import { handledClientSide } from "~/utils/errors"
+import { firstParam } from "~/utils/query-utils"
 
 export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
   const {
     query: { q: rawQ },
   } = to
-  const q = Array.isArray(rawQ) ? rawQ[0] : rawQ
+  const q = firstParam(rawQ)
   /**
    * This middleware redirects any search without a query to the homepage.
    * This is meant to block direct access to /search and all sub-routes.

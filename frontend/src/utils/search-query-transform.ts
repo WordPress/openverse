@@ -20,6 +20,8 @@ import {
   SearchFilterQuery,
 } from "~/types/search"
 
+import { firstParam } from "~/utils/query-utils"
+
 import type { Context } from "@nuxt/types"
 import type { Dictionary } from "vue-router/types/router"
 
@@ -240,7 +242,7 @@ export const queryDictionaryToQueryParams = (
   Object.keys(queryDictionary).forEach((key) => {
     const value = queryDictionary[key]
     // If the parameter is an array, use the first value.
-    const parameter = Array.isArray(value) ? value[0] : value
+    const parameter = firstParam(value)
     if (parameter) {
       queryParams[key] = parameter
     }

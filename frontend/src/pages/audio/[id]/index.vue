@@ -60,6 +60,8 @@ import { useSingleResultStore } from "~/stores/media/single-result"
 
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
+import { firstParam } from "~/utils/query-utils"
+
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
@@ -98,9 +100,7 @@ export default defineNuxtComponent({
     useAsyncData(
       "audio-single-result",
       async () => {
-        const audioId = Array.isArray(route.params.id)
-          ? route.params.id[0]
-          : route.params.id
+        const audioId = firstParam(route.params.id)
         await singleResultStore.fetch(AUDIO, audioId)
 
         const fetchedAudio = singleResultStore.audio

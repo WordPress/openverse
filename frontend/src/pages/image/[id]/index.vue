@@ -134,6 +134,8 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
+import { firstParam } from "~/utils/query-utils"
+
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
@@ -189,9 +191,7 @@ export default defineNuxtComponent({
     useAsyncData(
       "single-image-result",
       async () => {
-        const imageId = Array.isArray(route.params.id)
-          ? route.params.id[0]
-          : route.params.id
+        const imageId = firstParam(route.params.id)
         const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
         if (!fetchedImage) {
           if (fetchingError.value && !isRetriable(fetchingError.value)) {
@@ -275,7 +275,7 @@ export default defineNuxtComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const handleRightClick = (routeId: string | string[]) => {
-      const id = Array.isArray(routeId) ? routeId[0] : routeId
+      const id = firstParam(routeId)
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
         id,
       })

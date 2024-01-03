@@ -4,6 +4,7 @@ import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { isRetriable } from "~/utils/errors"
+import { firstParam } from "~/utils/query-utils"
 
 import { AUDIO, IMAGE } from "~/constants/media"
 
@@ -14,7 +15,7 @@ const isSearchOrCollectionPath = (path: string) =>
 export const singleResultMiddleware = defineNuxtRouteMiddleware(
   async (to, from) => {
     const mediaType = to.fullPath.includes("/image/") ? IMAGE : AUDIO
-    const mediaId = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id
+    const mediaId = firstParam(to.params.id)
     if (!mediaId) {
       return
     }
@@ -41,9 +42,7 @@ export const singleResultMiddleware = defineNuxtRouteMiddleware(
         searchStore.setBackToSearchPath(from.fullPath)
 
         if (isSearchPath(from.path)) {
-          const searchTerm = Array.isArray(to.query.q)
-            ? to.query.q[0]
-            : to.query.q
+          const searchTerm = firstParam(to.query.q)
 
           if (searchTerm) {
             searchStore.setSearchTerm(searchTerm)

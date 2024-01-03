@@ -29,6 +29,8 @@ import type { Metadata } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useUiStore } from "~/stores/ui"
 
+import { firstParam } from "~/utils/query-utils"
+
 import VMetadataValue from "~/components/VMediaInfo/VMetadataValue.vue"
 
 export default defineComponent({
@@ -55,9 +57,7 @@ export default defineComponent({
       if (!source) {
         return
       }
-      const id = Array.isArray(route.params.id)
-        ? route.params.id[0]
-        : route.params.id
+      const id = firstParam(route.params.id)
       sendCustomEvent("VISIT_SOURCE_LINK", {
         id,
         source,

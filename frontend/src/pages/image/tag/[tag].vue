@@ -16,6 +16,8 @@ import { IMAGE } from "~/constants/media"
 import { collectionMiddleware } from "~/middleware/collection"
 import type { TagCollection } from "~/types/search"
 
+import { firstParam } from "~/utils/query-utils"
+
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
 export default defineNuxtComponent({
@@ -27,9 +29,7 @@ export default defineNuxtComponent({
       middleware: collectionMiddleware,
     })
     const route = useRoute()
-    const tag = Array.isArray(route.params.tag)
-      ? route.params.tag[0]
-      : route.params.tag
+    const tag = firstParam(route.params.tag)
     const collectionParams: TagCollection = {
       tag,
       collection: "tag",
