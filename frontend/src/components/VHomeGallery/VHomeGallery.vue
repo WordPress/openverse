@@ -13,8 +13,7 @@
       }"
     >
       <ClientOnly>
-        <Component
-          :is="prefersReducedMotion ? 'div' : 'Transition'"
+        <Transition
           v-for="(image, idx) in imageList"
           :key="idx"
           enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
@@ -39,7 +38,7 @@
               :title="image.title"
             />
           </VLink>
-        </Component>
+        </Transition>
       </ClientOnly>
     </div>
   </div>
