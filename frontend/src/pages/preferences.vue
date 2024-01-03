@@ -106,7 +106,6 @@ export default defineNuxtComponent({
     VContentPage,
     VCheckbox,
   },
-
   setup() {
     definePageMeta({ layout: "content-layout" })
     const featureFlagStore = useFeatureFlagStore()
