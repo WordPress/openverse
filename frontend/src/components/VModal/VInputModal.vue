@@ -32,10 +32,10 @@ import {
   SetupContext,
 } from "vue"
 
-import { Portal as VTeleport } from "portal-vue"
-
 import { useDialogContent } from "~/composables/use-dialog-content"
 import { useDialogControl } from "~/composables/use-dialog-control"
+
+import { Portal as VTeleport } from "portal-vue"
 
 export default defineComponent({
   name: "VInputModal",

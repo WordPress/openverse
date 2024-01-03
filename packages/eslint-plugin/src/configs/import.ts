@@ -68,6 +68,10 @@ export = {
       },
     ],
     "import/extensions": ["error", "always", { js: "never", ts: "never" }],
+    // TODO: Remove this once we've migrated all imports.
+    "import/no-unresolved": ["error", { ignore: ["@nuxtjs/composition-api"] }],
+    // TODO: Remove after changes are made
+    "import/no-named-as-default": "off",
   },
   overrides: [
     {

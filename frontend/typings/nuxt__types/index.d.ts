@@ -1,50 +1,16 @@
-import "@nuxt/types"
-import "@nuxtjs/i18n"
-import { CookieSerializeOptions } from "cookie"
-
-import type { OpenverseCookieState } from "~/types/cookies"
-
-import type { Details as UADetails } from "express-useragent"
 import type { Plausible } from "plausible-tracker"
 
-export interface SetParams<Key extends keyof OpenverseCookieState> {
-  name: Key
-  value: OpenverseCookieState[Key]
-  opts?: CookieSerializeOptions
-}
-
-export interface NuxtCookies {
-  set: <Key extends keyof OpenverseCookieState>(
-    name: Key,
-    value: OpenverseCookieState[Key],
-    opts?: CookieSerializeOptions
-  ) => void
-  setAll: (cookieArray: SetParams[]) => void
-  get: <Key extends keyof OpenverseCookieState>(
-    name: Key,
-    opts?: GetOptions
-  ) => OpenverseCookieState[Key]
-  getAll: (opts?: GetOptions) => OpenverseCookieState
-  remove: <Key extends keyof OpenverseCookieState>(
-    name: Key,
-    opts?: CookieSerializeOptions
-  ) => void
-  removeAll: () => void
-}
-
-declare module "@nuxt/types" {
-  export interface Context {
-    $ua: UADetails | null
-    $cookies: NuxtCookies
+declare module "#app" {
+  interface NuxtApp {
     $plausible: ReturnType<typeof Plausible>
-  }
-  export interface NuxtAppOptions {
-    $ua: UADetails | null
-    $cookies: NuxtCookies
+    $sentry: {
+      captureException: (error: Error | unknown, options?: unknown) => void
+      captureMessage: (message: string) => void
+    }
   }
 }
 
-declare module "@nuxtjs/i18n" {
+declare module "vue-i18n-routing" {
   /**
    * We put a little extra information in the Vue-i18n `locales` field such as the
    * locale's name and native name, which comes in use here.
@@ -53,5 +19,16 @@ declare module "@nuxtjs/i18n" {
     name: string
     nativeName: string
     translated: number
+  }
+}
+
+declare module "nuxt/schema" {
+  interface RuntimeConfig {
+    apiSecret: string
+  }
+  interface PublicRuntimeConfig {
+    apiUrl: string
+    providerUpdateFrequency: number
+    savedSearchCount: number
   }
 }

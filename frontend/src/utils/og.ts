@@ -1,8 +1,4 @@
-import type { MetaInfo } from "vue-meta"
-import type {
-  MetaPropertyName,
-  MetaPropertyProperty,
-} from "vue-meta/types/vue-meta"
+type Meta = { name?: string; content?: string; property?: string }[]
 
 export const createDetailPageMeta = ({
   title,
@@ -14,24 +10,21 @@ export const createDetailPageMeta = ({
   thumbnail?: string
   isSensitive: boolean
 }) => {
-  const head = {} as MetaInfo
-  const meta = [
+  const head: { meta: Meta } = { meta: [] }
+  const meta: Meta = [
     {
-      hid: "robots",
       name: "robots",
       content: "noindex",
     },
-  ] as (MetaPropertyName | MetaPropertyProperty)[]
+  ]
   if (title) {
     meta.push({
-      hid: "og:title",
       property: "og:title",
       content: title,
     })
   }
   if (thumbnail && !isSensitive) {
     meta.push({
-      hid: "og:image",
       property: "og:image",
       content: thumbnail,
     })

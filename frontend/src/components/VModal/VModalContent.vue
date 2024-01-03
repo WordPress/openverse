@@ -87,11 +87,11 @@
 <script lang="ts">
 import { defineComponent, toRefs, ref, computed, PropType } from "vue"
 
-import { Portal as VTeleport } from "portal-vue"
-
 import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
+
+import { Portal as VTeleport } from "portal-vue"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
