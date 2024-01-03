@@ -88,7 +88,7 @@ export default defineComponent({
     /**
      * the search query given as input to the field
      */
-    value: {
+    modelValue: {
       type: String,
       default: "",
     },
@@ -102,7 +102,7 @@ export default defineComponent({
     },
   },
   emits: {
-    input: defineEvent<[string]>(),
+    "update:modelValue": defineEvent<[string]>(),
     submit: defineEvent(),
   },
   setup(props, { attrs, emit }) {
@@ -110,9 +110,9 @@ export default defineComponent({
     const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
 
     const modelMedium = computed<string>({
-      get: () => props.value ?? "",
+      get: () => props.modelValue ?? "",
       set: (value: string) => {
-        emit("input", value)
+        emit("update:modelValue", value)
       },
     })
 
