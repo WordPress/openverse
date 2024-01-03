@@ -30,8 +30,7 @@ export const useMatchRoute = (
     return routes.includes(route.split("__")[0])
   }
 
-  const routeName = String(route.name)
-  const matches = ref(routeNameMatches(routeName))
+  const matches = ref(routeNameMatches(String(route.name)))
 
   router.beforeEach((to, _from, next) => {
     matches.value = routeNameMatches(String(to.name))
