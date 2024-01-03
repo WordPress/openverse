@@ -1,4 +1,4 @@
-import { computed, Ref, ref } from "@nuxtjs/composition-api"
+import { computed, Ref, ref } from "vue"
 
 import type { ImageDimensions } from "~/types/media"
 

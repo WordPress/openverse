@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { computed, defineComponent } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
 
 import { useUiStore } from "~/stores/ui"
 import { defineEvent } from "~/types/emits"

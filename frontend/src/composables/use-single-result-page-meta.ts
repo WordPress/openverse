@@ -1,6 +1,5 @@
-import { computed, ref } from "vue"
+import { computed, ref , watch } from "vue"
 
-import { watch } from "@nuxtjs/composition-api"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
