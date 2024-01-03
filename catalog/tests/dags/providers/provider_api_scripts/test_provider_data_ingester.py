@@ -349,7 +349,7 @@ def test_ingest_records_commits_on_exception():
 def test_ingest_records_uses_initial_query_params_from_dagrun_conf():
     # Initialize the ingester with a conf
     ingester = MockProviderDataIngester(
-        {"initial_query_params": {"has_image": 1, "page": 5}}
+        conf={"initial_query_params": {"has_image": 1, "page": 5}}
     )
 
     # Mock get_batch to halt ingestion after a single batch
@@ -365,7 +365,7 @@ def test_ingest_records_uses_initial_query_params_from_dagrun_conf():
 def test_ingest_records_uses_query_params_list_from_dagrun_conf():
     # Initialize the ingester with a conf
     ingester = MockProviderDataIngester(
-        {
+        conf={
             "query_params_list": [
                 {"has_image": 1, "page": 5},
                 {"has_image": 1, "page": 12},

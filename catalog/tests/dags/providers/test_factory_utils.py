@@ -34,7 +34,7 @@ def internal_func_mock():
 fdi = FakeDataIngester()
 
 
-def _set_up_ingester(mock_conf, mock_dag_id, mock_func, value):
+def _set_up_ingester(mock_ti, mock_conf, mock_dag_id, mock_func, value):
     """
     Set up ingest records as a proxy for calling the mock function, then return
     the instance. This is necessary because the args are only handed in during
