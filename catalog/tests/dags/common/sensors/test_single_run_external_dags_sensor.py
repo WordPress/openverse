@@ -106,9 +106,10 @@ def test_fails_if_external_dag_does_not_exist(clean_db, setup_pool):
             mode="reschedule",
             dag=dag,
         )
-        
+
         run_sensor(sensor)
-        
+
+
 @pytest.mark.filterwarnings(
     "ignore:This class is deprecated. Please use "
     "`airflow.utils.task_group.TaskGroup`.:airflow.exceptions.RemovedInAirflow3Warning"
@@ -148,8 +149,9 @@ def test_fails_if_external_dag_missing_sensor_task(clean_db, setup_pool):
             mode="reschedule",
             dag=dag,
         )
-        
+
         run_sensor(sensor)
+
 
 @pytest.mark.filterwarnings(
     "ignore:This class is deprecated. Please use "
