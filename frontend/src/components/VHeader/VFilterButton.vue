@@ -55,7 +55,7 @@ export default defineComponent({
 
     const textLabel = computed(() => i18n.t("header.filterButton.simple"))
     const ariaLabel = computed(() =>
-      i18n.tc("header.filterButton.withCount", filterCount.value)
+      i18n.t("header.filterButton.withCount", { count: filterCount.value })
     )
 
     return {

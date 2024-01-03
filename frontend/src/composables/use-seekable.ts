@@ -28,11 +28,9 @@ export const useSeekable = ({
     "aria-role": "slider",
     "aria-valuemax": duration.value,
     "aria-valuenow": currentTime.value,
-    "aria-valuetext": i18n
-      .tc("waveform.currentTime", currentTime.value, {
-        time: currentTime.value,
-      })
-      .toString(),
+    "aria-valuetext": i18n.t("waveform.currentTime", {
+      time: currentTime.value,
+    }),
     "aria-orientation": "horizontal" as const,
     "aria-valuemin": "0",
   }))
