@@ -4,7 +4,6 @@
     :is-first="isFirst"
     :as="component"
     class="label-regular"
-    :size="size"
     v-bind="{ href }"
     @click="$emit('click', item)"
   >
@@ -67,14 +66,6 @@ export default defineComponent({
     useLinks: {
       type: Boolean,
       default: true,
-    },
-    /**
-     * 'Small' size for larger screens,
-     * 'medium' size for mobile screens.
-     */
-    size: {
-      type: String as PropType<"small" | "medium">,
-      default: "small",
     },
   },
   emits: {
