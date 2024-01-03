@@ -45,6 +45,7 @@ import {
   createError,
   defineNuxtComponent,
   definePageMeta,
+  navigateTo,
   useHead,
 } from "#imports"
 
@@ -52,7 +53,7 @@ import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
-import { useFetch, useRoute, useRouter } from "@nuxtjs/composition-api"
+import { useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -88,7 +89,6 @@ export default defineNuxtComponent({
     const searchStore = useSearchStore()
 
     const route = useRoute()
-    const router = useRouter()
 
     // I don't know *exactly* why this is necessary, but without it
     // transitioning from the homepage to this page breaks the
@@ -182,7 +182,7 @@ export default defineNuxtComponent({
       query,
       (newQuery, oldQuery) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {
-          router.push(searchStore.getSearchPath())
+          return navigateTo(searchStore.getSearchPath())
         }
       },
       { debounce: 800, maxWait: 5000 }

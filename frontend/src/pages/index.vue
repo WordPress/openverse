@@ -15,11 +15,14 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  navigateTo,
+  useHead,
+} from "#imports"
 
 import { computed, onMounted, ref } from "vue"
-
-import { useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
@@ -50,7 +53,6 @@ export default defineNuxtComponent({
     definePageMeta({
       layout: "default",
     })
-    const router = useRouter()
 
     const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
@@ -99,7 +101,7 @@ export default defineNuxtComponent({
         query: searchTerm,
       })
 
-      router.push(
+      return navigateTo(
         searchStore.updateSearchPath({
           type: searchType.value,
           searchTerm,

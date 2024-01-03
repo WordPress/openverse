@@ -104,7 +104,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
+import {
+  createError,
+  defineNuxtComponent,
+  definePageMeta,
+  useHead,
+} from "#imports"
 
 import axios from "axios"
 

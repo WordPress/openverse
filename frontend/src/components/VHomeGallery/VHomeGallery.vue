@@ -46,10 +46,9 @@
 </template>
 
 <script lang="ts">
-import { useLocalePath } from "#imports"
+import { useLocalePath, useRouter } from "#imports"
 
 import { computed, defineComponent, PropType, ref } from "vue"
-import { useRouter } from "@nuxtjs/composition-api"
 
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 import { useAnalytics } from "~/composables/use-analytics"

@@ -1,5 +1,6 @@
+import { navigateTo } from "#imports"
+
 import { computed, watch } from "vue"
-import { useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
@@ -13,7 +14,6 @@ export const useSearch = (
 ) => {
   const mediaStore = useMediaStore()
   const searchStore = useSearchStore()
-  const router = useRouter()
 
   const { matches: isSearchRoute } = useMatchSearchRoutes()
 
@@ -72,7 +72,7 @@ export const useSearch = (
     const searchPath = searchStore.updateSearchPath({
       searchTerm: searchTerm.value,
     })
-    router.push(searchPath)
+    return navigateTo(searchPath)
   }
 
   const isFetching = computed(() => mediaStore.fetchState.isFetching)

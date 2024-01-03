@@ -36,9 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
-
-import { useRouter } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, navigateTo, useHead } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -60,7 +58,6 @@ export default defineNuxtComponent({
   props: ["error"],
   setup() {
     const searchStore = useSearchStore()
-    const router = useRouter()
 
     const { sendCustomEvent } = useAnalytics()
 
@@ -70,7 +67,9 @@ export default defineNuxtComponent({
         query: searchTerm,
       })
 
-      router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
+      return navigateTo(
+        searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+      )
     }
 
     useHead({
