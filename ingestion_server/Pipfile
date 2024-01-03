@@ -10,7 +10,7 @@ pytest-order = "~=1.1"
 pytest-sugar = "~=0.9"
 remote-pdb = "~=2.1"
 pook = "~=1.0"
-pytest-subtests = "0.11.0"
+pytest-subtests = "*"
 
 [packages]
 aws-requests-auth = "~=0.4"
