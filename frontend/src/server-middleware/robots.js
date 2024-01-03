@@ -1,9 +1,11 @@
-const { LOCAL, PRODUCTION } = require("../constants/deploy-env")
+import { defineEventHandler } from "h3"
+
+import { LOCAL, PRODUCTION } from "~/constants/deploy-env"
 
 /**
  * Send the correct robots.txt information per-environment.
  */
-export default function robots(_, res) {
+export default defineEventHandler(() => {
   const deployEnv = process.env.DEPLOYMENT_ENV ?? LOCAL
 
   const contents =
@@ -21,6 +23,5 @@ User-agent: *
 Disallow: /
 `
 
-  res.setHeader("Content-Type", "text/plain")
-  res.end(contents)
-}
+  return contents.replaceAll("\n", "<br />")
+})
