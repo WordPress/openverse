@@ -4,7 +4,7 @@
     <p>{{ $t("searchGuide.intro") }}</p>
 
     <h2>{{ $t("searchGuide.exact.title") }}</h2>
-    <i18n-t keypath="searchGuide.exact.content" tag="p">
+    <i18n-t scope="global" keypath="searchGuide.exact.content" tag="p">
       <template #link>
         <VLink
           :aria-label="$t('searchGuide.exact.ariaLabel')"
@@ -17,7 +17,12 @@
 
     <h2>{{ $t("searchGuide.negate.title") }}</h2>
 
-    <i18n-t keypath="searchGuide.negate.content" tag="p" class="mb-4">
+    <i18n-t
+      scope="global"
+      keypath="searchGuide.negate.content"
+      tag="p"
+      class="mb-4"
+    >
       <template #operator
         ><!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
         <em :aria-label="$t('searchGuide.negate.operatorAriaLabel').toString()"

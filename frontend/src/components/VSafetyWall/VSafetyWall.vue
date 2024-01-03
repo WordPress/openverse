@@ -18,6 +18,7 @@
         }}
       </p>
       <i18n-t
+        scope="global"
         tag="p"
         class="mt-2"
         keypath="sensitiveContent.singleResult.learnMore"

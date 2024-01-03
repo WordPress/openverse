@@ -7,7 +7,7 @@
     :close-button-label="$t('notification.translation.close')"
     @close="$emit('close')"
   >
-    <i18n-t keypath="notification.translation.text" tag="span">
+    <i18n-t scope="global" keypath="notification.translation.text" tag="span">
       <template #link>
         <VLink :href="currentLocale.link" class="text-curr underline">{{
           $t("notification.translation.link")

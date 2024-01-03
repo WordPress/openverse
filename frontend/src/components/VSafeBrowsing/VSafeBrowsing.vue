@@ -5,7 +5,12 @@
         {{ $t("filters.safeBrowsing.title") }}
       </h4>
     </header>
-    <i18n-t tag="p" keypath="filters.safeBrowsing.desc" class="label-regular">
+    <i18n-t
+      scope="global"
+      tag="p"
+      keypath="filters.safeBrowsing.desc"
+      class="label-regular"
+    >
       <template #sensitive>
         <VLink :href="sensitivityPath">{{
           $t("filters.safeBrowsing.sensitive")

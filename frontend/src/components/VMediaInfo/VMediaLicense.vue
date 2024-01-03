@@ -6,6 +6,7 @@
 
     <template v-if="isLicense">
       <i18n-t
+        scope="global"
         keypath="mediaDetails.reuse.attribution"
         tag="span"
         class="mb-2 block text-sm md:mb-4 md:text-base"
@@ -26,6 +27,7 @@
     <template v-else>
       <VLicenseElements :license="license" />
       <i18n-t
+        scope="global"
         keypath="mediaDetails.reuse.tool.content"
         tag="span"
         class="description-bold"

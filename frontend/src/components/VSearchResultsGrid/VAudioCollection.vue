@@ -5,7 +5,7 @@
       is-for-tab="audio"
     />
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n-t keypath="audioResults.snackbar.text" tag="p">
+      <i18n-t scope="global" keypath="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
           :key="keyboardKey"

@@ -41,6 +41,7 @@
         ]"
       >
         <i18n-t
+          scope="global"
           tag="div"
           keypath="audioTrack.creator"
           class="line-clamp-1 inline-block overflow-hidden text-ellipsis whitespace-nowrap"

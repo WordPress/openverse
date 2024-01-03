@@ -25,11 +25,13 @@
         >
           <i18n-t
             v-if="isMd"
+            scope="global"
             keypath="externalSources.form.supportedTitle"
             tag="p"
           />
           <i18n-t
             v-else
+            scope="global"
             keypath="externalSources.form.supportedTitleSm"
             tag="p"
           />

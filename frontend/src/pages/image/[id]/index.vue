@@ -68,6 +68,7 @@
             </h1>
             <i18n-t
               v-if="image.creator"
+              scope="global"
               keypath="imageDetails.creator"
               tag="span"
             >

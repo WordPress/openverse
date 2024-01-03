@@ -7,14 +7,14 @@
       {{ $t("about.description.content", { openverse: "Openverse" }) }}
     </p>
 
-    <i18n-t keypath="about.collection.content" tag="p">
+    <i18n-t scope="global" keypath="about.collection.content" tag="p">
       <template #openverse>Openverse</template>
       <template #commonCrawl>
         <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
       </template>
     </i18n-t>
 
-    <i18n-t keypath="about.planning.content" tag="p">
+    <i18n-t scope="global" keypath="about.planning.content" tag="p">
       <template #openverse>Openverse</template>
       <template #frontend>
         <VLink href="https://github.com/wordpress/openverse-frontend/">{{
@@ -43,7 +43,7 @@
       </template>
     </i18n-t>
 
-    <i18n-t keypath="about.transfer.content" tag="p">
+    <i18n-t scope="global" keypath="about.transfer.content" tag="p">
       <template #openverse>Openverse</template>
       <template #creativeCommons>
         <VLink
@@ -58,7 +58,7 @@
       </template>
     </i18n-t>
 
-    <i18n-t keypath="about.declaration.content" tag="p">
+    <i18n-t scope="global" keypath="about.declaration.content" tag="p">
       <template #openverse>Openverse</template>
       <template #terms>
         <VLink href="https://creativecommons.org/terms/">{{
@@ -71,7 +71,7 @@
       {{ $t("externalSourcesPage.title") }}
     </h2>
 
-    <i18n-t keypath="externalSourcesPage.intro" tag="p">
+    <i18n-t scope="global" keypath="externalSourcesPage.intro" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="/sources">{{ $t("externalSourcesPage.link") }}</VLink>
@@ -89,7 +89,7 @@
     <h2>
       {{ $t("externalSourcesPage.new.title") }}
     </h2>
-    <i18n-t keypath="externalSourcesPage.new.content" tag="p">
+    <i18n-t scope="global" keypath="externalSourcesPage.new.content" tag="p">
       <template #issue>
         <VLink
           aria-label="issue"
@@ -106,7 +106,7 @@
     <h2>
       {{ $t("externalSourcesPage.why.title") }}
     </h2>
-    <i18n-t keypath="externalSourcesPage.why.content" tag="p">
+    <i18n-t scope="global" keypath="externalSourcesPage.why.content" tag="p">
       <template #old>
         <VLink
           aria-label="email"
@@ -119,7 +119,11 @@
     <p>
       {{ $t("externalSourcesPage.why.new", { openverse: "Openverse" }) }}
     </p>
-    <i18n-t keypath="externalSourcesPage.why.feedbackSuggestions" tag="p">
+    <i18n-t
+      scope="global"
+      keypath="externalSourcesPage.why.feedbackSuggestions"
+      tag="p"
+    >
       <template #feedback>
         <VLink
           :aria-label="$t('externalSourcesPage.why.ariaLabel')"

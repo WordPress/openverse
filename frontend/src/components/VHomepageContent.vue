@@ -57,7 +57,12 @@
     </VStandaloneSearchBar>
 
     <!-- Disclaimer for large screens -->
-    <i18n-t keypath="hero.disclaimer.content" tag="p" class="mt-4 text-sr">
+    <i18n-t
+      scope="global"
+      keypath="hero.disclaimer.content"
+      tag="p"
+      class="mt-4 text-sr"
+    >
       <template #openverse>Openverse</template>
       <template #license>
         <VLink

@@ -52,7 +52,7 @@
           class="subtitle mt-1 flex flex-col gap-2 text-base leading-snug lg:flex-row lg:items-center"
         >
           <i18n-t
-            as="span"
+            scope="global"
             keypath="audioTrack.creator"
             class="font-semibold"
             tag="span"
