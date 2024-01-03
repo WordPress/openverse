@@ -28,6 +28,12 @@ export = {
           "type",
         ],
         pathGroups: [
+          // Treat #imports as "builtin"
+          {
+            pattern: "#imports",
+            group: "builtin",
+            position: "before",
+          },
           {
             // Treat vue and composition-api as "builtin"
             pattern: "(vue|@nuxtjs/composition-api)",
@@ -65,6 +71,7 @@ export = {
             position: "after",
           },
         ],
+        pathGroupsExcludedImportTypes: ["builtin"],
       },
     ],
     "import/extensions": ["error", "always", { js: "never", ts: "never" }],
@@ -79,7 +86,7 @@ export = {
       settings: {
         "import/resolver": {
           typescript: {
-            project: "frontend/tsconfig.json",
+            project: "frontend/.nuxt/tsconfig.json",
             extensions: [".js", ".ts", ".vue", ".png"],
           },
         },
