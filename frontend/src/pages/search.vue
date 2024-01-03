@@ -38,10 +38,10 @@
 
 <script lang="ts">
 import {
-  createError,
   defineNuxtComponent,
   definePageMeta,
   navigateTo,
+  showError,
   useAsyncData,
   useHead,
 } from "#imports"
@@ -59,7 +59,7 @@ import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { areQueriesEqual } from "~/utils/search-query-transform"
-import { handledClientSide, isRetriable } from "~/utils/errors"
+import { isRetriable } from "~/utils/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 import VScrollButton from "~/components/VScrollButton.vue"
@@ -129,15 +129,11 @@ export default defineNuxtComponent({
         return
       }
 
-      await mediaStore.fetchMedia(payload)
-
-      if (
-        fetchingError.value === null ||
-        handledClientSide(fetchingError.value)
-      ) {
-        return null
+      try {
+        await mediaStore.fetchMedia(payload)
+      } catch (error) {
+        return showError(mediaStore.fetchState.fetchingError ?? {})
       }
-      return createError(fetchingError.value)
     }
 
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
@@ -150,6 +146,11 @@ export default defineNuxtComponent({
       query,
       (newQuery, oldQuery) => {
         if (!areQueriesEqual(newQuery, oldQuery)) {
+          mediaStore.clearMedia()
+          /**
+           * By default, Nuxt only scrolls to top when the path changes.
+           * This is a workaround to scroll to top when the query changes.
+           */
           document.getElementById("main-page")?.scroll(0, 0)
           const path = searchStore.getSearchPath()
           return Promise.allSettled([navigateTo(path), fetchMedia()])
