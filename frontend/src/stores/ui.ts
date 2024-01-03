@@ -178,10 +178,7 @@ export const useUiStore = defineStore("ui", {
     },
 
     updateCookieValue(value: keyof OpenverseCookieState["ui"]) {
-      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
-        "ui",
-        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
-      )
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>("ui")
       uiCookie.value = {
         ...uiCookie.value,
         [value]: this[value],
@@ -189,10 +186,7 @@ export const useUiStore = defineStore("ui", {
     },
 
     updateCookies() {
-      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
-        "ui",
-        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
-      )
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>("ui")
       uiCookie.value = {
         instructionsSnackbarState: this.instructionsSnackbarState,
         isFilterDismissed: this.isFilterDismissed,

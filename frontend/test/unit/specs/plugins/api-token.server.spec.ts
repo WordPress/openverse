@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { mockCreateApiService } from "~~/test/unit/test-utils/api-service-mock"
 
 import apiTokenPlugin, {
@@ -6,7 +8,6 @@ import apiTokenPlugin, {
 } from "~/plugins/api-token.server"
 
 import type { AxiosRequestConfig } from "axios"
-import { useNuxtApp } from "#imports"
 
 // Comment this out if you need to debug the tests as the logs are quite helpful
 jest.mock("~/utils/console", () => ({
@@ -114,8 +115,8 @@ describe("api-token.server plugin", () => {
       })
 
       const nuxtApp = useNuxtApp()
-      await apiTokenPlugin(getMockContext(nuxtApp))
-      await apiTokenPlugin(getMockContext(nuxtApp))
+      await apiTokenPlugin(nuxtApp)
+      await apiTokenPlugin(nuxtApp)
 
       expect(process.tokenData).toMatchObject({
         accessToken: nextMockTokenResponse.access_token,
@@ -136,8 +137,8 @@ describe("api-token.server plugin", () => {
       })
 
       const nuxtApp = useNuxtApp()
-      await apiTokenPlugin(getMockContext(nuxtApp))
-      await apiTokenPlugin(getMockContext(nuxtApp))
+      await apiTokenPlugin(nuxtApp)
+      await apiTokenPlugin(nuxtApp)
 
       expect(process.tokenData).toMatchObject({
         accessToken: mockTokenResponse.access_token,
@@ -290,20 +291,14 @@ describe("api-token.server plugin", () => {
   describe("missing client credentials", () => {
     describe("completely missing", () => {
       it("should not make any requests and fall back to tokenless", async () => {
-        await apiTokenPlugin(getMockContext({}))
+        await apiTokenPlugin(useNuxtApp())
         expect(mockInject).toHaveBeenCalledWith("openverseApiToken", "")
       })
     })
 
     describe("explicitly undefined", () => {
       it("should not make any requests and fall back to tokenless", async () => {
-        await apiTokenPlugin(
-          getMockContext({
-            apiClientId: undefined,
-            apiClientSecret: undefined,
-          }),
-          mockInject
-        )
+        await apiTokenPlugin(useNuxtApp())
         expect(mockInject).toHaveBeenCalledWith("openverseApiToken", "")
       })
     })
