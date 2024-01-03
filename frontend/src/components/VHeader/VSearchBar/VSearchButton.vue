@@ -1,7 +1,7 @@
 <template>
   <VButton
     type="submit"
-    :aria-label="$t('search.search').toString()"
+    :aria-label="$t('search.search')"
     size="disabled"
     variant="plain"
     :class="[

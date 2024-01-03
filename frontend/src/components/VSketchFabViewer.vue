@@ -47,9 +47,8 @@ export default defineComponent({
   emits: ["failure"],
   setup(props, { emit }) {
     const i18n = useNuxtI18n()
-    const label = i18n
-      .t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
-      .toString()
+    const label = i18n.t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
+
     const node = ref<Element | undefined>()
     const { $sentry } = useNuxtApp()
 

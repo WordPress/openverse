@@ -71,11 +71,9 @@ export default defineNuxtComponent({
     if (!image) {
       return nuxtError({
         statusCode: 404,
-        message: i18n
-          .t("error.imageNotFound", {
-            id: imageId,
-          })
-          .toString(),
+        message: i18n.t("error.imageNotFound", {
+          id: imageId,
+        }),
       })
     }
     const attributionMarkup = getAttribution(image, i18n, {

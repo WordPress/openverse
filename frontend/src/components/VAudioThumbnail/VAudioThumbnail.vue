@@ -64,14 +64,12 @@ export default defineComponent({
     const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
     const i18n = useNuxtI18n()
-    const helpText = (
-      shouldBlur.value
-        ? i18n.t("sensitiveContent.title.audio")
-        : i18n.t("audioThumbnail.alt", {
-            title: props.audio.title,
-            creator: props.audio.creator,
-          })
-    )?.toString()
+    const helpText = shouldBlur.value
+      ? i18n.t("sensitiveContent.title.audio")
+      : i18n.t("audioThumbnail.alt", {
+          title: props.audio.title,
+          creator: props.audio.creator,
+        })
 
     /* Switching */
 

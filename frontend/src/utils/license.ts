@@ -36,9 +36,7 @@ export const getFullLicenseName = (
 
   // PDM has no abbreviation
   if (license === "pdm" && i18n) {
-    licenseName = i18n
-      .t(`licenseReadableNames.${camelCase(license)}`)
-      .toString()
+    licenseName = i18n.t(`licenseReadableNames.${camelCase(license)}`)
   } else {
     licenseName = license.toUpperCase().replace("SAMPLING", "Sampling")
   }

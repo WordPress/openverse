@@ -87,7 +87,7 @@ export default defineComponent({
       () => Object.keys(filters.value) as FilterCategory[]
     )
     const filterTypeTitle = (filterType: FilterCategory) => {
-      return i18n.t(`filters.${filterType}.title`).toString()
+      return i18n.t(`filters.${filterType}.title`)
     }
 
     const toggleFilter = ({

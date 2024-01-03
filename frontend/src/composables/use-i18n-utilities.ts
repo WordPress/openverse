@@ -79,7 +79,7 @@ export function useI18nResultsCount() {
   const i18n = useNuxtI18n()
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
-  const getLoading = () => i18n.t("header.loading").toString()
+  const getLoading = () => i18n.t("header.loading")
 
   const getI18nKey = (
     resultsCount: number,

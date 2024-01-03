@@ -41,14 +41,14 @@
             id="search-bar"
             ref="searchInputRef"
             name="q"
-            :placeholder="$t('hero.search.placeholder').toString()"
+            :placeholder="$t('hero.search.placeholder')"
             type="search"
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
             :value="searchTerm"
             :aria-label="
               $t('search.searchBarLabel', {
                 openverse: 'Openverse',
-              }).toString()
+              })
             "
             autocomplete="off"
             role="combobox"

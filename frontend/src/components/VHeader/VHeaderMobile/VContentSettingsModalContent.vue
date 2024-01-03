@@ -1,6 +1,6 @@
 <template>
   <VModalContent
-    :aria-label="$t('header.aria.menu').toString()"
+    :aria-label="$t('header.aria.menu')"
     :hide-on-click-outside="true"
     :hide="close"
     :visible="visible"

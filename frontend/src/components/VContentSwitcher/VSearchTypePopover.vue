@@ -1,7 +1,7 @@
 <template>
   <VPopover
     ref="contentMenuPopover"
-    :label="$t('searchType.label').toString()"
+    :label="$t('searchType.label')"
     placement="bottom-end"
     :clippable="true"
     :trap-focus="false"

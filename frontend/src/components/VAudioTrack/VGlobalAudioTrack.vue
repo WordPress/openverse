@@ -76,7 +76,7 @@ export default defineComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const ariaLabel = computed(() =>
-      i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
+      i18n.t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
     const status = ref<AudioStatus>("paused")

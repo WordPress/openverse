@@ -32,9 +32,7 @@
           ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
           : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
       "
-      :aria-label="
-        $t('browsePage.aria.results', { query: searchTerm }).toString()
-      "
+      :aria-label="$t('browsePage.aria.results', { query: searchTerm })"
     >
       <template v-for="item in allMedia">
         <VImageCell

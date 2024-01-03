@@ -65,7 +65,7 @@ export default defineComponent({
       const licenseKey =
         props.license === "sampling+" ? props.license : camelCase(props.license)
       return {
-        readable: i18n.t(`licenseReadableNames.${licenseKey}`).toString(),
+        readable: i18n.t(`licenseReadableNames.${licenseKey}`),
         full: getFullLicenseName(props.license, "", i18n),
       }
     })

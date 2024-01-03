@@ -18,7 +18,7 @@
       variant="transparent-gray"
       :icon-props="{ name: 'eye-closed' }"
       size="small"
-      :label="$t('sensitiveContent.singleResult.hide').toString()"
+      :label="$t('sensitiveContent.singleResult.hide')"
       @click="$emit('click')"
     />
   </div>

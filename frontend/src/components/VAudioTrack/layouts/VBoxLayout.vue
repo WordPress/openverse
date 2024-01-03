@@ -76,7 +76,7 @@ export default defineComponent({
     const isSmall = computed(() => props.size === "s")
 
     const categoryLabel = computed(() =>
-      i18n.t(`filters.audioCategories.${props.audio.category}`).toString()
+      i18n.t(`filters.audioCategories.${props.audio.category}`)
     )
 
     const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)

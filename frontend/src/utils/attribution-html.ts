@@ -177,7 +177,7 @@ export const getAttribution = (
   const i18nBase = "mediaDetails.reuse.credit"
   const tFn = i18n
     ? (key: string, values?: VueI18n.Values) =>
-        i18n.t(`${i18nBase}.${key}`, values).toString()
+        i18n.t(`${i18nBase}.${key}`, values)
     : fakeT
 
   /* Title */
