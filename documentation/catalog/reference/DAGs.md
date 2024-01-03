@@ -492,6 +492,20 @@ provider due to deadlinks would look like this:
 }
 ```
 
+##### Multiple deletions
+
+When a record is deleted, it is added to the corresponding Deleted Media table.
+If the record is reingested back into the media table, the delete*records DAG
+may be run additional times to delete the same record. When this occurs, only
+one row will be kept in the Deleted Media table for the record (as uniquely
+identified by the provider and foreign identifier pair). This row is not
+updated, so the `deleted_on` time will reflect the \_first* time the record was
+deleted.
+
+When restoring records from the Deleted Media table, it is important to note
+that these records have not been updated through reingestion, so fields such as
+popularity data may be out of date.
+
 ##### Warnings
 
 Presently, there is no logic to prevent records that have an entry in a Deleted
