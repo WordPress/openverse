@@ -43,6 +43,8 @@ import {
 } from "~/types/button"
 import type { ButtonForm } from "~/types/button"
 
+import { skipToContentTargetId } from "~/constants/window"
+
 import VLink from "~/components/VLink.vue"
 
 export type ButtonProps = ProperlyExtractPropTypes<
@@ -239,7 +241,10 @@ const VButton = defineComponent({
     watch(
       () => props.as,
       (as) => {
-        if (["a", "NuxtLink"].includes(as)) {
+        if (
+          ["a", "NuxtLink"].includes(as) &&
+          attrs.href !== `#${skipToContentTargetId}`
+        ) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
           )
