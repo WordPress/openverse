@@ -102,7 +102,7 @@ export default defineComponent({
     })
 
     const i18n = useNuxtI18n()
-    const dir = computed(() => i18n.localeProperties.dir ?? "ltr")
+    const dir = computed(() => i18n.localeProperties.value.dir ?? "ltr")
 
     const scrollStep = 150 // px to scroll on each click
     const scrollMargin = 44 // px, button + margin

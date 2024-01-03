@@ -127,7 +127,7 @@ export default defineComponent({
      * @param rtl
      */
     const resolveArrow = (ltr: string, rtl: string) => {
-      return i18n.localeProperties.dir === "rtl" &&
+      return i18n.localeProperties.value.dir === "rtl" &&
         props.direction === "horizontal"
         ? rtl
         : ltr
