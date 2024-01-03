@@ -1,4 +1,8 @@
+import { useCookie } from "#imports"
+
 import { defineStore } from "pinia"
+
+import { CookieOptions } from "#app"
 
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
@@ -7,8 +11,9 @@ import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
+import { useI18n } from "~/composables/use-i18n"
 
-import type { LocaleObject } from "@nuxtjs/i18n"
+import type { LocaleObject } from "vue-i18n-routing"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
@@ -38,7 +43,6 @@ export interface UiState {
   /**
    * whether the request user agent is mobile or not.
    */
-  isMobileUa: boolean
   dismissedBanners: BannerId[]
   /**
    * Whether to blur sensitive content in search and single result pages.
@@ -59,7 +63,6 @@ export const useUiStore = defineStore("ui", {
     isFilterDismissed: false,
     isDesktopLayout: false,
     breakpoint: "sm",
-    isMobileUa: true,
     dismissedBanners: [],
     shouldBlurSensitive: true,
     revealedSensitiveResults: [],
@@ -94,7 +97,8 @@ export const useUiStore = defineStore("ui", {
      * The locale object of the current locale.
      */
     currentLocale(): LocaleObject {
-      return this.$nuxt.i18n.localeProperties
+      const i18n = useI18n()
+      return i18n.localeProperties
     },
     /**
      * The id used in the translation banner and the cookies for dismissed banners.
@@ -148,50 +152,53 @@ export const useUiStore = defineStore("ui", {
      *
      * @param cookies - mapping of UI state parameters and their states.
      */
-    initFromCookies(cookies: OpenverseCookieState) {
+    initFromCookies(cookies: OpenverseCookieState["ui"]) {
       let breakpoint = this.breakpoint
       if (
-        cookies.uiBreakpoint &&
-        Object.keys(ALL_SCREEN_SIZES).includes(cookies.uiBreakpoint)
+        cookies.breakpoint &&
+        Object.keys(ALL_SCREEN_SIZES).includes(cookies.breakpoint)
       ) {
-        breakpoint = cookies.uiBreakpoint
+        breakpoint = cookies.breakpoint
       }
       this.updateBreakpoint(breakpoint)
 
-      if (typeof cookies.uiIsFilterDismissed === "boolean") {
-        this.isFilterDismissed = cookies.uiIsFilterDismissed
-      }
-
-      this.isMobileUa = false
-      if (typeof cookies.uiIsMobileUa === "boolean") {
-        this.isMobileUa = cookies.uiIsMobileUa
+      if (typeof cookies.isFilterDismissed === "boolean") {
+        this.isFilterDismissed = cookies.isFilterDismissed
       }
 
       this.innerFilterVisible = this.isDesktopLayout
         ? !this.isFilterDismissed
         : false
 
-      if (Array.isArray(cookies.uiDismissedBanners)) {
-        this.dismissedBanners = cookies.uiDismissedBanners
+      if (Array.isArray(cookies.dismissedBanners)) {
+        this.dismissedBanners = cookies.dismissedBanners
       }
 
       this.updateCookies()
     },
 
-    updateCookies() {
-      const opts = { ...cookieOptions }
+    updateCookieValue(value: keyof OpenverseCookieState["ui"]) {
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
+        "ui",
+        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
+      )
+      uiCookie.value = {
+        ...uiCookie.value,
+        [value]: this[value],
+      }
+    },
 
-      this.$nuxt.$cookies.setAll([
-        {
-          name: "uiInstructionsSnackbarState",
-          value: this.instructionsSnackbarState,
-          opts,
-        },
-        { name: "uiIsFilterDismissed", value: this.isFilterDismissed, opts },
-        { name: "uiBreakpoint", value: this.breakpoint, opts },
-        { name: "uiIsMobileUa", value: this.isMobileUa, opts },
-        { name: "uiDismissedBanners", value: this.dismissedBanners, opts },
-      ])
+    updateCookies() {
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
+        "ui",
+        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
+      )
+      uiCookie.value = {
+        instructionsSnackbarState: this.instructionsSnackbarState,
+        isFilterDismissed: this.isFilterDismissed,
+        breakpoint: this.breakpoint,
+        dismissedBanners: this.dismissedBanners,
+      }
     },
 
     /**
@@ -206,9 +213,8 @@ export const useUiStore = defineStore("ui", {
 
       this.breakpoint = breakpoint
 
-      this.$nuxt.$cookies.set("uiBreakpoint", this.breakpoint, {
-        ...cookieOptions,
-      })
+      this.updateCookieValue("breakpoint")
+
       this.isDesktopLayout = desktopBreakpoints.includes(breakpoint)
     },
 
@@ -224,9 +230,7 @@ export const useUiStore = defineStore("ui", {
       if (this.isDesktopLayout) {
         this.isFilterDismissed = !visible
 
-        this.$nuxt.$cookies.set("uiIsFilterDismissed", this.isFilterDismissed, {
-          ...cookieOptions,
-        })
+        this.updateCookieValue("isFilterDismissed")
       }
     },
 
@@ -247,9 +251,7 @@ export const useUiStore = defineStore("ui", {
 
       this.dismissedBanners.push(bannerId)
 
-      this.$nuxt.$cookies.set("uiDismissedBanners", this.dismissedBanners, {
-        ...cookieOptions,
-      })
+      this.updateCookieValue("dismissedBanners")
     },
     isBannerDismissed(bannerId: BannerId) {
       return this.dismissedBanners.includes(bannerId)

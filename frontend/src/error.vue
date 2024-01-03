@@ -1,0 +1,67 @@
+<template>
+  <div>
+    <VSkipToContentButton />
+    <NuxtLayout name="default">
+      <VFourOhFour class="flex-grow" :error="error" />
+    </NuxtLayout>
+  </div>
+</template>
+
+<script lang="ts">
+import {
+  onMounted,
+  useCookie,
+  useFeatureFlagStore,
+  useRoute,
+  useUiStore,
+} from "#imports"
+
+import { defineComponent } from "vue"
+
+import { useLayout } from "~/composables/use-layout"
+import type { OpenverseCookieState } from "~/types/cookies"
+
+import VFourOhFour from "~/components/VFourOhFour.vue"
+
+export default defineComponent({
+  name: "ErrorPage",
+  components: { VFourOhFour },
+  props: ["error"],
+  async setup() {
+    /**
+     * Lifecycle hooks in async setup should be called before the first await.
+     */
+    const { updateBreakpoint } = useLayout()
+
+    const route = useRoute()
+    const uiStore = useUiStore()
+
+    /**
+     * Update the breakpoint value in the cookie on mounted.
+     * The Pinia state might become different from the cookie state if, for example, the cookies were saved when the screen was `sm`,
+     * and then a page is opened on SSR on a `lg` screen.
+     */
+    onMounted(() => {
+      updateBreakpoint()
+      featureFlagStore.syncAnalyticsWithLocalStorage()
+    })
+
+    /* Feature flag store */
+
+    const featureFlagStore = useFeatureFlagStore()
+    const featureCookies =
+      useCookie<OpenverseCookieState["features"]>("features")
+    featureFlagStore.initFromCookies(featureCookies.value ?? {})
+    const sessionFeatures =
+      useCookie<OpenverseCookieState["sessionFeatures"]>("sessionFeatures")
+    featureFlagStore.initFromCookies(sessionFeatures.value ?? {})
+    featureFlagStore.initFromQuery(route.query)
+
+    /* UI store */
+    const uiCookies = useCookie<OpenverseCookieState["ui"]>("ui")
+    uiStore.initFromCookies(uiCookies.value ?? {})
+
+    return {}
+  },
+})
+</script>
