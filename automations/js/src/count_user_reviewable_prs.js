@@ -77,10 +77,10 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
       }
     }
 
-    let should_alert = false
+    let shouldAlert = false
     if (reviewablePRs.length >= 1) {
       // Get the most recently created PR, then determine if it's valid
-      should_alert = isValidPR(
+      shouldAlert = isValidPR(
         reviewablePRs.sort((a, b) => a.createdAt.localeCompare(b.createdAt))[0]
       )
     }
@@ -88,7 +88,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
     const result = {
       pr_count: reviewablePRs.length,
       slack_id: slackID,
-      should_alert: should_alert,
+      should_alert: shouldAlert,
     }
     core.info(`Current user has ${result.pr_count} PR(s).`)
     core.info(
