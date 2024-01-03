@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta } from "#imports"
+import { defineNuxtComponent, definePageMeta, useRoute } from "#imports"
 
-import { useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -24,7 +24,7 @@ export default defineNuxtComponent({
       middleware: collectionMiddleware,
     })
     const route = useRoute()
-    const collectionParams = parseCollectionPath(route.value.params.source)
+    const collectionParams = parseCollectionPath(route.params.source)
     if (!collectionParams) {
       throw new Error("Invalid collection path")
     }

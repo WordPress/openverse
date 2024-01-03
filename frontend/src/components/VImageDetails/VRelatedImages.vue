@@ -13,8 +13,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, watch } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import type { ImageDetail } from "~/types/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
@@ -30,10 +31,13 @@ export default defineComponent({
     const route = useRoute()
 
     watch(
-      route,
-      async (newRoute) => {
-        if (newRoute.params.id !== relatedMediaStore.mainMediaId) {
-          await relatedMediaStore.fetchMedia("image", newRoute.params.id)
+      () => route.params.id,
+      async (newRouteIdParam) => {
+        const newRouteId = Array.isArray(newRouteIdParam)
+          ? newRouteIdParam[0]
+          : newRouteIdParam
+        if (newRouteId !== relatedMediaStore.mainMediaId) {
+          await relatedMediaStore.fetchMedia("image", newRouteId)
         }
       },
       { immediate: true }

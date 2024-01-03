@@ -109,12 +109,13 @@ import {
   defineNuxtComponent,
   definePageMeta,
   useHead,
+  useRoute,
 } from "#imports"
 
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch } from "@nuxtjs/composition-api"
 
 import { IMAGE, isAdditionalSearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -181,7 +182,9 @@ export default defineNuxtComponent({
     const isLoadingThumbnail = ref(true)
 
     useFetch(async () => {
-      const imageId = route.value.params.id
+      const imageId = Array.isArray(route.params.id)
+        ? route.params.id[0]
+        : route.params.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
         if (fetchingError.value && !isRetriable(fetchingError.value)) {
@@ -260,7 +263,8 @@ export default defineNuxtComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleRightClick = (id: string) => {
+    const handleRightClick = (routeId: string | string[]) => {
+      const id = Array.isArray(routeId) ? routeId[0] : routeId
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
         id,
       })

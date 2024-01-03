@@ -22,8 +22,9 @@
   </dl>
 </template>
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import type { Metadata } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -55,8 +56,11 @@ export default defineComponent({
       if (!source) {
         return
       }
+      const id = Array.isArray(route.params.id)
+        ? route.params.id[0]
+        : route.params.id
       sendCustomEvent("VISIT_SOURCE_LINK", {
-        id: route.value.params.id,
+        id,
         source,
       })
     }

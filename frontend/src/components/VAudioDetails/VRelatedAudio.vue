@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, watch } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
@@ -40,10 +41,13 @@ export default defineComponent({
       () => (relatedMediaStore.media ?? []) as AudioDetail[]
     )
     watch(
-      route,
-      async (newRoute) => {
-        if (newRoute.params.id !== relatedMediaStore.mainMediaId) {
-          await relatedMediaStore.fetchMedia("audio", newRoute.params.id)
+      () => route.params.id,
+      async (newRouteIdParam) => {
+        const newRouteId = Array.isArray(newRouteIdParam)
+          ? newRouteIdParam[0]
+          : newRouteIdParam
+        if (newRouteId !== relatedMediaStore.mainMediaId) {
+          await relatedMediaStore.fetchMedia("audio", newRouteId)
         }
       },
       { immediate: true }

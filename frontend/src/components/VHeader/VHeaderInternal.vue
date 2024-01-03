@@ -85,8 +85,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, ref, watch } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -162,11 +163,14 @@ export default defineComponent({
     }
 
     // When clicking on an internal link in the modal, close the modal
-    watch(route, () => {
-      if (isModalVisible.value) {
-        closePageMenu()
+    watch(
+      () => route,
+      () => {
+        if (isModalVisible.value) {
+          closePageMenu()
+        }
       }
-    })
+    )
 
     return {
       menuButtonRef,

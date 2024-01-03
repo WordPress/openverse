@@ -14,11 +14,11 @@
   </div>
 </template>
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, onMounted, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
-
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
@@ -120,9 +120,12 @@ export default defineComponent({
     // Reset the reachResultEndEvent whenever the route changes,
     // to make sure the result end is tracked properly whenever
     // the search query or content type changes
-    watch(route, () => {
-      reachResultEndEventSent.value = false
-    })
+    watch(
+      () => route,
+      () => {
+        reachResultEndEventSent.value = false
+      }
+    )
 
     watch(isLoadMoreButtonVisible, (isVisible) => {
       if (isVisible) {

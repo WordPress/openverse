@@ -1,7 +1,6 @@
-import { useLocalePath } from "#imports"
+import { useLocalePath, useRoute } from "#imports"
 
 import { computed } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 export default function usePages() {
   const localePath = useLocalePath()
@@ -54,9 +53,12 @@ export default function usePages() {
    * The route name of the current page is localized, so it looks like `index__en`.
    * We need to remove the locale suffix to match the page id.
    */
-  const currentPageId = computed<string>(
-    () => route.value?.name?.split("__")[0] ?? ""
-  )
+  const currentPageId = computed<string>(() => {
+    if (!route.name) {
+      return ""
+    }
+    return String(route.name).split("__")[0] ?? ""
+  })
 
   return { all: pages, current: currentPageId }
 }

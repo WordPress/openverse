@@ -47,13 +47,14 @@ import {
   definePageMeta,
   navigateTo,
   useHead,
+  useRoute,
 } from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
-import { useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -150,6 +151,9 @@ export default defineNuxtComponent({
 
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
 
+    const routePath = computed(() => route.path)
+    const routeQuery = computed(() => route.query)
+
     /**
      * Search middleware runs when the path changes. This watcher
      * is necessary to handle the query changes.
@@ -157,22 +161,24 @@ export default defineNuxtComponent({
      * It updates the search store state from the URL query,
      * fetches media, and scrolls to top if necessary.
      */
-    watch(route, async (newRoute, oldRoute) => {
-      if (
-        newRoute.path !== oldRoute.path ||
-        !isShallowEqualObjects(newRoute.query, oldRoute.query)
-      ) {
-        const { query: urlQuery, path } = newRoute
-        searchStore.setSearchStateFromUrl({ urlQuery, path })
+    watch(
+      [routePath, routeQuery],
+      async ([newPath, newQuery], [oldPath, oldQuery]) => {
+        if (newPath !== oldPath || !isShallowEqualObjects(newQuery, oldQuery)) {
+          searchStore.setSearchStateFromUrl({
+            urlQuery: newQuery,
+            path: newPath,
+          })
 
-        /**
-         * By default, Nuxt only scrolls to top when the path changes.
-         * This is a workaround to scroll to top when the query changes.
-         */
-        document.getElementById("main-page")?.scroll(0, 0)
-        await fetchMedia()
+          /**
+           * By default, Nuxt only scrolls to top when the path changes.
+           * This is a workaround to scroll to top when the query changes.
+           */
+          document.getElementById("main-page")?.scroll(0, 0)
+          await fetchMedia()
+        }
       }
-    })
+    )
 
     /**
      * This watcher fires even when the queries are equal. We update the path only

@@ -1,13 +1,15 @@
 import { CreatorCollection, SourceCollection } from "~/types/search"
 
 export function parseCollectionPath(
-  pathMatch: string
+  pathMatch: string | string[] | undefined
 ): SourceCollection | CreatorCollection | null {
   // Build collection params.
   // pathMatch is the part of the path after the collection name:
   //`/sourceName` or `/sourceName/creator/creatorName`.
-  const pathMatchParts = pathMatch
-    .split("/")
+  if (!pathMatch) {
+    return null
+  }
+  const pathMatchParts = (Array.isArray(pathMatch) ? pathMatch : [pathMatch])
     .map((part) => part.trim())
     .filter((part) => part !== "")
 

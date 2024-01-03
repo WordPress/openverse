@@ -43,10 +43,11 @@ import {
   defineNuxtComponent,
   definePageMeta,
   useHead,
+  useRoute,
 } from "#imports"
 
 import { computed, ref } from "vue"
-import { useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -98,7 +99,9 @@ export default defineNuxtComponent({
     )
 
     useFetch(async () => {
-      const audioId = route.value.params.id
+      const audioId = Array.isArray(route.params.id)
+        ? route.params.id[0]
+        : route.params.id
       await singleResultStore.fetch(AUDIO, audioId)
 
       const fetchedAudio = singleResultStore.audio
