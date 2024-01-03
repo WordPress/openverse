@@ -38,7 +38,6 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
           }
         }
         isDraft
-        createdAt
       }
     }
   }
@@ -50,53 +49,49 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
     '🟥 priority: critical',
   ]
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
-  const isRelevantPR = (pr) =>
+  const isRelevantPRFromGraphQL = (pr) =>
     pr.author.login === context.actor &&
     !pr.isDraft &&
     !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
+  const isRelevantPRFromContext = (pr) =>
+    !pr.draft && !pr.labels.some((label) => ignoredLabels.includes(label.name))
 
   try {
     let hasNextPage = true
     let cursor = null
     let reviewablePRs = []
-    while (hasNextPage) {
-      const result = await github.graphql(GET_PULL_REQUESTS, {
-        repoOwner: owner,
-        repo: repo,
-        cursor: cursor,
-      })
-
-      const { nodes, pageInfo } = result.repository.pullRequests
-      const relevantPRs = nodes.filter(isRelevantPR)
-      reviewablePRs.push(...relevantPRs)
-
-      if (pageInfo.hasNextPage) {
-        cursor = pageInfo.endCursor
-      } else {
-        hasNextPage = false
-      }
-    }
-
-    let shouldAlert = false
-    if (reviewablePRs.length >= 1) {
-      // Get the most recently created PR, then determine if it's relevant
-      shouldAlert = isRelevantPR(
-        reviewablePRs.sort((a, b) => a.createdAt.localeCompare(b.createdAt))[0]
-      )
-    }
-
+    const pullRequest = context.payload.pull_request
     const result = {
-      pr_count: reviewablePRs.length,
+      pr_count: 0,
       slack_id: slackID,
-      should_alert: shouldAlert,
     }
+
+    // Check that this pull request is relevant, otherwise skip the action entirely
+    if (isRelevantPRFromContext(pullRequest)) {
+      while (hasNextPage) {
+        const result = await github.graphql(GET_PULL_REQUESTS, {
+          repoOwner: owner,
+          repo: repo,
+          cursor: cursor,
+        })
+
+        const { nodes, pageInfo } = result.repository.pullRequests
+        const relevantPRs = nodes.filter(isRelevantPRFromGraphQL)
+        reviewablePRs.push(...relevantPRs)
+
+        if (pageInfo.hasNextPage) {
+          cursor = pageInfo.endCursor
+        } else {
+          hasNextPage = false
+        }
+      }
+
+      result.pr_count = reviewablePRs.length
+    }
+
     core.info(`Current user has ${result.pr_count} PR(s).`)
-    core.info(
-      `Most recent PR should trigger alert based on labels: ${result.should_alert}`
-    )
     core.setOutput('pr_count', result.pr_count)
     core.setOutput('slack_id', result.slack_id)
-    core.setOutput('should_alert', result.should_alert)
   } catch (error) {
     core.setFailed(`Error fetching pull requests: ${error.message}`)
   }

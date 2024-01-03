@@ -27,7 +27,7 @@ jobs:
   send_message:
     needs: analyze-user-prs
     name: Send Slack message
-    if: ${{ needs.analyze-user-prs.outputs.pr_count >= 3 && needs.analyze-user-prs.outputs.should_alert }}
+    if: needs.analyze-user-prs.outputs.pr_count >= 3
     runs-on: ubuntu-latest
     env:
       slack_url: ${{ secrets.SLACK_DM_WEBHOOK_URL }}
