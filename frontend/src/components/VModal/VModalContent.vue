@@ -4,7 +4,7 @@
       <Teleport to="#modal">
         <div
           v-show="visible"
-          class="fixed inset-0 z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
+          class="h-dyn-screen max-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
           :class="[
             {
               'bg-dark-charcoal bg-opacity-75':

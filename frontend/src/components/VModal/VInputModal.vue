@@ -4,7 +4,7 @@
     <ClientOnly v-else>
       <Teleport to="#modal">
         <div
-          class="fixed inset-0 z-40 flex h-dvh h-screen w-full justify-center overflow-y-auto bg-white"
+          class="h-dyn-screen fixed inset-0 z-40 flex w-full justify-center overflow-y-auto bg-white"
         >
           <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
           <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->

@@ -198,10 +198,14 @@ Time                - 11px - xs semibold (default leading-tight)
 
   .h-dyn-screen {
     @apply h-screen;
-    @apply h-[100dvh];
+    @apply h-dvh;
   }
   .min-h-dyn-screen {
     @apply min-h-screen;
-    @apply min-h-[100dvh];
+    @apply min-h-dvh;
+  }
+  .max-h-dyn-screen {
+    @apply min-h-screen;
+    @apply max-h-dvh;
   }
 }
