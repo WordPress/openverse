@@ -104,17 +104,12 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, useHead } from "#imports"
 
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import {
-  useContext,
-  useFetch,
-  useMeta,
-  useRoute,
-} from "@nuxtjs/composition-api"
+import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { IMAGE, isAdditionalSearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -292,7 +287,7 @@ export default defineNuxtComponent({
 
     const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
 
-    useMeta(() => ({
+    useHead(() => ({
       ...detailPageMeta,
       title: pageTitle.value,
     }))
@@ -329,8 +324,6 @@ export default defineNuxtComponent({
       hide,
     }
   },
-  // Necessary for useMeta
-  head: {},
   methods: { isAdditionalSearchType },
   // Fetching on the server is disabled because it is
   // handled by the `singleResultMiddleware`.

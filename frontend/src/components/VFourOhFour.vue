@@ -36,8 +36,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
-import { useMeta, useRouter } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, useHead } from "#imports"
+
+import { useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -49,7 +50,7 @@ import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VFourOhFour",
   components: {
     VLink,
@@ -72,8 +73,8 @@ export default defineComponent({
       router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
     }
 
-    useMeta({
-      meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
+    useHead({
+      meta: [{ name: "theme-color", content: "#ffe033" }],
     })
 
     return {
@@ -82,6 +83,5 @@ export default defineComponent({
       skipToContentTargetId,
     }
   },
-  head: {},
 })
 </script>

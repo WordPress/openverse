@@ -89,9 +89,7 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
-
-import { useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, useHead } from "#imports"
 
 import { supportedMediaTypes } from "~/constants/media"
 import { useI18n } from "~/composables/use-i18n"
@@ -108,13 +106,12 @@ export default defineNuxtComponent({
   setup() {
     const i18n = useI18n()
 
-    useMeta({
+    useHead({
       title: `${i18n.t("sources.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ name: "robots", content: "all" }],
     })
 
     return { supportedMediaTypes }
   },
-  head: {},
 })
 </script>

@@ -38,15 +38,10 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, useHead } from "#imports"
 
 import { computed, ref } from "vue"
-import {
-  useContext,
-  useFetch,
-  useMeta,
-  useRoute,
-} from "@nuxtjs/composition-api"
+import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -125,7 +120,7 @@ export default defineNuxtComponent({
 
     const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
 
-    useMeta(() => ({
+    useHead(() => ({
       ...detailPageMeta,
       title: pageTitle.value,
     }))
@@ -143,6 +138,5 @@ export default defineNuxtComponent({
       hide,
     }
   },
-  head: {},
 })
 </script>

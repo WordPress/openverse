@@ -15,11 +15,11 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent } from "#imports"
+import { defineNuxtComponent, useHead } from "#imports"
 
 import { computed, onMounted, ref } from "vue"
 
-import { useMeta, useRouter } from "@nuxtjs/composition-api"
+import { useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
@@ -56,10 +56,10 @@ export default defineNuxtComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    useMeta({
+    useHead({
       meta: [
-        { hid: "theme-color", name: "theme-color", content: "#ffe033" },
-        { hid: "robots", name: "robots", content: "all" },
+        { name: "theme-color", content: "#ffe033" },
+        { name: "robots", content: "all" },
       ],
     })
 
@@ -114,7 +114,6 @@ export default defineNuxtComponent({
       handleSearch,
     }
   },
-  head: {},
 })
 </script>
 
