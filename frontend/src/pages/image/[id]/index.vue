@@ -199,9 +199,7 @@ export default defineNuxtComponent({
           image.value = await singleResultStore.fetch(IMAGE, imageId)
           imageSrc.value = image.value.thumbnail
         } catch (error) {
-          throw createError(
-            singleResultStore.fetchState.fetchingError.value ?? {}
-          )
+          throw createError(singleResultStore.fetchState.fetchingError ?? {})
         }
       },
       // Fetching on the server is disabled because it is
@@ -278,6 +276,9 @@ export default defineNuxtComponent({
 
     const handleRightClick = (routeId: string | string[]) => {
       const id = firstParam(routeId)
+      if (!id) {
+        return
+      }
       sendCustomEvent("RIGHT_CLICK_IMAGE", {
         id,
       })
