@@ -41,18 +41,18 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
+import {
+  createError,
+  defineNuxtComponent,
+  definePageMeta,
+  useHead,
+} from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 import { computed, inject, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
-import {
-  useContext,
-  useFetch,
-  useRoute,
-  useRouter,
-} from "@nuxtjs/composition-api"
+import { useFetch, useRoute, useRouter } from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -122,8 +122,6 @@ export default defineNuxtComponent({
       meta: [{ name: "robots", content: "all" }],
     }))
 
-    const { error: nuxtError } = useContext()
-
     const fetchMedia = async (
       payload: { shouldPersistMedia?: boolean } = {}
     ) => {
@@ -147,7 +145,7 @@ export default defineNuxtComponent({
       ) {
         return null
       }
-      return nuxtError(fetchingError.value)
+      return createError(fetchingError.value)
     }
 
     const fetchingError = computed(() => mediaStore.fetchState.fetchingError)

@@ -1,7 +1,7 @@
 import type { ErrorCode } from "~/constants/errors"
 import type { SupportedSearchType } from "~/constants/media"
 
-import type { NuxtError } from "@nuxt/types"
+import type { NuxtError } from "#app"
 
 /**
  * Describes the kind of API request that was made.

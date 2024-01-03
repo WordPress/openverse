@@ -15,8 +15,9 @@
 </template>
 
 <script lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { defineComponent, ref, onMounted } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
 import { loadScript } from "~/utils/load-script"
@@ -50,7 +51,7 @@ export default defineComponent({
       .t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
       .toString()
     const node = ref<Element | undefined>()
-    const { $sentry } = useContext()
+    const { $sentry } = useNuxtApp()
 
     const initSketchfab = async () => {
       await loadScript(sketchfabUrl)

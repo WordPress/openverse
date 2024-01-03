@@ -41,8 +41,9 @@
 </template>
 
 <script lang="ts">
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
@@ -61,9 +62,9 @@ export default defineComponent({
   name: "VSafeBrowsing",
   components: { VCheckbox, VLink },
   setup() {
-    const { app } = useContext()
+    const localePath = useLocalePath()
 
-    const sensitivityPath = computed(() => app.localePath("/sensitive-content"))
+    const sensitivityPath = computed(() => localePath("/sensitive-content"))
 
     const featureFlagStore = useFeatureFlagStore()
     const { sendCustomEvent } = useAnalytics()

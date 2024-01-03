@@ -38,10 +38,15 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
+import {
+  createError,
+  defineNuxtComponent,
+  definePageMeta,
+  useHead,
+} from "#imports"
 
 import { computed, ref } from "vue"
-import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -92,8 +97,6 @@ export default defineNuxtComponent({
       () => singleResultStore.fetchState.fetchingError
     )
 
-    const { error: nuxtError } = useContext()
-
     useFetch(async () => {
       const audioId = route.value.params.id
       await singleResultStore.fetch(AUDIO, audioId)
@@ -101,7 +104,7 @@ export default defineNuxtComponent({
       const fetchedAudio = singleResultStore.audio
 
       if (!fetchedAudio) {
-        nuxtError(singleResultStore.fetchState.fetchingError ?? {})
+        throw createError(singleResultStore.fetchState.fetchingError ?? {})
       } else {
         audio.value = fetchedAudio
       }

@@ -1,7 +1,8 @@
 import Vue from "vue"
 
-import { ref, watch, useContext, onMounted } from "@nuxtjs/composition-api"
+import { ref, watch, onMounted } from "@nuxtjs/composition-api"
 import { useEffect } from "@storybook/client-api"
+import { useNuxtApp } from "#app"
 
 const languageDirection = Vue.observable({ value: "ltr" })
 
@@ -15,7 +16,7 @@ export const WithRTL = (story, context) => {
     components: { story },
     setup() {
       const element = ref()
-      const { i18n } = useContext()
+      const { $i18n: i18n } = useNuxtApp()
       onMounted(() => {
         watch(
           languageDirection,

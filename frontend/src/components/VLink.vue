@@ -43,8 +43,9 @@
  * External links use `a` element. If `href` does not start with `#`, they are set to
  * open in a new tab.
  */
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -103,7 +104,7 @@ export default defineComponent({
     keydown: defineEvent<[KeyboardEvent]>(),
   },
   setup(props) {
-    const { app } = useContext()
+    const localePath = useLocalePath()
     function checkHref(p: typeof props): p is {
       href: string
       showExternalIcon: boolean
@@ -122,7 +123,7 @@ export default defineComponent({
       if (checkHref(props)) {
         if (props.href?.startsWith("/")) {
           // Internal link should link to the localized page
-          return { to: app?.localePath(props.href) ?? props.href }
+          return { to: localePath(props.href) ?? props.href }
         } else if (props.href?.startsWith("#")) {
           // Anchor link for skip-to-content button
           return null

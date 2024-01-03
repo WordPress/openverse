@@ -17,8 +17,9 @@
 </template>
 
 <script lang="ts">
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { defineEvent } from "~/types/emits"
 
@@ -33,8 +34,8 @@ export default defineComponent({
     close: defineEvent(),
   },
   setup() {
-    const { app } = useContext()
-    const privacyPath = computed(() => app.localePath("/privacy"))
+    const localePath = useLocalePath()
+    const privacyPath = computed(() => localePath("/privacy"))
 
     return {
       privacyPath,

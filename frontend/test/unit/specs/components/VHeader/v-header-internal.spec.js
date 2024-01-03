@@ -13,11 +13,6 @@ jest.mock("~/composables/use-analytics", () => ({
 jest.mock("@nuxtjs/composition-api", () => {
   const { ref } = require("vue")
   return {
-    useContext: () => ({
-      app: {
-        localePath: jest.fn().mockReturnValue("/en"),
-      },
-    }),
     useRoute: jest.fn().mockReturnValue(
       ref({
         name: "route_name__extra",

@@ -109,7 +109,7 @@ import { defineNuxtComponent, definePageMeta, useHead } from "#imports"
 import axios from "axios"
 
 import { computed, ref } from "vue"
-import { useContext, useFetch, useRoute } from "@nuxtjs/composition-api"
+import { useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { IMAGE, isAdditionalSearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -175,14 +175,12 @@ export default defineNuxtComponent({
 
     const isLoadingThumbnail = ref(true)
 
-    const { error: nuxtError } = useContext()
-
     useFetch(async () => {
       const imageId = route.value.params.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
         if (fetchingError.value && !isRetriable(fetchingError.value)) {
-          nuxtError(fetchingError.value)
+          throw createError(fetchingError.value)
         }
       } else {
         image.value = fetchedImage

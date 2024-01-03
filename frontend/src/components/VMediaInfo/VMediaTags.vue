@@ -14,8 +14,9 @@
   </ul>
 </template>
 <script lang="ts">
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import type { Tag } from "~/types/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -33,7 +34,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const { app } = useContext()
+    const localePath = useLocalePath()
     const featureFlagStore = useFeatureFlagStore()
 
     const additionalSearchViews = computed(() =>
@@ -41,7 +42,7 @@ export default defineComponent({
     )
 
     const localizedTagPath = (tag: Tag) => {
-      return app.localePath({ path: `tag/${tag.name}` })
+      return localePath({ path: `/tag/${tag.name}` })
     }
 
     return { additionalSearchViews, localizedTagPath }
