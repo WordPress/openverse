@@ -68,3 +68,6 @@ CREATE TABLE public.deleted_audio (
     deleted_reason character varying(80)
 );
 ALTER TABLE public.deleted_audio OWNER TO deploy;
+CREATE UNIQUE INDEX deleted_audio_provider_fid_idx
+    ON public.deleted_audio
+        USING btree (provider, md5(foreign_identifier));
