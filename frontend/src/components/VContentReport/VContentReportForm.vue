@@ -55,7 +55,7 @@
             v-model="selectedReason"
             class="mb-4"
             name="reason"
-            :value_="reason"
+            :value="reason"
           >
             {{ $t(`mediaDetails.contentReport.form.${reason}.option`) }}
           </VRadio>
