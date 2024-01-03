@@ -46,7 +46,6 @@ def test_get_record_data():
         "foreign_identifier": "691102",
         "url": "http://api.aucklandmuseum.com/id/media/v/214749",
         "license_info": CC_BY_4_0,
-        "thumbnail_url": "http://api.aucklandmuseum.com/id/media/v/214749?rendering=thumbnail.jpg",
         "creator": "R. O. Gardner",
         "title": "Cypholophus macrocephalus mollis (Blume) Wedd. var. mollis (Wedd.) Wedd.",
         "meta_data": meta_data,
