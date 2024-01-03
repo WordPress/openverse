@@ -6,8 +6,7 @@ import apiTokenPlugin, {
 } from "~/plugins/api-token.server"
 
 import type { AxiosRequestConfig } from "axios"
-
-import type { Context } from "@nuxt/types"
+import { useNuxtApp } from "#imports"
 
 // Comment this out if you need to debug the tests as the logs are quite helpful
 jest.mock("~/utils/console", () => ({
@@ -47,7 +46,7 @@ const getMockContext = ($config: $config = defaultConfig) =>
       captureException: jest.fn(),
     },
     $config: $config,
-  } as unknown as Context)
+  })
 
 const mockInject = jest.fn()
 
@@ -88,8 +87,8 @@ describe("api-token.server plugin", () => {
           .onPost(matchTokenDataRequest)
           .replyOnce(mockResponseAndAssertData([200, mockTokenResponse]))
       })
-
-      await apiTokenPlugin(getMockContext(), mockInject)
+      const nuxtApp = useNuxtApp()
+      await apiTokenPlugin(nuxtApp)
 
       expect(process.tokenData).toMatchObject({
         accessToken: mockTokenResponse.access_token,
@@ -114,8 +113,9 @@ describe("api-token.server plugin", () => {
           .replyOnce(mockResponseAndAssertData([200, nextMockTokenResponse]))
       })
 
-      await apiTokenPlugin(getMockContext(), mockInject)
-      await apiTokenPlugin(getMockContext(), mockInject)
+      const nuxtApp = useNuxtApp()
+      await apiTokenPlugin(getMockContext(nuxtApp))
+      await apiTokenPlugin(getMockContext(nuxtApp))
 
       expect(process.tokenData).toMatchObject({
         accessToken: nextMockTokenResponse.access_token,
@@ -135,8 +135,9 @@ describe("api-token.server plugin", () => {
           .replyOnce(mockResponseAndAssertData([200, nextMockTokenResponse]))
       })
 
-      await apiTokenPlugin(getMockContext(), mockInject)
-      await apiTokenPlugin(getMockContext(), mockInject)
+      const nuxtApp = useNuxtApp()
+      await apiTokenPlugin(getMockContext(nuxtApp))
+      await apiTokenPlugin(getMockContext(nuxtApp))
 
       expect(process.tokenData).toMatchObject({
         accessToken: mockTokenResponse.access_token,
@@ -190,10 +191,11 @@ describe("api-token.server plugin", () => {
           .replyOnce(mockResponseAndAssertData([200, nextMockTokenResponse]))
       })
 
+      const nuxtApp = useNuxtApp()
       const promises = [
-        apiTokenPlugin(getMockContext(), mockInject),
-        apiTokenPlugin(getMockContext(), mockInject),
-        apiTokenPlugin(getMockContext(), mockInject),
+        apiTokenPlugin(nuxtApp),
+        apiTokenPlugin(nuxtApp),
+        apiTokenPlugin(nuxtApp),
       ]
 
       await resolveFirstRequest()
@@ -225,7 +227,7 @@ describe("api-token.server plugin", () => {
         capturedError = e
       })
 
-      await apiTokenPlugin(mockContext, mockInject)
+      await apiTokenPlugin(useNuxtApp())
 
       expect(mockContext.$sentry.captureException).toHaveBeenCalledTimes(1)
       expect(capturedError).not.toBeUndefined()
@@ -249,9 +251,9 @@ describe("api-token.server plugin", () => {
           .replyOnce(mockResponseAndAssertData([418]))
       })
 
-      await apiTokenPlugin(getMockContext(), mockInject)
+      await apiTokenPlugin(useNuxtApp())
       expect(process.tokenData.accessToken).not.toEqual("")
-      await apiTokenPlugin(getMockContext(), mockInject)
+      await apiTokenPlugin(useNuxtApp())
       expect(process.tokenData.accessToken).toEqual("")
     })
 
@@ -274,10 +276,11 @@ describe("api-token.server plugin", () => {
           .replyOnce(mockResponseAndAssertData([200, finalTokenResponse]))
       })
 
-      await apiTokenPlugin(getMockContext(), mockInject)
-      await apiTokenPlugin(getMockContext(), mockInject)
+      const nuxtApp = useNuxtApp()
+      await apiTokenPlugin(nuxtApp)
+      await apiTokenPlugin(nuxtApp)
       expect(process.fetchingMutex.isLocked()).toBe(false)
-      await apiTokenPlugin(getMockContext(), mockInject)
+      await apiTokenPlugin(nuxtApp)
       expect(process.tokenData.accessToken).toEqual(
         finalTokenResponse.access_token
       )
@@ -287,7 +290,7 @@ describe("api-token.server plugin", () => {
   describe("missing client credentials", () => {
     describe("completely missing", () => {
       it("should not make any requests and fall back to tokenless", async () => {
-        await apiTokenPlugin(getMockContext({}), mockInject)
+        await apiTokenPlugin(getMockContext({}))
         expect(mockInject).toHaveBeenCalledWith("openverseApiToken", "")
       })
     })
