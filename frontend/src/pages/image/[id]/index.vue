@@ -113,6 +113,7 @@ import {
   createError,
   defineNuxtComponent,
   definePageMeta,
+  showError,
   useAsyncData,
   useHead,
   useRoute,
@@ -129,7 +130,6 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
-import { isRetriable } from "~/utils/errors"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
@@ -189,17 +189,19 @@ export default defineNuxtComponent({
     const isLoadingThumbnail = ref(true)
 
     useAsyncData(
-      "single-image-result",
+      "single-image",
       async () => {
         const imageId = firstParam(route.params.id)
-        const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
-        if (!fetchedImage) {
-          if (fetchingError.value && !isRetriable(fetchingError.value)) {
-            throw createError(fetchingError.value)
-          }
-        } else {
-          image.value = fetchedImage
-          imageSrc.value = fetchedImage.thumbnail
+        if (!imageId) {
+          return showError({})
+        }
+        try {
+          image.value = await singleResultStore.fetch(IMAGE, imageId)
+          imageSrc.value = image.value.thumbnail
+        } catch (error) {
+          throw createError(
+            singleResultStore.fetchState.fetchingError.value ?? {}
+          )
         }
       },
       // Fetching on the server is disabled because it is

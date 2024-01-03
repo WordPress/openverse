@@ -42,6 +42,7 @@ import {
   createError,
   defineNuxtComponent,
   definePageMeta,
+  showError,
   useAsyncData,
   useHead,
   useRoute,
@@ -101,14 +102,13 @@ export default defineNuxtComponent({
       "audio-single-result",
       async () => {
         const audioId = firstParam(route.params.id)
-        await singleResultStore.fetch(AUDIO, audioId)
-
-        const fetchedAudio = singleResultStore.audio
-
-        if (!fetchedAudio) {
+        if (!audioId) {
+          return showError({})
+        }
+        try {
+          audio.value = await singleResultStore.fetch(AUDIO, audioId)
+        } catch (error) {
           throw createError(singleResultStore.fetchState.fetchingError ?? {})
-        } else {
-          audio.value = fetchedAudio
         }
       },
 
