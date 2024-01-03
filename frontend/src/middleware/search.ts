@@ -1,21 +1,15 @@
+import { navigateTo, defineNuxtRouteMiddleware, showError } from "#imports"
+
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
 import { handledClientSide } from "~/utils/errors"
 
-import type { Middleware } from "@nuxt/types"
-
-export const searchMiddleware: Middleware = async ({
-  redirect,
-  route,
-  $pinia,
-  error: nuxtError,
-}) => {
+export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
   const {
     query: { q: rawQ },
-  } = route
+  } = to
   const q = Array.isArray(rawQ) ? rawQ[0] : rawQ
-
   /**
    * This middleware redirects any search without a query to the homepage.
    * This is meant to block direct access to /search and all sub-routes.
@@ -29,26 +23,26 @@ export const searchMiddleware: Middleware = async ({
    * Note that the search by creator is not displayed in the UI.
    */
   if (!q) {
-    return redirect("/")
+    return navigateTo("/")
   }
 
-  const searchStore = useSearchStore($pinia)
-
-  await searchStore.initProviderFilters()
+  const searchStore = useSearchStore()
 
   searchStore.setSearchStateFromUrl({
-    path: route.path,
-    urlQuery: route.query,
+    path: to.path,
+    urlQuery: to.query,
   })
 
   // Fetch results before rendering the page on the server.
   if (process.server) {
-    const mediaStore = useMediaStore($pinia)
-    const results = await mediaStore.fetchMedia()
+    await searchStore.initProviderFilters()
 
+    const mediaStore = useMediaStore()
+
+    const results = await mediaStore.fetchMedia()
     const fetchingError = mediaStore.fetchState.fetchingError
     if (!results && fetchingError && !handledClientSide(fetchingError)) {
-      nuxtError(fetchingError)
+      return showError(fetchingError)
     }
   }
-}
+})
