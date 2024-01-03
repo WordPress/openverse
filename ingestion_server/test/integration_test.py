@@ -431,7 +431,7 @@ def _create_and_populate_filtered_index(
 
 
 @pytest.fixture(scope="module", autouse=True)
-def setUpClass():
+def setup_fixture():
     # Launch a Bottle server to receive and handle callbacks
     cb_queue = Queue()
     cb_process = Process(target=start_bottle, args=(cb_queue,))
@@ -486,9 +486,12 @@ def test_list_tasks_empty():
 
 
 @pytest.mark.order(after="test_list_tasks_empty")
-def test_image_ingestion_succeeds(setUpClass):
+def test_image_ingestion_succeeds(setup_fixture):
     _ingest_upstream(
-        setUpClass["cb_queue"], setUpClass["downstream_db"], "image", "integration"
+        setup_fixture["cb_queue"],
+        setup_fixture["downstream_db"],
+        "image",
+        "integration",
     )
 
 
@@ -501,9 +504,12 @@ def test_task_count_after_one():
 
 
 @pytest.mark.order(after="test_task_count_after_one")
-def test_audio_ingestion_succeeds(setUpClass):
+def test_audio_ingestion_succeeds(setup_fixture):
     _ingest_upstream(
-        setUpClass["cb_queue"], setUpClass["downstream_db"], "audio", "integration"
+        setup_fixture["cb_queue"],
+        setup_fixture["downstream_db"],
+        "audio",
+        "integration",
     )
 
 
@@ -516,13 +522,13 @@ def test_task_count_after_two():
 
 
 @pytest.mark.order(after="test_task_count_after_two")
-def test_promote_images(setUpClass):
-    _promote(setUpClass["cb_queue"], "image", "integration", "image-main")
+def test_promote_images(setup_fixture):
+    _promote(setup_fixture["cb_queue"], "image", "integration", "image-main")
 
 
 @pytest.mark.order(after="test_promote_images")
-def test_promote_audio(setUpClass):
-    _promote(setUpClass["cb_queue"], "audio", "integration", "audio-main")
+def test_promote_audio(setup_fixture):
+    _promote(setup_fixture["cb_queue"], "audio", "integration", "audio-main")
 
 
 @pytest.mark.order(after="test_promote_audio")
@@ -558,30 +564,30 @@ def test_upstream_indexed_audio():
 
 
 @pytest.mark.order(after="test_promote_images")
-def test_filtered_image_index_creation(setUpClass):
+def test_filtered_image_index_creation(setup_fixture):
     _create_and_populate_filtered_index(
-        setUpClass["cb_queue"], "image", "integration", "integration"
+        setup_fixture["cb_queue"], "image", "integration", "integration"
     )
 
 
 @pytest.mark.order(after="test_promote_audio")
-def test_filtered_audio_index_creation(setUpClass):
+def test_filtered_audio_index_creation(setup_fixture):
     _create_and_populate_filtered_index(
-        setUpClass["cb_queue"], "audio", "integration", "integration"
+        setup_fixture["cb_queue"], "audio", "integration", "integration"
     )
 
 
 @pytest.mark.order(after="test_filtered_image_index_creation")
-def test_point_filtered_image_alias(setUpClass):
+def test_point_filtered_image_alias(setup_fixture):
     _point_alias(
-        setUpClass["cb_queue"], "image", "integration-filtered", "image-filtered"
+        setup_fixture["cb_queue"], "image", "integration-filtered", "image-filtered"
     )
 
 
 @pytest.mark.order(after="test_filtered_audio_index_creation")
-def test_point_filtered_audio_alias(setUpClass):
+def test_point_filtered_audio_alias(setup_fixture):
     _point_alias(
-        setUpClass["cb_queue"], "audio", "integration-filtered", "audio-filtered"
+        setup_fixture["cb_queue"], "audio", "integration-filtered", "audio-filtered"
     )
 
 
@@ -616,7 +622,7 @@ def test_filtered_indexes(subtests):
 
 
 @pytest.mark.order(after="test_upstream_indexed_audio")
-def test_update_index_images(setUpClass):
+def test_update_index_images(setup_fixture):
     """Check that the image data can be updated from the API database into ES."""
 
     req = {
@@ -631,11 +637,11 @@ def test_update_index_images(setUpClass):
     assert res.status_code == 202, stat_msg
 
     # Wait for the task to send us a callback.
-    assert setUpClass["cb_queue"].get(timeout=120) == "CALLBACK!"
+    assert setup_fixture["cb_queue"].get(timeout=120) == "CALLBACK!"
 
 
 @pytest.mark.order(after="test_update_index_images")
-def test_update_index_audio(setUpClass):
+def test_update_index_audio(setup_fixture):
     """Check that the audio data can be updated from the API database into ES."""
 
     req = {
@@ -650,37 +656,37 @@ def test_update_index_audio(setUpClass):
     assert res.status_code == 202, stat_msg
 
     # Wait for the task to send us a callback.
-    assert setUpClass["cb_queue"].get(timeout=120) == "CALLBACK!"
+    assert setup_fixture["cb_queue"].get(timeout=120) == "CALLBACK!"
 
 
 @pytest.mark.order(after="test_update_index_audio")
-def test_index_deletion_succeeds(setUpClass):
+def test_index_deletion_succeeds(setup_fixture):
     _ingest_upstream(
-        setUpClass["cb_queue"], setUpClass["downstream_db"], "audio", "temporary"
+        setup_fixture["cb_queue"], setup_fixture["downstream_db"], "audio", "temporary"
     )
-    _delete_index(setUpClass["cb_queue"], "audio", "temporary")
+    _delete_index(setup_fixture["cb_queue"], "audio", "temporary")
 
 
 @pytest.mark.order(after="test_index_deletion_succeeds")
-def test_alias_force_deletion_succeeds(setUpClass):
+def test_alias_force_deletion_succeeds(setup_fixture):
     _ingest_upstream(
-        setUpClass["cb_queue"], setUpClass["downstream_db"], "audio", "temporary"
+        setup_fixture["cb_queue"], setup_fixture["downstream_db"], "audio", "temporary"
     )
-    _promote(setUpClass["cb_queue"], "audio", "temporary", "audio-temp")
-    _delete_index(setUpClass["cb_queue"], "audio", "temporary", "audio-temp")
+    _promote(setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
+    _delete_index(setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
 
 
 @pytest.mark.order(after="test_alias_force_deletion_succeeds")
-def test_alias_soft_deletion_fails(setUpClass):
+def test_alias_soft_deletion_fails(setup_fixture):
     _ingest_upstream(
-        setUpClass["cb_queue"], setUpClass["downstream_db"], "audio", "temporary"
+        setup_fixture["cb_queue"], setup_fixture["downstream_db"], "audio", "temporary"
     )
-    _promote(setUpClass["cb_queue"], "audio", "temporary", "audio-temp")
+    _promote(setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
     _soft_delete_index("audio", "audio-temp", "temporary")
 
 
 @pytest.mark.order(after="test_alias_soft_deletion_fails")
-def test_alias_ambiguous_deletion_fails(setUpClass):
+def test_alias_ambiguous_deletion_fails(setup_fixture):
     # No need to ingest or promote, index and alias exist
     _soft_delete_index("audio", "audio-temp", "temporary", True)
 
