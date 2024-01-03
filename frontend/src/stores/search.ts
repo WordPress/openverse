@@ -1,8 +1,9 @@
+import { useLocalePath, useRuntimeConfig } from "#imports"
+
 import { defineStore } from "pinia"
 
 import { useStorage } from "@vueuse/core"
 
-import { env } from "~/utils/env"
 import { deepClone } from "~/utils/clone"
 import type { DeepWriteable } from "~/types/utils"
 
@@ -248,8 +249,7 @@ export const useSearchStore = defineStore("search", {
           this.searchTerm,
           "frontend"
         )
-
-      return this.$nuxt.localePath({
+      return useLocalePath()({
         path: searchPath(searchType),
         query: queryParams as unknown as Dictionary<string>,
       })
@@ -267,7 +267,7 @@ export const useSearchStore = defineStore("search", {
       collectionParams: CollectionParams
     }) {
       const path = `/${type}/${collectionToPath(collectionParams)}`
-      return this.$nuxt.localePath(path)
+      return useLocalePath()(path)
     },
 
     setSearchType(type: SearchType) {
@@ -323,10 +323,13 @@ export const useSearchStore = defineStore("search", {
        * the max count, and removing existing occurrences of the
        * latest search term, if there are any.
        */
+      const {
+        public: { savedSearchCount },
+      } = useRuntimeConfig()
       this.recentSearches = [
         search,
         ...this.recentSearches.filter((i) => i !== search),
-      ].slice(0, parseInt(env.savedSearchCount))
+      ].slice(0, savedSearchCount)
     },
     clearRecentSearches() {
       this.recentSearches = []
