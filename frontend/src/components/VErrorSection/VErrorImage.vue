@@ -1,10 +1,6 @@
 <template>
   <figure class="error-image">
-    <img
-      :src="image.src"
-      :alt="$t(image.alt).toString()"
-      :title="$t(image.alt).toString()"
-    />
+    <img :src="image.src" :alt="$t(image.alt)" :title="$t(image.alt)" />
     <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
     <!-- eslint-disable-next-line vue/no-v-html -->
     <figcaption class="attribution" v-html="image.attribution" />

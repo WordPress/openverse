@@ -16,6 +16,8 @@
   </div>
 </template>
 <script lang="ts">
+import { defineAsyncComponent } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import { ECONNABORTED, NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
@@ -24,8 +26,12 @@ import type { FetchingError } from "~/types/fetch-state"
 
 export default defineComponent({
   components: {
-    VNoResults: () => import("~/components/VErrorSection/VNoResults.vue"),
-    VErrorImage: () => import("~/components/VErrorSection/VErrorImage.vue"),
+    VNoResults: defineAsyncComponent(
+      () => import("~/components/VErrorSection/VNoResults.vue")
+    ),
+    VErrorImage: defineAsyncComponent(
+      () => import("~/components/VErrorSection/VErrorImage.vue")
+    ),
   },
   props: {
     fetchingError: {
