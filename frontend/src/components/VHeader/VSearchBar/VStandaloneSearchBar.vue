@@ -66,6 +66,7 @@ export default defineComponent({
   emits: {
     submit: defineEvent<[string]>(),
   },
+  expose: ["focusInput"],
   setup(_, { emit }) {
     const inputRef = ref<HTMLInputElement | null>(null)
 
@@ -77,9 +78,14 @@ export default defineComponent({
       }
     }
 
+    const focusInput = () => {
+      inputRef.value?.focus()
+    }
+
     return {
       inputRef,
       handleSearch,
+      focusInput,
     }
   },
 })

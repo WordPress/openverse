@@ -74,7 +74,6 @@ import { computed, defineComponent, ref, PropType } from "vue"
 
 import type { SearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
-import { ensureFocus } from "~/utils/reakit-utils/focus"
 
 import useSearchType from "~/composables/use-search-type"
 import { useDialogControl } from "~/composables/use-dialog-control"
@@ -113,8 +112,12 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const searchTypeButtonRef = ref<{ $el: HTMLElement } | null>(null)
-    const searchBarRef = ref<{ $el: HTMLElement } | null>(null)
+    const searchTypeButtonRef = ref<InstanceType<
+      typeof VSearchTypeButton
+    > | null>(null)
+    const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(
+      null
+    )
     const nodeRef = computed(() => searchBarRef.value?.$el ?? null)
 
     const { getSearchTypeProps } = useSearchType()
@@ -141,10 +144,7 @@ export default defineComponent({
      */
     const handleSelect = (searchType: SearchType) => {
       props.setSearchType(searchType)
-      const searchInput = searchBarRef.value?.$el.getElementsByTagName("input")
-      if (searchInput) {
-        ensureFocus(searchInput[0])
-      }
+      searchBarRef.value?.focusInput()
       closeContentSwitcher()
     }
 
