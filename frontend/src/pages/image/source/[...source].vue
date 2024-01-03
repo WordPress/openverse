@@ -3,7 +3,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useFetch, useRoute } from "@nuxtjs/composition-api"
+import { defineNuxtComponent } from "#imports"
+
+import { useFetch, useRoute } from "@nuxtjs/composition-api"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -13,7 +15,7 @@ import { collectionMiddleware } from "~/middleware/collection"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VImageSourcePage",
   components: { VCollectionPage },
   layout: "content-layout",

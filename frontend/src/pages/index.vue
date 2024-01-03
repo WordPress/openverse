@@ -15,9 +15,11 @@
 </template>
 
 <script lang="ts">
+import { defineNuxtComponent } from "#imports"
+
 import { computed, onMounted, ref } from "vue"
 
-import { defineComponent, useMeta, useRouter } from "@nuxtjs/composition-api"
+import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import {
   ALL_MEDIA,
@@ -38,7 +40,7 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 import VHomepageContent from "~/components/VHomepageContent.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "HomePage",
   components: {
     VHomeGallery,

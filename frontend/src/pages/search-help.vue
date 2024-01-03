@@ -41,7 +41,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent } from "#imports"
+
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -50,7 +52,7 @@ import { useI18n } from "~/composables/use-i18n"
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VSearchHelpPage",
   components: { VLink, VContentPage },
   layout: "content-layout",

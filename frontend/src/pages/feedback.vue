@@ -39,7 +39,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent } from "#imports"
+
+import { useMeta } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
 
@@ -60,7 +62,7 @@ const forms = {
 } as const
 const tabs = Object.keys(forms) as (keyof typeof forms)[]
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "FeedbackPage",
   components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
   layout: "content-layout",

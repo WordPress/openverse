@@ -10,14 +10,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineNuxtComponent } from "#imports"
+
+import { PropType } from "vue"
 
 import type { ImageDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "ImageSearch",
   components: { VImageGrid },
   props: {

@@ -104,11 +104,12 @@
 </template>
 
 <script lang="ts">
+import { defineNuxtComponent } from "#imports"
+
 import axios from "axios"
 
 import { computed, ref } from "vue"
 import {
-  defineComponent,
   useContext,
   useFetch,
   useMeta,
@@ -142,7 +143,7 @@ import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VImageDetailsPage",
   components: {
     VErrorSection,
