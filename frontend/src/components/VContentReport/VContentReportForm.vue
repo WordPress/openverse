@@ -4,8 +4,8 @@
       <h2 class="heading-6 mb-4">
         {{ $t("mediaDetails.contentReport.success.title") }}
       </h2>
-      <i18n
-        path="mediaDetails.contentReport.success.note"
+      <i18n-t
+        keypath="mediaDetails.contentReport.success.note"
         class="text-sm"
         tag="p"
       >
@@ -16,7 +16,7 @@
             >{{ providerName }}</VLink
           >
         </template>
-      </i18n>
+      </i18n-t>
     </div>
 
     <div v-else-if="status === FAILED">

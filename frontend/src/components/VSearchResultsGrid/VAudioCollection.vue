@@ -5,7 +5,7 @@
       is-for-tab="audio"
     />
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="audioResults.snackbar.text" tag="p">
+      <i18n-t keypath="audioResults.snackbar.text" tag="p">
         <template
           v-for="keyboardKey in ['spacebar', 'left', 'right']"
           #[keyboardKey]
@@ -14,7 +14,7 @@
             $t(`audioResults.snackbar.${keyboardKey}`)
           }}</kbd>
         </template>
-      </i18n>
+      </i18n-t>
     </VSnackbar>
     <VAudioList
       :collection-label="collectionLabel"

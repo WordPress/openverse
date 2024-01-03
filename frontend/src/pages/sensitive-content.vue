@@ -4,7 +4,7 @@
       {{ $t("sensitive.title") }}
     </h1>
 
-    <i18n path="sensitive.description.content" tag="p">
+    <i18n-t keypath="sensitive.description.content" tag="p">
       <template #openverse>Openverse</template>
       <template #wpCoc
         ><VLink
@@ -18,7 +18,7 @@
           >{{ $t("sensitive.description.deiStatement") }}</VLink
         ></template
       >
-    </i18n>
+    </i18n-t>
 
     <p>{{ $t("sensitive.sensitivity.what", { openverse: "Openverse" }) }}</p>
     <p>{{ $t("sensitive.sensitivity.how", { openverse: "Openverse" }) }}</p>
@@ -51,7 +51,7 @@
       {{ $t("sensitive.designations.userReported.title") }}
     </h3>
 
-    <i18n path="sensitive.designations.userReported.description" tag="p">
+    <i18n-t keypath="sensitive.designations.userReported.description" tag="p">
       <template #openverse>Openverse</template>
       <template #gutenbergMediaInserter>
         <VLink
@@ -63,13 +63,13 @@
           }}</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
 
     <h3 id="sensitive-textual-content">
       {{ $t("sensitive.designations.sensitiveText.title") }}
     </h3>
 
-    <i18n path="sensitive.designations.sensitiveText.description" tag="p">
+    <i18n-t keypath="sensitive.designations.sensitiveText.description" tag="p">
       <template #openverse>Openverse</template>
       <template #sensitiveTermsList>
         <VLink href="https://github.com/wordpress/openverse-sensitive-terms">{{
@@ -86,16 +86,16 @@
           }}</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
 
-    <i18n path="sensitive.designations.sensitiveText.metadata" tag="p">
+    <i18n-t keypath="sensitive.designations.sensitiveText.metadata" tag="p">
       <template #openverse>Openverse</template>
       <template #notAvailable>
         <VLink href="https://github.com/WordPress/openverse/issues/2594">{{
           $t("sensitive.designations.sensitiveText.notAvailable")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
     <h2>
       {{ $t("sensitive.faq.title") }}

@@ -18,8 +18,8 @@
       :license="license"
     />
 
-    <i18n
-      :path="`filters.licenseExplanation.more.${
+    <i18n-t
+      :keypath="`filters.licenseExplanation.more.${
         isLicense(license) ? 'license' : 'mark'
       }`"
       tag="p"
@@ -31,7 +31,7 @@
         }}</VLink>
       </template>
       <template #mark>{{ license.toUpperCase() }}</template>
-    </i18n>
+    </i18n-t>
   </div>
 </template>
 

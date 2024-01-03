@@ -14,11 +14,11 @@
       />
     </div>
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
-      <i18n path="allResults.snackbar.text" tag="p">
+      <i18n-t keypath="allResults.snackbar.text" tag="p">
         <template #spacebar>
           <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
-      </i18n>
+      </i18n-t>
     </VSnackbar>
     <VGridSkeleton
       v-if="resultsLoading && allMedia.length === 0"

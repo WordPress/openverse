@@ -7,7 +7,7 @@
     :close-button-label="$t('notification.translation.close')"
     @close="$emit('close')"
   >
-    <i18n path="notification.translation.text">
+    <i18n-t keypath="notification.translation.text" tag="span">
       <template #link>
         <VLink :href="currentLocale.link" class="text-curr underline">{{
           $t("notification.translation.link")
@@ -16,7 +16,7 @@
       <template #locale>
         {{ currentLocale.name }}
       </template>
-    </i18n>
+    </i18n-t>
   </VNotificationBanner>
 </template>
 

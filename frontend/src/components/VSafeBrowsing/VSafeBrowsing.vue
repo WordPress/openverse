@@ -5,13 +5,13 @@
         {{ $t("filters.safeBrowsing.title") }}
       </h4>
     </header>
-    <i18n tag="p" path="filters.safeBrowsing.desc" class="label-regular">
+    <i18n-t tag="p" keypath="filters.safeBrowsing.desc" class="label-regular">
       <template #sensitive>
         <VLink :href="sensitivityPath">{{
           $t("filters.safeBrowsing.sensitive")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
     <form class="safe-browsing-form">
       <fieldset class="mb-10 mt-8 flex flex-col gap-8">
         <div v-for="toggle in toggles" :key="toggle.name">
