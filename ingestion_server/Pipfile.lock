@@ -171,12 +171,12 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:2cb56b433daa2d3ef1aaa2e5a5eacd36ba1d66884722f3d7759a4f9d16190059",
-                "sha256:68141d42d10c7f67ac466ca00496830d3b81a7e9476c3baa5585060832c60c69"
+                "sha256:360b721324ce4bc7d554afb8acbf4942370e73c5ef8c4dad5f5ba3bb2a70eeae",
+                "sha256:a98309cee11fef8d6750f388683e9a8005da94bdfd940b36ef85cb6cc53186c7"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.6' and python_version < '4'",
-            "version": "==8.10.1"
+            "markers": "python_version >= '3.6'",
+            "version": "==8.11.1"
         },
         "elasticsearch-dsl": {
             "hashes": [

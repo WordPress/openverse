@@ -1,33 +1,33 @@
 <template>
   <div
     class="flex"
-    :class="{
-      [$style[contextProps.direction]]: true,
-      [`border border-dark-charcoal-20 ${
-        $style[`${contextProps.direction}-bordered`]
-      }`]: contextProps.bordered,
-      'bg-dark-charcoal-10':
-        selected && contextProps.bordered && contextProps.showCheck,
-      'px-2': isInPopover,
-      'hover:bg-dark-charcoal-10': !isInPopover,
-      [$style[`${contextProps.direction}-popover-item`]]: isInPopover,
-      'has-check': contextProps.showCheck,
-      'font-semibold': selected && !contextProps.showCheck,
-    }"
+    :class="[
+      contextProps.direction,
+      {
+        [`${contextProps.direction}-bordered`]: contextProps.bordered,
+        [`${contextProps.direction}-popover-item`]: isInPopover,
+        'border border-dark-charcoal-20': contextProps.bordered,
+        'has-check': contextProps.showCheck,
+        'font-semibold': selected && !contextProps.showCheck,
+        'bg-dark-charcoal-10':
+          selected && contextProps.bordered && contextProps.showCheck,
+      },
+      isInPopover ? 'px-2' : 'hover:bg-dark-charcoal-10',
+    ]"
   >
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between border-0 py-2 hover:bg-dark-charcoal-10 focus:z-10"
-      :class="[
-        $style[`${contextProps.direction}-button`],
-        $style[`${contextProps.size}-button`],
-        selected &&
-          contextProps.showCheck &&
-          'bg-dark-charcoal-10 ring-offset-dark-charcoal-10',
-        as === 'VLink' && 'text-dark-charcoal',
-        !contextProps.showCheck && 'px-2',
-      ]"
+      class="group relative flex min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus:z-10"
+      :class="{
+        'w-max': contextProps.direction === 'horizontal',
+        'p-3': contextProps.size === 'small',
+        'p-5 ps-6': contextProps.size === 'medium',
+        'bg-dark-charcoal-10 ring-offset-dark-charcoal-10':
+          selected && contextProps.showCheck,
+        'text-dark-charcoal': as === 'VLink',
+        'px-2': !contextProps.showCheck,
+      }"
       variant="transparent-tx"
       size="disabled"
       :pressed="selected"
@@ -44,7 +44,7 @@
     >
       <div
         class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
-        :class="[$style[`${contextProps.direction}-content`]]"
+        :class="[`${contextProps.direction}-content`]"
       >
         <slot name="default" />
       </div>
@@ -173,11 +173,8 @@ export default defineComponent({
   },
 })
 </script>
-<style module>
-.button:focus {
-  @apply z-10;
-}
 
+<style scoped>
 .vertical {
   @apply min-w-max;
 }
@@ -206,10 +203,6 @@ export default defineComponent({
   @apply pb-0;
 }
 
-.horizontal-button {
-  @apply w-max;
-}
-
 .horizontal-bordered {
   @apply border-e border-s-0 border-dark-charcoal-20;
 }
@@ -236,11 +229,5 @@ export default defineComponent({
 
 .horizontal-popover-item:last-of-type {
   @apply pe-2;
-}
-.small-button {
-  @apply p-3;
-}
-.medium-button {
-  @apply p-5 ps-6;
 }
 </style>

@@ -4,7 +4,7 @@
     :hide-on-click-outside="true"
     :hide="close"
     :visible="visible"
-    :variant="showFilters ? 'two-thirds' : 'fit-content'"
+    :variant="variant"
     class="flex items-center"
   >
     <VTabs
@@ -121,6 +121,10 @@ export default defineComponent({
     VTabs,
   },
   props: {
+    variant: {
+      type: String as PropType<"fit-content" | "two-thirds">,
+      default: "fit-content",
+    },
     isFetching: {
       type: Boolean,
       default: false,
