@@ -10,13 +10,13 @@ def merge_configurations(base_configuration, update_configuration):
     overwritten rather than appended to. For example:
 
     merge_configurations(
-        {
+        base_configuration={
             "parent_key": {
                 "leaf_key": ["value1", "value2"]
             },
             "other_key": True,
         },
-        {
+        update_configuration={
             "parent_key": {
                 "leaf_key": ["value3",]
             },

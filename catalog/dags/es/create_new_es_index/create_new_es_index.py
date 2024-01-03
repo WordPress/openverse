@@ -54,14 +54,13 @@ def get_current_index_configuration(
     or an alias, but must uniquely identify one existing index or an
     error will be raised.
     """
-    logger.info(es_host)
     hook = ElasticsearchPythonHook(es_host)
     es_conn = hook.get_conn
 
     response = es_conn.indices.get(
         index=source_index,
         # Return empty dict instead of throwing error if no index can be
-        # found. This lets us raise our own error.
+        # found. We raise our own error instead.
         ignore_unavailable=True,
     )
 
@@ -73,9 +72,10 @@ def get_current_index_configuration(
     # The response has the form:
     #   { index_name: index_configuration }
     # However, since `source_index` can be an alias rather than the index name,
-    # we can not reliably know the value of the key. We instead get the first
-    # value, knowing that we have already ensured in a previous check that there
-    # is exactly one value in the response.
+    # we do not necessarily know the index_name so we cannot access the configuration
+    # directly by key. We instead get the first value from the dict, knowing that we
+    # have already ensured in a previous check that there is exactly one value in the
+    # response.
     config = next(iter(response.values()))
     return config
 
@@ -91,7 +91,7 @@ def merge_index_configurations(new_index_config, current_index_config):
     current_index_config.pop("aliases")
 
     # Remove fields from the current_index_config that should not be copied
-    # over into the new index
+    # over into the new index (such as uuid)
     for setting in EXCLUDED_INDEX_SETTINGS:
         current_index_config.get("settings", {}).get("index", {}).pop(setting)
 
@@ -105,7 +105,7 @@ def get_final_index_configuration(
     # The new config which was passed in via DAG params
     index_config,
     # The result of merging the index_config with the current index config.
-    # This may be None if the merge tasks were skipped.
+    # This may be None if the merge tasks were skipped using the override param.
     merged_config,
     index_name: str,
 ):
@@ -115,7 +115,7 @@ def get_final_index_configuration(
     """
     config = index_config if override_config else merged_config
 
-    # Apply the index name
+    # Apply the desired index name
     config["index"] = index_name
     return config
 
@@ -164,13 +164,14 @@ def trigger_and_wait_for_reindex(
         es_conn = hook.get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
-
         return response.get("completed")
 
     trigger_reindex_task = trigger_reindex(index_name, source_index, query, es_host)
 
-    PythonSensor(
+    wait_for_reindex = PythonSensor(
         task_id="wait_for_reindex",
         python_callable=_wait_for_reindex,
         op_kwargs={"task_id": trigger_reindex_task, "es_host": es_host},
     )
+
+    trigger_reindex_task >> wait_for_reindex
