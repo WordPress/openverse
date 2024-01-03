@@ -1,7 +1,6 @@
 <template>
   <Component
     :is="tag"
-    v-bind="$attrs"
     class="caption-bold md:description-bold inline-flex rounded-full bg-dark-charcoal-10 px-3 py-1 text-dark-blue md:px-4 md:py-2"
   >
     <!-- @slot Content goes here -->

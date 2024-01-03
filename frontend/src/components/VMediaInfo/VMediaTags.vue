@@ -14,7 +14,7 @@
   </ul>
 </template>
 <script lang="ts">
-import { useLocalePath } from "#imports"
+import { useLocalePath, useRoute } from "#imports"
 
 import { computed, defineComponent, PropType } from "vue"
 
@@ -34,6 +34,7 @@ export default defineComponent({
     },
   },
   setup() {
+    const route = useRoute()
     const localePath = useLocalePath()
     const featureFlagStore = useFeatureFlagStore()
 
@@ -42,7 +43,9 @@ export default defineComponent({
     )
 
     const localizedTagPath = (tag: Tag) => {
-      return localePath({ path: `/tag/${tag.name}` })
+      // TODO: replace with a prop
+      const mediaType = route.path.includes("/image/") ? "image" : "audio"
+      return localePath(`/${mediaType}/tag/${tag.name}`)
     }
 
     return { additionalSearchViews, localizedTagPath }
