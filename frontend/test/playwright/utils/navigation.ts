@@ -225,42 +225,6 @@ export const currentContentType = async (page: Page) => {
   return currentContentType
 }
 
-export const dismissAllBannersUsingCookies = async (page: Page) => {
-  const uiDismissedBanners = [
-    ...["ru", "en", "ar", "es"].map((lang) => `translation-${lang}`),
-    "analytics",
-  ]
-  await setCookies(page.context(), { uiDismissedBanners })
-}
-
-/**
- * Dismisses the translation banner if it is visible. It does not wait for the banner to become visible,
- * so the page should finish rendering before calling `dismissTranslationBanner`.
- */
-export const dismissTranslationBanner = async (page: Page) => {
-  await dismissAllBannersUsingCookies(page)
-  const bannerCloseButton = page.locator(
-    '[data-testid="banner-translation"] button'
-  )
-  if (await bannerCloseButton.isVisible()) {
-    await bannerCloseButton.click()
-  }
-}
-
-/**
- * Dismisses the analytics banner if it is visible. It does not wait for the banner to become visible,
- * so the page should finish rendering before calling `dismissAnalyticsBanner`.
- */
-export const dismissAnalyticsBanner = async (page: Page) => {
-  await dismissAllBannersUsingCookies(page)
-  const bannerCloseButton = page.locator(
-    '[data-testid="banner-analytics"] button'
-  )
-  if (await bannerCloseButton.isVisible()) {
-    await bannerCloseButton.click()
-  }
-}
-
 export const selectHomepageSearchType = async (
   page: Page,
   searchType: SupportedSearchType,
@@ -274,18 +238,32 @@ export const selectHomepageSearchType = async (
     .click()
 }
 
-export const dismissBannersUsingCookies = async (page: Page) => {
-  await dismissAnalyticsBanner(page)
-  await dismissTranslationBanner(page)
-}
-
+const ALL_TEST_BANNERS = [
+  ...["ru", "en", "ar", "es"].map((lang) => `translation-${lang}`),
+  "analytics",
+]
 export const preparePageForTests = async (
   page: Page,
-  breakpoint: Breakpoint
+  breakpoint: Breakpoint,
+  options: Partial<{
+    features: Record<string, "on" | "off">
+    dismissBanners: boolean
+    dismissFilter: boolean
+  }> = {}
 ) => {
-  await dismissAllBannersUsingCookies(page)
-  await closeFiltersUsingCookies(page)
-  await setBreakpointCookie(page, breakpoint)
+  const { features = {}, dismissBanners = true, dismissFilter = true } = options
+  const featuresCookie: Record<string, "on" | "off"> = {}
+  if (options.features) {
+    for (const [feature, status] of Object.entries(features)) {
+      featuresCookie[feature] = status
+    }
+  }
+  await setCookies(page.context(), {
+    features: featuresCookie,
+    uiDismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
+    uiIsFilterDismissed: dismissFilter ?? false,
+    uiBreakpoint: breakpoint,
+  })
 }
 
 export const goToSearchTerm = async (
@@ -303,7 +281,6 @@ export const goToSearchTerm = async (
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
 
-  await dismissAllBannersUsingCookies(page)
   if (mode === "SSR") {
     const path = `${searchPath(searchType)}?q=${term}${query}`
     await page.goto(pathWithDir(path, dir))
@@ -426,31 +403,44 @@ export const setCookies = async (
   context: BrowserContext,
   cookies: CookieMap
 ) => {
-  await context.addCookies(
-    Object.entries(cookies).map(([name, value]) => ({
+  const existingCookies = await context.cookies()
+  const cookiesToSet = Object.entries(cookies).map(([name, value]) => {
+    let existingValue = existingCookies.find((c) => c.name === name)?.value
+
+    // If cookie was URI encoded, it starts with %7B%22 `{"` or %5B%22 `["`
+    if (
+      existingValue &&
+      (existingValue.includes("%7B%22") || existingValue.includes("%5B%22"))
+    ) {
+      existingValue = decodeURIComponent(existingValue)
+    }
+    let newCookieValue = ""
+    if (existingValue) {
+      if (Array.isArray(value)) {
+        newCookieValue = JSON.stringify(
+          Array.from(new Set([...JSON.parse(existingValue), ...value]))
+        )
+      } else if (typeof value === "string") {
+        newCookieValue = value
+      } else if (typeof value === "object") {
+        newCookieValue = JSON.stringify({
+          ...JSON.parse(existingValue),
+          ...value,
+        })
+      } else if (typeof value === "boolean") {
+        newCookieValue = String(value)
+      }
+    } else {
+      newCookieValue = typeof value === "string" ? value : JSON.stringify(value)
+    }
+
+    return {
       name,
-      value: typeof value === "string" ? value : JSON.stringify(value),
+      value: newCookieValue,
       domain: "localhost",
       path: "/",
       maxAge: 60 * 5,
-    }))
-  )
-}
-
-export const closeFiltersUsingCookies = async (page: Page) => {
-  await setCookies(page.context(), { uiIsFilterDismissed: true })
-}
-
-export const setBreakpointCookie = async (page: Page, breakpoint: string) => {
-  await setCookies(page.context(), { uiBreakpoint: breakpoint })
-}
-
-export const turnOnAnalytics = async (page: Page) => {
-  await page.goto("/preferences")
-  const analyticsCheckbox = page.getByLabel(
-    "Record custom events and page views."
-  )
-  if (!(await analyticsCheckbox.isChecked())) {
-    await analyticsCheckbox.click()
-  }
+    }
+  })
+  await context.addCookies(cookiesToSet)
 }

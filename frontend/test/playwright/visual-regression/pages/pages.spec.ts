@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
-  dismissBannersUsingCookies,
   languageDirections,
   pathWithDir,
   preparePageForTests,
@@ -40,7 +39,7 @@ for (const contentPage of contentPages) {
 test.describe("Layout color is set correctly", () => {
   breakpoints.describeLg(() => {
     test.beforeEach(async ({ page }) => {
-      await dismissBannersUsingCookies(page)
+      await preparePageForTests(page, "lg", { dismissFilter: false })
     })
 
     test("Change language on homepage and search", async ({ page }) => {

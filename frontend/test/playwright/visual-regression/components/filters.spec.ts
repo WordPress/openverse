@@ -1,11 +1,10 @@
 import { test } from "@playwright/test"
 
 import {
-  dismissAllBannersUsingCookies,
   filters,
   languageDirections,
   pathWithDir,
-  setBreakpointCookie,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -21,8 +20,7 @@ for (const dir of languageDirections) {
     ({ breakpoint, expectSnapshot }) => {
       const isDesktop = breakpoint === "lg"
       test.beforeEach(async ({ page }) => {
-        await setBreakpointCookie(page, breakpoint)
-        await dismissAllBannersUsingCookies(page)
+        await preparePageForTests(page, breakpoint)
         await page.goto(pathWithDir("/search/?q=birds", dir))
         await filters.open(page, dir)
       })
