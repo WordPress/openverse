@@ -60,7 +60,7 @@ test.describe("attribution", () => {
     const id = "e9d97a98-621b-4ec2-bf70-f47a74380452"
     const format = "rich"
 
-    await page.goto(`${mediaType}/${id}?ff_analytics=on`)
+    await page.goto(`${mediaType}/${id}`)
     await page.click(`[id="copyattr-${format}"]`)
 
     const copyAttributionEvent = analyticsEvents.find(

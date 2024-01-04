@@ -191,8 +191,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.3(pinia@2.0.33)(vue@2.7.15)
       '@playwright/test':
-        specifier: 1.30.0
-        version: 1.30.0
+        specifier: 1.40.1
+        version: 1.40.1
       '@tailwindcss/typography':
         specifier: ^0.5.10
         version: 0.5.10(tailwindcss@3.3.5)
@@ -831,7 +831,7 @@ packages:
     resolution: {integrity: sha512-aBiH1NKMG0H2cGZqspNvsaBe6wNGjbJjuLy29aU+eDZjSbbN53BaxlpB02xm9v34pLTZ1nIQPFYn2qMZoa5BQQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.23.0
+      '@babel/types': 7.22.5
 
   /@babel/helper-member-expression-to-functions@7.23.0:
     resolution: {integrity: sha512-6gfrPwh7OuT6gZyJZvd6WbTfrqAo7vm4xCzAXOusKqq/vWdKXphTpj5klHKNmRUU6/QRGlBsyU9mAIPaWHlqJA==}
@@ -1064,7 +1064,7 @@ packages:
       '@babel/helper-function-name': 7.22.5
       '@babel/template': 7.22.5
       '@babel/traverse': 7.22.5
-      '@babel/types': 7.23.0
+      '@babel/types': 7.22.5
     transitivePeerDependencies:
       - supports-color
 
@@ -5685,13 +5685,12 @@ packages:
       - vue
     dev: true
 
-  /@playwright/test@1.30.0:
-    resolution: {integrity: sha512-SVxkQw1xvn/Wk/EvBnqWIq6NLo1AppwbYOjNLmyU0R1RoQ3rLEBtmjTnElcnz8VEtn11fptj1ECxK0tgURhajw==}
-    engines: {node: '>=14'}
+  /@playwright/test@1.40.1:
+    resolution: {integrity: sha512-EaaawMTOeEItCRvfmkI9v6rBkF1svM8wjl/YPRrg2N2Wmp+4qJYkWtJsbew1szfKKDm6fPLy4YAanBhIlf9dWw==}
+    engines: {node: '>=16'}
     hasBin: true
     dependencies:
-      '@types/node': 18.19.4
-      playwright-core: 1.30.0
+      playwright: 1.40.1
     dev: true
 
   /@polka/url@1.0.0-next.21:
@@ -9902,7 +9901,7 @@ packages:
       normalize-path: 3.0.0
       readdirp: 3.6.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
 
   /chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
@@ -10689,7 +10688,7 @@ packages:
       camelcase: 5.3.1
       cssesc: 3.0.0
       icss-utils: 4.1.1
-      loader-utils: 1.4.2
+      loader-utils: 1.4.0
       normalize-path: 3.0.0
       postcss: 7.0.39
       postcss-modules-extract-imports: 2.0.0
@@ -12841,6 +12840,14 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
+    dev: true
+    optional: true
+
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
     optional: true
 
   /function-bind@1.1.1:
@@ -14561,7 +14568,7 @@ packages:
       sane: 4.1.0
       walker: 1.0.8
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -14582,7 +14589,7 @@ packages:
       micromatch: 4.0.5
       walker: 1.0.8
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
 
   /jest-jasmine2@26.6.3(ts-node@10.9.1):
     resolution: {integrity: sha512-kPKUrQtc8aYwBV7CqBg5pu+tmYXlvFlSFYn18ev4gPFtrRzB15N2gW/Roew3187q2w2eHuu0MU9TJz6w0/nPEg==}
@@ -15446,7 +15453,6 @@ packages:
       big.js: 5.2.2
       emojis-list: 3.0.0
       json5: 1.0.2
-    dev: true
 
   /loader-utils@1.4.2:
     resolution: {integrity: sha512-I5d00Pd/jwMD2QCduo657+YM/6L3KZu++pmX9VFncxaxvHcru9jx1lBaFft+r4Mt2jK0Yhp41XlRAihzPxHNCg==}
@@ -17128,10 +17134,20 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /playwright-core@1.30.0:
-    resolution: {integrity: sha512-7AnRmTCf+GVYhHbLJsGUtskWTE33SwMZkybJ0v6rqR1boxq2x36U7p1vDRV7HO2IwTZgmycracLxPEJI49wu4g==}
-    engines: {node: '>=14'}
+  /playwright-core@1.40.1:
+    resolution: {integrity: sha512-+hkOycxPiV534c4HhpfX6yrlawqVUzITRKwHAmYfmsVreltEl6fAZJ3DPfLMOODw0H3s1Itd6MDCWmP1fl/QvQ==}
+    engines: {node: '>=16'}
     hasBin: true
+    dev: true
+
+  /playwright@1.40.1:
+    resolution: {integrity: sha512-2eHI7IioIpQ0bS1Ovg/HszsN/XKNwEG1kbzSDDmADpclKc7CyqkHw7Mg2JCz/bbCxg25QUPcjksoMW7JcIFQmw==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.40.1
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: true
 
   /pluralize@8.0.0:
@@ -17570,9 +17586,9 @@ packages:
     dependencies:
       cosmiconfig: 7.0.1
       klona: 2.0.5
-      loader-utils: 2.0.4
+      loader-utils: 2.0.2
       postcss: 7.0.39
-      schema-utils: 3.3.0
+      schema-utils: 3.1.1
       semver: 7.5.4
       webpack: 4.46.0
     dev: true
@@ -17586,9 +17602,9 @@ packages:
     dependencies:
       cosmiconfig: 7.0.1
       klona: 2.0.5
-      loader-utils: 2.0.4
+      loader-utils: 2.0.2
       postcss: 8.4.31
-      schema-utils: 3.3.0
+      schema-utils: 3.1.1
       semver: 7.5.4
       webpack: 4.46.0
     dev: true
@@ -17602,9 +17618,9 @@ packages:
     dependencies:
       cosmiconfig: 7.0.1
       klona: 2.0.5
-      loader-utils: 2.0.4
+      loader-utils: 2.0.2
       postcss: 8.4.31
-      schema-utils: 3.3.0
+      schema-utils: 3.1.1
       semver: 7.5.4
       webpack: 4.47.0
     dev: false
@@ -20150,7 +20166,7 @@ packages:
     peerDependencies:
       webpack: ^4.0.0 || ^5.0.0
     dependencies:
-      loader-utils: 2.0.4
+      loader-utils: 2.0.2
       schema-utils: 2.7.1
       webpack: 4.46.0
     dev: true
@@ -20762,7 +20778,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       enhanced-resolve: 4.5.0
-      loader-utils: 2.0.4
+      loader-utils: 2.0.2
       micromatch: 4.0.5
       semver: 7.5.4
       typescript: 5.2.2
@@ -21701,7 +21717,7 @@ packages:
     resolution: {integrity: sha512-sFuh0xfbtpRlKfm39ss/ikqs9AbKCoXZBpHeVZ8Tx650o0k0q/YCM7FRvigtxpACezfq6af+a7JeqVTWvncqDg==}
     dependencies:
       hash-sum: 1.0.2
-      loader-utils: 1.4.2
+      loader-utils: 1.4.0
 
   /vue-template-compiler@2.7.15:
     resolution: {integrity: sha512-yQxjxMptBL7UAog00O8sANud99C6wJF+7kgbcwqkvA38vCGF7HWE66w0ZFnS/kX5gSoJr/PQ4/oS3Ne2pW37Og==}

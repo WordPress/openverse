@@ -65,7 +65,12 @@ for (const dir of languageDirections) {
       const path = pathWithDir(`/image/${IMAGE_ID}/report`, dir)
 
       await page.goto(path)
-      await expectSnapshot(`${dir}-full-page-report`, page, { fullPage: true })
+      await expectSnapshot(
+        `${dir}-full-page-report`,
+        page,
+        { fullPage: true },
+        { maxDiffPixelRatio: undefined, maxDiffPixels: 2 }
+      )
     })
   })
 }
