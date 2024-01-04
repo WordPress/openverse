@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import timedelta
 
 from es.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
@@ -24,6 +25,7 @@ class CreateNewIndex:
     dag_id: str = field(init=False)
     environment: str
     blocking_dags: list
+    reindex_timeout: timedelta = timedelta(hours=12)
 
     def __post_init__(self):
         self.dag_id = f"create_new_{self.environment}_es_index"

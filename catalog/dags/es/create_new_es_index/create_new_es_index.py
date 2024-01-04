@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowException
@@ -6,6 +7,7 @@ from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPyt
 from airflow.sensors.python import PythonSensor
 from es.create_new_es_index.utils import merge_configurations
 
+from common.constants import REFRESH_POKE_INTERVAL
 from common.sensors.utils import prevent_concurrency_with_dag
 
 
@@ -132,7 +134,7 @@ def create_index(index_config, es_host: str):
 
 @task_group(group_id="trigger_and_wait_for_reindex")
 def trigger_and_wait_for_reindex(
-    index_name: str, source_index: str, query: dict, es_host: str
+    index_name: str, source_index: str, query: dict, timeout: timedelta, es_host: str
 ):
     @task
     def trigger_reindex(index_name: str, source_index: str, query: dict, es_host: str):
@@ -171,6 +173,8 @@ def trigger_and_wait_for_reindex(
     wait_for_reindex = PythonSensor(
         task_id="wait_for_reindex",
         python_callable=_wait_for_reindex,
+        timeout=timeout,
+        poke_interval=REFRESH_POKE_INTERVAL,
         op_kwargs={"task_id": trigger_reindex_task, "es_host": es_host},
     )
 

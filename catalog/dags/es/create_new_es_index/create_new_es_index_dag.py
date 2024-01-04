@@ -226,6 +226,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
             index_name=index_name,
             source_index="{{ params.source_index or params.media_type }}",
             query="{{ params.query }}",
+            timeout=config.reindex_timeout,
             es_host=es_host,
         )
 
