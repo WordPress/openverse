@@ -71,3 +71,6 @@ ALTER TABLE public.deleted_audio OWNER TO deploy;
 CREATE UNIQUE INDEX deleted_audio_provider_fid_idx
     ON public.deleted_audio
         USING btree (provider, md5(foreign_identifier));
+CREATE UNIQUE INDEX deleted_audio_identifier_key
+    ON public.deleted_audio
+        USING btree (identifier);

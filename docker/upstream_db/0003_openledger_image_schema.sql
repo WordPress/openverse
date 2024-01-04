@@ -64,3 +64,6 @@ ALTER TABLE public.deleted_image OWNER TO deploy;
 CREATE UNIQUE INDEX deleted_image_provider_fid_idx
     ON public.deleted_image
         USING btree (provider, md5(foreign_identifier));
+CREATE UNIQUE INDEX deleted_image_identifier_key
+    ON public.deleted_image
+        USING btree (identifier);
