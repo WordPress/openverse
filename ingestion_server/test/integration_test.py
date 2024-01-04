@@ -264,7 +264,8 @@ def _ingest_upstream(cb_queue, downstream_db, model, suffix="integration"):
     ), "Constraints in DB don't match the names they had before the go-live"
 
 
-def _get_es():
+@pytest.fixture()
+def sample_es():
     endpoint = f"http://localhost:{service_ports['es']}"
     es = Elasticsearch(
         endpoint,
@@ -276,7 +277,7 @@ def _get_es():
     return es
 
 
-def _promote(cb_queue, model, suffix="integration", alias=None):
+def _promote(sample_es, cb_queue, model, suffix="integration", alias=None):
     """Check that PROMOTE task succeeds and configures alias mapping in ES."""
 
     if alias is None:
@@ -295,46 +296,16 @@ def _promote(cb_queue, model, suffix="integration", alias=None):
     # Wait for the task to send us a callback.
     cb_queue.get(timeout=120) == "CALLBACK!"
 
-    es = _get_es()
+    es = sample_es
     assert list(es.indices.get(index=alias).keys())[0] == f"{model}-{suffix}"
 
 
-def check_index_exists(index_name):
-    es = _get_es()
+def check_index_exists(index_name, sample_es):
+    es = sample_es
     assert es.indices.get(index=index_name) is not None
 
 
-def _create_and_populate_filtered_index(
-    cb_queue,
-    model,
-    origin_suffix=None,
-    destination_suffix=None,
-):
-    req = {
-        "model": model,
-        "action": "CREATE_AND_POPULATE_FILTERED_INDEX",
-        "callback_url": bottle_url,
-    }
-    if origin_suffix is not None:
-        req |= {
-            "origin_index_suffix": origin_suffix,
-        }
-    if destination_suffix is not None:
-        req |= {"destination_index_suffix": destination_suffix}
-
-    res = requests.post(f"{ingestion_server}/task", json=req)
-    stat_msg = "The job should launch successfully and return 202 ACCEPTED."
-    assert res.status_code == 202, stat_msg
-
-    assert cb_queue.get(timeout=60) == "CALLBACK!"
-
-    index_pattern = (
-        f"{model}-{destination_suffix if destination_suffix else '*'}-filtered"
-    )
-    check_index_exists(index_pattern)
-
-
-def _point_alias(cb_queue, model, suffix, alias):
+def _point_alias(sample_es, cb_queue, model, suffix, alias):
     req = {
         "model": model,
         "action": "POINT_ALIAS",
@@ -349,10 +320,10 @@ def _point_alias(cb_queue, model, suffix, alias):
 
     assert cb_queue.get(timeout=30) == "CALLBACK!"
 
-    check_index_exists(alias)
+    check_index_exists(alias, sample_es)
 
 
-def _delete_index(cb_queue, model, suffix="integration", alias=None):
+def _delete_index(sample_es, cb_queue, model, suffix="integration", alias=None):
     req = {
         "model": model,
         "action": "DELETE_INDEX",
@@ -372,12 +343,14 @@ def _delete_index(cb_queue, model, suffix="integration", alias=None):
     # Wait for the task to send us a callback.
     assert cb_queue.get(timeout=120) == "CALLBACK!"
 
-    es = _get_es()
+    es = sample_es
     with pytest.raises(NotFoundError):
         es.indices.get(index=f"{model}-{suffix}")
 
 
-def _soft_delete_index(model, alias, suffix="integration", omit_force_delete=False):
+def _soft_delete_index(
+    sample_es, model, alias, suffix="integration", omit_force_delete=False
+):
     """
     Send a soft delete request.
 
@@ -397,10 +370,11 @@ def _soft_delete_index(model, alias, suffix="integration", omit_force_delete=Fal
     res = requests.post(f"{ingestion_server}/task", json=req)
     stat_msg = "The job should fail fast and return 400 BAD REQUEST."
     assert res.status_code == 400, stat_msg
-    check_index_exists(f"{model}-{suffix}")
+    check_index_exists(f"{model}-{suffix}", sample_es)
 
 
 def _create_and_populate_filtered_index(
+    sample_es,
     cb_queue,
     model,
     origin_suffix=None,
@@ -427,7 +401,7 @@ def _create_and_populate_filtered_index(
     index_pattern = (
         f"{model}-{destination_suffix if destination_suffix else '*'}-filtered"
     )
-    check_index_exists(index_pattern)
+    check_index_exists(index_pattern, sample_es)
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -522,17 +496,17 @@ def test_task_count_after_two():
 
 
 @pytest.mark.order(after="test_task_count_after_two")
-def test_promote_images(setup_fixture):
-    _promote(setup_fixture["cb_queue"], "image", "integration", "image-main")
+def test_promote_images(sample_es, setup_fixture):
+    _promote(sample_es, setup_fixture["cb_queue"], "image", "integration", "image-main")
 
 
 @pytest.mark.order(after="test_promote_images")
-def test_promote_audio(setup_fixture):
-    _promote(setup_fixture["cb_queue"], "audio", "integration", "audio-main")
+def test_promote_audio(sample_es, setup_fixture):
+    _promote(sample_es, setup_fixture["cb_queue"], "audio", "integration", "audio-main")
 
 
 @pytest.mark.order(after="test_promote_audio")
-def test_upstream_indexed_images():
+def test_upstream_indexed_images(sample_es):
     """
     Check that the image data has been successfully indexed in Elasticsearch.
 
@@ -540,7 +514,7 @@ def test_upstream_indexed_images():
     data.
     """
 
-    es = _get_es()
+    es = sample_es
     es.indices.refresh(index="image-integration")
     count = es.count(index="image-integration")["count"]
     msg = "There should be 5000 images in Elasticsearch after ingestion."
@@ -548,7 +522,7 @@ def test_upstream_indexed_images():
 
 
 @pytest.mark.order(after="test_upstream_indexed_images")
-def test_upstream_indexed_audio():
+def test_upstream_indexed_audio(sample_es):
     """
     Check that the audio data has been successfully indexed in Elasticsearch.
 
@@ -556,7 +530,7 @@ def test_upstream_indexed_audio():
     data.
     """
 
-    es = _get_es()
+    es = sample_es
     es.indices.refresh(index="audio-integration")
     count = es.count(index="audio-integration")["count"]
     msg = "There should be 5000 audio tracks in Elasticsearch after ingestion."
@@ -564,37 +538,45 @@ def test_upstream_indexed_audio():
 
 
 @pytest.mark.order(after="test_promote_images")
-def test_filtered_image_index_creation(setup_fixture):
+def test_filtered_image_index_creation(setup_fixture, sample_es):
     _create_and_populate_filtered_index(
-        setup_fixture["cb_queue"], "image", "integration", "integration"
+        sample_es, setup_fixture["cb_queue"], "image", "integration", "integration"
     )
 
 
 @pytest.mark.order(after="test_promote_audio")
-def test_filtered_audio_index_creation(setup_fixture):
+def test_filtered_audio_index_creation(setup_fixture, sample_es):
     _create_and_populate_filtered_index(
-        setup_fixture["cb_queue"], "audio", "integration", "integration"
+        sample_es, setup_fixture["cb_queue"], "audio", "integration", "integration"
     )
 
 
 @pytest.mark.order(after="test_filtered_image_index_creation")
-def test_point_filtered_image_alias(setup_fixture):
+def test_point_filtered_image_alias(setup_fixture, sample_es):
     _point_alias(
-        setup_fixture["cb_queue"], "image", "integration-filtered", "image-filtered"
+        sample_es,
+        setup_fixture["cb_queue"],
+        "image",
+        "integration-filtered",
+        "image-filtered",
     )
 
 
 @pytest.mark.order(after="test_filtered_audio_index_creation")
-def test_point_filtered_audio_alias(setup_fixture):
+def test_point_filtered_audio_alias(setup_fixture, sample_es):
     _point_alias(
-        setup_fixture["cb_queue"], "audio", "integration-filtered", "audio-filtered"
+        sample_es,
+        setup_fixture["cb_queue"],
+        "audio",
+        "integration-filtered",
+        "audio-filtered",
     )
 
 
 @pytest.mark.order(
     after=["test_point_filtered_audio_alias", "test_point_filtered_image_alias"]
 )
-def test_filtered_indexes(subtests):
+def test_filtered_indexes(sample_es, subtests):
     """
     Check that the sensitive terms are correctly filtered out.
 
@@ -604,7 +586,7 @@ def test_filtered_indexes(subtests):
     params = zip(mock_sensitive_terms, ["audio-filtered", "image-filtered"])
     for sensitive_term, index in params:
         with subtests.test(sensitive_term=sensitive_term, index=index):
-            es = _get_es()
+            es = sample_es
             queryable_fields = ["title", "description", "tags.name"]
             query = {
                 "bool": {
@@ -660,35 +642,37 @@ def test_update_index_audio(setup_fixture):
 
 
 @pytest.mark.order(after="test_update_index_audio")
-def test_index_deletion_succeeds(setup_fixture):
+def test_index_deletion_succeeds(setup_fixture, sample_es):
     _ingest_upstream(
         setup_fixture["cb_queue"], setup_fixture["downstream_db"], "audio", "temporary"
     )
-    _delete_index(setup_fixture["cb_queue"], "audio", "temporary")
+    _delete_index(sample_es, setup_fixture["cb_queue"], "audio", "temporary")
 
 
 @pytest.mark.order(after="test_index_deletion_succeeds")
-def test_alias_force_deletion_succeeds(setup_fixture):
+def test_alias_force_deletion_succeeds(setup_fixture, sample_es):
     _ingest_upstream(
         setup_fixture["cb_queue"], setup_fixture["downstream_db"], "audio", "temporary"
     )
-    _promote(setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
-    _delete_index(setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
+    _promote(sample_es, setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
+    _delete_index(
+        sample_es, setup_fixture["cb_queue"], "audio", "temporary", "audio-temp"
+    )
 
 
 @pytest.mark.order(after="test_alias_force_deletion_succeeds")
-def test_alias_soft_deletion_fails(setup_fixture):
+def test_alias_soft_deletion_fails(setup_fixture, sample_es):
     _ingest_upstream(
         setup_fixture["cb_queue"], setup_fixture["downstream_db"], "audio", "temporary"
     )
-    _promote(setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
-    _soft_delete_index("audio", "audio-temp", "temporary")
+    _promote(sample_es, setup_fixture["cb_queue"], "audio", "temporary", "audio-temp")
+    _soft_delete_index(sample_es, "audio", "audio-temp", "temporary")
 
 
 @pytest.mark.order(after="test_alias_soft_deletion_fails")
-def test_alias_ambiguous_deletion_fails(setup_fixture):
+def test_alias_ambiguous_deletion_fails(setup_fixture, sample_es):
     # No need to ingest or promote, index and alias exist
-    _soft_delete_index("audio", "audio-temp", "temporary", True)
+    _soft_delete_index(sample_es, "audio", "audio-temp", "temporary", True)
 
 
 @pytest.mark.order(after="test_alias_ambiguous_deletion_fails")
