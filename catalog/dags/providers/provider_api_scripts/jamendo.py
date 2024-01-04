@@ -258,8 +258,8 @@ class JamendoDataIngester(ProviderDataIngester):
         """
 
         select_query = (
-            "WHERE provider='jamendo' AND meta_data->>'audiodownload_allowed'"
-            " = 'False'"
+            f"WHERE provider='{prov.JAMENDO_DEFAULT_PROVIDER}' "
+            "AND meta_data->>'audiodownload_allowed' = 'False'"
         )
 
         @task_group(group_id="delete_records_with_downloads_disabled")
