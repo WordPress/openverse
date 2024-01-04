@@ -17,6 +17,7 @@ The following are DAGs grouped by their primary tag:
 1.  [Data Normalization](#data-normalization)
 1.  [Data Refresh](#data-refresh)
 1.  [Database](#database)
+1.  [Elasticsearch](#elasticsearch)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Other](#other)
@@ -50,6 +51,13 @@ The following are DAGs grouped by their primary tag:
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
+
+### Elasticsearch
+
+| DAG ID                                                              | Schedule Interval |
+| ------------------------------------------------------------------- | ----------------- |
+| [`create_new_production_es_index`](#create_new_production_es_index) | `None`            |
+| [`create_new_staging_es_index`](#create_new_staging_es_index)       | `None`            |
 
 ### Maintenance
 
@@ -130,6 +138,8 @@ The following is documentation associated with each DAG (where available):
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
+1.  [`create_new_production_es_index`](#create_new_production_es_index)
+1.  [`create_new_staging_es_index`](#create_new_staging_es_index)
 1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
@@ -463,6 +473,204 @@ There are two mechanisms that prevent this from happening:
 
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
+
+### `create_new_production_es_index`
+
+#### Create New ES Index DAG
+
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options are
+available:
+
+- `media_type` : media type for which to create the new index
+- `index_suffix` : optional suffix to be added to the new index name. If not
+  supplied, a creation timestamp is used.
+- `source_index` : the existing index on which to base the new index, and from
+  which to copy records
+- `index_config` : a JSON object containing the configuration for the new index.
+  By default, this will be merged into the configuration of the source index
+  according to the merging policy documented below.
+- `query` : an optional Elasticsearch query, used to filter the documents copied
+  from the source index into the new index. If not supplied, all records are
+  copied.
+- `override_config`: boolean override; when True, the `index_config` will be
+  used for the new index configuration _without_ merging any values from the
+  source index config.
+
+##### Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config`
+overwrites the entire value present in the source configuration at that key. The
+leaf values are merged naively, so a list for instance is replaced entirely
+(rather than appending values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+### `create_new_staging_es_index`
+
+#### Create New ES Index DAG
+
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options are
+available:
+
+- `media_type` : media type for which to create the new index
+- `index_suffix` : optional suffix to be added to the new index name. If not
+  supplied, a creation timestamp is used.
+- `source_index` : the existing index on which to base the new index, and from
+  which to copy records
+- `index_config` : a JSON object containing the configuration for the new index.
+  By default, this will be merged into the configuration of the source index
+  according to the merging policy documented below.
+- `query` : an optional Elasticsearch query, used to filter the documents copied
+  from the source index into the new index. If not supplied, all records are
+  copied.
+- `override_config`: boolean override; when True, the `index_config` will be
+  used for the new index configuration _without_ merging any values from the
+  source index config.
+
+##### Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config`
+overwrites the entire value present in the source configuration at that key. The
+leaf values are merged naively, so a list for instance is replaced entirely
+(rather than appending values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
 
 ### `delete_records`
 

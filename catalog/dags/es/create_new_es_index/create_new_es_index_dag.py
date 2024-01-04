@@ -1,7 +1,100 @@
 """
-# Create New Index DAG
+# Create New ES Index DAG
 
-TODO: Docstring
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options
+are available:
+
+* `media_type`     : media type for which to create the new index
+* `index_suffix`   : optional suffix to be added to the new index name. If not
+                     supplied, a creation timestamp is used.
+* `source_index`   : the existing index on which to base the new index, and from
+                     which to copy records
+* `index_config`   : a JSON object containing the configuration for the new index.
+                     By default, this will be merged into the configuration of the
+                     source index according to the merging policy documented below.
+* `query`          : an optional Elasticsearch query, used to filter the documents
+                     copied from the source index into the new index. If not
+                     supplied, all records are copied.
+* `override_config`: boolean override; when True, the `index_config` will be used
+                     for the new index configuration _without_ merging any values
+                     from the source index config.
+
+## Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config` overwrites
+the entire value present in the source configuration at that key. The leaf values are
+merged naively, so a list for instance is replaced entirely (rather than appending
+values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
 """
 import logging
 import os
@@ -36,19 +129,6 @@ def create_new_es_index_dag(config: CreateNewIndex):
                 enum=MEDIA_TYPES,
                 description="The media type for which to create the index.",
             ),
-            "index_config": Param(
-                default={},
-                type=["object"],
-                description=(
-                    "A JSON object containing the configuration for the new index."
-                    " The values in this object will be merged with the existing"
-                    " configuration, where the value specified at a leaf key in the"
-                    " object will override the existing value (see Merging policy in"
-                    " the DAG docs). This can also be the entire index configuration,"
-                    " in which case the existing configuration will be replaced entirely"
-                    " (see override_config parameter below)."
-                ),
-            ),
             "index_suffix": Param(
                 default=None,
                 type=["string", "null"],
@@ -66,6 +146,19 @@ def create_new_es_index_dag(config: CreateNewIndex):
                     "The existing index on Elasticsearch to use as the basis for the new"
                     " index. If not provided, the index aliased to media_type will be used"
                     " (e.g. image for the image media type)."
+                ),
+            ),
+            "index_config": Param(
+                default={},
+                type=["object"],
+                description=(
+                    "A JSON object containing the configuration for the new index."
+                    " The values in this object will be merged with the existing"
+                    " configuration, where the value specified at a leaf key in the"
+                    " object will override the existing value (see Merging policy in"
+                    " the DAG docs). This can also be the entire index configuration,"
+                    " in which case the existing configuration will be replaced entirely"
+                    " (see override_config parameter below)."
                 ),
             ),
             "query": Param(
