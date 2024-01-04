@@ -1,15 +1,12 @@
-import { useCookie, useI18n } from "#imports"
+import { isProd, useCookie, useI18n } from "#imports"
 
 import { defineStore } from "pinia"
-
-import { CookieOptions } from "#app"
 
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
 import type { BannerId, TranslationBannerId } from "~/types/banners"
 
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
-import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
 import type { LocaleObject } from "vue-i18n-routing"
@@ -176,22 +173,13 @@ export const useUiStore = defineStore("ui", {
       this.updateCookies()
     },
 
-    updateCookieValue(value: keyof OpenverseCookieState["ui"]) {
-      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
-        "ui",
-        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
-      )
-      uiCookie.value = {
-        ...uiCookie.value,
-        [value]: this[value],
-      }
-    },
-
     updateCookies() {
-      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
-        "ui",
-        cookieOptions as CookieOptions<OpenverseCookieState["ui"]>
-      )
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>("ui", {
+        path: "/",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 60, // 60 days; Makes the cookie persistent.
+        secure: isProd,
+      })
       uiCookie.value = {
         instructionsSnackbarState: this.instructionsSnackbarState,
         isFilterDismissed: this.isFilterDismissed,
@@ -212,7 +200,7 @@ export const useUiStore = defineStore("ui", {
 
       this.breakpoint = breakpoint
 
-      this.updateCookieValue("breakpoint")
+      this.updateCookies()
 
       this.isDesktopLayout = desktopBreakpoints.includes(breakpoint)
     },
@@ -229,7 +217,7 @@ export const useUiStore = defineStore("ui", {
       if (this.isDesktopLayout) {
         this.isFilterDismissed = !visible
 
-        this.updateCookieValue("isFilterDismissed")
+        this.updateCookies()
       }
     },
 
@@ -250,7 +238,7 @@ export const useUiStore = defineStore("ui", {
 
       this.dismissedBanners.push(bannerId)
 
-      this.updateCookieValue("dismissedBanners")
+      this.updateCookies()
     },
     isBannerDismissed(bannerId: BannerId) {
       return this.dismissedBanners.includes(bannerId)

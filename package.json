@@ -30,7 +30,8 @@
   },
   "pnpm": {
     "overrides": {
-      "vue": "3.4.5"
+      "vue": "3.4.5",
+      "esbuild": "0.19.10"
     },
     "peerDependencyRules": {
       "ignoreMissing": [
