@@ -576,31 +576,31 @@ def test_point_filtered_audio_alias(setup_fixture, sample_es):
 @pytest.mark.order(
     after=["test_point_filtered_audio_alias", "test_point_filtered_image_alias"]
 )
-def test_filtered_indexes(sample_es, subtests):
+@pytest.mark.parametrize(
+    "sensitive_term, index",
+    zip(mock_sensitive_terms, ["audio-filtered", "image-filtered"]),
+)
+def test_filtered_indexes(sample_es, sensitive_term, index):
     """
     Check that the sensitive terms are correctly filtered out.
 
     Each sensitive term should have zero exact matches for it when querying
     the filtered index. We use `term` against the `.raw` fields to ensure this.
     """
-    params = zip(mock_sensitive_terms, ["audio-filtered", "image-filtered"])
-    for sensitive_term, index in params:
-        with subtests.test(sensitive_term=sensitive_term, index=index):
-            es = sample_es
-            queryable_fields = ["title", "description", "tags.name"]
-            query = {
-                "bool": {
-                    "should": [
-                        {"term": {f"{field}.raw": sensitive_term}}
-                        for field in queryable_fields
-                    ]
-                }
-            }
-            res = es.search(index=index, query=query)
-            count = res["hits"]["total"]["value"]
-            assert (
-                count == 0
-            ), f"There should be no results that exactly match {sensitive_term} in {index}. Found {count}."
+    es = sample_es
+    queryable_fields = ["title", "description", "tags.name"]
+    query = {
+        "bool": {
+            "should": [
+                {"term": {f"{field}.raw": sensitive_term}} for field in queryable_fields
+            ]
+        }
+    }
+    res = es.search(index=index, query=query)
+    count = res["hits"]["total"]["value"]
+    assert (
+        count == 0
+    ), f"There should be no results that exactly match {sensitive_term} in {index}. Found {count}."
 
 
 @pytest.mark.order(after="test_upstream_indexed_audio")
