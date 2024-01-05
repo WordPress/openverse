@@ -49,11 +49,7 @@
                 -->
               <div
                 v-if="variant === 'default'"
-                class="flex w-full shrink-0 justify-between py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
-                :class="[
-                  $style[`top-bar-${variant}`],
-                  $style[`top-bar-${mode}`],
-                ]"
+                class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
               >
                 <VIconButton
                   ref="closeButton"
