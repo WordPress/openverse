@@ -1,4 +1,4 @@
-import { useI18n } from "#imports"
+import { useNuxtApp } from "#imports"
 
 const WESTERN_ARABIC_NUMERALS = [
   "0",
@@ -21,7 +21,7 @@ const WESTERN_ARABIC_NUMERALS = [
 export const useGetLocaleFormattedNumber = (
   locale: string | undefined = undefined
 ) => {
-  const i18n = useI18n({ useScope: "global" })
+  const i18n = useNuxtApp().$i18n
 
   return (n: number) => {
     const testFormat = n.toLocaleString(locale ?? i18n.locale.value)

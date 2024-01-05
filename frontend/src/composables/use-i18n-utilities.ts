@@ -1,4 +1,4 @@
-import { useI18n } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
@@ -77,7 +77,7 @@ function getCountKey(resultsCount: number) {
  * Returns the localized text for the number of search results.
  */
 export function useI18nResultsCount() {
-  const { t } = useI18n({ useScope: "global" })
+  const { t } = useNuxtApp().$i18n
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
   const getLoading = () => t("header.loading")
