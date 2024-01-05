@@ -1,4 +1,4 @@
-import { useI18n } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { computed, ref } from "vue"
 
@@ -38,7 +38,7 @@ const labels = {
 } as const
 
 export default function useSearchType() {
-  const i18n = useI18n({ useScope: "global" })
+  const i18n = useNuxtApp().$i18n
   const componentName = useComponentName()
   const analytics = useAnalytics()
 
