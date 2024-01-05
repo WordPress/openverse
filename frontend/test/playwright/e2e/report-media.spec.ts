@@ -81,10 +81,6 @@ const submitOtherReport = async (page: Page, context: BrowserContext) => {
   return expect(response.status()).toBe(200)
 }
 
-test.beforeEach(async ({ context }) => {
-  await mockProviderApis(context)
-})
-
 const reports = {
   dmca: submitDmcaReport,
   sensitive: submitSensitiveContentReport,
@@ -106,8 +102,11 @@ supportedMediaTypes.forEach((mediaType) => {
       context,
     }) => {
       await preparePageForTests(page, "xl")
+      await mockProviderApis(context)
+
       await goToSearchTerm(page, "cat", { searchType: mediaType })
       await openFirstResult(page, mediaType)
+
       await openReportModal(page)
       await reportAssertion(page, context)
     })

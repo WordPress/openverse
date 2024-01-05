@@ -1,3 +1,5 @@
+import { expect } from "@playwright/test"
+
 import rtlMessages from "~~/test/locales/ar.json"
 
 import enMessages from "~/locales/en.json"
@@ -323,6 +325,11 @@ export const openFirstResult = async (page: Page, mediaType: MediaType) => {
   const firstResult = page.locator(`a[href*="/${mediaType}/"]`).first()
   const firstResultHref = await getLocatorHref(firstResult)
   await firstResult.click({ position: { x: 32, y: 32 } })
+
+  // Make sure that navigation to single result page is complete.
+  // Using URL is not enough because it changes before navigation is complete.
+  await expect(page.getByRole("heading", { name: /how to use/i })).toBeVisible()
+
   await scrollDownAndUp(page)
   // Wait for all pending requests to finish, at which point we know
   // that all lazy-loaded content is available
