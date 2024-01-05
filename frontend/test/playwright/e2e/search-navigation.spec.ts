@@ -106,7 +106,7 @@ test.describe("search history navigation", () => {
       test("is visible in breadcrumb when navigating to image details page and returns to the search page", async ({
         page,
       }) => {
-        const url = "/search/?q=galah"
+        const url = "/search?q=galah"
         await page.goto(url)
         await page.locator('a[href^="/image"]').first().click()
         const link = page.locator(`text="${t("singleResult.back")}"`)
@@ -138,7 +138,7 @@ test.describe("search history navigation", () => {
   })
 })
 
-test.describe("search query param is set on a single page reulst", () => {
+test.describe("search query param is set on a single page results", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(`/search?q=cat`)
   })

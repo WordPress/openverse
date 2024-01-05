@@ -112,6 +112,9 @@ test.describe("search query on CSR", () => {
       await page
         .getByLabel(/Mark 50% of results as sensitive to test content safety./i)
         .check()
+      await page
+        .getByLabel(/Show results marked as sensitive in the results area./i)
+        .check()
 
       await goToSearchTerm(page, "cat", { mode: "CSR" })
 
