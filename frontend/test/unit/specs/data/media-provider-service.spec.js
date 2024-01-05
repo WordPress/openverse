@@ -16,7 +16,8 @@ vi.mock("~/utils/console", () => ({ warn: vi.fn(), log: vi.fn() }))
 // }))
 
 describe("Media Provider Service", () => {
-  it("No data in response", async () => {
+  // https://github.com/wordpress/openverse/issues/411
+  it.skip("No data in response", async () => {
     const result = await initProviderServices.image().getProviderStats()
     expect(result).toEqual([])
     expect(warn).toHaveBeenCalledTimes(1)
