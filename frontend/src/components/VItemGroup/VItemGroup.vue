@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { defineComponent, provide, ref, readonly, PropType } from "vue"
 
@@ -116,7 +116,7 @@ export default defineComponent({
     const isFocused = ref(false)
     provide(VItemGroupContextKey, props)
 
-    const i18n = useI18n({ useScope: "global" })
+    const i18n = useNuxtApp().$i18n
 
     /**
      * When the item group is horizontal, we need to "reverse" the behavior of the left and right arrow keys for RTL locales
