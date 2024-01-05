@@ -34,7 +34,7 @@ The steps below include the following:
 
 - **Code**: Any associated code for the step, if necessary.
 - **Example spreadsheet**: Any reference spreadsheets for the step, if
-  necessary.
+  necessary. These may require maintainer-provided access to view.
 - **Notes**: Intentions for the step and important aspects to consider.
 - **Process**: An ordered set of actions to take for completing the step.
 - **Outcome(s)**: Any tangible deliverables from the step.
@@ -105,7 +105,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
   https://github.com/WordPress/openverse/tree/main/utilities/project_planning#graph-project-voting
 
 - **Code**: [Graph Project Voting][graph_project_voting]
-- **Example spreadsheet**: TODO
+- **Example spreadsheet**:
+  [Project Ideas Effort & Impact Voting](https://docs.google.com/spreadsheets/d/1a_xBQvgirYF7Tzmbr5bbfvxaV0RKyBmoJ3FvCVs5zG8/edit?usp=sharing)
 - **Notes**:
   - Fibonacci's numbers are used here instead of linear sequence: 2, 3, 5, 8, 13
     instead of 1, 2, 3, 4, 5. This helps communicate the big difference between
@@ -148,7 +149,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
   https://github.com/WordPress/openverse/tree/main/utilities/project_planning#average-weeks-of-work-calculation
 
 - **Code**: [Calculate average weeks per-project][calculate_average_weeks]
-- **Example spreadsheet**: TODO
+- **Example spreadsheet**:
+  [Project Weeks Of Work Voting](https://docs.google.com/spreadsheets/d/1duRS489QMnQKaXjDq4BjEhyEUPQXs7GeMKNWhCLeE1s/edit?usp=sharing)
 - **Notes**:
   - The effort & impact graphs from the previous step can be used by each
     maintainer when estimating weeks.
@@ -176,7 +178,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
   https://github.com/WordPress/openverse/tree/main/utilities/project_planning#project-selection
 
 - **Code**: [Project selection aggregation][sum_selection_votes]
-- **Example spreadsheet**: TODO
+- **Example spreadsheet**:
+  [Project Selection Voting](https://docs.google.com/spreadsheets/d/1OA6fptxMyvAQvJ0U_G9f-oVt_Emdx2gA1VM68WI3hUg/edit?usp=sharing)
 - **Notes**:
   - This step revolves around deciding which projects "fit" into the next year
     based on weeks-of-effort estimates and the overall week availability of the
@@ -225,6 +228,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
 
 ### Create the projects list with project threads (1 week)
 
+- **Example spreadsheet**:
+  [Project Lead Interest Voting](https://docs.google.com/spreadsheets/d/13mYbcc61ZMHQA8qiuX4IStVr1fYQeVQBenTMucK_ki8/edit?usp=sharing)
 - **Notes**:
   - The project threads are made using the [project thread issue
     template][project_thread_template] in GitHub.
