@@ -135,7 +135,11 @@ export default defineComponent({
 
     const handleClick = (e: MouseEvent) => {
       emit("click", e)
-      if (!checkHref(props) || !props.sendExternalLinkClickEvent) {
+      if (
+        !checkHref(props) ||
+        !isInternal.value ||
+        !props.sendExternalLinkClickEvent
+      ) {
         return
       }
       sendCustomEvent("EXTERNAL_LINK_CLICK", {
