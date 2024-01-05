@@ -64,7 +64,7 @@ for (const dir of languageDirections) {
           await expectSnapshot(`content-switcher-open-${dir}`, page)
         })
 
-        test("content switcher with external sources open", async ({
+        test("content switcher with additional search types open", async ({
           page,
         }) => {
           await preparePageForTests(page, breakpoint, {
@@ -77,7 +77,7 @@ for (const dir of languageDirections) {
           await page.locator("#search-type-button").click()
 
           await expectSnapshot(
-            `content-switcher-with-external-sources-open-${dir}`,
+            `content-switcher-with-additional_search_types-open-${dir}`,
             page
           )
         })
