@@ -3,12 +3,14 @@
 [project_thread_template]:
   https://github.com/WordPress/openverse/blob/main/.github/ISSUE_TEMPLATE/project_thread.md
 [project_tracking_board]: /meta/project_boards/projects.md
+[team_rep]:
+  https://make.wordpress.org/training/handbook/training-team-how-to-guides/team-roles/team-rep/
 
 This document describes the process that the Openverse team strives to follow
 when planning which projects will be worked on in the next calendar year.
 
 ```{note}
-Many of the steps below reference resources that may only be accessible by maintainers.
+Some of the steps below reference resources that may only be accessible by maintainers.
 The purpose of this document is primarily to share our process in a way that might be
 useful for other projects, teams, or organizations. If you're interested in becoming a
 maintainer, please check out our [welcome page](/general/quickstart.md)
@@ -21,71 +23,81 @@ The outcome of the yearly planning should be a prioritized list of [project
 threads in GitHub][project_thread_template] for the next year which are
 reflected on the [project tracking board][project_tracking_board].
 
-## Outline
+## Steps
 
-Each step in the outline below includes a week estimate for how long this
-process is expected to take between ~8 maintainers asynchronously across
-multiple timezones.
+Each step in the outline below includes an estimate for how many weeks that step
+is expected to take between ~8 maintainers asynchronously across multiple
+timezones. In total, the yearly planning process is expected to take between 12
+and 13 weeks.
+
+The steps below include the following:
+
+- **Code**: Any associated code for the step, if necessary.
+- **Example spreadsheet**: Any reference spreadsheets for the step, if
+  necessary.
+- **Notes**: Intentions for the step and important aspects to consider.
+- **Process**: An ordered set of actions to take for completing the step.
+- **Outcome(s)**: Any tangible deliverables from the step.
 
 ### (Optional) Brainstorm project themes/categories (1 week)
 
-```{note}
+```{tip}
 See: [Project Themes](/projects/yearly_planning/project_themes.md)
 ```
 
 - **Notes**:
   - Consider WordPress Foundation goals to ensure Openverse's project themes are
     aligned.
-- **Process**:
-  1.  Each maintainer writes a 3-4 item list of ideas for project themes.
-  2.  Team comes together, shares their lists, and identify the similarities and
-      shared ideas to develop a set of themes/categories.
-      - This can be done using stickies that are then grouped together, similar
-        to a retrospective process.
-- **Stipulations**:
   - Themes should be written in the imperative sense.
   - These themes/categories can help shape project ideas, but should not prevent
     any project ideas from being raised if they exist outside the existing
     themes/categories.
+- **Process**:
+  1.  Each maintainer writes a 3-4 item list of ideas for project themes.
+  2.  The maintainers come together, share their lists, and identify the
+      similarities and shared ideas to develop a set of themes/categories.
+      - This can be done using stickies that are then grouped together, similar
+        to the [retrospective process](#retrospective).
 - **Outcome**: A list of themes written in the imperative sense.
 
 ### Describe ideas for next year's projects (4 weeks)
 
 - **Notes**:
-  - Include rollover from previous year and add or update descriptions for
-    rolled over projects.
+  - Include projects which should be rolled over from the previous year and add
+    or update descriptions for said projects.
   - Find existing backlog issues that can be grouped into "projects" of related
     issues.
 - **Process**:
-  1.  Create the post on the
+  1.  Create a post on the
       [Make WordPress Blog](https://make.wordpress.org/openverse/) to solicit
       ideas from the community.
       - Additionally, set up a Google form to encourage better
         descriptions/organisation and make it more shareable outside the
         WordPress Community.
   2.  (2 weeks) Each maintainer individually describes project ideas in their
-      own document. The team rep will seed community ideas to maintainers who
-      are best equipped to flesh out those specific descriptions. Descriptions
-      should define the scope of the project and the benefit. Describing
-      projects on our own, without collaborating right away, helps to identify
-      shared project ideas as well as potentially different ideas of very
-      similar projects. These "duplicate" descriptions will uncover assumptions
-      and nuances. Each idea should have the following:
+      own document. The [team rep][team_rep] will seed community ideas to
+      maintainers who are best equipped to flesh out those specific
+      descriptions. Descriptions should define the scope of the project and the
+      benefit. Describing projects on our own, without collaborating right away,
+      helps to identify shared project ideas as well as potentially different
+      ideas of very similar projects. These "duplicate" descriptions will
+      uncover assumptions and nuances. Each project idea should have the
+      following:
       - Title
       - Summary
       - Description
-      - Applicable project theme
-      - Expected implementation plans
+      - Applicable project theme(s)
+      - Anticipated implementation plans
   3.  (1 week) Maintainers review each other's ideas and ask for clarification.
       - Point out similar ideas and explicitly label differences in project
         descriptions.
-      - Identify connective themes across maintainers' documents.
-  4.  (1 week) Team rep combines the ideas into a single document with similar
-      ideas/descriptions side-by-side or combined.
-  5.  Individually review the combined document and ask for clarifications if
-      needed.
+      - Identify projects which might need more explicit scoping.
+  4.  (1 week) [Team rep][team_rep] combines the ideas into a single document
+      with similar ideas/descriptions side-by-side or combined.
+  5.  Individually review the combined document and ask for additional
+      clarifications if needed.
 - **Outcome**: A list of clarified project summaries/titles with descriptions
-  and projected implementation plans.
+  and projected implementation plans in a single document.
 
 ### Vote on the effort and impact of each project idea (3 weeks)
 
@@ -104,7 +116,7 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
   - This step is used as reference when voting during steps that follow.
 - **Process**:
   1.  Create a spreadsheet of the projects with spaces for effort and impact
-      with formatting options to record confidence for each vote.
+      with an additional column to record confidence for each vote.
   2.  Provide each maintainer with a tab within the spreadsheet and privately
       add votes, including confidence.
   3.  Generate the box-charts view of the combined votes with confidence using
@@ -120,7 +132,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
 
 - **Code**: [Calculate available weeks][available_weeks_script]
 - **Notes**:
-  - This step can occur concurrently with other steps.
+  - This step can occur concurrently with other steps and should not take
+    additional time.
 - **Process**:
   1. Update the [script for calculating available weeks][available_weeks_script]
      with maintainers, conferences, and availability that match the upcoming
@@ -142,20 +155,20 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
   - Confidence should also be recorded here for later use.
   - Maintainers should only be voting on weeks of implementation work. Weeks
     required for the project planning & implementation plans should
-    automatically be included using: 2 project plan weeks + (2 weeks \* \# of
-    implementation plans).
+    automatically be included using: `2 project plan weeks` + (`2 weeks` x
+    `# of anticipated implementation plans`).
 - **Process**:
   1. Create a spreadsheet of the projects with a count of the number of
-     implementation plans each project requires. Automatically deduce the total
+     implementation plans each project requires. Automatically compute the total
      number of weeks with a formula by combining voted implementation time with
      the implementation plans per the formula above.
   2. Provide each maintainer with a tab within the spreadsheet and privately add
-     votes, including confidence.
+     estimations, including confidence.
   3. Run the [script for calculating average weeks][calculate_average_weeks] to
      compute both average weeks of work and weighted average weeks (based on
      confidence votes).
   4. Record these values for the next step.
-- **Outcome**: Average and weighted average weeks of work for each project
+- **Outcome**: Average and weighted average weeks of work for each project.
 
 ### Vote on project inclusion for next year (1 week)
 
@@ -167,7 +180,7 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
 - **Notes**:
   - This step revolves around deciding which projects "fit" into the next year
     based on weeks-of-effort estimates and the overall week availability of the
-    team from the previous step
+    team from the previous step.
   - The assumption is that, at this point, there will be a surpless of projects
     and a restriction based on how many hours were computed as available in a
     previous step.
@@ -178,7 +191,7 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
      projects for the next year, and automatically subtract the weeks that
      project will occupy from the remaining available weeks.
   2. Provide each maintainer with a tab within the spreadsheet and privately add
-     votes.
+     selections.
   3. Run the [script for grouping the selected projects][sum_selection_votes].
   4. Record these values for the next step.
 - **Outcome**: A list of projects binned by the groups described [in the
@@ -189,13 +202,13 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
 - **Notes**:
   - This step will require discussion among maintainers to determine a final,
     conclusive list of which projects should be included for the next year.
-  - Assessment and clarification of projects may be necessary during or after
-    this step.
+  - Further assessment, clarification, and refining of projects may be necessary
+    during or after this step.
   - If possible, a synchronous discussion might be best for quickly iterating
     over the list of projects.
-  - It may be easiest for the team rep to dictate prioritization of projects
-    throughout the year, considering impact, spread of work (features vs.
-    maintenance), and community events.
+  - It may be easiest for the [team rep][team_rep] to dictate _prioritization_
+    of the selected projects throughout the year, considering impact, spread of
+    work (features vs. maintenance), and community events.
 - **Process**:
   1. Share and discuss the binned projects determined from the previous step.
   2. Create a new tab in the previous project selection spreadsheet for
@@ -205,7 +218,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
      room, pick from the final list of projects that only a few people had on
      their lists.
   4. Prioritize those projects by order of which projects should be completed
-     throughout the year (this may be done individually by the team rep).
+     throughout the year (this may be done individually by the [team
+     rep][team_rep]).
 - **Outcome**: A canonical list of projects ordered by priority for the next
   year.
 
@@ -215,7 +229,7 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
   - The project threads are made using the [project thread issue
     template][project_thread_template] in GitHub.
 - **Process**:
-  1. The team rep should prepare [project tracking
+  1. The [team rep][team_rep] should prepare the [project tracking
      board][project_tracking_board] in GitHub by archiving the previous year's
      completed project threads and removing any projects which were not
      completed and not scoped for the next year.
@@ -230,7 +244,7 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
     tracker][project_tracking_board].
   - A list of potential project leads for each project.
 
-### Retrospective on 2024 planning
+### Retrospective
 
 - **Notes**:
   - Once the planning is complete, it's useful for the maintainers to set aside
