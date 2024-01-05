@@ -5,9 +5,6 @@ import { warn } from "~/utils/console"
 
 vi.mock("~/utils/console", () => ({ warn: vi.fn(), log: vi.fn() }))
 
-vi.spyOn("~/data/api-service", "createApiService").mockReturnValue(() =>
-  vi.fn()
-)
 // vi.mock("~/data/api-service", () => ({
 //   createApiService: function () {
 //     return {
