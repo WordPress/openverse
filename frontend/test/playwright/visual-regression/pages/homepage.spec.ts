@@ -6,7 +6,6 @@ import {
   languageDirections,
   pathWithDir,
   preparePageForTests,
-  setCookies,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
@@ -68,7 +67,7 @@ for (const dir of languageDirections) {
         test("content switcher with external sources open", async ({
           page,
         }) => {
-          await setCookies(page.context(), {
+          await preparePageForTests(page, breakpoint, {
             features: { additional_search_types: "on" },
           })
 
