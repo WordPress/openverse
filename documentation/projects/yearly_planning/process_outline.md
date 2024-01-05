@@ -1,5 +1,9 @@
 # Yearly Planning: Process Outline
 
+[project_thread_template]:
+  https://github.com/WordPress/openverse/blob/main/.github/ISSUE_TEMPLATE/project_thread.md
+[project_tracking_board]: /meta/project_boards/projects.md
+
 This document describes the process that the Openverse team strives to follow
 when planning which projects will be worked on in the next calendar year.
 
@@ -13,10 +17,9 @@ for how to begin getting involved.
 
 ## Outcome
 
-The outcome of the yearly planning should be a prioritized list of
-[project threads in GitHub](https://github.com/WordPress/openverse/blob/main/.github/ISSUE_TEMPLATE/project_thread.md)
-which are reflected on the
-[project tracking board](/meta/project_boards/projects.md).
+The outcome of the yearly planning should be a prioritized list of [project
+threads in GitHub][project_thread_template] which are reflected on the [project
+tracking board][project_tracking_board].
 
 ## Outline
 
@@ -111,7 +114,7 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
 - Outcomes:
   - Box plots of effort and impact per-project, colored by average confidence.
 
-### Estimate total available weeks of effort for the team for the next year (1 week)
+### Estimate total available weeks of effort for the team for the next year
 
 [available_weeks_script]:
   https://github.com/WordPress/openverse/blob/main/utilities/project_planning/calculate_available_weeks.py
@@ -151,43 +154,81 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
      compute both average weeks of work and weighted average weeks (based on
      confidence votes).
   4. Record these values for the next step.
-- ## Outcomes:
+- Outcomes:
+  - Average and weighted average weeks of work for each project
 
-### Prioritise the ideas and identify dependencies (4 weeks)
+### Vote on project inclusion for next year (1 week)
+
+[sum_selection_votes]:
+  https://github.com/WordPress/openverse/tree/main/utilities/project_planning#project-selection
 
 - Notes:
+  - Code: [Project selection aggregation][sum_selection_votes]
+  - Example spreadsheet: TODO
   - This step revolves around deciding which projects "fit" into the next year
     based on weeks-of-effort estimates and the overall week availability of the
     team from the previous step
+  - The assumption is that, at this point, there will be a surpless of projects
+    and a restriction based on how many hours were computed as available in a
+    previous step.
+- Process:
+  1. Create a spreadsheet of the projects with the average and weighted average
+     weeks of work per project. Include as input the available weeks of work
+     computed in a previous step. Allow maintainers to either exclude or include
+     projects for the next year, and automatically subtract the weeks that
+     project will occupy from the remaining available weeks.
+  2. Provide each maintainer with a tab within the spreadsheet and privately add
+     votes.
+  3. Run the [script for grouping the selected projects][sum_selection_votes].
+  4. Record these values for the next step.
+- Outcomes:
+  - A list of projects binned by the groups described [in the selection
+    script][sum_selection_votes].
 
-2.  In deciding the project list, ensure a balance between feature and internal
-    work
-3.  Process: 2. Create a spreadsheet of the projects with their combined
-    weeks-of-work estimates with a method for marking projects for inclusion in
-    the year. Copy the spreadsheet for each team member who privately decides on
-    a list of projects to fill the available weeks of effort for the year. In
-    other words, each person decides on a list of projects to propose for
-    priority for 2024 that add up to the available weeks of effort for the
-    year. 3. Combine those lists as follows: 1. Identify the projects everyone
-    had on their final list 2. Identify the projects a majority had on their
-    list 3. Identify the projects that few people had on their lists 4. Fill up
-    a final list of projects collectively, starting first with the ones everyone
-    agreed on, then the ones most agreed on, and then if there's still room,
-    pick from the final list of projects that only a few people had on their
-    lists.
+### Prioritise the ideas and identify dependencies (2 weeks)
+
+- Notes:
+  - This step will require discussion among maintainers to determine a final,
+    conclusive list of which projects should be included for the next year.
+  - Assessment and clarification of projects may be necessary during or after
+    this step.
+  - If possible, a synchronous discussion might be best for quickly iterating
+    over the list of projects.
+  - It may be easiest for the team rep to dictate prioritization of projects
+    throughout the year, considering impact, spread of work (features vs.
+    maintenance), and community events.
+- Process:
+  1. Share and discuss the binned projects determined from the previous step.
+  2. Create a new tab in the previous project selection spreadsheet for
+     recording team votes.
+  3. Fill up a final list of projects collectively, starting first with the ones
+     everyone agreed on, then the ones most agreed on, and then if there's still
+     room, pick from the final list of projects that only a few people had on
+     their lists.
+  4. Prioritize those projects by order of which projects should be completed
+     throughout the year (this may be done individually by the team rep).
+- Outcomes:
+  - A canonical list of projects ordered by priority for the next year.
 
 ### Create the projects list with project threads (1 week)
 
-1.  P2 page for the team
-2.  Make post describing the plan and linking to the project board
-3.  Vote on which projects folks would be interested in/comfortable leading
-4.  Process:
-    1.  Delegate projects from the list to team members to create project
-        threads and include the descriptions we created earlier in the process
-    2.  Team lead writes the P2 page and make post?
-    3.  Using created project threads, set up a spreadsheet for folks to vote on
-        which projects they'd want to lead. This doesn't mean the person _will_
-        be leading that effort, but it can be used to determine who might be
-        interested when a new project is slated
+- Notes:
+  - The project threads are made using the [project thread issue
+    template][project_thread_template] in GitHub.
+- Process:
+  1. The team rep should prepare [project tracking
+     board][project_tracking_board] in GitHub by archiving the previous year's
+     completed project threads and removing any projects which were not
+     completed and not scoped for the next year.
+  2. Delegate projects from the canonical list to maintainers to create project
+     threads, using the descriptions created earlier in the process.
+  3. Using created project threads, set up a spreadsheet for maintainers to vote
+     on which projects they would want to lead. This doesn't mean the maintainer
+     _will_ be leading that effort, but it can be used to determine who might be
+     interested when a new project is slated for work
+- Outcomes:
+  - A list of project threads in GitHub associated with the [project
+    tracker][project_tracking_board].
+  - A list of potential project leads for each project.
 
 ### Retrospective on 2024 planning
