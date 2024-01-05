@@ -28,7 +28,7 @@ export default defineComponent({
   name: "VReportDescForm",
   model: {
     prop: "content",
-    event: "input",
+    event: "update:content",
   },
   props: {
     /**
@@ -47,12 +47,12 @@ export default defineComponent({
     },
   },
   emits: {
-    input: defineEvent<[string]>(),
+    "update:content": defineEvent<[string]>(),
   },
   setup(props, { emit }) {
     const text = computed({
       get: () => props.content,
-      set: (val) => emit("input", val),
+      set: (val) => emit("update:content", val),
     })
 
     const isRequired = computed(() => props.reason === OTHER)

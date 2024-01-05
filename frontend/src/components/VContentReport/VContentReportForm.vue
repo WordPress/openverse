@@ -71,7 +71,7 @@
           <VReportDescForm
             v-if="selectedReason !== DMCA"
             key="other"
-            v-model="description"
+            v-model:content="description"
             :reason="selectedReason"
             :is-required="selectedReason === OTHER"
           />
@@ -191,9 +191,10 @@ export default defineComponent({
       props.closeFn()
     }
 
-    const isSubmitDisabled = computed(
-      () => selectedReason.value === OTHER && description.value.length < 20
-    )
+    const isSubmitDisabled = computed(() => {
+      console.log("description.value.length", description.value.length)
+      return selectedReason.value === OTHER && description.value.length < 20
+    })
 
     const { sendCustomEvent } = useAnalytics()
 
