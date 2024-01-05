@@ -1,10 +1,10 @@
-import Vue from "vue"
+import { createApp } from "vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 
-const TestWrapper = Vue.component("TestWrapper", {
+const testWrapperContainer = createApp({}).component("TestWrapper", {
   props: ["n", "locale"],
   setup(props) {
     const getLocaleFormattedNumber = useGetLocaleFormattedNumber(props.locale)
@@ -13,6 +13,7 @@ const TestWrapper = Vue.component("TestWrapper", {
   },
   template: `<div>{{ getLocaleFormattedNumber(n) }}</div>`,
 })
+const TestWrapper = testWrapperContainer._context.components.TestWrapper
 
 describe("use-get-locale-formatted-number", () => {
   it.each(["ar", "fa", "ckb", "ps"])(
