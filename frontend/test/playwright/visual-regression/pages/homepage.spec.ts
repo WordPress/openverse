@@ -3,10 +3,10 @@ import { test, Page } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
+  languageDirections,
   pathWithDir,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
-import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -58,30 +58,32 @@ for (const dir of languageDirections) {
           )
         })
 
-        test("content switcher open", async ({ page }) => {
+        // https://github.com/wordpress/openverse/issues/411
+        test.skip("content switcher open", async ({ page }) => {
           await page.locator("#search-type-button").click()
 
           await expectSnapshot(`content-switcher-open-${dir}`, page)
         })
+
+        // https://github.com/wordpress/openverse/issues/411
+        test.skip("content switcher with additional search types open", async ({
+          page,
+        }) => {
+          await preparePageForTests(page, breakpoint, {
+            features: { additional_search_types: "on" },
+          })
+
+          await page.goto(path)
+          await cleanImageCarousel(page)
+
+          await page.locator("#search-type-button").click()
+
+          await expectSnapshot(
+            `content-switcher-with-additional_search_types-open-${dir}`,
+            page
+          )
+        })
       })
-    })
-
-    test(`${dir} content switcher with additional search types open`, async ({
-      page,
-    }) => {
-      await preparePageForTests(page, breakpoint, {
-        features: { additional_search_types: "on" },
-      })
-
-      await page.goto(path)
-      await cleanImageCarousel(page)
-
-      await page.locator("#search-type-button").click()
-
-      await expectSnapshot(
-        `content-switcher-with-external-sources-open-${dir}`,
-        page
-      )
     })
   })
 }

@@ -4,6 +4,8 @@
  * backend, or open an issue to track it.
  */
 
+import { useI18n } from "#imports"
+
 import type { Media } from "~/types/media"
 import {
   getElements,
@@ -13,8 +15,6 @@ import {
 import type { LicenseElement } from "~/constants/license"
 
 import enJson from "~/locales/en.json"
-
-import type VueI18n from "vue-i18n"
 
 /* Helper functions */
 
@@ -162,7 +162,7 @@ export interface AttributionOptions {
  */
 export const getAttribution = (
   mediaItem: AttributableMedia,
-  i18n: VueI18n | null = null,
+  i18n: ReturnType<typeof useI18n> | null = null,
   { includeIcons, isPlaintext }: AttributionOptions = {
     isPlaintext: false,
     includeIcons: true,
@@ -176,8 +176,7 @@ export const getAttribution = (
 
   const i18nBase = "mediaDetails.reuse.credit"
   const tFn = i18n
-    ? (key: string, values?: VueI18n.Values) =>
-        i18n.t(`${i18nBase}.${key}`, values).toString()
+    ? (key: string, values?: unknown) => i18n.t(`${i18nBase}.${key}`, values)
     : fakeT
 
   /* Title */

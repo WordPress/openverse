@@ -1,14 +1,14 @@
+import { useI18n } from "#imports"
+
 import { capitalCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 import { AUDIO, IMAGE } from "~/constants/media"
 
 import { useProviderStore } from "~/stores/provider"
 
-import type { NuxtI18nInstance } from "@nuxtjs/i18n"
-
 const getImageType = (
   imageType: string | undefined,
-  i18n: NuxtI18nInstance
+  i18n: ReturnType<typeof useI18n>
 ) => {
   if (imageType) {
     if (imageType.split("/").length > 1) {
@@ -19,7 +19,7 @@ const getImageType = (
   return i18n.t("mediaDetails.information.unknown")
 }
 
-const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
+const getAudioType = (audio: AudioDetail, i18n: ReturnType<typeof useI18n>) => {
   if (!audio.alt_files) {
     return audio.filetype ?? i18n.t("mediaDetails.information.unknown")
   }
@@ -35,7 +35,7 @@ const getAudioType = (audio: AudioDetail, i18n: NuxtI18nInstance) => {
 
 export const getMediaMetadata = (
   media: AudioDetail | ImageDetail,
-  i18n: NuxtI18nInstance,
+  i18n: ReturnType<typeof useI18n>,
   imageInfo?: { width?: number; height?: number; type?: string }
 ) => {
   const metadata: Metadata[] = []
@@ -60,9 +60,9 @@ export const getMediaMetadata = (
   if (media.category) {
     metadata.push({
       label: "mediaDetails.information.category",
-      value: i18n
-        .t(`filters.${media.frontendMediaType}Categories.${media.category}`)
-        .toString(),
+      value: i18n.t(
+        `filters.${media.frontendMediaType}Categories.${media.category}`
+      ),
     })
   }
 
@@ -72,7 +72,7 @@ export const getMediaMetadata = (
       : getAudioType(media, i18n)
   metadata.push({
     label: "mediaDetails.information.type",
-    value: mediaTypeString.toString().toUpperCase(),
+    value: mediaTypeString.toUpperCase(),
   })
 
   if (media.frontendMediaType === IMAGE) {

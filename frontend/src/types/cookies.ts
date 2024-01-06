@@ -1,19 +1,15 @@
 import type { FeatureState } from "~/constants/feature-flag"
-import { isProd } from "~/utils/node-env"
-
-import type { BannerId } from "~/types/banners"
 import type { RealBreakpoint } from "~/constants/screens"
-
-import type { CookieSerializeOptions } from "cookie"
+import type { BannerId } from "~/types/banners"
 
 export type SnackbarState = "not_shown" | "visible" | "dismissed"
 
-export const cookieOptions: CookieSerializeOptions = {
-  path: "/",
-  sameSite: "strict",
-  maxAge: 60 * 60 * 24 * 60, // 60 days
-  secure: isProd,
-}
+// export const cookieOptions = {
+//   path: "/",
+//   sameSite: "strict",
+//   maxAge: 60 * 60 * 24 * 60, // 60 days
+//   secure: isProd,
+// }
 /**
  * The cookies that Openverse uses to store the UI state.
  */

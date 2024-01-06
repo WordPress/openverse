@@ -4,7 +4,7 @@
     <p>{{ $t("searchGuide.intro") }}</p>
 
     <h2>{{ $t("searchGuide.exact.title") }}</h2>
-    <i18n path="searchGuide.exact.content" tag="p">
+    <i18n-t scope="global" keypath="searchGuide.exact.content" tag="p">
       <template #link>
         <VLink
           :aria-label="$t('searchGuide.exact.ariaLabel')"
@@ -13,15 +13,20 @@
           <em>{{ $t("searchGuide.exact.claudeMonet") }}</em>
         </VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
     <h2>{{ $t("searchGuide.negate.title") }}</h2>
 
-    <i18n path="searchGuide.negate.content" tag="p" class="mb-4">
+    <i18n-t
+      scope="global"
+      keypath="searchGuide.negate.content"
+      tag="p"
+      class="mb-4"
+    >
       <template #operator
         ><!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-        <em :aria-label="$t('searchGuide.negate.operatorAriaLabel').toString()"
-          >- {{ $t("searchGuide.negate.operatorName").toString() }}</em
+        <em :aria-label="$t('searchGuide.negate.operatorAriaLabel')"
+          >- {{ $t("searchGuide.negate.operatorName") }}</em
         >
         <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
       </template>
@@ -36,42 +41,43 @@
       <template #br>
         <br />
       </template>
-    </i18n>
+    </i18n-t>
   </VContentPage>
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
 
-import { useSearchStore } from "~/stores/search"
-
-import { useI18n } from "~/composables/use-i18n"
+// import { useSearchStore } from "~/stores/search"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VSearchHelpPage",
   components: { VLink, VContentPage },
-  layout: "content-layout",
   setup() {
-    const i18n = useI18n()
-    const searchStore = useSearchStore()
+    definePageMeta({
+      layout: "content-layout",
+    })
+    const i18n = useI18n({ useScope: "global" })
+    // const searchStore = useSearchStore()
 
-    useMeta({
+    useHead({
       title: `${i18n.t("searchGuide.title", {
         openverse: "Openverse",
       })} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ key: "robots", name: "robots", content: "all" }],
     })
 
     const pathFromQuery = (queryString: string) => {
-      return searchStore.getSearchPath({
-        query: { q: queryString },
-      })
+      // TODO: Fix after adding search store
+      return queryString
+      // return searchStore.getSearchPath({
+      //   query: { q: queryString },
+      // })
     }
     return { pathFromQuery }
   },
-  head: {},
 })
 </script>

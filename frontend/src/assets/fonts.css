@@ -5,7 +5,7 @@
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;
-    src: url("~assets/fonts/Inter-Roman.var.woff2") format("woff2");
+    src: url("fonts/Inter-Roman.var.woff2") format("woff2");
   }
 
   @font-face {
@@ -13,7 +13,7 @@
     font-style: italic;
     font-weight: 100 900;
     font-display: swap;
-    src: url("~assets/fonts/Inter-Italic.var.woff2") format("woff2");
+    src: url("fonts/Inter-Italic.var.woff2") format("woff2");
   }
 }
 
@@ -25,8 +25,8 @@
     font-style: normal;
     font-weight: 400;
     src: local("Inter-Regular"), local("Inter Regular"),
-      url("~assets/fonts/Inter-Regular.woff2") format("woff2"),
-      url("~assets/fonts/Inter-Regular.woff") format("woff");
+      url("fonts/Inter-Regular.woff2") format("woff2"),
+      url("fonts/Inter-Regular.woff") format("woff");
   }
 
   @font-face {
@@ -35,8 +35,8 @@
     font-style: italic;
     font-weight: 100 900;
     src: local("Inter-Italic"), local("Inter Italic"),
-      url("~assets/fonts/Inter-Italic.woff2") format("woff2"),
-      url("~assets/fonts/Inter-Italic.woff") format("woff");
+      url("fonts/Inter-Italic.woff2") format("woff2"),
+      url("fonts/Inter-Italic.woff") format("woff");
   }
 
   @font-face {
@@ -45,8 +45,8 @@
     font-style: normal;
     font-weight: 600;
     src: local("Inter-SemiBold"), local("Inter SemiBold"),
-      url("~assets/fonts/Inter-SemiBold.woff2") format("woff2"),
-      url("~assets/fonts/Inter-SemiBold.woff") format("woff");
+      url("fonts/Inter-SemiBold.woff2") format("woff2"),
+      url("fonts/Inter-SemiBold.woff") format("woff");
   }
 
   @font-face {
@@ -55,8 +55,8 @@
     font-style: italic;
     font-weight: 600;
     src: local("Inter-SemiBoldItalic"), local("Inter SemiBoldItalic"),
-      url("~assets/fonts/Inter-SemiBoldItalic.woff2") format("woff2"),
-      url("~assets/fonts/Inter-SemiBoldItalic.woff") format("woff");
+      url("fonts/Inter-SemiBoldItalic.woff2") format("woff2"),
+      url("fonts/Inter-SemiBoldItalic.woff") format("woff");
   }
 
   @font-face {
@@ -65,8 +65,8 @@
     font-style: normal;
     font-weight: 700;
     src: local("Inter-Bold"), local("Inter Bold"),
-      url("~assets/fonts/Inter-Bold.woff2") format("woff2"),
-      url("~assets/fonts/Inter-Bold.woff") format("woff");
+      url("fonts/Inter-Bold.woff2") format("woff2"),
+      url("fonts/Inter-Bold.woff") format("woff");
   }
 
   @font-face {
@@ -75,8 +75,8 @@
     font-style: italic;
     font-weight: 700;
     src: local("Inter-BoldItalic"), local("Inter BoldItalic"),
-      url("~assets/fonts/Inter-BoldItalic.woff2") format("woff2"),
-      url("~assets/fonts/Inter-BoldItalic.woff") format("woff");
+      url("fonts/Inter-BoldItalic.woff2") format("woff2"),
+      url("fonts/Inter-BoldItalic.woff") format("woff");
   }
 }
 
@@ -86,9 +86,9 @@
   font-weight: 400;
   font-display: swap;
   src: local("JetBrainsMono-Regular"), local("JetBrains Mono Regular"),
-    url("~assets/fonts/JetBrainsMono-Regular.woff2") format("woff2"),
-    url("~assets/fonts/JetBrainsMono-Regular.woff") format("woff"),
-    url("~assets/fonts/JetBrainsMono-Regular.otf") format("opentype");
+    url("fonts/JetBrainsMono-Regular.woff2") format("woff2"),
+    url("fonts/JetBrainsMono-Regular.woff") format("woff"),
+    url("fonts/JetBrainsMono-Regular.otf") format("opentype");
 }
 @font-face {
   font-family: "JetBrains Mono";
@@ -96,7 +96,7 @@
   font-weight: 600;
   font-display: swap;
   src: local("JetBrainsMono-Bold"), local("JetBrains Mono Bold"),
-    url("~assets/fonts/JetBrainsMono-Bold.woff2") format("woff2"),
-    url("~assets/fonts/JetBrainsMono-Bold.woff") format("woff"),
-    url("~assets/fonts/JetBrainsMono-Bold.otf") format("opentype");
+    url("fonts/JetBrainsMono-Bold.woff2") format("woff2"),
+    url("fonts/JetBrainsMono-Bold.woff") format("woff"),
+    url("fonts/JetBrainsMono-Bold.otf") format("opentype");
 }

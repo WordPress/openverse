@@ -1,3 +1,5 @@
+import { isProd, useCookie, useI18n } from "#imports"
+
 import { defineStore } from "pinia"
 
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
@@ -5,10 +7,9 @@ import type { BannerId, TranslationBannerId } from "~/types/banners"
 
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
-import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
-import type { LocaleObject } from "@nuxtjs/i18n"
+import type { LocaleObject } from "vue-i18n-routing"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
@@ -99,8 +100,9 @@ export const useUiStore = defineStore("ui", {
     /**
      * The locale object of the current locale.
      */
-    currentLocale(): LocaleObject {
-      return this.$nuxt.i18n.localeProperties
+    currentLocale() {
+      const i18n = useI18n({ useScope: "global" })
+      return i18n.localeProperties.value
     },
     /**
      * The id used in the translation banner and the cookies for dismissed banners.
@@ -179,11 +181,17 @@ export const useUiStore = defineStore("ui", {
       this.writeToCookie()
     },
     /**
-     * Write the current state of the ui store to the cookie. These cookies
+     * Write the current state of the feature flags to the cookie. These cookies
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      this.$nuxt.$cookies.set("ui", this.cookieState, { ...cookieOptions })
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>("features", {
+        path: "/",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 60, // 60 days.
+        secure: isProd,
+      })
+      uiCookie.value = this.cookieState
     },
 
     /**

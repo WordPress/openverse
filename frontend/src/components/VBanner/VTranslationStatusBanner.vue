@@ -1,13 +1,12 @@
 <template>
   <VNotificationBanner
-    v-bind="$attrs"
     :id="bannerKey"
     nature="warning"
     data-testid="banner-translation"
     :close-button-label="$t('notification.translation.close')"
     @close="$emit('close')"
   >
-    <i18n path="notification.translation.text">
+    <i18n-t scope="global" keypath="notification.translation.text" tag="span">
       <template #link>
         <VLink :href="currentLocale.link" class="text-curr underline">{{
           $t("notification.translation.link")
@@ -16,16 +15,16 @@
       <template #locale>
         {{ currentLocale.name }}
       </template>
-    </i18n>
+    </i18n-t>
   </VNotificationBanner>
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { BannerId } from "~/types/banners"
-
-import { useUiStore } from "~/stores/ui"
 
 import { createTranslationLink } from "~/utils/translation-banner"
 
@@ -40,7 +39,6 @@ export default defineComponent({
     VLink,
     VNotificationBanner,
   },
-  inheritAttrs: false,
   props: {
     bannerKey: {
       type: String as PropType<BannerId>,
@@ -51,13 +49,12 @@ export default defineComponent({
     close: defineEvent(),
   },
   setup() {
-    const uiStore = useUiStore()
-
     /**
      * Returns the link to the GlotPress project for the current locale and the locale native name.
      */
     const currentLocale = computed(() => {
-      const localeObject = uiStore.currentLocale
+      const localeObject = useI18n({ useScope: "global" }).localeProperties
+        .value
 
       return {
         link: createTranslationLink(localeObject),

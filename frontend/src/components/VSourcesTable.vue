@@ -1,6 +1,6 @@
 <template>
   <table
-    :aria-label="$t('sources.aria.table').toString()"
+    :aria-label="$t('sources.aria.table')"
     role="region"
     class="not-prose table w-full table-fixed text-base"
   >

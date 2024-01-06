@@ -17,6 +17,8 @@
 </template>
 
 <script lang="ts">
+import { defineAsyncComponent } from "#imports"
+
 import { computed, defineComponent } from "vue"
 
 import { useUiStore } from "~/stores/ui"
@@ -27,9 +29,12 @@ import type { TranslationBannerId, BannerId } from "~/types/banners"
 export default defineComponent({
   name: "VBanners",
   components: {
-    VTranslationStatusBanner: () =>
-      import("~/components/VBanner/VTranslationStatusBanner.vue"),
-    VAnalyticsNotice: () => import("~/components/VBanner/VAnalyticsNotice.vue"),
+    VTranslationStatusBanner: defineAsyncComponent(
+      () => import("~/components/VBanner/VTranslationStatusBanner.vue")
+    ),
+    VAnalyticsNotice: defineAsyncComponent(
+      () => import("~/components/VBanner/VAnalyticsNotice.vue")
+    ),
   },
   setup() {
     const uiStore = useUiStore()
