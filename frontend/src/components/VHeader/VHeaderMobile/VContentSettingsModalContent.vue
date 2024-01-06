@@ -1,6 +1,6 @@
 <template>
   <VModalContent
-    :aria-label="$t('header.aria.menu').toString()"
+    :aria-label="$t('header.aria.menu')"
     :hide-on-click-outside="true"
     :hide="close"
     :visible="visible"
@@ -52,16 +52,16 @@
         />
       </VTabPanel>
       <!-- Horizontal padding removed to display divider. -->
-      <VTabPanel v-if="showFilters" id="filters" class="px-0">
+      <!--<VTabPanel v-if="showFilters" id="filters" class="px-0">
         <VSearchGridFilter
           class="px-6"
           :show-filter-header="false"
           :change-tab-order="false"
         />
         <VSafeBrowsing class="border-t border-dark-charcoal-20 px-6 pt-6" />
-      </VTabPanel>
+      </VTabPanel>-->
     </VTabs>
-    <footer
+    <!--<footer
       v-if="showFilters"
       class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 p-4"
     >
@@ -75,13 +75,13 @@
         >{{ $t("filterList.clear") }}
       </VButton>
       <VShowResultsButton :is-fetching="isFetching" @click="close" />
-    </footer>
+    </footer>-->
   </VModalContent>
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 
-import { useSearchStore } from "~/stores/search"
+// import { useSearchStore } from "~/stores/search"
 
 import useSearchType from "~/composables/use-search-type"
 
@@ -89,17 +89,17 @@ import { defineEvent } from "~/types/emits"
 
 import { SearchType } from "~/constants/media"
 
-import VButton from "~/components/VButton.vue"
+// import VButton from "~/components/VButton.vue"
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
-import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
+// import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
-import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
+// import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
 import VTab from "~/components/VTabs/VTab.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
-import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
+// import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 type ContentSettingsTab = "content-settings" | "filters"
@@ -108,14 +108,14 @@ export default defineComponent({
   name: "VContentSettingsModalContent",
   components: {
     VIconButton,
-    VSafeBrowsing,
+    // VSafeBrowsing,
     VIcon,
     VModalContent,
-    VButton,
+    // VButton,
     VFilterTab,
-    VSearchGridFilter,
+    // VSearchGridFilter,
     VSearchTypes,
-    VShowResultsButton,
+    // VShowResultsButton,
     VTab,
     VTabPanel,
     VTabs,
@@ -150,29 +150,34 @@ export default defineComponent({
     select: defineEvent<[SearchType]>(),
   },
   setup(props) {
-    const searchStore = useSearchStore()
+    // const searchStore = useSearchStore()
     const content = useSearchType()
     const selectedTab = ref<ContentSettingsTab>("content-settings")
     const changeSelectedTab = (tab: string) => {
       selectedTab.value = tab as ContentSettingsTab
     }
 
-    const areFiltersSelected = computed(() => searchStore.isAnyFilterApplied)
+    const areFiltersSelected = computed(() => {
+      return false
+      // return searchStore.isAnyFilterApplied
+    })
 
     const showClearFiltersButton = computed(
       () => props.showFilters && selectedTab.value === "filters"
     )
-    const isClearButtonDisabled = computed(
-      () => !searchStore.isAnyFilterApplied
-    )
-    const appliedFilterCount = computed<number>(
-      () => searchStore.appliedFilterCount
-    )
+    const isClearButtonDisabled = computed(() => {
+      return false
+      // return !searchStore.isAnyFilterApplied
+    })
+    const appliedFilterCount = computed<number>(() => {
+      return 0
+      // return searchStore.appliedFilterCount
+    })
 
     const searchType = computed(() => content.getSearchTypeProps())
 
     const clearFilters = () => {
-      searchStore.clearFilters()
+      // searchStore.clearFilters()
     }
 
     return {

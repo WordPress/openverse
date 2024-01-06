@@ -254,7 +254,7 @@ export type Events = {
     /** The unique ID of the media */
     id: string
     /** If the result is a related result, provide the ID of the 'original' result */
-    relatedTo: string | null
+    relatedTo: string | "null"
     /** Kind of the result selected: search/related/collection */
     kind: ResultKind
     /** The media type being searched */
@@ -266,7 +266,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
     /** whether the result was blurred or visible when selected by the user */
-    isBlurred: boolean | null
+    isBlurred: boolean | "null"
   }
   /**
    * Description: When a user opens the external sources popover.
@@ -283,7 +283,7 @@ export type Events = {
     /** Pagination depth */
     resultPage: number
   }
-  /*
+  /**
    * Description: Whenever the user clicks the load more button
    * Questions:
    *   - On what page do users typically find a result?
@@ -301,7 +301,7 @@ export type Events = {
      * *before* loading more results.. */
     resultPage: number
   }
-  /*
+  /**
    * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
    * Questions:
    *  - Do most users filter their searches?

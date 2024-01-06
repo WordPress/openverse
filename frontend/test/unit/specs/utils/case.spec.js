@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest"
+
 import { camelCase, capitalCase } from "~/utils/case"
 
 describe("camelCase", () => {

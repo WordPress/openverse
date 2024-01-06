@@ -1,3 +1,5 @@
+import { nextTick } from "vue"
+
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { useUiStore } from "~/stores/ui"
@@ -25,13 +27,6 @@ const VISIBLE_AND_NOT_DISMISSED = {
 const NOT_VISIBLE_AND_NOT_DISMISSED = {
   innerFilterVisible: false,
   isFilterDismissed: false,
-}
-
-const cookieOptions = {
-  maxAge: 5184000,
-  path: "/",
-  sameSite: "strict",
-  secure: false,
 }
 
 describe("Ui Store", () => {
@@ -109,11 +104,11 @@ describe("Ui Store", () => {
         isFilterDismissed: true,
       })
 
-      expect(uiStore.instructionsSnackbarState).toEqual("not_shown")
-      expect(uiStore.breakpoint).toEqual("lg")
-      expect(uiStore.isDesktopLayout).toEqual(true)
-      expect(uiStore.isFilterVisible).toEqual(false)
-      expect(uiStore.isFilterDismissed).toEqual(true)
+      expect(uiStore.instructionsSnackbarState).toBe("not_shown")
+      expect(uiStore.breakpoint).toBe("lg")
+      expect(uiStore.isDesktopLayout).toBe(true)
+      expect(uiStore.isFilterVisible).toBe(false)
+      expect(uiStore.isFilterDismissed).toBe(true)
     })
 
     it("initFromCookies sets initial state with a dismissed banner", () => {
@@ -160,14 +155,16 @@ describe("Ui Store", () => {
   )
 
   test.each`
-    isDesktopLayout | breakpoint | expected
-    ${true}         | ${"xm"}    | ${{ isDesktopLayout: false }}
-    ${false}        | ${"lg"}    | ${{ isDesktopLayout: true }}
+    initialState | breakpoint | expected
+    ${true}      | ${"xs"}    | ${{ isDesktopLayout: false }}
+    ${false}     | ${"lg"}    | ${{ isDesktopLayout: true }}
   `(
     "updateBreakpoint gets breakpoint $breakpoint and returns $expected",
-    ({ isDesktopLayout, breakpoint, expected }) => {
+    ({ initialState, breakpoint, expected }) => {
       const uiStore = useUiStore()
-      uiStore.$patch({ isDesktopLayout })
+      uiStore.$patch({
+        isDesktopLayout: initialState,
+      })
       uiStore.updateBreakpoint(breakpoint)
       const actualOutput = {
         isDesktopLayout: uiStore.isDesktopLayout,
@@ -189,7 +186,7 @@ describe("Ui Store", () => {
     ${false}        | ${NOT_VISIBLE_AND_DISMISSED}     | ${true}  | ${VISIBLE_AND_DISMISSED}
     ${false}        | ${NOT_VISIBLE_AND_DISMISSED}     | ${false} | ${NOT_VISIBLE_AND_DISMISSED}
   `(
-    "setFiltersState sets state to $expectedState when visible is $visible and isDesktopLayout is $isDesktopLayout",
+    "setFiltersState updates state %o",
     ({ isDesktopLayout, currentState, visible, expectedState }) => {
       const uiStore = useUiStore()
       uiStore.$patch({
@@ -216,7 +213,7 @@ describe("Ui Store", () => {
     ${false}        | ${VISIBLE_AND_NOT_DISMISSED}     | ${NOT_VISIBLE_AND_NOT_DISMISSED}
     ${false}        | ${NOT_VISIBLE_AND_DISMISSED}     | ${VISIBLE_AND_DISMISSED}
   `(
-    "toggleFilters sets state to $expectedState when isDesktopLayout is $isDesktopLayout",
+    "toggleFilters updates state %o",
     ({ isDesktopLayout, currentState, expectedState }) => {
       const uiStore = useUiStore()
       uiStore.$patch({
@@ -237,25 +234,24 @@ describe("Ui Store", () => {
     ${["es"]}     | ${"de"}  | ${["es", "de"]} | ${true}
   `(
     "dismissBanner($bannerId): $originalState -> $expectedState",
-    ({ originalState, bannerId, expectedState, areCookiesSet }) => {
+    async ({ originalState, bannerId, expectedState, areCookiesSet }) => {
       const uiStore = useUiStore()
+      uiStore.initFromCookies({})
       uiStore.$patch({ dismissedBanners: originalState })
       uiStore.dismissBanner(bannerId)
 
+      await nextTick()
+
+      const dismissedBannersCookie = document.cookie
+        ? JSON.parse(decodeURIComponent(document.cookie.split("=")[1]))[
+            "dismissedBanners"
+          ]
+        : []
+
       expect(uiStore.dismissedBanners).toEqual(expectedState)
-      const expectedCookie = {
-        breakpoint: "sm",
-        dismissedBanners: expectedState,
-        instructionsSnackbarState: "not_shown",
-        isFilterDismissed: false,
-      }
       if (areCookiesSet) {
         // eslint-disable-next-line jest/no-conditional-expect
-        expect(uiStore.$nuxt.$cookies.set).toHaveBeenCalledWith(
-          "ui",
-          expectedCookie,
-          cookieOptions
-        )
+        expect(dismissedBannersCookie).toEqual(expectedState)
       }
     }
   )

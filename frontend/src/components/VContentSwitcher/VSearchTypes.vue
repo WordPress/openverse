@@ -27,7 +27,6 @@
         :key="item"
         :item="item"
         :is-first="index === 0 && idx === 0"
-        :size="size"
         :icon="content.icons[item]"
         :use-links="useLinks"
         :selected="isActive(item)"

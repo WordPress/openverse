@@ -1,11 +1,15 @@
+// @vitest-environment node
+// Disable nuxt environment to enable mocking the json file
+import { beforeEach, describe, expect, vi } from "vitest"
+
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { useFeatureFlagStore, getFlagStatus } from "~/stores/feature-flag"
 import { OFF, COOKIE, SESSION } from "~/constants/feature-flag"
 
-jest.mock(
-  "~~/feat/feature-flags.json",
-  () => ({
+vi.resetModules()
+vi.mock("~~/feat/feature-flags.json", () => ({
+  default: {
     features: {
       feat_enabled: {
         status: "enabled",
@@ -46,9 +50,8 @@ jest.mock(
         storage: "cookie",
       },
     },
-  }),
-  { virtual: true }
-)
+  },
+}))
 
 describe("Feature flag store", () => {
   beforeEach(() => {
@@ -143,7 +146,7 @@ describe("Feature flag store", () => {
     ${"staging"}    | ${"off"}
     ${"production"} | ${"off"}
   `(
-    "returns $expectedState for $environment",
+    "returns $featureState for $environment",
     ({ environment, featureState }) => {
       // Back up value of `DEPLOYMENT_ENV` and replace it
       const old_env = process.env.DEPLOYMENT_ENV

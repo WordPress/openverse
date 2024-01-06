@@ -3,6 +3,7 @@
     class="flex"
     :class="[
       contextProps.direction,
+      splitAttrs.class,
       {
         [`${contextProps.direction}-bordered`]: contextProps.bordered,
         [`${contextProps.direction}-popover-item`]: isInPopover,
@@ -18,15 +19,15 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus:z-10"
+      class="relative min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
-        'p-3': contextProps.size === 'small',
-        'p-5 ps-6': contextProps.size === 'medium',
+        '!p-3': contextProps.size === 'small',
+        '!p-5 !ps-6': contextProps.size === 'medium',
         'bg-dark-charcoal-10 ring-offset-dark-charcoal-10':
           selected && contextProps.showCheck,
         'text-dark-charcoal': as === 'VLink',
-        'px-2': !contextProps.showCheck,
+        '!px-2': !contextProps.showCheck,
       }"
       variant="transparent-tx"
       size="disabled"
@@ -34,13 +35,11 @@
       :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
       :aria-checked="selected"
       :tabindex="tabIndex"
-      v-bind="$attrs"
-      v-on="$listeners"
+      v-bind="splitAttrs.nonClass"
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keydown="focusContext.onItemKeyPress"
-      @keydown.native="focusContext.onItemKeyPress"
-      @click.native="$emit('click')"
+      @click="$emit('click')"
     >
       <div
         class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
@@ -106,16 +105,8 @@ export default defineComponent({
       validator: (val: string) => ["button", "VLink"].includes(val),
     },
   },
-  /**
-   * Setting `inheritAttrs` to false ensures that the $attrs are only passed to VButton component,
-   * and not the outer div. In Vue 3 this will also stops native events such as `click` from
-   * going up the tree. Adding `emits` should fix this:
-   * https://v3.vuejs.org/guide/migration/v-on-native-modifier-removed.html#_3-x-syntax
-   * However, with current Vue 2 setup, if VItem is a link (a or NuxtLink), it is
-   * necessary to add native modifier to handle click event: `@click.native='handler'`.
-   */
   emits: ["click"],
-  setup(props) {
+  setup(props, { attrs }) {
     const focusContext = inject(VItemGroupFocusContextKey)
     const isFocused = ref(false)
     const isInPopover = inject(VPopoverContentContextKey, false)
@@ -163,12 +154,18 @@ export default defineComponent({
       return -1
     })
 
+    const splitAttrs = computed(() => {
+      const { class: classAttrs, ...rest } = attrs
+      return { class: classAttrs, nonClass: rest }
+    })
+
     return {
       contextProps,
       isInPopover,
       isFocused,
       tabIndex,
       focusContext,
+      splitAttrs,
     }
   },
 })

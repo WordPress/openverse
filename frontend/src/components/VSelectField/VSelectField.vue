@@ -1,6 +1,7 @@
 <template>
   <div
     class="relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border border-dark-charcoal border-opacity-20 text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-pink hover:border-dark-charcoal focus-within:hover:border-pink"
+    :class="splitAttrs.classAttrs"
   >
     <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
       <slot name="start" />
@@ -14,9 +15,8 @@
       class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] w-full appearance-none truncate bg-tx pe-10"
       :class="hasStartContent ? 'ps-10' : 'ps-2'"
       :name="fieldName"
-      v-bind="$attrs"
+      v-bind="splitAttrs.nonClassAttrs"
       :aria-label="labelText"
-      v-on="$listeners"
     >
       <option v-if="blankText" disabled value="">{{ blankText }}</option>
       <option v-for="choice in choices" :key="choice.key" :value="choice.key">
@@ -103,7 +103,7 @@ const VSelectField = defineComponent({
   setup(props, { emit, attrs, slots }) {
     const fieldName = computed(() => (attrs["name"] as string) ?? props.fieldId)
     const modelMedium = computed<string>({
-      get: () => props.modelValue ?? "",
+      get: () => props.modelValue,
       set: (value: string) => {
         emit("update:modelValue", value)
       },
@@ -113,10 +113,19 @@ const VSelectField = defineComponent({
       return slots && slots.start && slots.start().length !== 0
     })
 
+    const splitAttrs = computed(() => {
+      const { class: classAttrs, ...rest } = attrs
+      return {
+        classAttrs,
+        nonClassAttrs: rest,
+      }
+    })
+
     return {
       fieldName,
       modelMedium,
       hasStartContent,
+      splitAttrs,
     }
   },
 })
