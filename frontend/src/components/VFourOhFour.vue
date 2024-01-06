@@ -19,7 +19,7 @@
           {{ $t("404.title") }}
         </h1>
         <p class="label-bold lg:heading-6">
-          <i18n path="404.main">
+          <i18n-t scope="global" keypath="404.main" tag="span">
             <template #link>
               <VLink
                 class="text-current underline hover:text-current active:text-current"
@@ -27,7 +27,7 @@
                 >Openverse</VLink
               >
             </template>
-          </i18n>
+          </i18n-t>
         </p>
         <VStandaloneSearchBar route="404" @submit="handleSearch" />
       </main>
@@ -36,10 +36,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
-import { useMeta, useRouter } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, useHead } from "#imports"
 
-import { useSearchStore } from "~/stores/search"
+// import { useSearchStore } from "~/stores/search"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
@@ -49,7 +48,7 @@ import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "VFourOhFour",
   components: {
     VLink,
@@ -58,22 +57,23 @@ export default defineComponent({
   },
   props: ["error"],
   setup() {
-    const searchStore = useSearchStore()
-    const router = useRouter()
+    // const searchStore = useSearchStore()
 
     const { sendCustomEvent } = useAnalytics()
 
-    const handleSearch = (searchTerm: string) => {
+    const handleSearch = async (searchTerm: string) => {
       sendCustomEvent("SUBMIT_SEARCH", {
         searchType: ALL_MEDIA,
         query: searchTerm,
       })
 
-      router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
+      // return navigateTo(
+      //   searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+      // )
     }
 
-    useMeta({
-      meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
+    useHead({
+      meta: [{ name: "theme-color", content: "#ffe033" }],
     })
 
     return {
@@ -82,6 +82,5 @@ export default defineComponent({
       skipToContentTargetId,
     }
   },
-  head: {},
 })
 </script>

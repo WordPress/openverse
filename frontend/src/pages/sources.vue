@@ -10,7 +10,7 @@
     <p>
       {{ $t("sources.ccContent.content", { openverse: "Openverse" }) }}
     </p>
-    <i18n path="sources.ccContent.provider" tag="p">
+    <i18n-t scope="global" keypath="sources.ccContent.provider" tag="p">
       <template #flickr>
         <VLink href="https://www.flickr.com/">Flickr</VLink>
       </template>
@@ -19,8 +19,8 @@
           $t("sources.ccContent.smithsonian")
         }}</VLink>
       </template>
-    </i18n>
-    <i18n path="sources.ccContent.europeana" tag="p">
+    </i18n-t>
+    <i18n-t scope="global" keypath="sources.ccContent.europeana" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
@@ -30,7 +30,7 @@
           $t("sources.ccContent.europeanaApi")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
 
     <h2>
       {{ $t("sources.newContent.next") }}
@@ -69,17 +69,16 @@
       </VButton>
     </p>
 
-    <i18n path="sources.detail" tag="p">
+    <i18n-t scope="global" keypath="sources.detail" tag="p">
       <template #singleName>
         <strong>
           {{ $t("sources.singleName") }}
         </strong>
       </template>
-    </i18n>
-    <template v-for="(mediaType, i) in supportedMediaTypes">
-      <h3 :key="`h3-${mediaType}`">{{ $t(`sources.heading.${mediaType}`) }}</h3>
+    </i18n-t>
+    <template v-for="(mediaType, i) in supportedMediaTypes" :key="mediaType">
+      <h3>{{ $t(`sources.heading.${mediaType}`) }}</h3>
       <VSourcesTable
-        :key="`table-${mediaType}`"
         :media="mediaType"
         class="mt-4"
         :class="i < supportedMediaTypes.length - 1 ? 'mb-10' : ''"
@@ -89,30 +88,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
 
 import { supportedMediaTypes } from "~/constants/media"
-import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 import VSourcesTable from "~/components/VSourcesTable.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "SourcePage",
   components: { VButton, VContentPage, VLink, VSourcesTable },
-  layout: "content-layout",
   setup() {
-    const i18n = useI18n()
+    definePageMeta({
+      layout: "content-layout",
+    })
+    const i18n = useI18n({ useScope: "global" })
 
-    useMeta({
+    useHead({
       title: `${i18n.t("sources.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [{ key: "robots", name: "robots", content: "all" }],
     })
 
     return { supportedMediaTypes }
   },
-  head: {},
 })
 </script>

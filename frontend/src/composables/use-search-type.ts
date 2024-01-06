@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { computed, ref } from "vue"
 
 import {
@@ -9,13 +11,12 @@ import {
   additionalSearchTypes,
   supportedSearchTypes,
   SearchType,
+  // SupportedSearchType,
 } from "~/constants/media"
 
-import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
+// import { useMediaStore } from "~/stores/media"
+// import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -38,11 +39,15 @@ const labels = {
 } as const
 
 export default function useSearchType() {
-  const i18n = useI18n()
+  const i18n = useNuxtApp().$i18n
   const componentName = useComponentName()
   const analytics = useAnalytics()
 
-  const activeType = computed(() => useSearchStore().searchType)
+  // TODO: use search store
+  const activeType = computed<SearchType>(() => {
+    // return useSearchStore().searchType
+    return ALL_MEDIA
+  })
 
   const previousSearchType = ref(activeType.value)
 
@@ -65,15 +70,15 @@ export default function useSearchType() {
       next: searchType,
       component: componentName,
     })
-    useSearchStore().setSearchType(searchType)
-    useMediaStore().clearMedia()
+    // useSearchStore().setSearchType(searchType)
+    // useMediaStore().clearMedia()
     previousSearchType.value = searchType
   }
 
   const getSearchTypeProps = (searchType?: SearchType) => {
     const type = searchType ?? activeType.value
     return {
-      label: i18n.t(labels[type]).toString(),
+      label: i18n.t(labels[type]),
       icon: icons[type],
       searchType: type,
     }

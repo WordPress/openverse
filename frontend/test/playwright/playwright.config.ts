@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = {
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
-      API_URL: "http://localhost:49153/",
+      NUXT_PUBLIC_API_URL: "http://localhost:49153/",
       UPDATE_TAPES: UPDATE_TAPES,
       PW: "true",
     },

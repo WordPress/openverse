@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from "vitest"
+
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
 import { parseCollectionPath } from "~/utils/parse-collection-path"
@@ -11,23 +13,23 @@ describe("validateCollectionParams", () => {
   beforeEach(() => {
     pinia = createPinia()
     setActivePinia(pinia)
-    useProviderStore().isSourceNameValid = jest.fn(() => true)
+    useProviderStore().isSourceNameValid = vi.fn(() => true)
     useFeatureFlagStore().toggleFeature("additional_search_views", "on")
   })
 
   it("returns source collection", () => {
-    const collection = parseCollectionPath("/flickr")
+    const collection = parseCollectionPath(["flickr"])
 
     expect(collection).toEqual({ source: "flickr", collection: "source" })
   })
 
   it("returns null if `creator` parameter is blank", () => {
-    const collection = parseCollectionPath("/flickr/creator/")
+    const collection = parseCollectionPath(["flickr", "creator"])
 
     expect(collection).toBeNull()
   })
   it("returns creator collection without trailing slash", () => {
-    const collection = parseCollectionPath("/flickr/creator/me")
+    const collection = parseCollectionPath(["flickr", "creator", "me"])
 
     expect(collection).toEqual({
       source: "flickr",
@@ -37,7 +39,7 @@ describe("validateCollectionParams", () => {
   })
 
   it("returns creator collection with trailing slash", () => {
-    const collection = parseCollectionPath("/flickr/creator/me/")
+    const collection = parseCollectionPath(["flickr", "creator", "me"])
 
     expect(collection).toEqual({
       source: "flickr",
