@@ -1,11 +1,20 @@
 import { expect, test } from "@playwright/test"
 
-import { sleep, t } from "~~/test/playwright/utils/navigation"
+import {
+  preparePageForTests,
+  sleep,
+  t,
+} from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
 
-test.describe("Global Audio", () => {
+test.describe.configure({ mode: "parallel" })
+
+test.describe("global audio", () => {
   breakpoints.describeXs(() => {
+    test.beforeEach(async ({ page }) => {
+      await preparePageForTests(page, "xs")
+    })
     test("track continues playing when navigating from search to details page", async ({
       page,
     }) => {

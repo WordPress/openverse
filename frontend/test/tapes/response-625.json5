@@ -1,14 +1,15 @@
 {
     meta: {
-        createdAt: '2023-07-17T15:35:18.919Z',
+        createdAt: '2024-01-01T05:50:38.092Z',
         host: 'https://api.openverse.engineering',
         resHumanReadable: true,
+        resUncompressed: true,
     },
     req: {
         headers: {
-            connection: 'close',
+            connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=querywithnoresults&peaks=true',
+        url: '/v1/audio/stats/',
         method: 'GET',
         body: '',
     },
@@ -16,40 +17,34 @@
         status: 200,
         headers: {
             date: [
-                'Mon, 17 Jul 2023 15:35:19 GMT',
+                'Mon, 01 Jan 2024 05:50:38 GMT',
             ],
             'content-type': [
                 'application/json',
             ],
-            'content-length': [
-                '70',
+            'transfer-encoding': [
+                'chunked',
             ],
             connection: [
-                'close',
+                'keep-alive',
             ],
             vary: [
-                'Accept, Authorization, origin',
+                'Accept, Authorization, origin, Accept-Encoding',
             ],
             allow: [
                 'GET, HEAD, OPTIONS',
             ],
             'x-ratelimit-limit-anon_burst': [
-                '5/hour',
+                '20/min',
             ],
             'x-ratelimit-available-anon_burst': [
-                '4',
+                '19',
             ],
             'x-ratelimit-limit-anon_sustained': [
-                '100/day',
+                '200/day',
             ],
             'x-ratelimit-available-anon_sustained': [
-                '98',
-            ],
-            'x-ratelimit-limit-anon_thumbnail': [
-                '150/minute',
-            ],
-            'x-ratelimit-available-anon_thumbnail': [
-                '149',
+                '199',
             ],
             'x-frame-options': [
                 'DENY',
@@ -63,17 +58,20 @@
             'cross-origin-opener-policy': [
                 'same-origin',
             ],
+            'x-request-id': [
+                'b3530e11f84b4cee8b9a6a31091c9369',
+            ],
             'cache-control': [
-                'max-age=14400',
+                'max-age=259200',
             ],
             'cf-cache-status': [
-                'MISS',
+                'HIT',
+            ],
+            age: [
+                '1885',
             ],
             'last-modified': [
-                'Mon, 17 Jul 2023 15:35:19 GMT',
-            ],
-            'accept-ranges': [
-                'bytes',
+                'Mon, 01 Jan 2024 05:19:13 GMT',
             ],
             'strict-transport-security': [
                 'max-age=15552000; includeSubDomains; preload',
@@ -82,18 +80,37 @@
                 'cloudflare',
             ],
             'cf-ray': [
-                '7e838dd8ff6626e0-OTP',
+                '83e87c61390f68b5-BUD',
+            ],
+            'content-encoding': [
+                'br',
             ],
             'alt-svc': [
                 'h3=":443"; ma=86400',
             ],
         },
-        body: {
-            result_count: 0,
-            page_count: 0,
-            page_size: 20,
-            page: 1,
-            results: [],
+      body: [
+        {
+          source_name: 'jamendo',
+          display_name: 'Jamendo',
+          source_url: 'https://www.jamendo.com/start',
+          logo_url: null,
+          media_count: 47262,
         },
-    },
+        {
+          source_name: 'wikimedia_audio',
+          display_name: 'Wikimedia Commons',
+          source_url: 'https://commons.wikimedia.org/wiki/Main_Page',
+          logo_url: null,
+          media_count: 1238,
+        },
+        {
+          source_name: 'freesound',
+          display_name: 'Freesound',
+          source_url: 'https://freesound.org/',
+          logo_url: null,
+          media_count: 47458,
+        },
+      ],
+    }
 }
