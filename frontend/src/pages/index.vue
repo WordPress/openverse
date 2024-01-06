@@ -15,9 +15,14 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, ref } from "vue"
+import {
+  defineNuxtComponent,
+  definePageMeta,
+  // navigateTo,
+  useHead,
+} from "#imports"
 
-import { defineComponent, useMeta, useRouter } from "@nuxtjs/composition-api"
+import { computed, onMounted, ref } from "vue"
 
 import {
   ALL_MEDIA,
@@ -27,50 +32,45 @@ import {
   supportedSearchTypes,
 } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
-import { useLayout } from "~/composables/use-layout"
 
-import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
+// import { useMediaStore } from "~/stores/media"
+// import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
-
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 import VHomepageContent from "~/components/VHomepageContent.vue"
 
-export default defineComponent({
+export default defineNuxtComponent({
   name: "HomePage",
   components: {
     VHomeGallery,
     VHomepageContent,
   },
   setup() {
-    const router = useRouter()
-
+    definePageMeta({
+      layout: "default",
+    })
     const featureFlagStore = useFeatureFlagStore()
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
+    // const mediaStore = useMediaStore()
+    // const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
     const { sendCustomEvent } = useAnalytics()
 
-    useMeta({
+    useHead({
       meta: [
-        { hid: "theme-color", name: "theme-color", content: "#ffe033" },
-        { hid: "robots", name: "robots", content: "all" },
+        { key: "theme-color", name: "theme-color", content: "#ffe033" },
+        { key: "robots", name: "robots", content: "all" },
       ],
     })
-
-    const { updateBreakpoint } = useLayout()
 
     /**
      * Reset the search type, search term and filters when the user navigates [back] to the homepage.
      */
     onMounted(() => {
-      searchStore.$reset()
-      mediaStore.$reset()
-
-      updateBreakpoint()
+      // searchStore.$reset()
+      // mediaStore.$reset()
     })
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
@@ -94,12 +94,12 @@ export default defineComponent({
         query: searchTerm,
       })
 
-      router.push(
-        searchStore.updateSearchPath({
-          type: searchType.value,
-          searchTerm,
-        })
-      )
+      // return navigateTo(
+      //   searchStore.updateSearchPath({
+      //     type: searchType.value,
+      //     searchTerm,
+      //   })
+      // )
     }
 
     return {
@@ -112,7 +112,6 @@ export default defineComponent({
       handleSearch,
     }
   },
-  head: {},
 })
 </script>
 

@@ -1,8 +1,8 @@
+import { useNuxtApp, useRuntimeConfig } from "#imports"
+
 import { defineStore } from "pinia"
-import { ssrRef } from "@nuxtjs/composition-api"
 
 import { capitalCase } from "~/utils/case"
-import { env } from "~/utils/env"
 import { parseFetchingError } from "~/utils/errors"
 import {
   AUDIO,
@@ -15,9 +15,11 @@ import { initProviderServices } from "~/data/media-provider-service"
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
-import type { Ref } from "vue"
-
 export interface ProviderState {
+  /**
+   * Timestamp is used to limit the update frequency to one every 60 minutes per request.
+   */
+  lastUpdated: null | Date
   providers: {
     audio: MediaProvider[]
     image: MediaProvider[]
@@ -43,15 +45,10 @@ const sortProviders = (data: MediaProvider[]): MediaProvider[] => {
     return nameA.localeCompare(nameB)
   })
 }
-/**
- * Timestamp is used to limit the update frequency to one every 60 minutes per request.
- */
-const lastUpdated: Ref<Date | null> = ssrRef(null)
-
-const updateFrequency = parseInt(env.providerUpdateFrequency, 10)
 
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
+    lastUpdated: null,
     providers: {
       [AUDIO]: [],
       [IMAGE]: [],
@@ -132,7 +129,7 @@ export const useProviderStore = defineStore("provider", {
             this.fetchMediaTypeProviders(mediaType)
           )
         )
-        lastUpdated.value = new Date()
+        this.lastUpdated = new Date()
       }
     },
 
@@ -146,9 +143,10 @@ export const useProviderStore = defineStore("provider", {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
       try {
-        const service = initProviderServices[mediaType](
-          this.$nuxt?.$config?.apiAccessToken
-        )
+        const { $openverseApiToken } = useNuxtApp()
+        const accessToken =
+          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
+        const service = initProviderServices[mediaType](accessToken)
         const res = await service.getProviderStats()
         sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
@@ -158,7 +156,12 @@ export const useProviderStore = defineStore("provider", {
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, "end", errorData)
-        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
+        const { $sentry } = useNuxtApp()
+        if ($sentry) {
+          $sentry.captureException(error, { extra: { errorData } })
+        } else {
+          console.log("Sentry not available to capture exception", errorData)
+        }
       } finally {
         this.providers[mediaType] = sortedProviders
         this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)
@@ -185,13 +188,16 @@ export const useProviderStore = defineStore("provider", {
       const noData = supportedMediaTypes.some(
         (mediaType) => !state.providers[mediaType].length
       )
-      if (noData || !lastUpdated.value) {
+      if (noData || !state.lastUpdated) {
         return true
       }
+      const {
+        public: { providerUpdateFrequency },
+      } = useRuntimeConfig()
 
       const timeSinceLastUpdate =
-        new Date().getTime() - new Date(lastUpdated.value).getTime()
-      return timeSinceLastUpdate > updateFrequency
+        new Date().getTime() - new Date(state.lastUpdated).getTime()
+      return timeSinceLastUpdate > providerUpdateFrequency
     },
   },
 })

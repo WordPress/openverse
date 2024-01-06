@@ -23,6 +23,7 @@
     "eslint-plugin-playwright": "^0.21.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "eslint-plugin-unicorn": "^48.0.1",
+    "eslint-plugin-vitest": "^0.3.18",
     "eslint-plugin-vue": "^9.17.0",
     "eslint-plugin-vuejs-accessibility": "^2.2.0",
     "typescript": "^5.2.2",

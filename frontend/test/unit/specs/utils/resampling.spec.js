@@ -9,14 +9,14 @@ describe("upsampleArray", () => {
 
   it("should scale up array even when not exactly divisible", () => {
     const upsampledArray = upsampleArray(baseArray, 8)
-    expect(upsampledArray[0]).toEqual(0)
+    expect(upsampledArray[0]).toBe(0)
     expect(upsampledArray[1]).toBeCloseTo(4.285, 2)
     expect(upsampledArray[2]).toBeCloseTo(8.571, 2)
     expect(upsampledArray[3]).toBeCloseTo(15.714, 2)
     expect(upsampledArray[4]).toBeCloseTo(24.285, 2)
     expect(upsampledArray[5]).toBeCloseTo(28.571, 2)
     expect(upsampledArray[6]).toBeCloseTo(24.285, 2)
-    expect(upsampledArray[7]).toEqual(20)
+    expect(upsampledArray[7]).toBe(20)
   })
 })
 

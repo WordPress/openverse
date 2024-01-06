@@ -1,26 +1,24 @@
 import type { TSESLint } from "@typescript-eslint/utils"
 
-const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(
-  (methodName) => ({
-    selector: `VariableDeclarator[id.type="ObjectPattern"]:has(Property[key.name="${methodName}"])[init.callee.name="useI18n"]`,
-    message: `Do not destructure ${methodName} from the i18n object as its methods internally depend on "this". Instead, use it directly (e.g., "i18n.${methodName}"). If you need an independent reference to the function then bind it or wrap it in a closure.`,
-  })
-)
-
 export = {
   extends: [
-    "plugin:vue/recommended",
     "plugin:vue/vue3-recommended",
     "plugin:vuejs-accessibility/recommended",
     "plugin:@intlify/vue-i18n/recommended",
   ],
   plugins: ["vue", "vuejs-accessibility", "@intlify/vue-i18n"],
   rules: {
-    // Enable these rules after the Nuxt 3 migration
-    "vue/no-deprecated-dollar-listeners-api": "off",
-    "vue/no-v-for-template-key-on-child": "off",
-    "vue/no-deprecated-v-on-native-modifier": "off",
-
+    // Vue i18n rules
+    "@intlify/vue-i18n/no-deprecated-i18n-component": "error",
+    "@intlify/vue-i18n/no-i18n-t-path-prop": "error",
+    "@intlify/vue-i18n/key-format-style": [
+      "error",
+      "camelCase",
+      {
+        allowArray: false,
+        splitByDots: false,
+      },
+    ],
     "vue/max-attributes-per-line": "off",
     "vue/require-prop-types": "off",
     "vue/require-default-prop": "off",
@@ -38,7 +36,7 @@ export = {
     "vue/component-name-in-template-casing": [
       "error",
       "PascalCase",
-      { registeredComponentsOnly: false, ignores: ["i18n"] },
+      { registeredComponentsOnly: false, ignores: ["i18n", "i18n-t"] },
     ],
     "vue/html-self-closing": [
       "error",
@@ -77,7 +75,6 @@ export = {
         message: "Use the <VLink> component instead of <RouterLink>.",
       },
     ],
-    "no-restricted-syntax": ["error", ...i18nDestructureRules],
 
     "@intlify/vue-i18n/no-raw-text": [
       "error",

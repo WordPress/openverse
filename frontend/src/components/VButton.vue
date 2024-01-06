@@ -20,7 +20,6 @@
     :aria-disabled="ariaDisabled"
     :disabled="disabledAttribute"
     v-bind="$attrs"
-    v-on="$listeners"
   >
     <!--
       @slot The content of the button
@@ -43,6 +42,8 @@ import {
   ButtonVariant,
 } from "~/types/button"
 import type { ButtonForm } from "~/types/button"
+
+import { skipToContentTargetId } from "~/constants/window"
 
 import VLink from "~/components/VLink.vue"
 
@@ -240,7 +241,10 @@ const VButton = defineComponent({
     watch(
       () => props.as,
       (as) => {
-        if (["a", "NuxtLink"].includes(as)) {
+        if (
+          ["a", "NuxtLink"].includes(as) &&
+          attrs.href !== `#${skipToContentTargetId}`
+        ) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
           )
@@ -309,7 +313,7 @@ a.button {
   @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90 hover:focus-visible:border-tx;
 }
 .bordered-gray {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal hover:focus-visible:border-tx;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .transparent-tx {
   @apply border-tx;

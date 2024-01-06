@@ -1,4 +1,4 @@
-import type { LocaleObject } from "@nuxtjs/i18n"
+import type { LocaleObject } from "vue-i18n-routing"
 
 const BASE_URL = "https://translate.wordpress.org/projects/meta/openverse/"
 // We show the banner if the translation is less than this percentage

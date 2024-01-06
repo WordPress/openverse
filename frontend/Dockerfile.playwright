@@ -6,7 +6,14 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
 ARG PACKAGE_MANAGER
 
+WORKDIR /frontend
+
 COPY package.json .
 
 # Requires `packageManager` field to be present in `frontend/package.json`.
 RUN npm install -g $PACKAGE_MANAGER
+
+# DO NOT actually run `pnpm install` here. Doing so requires us to copy the the source into the container.
+# However, that's a waste of time because we mount the source in the compose file anyway.
+# Instead, we run `pnpm install` in the entrypoint script defined in the compose file.
+# ENTRYPOINT ["pnpm", "install", "&&"]

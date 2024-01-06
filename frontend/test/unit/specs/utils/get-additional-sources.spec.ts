@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest"
+
 import { getAdditionalSources } from "~/utils/get-additional-sources"
 import { AUDIO, IMAGE, MediaType, MODEL_3D, VIDEO } from "~/constants/media"
 
