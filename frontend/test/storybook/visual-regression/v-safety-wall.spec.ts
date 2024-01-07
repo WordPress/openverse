@@ -7,6 +7,8 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 // other E2E tests. Use a label or other visual property.
 const safetyWallLocator = "#safety-wall"
 
+test.describe.configure({ mode: "parallel" })
+
 test.describe("VSafetyWall", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/iframe.html?id=components-vsafetywall--default-story")

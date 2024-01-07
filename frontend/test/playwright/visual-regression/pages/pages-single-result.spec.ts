@@ -7,7 +7,6 @@ import {
   openFirstResult,
   pathWithDir,
   preparePageForTests,
-  setCookies,
 } from "~~/test/playwright/utils/navigation"
 
 import { supportedMediaTypes } from "~/constants/media"
@@ -21,10 +20,10 @@ for (const isOn of [true, false]) {
         test(`${mediaType} ${dir} single-result page snapshots from search results, additional search views: ${isOn}`, async ({
           page,
         }) => {
-          await setCookies(page.context(), {
+          await preparePageForTests(page, breakpoint, {
             features: { additional_search_views: isOn ? "on" : "off" },
           })
-          await preparePageForTests(page, breakpoint)
+
           await page.route("**", (route) => {
             const url = route.request().url()
             // For audio, use the generated image instead of requesting the
@@ -66,7 +65,12 @@ for (const dir of languageDirections) {
       const path = pathWithDir(`/image/${IMAGE_ID}/report`, dir)
 
       await page.goto(path)
-      await expectSnapshot(`${dir}-full-page-report`, page, { fullPage: true })
+      await expectSnapshot(
+        `${dir}-full-page-report`,
+        page,
+        { fullPage: true },
+        { maxDiffPixelRatio: undefined, maxDiffPixels: 2 }
+      )
     })
   })
 }

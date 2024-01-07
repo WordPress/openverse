@@ -1,11 +1,10 @@
 import { test } from "@playwright/test"
 
 import {
-  dismissTranslationBanner,
-  dismissAnalyticsBanner,
   languageDirections,
   pathWithDir,
   t,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
@@ -15,8 +14,7 @@ for (const dir of languageDirections) {
     test(`Global audio player on the search page - ${dir}`, async ({
       page,
     }) => {
-      await dismissTranslationBanner(page)
-      await dismissAnalyticsBanner(page)
+      await preparePageForTests(page, "xs")
       await page.goto(
         pathWithDir("/search/audio/?q=honey&length=shortest", dir)
       )

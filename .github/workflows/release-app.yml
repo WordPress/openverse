@@ -118,28 +118,6 @@ jobs:
           # minutes is reached. On the other hand, we do want to wait
           # so that there is a record of the successful deployment.
 
-      - name: Deploy production thumbnails
-        if: inputs.app == 'api'
-        uses: felixp8/dispatch-and-wait@v0.1.0
-        with:
-          owner: WordPress
-          repo: openverse-infrastructure
-          token: ${{ secrets.ACCESS_TOKEN }}
-          event_type: deploy_production_api_thumbnails
-          client_payload: |
-            {
-              "actor": "${{ github.actor }}",
-              "tag": "${{ steps.tag.outputs.image-tag }}"
-            }
-          wait_time: 60 # check every minute
-          max_time: 1800 # allow up to 30 minutes for a deployment
-          # max_time can't easily be configured per application
-          # without duplicating information between our infrastructure
-          # and this workflow. The upstream workflows already have
-          # timeouts appropriately configured and will all fail before 30
-          # minutes is reached. On the other hand, we do want to wait
-          # so that there is a record of the successful deployment.
-
       - name: Create and publish release
         uses: release-drafter/release-drafter@v5
         id: release-drafter

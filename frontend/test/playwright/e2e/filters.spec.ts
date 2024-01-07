@@ -5,7 +5,7 @@ import {
   goToSearchTerm,
   isPageDesktop,
   filters,
-  dismissAllBannersUsingCookies,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -44,10 +44,10 @@ const FILTER_COUNTS = {
   [IMAGE]: 73,
 }
 
-breakpoints.describeMobileAndDesktop(() => {
+breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   test.beforeEach(async ({ context, page }) => {
     await mockProviderApis(context)
-    await dismissAllBannersUsingCookies(page)
+    await preparePageForTests(page, breakpoint)
   })
   for (const searchType of supportedSearchTypes) {
     test(`correct total number of filters is displayed for ${searchType}`, async ({

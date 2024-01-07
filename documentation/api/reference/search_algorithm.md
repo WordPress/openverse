@@ -6,7 +6,7 @@ the code in Openverse as well as parts of Openverse's historical development.
 Parts of the story for how Openverse's indexes came to be configured as they are
 today are likely missing. Future improvements to Openverse's indexing and search
 will be more carefully documented here and in the code to ensure there is
-greater longevitiy of understanding.
+greater longevity of understanding.
 
 > **Note**: This document avoids covering details covered in the
 > [Openverse Search Guide](https://wordpress.org/openverse/search-help).

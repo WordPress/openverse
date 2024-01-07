@@ -49,6 +49,7 @@
           :visible="isContentSwitcherVisible"
           :use-links="false"
           :show-filters="false"
+          variant="fit-content"
           @open="openContentSwitcher"
           @select="handleSelect"
         />
