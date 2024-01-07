@@ -20,6 +20,8 @@ import {
   SearchFilterQuery,
 } from "~/types/search"
 
+import { firstParam } from "~/utils/query-utils"
+
 import type { LocationQuery } from "vue-router"
 
 /**
@@ -236,9 +238,9 @@ export const queryDictionaryToQueryParams = (
   queryDictionary: LocationQuery
 ): Record<string, string> => {
   const queryParams = {} as Record<string, string>
-  Object.entries(queryDictionary).forEach(([key, value]) => {
+  Object.keys(queryDictionary).forEach((key) => {
     // If the parameter is an array, use the first value.
-    const parameter = Array.isArray(value) ? value[0] : value
+    const parameter = firstParam(queryDictionary[key])
     if (parameter) {
       queryParams[key] = parameter
     }

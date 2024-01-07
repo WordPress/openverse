@@ -81,7 +81,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 
-// import { useSearchStore } from "~/stores/search"
+import { useSearchStore } from "~/stores/search"
 
 import useSearchType from "~/composables/use-search-type"
 
@@ -150,7 +150,7 @@ export default defineComponent({
     select: defineEvent<[SearchType]>(),
   },
   setup(props) {
-    // const searchStore = useSearchStore()
+    const searchStore = useSearchStore()
     const content = useSearchType()
     const selectedTab = ref<ContentSettingsTab>("content-settings")
     const changeSelectedTab = (tab: string) => {
@@ -158,26 +158,23 @@ export default defineComponent({
     }
 
     const areFiltersSelected = computed(() => {
-      return false
-      // return searchStore.isAnyFilterApplied
+      return searchStore.isAnyFilterApplied
     })
 
     const showClearFiltersButton = computed(
       () => props.showFilters && selectedTab.value === "filters"
     )
     const isClearButtonDisabled = computed(() => {
-      return false
-      // return !searchStore.isAnyFilterApplied
+      return !searchStore.isAnyFilterApplied
     })
     const appliedFilterCount = computed<number>(() => {
-      return 0
-      // return searchStore.appliedFilterCount
+      return searchStore.appliedFilterCount
     })
 
     const searchType = computed(() => content.getSearchTypeProps())
 
     const clearFilters = () => {
-      // searchStore.clearFilters()
+      searchStore.clearFilters()
     }
 
     return {

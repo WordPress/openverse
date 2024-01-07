@@ -36,9 +36,9 @@
 </template>
 
 <script lang="ts">
-import { defineNuxtComponent, useHead } from "#imports"
+import { defineNuxtComponent, navigateTo, useHead } from "#imports"
 
-// import { useSearchStore } from "~/stores/search"
+import { useSearchStore } from "~/stores/search"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
@@ -57,7 +57,7 @@ export default defineNuxtComponent({
   },
   props: ["error"],
   setup() {
-    // const searchStore = useSearchStore()
+    const searchStore = useSearchStore()
 
     const { sendCustomEvent } = useAnalytics()
 
@@ -67,13 +67,13 @@ export default defineNuxtComponent({
         query: searchTerm,
       })
 
-      // return navigateTo(
-      //   searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
-      // )
+      return navigateTo(
+        searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+      )
     }
 
     useHead({
-      meta: [{ name: "theme-color", content: "#ffe033" }],
+      meta: [{ key: "theme-color", name: "theme-color", content: "#ffe033" }],
     })
 
     return {

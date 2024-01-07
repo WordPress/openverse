@@ -19,7 +19,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { BETA, contentStatus, SearchType } from "~/constants/media"
-// import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import useSearchType from "~/composables/use-search-type"
 
 import { defineEvent } from "~/types/emits"
@@ -72,7 +72,7 @@ export default defineComponent({
     click: defineEvent<[SearchType]>(),
   },
   setup(props) {
-    // const searchStore = useSearchStore()
+    const searchStore = useSearchStore()
     const { getSearchTypeProps } = useSearchType()
 
     const itemLabelKey = computed(() => getSearchTypeProps(props.item).label)
@@ -86,11 +86,10 @@ export default defineComponent({
     const isBeta = computed(() => contentStatus[props.item] === BETA)
 
     const href = computed(() => {
-      // if (!props.useLinks || !isSearchTypeSupported(props.item)) {
-      //   return undefined
-      // }
-      // return searchStore.getSearchPath({ type: props.item })
-      return undefined
+      if (!props.useLinks || !isSearchTypeSupported(props.item)) {
+        return undefined
+      }
+      return searchStore.getSearchPath({ type: props.item })
     })
 
     /**

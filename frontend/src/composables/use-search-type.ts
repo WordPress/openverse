@@ -11,11 +11,10 @@ import {
   additionalSearchTypes,
   supportedSearchTypes,
   SearchType,
-  // SupportedSearchType,
 } from "~/constants/media"
 
-// import { useMediaStore } from "~/stores/media"
-// import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useAnalytics } from "~/composables/use-analytics"
@@ -43,10 +42,8 @@ export default function useSearchType() {
   const componentName = useComponentName()
   const analytics = useAnalytics()
 
-  // TODO: use search store
   const activeType = computed<SearchType>(() => {
-    // return useSearchStore().searchType
-    return ALL_MEDIA
+    return useSearchStore().searchType
   })
 
   const previousSearchType = ref(activeType.value)
@@ -70,8 +67,8 @@ export default function useSearchType() {
       next: searchType,
       component: componentName,
     })
-    // useSearchStore().setSearchType(searchType)
-    // useMediaStore().clearMedia()
+    useSearchStore().setSearchType(searchType)
+    useMediaStore().clearMedia()
     previousSearchType.value = searchType
   }
 
