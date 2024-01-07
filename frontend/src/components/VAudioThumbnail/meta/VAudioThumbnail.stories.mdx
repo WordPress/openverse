@@ -1,0 +1,140 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+
+<Meta title="Components/VAudioThumbnail" components={VAudioThumbnail} />
+
+export const Template = (args) => ({
+  template: `
+    <div class="w-30">
+      <VAudioThumbnail v-bind="args"/>
+    </div>
+  `,
+  components: { VAudioThumbnail },
+  setup() {
+    return { args }
+  },
+})
+
+# VAudioThumbnail
+
+<Description of={VAudioThumbnail} />
+
+<ArgsTable of={VAudioThumbnail} />
+
+It does not have any intrinsic width and scales horizontally to take up the full
+width of the parent. It also does not have any rounding so the parent layout
+must apply the `rounded-*` classes on the `.thumbnail` class.
+
+## Aspect ratio
+
+The component always maintains a square aspect ratio. If the image is
+non-square, it will be cropped from the periphery.
+
+### Square
+
+**Sample image:** "SMPTE Color Bars" by
+[Guy Macon](https://commons.wikimedia.org/wiki/User:Guy_Macon)
+([Creative Commons](https://en.wikipedia.org/wiki/en:Creative_Commons)
+[CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/deed.en))
+
+<img
+  src="https://upload.wikimedia.org/wikipedia/commons/c/c6/500_x_500_SMPTE_Color_Bars.png"
+  style={{ width: "120px" }}
+/>
+
+<Canvas>
+  <Story
+    name="Square"
+    args={{
+      audio: {
+        title: "SMPTE Color Bars",
+        creator: "Guy Macon",
+        thumbnail:
+          "https://upload.wikimedia.org/wikipedia/commons/c/c6/500_x_500_SMPTE_Color_Bars.png",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Portrait
+
+**Sample image:** "Cat November 2010-1a" by
+[Alvesgaspar](https://commons.wikimedia.org/wiki/User:Alvesgaspar)
+([Creative Commons](https://en.wikipedia.org/wiki/en:Creative_Commons)
+[Attribution-Share Alike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/deed.en))
+
+<img
+  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/359px-Cat_November_2010-1a.jpg"
+  style={{ width: "120px" }}
+/>
+
+<Canvas>
+  <Story
+    name="Portrait"
+    args={{
+      audio: {
+        title: "Cat November 2010-1a",
+        creator: "Alvesgaspar",
+        thumbnail:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/359px-Cat_November_2010-1a.jpg",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Landscape
+
+**Sample image:** "Six weeks old cat (aka)" by André Karwath aka
+[Aka](https://commons.wikimedia.org/wiki/User:Aka)
+([Creative Commons](https://en.wikipedia.org/wiki/en:Creative_Commons)
+[Attribution-Share Alike 2.5 Generic](https://creativecommons.org/licenses/by-sa/2.5/deed.en))
+
+<img
+  src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Six_weeks_old_cat_(aka).jpg/320px-Six_weeks_old_cat_(aka).jpg"
+  style={{ height: "120px" }}
+/>
+
+<Canvas>
+  <Story
+    name="Landscape"
+    args={{
+      audio: {
+        title: "Six weeks old cat (aka)",
+        creator: "André Karwath aka Aka",
+        thumbnail:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Six_weeks_old_cat_(aka).jpg/320px-Six_weeks_old_cat_(aka).jpg",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Fallback
+
+In the absence of album art, a randomised artwork is generated.
+
+<Canvas>
+  <Story
+    name="Fallback"
+    args={{
+      audio: {
+        title: "Null",
+        creator: "Undefined",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
