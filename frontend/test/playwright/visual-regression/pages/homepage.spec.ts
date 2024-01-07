@@ -58,32 +58,32 @@ for (const dir of languageDirections) {
           )
         })
 
-        // https://github.com/wordpress/openverse/issues/411
-        test.skip("content switcher open", async ({ page }) => {
+        test("content switcher open", async ({ page }) => {
           await page.locator("#search-type-button").click()
 
           await expectSnapshot(`content-switcher-open-${dir}`, page)
         })
-
-        // https://github.com/wordpress/openverse/issues/411
-        test.skip("content switcher with additional search types open", async ({
-          page,
-        }) => {
-          await preparePageForTests(page, breakpoint, {
-            features: { additional_search_types: "on" },
-          })
-
-          await page.goto(path)
-          await cleanImageCarousel(page)
-
-          await page.locator("#search-type-button").click()
-
-          await expectSnapshot(
-            `content-switcher-with-additional_search_types-open-${dir}`,
-            page
-          )
-        })
       })
+    })
+  })
+
+  breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
+    test(`${dir} content switcher with additional search types open`, async ({
+      page,
+    }) => {
+      await preparePageForTests(page, breakpoint, {
+        features: { additional_search_types: "on" },
+      })
+
+      await page.goto(path)
+      await cleanImageCarousel(page)
+
+      await page.locator("#search-type-button").click()
+
+      await expectSnapshot(
+        `content-switcher-with-additional_search_types-open-${dir}`,
+        page
+      )
     })
   })
 }

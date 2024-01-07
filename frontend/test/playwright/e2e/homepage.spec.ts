@@ -4,10 +4,22 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   preparePageForTests,
+  selectHomepageSearchType,
+  sleep,
   t,
 } from "~~/test/playwright/utils/navigation"
 
-import { searchPath, supportedSearchTypes } from "~/constants/media"
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
+
+import {
+  ALL_MEDIA,
+  AUDIO,
+  searchPath,
+  supportedSearchTypes,
+} from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 const searchTypePopover = "[aria-labelledby='search-type-button'] > div"
@@ -42,11 +54,13 @@ test.describe("homepage", () => {
     })
   }
 
-  // https://github.com/wordpress/openverse/issues/411
-  test.skip("can close the search type popover by clicking outside", async ({
+  test("can close the search type popover by clicking outside", async ({
     page,
   }) => {
     await page.goto("/")
+
+    // wait for hydration
+    await sleep(500)
     await clickPopoverButton(page)
     await popoverIsVisible(page)
 
@@ -54,16 +68,45 @@ test.describe("homepage", () => {
     await popoverIsNotVisible(page)
   })
 
-  // https://github.com/wordpress/openverse/issues/411
-  test.skip("can close the search type popover by pressing Escape", async ({
+  test("can close the search type popover by pressing Escape", async ({
     page,
   }) => {
     await page.goto("/")
+
+    // wait for hydration
+    await sleep(500)
     await clickPopoverButton(page)
     await popoverIsVisible(page)
 
     await page.keyboard.press("Escape")
 
     await popoverIsNotVisible(page)
+  })
+})
+
+test.describe("analytics", () => {
+  test.beforeEach(async ({ context, page }) => {
+    await mockProviderApis(context)
+    await preparePageForTests(page, "xl")
+  })
+
+  test("sends CHANGE_CONTENT_TYPE event when changing search type", async ({
+    context,
+    page,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await page.goto("/")
+    await selectHomepageSearchType(page, AUDIO, "ltr")
+
+    const changeContentTypeEvent = analyticsEvents.find(
+      (event) => event.n === "CHANGE_CONTENT_TYPE"
+    )
+
+    expectEventPayloadToMatch(changeContentTypeEvent, {
+      component: "VSearchTypes",
+      next: AUDIO,
+      previous: ALL_MEDIA,
+    })
   })
 })
