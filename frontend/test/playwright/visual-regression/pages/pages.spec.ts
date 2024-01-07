@@ -5,6 +5,7 @@ import {
   languageDirections,
   pathWithDir,
   preparePageForTests,
+  sleep,
   t,
 } from "~~/test/playwright/utils/navigation"
 
@@ -70,6 +71,9 @@ test.describe("layout color is set correctly", () => {
       page,
     }) => {
       await page.goto("/ar")
+
+      // wait for hydration
+      await sleep(500)
       await page
         .getByRole("combobox", { name: t("language.language", "rtl") })
         .selectOption("en")

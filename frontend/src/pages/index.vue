@@ -18,7 +18,7 @@
 import {
   defineNuxtComponent,
   definePageMeta,
-  // navigateTo,
+  navigateTo,
   useHead,
 } from "#imports"
 
@@ -33,8 +33,8 @@ import {
 } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
-// import { useMediaStore } from "~/stores/media"
-// import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
@@ -52,8 +52,8 @@ export default defineNuxtComponent({
       layout: "default",
     })
     const featureFlagStore = useFeatureFlagStore()
-    // const mediaStore = useMediaStore()
-    // const searchStore = useSearchStore()
+    const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
     const { sendCustomEvent } = useAnalytics()
@@ -69,8 +69,8 @@ export default defineNuxtComponent({
      * Reset the search type, search term and filters when the user navigates [back] to the homepage.
      */
     onMounted(() => {
-      // searchStore.$reset()
-      // mediaStore.$reset()
+      searchStore.$reset()
+      mediaStore.$reset()
     })
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
@@ -94,12 +94,12 @@ export default defineNuxtComponent({
         query: searchTerm,
       })
 
-      // return navigateTo(
-      //   searchStore.updateSearchPath({
-      //     type: searchType.value,
-      //     searchTerm,
-      //   })
-      // )
+      return navigateTo(
+        searchStore.updateSearchPath({
+          type: searchType.value,
+          searchTerm,
+        })
+      )
     }
 
     return {
