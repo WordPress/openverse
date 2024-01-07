@@ -8,11 +8,7 @@
     variant="plain--avoid"
     v-bind="tabProps"
     class="rounded-none bg-white focus-slim-tx"
-    :class="[
-      $style[variant],
-      $style[`size-${size}`],
-      isSelected && $style[`${variant}-selected`],
-    ]"
+    :class="[variant, `size-${size}`, { [`${variant}-selected`]: isSelected }]"
     @click="handleSelection"
     @focus="handleFocus"
     @mousedown="handleMouseDown"
@@ -204,7 +200,7 @@ export default defineComponent({
 })
 </script>
 
-<style module>
+<style scoped>
 .bordered {
   @apply rounded-se-sm rounded-ss-sm border-x border-t border-tx text-sm font-semibold md:text-base md:font-semibold md:leading-snug;
 }

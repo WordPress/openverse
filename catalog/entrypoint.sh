@@ -52,8 +52,8 @@ while read -r var_string; do
   echo "    Old Value: $old_value"
   # call python to url encode the http clause
   url_encoded=$(python -c "from urllib.parse import quote_plus; import sys; print(quote_plus(sys.argv[1]))" "$old_value")
-  # prepend https://
-  new_value='https://'$url_encoded
+  # prepend http://
+  new_value='http://'$url_encoded
   echo "    New Value: $new_value"
   # set the environment variable
   export "$var_name"="$new_value"
