@@ -412,6 +412,24 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
   }
+
+  /**
+   * Time client-side search responses. Gives us observability into
+   * real user experience of search timings.
+   *
+   * Payload:
+   *   - `cfCacheStatus`: Whether the request hit Cloudflare or went all the way to our servers
+   *   - `cfRayIATA`: The IATA location identifier at the end of the `cf-ray` header.
+   *                  Indicates the data centre the request passed through. This gives us an idea of approximate distance from our API servers without revealing more precise request location information.
+   *   - `elapsedSeconds`: How many seconds it took to receive a response for the request
+   *   - `queryString`: The full query string including additional filters
+   */
+  SEARCH_RESPONSE_TIME: {
+    cfCacheStatus: string
+    cfRayIATA: string
+    elapsedTime: number
+    queryString: string
+  }
 }
 
 /**
