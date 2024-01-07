@@ -81,7 +81,7 @@ for (const dir of languageDirections) {
       await page.locator("#search-type-button").click()
 
       await expectSnapshot(
-        `content-switcher-with-additional_search_types-open-${dir}`,
+        `content-switcher-with-external-sources-open-${dir}`,
         page
       )
     })

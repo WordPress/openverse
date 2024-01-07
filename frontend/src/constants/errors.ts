@@ -41,7 +41,6 @@ export const clientSideErrorCodes: readonly ErrorCode[] = [
   ECONNABORTED,
   SERVER_TIMEOUT,
   NO_RESULT,
-  ERR_UNKNOWN,
   "ERR_NETWORK",
   "ETIMEDOUT",
 ] as const
