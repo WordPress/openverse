@@ -3,6 +3,10 @@ import { mockCreateApiService } from "~~/test/unit/test-utils/api-service-mock"
 import { initServices } from "~/stores/media/services"
 import { useAnalytics } from "~/composables/use-analytics"
 
+const API_IMAGES_ENDPOINT = "images/"
+const API_AUDIO_ENDPOINT = "audio/"
+const BASE_URL = "https://www.mockapiservice.openverse.engineering/v1/"
+
 jest.mock("~/composables/use-analytics")
 
 const sendCustomEventMock = jest.fn()
@@ -14,7 +18,9 @@ mockedUseAnalytics.mockImplementation(() => ({
 }))
 
 beforeAll(() => {
-  jest.useFakeTimers()
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  jest.useFakeTimers("modern")
   jest.setSystemTime(new Date("Tue, 17 Dec 2019 20:20:00 GMT"))
 })
 
@@ -59,7 +65,9 @@ describe("Media Service search and recordSearchTime", () => {
 
   it("should not send a SEARCH_RESPONSE_TIME analytics event if the cf-ray is malformed", async () => {
     mockCreateApiService((axiosMockAdapter) => {
-      axiosMockAdapter.onGet().reply(() => {
+      axiosMockAdapter.onGet().reply((config) => {
+        // force config.url so the responseURL is set in the AxiosRequest
+        config.url = BASE_URL + config.url
         return [
           200,
           {},
@@ -72,18 +80,16 @@ describe("Media Service search and recordSearchTime", () => {
       })
     })
 
+    await initServices.audio().search({})
+
     expect(sendCustomEventMock).not.toHaveBeenCalled()
   })
 
   it("should send SEARCH_RESPONSE_TIME analytics with correct parameters", async () => {
-    const API_IMAGES_ENDPOINT = "images/"
-    const API_AUDIO_ENDPOINT = "audio/"
-    const BASE_URL = "https://www.mockapiservice.openverse.engineering/v1/"
     mockCreateApiService((axiosMockAdapter) => {
       axiosMockAdapter
         .onGet(API_IMAGES_ENDPOINT, { params: { q: "apple" } })
         .reply((config) => {
-          // force config.url so the responseURL is set in the AxiosResponse
           config.url = BASE_URL + config.url + "?q=apple"
           return [
             200,

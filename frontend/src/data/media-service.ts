@@ -43,7 +43,6 @@ class MediaService<T extends Media> {
     if (!REQUIRED_HEADERS.every((header) => header in responseHeaders)) {
       return
     }
-    console.log(requestDatetime.toISOString())
 
     const responseDatetime = new Date(responseHeaders["date"])
     if (responseDatetime < requestDatetime) {
@@ -51,7 +50,7 @@ class MediaService<T extends Media> {
       return
     }
 
-    const cfRayIATA = responseHeaders["cf-ray"].split("-").at(-1)
+    const cfRayIATA = responseHeaders["cf-ray"].split("-")[1]
     if (cfRayIATA === undefined) {
       return
     }
