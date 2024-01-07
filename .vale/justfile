@@ -22,21 +22,18 @@ build:
 # the rest of our documentation is, so it doesn't seem right to retroactively
 # edit them for mere editorial purposes (rather than, for example, to correct
 # some grave inacurracy).
-CI_CONFIG := (
+VALE_FILES := (
     "documentation " +
     "--glob='!*{_build,_static,.venv,projects/proposals,changelogs/api,changelogs/frontend,changelogs/catalog,changelogs/ingestion_server}*'"
 )
 
 
-# Run `openverse-vale` using the specified image. Configuration defaults to what is used for CI.
-run image="ghcr.io/wordpress/openverse-vale:latest" +configuration=CI_CONFIG:
-    {{ if image == "openverse-vale:local" { "just build" } else { "" } }}
+# Run Vale configured for Openverse in Docker.
+# Using Docker avoids the need for contributors to install the Vale binary.
+#Configuration defaults to what is used for CI.
+run +configuration=VALE_FILES: build
     docker run --rm -it \
         -v $PWD/..:/src:rw,Z \
         --workdir=/src \
-        {{ image }} \
+        openverse-vale:local \
         {{ configuration }}
-
-# Run `openverse-vale` using the local image. Configuration defaults to what is used for CI.
-run-local +configuration=CI_CONFIG: build
-    just run openverse-vale:local "{{ configuration }}"

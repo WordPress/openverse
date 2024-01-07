@@ -135,13 +135,12 @@ repos:
         language: system
         pass_filenames: false
 
-      # Enable this once the vale image is published
-      # - id: vale
-      #   name: vale
-      #   language: system
-      #   entry: bash -c 'just .vale/run'
-      #   pass_filesnames: false
-      #   files: ^documentation.*$
+      - id: vale
+        name: vale
+        language: system
+        entry: bash -c 'just .vale/run'
+        pass_filesnames: false
+        files: ^documentation.*$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
     rev: 37.116.0
