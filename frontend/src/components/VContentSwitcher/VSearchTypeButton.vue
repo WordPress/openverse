@@ -1,6 +1,6 @@
 <template>
   <VButton
-    class="min-w-12 flex-shrink-0 gap-x-2"
+    class="min-w-12 gap-x-2"
     :class="showLabel ? '!px-3' : 'w-12'"
     variant="bordered-white"
     :disabled="!doneHydrating"
