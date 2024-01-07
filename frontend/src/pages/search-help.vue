@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
 
-// import { useSearchStore } from "~/stores/search"
+import { useSearchStore } from "~/stores/search"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -61,7 +61,7 @@ export default defineNuxtComponent({
       layout: "content-layout",
     })
     const i18n = useI18n({ useScope: "global" })
-    // const searchStore = useSearchStore()
+    const searchStore = useSearchStore()
 
     useHead({
       title: `${i18n.t("searchGuide.title", {
@@ -71,11 +71,9 @@ export default defineNuxtComponent({
     })
 
     const pathFromQuery = (queryString: string) => {
-      // TODO: Fix after adding search store
-      return queryString
-      // return searchStore.getSearchPath({
-      //   query: { q: queryString },
-      // })
+      return searchStore.getSearchPath({
+        query: { q: queryString },
+      })
     }
     return { pathFromQuery }
   },
