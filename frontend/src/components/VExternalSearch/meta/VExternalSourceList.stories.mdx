@@ -1,0 +1,81 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
+
+<Meta title="Components/VExternalSourceList" component={VExternalSourceList} />
+
+export const Template = (args) => ({
+  template: `<VExternalSourceList v-bind="args"/>`,
+  components: { VExternalSourceList },
+  setup() {
+    return { args }
+  },
+})
+
+# VExternalSourceList
+
+<Description of={VExternalSourceList} />
+
+<ArgsTable of={VExternalSourceList} />
+
+## Images
+
+<Canvas>
+  <Story
+    name="Images"
+    args={{
+      type: "image",
+      query: { q: "cat" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Audio
+
+<Canvas>
+  <Story
+    name="Audio"
+    args={{
+      type: "audio",
+      query: { q: "cat" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Video
+
+<Canvas>
+  <Story
+    name="Video"
+    args={{
+      type: "video",
+      query: { q: "cat" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## 3D models
+
+<Canvas>
+  <Story
+    name="3D models"
+    args={{
+      type: "model-3d",
+      query: { q: "cat" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

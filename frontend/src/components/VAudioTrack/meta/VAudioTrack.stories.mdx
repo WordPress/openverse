@@ -1,0 +1,287 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+import { computed } from "vue"
+import { audioLayouts, audioSizes } from "~/constants/audio"
+
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
+
+import flacWaveform from "./flac-waveform.json"
+import mp3Waveform from "./mp3-waveform.json"
+import oggWaveform from "./ogg-waveform.json"
+import wavWaveform from "./wav-waveform.json"
+
+<Meta
+  title="Components/Audio track"
+  component={VAudioTrack}
+  argTypes={{
+    format: {
+      defaultValue: "mp3",
+      options: ["mp3", "ogg", "flac", "wav"],
+      control: "select",
+    },
+    layout: {
+      defaultValue: "full",
+      options: audioLayouts,
+      control: "select",
+    },
+    size: {
+      defaultValue: "m",
+      options: audioSizes,
+      control: "select",
+    },
+    audio: {
+      control: false,
+    },
+  }}
+/>
+
+export const commonAttrs = () => ({
+  id: Math.floor(Math.random() * 1e9).toString(),
+  creator: "Wolfgang Amadeus Mozart",
+  creator_url: "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
+  category: "music",
+  thumbnail:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg",
+})
+
+export const formatExamples = {
+  ogg: {
+    title: "Eine kleine Nachtmusik - 1. Allegro",
+    url: "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+    duration: 355e3,
+    peaks: oggWaveform.points,
+    license: "by-sa",
+  },
+  mp3: {
+    title: 'Serenade No. 10 "Grand Partita" - VII. Finale. Molto Allegro',
+    url: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Mozart%27s_Serenade_No._10_%22Grand_Partita%22_-_VII._Finale._Molto_Allegro_-_United_States_Marine_Band.mp3",
+    duration: 206e3,
+    peaks: mp3Waveform.points,
+    license: "pdm",
+  },
+  wav: {
+    title: "Trio from Wind Serenade K. 388",
+    url: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Mozart_Trio_from_Wind_Serenade_K388.wav",
+    duration: 33e3,
+    peaks: wavWaveform.points,
+    license: "pdm",
+  },
+  flac: {
+    title: 'Piano Concerto No. 26 in D Major, KV 537 "Coronation", 1. Allegro',
+    url: "https://upload.wikimedia.org/wikipedia/commons/1/17/Mozart%3B_Piano_Concerto_No._26_in_D_Major%2C_KV_537_%22Coronation%22%2C_1._Allegro.flac",
+    duration: 808e3,
+    peaks: flacWaveform.points,
+    license: "pdm",
+  },
+}
+
+export const Template = (args) => ({
+  template: `<VAudioTrack v-bind="args" :audio="audioObj"/>`,
+  components: { VAudioTrack },
+  setup() {
+    const audioObj = computed(() => ({
+      ...commonAttrs(),
+      ...formatExamples[args.format],
+    }))
+    return { args, audioObj }
+  },
+})
+
+# Audio track
+
+<Description of={VAudioTrack} />
+
+<ArgsTable of={VAudioTrack} />
+
+**Audio thumbnail:** "Mozart Family" by
+[Johann Nepomuk della Croce](https://en.wikipedia.org/wiki/Johann_Nepomuk_della_Croce)
+(Public Domain)
+
+## Layouts
+
+The component can be rendered in a multiple different layouts, by specifying a
+`layout`. The layout can further be customised by the `size` prop.
+
+### Full (default)
+
+#### Size M (default)
+
+<Canvas>
+  <Story
+    name="Full (medium)"
+    args={
+      {
+        // layout: 'full', (default)
+        // size: 'm', (default)
+      }
+    }
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size S (mobile)
+
+<Canvas>
+  <Story
+    name="Full (small)"
+    args={{
+      // layout: 'full', (default)
+      size: "s",
+    }}
+    parameters={{
+      viewport: { defaultViewport: "sm" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Row
+
+#### Size L
+
+<Canvas>
+  <Story
+    name="Row (large)"
+    args={{
+      layout: "row",
+      size: "l",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size M (default)
+
+<Canvas>
+  <Story
+    name="Row (medium)"
+    args={{
+      layout: "row",
+      // size: 'm', (default)
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size S (mobile)
+
+<Canvas>
+  <Story
+    name="Row (small)"
+    args={{
+      layout: "row",
+      size: "s",
+    }}
+    parameters={{
+      viewport: { defaultViewport: "sm" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Box
+
+#### Sizes L and M (default)
+
+There is no M size in box layout.
+
+<Canvas>
+  <Story
+    name="Box (large)"
+    args={{
+      layout: "box",
+      size: "l",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Box (medium)"
+    args={{
+      layout: "box",
+      size: "l",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+#### Size S (mobile)
+
+<Canvas>
+  <Story
+    name="Box (small)"
+    args={{
+      layout: "box",
+      size: "s",
+    }}
+    parameters={{
+      viewport: { defaultViewport: "sm" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Global (mobile exclusive)
+
+This version of the player is affixed to the bottom of the screen and retained
+across pages when navigating.
+
+<Canvas>
+  <Story
+    name="Global"
+    args={{
+      layout: "global",
+    }}
+    parameters={{
+      viewport: { defaultViewport: "sm" },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Other formats
+
+The component is capable of playing audio in many formats, but this largely
+depends on the browser and engine. Refer to
+['Can I use...'](https://caniuse.com/?search=audio%20format) for more up-to-date
+information on browser compatibility.
+
+## Single active player
+
+The audio players use a centralised store for holding the details of the active
+media, enabling only one player to be active at any given time.
+
+export const Multiple = () => ({
+  template: `
+    <div>
+      <VAudioTrack
+        v-for="(audio, key) in formatExamples"
+        :key="key"
+        class="mb-8"
+        :audio="audioObj(audio)"
+        layout="row"/>
+    </div>
+  `,
+  components: { VAudioTrack },
+  setup() {
+    const audioObj = (audio) => ({ ...commonAttrs(), ...audio })
+    return { formatExamples, audioObj }
+  },
+})
+
+<Canvas>
+  <Story name="Multiple">{Multiple.bind({})}</Story>
+</Canvas>

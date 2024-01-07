@@ -1,0 +1,93 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VLink from "~/components/VLink.vue"
+import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
+
+<Meta
+  title="Components/VLogoLoader"
+  component={VLogoLoader}
+  argTypes={{
+    status: {
+      default: "idle",
+      options: ["loading", "idle"],
+      control: { type: "radio" },
+    },
+  }}
+/>
+
+export const Template = (args) => ({
+  template: `<VLogoLoader v-bind="args" />`,
+  components: { VLogoLoader },
+  setup() {
+    return { args }
+  },
+})
+
+# VLogoLoader
+
+<Description of={VLogoLoader} />
+
+<ArgsTable of={VLogoLoader} />
+
+## States
+
+The component can exist in two states.
+
+### Idle
+
+<Canvas>
+  <Story name="Idle" args={{ status: "idle" }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Loading
+
+Remember to test this state with the `prefers-reduced-motion` media query. In
+most popular browsers, this preference is set at the OS level. You can refer to
+[these instructions](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion#user_preferences)
+for toggling this setting for your particular OS.
+
+<Canvas>
+  <Story
+    name="Loading"
+    args={{
+      status: "loading",
+      loadingLabel: "Loading images",
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+## Link
+
+export const LinkTemplate = (args) => ({
+  template: `
+    <VLink href="https://wordpress.org/openverse">
+      <VLogoLoader v-bind="args" />
+    </VLink>
+  `,
+  components: { VLink, VLogoLoader },
+  setup() {
+    return { args }
+  },
+})
+
+<Canvas>
+  <Story
+    name="Link"
+    args={{
+      status: "loading",
+      loadingLabel: "Loading images",
+    }}
+  >
+    {LinkTemplate.bind({})}
+  </Story>
+</Canvas>
