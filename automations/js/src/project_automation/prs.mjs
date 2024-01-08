@@ -109,7 +109,12 @@ export const main = async (octokit, core) => {
       }
 
       case 'ready_for_review': {
-        await syncReviews(core, pr, prBoard, prCard)
+        if (pr.isDraft) {
+          await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
+        }
+        else {
+          await syncReviews(core, pr, prBoard, prCard)
+        }
         break
       }
 
