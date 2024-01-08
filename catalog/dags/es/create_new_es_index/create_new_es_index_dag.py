@@ -97,8 +97,6 @@ The resulting, merged configuration will be:
 ```
 """
 import logging
-import os
-
 
 from airflow import DAG
 from airflow.models.param import Param
@@ -187,10 +185,6 @@ def create_new_es_index_dag(config: CreateNewIndex):
         },
     )
 
-    # TODO: separate variables were necessary because we can't just get the value of
-    # Airflow connection vars, they get interpreted as Connection objects
-    es_host = os.getenv(f"ELASTICSEARCH_HTTP_{config.environment.upper()}")
-
     with dag:
         prevent_concurrency = prevent_concurrency_with_dags(config.blocking_dags)
 
@@ -207,7 +201,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
             task_id=es.GET_CURRENT_INDEX_CONFIG_TASK_NAME
         )(
             source_index="{{ params.source_index or params.media_type }}",
-            es_host=es_host,
+            es_host=config.es_host,
         )
 
         merged_index_config = es.merge_index_configurations(
@@ -227,7 +221,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         )
 
         create_new_index = es.create_index(
-            index_config=final_index_config, es_host=es_host
+            index_config=final_index_config, es_host=config.es_host
         )
 
         reindex = es.trigger_and_wait_for_reindex(
@@ -235,7 +229,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
             source_index="{{ params.source_index or params.media_type }}",
             query="{{ params.query }}",
             timeout=config.reindex_timeout,
-            es_host=es_host,
+            es_host=config.es_host,
         )
 
         # Set up dependencies
