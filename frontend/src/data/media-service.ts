@@ -7,7 +7,6 @@ import type { ApiService } from "~/data/api-service"
 import type { DetailFromMediaType, Media } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
-
 import type { EventName } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
