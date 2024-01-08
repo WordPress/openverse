@@ -68,7 +68,7 @@ def wait_for_external_dag(external_dag_id: str, task_id: str | None = None):
 @task_group(group_id="wait_for_external_dags")
 def wait_for_external_dags(external_dag_ids: list[str]):
     """
-    Wait for all DAGs with the given external DAG ids to no longer by
+    Wait for all DAGs with the given external DAG ids to no longer be
     in a running state before continuing.
     """
     for dag_id in external_dag_ids:

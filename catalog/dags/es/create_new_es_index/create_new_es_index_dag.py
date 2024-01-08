@@ -99,8 +99,10 @@ The resulting, merged configuration will be:
 import logging
 import os
 
+
 from airflow import DAG
 from airflow.models.param import Param
+from airflow.utils.trigger_rule import TriggerRule
 from es.create_new_es_index import create_new_es_index as es
 from es.create_new_es_index.create_new_es_index_types import (
     CREATE_NEW_INDEX_CONFIGS,
@@ -201,7 +203,9 @@ def create_new_es_index_dag(config: CreateNewIndex):
             override="{{ params.override_config }}"
         )
 
-        current_index_config = es.get_current_index_configuration(
+        current_index_config = es.get_current_index_configuration.override(
+            task_id=es.GET_CURRENT_INDEX_CONFIG_TASK_NAME
+        )(
             source_index="{{ params.source_index or params.media_type }}",
             es_host=es_host,
         )
@@ -211,7 +215,10 @@ def create_new_es_index_dag(config: CreateNewIndex):
             current_index_config=current_index_config,
         )
 
-        final_index_config = es.get_final_index_configuration(
+        final_index_config = es.get_final_index_configuration.override(
+            task_id=es.GET_FINAL_INDEX_CONFIG_TASK_NAME,
+            trigger_rule=TriggerRule.NONE_FAILED,
+        )(
             override_config="{{ params.override_config }}",
             index_config="{{ params.index_config }}",
             # May resolve to None if tasks were skipped

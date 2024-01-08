@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 # creating a new index.
 EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
 
+GET_FINAL_INDEX_CONFIG_TASK_NAME = "get_final_index_configuration"
+GET_CURRENT_INDEX_CONFIG_TASK_NAME = "get_current_index_configuration"
+
 
 @task
 def get_index_name(media_type: str, index_suffix: str):
@@ -28,9 +31,9 @@ def check_override_config(override):
     if override:
         # Skip the steps to fetch the current index configuration
         # and merge changes in.
-        return "get_final_index_configuration"
+        return GET_FINAL_INDEX_CONFIG_TASK_NAME
 
-    return "get_current_index_configuration"
+    return GET_CURRENT_INDEX_CONFIG_TASK_NAME
 
 
 @task
