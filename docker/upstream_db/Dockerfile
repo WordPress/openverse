@@ -2,7 +2,7 @@
 
 FROM postgres:13.10 as db
 
-ARG PGCLI_VERSION=4.0.1
+ARG PGCLI_VERSION
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
