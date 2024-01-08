@@ -51,11 +51,12 @@ from collections.abc import Sequence
 from airflow.models.baseoperator import chain
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
+from es.create_new_es_index.create_new_es_index_types import CREATE_NEW_INDEX_CONFIGS
 
 from common import ingestion_server
-from common.constants import XCOM_PULL_TEMPLATE
+from common.constants import PRODUCTION, XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
-from common.sensors.utils import wait_for_external_dag
+from common.sensors.utils import wait_for_external_dags
 from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
@@ -112,16 +113,19 @@ def create_data_refresh_task_group(
             pool=DATA_REFRESH_POOL,
         )
 
-        # If filtered index creation was manually triggered before the data refresh
-        # started, we need to wait for it to finish or the data refresh could destroy
-        # the origin index. Realistically the data refresh is too slow to beat the
-        # filtered index creation process, even if it was triggered immediately after
-        # filtered index creation. However, it is safer to avoid the possibility
-        # of the race condition altogether.
-        wait_for_filtered_index_creation = wait_for_external_dag(
-            external_dag_id=f"create_filtered_{data_refresh.media_type}_index",
+        # Wait for other DAGs that operate on the ES cluster. If a new or filtered index
+        # is being created by one of these DAGs, we need to wait for it to finish or else
+        # the data refresh might destroy the index being used as the source index.
+        # Realistically the data refresh is too slow to beat the index creation process,
+        # even if it was triggered immediately after one of these DAGs; however, it is
+        # always safer to avoid the possibility of the race condition altogether.
+        wait_for_es_dags = wait_for_external_dags.override(group_id="wait_for_es_dags")(
+            external_dag_ids=[
+                data_refresh.filtered_index_dag_id,
+                CREATE_NEW_INDEX_CONFIGS[PRODUCTION].dag_id,
+            ]
         )
-        tasks.append([wait_for_data_refresh, wait_for_filtered_index_creation])
+        tasks.append([wait_for_data_refresh, wait_for_es_dags])
 
         # Get the index currently mapped to our target alias, to delete later.
         get_current_index = ingestion_server.get_current_index(target_alias)

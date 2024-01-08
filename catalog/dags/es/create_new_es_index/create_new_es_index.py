@@ -8,7 +8,6 @@ from airflow.sensors.python import PythonSensor
 from es.create_new_es_index.utils import merge_configurations
 
 from common.constants import REFRESH_POKE_INTERVAL
-from common.sensors.utils import prevent_concurrency_with_dag
 
 
 logger = logging.getLogger(__name__)
@@ -17,17 +16,6 @@ logger = logging.getLogger(__name__)
 # Index settings that should not be copied over from the base configuration when
 # creating a new index.
 EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
-
-
-@task_group(group_id="prevent_concurrency")
-def prevent_concurrency_with_dags(external_dag_ids: list[str]):
-    """Fail immediately if any of the given external dags are in progress."""
-    # TODO: Double check if these need to be chained or if they can
-    # run concurrently
-    for dag_id in external_dag_ids:
-        prevent_concurrency_with_dag.override(
-            task_id=f"prevent_concurrency_with_{dag_id}"
-        )(dag_id)
 
 
 @task

@@ -108,6 +108,7 @@ from es.create_new_es_index.create_new_es_index_types import (
 )
 
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
+from common.sensors.utils import prevent_concurrency_with_dags
 
 
 logger = logging.getLogger(__name__)
@@ -189,7 +190,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
     es_host = os.getenv(f"ELASTICSEARCH_HTTP_{config.environment.upper()}")
 
     with dag:
-        prevent_concurrency = es.prevent_concurrency_with_dags(config.blocking_dags)
+        prevent_concurrency = prevent_concurrency_with_dags(config.blocking_dags)
 
         index_name = es.get_index_name(
             media_type="{{ params.media_type }}",
@@ -239,6 +240,6 @@ def create_new_es_index_dag(config: CreateNewIndex):
     return dag
 
 
-for config in CREATE_NEW_INDEX_CONFIGS:
+for config in CREATE_NEW_INDEX_CONFIGS.values():
     # Generate the DAG for this environment
     globals()[config.dag_id] = create_new_es_index_dag(config)
