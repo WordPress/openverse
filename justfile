@@ -126,6 +126,7 @@ export API_PY_VERSION := `just api/py-version`
 export INGESTION_PY_VERSION := `just ingestion_server/py-version`
 export FRONTEND_NODE_VERSION := `just frontend/node-version`
 export FRONTEND_PNPM_VERSION := `just frontend/pnpm-version`
+export PGCLI_VERSION := `just api/pgcli-version`
 
 export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
 
@@ -138,6 +139,7 @@ versions:
     ingestion_py_version=$(just ingestion_server/py-version)
     frontend_node_version=$(just frontend/node-version)
     frontend_pnpm_version=$(just frontend/pnpm-version)
+    pgcli_version=$(just api/pgcli-version)
     EOF
 
 # Run `docker-compose` configured with the correct files and environment

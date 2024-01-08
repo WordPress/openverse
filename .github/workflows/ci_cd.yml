@@ -229,6 +229,7 @@ jobs:
             INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
+            PGCLI_VERSION=${{ steps.prepare-build-args.outputs.pgcli_version }}
 
       - name: Upload image `${{ matrix.image }}`
         id: upload-img
