@@ -7,6 +7,7 @@ import type { ApiService } from "~/data/api-service"
 import type { DetailFromMediaType, Media } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
+import type { EventName } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
 
@@ -23,10 +24,13 @@ export interface MediaResult<
 class MediaService<T extends Media> {
   private readonly apiService: ApiService
   private readonly mediaType: T["frontendMediaType"]
+  private readonly searchEvent: EventName
 
   constructor(apiService: ApiService, mediaType: T["frontendMediaType"]) {
     this.apiService = apiService
     this.mediaType = mediaType
+    this.searchEvent =
+      `${this.mediaType.toUpperCase()}_SEARCH_RESPONSE_TIME` as EventName
   }
 
   /**
@@ -46,7 +50,7 @@ class MediaService<T extends Media> {
 
     const responseDatetime = new Date(responseHeaders["date"])
     if (responseDatetime < requestDatetime) {
-      // response returned was from the cache
+      // response returned was from the local cache
       return
     }
 
@@ -60,7 +64,7 @@ class MediaService<T extends Media> {
     )
     const url = new URL(response.request?.responseURL)
 
-    sendCustomEvent("SEARCH_RESPONSE_TIME", {
+    sendCustomEvent(this.searchEvent, {
       cfCacheStatus: responseHeaders["cf-cache-status"],
       cfRayIATA: cfRayIATA,
       elapsedTime: elapsedSeconds,
@@ -140,11 +144,17 @@ class MediaService<T extends Media> {
       )
     }
     const params = this.mediaType === AUDIO ? { peaks: "true" } : undefined
+
+    const requestDatetime = new Date()
+
     const res = (await this.apiService.get(
       this.mediaType,
       `${id}/related`,
       params
     )) as AxiosResponse<MediaResult<DetailFromMediaType<T>[]>>
+
+    this.recordSearchTime(res, requestDatetime)
+
     return {
       ...res.data,
       results: (res.data.results ?? []).map((item) =>

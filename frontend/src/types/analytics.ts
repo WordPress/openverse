@@ -414,20 +414,30 @@ export type Events = {
   }
 
   /**
-   * Time client-side search responses. Gives us observability into
+   * Description: Time client-side search responses. Gives us observability into
    * real user experience of search timings.
-   *
-   * Payload:
-   *   - `cfCacheStatus`: Whether the request hit Cloudflare or went all the way to our servers
-   *   - `cfRayIATA`: The IATA location identifier at the end of the `cf-ray` header.
-   *                  Indicates the data centre the request passed through. This gives us an idea of approximate distance from our API servers without revealing more precise request location information.
-   *   - `elapsedSeconds`: How many seconds it took to receive a response for the request
-   *   - `queryString`: The full query string including additional filters
+   * Questions:
+   * - How long does it take for the client to receive a response to search requests?
    */
-  SEARCH_RESPONSE_TIME: {
+  IMAGE_SEARCH_RESPONSE_TIME: {
+    /** the Cloudflare cache status, denoting whether the request hit Cloudflare or went all the way to our servers */
     cfCacheStatus: string
+    /** the IATA location identifier as part of the `cf-ray` header, indicating the data centre the request passed through */
     cfRayIATA: string
+    /** how many seconds it took to receive a response for the request */
     elapsedTime: number
+    /** full query string */
+    queryString: string
+  }
+
+  AUDIO_SEARCH_RESPONSE_TIME: {
+    /** the Cloudflare cache status, denoting whether the request hit Cloudflare or went all the way to our servers */
+    cfCacheStatus: string
+    /** the IATA location identifier as part of the `cf-ray` header, indicating the data centre the request passed through */
+    cfRayIATA: string
+    /** how many seconds it took to receive a response for the request */
+    elapsedTime: number
+    /** full query string */
     queryString: string
   }
 }

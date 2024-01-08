@@ -121,21 +121,27 @@ describe("Media Service search and recordSearchTime", () => {
     const IMAGE_QUERY_PARAMS = { q: "apple" }
     await initServices.image().search(IMAGE_QUERY_PARAMS)
 
-    expect(sendCustomEventMock).toHaveBeenCalledWith("SEARCH_RESPONSE_TIME", {
-      cfCacheStatus: "HIT",
-      cfRayIATA: "SJC",
-      elapsedTime: 2,
-      queryString: "?q=apple",
-    })
+    expect(sendCustomEventMock).toHaveBeenCalledWith(
+      "IMAGE_SEARCH_RESPONSE_TIME",
+      {
+        cfCacheStatus: "HIT",
+        cfRayIATA: "SJC",
+        elapsedTime: 2,
+        queryString: "?q=apple",
+      }
+    )
 
     const AUDIO_QUERY_PARAMS = { q: "table" }
     await initServices.audio().search(AUDIO_QUERY_PARAMS)
 
-    expect(sendCustomEventMock).toHaveBeenCalledWith("SEARCH_RESPONSE_TIME", {
-      cfCacheStatus: "MISS",
-      cfRayIATA: "LHR",
-      elapsedTime: 3,
-      queryString: "?q=table&peaks=true",
-    })
+    expect(sendCustomEventMock).toHaveBeenCalledWith(
+      "AUDIO_SEARCH_RESPONSE_TIME",
+      {
+        cfCacheStatus: "MISS",
+        cfRayIATA: "LHR",
+        elapsedTime: 3,
+        queryString: "?q=table&peaks=true",
+      }
+    )
   })
 })
