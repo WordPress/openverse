@@ -7,6 +7,7 @@ import type { ApiService } from "~/data/api-service"
 import type { DetailFromMediaType, Media } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
+
 import type { EventName } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
@@ -145,15 +146,11 @@ class MediaService<T extends Media> {
     }
     const params = this.mediaType === AUDIO ? { peaks: "true" } : undefined
 
-    const requestDatetime = new Date()
-
     const res = (await this.apiService.get(
       this.mediaType,
       `${id}/related`,
       params
     )) as AxiosResponse<MediaResult<DetailFromMediaType<T>[]>>
-
-    this.recordSearchTime(res, requestDatetime)
 
     return {
       ...res.data,
