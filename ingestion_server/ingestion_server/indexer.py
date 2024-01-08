@@ -491,7 +491,7 @@ class TableIndexer:
         final alias used.
         """
         # Allow relying on the model-name-based alias by
-        # not suppliying `origin_index_suffix`
+        # not supplying `origin_index_suffix`
         source_index = (
             f"{model_name}-{origin_index_suffix}" if origin_index_suffix else model_name
         )
