@@ -1,6 +1,10 @@
-import type { MediaType } from "~/constants/media"
+import { MediaType } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
-import { createApiService, getResourceSlug } from "~/data/api-service"
+import {
+  type ApiService,
+  createApiService,
+  getResourceSlug,
+} from "~/data/api-service"
 
 interface ReportParams {
   mediaType: MediaType
@@ -8,16 +12,20 @@ interface ReportParams {
   reason: ReportReason
   description?: string
 }
-
-const apiService = createApiService()
-const ReportService = {
+class ReportService {
+  private readonly apiService: ApiService
+  constructor(apiService: ApiService) {
+    this.apiService = apiService
+  }
   sendReport(params: ReportParams) {
     const mediaType = params.mediaType
-    return apiService.post(
+    return this.apiService.post(
       `/${getResourceSlug(mediaType)}${params.identifier}/report`,
       params
     )
-  },
+  }
 }
 
-export default ReportService
+export const initReportService = (accessToken?: string) => {
+  return new ReportService(createApiService({ accessToken }))
+}
