@@ -8,7 +8,7 @@
       'h-12 w-12': !autoResize,
     }"
     aria-hidden="true"
-    :data-prefers-reduced-motion="prefersReducedMotion"
+    :data-prefers-reduced-motion="prefersReducedMotion || undefined"
     data-testid="logo-loader"
     class="inline-flex items-center justify-center rounded p-3 md:h-12 md:w-12"
     fill="currentColor"

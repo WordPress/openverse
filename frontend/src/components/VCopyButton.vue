@@ -5,6 +5,7 @@
     variant="filled-dark"
     size="small"
     class="label-bold flex-shrink-0"
+    :disabled="!doneHydrating"
     :data-clipboard-target="el"
   >
     <span v-if="!success">
@@ -20,6 +21,8 @@
 import Clipboard from "clipboard"
 
 import { defineComponent, onBeforeUnmount, onMounted, ref } from "vue"
+
+import { useHydrating } from "~/composables/use-hydrating"
 
 import VButton from "~/components/VButton.vue"
 
@@ -77,9 +80,12 @@ export default defineComponent({
 
     onBeforeUnmount(() => clipboard.value?.destroy())
 
+    const { doneHydrating } = useHydrating()
+
     return {
       clipboard,
       success,
+      doneHydrating,
     }
   },
 })

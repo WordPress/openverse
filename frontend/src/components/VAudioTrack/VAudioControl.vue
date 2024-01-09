@@ -7,6 +7,7 @@
     :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
     :label="$t(label)"
     :connections="connections"
+    :disabled="!doneHydrating"
     @click.stop.prevent="handleClick"
     @mousedown="handleMouseDown"
   >
@@ -42,6 +43,8 @@ import {
 } from "~/constants/audio"
 import { defineEvent } from "~/types/emits"
 import type { ButtonConnections } from "~/types/button"
+
+import { useHydrating } from "~/composables/use-hydrating"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
@@ -157,6 +160,8 @@ export default defineComponent({
       emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")
     }
 
+    const { doneHydrating } = useHydrating()
+
     return {
       label,
       icon,
@@ -167,6 +172,7 @@ export default defineComponent({
 
       handleClick,
       handleMouseDown,
+      doneHydrating,
     }
   },
 })

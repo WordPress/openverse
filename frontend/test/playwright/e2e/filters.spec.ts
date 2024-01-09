@@ -24,6 +24,7 @@ import {
   ALL_MEDIA,
   IMAGE,
   AUDIO,
+  SupportedMediaType,
 } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
@@ -69,7 +70,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   }
 
   test("initial filters are applied based on the url", async ({ page }) => {
-    await page.goto("/search/?q=cat&license_type=commercial&license=cc0")
+    await page.goto("/search?q=cat&license_type=commercial&license=cc0")
     await filters.open(page)
     // Creator filter was removed from the UI
     const expectedFilters = ["Zero", "Use commercially"]
@@ -82,7 +83,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   test("common filters are retained when media type changes from all media to single type", async ({
     page,
   }) => {
-    await page.goto("/search/?q=cat&license_type=commercial&license=cc0")
+    await page.goto("/search?q=cat&license_type=commercial&license=cc0")
     await filters.open(page)
     // Creator filter was removed from the UI
     const expectedFilters = ["Zero", "Use commercially"]
@@ -118,7 +119,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
     await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(3)
 
     await expect(page).toHaveURL(
-      "/search/?q=cat&license_type=commercial&license=cc0"
+      "/search?q=cat&license_type=commercial&license=cc0"
     )
   })
 
@@ -254,13 +255,14 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   for (const [searchType, source] of [
     ["audio", "Freesound"],
     ["image", "Flickr"],
-  ]) {
+  ] as [SupportedMediaType, string][]) {
     test(`Provider filters are correctly initialized from the URL: ${source} - ${searchType}`, async ({
       page,
     }) => {
-      await page.goto(
-        `/search/${searchType}?q=birds&source=${source.toLowerCase()}`
-      )
+      await goToSearchTerm(page, "birds", {
+        searchType,
+        query: `source=${source.toLowerCase()}`,
+      })
       await filters.open(page)
 
       await expect(page.getByRole("checkbox", { name: source })).toBeChecked()

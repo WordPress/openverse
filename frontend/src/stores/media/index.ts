@@ -1,10 +1,10 @@
-import { createError, useNuxtApp } from "#imports"
-
 import { defineStore } from "pinia"
 
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import { isRetriable, parseFetchingError } from "~/utils/errors"
+import { VFetchingError } from "~/types/fetch-state"
+
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -407,27 +407,33 @@ export const useMediaStore = defineStore("media", {
      * If the search query changed, fetch state is reset, otherwise only the media types for which
      * fetchState.isFinished is not true are fetched.
      */
-    async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
+    async fetchMedia(
+      payload: { shouldPersistMedia?: boolean; accessToken?: string } = {}
+    ) {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
       if (!shouldPersistMedia) {
         this.clearMedia()
       }
-
-      const mediaToFetch = this._fetchableMediaTypes
-
-      const resultCounts = await Promise.all(
-        mediaToFetch.map((mediaType) =>
-          this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
-        )
+      const accessToken = payload.accessToken ?? ""
+      const fetchRequests = this._fetchableMediaTypes.map((mediaType) =>
+        this.fetchSingleMediaType({
+          mediaType,
+          shouldPersistMedia,
+          accessToken,
+        })
       )
-      const resultCount = resultCounts.reduce((a, b) => a + b, 0)
+
+      const results = await Promise.allSettled(fetchRequests)
+      if (results.some((result) => result.status === "rejected")) {
+        throw new Error("Fetching error")
+      }
 
       this.currentPage =
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
-      return resultCount
+      return this.resultItems
     },
 
     clearMedia() {
@@ -441,13 +447,16 @@ export const useMediaStore = defineStore("media", {
     /**
      * @param mediaType - the mediaType to fetch (do not use 'All_media' here)
      * @param shouldPersistMedia - whether the existing media should be added to or replaced.
+     * @param accessToken - the Openverse API access token for fetching on the server.
      */
     async fetchSingleMediaType({
       mediaType,
       shouldPersistMedia,
+      accessToken,
     }: {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
+      accessToken: string
     }) {
       const searchStore = useSearchStore()
       const { pathSlug, query: queryParams } =
@@ -459,9 +468,6 @@ export const useMediaStore = defineStore("media", {
 
       this._updateFetchState(mediaType, "start")
       try {
-        const { $openverseApiToken } = useNuxtApp()
-        const accessToken =
-          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initServices[mediaType](accessToken)
         const data = await service.search(queryParams, pathSlug)
         const mediaCount = data.result_count
@@ -495,16 +501,8 @@ export const useMediaStore = defineStore("media", {
         const errorData = parseFetchingError(error, mediaType, "search", {
           searchTerm: queryParams.q ?? "",
         })
-
         this._updateFetchState(mediaType, "end", errorData)
-
-        const { $sentry } = useNuxtApp()
-        if ($sentry) {
-          $sentry.captureException(error, { extra: { errorData } })
-        } else {
-          console.log("Sentry not available to capture exception", errorData)
-        }
-        throw createError(errorData)
+        throw new VFetchingError(errorData)
       }
     },
 

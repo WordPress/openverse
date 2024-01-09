@@ -68,4 +68,4 @@ export const contentStatus = Object.freeze({
 } as const)
 
 export const searchPath = (type: SearchType) =>
-  `/search/${type === ALL_MEDIA ? "" : type}`
+  `/search${type === ALL_MEDIA ? "" : "/" + type}`

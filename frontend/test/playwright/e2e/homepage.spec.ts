@@ -5,14 +5,14 @@ import {
   goToSearchTerm,
   preparePageForTests,
   selectHomepageSearchType,
-  sleep,
-  t,
 } from "~~/test/playwright/utils/navigation"
 
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
+
+import { t } from "~~/test/playwright/utils/i18n"
 
 import {
   ALL_MEDIA,
@@ -24,12 +24,6 @@ import {
 test.describe.configure({ mode: "parallel" })
 const searchTypePopover = "[aria-labelledby='search-type-button'] > div"
 
-/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["popoverIsVisible", "popoverIsNotVisible"] }] */
-const popoverIsVisible = async (page: Page) =>
-  await expect(page.locator(searchTypePopover)).toBeVisible()
-const popoverIsNotVisible = async (page: Page) =>
-  await expect(page.locator(searchTypePopover)).toBeHidden()
-
 const clickPopoverButton = async (page: Page) =>
   await page.getByRole("button", { name: t("searchType.all") }).click()
 
@@ -40,8 +34,7 @@ test.beforeEach(async ({ context, page }) => {
 
 test.describe("homepage", () => {
   for (const searchType of supportedSearchTypes) {
-    // https://github.com/wordpress/openverse/issues/411
-    test.skip(`can change type and search for ${searchType} from homepage`, async ({
+    test(`can change type and search for ${searchType} from homepage`, async ({
       page,
     }) => {
       await goToSearchTerm(page, "cat", {
@@ -59,13 +52,11 @@ test.describe("homepage", () => {
   }) => {
     await page.goto("/")
 
-    // wait for hydration
-    await sleep(500)
     await clickPopoverButton(page)
-    await popoverIsVisible(page)
+    await expect(page.locator(searchTypePopover)).toBeVisible()
 
     await page.mouse.click(1, 1)
-    await popoverIsNotVisible(page)
+    await expect(page.locator(searchTypePopover)).toBeHidden()
   })
 
   test("can close the search type popover by pressing Escape", async ({
@@ -73,40 +64,31 @@ test.describe("homepage", () => {
   }) => {
     await page.goto("/")
 
-    // wait for hydration
-    await sleep(500)
     await clickPopoverButton(page)
-    await popoverIsVisible(page)
+    await expect(page.locator(searchTypePopover)).toBeVisible()
 
     await page.keyboard.press("Escape")
 
-    await popoverIsNotVisible(page)
+    await expect(page.locator(searchTypePopover)).toBeHidden()
   })
 })
 
-test.describe("analytics", () => {
-  test.beforeEach(async ({ context, page }) => {
-    await mockProviderApis(context)
-    await preparePageForTests(page, "xl")
-  })
+test("sends CHANGE_CONTENT_TYPE event when changing search type", async ({
+  context,
+  page,
+}) => {
+  const analyticsEvents = collectAnalyticsEvents(context)
 
-  test("sends CHANGE_CONTENT_TYPE event when changing search type", async ({
-    context,
-    page,
-  }) => {
-    const analyticsEvents = collectAnalyticsEvents(context)
+  await page.goto("/")
+  await selectHomepageSearchType(page, AUDIO, "ltr")
 
-    await page.goto("/")
-    await selectHomepageSearchType(page, AUDIO, "ltr")
+  const changeContentTypeEvent = analyticsEvents.find(
+    (event) => event.n === "CHANGE_CONTENT_TYPE"
+  )
 
-    const changeContentTypeEvent = analyticsEvents.find(
-      (event) => event.n === "CHANGE_CONTENT_TYPE"
-    )
-
-    expectEventPayloadToMatch(changeContentTypeEvent, {
-      component: "VSearchTypes",
-      next: AUDIO,
-      previous: ALL_MEDIA,
-    })
+  expectEventPayloadToMatch(changeContentTypeEvent, {
+    component: "VSearchTypes",
+    next: AUDIO,
+    previous: ALL_MEDIA,
   })
 })
