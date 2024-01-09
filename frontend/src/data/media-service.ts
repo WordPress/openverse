@@ -144,13 +144,11 @@ class MediaService<T extends Media> {
       )
     }
     const params = this.mediaType === AUDIO ? { peaks: "true" } : undefined
-
     const res = (await this.apiService.get(
       this.mediaType,
       `${id}/related`,
       params
     )) as AxiosResponse<MediaResult<DetailFromMediaType<T>[]>>
-
     return {
       ...res.data,
       results: (res.data.results ?? []).map((item) =>
