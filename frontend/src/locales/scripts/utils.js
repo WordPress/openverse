@@ -44,6 +44,10 @@ function replacer(_, match) {
   // Replace ###<text>### from `po` files with {<text>} in `vue`.
   // Additionally, the old kebab-cased keys that can still be in the
   // translations are replaced with camelCased keys the app expects.
+  if (match.includes("_")) {
+    match.replace(/_/g, "-")
+    console.warn("Found _ in translation strings:", match)
+  }
   // TODO: Remove `camel` and warning once all translation strings are updated.
   // https://github.com/WordPress/openverse/issues/2438
   if (match.includes("-")) {
@@ -58,11 +62,22 @@ function replacer(_, match) {
  * @param json {any} - the JSON object to replace placeholders in
  * @return {any} the sanitised JSON object
  */
-const replacePlaceholders = (json) => {
+let replacePlaceholders = (json) => {
   if (json === null) {
     return null
   }
   if (typeof json === "string") {
+    if (json.includes("{") && json.includes("}")) {
+      json = json.replaceAll("{", "###")
+      json = json.replaceAll("}", "###")
+    }
+    if (json.includes("<em>")) {
+      json = json.replaceAll("<em>", "")
+      json = json.replaceAll("</em>", "")
+    }
+    if (json.includes("||")) {
+      json = ""
+    }
     return json.replace(/###([a-zA-Z-]*)###/g, replacer)
   }
   let currentJson = { ...json }
