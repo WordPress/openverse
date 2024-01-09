@@ -14,9 +14,9 @@ export const meta = [
   },
   // By default, tell all robots not to index pages. Will be overwritten in the
   // search, content and home pages.
-  { hid: "robots", name: "robots", content: "noindex" },
+  { key: "robots", name: "robots", content: "noindex" },
   {
-    hid: "theme-color",
+    key: "theme-color",
     name: "theme-color",
     content: "#ffffff",
   },
@@ -24,14 +24,12 @@ export const meta = [
     name: "description",
     content: DESCRIPTION,
   },
-  { hid: "og:title", property: "og:title", content: "Openverse" },
+  { property: "og:title", content: "Openverse" },
   {
-    hid: "og:image",
     property: "og:image",
     content: "/openverse-default.jpg",
   },
   {
-    hid: "og:description",
     name: "og:description",
     content: DESCRIPTION,
   },
