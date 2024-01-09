@@ -15,30 +15,50 @@ jobs:
       !startsWith(github.event.pull_request.title, '🔄')
     runs-on: ubuntu-latest
     env:
-      slack_url: ${{ secrets.SLACK_WEBHOOK_URL }}
       pr_url: ${{ github.event.pull_request.html_url }}
       pr_number: ${{ github.event.pull_request.number }}
       pr_title: ${{ github.event.pull_request.title }}
       pr_author: ${{ github.event.pull_request.user.login }}
       pr_repo: ${{ github.event.pull_request.base.repo.full_name }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
       - name: Send notification for new PR
         if: github.event.action == 'opened'
+        id: slack
+        uses: slackapi/slack-github-action@1.24.0
         env:
           pr_status: ${{ github.event.pull_request.draft && ' draft ' || ' ' }}
           pr_icon: ${{ github.event.pull_request.draft && ':pr-draft:' || ':pull-request:' }}
-        run: |
-          curl \
-            "$slack_url" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{"text":"New'"$pr_status"'PR opened by '"$pr_author"' in '"$pr_repo"': #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"'"$pr_icon"' New'"$pr_status"'PR opened by *'"$pr_author"'* in `'"$pr_repo"'`:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
-
+        with:
+          payload: |
+            {
+              "text": "New \"${{ env.pr_status }}\" PR opened by \"${{ env.pr_author }}\" in \"${{ env.pr_repo }}\": #\"${{ env.pr_number }}\" - \"${{ env.pr_title }}\"",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "\"${{ env.pr_icon }}\" New\"${{ env.pr_status }}\"PR opened by *\"${{ env.pr_author }}\"* in `\"${{ env.pr_repo }}\"`:\n<\"${{ env.pr_url }}\"|#\"${{ env.pr_number }}\" - \"${{ env.pr_title }}\">"
+                  }
+                }
+              ]
+            }
       - name: Send notification for PR marked ready
         if: github.event.action == 'ready_for_review'
-        run: |
-          curl \
-            "$slack_url" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{"text":"PR by '"$pr_author"' in '"$pr_repo"' marked ready for review: #'"$pr_number"' - '"$pr_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":pull-request: PR by *'"$pr_author"'* in `'"$pr_repo"'` marked ready for review:\n<'"$pr_url"'|#'"$pr_number"' - '"$pr_title"'>"}}]}'
+        id: slack-notifications
+        uses: slackapi/slack-github-action@1.24.0
+        with:
+          payload: |
+            {
+             "text": "PR by \"${{ env.pr_author }}\" in \"${{ env.pr_repo }}\" marked ready for review: #${{ env.pr_number }} - \"${{ env.pr_title }}\"",
+             "blocks": [
+               {
+                 "type": "section",
+                 "text": {
+                   "type": "mrkdwn",
+                   "text": ":pull-request: PR by *${{ env.pr_author }}* in `${{ env.pr_repo }}` marked ready for review:\n<${{ env.pr_url }}|#${{ env.pr_number }} - ${{ env.pr_title }}>"
+                 }
+               }
+             ]
+            }
