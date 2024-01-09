@@ -321,14 +321,20 @@ export const searchFromHeader = async (page: Page, term: string) => {
  * because localized routes start with the locale prefix (e.g. /ar/image/).
  * Scroll down and up to load all lazy-loaded content.
  */
-export const openFirstResult = async (page: Page, mediaType: MediaType) => {
+export const openFirstResult = async (
+  page: Page,
+  mediaType: MediaType,
+  dir: LanguageDirection = "ltr"
+) => {
   const firstResult = page.locator(`a[href*="/${mediaType}/"]`).first()
   const firstResultHref = await getLocatorHref(firstResult)
   await firstResult.click({ position: { x: 32, y: 32 } })
 
   // Make sure that navigation to single result page is complete.
   // Using URL is not enough because it changes before navigation is complete.
-  await expect(page.getByRole("heading", { name: /how to use/i })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: t("mediaDetails.reuse.title", dir) })
+  ).toBeVisible()
 
   await scrollDownAndUp(page)
   // Wait for all pending requests to finish, at which point we know

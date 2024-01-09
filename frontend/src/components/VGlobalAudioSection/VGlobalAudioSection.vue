@@ -27,7 +27,7 @@ import { useActiveAudio } from "~/composables/use-active-audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
-// import { useSingleResultStore } from "~/stores/media/single-result"
+import { useSingleResultStore } from "~/stores/media/single-result"
 import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
@@ -56,11 +56,10 @@ export default defineComponent({
       if (audioFromMediaStore) {
         return audioFromMediaStore as AudioDetail
       }
-      // TODO: Uncomment after adding single result store
-      // const singleResultStore = useSingleResultStore()
-      // if (singleResultStore.mediaId === trackId) {
-      //   return singleResultStore.audio
-      // }
+      const singleResultStore = useSingleResultStore()
+      if (singleResultStore.mediaId === trackId) {
+        return singleResultStore.audio
+      }
       return null
     }
     const audio = computed(() => {
