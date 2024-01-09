@@ -58,5 +58,5 @@ if config("IS_PROXIED", default=True, cast=bool):
 # Adding DJANGO_SECRET_KEY check
 if SECRET_KEY == "example_key" and ENVIRONMENT != "local":
     raise ImproperlyConfigured(
-        "DJANGO_SECRET_KEY must not be 'example_key' non-local environments."
+        "DJANGO_SECRET_KEY must not be 'example_key' in non-local environments."
     )
