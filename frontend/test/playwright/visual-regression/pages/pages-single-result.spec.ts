@@ -3,12 +3,13 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
-  languageDirections,
   openFirstResult,
   pathWithDir,
   preparePageForTests,
   sleep,
 } from "~~/test/playwright/utils/navigation"
+
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 import { supportedMediaTypes } from "~/constants/media"
 

@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test"
 
 import {
+  goToSearchTerm,
   preparePageForTests,
-  sleep,
-  t,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
+import { t } from "~~/test/playwright/utils/i18n"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -14,20 +14,29 @@ test.describe("global audio", () => {
   breakpoints.describeXs(() => {
     test.beforeEach(async ({ page }) => {
       await preparePageForTests(page, "xs")
+      await page.routeFromHAR("./test/hars/global-audio-provider.har", {
+        url: /wikimedia/,
+        update: false,
+      })
     })
     test("track continues playing when navigating from search to details page", async ({
       page,
     }) => {
-      await preparePageForTests(page, "xs")
-      await page.goto("/search/audio?q=honey&length=shortest")
+      await goToSearchTerm(page, "honey", {
+        searchType: "audio",
+        query: "length=shortest",
+      })
+
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
       await audio.play(firstAudioRow)
+
       // Navigate to the details page of the playing audio track
       await firstAudioRow.click()
+
       // and confirm is still playing (or loading to play)
       const mainPlayerButton = page.locator(".main-track >> button").first()
-      await sleep(600) // Doesn't seem to make a difference for the status
+
       await expect(mainPlayerButton).toHaveAttribute(
         "aria-label",
         /(Loading|Pause|Replay)/
@@ -35,8 +44,11 @@ test.describe("global audio", () => {
     })
 
     test("track can be closed while playing", async ({ page }) => {
-      await preparePageForTests(page, "xs")
-      await page.goto("/search/audio?q=honey")
+      await goToSearchTerm(page, "honey", {
+        searchType: "audio",
+        query: "length=shortest",
+      })
+
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
       await audio.play(firstAudioRow)
@@ -56,8 +68,11 @@ test.describe("global audio", () => {
     test("player does not reproduce an audio different that the current audio in the details page", async ({
       page,
     }) => {
-      await preparePageForTests(page, "xs")
-      await page.goto("/search/audio?q=honey&length=shortest")
+      await goToSearchTerm(page, "honey", {
+        searchType: "audio",
+        query: "length=shortest",
+      })
+
       // Find and play the first audio result
       const firstAudioRow = await audio.getNthAudioRow(page, 0)
       await audio.play(firstAudioRow)

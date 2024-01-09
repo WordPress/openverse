@@ -14,45 +14,45 @@ const pages = {
     ogTitle: "Openverse",
     robots: "all",
   },
-  // allSearch: {
-  //   url: "/search/?q=birds",
-  //   title: "birds | Openverse",
-  //   ogImage: "/openverse-default.jpg",
-  //   ogTitle: "Openverse",
-  //   robots: "all",
-  // },
-  // imageSearch: {
-  //   url: "/search/image?q=birds",
-  //   title: "birds | Openverse",
-  //   ogImage: "/openverse-default.jpg",
-  //   ogTitle: "Openverse",
-  //   robots: "all",
-  // },
-  // audioSearch: {
-  //   url: "/search/audio?q=birds",
-  //   title: "birds | Openverse",
-  //   ogImage: "/openverse-default.jpg",
-  //   ogTitle: "Openverse",
-  //   robots: "all",
-  // },
-  // imageDetail: {
-  //   url: "/image/da5cb478-c093-4d62-b721-cda18797e3fb",
-  //   title: "bird | Openverse",
-  //   ogImage: new RegExp(
-  //     "/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/"
-  //   ),
-  //   ogTitle: "bird",
-  //   robots: "noindex",
-  // },
-  // audioDetail: {
-  //   url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
-  //   title: "I Love My Dog You Love your Cat | Openverse",
-  //   ogImage: new RegExp(
-  //     "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
-  //   ),
-  //   ogTitle: "I Love My Dog You Love your Cat",
-  //   robots: "noindex",
-  // },
+  allSearch: {
+    url: "/search/?q=birds",
+    title: "birds | Openverse",
+    ogImage: "/openverse-default.jpg",
+    ogTitle: "Openverse",
+    robots: "all",
+  },
+  imageSearch: {
+    url: "/search/image?q=birds",
+    title: "birds | Openverse",
+    ogImage: "/openverse-default.jpg",
+    ogTitle: "Openverse",
+    robots: "all",
+  },
+  audioSearch: {
+    url: "/search/audio?q=birds",
+    title: "birds | Openverse",
+    ogImage: "/openverse-default.jpg",
+    ogTitle: "Openverse",
+    robots: "all",
+  },
+  imageDetail: {
+    url: "/image/da5cb478-c093-4d62-b721-cda18797e3fb",
+    title: "bird | Openverse",
+    ogImage: new RegExp(
+      "/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/"
+    ),
+    ogTitle: "bird",
+    robots: "noindex",
+  },
+  audioDetail: {
+    url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
+    title: "I Love My Dog You Love your Cat | Openverse",
+    ogImage: new RegExp(
+      "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
+    ),
+    ogTitle: "I Love My Dog You Love your Cat",
+    robots: "noindex",
+  },
   about: {
     url: "/about",
     title: "About Openverse | Openverse",

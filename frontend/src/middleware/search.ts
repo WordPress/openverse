@@ -3,6 +3,7 @@ import {
   defineNuxtRouteMiddleware,
   firstParam,
   showError,
+  useNuxtApp,
 } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
@@ -38,13 +39,18 @@ export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
     urlQuery: to.query,
   })
 
+  // Extracted the token handling to the middleware because `useNuxtApp`
+  // cannot be called from `useAsyncData` on the server.
+  const tokenRaw = useNuxtApp().$openverseApiToken
+  const accessToken = typeof tokenRaw === "string" ? tokenRaw : ""
+
   // Fetch results before rendering the page on the server.
   if (process.server) {
     await searchStore.initProviderFilters()
 
     const mediaStore = useMediaStore()
 
-    const results = await mediaStore.fetchMedia()
+    const results = await mediaStore.fetchMedia({ accessToken })
     const fetchingError = mediaStore.fetchState.fetchingError
     if (!results && fetchingError && !handledClientSide(fetchingError)) {
       return showError(fetchingError)

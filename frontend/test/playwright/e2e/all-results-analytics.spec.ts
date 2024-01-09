@@ -1,28 +1,33 @@
 import { expect, test } from "@playwright/test"
 
 import {
+  goToSearchTerm,
   openFirstResult,
   preparePageForTests,
-  t,
 } from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
 
+import { t } from "~~/test/playwright/utils/i18n"
+
 import { AUDIO, IMAGE } from "~/constants/media"
+
+test.describe.configure({ mode: "parallel" })
 
 test.describe("all results grid analytics test", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl")
-    await page.goto("/search/?q=birds")
+    await goToSearchTerm(page, "birds")
   })
 
-  test("should send SELECT_SEARCH_RESULT event when audio result is selected", async ({
+  test("sends SELECT_SEARCH_RESULT event when audio result is selected", async ({
     context,
     page,
   }) => {
     const analyticsEvents = collectAnalyticsEvents(context)
+
     await openFirstResult(page, "audio")
     const selectSearchResultEvent = analyticsEvents.find(
       (event) => event.n === "SELECT_SEARCH_RESULT"
@@ -44,6 +49,7 @@ test.describe("all results grid analytics test", () => {
     page,
   }) => {
     const analyticsEvents = collectAnalyticsEvents(context)
+
     await openFirstResult(page, "image")
     const selectSearchResultEvent = analyticsEvents.find(
       (event) => event.n === "SELECT_SEARCH_RESULT"
@@ -61,7 +67,7 @@ test.describe("all results grid analytics test", () => {
     })
   })
 
-  test("should send AUDIO_INTERACTION event when audio is interacted", async ({
+  test("sends AUDIO_INTERACTION event when audio is interacted", async ({
     page,
   }) => {
     const analyticsEvents = collectAnalyticsEvents(page.context())
@@ -69,9 +75,10 @@ test.describe("all results grid analytics test", () => {
     const firstResultPlay = page
       .locator(`a[href*="/audio/"]`)
       .first()
-      .locator(`[aria-label="Play"]`)
+      .getByRole("button", { name: /play/i })
 
     await firstResultPlay.click()
+    await expect(page.getByRole("button", { name: /pause/i })).toBeVisible()
 
     const audioInteractionEvent = analyticsEvents.find(
       (event) => event.n === "AUDIO_INTERACTION"

@@ -2,12 +2,12 @@ import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
-  languageDirections,
   pathWithDir,
   preparePageForTests,
   sleep,
-  t,
 } from "~~/test/playwright/utils/navigation"
+import { languageDirections, t } from "~~/test/playwright/utils/i18n"
+import { getH1 } from "~~/test/playwright/utils/components"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -49,8 +49,7 @@ test.describe("layout color is set correctly", () => {
       await preparePageForTests(page, "lg", { dismissFilter: false })
     })
 
-    // https://github.com/wordpress/openverse/issues/411
-    test.skip("change language on homepage and search", async ({ page }) => {
+    test("change language on homepage and search", async ({ page }) => {
       await page.goto("/")
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
       const searchBar = page.getByPlaceholder(
@@ -59,9 +58,7 @@ test.describe("layout color is set correctly", () => {
       await searchBar.fill("cat")
       await searchBar.press("Enter")
 
-      await expect(
-        page.getByRole("heading", { level: 1, name: "Cat" })
-      ).toBeVisible()
+      await expect(getH1(page, "Cat")).toBeVisible()
       await page.waitForURL(/ar\/search/)
 
       expect(await page.screenshot()).toMatchSnapshot("search-page-rtl-lg.png")
@@ -85,16 +82,6 @@ test.describe("layout color is set correctly", () => {
 
       expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
         "about-ltr-lg.png",
-        { maxDiffPixelRatio: 0.01 }
-      )
-    })
-
-    // https://github.com/wordpress/openverse/issues/411
-    test.skip("nonexistent `image` page", async ({ page }) => {
-      await page.goto("/image/non-existent")
-
-      expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
-        "non-existent-ltr-lg.png",
         { maxDiffPixelRatio: 0.01 }
       )
     })

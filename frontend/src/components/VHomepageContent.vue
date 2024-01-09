@@ -85,6 +85,8 @@ import { useDialogControl } from "~/composables/use-dialog-control"
 
 import { useUiStore } from "~/stores/ui"
 
+import { useHydrating } from "~/composables/use-hydrating"
+
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
 import VLink from "~/components/VLink.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"

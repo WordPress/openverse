@@ -27,6 +27,25 @@ export interface FetchingError {
   details?: Record<string, string>
 }
 
+export class VFetchingError extends Error {
+  code: ErrorCode
+  requestKind: RequestKind
+  statusCode: number | undefined
+  statusMessage: string | undefined
+  searchType: SupportedSearchType
+  details: Record<string, string> | undefined
+  constructor(public fetchingError: FetchingError) {
+    super()
+    this.name = "FetchingError"
+    this.code = fetchingError.code
+    this.statusCode = fetchingError.statusCode
+    this.statusMessage = fetchingError.statusMessage
+    this.requestKind = fetchingError.requestKind
+    this.searchType = fetchingError.searchType
+    this.details = fetchingError.details
+  }
+}
+
 export interface FetchState {
   isFetching: boolean
   hasStarted?: boolean
