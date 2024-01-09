@@ -2,12 +2,12 @@
   <div class="full-track w-full">
     <div class="relative border-b border-dark-charcoal-20">
       <span
-        v-if="props.currentTime > 0"
+        v-if="currentTime > 0"
         class="pointer-events-none absolute left-0 hidden h-full w-4 bg-yellow md:block lg:w-10"
         aria-hidden
       />
       <span
-        v-if="props.status === 'played'"
+        v-if="status === 'played'"
         class="pointer-events-none absolute right-0 hidden h-full w-4 bg-yellow md:block lg:w-10"
         aria-hidden
       />
@@ -74,8 +74,8 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed } from "vue"
+<script lang="ts">
+import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 import { audioFeatures, AudioSize, AudioStatus } from "~/constants/audio"
@@ -86,17 +86,38 @@ import VLink from "~/components/VLink.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
 
-const props = defineProps<{
-  audio: AudioDetail
-  size?: AudioSize
-  status?: AudioStatus
-  currentTime: number
-}>()
+export default defineComponent({
+  name: "VFullLayout",
+  components: { VMediaInfo, VGetMediaButton, VLink },
+  props: {
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+    size: {
+      type: String as PropType<AudioSize>,
+    },
+    status: {
+      type: String as PropType<AudioStatus>,
+    },
+    currentTime: {
+      type: Number,
+      required: true,
+    },
+  },
+  setup() {
+    const featureFlagStore = useFeatureFlagStore()
+    const additionalSearchViews = computed(() =>
+      featureFlagStore.isOn("additional_search_views")
+    )
 
-const featureFlagStore = useFeatureFlagStore()
-const additionalSearchViews = computed(() =>
-  featureFlagStore.isOn("additional_search_views")
-)
+    return {
+      audioFeatures,
+
+      additionalSearchViews,
+    }
+  },
+})
 </script>
 
 <style>
