@@ -40,7 +40,6 @@ class MediaService<T extends Media> {
    * @param requestDatetime - datetime before request was sent
    */
   recordSearchTime(response: AxiosResponse, requestDatetime: Date) {
-    const { sendCustomEvent } = useAnalytics()
     const REQUIRED_HEADERS = ["date", "cf-cache-status", "cf-ray"]
 
     const responseHeaders = response.headers
@@ -64,6 +63,7 @@ class MediaService<T extends Media> {
     )
     const url = new URL(response.request?.responseURL)
 
+    const { sendCustomEvent } = useAnalytics()
     sendCustomEvent(this.searchEvent, {
       cfCacheStatus: responseHeaders["cf-cache-status"],
       cfRayIATA: cfRayIATA,
