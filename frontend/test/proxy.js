@@ -161,7 +161,7 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   ignoreBody: true,
   allowHeaders: ["connection"],
   name: "Openverse e2e proxy",
-  summary: true,
+  summary: false,
   tapeNameGenerator,
   tapeDecorator,
 })

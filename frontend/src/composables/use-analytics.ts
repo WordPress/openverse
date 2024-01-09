@@ -1,20 +1,14 @@
 import { useTrackEvent } from "#imports"
 
-import { computed, onMounted } from "vue"
+import { computed } from "vue"
 
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { log } from "~/utils/console"
 
 export const useAnalytics = () => {
   const uiStore = useUiStore()
-  const featureFlagStore = useFeatureFlagStore()
-
-  onMounted(() => {
-    featureFlagStore.syncAnalyticsWithLocalStorage()
-  })
 
   /**
    * the Plausible props that work identically on the server-side and the
