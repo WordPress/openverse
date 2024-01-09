@@ -8,7 +8,9 @@ export default defineVitestConfig({
     setupFiles: ["./test/unit/vitest-setup.ts"],
 
     environmentOptions: {
-      nuxt: {},
+      nuxt: {
+        domEnvironment: "jsdom",
+      },
     },
   },
 })

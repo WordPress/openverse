@@ -3,21 +3,12 @@ import { beforeEach, describe, expect, it } from "vitest"
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
 import useSearchType from "~/composables/use-search-type"
-// import { useAnalytics } from "~/composables/use-analytics"
-
-// vi.mock("~/composables/use-analytics")
 
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 
 describe("useSearchType", () => {
-  // const sendCustomEventMock = vi.fn()
   beforeEach(() => {
-    // sendCustomEventMock.mockClear()
-
     setActivePinia(createPinia())
-    // useAnalytics.mockImplementation(() => ({
-    //   sendCustomEvent: sendCustomEventMock,
-    // }))
   })
 
   it("should have correct initial values", () => {

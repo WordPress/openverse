@@ -2,13 +2,13 @@
   <fieldset class="mb-8">
     <legend class="label-bold">{{ title }}</legend>
     <div
-      v-for="(item, index) in options"
-      :key="index"
+      v-for="item in options"
+      :key="item.code"
       class="mt-4 flex items-center justify-between"
     >
       <VCheckbox
         :id="item.code"
-        :key="index"
+        :key="item.code"
         :checked="item.checked"
         :name="title"
         :value="item.code"
@@ -115,6 +115,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const i18n = useI18n({ useScope: "global" })
+    const searchStore = useSearchStore()
 
     const itemLabel = (item: FilterItem) =>
       ["audioProviders", "imageProviders"].indexOf(props.filterType) > -1
@@ -138,9 +139,11 @@ export default defineComponent({
       return `${descriptions} - ${close}`
     }
 
-    const isDisabled = (item: FilterItem) =>
-      useSearchStore().isFilterDisabled(item, props.filterType) ??
-      props.disabled
+    const isDisabled = (item: FilterItem) => {
+      return (
+        searchStore.isFilterDisabled(item, props.filterType) ?? props.disabled
+      )
+    }
 
     const isLicense = (code: string): code is License => {
       // Quick check that also prevents "`code` is declared but its value is never read" warning.

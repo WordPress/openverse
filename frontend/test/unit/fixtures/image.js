@@ -13,7 +13,7 @@ export const image = {
   provider: "flickr",
   source: "flickr",
   category: "photograph",
-  filesize: "118813",
+  filesize: 118813,
   filetype: "jpg",
   tags: [
     {

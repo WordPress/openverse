@@ -3,10 +3,10 @@ import { test, Page } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
-  languageDirections,
   pathWithDir,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -65,9 +65,7 @@ for (const dir of languageDirections) {
         })
       })
     })
-  })
 
-  breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
     test(`${dir} content switcher with additional search types open`, async ({
       page,
     }) => {
