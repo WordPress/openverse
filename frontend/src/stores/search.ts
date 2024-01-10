@@ -1,4 +1,4 @@
-import { useLocalePath, useRuntimeConfig } from "#imports"
+import { useNuxtApp, useRuntimeConfig } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -248,7 +248,7 @@ export const useSearchStore = defineStore("search", {
           this.searchTerm,
           "frontend"
         )
-      return useLocalePath()({
+      return useNuxtApp().$localePath({
         path: searchPath(searchType),
         query: queryParams as unknown as LocationQuery,
       })
@@ -266,7 +266,7 @@ export const useSearchStore = defineStore("search", {
       collectionParams: CollectionParams
     }) {
       const path = `/${type}/${collectionToPath(collectionParams)}`
-      return useLocalePath()(path)
+      return useNuxtApp().$localePath(path)
     },
 
     setSearchType(type: SearchType) {
