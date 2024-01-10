@@ -145,7 +145,6 @@ repos:
         name: CODEOWNERS validator
         language: docker_image
         pass_filenames: false
-        files: CODEOWNERS$
         entry: >
           -e REPOSITORY_PATH="."
           -e CHECKS="files,duppatterns,syntax"
