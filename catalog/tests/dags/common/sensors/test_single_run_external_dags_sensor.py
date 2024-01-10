@@ -208,13 +208,6 @@ def test_succeeds_if_no_running_dags(
     "ignore:This class is deprecated. Please use "
     "`airflow.utils.task_group.TaskGroup`.:airflow.exceptions.RemovedInAirflow3Warning"
 )
-# This also appears to be coming from Airflow internals during testing as a result of
-# loading the example bash operator DAG:
-# /home/airflow/.local/lib/python3.10/site-packages/airflow/models/dag.py:3492: RemovedInAirflow3Warning  # noqa: E501
-@pytest.mark.filterwarnings(
-    "ignore:Param `schedule_interval` is deprecated and will be removed in a future release. "
-    "Please use `schedule` instead.:airflow.exceptions.RemovedInAirflow3Warning"
-)
 def test_retries_if_running_dags_with_completed_sensor_task(
     caplog, sample_dag_id_fixture, sample_pool_fixture, clean_db, setup_pool
 ):
