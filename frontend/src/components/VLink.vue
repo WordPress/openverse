@@ -32,7 +32,7 @@
  * External links use `a` element. If `href` does not start with `#`, they are set to
  * open in a new tab.
  */
-import { useLocalePath } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { computed, defineComponent } from "vue"
 
@@ -101,7 +101,7 @@ export default defineComponent({
     } {
       return typeof p.href === "string" && !["", "#"].includes(p.href)
     }
-    const localePath = useLocalePath()
+    const localePath = useNuxtApp().$localePath
 
     const isInternal = computed(
       () => checkHref(props) && props.href.startsWith("/")
