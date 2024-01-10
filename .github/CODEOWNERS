@@ -3,11 +3,7 @@ archive/ @WordPress/openverse-catalog
 
 api/                @WordPress/openverse-api
 ingestion_server/   @WordPress/openverse-api
-nginx/              @WordPress/openverse-api
-postgres/           @WordPress/openverse-api
 sample_data/        @WordPress/openverse-api
-.flake8             @WordPress/openverse-api
-.isort.cfg          @WordPress/openverse-api
 docker-compose.yml  @WordPress/openverse-api
 load_sample_data.sh @WordPress/openverse-api
 
@@ -22,21 +18,4 @@ pnpm-workspace.yaml @WordPress/openverse-frontend
 prettier.config.js  @WordPress/openverse-frontend
 .prettierignore     @WordPress/openverse-frontend
 
-automations/                @WordPress/openverse-maintainers
-brand/                      @WordPress/openverse-maintainers
-dead_links/                 @WordPress/openverse-maintainers
-docker/                     @WordPress/openverse-maintainers
-documentation/              @WordPress/openverse-maintainers
-readme_assets/              @WordPress/openverse-maintainers
-templates/                  @WordPress/openverse-maintainers
-utilities/                  @WordPress/openverse-maintainers
-.gitattributes              @WordPress/openverse-maintainers
-.gitignore                  @WordPress/openverse-maintainers
-.github/                    @WordPress/openverse-maintainers
-.devcontainer/              @WordPress/openverse-maintainers
-.pre-commit-config.yaml     @WordPress/openverse-maintainers
-CODE_OF_CONDUCT.md          @WordPress/openverse-maintainers
-CONTRIBUTING.md             @WordPress/openverse-maintainers
-justfile                    @WordPress/openverse-maintainers
-LICENSE                     @WordPress/openverse-maintainers
-README.md                   @WordPress/openverse-maintainers
+* @WordPress/openverse-maintainers
