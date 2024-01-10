@@ -2,9 +2,8 @@
   <div
     class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
     :class="[
-      { 'has-sidebar': isSidebarVisible },
       isSidebarVisible
-        ? 'grid-cols-[1fr_var(--filter-sidebar-width)]'
+        ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
         : 'grid-cols-1',
     ]"
   >
@@ -34,7 +33,34 @@
       id="main-page"
       class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
-      <slot />
+      <div
+        :id="skipToContentTargetId"
+        tabindex="-1"
+        class="browse-page flex w-full flex-col px-6 lg:px-10"
+      >
+        <VErrorSection
+          v-if="fetchingError"
+          :fetching-error="fetchingError"
+          class="w-full py-10"
+        />
+        <template v-else>
+          <slot :is-filter-sidebar-visible="isSidebarVisible" />
+          <footer :class="isAllView ? 'mb-6 mt-4 lg:mb-10' : 'mt-4'">
+            <VLoadMore v-if="supported" @load-more="handleLoadMore" />
+          </footer>
+          <VExternalSearchForm
+            v-if="!isAllView"
+            :search-term="searchTerm"
+            :is-supported="supported"
+            :has-no-results="false"
+          />
+          <VScrollButton
+            v-show="showScrollButton"
+            :is-filter-sidebar-visible="isSidebarVisible"
+            data-testid="scroll-button"
+          />
+        </template>
+      </div>
       <VFooter
         mode="content"
         class="border-t border-dark-charcoal-20 bg-white"
@@ -47,15 +73,17 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
 import { useScroll } from "@vueuse/core"
+import { storeToRefs } from "pinia"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 
-import {
-  IsHeaderScrolledKey,
-  IsSidebarVisibleKey,
-  ShowScrollButtonKey,
-} from "~/types/provides"
+import { useAsyncSearch } from "~/composables/use-async-search"
+
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
+
+import { skipToContentTargetId } from "~/constants/window"
+import { ALL_MEDIA } from "~/constants/media"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
@@ -64,6 +92,10 @@ import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
 import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+import VScrollButton from "~/components/VScrollButton.vue"
+import VLoadMore from "~/components/VLoadMore.vue"
+import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -72,6 +104,10 @@ import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
 export default defineComponent({
   name: "SearchLayout",
   components: {
+    VExternalSearchForm,
+    VLoadMore,
+    VScrollButton,
+    VErrorSection,
     VSafeBrowsing,
     VBanners,
     VFooter,
@@ -80,12 +116,15 @@ export default defineComponent({
     VHeaderDesktop,
     VHeaderMobile,
   },
-  setup() {
+  async setup() {
     const headerRef = ref<HTMLElement | null>(null)
     const mainPageRef = ref<HTMLElement | null>(null)
 
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
+
+    const { searchTerm, searchTypeIsSupported: supported } =
+      storeToRefs(searchStore)
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
@@ -94,10 +133,7 @@ export default defineComponent({
      * on search result pages for supported search types.
      */
     const isSidebarVisible = computed(
-      () =>
-        searchStore.searchTypeIsSupported &&
-        uiStore.isFilterVisible &&
-        isDesktopLayout.value
+      () => supported.value && uiStore.isFilterVisible && isDesktopLayout.value
     )
 
     const isHeaderScrolled = ref(false)
@@ -120,7 +156,6 @@ export default defineComponent({
       mainPageElement.value = document.getElementById("main-page")
     })
 
-    provide(ShowScrollButtonKey, showScrollButton)
     provide(IsHeaderScrolledKey, isHeaderScrolled)
     provide(IsSidebarVisibleKey, isSidebarVisible)
 
@@ -129,6 +164,9 @@ export default defineComponent({
         ? "border-b-dark-charcoal-20"
         : "border-b-tx"
     )
+    const isAllView = computed(() => searchStore.searchType === ALL_MEDIA)
+
+    const { handleLoadMore, fetchingError } = await useAsyncSearch()
 
     return {
       mainPageRef,
@@ -139,6 +177,15 @@ export default defineComponent({
       isSidebarVisible,
 
       headerBorder,
+
+      fetchingError,
+      handleLoadMore,
+      skipToContentTargetId,
+      showScrollButton,
+
+      isAllView,
+      supported,
+      searchTerm,
     }
   },
 })

@@ -1,89 +1,64 @@
 <template>
-  <div
-    :id="skipToContentTargetId"
-    tabindex="-1"
-    class="browse-page flex w-full flex-col px-6 lg:px-10"
-  >
-    <VErrorSection
-      v-if="fetchingError"
-      :fetching-error="fetchingError"
-      class="w-full py-10"
+  <section>
+    <header v-if="supported" class="my-0 md:mb-8 md:mt-4">
+      <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">{{
+        searchTerm
+      }}</VSearchResultsTitle>
+    </header>
+    <NuxtPage
+      v-if="supported"
+      :key="$route.path"
+      :results="results"
+      :search-term="searchTerm"
+      data-testid="search-results"
     />
-    <section v-else>
-      <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
-        <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">{{
-          searchTerm
-        }}</VSearchResultsTitle>
-      </header>
-      <NuxtPage
-        v-if="isAllView || isSupportedMediaType(searchType)"
-        :key="$route.path"
-        :search-term="searchTerm"
-        :supported="supported"
-        data-testid="search-results"
-      />
-      <VExternalSearchForm
-        v-if="!isAllView"
-        :search-term="searchTerm"
-        :is-supported="supported"
-        :has-no-results="false"
-      />
-      <VScrollButton
-        v-show="showScrollButton"
-        :is-filter-sidebar-visible="isSidebarVisible"
-        data-testid="scroll-button"
-      />
-    </section>
-  </div>
+    <VGridSkeleton
+      v-if="fetchState.isFetching && !results.length"
+      :is-sidebar-visible="isFilterSidebarVisible"
+      :is-for-tab="isSearchTypeSupported(searchType) ? searchType : 'all'"
+    />
+  </section>
 </template>
 
 <script lang="ts">
 import {
   defineNuxtComponent,
   definePageMeta,
-  navigateTo,
-  showError,
-  useAsyncData,
+  isSearchTypeSupported,
   useHead,
-  useNuxtApp,
 } from "#imports"
 
-import { computed, inject, ref, watch } from "vue"
-import { watchDebounced } from "@vueuse/core"
+import { computed, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 
 import { searchMiddleware } from "~/middleware/search"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
 
-import { skipToContentTargetId } from "~/constants/window"
-import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
-import { areQueriesEqual } from "~/utils/search-query-transform"
-import { handledClientSide } from "~/utils/errors"
-
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
-import VScrollButton from "~/components/VScrollButton.vue"
-import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
+import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 
 export default defineNuxtComponent({
-  name: "BrowsePage",
+  name: "SearchPage",
+  methods: { isSearchTypeSupported },
   components: {
+    VGridSkeleton,
     VErrorSection,
     VSearchResultsTitle,
-    VExternalSearchForm,
-    VScrollButton,
   },
-  setup() {
+  props: {
+    isFilterSidebarVisible: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  async setup() {
     definePageMeta({
       layout: "search-layout",
       middleware: searchMiddleware,
     })
-    const showScrollButton = inject(ShowScrollButtonKey)
-    const isSidebarVisible = inject(IsSidebarVisibleKey)
-    const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
@@ -97,11 +72,19 @@ export default defineNuxtComponent({
     const {
       searchTerm,
       searchType,
-      apiSearchQueryParams: query,
       searchTypeIsSupported: supported,
     } = storeToRefs(searchStore)
 
-    const { resultCount, fetchState } = storeToRefs(mediaStore)
+    const results = computed(() => {
+      const st = searchType.value
+      return st === ALL_MEDIA
+        ? mediaStore.allMedia
+        : isSupportedMediaType(st)
+        ? mediaStore.resultItems[st]
+        : []
+    })
+
+    const { fetchState } = storeToRefs(mediaStore)
 
     const isAllView = computed(() => searchType.value === ALL_MEDIA)
 
@@ -115,76 +98,15 @@ export default defineNuxtComponent({
       meta: [{ key: "robots", name: "robots", content: "all" }],
     }))
 
-    const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
-    const scrollToTop = () => {
-      document.getElementById("main-page")?.scroll(0, 0)
-    }
-
-    /**
-     * This watcher fires even when the queries are equal. We update the path only
-     * when the queries change.
-     */
-    watchDebounced(
-      query,
-      (newQuery, oldQuery) => {
-        if (!areQueriesEqual(newQuery, oldQuery)) {
-          shouldFetch.value = true
-          return navigateTo(searchStore.getSearchPath())
-        }
-      },
-      { debounce: 800, maxWait: 5000 }
-    )
-
-    const shouldFetchSensitiveResults = computed(() => {
-      return featureFlagStore.isOn("fetch_sensitive")
-    })
-
-    const shouldFetch = ref(false)
-    watch([shouldFetchSensitiveResults, searchTerm, searchType], () => {
-      scrollToTop()
-      shouldFetch.value = true
-    })
-
-    const nuxtApp = useNuxtApp()
-
-    useAsyncData(
-      "search",
-      async () => {
-        // Do not re-fetch data that was already fetched on the server
-        if (nuxtApp.isHydrating) {
-          return
-        }
-        shouldFetch.value = false
-        try {
-          return await mediaStore.fetchMedia()
-        } catch (error) {
-          if (fetchingError.value && !handledClientSide(fetchingError.value)) {
-            showError({ ...fetchingError.value, fatal: true })
-          }
-        }
-      },
-      {
-        watch: [shouldFetch],
-        server: false,
-      }
-    )
-
     return {
-      showScrollButton,
+      results,
       searchTerm,
       searchType,
       supported,
-      query,
-      isSupportedMediaType,
 
-      resultCount,
       fetchState,
-      isSidebarVisible,
-      fetchingError,
 
       isAllView,
-
-      skipToContentTargetId,
     }
   },
 })
