@@ -39,13 +39,18 @@ This plan is split into two major parts:
 1. [Move Airflow to `airflow.openverse.org`](#1-move-airflow-to-airflowopenverseorg)
 2. [Move the Django API to `api.openverse.org` (with staging at `api-staging.openverse.org`)](#2-move-the-django-api-to-apiopenverseorg)
 
+There are also two supplemental parts, a [preliminary step](#0-preliminary-work)
+and a
+[finalisation step](#3-update-references-announce-to-make-blog-and-finalise).
+
 ## Expected Outcomes
 
 <!-- List any succinct expected products from this implementation plan. -->
 
 - `openverse.engineering` should move to the Cloudflare free tier
-- All services should live on `openverse.org` with redirects from legacy
-  `openverse.engineering` domains
+- All services should live on `openverse.org`
+- Production API domains on `openverse.engineering` should redirect to
+  `openverse.org`
 
 ## Step-by-step plan
 
@@ -101,10 +106,6 @@ milestones like when a feature flag could be made available in a particular envi
 
 ### 2. Move the Django API to `api.openverse.org`
 
-For each of these steps, we will do them first for staging, then for production.
-Anywhere that references `api.openverse.org` should be read to include
-`api-production.` for production and only be `api-staging.` for staging.
-
 The general idea for this set of changes is to leverage the fact that both
 `openverse.engineering` and `openverse.org` can point to the external load
 balancer, and the load balancer can freely discriminate between requests for
@@ -119,48 +120,60 @@ rules are per-zone). So, the rest of the steps in this section are aimed at
 carefully preparing and moving the service's Cloudflare configuration to
 `openverse.org`.
 
-1. Add `api.openverse.org/admin` to Cloudflare Access and duplicate all API
-   Cloudflare rules from `openverse.engineering` to `openverse.org`.
+```{note}
+I am using `api(-(production|staging))?.` as shorthand for the three subdomains used
+for our staging and production API. For clarity, this should be understood to expand to:
+- `api.`
+- `api-production.`
+- `api-staging.`
+```
+
+1. Add `api(-(production|staging))?.openverse.org/admin` to Cloudflare Access
+   and duplicate all API Cloudflare rules from `openverse.engineering` to
+   `openverse.org`.
    - [This must all be in the `cloudflare` root module](#moving-cloudflare-access-and-the-new-cloudflare-root-module).
-1. Add `api.openverse.org` to `domain_aliases` for the API and use a new
-   `generic/service-domain` to point `api(-(production|staging))?.openverse.org`
-   to the existing API services.
+1. Add `api(-(production|staging))?.openverse.org` to `domain_aliases` for the
+   API services and use a new `generic/service-domain` to point
+   `api(-(production|staging))?.openverse.org` to the existing API services.
    - Rule priority does not matter here because our rules match on the requested
      host name, so the `openverse.org` and `openverse.engineering` listeners
      will never interrupt each other.
-1. Redirect `api(-(production|staging))?.openverse.engineering` to the relevant
-`openverse.org` using a Cloudflare
-[dynamic single redirect rule](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/)
-that matches only when a special header is present for testing. - Configure this
-in
-[the `cloudflare` root module](#moving-cloudflare-access-and-the-new-cloudflare-root-module),
-not in the environment root modules.
-<!-- 1. Redirect `api.openverse.engineering` to `api.openverse.org` using AWS load balancer listener rules using trial listeners that match only if a special header is present so we can test the redirect without it going live to everyone. -->
+1. Redirect `api(-production)?.openverse.engineering` to `api.openverse.org`
+   using a Cloudflare
+   [dynamic single redirect rule](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/)
+   that matches only when a special header is present for testing.
+   - Configure this in
+     [the `cloudflare` root module](#moving-cloudflare-access-and-the-new-cloudflare-root-module),
+     not in the environment root modules.
+   - We will redirect both `api.openverse.engineering` and
+     `api-production.openverse.engineering` to `api.openverse.org`. This reduces
+     the complexity of the dynamic target expression.
+   - We will not redirect staging. Staging has no guarantees for users.
+     Excluding it from the redirects also reduces the overall complexity of both
+     the redirect match and dynamic target expressions.
 1. Update UptimeRobot monitors to point to the `openverse.org` domains.
 1. **Production only steps**
    1. Update the frontend to point to `api.openverse.org` (only possible after
       configuring the domain for the production API because the staging and
       production frontend both point to the production API).
-   1. Coordinate with Gutenberg and Jetpack folks to update their references to
-      the API.
-      - These are important to call out separately from the management command
-        below because they're major integrations that should update as soon as
-        possible, even though they wouldn't break if they didn't.
+   1. Open PRs in Gutenberg and Jetpack to update the Openverse integration URL
+      to `api.openverse.org`
    1. Create and run a management command to run in production that emails
       registered production API users to notify them of the change to
-      `api.openverse.org`. Be sure to include a note regarding the redirect from
-      the old domain to prevent anyone from panicking that their integration
-      will break.
+      `api.openverse.org`. Make it absolutely clear the old URL will redirect
+      from the old domain to prevent anyone from panicking that their
+      integration will break.
    1. On the rollout date specified in the message from the previous step,
       remove the special header condition of the redirect listeners so that all
-      requests to the old domains.
+      requests to the old production API domains redirect to
+      `api.openverse.org`.
+      - I suggest 2 weeks from the day we send the emails.
 1. For Cloudflare redirect rules to work, we need to maintain a DNS record on
-   each subdomain that is redirected. Replace Cloudflare DNS records for the
-   `openverse.engineering` API domains with noops, configured in the
-   `cloudflare` root module. In doing this, we'll need to immediately remove the
-   `generic/service-domain` instances pointing those domains to the load
-   balancer, otherwise the next root module will overwrite the new noop
-   settings.
+   each subdomain that is redirected. Replace Cloudflare DNS records for
+   `api(-production)?.openverse.engineering` domains with noops, configured in
+   the `cloudflare` root module. In doing this, we'll need to immediately remove
+   the `generic/service-domain` instances pointing those domains to the load
+   balancer, otherwise the next root module will overwrite the new settings.
    - After this, control over requests to `openverse.engineering` API domains
      will rest solely with the Cloudflare redirect rule, and forwarded to the
      appropriate `openverse.org`.
@@ -525,6 +538,10 @@ Airflow over from `openverse.engineering` into the `cloudflare` root module onto
 the `openverse.org` zone. Right now these are not configured in Terraform, so we
 will take the opportunity now to do so.
 
+To clarify the redirect expectations, we will _not_ redirect
+`airflow.openverse.engineering` to `airflow.openverse.org`. This is an internal
+service and there is no reason to maintain additional code to redirect it.
+
 #### Deploy and maintain Airflow using Ansible
 
 The complexity of this change will primarily come from adding significant new
@@ -598,48 +615,44 @@ redirect rule, which is available in the free tier.
 The rule should match requests using something like the following expression:
 
 ```
-http.host matches "api.*?\.openverse.engineering"
+http.host matches "api(-production)?\.openverse.engineering"
 ```
 
-The expression should also temporarily look for a special header's presence, so
-that we can test the redirect without affecting normal users:
+As mentioned in the step-by-step section, we will only redirect production
+domains. This reduces the complexity of the match expression and the dynamic
+target expression below. It also helps to clarify the fact that staging is
+volatile and has no guarantees for anyone using it (which is mostly us).
+
+The expression should also temporarily look for a special header's presence,
+acting as a feature flag, so that we don't immediately start to redirect normal
+users and can test the redirect:
 
 ```
-any(http.request.headers.names[*] == "x-openverse-redirect") and http.host matches "api.*?\.openverse.engineering"
+any(http.request.headers.names[*] == "x-openverse-redirect") and http.host matches "api(-production)?\.openverse.engineering"
 ```
 
-Then, dynamically produce the redirect location
-[using `regex_replace`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#function-regex_replace),
-something like this:
+Then, because we are only redirecting production, the match expression is
+thankfully trivial and does not require `regex_replace` or other string
+manipulation:
 
 ```
-concat(
-  "https://",
-  regex_replace(
-    http.host,
-    "openverse\.engineering",
-    "openverse.org"
-  ),
-  http.request.uri
-)
+concat("https://api.openverse.org", http.request.uri)
 ```
 
-This expression replaces `openverse.engineering` with `openverse.org` in the
-host of the request. This works because we are using the exact same subdomains
-for the API deployments in the new zone, so we don't need to re-write the
-subdomain. We cannot modify query parameters in the redirect, so there's nothing
-we can do to re-write the `url` parameter to the oembed endpoint. Luckily, that
-endpoint's request serializer ignores the hostname of the `url` parameter
-altogether, so it won't cause a backwards compatibility issue.
+We cannot modify query parameters in the redirect, so there's nothing we can do
+to re-write the `url` parameter to the oembed endpoint. Luckily, that endpoint's
+request serializer ignores the hostname of the `url` parameter altogether, so it
+won't cause a backwards compatibility issue.
 
-As mentioned in the step-by-step section, this rule will be configured in
+As mentioned in the step-by-step section, we will configure this rule in
 [the `cloudflare` root module](#moving-cloudflare-access-and-the-new-cloudflare-root-module).
 
 ### Finalizing the move
 
 The finalization steps handle cleaning up documentation and other non-critical
-references, as well as announcing the change on Make. Old links will continue to
-work as redirects, so there's no need to update them.
+references, as well as announcing the change on Make. Old links to production
+API will continue to work as redirects, so there's no need to update them right
+away.
 
 ## Dependencies
 
@@ -703,7 +716,8 @@ how we store or present data.
 
 <!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
 
-No localisation is required for this change.
+Only the email and Make post call for new copy, and we localise neither.
+Therefore, this project requires no localisation.
 
 ## Risks
 
