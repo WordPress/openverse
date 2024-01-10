@@ -3,6 +3,7 @@ import { defineStore } from "pinia"
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import { isRetriable, parseFetchingError } from "~/utils/errors"
+import type { FetchingError, FetchState } from "~/types/fetch-state"
 import { VFetchingError } from "~/types/fetch-state"
 
 import type {
@@ -11,7 +12,6 @@ import type {
   ImageDetail,
   Media,
 } from "~/types/media"
-import type { FetchingError, FetchState } from "~/types/fetch-state"
 import {
   ALL_MEDIA,
   AUDIO,
@@ -19,6 +19,7 @@ import {
   isAdditionalSearchType,
   SupportedMediaType,
   supportedMediaTypes,
+  SupportedSearchType,
 } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { initServices } from "~/stores/media/services"
@@ -79,7 +80,7 @@ export const useMediaStore = defineStore("media", {
   }),
 
   getters: {
-    _searchType() {
+    _searchType(): SupportedSearchType {
       const searchType = useSearchStore().searchType
       if (isAdditionalSearchType(searchType)) {
         return ALL_MEDIA
@@ -433,7 +434,9 @@ export const useMediaStore = defineStore("media", {
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
-      return this.resultItems
+      return mediaType === ALL_MEDIA
+        ? this.allMedia
+        : this.resultItems[mediaType]
     },
 
     clearMedia() {
@@ -462,7 +465,7 @@ export const useMediaStore = defineStore("media", {
       const { pathSlug, query: queryParams } =
         searchStore.getSearchUrlParts(mediaType)
       let page = this.results[mediaType].page + 1
-      if (shouldPersistMedia) {
+      if (shouldPersistMedia && page > 1) {
         queryParams.page = `${page}`
       }
 

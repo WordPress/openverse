@@ -4,6 +4,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import { warn } from "~/utils/console"
 import { AUDIO, IMAGE } from "~/constants/media"
+import { isClient } from "~/constants/window"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
@@ -96,12 +97,13 @@ export interface ApiService {
 export const createApiService = ({
   accessToken = undefined,
   isVersioned = true,
-}: ApiServiceConfig = {}): ApiService => {
-  const {
-    public: { apiUrl: baseUrl },
-  } = useRuntimeConfig()
+}: ApiServiceConfig): ApiService => {
+  let url = process.env.NUXT_PUBLIC_API_URL
+  if (isClient && !url) {
+    url = useRuntimeConfig().public.apiUrl
+  }
   const axiosParams: OpenverseAxiosRequestConfig = {
-    baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
+    baseURL: isVersioned ? `${url}v1/` : url,
     timeout: DEFAULT_REQUEST_TIMEOUT,
     headers: {
       "User-Agent":

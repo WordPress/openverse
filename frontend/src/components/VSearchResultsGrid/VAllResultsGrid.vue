@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      v-if="!noResults"
-      class="results-grid mb-4 mt-2 grid grid-cols-2 gap-4 md:mt-0"
-    >
+    <div class="results-grid mb-4 mt-2 grid grid-cols-2 gap-4 md:mt-0">
       <VContentLink
         v-for="[mediaType, count] in resultCounts"
         :key="mediaType"
@@ -20,12 +17,7 @@
         </template>
       </i18n-t>
     </VSnackbar>
-    <VGridSkeleton
-      v-if="resultsLoading && allMedia.length === 0"
-      is-for-tab="all"
-    />
     <ol
-      v-else
       class="results-grid grid grid-cols-2 gap-4"
       :class="
         isSidebarVisible
@@ -34,7 +26,7 @@
       "
       :aria-label="$t('browsePage.aria.results', { query: searchTerm })"
     >
-      <template v-for="item in allMedia">
+      <template v-for="item in results">
         <VImageCell
           v-if="isDetail.image(item)"
           :key="item.id"
@@ -53,31 +45,25 @@
         />
       </template>
     </ol>
-
-    <VLoadMore class="mb-6 mt-4 lg:mb-10" />
   </div>
 </template>
 
 <script lang="ts">
-import { useI18n } from "#imports"
-
-import { computed, defineComponent } from "vue"
+import { computed, defineComponent, PropType } from "vue"
 import { storeToRefs } from "pinia"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 
-import { isDetail } from "~/types/media"
+import { AudioDetail, ImageDetail, isDetail } from "~/types/media"
 
 import type { SupportedMediaType } from "~/constants/media"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
-import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 
 export default defineComponent({
   name: "VAllResultsGrid",
@@ -85,44 +71,26 @@ export default defineComponent({
     VSnackbar,
     VImageCell,
     VAudioResult,
-    VLoadMore,
-    VGridSkeleton,
     VContentLink,
   },
+  props: {
+    results: {
+      type: Array as PropType<(AudioDetail | ImageDetail)[]>,
+      required: true,
+    },
+    searchTerm: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
-    const i18n = useI18n({ useScope: "global" })
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-
-    const searchTerm = computed(() => searchStore.searchTerm)
-
-    const resultsLoading = computed(() => {
-      return (
-        Boolean(mediaStore.fetchState.fetchingError) ||
-        mediaStore.fetchState.isFetching ||
-        !mediaStore.fetchState.hasStarted
-      )
-    })
 
     const contentLinkPath = (mediaType: SupportedMediaType) =>
       searchStore.getSearchPath({ type: mediaType })
 
-    const allMedia = computed(() => mediaStore.allMedia)
-
-    const isError = computed(() => !!mediaStore.fetchState.fetchingError)
-
-    const fetchState = computed(() => mediaStore.fetchState)
-
-    const errorHeader = computed(() => {
-      const type = i18n.t("browsePage.searchForm.audio")
-      return i18n.t("browsePage.fetchingError", { type })
-    })
-
     const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
-
-    const noResults = computed(
-      () => fetchState.value.isFinished && allMedia.value.length === 0
-    )
 
     const uiStore = useUiStore()
     const {
@@ -133,14 +101,7 @@ export default defineComponent({
     const isSm = computed(() => uiStore.isBreakpoint("sm"))
 
     return {
-      searchTerm,
-      isError,
-      errorHeader,
-      allMedia,
-      fetchState,
-      resultsLoading,
       resultCounts,
-      noResults,
 
       contentLinkPath,
 
