@@ -1,9 +1,9 @@
-import { useLocalePath, useRoute } from "#imports"
+import { useNuxtApp, useRoute } from "#imports"
 
 import { computed } from "vue"
 
 export default function usePages() {
-  const localePath = useLocalePath()
+  const localePath = useNuxtApp().$localePath
 
   const pages = [
     {
