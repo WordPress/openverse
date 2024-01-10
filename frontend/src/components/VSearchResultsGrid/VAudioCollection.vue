@@ -1,9 +1,5 @@
 <template>
   <section>
-    <VGridSkeleton
-      v-if="results && results.length === 0 && !fetchState.isFinished"
-      is-for-tab="audio"
-    />
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
       <i18n-t scope="global" keypath="audioResults.snackbar.text" tag="p">
         <template
@@ -22,9 +18,6 @@
       :kind="kind"
       :results="results"
     />
-    <footer v-if="kind !== 'related'" class="mt-4">
-      <VLoadMore />
-    </footer>
   </section>
 </template>
 
@@ -37,8 +30,6 @@ import type { ResultKind } from "~/types/result"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 
 import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
-import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VSnackbar from "~/components/VSnackbar.vue"
 
 /**
@@ -50,8 +41,6 @@ export default defineComponent({
   components: {
     VSnackbar,
     VAudioList,
-    VGridSkeleton,
-    VLoadMore,
   },
   props: {
     results: {

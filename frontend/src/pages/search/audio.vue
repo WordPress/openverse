@@ -2,7 +2,6 @@
   <VAudioCollection
     :results="results"
     kind="search"
-    :fetch-state="fetchState"
     :collection-label="collectionLabel"
   />
 </template>
@@ -10,11 +9,11 @@
 <script lang="ts">
 import { defineNuxtComponent, useI18n } from "#imports"
 
-import { computed } from "vue"
+import { computed, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
-import { useMediaStore } from "~/stores/media"
+import type { AudioDetail } from "~/types/media"
 
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 
@@ -23,13 +22,15 @@ export default defineNuxtComponent({
   components: {
     VAudioCollection,
   },
+  props: {
+    results: {
+      type: Array as PropType<AudioDetail[]>,
+      required: true,
+    },
+  },
   setup() {
     const i18n = useI18n({ useScope: "global" })
-    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-
-    const results = computed(() => mediaStore.resultItems["audio"])
-    const fetchState = computed(() => mediaStore.fetchState)
 
     const collectionLabel = computed(() => {
       const query = searchStore.searchTerm
@@ -38,8 +39,6 @@ export default defineNuxtComponent({
     })
 
     return {
-      results,
-      fetchState,
       collectionLabel,
     }
   },
