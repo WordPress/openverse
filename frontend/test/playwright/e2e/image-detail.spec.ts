@@ -1,11 +1,7 @@
 import { test, expect, Page } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-import {
-  setCookies,
-  t,
-  turnOnAnalytics,
-} from "~~/test/playwright/utils/navigation"
+import { preparePageForTests, t } from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
@@ -30,7 +26,7 @@ test.beforeEach(async ({ context }) => {
 })
 
 test("shows the author and title of the image", async ({ page }) => {
-  await setCookies(page.context(), {
+  await preparePageForTests(page, "xl", {
     features: { additional_search_views: "off" },
   })
   await goToCustomImagePage(page)
@@ -72,11 +68,13 @@ test("shows the 404 error page when no id", async ({ page }) => {
 })
 
 test.describe("analytics", () => {
+  test.beforeEach(async ({ page }) => {
+    await preparePageForTests(page, "xl", { features: { analytics: "on" } })
+  })
   test("sends GET_MEDIA event on CTA button click", async ({
     context,
     page,
   }) => {
-    await turnOnAnalytics(page)
     const analyticsEvents = collectAnalyticsEvents(context)
 
     await goToCustomImagePage(page)
@@ -98,7 +96,6 @@ test.describe("analytics", () => {
     context,
     page,
   }) => {
-    await turnOnAnalytics(page)
     const analyticsEvents = collectAnalyticsEvents(context)
 
     await goToCustomImagePage(page)

@@ -3,7 +3,7 @@
     viewBox="0 0 34 32"
     xmlns="http://www.w3.org/2000/svg"
     :class="{
-      [$style.loading]: status === 'loading' && !prefersReducedMotion,
+      loading: status === 'loading' && !prefersReducedMotion,
       'h-10 w-10': autoResize,
       'h-12 w-12': !autoResize,
     }"
@@ -65,7 +65,7 @@ export default defineComponent({
 })
 </script>
 
-<style module>
+<style scoped>
 /**
   Openverse Logo Loader
 

@@ -1,9 +1,18 @@
 set dotenv-load := true
 
+COLOR := "\\033[0;32m"
+NO_COLOR := "\\033[0m"
+
+# Show all available recipes
+@_default:
+    printf "\n{{ COLOR }}# Load testing (path: \`api/\`)\n"
+    printf "============================={{ NO_COLOR }}\n"
+    just --list --unsorted
+
 DOCKER_HOST := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
 
 build:
-    docker build . -t openverse-load-testing:latest
+    docker build . -t openverse-load_testing:latest
 
 run script host: build
     docker run --rm -it -v {{ invocation_directory() }}:/app openverse-load-testing:latest ./{{ script }}.sh {{ host }}
@@ -11,5 +20,13 @@ run script host: build
 api host=("http://" + DOCKER_HOST + ":8000"):
     @just run api {{ host }}
 
-k6 url="https://api-dev.openverse.engineering" +extra_args="": build
-    docker run --rm -e API_TOKEN=$API_TOKEN -e API_URL={{ url }} -v {{ invocation_directory() }}/k6:/app {{ extra_args }} openverse-load-testing:latest k6 run main.js
+# Run the specified script in a load testing container
+k6 script="main.js" +extra_args="": build
+    docker run \
+      --rm \
+      ${ACCESS_TOKEN:+ --env ACCESS_TOKEN=$ACCESS_TOKEN} \
+      ${API_URL:+ --env API_URL=$API_URL} \
+      --volume {{ invocation_directory() }}/k6:/app \
+      {{ extra_args }} \
+      openverse-load_testing:latest \
+      run {{ script }}
