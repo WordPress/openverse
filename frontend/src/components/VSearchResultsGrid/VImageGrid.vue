@@ -1,9 +1,5 @@
 <template>
   <section class="pt-2 sm:pt-0">
-    <VGridSkeleton
-      v-if="results && !results.length && !fetchState.isFinished"
-      is-for-tab="image"
-    />
     <ol class="image-grid flex flex-wrap gap-4" :aria-label="imageGridLabel">
       <VImageCell
         v-for="image in results"
@@ -15,9 +11,6 @@
         :related-to="relatedTo"
       />
     </ol>
-    <footer v-if="kind !== 'related'" class="pt-4">
-      <VLoadMore />
-    </footer>
   </section>
 </template>
 
@@ -37,13 +30,11 @@ import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 
-import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
 export default defineComponent({
   name: "ImageGrid",
-  components: { VGridSkeleton, VLoadMore, VImageCell },
+  components: { VImageCell },
   props: {
     results: {
       type: Array as PropType<ImageDetail[]>,

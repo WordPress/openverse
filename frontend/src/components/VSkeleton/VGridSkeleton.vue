@@ -2,7 +2,12 @@
   <section>
     <div
       v-if="isForTab === 'all'"
-      class="grid grid-cols-2 gap-4 lg:grid-cols-5"
+      class="grid grid-cols-2 gap-4"
+      :class="
+        isSidebarVisible
+          ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+          : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+      "
     >
       <VBone v-for="idx in elementCount" :key="idx" class="square" />
     </div>
@@ -44,6 +49,10 @@ export default defineComponent({
     },
     numElems: {
       type: Number,
+    },
+    isSidebarVisible: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props) {
