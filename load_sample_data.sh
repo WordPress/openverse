@@ -27,8 +27,12 @@ function exec_sql {
 
 # Load sample data
 function load_sample_data {
-  exec_sql "$UPSTREAM_DB_SERVICE_NAME" "DELETE FROM $1"
-  exec_sql "$UPSTREAM_DB_SERVICE_NAME" "\copy $1 from './sample_data/sample_$1.csv' with (FORMAT csv, HEADER true);"
+  exec_sql "$UPSTREAM_DB_SERVICE_NAME" "
+  	DELETE FROM $1;
+	\copy $1 \
+		from './sample_data/sample_$1.csv' \
+		with (FORMAT csv, HEADER true);
+"
 }
 
 function verify_loaded_data {
@@ -55,8 +59,8 @@ fi
 
 # Set up API database and upstream
 just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py migrate --noinput
+
 # Create a superuser and a user for integration testing
-# Not that the Python code uses 4 spaces for indentation after the tab that is stripped by <<-
 echo "
 from django.contrib.auth.models import User
 usernames = ['continuous_integration', 'deploy']
@@ -125,5 +129,8 @@ just docker/es/wait-for-index "image-filtered" "image-init-filtered"
 #########
 
 # Clear source cache since it's out of date after data has been loaded
-docker-compose exec -T "$CACHE_SERVICE_NAME" bash -c 'echo "del :1:sources-image" | redis-cli'
-docker-compose exec -T "$CACHE_SERVICE_NAME" bash -c 'echo "del :1:sources-audio" | redis-cli'
+function exec_redis {
+  echo "$1" | just dc exec -T "$CACHE_SERVICE_NAME" redis-cli
+}
+exec_redis "del :1:sources-image"
+exec_redis "del :1:sources-audio"
