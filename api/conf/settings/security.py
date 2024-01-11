@@ -2,7 +2,9 @@ from socket import gethostbyname, gethostname
 
 from decouple import config
 
-from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
+from conf.settings.base import INSTALLED_APPS, MIDDLEWARE, ENVIRONMENT
+
+from django.core.exceptions import ImproperlyConfigured
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,3 +54,9 @@ if config("IS_PROXIED", default=True, cast=bool):
     USE_X_FORWARDED_HOST = True
     # https://docs.djangoproject.com/en/4.0/ref/settings/#secure-proxy-ssl-header
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Adding DJANGO_SECRET_KEY check
+if SECRET_KEY == "example_key" and ENVIRONMENT != "local":
+    raise ImproperlyConfigured(
+        "DJANGO_SECRET_KEY must not be 'example_key' in non-local environments."
+    )
