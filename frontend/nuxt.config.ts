@@ -131,7 +131,6 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/svg-sprite",
     "@nuxtjs/plausible",
     "@nuxt/test-utils/module",
   ],
@@ -140,10 +139,6 @@ export default defineNuxtConfig({
     // https://github.com/unjs/nitro/pull/1976
     "/meta-search": { redirect: { to: "/about", statusCode: 301 } },
     "/external-sources": { redirect: { to: "/about", statusCode: 301 } },
-  },
-  svgSprite: {
-    input: "~/assets/svg/raw",
-    output: "~/assets/svg/sprite",
   },
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
