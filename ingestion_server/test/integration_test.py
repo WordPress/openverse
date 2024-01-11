@@ -203,7 +203,7 @@ def _get_constraints(conn, table) -> dict[str, str]:
 
 def _get_index_parts(index: str, table: str) -> list[str]:
     """
-    Strip out common keywords from the index to get a the name & columns.
+    Strip out common keywords from the index to get the name & columns.
 
     Indices take the form of:
         CREATE [UNIQUE] INDEX {name} ON {table} USING btree {columns}
