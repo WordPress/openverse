@@ -399,6 +399,15 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
                     " be run for just these sets of params."
                 ),
             ),
+            "additional_query_params": Param(
+                default={},
+                type=["object", "null"],
+                description=(
+                    "Supplement the `query_params` on each request. This option is used"
+                    " to run a DAG but restrict the search by specifying extra query"
+                    " params."
+                ),
+            ),
             "skip_ingestion_errors": Param(
                 default=False,
                 type="boolean",
