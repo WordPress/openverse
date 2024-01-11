@@ -173,6 +173,9 @@ class ProviderDataIngester(ABC):
             # Create a generator to facilitate fetching the next set of query_params.
             self.override_query_params = (qp for qp in query_params_list)
 
+        # An optional set of query params to add to each query
+        self.additional_query_params = conf.get("additional_query_params", {})
+
         # A configuration option that is used to skip over ALL errors and continue
         # ingestion, reporting errors in aggregate when ingestion has completed. This
         # option should be used sparingly and can only be enabled at the level of an
@@ -349,9 +352,10 @@ class ProviderDataIngester(ABC):
             )
             return next_params
 
-        # Default behavior when no conf options are provided; build the next
-        # set of query params, given the previous.
-        return self.get_next_query_params(prev_query_params, **kwargs)
+        # Default behavior; build the next set of query params, given the previous,
+        # along with any extra params if additional_query_params were provided
+        next_query_params = self.get_next_query_params(prev_query_params, **kwargs)
+        return next_query_params | self.additional_query_params
 
     @abstractmethod
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
