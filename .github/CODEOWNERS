@@ -22,7 +22,6 @@ prettier.config.js  @WordPress/openverse-frontend
 # Specific assignments for the 'openverse-maintainers' group
 automations/                @WordPress/openverse-maintainers
 brand/                      @WordPress/openverse-maintainers
-
 docker/                     @WordPress/openverse-maintainers
 documentation/              @WordPress/openverse-maintainers
 readme_assets/              @WordPress/openverse-maintainers
