@@ -26,7 +26,6 @@ import { computed, defineComponent, PropType } from "vue"
 import { useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
-import type { FetchState } from "~/types/fetch-state"
 import type { ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 
@@ -48,10 +47,6 @@ export default defineComponent({
     kind: {
       type: String as PropType<ResultKind>,
       default: "search",
-    },
-    fetchState: {
-      type: Object as PropType<FetchState>,
-      required: true,
     },
     imageGridLabel: {
       type: String,
