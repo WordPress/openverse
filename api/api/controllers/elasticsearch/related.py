@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from rest_framework.exceptions import APIException
 
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Match, Q, Term

@@ -125,10 +125,12 @@ doc-test: wait-up
       --fail \
       'http://localhost:50280/v1/schema/' > openapi.json
 
+export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } else { "172.17.0.1" }
+
 # Run the API schema tests using schemathesis
 test-schema: wait-up
     just doc-test
-    python -m pip install schemathesis && st run --checks response_headers_conformance openapi.json --base-url http://localhost:50280 && st run --checks not_a_server_error openapi.json --base-url http://localhost:50280
+    docker run docker.io/schemathesis/schemathesis:stable run --checks all "http://$HOST_NETWORK_ADDRESS:50280/v1/schema/"
 
 #########
 # NGINX #
