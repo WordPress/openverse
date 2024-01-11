@@ -25,7 +25,6 @@
 import { defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
-import type { FetchState } from "~/types/fetch-state"
 import type { ResultKind } from "~/types/result"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 
@@ -52,10 +51,6 @@ export default defineComponent({
      */
     kind: {
       type: String as PropType<ResultKind>,
-      required: true,
-    },
-    fetchState: {
-      type: Object as PropType<FetchState>,
       required: true,
     },
     /**
