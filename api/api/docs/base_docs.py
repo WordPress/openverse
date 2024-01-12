@@ -76,26 +76,6 @@ def custom_extend_schema(**kwargs):
     return extend_schema(**extend_args, **kwargs)
 
 
-unauthed_page_param = OpenApiParameter(
-    name="page",
-    type={
-        "type": "integer",
-        "minimum": 1,
-        "maximum": 20,
-    },
-)
-
-
-unauthed_page_size_param = OpenApiParameter(
-    name="page_size",
-    type={
-        "type": "integer",
-        "minimum": 1,
-        "maximum": 20,
-    },
-)
-
-
 class MediaSchema(AutoSchema):
     """
     Overrides the default schema generator provided by drf-spectacular to adapt
@@ -148,7 +128,7 @@ creator_path_parameter = OpenApiParameter(
     name="creator",
     type={
         "type": "string",
-        "pattern": "^[^/.]+?$",
+        "pattern": "^.+$",
     },
     location=OpenApiParameter.PATH,
     description="The name of the media creator. This parameter "
@@ -261,8 +241,6 @@ def collection_schema(
         responses=responses,
         parameters=[
             request_serializer,
-            unauthed_page_param,
-            unauthed_page_size_param,
             *path_parameters,
         ],
     )
