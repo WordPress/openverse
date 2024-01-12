@@ -209,9 +209,6 @@ def test_unauthed_response_headers(client):
 def test_sorting_authed(
     client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
 ):
-    # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {"unstable__sort_by": "indexed_on", "unstable__sort_dir": sort_dir}
@@ -234,9 +231,6 @@ def test_sorting_authed(
 def test_authority_authed(
     client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
 ):
-    # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {
