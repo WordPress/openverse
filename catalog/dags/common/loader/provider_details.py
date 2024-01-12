@@ -12,6 +12,7 @@ import os
 
 
 # Default provider names
+AUCKLAND_MUSEUM_IMAGE_PROVIDER = "aucklandmuseum_tamakipaengahira"
 BROOKLYN_DEFAULT_PROVIDER = "brooklynmuseum"
 CLEVELAND_DEFAULT_PROVIDER = "clevelandmuseum"
 EUROPEANA_DEFAULT_PROVIDER = "europeana"
