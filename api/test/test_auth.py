@@ -231,6 +231,7 @@ def test_sorting_authed(
 def test_authority_authed(
     client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
 ):
+    monkeypatch.setattr("api.views.media_views.MediaViewSet.get_db_results", False)
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {
