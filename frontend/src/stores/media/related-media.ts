@@ -51,10 +51,10 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.mainMediaId = id
       this._startFetching()
       this.media = []
+      const { $openverseApiToken, $sentry } = useNuxtApp()
+      const accessToken =
+        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
       try {
-        const { $openverseApiToken } = useNuxtApp()
-        const accessToken =
-          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initServices[mediaType](accessToken)
         this.media = (
           await service.getRelatedMedia<typeof mediaType>(id)
@@ -68,12 +68,7 @@ export const useRelatedMediaStore = defineStore("related-media", {
         })
 
         this._endFetching(errorData)
-        const { $sentry } = useNuxtApp()
-        if ($sentry) {
-          $sentry.captureException(error, { extra: { errorData } })
-        } else {
-          console.log("Sentry not available to capture exception", errorData)
-        }
+        $sentry.captureException(error, { extra: { errorData } })
         return null
       }
     },
