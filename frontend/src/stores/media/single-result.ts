@@ -159,12 +159,12 @@ export const useSingleResultStore = defineStore("single-result", {
       type: MediaType,
       id: string
     ) {
+      const { $openverseApiToken, $sentry } = useNuxtApp()
+      const accessToken =
+        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
       try {
-        this._updateFetchState("start")
-        const { $openverseApiToken } = useNuxtApp()
-        const accessToken =
-          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initServices[type](accessToken)
+        this._updateFetchState("start")
         const item = this._addProviderName(await service.getMediaDetail(id))
 
         this.setMediaItem(item)
@@ -176,12 +176,7 @@ export const useSingleResultStore = defineStore("single-result", {
           id,
         })
         this._updateFetchState("end", errorData)
-        const { $sentry } = useNuxtApp()
-        if ($sentry) {
-          $sentry.captureException(error, { extra: { errorData } })
-        } else {
-          console.log("Sentry not available to capture exception", errorData)
-        }
+        $sentry.captureException(error, { extra: { errorData } })
         return null
       }
     },
