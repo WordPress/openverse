@@ -133,6 +133,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/plausible",
     "@nuxt/test-utils/module",
+    "@nuxtjs/sitemap",
   ],
   routeRules: {
     // TODO: Move photos redirect and remove the photos page after this fix:
@@ -162,5 +163,10 @@ export default defineNuxtConfig({
      * */
     detectBrowserLanguage: false,
     vueI18n: "./src/vue-i18n",
+  },
+  nitro: {
+    prerender: {
+      routes: ["/sitemap.xml"],
+    },
   },
 })
