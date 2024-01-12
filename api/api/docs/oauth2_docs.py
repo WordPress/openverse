@@ -1,3 +1,5 @@
+from rest_framework.exceptions import ValidationError, PermissionDenied, APIException
+
 from api.docs.base_docs import custom_extend_schema
 from api.examples import (
     auth_key_info_200_example,
@@ -8,11 +10,7 @@ from api.examples import (
     auth_token_200_example,
     auth_token_curl,
 )
-from api.serializers.error_serializers import (
-    ForbiddenErrorSerializer,
-    InputErrorSerializer,
-    InternalServerErrorSerializer,
-)
+
 from api.serializers.oauth2_serializers import (
     OAuth2ApplicationSerializer,
     OAuth2KeyInfoSerializer,
@@ -27,7 +25,7 @@ register = custom_extend_schema(
     request=OAuth2RegistrationSerializer,
     res={
         201: (OAuth2ApplicationSerializer, auth_register_201_example),
-        400: (InputErrorSerializer, None),
+        400: (ValidationError, None),
     },
     eg=[auth_register_curl],
 )
@@ -36,8 +34,8 @@ key_info = custom_extend_schema(
     operation_id="key_info",
     res={
         200: (OAuth2KeyInfoSerializer, auth_key_info_200_example),
-        403: (ForbiddenErrorSerializer, auth_key_info_403_example),
-        500: (InternalServerErrorSerializer, None),
+        403: (PermissionDenied, auth_key_info_403_example),
+        500: (APIException, None),
     },
     eg=[auth_key_info_curl],
 )
