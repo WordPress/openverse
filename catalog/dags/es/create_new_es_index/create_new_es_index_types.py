@@ -1,8 +1,7 @@
-import os
-
 from dataclasses import dataclass, field
 from datetime import timedelta
 
+from airflow.models.connection import Connection
 from es.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
@@ -39,8 +38,11 @@ class CreateNewIndex:
     def __post_init__(self):
         self.dag_id = f"create_new_{self.environment}_es_index"
 
-        # Get the appropriate connection information for this environment
-        self.es_host = os.getenv(f"ELASTICSEARCH_HTTP_{self.environment.upper()}")
+        # Get the appropriate connection information for this environment.
+        conn = Connection.get_connection_from_secrets(
+            f"elasticsearch_http_{self.environment}"
+        )
+        self.es_host = conn.host
 
 
 CREATE_NEW_INDEX_CONFIGS = {
