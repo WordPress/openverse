@@ -7,6 +7,7 @@ from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+
 from adrf.views import APIView as AsyncAPIView
 from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
 from asgiref.sync import sync_to_async
@@ -172,18 +173,18 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         return self.get_media_results(request, "collection", params, collection_params)
 
-    @action(detail=False, methods=["get"], url_path="tag/(?P<tag>[^/.]+)")
+    @action(detail=False, methods=["get"], url_path="tag/(?P<tag>[^/.]+)/")
     def tag_collection(self, request, tag, *_, **__):
         return self.collection(request, tag, None, None)
 
-    @action(detail=False, methods=["get"], url_path="source/(?P<source>[^/.]+)")
+    @action(detail=False, methods=["get"], url_path="source/(?P<source>[^/.]+)/")
     def source_collection(self, request, source, *_, **__):
         return self.collection(request, None, source, None)
 
     @action(
         detail=False,
         methods=["get"],
-        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)/",
     )
     def creator_collection(self, request, source, creator):
         return self.collection(request, None, source, creator)

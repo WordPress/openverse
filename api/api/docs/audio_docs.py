@@ -1,5 +1,7 @@
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
+from rest_framework.exceptions import ValidationError, NotFound, PermissionDenied
+
 from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
 from api.examples import (
     audio_complain_201_example,
@@ -25,10 +27,7 @@ from api.serializers.audio_serializers import (
     AudioSerializer,
     AudioWaveformSerializer,
 )
-from api.serializers.error_serializers import (
-    InputErrorSerializer,
-    NotFoundErrorSerializer,
-)
+
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.provider_serializers import ProviderSerializer
 
@@ -53,7 +52,8 @@ search = custom_extend_schema(
     params=AudioSearchRequestSerializer,
     res={
         200: (AudioSerializer, audio_search_200_example),
-        400: (InputErrorSerializer, audio_search_400_example),
+        400: (ValidationError, audio_search_400_example),
+        403: (PermissionDenied, None),
     },
     eg=[audio_search_list_curl],
     external_docs={
@@ -69,7 +69,7 @@ stats = custom_extend_schema(
 
         By using this endpoint, you can obtain info about content providers such
         as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
-    res={200: (ProviderSerializer, audio_stats_200_example)},
+    res={200: (ProviderSerializer(many=True), audio_stats_200_example)},
     eg=[audio_stats_curl],
 )
 
@@ -81,7 +81,7 @@ detail = custom_extend_schema(
         {fields_to_md(AudioSerializer.Meta.fields)}""",
     res={
         200: (AudioSerializer, audio_detail_200_example),
-        404: (NotFoundErrorSerializer, audio_detail_404_example),
+        404: (NotFound, audio_detail_404_example),
     },
     eg=[audio_detail_curl],
 )
@@ -94,13 +94,16 @@ related = custom_extend_schema(
         {fields_to_md(AudioSerializer.Meta.fields)}.""",
     res={
         200: (AudioSerializer(many=True), audio_related_200_example),
-        404: (NotFoundErrorSerializer, audio_related_404_example),
+        404: (NotFound, audio_related_404_example),
     },
     eg=[audio_related_curl],
 )
 
 report = custom_extend_schema(
-    res={201: (AudioReportRequestSerializer, audio_complain_201_example)},
+    res={
+        201: (AudioReportRequestSerializer, audio_complain_201_example),
+        400: (ValidationError, None),
+    },
     eg=[audio_complain_curl],
 )
 
@@ -112,7 +115,7 @@ thumbnail = extend_schema(
 waveform = custom_extend_schema(
     res={
         200: (AudioWaveformSerializer, audio_waveform_200_example),
-        404: (NotFoundErrorSerializer, audio_waveform_404_example),
+        404: (NotFound, audio_waveform_404_example),
     },
     eg=[audio_waveform_curl],
 )
