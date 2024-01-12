@@ -83,9 +83,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
   runtimeConfig: {
-    // NUXT_API_CLIENT_ID
     apiClientId: "",
-    // NUXT_API_CLIENT_SECRET
     apiClientSecret: "",
     public: {
       // Can be overwritten by NUXT_PUBLIC_API_URL env variable
@@ -95,7 +93,7 @@ export default defineNuxtConfig({
       savedSearchCount: 4,
       sentry: {
         dsn: "",
-        environment: "development",
+        environment: process.env.DEPLOYMENT_ENV,
       },
       plausible: {
         trackLocalhost: true, // TODO: Replace with isProdNotPw

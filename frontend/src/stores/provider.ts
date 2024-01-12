@@ -142,10 +142,10 @@ export const useProviderStore = defineStore("provider", {
     ): Promise<void> {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
+      const { $openverseApiToken, $sentry } = useNuxtApp()
+      const accessToken =
+        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
       try {
-        const { $openverseApiToken } = useNuxtApp()
-        const accessToken =
-          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
         const service = initProviderServices[mediaType](accessToken)
         const res = await service.getProviderStats()
         sortedProviders = sortProviders(res)
@@ -156,12 +156,7 @@ export const useProviderStore = defineStore("provider", {
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, "end", errorData)
-        const { $sentry } = useNuxtApp()
-        if ($sentry) {
-          $sentry.captureException(error, { extra: { errorData } })
-        } else {
-          console.log("Sentry not available to capture exception", errorData)
-        }
+        $sentry.captureException(error, { extra: { errorData } })
       } finally {
         this.providers[mediaType] = sortedProviders
         this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)
