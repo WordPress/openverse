@@ -82,7 +82,11 @@ export const main = async (octokit, core) => {
   core.debug(`PR card ID: ${prCard.id}`)
 
   if (eventName === 'pull_request_review') {
-    await syncReviews(core, pr, prBoard, prCard)
+    if (pr.isDraft) {
+      await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
+    } else {
+      await syncReviews(core, pr, prBoard, prCard)
+    }
   } else {
     switch (eventAction) {
       case 'opened':
@@ -109,11 +113,7 @@ export const main = async (octokit, core) => {
       }
 
       case 'ready_for_review': {
-        if (pr.isDraft) {
-          await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
-        } else {
-          await syncReviews(core, pr, prBoard, prCard)
-        }
+        await syncReviews(core, pr, prBoard, prCard)
         break
       }
 
