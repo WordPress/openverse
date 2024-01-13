@@ -1,4 +1,4 @@
-import { useNuxtApp, useRuntimeConfig } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -56,6 +56,8 @@ export const isSearchTypeSupported = (
 ): st is SupportedSearchType => {
   return supportedSearchTypes.includes(st as SupportedSearchType)
 }
+
+const SAVED_SEARCH_COUNT = 4
 
 export interface SearchState {
   searchType: SearchType
@@ -322,13 +324,10 @@ export const useSearchStore = defineStore("search", {
        * the max count, and removing existing occurrences of the
        * latest search term, if there are any.
        */
-      const {
-        public: { savedSearchCount },
-      } = useRuntimeConfig()
       this.recentSearches = [
         search,
         ...this.recentSearches.filter((i) => i !== search),
-      ].slice(0, savedSearchCount)
+      ].slice(0, SAVED_SEARCH_COUNT)
     },
     clearRecentSearches() {
       this.recentSearches = []
