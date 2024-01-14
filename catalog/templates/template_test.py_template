@@ -47,9 +47,9 @@ def test_get_media_type():
 
 def test_get_record_data():
     # High level test for `get_record_data`. One way to test this is to create a
-    # `tests/resources/{provider}/single_item.json` file containing a sample json
-    # representation of a record from the API under test, call `get_record_data` with
-    # the json, and directly compare to expected output.
+    # `tests/resources/{provider_underscore}/single_item.json` file containing a sample
+    # json representation of a record from the API under test, call `get_record_data`
+    # with the json, and directly compare to expected output.
     #
     # Make sure to add additional tests for records of each media type supported by
     # your provider.

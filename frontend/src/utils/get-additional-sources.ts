@@ -1,5 +1,5 @@
 import type { MediaType } from "~/constants/media"
-import type { ApiQueryParams } from "~/utils/search-query-transform"
+import type { PaginatedSearchQuery } from "~/types/search"
 
 import { MODEL_3D } from "~/constants/media"
 
@@ -19,7 +19,7 @@ interface AdditionalSearchQuery {
  * @returns the query and filters in the format used by the URL builders
  */
 const transformSearchQuery = (
-  query: ApiQueryParams
+  query: PaginatedSearchQuery
 ): AdditionalSearchQuery => ({
   q: query.q ?? "",
 })
@@ -258,7 +258,7 @@ export const getAdditionalSourceBuilders = (
  */
 export const getAdditionalSources = (
   mediaType: MediaType,
-  query: ApiQueryParams
+  query: PaginatedSearchQuery
 ): AdditionalSource[] =>
   getAdditionalSourceBuilders(mediaType).map((source) => {
     const urlFunc = source[mediaType]

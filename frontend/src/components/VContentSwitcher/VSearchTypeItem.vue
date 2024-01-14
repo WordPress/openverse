@@ -23,6 +23,8 @@ import { BETA, contentStatus, SearchType } from "~/constants/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import useSearchType from "~/composables/use-search-type"
 
+import { defineEvent } from "~/types/emits"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
 import VPill from "~/components/VPill.vue"
@@ -74,6 +76,9 @@ export default defineComponent({
       type: String as PropType<"small" | "medium">,
       default: "small",
     },
+  },
+  emits: {
+    click: defineEvent<[SearchType]>(),
   },
   setup(props) {
     const searchStore = useSearchStore()

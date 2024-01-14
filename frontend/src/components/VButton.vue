@@ -1,32 +1,24 @@
 <template>
   <Component
     :is="as"
-    :type="typeRef"
-    class="group/button flex appearance-none items-center justify-center rounded-sm no-underline"
+    :type="typeAttribute"
+    class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
-      $style.button,
-      $style[variant],
-      $style[`size-${size}${iconOnly ? '-icon-only' : ''}`],
+      variantClass,
+      connectionStyles,
+      size,
       {
-        [$style[`${variant}-pressed`]]: isActive,
-        [$style[`connection-${connections}`]]: isConnected,
-        [$style[`icon-start-${size}`]]: hasIconStart,
-        [$style[`icon-end-${size}`]]: hasIconEnd,
-        [$style[`icon-only`]]: iconOnly,
-        'gap-x-2':
-          (hasIconEnd || hasIconStart) && (size == 'medium' || size == 'large'),
-        'gap-x-1': (hasIconEnd || hasIconStart) && size == 'small',
-        // Custom tailwind classes don't work with CSS modules in Vue, so they are
-        // written here explicitly instead of accessed off of `$style`.
+        'icon-only': iconOnly,
+        'icon-start': hasIconStart,
+        'icon-end': hasIconEnd,
+        border: !isPlainDangerous,
         'focus-slim-filled': isFocusSlimFilled,
         'focus-slim-tx': isFocusSlimTx,
-        'focus-bold-filled ': variant === 'dropdown-label-pressed',
-        border: !isPlainDangerous,
       },
     ]"
     :aria-pressed="pressed"
-    :aria-disabled="ariaDisabledRef"
-    :disabled="disabledAttributeRef"
+    :aria-disabled="ariaDisabled"
+    :disabled="disabledAttribute"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -38,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, toRefs, computed, PropType } from "vue"
+import { defineComponent, watch, computed, PropType } from "vue"
 
 import { warn } from "~/utils/console"
 
@@ -159,13 +151,12 @@ const VButton = defineComponent({
     /**
      * Whether the button is connected to another control and needs to have no rounded
      * borders at that edge.
-     * `all` means that the button is not rounded.
      *
-     * @default 'none'
+     * @default []
      */
     connections: {
-      type: String as PropType<ButtonConnections>,
-      default: "none",
+      type: Array as PropType<ButtonConnections[]>,
+      default: () => [] as ButtonConnections[],
     },
     /**
      * Whether the button has an icon at the inline start of the button.
@@ -194,27 +185,31 @@ const VButton = defineComponent({
     },
   },
   setup(props, { attrs }) {
-    const propsRef = toRefs(props)
-    const disabledAttributeRef = ref<boolean | undefined>(
-      propsRef.disabled.value
+    const typeAttribute = computed<ButtonType | undefined>(() =>
+      props.as === "VLink" ? undefined : props.type
     )
-    const ariaDisabledRef = ref<boolean>()
-    const trulyDisabledRef = ref<boolean>()
-    const typeRef = ref<ButtonType | undefined>(propsRef.type.value)
-    const supportsDisabledAttributeRef = ref(true)
 
-    const isConnected = computed(() => props.connections !== "none")
+    const connectionStyles = computed(() =>
+      props.connections
+        .map((connection) => `connection-${connection}`)
+        .join(" ")
+    )
 
     const isActive = computed(() => {
-      return (
-        propsRef.pressed.value ||
-        attrs["aria-pressed"] ||
-        attrs["aria-expanded"]
-      )
+      return props.pressed || attrs["aria-pressed"] || attrs["aria-expanded"]
+    })
+    const variantClass = computed(() => {
+      if (
+        isActive.value &&
+        ["bordered-white", "transparent-dark"].includes(props.variant)
+      ) {
+        return `${props.variant}-pressed`
+      }
+      return props.variant
     })
 
     const isPlainDangerous = computed(() => {
-      return propsRef.variant.value === "plain--avoid"
+      return props.variant === "plain--avoid"
     })
     const isFocusSlimFilled = computed(() => {
       return props.variant.startsWith("filled-")
@@ -223,33 +218,29 @@ const VButton = defineComponent({
       return (
         props.variant.startsWith("bordered-") ||
         props.variant.startsWith("transparent-") ||
-        ["dropdown-label", "plain"].includes(props.variant)
+        props.variant === "plain"
       )
     })
 
-    watch(
-      [propsRef.disabled, propsRef.focusableWhenDisabled],
-      ([disabled, focusableWhenDisabled]) => {
-        trulyDisabledRef.value = disabled && !focusableWhenDisabled
+    const supportsDisabledAttribute = computed(() => props.as !== "VLink")
 
+    const ariaDisabled = computed<true | undefined>(
+      () =>
         // If disabled and focusable then use `aria-disabled` instead of the `disabled` attribute to allow
         // the button to still be tabbed into by screen reader users
-        if (disabled && focusableWhenDisabled) {
-          ariaDisabledRef.value = true
-        } else {
-          ariaDisabledRef.value = undefined
-        }
-      },
-      { immediate: true }
+        (props.disabled && props.focusableWhenDisabled) || undefined
     )
 
+    const disabledAttribute = computed<true | undefined>(() => {
+      const trulyDisabled = props.disabled && !props.focusableWhenDisabled
+
+      return (trulyDisabled && supportsDisabledAttribute.value) || undefined
+    })
+
     watch(
-      propsRef.as,
+      () => props.as,
       (as) => {
-        if (["VLink"].includes(as)) {
-          typeRef.value = undefined
-          supportsDisabledAttributeRef.value = false
-        } else if (["a", "NuxtLink"].includes(as)) {
+        if (["a", "NuxtLink"].includes(as)) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
           )
@@ -258,21 +249,14 @@ const VButton = defineComponent({
       { immediate: true }
     )
 
-    watch(
-      [trulyDisabledRef, supportsDisabledAttributeRef],
-      ([trulyDisabled, supportsDisabled]) => {
-        disabledAttributeRef.value =
-          trulyDisabled && supportsDisabled ? true : undefined
-      },
-      { immediate: true }
-    )
-
     return {
-      disabledAttributeRef,
-      ariaDisabledRef,
-      typeRef,
+      variantClass,
+      connectionStyles,
+      disabledAttribute,
+      ariaDisabled,
+      typeAttribute,
       isActive,
-      isConnected,
+
       isPlainDangerous,
       isFocusSlimFilled,
       isFocusSlimTx,
@@ -283,90 +267,50 @@ const VButton = defineComponent({
 export default VButton
 </script>
 
-<style module>
+<style scoped>
 .button[disabled="disabled"],
 .button[aria-disabled="true"] {
   @apply cursor-not-allowed;
-}
-
-.size-small {
-  @apply h-8 px-2 py-0;
-}
-.size-small-icon-only {
-  @apply h-8 w-8;
-}
-.icon-start-small {
-  @apply ps-1;
-}
-.icon-end-small {
-  @apply pe-1;
-}
-
-.size-medium {
-  @apply h-10 px-3 py-0;
-}
-.size-medium-icon-only {
-  @apply h-10 w-10;
-}
-.icon-start-medium {
-  @apply ps-2;
-}
-.icon-end-medium {
-  @apply pe-2;
-}
-
-.size-large {
-  @apply h-12 px-5 py-0;
-}
-.size-large-icon-only {
-  @apply h-12 w-12;
-}
-.icon-start-large {
-  @apply ps-4;
-}
-.icon-end-large {
-  @apply pe-4;
-}
-
-.size-larger-icon-only {
-  @apply h-16 w-16;
-}
-
-.icon-only {
-  @apply flex-none;
 }
 
 a.button {
   @apply no-underline hover:no-underline;
 }
 
+.connection-start {
+  @apply rounded-s-none;
+}
+.connection-end {
+  @apply rounded-e-none;
+}
+.connection-top {
+  @apply rounded-se-none rounded-ss-none;
+}
+.connection-bottom {
+  @apply rounded-ee-none rounded-es-none;
+}
+
 .filled-pink {
   @apply border-tx bg-pink text-white hover:bg-dark-pink hover:text-white;
 }
-
 .filled-dark {
   @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white disabled:opacity-70;
 }
-
 .filled-gray {
   @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
-
 .filled-white {
   @apply border-tx bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
 }
-
 .bordered-white {
   @apply border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
 }
 .bordered-white-pressed {
-  @apply border border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90;
+  @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90 hover:focus-visible:border-tx;
 }
-
 .bordered-gray {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal;
+  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal hover:focus-visible:border-tx;
 }
-
 .transparent-tx {
   @apply border-tx;
 }
@@ -380,20 +324,52 @@ a.button {
   @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90;
 }
 
-.dropdown-label {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-tx hover:bg-dark-charcoal hover:text-white;
+.icon-only {
+  @apply flex-none;
 }
-.dropdown-label-pressed {
-  @apply border-tx bg-dark-charcoal text-white active:hover:border-white;
+.small {
+  @apply h-8 px-2 py-0;
+}
+.small.icon-only {
+  @apply w-8 p-0;
+}
+.small.icon-start {
+  @apply gap-x-1 ps-1;
+}
+.small.icon-end {
+  @apply gap-x-1 pe-1;
 }
 
-.connection-start {
-  @apply rounded-s-none;
+.medium {
+  @apply h-10 px-3 py-0;
 }
-.connection-end {
-  @apply rounded-e-none;
+.medium.icon-only {
+  @apply w-10 p-0;
 }
-.connection-all {
-  @apply rounded-none;
+.medium.icon-start {
+  @apply gap-x-2 ps-2;
+}
+.medium.icon-end {
+  @apply gap-x-2 pe-2;
+}
+
+.large {
+  @apply h-12 px-5 py-0;
+}
+.large.icon-only {
+  @apply w-12 p-0;
+}
+.large.icon-start {
+  @apply gap-x-2 ps-4;
+}
+.large.icon-end {
+  @apply gap-x-2 pe-4;
+}
+
+.larger {
+  @apply h-16;
+}
+.larger.icon-only {
+  @apply w-16;
 }
 </style>

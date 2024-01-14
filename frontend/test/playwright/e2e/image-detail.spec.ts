@@ -1,7 +1,7 @@
 import { test, expect, Page } from "@playwright/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-import { t } from "~~/test/playwright/utils/navigation"
+import { preparePageForTests, t } from "~~/test/playwright/utils/navigation"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
@@ -26,6 +26,9 @@ test.beforeEach(async ({ context }) => {
 })
 
 test("shows the author and title of the image", async ({ page }) => {
+  await preparePageForTests(page, "xl", {
+    features: { additional_search_views: "off" },
+  })
   await goToCustomImagePage(page)
   const author = page.locator('a[aria-label^="author"]')
   await expect(author).toBeVisible()
@@ -65,6 +68,9 @@ test("shows the 404 error page when no id", async ({ page }) => {
 })
 
 test.describe("analytics", () => {
+  test.beforeEach(async ({ page }) => {
+    await preparePageForTests(page, "xl", { features: { analytics: "on" } })
+  })
   test("sends GET_MEDIA event on CTA button click", async ({
     context,
     page,

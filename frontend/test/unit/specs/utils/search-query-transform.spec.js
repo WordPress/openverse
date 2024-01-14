@@ -2,7 +2,6 @@ import { deepClone } from "~/utils/clone"
 import {
   filtersToQueryData,
   queryToFilterData,
-  queryStringToQueryData,
 } from "~/utils/search-query-transform"
 import { AUDIO, IMAGE } from "~/constants/media"
 
@@ -87,7 +86,6 @@ describe("searchQueryTransform", () => {
         { code: "animaldiversity", checked: true },
         { code: "brooklynmuseum", checked: true },
       ],
-      searchBy: [{ code: "creator", checked: true }],
     }
     const expectedQueryData = {
       aspect_ratio: "tall",
@@ -95,7 +93,6 @@ describe("searchQueryTransform", () => {
       extension: "jpg",
       license: "cc0",
       license_type: "commercial",
-      searchBy: "creator",
       size: "medium",
       source: "animaldiversity,brooklynmuseum",
     }
@@ -242,9 +239,6 @@ describe("searchQueryTransform", () => {
           code: "wikimedia",
         },
       ],
-      searchBy: [
-        { code: "creator", checked: true, name: "filters.searchBy.creator" },
-      ],
     }
     const query = {
       q: "cat",
@@ -254,7 +248,6 @@ describe("searchQueryTransform", () => {
       extension: "mp3",
       length: "medium",
       source: "jamendo",
-      searchBy: "creator",
       includeSensitiveResults: "true",
     }
     const testFilters = deepClone(filters)
@@ -284,7 +277,7 @@ describe("searchQueryTransform", () => {
      * exist in `filters.audioProviders` list before. Other values either exist in
      * `filters.imageProviders` list, or do not exist at all, so they are discarded.
      * Valid filter items for categories that exist for all search types
-     * (`license`, `license_type`, `searchBy`) are set to checked.
+     * (`license`, `license_type`) are set to checked.
      * Invalid filter items for valid categories (`nonexistent` in `license`)
      * are discarded.
      */
@@ -296,7 +289,6 @@ describe("searchQueryTransform", () => {
       extension: "svg",
       length: "medium",
       source: "animaldiversity,wikimedia,nonexistent,wikimedia_audio,jamendo",
-      searchBy: "creator",
     }
     const expectedFilters = deepClone(filters)
     const setChecked = (code, filterCategory) => {
@@ -308,7 +300,6 @@ describe("searchQueryTransform", () => {
     setChecked("cc0", "licenses")
     setChecked("commercial", "licenseTypes")
     setChecked("medium", "lengths")
-    setChecked("creator", "searchBy")
     setChecked("jamendo", "audioProviders")
     setChecked("wikimedia_audio", "audioProviders")
 
@@ -318,24 +309,5 @@ describe("searchQueryTransform", () => {
       defaultFilters: filters,
     })
     expect(result).toEqual(expectedFilters) // toEqual checks for value equality
-  })
-  it("queryStringToQueryData", () => {
-    const expectedQueryData = {
-      license: "cc0",
-      license_type: "commercial",
-      category: "photograph",
-      extension: "jpg",
-      aspect_ratio: "tall",
-      size: "medium",
-      source: "animaldiversity,brooklynmuseum",
-      q: "cat",
-      searchBy: "creator",
-    }
-    const queryString =
-      "http://localhost:8443/search/image?q=cat&license=cc0&license_type=commercial" +
-      "&category=photograph&extension=jpg&aspect_ratio=tall&size=medium" +
-      "&source=animaldiversity,brooklynmuseum&searchBy=creator"
-    const result = queryStringToQueryData(queryString)
-    expect(result).toEqual(expectedQueryData)
   })
 })

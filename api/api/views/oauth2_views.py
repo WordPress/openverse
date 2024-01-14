@@ -1,3 +1,4 @@
+import json
 import logging as log
 import secrets
 import smtplib
@@ -13,6 +14,7 @@ from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.generators import generate_client_secret
 from oauth2_provider.views import TokenView as BaseTokenView
+from redis.exceptions import ConnectionError
 
 from api.docs.oauth2_docs import key_info, register, token
 from api.models import OAuth2Verification, ThrottledApplication
@@ -22,6 +24,9 @@ from api.serializers.oauth2_serializers import (
 )
 from api.utils.oauth2_helper import get_token_info
 from api.utils.throttle import OnePerSecond, TenPerDay
+
+
+module_logger = log.getLogger(__name__)
 
 
 @extend_schema(tags=["auth"])
@@ -136,9 +141,9 @@ class VerifyEmail(APIView):
 
 
 @extend_schema(tags=["auth"])
-class TokenView(BaseTokenView, APIView):
+class TokenView(APIView, BaseTokenView):
     @token
-    def post(self, *args, **kwargs):
+    def post(self, request):
         """
         Get an access token using client credentials.
 
@@ -154,7 +159,9 @@ class TokenView(BaseTokenView, APIView):
         endpoint.
         """
 
-        return super().post(*args, **kwargs)
+        res = super().post(request._request)
+        data = json.loads(res.content)
+        return Response(data, status=res.status_code)
 
 
 @extend_schema(tags=["auth"])
@@ -178,12 +185,19 @@ class CheckRates(APIView):
             return Response(status=403, data="Forbidden")
 
         access_token = str(request.auth)
-        client_id, rate_limit_model, verified = get_token_info(access_token)
+        token_info = get_token_info(access_token)
+
+        if not token_info:
+            # This shouldn't happen if `request.auth` was true above,
+            # but better safe than sorry
+            return Response(status=403, data="Forbidden")
+
+        client_id = token_info.client_id
 
         if not client_id:
             return Response(status=403, data="Forbidden")
 
-        throttle_type = rate_limit_model
+        throttle_type = token_info.rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
         if throttle_type == "standard":
             sustained_throttle_key = throttle_key.format(
@@ -208,19 +222,27 @@ class CheckRates(APIView):
             # TODO: Replace 500 response with exception.
             return Response(status=500, data="Unknown API key rate limit type")
 
-        sustained_requests_list = cache.get(sustained_throttle_key)
-        sustained_requests = (
-            len(sustained_requests_list) if sustained_requests_list else None
-        )
-        burst_requests_list = cache.get(burst_throttle_key)
-        burst_requests = len(burst_requests_list) if burst_requests_list else None
+        try:
+            sustained_requests_list = cache.get(sustained_throttle_key)
+            sustained_requests = (
+                len(sustained_requests_list) if sustained_requests_list else None
+            )
+            burst_requests_list = cache.get(burst_throttle_key)
+            burst_requests = len(burst_requests_list) if burst_requests_list else None
+            status = 200
+        except ConnectionError:
+            logger = module_logger.getChild("CheckRates.get")
+            logger.warning("Redis connect failed, cannot get key usage.")
+            burst_requests = None
+            sustained_requests = None
+            status = 424
 
         response_data = OAuth2KeyInfoSerializer(
             {
                 "requests_this_minute": burst_requests,
                 "requests_today": sustained_requests,
                 "rate_limit_model": throttle_type,
-                "verified": verified,
+                "verified": token_info.verified,
             }
         )
-        return Response(status=200, data=response_data.data)
+        return Response(status=status, data=response_data.data)

@@ -2,10 +2,7 @@ import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import {
-  dismissBannersUsingCookies,
-  setBreakpointCookie,
-} from "~~/test/playwright/utils/navigation"
+import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 import { keycodes } from "~/constants/key-codes"
 import { skipToContentTargetId } from "~/constants/window"
@@ -29,8 +26,9 @@ const pages = [
 for (const pageUrl of pages) {
   breakpoints.describeMobileAndDesktop(async ({ breakpoint }) => {
     test(`can skip to content on ${pageUrl}`, async ({ page }) => {
-      await dismissBannersUsingCookies(page)
-      await setBreakpointCookie(page, breakpoint)
+      await preparePageForTests(page, breakpoint, {
+        features: { fetch_sensitive: "off" },
+      })
 
       await page.goto(pageUrl)
 

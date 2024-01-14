@@ -8,8 +8,8 @@ import {
   filters,
   goToSearchTerm,
   languageDirections,
+  preparePageForTests,
   scrollToBottom,
-  setBreakpointCookie,
   sleep,
 } from "~~/test/playwright/utils/navigation"
 
@@ -21,7 +21,7 @@ for (const dir of languageDirections) {
   test.describe(`header-${dir}`, () => {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
       test.beforeEach(async ({ page }) => {
-        await setBreakpointCookie(page, breakpoint)
+        await preparePageForTests(page, breakpoint, { dismissFilter: false })
 
         await goToSearchTerm(page, "birds", { dir })
       })

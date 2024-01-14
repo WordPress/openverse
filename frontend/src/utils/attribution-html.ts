@@ -90,8 +90,11 @@ const fakeT = (
   let text: string | undefined = undefined
   segments.forEach((segment) => {
     const piece = fraction[segment]
-    if (typeof piece === "string") text = piece
-    else fraction = piece
+    if (typeof piece === "string") {
+      text = piece
+    } else {
+      fraction = piece
+    }
   })
   return text ? fmt(text, replacements) : ""
 }
@@ -165,7 +168,9 @@ export const getAttribution = (
     includeIcons: true,
   }
 ): string => {
-  if (!mediaItem) return ""
+  if (!mediaItem) {
+    return ""
+  }
 
   const isPd = isPublicDomain(mediaItem.license)
 
@@ -178,10 +183,15 @@ export const getAttribution = (
   /* Title */
 
   let title = mediaItem.originalTitle || tFn("genericTitle")
-  if (!isPlaintext) title = escapeHtml(title)
-  if (!isPlaintext && mediaItem.foreign_landing_url)
+  if (!isPlaintext) {
+    title = escapeHtml(title)
+  }
+  if (!isPlaintext && mediaItem.foreign_landing_url) {
     title = extLink(mediaItem.foreign_landing_url, title)
-  if (mediaItem.originalTitle) title = tFn("actualTitle", { title })
+  }
+  if (mediaItem.originalTitle) {
+    title = tFn("actualTitle", { title })
+  }
 
   /* License */
 
@@ -195,11 +205,14 @@ export const getAttribution = (
     const elements = getElements(mediaItem.license)
     const icons = elements.map((element) => licenseElementImg(element))
     // Icons are only rendered if present for every element
-    if (!icons.includes("")) licenseIcons = icons.join("")
+    if (!icons.includes("")) {
+      licenseIcons = icons.join("")
+    }
   }
   let license = `${fullLicenseName} ${licenseIcons}`.trim()
-  if (!isPlaintext && mediaItem.license_url)
+  if (!isPlaintext && mediaItem.license_url) {
     license = extLink(`${mediaItem.license_url}?ref=openverse`, license)
+  }
 
   /* Attribution */
 
@@ -220,9 +233,12 @@ export const getAttribution = (
 
   if (mediaItem.creator) {
     let creator = mediaItem.creator
-    if (!isPlaintext) creator = escapeHtml(creator)
-    if (!isPlaintext && mediaItem.creator_url)
+    if (!isPlaintext) {
+      creator = escapeHtml(creator)
+    }
+    if (!isPlaintext && mediaItem.creator_url) {
       creator = extLink(mediaItem.creator_url, creator)
+    }
     attributionParts.creator = tFn("creatorText", {
       creatorName: creator,
     })

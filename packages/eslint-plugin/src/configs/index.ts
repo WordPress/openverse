@@ -33,6 +33,8 @@ export const project: TSESLint.Linter.Config = {
     semi: ["error", "never"],
     "no-console": "off",
     "unicorn/filename-case": ["error", { case: "kebabCase" }],
+    "unicorn/switch-case-braces": ["error"],
+    curly: ["error", "all"],
   },
   overrides: [
     {
@@ -75,6 +77,8 @@ export const project: TSESLint.Linter.Config = {
       rules: {
         // Superseded by `@openverse/no-unexplained-disabled-test`
         "playwright/no-skipped-test": "off",
+        // Duplicates TypeScript functionality. All our Playwright tests are in TypeScript and type checks will already catch non-string titles.
+        "playwright/valid-title": "off",
       },
       settings: {
         playwright: {

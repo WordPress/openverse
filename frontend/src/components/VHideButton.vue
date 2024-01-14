@@ -28,8 +28,12 @@
 import { computed, defineComponent } from "@nuxtjs/composition-api"
 
 import { useUiStore } from "~/stores/ui"
+import { defineEvent } from "~/types/emits"
 
 export default defineComponent({
+  emits: {
+    click: defineEvent(),
+  },
   setup() {
     const uiStore = useUiStore()
     const isMd = computed(() => uiStore.isBreakpoint("md"))

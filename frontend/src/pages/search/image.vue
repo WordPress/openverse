@@ -1,8 +1,8 @@
 <template>
   <VImageGrid
-    :images="results"
-    :is-single-page="false"
+    :results="results"
     :fetch-state="fetchState"
+    kind="search"
     :image-grid-label="
       $t('browsePage.aria.results', { query: searchTerm }).toString()
     "

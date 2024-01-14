@@ -1,4 +1,5 @@
 set dotenv-load := false
+set positional-arguments
 
 COLOR := "\\033[0;35m"
 NO_COLOR := "\\033[0m"
@@ -17,6 +18,54 @@ install:
 ##########
 # Sphinx #
 ##########
+
+# Create a new project with proposal and, optionally, implementation plans
+create-project project_name *ip_names:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    TIMESTAMP=$(date '+%Y%m%d')
+    DATE=$(date '+%Y-%m-%d')
+    PROJECTFS="{{ replace(lowercase(project_name), ' ', '_') }}"
+    # Create project directory
+    mkdir "projects/proposals/$PROJECTFS"
+    # Create project directory index
+    INDEXPATH="projects/proposals/$PROJECTFS/index.md"
+    sed \
+      -e '1,3d;$d' \
+      -e 's/{Project title}/{{ project_name }}/g' \
+      projects/templates/index.md > $INDEXPATH
+    echo "Project index: $INDEXPATH"
+    # Create project proposal
+    PROPOSALPATH="projects/proposals/$PROJECTFS/$TIMESTAMP-project_proposal.md"
+    sed \
+      -e '1,3d;$d' \
+      -e 's/{Project proposal title}/{{ project_name }}/g' \
+      -e "s/{YYYY-MM-DD}/$DATE/g" \
+      projects/templates/project_proposal.md > $PROPOSALPATH
+    echo "Project proposal: $PROPOSALPATH"
+    # Create implementation plans
+    shift
+    for IP in "$@"; do
+        just create-ip "$PROJECTFS" "$IP"
+    done
+
+# Create a new implementation plan in the given directory
+create-ip project_dirname ip_name:
+    #!/usr/bin/env bash
+    set -eo pipefail
+    TIMESTAMP=$(date '+%Y%m%d')
+    DATE=$(date '+%Y-%m-%d')
+    IPFS="{{ replace(lowercase(ip_name), ' ', '_') }}"
+    PROPOSALFS=$(find "projects/proposals/{{ project_dirname }}" -maxdepth 1 -name '*project_proposal.md')
+    # Create implementation plan
+    IPPATH="projects/proposals/{{ project_dirname }}/$TIMESTAMP-implementation_plan_$IPFS.md"
+    sed \
+      -e '1,3d;$d' \
+      -e "s/{YYYY-MM-DD}/$DATE/g" \
+      -e 's/{Implementation plan title}/{{ ip_name }}/g' \
+      -e "s|{Project proposal path}|/$PROPOSALFS|g" \
+      projects/templates/implementation_plan.md > $IPPATH
+    echo "Implementation plan: $IPPATH"
 
 # Serve a live-reload documentation site
 live port="50230": clean

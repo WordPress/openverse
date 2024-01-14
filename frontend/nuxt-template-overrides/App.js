@@ -12,14 +12,13 @@ import { decode, parsePath, withoutBase, withoutTrailingSlash, normalizeURL } fr
     'sanitizeComponent'
   ]: []
 ] %>
+<% if (utilsImports.length) { %>import { <%= utilsImports.join(', ') %> } from './utils'<% } %>
 <% css.forEach((c) => { %>
 import '<%= relativeToBuild(resolvePath(c.src || c, { isStyle: true })) %>'
 <% }) %>
-<% if (utilsImports.length) { %>import { <%= utilsImports.join(', ') %> } from './utils'<% } %>
 import NuxtError from '<%= components.ErrorPage ? components.ErrorPage : "./components/nuxt-error.vue" %>'
 <% if (loading) { %>import NuxtLoading from '<%= (typeof loading === "string" ? loading : "./components/nuxt-loading.vue") %>'<% } %>
 <% if (buildIndicator) { %>import NuxtBuildIndicator from './components/nuxt-build-indicator'<% } %>
-
 
 <% if (features.layouts) { %>
 <%= Object.keys(layouts).map((key) => {
@@ -175,23 +174,16 @@ export default {
       }
       <% if (loading) { %>this.$loading.start()<% } %>
 
-      const promises = pages.map((page) => {
-        const p = []
+      const promises = pages.map(async (page) => {
+        let p = []
 
         <% if (features.fetch) { %>
         // Old fetch
         if (page.$options.fetch && page.$options.fetch.length) {
           p.push(promisify(page.$options.fetch, this.context))
         }
-        if (page.$fetch) {
-          p.push(page.$fetch())
-        } else {
-          // Get all component instance to call $fetch
-          for (const component of getChildrenComponentInstancesUsingFetch(page.$vnode.componentInstance)) {
-            p.push(component.$fetch())
-          }
-        }
         <% } %>
+
         <% if (features.asyncData) { %>
         if (page.$options.asyncData) {
           p.push(
@@ -204,6 +196,22 @@ export default {
           )
         }
         <% } %>
+
+        <% if (features.fetch) { %>
+        // Wait for asyncData & old fetch to finish
+        await Promise.all(p)
+        // Cleanup refs
+        p = []
+
+        if (page.$fetch) {
+          p.push(page.$fetch())
+        }
+        // Get all component instance to call $fetch
+        for (const component of getChildrenComponentInstancesUsingFetch(page.$vnode.componentInstance)) {
+          p.push(component.$fetch())
+        }
+        <% } %>
+
         return Promise.all(p)
       })
       try {

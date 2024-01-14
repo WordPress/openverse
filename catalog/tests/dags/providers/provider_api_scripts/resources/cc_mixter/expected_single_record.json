@@ -1,0 +1,47 @@
+{
+  "foreign_identifier": 69420,
+  "foreign_landing_url": "https://ccmixter.org/files/testuser/69420",
+  "license_info": {
+    "license": "by-nc",
+    "version": "4.0",
+    "url": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "raw_url": "https://creativecommons.org/licenses/by-nc/4.0/"
+  },
+  "creator": "Test User",
+  "creator_url": "https://ccmixter.org/people/testuser",
+  "title": "Test Music",
+  "meta_data": {
+    "description": "Thanks to:\r\nOther Test User – sax\r\nAnother Test User – bagpipes and sitar",
+    "description_html": "Thanks to:<br />\r\nOther Test User – sax<br />\r\nAnother Test User – bagpipes and sitar",
+    "upload_num_scores": 420
+  },
+  "raw_tags": [
+    "remix",
+    "media",
+    "bpm_090_095",
+    "non_commercial",
+    "audio",
+    "mp3",
+    "flac",
+    "zip",
+    "44k",
+    "stereo",
+    "CBR",
+    "VBR",
+    "instrumental"
+  ],
+  "url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.mp3",
+  "sample_rate": 44100,
+  "filetype": "mp3",
+  "filesize": 11150278,
+  "duration": 346000,
+  "alt_files": [
+    {
+      "url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.flac",
+      "sample_rate": 44000,
+      "filetype": "flac",
+      "filesize": 111502780,
+      "duration": 3946000
+    }
+  ]
+}

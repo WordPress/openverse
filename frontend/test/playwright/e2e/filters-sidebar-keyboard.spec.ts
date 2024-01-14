@@ -4,7 +4,7 @@ import {
   LanguageDirection,
   languageDirections,
   pathWithDir,
-  setBreakpointCookie,
+  preparePageForTests,
   t,
 } from "~~/test/playwright/utils/navigation"
 
@@ -32,12 +32,11 @@ test.describe.configure({ mode: "parallel" })
 for (const dir of languageDirections) {
   test.describe(`search header keyboard accessibility test in ${dir}`, () => {
     test.beforeEach(async ({ page }) => {
-      await setBreakpointCookie(page, "lg")
+      await preparePageForTests(page, "lg", { dismissFilter: false })
       /**
        * To simplify finding the last focusable element in the filters sidebar,
-       * we use the image search page. After the removal of the "searchBy" filter,
-       * the last element on the all media search page is the "license explanation"
-       * button, not a checkbox.
+       * we use the image search page. The last element on the all media search
+       * page is the "license explanation" button, not a checkbox.
        */
       await page.goto(pathWithDir("/search/image?q=birds", dir))
     })

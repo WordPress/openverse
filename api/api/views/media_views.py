@@ -1,24 +1,52 @@
 import logging
+from typing import Union
 
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from adrf.views import APIView as AsyncAPIView
+from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
+from asgiref.sync import sync_to_async
+
+from api.constants.media_types import MediaType
+from api.constants.search import SearchStrategy
 from api.controllers import search_controller
+from api.controllers.elasticsearch.related import related_media
 from api.models import ContentProvider
 from api.models.media import AbstractMedia
+from api.serializers import audio_serializers, media_serializers
 from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
+from api.utils.throttle import (
+    AnonThumbnailRateThrottle,
+    OAuth2IdThumbnailRateThrottle,
+    OpenverseReferrerAnonThumbnailRateThrottle,
+)
 
 
 logger = logging.getLogger(__name__)
 
+MediaListRequestSerializer = Union[
+    audio_serializers.AudioCollectionRequestSerializer,
+    media_serializers.PaginatedRequestSerializer,
+    media_serializers.MediaSearchRequestSerializer,
+]
 
-class MediaViewSet(ReadOnlyModelViewSet):
+
+class InvalidSource(APIException):
+    status_code = 400
+    default_detail = "Invalid source."
+    default_code = "invalid_source"
+
+
+class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
+    view_is_async = True
+
     lookup_field = "identifier"
     # TODO: https://github.com/encode/django-rest-framework/pull/6789
     lookup_value_regex = (
@@ -29,13 +57,16 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
     # Populate these in the corresponding subclass
     model_class: type[AbstractMedia] = None
+    media_type: MediaType | None = None
     query_serializer_class = None
+    collection_serializer_class = None
     default_index = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         required_fields = [
             self.model_class,
+            self.media_type,
             self.query_serializer_class,
             self.default_index,
         ]
@@ -59,6 +90,8 @@ class MediaViewSet(ReadOnlyModelViewSet):
             ).values_list("provider_identifier")
         )
 
+    aget_object = sync_to_async(ReadOnlyModelViewSet.get_object)
+
     def get_serializer_context(self):
         context = super().get_serializer_context()
         req_serializer = self._get_request_serializer(self.request)
@@ -73,6 +106,18 @@ class MediaViewSet(ReadOnlyModelViewSet):
         return req_serializer
 
     def get_db_results(self, results):
+        """
+        Map ES hits to ORM model instances.
+
+        ORM instances have all necessary info needed for serializers whereas ES
+        hits only contain the subset of fields needed for indexing and search.
+        This function issues one query to the DB, using the ``identifier`` field
+        which is both unique and indexed, so it's quite performant.
+
+        :param results: the list of ES hits
+        :return: the corresponding list of ORM model instances
+        """
+
         identifiers = []
         hits = []
         for hit in results:
@@ -82,7 +127,7 @@ class MediaViewSet(ReadOnlyModelViewSet):
         results = list(self.get_queryset().filter(identifier__in=identifiers))
         results.sort(key=lambda x: identifiers.index(str(x.identifier)))
         for result, hit in zip(results, hits):
-            result.fields_matched = getattr(hit, "fields_matched", None)
+            result.fields_matched = getattr(hit.meta, "highlight", None)
 
         return results
 
@@ -100,12 +145,64 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
     def list(self, request, *_, **__):
         params = self._get_request_serializer(request)
+        return self.get_media_results(request, "search", params)
 
+    def _validate_source(self, source):
+        valid_sources = search_controller.get_sources(self.media_type)
+        if source not in valid_sources:
+            valid_string = ", ".join([f"'{k}'" for k in valid_sources.keys()])
+            raise InvalidSource(
+                detail=f"Invalid source '{source}'. Valid sources are: {valid_string}.",
+            )
+
+    def collection(self, request, tag, source, creator, *_, **__):
+        if tag:
+            collection_params = {"tag": tag}
+        elif creator:
+            collection_params = {"creator": creator, "source": source}
+        else:
+            collection_params = {"source": source}
+        if source:
+            self._validate_source(source)
+
+        params = self.collection_serializer_class(
+            data=request.query_params, context={"request": request}
+        )
+        params.is_valid(raise_exception=True)
+
+        return self.get_media_results(request, "collection", params, collection_params)
+
+    @action(detail=False, methods=["get"], url_path="tag/(?P<tag>[^/.]+)")
+    def tag_collection(self, request, tag, *_, **__):
+        tag_lower = tag.lower()
+        return self.collection(request, tag_lower, None, None)
+
+    @action(detail=False, methods=["get"], url_path="source/(?P<source>[^/.]+)")
+    def source_collection(self, request, source, *_, **__):
+        return self.collection(request, None, source, None)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
+    )
+    def creator_collection(self, request, source, creator):
+        return self.collection(request, None, source, creator)
+
+    # Common functionality for search and collection views
+
+    def get_media_results(
+        self,
+        request,
+        strategy: SearchStrategy,
+        params: MediaListRequestSerializer,
+        collection_params: dict[str, str] | None = None,
+    ):
         page_size = self.paginator.page_size = params.data["page_size"]
         page = self.paginator.page = params.data["page"]
 
         hashed_ip = hash(self._get_user_ip(request))
-        filter_dead = params.validated_data["filter_dead"]
+        filter_dead = params.validated_data.get("filter_dead", True)
 
         if pref_index := params.validated_data.get("index"):
             logger.info(f"Using preferred index {pref_index} for media.")
@@ -117,8 +214,15 @@ class MediaViewSet(ReadOnlyModelViewSet):
             exact_index = False
 
         try:
-            results, num_pages, num_results, search_context = search_controller.search(
+            (
+                results,
+                num_pages,
+                num_results,
+                search_context,
+            ) = search_controller.query_media(
+                strategy,
                 params,
+                collection_params,
                 search_index,
                 exact_index,
                 page_size,
@@ -158,22 +262,27 @@ class MediaViewSet(ReadOnlyModelViewSet):
     @action(detail=True)
     def related(self, request, identifier=None, *_, **__):
         try:
-            results, num_results, search_context = search_controller.related_media(
+            results = related_media(
                 uuid=identifier,
                 index=self.default_index,
                 filter_dead=True,
             )
-            self.paginator.result_count = num_results
             self.paginator.page_count = 1
             # `page_size` refers to the maximum number of related images to return.
             self.paginator.page_size = 10
+            # `result_count` is hard-coded and is equal to the page size.
+            self.paginator.result_count = 10
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
         # If there are no hits in the search controller
         except IndexError:
-            raise APIException("Could not find items.", 404)
+            raise NotFound
 
-        serializer_context = search_context | self.get_serializer_context()
+        serializer_context = self.get_serializer_context()
+
+        serializer_class = self.get_serializer()
+        if serializer_class.needs_db:
+            results = self.get_db_results(results)
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
@@ -185,15 +294,35 @@ class MediaViewSet(ReadOnlyModelViewSet):
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def thumbnail(self, request, media_obj, image_url):
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
+        raise NotImplementedError(
+            "Subclasses must implement `get_image_proxy_media_info`"
+        )
+
+    thumbnail_action = action(
+        detail=True,
+        url_path="thumb",
+        url_name="thumb",
+        serializer_class=media_serializers.MediaThumbnailRequestSerializer,
+        throttle_classes=[
+            AnonThumbnailRateThrottle,
+            OpenverseReferrerAnonThumbnailRateThrottle,
+            OAuth2IdThumbnailRateThrottle,
+        ],
+    )
+
+    async def thumbnail(self, request, *_, **__):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        return image_proxy.get(
-            image_url,
-            media_obj.identifier,
-            accept_header=request.headers.get("Accept", "image/*"),
-            **serializer.validated_data,
+        media_info = await self.get_image_proxy_media_info()
+
+        return await image_proxy.get(
+            media_info,
+            request_config=image_proxy.RequestConfig(
+                accept_header=request.headers.get("Accept", "image/*"),
+                **serializer.validated_data,
+            ),
         )
 
     # Helper functions

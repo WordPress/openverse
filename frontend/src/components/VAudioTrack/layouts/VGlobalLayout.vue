@@ -1,21 +1,22 @@
 <template>
-  <div class="global-track flex w-full flex-row">
-    <div class="flex-shrink-0">
-      <VAudioThumbnail :audio="audio" />
-      <slot name="play-pause" size="large" layout="global" />
+  <div
+    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring-1 ring-dark-charcoal ring-opacity-20"
+  >
+    <div class="h-12 w-12 rounded-ss">
+      <VAudioThumbnail class="rounded-ss" :audio="audio" />
     </div>
 
-    <div class="relative flex-grow">
+    <div class="flex h-12 items-center justify-between rounded-se bg-white">
       <VLink
         :href="`/audio/${audio.id}`"
-        class="hover-underline absolute inset-x-0 top-[10.5px] z-10 line-clamp-2 flex flex-row items-center justify-between px-4 pe-12 text-sr font-semibold text-dark-charcoal"
+        class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-dark-charcoal"
         :class="{ 'blur-text': shouldBlur }"
       >
         {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
       </VLink>
-
-      <slot name="controller" :usable-frac="0.5" />
     </div>
+    <slot name="audio-control" size="medium" layout="global" />
+    <slot name="controller" :usable-frac="1" />
   </div>
 </template>
 
@@ -52,12 +53,20 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .global-track .thumbnail {
-  @apply h-14 w-14;
+  @apply h-12 w-12 rounded-ss;
+}
+.global-track .thumbnail img,
+.global-track .thumbnail ~ svg {
+  @apply rounded-ss;
 }
 
 .global-track .waveform {
-  @apply h-full;
+  @apply h-full rounded-ee;
+  --waveform-background-color: theme("colors.white");
+}
+.global-track .audio-control {
+  @apply rounded-es;
 }
 </style>

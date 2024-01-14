@@ -21,9 +21,6 @@
 Openverse is a powerful search engine for GPL-compatible images, audio, and
 more. Openverse is live at [openverse.org](https://openverse.org).
 
-This repository contains most of the codebase, except for the Openverse catalog.
-Eventually the catalog will be merged into this repository as well.
-
 - [Catalog](catalog/) | The Apache Airflow-powered system for downloading and
   storing Openverse's metadata
 - [Ingestion server](ingestion_server/) | The mechanism for refreshing the data
@@ -55,10 +52,10 @@ You can keep in touch with the project via the following channels:
   - [Project Board](https://github.com/orgs/WordPress/projects/3)
 - [Community Site](https://make.wordpress.org/openverse/)
 - #openverse channel in the
-  [Making WordPress Slack](https://make.wordpress.org/chat/)
-  - Weekly Development Chat (@
-    [Tuesday 15:00 UTC](https://everytimezone.com/s/d1d42c7b))
-  - Monthly Prioritisation Meeting
+  [Making WordPress Chat](https://make.wordpress.org/chat/)
+  - Weekly Development Chat (
+    [Mondays @ 15:00 UTC](https://everytimezone.com/s/d2e71015))
+  - Monthly Prioritisation Meeting (first Wednesday of every month @ 15:00 UTC)
 
 ## Documentation
 

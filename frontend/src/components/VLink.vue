@@ -48,6 +48,8 @@ import { useContext } from "@nuxtjs/composition-api"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
+import { defineEvent } from "~/types/emits"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 
 type InternalLinkProps = { to: string }
@@ -93,6 +95,13 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: {
+    mousedown: defineEvent<[MouseEvent]>(),
+    click: defineEvent<[MouseEvent]>(),
+    blur: defineEvent<[FocusEvent]>(),
+    focus: defineEvent<[FocusEvent]>(),
+    keydown: defineEvent<[KeyboardEvent]>(),
+  },
   setup(props) {
     const { app } = useContext()
     function checkHref(p: typeof props): p is {
@@ -129,7 +138,9 @@ export default defineComponent({
     const { sendCustomEvent } = useAnalytics()
 
     const handleExternalClick = () => {
-      if (!checkHref(props) || !props.sendExternalLinkClickEvent) return
+      if (!checkHref(props) || !props.sendExternalLinkClickEvent) {
+        return
+      }
       sendCustomEvent("EXTERNAL_LINK_CLICK", {
         url: props.href,
       })

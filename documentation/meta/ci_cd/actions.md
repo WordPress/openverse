@@ -45,7 +45,6 @@ host dependencies are needed).
 {
   setup_python: "true" | "false" // default: "true"
   setup_nodejs: "true" | "false" // default: "true"
-  install_deps: "true" | "false" // default: "true"
   install_recipe: string // default: "install"
 }
 ```

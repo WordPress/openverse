@@ -43,11 +43,14 @@ const FEATURE_FLAG = "feature_flag"
  */
 export const getFlagStatus = (flag: FeatureFlag): FlagStatus => {
   const deployEnv = (process.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
-  if (typeof flag.status === "string") return flag.status
-  else {
+  if (typeof flag.status === "string") {
+    return flag.status
+  } else {
     const envIndex = DEPLOY_ENVS.indexOf(deployEnv)
     for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
-      if (DEPLOY_ENVS[i] in flag.status) return flag.status[DEPLOY_ENVS[i]]
+      if (DEPLOY_ENVS[i] in flag.status) {
+        return flag.status[DEPLOY_ENVS[i]]
+      }
     }
   }
   return DISABLED
@@ -61,9 +64,12 @@ export const getFlagStatus = (flag: FeatureFlag): FlagStatus => {
  */
 const getFeatureState = (flag: FeatureFlag): FeatureState => {
   const status = getFlagStatus(flag)
-  if (status === SWITCHABLE)
+  if (status === SWITCHABLE) {
     return flag.preferredState ?? flag.defaultState ?? OFF
-  if (status === ENABLED) return ON
+  }
+  if (status === ENABLED) {
+    return ON
+  }
   return OFF
 }
 
@@ -81,8 +87,9 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
     featureState:
       (state: FeatureFlagState) =>
       (name: FlagName): FeatureState => {
-        if (name in state.flags) return getFeatureState(state.flags[name])
-        else {
+        if (name in state.flags) {
+          return getFeatureState(state.flags[name])
+        } else {
           warn(`Invalid feature flag accessed: ${name}`)
           return ON
         }
@@ -105,8 +112,9 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       (dest: string): Record<string, FeatureState> => {
         const featureMap: Record<string, FeatureState> = {}
         Object.entries(state.flags).forEach(([name, flag]) => {
-          if (getFlagStatus(flag) === SWITCHABLE && flag.storage === dest)
+          if (getFlagStatus(flag) === SWITCHABLE && flag.storage === dest) {
             featureMap[name] = getFeatureState(flag)
+          }
         })
         return featureMap
       },
@@ -199,8 +207,12 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
         flag.preferredState = targetState
         this.writeToCookie()
         this.writeToSession()
-        if (name === "analytics") this.syncAnalyticsWithLocalStorage()
-      } else warn(`Cannot set preferred state for non-switchable flag: ${name}`)
+        if (name === "analytics") {
+          this.syncAnalyticsWithLocalStorage()
+        }
+      } else {
+        warn(`Cannot set preferred state for non-switchable flag: ${name}`)
+      }
     },
     /**
      * For Plausible to stop tracking `plausible_ignore` must be set in

@@ -1,0 +1,22 @@
+set dotenv-load := false
+
+COLOR := "\\033[0;32m"
+NO_COLOR := "\\033[0m"
+
+# Show all available recipes
+@_default:
+    printf "\n{{ COLOR }}# Cache (path: \`docker/cache/\`)\n"
+    printf "==============================={{ NO_COLOR }}\n"
+    just --list --unsorted
+
+#######
+# CLI #
+#######
+
+# Open the Redis CLI as an interactive REPL
+cli *args:
+    just ../../exec cache redis-cli {{ args }}
+
+# Delete all data cached in Redis
+flushall:
+    just cli FLUSHALL

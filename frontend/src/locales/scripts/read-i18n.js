@@ -79,13 +79,18 @@ class Entry {
    */
   toJSON() {
     // This is a string-string entry, will be handled by parent.
-    if (this.value) return {}
+    if (this.value) {
+      return {}
+    }
 
     /** @type {SimJson} */
     const pojo = {}
     for (const child of this.children) {
-      if (child.value) pojo[child.key] = child.value
-      else pojo[child.key] = child.toJSON()
+      if (child.value) {
+        pojo[child.key] = child.value
+      } else {
+        pojo[child.key] = child.toJSON()
+      }
     }
     return pojo
   }
@@ -99,12 +104,16 @@ class Entry {
  * @return {string} the text content of the key
  */
 const parseKey = (keyNode) => {
-  if (keyNode === undefined) return ""
+  if (keyNode === undefined) {
+    return ""
+  }
   switch (keyNode.type) {
-    case "StringLiteral":
+    case "StringLiteral": {
       return keyNode.value
-    case "Identifier":
+    }
+    case "Identifier": {
       return keyNode.name
+    }
   }
 }
 
@@ -117,13 +126,15 @@ const parseKey = (keyNode) => {
  */
 const parseComment = (commentNode) => {
   switch (commentNode.type) {
-    case "CommentLine":
+    case "CommentLine": {
       return commentNode.value.trim()
-    case "CommentBlock":
+    }
+    case "CommentBlock": {
       return commentNode.value
         .replace(/\n|\*+/g, "")
         .replace(/\s+/, " ")
         .trim()
+    }
   }
 }
 
@@ -136,14 +147,16 @@ const parseComment = (commentNode) => {
  */
 const parseValue = (entry, valueNode) => {
   switch (valueNode.type) {
-    case "StringLiteral":
+    case "StringLiteral": {
       entry.value = valueNode.value
       break
-    case "ObjectExpression":
+    }
+    case "ObjectExpression": {
       valueNode.properties.map(parseObjProperty).forEach((child) => {
         entry.addChild(child)
       })
       break
+    }
   }
 }
 

@@ -394,8 +394,39 @@ def test_ingest_records_uses_query_params_list_from_dagrun_conf():
         )
 
 
+def test_ingest_records_uses_additional_query_params_from_dagrun_conf():
+    # Initialize the ingester with a conf
+    ingester = MockProviderDataIngester(
+        {"additional_query_params": {"extra_param": 310}}
+    )
+
+    with (
+        patch.object(ingester, "get_batch") as get_batch_mock,
+        patch.object(ingester, "process_batch", return_value=3),
+    ):
+        get_batch_mock.side_effect = [
+            (EXPECTED_BATCH_DATA, True),
+            (EXPECTED_BATCH_DATA, True),
+            (EXPECTED_BATCH_DATA, True),
+            (EXPECTED_BATCH_DATA, False),
+        ]
+
+        ingester.ingest_records()
+
+        # All calls should have the extra query param added
+        assert get_batch_mock.call_count == 4
+        get_batch_mock.assert_has_calls(
+            [
+                call({"has_image": 1, "page": 1, "extra_param": 310}),
+                call({"has_image": 1, "page": 1, "extra_param": 310}),
+                call({"has_image": 1, "page": 1, "extra_param": 310}),
+                call({"has_image": 1, "page": 1, "extra_param": 310}),
+            ]
+        )
+
+
 def test_ingest_records_raises_IngestionError():
-    with (patch.object(ingester, "get_batch") as get_batch_mock,):
+    with patch.object(ingester, "get_batch") as get_batch_mock:
         get_batch_mock.side_effect = [
             Exception("Mock exception message"),
             (EXPECTED_BATCH_DATA, True),  # Second batch should not be reached

@@ -15,10 +15,7 @@ import type http from "http"
 
 import type { NuxtConfig } from "@nuxt/types"
 import type { LocaleObject } from "@nuxtjs/i18n"
-import type { Options as ProxyOptions } from "http-proxy-middleware"
 import type { IncomingMessage, NextFunction } from "connect"
-
-let plausibleLogged = false
 
 if (process.env.NODE_ENV === "production") {
   meta.push({
@@ -264,6 +261,7 @@ const config: NuxtConfig = {
       // Enables use of IDE debuggers
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
     },
+    transpile: [({ isLegacy }) => (isLegacy ? "axios" : undefined)],
   },
   typescript: {
     typeCheck: {
@@ -306,43 +304,6 @@ const config: NuxtConfig = {
       },
     },
   },
-  proxy: {
-    // The key is appended to the address in the value.
-    "/api/event": {
-      target:
-        process.env.PLAUSIBLE_ORIGIN ??
-        (isProdNotPlaywright
-          ? "https://plausible.io"
-          : "http://localhost:50288"),
-      // Prevent ECONNREFUSED errors in the server console.
-      logProvider: () => {
-        return {
-          ...console,
-          error: isProdNotPlaywright
-            ? console.error
-            : (...data: unknown[]) => {
-                if (
-                  !plausibleLogged &&
-                  data.some(
-                    (item) =>
-                      typeof item === "string" && item.includes("ECONNREFUSED")
-                  )
-                ) {
-                  console.warn("Plausible is not running.")
-                  plausibleLogged = true
-                }
-              },
-        }
-      },
-      // Prevent 504 errors in the browser console.
-      onError: (err, _req, res) => {
-        if (!isProdNotPlaywright && err.message.includes("ECONNREFUSED")) {
-          res.writeHead(200, { "Content-Type": "text/plain" })
-          res.end("plausible not running")
-        }
-      },
-    } satisfies ProxyOptions,
-  },
   plausible: {
     trackLocalhost: !isProdNotPlaywright,
   },
@@ -356,7 +317,18 @@ const config: NuxtConfig = {
         process.env.SITE_DOMAIN ??
         (isProdNotPlaywright
           ? "https://openverse.org"
-          : `http://localhost:${port}`),
+          : /**
+             * We rely on the Nginx container running as `frontend_nginx`
+             * in the local compose stack to proxy requests. Therefore, the
+             * URL here is not for the Plausible container in the local stack,
+             * but the Nginx service, which then itself forwards the requests
+             * to the local Plausible instance.
+             *
+             * In production, the Nginx container is handling all requests
+             * made to the root URL (openverse.org), and is configured to
+             * forward Plausible requests to upstream Plausible.
+             */
+            "http://localhost:50290"),
     },
     sentry: {
       config: {

@@ -17,11 +17,11 @@
 </template>
 
 <script lang="ts">
-import { camel } from "case"
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
+import { camelCase } from "~/utils/case"
 import { useI18n } from "~/composables/use-i18n"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -63,7 +63,7 @@ export default defineComponent({
     const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {
       const licenseKey =
-        props.license === "sampling+" ? props.license : camel(props.license)
+        props.license === "sampling+" ? props.license : camelCase(props.license)
       return {
         readable: i18n.t(`licenseReadableNames.${licenseKey}`).toString(),
         full: getFullLicenseName(props.license, "", i18n),

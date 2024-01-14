@@ -5,9 +5,7 @@ import pytest
 from airflow import DAG
 from airflow.exceptions import AirflowSkipException, BackfillUnfinished
 from airflow.executors.debug_executor import DebugExecutor
-from airflow.models import DagRun, TaskInstance
 from airflow.operators.empty import EmptyOperator
-from airflow.utils.session import create_session
 from pendulum import now
 
 from catalog.tests.conftest import mark_extended
@@ -19,22 +17,6 @@ from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_i
 from providers import provider_dag_factory
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
 from providers.provider_workflows import ProviderWorkflow
-
-
-DAG_ID = "test_provider_dag_factory"
-
-
-def _clean_dag_from_db():
-    with create_session() as session:
-        session.query(DagRun).filter(DagRun.dag_id == DAG_ID).delete()
-        session.query(TaskInstance).filter(TaskInstance.dag_id == DAG_ID).delete()
-
-
-@pytest.fixture()
-def clean_db():
-    _clean_dag_from_db()
-    yield
-    _clean_dag_from_db()
 
 
 @mark_extended

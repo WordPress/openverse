@@ -19,8 +19,6 @@ export const buttonVariants = [
   ...baseButtonVariants,
   "plain",
   "plain--avoid",
-  "dropdown-label",
-  "dropdown-label-pressed",
 ] as const
 export type ButtonVariant = (typeof buttonVariants)[number]
 
@@ -36,5 +34,5 @@ export type ButtonSize = (typeof buttonSizes)[number]
 export const buttonTypes = ["button", "submit", "reset"] as const
 export type ButtonType = (typeof buttonTypes)[number]
 
-export const buttonConnections = ["start", "end", "none", "all"] as const
+export const buttonConnections = ["start", "end", "top", "bottom"] as const
 export type ButtonConnections = (typeof buttonConnections)[number]

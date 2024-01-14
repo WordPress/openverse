@@ -2,7 +2,7 @@
   <div>
     <VSkipToContentButton />
     <div
-      class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr,auto] bg-white"
+      class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
       :class="[
         isDesktopLayout ? 'desktop' : 'mobile',
         breakpoint,
@@ -31,10 +31,7 @@
         class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
       >
         <VSearchGridFilter class="px-10 py-8" />
-        <VSafeBrowsing
-          v-if="isSensitiveContentEnabled"
-          class="border-t border-dark-charcoal-20 px-10 py-8"
-        />
+        <VSafeBrowsing class="border-t border-dark-charcoal-20 px-10 py-8" />
       </aside>
 
       <div
@@ -47,10 +44,9 @@
           class="border-t border-dark-charcoal-20 bg-white"
         />
       </div>
-
-      <VModalTarget class="modal" />
       <VGlobalAudioSection />
     </div>
+    <VModalTarget class="modal" />
   </div>
 </template>
 <script lang="ts">
@@ -61,7 +57,6 @@ import { useLayout } from "~/composables/use-layout"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import {
   IsHeaderScrolledKey,
@@ -101,11 +96,6 @@ export default defineComponent({
 
     const uiStore = useUiStore()
     const searchStore = useSearchStore()
-
-    const featureStore = useFeatureFlagStore()
-    const isSensitiveContentEnabled = computed(() =>
-      featureStore.isOn("sensitive_content")
-    )
 
     const { updateBreakpoint } = useLayout()
 
@@ -163,8 +153,6 @@ export default defineComponent({
     )
 
     return {
-      isSensitiveContentEnabled,
-
       mainPageRef,
       headerRef,
 
@@ -190,7 +178,7 @@ export default defineComponent({
   width: var(--filter-sidebar-width);
 }
 .app {
-  grid-template-areas: "header" "main" "global-audio";
+  grid-template-areas: "header" "main";
 }
 .header-el {
   grid-area: header;

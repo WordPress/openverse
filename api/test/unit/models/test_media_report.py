@@ -1,5 +1,4 @@
 import uuid
-from typing import Literal, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -21,8 +20,6 @@ from api.models.media import (
 
 
 pytestmark = pytest.mark.django_db
-
-MediaType = Union[Literal["audio"], Literal["image"]]
 
 reason_params = pytest.mark.parametrize("reason", [DMCA, MATURE, OTHER])
 

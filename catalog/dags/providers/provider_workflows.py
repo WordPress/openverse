@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 from airflow.models import Variable
 from typing_extensions import NotRequired, TypedDict
 
+from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIngester
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester
+from providers.provider_api_scripts.cc_mixter import CcMixterDataIngester
 from providers.provider_api_scripts.cleveland_museum import ClevelandDataIngester
 from providers.provider_api_scripts.europeana import EuropeanaDataIngester
 from providers.provider_api_scripts.finnish_museums import FinnishMuseumsDataIngester
@@ -193,8 +195,18 @@ class ProviderWorkflow:
 
 PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
+        start_date=datetime(2023, 10, 1),
+        ingester_class=AucklandMuseumDataIngester,
+        schedule_string="@daily",
+        dated=True,
+    ),
+    ProviderWorkflow(
         start_date=datetime(2020, 1, 1),
         ingester_class=BrooklynMuseumDataIngester,
+    ),
+    ProviderWorkflow(
+        start_date=datetime(2023, 11, 30),
+        ingester_class=CcMixterDataIngester,
     ),
     ProviderWorkflow(
         ingester_class=ClevelandDataIngester,
@@ -206,7 +218,7 @@ PROVIDER_WORKFLOWS = [
         start_date=datetime(2022, 10, 27),
         schedule_string="@daily",
         dated=True,
-        pull_timeout=timedelta(days=3),
+        pull_timeout=timedelta(weeks=1),
     ),
     ProviderWorkflow(
         ingester_class=FinnishMuseumsDataIngester,

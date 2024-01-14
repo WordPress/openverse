@@ -155,6 +155,7 @@ class JamendoDataIngester(ProviderDataIngester):
             "downloads": stats.get("rate_download_total", 0),
             "listens": stats.get("rate_listened_total", 0),
             "playlists": stats.get("rate_playlisted_total", 0),
+            "audiodownload_allowed": data.get("audiodownload_allowed", True),
         }
         return {k: v for k, v in metadata.items() if v is not None}
 

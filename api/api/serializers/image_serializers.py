@@ -16,7 +16,6 @@ from api.serializers.media_serializers import (
     get_hyperlinks_serializer,
     get_search_request_source_serializer,
 )
-from api.utils.url import add_protocol
 
 
 #######################
@@ -33,8 +32,8 @@ class ImageSearchRequestSerializer(
 ):
     """Parse and validate search query string parameters."""
 
-    fields_names = [
-        *MediaSearchRequestSerializer.fields_names,
+    field_names = [
+        *MediaSearchRequestSerializer.field_names,
         *ImageSearchRequestSourceSerializer.field_names,
         "category",
         "aspect_ratio",
@@ -119,21 +118,28 @@ class ImageSerializer(ImageHyperlinksSerializer, MediaSerializer):
 class OembedRequestSerializer(serializers.Serializer):
     """Parse and validate oEmbed parameters."""
 
-    url = serializers.CharField(
+    url = serializers.URLField(
+        allow_blank=False,
         help_text="The link to an image present in Openverse.",
     )
 
-    @staticmethod
-    def validate_url(value):
-        url = add_protocol(value)
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+
+        url = data["url"]
         if url.endswith("/"):
             url = url[:-1]
         identifier = url.rsplit("/", 1)[1]
+
         try:
             uuid = UUID(identifier)
         except ValueError:
-            raise serializers.ValidationError("Could not parse identifier from URL.")
-        return uuid
+            raise serializers.ValidationError(
+                {"Could not parse identifier from URL.": data["url"]}
+            )
+
+        data["identifier"] = uuid
+        return data
 
 
 class OembedSerializer(BaseModelSerializer):

@@ -26,14 +26,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download image `${{ github.event.inputs.image }}`
-        uses: dawidd6/action-download-artifact@v2
+      - name: Determine successful run ID
+        id: determine-run-id
+        uses: actions/github-script@v7
         with:
-          workflow: ci_cd.yml
-          workflow_conclusion: success
-          commit: ${{ github.event.inputs.commit }}
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            const [owner, repo] = '${{ github.repository }}'.split('/')
+            const { data: runs } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner,
+              repo,
+              branch: 'main',
+              event: 'push',
+              status: 'success',
+              head_sha: '${{ github.event.inputs.commit }}',
+            })
+            const runId = runs.workflow_runs.find((run) => run.name === 'CI + CD').id
+            core.setOutput('run_id', runId)
+
+      - name: Download image `${{ github.event.inputs.image }}`
+        uses: actions/download-artifact@v4
+        with:
           name: ${{ github.event.inputs.image }}
           path: /tmp
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          run_id: ${{ steps.determine-run-id.outputs.run_id }}
 
       - name: Load and tag image `${{ github.event.inputs.image }}`
         env:

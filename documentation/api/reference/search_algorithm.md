@@ -6,7 +6,7 @@ the code in Openverse as well as parts of Openverse's historical development.
 Parts of the story for how Openverse's indexes came to be configured as they are
 today are likely missing. Future improvements to Openverse's indexing and search
 will be more carefully documented here and in the code to ensure there is
-greater longevitiy of understanding.
+greater longevity of understanding.
 
 > **Note**: This document avoids covering details covered in the
 > [Openverse Search Guide](https://wordpress.org/openverse/search-help).
@@ -136,11 +136,12 @@ following fields:
 
 - Extension
 - Category
-- Length
-- Aspect ratio
-- Size
 - Source
 - License
+- License type
+- Length (audio only)
+- Aspect ratio (image only)
+- Size (image only)
 
 Source is the only field for which you can currently also specify exclusions.
 
@@ -152,12 +153,13 @@ field:
 - [Audio search](https://api.openverse.engineering/v1/#operation/audio_search)
 - [Image search](https://api.openverse.engineering/v1/#operation/image_search)
 
-Each of these fields are searched relatively strictly, primarily because the
-search domain in each is very small and "keyword" like. That is, there is a
-limited and specific set of terms that appear for the relevant document fields
-for each of these query parameters. All of them are validated to only allow
-specific options (documented in the API documentation links above), which
-enforces the "keyword" like nature of their usage.
+For each of these fields, there is a limited and specific set of terms that
+appear for the relevant document fields for each of these query parameters.
+These fields are matched exactly, using the filter context Elasticsearch queries
+("filter" or "must_not"). Filter-context queries can be cached by Elasticsearch,
+which improves their performance. All of these filters except for `extension`
+are validated to only allow specific options (documented in the API
+documentation links above).
 
 ### General "query" searching
 

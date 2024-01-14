@@ -24,6 +24,7 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { reasons, OTHER, ReportReason } from "~/constants/content-report"
+import { defineEvent } from "~/types/emits"
 
 export default defineComponent({
   name: "VReportDescForm",
@@ -46,6 +47,9 @@ export default defineComponent({
       type: String as PropType<ReportReason>,
       validator: (val: ReportReason) => reasons.includes(val),
     },
+  },
+  emits: {
+    input: defineEvent<[string]>(),
   },
   setup(props, { emit }) {
     const text = computed({

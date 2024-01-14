@@ -1,12 +1,12 @@
 # Run Book: API Production HTTP 2XX responses count under threshold
 
 ```{admonition} Metadata
-Status: **Unstable**
+Status: **Stable**
 
-Maintainer: @krysaldb
-
-Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+2XX+responses+count+under+threshold?>
+Alarm links:
+- [Alarm details](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+HTTP+2XX+responses+count+under+threshold?)
+- [ECS-Production-Dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/ECS-Production-Dashboard)
+- [Production Database + Elasticsearch dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/Service-Overview)
 ```
 
 ## Severity Guide

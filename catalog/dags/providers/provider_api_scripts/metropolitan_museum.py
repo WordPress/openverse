@@ -113,8 +113,8 @@ class MetMuseumDataIngester(ProviderDataIngester):
 
         return [
             {
-                "foreign_landing_url": foreign_landing_url,
-                "url": img,
+                "foreign_landing_url": foreign_landing_url.replace(" ", "%20"),
+                "url": img.replace(" ", "%20"),
                 "license_info": self.DEFAULT_LICENSE_INFO,
                 "foreign_identifier": self._get_foreign_id(object_id, img),
                 "creator": artist,

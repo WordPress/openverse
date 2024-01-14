@@ -55,6 +55,7 @@ from collections.abc import Callable
 from os.path import basename
 from typing import Any
 
+from airflow.decorators import task
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Variable
 from airflow.providers.http.hooks.http import HttpHook
@@ -403,4 +404,19 @@ def on_failure_callback(context: dict) -> None:
         dag_id=dag_id,
         task_id=task_id,
         username="Airflow DAG Failure",
+    )
+
+
+@task
+def notify_slack(
+    text: str,
+    dag_id: str,
+    username: str = "Airflow Notification",
+    icon_emoji: str = ":airflow:",
+) -> None:
+    send_message(
+        text,
+        username=username,
+        icon_emoji=icon_emoji,
+        dag_id=dag_id,
     )

@@ -28,9 +28,6 @@ RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
 
-# Fetch dependencies, including local development tools, to the virtual store.
-RUN pnpm fetch
-
 WORKDIR /home/node/frontend
 
 # Prevent pre-commit from being installed, we don't need it here and it fails to install anyway
@@ -38,9 +35,8 @@ ENV SKIP_PRE_COMMIT=true
 
 # Get rid of the lockfile as it won't be accurate for the build without workspace.
 # Then install dependencies, and in the process:
-#   - use only dependencies present in the virtual-store
 #   - fix the missing lockfile by writing a new one
-RUN pnpm install --offline
+RUN pnpm install
 
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
@@ -48,9 +44,6 @@ ENV NODE_ENV=production
 ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
 
 ARG API_URL
-ARG SEMANTIC_VERSION
-
-RUN echo "{\"release\":\"${SEMANTIC_VERSION}\"}" > /home/node/frontend/src/static/version.json
 
 RUN pnpm build:only
 
@@ -73,6 +66,9 @@ COPY --from=builder --chown=node:node /home/node/node_modules ./node_modules/
 COPY --from=builder --chown=node:node /home/node/frontend ./frontend/
 
 WORKDIR /home/node/frontend/
+
+ARG SEMANTIC_VERSION
+ENV SENTRY_RELEASE=$SEMANTIC_VERSION
 
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0

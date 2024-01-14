@@ -10,7 +10,9 @@ type Props = {
 function isActualElement(
   element: EventTarget | Element | null
 ): element is Element {
-  if (!element) return false
+  if (!element) {
+    return false
+  }
   const elementAsElement = element as Element
   return !!(
     elementAsElement.tagName &&
@@ -31,15 +33,21 @@ export function useFocusOnBlur({ dialogRef, visibleRef }: Props) {
   const [blurredRef, scheduleFocus] = useBlurTracker()
 
   watch([blurredRef], ([blurred]) => {
-    if (!visibleRef.value) return
-    if (!blurred) return
+    if (!visibleRef.value) {
+      return
+    }
+    if (!blurred) {
+      return
+    }
     if (!isActualElement(getActiveElement(dialogRef.value))) {
       dialogRef.value?.focus()
     }
   })
 
   return (event: FocusEvent) => {
-    if (visibleRef.value) return
+    if (visibleRef.value) {
+      return
+    }
     const nextActiveElement = event.relatedTarget
     if (!isActualElement(nextActiveElement as Element)) {
       scheduleFocus()

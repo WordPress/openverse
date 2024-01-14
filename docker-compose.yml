@@ -17,11 +17,11 @@ x-airflow-common: &airflow-common
     context: ./catalog/
     target: cat
     args: # Automatically inferred from env vars, unless specified
-      - REQUIREMENTS_FILE=requirements_dev.txt
+      - REQUIREMENTS_FILE=requirements-dev.txt
       - CATALOG_PY_VERSION
       - CATALOG_AIRFLOW_VERSION
   volumes:
-    - ./catalog:/opt/airflow/catalog
+    - ./catalog:/opt/airflow/catalog:z
     - catalog-cache:/home/airflow/.cache
 
 services:
@@ -50,12 +50,14 @@ services:
     build:
       context: ./docker/upstream_db/
       target: db
+      args: # Automatically inferred from env vars, unless specified
+        - PGCLI_VERSION
     image: openverse-upstream_db
     ports:
       - "50255:5432"
     volumes:
       - catalog-postgres:/var/lib/postgresql/data
-      - ./sample_data:/sample_data
+      - ./sample_data:/sample_data:z
     env_file:
       - docker/upstream_db/env.docker
     healthcheck:
@@ -76,7 +78,7 @@ services:
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
-      - ./docker/minio/s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro
+      - ./docker/minio/s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/s3_entrypoint.sh
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
@@ -97,8 +99,8 @@ services:
     volumes:
       # Buckets for testing provider data imported from s3 are subdirectories under
       # /tests/s3-data/
-      - ./catalog/tests/s3-data:/data:rw
-      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro
+      - ./catalog/tests/s3-data:/data:rw,z
+      - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/load_to_s3_entrypoint.sh
 
   # Dev changes for the scheduler
@@ -161,8 +163,8 @@ services:
     image: docker.io/clickhouse/clickhouse-server:23.4-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
-      - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
-      - ./docker/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+      - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro,z
+      - ./docker/clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro,z
     ulimits:
       nofile:
         soft: 262144
@@ -184,7 +186,7 @@ services:
   cache:
     profiles:
       - api
-    image: docker.io/redis:4.0.14
+    image: docker.io/redis:7.2.3
     ports:
       - "50263:6379"
 
@@ -224,7 +226,7 @@ services:
         - API_PY_VERSION
     image: openverse-api
     volumes:
-      - ./api:/api
+      - ./api:/api:z
     ports:
       - "50280:8000" # Django
     depends_on:
@@ -236,7 +238,6 @@ services:
       - api/.env
     stdin_open: true
     tty: true
-    command: gunicorn --reload -w 1
 
   ingestion_server:
     profiles:
@@ -256,7 +257,7 @@ services:
       - es
       - indexer_worker
     volumes:
-      - ./ingestion_server:/ingestion_server
+      - ./ingestion_server:/ingestion_server:z
     env_file:
       - ingestion_server/env.docker
       - ingestion_server/.env
@@ -281,7 +282,7 @@ services:
       - upstream_db
       - es
     volumes:
-      - ./ingestion_server:/ingestion_server
+      - ./ingestion_server:/ingestion_server:z
     env_file:
       - ingestion_server/env.docker
     stdin_open: true
@@ -315,8 +316,29 @@ services:
     depends_on:
       - web
     volumes:
-      - ./docker/nginx/templates:/etc/nginx/templates
-      - ./docker/nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/templates:/etc/nginx/templates:z
+      - ./docker/nginx/certs:/etc/nginx/certs:z
+
+  frontend_nginx:
+    profiles:
+      - frontend
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.nginx
+      target: nginx
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - FRONTEND_NODE_VERSION
+        - FRONTEND_PNPM_VERSION
+    ports:
+      - "50290:8080"
+    environment:
+      OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS:-172.17.0.1}:8443
+      OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
+      # Set to Docker network resolver to be able to resolve the `plausible` container.
+      # This would be the default but Nginx requires it to be explicitly set when
+      # making outgoing requests (e.g., to plausible.io)
+      OPENVERSE_NGINX_DNS_RESOLVER: 127.0.0.11
 
 volumes:
   api-postgres:

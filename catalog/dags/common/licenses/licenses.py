@@ -184,7 +184,7 @@ def _get_valid_cc_url(license_url) -> str | None:
     rewritten URL. Otherwise, we return None.
     """
     logger.debug(f"Checking license URL {license_url}")
-    if type(license_url) != str:
+    if not isinstance(license_url, str):
         logger.debug(f"License URL is not a string. Type is {type(license_url)}")
         return
 

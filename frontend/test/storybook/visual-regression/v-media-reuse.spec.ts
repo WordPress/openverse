@@ -1,7 +1,11 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { languageDirections, t } from "~~/test/playwright/utils/navigation"
+import {
+  languageDirections,
+  sleep,
+  t,
+} from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -15,7 +19,7 @@ const defaultUrl =
 const pageUrl = (dir: (typeof languageDirections)[number]) =>
   dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 
-test.describe("media-reuse", () => {
+test.describe("VMediaReuse", () => {
   for (const tab of tabs) {
     for (const dir of languageDirections) {
       breakpoints.describeEvery(({ expectSnapshot }) => {
@@ -26,13 +30,15 @@ test.describe("media-reuse", () => {
           }
         })
 
-        test(`Should render a ${dir} media reuse section with "${tab.name}" tab open`, async ({
+        test(`should render a ${dir} media reuse section with "${tab.name}" tab open`, async ({
           page,
         }) => {
           await page.locator(`#tab-${tab.id}`).click()
           // Make sure the tab is not focused and doesn't have a pink ring
           const reuseTitle = t("mediaDetails.reuse.title", dir)
           await page.locator(`h2:has-text("${reuseTitle}")`).click()
+          await sleep(500)
+
           await expectSnapshot(
             `media-reuse-${dir}-${tab.id}-tab`,
             page.locator(".media-reuse")

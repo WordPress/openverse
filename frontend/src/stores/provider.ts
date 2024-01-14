@@ -1,7 +1,7 @@
-import { capital } from "case"
 import { defineStore } from "pinia"
 import { ssrRef } from "@nuxtjs/composition-api"
 
+import { capitalCase } from "~/utils/case"
 import { env } from "~/utils/env"
 import { parseFetchingError } from "~/utils/errors"
 import {
@@ -25,6 +25,10 @@ export interface ProviderState {
   fetchState: {
     audio: FetchState
     image: FetchState
+  }
+  sourceNames: {
+    audio: string[]
+    image: string[]
   }
 }
 
@@ -55,6 +59,10 @@ export const useProviderStore = defineStore("provider", {
     fetchState: {
       [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },
       [IMAGE]: { isFetching: false, hasStarted: false, fetchingError: null },
+    },
+    sourceNames: {
+      [AUDIO]: [],
+      [IMAGE]: [],
     },
   }),
 
@@ -102,7 +110,7 @@ export const useProviderStore = defineStore("provider", {
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
       const provider = this._getProvider(providerCode, mediaType)
-      return provider?.display_name || capital(providerCode)
+      return provider?.display_name || capitalCase(providerCode)
     },
 
     /**
@@ -142,7 +150,7 @@ export const useProviderStore = defineStore("provider", {
           this.$nuxt?.$config?.apiAccessToken
         )
         const res = await service.getProviderStats()
-        sortedProviders = sortProviders(res.data)
+        sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
         const errorData = parseFetchingError(error, mediaType, "provider")
@@ -153,7 +161,18 @@ export const useProviderStore = defineStore("provider", {
         this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
       } finally {
         this.providers[mediaType] = sortedProviders
+        this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)
       }
+    },
+
+    /**
+     * Returns true if the given source name exists in the given media type sources list.
+     */
+    isSourceNameValid(
+      mediaType: SupportedMediaType,
+      sourceName: string
+    ): boolean {
+      return this.sourceNames[mediaType].includes(sourceName)
     },
   },
 
