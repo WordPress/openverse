@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test"
 
-import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+import {
+  goToSearchTerm,
+  preparePageForTests,
+} from "~~/test/playwright/utils/navigation"
 import {
   locateFocusedResult,
   walkToType,
@@ -11,7 +14,7 @@ test.describe.configure({ mode: "parallel" })
 test.describe("all results grid keyboard accessibility test", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl")
-    await page.goto("/search/?q=birds")
+    await goToSearchTerm(page, "birds")
   })
 
   test("should show instructions snackbar when focusing first audio", async ({

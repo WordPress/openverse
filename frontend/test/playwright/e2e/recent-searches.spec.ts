@@ -1,19 +1,26 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import { searchFromHeader } from "~~/test/playwright/utils/navigation"
+import {
+  goToSearchTerm,
+  preparePageForTests,
+  searchFromHeader,
+} from "~~/test/playwright/utils/navigation"
+import { getH1 } from "~~/test/playwright/utils/components"
 
 test.describe.configure({ mode: "parallel" })
 
 test.beforeEach(async ({ page }) => {
+  await preparePageForTests(page, "xl")
   // We are first navigating to search because the recent searches feature has
   // not yet been implemented on the homepage.
-  await page.goto("/search?q=galah")
+  await goToSearchTerm(page, "galah")
 })
 
 const executeSearches = async (page: Page) => {
   const searches = ["honey", "galah"] // in that order
   for (const term of searches) {
     await searchFromHeader(page, term)
+    await expect(getH1(page, new RegExp(term, "i"))).toBeVisible()
   }
   return searches
 }
@@ -40,6 +47,7 @@ test("clicking takes user to that search", async ({ page }) => {
     .locator(`[aria-label="Recent searches"]`)
     .locator('[id="option-1"]')
     .click()
+  await expect(getH1(page, /honey/i)).toBeVisible()
   expect(page.url()).toContain("?q=honey")
 })
 

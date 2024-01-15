@@ -2,12 +2,12 @@ import { test } from "@playwright/test"
 
 import {
   goToSearchTerm,
-  languageDirections,
   preparePageForTests,
-  t,
 } from "~~/test/playwright/utils/navigation"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 
 import { supportedMediaTypes } from "~/constants/media"
 

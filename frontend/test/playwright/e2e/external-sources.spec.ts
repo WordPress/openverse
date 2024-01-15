@@ -1,15 +1,15 @@
-import { test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import {
   goToSearchTerm,
   preparePageForTests,
-  t,
 } from "~~/test/playwright/utils/navigation"
 
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
+import { t } from "~~/test/playwright/utils/i18n"
 
 test.describe("analytics", () => {
   test.beforeEach(async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe("analytics", () => {
     })
   })
 
-  test("sends SELECT_EXTERNAL_SOURCE analytics events", async ({
+  test("sends SELECT_EXTERNAL_SOURCE analytics event and does not send EXTERNAL_LINK_CLICK event", async ({
     page,
     context,
   }) => {
@@ -70,5 +70,10 @@ test.describe("analytics", () => {
       query: "cat",
       component: "VExternalSourceList",
     })
+
+    const externalLinkClickEvent = events.find(
+      (event) => event.n === "EXTERNAL_LINK_CLICK"
+    )
+    expect(externalLinkClickEvent).toBeUndefined()
   })
 })

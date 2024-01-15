@@ -168,7 +168,11 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
 
 const server = talkback(opts)
 
-server.start(() => console.log("Talkback started with record mode", recordMode))
+server.start(() =>
+  console.log(
+    `Talkback started at http://localhost:${port} with record mode ${recordMode}`
+  )
+)
 function closeServer() {
   server.close()
   console.log("Server closed, exiting process")

@@ -3,11 +3,12 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
-  languageDirections,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
 import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
+
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 import { ALL_MEDIA, supportedSearchTypes } from "~/constants/media"
 
@@ -82,12 +83,14 @@ const searchCSRErrorStatuses = [429, 500]
 
 for (const searchType of supportedSearchTypes) {
   breakpoints.describeMobileAndDesktop(({ breakpoint, expectSnapshot }) => {
+    test.beforeEach(async ({ page }) => {
+      await preparePageForTests(page, breakpoint)
+    })
     for (const dir of languageDirections) {
       for (const errorStatus of searchCSRErrorStatuses) {
         test(`${errorStatus} error on ${dir} ${searchType} search on CSR`, async ({
           page,
         }) => {
-          await preparePageForTests(page, breakpoint)
           await goToSearchTerm(page, `SearchPage${errorStatus}error`, {
             mode: "CSR",
             searchType,
@@ -97,11 +100,9 @@ for (const searchType of supportedSearchTypes) {
         })
       }
 
-      test(`No results ${searchType} ${dir} page snapshots`, async ({
+      test(`no results ${searchType} ${dir} page snapshots`, async ({
         page,
       }) => {
-        await preparePageForTests(page, breakpoint)
-
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
 
         await setViewportToFullHeight(page)
@@ -116,9 +117,7 @@ for (const searchType of supportedSearchTypes) {
         )
       })
 
-      test(`Timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
-        await preparePageForTests(page, breakpoint)
-
+      test(`timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
         await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
           route.abort("timedout")
         })

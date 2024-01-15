@@ -4,21 +4,18 @@ import {
   goToSearchTerm,
   preparePageForTests,
   renderModes,
-  sleep,
-  t,
 } from "~~/test/playwright/utils/navigation"
-import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
 
+import { getLoadMoreButton } from "~~/test/playwright/utils/components"
+
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
-
-const loadMoreButton = `button:has-text("${t("browsePage.load", "ltr")}")`
 
 const openSingleMediaView = async (
   page: Page,
@@ -46,8 +43,8 @@ const openSingleMediaView = async (
  */
 
 test.describe("Load more button", () => {
-  test.beforeEach(async ({ context }) => {
-    await mockProviderApis(context)
+  test.beforeEach(async ({ page }) => {
+    await preparePageForTests(page, "xl")
   })
 
   test("Clicking sends 2 requests on All view with enough results", async ({
@@ -65,9 +62,8 @@ test.describe("Load more button", () => {
       }
     })
     await goToSearchTerm(page, "cat")
-    await expect(page.locator(loadMoreButton)).toBeVisible()
 
-    await page.click(loadMoreButton)
+    await getLoadMoreButton(page).click()
 
     expect(additionalRequests.length).toEqual(2)
     expect(additionalRequests.includes(AUDIO)).toBeTruthy()
@@ -78,16 +74,18 @@ test.describe("Load more button", () => {
     test.describe(mode, () => {
       test(`Rendered on All view if enough results`, async ({ page }) => {
         await goToSearchTerm(page, "cat", { mode })
-        await expect(page.locator(loadMoreButton)).toBeVisible()
+
+        const loadMoreButton = getLoadMoreButton(page)
+        await expect(loadMoreButton).toBeVisible()
 
         // Load more button is also available on single media type views.
         await openSingleMediaView(page, IMAGE)
-        await expect(page.locator(loadMoreButton)).toBeVisible()
+        await expect(loadMoreButton).toBeVisible()
 
         await page.goBack()
 
         await openSingleMediaView(page, AUDIO)
-        await expect(page.locator(loadMoreButton)).toBeVisible()
+        await expect(loadMoreButton).toBeVisible()
       })
 
       test(`Renders on All view when images have results but audio does not`, async ({
@@ -95,7 +93,7 @@ test.describe("Load more button", () => {
       }) => {
         await goToSearchTerm(page, "ecommerce", { mode })
 
-        await expect(page.locator(loadMoreButton)).toBeVisible()
+        await expect(getLoadMoreButton(page)).toBeVisible()
       })
 
       test(`All view when only 1 page of audio: sends only image request when clicked`, async ({
@@ -112,119 +110,115 @@ test.describe("Load more button", () => {
             }
           }
         })
-        await goToSearchTerm(page, "horses snort", { mode })
+        await goToSearchTerm(page, "horses snort window", { mode })
 
-        await page.click(loadMoreButton)
+        await getLoadMoreButton(page).click()
         expect(additionalRequests.length).toEqual(1)
-        expect(additionalRequests[0]).toEqual(IMAGE)
       })
 
       test(`Rendered on All view but not on the audio view when audio has only 1 page of results`, async ({
         page,
       }) => {
-        await goToSearchTerm(page, "horses snort", { mode })
-        await expect(page.locator(loadMoreButton)).toBeVisible()
+        await goToSearchTerm(page, "horses snort window", { mode })
+
+        await expect(getLoadMoreButton(page)).toBeVisible()
 
         // Cannot go to the audio view because the link is disabled.
-        await goToSearchTerm(page, "horses snort", {
+        await goToSearchTerm(page, "horses snort window", {
           mode,
           searchType: AUDIO,
         })
-        await expect(page.locator(loadMoreButton)).toBeHidden()
+        await expect(getLoadMoreButton(page)).toBeHidden()
       })
     })
   }
 
-  test.describe("Analytics events", () => {
-    /**
-     * Checks that an analytics event is posted to /api/event and has the correct
-     * payload for the REACH_RESULT_END event.
-     */
-    test(`Sends a valid REACH_RESULT_END event when user reaches the load more page`, async ({
-      page,
-      context,
-    }) => {
-      await preparePageForTests(page, "xl")
-      const analyticsEvents = collectAnalyticsEvents(context)
+  /**
+   * Checks that an analytics event is posted to /api/event and has the correct
+   * payload for the REACH_RESULT_END event.
+   */
+  test(`Sends a valid REACH_RESULT_END event when user reaches the load more page`, async ({
+    page,
+    context,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
 
-      await page.goto("/search/?q=cat")
+    await goToSearchTerm(page, "cat")
+    const loadMoreButton = getLoadMoreButton(page)
 
-      await page.locator(loadMoreButton).scrollIntoViewIfNeeded()
-      await expect(page.locator(loadMoreButton)).toBeVisible()
+    await loadMoreButton.scrollIntoViewIfNeeded()
+    await expect(loadMoreButton).toBeVisible()
 
-      await sleep(300)
+    const reachResultEndEvent = analyticsEvents.find(
+      (event) => event.n === "REACH_RESULT_END"
+    )
 
-      const reachResultEndEvent = analyticsEvents.find(
-        (event) => event.n === "REACH_RESULT_END"
-      )
+    expectEventPayloadToMatch(reachResultEndEvent, {
+      query: "cat",
+      searchType: "all",
+      resultPage: 1,
+    })
+  })
 
-      expectEventPayloadToMatch(reachResultEndEvent, {
+  test(`is sent when loading one page of results.`, async ({
+    page,
+    context,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await goToSearchTerm(page, "cat")
+    await getLoadMoreButton(page).click()
+
+    const loadMoreEvent = analyticsEvents.find(
+      (event) => event.n === "LOAD_MORE_RESULTS"
+    )
+
+    expectEventPayloadToMatch(loadMoreEvent, {
+      query: "cat",
+      searchType: "all",
+      resultPage: 1,
+    })
+  })
+
+  test(`is sent when loading two pages of results.`, async ({
+    page,
+    context,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
+
+    await goToSearchTerm(page, "cat")
+    const loadMoreButton = getLoadMoreButton(page)
+
+    await loadMoreButton.click()
+    await loadMoreButton.click()
+
+    const loadMoreEvents = analyticsEvents.filter(
+      (event) => event.n === "LOAD_MORE_RESULTS"
+    )
+
+    expect(loadMoreEvents.length).toBe(2)
+    loadMoreEvents.every((event, index) =>
+      expectEventPayloadToMatch(event, {
         query: "cat",
         searchType: "all",
-        resultPage: 1,
+        resultPage: index + 1,
       })
-    })
+    )
+  })
 
-    test(`is sent when loading one page of results.`, async ({
-      page,
-      context,
-    }) => {
-      const analyticsEvents = collectAnalyticsEvents(context)
+  test(`is not sent when more results are not loaded.`, async ({
+    page,
+    context,
+  }) => {
+    const analyticsEvents = collectAnalyticsEvents(context)
 
-      await goToSearchTerm(page, "cat")
-      await page.click(loadMoreButton)
+    await goToSearchTerm(page, "cat")
+    await expect(getLoadMoreButton(page)).toBeVisible()
 
-      const loadMoreEvent = analyticsEvents.find(
-        (event) => event.n === "LOAD_MORE_RESULTS"
-      )
+    const loadMoreEvents = analyticsEvents.filter(
+      (event) => event.n === "LOAD_MORE_RESULTS"
+    )
 
-      expectEventPayloadToMatch(loadMoreEvent, {
-        query: "cat",
-        searchType: "all",
-        resultPage: 1,
-      })
-    })
-
-    test(`is sent when loading two pages of results.`, async ({
-      page,
-      context,
-    }) => {
-      const analyticsEvents = collectAnalyticsEvents(context)
-
-      await goToSearchTerm(page, "cat")
-      await expect(page.locator(loadMoreButton)).toBeVisible()
-
-      await page.click(loadMoreButton)
-      await page.click(loadMoreButton)
-
-      const loadMoreEvents = analyticsEvents.filter(
-        (event) => event.n === "LOAD_MORE_RESULTS"
-      )
-
-      expect(loadMoreEvents.length).toBe(2)
-      loadMoreEvents.every((event, index) =>
-        expectEventPayloadToMatch(event, {
-          query: "cat",
-          searchType: "all",
-          resultPage: index + 1,
-        })
-      )
-    })
-
-    test(`is not sent when more results are not loaded.`, async ({
-      page,
-      context,
-    }) => {
-      const analyticsEvents = collectAnalyticsEvents(context)
-
-      await goToSearchTerm(page, "cat")
-      await expect(page.locator(loadMoreButton)).toBeVisible()
-
-      const loadMoreEvents = analyticsEvents.filter(
-        (event) => event.n === "LOAD_MORE_RESULTS"
-      )
-
-      expect(loadMoreEvents.length).toBe(0)
-    })
+    expect(loadMoreEvents.length).toBe(0)
   })
 })

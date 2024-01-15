@@ -2,8 +2,6 @@ import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
 
-import { cookieOptions } from "~/utils/cookies"
-
 import type { Context, Middleware } from "@nuxt/types"
 
 /**
@@ -19,12 +17,7 @@ import type { Context, Middleware } from "@nuxt/types"
  * Currently, one event type is used:
  * - `urlChange` sends the relative path of the URL on every URL change.
  */
-const middleware: Middleware = async ({
-  $cookies,
-  $ua,
-  query,
-  $pinia,
-}: Context) => {
+const middleware: Middleware = async ({ $cookies, query, $pinia }: Context) => {
   /* Provider store */
   const providerStore = useProviderStore($pinia)
   await providerStore.fetchMediaProviders()
@@ -39,9 +32,7 @@ const middleware: Middleware = async ({
   /* UI store */
 
   const uiStore = useUiStore($pinia)
-  const isMobileUa = $ua ? $ua.isMobile : false
 
-  $cookies.set("uiIsMobileUa", isMobileUa, cookieOptions)
-  uiStore.initFromCookies($cookies.getAll() ?? {})
+  uiStore.initFromCookies($cookies.get("ui") ?? {})
 }
 export default middleware

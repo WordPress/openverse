@@ -1,0 +1,73 @@
+{
+    meta: {
+        createdAt: '2024-01-15T12:00:29.829Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/stats/',
+        method: 'OPTIONS',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 15 Jan 2024 12:00:30 GMT',
+            ],
+            'content-type': [
+                'text/html; charset=utf-8',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'origin',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'access-control-allow-headers': [
+                'accept, authorization, content-type, user-agent, x-csrftoken, x-requested-with',
+            ],
+            'access-control-allow-methods': [
+                'DELETE, GET, OPTIONS, PATCH, POST, PUT',
+            ],
+            'access-control-max-age': [
+                '86400',
+            ],
+            'x-request-id': [
+                'd233302a9a42402b8958372c70f0a8a2',
+            ],
+            'cf-cache-status': [
+                'DYNAMIC',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '845df56bb8e41cd4-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: '',
+    },
+}

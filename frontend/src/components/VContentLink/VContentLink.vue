@@ -5,8 +5,8 @@
     :aria-label="resultsAriaLabel"
     variant="bordered-gray"
     size="disabled"
+    :disabled="!doneHydrating"
     class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
-    :send-external-link-click-event="false"
     @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
@@ -32,6 +32,8 @@ import type { SupportedMediaType } from "~/constants/media"
 import { defineEvent } from "~/types/emits"
 
 import useSearchType from "~/composables/use-search-type"
+
+import { useHydrating } from "~/composables/use-hydrating"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -95,11 +97,14 @@ export default defineComponent({
       })
     }
 
+    const { doneHydrating } = useHydrating()
+
     return {
       resultsCountLabel,
       resultsAriaLabel,
 
       handleClick,
+      doneHydrating,
     }
   },
 })

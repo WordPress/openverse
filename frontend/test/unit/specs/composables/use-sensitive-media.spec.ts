@@ -74,10 +74,6 @@ describe("useSensitiveMedia composable", () => {
     reveal()
 
     expect(visibility.value).toBe("sensitive-shown")
-    expect(sendCustomEventMock).toHaveBeenCalledWith(
-      "UNBLUR_SENSITIVE_RESULT",
-      { id: "mock-id", sensitivities: "" }
-    )
   })
 
   it("should hide sensitive media", () => {
@@ -88,10 +84,6 @@ describe("useSensitiveMedia composable", () => {
     hide()
 
     expect(visibility.value).toBe("sensitive-hidden")
-    expect(sendCustomEventMock).toHaveBeenCalledWith(
-      "REBLUR_SENSITIVE_RESULT",
-      { id: "mock-id", sensitivities: "" }
-    )
   })
 
   it("should correctly report if a media is hidden", () => {

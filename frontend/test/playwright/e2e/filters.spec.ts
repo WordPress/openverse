@@ -12,6 +12,11 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
+
 import enMessages from "~/locales/en.json"
 
 import {
@@ -47,7 +52,7 @@ const FILTER_COUNTS = {
 breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   test.beforeEach(async ({ context, page }) => {
     await mockProviderApis(context)
-    await preparePageForTests(page, breakpoint)
+    await preparePageForTests(page, breakpoint, { dismissFilter: false })
   })
   for (const searchType of supportedSearchTypes) {
     test(`correct total number of filters is displayed for ${searchType}`, async ({
@@ -261,4 +266,49 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
       await expect(page.getByRole("checkbox", { name: source })).toBeChecked()
     })
   }
+
+  test("sends APPLY_FILTER event", async ({ context, page }) => {
+    const events = collectAnalyticsEvents(context)
+    await goToSearchTerm(page, "cat")
+
+    await filters.open(page)
+    await page.getByRole("checkbox", { name: /use commercially/i }).click()
+
+    const applyFilterEvent = events.find((e) => e.n === "APPLY_FILTER")
+
+    expectEventPayloadToMatch(applyFilterEvent, {
+      category: "licenseTypes",
+      key: "commercial",
+      checked: true,
+      query: "cat",
+      searchType: ALL_MEDIA,
+    })
+  })
+})
+
+breakpoints.describeLg(({ breakpoint }) => {
+  test("sends TOGGLE_FILTER_SIDEBAR event", async ({ context, page }) => {
+    const events = collectAnalyticsEvents(context)
+    await preparePageForTests(page, breakpoint, { dismissFilter: false })
+    await goToSearchTerm(page, "cat")
+
+    await filters.close(page)
+    await expect(page.locator("#filters")).toBeHidden()
+
+    await filters.open(page)
+    await expect(page.locator("#filters")).toBeVisible()
+
+    const toggleFilterSidebarEvents = events.filter(
+      (e) => e.n === "TOGGLE_FILTER_SIDEBAR"
+    )
+
+    expectEventPayloadToMatch(toggleFilterSidebarEvents[0], {
+      searchType: ALL_MEDIA,
+      toState: "closed",
+    })
+    expectEventPayloadToMatch(toggleFilterSidebarEvents[1], {
+      searchType: ALL_MEDIA,
+      toState: "opened",
+    })
+  })
 })

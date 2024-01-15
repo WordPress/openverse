@@ -3,11 +3,13 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
-  languageDirections,
   openFirstResult,
   pathWithDir,
   preparePageForTests,
+  sleep,
 } from "~~/test/playwright/utils/navigation"
+
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -41,7 +43,7 @@ for (const isOn of [true, false]) {
           await goToSearchTerm(page, "birds", { dir, mode: "SSR" })
 
           // This will include the "Back to results" link.
-          await openFirstResult(page, mediaType)
+          await openFirstResult(page, mediaType, dir)
           await expectSnapshot(
             `${mediaType}-${dir}-from-search-results${
               isOn ? "-with-additional-search-views" : ""
@@ -65,6 +67,9 @@ for (const dir of languageDirections) {
       const path = pathWithDir(`/image/${IMAGE_ID}/report`, dir)
 
       await page.goto(path)
+
+      // Wait for the language select to hydrate.
+      await sleep(500)
       await expectSnapshot(
         `${dir}-full-page-report`,
         page,
