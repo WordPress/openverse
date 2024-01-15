@@ -17,6 +17,7 @@
         ref="menuButtonRef"
         variant="transparent-dark"
         size="large"
+        :disabled="!doneHydrating"
         :icon-props="{ name: 'menu' }"
         :label="$t('header.aria.menu')"
         v-bind="triggerA11yProps"
@@ -90,6 +91,7 @@ import { useRoute } from "@nuxtjs/composition-api"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useAnalytics } from "~/composables/use-analytics"
+import { useHydrating } from "~/composables/use-hydrating"
 import usePages from "~/composables/use-pages"
 
 import { useUiStore } from "~/stores/ui"
@@ -141,6 +143,8 @@ export default defineComponent({
       () => modalContentRef.value?.deactivateFocusTrap
     )
 
+    const { doneHydrating } = useHydrating()
+
     const {
       close: closePageMenu,
       open: openPageMenu,
@@ -177,6 +181,7 @@ export default defineComponent({
       currentPage,
 
       isModalVisible,
+      doneHydrating,
       closePageMenu,
       openPageMenu,
       isSm,

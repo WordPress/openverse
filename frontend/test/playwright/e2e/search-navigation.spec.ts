@@ -5,10 +5,12 @@ import {
   filters,
   searchFromHeader,
   openFirstResult,
-  t,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+import { getBackToSearchLink } from "~~/test/playwright/utils/components"
 
 import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
 
@@ -20,9 +22,10 @@ const getContentLink = async (page: Page, mediaType: SupportedMediaType) => {
 }
 
 test.describe("search history navigation", () => {
-  breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
+  breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
+    test.beforeEach(async ({ context, page }) => {
       await mockProviderApis(context)
+      await preparePageForTests(page, breakpoint)
     })
 
     test("should update search results when back navigation changes filters", async ({
@@ -59,13 +62,11 @@ test.describe("search history navigation", () => {
       page,
     }) => {
       await goToSearchTerm(page, "galah")
-      await page
-        .getByRole("link", { name: /See.*images found for .*/i })
-        .click()
+      await (await getContentLink(page, IMAGE)).click()
 
-      expect(page.url()).toContain("/search/image")
       // There are no content links on single media type search pages
       await expect(await getContentLink(page, IMAGE)).toBeHidden()
+      expect(page.url()).toContain("/search/image")
 
       await page.goBack({ waitUntil: "networkidle" })
 
@@ -101,44 +102,41 @@ test.describe("search history navigation", () => {
     })
 
     test.describe("back to search results link", () => {
+      const locale = "es"
       test("is visible in breadcrumb when navigating to image details page and returns to the search page", async ({
         page,
       }) => {
-        const url = "/search/?q=galah"
-        await page.goto(url)
-        await page.locator('a[href^="/image"]').first().click()
-        const link = page.locator(`text="${t("singleResult.back")}"`)
-        await expect(link).toBeVisible()
-        await link.click()
-        await expect(page).toHaveURL(url)
+        await goToSearchTerm(page, "birds")
+        await openFirstResult(page, "image", "ltr")
+
+        await getBackToSearchLink(page).click()
+        await expect(page).toHaveURL("/search/?q=birds")
       })
 
       test("is visible in breadcrumb when navigating to localized image details page", async ({
         page,
       }) => {
-        await page.goto("/es/search/?q=galah")
-        await page.locator('a[href^="/es/image"]').first().click()
-        await expect(
-          page.locator('text="Volver a los resultados de búsqueda"')
-        ).toBeVisible()
+        await goToSearchTerm(page, "birds", { locale })
+        await openFirstResult(page, "image", "ltr", locale)
+
+        await expect(getBackToSearchLink(page, "ltr", locale)).toBeVisible()
       })
 
       test("is visible in breadcrumb when navigating to localized audio details page", async ({
         page,
       }) => {
-        await page.goto("/es/search/?q=galah")
-        await page.locator('a[href^="/es/audio"]').first().click()
-        await expect(
-          page.locator('text="Volver a los resultados de búsqueda"')
-        ).toBeVisible()
+        await goToSearchTerm(page, "birds", { locale })
+        await openFirstResult(page, "audio", "ltr", locale)
+
+        await expect(getBackToSearchLink(page, "ltr", locale)).toBeVisible()
       })
     })
   })
 })
 
-test.describe("search query param is set on a single page reulst", () => {
+test.describe("search query param is set on a single page results", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`/search?q=cat`)
+    await goToSearchTerm(page, "cat")
   })
 
   test("the search query param should be set to the search term inside the header on a single page result of type image", async ({

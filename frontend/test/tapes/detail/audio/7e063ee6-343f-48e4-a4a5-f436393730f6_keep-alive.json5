@@ -85,6 +85,9 @@
             'alt-svc': [
                 'h3=":443"; ma=86400',
             ],
+            'access-control-allow-origin': [
+                '*',
+            ],
         },
         body: {
             id: '7e063ee6-343f-48e4-a4a5-f436393730f6',

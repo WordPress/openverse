@@ -4,6 +4,7 @@ import {
   currentContentType,
   filters,
   goToSearchTerm,
+  preparePageForTests,
   searchTypeNames,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -27,9 +28,10 @@ import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 test.describe.configure({ mode: "parallel" })
 
 test.describe("search query on SSR", () => {
-  breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
+  breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
+    test.beforeEach(async ({ context, page }) => {
       await mockProviderApis(context)
+      await preparePageForTests(page, breakpoint)
     })
 
     test("q query parameter is set as the search term", async ({ page }) => {

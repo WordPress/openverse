@@ -7,11 +7,11 @@ import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {
   filters,
   goToSearchTerm,
-  languageDirections,
   preparePageForTests,
   scrollToBottom,
   sleep,
 } from "~~/test/playwright/utils/navigation"
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 test.describe.configure({ mode: "parallel" })
 
