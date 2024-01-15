@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { useLocalePath } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { computed, defineComponent } from "vue"
 
@@ -67,7 +67,7 @@ export default defineComponent({
   name: "VSafeBrowsing",
   components: { VCheckbox, VLink },
   setup() {
-    const localePath = useLocalePath()
+    const localePath = useNuxtApp().$localePath
 
     const sensitivityPath = computed(() => localePath("/sensitive-content"))
 
