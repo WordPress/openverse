@@ -49,6 +49,12 @@ export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) {
     const mediaStore = useMediaStore()
     const results = await mediaStore.fetchMedia()
+    console.log(
+      "server results",
+      results.length,
+      "error",
+      mediaStore.fetchState.fetchingError
+    )
 
     const fetchingError = mediaStore.fetchState.fetchingError
     if (!results.length && fetchingError && !handledClientSide(fetchingError)) {
