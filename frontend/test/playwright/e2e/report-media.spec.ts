@@ -4,9 +4,16 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   openFirstResult,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
+
 import { supportedMediaTypes } from "~/constants/media"
+import { ReportReason } from "~/constants/content-report"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -55,33 +62,28 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
     await page.click('text="Open form"'), // Opens a new tab
   ])
   await newPage.waitForLoadState()
-  return expect(newPage.url()).toContain("https://docs.google.com/forms")
+  // Return the beginning of the url, without parameters
+  return newPage.url().split("/forms/")[0] + "/forms/"
 }
 
 // todo: Test a sensitive report with the optional description field
-const submitSensitiveContentReport = async (
-  page: Page,
-  context: BrowserContext
-) => {
-  await mockReportingEndpoint(context)
+const submitSensitiveContentReport = async (page: Page) => {
   await page.click('text="Contains sensitive content"')
-  const response = await submitApiReport(page)
-  return expect(response.status()).toBe(200)
+  return (await submitApiReport(page)).status()
 }
 
-const submitOtherReport = async (page: Page, context: BrowserContext) => {
-  await mockReportingEndpoint(context)
+const submitOtherReport = async (page: Page) => {
   await page.click('text="Other"')
   await page.fill(
     "text=Describe the issue",
     'This is an example "Other" report submit by Playwright, our automated e2e test tool.'
   )
-  const response = await submitApiReport(page)
-  return expect(response.status()).toBe(200)
+  return (await submitApiReport(page)).status()
 }
 
-test.beforeEach(async ({ context }) => {
+test.beforeEach(async ({ context, page }) => {
   await mockProviderApis(context)
+  await preparePageForTests(page, "xl")
 })
 
 const reports = {
@@ -89,10 +91,22 @@ const reports = {
   sensitive: submitSensitiveContentReport,
   other: submitOtherReport,
 }
+const reportResults = {
+  dmca: "https://docs.google.com/forms/",
+  sensitive: 200,
+  other: 200,
+}
 
-// The right side of the object above contains the assertion functions
-// These are aliased as `reportAssertion` in the `Object.entries(reports).forEach` loop below
-/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["reportAssertion"] }] */
+const mediaObjects = {
+  image: {
+    id: "f9384235-b72e-4f1e-9b05-e1b116262a29",
+    provider: "flickr",
+  },
+  audio: {
+    id: "2ecd5631-c48c-4a5f-89c4-83c44dbbd365",
+    provider: "jamendo",
+  },
+}
 
 /**
  * Iterate through all the media types and supported reports
@@ -104,10 +118,28 @@ supportedMediaTypes.forEach((mediaType) => {
       page,
       context,
     }) => {
+      const analyticsEvents = collectAnalyticsEvents(context)
+      await mockReportingEndpoint(context)
+
       await goToSearchTerm(page, "cat", { searchType: mediaType })
       await openFirstResult(page, mediaType)
       await openReportModal(page)
-      await reportAssertion(page, context)
+      const result = await reportAssertion(page, context)
+      expect(result).toEqual(reportResults[reportName as ReportReason])
+
+      await page
+        .getByRole("dialog", { name: /report submitted successfully/ })
+        .isVisible()
+
+      const reportMediaEvent = analyticsEvents.find(
+        (event) => event.n === "REPORT_MEDIA"
+      )
+
+      expectEventPayloadToMatch(reportMediaEvent, {
+        ...mediaObjects[mediaType],
+        mediaType,
+        reason: reportName as ReportReason,
+      })
     })
   })
 })

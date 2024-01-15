@@ -3,6 +3,7 @@
     class="min-w-12 gap-x-2"
     :class="showLabel ? '!px-3' : 'w-12'"
     variant="bordered-white"
+    :disabled="!doneHydrating"
     size="large"
     :aria-label="$t('searchType.selectLabel', { type: label })"
     v-bind="$attrs"
@@ -23,6 +24,8 @@ import type { SearchType } from "~/constants/media"
 import { warn } from "~/utils/console"
 
 import { defineEvent } from "~/types/emits"
+
+import { useHydrating } from "~/composables/use-hydrating"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
@@ -62,6 +65,11 @@ export default defineComponent({
       warn(
         "You should provide `aria-haspopup` and `aria-expanded` props to VSearchTypeButton."
       )
+    }
+    const { doneHydrating } = useHydrating()
+
+    return {
+      doneHydrating,
     }
   },
 })

@@ -130,21 +130,6 @@ describe("VContentReportForm", () => {
     getDescriptionTextarea()
   })
 
-  it("should dispatch SEND_CONTENT_REPORT on next when sensitive is selected", async () => {
-    ReportService.sendReport = jest.fn()
-
-    render(VContentReportForm, options)
-    await fireEvent.click(getSensitiveInput())
-    await fireEvent.click(getReportButton())
-
-    expect(ReportService.sendReport).toHaveBeenCalledWith({
-      identifier: props.media.id,
-      reason: "sensitive",
-      mediaType: props.media.frontendMediaType,
-      description: "",
-    })
-  })
-
   it("should send report on other form submit", async () => {
     ReportService.sendReport = jest.fn()
 

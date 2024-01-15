@@ -3,6 +3,7 @@
     type="submit"
     :aria-label="$t('search.search').toString()"
     size="disabled"
+    :disabled="!doneHydrating"
     variant="plain"
     :class="[
       'h-full flex-shrink-0 rounded-s-none border-s-0 p-0.5px ps-1.5px focus-slim-filled hover:text-white focus-visible:border-s group-focus-within:border-tx group-focus-within:bg-pink group-focus-within:text-white group-focus-within:hover:bg-dark-pink group-hover:border-tx group-hover:bg-pink group-hover:text-white',
@@ -20,6 +21,8 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
+import { useHydrating } from "~/composables/use-hydrating"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 /**
@@ -36,6 +39,13 @@ export default defineComponent({
       type: String as PropType<"home" | "404" | "search">,
       required: true,
     },
+  },
+  setup() {
+    const { doneHydrating } = useHydrating()
+
+    return {
+      doneHydrating,
+    }
   },
 })
 </script>

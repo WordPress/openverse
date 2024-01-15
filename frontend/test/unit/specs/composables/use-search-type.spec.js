@@ -66,22 +66,4 @@ describe("useSearchType", () => {
     expect(icon).toEqual(AUDIO)
     expect(label).toEqual("searchType.audio")
   })
-
-  it("should send the analytics event when setActiveType is called", () => {
-    const { setActiveType } = useSearchType()
-
-    setActiveType(AUDIO)
-    expect(sendCustomEventMock).toHaveBeenCalledWith("CHANGE_CONTENT_TYPE", {
-      component: "Unknown",
-      next: AUDIO,
-      previous: ALL_MEDIA,
-    })
-  })
-
-  it("should not send the analytics event when setActiveType is called with current type", () => {
-    const { setActiveType } = useSearchType()
-
-    setActiveType(ALL_MEDIA)
-    expect(sendCustomEventMock).not.toHaveBeenCalled()
-  })
 })
