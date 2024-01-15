@@ -14,7 +14,7 @@
   </ul>
 </template>
 <script lang="ts">
-import { useLocalePath } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { computed, defineComponent, PropType } from "vue"
 
@@ -34,7 +34,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const localePath = useLocalePath()
+    const localePath = useNuxtApp().$localePath
     const featureFlagStore = useFeatureFlagStore()
 
     const additionalSearchViews = computed(() =>
