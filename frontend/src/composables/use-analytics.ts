@@ -1,4 +1,4 @@
-import { useContext } from "@nuxtjs/composition-api"
+import { useNuxtApp } from "#imports"
 
 /**
  * This wrapper around the plugin, retained to reduce code churn.
@@ -7,7 +7,7 @@ import { useContext } from "@nuxtjs/composition-api"
  * @deprecated For new code, use `$sendCustomEvent` from Nuxt context
  */
 export const useAnalytics = () => {
-  const { $sendCustomEvent } = useContext()
+  const { $sendCustomEvent } = useNuxtApp()
 
   return { sendCustomEvent: $sendCustomEvent }
 }

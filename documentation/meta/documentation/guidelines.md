@@ -12,8 +12,8 @@ maintainers which occurred after reading
 These are some aspects to consider when starting the document.
 
 **Type**: _(README, "Getting Started", Conceptual, Procedural
-[tutorial/how-to/guide], Reference [API reference, Glossary, Troubleshooting,
-Changelog])_\
+[tutorial/how-to/guide], Reference [API reference, Glossary,
+Troubleshooting, Changelog])_\
 **Audience**:\
 **Purpose**:\
 **Title**:\

@@ -1,7 +1,7 @@
 <template>
   <div>
     <table
-      :aria-label="$t('sources.aria.table').toString()"
+      :aria-label="$t('sources.aria.table')"
       role="region"
       class="not-prose source-table w-full table-fixed text-base"
     >

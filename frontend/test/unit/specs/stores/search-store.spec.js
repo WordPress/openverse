@@ -1,8 +1,8 @@
 import { nextTick } from "vue"
 
-import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
+import { describe, expect, it } from "vitest"
 
-import { env } from "~/utils/env"
+import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { filterData, mediaFilterKeys } from "~/constants/filters"
 import {
@@ -68,13 +68,13 @@ describe("Search Store", () => {
      */
     it.each`
       type         | currentState                                                                                | expected
-      ${undefined} | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa", extension: "ogg" } }}
-      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/image", query: { q: "cat", license: "by,by-sa" } }}
-      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${{ path: "/search/audio", query: { q: "cat", license: "by,by-sa" } }}
-      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/audio", query: { q: "cat" } }}
-      ${IMAGE}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${{ path: "/search/image", query: { q: "cat", extension: "svg" } }}
-      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${{ path: "/search/image", query: { q: "cat" } }}
-      ${VIDEO}     | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${{ path: "/search/video", query: { q: "cat" } }}
+      ${undefined} | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa", extension: "ogg" } }} | ${"/search/audio?q=cat&license=by,by-sa&extension=ogg"}
+      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${"/search/image?q=cat&license=by,by-sa"}
+      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", license: "by,by-sa" } }}                   | ${"/search/audio?q=cat&license=by,by-sa"}
+      ${AUDIO}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${"/search/audio?q=cat"}
+      ${IMAGE}     | ${{ path: "/search/image", urlQuery: { q: "cat", extension: "svg" } }}                      | ${"/search/image?q=cat&extension=svg"}
+      ${IMAGE}     | ${{ path: "/search/audio", urlQuery: { q: "cat", duration: "medium" } }}                    | ${"/search/image?q=cat"}
+      ${VIDEO}     | ${{ path: "/search/audio", urlQuery: { q: "cat", extension: "ogg" } }}                      | ${"/search/video?q=cat"}
     `(
       "getSearchPath returns $expected.path, $expected.query for $type and current state $currentState.path, $currentState.urlQuery",
       ({ type, query, currentState, expected }) => {
@@ -82,15 +82,15 @@ describe("Search Store", () => {
 
         searchStore.setSearchStateFromUrl(currentState)
 
-        searchStore.getSearchPath({ type, query })
+        const actualPath = searchStore.getSearchPath({ type, query })
 
-        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+        expect(actualPath).toEqual(expected)
       }
     )
 
     it.each`
       type         | query                          | currentState                                      | expected
-      ${undefined} | ${{ unknownParam: "dropped" }} | ${{ path: "/search/image", urlQuery: { q: "" } }} | ${{ path: "/search/image", query: { unknownParam: "dropped" } }}
+      ${undefined} | ${{ unknownParam: "dropped" }} | ${{ path: "/search/image", urlQuery: { q: "" } }} | ${"/search/image?unknownParam=dropped"}
     `(
       "getSearchPath returns $expected.path, $expected.query for query $query $type and current state $currentState.path, $currentState.urlQuery",
       ({ type, query, currentState, expected }) => {
@@ -98,24 +98,28 @@ describe("Search Store", () => {
 
         searchStore.setSearchStateFromUrl(currentState)
 
-        searchStore.getSearchPath({ type, query })
+        const actualPath = searchStore.getSearchPath({ type, query })
 
-        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+        expect(actualPath).toEqual(expected)
       }
     )
 
     it.each`
       type     | collectionParams                                                | expected
-      ${IMAGE} | ${{ collection: "tag", tag: "cat" }}                            | ${{ path: "/image/collection", query: { tag: "cat" } }}
-      ${AUDIO} | ${{ collection: "creator", source: "jamendo", creator: "cat" }} | ${{ path: "/audio/collection", query: { source: "jamendo", creator: "cat" } }}
-      ${IMAGE} | ${{ collection: "source", source: "flickr" }}                   | ${{ path: "/image/collection", query: { source: "flickr" } }}
+      ${IMAGE} | ${{ collection: "tag", tag: "cat" }}                            | ${"/image/collection?tag=cat"}
+      ${AUDIO} | ${{ collection: "creator", source: "jamendo", creator: "cat" }} | ${"/audio/collection?source=jamendo&creator=cat"}
+      ${IMAGE} | ${{ collection: "source", source: "flickr" }}                   | ${"/image/collection?source=flickr"}
     `(
       "getCollectionPath returns $expected for $type, $tag, $creator, $source",
       ({ type, collectionParams, expected }) => {
         const searchStore = useSearchStore()
-        searchStore.getCollectionPath({ type, collectionParams })
 
-        expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith(expected)
+        const actualPath = searchStore.getCollectionPath({
+          type,
+          collectionParams,
+        })
+
+        expect(actualPath).toEqual(expected)
       }
     )
 
@@ -264,28 +268,25 @@ describe("Search Store", () => {
 
     it("updateSearchPath updates searchType and query", () => {
       const searchStore = useSearchStore()
-      searchStore.updateSearchPath({ type: "audio", searchTerm: "cat" })
-
-      expect(searchStore.searchType).toEqual("audio")
-      expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
-      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
-        path: "/search/audio",
-        query: { q: "cat" },
+      const actualPath = searchStore.updateSearchPath({
+        type: "audio",
+        searchTerm: "cat",
       })
+
+      expect(searchStore.searchType).toBe("audio")
+      expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
+      expect(actualPath).toEqual("/search/audio?q=cat")
     })
 
     it("updateSearchPath keeps searchType and query if none provided", () => {
       const searchStore = useSearchStore()
       searchStore.setSearchTerm("cat")
       searchStore.setSearchType("audio")
-      searchStore.updateSearchPath()
+      const actualPath = searchStore.updateSearchPath()
 
-      expect(searchStore.searchType).toEqual("audio")
+      expect(searchStore.searchType).toBe("audio")
       expect(searchStore.apiSearchQueryParams).toEqual({ q: "cat" })
-      expect(searchStore.$nuxt.localePath).toHaveBeenCalledWith({
-        path: "/search/audio",
-        query: { q: "cat" },
-      })
+      expect(actualPath).toEqual("/search/audio?q=cat")
     })
 
     it.each`
@@ -345,7 +346,7 @@ describe("Search Store", () => {
 
         searchStore.toggleFilter({ filterType, codeIdx })
         const filterItem = searchStore.filters[filterType][codeIdx]
-        expect(filterItem.checked).toEqual(true)
+        expect(filterItem.checked).toBe(true)
       }
     )
 
@@ -358,15 +359,15 @@ describe("Search Store", () => {
       })
 
       searchStore.toggleFilter({ filterType: "imageProviders", code: "met" })
-      expect(searchStore.appliedFilterCount).toEqual(1)
-      expect(searchStore.isAnyFilterApplied).toEqual(true)
+      expect(searchStore.appliedFilterCount).toBe(1)
+      expect(searchStore.isAnyFilterApplied).toBe(true)
     })
 
     it("toggleFilter updates isFilterApplied with license type", () => {
       const searchStore = useSearchStore()
       searchStore.toggleFilter({ filterType: "licenseTypes", codeIdx: 0 })
 
-      expect(searchStore.isAnyFilterApplied).toEqual(true)
+      expect(searchStore.isAnyFilterApplied).toBe(true)
     })
 
     it("updateProviderFilters merges with existing provider filters", () => {
@@ -436,7 +437,7 @@ describe("Search Store", () => {
 
         const filterItem = searchStore.filters[filterType][idx]
 
-        expect(filterItem.checked).toEqual(true)
+        expect(filterItem.checked).toBe(true)
       }
     )
     it.each`
@@ -525,14 +526,14 @@ describe("Search Store", () => {
         filterType: "licenseTypes",
         code: "commercial",
       })
-      expect(searchStore.isAnyFilterApplied).toEqual(true)
+      expect(searchStore.isAnyFilterApplied).toBe(true)
 
       searchStore.setSearchType(VIDEO)
       searchStore.toggleFilter({
         filterType: "licenseTypes",
         code: "commercial",
       })
-      expect(searchStore.isAnyFilterApplied).toEqual(false)
+      expect(searchStore.isAnyFilterApplied).toBe(false)
     })
 
     describe("Recent searches", () => {
@@ -551,9 +552,8 @@ describe("Search Store", () => {
           "baz",
           "bar",
         ])
-        expect(searchStore.recentSearches.length).toEqual(
-          parseInt(env.savedSearchCount)
-        )
+        // TODO: Replace 4 with the useRuntimeConfig value
+        expect(searchStore.recentSearches.length).toEqual(parseInt(4))
       })
       it("can be cleared", () => {
         const searchStore = useSearchStore()

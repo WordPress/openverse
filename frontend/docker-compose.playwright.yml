@@ -6,12 +6,15 @@ services:
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
-      - ../node_modules:/node_modules
-      - .:/frontend
-      - ${PWD}/../tsconfig.base.json:/tsconfig.base.json
+      - ../node_modules:/node_modules:rw,Z
+      - .:/frontend:rw,Z
     user: ${USER_ID}
     working_dir: /frontend
-    command: pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-}
+    entrypoint: >
+      /bin/sh -c '
+      pnpm install;
+      pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-};
+      '
     environment:
       # This makes the webserver that Playwright runs show the build
       - DEBUG=pw:webserver

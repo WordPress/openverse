@@ -17,32 +17,42 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { defineComponent, defineAsyncComponent, useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import { useUiStore } from "~/stores/ui"
 import usePages from "~/composables/use-pages"
 
 import type { TranslationBannerId, BannerId } from "~/types/banners"
 
+import type { LocaleObject } from "@nuxtjs/i18n"
+
 export default defineComponent({
   name: "VBanners",
   components: {
-    VTranslationStatusBanner: () =>
-      import("~/components/VBanner/VTranslationStatusBanner.vue"),
-    VAnalyticsNotice: () => import("~/components/VBanner/VAnalyticsNotice.vue"),
+    VTranslationStatusBanner: defineAsyncComponent(
+      () => import("~/components/VBanner/VTranslationStatusBanner.vue")
+    ),
+    VAnalyticsNotice: defineAsyncComponent(
+      () => import("~/components/VBanner/VAnalyticsNotice.vue")
+    ),
   },
   setup() {
     const uiStore = useUiStore()
+    const localeProperties = useNuxtApp().$i18n.localeProperties
 
-    const shouldShowTranslationBanner = computed(
-      () => uiStore.shouldShowTranslationBanner
+    const shouldShowTranslationBanner = computed(() =>
+      uiStore.shouldShowTranslationBanner(
+        localeProperties.value as LocaleObject
+      )
     )
     const shouldShowAnalyticsBanner = computed(
       () => uiStore.shouldShowAnalyticsBanner
     )
 
     const translationBannerId = computed<TranslationBannerId>(
-      () => uiStore.translationBannerId
+      () => `translation-${localeProperties.value.code}`
     )
 
     const { current: currentPage } = usePages()

@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
+import { useI18n, useNuxtApp } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { defineComponent, ref, onMounted } from "vue"
+
 import { loadScript } from "~/utils/load-script"
 
 const sketchfabUrl =
@@ -45,12 +45,10 @@ export default defineComponent({
   },
   emits: ["failure"],
   setup(props, { emit }) {
-    const i18n = useI18n()
-    const label = i18n
-      .t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
-      .toString()
+    const { t } = useI18n({ useScope: "global" })
+    const label = t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
     const node = ref<Element | undefined>()
-    const { $sentry } = useContext()
+    const { $sentry } = useNuxtApp()
 
     const initSketchfab = async () => {
       await loadScript(sketchfabUrl)

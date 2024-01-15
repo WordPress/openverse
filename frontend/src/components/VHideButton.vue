@@ -18,14 +18,14 @@
       variant="transparent-gray"
       :icon-props="{ name: 'eye-closed' }"
       size="small"
-      :label="$t('sensitiveContent.singleResult.hide').toString()"
+      :label="$t('sensitiveContent.singleResult.hide')"
       @click="$emit('click')"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "@nuxtjs/composition-api"
+import { computed, defineComponent } from "vue"
 
 import { useUiStore } from "~/stores/ui"
 import { defineEvent } from "~/types/emits"

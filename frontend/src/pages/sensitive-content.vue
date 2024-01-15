@@ -12,7 +12,11 @@
           openverseOrg: "Openverse.org",
         })
       }}
-      <i18n path="sensitive.description.content.c" tag="span">
+      <i18n-t
+        scope="global"
+        keypath="sensitive.description.content.c"
+        tag="span"
+      >
         <template #openverse>Openverse</template>
         <template #wpCoc
           ><VLink
@@ -26,7 +30,7 @@
             >{{ $t("sensitive.description.deiStatement") }}</VLink
           ></template
         >
-      </i18n>
+      </i18n-t>
       {{
         $t("sensitive.description.content.d", {
           openverse: "Openverse",
@@ -92,7 +96,11 @@
           openverseOrg: "Openverse.org",
         })
       }}
-      <i18n path="sensitive.designations.userReported.description.b" tag="span">
+      <i18n-t
+        scope="global"
+        keypath="sensitive.designations.userReported.description.b"
+        tag="span"
+      >
         <template #openverse>Openverse</template>
         <template #gutenbergMediaInserter>
           <VLink
@@ -104,7 +112,7 @@
             }}</VLink
           >
         </template>
-      </i18n>
+      </i18n-t>
       {{ $t("sensitive.designations.userReported.description.c") }}
       {{
         $t("sensitive.designations.userReported.description.d", {
@@ -123,8 +131,9 @@
           openverse: "Openverse",
         })
       }}
-      <i18n
-        path="sensitive.designations.sensitiveText.description.b"
+      <i18n-t
+        scope="global"
+        keypath="sensitive.designations.sensitiveText.description.b"
         tag="span"
       >
         <template #openverse>Openverse</template>
@@ -136,15 +145,16 @@
             }}</VLink
           >
         </template>
-      </i18n>
+      </i18n-t>
       {{
         $t("sensitive.designations.sensitiveText.description.c", {
           openverse: "Openverse",
         })
       }}
       {{ $t("sensitive.designations.sensitiveText.description.d") }}
-      <i18n
-        path="sensitive.designations.sensitiveText.description.e"
+      <i18n-t
+        scope="global"
+        keypath="sensitive.designations.sensitiveText.description.e"
         tag="span"
       >
         <template #imperfect>
@@ -157,11 +167,15 @@
             }}</VLink
           >
         </template>
-      </i18n>
+      </i18n-t>
     </p>
 
     <p>
-      <i18n path="sensitive.designations.sensitiveText.metadata.a" tag="span">
+      <i18n-t
+        scope="global"
+        keypath="sensitive.designations.sensitiveText.metadata.a"
+        tag="span"
+      >
         <template #openverse>Openverse</template>
         <template #openverseOrg>Openverse.org</template>
         <template #notAvailable>
@@ -169,7 +183,7 @@
             $t("sensitive.designations.sensitiveText.notAvailable")
           }}</VLink>
         </template>
-      </i18n>
+      </i18n-t>
       {{ $t("sensitive.designations.sensitiveText.metadata.b") }}
       {{
         $t("sensitive.designations.sensitiveText.metadata.c", {
@@ -222,26 +236,19 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
-
-import { useI18n } from "~/composables/use-i18n"
+<script setup lang="ts">
+import { definePageMeta, useHead, useI18n } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineComponent({
-  name: "SensitiveContent",
-  components: { VLink, VContentPage },
+definePageMeta({
   layout: "content-layout",
-  setup() {
-    const i18n = useI18n()
+})
 
-    useMeta({
-      title: `${i18n.t("sensitive.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
-  },
-  head: {},
+const { t } = useI18n({ useScope: "global" })
+useHead({
+  title: `${t("sensitive.title")} | Openverse`,
+  meta: [{ hid: "robots", name: "robots", content: "all" }],
 })
 </script>

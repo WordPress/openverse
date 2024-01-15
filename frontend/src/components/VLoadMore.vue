@@ -15,6 +15,8 @@
 </template>
 
 <script lang="ts">
+import { useI18n, useNuxtApp, useRoute } from "#imports"
+
 import {
   computed,
   defineComponent,
@@ -26,16 +28,13 @@ import {
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
 
-import { useContext, useRoute } from "@nuxtjs/composition-api"
-
 import { useMediaStore } from "~/stores/media"
-import { useI18n } from "~/composables/use-i18n"
+import { useSearchStore } from "~/stores/search"
 import { defineEvent } from "~/types/emits"
 
 import type { ResultKind } from "~/types/result"
+import type { Collection } from "~/types/search"
 import type { SupportedSearchType } from "~/constants/media"
-
-import { useSearchStore } from "~/stores/search"
 
 import VButton from "~/components/VButton.vue"
 
@@ -68,24 +67,25 @@ export default defineComponent({
   setup(props, { emit }) {
     const loadMoreSectionRef = ref(null)
     const route = useRoute()
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const { $sendCustomEvent } = useContext()
+    const { $sendCustomEvent } = useNuxtApp()
 
     const { currentPage } = storeToRefs(mediaStore)
 
     const eventPayload = computed(() => {
       let kind: ResultKind =
         searchStore.strategy === "default" ? "search" : "collection"
+      const collectionType =
+        (searchStore.collectionValue as Collection) ?? "null"
       return {
         searchType: props.searchType,
         query: props.searchTerm,
         resultPage: currentPage.value || 1,
         kind,
-        collectionType:
-          searchStore.strategy !== "default" ? searchStore.strategy : null,
-        collectionValue: searchStore.collectionValue,
+        collectionType,
+        collectionValue: searchStore.collectionValue ?? "null",
       }
     })
 
@@ -126,9 +126,7 @@ export default defineComponent({
     }
 
     const buttonLabel = computed(() =>
-      props.isFetching
-        ? i18n.t("browsePage.loading")
-        : i18n.t("browsePage.load")
+      props.isFetching ? t("browsePage.loading") : t("browsePage.load")
     )
     const mainPageElement = ref<HTMLElement | null>(null)
     onMounted(() => {

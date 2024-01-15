@@ -18,10 +18,9 @@
         />
       </template>
 
-      <template #audio-control="{ size, layout }">
+      <template #audio-control="audioControlProps">
         <VAudioControl
-          :size="size"
-          :layout="layout"
+          v-bind="audioControlProps"
           :status="status"
           @toggle="handleToggle"
         />
@@ -31,13 +30,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from "vue"
+import { useI18n, useNuxtApp } from "#imports"
 
-import { useContext } from "@nuxtjs/composition-api"
+import { computed, defineComponent, PropType, ref, watch } from "vue"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
-import { useI18n } from "~/composables/use-i18n"
 
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
@@ -71,13 +69,13 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
-    const { $sendCustomEvent } = useContext()
+    const { $sendCustomEvent } = useNuxtApp()
 
     const ariaLabel = computed(() =>
-      i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
+      t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
     const status = ref<AudioStatus>("paused")
@@ -200,7 +198,7 @@ export default defineComponent({
     /* Timekeeping */
     const message = computed(() =>
       activeMediaStore.message
-        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`).toString()
+        ? t(`audioTrack.messages.${activeMediaStore.message}`)
         : ""
     )
 

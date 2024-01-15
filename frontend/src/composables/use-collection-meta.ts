@@ -1,6 +1,7 @@
+import { useI18n } from "#imports"
+
 import { computed } from "vue"
 
-import { useI18n } from "~/composables/use-i18n"
 import { useProviderStore } from "~/stores/provider"
 import type { SupportedMediaType } from "~/constants/media"
 import type { CollectionParams } from "~/types/search"

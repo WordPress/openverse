@@ -4,8 +4,9 @@
       <h2 class="heading-6 mb-4">
         {{ $t("mediaDetails.contentReport.success.title") }}
       </h2>
-      <i18n
-        path="mediaDetails.contentReport.success.note"
+      <i18n-t
+        scope="global"
+        keypath="mediaDetails.contentReport.success.note"
         class="text-sm"
         tag="p"
       >
@@ -16,7 +17,7 @@
             >{{ providerName }}</VLink
           >
         </template>
-      </i18n>
+      </i18n-t>
     </div>
 
     <div v-else-if="status === FAILED">
@@ -54,7 +55,7 @@
             v-model="selectedReason"
             class="mb-4"
             name="reason"
-            :value_="reason"
+            :value="reason"
           >
             {{ $t(`mediaDetails.contentReport.form.${reason}.option`) }}
           </VRadio>
@@ -70,7 +71,7 @@
           <VReportDescForm
             v-if="selectedReason !== DMCA"
             key="other"
-            v-model="description"
+            v-model:content="description"
             :reason="selectedReason"
             :is-required="selectedReason === OTHER"
           />
@@ -123,9 +124,11 @@
 </template>
 
 <script lang="ts">
+import { useRuntimeConfig } from "#imports"
+
 import { computed, defineComponent, PropType, ref } from "vue"
 
-import ReportService from "~/data/report-service"
+import { ofetch } from "ofetch"
 
 import {
   reasons,
@@ -135,11 +138,13 @@ import {
   FAILED,
   WIP,
   DMCA_FORM_URL,
-  ReportReason,
+  type ReportReason,
 } from "~/constants/content-report"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
+
+import { mediaSlug } from "~/utils/query-utils"
 
 import VButton from "~/components/VButton.vue"
 import VRadio from "~/components/VRadio/VRadio.vue"
@@ -210,12 +215,22 @@ export default defineComponent({
         const mediaType = props.media.frontendMediaType
         const reason = selectedReason.value
 
-        await ReportService.sendReport({
-          mediaType,
-          reason,
-          identifier: props.media.id,
-          description: description.value,
-        })
+        const {
+          public: { apiUrl },
+        } = useRuntimeConfig()
+
+        await ofetch(
+          `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
+          {
+            method: "POST",
+            body: {
+              mediaType,
+              reason,
+              identifier: props.media.id,
+              description: description.value,
+            },
+          }
+        )
 
         sendCustomEvent("REPORT_MEDIA", {
           mediaType,

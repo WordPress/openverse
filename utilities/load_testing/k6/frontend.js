@@ -7,14 +7,8 @@ import {
   makeResponseFailedCheck,
 } from "./utils.js"
 
-const STATIC_PAGES = [
-  "about",
-  "sources",
-  "search-help",
-  "privacy",
-  "sensitive-content",
-]
-const TEST_LOCALES = ["en", "ru", "es", "ar"]
+const STATIC_PAGES = ["about", "sources", "privacy", "sensitive-content"]
+const TEST_LOCALES = ["en", "ru", "es", "fa"]
 const TEST_PARAMS = "&license=by&extension=jpg,mp3&source=flickr,jamendo"
 
 const localePrefix = (locale) => {
@@ -22,7 +16,9 @@ const localePrefix = (locale) => {
 }
 
 const visitUrl = (url, locale, action) => {
-  const response = http.get(url, { headers: { "cache-control": "no-cache" } })
+  const response = http.get(url, {
+    headers: { "User-Agent": "OpenverseLoadTesting" },
+  })
   const checkResponseFailed = makeResponseFailedCheck("", url)
   if (checkResponseFailed(response, action)) {
     console.error(`Failed URL: ${url}`)
@@ -59,21 +55,18 @@ export function visitSearchPages() {
   console.log(
     `VU: ${exec.vu.idInTest}  -  ITER: ${exec.vu.iterationInInstance}`
   )
-  for (let MEDIA_TYPE of ["image", "audio"]) {
-    for (let locale of locales) {
-      let q = getRandomWord()
-      group(
-        `${MEDIA_TYPE} search for ${q} on locale ${locale}${paramsString}`,
-        () => {
-          return visitUrl(
-            `${FRONTEND_URL}${localePrefix(locale)}search/${MEDIA_TYPE}?q=${q}${params}`,
-            locale,
-            "visitSearchPage"
-          )
-        }
-      )
+  group(`search for random word on locales ${locales}${paramsString}`, () => {
+    for (let MEDIA_TYPE of ["image", "audio"]) {
+      for (let locale of locales) {
+        let q = getRandomWord()
+        return visitUrl(
+          `${FRONTEND_URL}${localePrefix(locale)}search/${MEDIA_TYPE}?q=${q}${params}`,
+          locale,
+          "visitSearchPage"
+        )
+      }
     }
-  }
+  })
 }
 
 const createScenario = (env, funcName) => {
@@ -81,8 +74,8 @@ const createScenario = (env, funcName) => {
     executor: "per-vu-iterations",
     env,
     exec: funcName,
-    vus: 10,
-    iterations: 10,
+    vus: 5,
+    iterations: 40,
   }
 }
 

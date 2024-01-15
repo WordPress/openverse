@@ -1,685 +1,937 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",0],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",0],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", no images and no audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", no images and no audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",0],["audio",10]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",0],["audio",10]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", no images and 10 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", no images and 10 audio track.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",0],["audio",4300]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",0],["audio",240]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", no images and top 4,300 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", no images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",0],["audio",10000]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",0],["audio",240]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", no images and top 10,000 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", no images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",0],["audio",10001]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",0],["audio",4300]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", no images and top 10,001 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", no images and top 4,300 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",10],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", 10 images and no audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", 10 image and no audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10],["audio",10]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",10],["audio",10]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", 10 images and 10 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", 10 image and 10 audio track.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10],["audio",4300]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",10],["audio",240]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", 10 images and top 4,300 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", 10 image and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10],["audio",10000]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",10],["audio",240]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", 10 images and top 10,000 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", 10 image and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10],["audio",10001]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",10],["audio",4300]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", 10 images and top 10,001 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", 10 image and top 4,300 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",4300],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 4,300 images and no audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and no audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",4300],["audio",10]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",0]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 4,300 images and 10 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and no audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",4300],["audio",4300]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",10]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 4,300 images and top 4,300 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and 10 audio track.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",4300],["audio",10000]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",10]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 4,300 images and top 10,000 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and 10 audio track.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",4300],["audio",10001]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",240]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 4,300 images and top 10,001 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10000],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",240]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,000 images and no audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10000],["audio",10]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",240]]} 3`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,000 images and 10 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10000],["audio",4300]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",240]]} 4`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,000 images and top 4,300 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10000],["audio",10000]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",4300]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,000 images and top 10,000 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and top 4,300 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10000],["audio",10001]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",240],["audio",4300]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,000 images and top 10,001 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 240 images and top 4,300 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10001],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",4300],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,001 images and no audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 4,300 images and no audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10001],["audio",10]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",4300],["audio",10]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,001 images and 10 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 4,300 images and 10 audio track.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10001],["audio",4300]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",4300],["audio",240]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,001 images and top 4,300 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 4,300 images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10001],["audio",10000]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",4300],["audio",240]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,001 images and top 10,000 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 4,300 images and top 240 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCounts":[["image",10001],["audio",10001]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultCounts":[["image",4300],["audio",4300]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", top 10,001 images and top 10,001 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", top 4,300 images and top 4,300 audio tracks.
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCounts":[["audio",0],["image",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resultCounts":[["audio",0],["image",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      No audio tracks for "zack"
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        No audio tracks for "zack"
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCounts":[["audio",10],["image",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resultCounts":[["audio",10],["image",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      10 audio tracks for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        10 audio tracks for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCounts":[["audio",4300],["image",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resultCounts":[["audio",240],["image",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      Top 4,300 audio tracks for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        Top 240 audio tracks for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCounts":[["audio",10000],["image",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resultCounts":[["audio",240],["image",0]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      Top 10,000 audio tracks for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        Top 240 audio tracks for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCounts":[["audio",10001],["image",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resultCounts":[["audio",4300],["image",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      Top 10,001 audio tracks for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        Top 4,300 audio tracks for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCounts":[["image",0],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resultCounts":[["image",0],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      No image results for "zack"
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        No image results for "zack"
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCounts":[["image",10],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resultCounts":[["image",10],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      10 image results for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        10 image results for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCounts":[["image",4300],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resultCounts":[["image",240],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      Top 4,300 image results for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        Top 240 image results for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCounts":[["image",10000],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resultCounts":[["image",240],["audio",0]]} 2`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      Top 10,000 image results for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        Top 240 image results for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCounts":[["image",10001],["audio",0]]} 1`] = `
+exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resultCounts":[["image",4300],["audio",0]]} 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      Top 10,001 image results for "zack".
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        Top 4,300 image results for "zack".
+      </span>
+    </h1>
+  </div>
 </div>
 `;
 
-exports[`VSearchResultsTitle should render an h1 tag containing the correct text 1`] = `
+exports[`VSearchResultsTitle > should render an h1 tag containing the correct text 1`] = `
 <div>
-  <h1
-    class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+  <div
+    id="test-wrapper"
   >
-    <span
-      aria-hidden="true"
+    <h1
+      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
+      data-v-2b685c21=""
     >
-      zack
-    </span>
-    <span
-      class="sr-only"
-    >
-      All results for "zack", 10 images and 10 audio tracks.
-    </span>
-  </h1>
+      <span
+        aria-hidden="true"
+        data-v-2b685c21=""
+      >
+        zack
+      </span>
+      <span
+        class="sr-only"
+        data-v-2b685c21=""
+      >
+        All results for "zack", 10 image and 10 audio track.
+      </span>
+    </h1>
+  </div>
 </div>
 `;

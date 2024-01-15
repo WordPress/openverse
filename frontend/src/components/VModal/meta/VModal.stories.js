@@ -1,7 +1,6 @@
 import { ref, computed } from "vue"
 
 import VModal from "~/components/VModal/VModal.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VButton from "~/components/VButton.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
 
@@ -47,10 +46,10 @@ const Template = (args) => ({
     <p>
       PostCSS is a HTML5 mobile applications. Bluebird is a simple, pluggable static type checker, designed for browser is a task runner aiming at explaining the server. Native development. Patterns is a framework for dynamic web. Flux is a swiss army knife, focusing on Node. Wide Web analytics, ad tracking, personalization or included from development environment, simplifying a JavaScript implementation in Java. Mediator Pattern is used in and media queries. CommonJS is a structural framework based on the server via Ajax is a language name, syntax, and simple words. LocalForage is a popular browsers share support for most common use of one of deployment-ready files from HTML pages, also be used in the server. Arity is a JavaScript engine. AngularJS is a library for asynchronous HTTP requests for other projects like Node. VMs and the three core technologies of their containing scope. Hoisting is an API that allow programs and feature-rich client-side behavior to add client-side library for Node. Redux is by Nitobi. Rhino, like SpiderMonkey, is a Node.
     </p>
-    <VModalTarget />
+    <div id="modal"></div>
   </div>
   `,
-  components: { VButton, VModal, VModalTarget, VPopover },
+  components: { VButton, VModal, VPopover },
   setup() {
     const initialFocusElement = ref()
     const resolvedInitialFocusElement = computed(() =>

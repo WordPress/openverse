@@ -6,7 +6,6 @@
       :size="size"
       :search-term="searchTerm"
       v-bind="$attrs"
-      v-on="$listeners"
       @interacted="sendInteractionEvent"
       @mousedown="sendSelectSearchResultEvent(audio, $event)"
     />
@@ -14,9 +13,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs } from "vue"
+import { useNuxtApp } from "#imports"
 
-import { useContext } from "@nuxtjs/composition-api"
+import { defineComponent, PropType, toRefs } from "vue"
 
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
@@ -62,7 +61,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { $sendCustomEvent } = useContext()
+    const { $sendCustomEvent } = useNuxtApp()
     const searchStore = useSearchStore()
 
     const { audio } = toRefs(props)
@@ -84,12 +83,12 @@ export default defineComponent({
         mediaType: AUDIO,
         query: props.searchTerm,
         provider: audio.provider,
-        relatedTo: props.relatedTo,
+        relatedTo: props.relatedTo ?? "null",
         sensitivities: audio.sensitivity?.join(",") ?? "",
-        isBlurred: shouldBlur.value,
+        isBlurred: shouldBlur.value ?? "null",
         collectionType:
-          searchStore.strategy !== "default" ? searchStore.strategy : null,
-        collectionValue: searchStore.collectionValue,
+          searchStore.strategy !== "default" ? searchStore.strategy : "null",
+        collectionValue: searchStore.collectionValue ?? "null",
       })
     }
     const sendInteractionEvent = (

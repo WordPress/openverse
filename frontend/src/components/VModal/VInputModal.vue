@@ -1,7 +1,7 @@
 <template>
   <div ref="nodeRef">
     <div v-if="!isActive" class="flex w-full"><slot /></div>
-    <VTeleport v-else to="modal">
+    <Teleport v-else to="#teleports">
       <div
         class="h-dyn-screen fixed inset-0 z-40 flex w-full justify-center overflow-y-auto bg-white"
       >
@@ -19,28 +19,18 @@
           <slot />
         </div>
       </div>
-    </VTeleport>
+    </Teleport>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  toRef,
-  ComponentInstance,
-  SetupContext,
-} from "vue"
-
-import { Portal as VTeleport } from "portal-vue"
+import { defineComponent, ref, toRef, SetupContext } from "vue"
 
 import { useDialogContent } from "~/composables/use-dialog-content"
 import { useDialogControl } from "~/composables/use-dialog-control"
 
 export default defineComponent({
   name: "VInputModal",
-  components: { VTeleport },
-
   /**
    * NB: Most of these technically default to `undefined` so that the underlying `VPopoverContent`
    * default for each of them can take over.
@@ -68,7 +58,6 @@ export default defineComponent({
     "close",
   ],
   setup(props, { attrs, emit }) {
-    const focusTrapRef = ref<ComponentInstance | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
     const dialogRef = ref<HTMLElement | null>(null)
 
@@ -103,7 +92,6 @@ export default defineComponent({
     deactivateRef.value = deactivateFocusTrap
 
     return {
-      focusTrapRef,
       dialogRef,
       nodeRef,
       visibleRef,

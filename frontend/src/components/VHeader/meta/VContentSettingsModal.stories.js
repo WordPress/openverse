@@ -1,9 +1,8 @@
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 
 const Template = (args) => ({
-  template: `<div><VContentSettingsModalContent v-bind="args" v-on="args" :close="args.close" /> <VModalTarget class="modal" /></div>`,
-  components: { VContentSettingsModalContent, VModalTarget },
+  template: `<div><VContentSettingsModalContent v-bind="args" v-on="args" :close="args.close" /><div id="modal" /></div>`,
+  components: { VContentSettingsModalContent },
   setup() {
     return { args }
   },

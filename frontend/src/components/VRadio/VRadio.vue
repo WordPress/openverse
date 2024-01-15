@@ -3,7 +3,7 @@
     <input
       :id="id"
       v-bind="$attrs"
-      :value="value_"
+      :value="value"
       class="radio relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-dark-charcoal bg-white focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-2 disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10"
       type="radio"
       :checked="isChecked"
@@ -48,13 +48,8 @@ export default defineComponent({
     },
     /**
      * the value associated with this radio input
-     *
-     * vue-tsc with Vue 2 throws TS1117 error "An object literal cannot have multiple properties with the same name"
-     * if this prop is called `value` and we have a `v-model` (which uses `value` under the hood in Vue 2, and `modelValue` in Vue 3, so we rename it to `value_` here.
-     *
      */
-    // eslint-disable-next-line vue/prop-name-casing
-    value_: {
+    value: {
       type: String,
       required: true,
     },
@@ -67,12 +62,12 @@ export default defineComponent({
     },
   },
   emits: {
-    change: defineEvent<[string]>(),
+    "update:modelValue": defineEvent<[string]>(),
   },
   setup(props, { emit }) {
-    const isChecked = computed(() => props.value_ === props.modelValue)
+    const isChecked = computed(() => props.value === props.modelValue)
     const handleInput = () => {
-      emit("change", props.value_)
+      emit("update:modelValue", props.value)
     }
 
     return {

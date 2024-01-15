@@ -2,7 +2,7 @@ import { test } from "@playwright/test"
 
 import {
   filters,
-  pathWithDir,
+  goToSearchTerm,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
@@ -22,7 +22,7 @@ for (const dir of languageDirections) {
       const isDesktop = breakpoint === "lg"
       test.beforeEach(async ({ page }) => {
         await preparePageForTests(page, breakpoint)
-        await page.goto(pathWithDir("/search/?q=birds", dir))
+        await goToSearchTerm(page, "birds", { dir })
         await filters.open(page, dir)
       })
       test(`filters modal none selected - ${dir}`, async ({ page }) => {

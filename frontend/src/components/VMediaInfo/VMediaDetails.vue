@@ -27,11 +27,13 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
+import { IMAGE } from "~/constants/media"
 
-import { useI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
 
 import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
@@ -49,28 +51,23 @@ export default defineComponent({
       type: Object as PropType<AudioDetail | ImageDetail>,
       required: true,
     },
-    imageWidth: {
-      type: Number,
-    },
-    imageHeight: {
-      type: Number,
-    },
-    imageType: {
-      type: String,
-    },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const metadata = computed<null | Metadata[]>(() => {
       if (!props.media) {
         return null
       }
-      return getMediaMetadata(props.media, i18n, {
-        width: props.imageWidth,
-        height: props.imageHeight,
-        type: props.imageType,
-      })
+      let imageInfo =
+        props.media.frontendMediaType === IMAGE
+          ? {
+              width: props.media.width,
+              height: props.media.height,
+              type: props.media.filetype,
+            }
+          : {}
+      return getMediaMetadata(props.media, i18n, imageInfo)
     })
 
     return {

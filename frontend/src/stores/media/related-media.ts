@@ -1,10 +1,11 @@
-import { defineStore } from "pinia"
+import { useNuxtApp } from "#imports"
 
-import { initServices } from "~/stores/media/services"
+import { defineStore } from "pinia"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 import type { Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
+import { createApiClient } from "~/data/api-service"
 
 interface RelatedMediaState {
   mainMediaId: null | string
@@ -44,29 +45,27 @@ export const useRelatedMediaStore = defineStore("related-media", {
     },
 
     async fetchMedia(mediaType: SupportedMediaType, id: string) {
+      if (this.mainMediaId === id && this.media.length > 0) {
+        return this.media
+      }
       this._resetFetching()
       this.mainMediaId = id
       this._startFetching()
       this.media = []
       try {
-        const accessToken = this.$nuxt.$openverseApiToken
-        const service = initServices[mediaType](accessToken)
-        this.media = (
-          await service.getRelatedMedia<typeof mediaType>(id)
-        ).results
+        const { $openverseApiToken: accessToken } = useNuxtApp()
+
+        const client = createApiClient({ accessToken })
+
+        this.media = await client.getRelatedMedia(mediaType, id)
         this._endFetching()
 
-        return this.media.length
+        return this.media
       } catch (error) {
-        const errorData = this.$nuxt.$processFetchingError(
-          error,
-          mediaType,
-          "related",
-          {
-            id,
-          }
-        )
-
+        const { $processFetchingError } = useNuxtApp()
+        const errorData = $processFetchingError(error, mediaType, "related", {
+          id,
+        })
         this._endFetching(errorData)
         return null
       }

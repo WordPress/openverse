@@ -1,12 +1,12 @@
 <template>
   <!-- eslint-disable vue/use-v-on-exact -->
   <Component
-    :is="isComposite ? 'VLink' : 'VWarningSuppressor'"
+    :is="isComposite ? VLink : 'div'"
     v-bind="containerAttributes"
     class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
-    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
     @keydown="handleKeydown"
     @blur="handleBlur"
     @mousedown="handleMousedown"
@@ -49,6 +49,8 @@
 </template>
 
 <script lang="ts">
+import { firstParam, useI18n, useRoute } from "#imports"
+
 import {
   computed,
   defineComponent,
@@ -57,11 +59,9 @@ import {
   ref,
   watch,
 } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
-import { useI18n } from "~/composables/use-i18n"
 import { useSeekable } from "~/composables/use-seekable"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import {
@@ -78,7 +78,6 @@ import {
   AudioLayout,
   AudioSize,
   AudioStatus,
-  layoutMappings,
 } from "~/constants/audio"
 
 import type { AudioInteraction, AudioInteractionData } from "~/types/analytics"
@@ -95,7 +94,6 @@ import VRowLayout from "~/components/VAudioTrack/layouts/VRowLayout.vue"
 import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 import VGlobalLayout from "~/components/VAudioTrack/layouts/VGlobalLayout.vue"
 import VLink from "~/components/VLink.vue"
-import VWarningSuppressor from "~/components/VWarningSuppressor.vue"
 
 /**
  * Displays the waveform and basic information about the track, along with
@@ -107,7 +105,6 @@ export default defineComponent({
     VAudioControl,
     VWaveform,
     VLink,
-    VWarningSuppressor,
 
     // Layouts
     VFullLayout,
@@ -153,7 +150,7 @@ export default defineComponent({
     focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
 
     const activeMediaStore = useActiveMediaStore()
     const route = useRoute()
@@ -329,9 +326,10 @@ export default defineComponent({
       const { matches: isSearchRoute } = useMatchSearchRoutes()
       const { matches: isSingleResultRoute } = useMatchSingleResultRoutes()
 
+      const mediaId = firstParam(route?.params.id)
+
       if (
-        (isSingleResultRoute.value &&
-          route.value?.params?.id === props.audio.id) ||
+        (isSingleResultRoute.value && mediaId && mediaId === props.audio.id) ||
         (isSearchRoute.value && mediaStore.getItemById(AUDIO, props.audio.id))
       ) {
         /**
@@ -383,7 +381,7 @@ export default defineComponent({
 
     const message = computed(() =>
       activeMediaStore.message
-        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`).toString()
+        ? t(`audioTrack.messages.${activeMediaStore.message}`)
         : ""
     )
 
@@ -462,6 +460,12 @@ export default defineComponent({
     }
 
     /* Layout */
+    const layoutMappings = {
+      full: VFullLayout,
+      row: VRowLayout,
+      box: VBoxLayout,
+      global: VGlobalLayout,
+    }
     const layoutComponent = computed(() => layoutMappings[props.layout])
 
     /**
@@ -479,13 +483,13 @@ export default defineComponent({
      * so we can capture clicks and skip
      * sending an event to the boxed layout.
      */
-    const audioControlRef = ref<{ $el: HTMLElement } | null>(null)
+    const audioControlRef = ref<InstanceType<typeof VAudioControl> | null>(null)
 
     /**
      * A ref used on the waveform, so we can capture mousedown on the
      * audio track outside it as it will open a detail page.
      */
-    const waveformRef = ref<{ $el: HTMLElement } | null>(null)
+    const waveformRef = ref<InstanceType<typeof VWaveform> | null>(null)
 
     const handleMousedown = (event: MouseEvent) => {
       const inWaveform =
@@ -518,10 +522,10 @@ export default defineComponent({
     )
     const ariaLabel = computed(() =>
       isComposite.value
-        ? i18n.t("audioTrack.ariaLabelInteractiveSeekable", {
+        ? t("audioTrack.ariaLabelInteractiveSeekable", {
             title: props.audio.title,
           })
-        : i18n.t("audioTrack.ariaLabel", { title: props.audio.title })
+        : t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
     const togglePlayback = () => {
@@ -598,6 +602,7 @@ export default defineComponent({
 
       audioControlRef,
       waveformRef,
+      VLink,
     }
   },
 })

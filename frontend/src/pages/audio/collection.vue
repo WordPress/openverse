@@ -1,5 +1,9 @@
 <template>
-  <div class="p-6 pt-0 lg:p-10 lg:pt-2">
+  <div
+    :id="skipToContentTargetId"
+    tabindex="-1"
+    class="p-6 pt-0 lg:p-10 lg:pt-2"
+  >
     <VCollectionResults
       v-if="collectionParams"
       search-term=""
@@ -12,99 +16,95 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
-  defineComponent,
-  useFetch,
-  useMeta,
+  definePageMeta,
+  useAsyncData,
+  useHead,
+  useI18n,
   useRoute,
-} from "@nuxtjs/composition-api"
+} from "#imports"
+
 import { computed, ref, watch } from "vue"
 
 import { collectionMiddleware } from "~/middleware/collection"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
-import { useI18n } from "~/composables/use-i18n"
 import { useCollectionMeta } from "~/composables/use-collection-meta"
 import type { AudioDetail } from "~/types/media"
 
+import { skipToContentTargetId } from "~/constants/window"
+
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
-export default defineComponent({
-  name: "VAudioCollectionPage",
-  components: { VCollectionResults },
+definePageMeta({
   layout: "content-layout",
   middleware: collectionMiddleware,
-  setup() {
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
-
-    const collectionParams = computed(() => searchStore.collectionParams)
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
-
-    const media = ref<AudioDetail[]>([])
-    const creatorUrl = ref<string>()
-
-    const i18n = useI18n()
-
-    const collectionLabel = computed(() => {
-      if (!collectionParams.value) {
-        return ""
-      }
-      const { collection, ...params } = collectionParams.value
-      return i18n
-        .t(`collection.ariaLabel.${collection}.audio`, { ...params })
-        .toString()
-    })
-
-    const fetchMedia = async (
-      { shouldPersistMedia }: { shouldPersistMedia: boolean } = {
-        shouldPersistMedia: false,
-      }
-    ) => {
-      media.value = (await mediaStore.fetchMedia({
-        shouldPersistMedia,
-      })) as (typeof media)["value"]
-      creatorUrl.value =
-        media.value.length > 0 ? media.value[0].creator_url : undefined
-    }
-    const loadMore = () => {
-      fetchMedia({ shouldPersistMedia: true })
-    }
-
-    const { pageTitle } = useCollectionMeta({
-      collectionParams,
-      mediaType: "audio",
-      i18n,
-    })
-
-    useMeta({
-      meta: [
-        { hid: "robots", name: "robots", content: "all" },
-        { hid: "og:title", property: "og:title", content: pageTitle.value },
-      ],
-      title: pageTitle.value,
-    })
-
-    useFetch(async () => {
-      await fetchMedia()
-    })
-
-    // Fetch media when the route changes, e.g. when the user navigates from
-    // a creator collection page to a source collection page.
-    const route = useRoute()
-    watch(route, () => {
-      fetchMedia()
-    })
-
-    return {
-      collectionParams,
-      isFetching,
-      media,
-      collectionLabel,
-      loadMore,
-    }
-  },
-  head: {},
 })
+
+const mediaStore = useMediaStore()
+const searchStore = useSearchStore()
+
+const collectionParams = computed(() => searchStore.collectionParams)
+const isFetching = computed(() => mediaStore.fetchState.isFetching)
+
+const media = ref<AudioDetail[]>([])
+const creatorUrl = ref<string>()
+
+const i18n = useI18n({ useScope: "global" })
+
+const collectionLabel = computed(() => {
+  if (!collectionParams.value) {
+    return ""
+  }
+  const { collection, ...params } = collectionParams.value
+  return i18n.t(`collection.ariaLabel.${collection}.audio`, { ...params })
+})
+
+const fetchMedia = async (
+  { shouldPersistMedia }: { shouldPersistMedia: boolean } = {
+    shouldPersistMedia: false,
+  }
+) => {
+  media.value = (await mediaStore.fetchMedia({
+    shouldPersistMedia,
+  })) as AudioDetail[]
+  creatorUrl.value =
+    media.value.length > 0 ? media.value[0].creator_url : undefined
+  return media.value
+}
+const loadMore = () => {
+  fetchMedia({ shouldPersistMedia: true })
+}
+
+const { pageTitle } = useCollectionMeta({
+  collectionParams,
+  mediaType: "audio",
+  i18n,
+})
+
+useHead({
+  meta: [
+    { hid: "robots", name: "robots", content: "all" },
+    { hid: "og:title", property: "og:title", content: pageTitle.value },
+  ],
+  title: pageTitle.value,
+})
+
+// `useAsyncData` is not triggered when the query changes, e.g. when the user navigates from
+// a creator collection page to a source collection page.
+const route = useRoute()
+
+watch(route, async () => {
+  await fetchMedia()
+})
+/**
+ * Media is not empty when we navigate back to this page, so we don't need to fetch
+ * it again to make sure that all the previously fetched media is displayed.
+ */
+await useAsyncData(
+  "audio-collection",
+  async () => (media.value.length ? media.value : await fetchMedia()),
+  { lazy: true, server: false }
+)
 </script>

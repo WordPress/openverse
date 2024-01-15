@@ -1,30 +1,17 @@
+import { beforeEach, describe, expect, it } from "vitest"
+
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
 import useSearchType from "~/composables/use-search-type"
-import { useAnalytics } from "~/composables/use-analytics"
-
-jest.mock("~/composables/use-analytics")
 
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 
-jest.mock("~/composables/use-i18n", () => ({
-  useI18n: jest.fn(() => ({
-    t: (key) => key,
-  })),
-}))
-
 describe("useSearchType", () => {
-  const sendCustomEventMock = jest.fn()
   beforeEach(() => {
-    sendCustomEventMock.mockClear()
-
     setActivePinia(createPinia())
-    useAnalytics.mockImplementation(() => ({
-      sendCustomEvent: sendCustomEventMock,
-    }))
   })
 
-  it("should have correct initial values", () => {
+  it("should have correct initial values", async () => {
     const {
       activeType,
       types: searchTypes,
@@ -51,19 +38,19 @@ describe("useSearchType", () => {
     expect(additionalTypes.value).toEqual([])
   })
 
-  it("should return correct props for active search type when type is not passed", () => {
+  it("should return correct props for active search type when type is not passed", async () => {
     const { getSearchTypeProps } = useSearchType()
 
     const { icon, label } = getSearchTypeProps()
     expect(icon).toEqual(ALL_MEDIA)
-    expect(label).toEqual("searchType.all")
+    expect(label).toBe("All content")
   })
 
-  it("should return correct props when type is passed", () => {
+  it("should return correct props when type is passed", async () => {
     const { getSearchTypeProps } = useSearchType()
 
     const { icon, label } = getSearchTypeProps(AUDIO)
     expect(icon).toEqual(AUDIO)
-    expect(label).toEqual("searchType.audio")
+    expect(label).toBe("Audio")
   })
 })

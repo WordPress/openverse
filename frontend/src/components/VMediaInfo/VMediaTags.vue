@@ -26,8 +26,9 @@
 </template>
 
 <script lang="ts">
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent, type PropType } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { Tag } from "~/types/media"
@@ -74,9 +75,9 @@ export default defineComponent({
       () => tagsByType.value.generated.length > 0
     )
 
-    const { app } = useContext()
+    const localePath = useLocalePath()
 
-    const tagsPagePath = computed(() => app.localePath("/tags"))
+    const tagsPagePath = computed(() => localePath("/tags"))
 
     return { tagsPagePath, tagsByType, hasSourceTags, hasGeneratedTags }
   },

@@ -1,3 +1,5 @@
+import isShallowEqual from "@wordpress/is-shallow-equal"
+
 import {
   FilterCategory,
   FilterItem,
@@ -20,8 +22,9 @@ import {
   SearchFilterQuery,
 } from "~/types/search"
 
-import type { Context } from "@nuxt/types"
-import type { Dictionary } from "vue-router/types/router"
+import { firstParam } from "~/utils/query-utils"
+
+import type { LocationQuery } from "vue-router"
 
 /**
  * This maps properties in the search store state to the corresponding API query
@@ -150,7 +153,7 @@ export const queryToFilterData = ({
   searchType = "image",
   defaultFilters,
 }: {
-  query: Dictionary<string>
+  query: Record<string, string>
   searchType: SupportedSearchType
   defaultFilters: Partial<Filters>
 }) => {
@@ -201,29 +204,20 @@ export const queryToFilterData = ({
   return filters
 }
 
+type PaginatedSearchQueryOptionalQ = Omit<PaginatedSearchQuery, "q"> & {
+  q?: string
+}
+
 /**
  * Compares two API queries, excluding the search term (`q`) parameter.
  */
 export const areQueriesEqual = (
-  newQuery: PaginatedSearchQuery,
-  oldQuery: PaginatedSearchQuery
+  newQuery: PaginatedSearchQueryOptionalQ,
+  oldQuery: PaginatedSearchQueryOptionalQ
 ): boolean => {
-  const queryKeys = (query: PaginatedSearchQuery) =>
-    Object.keys(query).filter(
-      (k) => k !== "q"
-    ) as (keyof PaginatedSearchQuery)[]
-  const oldQueryKeys = queryKeys(oldQuery)
-  const newQueryKeys = queryKeys(newQuery)
-  if (oldQueryKeys.length !== newQueryKeys.length) {
-    return false
-  }
-
-  for (const key of oldQueryKeys) {
-    if (oldQuery[key] !== newQuery[key]) {
-      return false
-    }
-  }
-  return true
+  delete newQuery.q
+  delete oldQuery.q
+  return isShallowEqual(newQuery, oldQuery)
 }
 
 /**
@@ -234,13 +228,12 @@ export const areQueriesEqual = (
  * * @param queryDictionary - the query param dictionary provided by Vue router
  */
 export const queryDictionaryToQueryParams = (
-  queryDictionary: Context["query"]
-): Dictionary<string> => {
-  const queryParams = {} as Dictionary<string>
+  queryDictionary: LocationQuery
+): Record<string, string> => {
+  const queryParams = {} as Record<string, string>
   Object.keys(queryDictionary).forEach((key) => {
-    const value = queryDictionary[key]
     // If the parameter is an array, use the first value.
-    const parameter = Array.isArray(value) ? value[0] : value
+    const parameter = firstParam(queryDictionary[key])
     if (parameter) {
       queryParams[key] = parameter
     }

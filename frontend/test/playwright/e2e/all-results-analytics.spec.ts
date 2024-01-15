@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 import {
+  getFirstResult,
   goToSearchTerm,
   openFirstResult,
   preparePageForTests,
@@ -15,6 +16,16 @@ import { t } from "~~/test/playwright/utils/i18n"
 import { AUDIO, IMAGE } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
+
+const defaultPayload = {
+  query: "birds",
+  kind: "search",
+  relatedTo: "null",
+  collectionType: "null",
+  collectionValue: "null",
+  sensitivities: "",
+  isBlurred: false,
+} as const
 
 test.describe("all results grid analytics test", () => {
   test.beforeEach(async ({ page }) => {
@@ -33,16 +44,10 @@ test.describe("all results grid analytics test", () => {
       (event) => event.n === "SELECT_SEARCH_RESULT"
     )
     expectEventPayloadToMatch(selectSearchResultEvent, {
+      ...defaultPayload,
       mediaType: AUDIO,
-      query: "birds",
-      kind: "search",
-      relatedTo: null,
       id: "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
       provider: "jamendo",
-      sensitivities: "",
-      isBlurred: false,
-      collectionType: null,
-      collectionValue: null,
     })
   })
 
@@ -59,15 +64,8 @@ test.describe("all results grid analytics test", () => {
 
     expectEventPayloadToMatch(selectSearchResultEvent, {
       id: "da5cb478-c093-4d62-b721-cda18797e3fb",
-      kind: "search",
       mediaType: IMAGE,
-      query: "birds",
       provider: "flickr",
-      relatedTo: null,
-      sensitivities: "",
-      isBlurred: false,
-      collectionType: null,
-      collectionValue: null,
     })
   })
 
@@ -76,10 +74,9 @@ test.describe("all results grid analytics test", () => {
   }) => {
     const analyticsEvents = collectAnalyticsEvents(page.context())
 
-    const firstResultPlay = page
-      .locator(`a[href*="/audio/"]`)
-      .first()
-      .getByRole("button", { name: /play/i })
+    const firstResult = await getFirstResult(page, "audio")
+
+    const firstResultPlay = firstResult.getByRole("button", { name: /play/i })
 
     await firstResultPlay.click()
     await expect(page.getByRole("button", { name: /pause/i })).toBeVisible()

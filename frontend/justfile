@@ -35,6 +35,7 @@ export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'
 # Build the frontend Docker image
 build-img tag="openverse-frontend:local" target="app":
     docker build \
+      --load \
       --target {{ target }} \
       --build-context 'repo_root=..' \
       --build-arg FRONTEND_NODE_VERSION=$(just node-version) \
@@ -48,6 +49,18 @@ run-img tag="openverse-frontend:local":
       --rm \
       --publish 8443:8443 \
       {{ tag }}
+
+# Build and push frontend images to `nuxt-preview` tag at https://nuxt-preview.openverse.org/.
+# Part of temporary utilities for Nuxt 3 iteration.
+# You must set the CR_PAT env variable to your GitHub token before running this script to enable ghcr login.
+# export CR_PAT=YOUR_TOKEN
+push-to-nuxt-preview github_username:
+    echo $CR_PAT | docker login ghcr.io -u {{github_username}} --password-stdin
+    just build-img ghcr.io/wordpress/openverse-frontend:nuxt-preview
+    docker build -t ghcr.io/wordpress/openverse-frontend_nginx:nuxt-preview -f ./Dockerfile.nginx .
+    docker push ghcr.io/wordpress/openverse-frontend:nuxt-preview
+    docker push ghcr.io/wordpress/openverse-frontend_nginx:nuxt-preview
+    gh workflow run -R WordPress/openverse-infrastructure 'Deployment - production-frontend-nuxt-3' -f tag=nuxt-preview
 
 ######
 # Up #

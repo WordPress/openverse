@@ -3,7 +3,6 @@ import { test, expect, Page } from "@playwright/test"
 import {
   goToSearchTerm,
   preparePageForTests,
-  sleep,
 } from "~~/test/playwright/utils/navigation"
 
 import {
@@ -47,7 +46,6 @@ for (const dir of languageDirections) {
        * page is the "license explanation" button, not a checkbox.
        */
       await goToSearchTerm(page, "birds", { mode: "SSR", dir })
-      await sleep(1000)
     })
 
     test("should move focus to the sidebar after header", async ({ page }) => {

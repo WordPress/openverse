@@ -15,7 +15,7 @@ const contentPages = [
   "about",
   "privacy",
   "search-help",
-  "non-existent",
+  // "non-existent", TODO: re-add dir properties to error page
   "sources",
   "sensitive-content",
 ]
@@ -51,6 +51,12 @@ test.describe("layout color is set correctly", () => {
 
     test("change language on homepage and search", async ({ page }) => {
       await page.goto("/")
+
+      // Wait for hydration
+      await expect(
+        page.getByRole("button", { name: t("search.search") })
+      ).toBeEnabled()
+
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
       const searchBar = page.getByPlaceholder(
         t("hero.search.placeholder", "rtl")

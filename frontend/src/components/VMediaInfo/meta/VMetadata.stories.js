@@ -1,7 +1,8 @@
+import { useI18n } from "#imports"
+
 import { image as testImage } from "~~/test/unit/fixtures/image"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
-import { useI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
 import { useProviderStore } from "~/stores/provider"
 
@@ -35,7 +36,7 @@ const Template = (args) => ({
       },
       sourceNames: { audio: [testAudio.source], image: [testImage.source] },
     })
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
     const data = [
       {
         metadata: getMediaMetadata(testImage, i18n, {

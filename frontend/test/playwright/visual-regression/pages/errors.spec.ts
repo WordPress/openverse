@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
   preparePageForTests,
+  sleep,
 } from "~~/test/playwright/utils/navigation"
 
 import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
@@ -24,17 +25,20 @@ const singleResultCSRErrorStatuses = [404, 429, 500]
  */
 breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
   for (const { errorStatus, imageId } of errorTapes) {
-    test(`${errorStatus} error on single-result page on SSR`, async ({
+    test(`${errorStatus} error on single-result image page on SSR`, async ({
       page,
     }) => {
       await preparePageForTests(page, breakpoint)
 
       await page.goto(`/image/${imageId}`)
+      // eslint-disable-next-line playwright/no-networkidle
+      await page.waitForLoadState("networkidle")
       await expectSnapshot("generic-error", page, { fullPage: true })
     })
   }
+
   for (const status of singleResultCSRErrorStatuses) {
-    test(`${status} on single-result page on CSR`, async ({ page }) => {
+    test(`${status} on single-result image page on CSR`, async ({ page }) => {
       await page.route(new RegExp(`v1/images/`), (route) => {
         return route.fulfill({ status })
       })
@@ -104,6 +108,7 @@ for (const searchType of supportedSearchTypes) {
         page,
       }) => {
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
+        await sleep(500)
 
         await setViewportToFullHeight(page)
 
@@ -118,8 +123,8 @@ for (const searchType of supportedSearchTypes) {
       })
 
       test(`timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
-        await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
-          route.abort("timedout")
+        await page.route(new RegExp(`/v1/(images|audio)/`), async (route) => {
+          return route.abort("timedout")
         })
         await goToSearchTerm(page, "cat", { dir, searchType, mode: "CSR" })
 
