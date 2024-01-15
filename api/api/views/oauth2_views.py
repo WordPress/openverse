@@ -174,7 +174,7 @@ class CheckRates(APIView):
         > token has expired.
         """
 
-        if "Authorization" in request.HEADERS and not request.auth:
+        if "Authorization" in request.headers and not request.auth:
             raise AuthenticationFailed(detail="Invalid credentials")
 
         access_token = str(request.auth)
