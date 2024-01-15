@@ -1,7 +1,8 @@
 <template>
-  <i18n
+  <i18n-t
+    scope="global"
     class="dmca-notice"
-    path="mediaDetails.contentReport.form.dmca.note"
+    keypath="mediaDetails.contentReport.form.dmca.note"
     tag="p"
   >
     <template #form>
@@ -18,10 +19,10 @@
         provider
       }}</VLink>
     </template>
-  </i18n>
+  </i18n-t>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 
 import { DMCA_FORM_URL } from "~/constants/content-report"

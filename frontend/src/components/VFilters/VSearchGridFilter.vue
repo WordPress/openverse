@@ -32,13 +32,14 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent } from "vue"
 import { storeToRefs } from "pinia"
 
 import { useSearchStore } from "~/stores/search"
 
 import type { FilterCategory } from "~/constants/filters"
-import { useI18n } from "~/composables/use-i18n"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
@@ -72,7 +73,7 @@ export default defineComponent({
   setup() {
     const searchStore = useSearchStore()
 
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
 
     const { sendCustomEvent } = useAnalytics()
 
@@ -87,7 +88,7 @@ export default defineComponent({
       () => Object.keys(filters.value) as FilterCategory[]
     )
     const filterTypeTitle = (filterType: FilterCategory) => {
-      return i18n.t(`filters.${filterType}.title`).toString()
+      return t(`filters.${filterType}.title`)
     }
 
     const toggleFilter = ({

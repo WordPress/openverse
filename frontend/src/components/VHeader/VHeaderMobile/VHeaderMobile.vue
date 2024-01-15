@@ -6,7 +6,7 @@
     <VInputModal
       class="flex w-full"
       :is-active="isRecentVisible"
-      :aria-label="$t('recentSearches.heading').toString()"
+      :aria-label="$t('recentSearches.heading')"
       @close="hideRecentSearches"
     >
       <div class="flex w-full" :class="{ 'px-3': isRecentVisible }">
@@ -42,14 +42,14 @@
             id="search-bar"
             ref="searchInputRef"
             name="q"
-            :placeholder="$t('hero.search.placeholder').toString()"
+            :placeholder="$t('hero.search.placeholder')"
             type="search"
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
             :value="localSearchTerm"
             :aria-label="
               $t('search.searchBarLabel', {
                 openverse: 'Openverse',
-              }).toString()
+              })
             "
             autocomplete="off"
             role="combobox"
@@ -121,8 +121,9 @@
 </template>
 
 <script lang="ts">
+import { firstParam, useNuxtApp, useRoute } from "#imports"
+
 import { computed, defineComponent, nextTick, ref, watch } from "vue"
-import { useContext, useRoute } from "@nuxtjs/composition-api"
 import { onClickOutside } from "@vueuse/core"
 
 import {
@@ -192,7 +193,7 @@ export default defineComponent({
      */
     const selection = ref<{ start: number; end: number }>({ start: 0, end: 0 })
 
-    const { $sendCustomEvent } = useContext()
+    const { $sendCustomEvent } = useNuxtApp()
     const { updateSearchState, searchTerm, searchStatus } =
       useSearch($sendCustomEvent)
     const localSearchTerm = ref(searchTerm.value)
@@ -358,16 +359,14 @@ export default defineComponent({
       visibleRef: contentSettingsOpen,
       nodeRef: headerRef,
       lockBodyScroll: true,
-      emit,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      emit: emit as (event: string, ...args: any[]) => void,
     })
 
     const route = useRoute()
-    const routeSearchTerm = computed(() => route.value?.query?.q)
+    const routeSearchTerm = computed(() => firstParam(route?.query.q))
     watch(routeSearchTerm, (newSearchTerm) => {
-      const term = Array.isArray(newSearchTerm)
-        ? newSearchTerm[0]
-        : newSearchTerm
-      localSearchTerm.value = term ?? ""
+      localSearchTerm.value = newSearchTerm ?? ""
     })
 
     const { doneHydrating } = useHydrating()

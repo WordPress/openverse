@@ -796,14 +796,11 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook
         include:
           - name: playwright_vr
             script: "test:playwright visual-regression -u"
           - name: playwright_e2e
             script: "test:playwright e2e"
-          - name: storybook
-            script: "test:storybook -u"
 
     steps:
       - name: Checkout repository
@@ -866,7 +863,6 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook
 
     steps:
       - name: Pass

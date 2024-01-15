@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/8c6ded89-0f49-41af-9d7c-9fb17d59553d/related/',
+        url: '/v1/audio/8c6ded89-0f49-41af-9d7c-9fb17d59553d/related/?peaks=true',
         method: 'GET',
         body: '',
     },

@@ -4,14 +4,15 @@
     icon="source"
     :label="
       appliedFilterCount
-        ? $tc('header.contentSettingsButton.withCount', appliedFilterCount)
+        ? $t('header.contentSettingsButton.withCount', {
+            count: appliedFilterCount,
+          })
         : $t('header.contentSettingsButton.simple')
     "
     aria-haspopup="dialog"
     :aria-expanded="isPressed ? 'true' : 'false'"
     aria-controls="content-settings-modal"
     variant="filled-white"
-    v-on="$listeners"
   >
     <template #notification>
       <span
@@ -22,7 +23,7 @@
   </VSearchBarButton>
 </template>
 <script lang="ts">
-import { defineComponent } from "@nuxtjs/composition-api"
+import { defineComponent } from "vue"
 
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 

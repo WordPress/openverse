@@ -34,12 +34,11 @@ const isFiletypeMatching = (extension: string, filetype?: string) => {
     Boolean(filetype.match(matcher) && extension.match(matcher))
   )
 }
-const extractPartAfterLastDot = (str?: string) => {
-  if (!str) {
+export const extractPartAfterLastDot = (str?: string) => {
+  if (!str || str.lastIndexOf(".") === -1) {
     return ""
   }
-  const parts = str.split(".")
-  return parts.length ? parts[parts.length - 1].toLowerCase() : ""
+  return str.split(".").pop()?.toLowerCase() ?? ""
 }
 
 /**
@@ -53,14 +52,28 @@ const stripExtension = (
   media: ApiMedia
 ) => {
   const filetype = media.filetype ?? extractPartAfterLastDot(media.url)
-  const titleParts = title.split(".")
+  const lastDotIndex = title.lastIndexOf(".")
+  const [titleWithoutExtension, possibleExtension] = [
+    title.slice(0, lastDotIndex),
+    title.slice(lastDotIndex + 1),
+  ]
   if (
     mediaTypeExtensions[mediaType].includes(filetype) &&
-    isFiletypeMatching(extractPartAfterLastDot(title), filetype)
+    isFiletypeMatching(possibleExtension, filetype)
   ) {
-    titleParts.pop()
+    return titleWithoutExtension
   }
-  return titleParts.join(".")
+  return title
+}
+
+const extractFiletype = (url: string, mediaType: MediaType) => {
+  if (url.lastIndexOf(".") === -1) {
+    return null
+  }
+  const extension = url.split(".").pop()?.toLowerCase()
+  return extension && mediaTypeExtensions[mediaType].includes(extension)
+    ? extension
+    : null
 }
 /**
  * Corrects the encoding of the media title, or uses the media type as the title.
@@ -100,9 +113,12 @@ const parseTags = (tags: Tag[]) => {
  * @returns the given media object with the text fields decoded
  */
 export const decodeMediaData = <T extends Media>(
-  media: ApiMedia,
+  media: ApiMedia | undefined | null,
   mediaType: T["frontendMediaType"]
 ): T => {
+  if (!media) {
+    throw new Error("Media is undefined or null")
+  }
   // Fake ~50% of results as sensitive.
   const featureFlagStore = useFeatureFlagStore()
   const sensitivity =
@@ -116,6 +132,8 @@ export const decodeMediaData = <T extends Media>(
   const providerStore = useProviderStore()
   const sourceName = providerStore.getProviderName(media.source, mediaType)
   const providerName = providerStore.getProviderName(media.provider, mediaType)
+  const filetype =
+    media.filetype ?? extractFiletype(media.url, mediaType) ?? "Unknown"
 
   return {
     ...media,
@@ -123,6 +141,7 @@ export const decodeMediaData = <T extends Media>(
     frontendMediaType: mediaType,
     creator: decodeString(media.creator),
     tags: media.tags ? parseTags(media.tags) : ([] as Tag[]),
+    filetype,
     sourceName,
     providerName,
     sensitivity,

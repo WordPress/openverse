@@ -80,8 +80,8 @@
                 'h3=":443"; ma=86400, h3-29=":443"; ma=86400',
             ],
         },
-        body: {
-            detail: 'Not found.',
-        },
+      body: {
+        detail: 'Internal Server Error',
+      }
     },
 }

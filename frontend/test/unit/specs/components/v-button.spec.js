@@ -1,14 +1,13 @@
 import { screen } from "@testing-library/vue"
 
-import { render } from "~~/test/unit/test-utils/render"
+import { describe, expect, it } from "vitest"
 
-import { warn } from "~/utils/console"
+import { nextTick } from "vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VButton from "~/components/VButton.vue"
 
-jest.mock("~/utils/console", () => ({ warn: jest.fn(), log: jest.fn() }))
-
-const nextTick = () => new Promise((r) => setTimeout(r, 0))
 /**
  * Throughout this suite we use the `screen.findBy*` functions to asynchronously
  * wait for the component to re-render. There might be some kind of performance
@@ -17,13 +16,10 @@ const nextTick = () => new Promise((r) => setTimeout(r, 0))
  * won't be rendered.
  */
 describe("VButton", () => {
-  afterEach(() => {
-    warn.mockReset()
-  })
   it('should render a `button` by default with type="button" and no tabindex', async () => {
-    render(VButton, {
+    await render(VButton, {
       props: { variant: "filled-white", size: "medium" },
-      slots: { default: "Code is Poetry" },
+      slots: { default: () => "Code is Poetry" },
     })
 
     const element = await screen.findByRole("button")
@@ -34,9 +30,9 @@ describe("VButton", () => {
   })
 
   it("should allow passing an explicit type", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: { type: "submit", variant: "filled-white", size: "medium" },
-      slots: { default: "Code is Poetry" },
+      slots: { default: () => "Code is Poetry" },
     })
 
     const element = await screen.findByRole("button")
@@ -45,10 +41,10 @@ describe("VButton", () => {
   })
 
   it("should render an anchor with no type attribute", async () => {
-    render(VButton, {
+    await render(VButton, {
       attrs: { href: "http://localhost" },
       props: { as: "VLink", variant: "filled-white", size: "medium" },
-      slots: { default: "Code is Poetry" },
+      slots: { default: () => "Code is Poetry" },
     })
     await nextTick()
 
@@ -59,31 +55,30 @@ describe("VButton", () => {
   })
 
   it("should render the disabled attribute on a button when the element is explicitly unfocusableWhenDisabled and is disabled", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: {
         disabled: true,
         focusableWhenDisabled: false,
         variant: "filled-white",
         size: "medium",
       },
-      slots: { default: "Code is Poetry" },
+      slots: { default: () => "Code is Poetry" },
     })
 
     const element = await screen.findByRole("button")
 
-    // Vue renders the disabled attribute having a `true` value as `[disabled="disabled"]`
-    expect(element).toHaveAttribute("disabled", "disabled")
+    expect(element).toHaveAttribute("disabled")
   })
 
   it("should not render the disabled attribute if the element is focusableWhenDisabled", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: {
         disabled: true,
         focusableWhenDisabled: true,
         variant: "filled-white",
         size: "medium",
       },
-      slots: { default: "Code is Poetry" },
+      slots: { default: () => "Code is Poetry" },
     })
 
     const element = await screen.findByRole("button")
@@ -93,7 +88,7 @@ describe("VButton", () => {
   })
 
   it("should not render the disabled attribute on elements that do not support it", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: {
         as: "VLink",
         disabled: true,
@@ -102,7 +97,7 @@ describe("VButton", () => {
         variant: "filled-white",
         size: "medium",
       },
-      slots: { default: "Code is Poetry" },
+      slots: { default: () => "Code is Poetry" },
     })
 
     const element = await screen.findByText(/code is poetry/i)

@@ -4,10 +4,17 @@ ARG PLAYWRIGHT_VERSION
 
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
-COPY package.json /
+WORKDIR /frontend
+
+COPY package.json .
 
 # Ensure the Playwright container's pnpm cache folder exists and is writable
 RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
 
 # Requires `packageManager` field to be present in `frontend/package.json`.
 RUN corepack enable pnpm
+
+# DO NOT actually run `pnpm install` here. Doing so requires us to copy the the source into the container.
+# However, that's a waste of time because we mount the source in the compose file anyway.
+# Instead, we run `pnpm install` in the entrypoint script defined in the compose file.
+# ENTRYPOINT ["pnpm", "install", "&&"]

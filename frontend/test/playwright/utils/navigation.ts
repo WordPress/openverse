@@ -4,7 +4,7 @@ import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
 import featureData from "~~/feat/feature-flags.json"
 
-import type { MediaType, SupportedSearchType } from "~/constants/media"
+import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 import {
   ALL_MEDIA,
   AUDIO,
@@ -96,6 +96,7 @@ export const setContentSwitcherState = async (
         : "#search-type-button"
   )
 
+  await expect(buttonLocator).toBeEnabled()
   const isPressed = await getSelectorPressed(buttonLocator)
   const shouldBePressed = state === "open"
 
@@ -124,6 +125,13 @@ export const filters = {
   close: async (page: Page, dir: LanguageDirection = "ltr") => {
     await setContentSwitcherState(page, "filters", "closed", dir)
   },
+}
+
+export const ensureSearchPageHydrated = async (page: Page) => {
+  const buttonId = isPageDesktop(page)
+    ? "#filter-button"
+    : "#content-settings-button"
+  await expect(page.locator(`button${buttonId}`)).toBeEnabled()
 }
 
 export const searchTypes = {
@@ -301,6 +309,18 @@ export const searchFromHeader = async (page: Page, term: string) => {
   await page.keyboard.press("Enter")
 }
 
+export const getFirstResult = async (
+  page: Page,
+  mediaType: SupportedMediaType
+) => {
+  return mediaType === "image"
+    ? page
+        .getByRole("link")
+        .filter({ has: page.getByRole("figure") })
+        .first()
+    : page.getByRole("application").first()
+}
+
 /**
  * Click on the first <mediaType> result: a link that contains
  * /<mediaType>/ in its URL. We cannot use the 'startsWith' `^` matcher
@@ -309,11 +329,11 @@ export const searchFromHeader = async (page: Page, term: string) => {
  */
 export const openFirstResult = async (
   page: Page,
-  mediaType: MediaType,
+  mediaType: SupportedMediaType,
   dir: LanguageDirection = "ltr",
   locale?: "es" | "ru"
 ) => {
-  const firstResult = page.locator(`a[href*="/${mediaType}/"]`).first()
+  const firstResult = await getFirstResult(page, mediaType)
   const firstResultHref = await getLocatorHref(firstResult)
 
   await firstResult.click({ position: { x: 32, y: 32 } })

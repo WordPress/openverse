@@ -1,39 +1,16 @@
 import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
 
+import { beforeEach, describe, expect, it } from "vitest"
+
 import { render } from "~~/test/unit/test-utils/render"
 
 import { useProviderStore } from "~/stores/provider"
 
-import VSourcesTableVue from "~/components/VSourcesTable.vue"
+import VSourcesTable from "~/components/VSourcesTable.vue"
 
-const initialProviderStoreState = {
-  providers: {
-    image: [
-      {
-        source_name: "Provider_B",
-        display_name: "Provider B",
-        source_url: "http://yyy.com",
-        media_count: 1111,
-      },
-      {
-        source_name: "Provider_C",
-        display_name: "Provider C",
-        source_url: "www.xxx.com",
-        media_count: 2222,
-      },
-      {
-        source_name: "Provider_A",
-        display_name: "Provider A",
-        source_url: "https://zzz.com",
-        media_count: 3333,
-      },
-    ],
-  },
-}
-
-const getTableData = (table) => {
-  const data = [...table.rows].map((t) =>
+const getTableData = (tableRows) => {
+  const data = [...tableRows].map((t) =>
     [...t.children].map((u) => u.textContent.trim())
   )
   // Remove the header row
@@ -43,23 +20,45 @@ const getTableData = (table) => {
 
 describe("VSourcesTable", () => {
   let options
-  let configureStoreCb
-  let providerStore
 
   beforeEach(() => {
+    const providerStore = useProviderStore()
+    providerStore.$patch({
+      providers: {
+        image: [
+          {
+            source_name: "Provider_B",
+            display_name: "Provider B",
+            source_url: "http://yyy.com",
+            media_count: 1111,
+          },
+          {
+            source_name: "Provider_C",
+            display_name: "Provider C",
+            source_url: "www.xxx.com",
+            media_count: 2222,
+          },
+          {
+            source_name: "Provider_A",
+            display_name: "Provider A",
+            source_url: "https://zzz.com",
+            media_count: 3333,
+          },
+        ],
+      },
+    })
     options = {
-      propsData: { media: "image" },
-      stubs: ["TableSortIcon", "VLink"],
-    }
-    configureStoreCb = (localVue, options) => {
-      providerStore = useProviderStore(options?.pinia)
-      providerStore.$patch(initialProviderStoreState)
+      props: { media: "image" },
+      global: {
+        stubs: ["TableSortIcon"],
+      },
     }
   })
 
-  it('should be sorted by display_name ("Source") by default', () => {
-    render(VSourcesTableVue, options, configureStoreCb)
-    const table = getTableData(screen.getByLabelText(/source/i))
+  it('should be sorted by display_name ("Source") by default', async () => {
+    await render(VSourcesTable, options)
+
+    const table = getTableData(screen.getAllByRole("row"))
     const expectedTable = [
       ["Provider A", "zzz.com", "3,333"],
       ["Provider B", "yyy.com", "1,111"],
@@ -69,12 +68,12 @@ describe("VSourcesTable", () => {
   })
 
   it('should be sorted by clean url when click on "Domain" header', async () => {
-    render(VSourcesTableVue, options, configureStoreCb)
+    await render(VSourcesTable, options)
     const domainCell = screen.getByRole("columnheader", {
       name: /domain/i,
     })
     await userEvent.click(domainCell)
-    const table = getTableData(screen.getByLabelText("sources table"))
+    const table = getTableData(screen.getAllByRole("row"))
     const expectedTable = [
       ["Provider C", "xxx.com", "2,222"],
       ["Provider B", "yyy.com", "1,111"],
@@ -84,12 +83,12 @@ describe("VSourcesTable", () => {
   })
 
   it('should be sorted by media_count when click on "Total items" header', async () => {
-    render(VSourcesTableVue, options, configureStoreCb)
+    await render(VSourcesTable, options)
     const domainCell = screen.getByRole("columnheader", {
       name: /total items/i,
     })
     await userEvent.click(domainCell)
-    const table = getTableData(screen.getByLabelText("sources table"))
+    const table = getTableData(screen.getAllByRole("row"))
     const expectedTable = [
       ["Provider B", "yyy.com", "1,111"],
       ["Provider C", "xxx.com", "2,222"],

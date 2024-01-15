@@ -1,8 +1,5 @@
 <template>
-  <section
-    :aria-label="$t('mediaDetails.reuse.title').toString()"
-    class="media-reuse"
-  >
+  <section :aria-label="$t('mediaDetails.reuse.title')" class="media-reuse">
     <h2 class="heading-6 md:heading-5 mb-4">
       {{ $t("mediaDetails.reuse.title") }}
     </h2>

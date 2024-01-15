@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { defineStore } from "pinia"
 
 import type {
@@ -9,10 +11,11 @@ import { isDetail, isMediaDetail } from "~/types/media"
 
 import type { SupportedMediaType } from "~/constants/media"
 
-import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
+import { validateUUID } from "~/utils/query-utils"
 
-import type { FetchingError, FetchState } from "~/types/fetch-state"
+import { FetchingError, FetchState } from "~/types/fetch-state"
+import { createApiClient } from "~/data/api-service"
 
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
@@ -98,6 +101,7 @@ export const useSingleResultStore = defineStore("single-result", {
       } else {
         this.mediaId = id
         this.mediaType = type
+        this.mediaItem = null
       }
     },
 
@@ -119,44 +123,42 @@ export const useSingleResultStore = defineStore("single-result", {
      * Check if the `id` matches the `mediaId` and the media item
      * is already fetched. If middleware only set the `id` and
      * did not set the media, fetch the media item.
-     *
-     * Fetch the related media if necessary.
      */
-    async fetch<T extends SupportedMediaType>(type: T, id: string) {
+    async fetch<T extends SupportedMediaType>(type: T, id: string | null) {
+      if (!id || !validateUUID(id)) {
+        this._endFetching({
+          code: "ERR_UNKNOWN",
+          requestKind: "single-result",
+          searchType: type,
+        } as FetchingError)
+        return null
+      }
       const existingItem = this.getExistingItem(type, id)
+      if (existingItem) {
+        return existingItem
+      }
 
-      return existingItem
-        ? existingItem
-        : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
-    },
+      this._updateFetchState("start")
 
-    /**
-     * Fetch the media item from the API.
-     * On error, send the error to Sentry and return null.
-     */
-    async fetchMediaItem<MediaType extends SupportedMediaType>(
-      type: MediaType,
-      id: string
-    ) {
+      // When fetch is called by the middleware, the app context is not available during the error handling,
+      // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
+      const { $processFetchingError } = useNuxtApp()
+
       try {
-        this._updateFetchState("start")
-        const accessToken = this.$nuxt.$openverseApiToken
-        const service = initServices[type](accessToken)
-        const item = await service.getMediaDetail(id)
+        const { $openverseApiToken: accessToken } = useNuxtApp()
+        const client = createApiClient({ accessToken })
+
+        const item = await client.getSingleMedia(type, id)
 
         this.setMediaItem(item)
         this._updateFetchState("end")
 
-        return item as DetailFromMediaType<MediaType>
+        return item as DetailFromMediaType<typeof type>
       } catch (error) {
-        const errorData = this.$nuxt.$processFetchingError(
-          error,
-          type,
-          "single-result",
-          { id }
-        )
+        const errorData = $processFetchingError(error, type, "single-result", {
+          id,
+        })
         this._updateFetchState("end", errorData)
-
         return null
       }
     },

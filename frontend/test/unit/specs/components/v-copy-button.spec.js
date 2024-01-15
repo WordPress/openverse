@@ -8,13 +8,14 @@ import { render } from "~~/test/unit/test-utils/render"
 import VCopyButton from "~/components/VCopyButton.vue"
 
 describe("VCopyButton", () => {
-  it("should render correct contents", () => {
-    const screen = render(VCopyButton, {
-      propsData: {
+  it("should render correct contents", async () => {
+    const { getByRole } = await render(VCopyButton, {
+      props: {
         el: "#foo",
         id: "foo",
       },
     })
-    expect(screen.getByRole("button")).toHaveTextContent("Copy text")
+
+    expect(getByRole("button", { text: "Copy text" })).toBeVisible()
   })
 })

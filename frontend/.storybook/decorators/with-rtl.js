@@ -1,9 +1,10 @@
-import Vue from "vue"
+import { useI18n } from "#imports"
 
-import { ref, watch, useContext, onMounted } from "@nuxtjs/composition-api"
+import { ref, watch, onMounted, reactive } from "vue"
+
 import { useEffect } from "@storybook/client-api"
 
-const languageDirection = Vue.observable({ value: "ltr" })
+const languageDirection = reactive({ value: "ltr" })
 
 export const WithRTL = (story, context) => {
   useEffect(() => {
@@ -15,7 +16,7 @@ export const WithRTL = (story, context) => {
     components: { story },
     setup() {
       const element = ref()
-      const { i18n } = useContext()
+      const { i18n } = useI18n({ useScope: "global" })
       onMounted(() => {
         watch(
           languageDirection,

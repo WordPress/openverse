@@ -67,5 +67,6 @@ export const contentStatus = Object.freeze({
   [MODEL_3D]: ADDITIONAL,
 } as const)
 
-export const searchPath = (type: SearchType) =>
-  `/search/${type === ALL_MEDIA ? "" : type}`
+export const searchPath = (type: SearchType) => {
+  return `/search${type === ALL_MEDIA ? "" : "/" + type}`
+}

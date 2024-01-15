@@ -1,25 +1,12 @@
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
-jest.mock("@nuxtjs/composition-api", () => ({
-  useContext: () => ({
-    i18n: {
-      tc: (fullKey, resultsCount, { localeCount }) => ({
-        fullKey,
-        resultsCount,
-        localeCount,
-      }),
-      locale: "en",
-    },
-  }),
-}))
-
 describe("i18nResultsCount", () => {
   it.each`
     resultCount | expectedResult
-    ${0}        | ${{ fullKey: "browsePage.allNoResults", resultsCount: 0, localeCount: "0" }}
-    ${1}        | ${{ fullKey: "browsePage.allResultCount", resultsCount: 1, localeCount: "1" }}
-    ${10}       | ${{ fullKey: "browsePage.allResultCount", resultsCount: 10, localeCount: "10" }}
-    ${10000}    | ${{ fullKey: "browsePage.allResultCountMore", resultsCount: 10000, localeCount: "10,000" }}
+    ${0}        | ${"No results"}
+    ${1}        | ${"1 result"}
+    ${10}       | ${"10 results"}
+    ${240}      | ${"Top 240 results"}
   `(
     "Should show correct result for $resultCount of type $mediaType",
     ({ resultCount, expectedResult }) => {

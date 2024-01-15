@@ -1,4 +1,4 @@
-import { ref, onMounted } from "@nuxtjs/composition-api"
+import { ref, onMounted } from "vue"
 
 import { useLayout } from "~/composables/use-layout"
 

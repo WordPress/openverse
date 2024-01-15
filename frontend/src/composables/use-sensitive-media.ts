@@ -1,9 +1,10 @@
 import { computed, unref, Ref } from "vue"
 
+import { useNuxtApp } from "#app"
+
 import type { Media } from "~/types/media"
 
 import { useUiStore } from "~/stores/ui"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import type { SensitiveMediaVisibility } from "~/constants/content-safety"
 
@@ -14,11 +15,9 @@ type SensitiveFields = Pick<Media, "id" | "sensitivity" | "isSensitive">
  * Provides the current visibility of a sensitive media,
  * along with toggles for hiding/revealing the media.
  */
-export function useSensitiveMedia(
-  rawMedia: SensitiveFields | Ref<SensitiveFields> | null
-) {
+export function useSensitiveMedia(rawMedia: SensitiveFields | Ref | null) {
   const uiStore = useUiStore()
-  const { sendCustomEvent } = useAnalytics()
+  const { $sendCustomEvent } = useNuxtApp()
 
   /**
    * The current state of a single sensitive media item.
@@ -46,7 +45,7 @@ export function useSensitiveMedia(
     const media = unref(rawMedia)
     if (media && !uiStore.revealedSensitiveResults.includes(media.id)) {
       uiStore.revealedSensitiveResults.push(media.id)
-      sendCustomEvent("UNBLUR_SENSITIVE_RESULT", {
+      $sendCustomEvent("UNBLUR_SENSITIVE_RESULT", {
         id: media.id,
         sensitivities: media.sensitivity.join(","),
       })
@@ -62,7 +61,7 @@ export function useSensitiveMedia(
     if (index > -1) {
       uiStore.revealedSensitiveResults.splice(index, 1)
     }
-    sendCustomEvent("REBLUR_SENSITIVE_RESULT", {
+    $sendCustomEvent("REBLUR_SENSITIVE_RESULT", {
       id: media.id,
       sensitivities: media.sensitivity.join(","),
     })

@@ -7,7 +7,6 @@
     variant="transparent-gray"
     size="small"
     class="label-bold inline-flex"
-    v-bind="$attrs"
     @mousedown="handleClick"
   >
     <VIcon name="chevron-back" :rtl-flip="true" />

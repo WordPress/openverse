@@ -13,13 +13,14 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { defineComponent, PropType, computed } from "vue"
 
 import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 import { getCountKey } from "~/composables/use-i18n-utilities"
-import { useI18n } from "~/composables/use-i18n"
 
 export default defineComponent({
   name: "VSearchResultsTitle",
@@ -44,7 +45,7 @@ export default defineComponent({
   },
   setup(props) {
     const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
-    const i18n = useI18n()
+    const { t } = useI18n()
     const mediaLocaleCounts = computed(() =>
       props.resultCounts.reduce(
         (acc, [mediaType, count]) => {
@@ -66,44 +67,42 @@ export default defineComponent({
 
     const _getAllMediaAriaHeading = () => {
       const imageLocaleCounts = mediaLocaleCounts.value.image
-      const imageResults = i18n.tc(
+      const imageResults = t(
         `browsePage.aria.allResultsHeadingCount.image.${imageLocaleCounts.countKey}`,
-        imageLocaleCounts.count,
         {
           localeCount: imageLocaleCounts.localeCount,
         }
       )
 
       const audioLocaleCounts = mediaLocaleCounts.value.audio
-      const audioResults = i18n.tc(
+      const audioResults = t(
         `browsePage.aria.allResultsHeadingCount.audio.${audioLocaleCounts.countKey}`,
-        audioLocaleCounts.count,
         {
           localeCount: audioLocaleCounts.localeCount,
         }
       )
 
-      return i18n
-        .t("browsePage.aria.results.all", {
-          query: props.searchTerm,
-          imageResults,
-          audioResults,
-        })
-        .toString()
+      return t("browsePage.aria.results.all", {
+        query: props.searchTerm,
+        imageResults,
+        audioResults,
+      })
     }
 
     const ariaHeading = computed((): string => {
       switch (props.searchType) {
         case "image": {
           const { count, countKey, localeCount } = mediaLocaleCounts.value.image
-          return i18n.tc(`browsePage.aria.results.image.${countKey}`, count, {
+          return t(`browsePage.aria.results.image.${countKey}`, {
+            count,
             localeCount,
             query: props.searchTerm,
           })
         }
         case "audio": {
           const { count, countKey, localeCount } = mediaLocaleCounts.value.audio
-          return i18n.tc(`browsePage.aria.results.audio.${countKey}`, count, {
+          return t(`browsePage.aria.results.audio.${countKey}`, {
+            count,
             localeCount,
             query: props.searchTerm,
           })

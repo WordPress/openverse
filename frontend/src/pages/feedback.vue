@@ -3,7 +3,7 @@
     <h1 id="feedback">
       {{ $t("feedback.title") }}
     </h1>
-    <i18n path="feedback.intro" tag="p">
+    <i18n-t scope="global" keypath="feedback.intro" tag="p">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
       <template #openverse>Openverse</template>
       <template #slack>
@@ -15,7 +15,7 @@
         <VLink href="https://make.wordpress.org/chat/">Making WordPress</VLink>
       </template>
       <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
-    </i18n>
+    </i18n-t>
     <section>
       <VTabs label="#feedback" variant="plain" :selected-id="tabs[0]" manual>
         <template #tabs>
@@ -27,8 +27,8 @@
           <iframe
             class="h-[1200px] w-full border-0"
             :src="forms[tab]"
-            :aria-label="$t(`feedback.aria.${tab}`).toString()"
-            :title="$t(`feedback.aria.${tab}`).toString()"
+            :aria-label="$t(`feedback.aria.${tab}`)"
+            :title="$t(`feedback.aria.${tab}`)"
           >
             {{ $t("feedback.loading") }}
           </iframe>
@@ -38,10 +38,8 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
-
-import { useI18n } from "~/composables/use-i18n"
+<script setup lang="ts">
+import { definePageMeta, useHead, useI18n } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -60,23 +58,14 @@ const forms = {
 } as const
 const tabs = Object.keys(forms) as (keyof typeof forms)[]
 
-export default defineComponent({
-  name: "FeedbackPage",
-  components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
+definePageMeta({
   layout: "content-layout",
-  setup() {
-    const i18n = useI18n()
+})
 
-    useMeta({
-      title: `${i18n.t("feedback.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
+const { t } = useI18n({ useScope: "global" })
 
-    return {
-      forms,
-      tabs,
-    }
-  },
-  head: {},
+useHead({
+  title: `${t("feedback.title")} | Openverse`,
+  meta: [{ hid: "robots", name: "robots", content: "all" }],
 })
 </script>

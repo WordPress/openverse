@@ -107,7 +107,7 @@ test.describe("search history navigation", () => {
         await openFirstResult(page, "image", "ltr")
 
         await getBackToSearchLink(page).click()
-        await expect(page).toHaveURL("/search/?q=birds")
+        await expect(page).toHaveURL("/search?q=birds")
       })
 
       test("is visible in breadcrumb when navigating to localized image details page", async ({

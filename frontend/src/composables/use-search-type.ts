@@ -1,3 +1,5 @@
+import { useNuxtApp } from "#imports"
+
 import { computed, ref } from "vue"
 
 import {
@@ -13,8 +15,6 @@ import {
 
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-
-import { useI18n } from "~/composables/use-i18n"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -37,11 +37,13 @@ const labels = {
 } as const
 
 export default function useSearchType() {
-  const i18n = useI18n()
+  const { t } = useNuxtApp().$i18n
   const componentName = useComponentName()
   const analytics = useAnalytics()
 
-  const activeType = computed(() => useSearchStore().searchType)
+  const activeType = computed<SearchType>(() => {
+    return useSearchStore().searchType
+  })
 
   const previousSearchType = ref(activeType.value)
 
@@ -78,7 +80,7 @@ export default function useSearchType() {
   const getSearchTypeProps = (searchType?: SearchType) => {
     const type = searchType ?? activeType.value
     return {
-      label: i18n.t(labels[type]).toString(),
+      label: t(labels[type]),
       icon: icons[type],
       searchType: type,
     }

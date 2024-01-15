@@ -40,16 +40,17 @@
           isMedium ? 'flex-row items-center' : 'flex-col gap-1',
         ]"
       >
-        <i18n
+        <i18n-t
           tag="div"
-          path="audioTrack.creator"
+          keypath="audioTrack.creator"
+          scope="global"
           class="line-clamp-1 inline-block overflow-hidden text-ellipsis whitespace-nowrap"
           :class="{ 'blur-text': shouldBlur }"
         >
           <template #creator>{{
             shouldBlur ? $t("sensitiveContent.creator") : audio.creator
           }}</template>
-        </i18n>
+        </i18n-t>
         <!-- Small layout only -->
         <div v-if="isSmall" class="flex flex-col gap-1">
           <div class="flex flex-row">
@@ -159,17 +160,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.row-track .audio-control {
+:deep(.audio-control) {
   @apply flex-none rounded-es-sm rounded-ss-sm;
 }
 
-.row-track .waveform {
-  @apply w-full;
+:deep(.waveform) {
+  @apply w-full rounded-ee-sm rounded-se-sm;
   --waveform-background-color: theme("colors.tx");
-}
-
-.row-track .waveform {
-  @apply rounded-ee-sm rounded-se-sm;
 }
 
 .row-track.size-s {

@@ -1,15 +1,24 @@
-import Vue, { ref, computed } from "vue"
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest"
+
+import { ref, computed, createApp } from "vue"
 import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
 import VModal from "~/components/VModal/VModal.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VButton from "~/components/VButton.vue"
 
-const TestWrapper = Vue.component("TestWrapper", {
-  components: { VModal, VButton, VModalTarget },
+const TestWrapper = createApp({}).component("TestWrapper", {
+  components: { VModal, VButton },
   props: ["useCustomInitialFocus"],
   setup(props) {
     const initialFocusElement = ref()
@@ -31,10 +40,10 @@ const TestWrapper = Vue.component("TestWrapper", {
 
         <button ref="initialFocusElement" type="button">Custom initial focus</button>
       </VModal>
-      <VModalTarget />
+      <div id="teleports" />
     </div>
   `,
-})
+})._context.components.TestWrapper
 
 const nextTick = async () =>
   await new Promise((resolve) => setTimeout(resolve, 1))
@@ -56,7 +65,7 @@ describe("VModal", () => {
   let _scrollTo
   beforeAll(() => {
     _scrollTo = window.scrollTo
-    window.scrollTo = jest.fn()
+    window.scrollTo = vi.fn()
   })
   afterAll(() => {
     window.scrollTo = _scrollTo
@@ -66,11 +75,11 @@ describe("VModal", () => {
     options = {
       props: { useCustomInitialFocus: false },
     }
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   it("should render a close button that hides the modal", async () => {
-    render(TestWrapper, options)
+    await render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
@@ -78,11 +87,11 @@ describe("VModal", () => {
     await userEvent.click(getCloseButton())
     await nextTick()
 
-    expect(queryDialog()).toBe(null)
+    expect(queryDialog()).toBeNull()
   })
 
   it("should scroll lock the body when modal opens and unlock when modal closes", async () => {
-    const { container } = render(TestWrapper, options)
+    const { container } = await render(TestWrapper, options)
     const scrollY = 10
     window.scrollY = scrollY
     await doOpen()
@@ -99,7 +108,7 @@ describe("VModal", () => {
   })
 
   it("should focus the close button by default", async () => {
-    render(TestWrapper, options)
+    await render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
@@ -108,7 +117,7 @@ describe("VModal", () => {
 
   it("should focus the explicit initial focus element when specified", async () => {
     options.props = { useCustomInitialFocus: true }
-    render(TestWrapper, options)
+    await render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
@@ -116,7 +125,7 @@ describe("VModal", () => {
   })
 
   it("should hide the modal on escape", async () => {
-    render(TestWrapper, options)
+    await render(TestWrapper, options)
     await doOpen()
 
     expect(getDialog()).toBeVisible()
@@ -124,6 +133,6 @@ describe("VModal", () => {
     await userEvent.keyboard("{Escape}")
     await nextTick()
 
-    expect(queryDialog()).toBe(null)
+    expect(queryDialog()).toBeNull()
   })
 })

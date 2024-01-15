@@ -1,37 +1,39 @@
-import { fireEvent, screen } from "@testing-library/vue"
-import Vue from "vue"
+import { beforeEach, describe, expect, it } from "vitest"
 
-import { render } from "~~/test/unit/test-utils/render"
+import { fireEvent, render, screen } from "@testing-library/vue"
+import { createApp } from "vue"
 
 import VLink from "~/components/VLink.vue"
 
-jest.mock("@nuxtjs/composition-api", () => ({
-  useContext: () => ({
-    $sendCustomEvent: jest.fn(),
-  }),
-}))
+// eslint-disable-next-line vue/one-component-per-file
+const RouterLinkStub = createApp({}).component("RouterLink", {
+  template: "<a :href='href'><slot /></a>",
+  props: ["to"],
+  computed: {
+    href() {
+      return this.to
+    },
+  },
+})._context.components.RouterLink
 
 describe("VLink", () => {
+  let options = null
+  beforeEach(() => {
+    options = { global: { stubs: { RouterLink: RouterLinkStub } } }
+  })
   it.each`
     href                        | target  | rel
     ${"/about"}                 | ${null} | ${null}
     ${"http://localhost:8443/"} | ${null} | ${"noopener noreferrer"}
   `(
     "Creates a correct link component based on href",
-    ({ href, target, rel }) => {
-      render(VLink, {
-        props: { href },
-        slots: { default: "Code is Poetry" },
-        stubs: {
-          NuxtLink: {
-            props: ["to"],
-            template: '<a :href="to"><slot /></a>',
-          },
-        },
-      })
+    async ({ href, target, rel }) => {
+      options.props = { href }
+      options.slots = { default: () => "Code is Poetry" }
+      await render(VLink, options)
       const link = screen.getByRole("link")
       const expectedHref = href.startsWith("/")
-        ? `http://localhost${href}`
+        ? `http://localhost:3000${href}`
         : href
       expect(link.href).toEqual(expectedHref)
       expect(link.getAttribute("target")).toEqual(target)
@@ -45,7 +47,7 @@ describe("VLink", () => {
   `("VLink handles click", async ({ href }) => {
     const createVLinkWrapper = (href) =>
       // eslint-disable-next-line vue/one-component-per-file
-      Vue.component("VLinkWrapper", {
+      createApp({}).component("VLinkWrapper", {
         components: { VLink },
         data: () => ({ text: "Link Text" }),
         methods: {
@@ -58,24 +60,11 @@ describe("VLink", () => {
           <div>
           <VLink href="${href}" @click="handleClick">{{ text }}</VLink>
           </div>`,
-      })
+      })._context.components.VLinkWrapper
     const WrapperComponent = createVLinkWrapper(href)
-    render(
-      WrapperComponent,
-      {
-        stubs: {
-          NuxtLink: {
-            props: ["to"],
-            template: '<a :href="to"><slot /></a>',
-          },
-        },
-      },
-      (localVue) => {
-        localVue.component("VLink", VLink)
-      }
-    )
-    const linkBefore = await screen.getByRole("link")
-    expect(linkBefore.textContent).toEqual("Link Text")
+    await render(WrapperComponent, options)
+    const linkBefore = screen.getByRole("link")
+    expect(linkBefore.textContent).toBe("Link Text")
 
     await fireEvent.click(linkBefore)
     const linkAfter = await screen.findByText("Code is Poetry")

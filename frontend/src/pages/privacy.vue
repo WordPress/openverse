@@ -3,14 +3,14 @@
     <h1>
       {{ $t("privacy.title", { openverse: "Openverse" }) }}
     </h1>
-    <i18n path="privacy.intro.content" tag="p">
+    <i18n-t scope="global" keypath="privacy.intro.content" tag="p">
       <template #link>
         <VLink href="https://wordpress.org/about/privacy/">{{
           $t("privacy.intro.link")
         }}</VLink>
       </template>
       <template #openverse>Openverse</template>
-    </i18n>
+    </i18n-t>
 
     <h2>
       {{ $t("privacy.cookies.title") }}
@@ -24,7 +24,7 @@
       {{ $t("privacy.contact.title") }}
     </h2>
 
-    <i18n path="privacy.contact.content" tag="p">
+    <i18n-t scope="global" keypath="privacy.contact.content" tag="p">
       <template #openverse>Openverse</template>
       <template #email>
         <VLink href="mailto:openverse@wordpress.org"
@@ -41,7 +41,7 @@
           {{ $t("privacy.contact.chat") }}</VLink
         >
       </template>
-    </i18n>
+    </i18n-t>
 
     <h2>{{ $t("prefPage.groups.analytics.title") }}</h2>
 
@@ -63,11 +63,11 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { computed } from "vue"
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+<script setup lang="ts">
+import { definePageMeta, useHead, useNuxtApp } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { computed } from "vue"
+
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON, OFF } from "~/constants/feature-flag"
 
@@ -75,34 +75,25 @@ import VLink from "~/components/VLink.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineComponent({
-  name: "VPrivacyPage",
-  components: { VLink, VCheckbox, VContentPage },
+definePageMeta({
   layout: "content-layout",
-  setup() {
-    const i18n = useI18n()
-    const featureFlagStore = useFeatureFlagStore()
-
-    useMeta({
-      title: `${i18n.t("privacy.title", {
-        openverse: "Openverse",
-      })} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
-
-    const isChecked = computed(
-      () => featureFlagStore.featureState("analytics") === ON
-    )
-
-    const handleChange = ({ checked }: { checked?: boolean }) => {
-      featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
-    }
-
-    return {
-      isChecked,
-      handleChange,
-    }
-  },
-  head: {},
 })
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+useHead({
+  title: `${t("privacy.title", {
+    openverse: "Openverse",
+  })} | Openverse`,
+  meta: [{ hid: "robots", name: "robots", content: "all" }],
+})
+const featureFlagStore = useFeatureFlagStore()
+
+const isChecked = computed(() => featureFlagStore.isOn("analytics"))
+
+const handleChange = ({ checked }: { checked?: boolean }) => {
+  featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
+}
 </script>

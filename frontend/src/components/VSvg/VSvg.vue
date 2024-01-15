@@ -1,22 +1,55 @@
 <template>
-  <SvgIcon :name="`images/${name}`" aria-hidden="true" focusable="false" />
+  <svg
+    :viewBox="viewBox"
+    focusable="false"
+    class="v-icon flex-none"
+    :class="icon.class"
+    aria-hidden="true"
+  >
+    <use :href="icon.url" />
+  </svg>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { ref, watch } from "vue"
+
+import { useSprite } from "~/composables/use-sprite"
+
 /**
- * Displays the given SVG image.
+ * Vendored from SVG Sprite Module https://github.com/nuxt-modules/svg-sprite
+ * The module had problem with handling the source code that is inside `/src` directory.
  */
-export default defineComponent({
-  name: "VSvg",
-  props: {
+
+const props = withDefaults(
+  defineProps<{
     /**
-     * name of the SVG in `assets/svg/raw/images`
+     * The name of the svg. For options, @see "~/assets/svg/sprite/images.svg"
      */
-    name: {
-      type: String,
-      required: true,
-    },
-  },
+    name: string
+    viewBox?: string
+  }>(),
+  {
+    viewBox: "0 0 24 24",
+  }
+)
+
+if (!props.viewBox.split(" ").every((v) => !isNaN(parseInt(v)))) {
+  throw new Error(
+    `Invalid viewBox "${props.viewBox}" for icon "${props.name}".`
+  )
+}
+
+const icon = ref({
+  url: "",
+  class: "",
 })
+
+icon.value = useSprite(`images/${props.name}`)
+
+watch(
+  () => props.name,
+  (name) => {
+    icon.value = useSprite(name)
+  }
+)
 </script>

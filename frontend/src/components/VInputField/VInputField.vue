@@ -10,18 +10,19 @@
           connectionSides.includes('end'),
       },
       sizeClass,
+      $attrs.class,
     ]"
   >
     <input
       :id="fieldId"
-      v-bind="$attrs"
+      v-bind="nonClassAttrs"
       ref="inputEl"
+      :placeholder="placeholder"
       :type="type"
       class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus-visible:outline-none md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"
-      v-on="$listeners"
     />
 
     <!-- @slot Extra information goes here -->
@@ -30,7 +31,13 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent, PropType } from "vue"
+import {
+  ref,
+  computed,
+  defineComponent,
+  PropType,
+  InputTypeHTMLAttribute,
+} from "vue"
 
 import { defineEvent } from "~/types/emits"
 
@@ -92,8 +99,14 @@ export default defineComponent({
       required: true,
       validator: (v: string) => Object.keys(FIELD_SIZES).includes(v),
     },
+    placeholder: {
+      type: String,
+    },
+    type: {
+      type: String as PropType<InputTypeHTMLAttribute>,
+      default: "text",
+    },
   },
-  // using non-native event name to ensure the two are not mixed
   emits: {
     "update:modelValue": defineEvent<[string]>(),
   },
@@ -105,12 +118,16 @@ export default defineComponent({
       inputEl.value?.focus()
     }
 
-    const type = typeof attrs["type"] === "string" ? attrs["type"] : "text"
-
     const updateModelValue = (event: Event) => {
       emit("update:modelValue", (event.target as HTMLInputElement).value)
     }
     const sizeClass = computed(() => FIELD_SIZES[props.size])
+
+    const nonClassAttrs = computed(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { class: _, ...rest } = attrs
+      return rest
+    })
 
     return {
       inputEl,
@@ -118,9 +135,9 @@ export default defineComponent({
       focusInput,
 
       emit,
-      type,
 
       sizeClass,
+      nonClassAttrs,
       updateModelValue,
     }
   },

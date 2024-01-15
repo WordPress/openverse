@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest"
+
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { AUDIO } from "~/constants/media"
@@ -37,7 +39,7 @@ describe("Active Media Store", () => {
       activeMediaStore.setActiveMediaItem({ status })
       activeMediaStore.pauseActiveMediaItem()
 
-      expect(activeMediaStore.status).toEqual("paused")
+      expect(activeMediaStore.status).toBe("paused")
     })
     it("can eject an item", () => {
       const activeMediaStore = useActiveMediaStore()

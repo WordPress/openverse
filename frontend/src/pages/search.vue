@@ -10,8 +10,8 @@
       class="w-full py-10"
     />
     <section v-else>
-      <NuxtChild
-        :key="$route.path"
+      <NuxtPage
+        :page-key="$route.path"
         :results="searchResults"
         :is-fetching="isFetching"
         :search-term="searchTerm"
@@ -23,24 +23,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
+<script setup lang="ts">
+import {
+  createError,
+  definePageMeta,
+  isSearchTypeSupported,
+  navigateTo,
+  showError,
+  useAsyncData,
+  useHead,
+  useNuxtApp,
+  useRoute,
+} from "#imports"
+
 import { computed, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
+
 import { storeToRefs } from "pinia"
-import {
-  defineComponent,
-  useContext,
-  useFetch,
-  useMeta,
-  useRoute,
-  useRouter,
-} from "@nuxtjs/composition-api"
 
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
-import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { useSearchStore } from "~/stores/search"
 import { ALL_MEDIA } from "~/constants/media"
 
 import { skipToContentTargetId } from "~/constants/window"
@@ -50,160 +54,126 @@ import { handledClientSide, isRetriable } from "~/utils/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
-export default defineComponent({
-  name: "BrowsePage",
-  components: {
-    VErrorSection,
-  },
+definePageMeta({
   layout: "search-layout",
   middleware: searchMiddleware,
-  fetchOnServer: false,
-  setup() {
-    const featureFlagStore = useFeatureFlagStore()
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
+})
 
-    const route = useRoute()
-    const router = useRouter()
+const nuxtApp = useNuxtApp()
 
-    const {
-      searchTerm,
-      searchType,
-      apiSearchQueryParams: query,
-      searchTypeIsSupported: supported,
-    } = storeToRefs(searchStore)
+const featureFlagStore = useFeatureFlagStore()
+const mediaStore = useMediaStore()
+const searchStore = useSearchStore()
 
-    const { resultCount, fetchState } = storeToRefs(mediaStore)
+const route = useRoute()
 
-    const needsFetching = computed(() =>
-      Boolean(supported.value && !resultCount.value && searchTerm.value !== "")
-    )
+const {
+  searchTerm,
+  searchType,
+  apiSearchQueryParams: query,
+  searchTypeIsSupported: supported,
+} = storeToRefs(searchStore)
 
-    const pageTitle = ref(`${searchTerm.value} | Openverse`)
-    watch(searchTerm, () => {
-      pageTitle.value = `${searchTerm.value} | Openverse`
-    })
+const { fetchState } = storeToRefs(mediaStore)
 
-    useMeta(() => ({
-      title: pageTitle.value,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    }))
+const pageTitle = ref(`${searchTerm.value} | Openverse`)
+watch(searchTerm, () => {
+  pageTitle.value = `${searchTerm.value} | Openverse`
+})
 
-    const { error: nuxtError } = useContext()
+useHead(() => ({
+  title: pageTitle.value,
+  meta: [{ hid: "robots", name: "robots", content: "all" }],
+}))
 
-    const searchResults = ref<Results | null>(
-      isSearchTypeSupported(searchType.value)
-        ? ({
-            type: searchType.value,
-            items:
-              searchType.value === ALL_MEDIA
-                ? mediaStore.allMedia
-                : mediaStore.resultItems[searchType.value],
-          } as Results)
-        : null
-    )
+const searchResults = ref<Results | null>(
+  isSearchTypeSupported(searchType.value)
+    ? ({
+        type: searchType.value,
+        items:
+          searchType.value === ALL_MEDIA
+            ? mediaStore.allMedia
+            : mediaStore.resultItems[searchType.value],
+      } as Results)
+    : null
+)
 
-    const fetchMedia = async (
-      payload: { shouldPersistMedia?: boolean } = {}
-    ) => {
-      if (!isSearchTypeSupported(searchType.value)) {
-        return
-      }
-      /**
-       * If the fetch has already started in the middleware,
-       * and there is an error status that will not change if retried, don't re-fetch.
-       */
-      const shouldNotRefetch =
-        fetchState.value.hasStarted &&
-        fetchingError.value !== null &&
-        !isRetriable(fetchingError.value)
-      if (shouldNotRefetch) {
-        return
-      }
-      if (!payload.shouldPersistMedia) {
-        searchResults.value = { type: searchType.value, items: [] }
-      }
+const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
+  if (!isSearchTypeSupported(searchType.value)) {
+    return
+  }
+  /**
+   * If the fetch has already started in the middleware,
+   * and there is an error status that will not change if retried, don't re-fetch.
+   */
+  const shouldNotRefetch =
+    fetchState.value.hasStarted &&
+    fetchingError.value !== null &&
+    !isRetriable(fetchingError.value)
+  if (shouldNotRefetch) {
+    return
+  }
+  if (!payload.shouldPersistMedia) {
+    searchResults.value = { type: searchType.value, items: [] }
+  }
 
-      const media = await mediaStore.fetchMedia(payload)
-      searchResults.value = { type: searchType.value, items: media } as Results
+  const media = await mediaStore.fetchMedia(payload)
+  searchResults.value = { type: searchType.value, items: media } as Results
 
-      if (
-        fetchingError.value === null ||
-        handledClientSide(fetchingError.value)
-      ) {
-        return null
-      }
-      return nuxtError(fetchingError.value)
-    }
+  if (fetchingError.value === null || handledClientSide(fetchingError.value)) {
+    return media
+  }
+  return fetchingError.value
+}
 
-    const fetchingError = computed(() => fetchState.value.fetchingError)
-    const isFetching = computed(() => fetchState.value.isFetching)
+const fetchingError = computed(() => fetchState.value.fetchingError)
+const isFetching = computed(() => fetchState.value.isFetching)
 
-    /**
-     * The search middleware updates the search store on every path or query
-     * change.
-     * This watcher fetches media, and scrolls to top if necessary.
-     */
-    watch(route, async (newRoute, oldRoute) => {
-      if (
-        newRoute.path !== oldRoute.path ||
-        !isShallowEqualObjects(newRoute.query, oldRoute.query)
-      ) {
-        /**
-         * By default, Nuxt only scrolls to top when the path changes.
-         * This is a workaround to scroll to top when the query changes.
-         */
-        document.getElementById("main-page")?.scroll(0, 0)
-        await fetchMedia()
-      }
-    })
-
-    /**
-     * This watcher fires even when the queries are equal. We update the path only
-     * when the queries change.
-     */
-    watchDebounced(
-      query,
-      (newQuery, oldQuery) => {
-        if (!areQueriesEqual(newQuery, oldQuery)) {
-          router.push(searchStore.getSearchPath())
-        }
-      },
-      { debounce: 800, maxWait: 5000 }
-    )
-
-    const shouldFetchSensitiveResults = computed(() => {
-      return featureFlagStore.isOn("fetch_sensitive")
-    })
-    watch(shouldFetchSensitiveResults, async () => {
-      await fetchMedia()
-    })
-
-    useFetch(async () => {
-      if (needsFetching.value) {
-        await fetchMedia()
-      }
-    })
-    const handleLoadMore = async () => {
-      await fetchMedia({ shouldPersistMedia: true })
-    }
-
-    return {
-      searchTerm,
-      searchType,
-      supported,
-      query,
-
-      resultCount,
-      searchResults,
-      isFetching,
-      fetchingError,
-
-      handleLoadMore,
-
-      skipToContentTargetId,
+/**
+ * This watcher fires even when the queries are equal. We update the path only
+ * when the queries change.
+ */
+watchDebounced(
+  query,
+  (newQuery, oldQuery) => {
+    if (!areQueriesEqual(newQuery, oldQuery)) {
+      navigateTo(searchStore.getSearchPath())
     }
   },
-  head: {},
+  { debounce: 800, maxWait: 5000 }
+)
+
+const routeQuery = computed(() => route.query)
+const routePath = computed(() => route.path)
+const shouldFetchSensitiveResults = computed(() => {
+  return featureFlagStore.isOn("fetch_sensitive")
 })
+
+const handleLoadMore = async () => {
+  await fetchMedia({ shouldPersistMedia: true })
+}
+
+await useAsyncData(
+  "search",
+  async () => {
+    if (nuxtApp.isHydrating) {
+      return searchResults.value
+    }
+    /**
+     * By default, Nuxt only scrolls to top when the path changes.
+     * This is a workaround to scroll to top when the query changes.
+     */
+    document.getElementById("main-page")?.scroll(0, 0)
+    const res = await fetchMedia()
+    if (!res || (res && "requestKind" in res)) {
+      return showError(res ?? createError("No results found"))
+    }
+    return res
+  },
+  {
+    server: false,
+    lazy: true,
+    watch: [shouldFetchSensitiveResults, routeQuery, routePath],
+  }
+)
 </script>

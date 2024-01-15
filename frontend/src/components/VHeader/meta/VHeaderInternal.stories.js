@@ -1,9 +1,8 @@
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
 
 const Template = (args) => ({
-  template: `<div class="fixed inset-0 w-full h-full"><VHeaderInternal v-bind="args" v-on="args" /><VModalTarget /></div>`,
-  components: { VHeaderInternal, VModalTarget },
+  template: `<div class="fixed inset-0 w-full h-full"><VHeaderInternal v-bind="args" v-on="args" /><div id="modal"/></div>`,
+  components: { VHeaderInternal },
   setup() {
     return { args }
   },

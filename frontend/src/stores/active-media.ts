@@ -1,5 +1,7 @@
 import { defineStore } from "pinia"
 
+import { useNuxtApp } from "#app"
+
 import type { SupportedMediaType } from "~/constants/media"
 import type { Media } from "~/types/media"
 import { audioErrorMessages } from "~/constants/audio"
@@ -84,7 +86,8 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
           ? audioErrorMessages[err.name as keyof typeof audioErrorMessages]
           : "err_unknown"
         if (message === "err_unknown") {
-          this.$nuxt.$sentry.captureException(err)
+          const { $sentry } = useNuxtApp()
+          $sentry.captureException(err)
         }
         this.setMessage({ message })
         audio?.pause()

@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { defineEvent } from "~/types/emits"
-import { useI18n } from "~/composables/use-i18n"
 
 import VButton from "~/components/VButton.vue"
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
@@ -48,14 +49,14 @@ export default defineComponent({
     toggle: defineEvent(),
   },
   setup() {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
     const searchStore = useSearchStore()
     const filterCount = computed(() => searchStore.appliedFilterCount)
     const filtersAreApplied = computed(() => filterCount.value > 0)
 
-    const textLabel = computed(() => i18n.t("header.filterButton.simple"))
+    const textLabel = computed(() => t("header.filterButton.simple"))
     const ariaLabel = computed(() =>
-      i18n.tc("header.filterButton.withCount", filterCount.value)
+      t("header.filterButton.withCount", { count: filterCount.value })
     )
 
     return {
