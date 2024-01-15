@@ -1,6 +1,6 @@
 <template>
   <VModalContent
-    :aria-label="$t('header.aria.menu').toString()"
+    :aria-label="$t('header.aria.menu')"
     :hide-on-click-outside="true"
     :hide="close"
     :visible="visible"
@@ -123,7 +123,9 @@ export default defineComponent({
   },
   props: {
     triggerElement: {
-      type: (process.server ? Object : HTMLElement) as PropType<HTMLElement>,
+      type: (import.meta.server
+        ? Object
+        : HTMLElement) as PropType<HTMLElement>,
       default: null,
     },
     variant: {

@@ -96,6 +96,7 @@ export const setContentSwitcherState = async (
         : "#search-type-button"
   )
 
+  await expect(buttonLocator).toBeEnabled()
   const isPressed = await getSelectorPressed(buttonLocator)
   const shouldBePressed = state === "open"
 
@@ -124,6 +125,13 @@ export const filters = {
   close: async (page: Page, dir: LanguageDirection = "ltr") => {
     await setContentSwitcherState(page, "filters", "closed", dir)
   },
+}
+
+export const ensureSearchPageHydrated = async (page: Page) => {
+  const buttonId = isPageDesktop(page)
+    ? "#filter-button"
+    : "#content-settings-button"
+  await expect(page.locator(`button${buttonId}`)).toBeEnabled()
 }
 
 export const searchTypes = {

@@ -48,7 +48,7 @@ test.describe("search query on SSR", () => {
     test("url path /search/ is used to select `all` search tab", async ({
       page,
     }) => {
-      await page.goto("/search/?q=cat")
+      await goToSearchTerm(page, "cat")
 
       const contentType = await currentContentType(page)
       expect(contentType).toEqual(searchTypeNames.ltr[ALL_MEDIA])

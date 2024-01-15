@@ -1,5 +1,7 @@
 import { screen } from "@testing-library/vue"
 
+import { describe, expect, it } from "vitest"
+
 import { render } from "~~/test/unit/test-utils/render"
 
 import VInputField from "~/components/VInputField/VInputField.vue"
@@ -11,12 +13,12 @@ const props = {
 }
 
 describe("VInputField", () => {
-  it('should render an `input` element with type="text"', () => {
-    render(VInputField, {
+  it('should render an `input` element with type="text"', async () => {
+    await render(VInputField, {
       attrs: {
         placeholder: "Enter some text",
       },
-      propsData: props,
+      props: props,
     })
     const element = screen.getByPlaceholderText("Enter some text")
 
@@ -24,13 +26,13 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "text")
   })
 
-  it("should allow changing the type", () => {
-    render(VInputField, {
+  it("should allow changing the type", async () => {
+    await render(VInputField, {
       attrs: {
         placeholder: "Enter some number",
         type: "number",
       },
-      propsData: props,
+      props: props,
     })
 
     const element = screen.getByPlaceholderText("Enter some number")
@@ -38,12 +40,12 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("type", "number")
   })
 
-  it("should set the ID on the `input` to allow attaching labels", () => {
-    render(VInputField, {
+  it("should set the ID on the `input` to allow attaching labels", async () => {
+    await render(VInputField, {
       attrs: {
         placeholder: "Enter some text",
       },
-      propsData: props,
+      props: props,
     })
 
     const element = screen.getByPlaceholderText("Enter some text")
@@ -51,9 +53,9 @@ describe("VInputField", () => {
     expect(element).toHaveAttribute("id", "input-id")
   })
 
-  it("should render the label text connected to the input field if specified", () => {
-    render(VInputField, {
-      propsData: props,
+  it("should render the label text connected to the input field if specified", async () => {
+    await render(VInputField, {
+      props: props,
     })
 
     const element = screen.getByLabelText("Label")

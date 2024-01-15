@@ -1,22 +1,51 @@
 <template>
-  <SvgIcon :name="`images/${name}`" aria-hidden="true" focusable="false" />
+  <svg
+    :viewBox="viewBox"
+    focusable="false"
+    class="v-icon flex-none"
+    :class="icon.class"
+    aria-hidden="true"
+  >
+    <use :href="icon.url" />
+  </svg>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-/**
- * Displays the given SVG image.
- */
-export default defineComponent({
-  name: "VSvg",
-  props: {
+<script setup lang="ts">
+import { ref, watch } from "vue"
+
+import { useSprite } from "~/composables/use-sprite"
+
+const props = withDefaults(
+  defineProps<{
     /**
-     * name of the SVG in `assets/svg/raw/images`
+     * the path to the icon SVG; In a bundled application like Openverse,
+     * importing an SVG should give us the path to the file.
      */
-    name: {
-      type: String,
-      required: true,
-    },
-  },
+    name: string
+    viewBox?: string
+  }>(),
+  {
+    viewBox: "0 0 24 24",
+  }
+)
+
+if (!props.viewBox.split(" ").every((v) => !isNaN(parseInt(v)))) {
+  throw new Error(
+    `Invalid viewBox "${props.viewBox}" for icon "${props.name}".`
+  )
+}
+
+const icon = ref({
+  url: "",
+  class: "",
 })
+
+icon.value = useSprite(`images/${props.name}`)
+
+watch(
+  () => props.name,
+  (name) => {
+    icon.value = useSprite(name)
+  }
+)
 </script>

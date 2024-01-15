@@ -23,12 +23,17 @@
           size="disabled"
           class="label-bold lg:description-bold h-16 w-full gap-x-2 lg:h-18"
         >
-          <i18n
+          <i18n-t
             v-if="isMd"
-            path="externalSources.form.supportedTitle"
+            scope="global"
+            keypath="externalSources.form.supportedTitle"
             tag="p"
           />
-          <i18n v-else path="externalSources.form.supportedTitleSm" tag="p" />
+          <i18n-t
+            v-else
+            keypath="externalSources.form.supportedTitleSm"
+            tag="p"
+          />
           <VIcon
             :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
             name="caret-down"
@@ -56,12 +61,10 @@
   </section>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from "vue"
+<script setup lang="ts">
+import { computed, ref } from "vue"
 
 import { storeToRefs } from "pinia"
-
-import { defineEvent } from "~/types/emits"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
@@ -76,61 +79,36 @@ import VIcon from "~/components/VIcon/VIcon.vue"
 import VModal from "~/components/VModal/VModal.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-export default defineComponent({
-  name: "VExternalSearchForm",
-  components: {
-    VModal,
-    VIconButton,
-    VIcon,
-    VButton,
-    VExternalSourceList,
-  },
-  props: {
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    isSupported: {
-      type: Boolean,
-      default: false,
-    },
-    hasNoResults: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    tab: defineEvent<[KeyboardEvent]>(),
-  },
-  setup() {
-    const sectionRef = ref<HTMLElement | null>(null)
-    const searchStore = useSearchStore()
-    const uiStore = useUiStore()
+withDefaults(
+  defineProps<{
+    searchTerm: string
+    isSupported?: boolean
+    hasNoResults?: boolean
+  }>(),
+  {
+    isSupported: false,
+    hasNoResults: true,
+  }
+)
 
-    const { sendCustomEvent } = useAnalytics()
+const sectionRef = ref<HTMLElement | null>(null)
+const searchStore = useSearchStore()
+const uiStore = useUiStore()
 
-    const mediaStore = useMediaStore()
-    const { currentPage } = storeToRefs(mediaStore)
+const { sendCustomEvent } = useAnalytics()
 
-    const handleModalOpen = () => {
-      sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
-        searchType: searchStore.searchType,
-        query: searchStore.searchTerm,
-        resultPage: currentPage.value || 1,
-      })
-    }
+const mediaStore = useMediaStore()
+const { currentPage } = storeToRefs(mediaStore)
 
-    const { externalSourcesType } = useExternalSources()
+const handleModalOpen = () => {
+  sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+    searchType: searchStore.searchType,
+    query: searchStore.searchTerm,
+    resultPage: currentPage.value || 1,
+  })
+}
 
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
+const { externalSourcesType } = useExternalSources()
 
-    return {
-      externalSourcesType,
-      sectionRef,
-      isMd,
-
-      handleModalOpen,
-    }
-  },
-})
+const isMd = computed(() => uiStore.isBreakpoint("md"))
 </script>

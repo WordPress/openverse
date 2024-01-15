@@ -1,6 +1,7 @@
+import { useI18n } from "#imports"
+
 import { computed, ToRefs, ref } from "vue"
 
-import { useI18n } from "~/composables/use-i18n"
 import { keycodes } from "~/constants/key-codes"
 
 export interface UseSeekableOptions
@@ -22,17 +23,15 @@ export const useSeekable = ({
   onSeek,
   onTogglePlayback,
 }: UseSeekableOptions) => {
-  const i18n = useI18n()
+  const { t } = useI18n({ useScope: "global" })
 
   const attributes = computed(() => ({
     "aria-role": "slider",
     "aria-valuemax": duration.value,
     "aria-valuenow": currentTime.value,
-    "aria-valuetext": i18n
-      .tc("waveform.currentTime", currentTime.value, {
-        time: currentTime.value,
-      })
-      .toString(),
+    "aria-valuetext": t("waveform.currentTime", {
+      time: currentTime.value,
+    }),
     "aria-orientation": "horizontal" as const,
     "aria-valuemin": "0",
   }))

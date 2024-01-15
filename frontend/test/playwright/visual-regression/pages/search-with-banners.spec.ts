@@ -1,7 +1,10 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+import {
+  ensureSearchPageHydrated,
+  preparePageForTests,
+} from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -12,6 +15,7 @@ breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
       dismissFilter: false,
     })
     await page.goto("/ru/search/?q=birds&referrer=creativecommons.org")
+    await ensureSearchPageHydrated(page)
   })
 
   test("page with all banners", async ({ page }) => {

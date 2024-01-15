@@ -17,7 +17,7 @@
         variant="transparent-gray"
         class="label-bold"
         size="small"
-        :aria-label="$t('recentSearches.clear.label').toString()"
+        :aria-label="$t('recentSearches.clear.label')"
         @click="handleClear()"
       >
         {{ $t("recentSearches.clear.text") }}
@@ -28,7 +28,7 @@
       v-if="entries.length"
       id="recent-searches-list"
       role="listbox"
-      :aria-label="$t('recentSearches.heading').toString()"
+      :aria-label="$t('recentSearches.heading')"
     >
       <!-- eslint-disable vuejs-accessibility/interactive-supports-focus Combobox descendants only have visual focus. -->
       <!-- eslint-disable vuejs-accessibility/click-events-have-key-events Key events handled by input field of combobox. -->
@@ -48,7 +48,7 @@
           variant="transparent-gray"
           :icon-props="{ name: 'close-small' }"
           size="small"
-          :label="$t('recentSearches.clearSingle.label', { entry }).toString()"
+          :label="$t('recentSearches.clearSingle.label', { entry })"
           class="ms-auto group-hover/entry:flex"
           :class="{ hidden: bordered }"
           @click.stop="handleClear(entry)"

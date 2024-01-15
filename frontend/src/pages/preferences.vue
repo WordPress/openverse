@@ -79,67 +79,48 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
+
 import { computed } from "vue"
-import { defineComponent } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { SWITCHABLE, ON, OFF, FEATURE_STATES } from "~/constants/feature-flag"
+import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
 
 import VContentPage from "~/components/VContentPage.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 
-export default defineComponent({
-  name: "VPreferences",
-  components: {
-    VContentPage,
-    VCheckbox,
-  },
+definePageMeta({
   layout: "content-layout",
-  setup() {
-    const featureFlagStore = useFeatureFlagStore()
+})
 
-    const flags = computed(() => featureFlagStore.flags)
+const featureFlagStore = useFeatureFlagStore()
 
-    /**
-     * Toggle the state of the switchable flag to the preferred value.
-     * @param name
-     * @param checked
-     */
-    const handleChange = ({
-      name,
-      checked,
-    }: {
-      name: string
-      checked?: boolean
-    }) => {
-      featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-    }
+const flags = computed(() => featureFlagStore.flags)
 
-    const flagsBySwitchable = computed(() => {
-      return {
-        true: featureFlagStore.getFlagsBySwitchable(true),
-        false: featureFlagStore.getFlagsBySwitchable(false),
-      }
-    })
+/**
+ * Toggle the state of the switchable flag to the preferred value.
+ * @param name
+ * @param checked
+ */
+const handleChange = ({
+  name,
+  checked,
+}: {
+  name: string
+  checked?: boolean
+}) => {
+  featureFlagStore.toggleFeature(name, checked ? ON : OFF)
+}
 
-    const featureGroups = computed(() => {
-      return featureFlagStore.getFeatureGroups()
-    })
+const flagsBySwitchable = computed(() => {
+  return {
+    true: featureFlagStore.getFlagsBySwitchable(true),
+    false: featureFlagStore.getFlagsBySwitchable(false),
+  }
+})
 
-    return {
-      ON,
-      OFF,
-      SWITCHABLE,
-      FEATURE_STATES,
-
-      flags,
-
-      handleChange,
-
-      flagsBySwitchable,
-      featureGroups,
-    }
-  },
+const featureGroups = computed(() => {
+  return featureFlagStore.getFeatureGroups()
 })
 </script>

@@ -10,10 +10,11 @@
   </div>
 </template>
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import { defineEvent } from "~/types/emits"
-import { useI18n } from "~/composables/use-i18n"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
@@ -30,12 +31,12 @@ export default defineComponent({
     click: defineEvent(),
   },
   setup(props) {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
     const iconName = computed(() =>
       props.direction === "forward" ? "chevron-forward" : "chevron-back"
     )
     const label = computed(() =>
-      i18n.t(
+      t(
         props.direction === "forward"
           ? "mediaDetails.scroll.forward"
           : "mediaDetails.scroll.back"

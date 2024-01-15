@@ -40,6 +40,22 @@ exports.setToValue = function setValue(obj, path, value) {
   o[a[0]] = value
 }
 
+// function replacer(_, match) {
+//   // Replace ###<text>### from `po` files with {<text>} in `vue`.
+//   // Additionally, the old kebab-cased keys that can still be in the
+//   // translations are replaced with camelCased keys the app expects.
+//   if (match.includes("_")) {
+//     match.replace(/_/g, "-")
+//     console.warn("Found _ in translation strings:", match)
+//   }
+//   // TODO: Remove `camel` and warning once all translation strings are updated.
+//   // https://github.com/WordPress/openverse/issues/2438
+//   if (match.includes("-")) {
+//     console.warn("Found kebab-cased key in translation strings:", match)
+//   }
+//   return `{${kebabToCamel(match)}}`
+// }
+
 /**
  * Replace ###<text>### with {<text>}.
  *
@@ -48,7 +64,7 @@ exports.setToValue = function setValue(obj, path, value) {
  * @param {object} deprecatedKeys - object to store deprecated kebab-cased keys and number of replacements.
  * @return {any} the sanitised JSON object
  */
-const replacePlaceholders = (json, locale, deprecatedKeys) => {
+let replacePlaceholders = (json, locale, deprecatedKeys) => {
   if (json === null) {
     return null
   }
@@ -70,7 +86,33 @@ const replacePlaceholders = (json, locale, deprecatedKeys) => {
   }
 
   if (typeof json === "string") {
-    return json.replace(/###([a-zA-Z-]*)###/g, replacer)
+    if (json.includes("{") && json.includes("}")) {
+      json = json.replaceAll("{", "###")
+      json = json.replaceAll("}", "###")
+    }
+    if (json.includes("<em>")) {
+      json = json.replaceAll("<em>", "")
+      json = json.replaceAll("</em>", "")
+    }
+    if (json.includes("||")) {
+      json = ""
+    }
+
+    let replaced = json.replace(/###([a-zA-Z-]*?)###/g, replacer)
+    // Irregular placeholders with more or fewer than 3 #s
+    replaced = replaced.replace(/#{1,4}([a-zA-Z-]+?)#{1,4}/g, "{$1}")
+    if (replaced.includes("{}")) {
+      console.warn(`Found {} in ${locale} translation strings: ${replaced}`)
+      replaced = ""
+    }
+    let withoutOpenverseChannel = replaced.replace("#openverse", "")
+    if (withoutOpenverseChannel.includes("#")) {
+      console.warn(
+        `Found left-over # in ${locale} translation strings: ${replaced}`
+      )
+      replaced = ""
+    }
+    return replaced
   }
   let currentJson = { ...json }
 

@@ -2,7 +2,6 @@ import { expect, test, type Page } from "@playwright/test"
 
 import {
   goToSearchTerm,
-  isPageDesktop,
   preparePageForTests,
   searchFromHeader,
   sleep,
@@ -27,24 +26,8 @@ const clickClear = async (page: Page) => (await clearButton(page)).click()
 const recentSearches = (page: Page) =>
   page.locator('[data-testid="recent-searches"]')
 
-const navigateBackToSkipToContent = async (page: Page) => {
-  const isSkipToContent = async () =>
-    await page.evaluate(
-      () =>
-        document.activeElement?.textContent?.trim() === "Skip to content" &&
-        document.activeElement?.tagName === "A"
-    )
-  while (!(await isSkipToContent())) {
-    await page.keyboard.press("Shift+Tab")
-  }
-}
-
 const tabToSearchbar = async (page: Page) => {
-  if (isPageDesktop(page)) {
-    await navigateBackToSkipToContent(page)
-  } else {
-    await page.keyboard.press("Tab")
-  }
+  await page.getByRole("link", { name: t("skipToContent") }).focus()
   for (let i = 0; i < 2; i++) {
     await page.keyboard.press("Tab")
   }

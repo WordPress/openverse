@@ -27,8 +27,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted } from "vue"
+<script setup lang="ts">
+import { onMounted } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useExternalSources } from "~/composables/use-external-sources"
@@ -36,39 +36,26 @@ import { useUiStore } from "~/stores/ui"
 
 import VButton from "~/components/VButton.vue"
 
-export default defineComponent({
-  name: "VNoResults",
-  components: { VButton },
-  props: {
-    /**
-     * The search term for which the external sources links are generated.
-     */
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { externalSources, externalSourcesType } = useExternalSources()
-    const { sendCustomEvent } = useAnalytics()
-    const handleClick = (sourceName: string) => {
-      sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
-        name: sourceName,
-        mediaType: externalSourcesType.value,
-        query: props.searchTerm,
-        component: "VNoResults",
-      })
-    }
+const props = defineProps<{
+  /**
+   * The search term for which the external sources links are generated.
+   */
+  searchTerm: string
+}>()
 
-    onMounted(() => {
-      const uiStore = useUiStore()
-      uiStore.setFiltersState(false)
-    })
+const { externalSources, externalSourcesType } = useExternalSources()
+const { sendCustomEvent } = useAnalytics()
+const handleClick = (sourceName: string) => {
+  sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
+    name: sourceName,
+    mediaType: externalSourcesType.value,
+    query: props.searchTerm,
+    component: "VNoResults",
+  })
+}
 
-    return {
-      handleClick,
-      externalSources,
-    }
-  },
+onMounted(() => {
+  const uiStore = useUiStore()
+  uiStore.setFiltersState(false)
 })
 </script>

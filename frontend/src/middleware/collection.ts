@@ -1,5 +1,8 @@
+import { createError, defineNuxtRouteMiddleware } from "#imports"
+
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 
+import { useMediaStore } from "~/stores/media"
 import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
 
@@ -15,11 +18,10 @@ import type {
   TagCollection,
 } from "~/types/search"
 
-import type { Context, Middleware } from "@nuxt/types"
-import type { Dictionary } from "vue-router/types/router"
+import type { RouteLocationNormalized } from "vue-router"
 
 const queryToCollectionParams = (
-  query: Dictionary<string | (string | null)[]>
+  query: RouteLocationNormalized["query"]
 ): CollectionParams | undefined => {
   query = queryDictionaryToQueryParams(query)
   if ("tag" in query) {
@@ -47,9 +49,9 @@ const queryToCollectionParams = (
 }
 
 const routeNameToMediaType = (
-  route: Context["route"]
+  route: RouteLocationNormalized
 ): SupportedMediaType | null => {
-  const firstPart = route.name?.split("-")[0]
+  const firstPart = route.name ? String(route.name).split("-")[0] : null
   return firstPart && isSupportedMediaType(firstPart) ? firstPart : null
 }
 
@@ -60,28 +62,24 @@ const routeNameToMediaType = (
  * If the source name does not exist in the provider store, it will throw a 404 error.
  */
 
-export const collectionMiddleware: Middleware = async ({
-  $pinia,
-  error: nuxtError,
-  route,
-}) => {
-  const searchStore = useSearchStore($pinia)
+export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
+  const mediaStore = useMediaStore()
+  const searchStore = useSearchStore()
   // Route name has the locale in it, e.g. `audio-collection__en`
-  const mediaType = routeNameToMediaType(route)
-  const collectionParams = queryToCollectionParams(route.query)
+  const mediaType = routeNameToMediaType(to)
+  const collectionParams = queryToCollectionParams(to.query)
 
   if (mediaType === null || collectionParams === undefined) {
-    nuxtError({
+    throw createError({
       statusCode: 404,
       message: "Invalid collection route",
     })
-    return
   }
 
   if ("source" in collectionParams) {
-    const providerStore = useProviderStore($pinia)
+    const providerStore = useProviderStore()
     if (!providerStore.isSourceNameValid(mediaType, collectionParams.source)) {
-      nuxtError({
+      throw createError({
         statusCode: 404,
         message: `Invalid source name ${collectionParams.source} for media type ${mediaType}`,
       })
@@ -98,4 +96,8 @@ export const collectionMiddleware: Middleware = async ({
   ) {
     searchStore.setCollectionState(collectionParams, mediaType)
   }
-}
+
+  if (import.meta.server) {
+    await mediaStore.fetchMedia()
+  }
+})

@@ -157,8 +157,8 @@ test.describe("Load more button", () => {
       query: "cat",
       searchType: "all",
       resultPage: 1,
-      collectionType: null,
-      collectionValue: null,
+      collectionType: "null",
+      collectionValue: "null",
     })
   })
 
@@ -179,8 +179,8 @@ test.describe("Load more button", () => {
       query: "cat",
       searchType: "all",
       resultPage: 1,
-      collectionType: null,
-      collectionValue: null,
+      collectionType: "null",
+      collectionValue: "null",
     })
   })
 
@@ -206,8 +206,8 @@ test.describe("Load more button", () => {
         query: "cat",
         searchType: "all",
         resultPage: index + 1,
-        collectionType: null,
-        collectionValue: null,
+        collectionType: "null",
+        collectionValue: "null",
       })
     )
   })

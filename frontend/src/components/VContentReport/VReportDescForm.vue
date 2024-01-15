@@ -10,9 +10,7 @@
       id="description"
       v-model="text"
       class="mt-2 h-20 w-full border border-dark-charcoal-20 p-2 placeholder-dark-charcoal-70"
-      :placeholder="
-        $t(`mediaDetails.contentReport.form.${reason}.placeholder`).toString()
-      "
+      :placeholder="$t(`mediaDetails.contentReport.form.${reason}.placeholder`)"
       :required="isRequired"
       :minlength="isRequired ? 20 : 0"
       maxlength="500"
@@ -30,7 +28,7 @@ export default defineComponent({
   name: "VReportDescForm",
   model: {
     prop: "content",
-    event: "input",
+    event: "update:content",
   },
   props: {
     /**
@@ -49,12 +47,12 @@ export default defineComponent({
     },
   },
   emits: {
-    input: defineEvent<[string]>(),
+    "update:content": defineEvent<[string]>(),
   },
   setup(props, { emit }) {
     const text = computed({
       get: () => props.content,
-      set: (val) => emit("input", val),
+      set: (val) => emit("update:content", val),
     })
 
     const isRequired = computed(() => props.reason === OTHER)

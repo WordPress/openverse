@@ -7,7 +7,7 @@
   >
     <VBackToSearchResultsLink
       v-if="backToSearchPath"
-      :id="$route.params.id"
+      :id="media.id"
       :href="backToSearchPath"
     />
     <VHideButton v-if="canBeHidden" class="ml-auto" @click="hide" />

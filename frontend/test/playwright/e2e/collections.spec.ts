@@ -1,9 +1,3 @@
-/**
- * The commented-out assertions will be re-enabled after the fetching
- * of collections is fixed using `VMediaCollection` component
- * introduced in https://github.com/WordPress/openverse/pull/3831
- */
-
 import { test, expect, Page } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
@@ -72,6 +66,7 @@ test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
   await preparePageForTests(page, "xl")
   await page.goto("/image/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750")
 
+  await expect(EXPAND_BUTTON(page)).toBeVisible()
   const tags = page.getByRole("list").nth(2)
   await expect(tags).toBeVisible()
   const tagsCount = await tags.locator("li").count()

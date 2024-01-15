@@ -5,13 +5,18 @@
         {{ $t("filters.safeBrowsing.title") }}
       </h4>
     </header>
-    <i18n tag="p" path="filters.safeBrowsing.desc" class="label-regular">
+    <i18n-t
+      scope="global"
+      tag="p"
+      keypath="filters.safeBrowsing.desc"
+      class="label-regular"
+    >
       <template #sensitive>
         <VLink :href="sensitivityPath">{{
           $t("filters.safeBrowsing.sensitive")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
     <form class="safe-browsing-form">
       <fieldset class="mb-10 mt-8 flex flex-col gap-8">
         <div v-for="toggle in toggles" :key="toggle.name">
@@ -41,8 +46,9 @@
 </template>
 
 <script lang="ts">
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
@@ -61,9 +67,9 @@ export default defineComponent({
   name: "VSafeBrowsing",
   components: { VCheckbox, VLink },
   setup() {
-    const { app } = useContext()
+    const localePath = useLocalePath()
 
-    const sensitivityPath = computed(() => app.localePath("/sensitive-content"))
+    const sensitivityPath = computed(() => localePath("/sensitive-content"))
 
     const featureFlagStore = useFeatureFlagStore()
     const { sendCustomEvent } = useAnalytics()

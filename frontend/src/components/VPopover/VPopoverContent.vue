@@ -67,7 +67,7 @@ export default defineComponent({
       default: true,
     },
     triggerElement: {
-      type: (process.server
+      type: (import.meta.server
         ? Object
         : HTMLElement) as PropType<HTMLElement | null>,
       required: true,

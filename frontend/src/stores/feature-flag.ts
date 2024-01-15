@@ -1,10 +1,11 @@
+import { useCookie } from "#imports"
+
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
 import featureData from "~~/feat/feature-flags.json"
 
 import { warn } from "~/utils/console"
-import { cookieOptions } from "~/utils/cookies"
 
 import type {
   FeatureFlag,
@@ -25,7 +26,9 @@ import {
 } from "~/constants/feature-flag"
 import { DEPLOY_ENVS, DeployEnv, LOCAL } from "~/constants/deploy-env"
 
-import type { Dictionary } from "vue-router/types/router"
+import type { OpenverseCookieState } from "~/types/cookies"
+
+import type { LocationQuery, LocationQueryValue } from "vue-router"
 
 export const isFlagName = (name: string): name is FlagName => {
   return Object.keys(featureData.features).includes(name)
@@ -47,7 +50,7 @@ interface FeatureGroup {
  * @param flag - the flag for which to get the status
  */
 export const getFlagStatus = (flag: FeatureFlagRecord): FlagStatus => {
-  const deployEnv = (process.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
+  const deployEnv = (import.meta.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
   if (typeof flag.status === "string") {
     if (!FLAG_STATUSES.includes(flag.status as FlagStatus)) {
       warn(`Invalid ${flag.description} flag status: ${flag.status}`)
@@ -197,11 +200,16 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      this.$nuxt.$cookies.set(
+      const featuresCookie = useCookie<OpenverseCookieState["features"]>(
         "features",
-        this.flagStateMap(COOKIE),
-        cookieOptions
+        {
+          path: "/",
+          sameSite: "strict",
+          maxAge: 60 * 60 * 24 * 60, // 60 days; Makes the cookie persistent.
+          secure: import.meta.env.NODE_ENV === "production",
+        }
       )
+      featuresCookie.value = this.flagStateMap(COOKIE)
     },
     /**
      * Write the current state of the switchable flags to the session cookie.
@@ -211,10 +219,15 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * and will be deleted by the browser after the session.
      */
     writeToSession() {
-      this.$nuxt.$cookies.set("sessionFeatures", this.flagStateMap(SESSION), {
-        ...cookieOptions,
+      const sessionFeaturesCookie = useCookie<
+        OpenverseCookieState["sessionFeatures"]
+      >("sessionFeatures", {
+        path: "/",
+        sameSite: "strict",
+        secure: import.meta.env.NODE_ENV === "production",
         maxAge: undefined,
       })
+      sessionFeaturesCookie.value = this.flagStateMap(SESSION)
     },
     /**
      * Set the value of flag entries from the query parameters. Only those
@@ -225,15 +238,15 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      *
      * @param query - values for the feature flags
      */
-    initFromQuery(query: Dictionary<string | (string | null)[]>) {
+    initFromQuery(query: LocationQuery) {
       const isValidName = (name: string): name is `ff_${FlagName}` =>
         name.startsWith("ff_") && name.replace("ff_", "") in this.flags
       const isValidValue = (
-        value: string | (string | null)[]
+        value: LocationQueryValue | LocationQueryValue[]
       ): value is FeatureState =>
         typeof value === "string" && ["on", "off"].includes(value)
       const isValidEntry = (
-        entry: [string, string | (string | null)[]]
+        entry: [string, LocationQueryValue | LocationQueryValue[]]
       ): entry is [`ff_${FlagName}`, FeatureState] =>
         isValidName(entry[0]) && isValidValue(entry[1])
 

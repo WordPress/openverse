@@ -3,7 +3,6 @@ import { test, expect, Page } from "@playwright/test"
 import {
   goToSearchTerm,
   preparePageForTests,
-  sleep,
 } from "~~/test/playwright/utils/navigation"
 
 import {
@@ -33,10 +32,6 @@ const firstFilterCheckbox = (page: Page, dir: LanguageDirection) => {
 
 test.describe.configure({ mode: "parallel" })
 
-const getFilterButton = async (page: Page) => {
-  return page.locator("#filter-button")
-}
-
 for (const dir of languageDirections) {
   test.describe(`search header keyboard accessibility test in ${dir}`, () => {
     test.beforeEach(async ({ page }) => {
@@ -47,14 +42,13 @@ for (const dir of languageDirections) {
        * page is the "license explanation" button, not a checkbox.
        */
       await goToSearchTerm(page, "birds", { mode: "SSR", dir })
-      await sleep(1000)
     })
 
     test("should move focus to the sidebar after header", async ({ page }) => {
       await walkToFilterButton(page)
 
       // Check that the filters sidebar is open
-      await expect(await getFilterButton(page)).toHaveAttribute(
+      await expect(page.locator("#filter-button")).toHaveAttribute(
         "aria-expanded",
         "true"
       )

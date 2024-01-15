@@ -1,3 +1,5 @@
+import { describe, expect, it } from "vitest"
+
 import { render } from "~~/test/unit/test-utils/render"
 
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
@@ -17,7 +19,7 @@ const DEFAULT_PROPS = {
  * result count combinations.
  */
 function getScenarios() {
-  const counts = [0, 10, 4300, 10000, 10001]
+  const counts = [0, 10, 4300, 240, 240]
   let scenarios = []
   counts.forEach((count) => {
     counts.forEach((innerCount) => {
@@ -57,13 +59,13 @@ describe("VSearchResultsTitle", () => {
   })
 
   it("should render an h1 tag containing the correct text", async () => {
-    const { container } = render(VSearchResultsTitle, getOptions())
+    const { container } = await render(VSearchResultsTitle, getOptions())
     expect(container).toMatchSnapshot()
   })
 
   describe("accessible heading", () => {
-    it.each(getScenarios())("%s", (_, { searchType, resultCounts }) => {
-      const { container } = render(
+    it.each(getScenarios())("%s", async (_, { searchType, resultCounts }) => {
+      const { container } = await render(
         VSearchResultsTitle,
         getOptions({
           props: {

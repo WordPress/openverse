@@ -26,6 +26,7 @@ const config: PlaywrightTestConfig = {
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
       API_URL,
+      NUXT_PUBLIC_API_URL: API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
       PW: "true",
     },

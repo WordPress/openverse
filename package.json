@@ -9,7 +9,7 @@
   },
   "author": "Openverse <openverse@wordpress.org>",
   "scripts": {
-    "postinstall": "pnpm --filter './packages/js/*' run build",
+    "postinstall": "pnpm --filter './packages/js/*' run build && pnpm --filter frontend run postinstall:nuxt",
     "preeslint": "pnpm --filter '@openverse/eslint-plugin' run build",
     "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json"
   },
@@ -25,16 +25,17 @@
     "vue-tsc": "2.0.24"
   },
   "pnpm": {
+    "overrides": {
+      "@nuxt/kit": "^3.12",
+      "@nuxt/schema": "^3.12"
+    },
     "peerDependencyRules": {
       "ignoreMissing": [
         "react",
         "react-dom",
         "consola",
         "eslint"
-      ],
-      "allowedVersions": {
-        "babel-core": "7.0.0-bridge.0"
-      }
+      ]
     }
   }
 }

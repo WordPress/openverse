@@ -1,14 +1,15 @@
+import { useCookie } from "#imports"
+
 import { defineStore } from "pinia"
 
+import { LocaleObject } from "@nuxtjs/i18n"
+
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
-import type { BannerId, TranslationBannerId } from "~/types/banners"
+import type { BannerId } from "~/types/banners"
 
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
-import { cookieOptions } from "~/utils/cookies"
 import { needsTranslationBanner } from "~/utils/translation-banner"
-
-import type { LocaleObject } from "@nuxtjs/i18n"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
@@ -97,29 +98,6 @@ export const useUiStore = defineStore("ui", {
       return state.innerFilterVisible
     },
     /**
-     * The locale object of the current locale.
-     */
-    currentLocale(): LocaleObject {
-      return this.$nuxt.i18n.localeProperties
-    },
-    /**
-     * The id used in the translation banner and the cookies for dismissed banners.
-     * @example 'translation-ru'
-     */
-    translationBannerId(): TranslationBannerId {
-      return `translation-${this.currentLocale.code as LocaleObject["code"]}`
-    },
-    /**
-     * The translation banner is shown if the translated percentage is below 90%,
-     * and the banner for the current locale was not dismissed (status from cookies).
-     */
-    shouldShowTranslationBanner(): boolean {
-      return (
-        !this.dismissedBanners.includes(this.translationBannerId) &&
-        needsTranslationBanner(this.currentLocale)
-      )
-    },
-    /**
      * The analytics banner is shown if the user hasn't dismissed it yet.
      */
     shouldShowAnalyticsBanner(): boolean {
@@ -128,6 +106,17 @@ export const useUiStore = defineStore("ui", {
   },
 
   actions: {
+    /**
+     * The translation banner is shown if the translated percentage is below 90%,
+     * and the banner for the current locale was not dismissed (status from cookies).
+     */
+    shouldShowTranslationBanner(localeProperties: LocaleObject): boolean {
+      const locale = localeProperties.code
+      return (
+        !this.dismissedBanners.includes(`translation-${locale}`) &&
+        needsTranslationBanner(localeProperties)
+      )
+    },
     showInstructionsSnackbar() {
       if (this.instructionsSnackbarState === "not_shown") {
         this.instructionsSnackbarState = "visible"
@@ -162,7 +151,7 @@ export const useUiStore = defineStore("ui", {
       ) {
         breakpoint = cookies.breakpoint
       }
-      this.updateBreakpoint(breakpoint)
+      this.updateBreakpoint(breakpoint, false)
 
       if (typeof cookies.isFilterDismissed === "boolean") {
         this.isFilterDismissed = cookies.isFilterDismissed
@@ -179,26 +168,35 @@ export const useUiStore = defineStore("ui", {
       this.writeToCookie()
     },
     /**
-     * Write the current state of the ui store to the cookie. These cookies
+     * Write the current state of the feature flags to the cookie. These cookies
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      this.$nuxt.$cookies.set("ui", this.cookieState, { ...cookieOptions })
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>("ui", {
+        path: "/",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 60, // 60 days.
+        secure: import.meta.env.NODE_ENV === "production",
+      })
+      uiCookie.value = this.cookieState
     },
 
     /**
      * If the breakpoint is different from the state, updates the state, and saves it into app cookies.
      *
      * @param breakpoint - the `min-width` tailwind breakpoint for the screen width.
+     * @param saveToCookie - whether to save the new breakpoint in the cookie.
      */
-    updateBreakpoint(breakpoint: RealBreakpoint) {
+    updateBreakpoint(breakpoint: RealBreakpoint, saveToCookie = true) {
       if (this.breakpoint === breakpoint) {
         return
       }
 
       this.breakpoint = breakpoint
 
-      this.writeToCookie()
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
 
       this.isDesktopLayout = desktopBreakpoints.includes(breakpoint)
     },

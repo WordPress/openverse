@@ -1,28 +1,27 @@
-import { computed, ref } from "vue"
+import { useI18n } from "#imports"
 
-import { watch } from "@nuxtjs/composition-api"
+import { computed, ref, watch } from "vue"
+
+import { createDetailPageMeta } from "~/utils/og"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
-
-import { useI18n } from "~/composables/use-i18n"
-import { createDetailPageMeta } from "~/utils/og"
 
 import type { Ref } from "vue"
 
 export const useSingleResultPageMeta = (
   media: Ref<AudioDetail | ImageDetail | null>
 ) => {
-  const i18n = useI18n()
+  const { t } = useI18n({ useScope: "global" })
 
   const titles = () => {
     if (!media.value) {
       return { genericTitle: "", sensitiveTitle: "" }
     }
     return {
-      genericTitle: `${i18n.t(
+      genericTitle: `${t(
         `mediaDetails.reuse.${media.value.frontendMediaType}`
       )}`,
-      sensitiveTitle: `${i18n.t(
+      sensitiveTitle: `${t(
         `sensitiveContent.title.${media.value.frontendMediaType}`
       )}`,
     }

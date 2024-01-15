@@ -23,8 +23,7 @@ WORKDIR /home/node/
 # Copy monorepo mocking files into `/home/node`, which pretends to be the monorepo root.
 # Note: these files must be manually un-ignored in the root .dockerignore
 # hadolint ignore=DL3022
-COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml tsconfig.base.json ./
-
+COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
 RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
@@ -43,9 +42,12 @@ RUN pnpm install
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
+ENV NUXT_PUBLIC_SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
 
-ARG API_URL
+ARG API_URL=https://api.openverse.org/
+ENV NUXT_PUBLIC_API_URL=$API_URL
+# Increase memory limit for the build process (necessary for i18n routes)
+ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 RUN pnpm build:only
 
@@ -70,7 +72,12 @@ COPY --from=builder --chown=node:node /home/node/frontend ./frontend/
 WORKDIR /home/node/frontend/
 
 ARG SEMANTIC_VERSION
-ENV SENTRY_RELEASE=$SEMANTIC_VERSION
+ARG DEPLOYMENT_ENV=production
+ARG API_URL=https://api.openverse.org/
+
+ENV NUXT_PUBLIC_API_URL=$API_URL
+ENV NUXT_PUBLIC_SENTRY_RELEASE=$SEMANTIC_VERSION
+ENV NUXT_PUBLIC_SENTRY_ENVIRONMENT=$DEPLOYMENT_ENV
 
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0

@@ -1,16 +1,22 @@
 <template>
-  <SvgIcon
-    class="v-icon flex-none"
-    :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }]"
-    :name="name"
-    aria-hidden="true"
+  <svg
+    :viewBox="viewBox"
     focusable="false"
-  />
+    class="v-icon flex-none"
+    :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }, icon.class]"
+    aria-hidden="true"
+  >
+    <use :href="icon.url" />
+  </svg>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script lang="ts" setup>
+import { ref, watch } from "vue"
 
+import { useSprite } from "~/composables/use-sprite"
+/**
+ * Displays the given icon in a 24px × 24px square.
+ */
 export type IconProps = {
   name: string
   viewBox?: string
@@ -18,60 +24,64 @@ export type IconProps = {
   size?: number
   rtlFlip?: boolean
 }
-
-/**
- * Displays the given icon in a 24px × 24px square.
- */
-export default defineComponent({
-  name: "VIcon",
-  props: {
-    /**
-     *
-     */
-    viewBox: {
-      type: String,
-      default: "0 0 24 24",
-    },
+const props = withDefaults(
+  defineProps<{
     /**
      * the path to the icon SVG; In a bundled application like Openverse,
      * importing an SVG should give us the path to the file.
      */
-    name: {
-      /**
-       * In `jest` our icons get transformed to Vue components
-       */
-      type: String,
-      required: true,
-    },
+    name: string
+    viewBox?: string
     /**
      * the ID of the `g` element to import from the icon; This element should
      * ideally have the `id` as "icon" and the `fill` as `currentColor`.
      */
-    gId: {
-      type: String,
-      default: "icon",
-    },
+    gId?: string
     /**
      * The size of the icon based on tailwind values. Possible values:
      * 4 - 1rem, 5 - 1.25rem, 6 - 1.5rem, 8 - 2rem, 10 - 2.5rem,  12 - 3rem.
      *
      * @default 6
      */
-    size: {
-      type: Number,
-      default: 6,
-      validator: (val: number) => [4, 5, 6, 8, 10, 12].includes(val),
-    },
+    size?: number
     /**
      * whether to flip the icon for RTL languages; This generally makes sense
      * for directional icons such as those involving arrows.
      */
-    rtlFlip: {
-      type: Boolean,
-      default: false,
-    },
-  },
+    rtlFlip?: boolean
+  }>(),
+  {
+    viewBox: "0 0 24 24",
+    gId: "icon",
+    size: 6,
+    rtlFlip: false,
+  }
+)
+
+if (!props.viewBox.split(" ").every((v) => !isNaN(parseInt(v)))) {
+  throw new Error(
+    `Invalid viewBox "${props.viewBox}" for icon "${props.name}".`
+  )
+}
+if (![4, 5, 6, 8, 10, 12].includes(props.size)) {
+  throw new Error(`Invalid size "${props.size}" for icon "${props.name}".`)
+}
+
+const icon = ref({
+  url: "",
+  class: "",
 })
+
+icon.value = useSprite(
+  props.name.includes("/") ? props.name : `icons/${props.name}`
+)
+
+watch(
+  () => props.name,
+  (name) => {
+    icon.value = useSprite(name)
+  }
+)
 </script>
 
 <style scoped>

@@ -17,12 +17,13 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import { camelCase } from "~/utils/case"
-import { useI18n } from "~/composables/use-i18n"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
@@ -58,14 +59,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const i18n = useI18n({ useScope: "global" })
 
     const iconNames = computed(() => getElements(props.license))
     const licenseName = computed(() => {
       const licenseKey =
         props.license === "sampling+" ? props.license : camelCase(props.license)
       return {
-        readable: i18n.t(`licenseReadableNames.${licenseKey}`).toString(),
+        readable: i18n.t(`licenseReadableNames.${licenseKey}`),
         full: getFullLicenseName(props.license, "", i18n),
       }
     })

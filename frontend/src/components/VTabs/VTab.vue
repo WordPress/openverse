@@ -7,7 +7,7 @@
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="rounded-none bg-white focus-slim-tx"
+    class="rounded-none bg-white focus-slim-tx focus:z-10"
     :class="[variant, `size-${size}`, { [`${variant}-selected`]: isSelected }]"
     @click="handleSelection"
     @focus="handleFocus"
@@ -208,7 +208,7 @@ export default defineComponent({
   @apply rounded-sm border-tx bg-tx text-sm hover:bg-dark-charcoal-10;
 }
 .bordered-selected {
-  @apply -mb-[1px] border border-x-dark-charcoal-20 border-b-white border-t-dark-charcoal-20 bg-white;
+  @apply -mb-[1px] border border-x-dark-charcoal-20 border-b-white border-t-dark-charcoal-20 bg-white focus-visible:border-tx;
 }
 .plain-selected {
   @apply relative after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal after:transition-all after:duration-200;

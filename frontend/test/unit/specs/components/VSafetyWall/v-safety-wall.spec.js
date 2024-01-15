@@ -1,26 +1,33 @@
 import { fireEvent, waitFor } from "@testing-library/vue"
 
+import { createApp } from "vue"
+
 import { render } from "~~/test/unit/test-utils/render"
+
+import { i18n } from "~~/test/unit/test-utils/i18n"
 
 import { useSearchStore } from "~/stores/search"
 
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 
-jest.mock("~/stores/search", () => ({
-  useSearchStore: jest.fn(),
-}))
-
+const RouterLinkStub = createApp({}).component("RouterLink", {
+  template: "<a :href='href'><slot /></a>",
+  props: ["to"],
+  computed: {
+    href() {
+      return this.to
+    },
+  },
+})._context.components.RouterLink
 describe("VSafetyWall.vue", () => {
-  let mockStore
   let options = {}
 
   beforeEach(() => {
-    mockStore = {
-      backToSearchPath: "/somepath",
-    }
-    useSearchStore.mockReturnValue(mockStore)
-
     options = {
+      global: {
+        plugins: [i18n],
+        stubs: { RouterLink: RouterLinkStub },
+      },
       props: {
         media: {
           sensitivity: [
@@ -34,7 +41,7 @@ describe("VSafetyWall.vue", () => {
   })
 
   it("emits reveal event when showMedia method is called", async () => {
-    const { getByText, emitted } = render(VSafetyWall, options)
+    const { getByText, emitted } = await render(VSafetyWall, options)
     const showButton = getByText("Show content")
 
     await fireEvent.click(showButton)
@@ -45,12 +52,12 @@ describe("VSafetyWall.vue", () => {
   })
 
   it("backToSearchPath gets the value from the store", async () => {
-    const { findByText } = render(VSafetyWall, options)
+    const searchStore = useSearchStore()
+    searchStore.setBackToSearchPath("/search")
+    const { findByText } = await render(VSafetyWall, options)
 
     const backToSearchButton = await findByText("Back to results")
     expect(backToSearchButton).toBeInTheDocument()
-    expect(backToSearchButton.getAttribute("href")).toBe(
-      mockStore.backToSearchPath
-    )
+    expect(backToSearchButton.getAttribute("href")).toEqual("/search")
   })
 })

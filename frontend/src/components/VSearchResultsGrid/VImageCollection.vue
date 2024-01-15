@@ -45,8 +45,8 @@ export default defineComponent({
       required: true,
     },
     relatedTo: {
-      type: String as PropType<string | null>,
-      default: null,
+      type: String as PropType<string>,
+      default: "null",
     },
   },
 })

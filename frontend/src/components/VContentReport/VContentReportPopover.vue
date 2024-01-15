@@ -2,7 +2,7 @@
   <VPopover
     ref="popoverEl"
     :hide-on-click-outside="false"
-    :label="$t('mediaDetails.contentReport.long').toString()"
+    :label="$t('mediaDetails.contentReport.long')"
     placement="bottom-end"
   >
     <template #trigger="{ a11yProps }">

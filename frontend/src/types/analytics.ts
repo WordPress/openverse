@@ -29,9 +29,9 @@ export type AudioComponent =
  */
 type CollectionProperties = {
   /** If a collection page, the type of collection */
-  collectionType: Collection | null
+  collectionType: Collection | "null"
   /** A string representing a unique identifier for the collection */
-  collectionValue: string | null
+  collectionValue: string | "null"
 }
 
 /**
@@ -272,7 +272,7 @@ export type Events = {
     /** The unique ID of the media */
     id: string
     /** If the result is a related result, provide the ID of the 'original' result */
-    relatedTo: string | null
+    relatedTo: string | "null"
     /** Kind of the result selected: search/related/collection */
     kind: ResultKind
     /** The media type being searched */
@@ -284,7 +284,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
     /** whether the result was blurred or visible when selected by the user */
-    isBlurred: boolean | null
+    isBlurred: boolean | "null"
   } & CollectionProperties
   /**
    * Description: When a user opens the external sources popover.

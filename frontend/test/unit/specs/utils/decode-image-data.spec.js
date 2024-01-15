@@ -34,7 +34,7 @@ describe("decodeImageData", () => {
     setActivePinia(createPinia())
   })
 
-  it("decodes symbols correctly", () => {
+  it("decodes symbols correctly", async () => {
     const data = {
       ...expectedFields,
       creator: "S\\xe3",
@@ -48,13 +48,14 @@ describe("decodeImageData", () => {
       originalTitle: "Sé",
       creator: "Sã",
       tags: [{ name: "maß" }],
+      filetype: "jpg",
       frontendMediaType: IMAGE,
     }
 
     expect(decodeMediaData(data, IMAGE)).toEqual(expected)
   })
 
-  it("strips the extension if the same as media filetype", () => {
+  it("strips the extension if the same as media filetype", async () => {
     const data = {
       ...expectedFields,
       creator: "Creator",
@@ -74,7 +75,7 @@ describe("decodeImageData", () => {
     expect(decodeMediaData(data, IMAGE)).toEqual(expected)
   })
 
-  it("strips the extension if the same as url extension", () => {
+  it("strips the extension if the same as url extension", async () => {
     const data = {
       ...requiredFields,
       url: "https://example.com/image.jpg",
@@ -87,13 +88,14 @@ describe("decodeImageData", () => {
       title: "Image",
       originalTitle: "Image.JPG",
       creator: "Creator",
+      filetype: "jpg",
       frontendMediaType: IMAGE,
     }
 
     expect(decodeMediaData(data, IMAGE)).toEqual(expected)
   })
 
-  it("does not strip the extension if different from filetype in url extension", () => {
+  it("does not strip the extension if different from filetype in url extension", async () => {
     const data = {
       ...requiredFields,
       url: "https://example.com/image.png",
@@ -106,6 +108,7 @@ describe("decodeImageData", () => {
       url: "https://example.com/image.png",
       title: "Image.JPG",
       originalTitle: "Image.JPG",
+      filetype: "png",
       creator: "Creator",
       frontendMediaType: IMAGE,
     }

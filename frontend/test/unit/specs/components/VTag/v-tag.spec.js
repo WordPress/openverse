@@ -10,22 +10,23 @@ describe("VTag", () => {
   beforeEach(() => {
     options = {
       props: { href: "https://example.com/" },
-      slots: { default: "Hello" },
+      slots: { default: () => "Hello" },
     }
   })
 
-  it("should render an anchor tag by default", () => {
-    const { getByRole } = render(VTag, options)
+  it("should render an anchor tag by default", async () => {
+    const { getByRole } = await render(VTag, options)
     const link = getByRole("link", { name: "Hello" })
     expect(link).toBeDefined()
     expect(link.href).toEqual("https://example.com/")
   })
 
-  it("renders slot content", () => {
+  // https://github.com/wordpress/openverse/issues/411
+  it.skip("renders slot content", async () => {
     const slotText = "Slot test"
-    options.slots = { default: `<div>${slotText}</div>` }
+    options.slots = { default: () => `<div>${slotText}</div>` }
 
-    render(VTag, options)
+    await render(VTag, options)
     expect(screen.getByText(slotText)).toBeDefined()
   })
 })

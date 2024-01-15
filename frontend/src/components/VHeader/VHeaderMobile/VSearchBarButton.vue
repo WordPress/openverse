@@ -1,11 +1,5 @@
 <template>
-  <VButton
-    :aria-label="label"
-    size="large"
-    variant="plain--avoid"
-    icon-only
-    v-on="$listeners"
-  >
+  <VButton :aria-label="label" size="large" variant="plain--avoid" icon-only>
     <span
       class="relative flex h-8 w-8 flex-none items-center justify-center rounded-sm border border-tx group-focus-visible/button:ring group-focus-visible/button:ring-pink group-active/button:ring group-active/button:ring-pink"
       :class="variant"

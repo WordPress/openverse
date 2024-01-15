@@ -18,8 +18,9 @@
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
           {{ $t("404.title") }}
         </h1>
+        <p class="sr-only">{{ error }}</p>
         <p class="label-bold lg:heading-6">
-          <i18n path="404.main">
+          <i18n-t scope="global" keypath="404.main" tag="span">
             <template #link>
               <VLink
                 class="text-current underline hover:text-current active:text-current"
@@ -27,7 +28,7 @@
                 >Openverse</VLink
               >
             </template>
-          </i18n>
+          </i18n-t>
         </p>
         <VStandaloneSearchBar route="404" @submit="handleSearch" />
       </main>
@@ -36,8 +37,9 @@
 </template>
 
 <script lang="ts">
+import { navigateTo, useHead } from "#imports"
+
 import { defineComponent } from "vue"
-import { useMeta, useRouter } from "@nuxtjs/composition-api"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -59,7 +61,6 @@ export default defineComponent({
   props: ["error"],
   setup() {
     const searchStore = useSearchStore()
-    const router = useRouter()
 
     const { sendCustomEvent } = useAnalytics()
 
@@ -69,10 +70,12 @@ export default defineComponent({
         query: searchTerm,
       })
 
-      router.push(searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm }))
+      return navigateTo(
+        searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+      )
     }
 
-    useMeta({
+    useHead({
       meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
     })
 
@@ -82,6 +85,5 @@ export default defineComponent({
       skipToContentTargetId,
     }
   },
-  head: {},
 })
 </script>

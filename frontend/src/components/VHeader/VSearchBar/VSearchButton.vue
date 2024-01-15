@@ -1,7 +1,7 @@
 <template>
   <VButton
     type="submit"
-    :aria-label="$t('search.search').toString()"
+    :aria-label="$t('search.search')"
     size="disabled"
     :disabled="!doneHydrating"
     variant="plain"
@@ -13,7 +13,6 @@
         'border-tx bg-pink text-white hover:!bg-dark-pink': route === 'home',
       },
     ]"
-    v-on="$listeners"
   >
     <VIcon name="search" />
   </VButton>
