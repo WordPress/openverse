@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
 
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.generators import generate_client_secret
@@ -173,15 +174,14 @@ class CheckRates(APIView):
         > token has expired.
         """
 
-        # TODO: Replace 403 responses with DRF `authentication_classes`.
-        if not request.auth:
-            return Response(status=403, data="Forbidden")
+        if "Authorization" in request.HEADERS and not request.auth:
+            raise AuthenticationFailed(detail="Invalid credentials")
 
         access_token = str(request.auth)
         client_id, rate_limit_model, verified = get_token_info(access_token)
 
         if not client_id:
-            return Response(status=403, data="Forbidden")
+            raise AuthenticationFailed(detail="Invalid credentials")
 
         throttle_type = rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
