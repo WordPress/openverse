@@ -33,13 +33,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "New \"${{ env.pr_status }}\" PR opened by \"${{ env.pr_author }}\" in \"${{ env.pr_repo }}\": #\"${{ env.pr_number }}\" - \"${{ env.pr_title }}\"",
+              "text": "New ${{ env.pr_status }} PR opened by ${{ env.pr_author }} in ${{ env.pr_repo }}: #${{ env.pr_number }} - ${{ env.pr_title }}",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "\"${{ env.pr_icon }}\" New\"${{ env.pr_status }}\"PR opened by *\"${{ env.pr_author }}\"* in `\"${{ env.pr_repo }}\"`:\n<\"${{ env.pr_url }}\"|#\"${{ env.pr_number }}\" - \"${{ env.pr_title }}\">"
+                    "text": "${{ env.pr_icon }} New${{ env.pr_status }}PR opened by *${{ env.pr_author }}* in `${{ env.pr_repo }}`:\n<${{ env.pr_url }}|#${{ env.pr_number }} - ${{ env.pr_title }}>"
                   }
                 }
               ]
@@ -51,7 +51,7 @@ jobs:
         with:
           payload: |
             {
-             "text": "PR by \"${{ env.pr_author }}\" in \"${{ env.pr_repo }}\" marked ready for review: #${{ env.pr_number }} - \"${{ env.pr_title }}\"",
+             "text": "PR by${{ env.pr_author }}in ${{ env.pr_repo }} marked ready for review: #${{ env.pr_number }} - ${{ env.pr_title }}",
              "blocks": [
                {
                  "type": "section",

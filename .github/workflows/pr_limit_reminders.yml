@@ -31,15 +31,29 @@ jobs:
     env:
       pr_count: ${{ needs.analyze-user-prs.outputs.pr_count }}
       slack_id: ${{ needs.analyze-user-prs.outputs.slack_id }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_DM_WEBHOOK_URL }}
       SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
+      - name: Set required review count
+        run: |
+          echo "required_review_count=$(( pr_count * 2 ))" >> "$GITHUB_ENV"
       - name: Send notification
         id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: |
+          # The JSON below looks malformed, with an invalid multiline string, but YAML's `>`
+          # construct replaces linebreaks with a space, so the multiline string below will end
+          # up as a single-line string. The payload will be `{  "user": "...",  "message":   "..." }
+          payload: >
             {
               "user": "${{ env.slack_id }}",
-                "message": "Hi, Opener! \nYou currently have ${{ env.pr_count }} Pull Request(s) open with requested reviews (totalling $((${{ env.pr_count }} * 2)) required reviews). \nTo help ease the review burden, increase review velocity for older PRs, and improve the equitable distribution of project maintenance tasks across the team, please consider reviewing this list of ways to contribute instead of working on new code contributions: \nhttps://docs.openverse.org/meta/maintainer_tasks.html"
+              "message":
+                "Hi, Opener! \n
+                You currently have ${{ env.pr_count }} Pull Request(s) open with requested
+                reviews (totalling ${{ env.required_review_count }} required reviews). \n
+                To help ease the review burden, increase review velocity for older PRs, and
+                improve the equitable distribution of project maintenance tasks across the team,
+                please consider reviewing this list of ways to contribute instead of working on
+                new code contributions: \n
+                https://docs.openverse.org/meta/maintainer_tasks.html"
             }
