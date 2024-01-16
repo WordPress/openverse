@@ -7,10 +7,12 @@ import {
 } from "@storybook/addon-docs"
 
 import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/VHeaderMobile/VShowResultsButton"
   component={VShowResultsButton}
+  decorators={WithSuspense}
 />
 
 export const Template = (args) => ({

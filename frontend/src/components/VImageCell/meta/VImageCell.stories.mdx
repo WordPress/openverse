@@ -7,8 +7,9 @@ import {
 } from "@storybook/addon-docs"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import { image } from "~~/test/unit/fixtures/image"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VImageCell" components={VImageCell} />
+<Meta title="Components/VImageCell" components={VImageCell} decorators={WithSuspense} />
 
 export const Template = (args, { argTypes }) => ({
   components: { VImageCell },

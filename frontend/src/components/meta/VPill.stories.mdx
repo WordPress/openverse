@@ -1,0 +1,32 @@
+import {
+  ArgsTable,
+  Canvas,
+  Description,
+  Meta,
+  Story,
+} from "@storybook/addon-docs"
+
+import VPill from "~/components/VPill.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
+
+<Meta title="Components/VPill" components={VPill} decorators={WithSuspense} />
+
+export const Default = (args) => ({
+  template: `<VPill>Beta</VPill>`,
+  components: { VPill },
+  setup() {
+    return { args }
+  },
+})
+
+# VPill
+
+<Description of={VPill} />
+
+<ArgsTable of={VPill} />
+
+## Default VPill
+
+<Canvas>
+  <Story name="Default">{Default.bind({})}</Story>
+</Canvas>

@@ -9,10 +9,12 @@ import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 import { useSearchStore } from "~/stores/search"
 import { filterData, mediaFilterKeys } from "~/constants/filters"
 import { IMAGE } from "~/constants/media"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/VFilterButton"
   component={VFilterButton}
+  decorators={WithSuspense}
   argTypes={{
     pressed: {
       type: "boolean",
@@ -29,11 +31,9 @@ import { IMAGE } from "~/constants/media"
   }}
 />
 
-[//]:
-  #
-  "Flexible-width wrappers are added to the template to make the button
-better visible on a darker background and to make the changes in button width
-easier to see."
+{/_ "Flexible-width wrappers are added to the template to make the button better
+visible on a darker background and to make the changes in button width easier to
+see." _/}
 
 export const Template = (args, { argTypes }) => ({
   template: `<div class="flex"><div id="wrapper" class="px-4 h-16 bg-dark-charcoal-06 flex align-center justify-center">

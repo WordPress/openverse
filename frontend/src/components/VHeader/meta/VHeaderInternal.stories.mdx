@@ -1,12 +1,12 @@
 import { Canvas, Description, Meta, Story } from "@storybook/addon-docs"
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
-import VModalTarget from "~/components/VModal/VModalTarget.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VHeader/VHeaderInternal" component={VHeaderInternal} />
+<Meta title="Components/VHeader/VHeaderInternal" component={VHeaderInternal} decorators={WithSuspense} />
 
 export const Template = (args) => ({
-  template: `<div class="fixed inset-0 w-full h-full"><VHeaderInternal v-bind="args" v-on="args" /><VModalTarget /></div>`,
-  components: { VHeaderInternal, VModalTarget },
+  template: `<Suspense><div class="fixed inset-0 w-full h-full"><VHeaderInternal v-bind="args" v-on="args" /><div id="#modal"></div></div></Suspense>`,
+  components: { VHeaderInternal },
   setup() {
     return { args }
   },

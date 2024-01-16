@@ -10,10 +10,12 @@ import { ref, computed } from "vue"
 import VModal from "~/components/VModal/VModal.vue"
 import VButton from "~/components/VButton.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VModal"
   components={VModal}
+  decorators={WithSuspense}
   argTypes={{
     hideOnEsc: { control: { type: "boolean" } },
     hideOnClickOutside: { control: { type: "boolean" } },

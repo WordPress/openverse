@@ -7,10 +7,12 @@ import {
 } from "@storybook/addon-docs"
 
 import VTag from "~/components/VTag/VTag.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VTag"
   component={VTag}
+  decorators={WithSuspense}
   argTypes={{
     title: {
       type: "text",

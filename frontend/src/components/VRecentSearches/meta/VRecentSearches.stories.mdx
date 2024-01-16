@@ -7,10 +7,12 @@ import {
 } from "@storybook/addon-docs"
 
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VRecentSearches"
   component={VRecentSearches}
+  decorators={WithSuspense}
   argTypes={{
     select: {
       action: "select",

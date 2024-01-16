@@ -9,6 +9,7 @@ import { supportedMediaTypes } from "~/constants/media"
 import { useProviderStore } from "~/stores/provider"
 
 import VByLine from "~/components/VMediaInfo/VByLine/VByLine.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 export const Template = (args) => ({
   template: `<div class="wrapper w-full inline-flex p-4"><VByLine v-bind="args" /></div>`,
@@ -23,6 +24,7 @@ export const Template = (args) => ({
 <Meta
   title="Components/VByLine"
   component={VByLine}
+  decorators={WithSuspense}
   argTypes={{
     mediaType: {
       control: "select",

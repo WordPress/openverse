@@ -7,10 +7,12 @@ import {
 } from "@storybook/addon-docs"
 
 import VRadio from "~/components/VRadio/VRadio.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VRadio"
   components={VRadio}
+  decorators={WithSuspense}
   argTypes={{
     change: {
       action: "change",

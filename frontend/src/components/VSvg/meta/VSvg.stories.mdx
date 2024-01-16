@@ -7,14 +7,28 @@ import {
 } from "@storybook/addon-docs"
 
 import VSvg from "~/components/VSvg/VSvg.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-import spriteData from "~svgsprite/sprites.json"
+export const spriteData = [
+  {
+    name: "images",
+    symbols: [
+      "brand",
+      "logo",
+      "logo-and-wordmark",
+      "oops",
+      "openverse-logo-text",
+      "radiomark",
+      "wordpress",
+    ],
+  },
+]
 
-<Meta title="Components/VSvg" component={VSvg} />
+<Meta title="Components/VSvg" component={VSvg} decorators={WithSuspense} />
 
-export const svgImages = spriteData.filter(
+export const svgImages = spriteData.find(
   (sprite) => sprite.name === "images"
-)[0].symbols
+).symbols
 
 export const Template = (args) => ({
   template: `<VSvg v-bind="args" />`,

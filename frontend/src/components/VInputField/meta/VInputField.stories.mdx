@@ -7,10 +7,12 @@ import {
 } from "@storybook/addon-docs"
 
 import VInputField from "~/components/VInputField/VInputField.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VInputField"
   component={VInputField}
+  decorators={WithSuspense}
   argTypes={{
     "update:modelValue": {
       action: "update:modelValue",

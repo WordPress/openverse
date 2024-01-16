@@ -6,8 +6,13 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VHeader/VHeaderDesktop" component={VHeaderDesktop} />
+<Meta
+  title="Components/VHeader/VHeaderDesktop"
+  component={VHeaderDesktop}
+  decorators={WithSuspense}
+/>
 
 export const Template = (args) => ({
   template: `

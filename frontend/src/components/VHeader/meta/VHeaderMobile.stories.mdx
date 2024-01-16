@@ -6,10 +6,12 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/VHeaderMobile/VHeaderMobile"
   component={VHeaderMobile}
+  decorators={WithSuspense}
 />
 
 export const Template = (args) => ({

@@ -6,10 +6,12 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/Search bar"
   component={VSearchBar}
+  decorators={WithSuspense}
   argTypes={{
     input: {
       action: "input",

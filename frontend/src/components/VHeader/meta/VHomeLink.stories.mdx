@@ -6,10 +6,12 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/HomeLinks/VHomeLink"
   components={VHomeLink}
+  decorators={WithSuspense}
   argTypes={{
     variant: {
       type: "string",

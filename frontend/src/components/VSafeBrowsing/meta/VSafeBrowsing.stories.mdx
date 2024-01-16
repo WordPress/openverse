@@ -1,8 +1,9 @@
 import { Canvas, Description, Meta, Story } from "@storybook/addon-docs"
 
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VSafeBrowsing" component={VSafeBrowsing} />
+<Meta title="Components/VSafeBrowsing" component={VSafeBrowsing} decorators={WithSuspense}/>
 
 export const Template = (args) => ({
   template: `<VSafeBrowsing v-bind="args" />`,
@@ -20,7 +21,7 @@ export const Template = (args) => ({
   <Story
     name="Default"
     parameters={{
-      viewport: { defaultViewport: "xs" }, // because it is present in the sidebar
+      viewport: { defaultViewport: "xs" },
     }}
   >
     {Template.bind({})}

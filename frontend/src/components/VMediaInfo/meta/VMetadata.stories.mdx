@@ -14,10 +14,11 @@ import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 export const testAudio = getAudioObj()
 
-<Meta title="Components/VMediaInfo/VMetadata" components={VMetadata} />
+<Meta title="Components/VMediaInfo/VMetadata" components={VMetadata} decorators={WithSuspense} />
 
 export const Template = (args) => ({
   template: `

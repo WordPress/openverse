@@ -7,8 +7,9 @@ import {
 } from "@storybook/addon-docs"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VLicense" component={VLicense} />
+<Meta title="Components/VLicense" component={VLicense} decorators={WithSuspense} />
 
 export const Template = (args) => ({
   template: `<VLicense v-bind="args" />`,

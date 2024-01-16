@@ -8,10 +8,12 @@ import {
 
 import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
 import { ALL_LICENSES } from "~/constants/license"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VLicenseElements"
   component={VLicenseElements}
+  decorators={WithSuspense}
   argTypes={{
     license: {
       default: "by",

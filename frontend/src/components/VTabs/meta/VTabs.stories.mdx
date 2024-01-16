@@ -9,10 +9,12 @@ import {
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 import VTab from "~/components/VTabs/VTab.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VTabs"
   component={VTabs}
+  decorators={WithSuspense}
   argTypes={{
     variant: {
       options: ["bordered", "plain"],

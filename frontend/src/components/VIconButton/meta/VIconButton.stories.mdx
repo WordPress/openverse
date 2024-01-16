@@ -8,10 +8,12 @@ import {
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import { baseButtonSizes, baseButtonVariants } from "~/types/button"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VIconButton"
   component={VIconButton}
+  decorators={WithSuspense}
   argTypes={{
     size: {
       options: baseButtonSizes,

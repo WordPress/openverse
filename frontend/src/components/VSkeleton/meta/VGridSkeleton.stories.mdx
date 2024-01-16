@@ -7,8 +7,9 @@ import {
 } from "@storybook/addon-docs"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/Skeleton" component={VGridSkeleton} />
+<Meta title="Components/Skeleton" component={VGridSkeleton} decorators={WithSuspense}/>
 
 export const Template = (args) => ({
   template: `<VGridSkeleton v-bind="args" />`,

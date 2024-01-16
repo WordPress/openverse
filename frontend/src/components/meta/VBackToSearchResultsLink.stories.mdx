@@ -1,0 +1,28 @@
+import { Description, Meta, Canvas, Story } from "@storybook/addon-docs"
+
+import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
+
+<Meta
+  title="Components/VBackToSearchResultsLink"
+  component={VBackToSearchResultsLink}
+  decorators={WithSuspense}
+/>
+
+export const Template = (args) => ({
+  template: `<Suspense><VBackToSearchResultsLink v-bind="args" /></Suspense>`,
+  components: { VBackToSearchResultsLink },
+  setup() {
+    return { args }
+  },
+})
+
+# VBackToSearchResultsLink
+
+<Description of={VBackToSearchResultsLink} />
+
+<Canvas>
+  <Story name="Default" args={{ href: "#", id: "123" }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>

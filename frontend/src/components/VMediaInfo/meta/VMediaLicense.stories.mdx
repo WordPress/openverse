@@ -10,6 +10,7 @@ import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
 
 import { ALL_LICENSES, LICENSE_VERSIONS } from "~/constants/license"
 import { getLicenseUrl } from "~/utils/license"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 export const Template = (args) => ({
   template: `<VMediaLicense v-bind="args"/>`,
@@ -22,6 +23,7 @@ export const Template = (args) => ({
 <Meta
   title="Components/VMediaLicense"
   component={VMediaLicense}
+  decorators={WithSuspense}
   argTypes={{
     license: {
       defaultValue: ALL_LICENSES[0],
@@ -42,7 +44,7 @@ export const Template = (args) => ({
 
 <ArgsTable of={VMediaLicense} />
 
-<!-- A large portion of this file is copied from the story for `VLicense`. -->
+{/* A large portion of this file is copied from the story for `VLicense`. */}
 
 It can display CC licenses.
 

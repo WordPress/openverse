@@ -8,10 +8,12 @@ import {
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VTab from "~/components/VTabs/VTab.vue"
 import VTabs from "~/components/VTabs/VTabs.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/VHeaderMobile/VFilterTab"
   component={VFilterTab}
+  decorators={WithSuspense}
   argTypes={{
     appliedFilterCount: {
       type: "number",

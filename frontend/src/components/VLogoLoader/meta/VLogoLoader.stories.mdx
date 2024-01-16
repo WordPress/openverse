@@ -8,10 +8,12 @@ import {
 
 import VLink from "~/components/VLink.vue"
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VLogoLoader"
   component={VLogoLoader}
+  decorators={WithSuspense}
   argTypes={{
     status: {
       default: "idle",

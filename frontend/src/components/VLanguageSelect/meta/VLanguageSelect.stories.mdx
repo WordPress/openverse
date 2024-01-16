@@ -1,8 +1,13 @@
 import { Description, Meta, Canvas, Story } from "@storybook/addon-docs"
 
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VLanguageSelect" component={VLanguageSelect} />
+<Meta
+  title="Components/VLanguageSelect"
+  component={VLanguageSelect}
+  decorators={WithSuspense}
+/>
 
 export const Template = (args) => ({
   template: `

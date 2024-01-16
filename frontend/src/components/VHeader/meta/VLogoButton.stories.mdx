@@ -6,10 +6,12 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/HomeLinks/VLogoButton"
   component={VLogoButton}
+  decorators={WithSuspense}
   argTypes={{
     isFetching: {
       type: "boolean",

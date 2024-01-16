@@ -7,6 +7,8 @@ import {
 } from "@storybook/addon-docs"
 
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
+import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 export const image = {
   id: "f9384235-b72e-4f1e-9b05-e1b116262a29",
@@ -26,7 +28,7 @@ export const image = {
     "http://localhost:49153/v1/images/f9384235-b72e-4f1e-9b05-e1b116262a29/",
 }
 
-<Meta title="Components/VMediaInfo/VMediaReuse" components={VMediaReuse} />
+<Meta title="Components/VMediaInfo/VMediaReuse" components={VMediaReuse} decorators={WithSuspense} />
 
 export const Template = (args) => ({
   template: `
@@ -35,7 +37,7 @@ export const Template = (args) => ({
     <VMediaReuse v-bind="args" />
 </div>
   `,
-  components: { VMediaReuse },
+  components: { VLanguageSelect, VMediaReuse },
   setup() {
     return { args }
   },

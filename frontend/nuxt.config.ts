@@ -131,6 +131,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/plausible",
     "@nuxt/test-utils/module",
+    "@nuxtjs/storybook",
     "@nuxtjs/sitemap",
   ],
   routeRules: {

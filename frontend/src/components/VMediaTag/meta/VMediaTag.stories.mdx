@@ -7,8 +7,9 @@ import {
 } from "@storybook/addon-docs"
 
 import VMediaTag from "~/components/VMediaTag/VMediaTag"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
-<Meta title="Components/VMediaTag" component={VMediaTag} />
+<Meta title="Components/VMediaTag" component={VMediaTag} decorators={WithSuspense} />
 
 export const Template = (args) => ({
   template: `<VMediaTag v-bind="args">Hello</VMediaTag>`,

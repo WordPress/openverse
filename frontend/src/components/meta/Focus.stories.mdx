@@ -1,0 +1,95 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs"
+
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
+
+<Meta title="Meta/Focus" decorators={[WithScreenshotArea, WithSuspense]} />
+
+export const GetTemplate = (irrelevantClassNames) => (args) => ({
+  template: `
+    <div
+      class="h-30 w-30 flex items-center justify-center ${irrelevantClassNames}"
+      :class="args.classNames"
+      data-testid="focus-target"
+      tabindex="0"
+    >
+      Focus on me
+    </div>`,
+  setup() {
+    return { args }
+  },
+})
+
+# Focus
+
+Focus styles are defined across two axes: thickness (slim or bold) and style
+(transparent or filled). However, there is no bold-transparent variant.
+
+The transparent and filled styles work best if the element has a border and no
+background color.
+
+Both the outer and inner strokes in filled border variants are box-shadows.
+
+## Slim transparent
+
+An outer stroke (colored) of 1.5px is applied to the component and the existing
+border is turned transparent.
+
+<Canvas>
+  <Story name="Slim transparent" args={{ classNames: ["focus-slim-tx"] }}>
+    {GetTemplate(
+      "border border-dark-charcoal-40 hover:border-dark-charcoal"
+    ).bind({})}
+  </Story>
+</Canvas>
+
+## Slim filled - for bordered elements
+
+A colored outer stroke of 1.5px and a white inner stroke of 1.5px overlapping
+the border are both applied to the component.
+
+<Canvas>
+  <Story name="Slim filled" args={{ classNames: ["focus-slim-filled"] }}>
+    {GetTemplate("bg-dark-charcoal text-white border border-tx").bind({})}
+  </Story>
+</Canvas>
+
+## Slim filled borderless - for elements without a border
+
+Similar to "slim filled", a colored outer stroke of 1.5px and a white inner
+stroke of 1.5px are applied to the component.
+
+<Canvas>
+  <Story
+    name="Slim filled borderless"
+    args={{ classNames: ["focus-slim-borderless-filled"] }}
+  >
+    {GetTemplate("bg-pink text-white").bind({})}
+  </Story>
+</Canvas>
+
+## Bold filled
+
+A colored outer stroke of 3.0px and a white inner stroke of 3.0px are both
+applied to the component.
+
+<Canvas>
+  <Story name="Bold filled" args={{ classNames: ["focus-bold-filled"] }}>
+    {GetTemplate("bg-yellow text-dark-charcoal").bind({})}
+  </Story>
+</Canvas>
+
+## Colored
+
+The ring may be colored with a `-<color>` suffix after the appropriate class. If
+no color is set, the default is assumed to be pink.
+
+<Canvas>
+  <Story
+    name="Colored"
+    args={{ classNames: ["focus-slim-tx-yellow"] }}
+    parameters={{ backgrounds: { default: "Dark charcoal" } }}
+  >
+    {GetTemplate("bg-dark-charcoal text-white border border-tx").bind({})}
+  </Story>
+</Canvas>

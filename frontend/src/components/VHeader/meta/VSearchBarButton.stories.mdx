@@ -7,10 +7,12 @@ import {
 } from "@storybook/addon-docs"
 import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VHeader/VHeaderMobile/VSearchBarButton"
   component={VSearchBarButton}
+  decorators={WithSuspense}
   argTypes={{
     icon: {
       control: {

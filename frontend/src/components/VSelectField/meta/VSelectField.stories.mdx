@@ -9,10 +9,12 @@ import {
 import { ref } from "vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField from "~/components/VSelectField/VSelectField.vue"
+import { WithSuspense } from "~~/.storybook/decorators/with-suspense"
 
 <Meta
   title="Components/VSelectField"
   component={VSelectField}
+  decorators={WithSuspense}
   argTypes={{
     "update:modelValue": {
       action: "update:modelValue",
