@@ -56,6 +56,7 @@ authority_types = {
     "clevelandmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
     "brooklynmuseum": AuthorityTypes.CULTURAL_INSTITUTION,
     "stocksnap": AuthorityTypes.CURATED,
+    "rawpixel": AuthorityTypes.CURATED,
 }
 
 
