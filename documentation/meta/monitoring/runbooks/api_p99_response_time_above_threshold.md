@@ -1,12 +1,12 @@
 # Run Book: API Production P99 Response Time above threshold
 
 ```{admonition} Metadata
-Status: **Unstable**
-
-Maintainer: @krysaldb
+Status: **Stable**
 
 Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+P99+Response+Time+above+threshold?>
+- [Alarm details](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/API+Production+P99+Response+Time+above+threshold?)
+- [ECS-Production-Dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/ECS-Production-Dashboard)
+- [Production Database + Elasticsearch dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/Service-Overview)
 ```
 
 ## Severity Guide
