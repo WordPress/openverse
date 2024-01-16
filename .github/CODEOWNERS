@@ -1,42 +1,49 @@
-catalog/ @WordPress/openverse-catalog
-archive/ @WordPress/openverse-catalog
+# Specific assignments for the 'openverse-catalog' group
+catalog/    @WordPress/openverse-catalog
+archive/    @WordPress/openverse-catalog
+dag-sync.sh @WordPress/openverse-catalog
 
 api/                @WordPress/openverse-api
 ingestion_server/   @WordPress/openverse-api
-nginx/              @WordPress/openverse-api
-postgres/           @WordPress/openverse-api
 sample_data/        @WordPress/openverse-api
-.flake8             @WordPress/openverse-api
-.isort.cfg          @WordPress/openverse-api
-docker-compose.yml  @WordPress/openverse-api
 load_sample_data.sh @WordPress/openverse-api
+pyproject.toml      @WordPress/openverse-api
 
 frontend/           @WordPress/openverse-frontend
+packages/           @WordPress/openverse-frontend
 .eslintignore       @WordPress/openverse-frontend
 .eslintrc.js        @WordPress/openverse-frontend
 .npmrc              @WordPress/openverse-frontend
 .pnpmfile.cjs       @WordPress/openverse-frontend
+.prettierignore     @WordPress/openverse-frontend
 package.json        @WordPress/openverse-frontend
 pnpm-lock.yaml      @WordPress/openverse-frontend
 pnpm-workspace.yaml @WordPress/openverse-frontend
 prettier.config.js  @WordPress/openverse-frontend
-.prettierignore     @WordPress/openverse-frontend
+setup_plausible.sh  @WordPress/openverse-frontend
+tsconfig.base.json  @WordPress/openverse-frontend
 
+# Specific assignments for the 'openverse-maintainers' group
+.codespell/                 @WordPress/openverse-maintainers
+.devcontainer/              @WordPress/openverse-maintainers
+.github/                    @WordPress/openverse-maintainers
 automations/                @WordPress/openverse-maintainers
 brand/                      @WordPress/openverse-maintainers
-dead_links/                 @WordPress/openverse-maintainers
 docker/                     @WordPress/openverse-maintainers
 documentation/              @WordPress/openverse-maintainers
 readme_assets/              @WordPress/openverse-maintainers
 templates/                  @WordPress/openverse-maintainers
 utilities/                  @WordPress/openverse-maintainers
+.dockerignore               @WordPress/openverse-maintainers
+.editorconfig               @WordPress/openverse-maintainers
+.git-blame-ignore-revs      @WordPress/openverse-maintainers
 .gitattributes              @WordPress/openverse-maintainers
 .gitignore                  @WordPress/openverse-maintainers
-.github/                    @WordPress/openverse-maintainers
-.devcontainer/              @WordPress/openverse-maintainers
 .pre-commit-config.yaml     @WordPress/openverse-maintainers
 CODE_OF_CONDUCT.md          @WordPress/openverse-maintainers
 CONTRIBUTING.md             @WordPress/openverse-maintainers
-justfile                    @WordPress/openverse-maintainers
 LICENSE                     @WordPress/openverse-maintainers
 README.md                   @WordPress/openverse-maintainers
+docker-compose.yml          @WordPress/openverse-maintainers
+env.template                @WordPress/openverse-maintainers
+justfile                    @WordPress/openverse-maintainers
