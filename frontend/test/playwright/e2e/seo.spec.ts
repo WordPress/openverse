@@ -15,7 +15,7 @@ const pages = {
     robots: "all",
   },
   allSearch: {
-    url: "/search/?q=birds",
+    url: "/search?q=birds",
     title: "birds | Openverse",
     ogImage: "/openverse-default.jpg",
     ogTitle: "Openverse",
