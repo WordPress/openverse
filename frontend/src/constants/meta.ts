@@ -24,12 +24,14 @@ export const meta = [
     name: "description",
     content: DESCRIPTION,
   },
-  { property: "og:title", content: "Openverse" },
+  { key: "og:title", property: "og:title", content: "Openverse" },
   {
+    key: "og:image",
     property: "og:image",
     content: "/openverse-default.jpg",
   },
   {
+    key: "og:description",
     name: "og:description",
     content: DESCRIPTION,
   },
