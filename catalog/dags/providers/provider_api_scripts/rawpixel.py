@@ -73,9 +73,12 @@ class RawpixelDataIngester(ProviderDataIngester):
         "public domain",
     }
     # Image size options
-    full_size_option = "image_1300"
-    # TODO: Use as part of https://github.com/WordPress/openverse-catalog/issues/817
-    thumbnail_size_option = "image_600_png"
+    full_size_option = "editor_1024"
+    png_full_size_option = "image_png_1300"
+    png_dark_full_size_option = "dark_image_png_1300"
+    thumbnail_size_option = "image_600"
+    png_thumbnail_size_option = "image_png_600"
+    png_dark_thumbnail_size_option = "dark_image_png_600"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -133,6 +136,24 @@ class RawpixelDataIngester(ProviderDataIngester):
         return None
 
     @staticmethod
+    def _get_full_size_preset(self, data: dict) -> str | None:
+        """Get the full size preset based on the image properties."""
+        if data.get("isPng") and data.get("isDarkPng"):
+            return RawpixelDataIngester.png_dark_full_size_option
+        if data.get("isPng"):
+            return RawpixelDataIngester.png_full_size_option
+        return RawpixelDataIngester.full_size_option
+
+    @staticmethod
+    def _get_thumbnail_size_preset(self, data: dict) -> str | None:
+        """Get the full size preset based on the image properties."""
+        if data.get("isPng") and data.get("isDarkPng"):
+            return RawpixelDataIngester.png_dark_thumbnail_size_option
+        if data.get("isPng"):
+            return RawpixelDataIngester.png_thumbnail_size_option
+        return RawpixelDataIngester.thumbnail_size_option
+
+    @staticmethod
     def _get_image_url(data: dict, size_option: str) -> str | None:
         """
         Get the URL for an image.
@@ -144,10 +165,12 @@ class RawpixelDataIngester(ProviderDataIngester):
             'image_png_400', 'image_500', 'image_png_500', 'image_600', 'image_png_600',
             'image_700', 'image_png_700', 'image_800', 'image_png_800', 'image_900',
             'image_png_900', 'image_1000', 'image_png_1000', 'image_1300',
-            'image_png_1300'
+            'image_png_1300', 'editor_1024'
 
         The number refers to the width displayed, and a png option is provided for each
         size.
+
+        Note that preset size starting from 1100 are watermarked.
         """
         style_uri = data.get("style_uri")
         if not style_uri:
@@ -202,13 +225,14 @@ class RawpixelDataIngester(ProviderDataIngester):
         return title or None
 
     @staticmethod
-    def _get_meta_data(data: dict, metadata: dict) -> dict:
+    def _get_meta_data(data: dict, metadata: dict, thumbnail_url: str) -> dict:
         description = RawpixelDataIngester._clean_text(
             metadata.get("description_text") or ""
         )
         meta_data = {
             "description": description or None,
             "download_count": data.get("download_count"),
+            "thumbnail_url": thumbnail_url,
         }
         meta_data = {k: v for k, v in meta_data.items() if v is not None}
         return meta_data
@@ -258,8 +282,13 @@ class RawpixelDataIngester(ProviderDataIngester):
         if not (license_info := get_license_info(metadata["licenseUrl"])):
             return None
 
-        if not (url := self._get_image_url(data, self.full_size_option)):
+        full_size_preset = self._get_full_size_preset(self, data)
+        if not (url := self._get_image_url(data, full_size_preset)):
             return None
+
+        thumbnail_preset = self._get_thumbnail_size_preset(self, data)
+        if not (thumbnail := self._get_image_url(data, thumbnail_preset)):
+            thumbnail = url
 
         width, height = self._get_image_properties(data)
         return {
@@ -270,7 +299,7 @@ class RawpixelDataIngester(ProviderDataIngester):
             "width": width,
             "height": height,
             "title": self._get_title(metadata),
-            "meta_data": self._get_meta_data(data, metadata),
+            "meta_data": self._get_meta_data(data, metadata, thumbnail),
             "raw_tags": self._get_tags(metadata),
             "creator": self._get_creator(data),
             "filetype": data.get("name_ext"),

@@ -291,7 +291,7 @@ def test_get_record_data():
         "foreign_identifier": 4032668,
         "foreign_landing_url": "https://www.rawpixel.com/image/4032668/photo-image-background-nature-mountain",  # noqa
         "height": 5515,
-        "url": "https://images.rawpixel.com/image_1300/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2ZsNDY0NDU5OTQ2MjQtaW1hZ2Uta3UyY21zcjUuanBn.jpg",  # noqa
+        "url": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2ZsNDY0NDU5OTQ2MjQtaW1hZ2Uta3UyY21zcjUuanBn.jpg",  # noqa
         "license_info": LicenseInfo(
             license="cc0",
             version="1.0",
@@ -301,6 +301,7 @@ def test_get_record_data():
         "meta_data": {
             "description": "Bull elk searches for food beneath the snow. Frank. Original public domain image from Flickr",  # noqa
             "download_count": 0,
+            "thumbnail_url": "https://images.rawpixel.com/image_600/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2ZsNDY0NDU5OTQ2MjQtaW1hZ2Uta3UyY21zcjUuanBn.jpg",  # noqa
         },
         "raw_tags": [
             "animal",
