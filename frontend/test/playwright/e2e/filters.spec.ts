@@ -24,6 +24,7 @@ import {
   ALL_MEDIA,
   IMAGE,
   AUDIO,
+  SupportedMediaType,
 } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
@@ -254,14 +255,15 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   for (const [searchType, source] of [
     ["audio", "Freesound"],
     ["image", "Flickr"],
-  ]) {
+  ] as [SupportedMediaType, string][]) {
     test(`Provider filters are correctly initialized from the URL: ${source} - ${searchType}`, async ({
       page,
     }) => {
-      await page.goto(
-        `/search/${searchType}?q=birds&source=${source.toLowerCase()}`
-      )
-      await filters.open(page)
+      await goToSearchTerm(page, "birds", {
+        searchType,
+        query: `source=${source.toLowerCase()}`,
+      })
+      await expect(page.locator("#filter-button")).toBeEnabled()
 
       await expect(page.getByRole("checkbox", { name: source })).toBeChecked()
     })
