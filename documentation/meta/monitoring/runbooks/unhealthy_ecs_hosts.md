@@ -1,7 +1,7 @@
 # Run Book: Unhealthy hosts for ECS service
 
 ```{admonition} Metadata
-Status: **Unstable**
+Status: **Stable**
 
 
 Alarm links:
