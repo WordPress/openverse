@@ -909,7 +909,7 @@ jobs:
       !failure() && !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
       ) &&
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
@@ -970,7 +970,7 @@ jobs:
       !failure() && !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
       ) &&
       needs.get-changes.outputs.frontend == 'true' &&
       needs.playwright.result == 'success' &&
@@ -1015,7 +1015,7 @@ jobs:
       !failure() && !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
       ) &&
       needs.get-changes.outputs.api == 'true' &&
       needs.publish-images.result == 'success'
@@ -1062,7 +1062,7 @@ jobs:
       !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
       ) &&
       (
         (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
