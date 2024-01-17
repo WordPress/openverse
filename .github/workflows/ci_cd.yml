@@ -11,6 +11,11 @@ on:
         description: "The tag to assign to the images built in the workflow."
         type: string
         required: true
+      force_deploy:
+        description: "Whether to force GHCR publish and ECS deploy from a non-main branch."
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -898,8 +903,10 @@ jobs:
     # prevent running on fork PRs
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
-      github.repository == 'WordPress/openverse' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+      ) &&
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
@@ -957,7 +964,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+      ) &&
       needs.get-changes.outputs.frontend == 'true' &&
       needs.playwright.result == 'success' &&
       needs.publish-images.result == 'success'
@@ -999,7 +1009,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+      ) &&
       needs.get-changes.outputs.api == 'true' &&
       needs.publish-images.result == 'success'
     needs:
@@ -1043,8 +1056,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !cancelled() &&
-      github.event_name == 'push' &&
-      github.repository == 'WordPress/openverse' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.force_deploy == 'true')
+      ) &&
       (
         (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
