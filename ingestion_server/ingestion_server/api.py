@@ -1,4 +1,5 @@
 """A small RPC API server for scheduling data refresh and indexing tasks."""
+from collections import defaultdict
 
 import logging
 import os
@@ -55,17 +56,17 @@ class HealthResource:
         if not req.get_param_as_bool("check_deps", blank_as_true=False):
             return
 
-        messages = []
+        messages = defaultdict(list)
         # Elasticsearch checks
         es = elasticsearch_connect(timeout=3)
         if not es:
-            messages.append("Elasticsearch could not be reached")
+            messages["es"].append("Elasticsearch could not be reached")
         else:
             es_health = es.cluster.health(timeout="3s")
             if es_health["timed_out"]:
-                messages.append("Elasticsearch health check timed out")
+                messages["es"].append("Elasticsearch health check timed out")
             if (es_status := es_health["status"]) != "green":
-                messages.append(f"Elasticsearch cluster health: {es_status}")
+                messages["es"].append(f"Elasticsearch cluster health: {es_status}")
 
         # Database checks
         for name, dbconfig in zip(
@@ -74,13 +75,13 @@ class HealthResource:
         ):
             db = database_connect(dbconfig=dbconfig, timeout=3, attempt_reconnect=False)
             if not db:
-                messages.append(
+                messages["db"].append(
                     f"Database connection for '{name}' could not be established"
                 )
 
         if messages:
             resp.status = falcon.HTTP_503
-            resp.media = {"status": messages}
+            resp.media = {"status": "503 Service Unavailable", "dependencies": messages}
 
 
 class StatResource:
