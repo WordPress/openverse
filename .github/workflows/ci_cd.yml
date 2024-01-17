@@ -10,7 +10,8 @@ on:
       image_tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
-        required: true
+        required: false
+        default: ""
       force_deploy:
         description: "Whether to force GHCR publish and ECS deploy from a non-main branch."
         type: boolean
@@ -61,7 +62,7 @@ jobs:
       - name: Get image tag
         id: get-image-tag
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.image_tag }}" != "" ]]; then
               echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
           else
               echo "image_tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
