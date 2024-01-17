@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { decodeMediaData, useNuxtApp, useRequestHeaders } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -24,10 +24,12 @@ import {
   SupportedSearchType,
 } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
-import { initServices } from "~/stores/media/services"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
+import { mediaSlug } from "~/utils/query-utils"
+
+import type { PaginatedApiMediaResult } from "~/types/api"
 
 export type MediaStoreResult = {
   count: number
@@ -452,12 +454,10 @@ export const useMediaStore = defineStore("media", {
     /**
      * @param mediaType - the mediaType to fetch (do not use 'All_media' here)
      * @param shouldPersistMedia - whether the existing media should be added to or replaced.
-     * @param accessToken - the Openverse API access token for fetching on the server.
      */
     async fetchSingleMediaType({
       mediaType,
       shouldPersistMedia,
-      accessToken,
     }: {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
@@ -470,11 +470,28 @@ export const useMediaStore = defineStore("media", {
       if (shouldPersistMedia && page > 1) {
         queryParams.page = `${page}`
       }
+      if (mediaType === AUDIO) {
+        queryParams.peaks = "true"
+      }
 
       this._updateFetchState(mediaType, "start")
+      const headers = useRequestHeaders(["cookie"])
+      const url = `/api/${mediaSlug(mediaType)}/${pathSlug}`
       try {
-        const service = initServices[mediaType](accessToken)
-        const data = await service.search(queryParams, pathSlug)
+        console.log("url", url)
+        const res = await $fetch<PaginatedApiMediaResult>(url, {
+          query: queryParams,
+          headers,
+        })
+        const mediaResults = res.results ?? []
+        const data = {
+          ...res,
+          results: mediaResults.reduce((acc, item) => {
+            acc[item.id] = decodeMediaData(item, mediaType)
+            return acc
+          }, {} as Record<string, AudioDetail | ImageDetail>),
+        }
+
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

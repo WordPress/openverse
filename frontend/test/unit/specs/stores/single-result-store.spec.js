@@ -39,18 +39,6 @@ const mockGetMediaDetailAudio = vi
 const mockGetMediaDetailImage = vi
   .fn()
   .mockImplementation(mockImplementation(IMAGE))
-vi.mock("~/stores/media/services", () => ({
-  initServices: {
-    audio: () =>
-      /** @type {import('~/data/services').MediaService} */ ({
-        getMediaDetail: mockGetMediaDetailAudio,
-      }),
-    image: () =>
-      /** @type {import('~/data/services').MediaService} */ ({
-        getMediaDetail: mockGetMediaDetailImage,
-      }),
-  },
-}))
 
 describe("Media Item Store", () => {
   let singleResultStore = null

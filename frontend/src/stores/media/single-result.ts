@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { decodeMediaData, useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -11,10 +11,10 @@ import { isDetail, isMediaDetail } from "~/types/media"
 
 import type { SupportedMediaType } from "~/constants/media"
 
-import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
 import { useProviderStore } from "~/stores/provider"
 import { parseFetchingError } from "~/utils/errors"
+import { mediaSlug } from "~/utils/query-utils"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
@@ -140,8 +140,6 @@ export const useSingleResultStore = defineStore("single-result", {
      * Check if the `id` matches the `mediaId` and the media item
      * is already fetched. If middleware only set the `id` and
      * did not set the media, fetch the media item.
-     *
-     * Fetch the related media if necessary.
      */
     async fetch<T extends SupportedMediaType>(type: T, id: string) {
       const existingItem = this.getExistingItem(type, id)
@@ -159,29 +157,24 @@ export const useSingleResultStore = defineStore("single-result", {
       type: MediaType,
       id: string
     ) {
+      this._updateFetchState("start")
       try {
-        this._updateFetchState("start")
-        const { $openverseApiToken } = useNuxtApp()
-        const accessToken =
-          typeof $openverseApiToken === "string" ? $openverseApiToken : ""
-        const service = initServices[type](accessToken)
-        const item = this._addProviderName(await service.getMediaDetail(id))
+        const rawItem = await $fetch(`/api/${mediaSlug(type)}/${id}/`)
+        const transformedItem = decodeMediaData(rawItem, type)
+        const item = this._addProviderName(transformedItem)
 
         this.setMediaItem(item)
         this._updateFetchState("end")
 
         return item as DetailFromMediaType<MediaType>
       } catch (error) {
+        console.log(error)
         const errorData = parseFetchingError(error, type, "single-result", {
           id,
         })
         this._updateFetchState("end", errorData)
         const { $sentry } = useNuxtApp()
-        if ($sentry) {
-          $sentry.captureException(error, { extra: { errorData } })
-        } else {
-          console.log("Sentry not available to capture exception", errorData)
-        }
+        $sentry.captureException(error, { extra: { errorData } })
         return null
       }
     },

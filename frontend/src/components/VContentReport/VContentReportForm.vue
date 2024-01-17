@@ -125,8 +125,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
-
-import { initReportService } from "~/data/report-service"
+import { $fetch } from "ofetch"
 
 import {
   reasons,
@@ -141,6 +140,8 @@ import {
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
+
+import { mediaSlug } from "~/utils/query-utils"
 
 import VButton from "~/components/VButton.vue"
 import VRadio from "~/components/VRadio/VRadio.vue"
@@ -211,11 +212,14 @@ export default defineComponent({
         const mediaType = props.media.frontendMediaType
         const reason = selectedReason.value
 
-        await initReportService().sendReport({
-          mediaType,
-          reason,
-          identifier: props.media.id,
-          description: description.value,
+        await $fetch(`/api/${mediaSlug(mediaType)}/${props.media.id}/report/`, {
+          method: "POST",
+          body: JSON.stringify({
+            mediaType,
+            reason,
+            identifier: props.media.id,
+            description: description.value,
+          }),
         })
 
         sendCustomEvent("REPORT_MEDIA", {

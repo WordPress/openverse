@@ -24,7 +24,6 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import type { ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
@@ -52,19 +51,17 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    relatedTo: {
+      type: String,
+      default: "null",
+    },
   },
-  setup(props) {
+  setup() {
     const searchStore = useSearchStore()
 
     const searchTerm = computed(() => searchStore.searchTerm)
 
-    const relatedTo = computed(() => {
-      return props.kind === "related"
-        ? useRelatedMediaStore().mainMediaId
-        : null
-    })
-
-    return { searchTerm, relatedTo }
+    return { searchTerm }
   },
 })
 </script>

@@ -10,10 +10,10 @@ import {
   SupportedMediaType,
   supportedMediaTypes,
 } from "~/constants/media"
-import { initProviderServices } from "~/data/media-provider-service"
 
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
+import { DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 export interface ProviderState {
   /**
@@ -142,12 +142,14 @@ export const useProviderStore = defineStore("provider", {
     ): Promise<void> {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
-      const { $openverseApiToken, $sentry } = useNuxtApp()
-      const accessToken =
-        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
+      const { $sentry } = useNuxtApp()
       try {
-        const service = initProviderServices[mediaType](accessToken)
-        const res = await service.getProviderStats()
+        const res: MediaProvider[] = await $fetch(
+          `/api/${mediaType === "image" ? "images" : "audio"}/stats/`,
+          {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+          }
+        )
         sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {

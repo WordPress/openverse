@@ -61,7 +61,7 @@
           :image-height="imageHeight"
           :image-type="imageType"
         />
-        <VRelatedImages />
+        <VRelatedImages :media-id="image.id" />
       </template>
     </template>
 
@@ -85,9 +85,9 @@ import {
   useRoute,
 } from "#imports"
 
-import axios from "axios"
+import { $fetch } from "ofetch"
 
-import { computed, ref, watch } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -158,6 +158,11 @@ export default defineNuxtComponent({
     const isLoadingThumbnail = ref(true)
     const imageId = computed(() => firstParam(route.params.id))
 
+    onMounted(() => {
+      isLoadingThumbnail.value = false
+      imageSrc.value = image.value?.url ?? errorImage
+    })
+
     const { error } = await useAsyncData(
       "single-image",
       async () => {
@@ -195,10 +200,27 @@ export default defineNuxtComponent({
       },
       { immediate: true }
     )
+    const extractFiletype = (url: string): string | null => {
+      const splitUrl = url.split(".")
+      if (splitUrl.length > 1) {
+        const possibleFiletype = splitUrl[splitUrl.length - 1]
+        if (
+          ["jpg", "jpeg", "png", "gif", "tiff", "svg"].includes(
+            possibleFiletype
+          )
+        ) {
+          return possibleFiletype
+        }
+      }
+      return null
+    }
+    const getFiletype = (image: ImageDetail) => {
+      return image.filetype ?? extractFiletype(image.url) ?? "Unknown"
+    }
 
     const imageWidth = ref(image.value?.width ?? 0)
     const imageHeight = ref(image.value?.height ?? 0)
-    const imageType = ref(image.value?.filetype ?? "Unknown")
+    const imageType = ref(image.value ? getFiletype(image.value) : "Unknown")
     const isLoadingMainImage = ref(true)
     const sketchFabfailure = ref(false)
 
@@ -210,6 +232,15 @@ export default defineNuxtComponent({
         .split("https://media.sketchfab.com/models/")[1]
         .split("/")[0]
     })
+
+    const fetchFiletype = async (url: string) => {
+      const response = await $fetch.raw(url, { method: "HEAD" })
+      const possibleFiletype = response.headers.get("content-type")?.split("/")
+      if (possibleFiletype && possibleFiletype.length > 1) {
+        return possibleFiletype[1]
+      }
+      return null
+    }
 
     /**
      * On image error, fall back on image thumbnail or the error image.
@@ -230,32 +261,26 @@ export default defineNuxtComponent({
      * to load the original provider image.
      * @param event - the image load event.
      */
-    const onImageLoaded = (event: Event) => {
+    const onImageLoaded = async (event: Event) => {
       if (!(event.target instanceof HTMLImageElement) || !image.value) {
         return
       }
 
       isLoadingThumbnail.value = false
 
-      if (isLoadingMainImage.value) {
+      if (
+        isLoadingMainImage.value &&
+        event.target.src === image.value.thumbnail
+      ) {
         imageWidth.value = image.value.width || event.target.naturalWidth
         imageHeight.value = image.value.height || event.target.naturalHeight
-
-        if (image.value.filetype) {
-          imageType.value = image.value.filetype
-        } else {
-          axios
-            .head(event.target.src)
-            .then((res) => {
-              imageType.value = res.headers["content-type"]
-            })
-            .catch(() => {
-              /**
-               * Do nothing. This avoids the console warning "Uncaught (in promise) Error:
-               * Network Error" in Firefox in development mode.
-               */
-            })
+        if (imageType.value === "Unknown") {
+          imageType.value =
+            extractFiletype(image.value.url) ||
+            (await fetchFiletype(image.value.url)) ||
+            "Unknown"
         }
+
         imageSrc.value = image.value.url
         isLoadingMainImage.value = false
       }

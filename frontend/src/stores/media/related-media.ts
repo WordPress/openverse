@@ -1,13 +1,14 @@
-import { useNuxtApp } from "#imports"
+import { decodeMediaData, useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
 import { parseFetchingError } from "~/utils/errors"
-import { initServices } from "~/stores/media/services"
+import { mediaSlug, DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
-import type { Media } from "~/types/media"
+import type { AudioDetail, ImageDetail, Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
+import type { PaginatedApiMediaResult } from "~/types/api"
 
 interface RelatedMediaState {
   mainMediaId: null | string
@@ -47,22 +48,28 @@ export const useRelatedMediaStore = defineStore("related-media", {
     },
 
     async fetchMedia(mediaType: SupportedMediaType, id: string) {
+      if (this.mainMediaId === id && this.media.length > 0) {
+        return this.media
+      }
       this._resetFetching()
       this.mainMediaId = id
       this._startFetching()
       this.media = []
-      const { $openverseApiToken, $sentry } = useNuxtApp()
-      const accessToken =
-        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
+      const { $sentry } = useNuxtApp()
       try {
-        const service = initServices[mediaType](accessToken)
-        this.media = (
-          await service.getRelatedMedia<typeof mediaType>(id)
-        ).results
+        const requestUrl = `/api/${mediaSlug(mediaType)}/${id}/related/`
+        const { results: data } = await $fetch<PaginatedApiMediaResult>(
+          requestUrl,
+          { timeout: DEFAULT_REQUEST_TIMEOUT }
+        )
+        this.media = (data ?? []).map((item: AudioDetail | ImageDetail) =>
+          decodeMediaData(item, mediaType)
+        )
         this._endFetching()
 
-        return this.media.length
+        return this.media
       } catch (error) {
+        console.log("error", error)
         const errorData = parseFetchingError(error, mediaType, "related", {
           id,
         })
