@@ -63,9 +63,9 @@ jobs:
         id: get-image-tag
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.image_tag }}" != "" ]]; then
-              echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${{ inputs.image_tag }}" | tee "$GITHUB_OUTPUT"
           else
-              echo "image_tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${{ github.sha }}" | tee "$GITHUB_OUTPUT"
           fi
 
   determine-images:
