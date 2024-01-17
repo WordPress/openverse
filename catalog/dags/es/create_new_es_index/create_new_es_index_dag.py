@@ -164,7 +164,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
             ),
             "query": Param(
                 default={},
-                type=["object"],
+                type=["object", "null"],
                 description=(
                     "An optional Elasticsearch query to use to filter the documents to be"
                     " copied to the new index. If not provided, all documents will be"

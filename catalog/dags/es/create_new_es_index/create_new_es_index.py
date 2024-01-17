@@ -47,7 +47,7 @@ def get_current_index_configuration(
     or an alias, but must uniquely identify one existing index or an
     error will be raised.
     """
-    hook = ElasticsearchPythonHook(es_host)
+    hook = ElasticsearchPythonHook(hosts=[es_host])
     es_conn = hook.get_conn
 
     response = es_conn.indices.get(
@@ -115,7 +115,7 @@ def get_final_index_configuration(
 
 @task
 def create_index(index_config, es_host: str):
-    hook = ElasticsearchPythonHook(es_host)
+    hook = ElasticsearchPythonHook(hosts=[es_host])
     es_conn = hook.get_conn
 
     new_index = es_conn.indices.create(**index_config)
@@ -129,7 +129,7 @@ def trigger_and_wait_for_reindex(
 ):
     @task
     def trigger_reindex(index_name: str, source_index: str, query: dict, es_host: str):
-        hook = ElasticsearchPythonHook(es_host)
+        hook = ElasticsearchPythonHook(hosts=[es_host])
         es_conn = hook.get_conn
 
         source = {"index": source_index}
@@ -153,7 +153,7 @@ def trigger_and_wait_for_reindex(
         return response["task"]
 
     def _wait_for_reindex(task_id: str, es_host: str):
-        hook = ElasticsearchPythonHook(es_host)
+        hook = ElasticsearchPythonHook(hosts=[es_host])
         es_conn = hook.get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
