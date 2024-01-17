@@ -37,7 +37,7 @@ jobs:
               owner,
               repo,
               branch: '${{ github.ref_name }}',
-              event: 'push',
+              event: 'pull_request',
               status: 'success',
               head_sha: '${{ github.event.inputs.commit }}',
             })
