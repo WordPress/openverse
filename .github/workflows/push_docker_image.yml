@@ -41,6 +41,7 @@ jobs:
               status: 'success',
               head_sha: '${{ github.event.inputs.commit }}',
             })
+            core.info(runs.workflow_runs)
             const runId = runs.workflow_runs.find((run) => run.name === 'CI + CD').id
             core.setOutput('run_id', runId)
 
