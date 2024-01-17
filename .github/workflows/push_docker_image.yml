@@ -36,7 +36,7 @@ jobs:
             const { data: runs } = await github.rest.actions.listWorkflowRunsForRepo({
               owner,
               repo,
-              branch: 'main',
+              branch: '${{ github.ref_name }}',
               event: 'push',
               status: 'success',
               head_sha: '${{ github.event.inputs.commit }}',
