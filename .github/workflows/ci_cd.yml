@@ -192,8 +192,7 @@ jobs:
       - name: Prepare build args
         id: prepare-build-args
         run: |
-          just versions
-          just versions >> "$GITHUB_OUTPUT"
+          just versions | tee "$GITHUB_OUTPUT"
 
       # ℹ️Step only applies for frontend image.
       # This step
@@ -737,8 +736,7 @@ jobs:
           $EOF
           HEREDOC
           )
-          echo "$MESSAGE"
-          echo "$MESSAGE" >> "$GITHUB_OUTPUT"
+          echo "$MESSAGE" | tee "$GITHUB_OUTPUT"
 
       - uses: peter-evans/create-or-update-comment@v3
         id: create-comment
