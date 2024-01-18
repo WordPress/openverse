@@ -1066,7 +1066,7 @@ jobs:
         (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
       ) &&
       (
-        (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
+        ((github.event_name == 'push' && needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
