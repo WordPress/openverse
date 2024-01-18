@@ -1,6 +1,6 @@
 import { useRuntimeConfig } from "#imports"
 
-import { joinURL, withQuery } from "ufo"
+import { joinURL } from "ufo"
 import { defineEventHandler, proxyRequest } from "h3"
 import { createConsola } from "consola"
 import { Mutex, MutexInterface } from "async-mutex"
@@ -194,7 +194,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const path = event.path.replace(/^\/api\//, "")
-  const target = withQuery(joinURL(proxyUrl, path), { format: "json" })
+  const target = joinURL(proxyUrl, path)
 
   const response = await proxyRequest(event, target, {
     headers: {
