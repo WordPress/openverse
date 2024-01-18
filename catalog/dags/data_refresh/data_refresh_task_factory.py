@@ -49,10 +49,11 @@ import os
 from collections.abc import Sequence
 
 from airflow.models.baseoperator import chain
+from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common import ingestion_server
+from common import ingestion_server, cloudwatch
 from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dag
@@ -131,7 +132,13 @@ def create_data_refresh_task_group(
         generate_index_suffix = ingestion_server.generate_index_suffix.override(
             trigger_rule=TriggerRule.NONE_FAILED,
         )()
-        tasks.append(generate_index_suffix)
+
+        disable_alarms = PythonOperator(
+            task_id="disable_sensitive_cloudwatch_alarms",
+            python_callable=cloudwatch.enable_or_disable_alarms,
+            op_args=[False],
+        )
+        tasks.append([generate_index_suffix, disable_alarms])
 
         # Trigger the 'ingest_upstream' task on the ingestion server and await its
         # completion. This task copies the media table for the given model from the
@@ -175,6 +182,13 @@ def create_data_refresh_task_group(
         # running against an index that is already promoted in production.
         tasks.append(create_filtered_index)
 
+        enable_alarms = PythonOperator(
+            task_id="enable_sensitive_cloudwatch_alarms",
+            python_callable=cloudwatch.enable_or_disable_alarms,
+            op_args=[True],
+            trigger_rule=TriggerRule.ALL_DONE,
+        )
+
         # Trigger the `promote` task on the ingestion server and await its completion.
         # This task promotes the newly created API DB table and elasticsearch index. It
         # does not include promotion of the filtered index, which must be promoted
@@ -189,7 +203,7 @@ def create_data_refresh_task_group(
                 },
                 timeout=data_refresh.data_refresh_timeout,
             )
-            tasks.append(promote_tasks)
+            tasks.append([enable_alarms, promote_tasks])
 
         # Delete the alias' previous target index, now unused.
         delete_old_index = ingestion_server.trigger_task(
@@ -213,7 +227,8 @@ def create_data_refresh_task_group(
         #       └─ create_filtered_index
         #          └─ promote (trigger_promote + wait_for_promote)
         #             └─ delete_old_index
-        #                └─ promote_filtered_index (including delete filtered index)
+        #                └─ promote_filtered_index (including delete filtered index) +
+        #                   enable_alarms
         chain(*tasks)
 
     return data_refresh_group
