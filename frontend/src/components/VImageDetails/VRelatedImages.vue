@@ -13,30 +13,31 @@
 </template>
 
 <script lang="ts">
-import { firstParam, useRoute } from "#imports"
+import { computed, defineComponent, toRef, watch } from "vue"
 
-import { computed, defineComponent, watch } from "vue"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import type { ImageDetail } from "~/types/media"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
 export default defineComponent({
   name: "VRelatedImages",
   components: { VImageGrid },
-  setup() {
+  props: {
+    mediaId: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const relatedMediaStore = useRelatedMediaStore()
-
-    const route = useRoute()
+    const mediaId = toRef(props, "mediaId")
 
     watch(
-      route,
-      async (newRoute) => {
-        const mediaId = firstParam(newRoute.params.id)
-        if (mediaId && mediaId !== relatedMediaStore.mainMediaId) {
-          await relatedMediaStore.fetchMedia("image", mediaId)
-        }
+      mediaId,
+      async (newMediaId) => {
+        await relatedMediaStore.fetchMedia("image", newMediaId)
       },
       { immediate: true }
     )
@@ -45,10 +46,7 @@ export default defineComponent({
       () => media.value.length > 0 || relatedMediaStore.fetchState.isFetching
     )
 
-    const media = computed(
-      () => (relatedMediaStore.media ?? []) as ImageDetail[]
-    )
-
+    const media = computed(() => relatedMediaStore.media as ImageDetail[])
     const fetchState = computed(() => relatedMediaStore.fetchState)
 
     return {

@@ -82,9 +82,8 @@ export const isRetriable = (error: FetchingError) => {
   return !(isNonRetryableErrorStatusCode(statusCode) || code === NO_RESULT)
 }
 
-export const handledClientSide = (error: FetchingError | null) => {
+export const handledClientSide = (error: FetchingError) => {
   return (
-    error &&
     !isNonRetryableErrorStatusCode(error.statusCode) &&
     (clientSideErrorCodes as readonly string[]).includes(error.code)
   )

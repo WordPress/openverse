@@ -17,6 +17,7 @@
       :id="fieldId"
       v-bind="nonClassAttrs"
       ref="inputEl"
+      :placeholder="placeholder"
       :type="type"
       class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus:outline-none md:text-base"
       :value="modelValue"
@@ -30,7 +31,13 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent, PropType } from "vue"
+import {
+  ref,
+  computed,
+  defineComponent,
+  PropType,
+  InputTypeHTMLAttribute,
+} from "vue"
 
 import { defineEvent } from "~/types/emits"
 
@@ -91,8 +98,14 @@ export default defineComponent({
       required: true,
       validator: (v: string) => Object.keys(FIELD_SIZES).includes(v),
     },
+    placeholder: {
+      type: String,
+    },
+    type: {
+      type: String as PropType<InputTypeHTMLAttribute>,
+      default: "text",
+    },
   },
-  // using non-native event name to ensure the two are not mixed
   emits: {
     "update:modelValue": defineEvent<[string]>(),
   },
@@ -103,8 +116,6 @@ export default defineComponent({
     const focusInput = () => {
       inputEl.value?.focus()
     }
-
-    const type = typeof attrs["type"] === "string" ? attrs["type"] : "text"
 
     const updateModelValue = (event: Event) => {
       emit("update:modelValue", (event.target as HTMLInputElement).value)
@@ -123,7 +134,6 @@ export default defineComponent({
       focusInput,
 
       emit,
-      type,
 
       sizeClass,
       nonClassAttrs,

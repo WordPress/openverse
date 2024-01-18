@@ -56,11 +56,12 @@ import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
+import { validateUUID } from "~/utils/query-utils"
+
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
-
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
@@ -84,11 +85,6 @@ export default defineNuxtComponent({
     VMediaReuse,
     VRelatedAudio,
   },
-  validate({ params }: { params: { id?: string } }) {
-    const uuidPattern =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-    return !(!params.id || !uuidPattern.test(params.id))
-  },
   async setup() {
     definePageMeta({
       layout: "content-layout",
@@ -108,7 +104,7 @@ export default defineNuxtComponent({
     const { error } = await useAsyncData(
       "single-audio",
       async () => {
-        if (audioId.value) {
+        if (audioId.value && validateUUID(audioId.value)) {
           audio.value = await singleResultStore.fetch(AUDIO, audioId.value)
           return audio.value
         } else {

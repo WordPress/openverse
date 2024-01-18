@@ -1,8 +1,11 @@
-import { useNuxtApp } from "#imports"
+import { decodeMediaData, useNuxtApp, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
 
+import axios from "axios"
+
 import type {
+  ApiMedia,
   AudioDetail,
   DetailFromMediaType,
   ImageDetail,
@@ -11,10 +14,10 @@ import { isDetail, isMediaDetail } from "~/types/media"
 
 import type { SupportedMediaType } from "~/constants/media"
 
-import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
 import { useProviderStore } from "~/stores/provider"
 import { parseFetchingError } from "~/utils/errors"
+import { DEFAULT_REQUEST_TIMEOUT, mediaSlug } from "~/utils/query-utils"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
@@ -140,8 +143,6 @@ export const useSingleResultStore = defineStore("single-result", {
      * Check if the `id` matches the `mediaId` and the media item
      * is already fetched. If middleware only set the `id` and
      * did not set the media, fetch the media item.
-     *
-     * Fetch the related media if necessary.
      */
     async fetch<T extends SupportedMediaType>(type: T, id: string) {
       const existingItem = this.getExistingItem(type, id)
@@ -159,13 +160,23 @@ export const useSingleResultStore = defineStore("single-result", {
       type: MediaType,
       id: string
     ) {
-      const { $openverseApiToken, $sentry } = useNuxtApp()
-      const accessToken =
-        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
+      this._updateFetchState("start")
+
+      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
+
+      // TODO: Check if baseURL works in prod.
+      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
+      baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
-        const service = initServices[type](accessToken)
-        this._updateFetchState("start")
-        const item = this._addProviderName(await service.getMediaDetail(id))
+        const rawItem = await axios.get<ApiMedia>(
+          `/api/${mediaSlug(type)}/${id}/`,
+          {
+            timeout: DEFAULT_REQUEST_TIMEOUT,
+            baseURL,
+          }
+        )
+        const transformedItem = decodeMediaData(rawItem.data, type)
+        const item = this._addProviderName(transformedItem)
 
         this.setMediaItem(item)
         this._updateFetchState("end")
@@ -176,6 +187,7 @@ export const useSingleResultStore = defineStore("single-result", {
           id,
         })
         this._updateFetchState("end", errorData)
+        const { $sentry } = useNuxtApp()
         $sentry.captureException(error, { extra: { errorData } })
         return null
       }

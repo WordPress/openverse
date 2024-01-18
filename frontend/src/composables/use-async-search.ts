@@ -60,7 +60,6 @@ export const useAsyncSearch = async () => {
     (newQuery, oldQuery) => {
       const newFilters = extractFiltersFromQuery(newQuery)
       if (!areQueriesEqual(newFilters, extractFiltersFromQuery(oldQuery))) {
-        console.table({ newQuery, oldQuery })
         debouncedQuery.value = newFilters
         page.value = 1
         return navigateTo(searchStore.getSearchPath())

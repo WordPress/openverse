@@ -1,13 +1,16 @@
-import { useNuxtApp } from "#imports"
+import { decodeMediaData, useNuxtApp, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
 
+import axios from "axios"
+
 import { parseFetchingError } from "~/utils/errors"
-import { initServices } from "~/stores/media/services"
+import { mediaSlug, DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
-import type { Media } from "~/types/media"
+import type { AudioDetail, ImageDetail, Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
+import type { PaginatedApiMediaResult } from "~/types/api"
 
 interface RelatedMediaState {
   mainMediaId: null | string
@@ -47,21 +50,33 @@ export const useRelatedMediaStore = defineStore("related-media", {
     },
 
     async fetchMedia(mediaType: SupportedMediaType, id: string) {
+      if (this.mainMediaId === id && this.media.length > 0) {
+        return this.media
+      }
       this._resetFetching()
       this.mainMediaId = id
       this._startFetching()
       this.media = []
-      const { $openverseApiToken, $sentry } = useNuxtApp()
-      const accessToken =
-        typeof $openverseApiToken === "string" ? $openverseApiToken : ""
+      const { $sentry } = useNuxtApp()
+      const url = `/api/${mediaSlug(mediaType)}/${id}/related/`
+      const params = mediaType === "audio" ? { peaks: true } : {}
+
+      // TODO: Check if baseURL works in prod.
+      const nitroOrigin = useRequestEvent()?.context?.siteConfigNitroOrigin
+      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
+      baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
-        const service = initServices[mediaType](accessToken)
-        this.media = (
-          await service.getRelatedMedia<typeof mediaType>(id)
-        ).results
+        const res = await axios.get<PaginatedApiMediaResult>(url, {
+          timeout: DEFAULT_REQUEST_TIMEOUT,
+          params,
+          baseURL,
+        })
+        this.media = (res.data.results ?? []).map(
+          (item: AudioDetail | ImageDetail) => decodeMediaData(item, mediaType)
+        )
         this._endFetching()
 
-        return this.media.length
+        return this.media
       } catch (error) {
         const errorData = parseFetchingError(error, mediaType, "related", {
           id,

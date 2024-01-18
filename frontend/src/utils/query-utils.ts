@@ -1,3 +1,5 @@
+import { SupportedMediaType } from "~/constants/media"
+
 import type { LocationQueryValue } from "vue-router"
 
 export const firstParam = (
@@ -17,3 +19,8 @@ export const validateUUID = (id: string | undefined | null) => {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/
   )
 }
+
+export const mediaSlug = (mediaType: SupportedMediaType) =>
+  mediaType === "image" ? "images" : "audio"
+
+export const DEFAULT_REQUEST_TIMEOUT = 30000

@@ -78,11 +78,9 @@
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
-import { timeFmt } from "~/utils/time-fmt"
 import { audioFeatures, AudioSize, AudioStatus } from "~/constants/audio"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useProviderStore } from "~/stores/provider"
 
 import VLink from "~/components/VLink.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
@@ -107,28 +105,14 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    const isSmall = computed(() => props.size === "s")
-
+  setup() {
     const featureFlagStore = useFeatureFlagStore()
     const additionalSearchViews = computed(() =>
       featureFlagStore.isOn("additional_search_views")
     )
 
-    const providerStore = useProviderStore()
-    const sourceName = computed(() => {
-      return providerStore.getProviderName(
-        props.audio.source ?? props.audio.provider,
-        "audio"
-      )
-    })
-
     return {
-      timeFmt,
-
-      isSmall,
       audioFeatures,
-      sourceName,
 
       additionalSearchViews,
     }
