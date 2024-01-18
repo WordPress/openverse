@@ -208,16 +208,15 @@ def create_data_refresh_task_group(
                 ),
             },
         )
+        tasks.append(delete_old_index)
 
         enable_alarms = PythonOperator(
             task_id="enable_cloudwatch_alarms",
             python_callable=cloudwatch.enable_or_disable_alarms,
             op_args=[True],
         )
-        tasks.append([delete_old_index, enable_alarms])
-
         # Finally, promote the filtered index.
-        tasks.append(promote_filtered_index)
+        tasks.append([enable_alarms, promote_filtered_index])
 
         # ``tasks`` contains the following tasks and task groups:
         # wait_for_data_refresh
