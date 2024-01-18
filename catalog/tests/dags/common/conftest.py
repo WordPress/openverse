@@ -5,9 +5,9 @@ import boto3
 import pytest
 
 from catalog.tests.dags.common.loader.test_s3 import (
-    ACCESS_KEY,
+    AWS_ACCESS_KEY_ID,
     S3_LOCAL_ENDPOINT,
-    SECRET_KEY,
+    AWS_SECRET_ACCESS_KEY,
 )
 
 
@@ -40,8 +40,8 @@ def empty_s3_bucket(request):
     print(f"{bucket_name=}")
     bucket = boto3.resource(
         "s3",
-        aws_access_key_id=ACCESS_KEY,
-        aws_secret_access_key=SECRET_KEY,
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
         endpoint_url=S3_LOCAL_ENDPOINT,
     ).Bucket(bucket_name)
 
