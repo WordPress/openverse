@@ -478,7 +478,6 @@ export const useMediaStore = defineStore("media", {
       const headers = useRequestHeaders(["cookie"])
       const url = `/api/${mediaSlug(mediaType)}/${pathSlug}`
       try {
-        console.log("url", url)
         const res = await $fetch<PaginatedApiMediaResult>(url, {
           query: queryParams,
           headers,
