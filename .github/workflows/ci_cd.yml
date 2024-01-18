@@ -10,7 +10,14 @@ on:
       image_tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
-        required: true
+        required: false
+        default: ""
+      # This is useful when dispatching on a branch other than `main`.
+      perform_deploy:
+        description: "Publish images and deploy staging?"
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -56,10 +63,10 @@ jobs:
       - name: Get image tag
         id: get-image-tag
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-              echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.image_tag }}" != "" ]]; then
+              echo "image_tag=${{ inputs.image_tag }}" | tee "$GITHUB_OUTPUT"
           else
-              echo "image_tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${{ github.sha }}" | tee "$GITHUB_OUTPUT"
           fi
 
   determine-images:
@@ -901,8 +908,10 @@ jobs:
     # prevent running on fork PRs
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
-      github.repository == 'WordPress/openverse' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
@@ -960,7 +969,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
       needs.get-changes.outputs.frontend == 'true' &&
       needs.playwright.result == 'success' &&
       needs.publish-images.result == 'success'
@@ -1002,7 +1014,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
       needs.get-changes.outputs.api == 'true' &&
       needs.publish-images.result == 'success'
     needs:
@@ -1046,10 +1061,12 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !cancelled() &&
-      github.event_name == 'push' &&
-      github.repository == 'WordPress/openverse' &&
       (
-        (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
+      (
+        ((github.event_name == 'push' && needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
