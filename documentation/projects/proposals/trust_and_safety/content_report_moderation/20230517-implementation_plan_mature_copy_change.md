@@ -72,45 +72,16 @@ The following model names will need to be updated:
 The database table name for these models will _not_ be changed, and they will
 need to be referenced using
 [the `db_table` model attribute](https://docs.djangoproject.com/en/5.0/ref/models/options/#django.db.models.Options.db_table).
+This can be accomplished in a zero-downtime manner with a single deployment.
 
 The
 [`mature` reason](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L22-L21)
 (and
 [`mature_filtered`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L18-L17)
-value) in `AbstractMediaReport` definition will also need to be changed to
-`sensitive` and `sensitive_filtered` respectively. The migration necessary for
-changing the data is described below, however the API will need to continue to
-accept `mature` as a report reason and convert it internally to `sensitive` (at
-least until we decide to make a version change to the API).
-
-In order to perform both of these changes in a
-[zero-downtime manner](https://docs.openverse.org/general/zero_downtime_database_management.html),
-the following steps will need to be taken:
-
-1. Rename the models (without changing the underlying tables) and associated
-   references for:
-   - `AbstractMatureMedia` -> `AbstractSensitiveMedia`
-   - `MatureImage` -> `SensitiveImage`
-   - `MatureAudio` -> `SensitiveAudio`
-2. Add `sensitive` and `sensitive_filtered` as a new status and reason
-   respectively for the `AbstractMediaReport` class. Also add
-   `sensitive_filtered` as to the check for
-   [creating sensitive media records](https://github.com/WordPress/openverse/blob/aa16d4f1be7607b12c428886b9890bdd947cc71c/api/api/models/media.py#L224).
-   Instance of `mature` that are supplied for the reporting endpoints should be
-   converted to `sensitive`.
-3. Add `sensitive` as an alias for the
-   [`mature` query parameter](https://github.com/WordPress/openverse/blob/3986e71c722e6cd8aca8a66a1f37d710aadc9a19/api/api/serializers/media_serializers.py#L120),
-   and deprecate the `mature` parameter.
-4. Deploy this version of the API.
-5. Create a
-   [data management command](https://docs.openverse.org/general/zero_downtime_database_management.html#django-management-command-based-data-transformations)
-   which converts all the `mature` and `mature_filtered` values to `sensitive`
-   and `sensitive_filtered` respectively for both report tables.
-6. Deploy this version of the API and run the data management command to convert
-   all the values.
-7. Remove the conversions from `mature` to `sensitive` and remove `mature` as a
-   choice for the `AbstractMediaReport` table.
-8. Deploy the API.
+value) in `AbstractMediaReport` were initially going to be changed as part of
+this, they will actually be deprecated in further steps as described by the
+[Django admin tools and access control for moderators plan](20231208-implementation_plan_django_admin_moderator_access.md).
+They will not be changed at this time.
 
 <details> <summary>Prior plan involving table changes</summary>
 
