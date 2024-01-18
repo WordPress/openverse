@@ -30,7 +30,7 @@ describe("VLink", () => {
     async ({ href, target, rel }) => {
       options.props = { href }
       options.slots = { default: () => "Code is Poetry" }
-      render(VLink, options)
+      await render(VLink, options)
       const link = screen.getByRole("link")
       const expectedHref = href.startsWith("/")
         ? `http://localhost:3000${href}`
@@ -62,7 +62,7 @@ describe("VLink", () => {
           </div>`,
       })._context.components.VLinkWrapper
     const WrapperComponent = createVLinkWrapper(href)
-    render(WrapperComponent, options)
+    await render(WrapperComponent, options)
     const linkBefore = screen.getByRole("link")
     expect(linkBefore.textContent).toBe("Link Text")
 

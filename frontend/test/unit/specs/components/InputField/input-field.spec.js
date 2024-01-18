@@ -1,6 +1,8 @@
-import { screen, render } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
 import { describe, expect, it } from "vitest"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VInputField from "~/components/VInputField/VInputField.vue"
 
@@ -12,7 +14,7 @@ const props = {
 
 describe("VInputField", () => {
   it('should render an `input` element with type="text"', async () => {
-    render(VInputField, {
+    await render(VInputField, {
       attrs: {
         placeholder: "Enter some text",
       },
@@ -25,7 +27,7 @@ describe("VInputField", () => {
   })
 
   it("should allow changing the type", async () => {
-    render(VInputField, {
+    await render(VInputField, {
       attrs: {
         placeholder: "Enter some number",
         type: "number",
@@ -39,7 +41,7 @@ describe("VInputField", () => {
   })
 
   it("should set the ID on the `input` to allow attaching labels", async () => {
-    render(VInputField, {
+    await render(VInputField, {
       attrs: {
         placeholder: "Enter some text",
       },
@@ -52,7 +54,7 @@ describe("VInputField", () => {
   })
 
   it("should render the label text connected to the input field if specified", async () => {
-    render(VInputField, {
+    await render(VInputField, {
       props: props,
     })
 

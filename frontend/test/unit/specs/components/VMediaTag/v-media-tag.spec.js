@@ -1,39 +1,35 @@
 import { RouterLinkStub } from "@vue/test-utils"
 import { render, screen } from "@testing-library/vue"
 
-import { i18n } from "~~/test/unit/test-utils/i18n"
-
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 
 describe("VMediaTag", () => {
-  let props = null
   let options = null
 
   beforeEach(() => {
-    props = {}
-    options = { propsData: props, global: { plugins: [i18n] } }
+    options = { props: {}, global: { stubs: {} } }
   })
 
-  it("should render an span tag by default", () => {
-    const { container } = render(VMediaTag, options)
+  it("should render an span tag by default", async () => {
+    const { container } = await render(VMediaTag, options)
     expect(container.firstChild.tagName).toEqual("SPAN")
   })
 
-  it("should render the supplied tag", () => {
-    options.propsData = {
-      ...options.propsData,
+  it("should render the supplied tag", async () => {
+    options.props = {
+      ...options.props,
       tag: "a",
       href: "https://example.com/",
     }
 
-    const { container } = render(VMediaTag, options)
+    const { container } = await render(VMediaTag, options)
     expect(container.firstChild.tagName).toEqual("A")
     expect(container.firstChild.href).toEqual("https://example.com/")
   })
 
-  it("should render the supplied Vue component", () => {
-    options.propsData = {
-      ...options.propsData,
+  it("should render the supplied Vue component", async () => {
+    options.props = {
+      ...options.props,
       tag: "RouterLink",
       to: "/",
     }
@@ -41,17 +37,17 @@ describe("VMediaTag", () => {
       RouterLink: RouterLinkStub,
     }
 
-    const { container } = render(VMediaTag, options)
+    const { container } = await render(VMediaTag, options)
     expect(container.firstChild.tagName).toEqual("A")
   })
 
-  it("renders slot content", () => {
+  it("renders slot content", async () => {
     const label = "I'm a label"
     options.slots = {
       default: () => `<div aria-label="${label}">Hello</div>`,
     }
 
-    render(VMediaTag, options)
+    await render(VMediaTag, options)
     expect(screen.queryByLabelText(label)).toBeDefined()
   })
 })

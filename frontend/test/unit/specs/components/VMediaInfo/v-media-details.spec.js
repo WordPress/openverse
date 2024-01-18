@@ -1,14 +1,12 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
-
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 
 describe("VMediaDetails", () => {
   let options
-  let props
 
   const overrides = {
     audio_set: {
@@ -21,21 +19,17 @@ describe("VMediaDetails", () => {
   }
 
   beforeEach(() => {
-    props = {
-      media: getAudioObj(overrides),
-    }
     options = {
-      propsData: props,
+      props: { media: getAudioObj(overrides) },
       global: {
         stubs: ["VAudioThumbnail"],
-        plugins: [i18n],
         mocks: { route: { value: { name: "audio-id" } } },
       },
     }
   })
 
-  it("renders the album title", () => {
-    render(VMediaDetails, options)
+  it("renders the album title", async () => {
+    await render(VMediaDetails, options)
 
     const album = screen.getByRole("link", { name: overrides.audio_set.title })
     expect(album).toHaveAttribute(
@@ -44,32 +38,26 @@ describe("VMediaDetails", () => {
     )
   })
 
-  it("hides the album title tag when it does not exists", () => {
-    options.propsData.media.audio_set = null
-    render(VMediaDetails, options)
+  it("hides the album title tag when it does not exists", async () => {
+    options.props.media.audio_set = null
+    await render(VMediaDetails, options)
     expect(screen.queryByText("Album")).toBeNull()
   })
 
-  it("displays the main filetype when no alternative files are available", () => {
-    render(VMediaDetails, options)
+  it("displays the main filetype when no alternative files are available", async () => {
+    await render(VMediaDetails, options)
     expect(screen.queryByText("MP32")).toBeVisible()
   })
 
-  it("displays multiple filetypes when they are available in alt_files", () => {
-    options.propsData.media.alt_files = [
-      { filetype: "wav" },
-      { filetype: "ogg" },
-    ]
-    render(VMediaDetails, options)
+  it("displays multiple filetypes when they are available in alt_files", async () => {
+    options.props.media.alt_files = [{ filetype: "wav" }, { filetype: "ogg" }]
+    await render(VMediaDetails, options)
     expect(screen.queryByText("MP32, WAV, OGG")).toBeVisible()
   })
 
-  it("displays only distinct filetypes", () => {
-    options.propsData.media.alt_files = [
-      { filetype: "ogg" },
-      { filetype: "ogg" },
-    ]
-    render(VMediaDetails, options)
+  it("displays only distinct filetypes", async () => {
+    options.props.media.alt_files = [{ filetype: "ogg" }, { filetype: "ogg" }]
+    await render(VMediaDetails, options)
     expect(screen.queryByText("MP32, OGG")).toBeVisible()
   })
 })

@@ -1,8 +1,8 @@
 import { createApp, ref } from "vue"
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
 
-import { describe, expect, it } from "vitest"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
@@ -50,7 +50,7 @@ const TestWrapper = createApp({}).component("TestWrapper", {
 
 describe("VItemGroup", () => {
   it("should render buttons with the appropriate roles", async () => {
-    render(TestWrapper)
+    await render(TestWrapper)
     expect(screen.queryByRole("menu")).toBeVisible()
     const items = screen.queryAllByRole("menuitemcheckbox")
     expect(items).toHaveLength(4)
@@ -58,7 +58,7 @@ describe("VItemGroup", () => {
   })
 
   it("should render functional buttons", async () => {
-    const { container } = render(TestWrapper)
+    const { container } = await render(TestWrapper)
     const [, secondItem] = screen.queryAllByRole("menuitemcheckbox")
     expect(
       container.querySelector('[aria-pressed="true"][aria-checked="true"]')
@@ -70,7 +70,7 @@ describe("VItemGroup", () => {
   })
 
   it("should render a radio group", async () => {
-    const { container } = render(TestWrapper, {
+    const { container } = await render(TestWrapper, {
       attrs: { type: "radiogroup" },
     })
     expect(screen.queryByRole("radiogroup")).not.toBeNull()
@@ -86,7 +86,7 @@ describe("VItemGroup", () => {
 
   describe("navigation", () => {
     it("should render the first item tabbable when there is no default selection and none are selected", async () => {
-      const { container } = render(TestWrapper, {
+      const { container } = await render(TestWrapper, {
         props: { hasDefaultSelection: false },
         attrs: { type: "radiogroup" },
       })
@@ -97,7 +97,7 @@ describe("VItemGroup", () => {
     })
 
     it("should render all items tabbable when in a menu", async () => {
-      const { container } = render(TestWrapper, {
+      const { container } = await render(TestWrapper, {
         attrs: { type: "menu" },
       })
       const tabbableElements = container.querySelectorAll('[tabindex="0"]')
@@ -106,7 +106,7 @@ describe("VItemGroup", () => {
     })
 
     it("should render only the selected item as tabbable", async () => {
-      const { container } = render(TestWrapper, {
+      const { container } = await render(TestWrapper, {
         attrs: { type: "radiogroup" },
         props: { hasDefaultSelection: false },
       })
@@ -121,7 +121,7 @@ describe("VItemGroup", () => {
     })
 
     it("should render the currently focused item as tabbable even when there is a selection", async () => {
-      const { container } = render(TestWrapper, {
+      const { container } = await render(TestWrapper, {
         attrs: { type: "radiogroup" },
       })
       const [, secondItem] = screen.queryAllByRole("radio")
@@ -136,7 +136,7 @@ describe("VItemGroup", () => {
       it.each(["ArrowUp", "ArrowLeft"])(
         "should focus to the previous item on %s",
         async (key) => {
-          render(TestWrapper, { attrs: { type: "radiogroup" } })
+          await render(TestWrapper, { attrs: { type: "radiogroup" } })
           const [firstItem, secondItem] = screen.queryAllByRole("radio")
 
           await doFocus(secondItem)
@@ -148,7 +148,7 @@ describe("VItemGroup", () => {
       it.each(["ArrowUp", "ArrowLeft"])(
         "should go to the last item when on the first item and pressing %s",
         async (key) => {
-          render(TestWrapper, { attrs: { type: "radiogroup" } })
+          await render(TestWrapper, { attrs: { type: "radiogroup" } })
           const [firstItem, , , lastItem] = screen.queryAllByRole("radio")
           await doFocus(firstItem)
           await userEvent.keyboard(`{${key}}`)
@@ -159,7 +159,7 @@ describe("VItemGroup", () => {
       it.each(["ArrowDown", "ArrowRight"])(
         "should focus to the next item on %s",
         async (key) => {
-          render(TestWrapper, { attrs: { type: "radiogroup" } })
+          await render(TestWrapper, { attrs: { type: "radiogroup" } })
           const [firstItem, secondItem] = screen.queryAllByRole("radio")
 
           await doFocus(firstItem)
@@ -171,7 +171,7 @@ describe("VItemGroup", () => {
       it.each(["ArrowDown", "ArrowRight"])(
         "should go to the first item when on the last item and pressing %s",
         async (key) => {
-          render(TestWrapper, { attrs: { type: "radiogroup" } })
+          await render(TestWrapper, { attrs: { type: "radiogroup" } })
           const [firstItem, , , lastItem] = screen.queryAllByRole("radio")
 
           await doFocus(lastItem)
@@ -185,7 +185,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowUp", "ArrowLeft"])(
             "should focus to the previous item on %s",
             async (key) => {
-              render(TestWrapper, { attrs: { type: "radiogroup" } })
+              await render(TestWrapper, { attrs: { type: "radiogroup" } })
               const [firstItem, secondItem] = screen.queryAllByRole("radio")
 
               await doFocus(secondItem)
@@ -197,7 +197,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowUp", "ArrowLeft"])(
             "should go to the last item when on the first item and pressing %s",
             async (key) => {
-              render(TestWrapper, { attrs: { type: "radiogroup" } })
+              await render(TestWrapper, { attrs: { type: "radiogroup" } })
               const [firstItem, , , lastItem] = screen.queryAllByRole("radio")
               await doFocus(firstItem)
               await userEvent.keyboard(`{${key}}`)
@@ -208,7 +208,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowDown", "ArrowRight"])(
             "should focus to the next item on %s",
             async (key) => {
-              render(TestWrapper, { attrs: { type: "radiogroup" } })
+              await render(TestWrapper, { attrs: { type: "radiogroup" } })
               const [firstItem, secondItem] = screen.queryAllByRole("radio")
 
               await doFocus(firstItem)
@@ -220,7 +220,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowDown", "ArrowRight"])(
             "should go to the first item when on the last item and pressing %s",
             async (key) => {
-              render(TestWrapper, { attrs: { type: "radiogroup" } })
+              await render(TestWrapper, { attrs: { type: "radiogroup" } })
               const [firstItem, , , lastItem] = screen.queryAllByRole("radio")
 
               await doFocus(lastItem)
@@ -235,7 +235,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowUp"])(
             "should focus to the previous item on %s",
             async (key) => {
-              render(TestWrapper, {
+              await render(TestWrapper, {
                 attrs: { type: "radiogroup", direction: "horizontal" },
               })
               const [firstItem, secondItem] = screen.queryAllByRole("radio")
@@ -250,7 +250,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowUp"])(
             "should go to the last item when on the first item and pressing %s",
             async (key) => {
-              render(TestWrapper, {
+              await render(TestWrapper, {
                 attrs: { type: "radiogroup", direction: "horizontal" },
               })
               const [firstItem, , , lastItem] = screen.queryAllByRole("radio")
@@ -264,7 +264,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowDown"])(
             "should focus to the next item on %s",
             async (key) => {
-              render(TestWrapper, {
+              await render(TestWrapper, {
                 attrs: { type: "radiogroup", direction: "horizontal" },
               })
               const [firstItem, secondItem] = screen.queryAllByRole("radio")
@@ -279,7 +279,7 @@ describe("VItemGroup", () => {
           it.each(["ArrowDown"])(
             "should go to the first item when on the last item and pressing %s",
             async (key) => {
-              render(TestWrapper, {
+              await render(TestWrapper, {
                 attrs: { type: "radiogroup", direction: "horizontal" },
               })
               const [firstItem, , , lastItem] = screen.queryAllByRole("radio")

@@ -1,7 +1,5 @@
 // vitest-environment jsdom
-import { render } from "@testing-library/vue"
-
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 
@@ -22,32 +20,27 @@ describe("VWaveform", () => {
       audioId: "test",
     }
 
-    options = {
-      propsData: props,
-      global: {
-        plugins: [i18n],
-      },
-    }
+    options = { props }
   })
 
-  it("should use given peaks when peaks array is provided", () => {
+  it("should use given peaks when peaks array is provided", async () => {
     const peaksCount = 5
     props.peaks = Array.from({ length: peaksCount }, () => 0)
-    const { container } = render(VWaveform, options)
+    const { container } = await render(VWaveform, options)
     // There is also a yellow "played" rectangle
     expect(container.querySelectorAll("rect").length).toBe(peaksCount + 1)
   })
 
-  it("should use random peaks when peaks not set", () => {
+  it("should use random peaks when peaks not set", async () => {
     const peaksCount = 100
-    const { container } = render(VWaveform, options)
+    const { container } = await render(VWaveform, options)
     expect(container.querySelectorAll("rect")).toHaveLength(peaksCount + 1)
   })
 
-  it("should use random peaks when peaks array is blank", () => {
+  it("should use random peaks when peaks array is blank", async () => {
     const peaksCount = 100
     props.peaks = null
-    const { container } = render(VWaveform, options)
+    const { container } = await render(VWaveform, options)
     expect(container.querySelectorAll("rect")).toHaveLength(peaksCount + 1)
   })
 })

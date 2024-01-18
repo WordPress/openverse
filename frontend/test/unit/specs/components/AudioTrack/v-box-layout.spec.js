@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
-
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 
@@ -14,15 +13,12 @@ describe("VBoxLayout", () => {
   }
 
   beforeEach(() => {
-    options = {
-      propsData: props,
-      global: { plugins: [i18n] },
-    }
+    options = { props }
   })
 
-  it("renders audio title, license and category in v-box-layout", () => {
+  it("renders audio title, license and category in v-box-layout", async () => {
     props.audio.category = "music"
-    render(VBoxLayout, options)
+    await render(VBoxLayout, options)
     const title = screen.getByText(props.audio.title)
     expect(title).toBeVisible()
     const license = screen.getByLabelText(
@@ -33,9 +29,9 @@ describe("VBoxLayout", () => {
     expect(category).toBeVisible()
   })
 
-  it("should not render category string if category is null", () => {
+  it("should not render category string if category is null", async () => {
     props.audio.category = null
-    render(VBoxLayout, options)
+    await render(VBoxLayout, options)
     const categoryLabel = screen.queryByText("Music")
     expect(categoryLabel).toBeNull()
   })
