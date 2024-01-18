@@ -1,8 +1,10 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
 import { beforeEach, describe, expect, it } from "vitest"
 
 import { createApp } from "vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { i18n } from "~~/test/unit/test-utils/i18n"
 
@@ -37,7 +39,7 @@ describe("VContentLink", () => {
   })
 
   it("is enabled when there are results", async () => {
-    render(VContentLink, options)
+    await render(VContentLink, options)
     const btn = screen.getByRole("link")
 
     expect(btn).toHaveAttribute("href")

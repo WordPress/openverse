@@ -1,8 +1,10 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 
 import { describe, expect, it } from "vitest"
 
 import { nextTick } from "vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import VButton from "~/components/VButton.vue"
 
@@ -15,7 +17,7 @@ import VButton from "~/components/VButton.vue"
  */
 describe("VButton", () => {
   it('should render a `button` by default with type="button" and no tabindex', async () => {
-    render(VButton, {
+    await render(VButton, {
       props: { variant: "filled-white", size: "medium" },
       slots: { default: () => "Code is Poetry" },
     })
@@ -28,7 +30,7 @@ describe("VButton", () => {
   })
 
   it("should allow passing an explicit type", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: { type: "submit", variant: "filled-white", size: "medium" },
       slots: { default: () => "Code is Poetry" },
     })
@@ -39,7 +41,7 @@ describe("VButton", () => {
   })
 
   it("should render an anchor with no type attribute", async () => {
-    render(VButton, {
+    await render(VButton, {
       attrs: { href: "http://localhost" },
       props: { as: "VLink", variant: "filled-white", size: "medium" },
       slots: { default: () => "Code is Poetry" },
@@ -53,7 +55,7 @@ describe("VButton", () => {
   })
 
   it("should render the disabled attribute on a button when the element is explicitly unfocusableWhenDisabled and is disabled", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: {
         disabled: true,
         focusableWhenDisabled: false,
@@ -69,7 +71,7 @@ describe("VButton", () => {
   })
 
   it("should not render the disabled attribute if the element is focusableWhenDisabled", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: {
         disabled: true,
         focusableWhenDisabled: true,
@@ -86,7 +88,7 @@ describe("VButton", () => {
   })
 
   it("should not render the disabled attribute on elements that do not support it", async () => {
-    render(VButton, {
+    await render(VButton, {
       props: {
         as: "VLink",
         disabled: true,

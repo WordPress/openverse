@@ -3,13 +3,13 @@ import { describe, expect, it } from "vitest"
 import { defaultRef } from "~/composables/default-ref"
 
 describe("defaultRef", () => {
-  it("should use the default value", () => {
+  it("should use the default value", async () => {
     const getDefault = () => 100
     const value = defaultRef(getDefault)
     expect(value.value).toBe(100)
   })
 
-  it("should use the set value", () => {
+  it("should use the set value", async () => {
     const value = defaultRef(() => "a")
     value.value = "b"
     expect(value.value).toBe("b")

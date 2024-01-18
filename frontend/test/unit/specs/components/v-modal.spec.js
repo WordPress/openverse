@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import {
   afterAll,
   beforeAll,
@@ -10,10 +9,10 @@ import {
 } from "vitest"
 
 import { ref, computed, createApp } from "vue"
-import { screen, render } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
 
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VModal from "~/components/VModal/VModal.vue"
 import VButton from "~/components/VButton.vue"
@@ -75,7 +74,6 @@ describe("VModal", () => {
   beforeEach(() => {
     options = {
       props: { useCustomInitialFocus: false },
-      global: { plugins: [i18n] },
     }
     vi.resetAllMocks()
   })

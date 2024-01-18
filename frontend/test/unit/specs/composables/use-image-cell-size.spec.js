@@ -3,7 +3,7 @@ import { ref } from "vue"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 
 describe("useImageCellSize", () => {
-  it("Should return correct values for square image", () => {
+  it("Should return correct values for square image", async () => {
     const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
       imageSize: {},
       isSquare: ref(true),
@@ -15,7 +15,7 @@ describe("useImageCellSize", () => {
     expect(styles.value).toEqual({})
   })
 
-  it("Should return correct values for intrinsic panorama image", () => {
+  it("Should return correct values for intrinsic panorama image", async () => {
     const HEIGHT = 25
     const WIDTH = 300
     const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
@@ -33,7 +33,7 @@ describe("useImageCellSize", () => {
     })
   })
 
-  it("Should return correct values for intrinsic tall image", () => {
+  it("Should return correct values for intrinsic tall image", async () => {
     const HEIGHT = 300
     const WIDTH = 25
     const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
@@ -51,7 +51,7 @@ describe("useImageCellSize", () => {
     })
   })
 
-  it("Should return correct values for intrinsic square image", () => {
+  it("Should return correct values for intrinsic square image", async () => {
     const HEIGHT = 300
     const WIDTH = 300
     const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({

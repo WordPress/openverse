@@ -19,7 +19,7 @@ vi.mock("~/composables/use-reduced-motion", () => ({
 
 describe("VLogoLoader", () => {
   it("should render the logo", async () => {
-    render(VLogoLoader)
+    await render(VLogoLoader)
     const element = screen.getByTestId("logo-loader")
     expect(element).toBeInTheDocument()
   })
@@ -28,7 +28,7 @@ describe("VLogoLoader", () => {
     it("should render differently when the user prefers reduced motion", async () => {
       useReducedMotion.mockImplementation(() => true)
 
-      render(VLogoLoader, {
+      await render(VLogoLoader, {
         props: { status: "loading" },
       })
       const element = screen.getByTestId("logo-loader")
@@ -37,7 +37,7 @@ describe("VLogoLoader", () => {
     it("should show the default loading style when no motion preference is set", async () => {
       useReducedMotion.mockImplementation(() => false)
 
-      render(VLogoLoader, {
+      await render(VLogoLoader, {
         props: { status: "loading" },
       })
       const element = screen.getByTestId("logo-loader")

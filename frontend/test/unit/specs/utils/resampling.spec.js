@@ -3,11 +3,11 @@ import { downsampleArray, upsampleArray } from "~/utils/resampling"
 describe("upsampleArray", () => {
   const baseArray = [0, 10, 30, 20]
 
-  it("should scale up array by filling points between elements", () => {
+  it("should scale up array by filling points between elements", async () => {
     expect(upsampleArray(baseArray, 7)).toEqual([0, 5, 10, 20, 30, 25, 20])
   })
 
-  it("should scale up array even when not exactly divisible", () => {
+  it("should scale up array even when not exactly divisible", async () => {
     const upsampledArray = upsampleArray(baseArray, 8)
     expect(upsampledArray[0]).toBe(0)
     expect(upsampledArray[1]).toBeCloseTo(4.285, 2)
@@ -23,11 +23,11 @@ describe("upsampleArray", () => {
 describe("downsampleArray", () => {
   const baseArray = [5, 10, 15, 10, 5, 0, 5]
 
-  it("should scale down array by dropping points between elements", () => {
+  it("should scale down array by dropping points between elements", async () => {
     expect(downsampleArray(baseArray, 4)).toEqual([5, 15, 0, 5])
   })
 
-  it("should scale down array even when not exactly divisible", () => {
+  it("should scale down array even when not exactly divisible", async () => {
     expect(downsampleArray(baseArray, 3)).toEqual([5, 15, 5])
   })
 })

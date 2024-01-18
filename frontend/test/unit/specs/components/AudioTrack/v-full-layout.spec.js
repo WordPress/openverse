@@ -1,18 +1,14 @@
-import { render } from "@testing-library/vue"
-
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
-
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
 
 describe("VFullLayout", () => {
-  it("should render the weblink button with the foreign landing url", () => {
+  it("should render the weblink button with the foreign landing url", async () => {
     const audio = getAudioObj()
 
-    const { getByText } = render(VFullLayout, {
-      global: { plugins: [i18n] },
-      propsData: {
+    const { getByText } = await render(VFullLayout, {
+      props: {
         audio,
         size: "s",
         status: "playing",

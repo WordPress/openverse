@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/vue"
+import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
 
 import { beforeEach, describe, expect, it } from "vitest"
 
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import { useProviderStore } from "~/stores/provider"
 
@@ -50,14 +50,13 @@ describe("VSourcesTable", () => {
     options = {
       props: { media: "image" },
       global: {
-        plugins: [i18n],
         stubs: ["TableSortIcon"],
       },
     }
   })
 
   it('should be sorted by display_name ("Source") by default', async () => {
-    render(VSourcesTable, options)
+    await render(VSourcesTable, options)
 
     const table = getTableData(screen.getAllByRole("row"))
     const expectedTable = [
@@ -69,7 +68,7 @@ describe("VSourcesTable", () => {
   })
 
   it('should be sorted by clean url when click on "Domain" header', async () => {
-    render(VSourcesTable, options)
+    await render(VSourcesTable, options)
     const domainCell = screen.getByRole("columnheader", {
       name: /domain/i,
     })
@@ -85,7 +84,7 @@ describe("VSourcesTable", () => {
 
   // https://github.com/wordpress/openverse/issues/411
   it.skip('should be sorted by media_count when click on "Total items" header', async () => {
-    render(VSourcesTable, options)
+    await render(VSourcesTable, options)
     const domainCell = screen.getByRole("columnheader", {
       name: /total items/i,
     })

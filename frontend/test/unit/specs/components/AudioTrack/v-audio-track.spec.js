@@ -1,6 +1,8 @@
-import { fireEvent, render } from "@testing-library/vue"
+import { fireEvent } from "@testing-library/vue"
 
 import { createApp } from "vue"
+
+import { render } from "~~/test/unit/test-utils/render"
 
 import { i18n } from "~~/test/unit/test-utils/i18n"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
@@ -58,32 +60,32 @@ describe("AudioTrack", () => {
     }
   })
 
-  it("should render the full audio track component even without duration", () => {
+  it("should render the full audio track component even without duration", async () => {
     options.props.layout = "full"
-    const { getByText } = render(VAudioTrack, options)
+    const { getByText } = await render(VAudioTrack, options)
     const creator = getByText(props.audio.creator)
     expect(creator).toBeInstanceOf(HTMLAnchorElement)
   })
 
-  it("should show audio title as main page title in full layout", () => {
+  it("should show audio title as main page title in full layout", async () => {
     options.props.layout = "full"
-    const { getByText } = render(VAudioTrack, options)
+    const { getByText } = await render(VAudioTrack, options)
     // Title text appears multiple times in the track, so need to specify selector
     const element = getByText(props.audio.title, { selector: "H1" })
     expect(element).toBeInTheDocument()
   })
 
-  it("should show audio creator in a full layout with link", () => {
+  it("should show audio creator in a full layout with link", async () => {
     options.props.layout = "full"
-    const { getByText } = render(VAudioTrack, options)
+    const { getByText } = await render(VAudioTrack, options)
     const element = getByText(props.audio.creator)
     expect(element).toBeInstanceOf(HTMLAnchorElement)
     expect(element).toHaveAttribute("href", props.audio.creator_url)
   })
 
-  it("should render the row audio track component even without duration", () => {
+  it("should render the row audio track component even without duration", async () => {
     options.props.layout = "row"
-    const { getByText } = render(VAudioTrack, options)
+    const { getByText } = await render(VAudioTrack, options)
     const creator = getByText("by " + props.audio.creator)
     expect(creator).toBeTruthy()
   })
@@ -115,7 +117,7 @@ describe("AudioTrack", () => {
         .spyOn(window.HTMLMediaElement.prototype, "play")
         .mockImplementation(() => Promise.reject(playError))
 
-      const { getByRole, getByText } = render(VAudioTrack, options)
+      const { getByRole, getByText } = await render(VAudioTrack, options)
 
       await fireEvent.click(getByRole("button"))
       expect(playStub).toHaveBeenCalledTimes(1)
@@ -137,7 +139,7 @@ describe("AudioTrack", () => {
     options.props.audio.isSensitive = true
     options.props.layout = "box"
     options.props.size = "large"
-    const { getByText } = render(VAudioTrack, options)
+    const { getByText } = await render(VAudioTrack, options)
     const h2 = getByText("This audio track may contain sensitive content.")
     expect(h2).toHaveClass("blur-text")
   })
@@ -145,7 +147,7 @@ describe("AudioTrack", () => {
   it("has blurred info in row layout when audio is sensitive", async () => {
     options.props.audio.isSensitive = true
     options.props.layout = "row"
-    const { getByText } = render(VAudioTrack, options)
+    const { getByText } = await render(VAudioTrack, options)
 
     const h2 = getByText("This audio track may contain sensitive content.")
     expect(h2).toHaveClass("blur-text")
@@ -157,7 +159,7 @@ describe("AudioTrack", () => {
   it("is does not contain title or creator anywhere when the audio is sensitive", async () => {
     options.props.audio.isSensitive = true
     options.props.layout = "row"
-    const screen = render(VAudioTrack, options)
+    const screen = await render(VAudioTrack, options)
     let { title, creator } = options.props.audio
     let match = RegExp(`(${title}|${creator})`)
     expect(screen.queryAllByText(match)).toEqual([])

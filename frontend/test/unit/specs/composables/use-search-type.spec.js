@@ -11,7 +11,7 @@ describe("useSearchType", () => {
     setActivePinia(createPinia())
   })
 
-  it("should have correct initial values", () => {
+  it("should have correct initial values", async () => {
     const {
       activeType,
       types: searchTypes,
@@ -38,7 +38,7 @@ describe("useSearchType", () => {
     expect(additionalTypes.value).toEqual([])
   })
 
-  it("should return correct props for active search type when type is not passed", () => {
+  it("should return correct props for active search type when type is not passed", async () => {
     const { getSearchTypeProps } = useSearchType()
 
     const { icon, label } = getSearchTypeProps()
@@ -46,7 +46,7 @@ describe("useSearchType", () => {
     expect(label).toBe("All content")
   })
 
-  it("should return correct props when type is passed", () => {
+  it("should return correct props when type is passed", async () => {
     const { getSearchTypeProps } = useSearchType()
 
     const { icon, label } = getSearchTypeProps(AUDIO)

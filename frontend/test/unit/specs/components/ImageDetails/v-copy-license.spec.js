@@ -1,6 +1,4 @@
-import { render } from "@testing-library/vue"
-
-import { i18n } from "~~/test/unit/test-utils/i18n"
+import { render } from "~~/test/unit/test-utils/render"
 
 import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
 
@@ -26,16 +24,11 @@ describe("VCopyLicense", () => {
       },
       fullLicenseName: "LICENSE",
     }
-    options = {
-      propsData: props,
-      global: {
-        plugins: [i18n],
-      },
-    }
+    options = { props }
   })
 
-  it("should contain the correct contents", () => {
-    const { queryAllByText } = render(VCopyLicense, options)
+  it("should contain the correct contents", async () => {
+    const { queryAllByText } = await render(VCopyLicense, options)
     expect(queryAllByText(/Copy text/i)).toHaveLength(3)
   })
 })

@@ -49,24 +49,24 @@ describe("useSensitiveMedia composable", () => {
     }))
   })
 
-  it("should return non-sensitive when media is null", () => {
+  it("should return non-sensitive when media is null", async () => {
     const { visibility } = useSensitiveMedia(null)
     expect(visibility.value).toBe("non-sensitive")
   })
 
-  it("should return non-sensitive when media is not sensitive", () => {
+  it("should return non-sensitive when media is not sensitive", async () => {
     const { visibility } = useSensitiveMedia(mockMedia)
     expect(visibility.value).toBe("non-sensitive")
   })
 
-  it("should return sensitive-hidden when media is sensitive and shouldBlurSensitive is true", () => {
+  it("should return sensitive-hidden when media is sensitive and shouldBlurSensitive is true", async () => {
     mockMedia.isSensitive = true
 
     const { visibility } = useSensitiveMedia(mockMedia)
     expect(visibility.value).toBe("sensitive-hidden")
   })
 
-  it("should return sensitive-shown when media is sensitive and shouldBlurSensitive is false", () => {
+  it("should return sensitive-shown when media is sensitive and shouldBlurSensitive is false", async () => {
     mockMedia.isSensitive = true
     mockUseUiStore.shouldBlurSensitive = false
 
@@ -74,38 +74,7 @@ describe("useSensitiveMedia composable", () => {
     expect(visibility.value).toBe("sensitive-shown")
   })
 
-  // TODO: Move the test to e2e
-  // https://github.com/wordpress/openverse/issues/411
-  it.skip("should reveal sensitive media", () => {
-    mockMedia.isSensitive = true
-
-    const { reveal, visibility } = useSensitiveMedia(mockMedia)
-    reveal()
-
-    expect(visibility.value).toBe("sensitive-shown")
-    expect(sendCustomEventMock).toHaveBeenCalledWith(
-      "UNBLUR_SENSITIVE_RESULT",
-      { id: "mock-id", sensitivities: "" }
-    )
-  })
-
-  // TODO: Move the test to e2e
-  // https://github.com/wordpress/openverse/issues/411
-  it.skip("should hide sensitive media", () => {
-    mockMedia.isSensitive = true
-
-    const { reveal, hide, visibility } = useSensitiveMedia(mockMedia)
-    reveal()
-    hide()
-
-    expect(visibility.value).toBe("sensitive-hidden")
-    expect(sendCustomEventMock).toHaveBeenCalledWith(
-      "REBLUR_SENSITIVE_RESULT",
-      { id: "mock-id", sensitivities: "" }
-    )
-  })
-
-  it("should correctly report if a media is hidden", () => {
+  it("should correctly report if a media is hidden", async () => {
     mockMedia.isSensitive = true
 
     const { reveal, hide, isHidden } = useSensitiveMedia(mockMedia)
@@ -115,7 +84,7 @@ describe("useSensitiveMedia composable", () => {
     expect(isHidden.value).toBe(true)
   })
 
-  it("should correctly report if a media can be hidden", () => {
+  it("should correctly report if a media can be hidden", async () => {
     mockMedia.isSensitive = true
     mockUseUiStore.shouldBlurSensitive = false
 
