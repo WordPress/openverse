@@ -51,10 +51,6 @@ def enable_or_disable_alarms(enable):
     cw_wrapper = CloudWatchWrapper(boto3.resource("cloudwatch"))
 
     sensitive_alarms_list = [
-        "API Production Average Response Time above threshold",
-        "API Production Average Response Time anomalously high",
-        "API Production P99 Response Time above threshold",
-        "API Production P99 Response Time anomalously high",
         "ES Production CPU utilization above 50%",
     ]
 
