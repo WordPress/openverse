@@ -12,8 +12,9 @@ on:
         type: string
         required: false
         default: ""
-      force_deploy:
-        description: "Whether to force GHCR publish and ECS deploy from a non-main branch."
+      # This is useful when dispatching on a branch other than `main`.
+      perform_deploy:
+        description: "Publish images and deploy staging?"
         type: boolean
         required: false
         default: false
@@ -909,7 +910,7 @@ jobs:
       !failure() && !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
       ) &&
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
@@ -970,7 +971,7 @@ jobs:
       !failure() && !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
       ) &&
       needs.get-changes.outputs.frontend == 'true' &&
       needs.playwright.result == 'success' &&
@@ -1015,7 +1016,7 @@ jobs:
       !failure() && !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
       ) &&
       needs.get-changes.outputs.api == 'true' &&
       needs.publish-images.result == 'success'
@@ -1062,7 +1063,7 @@ jobs:
       !cancelled() &&
       (
         (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
-        (github.event_name == 'workflow_dispatch' && inputs.force_deploy)
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
       ) &&
       (
         (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
