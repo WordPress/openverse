@@ -1,10 +1,8 @@
-import axios from "axios"
+import { FetchError } from "ofetch"
 
 import {
   clientSideErrorCodes,
   ERR_UNKNOWN,
-  ErrorCode,
-  errorCodes,
   NO_RESULT,
 } from "~/constants/errors"
 import type { FetchingError, RequestKind } from "~/types/fetch-state"
@@ -29,27 +27,9 @@ export const parseFetchingError = (
     searchType,
     code: ERR_UNKNOWN,
   }
-
-  if (axios.isAxiosError(error)) {
-    if (isValidErrorCode(error.code)) {
-      fetchingError.code = error.code
-    }
-    if (error.response?.status) {
-      fetchingError.statusCode = error.response.status
-    }
-    const responseData = error?.response?.data
-    // Use the message returned by the API.
-    if (
-      typeof responseData === "object" &&
-      responseData !== null &&
-      "detail" in responseData
-    ) {
-      fetchingError.message = responseData?.detail as string
-    } else {
-      fetchingError.message = error.message
-    }
-  } else {
-    fetchingError.message = (error as Error).message
+  if (error instanceof FetchError) {
+    fetchingError.statusCode = error.statusCode
+    fetchingError.message = error.message
   }
   return fetchingError
 }
@@ -60,15 +40,6 @@ const isNonRetryableErrorStatusCode = (statusCode: number | undefined) => {
     statusCode &&
     (NON_RETRYABLE_ERROR_CODES as readonly number[]).includes(statusCode)
   )
-}
-
-const isValidErrorCode = (
-  code: string | undefined | null
-): code is ErrorCode => {
-  if (!code) {
-    return false
-  }
-  return (errorCodes as readonly string[]).includes(code)
 }
 
 /**
