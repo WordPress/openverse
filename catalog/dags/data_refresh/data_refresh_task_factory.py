@@ -134,7 +134,7 @@ def create_data_refresh_task_group(
         )()
 
         disable_alarms = PythonOperator(
-            task_id="disable_cloudwatch_alarms",
+            task_id="disable_sensitive_cloudwatch_alarms",
             python_callable=cloudwatch.enable_or_disable_alarms,
             op_args=[False],
         )
@@ -211,9 +211,10 @@ def create_data_refresh_task_group(
         tasks.append(delete_old_index)
 
         enable_alarms = PythonOperator(
-            task_id="enable_cloudwatch_alarms",
+            task_id="enable_sensitive_cloudwatch_alarms",
             python_callable=cloudwatch.enable_or_disable_alarms,
             op_args=[True],
+            trigger_rule=TriggerRule.ALL_DONE,
         )
         # Finally, promote the filtered index.
         tasks.append([enable_alarms, promote_filtered_index])
