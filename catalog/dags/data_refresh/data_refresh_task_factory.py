@@ -182,6 +182,13 @@ def create_data_refresh_task_group(
         # running against an index that is already promoted in production.
         tasks.append(create_filtered_index)
 
+        enable_alarms = PythonOperator(
+            task_id="enable_sensitive_cloudwatch_alarms",
+            python_callable=cloudwatch.enable_or_disable_alarms,
+            op_args=[True],
+            trigger_rule=TriggerRule.ALL_DONE,
+        )
+
         # Trigger the `promote` task on the ingestion server and await its completion.
         # This task promotes the newly created API DB table and elasticsearch index. It
         # does not include promotion of the filtered index, which must be promoted
@@ -196,7 +203,7 @@ def create_data_refresh_task_group(
                 },
                 timeout=data_refresh.data_refresh_timeout,
             )
-            tasks.append(promote_tasks)
+            tasks.append([enable_alarms, promote_tasks])
 
         # Delete the alias' previous target index, now unused.
         delete_old_index = ingestion_server.trigger_task(
@@ -210,14 +217,8 @@ def create_data_refresh_task_group(
         )
         tasks.append(delete_old_index)
 
-        enable_alarms = PythonOperator(
-            task_id="enable_sensitive_cloudwatch_alarms",
-            python_callable=cloudwatch.enable_or_disable_alarms,
-            op_args=[True],
-            trigger_rule=TriggerRule.ALL_DONE,
-        )
         # Finally, promote the filtered index.
-        tasks.append([enable_alarms, promote_filtered_index])
+        tasks.append(promote_filtered_index)
 
         # ``tasks`` contains the following tasks and task groups:
         # wait_for_data_refresh
