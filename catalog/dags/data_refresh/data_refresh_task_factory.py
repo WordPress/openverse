@@ -226,7 +226,8 @@ def create_data_refresh_task_group(
         #       └─ create_filtered_index
         #          └─ promote (trigger_promote + wait_for_promote)
         #             └─ delete_old_index
-        #                └─ promote_filtered_index (including delete filtered index)
+        #                └─ promote_filtered_index (including delete filtered index) +
+        #                   enable_alarms
         chain(*tasks)
 
     return data_refresh_group
