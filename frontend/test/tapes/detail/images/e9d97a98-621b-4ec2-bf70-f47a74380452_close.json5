@@ -1,0 +1,129 @@
+{
+    meta: {
+        createdAt: '2024-01-11T12:13:25.034Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Thu, 11 Jan 2024 12:13:25 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '18',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '197',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '7d8fd4ed4f9e4beea6168000bb5973f7',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '172889',
+            ],
+            'last-modified': [
+                'Tue, 09 Jan 2024 12:11:56 GMT',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '843d12d8af706844-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: 'e9d97a98-621b-4ec2-bf70-f47a74380452',
+            title: 'bubbles in honey',
+            indexed_on: '2020-05-06T08:17:26.137708Z',
+            foreign_landing_url: 'https://www.flickr.com/photos/85398171@N00/272777927',
+            url: 'https://live.staticflickr.com/79/272777927_6f5df1b3cb.jpg',
+            creator: 'mutednarayan',
+            creator_url: 'https://www.flickr.com/photos/85398171@N00',
+            license: 'by-sa',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-sa/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            filesize: null,
+            filetype: null,
+            tags: [
+                {
+                    name: 'bubbles',
+                    accuracy: null,
+                },
+                {
+                    name: 'honey',
+                    accuracy: null,
+                },
+            ],
+            attribution: '"bubbles in honey" by mutednarayan is licensed under CC BY-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/2.0/.',
+            fields_matched: [],
+            mature: false,
+            height: 375,
+            width: 500,
+            thumbnail: 'http://localhost:49153/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/',
+            related_url: 'http://localhost:49153/v1/images/e9d97a98-621b-4ec2-bf70-f47a74380452/related/',
+            unstable__sensitivity: [],
+        },
+    },
+}

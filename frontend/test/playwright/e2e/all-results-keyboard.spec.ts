@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test"
 
 import audio from "~~/test/playwright/utils/audio"
-import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+import {
+  goToSearchTerm,
+  preparePageForTests,
+} from "~~/test/playwright/utils/navigation"
 
 import {
   locateFocusedResult,
@@ -16,7 +19,7 @@ test.describe.configure({ mode: "parallel" })
 test.describe("all results grid keyboard accessibility test", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl")
-    await page.goto("/search/?q=birds")
+    await goToSearchTerm(page, "birds")
   })
 
   test("should open image results as links", async ({ page }) => {

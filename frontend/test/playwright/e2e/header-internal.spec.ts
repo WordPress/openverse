@@ -1,20 +1,20 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page, test } from "@playwright/test"
 
 import {
   isDialogOpen,
-  LanguageDirection,
   preparePageForTests,
   scrollToBottom,
-  t,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
+import { getHomeLink, getMenuButton } from "~~/test/playwright/utils/components"
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
 
 const currentPageLink = 'div[role="dialog"] >> [aria-current="page"]'
 const currentPageLinkInPopover = '.popover-content >> [aria-current="page"]'
-
-const getMenuButton = async (page: Page) => {
-  return page.getByRole("button", { name: t("header.aria.menu") })
-}
 
 const clickMenuButton = async (page: Page) => {
   return (await getMenuButton(page)).click()
@@ -51,6 +51,9 @@ test.describe("Header internal", () => {
 
     test("the modal locks the scroll on xs breakpoint", async ({ page }) => {
       await page.goto("/about")
+
+      // Wait for hydration
+      await expect(await getMenuButton(page)).toBeEnabled()
       await scrollToBottom(page)
 
       await clickMenuButton(page)
@@ -95,13 +98,17 @@ test.describe("Header internal", () => {
       const homeUrl = page.url()
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
-      // "Openverse Home" is hardcoded because our translation helper
-      // doesn't support named interpolation.
-      await page
-        .getByRole("banner")
-        .getByRole("link", { name: "Openverse Home" })
-        .click()
+
+      await getHomeLink(page).click()
       expect(page.url()).toBe(homeUrl)
+    })
+
+    test("sends OPEN_PAGES_MENU event", async ({ context, page }) => {
+      const events = collectAnalyticsEvents(context)
+      await page.goto("/")
+      await clickMenuButton(page)
+      const openPagesMenuEvent = events.find((e) => e.n === "OPEN_PAGES_MENU")
+      expectEventPayloadToMatch(openPagesMenuEvent, {})
     })
   })
 

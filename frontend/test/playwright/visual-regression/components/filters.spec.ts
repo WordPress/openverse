@@ -2,11 +2,12 @@ import { test } from "@playwright/test"
 
 import {
   filters,
-  languageDirections,
   pathWithDir,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 import type { Breakpoint } from "~/constants/screens"
 

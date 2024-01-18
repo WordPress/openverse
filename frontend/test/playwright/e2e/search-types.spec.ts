@@ -3,6 +3,7 @@ import { test, expect, Page } from "@playwright/test"
 import {
   changeSearchType,
   goToSearchTerm,
+  preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
@@ -30,7 +31,7 @@ test.describe.configure({ mode: "parallel" })
 const allContentConfig = {
   id: "all",
   name: "All content",
-  url: "/search/?q=birds",
+  url: "/search?q=birds",
   canLoadMore: true,
 } as const
 
@@ -98,9 +99,12 @@ async function checkSearchResult(page: Page, searchType: SearchTypeConfig) {
 }
 
 test.describe("search types", () => {
-  breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
+  breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
+    test.beforeEach(async ({ context, page }) => {
       await mockProviderApis(context)
+      await preparePageForTests(page, breakpoint, {
+        features: { fetch_sensitive: "off", fake_sensitive: "off" },
+      })
     })
 
     for (const searchType of searchTypes) {
@@ -130,7 +134,7 @@ test.describe("search types", () => {
       test(`Can open ${searchTypeName} page from the all view`, async ({
         page,
       }) => {
-        await page.goto("/search/?q=birds")
+        await goToSearchTerm(page, "birds")
         const contentLink = page.locator(
           `a:not([role="radio"])[href*="/search/${searchTypeName}"][href$="q=birds"]`
         )

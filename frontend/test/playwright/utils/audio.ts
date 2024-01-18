@@ -1,7 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test"
 
-import type { LanguageDirection } from "~~/test/playwright/utils/navigation"
-import { t } from "~~/test/playwright/utils/navigation"
+import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
 import {
   activeAudioStatus,
