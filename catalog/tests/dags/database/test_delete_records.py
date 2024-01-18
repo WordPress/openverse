@@ -53,6 +53,9 @@ def postgres_with_image_and_deleted_image_table(image_table, deleted_image_table
     cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;')
     cur.execute(sql.CREATE_IMAGE_TABLE_QUERY.format(image_table))
     cur.execute(sql.CREATE_DELETED_IMAGE_TABLE_QUERY.format(deleted_image_table))
+    cur.execute(
+        sql.DELETED_IMAGE_TABLE_UNIQUE_CONDITION_QUERY.format(table=deleted_image_table)
+    )
 
     conn.commit()
 
@@ -65,7 +68,7 @@ def postgres_with_image_and_deleted_image_table(image_table, deleted_image_table
     conn.close()
 
 
-def _load_sample_data_into_image_table(image_table, postgres):
+def _load_sample_data_into_image_table(image_table, postgres, sample_records=None):
     DEFAULT_COLS = {
         col.LICENSE.db_name: LICENSE,
         col.UPDATED_ON.db_name: "NOW()",
@@ -73,27 +76,28 @@ def _load_sample_data_into_image_table(image_table, postgres):
         col.TITLE.db_name: TITLE,
     }
 
-    # Load sample data into the image table
-    sample_records = [
-        {
-            col.FOREIGN_ID.db_name: FID_A,
-            col.DIRECT_URL.db_name: f"https://images.com/{FID_A}/img.jpg",
-            col.PROVIDER.db_name: MATCHING_PROVIDER,
-        },
-        {
-            col.FOREIGN_ID.db_name: FID_B,
-            col.DIRECT_URL.db_name: f"https://images.com/{FID_B}/img.jpg",
-            col.PROVIDER.db_name: MATCHING_PROVIDER,
-        },
-        {
-            col.FOREIGN_ID.db_name: FID_C,
-            col.DIRECT_URL.db_name: f"https://images.com/{FID_C}/img.jpg",
-            col.PROVIDER.db_name: NOT_MATCHING_PROVIDER,
-        },
-    ]
+    if not sample_records:
+        sample_records = [
+            {
+                col.FOREIGN_ID.db_name: FID_A,
+                col.DIRECT_URL.db_name: f"https://images.com/{FID_A}/img.jpg",
+                col.PROVIDER.db_name: MATCHING_PROVIDER,
+            },
+            {
+                col.FOREIGN_ID.db_name: FID_B,
+                col.DIRECT_URL.db_name: f"https://images.com/{FID_B}/img.jpg",
+                col.PROVIDER.db_name: MATCHING_PROVIDER,
+            },
+            {
+                col.FOREIGN_ID.db_name: FID_C,
+                col.DIRECT_URL.db_name: f"https://images.com/{FID_C}/img.jpg",
+                col.PROVIDER.db_name: NOT_MATCHING_PROVIDER,
+            },
+        ]
 
+    # Load sample data into the image table
     sql.load_sample_data_into_image_table(
-        image_table, postgres, [{**record, **DEFAULT_COLS} for record in sample_records]
+        image_table, postgres, [{**DEFAULT_COLS, **record} for record in sample_records]
     )
 
 
@@ -142,6 +146,82 @@ def test_create_deleted_records(
     assert actual_rows[1][sql.title_idx] == TITLE
     assert actual_rows[1][sql.license_idx] == LICENSE
     assert actual_rows[1][sql.deleted_reason_idx] == deleted_reason
+
+
+def test_create_deleted_records_does_not_add_duplicates(
+    postgres_with_image_and_deleted_image_table,
+    image_table,
+    deleted_image_table,
+    identifier,
+):
+    sample_record = {
+        col.FOREIGN_ID.db_name: FID_A,
+        col.DIRECT_URL.db_name: f"https://images.com/{FID_A}/img.jpg",
+        col.PROVIDER.db_name: MATCHING_PROVIDER,
+        col.TITLE.db_name: "Original title",
+    }
+    # Load sample data into the image table
+    _load_sample_data_into_image_table(
+        image_table,
+        postgres_with_image_and_deleted_image_table,
+        sample_records=[
+            sample_record,
+        ],
+    )
+
+    # Delete the record
+    select_query = f"WHERE provider='{MATCHING_PROVIDER}'"
+    original_deleted_reason = "FOO"
+    deleted_count = create_deleted_records.function(
+        media_type=image_table,
+        select_query=select_query,
+        deleted_reason=original_deleted_reason,
+        db_columns=IMAGE_TABLE_COLUMNS,
+        deleted_db_columns=DELETED_IMAGE_TABLE_COLUMNS,
+        postgres_conn_id=sql.POSTGRES_CONN_ID,
+    )
+
+    assert deleted_count == 1
+
+    # Load a record with the same (provider, foreign_id), but a new title into
+    # the image table
+    _load_sample_data_into_image_table(
+        image_table,
+        postgres_with_image_and_deleted_image_table,
+        sample_records=[
+            # Sample record, modified to have a new title
+            {**sample_record, col.TITLE.db_name: "New title"},
+        ],
+    )
+
+    # Delete the record again
+    select_query = f"WHERE provider='{MATCHING_PROVIDER}'"
+    new_deleted_reason = "BAR"
+    deleted_count = create_deleted_records.function(
+        media_type=image_table,
+        select_query=select_query,
+        deleted_reason=new_deleted_reason,
+        db_columns=IMAGE_TABLE_COLUMNS,
+        deleted_db_columns=DELETED_IMAGE_TABLE_COLUMNS,
+        postgres_conn_id=sql.POSTGRES_CONN_ID,
+    )
+
+    # 0 records were added to the deleted_image table
+    assert deleted_count == 0
+
+    # There should only be one record in the deleted image table; a duplicate
+    # (provider, foreign_id) should not have been added
+    postgres_with_image_and_deleted_image_table.cursor.execute(
+        f"SELECT * FROM {deleted_image_table};"
+    )
+    actual_rows = postgres_with_image_and_deleted_image_table.cursor.fetchall()
+    assert len(actual_rows) == 1
+
+    # The record should reflect the first deletion, so it should have the original
+    # deleted_reason and updates should not have been made to the record.
+    assert actual_rows[0][sql.fid_idx] == FID_A
+    assert actual_rows[0][sql.title_idx] == "Original title"
+    assert actual_rows[0][sql.deleted_reason_idx] == original_deleted_reason
 
 
 def test_create_deleted_records_with_query_matching_no_rows(

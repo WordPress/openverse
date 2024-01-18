@@ -14,6 +14,8 @@ CREATE_RECORDS_QUERY = """
     SELECT {source_cols}
     FROM {source_table}
     {select_query}
+    ON CONFLICT {unique_cols}
+    DO NOTHING
     """
 DELETE_RECORDS_QUERY = """
     DELETE FROM {table}

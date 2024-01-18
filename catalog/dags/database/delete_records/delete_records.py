@@ -7,7 +7,7 @@ from airflow.models.abstractoperator import AbstractOperator
 from common import slack
 from common.constants import POSTGRES_CONN_ID
 from common.sql import RETURN_ROW_COUNT, PostgresHook
-from common.storage.columns import DELETED_ON, Column
+from common.storage.columns import DELETED_ON, Column, PROVIDER, FOREIGN_ID
 from common.storage.db_columns import (
     setup_db_columns_for_media_type,
     setup_deleted_db_columns_for_media_type,
@@ -60,11 +60,19 @@ def create_deleted_records(
 
     # To build the source columns, we first list all columns in the main media table
     source_cols = ", ".join([col.db_name for col in db_columns])
+
     # Then add the deleted-media specific columns.
     # `deleted_on` is set to its insert value to get the current timestamp:
     source_cols += f", {DELETED_ON.get_insert_value()}"
     # `deleted_reason` is set to the given string
     source_cols += f", '{deleted_reason}'"
+
+    # The provider, foreign_id pair uniquely identifies a record. When trying to
+    # add a record to the deleted_media table, if the record's (provider, foreign_id)
+    # pair is already present in the table, no additional record will be added and the
+    # existing record in the deleted_media table will not be updated. This preserves the
+    # record exactly as it was when it was first deleted.
+    unique_cols = f"({PROVIDER.db_name}, md5({FOREIGN_ID.db_name}))"
 
     return run_sql(
         sql_template=constants.CREATE_RECORDS_QUERY,
@@ -75,6 +83,7 @@ def create_deleted_records(
         source_table=media_type,
         source_cols=source_cols,
         select_query=select_query,
+        unique_cols=unique_cols,
     )
 
 

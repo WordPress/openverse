@@ -248,6 +248,7 @@ PROVIDER_WORKFLOWS = [
     ),
     ProviderWorkflow(
         ingester_class=JamendoDataIngester,
+        create_postingestion_tasks=JamendoDataIngester.create_postingestion_tasks,
     ),
     ProviderWorkflow(
         ingester_class=JusttakeitfreeDataIngester,
