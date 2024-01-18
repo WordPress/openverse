@@ -45,12 +45,11 @@ const pages = {
     robots: "noindex",
   },
   audioDetail: {
-    url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
-    title: "I Love My Dog You Love your Cat | Openverse",
-    ogImage: new RegExp(
-      "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
-    ),
-    ogTitle: "I Love My Dog You Love your Cat",
+    url: "/audio/1cb1af19-7232-40c2-b9ea-8d6c47e677f9",
+    title: "En-us-honey | Openverse",
+    // This audio does not have a thumbnail, so the default image is used.
+    ogImage: new RegExp("/openverse-default.jpg"),
+    ogTitle: "En-us-honey",
     robots: "noindex",
   },
   about: {
