@@ -2,7 +2,6 @@ import logging
 from datetime import timedelta
 
 from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowException
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.python import PythonSensor
@@ -64,9 +63,7 @@ def get_current_index_configuration(
     )
 
     if len(response) != 1:
-        raise AirflowException(
-            f"Index {source_index} could not be uniquely identified."
-        )
+        raise ValueError(f"Index {source_index} could not be uniquely identified.")
 
     # The response has the form:
     #   { index_name: index_configuration }
