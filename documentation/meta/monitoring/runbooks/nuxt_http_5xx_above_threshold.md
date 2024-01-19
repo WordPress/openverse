@@ -1,12 +1,11 @@
 # Run Book: Nuxt 5XX responses count above threshold
 
 ```{admonition} Metadata
-Status: **Unstable**
-
-Maintainer: @dhruvkb
+Status: **Stable**
 
 Alarm link:
-- [production-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+HTTP+5XX+responses+count+over+threshold)
+- [Alarm details](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+HTTP+5XX+responses+count+over+threshold)
+- [ECS-Production-Dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/ECS-Production-Dashboard)
 ```
 
 ## Severity guide
@@ -25,9 +24,7 @@ errors (this can be checked by observing paths in the Cloudflare logs).
 - If the API requests are returning 5XX responses, the severity is high. Further
   investigation into the API side is warranted to determine the cause for the
   5XX responses. Also refer to the
-  [API 5XX runbook](/meta/monitoring/runbooks/index.md).
-
-<!-- TODO: Update link to /meta/monitoring/runbooks/api_5xx_above_threshold.md -->
+  [API 5XX runbook](/meta/monitoring/runbooks/api_http_5xx_above_threshold.md).
 
 ## Historical false positives
 
