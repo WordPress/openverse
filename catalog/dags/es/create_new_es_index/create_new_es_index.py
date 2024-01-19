@@ -130,10 +130,21 @@ def create_index(index_config, es_host: str):
 
 @task_group(group_id="trigger_and_wait_for_reindex")
 def trigger_and_wait_for_reindex(
-    index_name: str, source_index: str, query: dict, timeout: timedelta, es_host: str
+    index_name: str,
+    source_index: str,
+    query: dict,
+    timeout: timedelta,
+    requests_per_second: int,
+    es_host: str,
 ):
     @task
-    def trigger_reindex(index_name: str, source_index: str, query: dict, es_host: str):
+    def trigger_reindex(
+        index_name: str,
+        source_index: str,
+        query: dict,
+        requests_per_second: int,
+        es_host: str,
+    ):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         source = {"index": source_index}
@@ -152,6 +163,8 @@ def trigger_and_wait_for_reindex(
             # Immediately refresh the index after completion to make
             # the data available for search
             refresh=True,
+            # Throttle
+            requests_per_second=requests_per_second,
         )
 
         return response["task"]
@@ -162,7 +175,9 @@ def trigger_and_wait_for_reindex(
         response = es_conn.tasks.get(task_id=task_id)
         return response.get("completed")
 
-    trigger_reindex_task = trigger_reindex(index_name, source_index, query, es_host)
+    trigger_reindex_task = trigger_reindex(
+        index_name, source_index, query, requests_per_second, es_host
+    )
 
     wait_for_reindex = PythonSensor(
         task_id="wait_for_reindex",

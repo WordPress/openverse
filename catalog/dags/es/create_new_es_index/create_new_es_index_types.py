@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import timedelta
 
-from airflow.models.connection import Connection
+from airflow.models import Variable
 from es.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
@@ -20,29 +20,29 @@ class CreateNewIndex:
 
     Required Constructor Arguments:
 
-    environment:     str representation of the environment in which to create
-                     the new index
-    blocking_dags:   list of dags with which to prevent concurrency; the
-                     generated create_new_es_index dag will fail immediately if
-                     any of these dags are running.
-    reindex_timeout: timedelta expressing maximum amount of time the reindexing
-                     step may take
+    environment:         str representation of the environment in which to
+                         create the new index
+    blocking_dags:       list of dags with which to prevent concurrency; the
+                         generated create_new_es_index dag will fail
+                         immediately if any of these dags are running.
+    reindex_timeout:     timedelta expressing maximum amount of time the
+                         reindexing step may take
+    requests_per_second: number of requests to send per second during ES
+                         reindexing, used to throttle the reindex step
     """
 
     dag_id: str = field(init=False)
     es_host: str = field(init=False)
     environment: str
     blocking_dags: list
+    requests_per_second: int | None = None
     reindex_timeout: timedelta = timedelta(hours=12)
 
     def __post_init__(self):
         self.dag_id = f"create_new_{self.environment}_es_index"
 
-        # Get the appropriate connection information for this environment.
-        conn = Connection.get_connection_from_secrets(
-            f"elasticsearch_http_{self.environment}"
-        )
-        self.es_host = conn.host
+        if not self.requests_per_second:
+            self.requests_per_second = Variable.get("ES_INDEX_THROTTLING_RATE")
 
 
 CREATE_NEW_INDEX_CONFIGS = {
