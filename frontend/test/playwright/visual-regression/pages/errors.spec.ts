@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
   preparePageForTests,
+  sleep,
 } from "~~/test/playwright/utils/navigation"
 
 import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
@@ -35,7 +36,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
   }
   for (const status of singleResultCSRErrorStatuses) {
     test(`${status} on single-result page on CSR`, async ({ page }) => {
-      await page.route(new RegExp(`v1/images/`), (route) => {
+      await page.route(new RegExp(`api/images/`), (route) => {
         return route.fulfill({ status })
       })
 
@@ -104,6 +105,7 @@ for (const searchType of supportedSearchTypes) {
         page,
       }) => {
         await goToSearchTerm(page, "querywithnoresults", { dir, searchType })
+        await sleep(500)
 
         await setViewportToFullHeight(page)
 
@@ -118,8 +120,8 @@ for (const searchType of supportedSearchTypes) {
       })
 
       test(`timeout ${searchType} ${dir} page snapshots`, async ({ page }) => {
-        await page.route(new RegExp(`v1/(images|audio)/`), async (route) => {
-          route.abort("timedout")
+        await page.route(new RegExp(`/api/(images|audio)/`), async (route) => {
+          return route.abort("timedout")
         })
         await goToSearchTerm(page, "cat", { dir, searchType, mode: "CSR" })
 
