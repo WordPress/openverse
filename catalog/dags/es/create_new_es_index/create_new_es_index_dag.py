@@ -188,6 +188,8 @@ def create_new_es_index_dag(config: CreateNewIndex):
     with dag:
         prevent_concurrency = prevent_concurrency_with_dags(config.blocking_dags)
 
+        es_host = es.get_es_host(environment=config.environment)
+
         index_name = es.get_index_name(
             media_type="{{ params.media_type }}",
             index_suffix="{{ params.index_suffix or ts_nodash }}",
@@ -201,7 +203,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
             task_id=es.GET_CURRENT_INDEX_CONFIG_TASK_NAME
         )(
             source_index="{{ params.source_index or params.media_type }}",
-            es_host=config.es_host,
+            es_host=es_host,
         )
 
         merged_index_config = es.merge_index_configurations(
@@ -221,7 +223,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         )
 
         create_new_index = es.create_index(
-            index_config=final_index_config, es_host=config.es_host
+            index_config=final_index_config, es_host=es_host
         )
 
         reindex = es.trigger_and_wait_for_reindex(
@@ -229,11 +231,11 @@ def create_new_es_index_dag(config: CreateNewIndex):
             source_index="{{ params.source_index or params.media_type }}",
             query="{{ params.query }}",
             timeout=config.reindex_timeout,
-            es_host=config.es_host,
+            es_host=es_host,
         )
 
         # Set up dependencies
-        prevent_concurrency >> index_name
+        prevent_concurrency >> [es_host, index_name]
         index_name >> check_override >> [current_index_config, final_index_config]
         current_index_config >> merged_index_config >> final_index_config
         final_index_config >> create_new_index >> reindex

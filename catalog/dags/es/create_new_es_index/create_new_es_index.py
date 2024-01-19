@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowException
+from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.python import PythonSensor
 from es.create_new_es_index.utils import merge_configurations
@@ -19,6 +20,12 @@ EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
 
 GET_FINAL_INDEX_CONFIG_TASK_NAME = "get_final_index_configuration"
 GET_CURRENT_INDEX_CONFIG_TASK_NAME = "get_current_index_configuration"
+
+
+@task
+def get_es_host(environment: str):
+    conn = Connection.get_connection_from_secrets(f"elasticsearch_http_{environment}")
+    return conn.host
 
 
 @task
@@ -47,8 +54,7 @@ def get_current_index_configuration(
     or an alias, but must uniquely identify one existing index or an
     error will be raised.
     """
-    hook = ElasticsearchPythonHook(hosts=[es_host])
-    es_conn = hook.get_conn
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
     response = es_conn.indices.get(
         index=source_index,
@@ -115,8 +121,7 @@ def get_final_index_configuration(
 
 @task
 def create_index(index_config, es_host: str):
-    hook = ElasticsearchPythonHook(hosts=[es_host])
-    es_conn = hook.get_conn
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
     new_index = es_conn.indices.create(**index_config)
 
@@ -129,8 +134,7 @@ def trigger_and_wait_for_reindex(
 ):
     @task
     def trigger_reindex(index_name: str, source_index: str, query: dict, es_host: str):
-        hook = ElasticsearchPythonHook(hosts=[es_host])
-        es_conn = hook.get_conn
+        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         source = {"index": source_index}
         # An empty query is not accepted; only pass it
@@ -153,8 +157,7 @@ def trigger_and_wait_for_reindex(
         return response["task"]
 
     def _wait_for_reindex(task_id: str, es_host: str):
-        hook = ElasticsearchPythonHook(hosts=[es_host])
-        es_conn = hook.get_conn
+        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
         return response.get("completed")
