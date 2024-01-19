@@ -98,16 +98,24 @@ def merge_index_configurations(new_index_config, current_index_config):
 @task
 def get_final_index_configuration(
     override_config: bool,
-    # The new config which was passed in via DAG params
     index_config,
-    # The result of merging the index_config with the current index config.
-    # This may be None if the merge tasks were skipped using the override param.
     merged_config,
     index_name: str,
 ):
     """
     Resolve the final index configuration to be used in the `create_index`
     task.
+
+    Required arguments:
+
+    override_config: Whether the index_config should be used instead of
+                     the merged_config
+    index_config:    The new index configuration which was passed in via
+                     DAG params
+    merged_config:   The result of merging the index_config with the current
+                     index configuration. This may be None if the merge
+                     tasks were skipped using the override param.
+    index_name:      Name of the index to update.
     """
     config = index_config if override_config else merged_config
 
