@@ -12,9 +12,10 @@ export default defineNuxtPrepareHandler(async () => {
   return {
     ok: true,
     state: {
-      providers: {
+      preparedProviders: {
         audio: sortProviders(audioProviders),
         image: sortProviders(imageProviders),
+        lastUpdated: new Date(),
       },
     },
   }

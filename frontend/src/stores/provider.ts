@@ -19,7 +19,7 @@ import { DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 import { sortProviders } from "~/utils/provider"
 
-import { providers } from "#nuxt-prepare"
+import { preparedProviders } from "#nuxt-prepare"
 
 export interface ProviderState {
   /**
@@ -42,10 +42,12 @@ export interface ProviderState {
 
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
-    lastUpdated: null,
+    lastUpdated: preparedProviders.lastUpdated
+      ? new Date(preparedProviders.lastUpdated)
+      : null,
     providers: {
-      [AUDIO]: providers?.audio ?? [],
-      [IMAGE]: providers?.image ?? [],
+      [AUDIO]: preparedProviders?.audio ?? [],
+      [IMAGE]: preparedProviders?.image ?? [],
     },
     fetchState: {
       [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },

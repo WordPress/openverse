@@ -6,7 +6,6 @@ import {
 } from "#imports"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
 
 import type { SupportedMediaType } from "~/constants/media"
@@ -45,18 +44,7 @@ export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
     }
     collectionParams = { collection: "tag", tag }
   } else if (to.params.source) {
-    const rawCollectionParams = parseCollectionPath(to.params.source)
-    const providerStore = useProviderStore()
-    await providerStore.fetchMediaTypeProviders(mediaType)
-    if (
-      rawCollectionParams &&
-      useProviderStore().isSourceNameValid(
-        mediaType,
-        rawCollectionParams.source
-      )
-    ) {
-      collectionParams = rawCollectionParams
-    }
+    collectionParams = parseCollectionPath(to.params.source)
   }
   if (!collectionParams) {
     throw createError({
