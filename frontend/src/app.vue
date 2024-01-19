@@ -42,7 +42,6 @@ import {
 } from "#imports"
 
 import { useUiStore } from "~/stores/ui"
-import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useLayout } from "~/composables/use-layout"
@@ -96,10 +95,6 @@ export default defineComponent({
 
     const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
     const breakpoint = computed(() => uiStore.breakpoint)
-
-    /* Provider store */
-    const providerStore = useProviderStore()
-    await providerStore.fetchMediaProviders()
 
     return {
       isDesktopLayout,

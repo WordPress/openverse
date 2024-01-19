@@ -17,6 +17,10 @@ import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 import { DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
+import { sortProviders } from "~/utils/provider"
+
+import { providers } from "#nuxt-prepare"
+
 export interface ProviderState {
   /**
    * Timestamp is used to limit the update frequency to one every 60 minutes per request.
@@ -36,24 +40,12 @@ export interface ProviderState {
   }
 }
 
-/**
- * Sorts providers by their source_name property.
- * @param data - initial unordered list of providers
- */
-const sortProviders = (data: MediaProvider[]): MediaProvider[] => {
-  return [...data].sort((sourceObjectA, sourceObjectB) => {
-    const nameA = sourceObjectA.source_name.toUpperCase()
-    const nameB = sourceObjectB.source_name.toUpperCase()
-    return nameA.localeCompare(nameB)
-  })
-}
-
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
     lastUpdated: null,
     providers: {
-      [AUDIO]: [],
-      [IMAGE]: [],
+      [AUDIO]: providers?.audio ?? [],
+      [IMAGE]: providers?.image ?? [],
     },
     fetchState: {
       [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },
@@ -147,7 +139,10 @@ export const useProviderStore = defineStore("provider", {
       const { $sentry } = useNuxtApp()
 
       const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
-      const baseURL = nitroOrigin ? nitroOrigin : location?.origin
+
+      // TODO: Check if baseURL works in prod.
+      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
+      baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
         const res: MediaProvider[] = await axios.get(
           `/api/${mediaType === "image" ? "images" : "audio"}/stats/`,

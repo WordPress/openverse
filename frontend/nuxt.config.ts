@@ -134,6 +134,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/plausible",
+    "nuxt-prepare",
     "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
   ],
