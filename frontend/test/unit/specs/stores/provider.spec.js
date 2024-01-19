@@ -38,10 +38,8 @@ describe("provider store", () => {
   })
 
   it("sets the default state", () => {
-    expect(providerStore.providers).toEqual({
-      [AUDIO]: [],
-      [IMAGE]: [],
-    })
+    expect(providerStore.providers.audio.length).toEqual(3)
+    expect(providerStore.providers.image.length).toBeGreaterThan(10)
     expect(providerStore.fetchState).toEqual({
       [AUDIO]: { hasStarted: false, isFetching: false, fetchingError: null },
       [IMAGE]: { hasStarted: false, isFetching: false, fetchingError: null },
