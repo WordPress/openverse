@@ -92,7 +92,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.box-track .waveform {
+:deep(.waveform) {
   @apply h-10 flex-grow;
   --waveform-background-color: theme("colors.yellow");
 }
