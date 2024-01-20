@@ -83,7 +83,7 @@ describe("VSourcesTable", () => {
   })
 
   // https://github.com/wordpress/openverse/issues/411
-  it.skip('should be sorted by media_count when click on "Total items" header', async () => {
+  it('should be sorted by media_count when click on "Total items" header', async () => {
     await render(VSourcesTable, options)
     const domainCell = screen.getByRole("columnheader", {
       name: /total items/i,
