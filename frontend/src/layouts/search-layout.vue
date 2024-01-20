@@ -66,8 +66,6 @@
         class="border-t border-dark-charcoal-20 bg-white"
       />
     </div>
-
-    <VGlobalAudioSection />
   </div>
 </template>
 <script lang="ts">
@@ -87,7 +85,6 @@ import { ALL_MEDIA } from "~/constants/media"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
-import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
@@ -111,7 +108,6 @@ export default defineComponent({
     VSafeBrowsing,
     VBanners,
     VFooter,
-    VGlobalAudioSection,
     VSearchGridFilter,
     VHeaderDesktop,
     VHeaderMobile,

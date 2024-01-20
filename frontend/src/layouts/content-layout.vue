@@ -17,8 +17,6 @@
         class="border-t border-dark-charcoal-20 bg-white"
       />
     </div>
-
-    <VGlobalAudioSection />
   </div>
 </template>
 <script lang="ts">
@@ -33,7 +31,6 @@ import { ShowScrollButtonKey } from "~/types/provides"
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
-import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 
 /**
  * This is the ContentLayout: the search page, the single result page,
@@ -45,7 +42,6 @@ export default defineComponent({
   components: {
     VBanners,
     VFooter,
-    VGlobalAudioSection,
     VHeaderInternal,
   },
   setup() {

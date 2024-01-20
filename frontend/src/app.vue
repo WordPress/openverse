@@ -24,6 +24,7 @@
           <NuxtLayout>
             <NuxtPage />
           </NuxtLayout>
+          <VGlobalAudioSection />
           <div id="modal" />
         </div>
       </Body>

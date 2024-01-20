@@ -165,6 +165,13 @@ export default defineComponent({
     const initLocalAudio = () => {
       // Preserve existing local audio if we plucked it from the global active audio
       if (!localAudio) {
+        if (
+          activeAudio.obj.value?.src !== props.audio.url &&
+          !activeAudio.obj.value?.paused
+        ) {
+          activeAudio.obj.value?.pause()
+          activeMediaStore.pauseActiveMediaItem()
+        }
         localAudio = new Audio(props.audio.url)
       }
 
@@ -257,6 +264,7 @@ export default defineComponent({
       activeMediaStore.setActiveMediaItem({
         type: "audio",
         id: props.audio.id,
+        detail: props.audio,
       })
       activeMediaStore.setMessage({ message: null })
       updateTimeLoop()

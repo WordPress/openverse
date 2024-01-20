@@ -22,18 +22,15 @@ import { useRoute } from "#imports"
 
 import { watch, computed, defineComponent } from "vue"
 
-import { AUDIO } from "~/constants/media"
 import { useActiveAudio } from "~/composables/use-active-audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
-import { useMediaStore } from "~/stores/media"
-import { useSingleResultStore } from "~/stores/media/single-result"
 import { useUiStore } from "~/stores/ui"
-
-import type { AudioDetail } from "~/types/media"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
+
+import type { RouteRecordName } from "vue-router"
 
 export default defineComponent({
   name: "VGlobalAudioSection",
@@ -45,30 +42,11 @@ export default defineComponent({
     const route = useRoute()
 
     const activeMediaStore = useActiveMediaStore()
-    const mediaStore = useMediaStore()
     const uiStore = useUiStore()
 
     const activeAudio = useActiveAudio()
 
-    /* Active audio track */
-    const getAudioItemById = (trackId: string): AudioDetail | null => {
-      const audioFromMediaStore = mediaStore.getItemById(AUDIO, trackId)
-      if (audioFromMediaStore) {
-        return audioFromMediaStore as AudioDetail
-      }
-      const singleResultStore = useSingleResultStore()
-      if (singleResultStore.mediaId === trackId) {
-        return singleResultStore.audio
-      }
-      return null
-    }
-    const audio = computed(() => {
-      const trackId = activeMediaStore.id
-      if (trackId) {
-        return getAudioItemById(trackId)
-      }
-      return null
-    })
+    const audio = computed(() => activeMediaStore.detail)
 
     /* Message */
 
@@ -127,25 +105,41 @@ export default defineComponent({
       activeMediaStore.ejectActiveMediaItem()
     }
 
+    const getRouteId = (routeName: RouteRecordName | null | undefined) => {
+      return String(routeName).split("__")[0]
+    }
+
     /**
      * Router observation
+     *
+     * When navigating to pages other than search or single audio detail,
+     * close the global audio player.
+     *
      *
      * The player will continue only within 'search-audio' and 'audio-id' routes,
      * and on desktop, only if the next route is the 'audio-id' page of the
      * track currently playing, or the original search result page.
      */
-    const routeValue = computed(() => route)
-    watch(routeValue, (newRouteVal, oldRouteVal) => {
-      const oldName = oldRouteVal.name ? String(oldRouteVal.name) : ""
-      const newName = newRouteVal.name ? String(newRouteVal.name) : ""
-      if (
-        (oldName.includes("audio") && !newName.includes("audio")) ||
-        (uiStore.isDesktopLayout &&
-          newName.includes("audio-id") &&
-          newRouteVal.params.id != activeMediaStore.id)
-      ) {
-        activeAudio.obj.value?.pause()
-        activeMediaStore.ejectActiveMediaItem()
+    const routeId = computed(() => getRouteId(route?.name))
+    watch(routeId, (newRouteId) => {
+      if (!["search", "search-audio", "audio-id"].includes(newRouteId)) {
+        ejectAndClose()
+      }
+    })
+
+    const ejectAndClose = () => {
+      activeAudio.obj.value?.pause()
+      activeMediaStore.ejectActiveMediaItem()
+    }
+
+    /**
+     * Stop the global audio when the global audio player is hidden on screens
+     * above sm.
+     */
+    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+    watch(isSm, (aboveSm) => {
+      if (aboveSm) {
+        ejectAndClose()
       }
     })
 
