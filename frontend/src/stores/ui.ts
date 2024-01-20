@@ -164,7 +164,7 @@ export const useUiStore = defineStore("ui", {
       ) {
         breakpoint = cookies.breakpoint
       }
-      this.updateBreakpoint(breakpoint)
+      this.updateBreakpoint(breakpoint, false)
 
       if (typeof cookies.isFilterDismissed === "boolean") {
         this.isFilterDismissed = cookies.isFilterDismissed
@@ -185,7 +185,7 @@ export const useUiStore = defineStore("ui", {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      const uiCookie = useCookie<OpenverseCookieState["ui"]>("features", {
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>("ui", {
         path: "/",
         sameSite: "strict",
         maxAge: 60 * 60 * 24 * 60, // 60 days.
@@ -198,15 +198,18 @@ export const useUiStore = defineStore("ui", {
      * If the breakpoint is different from the state, updates the state, and saves it into app cookies.
      *
      * @param breakpoint - the `min-width` tailwind breakpoint for the screen width.
+     * @param saveToCookie - whether to save the new breakpoint in the cookie.
      */
-    updateBreakpoint(breakpoint: RealBreakpoint) {
+    updateBreakpoint(breakpoint: RealBreakpoint, saveToCookie = true) {
       if (this.breakpoint === breakpoint) {
         return
       }
 
       this.breakpoint = breakpoint
 
-      this.writeToCookie()
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
 
       this.isDesktopLayout = desktopBreakpoints.includes(breakpoint)
     },
