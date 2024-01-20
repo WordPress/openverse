@@ -124,6 +124,8 @@
 </template>
 
 <script lang="ts">
+import { useRuntimeConfig } from "#imports"
+
 import { computed, defineComponent, PropType, ref } from "vue"
 
 import axios from "axios"
@@ -213,15 +215,18 @@ export default defineComponent({
         const mediaType = props.media.frontendMediaType
         const reason = selectedReason.value
 
+        const {
+          public: { apiUrl },
+        } = useRuntimeConfig()
+
+        // Not proxied through the Nuxt `/api/` because it is a POST request
         await axios.post(
-          `/api/${mediaSlug(mediaType)}/${props.media.id}/report/`,
+          `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
           {
-            body: JSON.stringify({
-              mediaType,
-              reason,
-              identifier: props.media.id,
-              description: description.value,
-            }),
+            mediaType,
+            reason,
+            identifier: props.media.id,
+            description: description.value,
           }
         )
 
