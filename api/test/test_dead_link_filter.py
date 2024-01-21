@@ -8,20 +8,7 @@ import pytest
 import requests
 
 from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
-
-
-@pytest.fixture(autouse=True)
-def turn_off_db_read(monkeypatch):
-    """
-    Prevent DB lookup for ES results because DB is empty.
-
-    Since ImageSerializer has set ``needs_db`` to ``True``, all results from ES will be
-    mapped to DB models. Since the test DB is empty, results array will be empty. By
-    patching ``needs_db`` to ``False``, we can test the dead link filtering process
-    without needing to populate the test DB.
-    """
-
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
+import pickle
 
 
 @pytest.fixture
@@ -81,20 +68,34 @@ def test_dead_link_filtering(mocked_map, client):
     query_params = {"q": "*", "page_size": 20}
 
     # Make a request that does not filter dead links...
-    res_with_dead_links = client.get(
-        path,
-        query_params | {"filter_dead": False},
-    )
-    # ...and ensure that our patched function was not called
-    mocked_map.assert_not_called()
+    with open("test/factory/res-with-dead-link-sample-data.pickle", "rb") as inp:
+        res_with_dead_links_data = pickle.load(inp)
 
-    # Make a request that filters dead links...
-    res_without_dead_links = client.get(
-        path,
-        query_params | {"filter_dead": True},
-    )
-    # ...and ensure that our patched function was called
-    mocked_map.assert_called()
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results",
+        return_value=res_with_dead_links_data,
+    ):
+        res_with_dead_links = client.get(
+            path,
+            query_params | {"filter_dead": False},
+        )
+        # ...and ensure that our patched function was not called
+        mocked_map.assert_not_called()
+
+    with open("test/factory/res-without-dead-link-sample-data.pickle", "rb") as inp:
+        res_without_dead_links_data = pickle.load(inp)
+
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results",
+        return_value=res_without_dead_links_data,
+    ):
+        # Make a request that filters dead links...
+        res_without_dead_links = client.get(
+            path,
+            query_params | {"filter_dead": True},
+        )
+        # ...and ensure that our patched function was called
+        mocked_map.assert_called()
 
     assert res_with_dead_links.status_code == 200
     assert res_without_dead_links.status_code == 200
