@@ -131,12 +131,22 @@ def test_dead_link_filtering_all_dead_links(
 ):
     path = "/v1/images/"
     query_params = {"q": "*", "page_size": page_size}
+    filter_dead_lowercase = str(filter_dead).lower()
+    with open(
+        f"test/factory/dead_link_filter_{filter_dead_lowercase}_sample_data.pickle",
+        "rb",
+    ) as inp:
+        res_without_dead_links_data = pickle.load(inp)
 
-    with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
-        response = client.get(
-            path,
-            query_params | {"filter_dead": filter_dead},
-        )
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results",
+        return_value=res_without_dead_links_data,
+    ):
+        with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
+            response = client.get(
+                path,
+                query_params | {"filter_dead": filter_dead},
+            )
 
     assert response.status_code == 200
 
