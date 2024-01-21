@@ -1,6 +1,5 @@
 import logging
 from typing import Union
-
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
@@ -237,6 +236,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         serializer_context = search_context | self.get_serializer_context()
 
+        # with open("test.pickle", "wb") as fp:  # Pickling
+        #    pickle.dump(results, fp)
         results = self.get_db_results(results)
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
