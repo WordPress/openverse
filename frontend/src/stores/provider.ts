@@ -138,24 +138,23 @@ export const useProviderStore = defineStore("provider", {
     ): Promise<void> {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
-      const { $sentry } = useNuxtApp()
-
-      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
 
       // TODO: Check if baseURL works in prod.
+      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
       let baseURL = nitroOrigin ? nitroOrigin : location?.origin
       baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
-        const res: MediaProvider[] = await axios.get(
+        const res: { data: MediaProvider[] } = await axios.get(
           `/api/${mediaType === "image" ? "images" : "audio"}/stats/`,
           {
             baseURL,
             timeout: DEFAULT_REQUEST_TIMEOUT,
           }
         )
-        sortedProviders = sortProviders(res)
+        sortedProviders = sortProviders(res.data ?? [])
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
+        const { $sentry } = useNuxtApp()
         const errorData = parseFetchingError(error, mediaType, "provider")
 
         // Fallback on existing providers if there was an error
