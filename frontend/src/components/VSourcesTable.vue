@@ -40,9 +40,12 @@
     </thead>
     <tbody>
       <tr v-for="provider in sortedProviders" :key="provider.display_name">
-        <td>
-          {{ provider.display_name }}
+        <td v-if="additionalSearchViews">
+          <VLink :href="providerViewUrl(provider)">{{
+            provider.display_name
+          }}</VLink>
         </td>
+        <td v-else>{{ provider.display_name }}</td>
         <td class="truncate font-semibold">
           <VLink :href="provider.source_url">
             {{ cleanSourceUrlForPresentation(provider.source_url) }}
@@ -57,6 +60,8 @@
 </template>
 
 <script lang="ts">
+import { computed, useFeatureFlagStore, useNuxtApp } from "#imports"
+
 import { defineComponent, PropType, reactive, ref } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
@@ -81,13 +86,17 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const featureFlagStore = useFeatureFlagStore()
+    const additionalSearchViews = computed(() => {
+      return featureFlagStore.isOn("additional_search_views")
+    })
     const sorting = reactive({
       direction: "asc",
       field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
     })
 
     const providerStore = useProviderStore()
-    const sortedProviders = ref(
+    const sortedProviders = ref<MediaProvider[]>(
       providerStore.providers[props.media].sort(compareProviders)
     )
 
@@ -138,12 +147,19 @@ export default defineComponent({
       return 0
     }
 
+    const { $localePath } = useNuxtApp()
+    const providerViewUrl = (provider: MediaProvider) => {
+      return $localePath(`/${props.media}/source/${provider.source_name}`)
+    }
+
     return {
       getLocaleFormattedNumber,
       sortedProviders,
       sorting,
       sortTable,
       cleanSourceUrlForPresentation,
+      providerViewUrl,
+      additionalSearchViews,
     }
   },
 })
