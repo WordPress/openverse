@@ -14,8 +14,8 @@ TEST_MEDIA_PREFIX = "media"
 TEST_STAGING_PREFIX = "test_staging"
 S3_LOCAL_ENDPOINT = os.getenv("S3_LOCAL_ENDPOINT")
 S3_TEST_BUCKET = f"cccatalog-storage-{TEST_ID}"
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
+SECRET_KEY = os.getenv("AWS_SECRET_KEY")
 
 
 @pytest.fixture
