@@ -51,7 +51,6 @@ from collections.abc import Sequence
 from airflow.models.baseoperator import chain
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
-from es.create_new_es_index.create_new_es_index_types import CREATE_NEW_INDEX_CONFIGS
 
 from common import ingestion_server
 from common.constants import PRODUCTION, XCOM_PULL_TEMPLATE
@@ -61,6 +60,7 @@ from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
 from data_refresh.data_refresh_types import DataRefresh
+from es.create_new_es_index.create_new_es_index_types import CREATE_NEW_INDEX_CONFIGS
 
 
 logger = logging.getLogger(__name__)

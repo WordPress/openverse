@@ -5,9 +5,9 @@ from airflow.decorators import task, task_group
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.python import PythonSensor
-from es.create_new_es_index.utils import merge_configurations
 
 from common.constants import REFRESH_POKE_INTERVAL
+from es.create_new_es_index.utils import merge_configurations
 
 
 logger = logging.getLogger(__name__)
