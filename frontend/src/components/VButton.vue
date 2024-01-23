@@ -16,7 +16,7 @@
         'focus-slim-tx': isFocusSlimTx,
       },
     ]"
-    :aria-pressed="pressed"
+    :aria-pressed="pressed ?? undefined"
     :aria-disabled="ariaDisabled"
     :disabled="disabledAttribute"
     v-bind="$attrs"
@@ -99,12 +99,10 @@ const VButton = defineComponent({
     /**
      * Allows for programmatically setting the pressed state of a button,
      * i.e., in the case of a button opening a menu.
-     *
-     * @default false
      */
     pressed: {
       type: Boolean,
-      default: false,
+      default: undefined,
     },
     /**
      * The size of the button. `disabled` removes all internal padding allowing
