@@ -72,13 +72,13 @@ class RawpixelDataIngester(ProviderDataIngester):
         "creative commons",
         "public domain",
     }
-    # Image size options
-    full_size_option = "editor_1024"
-    png_full_size_option = "image_png_1300"
-    png_dark_full_size_option = "dark_image_png_1300"
-    thumbnail_size_option = "image_600"
-    png_thumbnail_size_option = "image_png_600"
-    png_dark_thumbnail_size_option = "dark_image_png_600"
+    # Image size options, without watermark.
+    full_size_option = "editor_1024" # Always serve webp format, "image_1000" can be used as an alternative with jpeg fallback
+    png_full_size_option = "image_png_1300" # Serve webp format if accepted else jpeg
+    png_dark_full_size_option = "dark_image_png_1300" # Serve webp format if accepted else jpeg
+    thumbnail_size_option = "image_600" # Serve webp format if accepted else jpeg
+    png_thumbnail_size_option = "image_png_600" # Serve webp format if accepted else jpeg
+    png_dark_thumbnail_size_option = "dark_image_png_600" # Serve webp format if accepted else jpeg
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -138,7 +138,7 @@ class RawpixelDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_full_size_preset(self, data: dict) -> str | None:
         """Get the full size preset based on the image properties."""
-        if data.get("isPng"): 
+        if data.get("isPng"):
             if data.get("isDarkPng"):
                 return RawpixelDataIngester.png_dark_full_size_option
             return RawpixelDataIngester.png_full_size_option
@@ -147,7 +147,7 @@ class RawpixelDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_thumbnail_size_preset(self, data: dict) -> str | None:
         """Get the full size preset based on the thumbnail properties."""
-        if data.get("isPng"): 
+        if data.get("isPng"):
             if data.get("isDarkPng"):
                 return RawpixelDataIngester.png_dark_thumbnail_size_option
             return RawpixelDataIngester.png_thumbnail_size_option
@@ -225,14 +225,13 @@ class RawpixelDataIngester(ProviderDataIngester):
         return title or None
 
     @staticmethod
-    def _get_meta_data(data: dict, metadata: dict, thumbnail_url: str) -> dict:
+    def _get_meta_data(data: dict, metadata: dict) -> dict:
         description = RawpixelDataIngester._clean_text(
             metadata.get("description_text") or ""
         )
         meta_data = {
             "description": description or None,
             "download_count": data.get("download_count"),
-            "thumbnail_url": thumbnail_url,
         }
         meta_data = {k: v for k, v in meta_data.items() if v is not None}
         return meta_data
@@ -287,19 +286,20 @@ class RawpixelDataIngester(ProviderDataIngester):
             return None
 
         thumbnail_preset = self._get_thumbnail_size_preset(self, data)
-        if not (thumbnail := self._get_image_url(data, thumbnail_preset)):
-            thumbnail = url
+        if not (thumbnail_url := self._get_image_url(data, thumbnail_preset)):
+            thumbnail_url = None
 
         width, height = self._get_image_properties(data)
         return {
             "foreign_landing_url": foreign_landing_url,
             "url": url,
+            "thumbnail_url": thumbnail_url,
             "license_info": license_info,
             "foreign_identifier": foreign_identifier,
             "width": width,
             "height": height,
             "title": self._get_title(metadata),
-            "meta_data": self._get_meta_data(data, metadata, thumbnail),
+            "meta_data": self._get_meta_data(data, metadata),
             "raw_tags": self._get_tags(metadata),
             "creator": self._get_creator(data),
             "filetype": data.get("name_ext"),
