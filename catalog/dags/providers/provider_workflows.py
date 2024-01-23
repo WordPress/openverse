@@ -310,5 +310,6 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         ingester_class=WordPressDataIngester,
         pull_timeout=timedelta(hours=12),
+        schedule_string="@weekly",
     ),
 ]
