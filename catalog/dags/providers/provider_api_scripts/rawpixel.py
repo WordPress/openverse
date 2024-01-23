@@ -73,12 +73,18 @@ class RawpixelDataIngester(ProviderDataIngester):
         "public domain",
     }
     # Image size options, without watermark.
-    full_size_option = "editor_1024" # Always serve webp format, "image_1000" can be used as an alternative with jpeg fallback
-    png_full_size_option = "image_png_1300" # Serve webp format if accepted else jpeg
-    png_dark_full_size_option = "dark_image_png_1300" # Serve webp format if accepted else jpeg
-    thumbnail_size_option = "image_600" # Serve webp format if accepted else jpeg
-    png_thumbnail_size_option = "image_png_600" # Serve webp format if accepted else jpeg
-    png_dark_thumbnail_size_option = "dark_image_png_600" # Serve webp format if accepted else jpeg
+    full_size_option = "editor_1024"  # Always serve webp format, "image_1000" can be used as an alternative with jpeg fallback
+    png_full_size_option = "image_png_1300"  # Serve webp format if accepted else jpeg
+    png_dark_full_size_option = (
+        "dark_image_png_1300"  # Serve webp format if accepted else jpeg
+    )
+    thumbnail_size_option = "image_600"  # Serve webp format if accepted else jpeg
+    png_thumbnail_size_option = (
+        "image_png_600"  # Serve webp format if accepted else jpeg
+    )
+    png_dark_thumbnail_size_option = (
+        "dark_image_png_600"  # Serve webp format if accepted else jpeg
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
