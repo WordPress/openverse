@@ -53,6 +53,7 @@ class DataRefresh:
     """
 
     dag_id: str = field(init=False)
+    filtered_index_dag_id: str = field(init=False)
     media_type: str
     start_date: datetime = datetime(2020, 1, 1)
     schedule: str | None = "0 0 * * 1"  # Mondays 00:00 UTC
@@ -69,6 +70,7 @@ class DataRefresh:
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
+        self.filtered_index_dag_id = f"create_filtered_{self.media_type}_index"
 
 
 DATA_REFRESH_CONFIGS = {

@@ -41,19 +41,28 @@ from datetime import datetime
 from airflow.decorators import dag
 from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
-from es.recreate_staging_index.recreate_full_staging_index import (
+
+from common import ingestion_server, slack
+from common.constants import (
+    AUDIO,
+    DAG_DEFAULT_ARGS,
+    MEDIA_TYPES,
+    STAGING,
+    XCOM_PULL_TEMPLATE,
+)
+from common.sensors.utils import prevent_concurrency_with_dags
+from database.staging_database_restore.constants import (
+    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
+)
+from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
+    CREATE_NEW_INDEX_CONFIGS,
+)
+from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID,
     create_index,
     get_target_alias,
     point_alias,
     should_delete_index,
-)
-
-from common import ingestion_server, slack
-from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES, XCOM_PULL_TEMPLATE
-from common.sensors.utils import prevent_concurrency_with_dag
-from database.staging_database_restore.constants import (
-    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
 )
 
 
@@ -94,10 +103,14 @@ from database.staging_database_restore.constants import (
     render_template_as_native_obj=True,
 )
 def recreate_full_staging_index():
-    # Fail early if the staging_db_restore DAG is running
-    prevent_concurrency = prevent_concurrency_with_dag.override(
-        task_id="prevent_concurrency_with_staging_db_restore"
-    )(external_dag_id=STAGING_DB_RESTORE_DAG_ID)
+    # Fail early if the staging_db_restore DAG or the create_new_staging_es_index DAG
+    # is running
+    prevent_concurrency = prevent_concurrency_with_dags(
+        external_dag_ids=[
+            STAGING_DB_RESTORE_DAG_ID,
+            CREATE_NEW_INDEX_CONFIGS[STAGING].dag_id,
+        ]
+    )
 
     target_alias = get_target_alias(
         media_type="{{ params.media_type }}",
