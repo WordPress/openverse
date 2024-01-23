@@ -493,8 +493,8 @@ export const useMediaStore = defineStore("media", {
           searchTerm: queryParams.q ?? "",
         })
         this._updateFetchState(mediaType, "end", errorData)
-        useNuxtApp().$sentry.captureException(error)
         log(errorData)
+        useNuxtApp().$sentry.captureException(error)
         throw new VFetchingError(errorData)
       }
     },
