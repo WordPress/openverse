@@ -9,7 +9,6 @@ import pytest
 from oauth2_provider.models import AccessToken
 
 from api.models import OAuth2Verification, ThrottledApplication
-import pickle
 from unittest.mock import patch
 
 cache_availability_params = pytest.mark.parametrize(
@@ -208,11 +207,10 @@ def test_unauthed_response_headers(client):
     ],
 )
 def test_sorting_authed(client, test_auth_token_exchange, sort_dir, exp_indexed_on):
-    # Prevent DB lookup for ES results because DB is empty.
-    with open(f"test/factory/{sort_dir}-sample-data.pickle", "rb") as inp:
-        data = pickle.load(inp)
-
-    with patch("api.views.image_views.ImageViewSet.get_db_results", return_value=data):
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
         time.sleep(1)
         token = test_auth_token_exchange["access_token"]
         query_params = {
@@ -240,11 +238,11 @@ def test_sorting_authed(client, test_auth_token_exchange, sort_dir, exp_indexed_
 def test_authority_authed(
     client, test_auth_token_exchange, authority_boost, exp_source
 ):
-    # Prevent DB lookup for ES results because DB is empty.
-    with open(f"test/factory/{exp_source}-sample-data.pickle", "rb") as inp:
-        data = pickle.load(inp)
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
 
-    with patch("api.views.image_views.ImageViewSet.get_db_results", return_value=data):
         time.sleep(1)
         token = test_auth_token_exchange["access_token"]
         query_params = {
