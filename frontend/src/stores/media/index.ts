@@ -1,4 +1,4 @@
-import { decodeMediaData, useNuxtApp, useRequestEvent } from "#imports"
+import { decodeMediaData, log, useNuxtApp, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -204,15 +204,8 @@ export const useMediaStore = defineStore("media", {
             (type) => this.mediaFetchState[type].isFinished
           ),
         }
-      } else if (isSearchTypeSupported(this._searchType)) {
-        return this.mediaFetchState[this._searchType]
       } else {
-        return {
-          isFetching: false,
-          fetchingError: null,
-          hasStarted: false,
-          isFinished: false,
-        }
+        return this.mediaFetchState[this._searchType]
       }
     },
 
@@ -291,7 +284,6 @@ export const useMediaStore = defineStore("media", {
       ).filter(
         (type) =>
           !this.mediaFetchState[type].fetchingError &&
-          !this.mediaFetchState[type].isFetching &&
           !this.mediaFetchState[type].isFinished
       )
     },
@@ -339,14 +331,10 @@ export const useMediaStore = defineStore("media", {
 
     _updateFetchState(
       mediaType: SupportedMediaType,
-      action: "reset" | "start" | "end" | "finish",
+      action: "start" | "end" | "finish",
       error?: FetchingError
     ) {
       switch (action) {
-        case "reset": {
-          this._resetFetchState()
-          break
-        }
         case "start": {
           this._startFetching(mediaType)
           break
@@ -414,20 +402,16 @@ export const useMediaStore = defineStore("media", {
      * If the search query changed, fetch state is reset, otherwise only the media types for which
      * fetchState.isFinished is not true are fetched.
      */
-    async fetchMedia(
-      payload: { shouldPersistMedia?: boolean; accessToken?: string } = {}
-    ) {
+    async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
       if (!shouldPersistMedia) {
         this.clearMedia()
       }
-      const accessToken = payload.accessToken ?? ""
       const fetchRequests = this._fetchableMediaTypes.map((mediaType) =>
         this.fetchSingleMediaType({
           mediaType,
           shouldPersistMedia,
-          accessToken,
         })
       )
 
@@ -440,6 +424,7 @@ export const useMediaStore = defineStore("media", {
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
+
       return mediaType === ALL_MEDIA
         ? this.allMedia
         : this.resultItems[mediaType]
@@ -463,26 +448,16 @@ export const useMediaStore = defineStore("media", {
     }: {
       mediaType: SupportedMediaType
       shouldPersistMedia: boolean
-      accessToken: string
     }) {
-      const searchStore = useSearchStore()
-      const { pathSlug, query: queryParams } =
-        searchStore.getSearchUrlParts(mediaType)
-      let page = this.results[mediaType].page + 1
-      if (shouldPersistMedia && page > 1) {
-        queryParams.page = `${page}`
-      }
-      if (mediaType === AUDIO) {
-        queryParams.peaks = "true"
-      }
-
       this._updateFetchState(mediaType, "start")
-      const url = `/api/${mediaSlug(mediaType)}/${pathSlug}`
 
-      // TODO: Check if baseURL works in prod.
-      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
-      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
-      baseURL = baseURL.replace("localhost", "0.0.0.0")
+      let page = this.results[mediaType].page + 1
+      const { pathSlug, queryParams } = this.getSearchUrlParts(
+        mediaType,
+        page,
+        shouldPersistMedia
+      )
+      const { url, baseURL } = this.getFetchUrl(mediaType, pathSlug)
 
       try {
         const res = await axios.get<PaginatedApiMediaResult>(url, {
@@ -491,32 +466,17 @@ export const useMediaStore = defineStore("media", {
           timeout: DEFAULT_REQUEST_TIMEOUT,
         })
 
-        // Hotfix for when results is null/undefined.
-        const mediaResults = res.data.results ?? []
-        const data = {
-          ...res.data,
-          results: mediaResults.reduce((acc, item) => {
-            acc[item.id] = decodeMediaData(item, mediaType)
-            return acc
-          }, {} as Record<string, AudioDetail | ImageDetail>),
-        }
+        const data = this.decodeData(res.data, mediaType)
 
         const mediaCount = data.result_count
-        let errorData: FetchingError | undefined
-        /**
-         * When there are no results for a query, the API returns a 200 response.
-         * In such cases, we show the "No results" client error page.
-         */
         if (!mediaCount) {
           page = 1
-          errorData = {
-            message: `No results found for ${queryParams.q}`,
-            code: NO_RESULT,
-            requestKind: "search",
-            searchType: mediaType,
-            details: { searchTerm: queryParams.q ?? "" },
-          }
         }
+        const errorData = createNoResultErrorData(
+          queryParams.q ?? "",
+          mediaType,
+          mediaCount
+        )
         this._updateFetchState(mediaType, "end", errorData)
 
         this.setMedia({
@@ -529,14 +489,51 @@ export const useMediaStore = defineStore("media", {
         })
         return mediaCount
       } catch (error: unknown) {
-        console.log("error", error)
         const errorData = parseFetchingError(error, mediaType, "search", {
           searchTerm: queryParams.q ?? "",
         })
         this._updateFetchState(mediaType, "end", errorData)
         useNuxtApp().$sentry.captureException(error)
+        log(errorData)
         throw new VFetchingError(errorData)
       }
+    },
+
+    decodeData(data: PaginatedApiMediaResult, mediaType: SupportedMediaType) {
+      return {
+        ...data,
+        results: (data.results ?? []).reduce((acc, item) => {
+          acc[item.id] = decodeMediaData(item, mediaType)
+          return acc
+        }, {} as Record<string, AudioDetail | ImageDetail>),
+      }
+    },
+
+    getSearchUrlParts(
+      mediaType: SupportedMediaType,
+      page: number,
+      shouldPersistMedia: boolean
+    ) {
+      const searchStore = useSearchStore()
+      const { pathSlug, query: queryParams } =
+        searchStore.getSearchUrlParts(mediaType)
+      if (shouldPersistMedia && page > 1) {
+        queryParams.page = `${page}`
+      }
+      if (mediaType === AUDIO) {
+        queryParams.peaks = "true"
+      }
+      return { pathSlug, queryParams }
+    },
+
+    getFetchUrl(mediaType: SupportedMediaType, pathSlug: string) {
+      const url = `/api/${mediaSlug(mediaType)}/${pathSlug}`
+
+      // TODO: Check if baseURL works in prod.
+      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
+      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
+      baseURL = baseURL.replace("localhost", "0.0.0.0")
+      return { url, baseURL }
     },
 
     setMediaProperties(
@@ -571,4 +568,21 @@ const findNoResultError = (errors: FetchingError[]): FetchingError | null => {
     errors.every(({ code }) => code === NO_RESULT)
     ? { ...errors[0], searchType: ALL_MEDIA }
     : null
+}
+
+export const createNoResultErrorData = (
+  searchTerm: string,
+  mediaType: SupportedMediaType,
+  mediaCount: number
+) => {
+  if (mediaCount) {
+    return undefined
+  }
+  return {
+    message: `No results found for ${searchTerm}`,
+    code: NO_RESULT,
+    requestKind: "search",
+    searchType: mediaType,
+    details: { searchTerm },
+  } as const
 }

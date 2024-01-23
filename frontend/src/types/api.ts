@@ -7,6 +7,7 @@ export interface PaginatedApiResult {
   page: number
 }
 
+// TODO: `null` and `undefined` should not be allowed here, but they are returned by the API.
 export interface PaginatedApiMediaResult extends PaginatedApiResult {
-  results: AudioDetail[] | ImageDetail[]
+  results: AudioDetail[] | ImageDetail[] | null | undefined
 }
