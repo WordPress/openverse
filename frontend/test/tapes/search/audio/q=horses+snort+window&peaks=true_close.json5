@@ -1,0 +1,199 @@
+{
+    meta: {
+        createdAt: '2024-01-10T11:48:41.061Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/audio/?q=horses+snort+window&peaks=true',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Wed, 10 Jan 2024 11:48:41 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '19',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '194',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '9cfbb350423049ac99aa18af224e1625',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '1928',
+            ],
+            'last-modified': [
+                'Wed, 10 Jan 2024 11:16:33 GMT',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '8434b13dc9f21cd4-BUD',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: {
+            result_count: 1,
+            page_count: 1,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '35c4dd22-613c-48a6-8c53-e18f87ac96e2',
+                    title: 'Horse Stables Ambience (interior) OWI',
+                    indexed_on: '2022-06-01T12:00:12.608809Z',
+                    foreign_landing_url: 'https://freesound.org/people/WolfOWI/sounds/588299',
+                    url: 'https://cdn.freesound.org/previews/588/588299_12594692-hq.mp3',
+                    creator: 'WolfOWI',
+                    creator_url: 'https://freesound.org/people/WolfOWI',
+                    license: 'by-nc',
+                    license_version: '3.0',
+                    license_url: 'https://creativecommons.org/licenses/by-nc/3.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: null,
+                    genres: null,
+                    filesize: 3702480,
+                    filetype: 'mp3',
+                    tags: [
+                        {
+                            name: 'OWI',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'horse',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'equestrian',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'stables',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'interior',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'equestrian-stables',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'horse-stable',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'horse-stables',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'animal',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'stable',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'ambience',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'horses-ambience',
+                            accuracy: null,
+                        },
+                        {
+                            name: 'barn',
+                            accuracy: null,
+                        },
+                    ],
+                    alt_files: [
+                        {
+                            url: 'https://freesound.org/apiv2/sounds/588299/download/',
+                            bit_rate: '0',
+                            filesize: '111427814',
+                            filetype: 'wav',
+                            sample_rate: '96000',
+                        },
+                    ],
+                    attribution: '"Horse Stables Ambience (interior) OWI" by WolfOWI is licensed under CC BY-NC 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc/3.0/.',
+                    fields_matched: [
+                        'description',
+                        'title',
+                        'tags.name',
+                    ],
+                    mature: false,
+                    audio_set: null,
+                    duration: 193195,
+                    bit_rate: 128000,
+                    sample_rate: null,
+                    thumbnail: null,
+                    detail_url: 'http://localhost:49153/v1/audio/35c4dd22-613c-48a6-8c53-e18f87ac96e2/',
+                    related_url: 'http://localhost:49153/v1/audio/35c4dd22-613c-48a6-8c53-e18f87ac96e2/related/',
+                    waveform: 'http://localhost:49153/v1/audio/35c4dd22-613c-48a6-8c53-e18f87ac96e2/waveform/',
+                    peaks: [],
+                    unstable__sensitivity: [],
+                },
+            ],
+        },
+    },
+}

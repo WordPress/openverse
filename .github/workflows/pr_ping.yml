@@ -51,7 +51,7 @@ jobs:
         with:
           payload: |
             {
-             "text": "PR by${{ env.pr_author }}in ${{ env.pr_repo }} marked ready for review: #${{ env.pr_number }} - ${{ env.pr_title }}",
+             "text": "PR by ${{ env.pr_author }} in ${{ env.pr_repo }} marked ready for review: #${{ env.pr_number }} - ${{ env.pr_title }}",
              "blocks": [
                {
                  "type": "section",

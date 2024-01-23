@@ -18,26 +18,28 @@ export const cookieOptions: CookieSerializeOptions = {
  * The cookies that Openverse uses to store the UI state.
  */
 export interface OpenverseCookieState {
-  /**
-   * The state of the instructions snackbar for audio component.
-   */
-  uiInstructionsSnackbarState?: SnackbarState
-  /**
-   * Whether the filters were dismissed on desktop layout.
-   */
-  uiIsFilterDismissed?: boolean
-  /**
-   * The screen's max-width breakpoint.
-   */
-  uiBreakpoint?: RealBreakpoint
-  /**
-   * Whether the request user agent is mobile or not.
-   */
-  uiIsMobileUa?: boolean
-  /**
-   * The list of ids of dismissed banners.
-   */
-  uiDismissedBanners?: BannerId[]
+  ui: {
+    /**
+     * The state of the instructions snackbar for audio component.
+     */
+    instructionsSnackbarState?: SnackbarState
+    /**
+     * Whether the filters were dismissed on desktop layout.
+     */
+    isFilterDismissed?: boolean
+    /**
+     * The screen's max-width breakpoint.
+     */
+    breakpoint?: RealBreakpoint
+    /**
+     * Whether the request user agent is mobile or not.
+     */
+    isMobileUa?: boolean
+    /**
+     * The list of ids of dismissed banners.
+     */
+    dismissedBanners?: BannerId[]
+  }
   /**
    * The state of the persistent feature flags.
    */

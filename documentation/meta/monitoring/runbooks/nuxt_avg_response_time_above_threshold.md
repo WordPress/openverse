@@ -1,12 +1,11 @@
 # Run Book: Nuxt Production Average Response Time above threshold
 
 ```{admonition} Metadata
-Status: **Unstable**
-
-Maintainer: @obulat
+Status: **Stable**
 
 Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+Average+Response+Time+above+threshold?>
+- [Alarm details](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+Average+Response+Time+above+threshold)
+- [ECS-Production-Dashboard](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards/dashboard/ECS-Production-Dashboard)
 ```
 
 ## Severity Guide

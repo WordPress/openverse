@@ -14,8 +14,8 @@ import requests as re
 import tldextract
 from psycopg2.extras import DictCursor, Json
 
-from ingestion_server.indexer import DB_BUFFER_SIZE, database_connect
-
+from ingestion_server.indexer import DB_BUFFER_SIZE
+from ingestion_server.db_helpers import database_connect
 
 # Number of records to buffer in memory at once
 CLEANUP_BUFFER_SIZE = DB_BUFFER_SIZE

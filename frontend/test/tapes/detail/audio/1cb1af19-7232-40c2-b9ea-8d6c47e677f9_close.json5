@@ -1,0 +1,125 @@
+{
+    meta: {
+        createdAt: '2024-01-13T18:32:28.378Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/audio/1cb1af19-7232-40c2-b9ea-8d6c47e677f9/',
+        method: 'GET',
+        body: '',
+    },
+  res: {
+    status: 200,
+    headers: {
+      date: [
+        'Thu, 11 Jan 2024 12:13:25 GMT',
+      ],
+      'content-type': [
+        'application/json',
+      ],
+      'transfer-encoding': [
+        'chunked',
+      ],
+      connection: [
+        'close',
+      ],
+      vary: [
+        'Accept-Encoding, Accept, Authorization, origin',
+      ],
+      allow: [
+        'GET, HEAD, OPTIONS',
+      ],
+      'x-ratelimit-limit-anon_burst': [
+        '20/min',
+      ],
+      'x-ratelimit-available-anon_burst': [
+        '18',
+      ],
+      'x-ratelimit-limit-anon_sustained': [
+        '200/day',
+      ],
+      'x-ratelimit-available-anon_sustained': [
+        '197',
+      ],
+      'x-frame-options': [
+        'DENY',
+      ],
+      'x-content-type-options': [
+        'nosniff',
+      ],
+      'referrer-policy': [
+        'same-origin',
+      ],
+      'cross-origin-opener-policy': [
+        'same-origin',
+      ],
+      'x-request-id': [
+        '7d8fd4ed4f9e4beea6168000bb5973f7',
+      ],
+      'cache-control': [
+        'max-age=14400',
+      ],
+      'cf-cache-status': [
+        'HIT',
+      ],
+      age: [
+        '172889',
+      ],
+      'last-modified': [
+        'Tue, 09 Jan 2024 12:11:56 GMT',
+      ],
+      'strict-transport-security': [
+        'max-age=15552000; includeSubDomains; preload',
+      ],
+      server: [
+        'cloudflare',
+      ],
+      'cf-ray': [
+        '843d12d8af706844-BUD',
+      ],
+      'content-encoding': [
+        'br',
+      ],
+      'alt-svc': [
+        'h3=":443"; ma=86400',
+      ],
+    },
+        body: {
+            id: '1cb1af19-7232-40c2-b9ea-8d6c47e677f9',
+            title: 'En-us-honey',
+            indexed_on: '2023-04-16T12:13:03.247420Z',
+            foreign_landing_url: 'https://commons.wikimedia.org/w/index.php?curid=1224117',
+            url: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/En-us-honey.ogg',
+            creator: 'Dvortygirl',
+            creator_url: 'https://commons.wikimedia.org/wiki/User:Dvortygirl',
+            license: 'by-sa',
+            license_version: '3.0',
+            license_url: 'https://creativecommons.org/licenses/by-sa/3.0/',
+            provider: 'wikimedia_audio',
+            source: 'wikimedia_audio',
+            category: 'pronunciation',
+            genres: null,
+            filesize: 9438,
+            filetype: 'ogg',
+            tags: [],
+            alt_files: null,
+            attribution: '"En-us-honey" by Dvortygirl is licensed under CC BY-SA 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/3.0/.',
+            fields_matched: [],
+            mature: false,
+            audio_set: null,
+            duration: 545,
+            bit_rate: 96001,
+            sample_rate: 44100,
+            thumbnail: null,
+            detail_url: 'http://localhost:49153/v1/audio/1cb1af19-7232-40c2-b9ea-8d6c47e677f9/',
+            related_url: 'http://localhost:49153/v1/audio/1cb1af19-7232-40c2-b9ea-8d6c47e677f9/related/',
+            waveform: 'http://localhost:49153/v1/audio/1cb1af19-7232-40c2-b9ea-8d6c47e677f9/waveform/',
+            unstable__sensitivity: [],
+        },
+    },
+}

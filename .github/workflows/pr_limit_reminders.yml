@@ -11,6 +11,7 @@ jobs:
     outputs:
       pr_count: ${{ steps.count-prs.outputs.pr_count }}
       slack_id: ${{ steps.count-prs.outputs.slack_id }}
+      should_alert: ${{ steps.count-prs.outputs.should_alert }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/github-script@v6
@@ -26,7 +27,7 @@ jobs:
   send_message:
     needs: analyze-user-prs
     name: Send Slack message
-    if: ${{ needs.analyze-user-prs.outputs.pr_count >= 3 }}
+    if: needs.analyze-user-prs.outputs.pr_count >= 3
     runs-on: ubuntu-latest
     env:
       pr_count: ${{ needs.analyze-user-prs.outputs.pr_count }}

@@ -11,13 +11,15 @@ import { expect, test } from "@playwright/test"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
+  preparePageForTests,
   scrollToBottom,
   searchFromHeader,
 } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 
-test.beforeEach(async ({ context }) => {
+test.beforeEach(async ({ context, page }) => {
+  await preparePageForTests(page, "xl")
   await mockProviderApis(context)
 })
 
@@ -31,7 +33,7 @@ test("scroll to top on new search term submitted", async ({ page }) => {
 
   expect(scrollY).not.toBe(0)
 
-  await searchFromHeader(page, "honey")
+  await searchFromHeader(page, "cat")
   scrollY = await page.evaluate(
     () => document.getElementById("main-page")?.scrollTop
   )

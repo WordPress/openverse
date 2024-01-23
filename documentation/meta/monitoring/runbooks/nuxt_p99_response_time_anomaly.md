@@ -3,10 +3,8 @@
 ```{admonition} Metadata
 Status: **Disabled** until Nuxt request logging is added.
 
-Maintainer: @obulat
-
 Alarm link:
-- <https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+P99+Response+Time+anomalously+high>
+- [Alarm details](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/Nuxt+Production+P99+Response+Time+anomalously+high>)
 ```
 
 ## Severity Guide
