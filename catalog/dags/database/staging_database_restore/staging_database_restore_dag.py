@@ -48,7 +48,7 @@ from database.staging_database_restore.staging_database_restore import (
     restore_staging_from_snapshot,
     skip_restore,
 )
-from es.recreate_staging_index.recreate_full_staging_index import (
+from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
 

@@ -7,7 +7,7 @@ from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPyt
 from airflow.sensors.python import PythonSensor
 
 from common.constants import REFRESH_POKE_INTERVAL
-from es.create_new_es_index.utils import merge_configurations
+from elasticsearch_cluster.create_new_es_index.utils import merge_configurations
 
 
 logger = logging.getLogger(__name__)

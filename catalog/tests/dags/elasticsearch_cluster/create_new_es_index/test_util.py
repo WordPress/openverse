@@ -1,6 +1,6 @@
 import pytest
 
-from es.create_new_es_index.utils import merge_configurations
+from elasticsearch_cluster.create_new_es_index.utils import merge_configurations
 
 
 @pytest.mark.parametrize(

@@ -1,4 +1,6 @@
-from es.create_new_es_index.create_new_es_index import merge_index_configurations
+from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
+    merge_index_configurations,
+)
 
 
 def test_merge_index_configurations():

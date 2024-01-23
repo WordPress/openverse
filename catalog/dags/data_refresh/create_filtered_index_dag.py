@@ -61,7 +61,9 @@ from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
-from es.create_new_es_index.create_new_es_index_types import CREATE_NEW_INDEX_CONFIGS
+from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
+    CREATE_NEW_INDEX_CONFIGS,
+)
 
 
 # Note: We can't use the TaskFlow `@dag` DAG factory decorator
