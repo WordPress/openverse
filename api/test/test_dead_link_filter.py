@@ -8,7 +8,6 @@ import pytest
 import requests
 
 from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
-import pickle
 
 
 @pytest.fixture
@@ -68,13 +67,10 @@ def test_dead_link_filtering(mocked_map, client):
     query_params = {"q": "*", "page_size": 20}
 
     # Make a request that does not filter dead links...
-    with open("test/factory/res-with-dead-link-sample-data.pickle", "rb") as inp:
-        res_with_dead_links_data = pickle.load(inp)
-
     with patch(
-        "api.views.image_views.ImageViewSet.get_db_results",
-        return_value=res_with_dead_links_data,
-    ):
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
         res_with_dead_links = client.get(
             path,
             query_params | {"filter_dead": False},
@@ -82,13 +78,6 @@ def test_dead_link_filtering(mocked_map, client):
         # ...and ensure that our patched function was not called
         mocked_map.assert_not_called()
 
-    with open("test/factory/res-without-dead-link-sample-data.pickle", "rb") as inp:
-        res_without_dead_links_data = pickle.load(inp)
-
-    with patch(
-        "api.views.image_views.ImageViewSet.get_db_results",
-        return_value=res_without_dead_links_data,
-    ):
         # Make a request that filters dead links...
         res_without_dead_links = client.get(
             path,
@@ -97,20 +86,20 @@ def test_dead_link_filtering(mocked_map, client):
         # ...and ensure that our patched function was called
         mocked_map.assert_called()
 
-    assert res_with_dead_links.status_code == 200
-    assert res_without_dead_links.status_code == 200
+        assert res_with_dead_links.status_code == 200
+        assert res_without_dead_links.status_code == 200
 
-    data_with_dead_links = res_with_dead_links.json()
-    data_without_dead_links = res_without_dead_links.json()
+        data_with_dead_links = res_with_dead_links.json()
+        data_without_dead_links = res_without_dead_links.json()
 
-    res_1_ids = {result["id"] for result in data_with_dead_links["results"]}
-    res_2_ids = {result["id"] for result in data_without_dead_links["results"]}
-    # In this case, both have 20 results as the dead link filter has "back filled" the
-    # pages of dead links. See the subsequent test for the case when this does not
-    # occur (i.e., when the entire first page of links is dead).
-    assert len(res_1_ids) == 20
-    assert len(res_2_ids) == 20
-    assert bool(res_1_ids - res_2_ids)
+        res_1_ids = {result["id"] for result in data_with_dead_links["results"]}
+        res_2_ids = {result["id"] for result in data_without_dead_links["results"]}
+        # In this case, both have 20 results as the dead link filter has "back filled" the
+        # pages of dead links. See the subsequent test for the case when this does not
+        # occur (i.e., when the entire first page of links is dead).
+        assert len(res_1_ids) == 20
+        assert len(res_2_ids) == 20
+        assert bool(res_1_ids - res_2_ids)
 
 
 @pytest.mark.django_db
@@ -131,37 +120,24 @@ def test_dead_link_filtering_all_dead_links(
 ):
     path = "/v1/images/"
     query_params = {"q": "*", "page_size": page_size}
-    if not filter_dead:
-        filter_dead_lowercase = str(filter_dead).lower()
-        with open(
-            f"test/factory/dead_link_filter_{filter_dead_lowercase}_sample_data.pickle",
-            "rb",
-        ) as inp:
-            data = pickle.load(inp)
 
-        with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
-            with patch(
-                "api.views.image_views.ImageViewSet.get_db_results",
-                return_value=data,
-            ):
-                response = client.get(
-                    path,
-                    query_params | {"filter_dead": filter_dead},
-                )
-    else:
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
         with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
             response = client.get(
                 path,
                 query_params | {"filter_dead": filter_dead},
             )
 
-    assert response.status_code == 200
+        assert response.status_code == 200
 
-    res_json = response.json()
+        res_json = response.json()
 
-    assert len(res_json["results"]) == expected_result_count
-    if expected_result_count == 0:
-        assert res_json["result_count"] == 0
+        assert len(res_json["results"]) == expected_result_count
+        if expected_result_count == 0:
+            assert res_json["result_count"] == 0
 
 
 @pytest.fixture
