@@ -42,7 +42,7 @@ class CreateNewIndex:
         self.dag_id = f"create_new_{self.environment}_es_index"
 
         if not self.requests_per_second:
-            self.requests_per_second = Variable.get("ES_INDEX_THROTTLING_RATE")
+            self.requests_per_second = Variable.get("ES_INDEX_THROTTLING_RATE", 20_000)
 
 
 CREATE_NEW_INDEX_CONFIGS = {
