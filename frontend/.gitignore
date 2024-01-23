@@ -12,6 +12,7 @@ test/Default
 
 # Coverage
 test/unit/coverage/
+coverage
 
 # Generated translation files
 *.pot
