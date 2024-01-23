@@ -207,24 +207,25 @@ def test_unauthed_response_headers(client):
     ],
 )
 def test_sorting_authed(client, test_auth_token_exchange, sort_dir, exp_indexed_on):
+    time.sleep(1)
+    token = test_auth_token_exchange["access_token"]
+    query_params = {
+        "unstable__sort_by": "indexed_on",
+        "unstable__sort_dir": sort_dir,
+    }
     with patch(
         "api.views.image_views.ImageViewSet.get_db_results"
     ) as mock_get_db_result:
         mock_get_db_result.side_effect = lambda value: value
-        time.sleep(1)
-        token = test_auth_token_exchange["access_token"]
-        query_params = {
-            "unstable__sort_by": "indexed_on",
-            "unstable__sort_dir": sort_dir,
-        }
+
         res = client.get(
             "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
         )
-        assert res.status_code == 200
+    assert res.status_code == 200
 
-        res_data = res.json()
-        indexed_on = res_data["results"][0]["indexed_on"][:10]  # ``indexed_on`` is ISO.
-        assert indexed_on == exp_indexed_on
+    res_data = res.json()
+    indexed_on = res_data["results"][0]["indexed_on"][:10]  # ``indexed_on`` is ISO.
+    assert indexed_on == exp_indexed_on
 
 
 @pytest.mark.django_db
@@ -238,26 +239,26 @@ def test_sorting_authed(client, test_auth_token_exchange, sort_dir, exp_indexed_
 def test_authority_authed(
     client, test_auth_token_exchange, authority_boost, exp_source
 ):
+    time.sleep(1)
+    token = test_auth_token_exchange["access_token"]
+    query_params = {
+        "q": "cat",
+        "unstable__authority": "true",
+        "unstable__authority_boost": authority_boost,
+    }
     with patch(
         "api.views.image_views.ImageViewSet.get_db_results"
     ) as mock_get_db_result:
         mock_get_db_result.side_effect = lambda value: value
 
-        time.sleep(1)
-        token = test_auth_token_exchange["access_token"]
-        query_params = {
-            "q": "cat",
-            "unstable__authority": "true",
-            "unstable__authority_boost": authority_boost,
-        }
         res = client.get(
             "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
         )
-        assert res.status_code == 200
+    assert res.status_code == 200
 
-        res_data = res.json()
-        source = res_data["results"][0]["source"]
-        assert source == exp_source
+    res_data = res.json()
+    source = res_data["results"][0]["source"]
+    assert source == exp_source
 
 
 @pytest.mark.django_db

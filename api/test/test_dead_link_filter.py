@@ -86,20 +86,20 @@ def test_dead_link_filtering(mocked_map, client):
         # ...and ensure that our patched function was called
         mocked_map.assert_called()
 
-        assert res_with_dead_links.status_code == 200
-        assert res_without_dead_links.status_code == 200
+    assert res_with_dead_links.status_code == 200
+    assert res_without_dead_links.status_code == 200
 
-        data_with_dead_links = res_with_dead_links.json()
-        data_without_dead_links = res_without_dead_links.json()
+    data_with_dead_links = res_with_dead_links.json()
+    data_without_dead_links = res_without_dead_links.json()
 
-        res_1_ids = {result["id"] for result in data_with_dead_links["results"]}
-        res_2_ids = {result["id"] for result in data_without_dead_links["results"]}
-        # In this case, both have 20 results as the dead link filter has "back filled" the
-        # pages of dead links. See the subsequent test for the case when this does not
-        # occur (i.e., when the entire first page of links is dead).
-        assert len(res_1_ids) == 20
-        assert len(res_2_ids) == 20
-        assert bool(res_1_ids - res_2_ids)
+    res_1_ids = {result["id"] for result in data_with_dead_links["results"]}
+    res_2_ids = {result["id"] for result in data_without_dead_links["results"]}
+    # In this case, both have 20 results as the dead link filter has "back filled" the
+    # pages of dead links. See the subsequent test for the case when this does not
+    # occur (i.e., when the entire first page of links is dead).
+    assert len(res_1_ids) == 20
+    assert len(res_2_ids) == 20
+    assert bool(res_1_ids - res_2_ids)
 
 
 @pytest.mark.django_db
@@ -131,13 +131,13 @@ def test_dead_link_filtering_all_dead_links(
                 query_params | {"filter_dead": filter_dead},
             )
 
-        assert response.status_code == 200
+    assert response.status_code == 200
 
-        res_json = response.json()
+    res_json = response.json()
 
-        assert len(res_json["results"]) == expected_result_count
-        if expected_result_count == 0:
-            assert res_json["result_count"] == 0
+    assert len(res_json["results"]) == expected_result_count
+    if expected_result_count == 0:
+        assert res_json["result_count"] == 0
 
 
 @pytest.fixture
