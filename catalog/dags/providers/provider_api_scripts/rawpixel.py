@@ -138,18 +138,18 @@ class RawpixelDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_full_size_preset(self, data: dict) -> str | None:
         """Get the full size preset based on the image properties."""
-        if data.get("isPng") and data.get("isDarkPng"):
-            return RawpixelDataIngester.png_dark_full_size_option
-        if data.get("isPng"):
+        if data.get("isPng"): 
+            if data.get("isDarkPng"):
+                return RawpixelDataIngester.png_dark_full_size_option
             return RawpixelDataIngester.png_full_size_option
         return RawpixelDataIngester.full_size_option
 
     @staticmethod
     def _get_thumbnail_size_preset(self, data: dict) -> str | None:
-        """Get the full size preset based on the image properties."""
-        if data.get("isPng") and data.get("isDarkPng"):
-            return RawpixelDataIngester.png_dark_thumbnail_size_option
-        if data.get("isPng"):
+        """Get the full size preset based on the thumbnail properties."""
+        if data.get("isPng"): 
+            if data.get("isDarkPng"):
+                return RawpixelDataIngester.png_dark_thumbnail_size_option
             return RawpixelDataIngester.png_thumbnail_size_option
         return RawpixelDataIngester.thumbnail_size_option
 
