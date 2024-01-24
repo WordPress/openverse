@@ -12,6 +12,7 @@ ignore-words = ".codespell/ignore_words.txt"
 extend-select = [
   "UP",
   "D",  # pydocstyle, https://docs.astral.sh/ruff/rules/#pydocstyle-d
+  "I",  # isort, https://docs.astral.sh/ruff/rules/#isort-i
 ]
 ignore = [
   "D1",  # D1xx: we do not want to force contributors to write redundant or useless docstrings
@@ -49,6 +50,7 @@ known-first-party = [
   "oauth2",
   "providers",
   "retired",
+  "test",
 ]
 
 [tool.ruff.lint.isort.sections]
