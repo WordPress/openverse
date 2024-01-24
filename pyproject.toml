@@ -10,9 +10,9 @@ ignore-words = ".codespell/ignore_words.txt"
 # Default for `select` is ["E4", "E7", "E9", "F"]
 # All additional rules must be added using `extend-select`.
 extend-select = [
-  "UP",
+  "UP",  # pyupgrade, https://docs.astral.sh/ruff/rules/#pyupgrade-up
   "D",  # pydocstyle, https://docs.astral.sh/ruff/rules/#pydocstyle-d
-  "I",  # isort
+  "I",  # isort, https://docs.astral.sh/ruff/rules/#isort-i
 ]
 ignore = [
   "D1",  # D1xx: we do not want to force contributors to write redundant or useless docstrings
