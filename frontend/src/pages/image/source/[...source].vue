@@ -6,8 +6,8 @@
   />
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import { collectionMiddleware } from "~/middleware/collection"
 
@@ -15,23 +15,12 @@ import { useCollectionFetching } from "~/composables/use-collection-fetching"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
-export default defineNuxtComponent({
-  name: "VImageSourcePage",
-  components: { VCollectionPage },
-  async setup() {
-    definePageMeta({
-      layout: "content-layout",
-      middleware: collectionMiddleware,
-    })
+definePageMeta({
+  layout: "content-layout",
+  middleware: collectionMiddleware,
+})
 
-    const { pending, handleLoadMore } = await useCollectionFetching({
-      collectionId: "image-source ",
-    })
-
-    return {
-      pending,
-      handleLoadMore,
-    }
-  },
+const { pending, handleLoadMore } = await useCollectionFetching({
+  collectionId: "image-source ",
 })
 </script>

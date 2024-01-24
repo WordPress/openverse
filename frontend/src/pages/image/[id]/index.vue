@@ -72,9 +72,8 @@
   </main>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
-  defineNuxtComponent,
   definePageMeta,
   firstParam,
   handledClientSide,
@@ -103,7 +102,6 @@ import { singleResultMiddleware } from "~/middleware/single-result"
 import { validateUUID } from "~/utils/query-utils"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
-import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
@@ -117,247 +115,167 @@ import VImageTitleButton from "~/components/VMediaInfo/VImageTitleButton.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
-export default defineNuxtComponent({
-  name: "VImageDetailsPage",
-  components: {
-    VImageTitleButton,
-    VErrorSection,
-    VMediaInfo,
-    VGetMediaButton,
-    VMediaDetails,
-    VSingleResultControls,
-    VSafetyWall,
-    VBone,
-    VLink,
-    VMediaReuse,
-    VRelatedImages,
-    VSketchFabViewer,
-  },
-  async setup() {
-    definePageMeta({
-      layout: "content-layout",
-      middleware: singleResultMiddleware,
-    })
-    const singleResultStore = useSingleResultStore()
+definePageMeta({
+  layout: "content-layout",
+  middleware: singleResultMiddleware,
+})
+const singleResultStore = useSingleResultStore()
 
-    const route = useRoute()
+const route = useRoute()
 
-    const image = ref<ImageDetail | null>(singleResultStore.image)
-    const fetchingError = computed(
-      () => singleResultStore.fetchState.fetchingError
-    )
+const image = ref<ImageDetail | null>(singleResultStore.image)
+const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
 
-    /**
-     * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
-     * and replace it with the provider image once the thumbnail is loaded.
-     */
-    const imageSrc = ref(image.value?.thumbnail)
+/**
+ * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
+ * and replace it with the provider image once the thumbnail is loaded.
+ */
+const imageSrc = ref(image.value?.thumbnail)
 
-    const isLoadingThumbnail = ref(true)
-    const imageId = computed(() => firstParam(route.params.id))
+const isLoadingThumbnail = ref(true)
+const imageId = computed(() => firstParam(route.params.id))
 
-    onMounted(() => {
-      isLoadingThumbnail.value = false
-      imageSrc.value = image.value?.url ?? errorImage
-    })
+onMounted(() => {
+  isLoadingThumbnail.value = false
+  imageSrc.value = image.value?.url ?? errorImage
+})
 
-    const { error } = await useAsyncData(
-      "single-image",
-      async () => {
-        if (imageId.value && validateUUID(imageId.value)) {
-          const fetchedImage = await singleResultStore.fetch(
-            IMAGE,
-            imageId.value
-          )
-          image.value = fetchedImage
-          imageSrc.value = fetchedImage.thumbnail
-          return fetchedImage
-        } else {
-          throw new Error("Image ID not found")
-        }
-      },
-      {
-        immediate: true,
-        lazy: isClient,
-        watch: [imageId],
-      }
-    )
-
-    watch(
-      error,
-      () => {
-        if (
-          (fetchingError.value && !handledClientSide(fetchingError.value)) ||
-          error.value
-        ) {
-          showError({
-            ...(fetchingError.value ?? {}),
-            fatal: true,
-          })
-        }
-      },
-      { immediate: true }
-    )
-    const extractFiletype = (url: string): string | null => {
-      const splitUrl = url.split(".")
-      if (splitUrl.length > 1) {
-        const possibleFiletype = splitUrl[splitUrl.length - 1]
-        if (
-          ["jpg", "jpeg", "png", "gif", "tiff", "svg"].includes(
-            possibleFiletype
-          )
-        ) {
-          return possibleFiletype
-        }
-      }
-      return null
-    }
-    const getFiletype = (image: ImageDetail) => {
-      return image.filetype ?? extractFiletype(image.url) ?? "Unknown"
-    }
-
-    const imageWidth = ref(image.value?.width ?? 0)
-    const imageHeight = ref(image.value?.height ?? 0)
-    const imageType = ref(image.value ? getFiletype(image.value) : "Unknown")
-    const isLoadingMainImage = ref(true)
-    const sketchFabfailure = ref(false)
-
-    const sketchFabUid = computed(() => {
-      if (image.value?.source !== "sketchfab" || sketchFabfailure.value) {
-        return null
-      }
-      return image.value.url
-        .split("https://media.sketchfab.com/models/")[1]
-        .split("/")[0]
-    })
-
-    const fetchFiletype = async (url: string) => {
-      const response = await axios.head(url)
-      const contentType = response.headers["content-type"]
-      if (contentType?.includes("image")) {
-        return contentType.split("/")[1]
-      }
-      return null
-    }
-
-    /**
-     * On image error, fall back on image thumbnail or the error image.
-     * @param event - image load error event.
-     */
-    const onImageError = (event: Event) => {
-      if (!(event.target instanceof HTMLImageElement)) {
-        return
-      }
-      imageSrc.value =
-        event.target.src === image.value?.url
-          ? image.value.thumbnail
-          : errorImage
-    }
-    /**
-     * When the load event is fired for the thumbnail image, we set the dimensions
-     * of the image, and replace the image src attribute with the `image.url`
-     * to load the original provider image.
-     * @param event - the image load event.
-     */
-    const onImageLoaded = async (event: Event) => {
-      if (!(event.target instanceof HTMLImageElement) || !image.value) {
-        return
-      }
-
-      isLoadingThumbnail.value = false
-
-      if (
-        isLoadingMainImage.value &&
-        event.target.src === image.value.thumbnail
-      ) {
-        imageWidth.value = image.value.width || event.target.naturalWidth
-        imageHeight.value = image.value.height || event.target.naturalHeight
-        if (imageType.value === "Unknown") {
-          imageType.value =
-            extractFiletype(image.value.url) ||
-            (await fetchFiletype(image.value.url)) ||
-            "Unknown"
-        }
-
-        imageSrc.value = image.value.url
-        isLoadingMainImage.value = false
-      }
-    }
-
-    const { sendCustomEvent } = useAnalytics()
-
-    const handleRightClick = () => {
-      if (!image.value) {
-        return
-      }
-      sendCustomEvent("RIGHT_CLICK_IMAGE", {
-        id: image.value.id,
-      })
-    }
-
-    const sendGetMediaEvent = () => {
-      if (!image.value) {
-        return
-      }
-      sendCustomEvent("GET_MEDIA", {
-        id: image.value.id,
-        provider: image.value.provider,
-        mediaType: IMAGE,
-      })
-    }
-
-    const sendVisitCreatorLinkEvent = () => {
-      if (!image.value) {
-        return
-      }
-      sendCustomEvent("VISIT_CREATOR_LINK", {
-        id: image.value.id,
-        source: image.value.source ?? image.value.provider,
-        url: image.value.creator_url ?? "",
-      })
-    }
-
-    const { reveal, hide, isHidden } = useSensitiveMedia(image.value)
-
-    const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
-
-    useHead(() => ({
-      ...detailPageMeta,
-      title: pageTitle.value,
-    }))
-
-    const featureFlagStore = useFeatureFlagStore()
-    const isAdditionalSearchView = computed(() => {
-      return featureFlagStore.isOn("additional_search_views")
-    })
-
-    return {
-      isAdditionalSearchView,
-
-      image,
-      fetchingError,
-      imageWidth,
-      imageHeight,
-      imageSrc,
-      imageType,
-      sketchFabfailure,
-      sketchFabUid,
-
-      isLoadingThumbnail,
-      onImageLoaded,
-      onImageError,
-      handleRightClick,
-
-      skipToContentTargetId,
-
-      sendGetMediaEvent,
-      sendVisitCreatorLinkEvent,
-
-      isHidden,
-      reveal,
-      hide,
+const { error } = await useAsyncData(
+  "single-image",
+  async () => {
+    if (imageId.value && validateUUID(imageId.value)) {
+      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId.value)
+      image.value = fetchedImage
+      imageSrc.value = fetchedImage.thumbnail
+      return fetchedImage
+    } else {
+      throw new Error("Image ID not found")
     }
   },
+  {
+    immediate: true,
+    lazy: isClient,
+    watch: [imageId],
+  }
+)
+
+watch(
+  error,
+  () => {
+    if (
+      (fetchingError.value && !handledClientSide(fetchingError.value)) ||
+      error.value
+    ) {
+      showError({
+        ...(fetchingError.value ?? {}),
+        fatal: true,
+      })
+    }
+  },
+  { immediate: true }
+)
+const extractFiletype = (url: string): string | null => {
+  const splitUrl = url.split(".")
+  if (splitUrl.length > 1) {
+    const possibleFiletype = splitUrl[splitUrl.length - 1]
+    if (
+      ["jpg", "jpeg", "png", "gif", "tiff", "svg"].includes(possibleFiletype)
+    ) {
+      return possibleFiletype
+    }
+  }
+  return null
+}
+const getFiletype = (image: ImageDetail) => {
+  return image.filetype ?? extractFiletype(image.url) ?? "Unknown"
+}
+
+const imageWidth = ref(image.value?.width ?? 0)
+const imageHeight = ref(image.value?.height ?? 0)
+const imageType = ref(image.value ? getFiletype(image.value) : "Unknown")
+const isLoadingMainImage = ref(true)
+const sketchFabfailure = ref(false)
+
+const sketchFabUid = computed(() => {
+  if (image.value?.source !== "sketchfab" || sketchFabfailure.value) {
+    return null
+  }
+  return image.value.url
+    .split("https://media.sketchfab.com/models/")[1]
+    .split("/")[0]
+})
+
+const fetchFiletype = async (url: string) => {
+  const response = await axios.head(url)
+  const contentType = response.headers["content-type"]
+  if (contentType?.includes("image")) {
+    return contentType.split("/")[1]
+  }
+  return null
+}
+
+/**
+ * On image error, fall back on image thumbnail or the error image.
+ * @param event - image load error event.
+ */
+const onImageError = (event: Event) => {
+  if (!(event.target instanceof HTMLImageElement)) {
+    return
+  }
+  imageSrc.value =
+    event.target.src === image.value?.url ? image.value.thumbnail : errorImage
+}
+/**
+ * When the load event is fired for the thumbnail image, we set the dimensions
+ * of the image, and replace the image src attribute with the `image.url`
+ * to load the original provider image.
+ * @param event - the image load event.
+ */
+const onImageLoaded = async (event: Event) => {
+  if (!(event.target instanceof HTMLImageElement) || !image.value) {
+    return
+  }
+
+  isLoadingThumbnail.value = false
+
+  if (isLoadingMainImage.value && event.target.src === image.value.thumbnail) {
+    imageWidth.value = image.value.width || event.target.naturalWidth
+    imageHeight.value = image.value.height || event.target.naturalHeight
+    if (imageType.value === "Unknown") {
+      imageType.value =
+        extractFiletype(image.value.url) ||
+        (await fetchFiletype(image.value.url)) ||
+        "Unknown"
+    }
+
+    imageSrc.value = image.value.url
+    isLoadingMainImage.value = false
+  }
+}
+
+const { sendCustomEvent } = useAnalytics()
+
+const handleRightClick = () => {
+  if (!image.value) {
+    return
+  }
+  sendCustomEvent("RIGHT_CLICK_IMAGE", {
+    id: image.value.id,
+  })
+}
+
+const { reveal, isHidden } = useSensitiveMedia(image.value)
+
+const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
+
+useHead(() => ({
+  ...detailPageMeta,
+  title: pageTitle.value,
+}))
+
+const featureFlagStore = useFeatureFlagStore()
+const isAdditionalSearchView = computed(() => {
+  return featureFlagStore.isOn("additional_search_views")
 })
 </script>
 

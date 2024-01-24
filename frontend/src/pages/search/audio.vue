@@ -6,10 +6,10 @@
   />
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, useI18n } from "#imports"
+<script setup lang="ts">
+import { useI18n } from "#imports"
 
-import { computed, PropType } from "vue"
+import { computed } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -17,30 +17,17 @@ import type { AudioDetail } from "~/types/media"
 
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 
-export default defineNuxtComponent({
-  name: "AudioSearch",
-  components: {
-    VAudioCollection,
-  },
-  props: {
-    results: {
-      type: Array as PropType<AudioDetail[]>,
-      required: true,
-    },
-  },
-  setup() {
-    const i18n = useI18n({ useScope: "global" })
-    const searchStore = useSearchStore()
+defineProps<{
+  searchTerm: string
+  results: AudioDetail[]
+}>()
 
-    const collectionLabel = computed(() => {
-      const query = searchStore.searchTerm
+const i18n = useI18n({ useScope: "global" })
+const searchStore = useSearchStore()
 
-      return i18n.t("browsePage.aria.results", { query })
-    })
+const collectionLabel = computed(() => {
+  const query = searchStore.searchTerm
 
-    return {
-      collectionLabel,
-    }
-  },
+  return i18n.t("browsePage.aria.results", { query })
 })
 </script>

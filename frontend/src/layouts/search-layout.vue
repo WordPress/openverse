@@ -68,8 +68,8 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
+<script setup lang="ts">
+import { computed, onMounted, provide, ref, watch } from "vue"
 import { useScroll } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 
@@ -98,93 +98,53 @@ import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchFor
  * This is the SearchLayout: the search page that has a sidebar.
  * It has white background.
  */
-export default defineComponent({
-  name: "SearchLayout",
-  components: {
-    VExternalSearchForm,
-    VLoadMore,
-    VScrollButton,
-    VErrorSection,
-    VSafeBrowsing,
-    VBanners,
-    VFooter,
-    VSearchGridFilter,
-    VHeaderDesktop,
-    VHeaderMobile,
-  },
-  async setup() {
-    const headerRef = ref<HTMLElement | null>(null)
-    const mainPageRef = ref<HTMLElement | null>(null)
+const uiStore = useUiStore()
+const searchStore = useSearchStore()
 
-    const uiStore = useUiStore()
-    const searchStore = useSearchStore()
+const { searchTerm, searchTypeIsSupported: supported } =
+  storeToRefs(searchStore)
 
-    const { searchTerm, searchTypeIsSupported: supported } =
-      storeToRefs(searchStore)
+const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
-    const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+/**
+ * Filters sidebar is visible only on desktop layouts
+ * on search result pages for supported search types.
+ */
+const isSidebarVisible = computed(
+  () => supported.value && uiStore.isFilterVisible && isDesktopLayout.value
+)
 
-    /**
-     * Filters sidebar is visible only on desktop layouts
-     * on search result pages for supported search types.
-     */
-    const isSidebarVisible = computed(
-      () => supported.value && uiStore.isFilterVisible && isDesktopLayout.value
-    )
+const isHeaderScrolled = ref(false)
+const showScrollButton = ref(false)
 
-    const isHeaderScrolled = ref(false)
-    const showScrollButton = ref(false)
+/**
+ * Update the `isHeaderScrolled` and `showScrollButton` values on `main-page` scroll.
+ *
+ * Note: template refs do not work in a Nuxt layout, so we get the `main-page` element using `document.getElementById`.
+ */
+let mainPageElement = ref<HTMLElement | null>(null)
 
-    /**
-     * Update the `isHeaderScrolled` and `showScrollButton` values on `main-page` scroll.
-     *
-     * Note: template refs do not work in a Nuxt layout, so we get the `main-page` element using `document.getElementById`.
-     */
-    let mainPageElement = ref<HTMLElement | null>(null)
-
-    const { y: mainPageY } = useScroll(mainPageElement)
-    watch(mainPageY, (y) => {
-      isHeaderScrolled.value = y > 0
-      showScrollButton.value = y > 70
-    })
-
-    onMounted(() => {
-      mainPageElement.value = document.getElementById("main-page")
-    })
-
-    provide(IsHeaderScrolledKey, isHeaderScrolled)
-    provide(IsSidebarVisibleKey, isSidebarVisible)
-
-    const headerBorder = computed(() =>
-      isHeaderScrolled.value || isSidebarVisible.value
-        ? "border-b-dark-charcoal-20"
-        : "border-b-tx"
-    )
-    const isAllView = computed(() => searchStore.searchType === ALL_MEDIA)
-
-    const { handleLoadMore, fetchingError } = await useAsyncSearch()
-
-    return {
-      mainPageRef,
-      headerRef,
-
-      isHeaderScrolled,
-      isDesktopLayout,
-      isSidebarVisible,
-
-      headerBorder,
-
-      fetchingError,
-      handleLoadMore,
-      skipToContentTargetId,
-      showScrollButton,
-
-      isAllView,
-      supported,
-      searchTerm,
-    }
-  },
+const { y: mainPageY } = useScroll(mainPageElement)
+watch(mainPageY, (y) => {
+  isHeaderScrolled.value = y > 0
+  showScrollButton.value = y > 70
 })
+
+onMounted(() => {
+  mainPageElement.value = document.getElementById("main-page")
+})
+
+provide(IsHeaderScrolledKey, isHeaderScrolled)
+provide(IsSidebarVisibleKey, isSidebarVisible)
+
+const headerBorder = computed(() =>
+  isHeaderScrolled.value || isSidebarVisible.value
+    ? "border-b-dark-charcoal-20"
+    : "border-b-tx"
+)
+const isAllView = computed(() => searchStore.searchType === ALL_MEDIA)
+
+const { handleLoadMore, fetchingError } = await useAsyncSearch()
 </script>
 
 <style scoped>

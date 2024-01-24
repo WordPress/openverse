@@ -37,9 +37,8 @@
   </main>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
-  defineNuxtComponent,
   definePageMeta,
   firstParam,
   handledClientSide,
@@ -73,99 +72,69 @@ import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
-export default defineNuxtComponent({
-  name: "AudioDetailPage",
-  components: {
-    VErrorSection,
-    VAudioThumbnail,
-    VSingleResultControls,
-    VSafetyWall,
-    VMediaDetails,
-    VAudioTrack,
-    VMediaReuse,
-    VRelatedAudio,
+definePageMeta({
+  layout: "content-layout",
+  middleware: singleResultMiddleware,
+})
+const singleResultStore = useSingleResultStore()
+
+const route = useRoute()
+
+const audio = ref<AudioDetail | null>(singleResultStore.audio)
+const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
+
+const audioId = computed(() => firstParam(route.params.id))
+
+const { error } = await useAsyncData(
+  "single-audio",
+  async () => {
+    if (audioId.value && validateUUID(audioId.value)) {
+      audio.value = await singleResultStore.fetch(AUDIO, audioId.value)
+      return audio.value
+    } else {
+      throw new Error("Audio ID not found")
+    }
   },
-  async setup() {
-    definePageMeta({
-      layout: "content-layout",
-      middleware: singleResultMiddleware,
-    })
-    const singleResultStore = useSingleResultStore()
+  {
+    immediate: true,
+    lazy: isClient,
+    watch: [audioId],
+  }
+)
 
-    const route = useRoute()
-
-    const audio = ref<AudioDetail | null>(singleResultStore.audio)
-    const fetchingError = computed(
-      () => singleResultStore.fetchState.fetchingError
-    )
-
-    const audioId = computed(() => firstParam(route.params.id))
-
-    const { error } = await useAsyncData(
-      "single-audio",
-      async () => {
-        if (audioId.value && validateUUID(audioId.value)) {
-          audio.value = await singleResultStore.fetch(AUDIO, audioId.value)
-          return audio.value
-        } else {
-          throw new Error("Audio ID not found")
-        }
-      },
-      {
-        immediate: true,
-        lazy: isClient,
-        watch: [audioId],
-      }
-    )
-
-    watch(
-      error,
-      () => {
-        if (
-          (fetchingError.value && !handledClientSide(fetchingError.value)) ||
-          error.value
-        ) {
-          showError({
-            ...(fetchingError.value ?? {}),
-            fatal: true,
-          })
-        }
-      },
-      { immediate: true }
-    )
-
-    const { sendCustomEvent } = useAnalytics()
-    const sendAudioEvent = (
-      data: Omit<AudioInteractionData, "component">,
-      component: "AudioDetailPage" | "VRelatedAudio"
-    ) => {
-      sendCustomEvent("AUDIO_INTERACTION", {
-        ...data,
-        component,
+watch(
+  error,
+  () => {
+    if (
+      (fetchingError.value && !handledClientSide(fetchingError.value)) ||
+      error.value
+    ) {
+      showError({
+        ...(fetchingError.value ?? {}),
+        fatal: true,
       })
     }
-
-    const { isHidden, reveal, hide } = useSensitiveMedia(audio.value)
-
-    const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
-
-    useHead(() => ({
-      ...detailPageMeta,
-      title: pageTitle.value,
-    }))
-
-    return {
-      audio,
-      fetchingError,
-
-      sendAudioEvent,
-
-      skipToContentTargetId,
-
-      isHidden,
-      reveal,
-      hide,
-    }
   },
-})
+  { immediate: true }
+)
+
+const { sendCustomEvent } = useAnalytics()
+const sendAudioEvent = (
+  data: Omit<AudioInteractionData, "component">,
+  component: "AudioDetailPage" | "VRelatedAudio"
+) => {
+  sendCustomEvent("AUDIO_INTERACTION", {
+    ...data,
+    component,
+  })
+}
+
+const { isHidden, reveal } = useSensitiveMedia(audio.value)
+
+const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
+
+useHead(() => ({
+  ...detailPageMeta,
+  title: pageTitle.value,
+}))
 </script>

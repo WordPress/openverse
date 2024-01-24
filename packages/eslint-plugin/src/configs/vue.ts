@@ -92,4 +92,10 @@ export = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ["frontend/src/pages/**/*.vue"],
+      rules: { "vue/multi-word-component-names": "off" },
+    },
+  ],
 } satisfies TSESLint.Linter.Config

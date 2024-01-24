@@ -6,27 +6,13 @@
   />
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent } from "#imports"
-
+<script setup lang="ts">
 import type { ImageDetail } from "~/types/media"
 
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
-import type { PropType } from "vue"
-
-export default defineNuxtComponent({
-  name: "ImageSearch",
-  components: { VImageGrid },
-  props: {
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    results: {
-      type: Array as PropType<ImageDetail[]>,
-      default: () => [],
-    },
-  },
-})
+defineProps<{
+  searchTerm: string
+  results: ImageDetail[]
+}>()
 </script>
