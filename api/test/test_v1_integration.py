@@ -6,7 +6,6 @@ Run with the `pytest -s` command from this directory.
 """
 
 import json
-from test.constants import API_URL
 
 import pytest
 import requests
@@ -14,6 +13,7 @@ import requests
 from api.constants.licenses import LICENSE_GROUPS
 from api.models import Image
 from api.utils.watermark import watermark
+from test.constants import API_URL
 
 
 @pytest.fixture

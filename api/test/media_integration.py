@@ -6,9 +6,10 @@ These are not tests and cannot be invoked.
 
 import json
 import re
-from test.constants import API_URL
 
 import requests
+
+from test.constants import API_URL
 
 
 def search(fixture):

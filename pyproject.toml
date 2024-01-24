@@ -51,6 +51,7 @@ known-first-party = [
   "oauth2",
   "providers",
   "retired",
+  "test",
 ]
 
 [tool.ruff.lint.isort.sections]

@@ -1,7 +1,6 @@
 import asyncio
 import itertools
 from dataclasses import replace
-from test.factory.models.image import ImageFactory
 from unittest.mock import patch
 from urllib.parse import urlencode
 
@@ -23,6 +22,7 @@ from api.utils.image_proxy import (
 )
 from api.utils.image_proxy import get as _photon_get
 from api.utils.tallies import get_monthly_timestamp
+from test.factory.models.image import ImageFactory
 
 
 TEST_IMAGE_DOMAIN = "subdomain.example.com"

@@ -1,9 +1,10 @@
 import json
 import os
 import subprocess
-from test.constants import API_URL
 
 import pytest
+
+from test.constants import API_URL
 
 
 os.environ["AUDIO_REQ_TOKEN"] = ""

@@ -1,6 +1,6 @@
 import time
 import uuid
-from test.constants import API_URL
+from unittest.mock import patch
 
 from django.urls import reverse
 from django.utils.http import urlencode
@@ -9,7 +9,8 @@ import pytest
 from oauth2_provider.models import AccessToken
 
 from api.models import OAuth2Verification, ThrottledApplication
-from unittest.mock import patch
+from test.constants import API_URL
+
 
 cache_availability_params = pytest.mark.parametrize(
     "is_cache_reachable, cache_name",

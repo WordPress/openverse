@@ -1,9 +1,9 @@
-from test.unit_tests.conftest import create_mock_image
 from unittest.mock import MagicMock
 
 from psycopg2._json import Json
 
 from ingestion_server.cleanup import CleanupFunctions, TlsTest
+from test.unit_tests.conftest import create_mock_image
 
 
 class TestCleanup:

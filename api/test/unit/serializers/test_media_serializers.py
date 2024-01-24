@@ -1,6 +1,5 @@
 import random
 import uuid
-from test.factory.models.oauth2 import AccessTokenFactory
 from unittest.mock import MagicMock, patch
 
 from django.conf import settings
@@ -14,6 +13,7 @@ from api.constants import sensitivity
 from api.serializers.audio_serializers import AudioSearchRequestSerializer
 from api.serializers.image_serializers import ImageSearchRequestSerializer
 from api.serializers.media_serializers import MediaSearchRequestSerializer
+from test.factory.models.oauth2 import AccessTokenFactory
 
 
 @pytest.fixture
