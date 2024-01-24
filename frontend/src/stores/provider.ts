@@ -14,7 +14,7 @@ import {
 } from "~/constants/media"
 
 import type { MediaProvider } from "~/types/media-provider"
-import type { FetchingError, FetchState } from "~/types/fetch-state"
+import { FetchingError, FetchState, VFetchingError } from "~/types/fetch-state"
 import { DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 import { sortProviders } from "~/utils/provider"
@@ -154,13 +154,17 @@ export const useProviderStore = defineStore("provider", {
         sortedProviders = sortProviders(res.data ?? [])
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
-        const { $sentry } = useNuxtApp()
         const errorData = parseFetchingError(error, mediaType, "provider")
 
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, "end", errorData)
-        $sentry.captureException(error, { extra: { errorData } })
+
+        const cause = error instanceof Error ? error : null
+        const fetchingError = new VFetchingError(errorData, cause)
+
+        const { $sentry } = useNuxtApp()
+        $sentry.captureException(fetchingError)
       } finally {
         this.providers[mediaType] = sortedProviders
         this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)

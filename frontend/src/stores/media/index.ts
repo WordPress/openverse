@@ -1,4 +1,4 @@
-import { decodeMediaData, log, useNuxtApp, useRequestEvent } from "#imports"
+import { decodeMediaData, useNuxtApp, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -493,9 +493,13 @@ export const useMediaStore = defineStore("media", {
           searchTerm: queryParams.q ?? "",
         })
         this._updateFetchState(mediaType, "end", errorData)
-        log(errorData)
-        useNuxtApp().$sentry.captureException(error)
-        throw new VFetchingError(errorData)
+
+        const cause = error instanceof Error ? error : null
+        const fetchingError = new VFetchingError(errorData, cause)
+
+        const { $sentry } = useNuxtApp()
+        $sentry.captureException(fetchingError)
+        throw fetchingError
       }
     },
 

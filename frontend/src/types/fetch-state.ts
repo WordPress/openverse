@@ -34,7 +34,8 @@ export class VFetchingError extends Error {
   statusMessage: string | undefined
   searchType: SupportedSearchType
   details: Record<string, string> | undefined
-  constructor(public fetchingError: FetchingError) {
+  cause: Error | null
+  constructor(public fetchingError: FetchingError, cause: Error | null = null) {
     super()
     this.name = "FetchingError"
     this.code = fetchingError.code
@@ -43,6 +44,7 @@ export class VFetchingError extends Error {
     this.requestKind = fetchingError.requestKind
     this.searchType = fetchingError.searchType
     this.details = fetchingError.details
+    this.cause = cause
   }
 }
 
