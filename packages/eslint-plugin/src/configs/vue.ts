@@ -94,7 +94,7 @@ export = {
   },
   overrides: [
     {
-      files: ["frontend/src/pages/**/*.vue"],
+      files: ["frontend/src/pages/**/*.vue", "frontend/src/error.vue"],
       rules: { "vue/multi-word-component-names": "off" },
     },
   ],
