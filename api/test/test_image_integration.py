@@ -6,6 +6,11 @@ Run with the `pytest -s` command from this directory.
 """
 
 import json
+from urllib.parse import urlencode
+
+import pytest
+import requests
+
 from test.constants import API_URL
 from test.media_integration import (
     creator_collection,
@@ -26,10 +31,6 @@ from test.media_integration import (
     tag_collection,
     uuid_validation,
 )
-from urllib.parse import urlencode
-
-import pytest
-import requests
 
 
 identifier = "cdbd3bf6-1745-45bb-b399-61ee149cd58a"

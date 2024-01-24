@@ -1,10 +1,10 @@
 from socket import gethostbyname, gethostname
 
+from django.core.exceptions import ImproperlyConfigured
+
 from decouple import config
 
-from conf.settings.base import INSTALLED_APPS, MIDDLEWARE, ENVIRONMENT
-
-from django.core.exceptions import ImproperlyConfigured
+from conf.settings.base import ENVIRONMENT, INSTALLED_APPS, MIDDLEWARE
 
 
 # Quick-start development settings - unsuitable for production

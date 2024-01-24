@@ -41,6 +41,16 @@ from datetime import datetime
 from airflow.decorators import dag
 from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
+from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
+    CREATE_NEW_INDEX_CONFIGS,
+)
+from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
+    DAG_ID,
+    create_index,
+    get_target_alias,
+    point_alias,
+    should_delete_index,
+)
 
 from common import ingestion_server, slack
 from common.constants import (
@@ -53,16 +63,6 @@ from common.constants import (
 from common.sensors.utils import prevent_concurrency_with_dags
 from database.staging_database_restore.constants import (
     DAG_ID as STAGING_DB_RESTORE_DAG_ID,
-)
-from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
-    CREATE_NEW_INDEX_CONFIGS,
-)
-from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
-    DAG_ID,
-    create_index,
-    get_target_alias,
-    point_alias,
-    should_delete_index,
 )
 
 

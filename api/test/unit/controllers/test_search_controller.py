@@ -4,12 +4,6 @@ import random
 import re
 from collections.abc import Callable
 from enum import Enum, auto
-from test.factory.es_http import (
-    MOCK_DEAD_RESULT_URL_PREFIX,
-    MOCK_LIVE_RESULT_URL_PREFIX,
-    create_mock_es_http_image_search_response,
-)
-from test.factory.models.content_provider import ContentProviderFactory
 from unittest import mock
 from unittest.mock import patch
 from uuid import uuid4
@@ -26,6 +20,12 @@ from api.controllers.search_controller import FILTERED_PROVIDERS_CACHE_KEY
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
+from test.factory.es_http import (
+    MOCK_DEAD_RESULT_URL_PREFIX,
+    MOCK_LIVE_RESULT_URL_PREFIX,
+    create_mock_es_http_image_search_response,
+)
+from test.factory.models.content_provider import ContentProviderFactory
 
 
 pytestmark = pytest.mark.django_db

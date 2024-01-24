@@ -2,14 +2,14 @@ from dataclasses import dataclass, field
 from datetime import timedelta
 
 from airflow.models import Variable
+from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
+    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
+)
 
 from common.constants import PRODUCTION, STAGING
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 from database.staging_database_restore.constants import (
     DAG_ID as STAGING_DB_RESTORE_DAG_ID,
-)
-from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
-    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
 
 

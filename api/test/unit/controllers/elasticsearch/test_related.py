@@ -1,9 +1,3 @@
-from test.factory.es_http import (
-    MOCK_LIVE_RESULT_URL_PREFIX,
-    create_mock_es_http_image_response_with_identifier,
-    create_mock_es_http_image_search_response,
-)
-from test.factory.models import ImageFactory
 from unittest import mock
 
 import pook
@@ -14,6 +8,12 @@ from api.controllers.search_controller import (
     FILTERED_PROVIDERS_CACHE_KEY,
     FILTERED_PROVIDERS_CACHE_VERSION,
 )
+from test.factory.es_http import (
+    MOCK_LIVE_RESULT_URL_PREFIX,
+    create_mock_es_http_image_response_with_identifier,
+    create_mock_es_http_image_search_response,
+)
+from test.factory.models import ImageFactory
 
 
 pytestmark = pytest.mark.django_db

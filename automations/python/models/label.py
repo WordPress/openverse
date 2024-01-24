@@ -1,5 +1,6 @@
-from models.label_group import LabelGroup
 from shared.data import get_data
+
+from models.label_group import LabelGroup
 
 
 class Label:

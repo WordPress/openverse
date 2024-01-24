@@ -1,10 +1,9 @@
 """A small RPC API server for scheduling data refresh and indexing tasks."""
-from collections import defaultdict
-
 import logging
 import os
 import time
 import uuid
+from collections import defaultdict
 from multiprocessing import Process, Value
 from pathlib import Path
 from urllib.parse import urlparse
@@ -17,8 +16,8 @@ from sentry_sdk.integrations.falcon import FalconIntegration
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MEDIA_TYPES, MediaType
 from ingestion_server.db_helpers import (
-    DB_UPSTREAM_CONFIG,
     DB_API_CONFIG,
+    DB_UPSTREAM_CONFIG,
     database_connect,
 )
 from ingestion_server.es_helpers import elasticsearch_connect, get_stat

@@ -1,4 +1,3 @@
-from test.constants import API_URL
 from unittest.mock import patch
 from uuid import uuid4
 
@@ -8,6 +7,7 @@ import pytest
 import requests
 
 from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
+from test.constants import API_URL
 
 
 @pytest.fixture

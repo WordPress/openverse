@@ -6,9 +6,10 @@ Run with the `pytest -s` command from this directory.
 """
 
 import uuid
-from test.constants import API_URL
 
 import requests
+
+from test.constants import API_URL
 
 
 def test_old_stats_endpoint():

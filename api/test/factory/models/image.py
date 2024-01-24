@@ -1,9 +1,8 @@
-from test.factory.models.media import MediaFactory, MediaReportFactory
-
 import factory
 from factory.django import DjangoModelFactory
 
 from api.models.image import Image, ImageReport, MatureImage
+from test.factory.models.media import MediaFactory, MediaReportFactory
 
 
 class MatureImageFactory(DjangoModelFactory):
