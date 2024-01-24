@@ -13,13 +13,13 @@ These DAGs are not on a schedule, and should only be run manually when new
 SQL code is deployed for the calculation.
 """
 from airflow import DAG
+
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from popularity import sql
 from popularity.popularity_refresh_types import (
     POPULARITY_REFRESH_CONFIGS,
     PopularityRefresh,
 )
-
-from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 
 
 def create_recreate_popularity_calculation_dag(popularity_refresh: PopularityRefresh):

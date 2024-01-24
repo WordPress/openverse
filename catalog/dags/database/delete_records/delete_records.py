@@ -7,7 +7,7 @@ from airflow.models.abstractoperator import AbstractOperator
 from common import slack
 from common.constants import POSTGRES_CONN_ID
 from common.sql import RETURN_ROW_COUNT, PostgresHook
-from common.storage.columns import DELETED_ON, Column, PROVIDER, FOREIGN_ID
+from common.storage.columns import DELETED_ON, FOREIGN_ID, PROVIDER, Column
 from common.storage.db_columns import (
     setup_db_columns_for_media_type,
     setup_deleted_db_columns_for_media_type,

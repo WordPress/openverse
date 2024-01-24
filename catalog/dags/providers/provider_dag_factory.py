@@ -76,9 +76,8 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
-from common.constants import XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow

@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from models.label import Label
 from models.label_group import LabelGroup
+
 from shared.data import get_data
 
 
