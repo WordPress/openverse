@@ -1,16 +1,17 @@
 <template>
-  <ul v-if="tags.length && additionalSearchViews" class="flex flex-wrap gap-3">
+  <ul
+    v-if="tagNames.length && additionalSearchViews"
+    class="flex flex-wrap gap-3"
+  >
     <VTag
-      v-for="(tag, index) in tags"
-      :key="index"
+      v-for="tag in tagNames"
+      :key="tag"
       :href="localizedTagPath(tag)"
-      :title="tag.name"
+      :title="tag"
     />
   </ul>
   <ul v-else class="flex flex-wrap gap-2">
-    <VMediaTag v-for="(tag, index) in tags" :key="index" tag="li">{{
-      tag.name
-    }}</VMediaTag>
+    <VMediaTag v-for="tag in tagNames" :key="tag" tag="li">{{ tag }}</VMediaTag>
   </ul>
 </template>
 <script lang="ts">
@@ -33,7 +34,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const localePath = useNuxtApp().$localePath
     const featureFlagStore = useFeatureFlagStore()
 
@@ -41,11 +42,14 @@ export default defineComponent({
       featureFlagStore.isOn("additional_search_views")
     )
 
-    const localizedTagPath = (tag: Tag) => {
-      return localePath({ path: `tag/${tag.name}` })
+    const localizedTagPath = (tag: string) => {
+      return localePath({ path: `tag/${tag}` })
     }
+    const tagNames = computed<string[]>(() => {
+      return Array.from(new Set(props.tags.map((tag) => tag.name)))
+    })
 
-    return { additionalSearchViews, localizedTagPath }
+    return { additionalSearchViews, localizedTagPath, tagNames }
   },
 })
 </script>
