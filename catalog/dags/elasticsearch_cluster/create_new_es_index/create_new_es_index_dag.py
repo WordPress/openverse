@@ -101,14 +101,14 @@ import logging
 from airflow import DAG
 from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
+
+from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
+from common.sensors.utils import prevent_concurrency_with_dags
 from elasticsearch_cluster.create_new_es_index import create_new_es_index as es
 from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
     CREATE_NEW_INDEX_CONFIGS,
     CreateNewIndex,
 )
-
-from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
-from common.sensors.utils import prevent_concurrency_with_dags
 
 
 logger = logging.getLogger(__name__)

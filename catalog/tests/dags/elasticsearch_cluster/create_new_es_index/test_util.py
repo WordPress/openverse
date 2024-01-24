@@ -1,4 +1,5 @@
 import pytest
+
 from elasticsearch_cluster.create_new_es_index.utils import merge_configurations
 
 

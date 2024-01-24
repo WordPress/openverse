@@ -29,9 +29,6 @@ from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 from airflow.utils.trigger_rule import TriggerRule
-from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
-    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
-)
 
 from common.constants import (
     AWS_RDS_CONN_ID,
@@ -50,6 +47,9 @@ from database.staging_database_restore.staging_database_restore import (
     notify_slack,
     restore_staging_from_snapshot,
     skip_restore,
+)
+from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
+    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
 
 
