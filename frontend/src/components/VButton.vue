@@ -185,7 +185,7 @@ const VButton = defineComponent({
   },
   setup(props, { attrs }) {
     const typeAttribute = computed<ButtonType | undefined>(() =>
-      props.as === "VLink" ? undefined : props.type
+      ["a", "VLink"].includes(props.as) ? undefined : props.type
     )
 
     const connectionStyles = computed(() =>

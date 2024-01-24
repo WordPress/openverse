@@ -1,7 +1,7 @@
 <template>
   <VButton
     :href="`#${skipToContentTargetId}`"
-    :as="'a'"
+    as="a"
     variant="filled-pink"
     size="medium"
     class="skip-button z-50 focus:fixed focus:absolute focus:ms-2 focus:mt-2"

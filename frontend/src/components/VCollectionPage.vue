@@ -1,5 +1,9 @@
 <template>
-  <div class="p-6 pt-0 lg:p-10 lg:pt-2">
+  <div
+    :id="skipToContentTargetId"
+    class="p-6 pt-0 lg:p-10 lg:pt-2"
+    tabindex="-1"
+  >
     <VCollectionHeader
       v-if="collectionParams"
       :collection-params="collectionParams"
@@ -36,6 +40,8 @@ import { computed, defineComponent, PropType } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+
+import { skipToContentTargetId } from "~/constants/window"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { Results } from "~/types/result"
@@ -115,6 +121,7 @@ export default defineComponent({
       creatorUrl,
       collectionParams,
       collectionLabel,
+      skipToContentTargetId,
     }
   },
 })
