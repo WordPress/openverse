@@ -37,10 +37,6 @@ class AudioCollectionRequestSerializer(PaginatedRequestSerializer):
         default=False,
     )
 
-    @property
-    def needs_db(self) -> bool:
-        return super().needs_db or self.data["peaks"]
-
 
 class AudioSearchRequestSerializer(
     AudioSearchRequestSourceSerializer,
@@ -74,10 +70,6 @@ class AudioSearchRequestSerializer(
         required=False,
         default=False,
     )
-
-    @property
-    def needs_db(self) -> bool:
-        return super().needs_db or self.data["peaks"]
 
     def validate_internal__index(self, value):
         if not (index := super().validate_internal__index(value)):
@@ -146,8 +138,6 @@ class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
         Keep the fields names in sync with the actual fields below as this list is
         used to generate Swagger documentation.
         """
-
-    needs_db = True  # for the 'thumbnail' field
 
     audio_set = AudioSetSerializer(
         allow_null=True,

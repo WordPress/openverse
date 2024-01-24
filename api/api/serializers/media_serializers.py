@@ -81,10 +81,6 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
         return value
 
-    @property
-    def needs_db(self) -> bool:
-        return False
-
 
 @extend_schema_serializer(
     # Hide unstable and internal fields from documentation.
@@ -496,9 +492,6 @@ class MediaSerializer(BaseModelSerializer):
         Keep the fields names in sync with the actual fields below as this list is
         used to generate Swagger documentation.
         """
-
-    needs_db = False
-    """whether the serializer needs fields from the DB to process results"""
 
     id = serializers.CharField(
         help_text="Our unique identifier for an open-licensed work.",

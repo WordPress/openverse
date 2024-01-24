@@ -9,7 +9,7 @@ import pytest
 from oauth2_provider.models import AccessToken
 
 from api.models import OAuth2Verification, ThrottledApplication
-
+from unittest.mock import patch
 
 cache_availability_params = pytest.mark.parametrize(
     "is_cache_reachable, cache_name",
@@ -206,16 +206,21 @@ def test_unauthed_response_headers(client):
         ("asc", "2022-01-01"),
     ],
 )
-def test_sorting_authed(
-    client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
-):
-    # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
+def test_sorting_authed(client, test_auth_token_exchange, sort_dir, exp_indexed_on):
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
-    query_params = {"unstable__sort_by": "indexed_on", "unstable__sort_dir": sort_dir}
-    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    query_params = {
+        "unstable__sort_by": "indexed_on",
+        "unstable__sort_dir": sort_dir,
+    }
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
+
+        res = client.get(
+            "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
+        )
     assert res.status_code == 200
 
     res_data = res.json()
@@ -232,11 +237,8 @@ def test_sorting_authed(
     ],
 )
 def test_authority_authed(
-    client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
+    client, test_auth_token_exchange, authority_boost, exp_source
 ):
-    # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {
@@ -244,7 +246,14 @@ def test_authority_authed(
         "unstable__authority": "true",
         "unstable__authority_boost": authority_boost,
     }
-    res = client.get("/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}")
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
+
+        res = client.get(
+            "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
+        )
     assert res.status_code == 200
 
     res_data = res.json()
