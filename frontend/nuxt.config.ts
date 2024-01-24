@@ -91,13 +91,13 @@ export default defineNuxtConfig({
     apiClientSecret: "",
     public: {
       // Can be overwritten by NUXT_PUBLIC_API_URL env variable
-      apiUrl:
-        process.env.NUXT_PUBLIC_API_URL || "https://api.openverse.engineering/",
+      apiUrl: "https://api.openverse.engineering/",
       providerUpdateFrequency: 3600000,
       savedSearchCount: 4,
       sentry: {
-        dsn: "",
-        environment: process.env.DEPLOYMENT_ENV,
+        dsn: "https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642",
+        environment: "local",
+        release: "",
       },
       plausible: {
         trackLocalhost: true, // TODO: Replace with isProdNotPw

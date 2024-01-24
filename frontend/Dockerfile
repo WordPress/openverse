@@ -41,9 +41,10 @@ RUN pnpm install
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
+ENV NUXT_PUBLIC_SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642
 
-ARG API_URL
+ARG API_URL=https://api.openverse.engineering/
+ENV NUXT_PUBLIC_API_URL=$API_URL
 
 RUN pnpm build:only
 
@@ -68,7 +69,9 @@ COPY --from=builder --chown=node:node /home/node/frontend ./frontend/
 WORKDIR /home/node/frontend/
 
 ARG SEMANTIC_VERSION
-ENV SENTRY_RELEASE=$SEMANTIC_VERSION
+ARG DEPLOYMENT_ENV=production
+ENV NUXT_PUBLIC_SENTRY_RELEASE=$SEMANTIC_VERSION
+ENV NUXT_PUBLIC_SENTRY_ENVIRONMENT=$DEPLOYMENT_ENV
 
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0

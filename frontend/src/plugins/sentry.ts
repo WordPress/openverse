@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
+import { defineNuxtPlugin, isServer, useRuntimeConfig } from "#imports"
 
 import * as Sentry from "@sentry/vue"
 
@@ -11,10 +11,15 @@ export default defineNuxtPlugin((nuxtApp) => {
     return
   }
 
+  if (isServer) {
+    console.log("Initializing Sentry with config", sentry)
+  }
+
   Sentry.init({
     app: nuxtApp.vueApp,
     dsn: sentry.dsn,
     environment: sentry.environment,
+    release: sentry.release,
     // Only allow errors that come from openverse.org or a subdomain
     allowUrls: [/^https?:\/\/((.*)\.)?openverse\.org/],
     ignoreErrors: [
