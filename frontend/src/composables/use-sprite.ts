@@ -17,7 +17,7 @@ function generateName(name: string) {
     .replace(/:/g, "--")
 }
 
-export const useSprite = async (name: string) => {
+export const useSprite = (name: string) => {
   let [sprite, icon] = name.split("/")
 
   if (!icon) {

@@ -10,47 +10,42 @@
   </svg>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, watch } from "vue"
 
 import { useSprite } from "~/composables/use-sprite"
-/**
- * Displays the given icon in a 24px × 24px square.
- */
-const props = defineProps({
-  /**
-   * the path to the icon SVG; In a bundled application like Openverse,
-   * importing an SVG should give us the path to the file.
-   */
-  /**
-   * In `jest` our icons get transformed to Vue components
-   */
-  name: {
-    type: String,
-    required: true,
-  },
-  viewBox: {
-    type: String,
-    default: "0 0 24 24",
-    validator(value: string) {
-      return value.split(" ").every((v) => {
-        return !isNaN(parseInt(v))
-      })
-    },
-  },
-})
+
+const props = withDefaults(
+  defineProps<{
+    /**
+     * the path to the icon SVG; In a bundled application like Openverse,
+     * importing an SVG should give us the path to the file.
+     */
+    name: string
+    viewBox?: string
+  }>(),
+  {
+    viewBox: "0 0 24 24",
+  }
+)
+
+if (!props.viewBox.split(" ").every((v) => !isNaN(parseInt(v)))) {
+  throw new Error(
+    `Invalid viewBox "${props.viewBox}" for icon "${props.name}".`
+  )
+}
 
 const icon = ref({
   url: "",
   class: "",
 })
 
-icon.value = await useSprite(`images/${props.name}`)
+icon.value = useSprite(`images/${props.name}`)
 
 watch(
   () => props.name,
-  async (name) => {
-    icon.value = await useSprite(name)
+  (name) => {
+    icon.value = useSprite(name)
   }
 )
 </script>
