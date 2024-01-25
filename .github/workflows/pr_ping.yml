@@ -17,7 +17,7 @@ jobs:
     env:
       pr_url: ${{ github.event.pull_request.html_url }}
       pr_number: ${{ github.event.pull_request.number }}
-      pr_title: ${{ github.event.pull_request.title }}
+      pr_title: ${{ toJSON(github.event.pull_request.title) }}
       pr_author: ${{ github.event.pull_request.user.login }}
       pr_repo: ${{ github.event.pull_request.base.repo.full_name }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -33,7 +33,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "New ${{ env.pr_status }} PR opened by ${{ env.pr_author }} in ${{ env.pr_repo }}: #${{ env.pr_number }} - ${{ env.pr_title }}",
+              "text": "New${{ env.pr_status }}PR opened by ${{ env.pr_author }} in ${{ env.pr_repo }}: #${{ env.pr_number }} - ${{ env.pr_title }}",
               "blocks": [
                 {
                   "type": "section",
