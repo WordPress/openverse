@@ -17,7 +17,7 @@ jobs:
     env:
       pr_url: ${{ github.event.pull_request.html_url }}
       pr_number: ${{ github.event.pull_request.number }}
-      pr_title: ${{ toJSON(github.event.pull_request.title) }}
+      pr_title: ${{ format('{0}', github.event.pull_request.title) }}
       pr_author: ${{ github.event.pull_request.user.login }}
       pr_repo: ${{ github.event.pull_request.base.repo.full_name }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
