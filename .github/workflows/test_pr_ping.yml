@@ -1,0 +1,25 @@
+name: Test GitHub Action Formatting
+
+on:
+  pull_request:
+
+jobs:
+  send_message:
+    name: Check formatting
+    runs-on: ubuntu-latest
+    env:
+      pr_title_json: ${{ toJSON(github.event.pull_request.title) }}
+      pr_title: ${{ github.event.pull_request.title }}
+      pr_title_formatted: ${{ format('{0}', github.event.pull_request.title) }}
+    steps:
+      - name: Print formatting
+        run: |
+          echo ${{ env.pr_title }}
+          echo '${{ env.pr_title }}'
+          echo "${{ env.pr_title }}"
+          echo ${{ env.pr_title_json }}
+          echo '${{ env.pr_title_json }}'
+          echo "${{ env.pr_title_json }}"
+          echo ${{ env.pr_title_formatted }}
+          echo '${{ env.pr_title_formatted }}'
+          echo "${{ env.pr_title_formatted }}"
