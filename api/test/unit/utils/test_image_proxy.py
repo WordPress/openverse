@@ -331,18 +331,8 @@ def test_get_successful_records_response_code(
 
 
 alert_count_params = pytest.mark.parametrize(
-    "count_start, should_alert",
-    [
-        (0, True),
-        (1, True),
-        (50, True),
-        (99, True),
-        (100, False),
-        (999, True),
-        (1000, False),
-        (1500, False),
-        (1999, True),
-    ],
+    "count_start",
+    [0, 1, 50, 99, 100, 999, 1000, 1500, 1999],
 )
 
 MOCK_CONNECTION_KEY = ConnectionKey(
@@ -385,7 +375,6 @@ def test_get_exception_handles_error(
     exc,
     exc_name,
     count_start,
-    should_alert,
     sentry_capture_exception,
     setup_request_exception,
     is_cache_reachable,
@@ -409,12 +398,7 @@ def test_get_exception_handles_error(
     ):
         photon_get(TEST_MEDIA_INFO)
 
-    assert_func = (
-        sentry_capture_exception.assert_called_once
-        if should_alert
-        else sentry_capture_exception.assert_not_called
-    )
-    assert_func()
+    sentry_capture_exception.assert_not_called()
 
     if is_cache_reachable:
         assert cache.get(key) == str(count_start + 1).encode()
@@ -438,7 +422,6 @@ def test_get_http_exception_handles_error(
     status_code,
     text,
     count_start,
-    should_alert,
     sentry_capture_exception,
     is_cache_reachable,
     cache_name,
@@ -459,12 +442,7 @@ def test_get_http_exception_handles_error(
             pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
             photon_get(TEST_MEDIA_INFO)
 
-    assert_func = (
-        sentry_capture_exception.assert_called_once
-        if should_alert
-        else sentry_capture_exception.assert_not_called
-    )
-    assert_func()
+    sentry_capture_exception.assert_not_called()
 
     if is_cache_reachable:
         assert cache.get(key) == str(count_start + 1).encode()
