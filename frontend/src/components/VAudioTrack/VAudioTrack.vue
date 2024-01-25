@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { useI18n, useNuxtApp, useRoute } from "#imports"
+import { useI18n, useRoute } from "#imports"
 
 import {
   computed,
@@ -152,7 +152,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const i18n = useI18n({ useScope: "global" })
-    const { $sentry } = useNuxtApp()
 
     const activeMediaStore = useActiveMediaStore()
     const route = useRoute()
@@ -389,7 +388,7 @@ export default defineComponent({
             }
             default: {
               message = "err_unknown"
-              $sentry.captureException(err)
+              console.warn(err)
             }
           }
           activeMediaStore.setMessage({ message })

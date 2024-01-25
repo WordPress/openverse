@@ -1,4 +1,4 @@
-import { useNuxtApp, useRuntimeConfig, useRequestEvent } from "#imports"
+import { useRuntimeConfig, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -159,8 +159,7 @@ export const useProviderStore = defineStore("provider", {
         sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, "end", errorData)
 
-        const { $sentry } = useNuxtApp()
-        $sentry.captureException(error, { extra: errorData })
+        console.warn(error, { extra: errorData })
       } finally {
         this.providers[mediaType] = sortedProviders
         this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)

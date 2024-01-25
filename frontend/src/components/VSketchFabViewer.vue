@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { useI18n, useNuxtApp } from "#imports"
+import { useI18n } from "#imports"
 
 import { defineComponent, ref, onMounted } from "vue"
 
@@ -48,12 +48,11 @@ export default defineComponent({
     const i18n = useI18n({ useScope: "global" })
     const label = i18n.t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
     const node = ref<Element | undefined>()
-    const { $sentry } = useNuxtApp()
 
     const initSketchfab = async () => {
       await loadScript(sketchfabUrl)
       if (typeof window.Sketchfab === "undefined") {
-        $sentry.captureMessage("Unable to find window.Sketchfab after loading")
+        console.warn("Unable to find window.Sketchfab after loading")
         return
       }
 
@@ -66,7 +65,7 @@ export default defineComponent({
       const sf = new window.Sketchfab(node.value)
       sf.init(props.uid, {
         error: (e: unknown) => {
-          $sentry.captureException(e)
+          console.warn(e)
           emit("failure")
         },
       })

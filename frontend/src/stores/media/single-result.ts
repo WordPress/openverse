@@ -1,4 +1,4 @@
-import { decodeMediaData, useNuxtApp, useRequestEvent } from "#imports"
+import { decodeMediaData, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -187,8 +187,7 @@ export const useSingleResultStore = defineStore("single-result", {
         })
         this._updateFetchState("end", errorData)
 
-        const { $sentry } = useNuxtApp()
-        $sentry.captureException(error, { extra: errorData })
+        console.warn(error, { extra: errorData })
         throw createError(errorData)
       }
     },
