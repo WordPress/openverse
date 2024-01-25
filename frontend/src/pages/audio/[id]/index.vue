@@ -48,7 +48,7 @@ import {
   useRoute,
 } from "#imports"
 
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -84,6 +84,15 @@ const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
 
 const audioId = computed(() => firstParam(route.params.id))
 
+const { isHidden, reveal } = useSensitiveMedia(audio.value)
+
+const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
+
+useHead(() => ({
+  ...detailPageMeta,
+  title: pageTitle.value,
+}))
+
 const { error } = await useAsyncData(
   "single-audio",
   async () => {
@@ -97,25 +106,18 @@ const { error } = await useAsyncData(
   {
     immediate: true,
     lazy: true,
-    watch: [audioId],
   }
 )
-
-watch(
-  error,
-  () => {
-    if (
-      (fetchingError.value && !handledClientSide(fetchingError.value)) ||
-      error.value
-    ) {
-      showError({
-        ...(fetchingError.value ?? {}),
-        fatal: true,
-      })
-    }
-  },
-  { immediate: true }
-)
+if (
+  error.value &&
+  fetchingError.value &&
+  !handledClientSide(fetchingError.value)
+) {
+  showError({
+    ...(fetchingError.value ?? {}),
+    fatal: true,
+  })
+}
 
 const { sendCustomEvent } = useAnalytics()
 const sendAudioEvent = (
@@ -127,13 +129,4 @@ const sendAudioEvent = (
     component,
   })
 }
-
-const { isHidden, reveal } = useSensitiveMedia(audio.value)
-
-const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
-
-useHead(() => ({
-  ...detailPageMeta,
-  title: pageTitle.value,
-}))
 </script>

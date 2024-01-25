@@ -83,7 +83,7 @@ import {
   useRoute,
 } from "#imports"
 
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 import axios from "axios"
 
@@ -125,6 +125,10 @@ const route = useRoute()
 const image = ref<ImageDetail | null>(singleResultStore.image)
 const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
 
+onMounted(() => {
+  isLoadingThumbnail.value = false
+  imageSrc.value = image.value?.url ?? errorImage
+})
 /**
  * To make sure that image is loaded fast, we `src` to `image.thumbnail`,
  * and replace it with the provider image once the thumbnail is loaded.
@@ -134,9 +138,18 @@ const imageSrc = ref(image.value?.thumbnail)
 const isLoadingThumbnail = ref(true)
 const imageId = computed(() => firstParam(route.params.id))
 
-onMounted(() => {
-  isLoadingThumbnail.value = false
-  imageSrc.value = image.value?.url ?? errorImage
+const { reveal, isHidden } = useSensitiveMedia(image.value)
+
+const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
+
+useHead(() => ({
+  ...detailPageMeta,
+  title: pageTitle.value,
+}))
+
+const featureFlagStore = useFeatureFlagStore()
+const isAdditionalSearchView = computed(() => {
+  return featureFlagStore.isOn("additional_search_views")
 })
 
 const { error } = await useAsyncData(
@@ -154,25 +167,20 @@ const { error } = await useAsyncData(
   {
     immediate: true,
     lazy: true,
-    watch: [imageId],
   }
 )
 
-watch(
-  error,
-  () => {
-    if (
-      (fetchingError.value && !handledClientSide(fetchingError.value)) ||
-      error.value
-    ) {
-      showError({
-        ...(fetchingError.value ?? {}),
-        fatal: true,
-      })
-    }
-  },
-  { immediate: true }
-)
+if (
+  error.value &&
+  fetchingError.value &&
+  !handledClientSide(fetchingError.value)
+) {
+  showError({
+    ...(fetchingError.value ?? {}),
+    fatal: true,
+  })
+}
+
 const extractFiletype = (url: string): string | null => {
   const splitUrl = url.split(".")
   if (splitUrl.length > 1) {
@@ -262,20 +270,6 @@ const handleRightClick = () => {
     id: image.value.id,
   })
 }
-
-const { reveal, isHidden } = useSensitiveMedia(image.value)
-
-const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
-
-useHead(() => ({
-  ...detailPageMeta,
-  title: pageTitle.value,
-}))
-
-const featureFlagStore = useFeatureFlagStore()
-const isAdditionalSearchView = computed(() => {
-  return featureFlagStore.isOn("additional_search_views")
-})
 </script>
 
 <style scoped>
