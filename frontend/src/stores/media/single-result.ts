@@ -19,7 +19,7 @@ import { useProviderStore } from "~/stores/provider"
 import { parseFetchingError } from "~/utils/errors"
 import { DEFAULT_REQUEST_TIMEOUT, mediaSlug } from "~/utils/query-utils"
 
-import { FetchingError, FetchState, VFetchingError } from "~/types/fetch-state"
+import { FetchingError, FetchState } from "~/types/fetch-state"
 
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
@@ -164,7 +164,6 @@ export const useSingleResultStore = defineStore("single-result", {
 
       const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
 
-      // TODO: Check if baseURL works in prod.
       let baseURL = nitroOrigin ? nitroOrigin : location?.origin
       baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
@@ -188,12 +187,9 @@ export const useSingleResultStore = defineStore("single-result", {
         })
         this._updateFetchState("end", errorData)
 
-        const cause = error instanceof Error ? error : null
-        const fetchingError = new VFetchingError(errorData, cause)
-
         const { $sentry } = useNuxtApp()
-        $sentry.captureException(fetchingError)
-        return null
+        $sentry.captureException(error, { extra: errorData })
+        throw createError(errorData)
       }
     },
   },

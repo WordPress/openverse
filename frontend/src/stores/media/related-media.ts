@@ -7,7 +7,7 @@ import axios from "axios"
 import { parseFetchingError } from "~/utils/errors"
 import { mediaSlug, DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
-import { FetchingError, FetchState, VFetchingError } from "~/types/fetch-state"
+import { FetchingError, FetchState } from "~/types/fetch-state"
 import type { AudioDetail, ImageDetail, Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
 import type { PaginatedApiMediaResult } from "~/types/api"
@@ -83,11 +83,8 @@ export const useRelatedMediaStore = defineStore("related-media", {
 
         this._endFetching(errorData)
 
-        const cause = error instanceof Error ? error : null
-        const fetchingError = new VFetchingError(errorData, cause)
-
         const { $sentry } = useNuxtApp()
-        $sentry.captureException(fetchingError)
+        $sentry.captureException(error, { extra: errorData })
         return null
       }
     },

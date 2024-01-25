@@ -14,7 +14,7 @@ import {
 } from "~/constants/media"
 
 import type { MediaProvider } from "~/types/media-provider"
-import { FetchingError, FetchState, VFetchingError } from "~/types/fetch-state"
+import { FetchingError, FetchState } from "~/types/fetch-state"
 import { DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 import { sortProviders } from "~/utils/provider"
@@ -139,7 +139,6 @@ export const useProviderStore = defineStore("provider", {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
 
-      // TODO: Check if baseURL works in prod.
       const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
       let baseURL = nitroOrigin ? nitroOrigin : location?.origin
       baseURL = baseURL.replace("localhost", "0.0.0.0")
@@ -160,11 +159,8 @@ export const useProviderStore = defineStore("provider", {
         sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, "end", errorData)
 
-        const cause = error instanceof Error ? error : null
-        const fetchingError = new VFetchingError(errorData, cause)
-
         const { $sentry } = useNuxtApp()
-        $sentry.captureException(fetchingError)
+        $sentry.captureException(error, { extra: errorData })
       } finally {
         this.providers[mediaType] = sortedProviders
         this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)

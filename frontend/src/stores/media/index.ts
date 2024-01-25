@@ -8,7 +8,6 @@ import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
 import { isRetriable, parseFetchingError } from "~/utils/errors"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
-import { VFetchingError } from "~/types/fetch-state"
 
 import type {
   AudioDetail,
@@ -494,12 +493,9 @@ export const useMediaStore = defineStore("media", {
         })
         this._updateFetchState(mediaType, "end", errorData)
 
-        const cause = error instanceof Error ? error : null
-        const fetchingError = new VFetchingError(errorData, cause)
-
         const { $sentry } = useNuxtApp()
-        $sentry.captureException(fetchingError)
-        throw fetchingError
+        $sentry.captureException(error, { extra: errorData })
+        throw createError(errorData)
       }
     },
 
