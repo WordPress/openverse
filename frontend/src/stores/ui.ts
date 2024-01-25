@@ -1,15 +1,15 @@
-import { isProd, useCookie, useI18n } from "#imports"
+import { isProd, useCookie } from "#imports"
 
 import { defineStore } from "pinia"
 
+import { LocaleObject } from "@nuxtjs/i18n"
+
 import type { OpenverseCookieState, SnackbarState } from "~/types/cookies"
-import type { BannerId, TranslationBannerId } from "~/types/banners"
+import type { BannerId } from "~/types/banners"
 
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { needsTranslationBanner } from "~/utils/translation-banner"
-
-import type { LocaleObject } from "vue-i18n-routing"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
@@ -98,30 +98,6 @@ export const useUiStore = defineStore("ui", {
       return state.innerFilterVisible
     },
     /**
-     * The locale object of the current locale.
-     */
-    currentLocale() {
-      const i18n = useI18n({ useScope: "global" })
-      return i18n.localeProperties.value
-    },
-    /**
-     * The id used in the translation banner and the cookies for dismissed banners.
-     * @example 'translation-ru'
-     */
-    translationBannerId(): TranslationBannerId {
-      return `translation-${this.currentLocale.code as LocaleObject["code"]}`
-    },
-    /**
-     * The translation banner is shown if the translated percentage is below 90%,
-     * and the banner for the current locale was not dismissed (status from cookies).
-     */
-    shouldShowTranslationBanner(): boolean {
-      return (
-        !this.dismissedBanners.includes(this.translationBannerId) &&
-        needsTranslationBanner(this.currentLocale)
-      )
-    },
-    /**
      * The analytics banner is shown if the user hasn't dismissed it yet.
      */
     shouldShowAnalyticsBanner(): boolean {
@@ -130,6 +106,17 @@ export const useUiStore = defineStore("ui", {
   },
 
   actions: {
+    /**
+     * The translation banner is shown if the translated percentage is below 90%,
+     * and the banner for the current locale was not dismissed (status from cookies).
+     */
+    shouldShowTranslationBanner(localeProperties: LocaleObject): boolean {
+      const locale = localeProperties.code
+      return (
+        !this.dismissedBanners.includes(`translation-${locale}`) &&
+        needsTranslationBanner(localeProperties)
+      )
+    },
     showInstructionsSnackbar() {
       if (this.instructionsSnackbarState === "not_shown") {
         this.instructionsSnackbarState = "visible"

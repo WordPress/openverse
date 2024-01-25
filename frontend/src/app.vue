@@ -1,18 +1,27 @@
 <template>
   <div>
-    <div :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]">
-      <VSkipToContentButton />
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
-      <VGlobalAudioSection />
-    </div>
-    <div id="modal"></div>
+    <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir" />
+    <Body>
+      <div :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]">
+        <VSkipToContentButton />
+        <NuxtLayout>
+          <NuxtPage />
+        </NuxtLayout>
+        <VGlobalAudioSection />
+      </div>
+      <div id="modal"></div>
+    </Body>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, useRoute, useCookie } from "#imports"
+import {
+  computed,
+  onMounted,
+  useRoute,
+  useCookie,
+  useLocaleHead,
+} from "#imports"
 
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -21,6 +30,11 @@ import { useLayout } from "~/composables/use-layout"
 import type { OpenverseCookieState } from "~/types/cookies"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
+
+const head = useLocaleHead({
+  addDirAttribute: true,
+  identifierAttribute: "id",
+})
 
 /**
  * Lifecycle hooks in async setup should be called before the first await.

@@ -78,11 +78,11 @@ import {
   firstParam,
   handledClientSide,
   showError,
-  useAsyncData,
+  useLazyAsyncData,
   useRoute,
 } from "#imports"
 
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 
 import axios from "axios"
 
@@ -118,8 +118,6 @@ definePageMeta({
 })
 const singleResultStore = useSingleResultStore()
 
-const route = useRoute()
-
 const image = ref<ImageDetail | null>(singleResultStore.image)
 const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
 
@@ -134,6 +132,7 @@ onMounted(() => {
 const imageSrc = ref(image.value?.thumbnail)
 
 const isLoadingThumbnail = ref(true)
+const route = useRoute()
 const imageId = computed(() => firstParam(route.params.id))
 
 const { reveal, isHidden } = useSensitiveMedia(image.value)
@@ -142,35 +141,6 @@ const featureFlagStore = useFeatureFlagStore()
 const isAdditionalSearchView = computed(() => {
   return featureFlagStore.isOn("additional_search_views")
 })
-
-const { error } = await useAsyncData(
-  "single-image",
-  async () => {
-    if (imageId.value && validateUUID(imageId.value)) {
-      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId.value)
-      image.value = fetchedImage
-      imageSrc.value = fetchedImage.thumbnail
-      return fetchedImage
-    } else {
-      throw new Error("Image ID not found")
-    }
-  },
-  {
-    immediate: true,
-    lazy: true,
-  }
-)
-
-if (
-  error.value &&
-  fetchingError.value &&
-  !handledClientSide(fetchingError.value)
-) {
-  showError({
-    ...(fetchingError.value ?? {}),
-    fatal: true,
-  })
-}
 
 const extractFiletype = (url: string): string | null => {
   const splitUrl = url.split(".")
@@ -261,6 +231,55 @@ const handleRightClick = () => {
     id: image.value.id,
   })
 }
+const { error } = await useLazyAsyncData(
+  "single-image",
+  async () => {
+    if (imageId.value && validateUUID(imageId.value)) {
+      const fetchedImage = await singleResultStore.fetch(IMAGE, imageId.value)
+      if (!fetchedImage) {
+        throw new Error("Image not found")
+      }
+      image.value = fetchedImage
+      imageSrc.value = fetchedImage.thumbnail
+      return fetchedImage
+    } else {
+      throw new Error("Image ID not found")
+    }
+  },
+  {
+    immediate: true,
+  }
+)
+
+const handleError = (error: unknown) => {
+  if (error instanceof Error) {
+    if (
+      error.message === "Image not found" ||
+      error.message === "Image ID not found"
+    ) {
+      showError({
+        statusCode: 404,
+        message: error.message,
+        fatal: true,
+      })
+    }
+    if (fetchingError.value && !handledClientSide(fetchingError.value)) {
+      showError({
+        ...(fetchingError.value ?? {}),
+        fatal: true,
+      })
+    }
+  }
+}
+if (error.value) {
+  handleError(error.value)
+}
+
+watch(error, (err) => {
+  if (err) {
+    handleError(err)
+  }
+})
 </script>
 
 <style scoped>

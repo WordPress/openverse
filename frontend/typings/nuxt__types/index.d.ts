@@ -10,7 +10,7 @@ declare module "#app" {
   }
 }
 
-declare module "vue-i18n-routing" {
+declare module "@nuxtjs/i18n" {
   /**
    * We put a little extra information in the Vue-i18n `locales` field such as the
    * locale's name and native name, which comes in use here.

@@ -44,11 +44,11 @@ import {
   firstParam,
   handledClientSide,
   showError,
-  useAsyncData,
+  useLazyAsyncData,
   useRoute,
 } from "#imports"
 
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 
 import { AUDIO } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -85,11 +85,14 @@ const audioId = computed(() => firstParam(route.params.id))
 
 const { isHidden, reveal } = useSensitiveMedia(audio.value)
 
-const { error } = await useAsyncData(
+const { error } = await useLazyAsyncData(
   "single-audio",
   async () => {
     if (audioId.value && validateUUID(audioId.value)) {
       audio.value = await singleResultStore.fetch(AUDIO, audioId.value)
+      if (!audio.value) {
+        throw new Error("Audio not found")
+      }
       return audio.value
     } else {
       throw new Error("Audio ID not found")
@@ -97,19 +100,33 @@ const { error } = await useAsyncData(
   },
   {
     immediate: true,
-    lazy: true,
   }
 )
-if (
-  error.value &&
-  fetchingError.value &&
-  !handledClientSide(fetchingError.value)
-) {
-  showError({
-    ...(fetchingError.value ?? {}),
-    fatal: true,
-  })
+
+const handleError = (error: Error) => {
+  if (["Audio not found", "Audio ID not found"].includes(error.message)) {
+    showError({
+      statusCode: 404,
+      message: "Audio ID not found",
+      fatal: true,
+    })
+  }
+  if (fetchingError.value && !handledClientSide(fetchingError.value)) {
+    showError({
+      ...(fetchingError.value ?? {}),
+      fatal: true,
+    })
+  }
 }
+
+if (error.value) {
+  handleError(error.value)
+}
+watch(error, (err) => {
+  if (err) {
+    handleError(err)
+  }
+})
 
 const { sendCustomEvent } = useAnalytics()
 const sendAudioEvent = (

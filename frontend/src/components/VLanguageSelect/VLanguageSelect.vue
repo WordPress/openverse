@@ -22,7 +22,7 @@ import VSelectField, {
   type Choice,
 } from "~/components/VSelectField/VSelectField.vue"
 
-import type { LocaleObject } from "vue-i18n-routing"
+import type { LocaleObject } from "@nuxtjs/i18n"
 
 /**
  * Presents a way for the users to change the app locale and use a translated

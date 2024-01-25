@@ -49,7 +49,11 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.fetchState.fetchingError = null
     },
 
-    async fetchMedia(mediaType: SupportedMediaType, id: string) {
+    async fetchMedia(
+      mediaType: SupportedMediaType,
+      id: string,
+      baseUrl?: string
+    ) {
       if (this.mainMediaId === id && this.media.length > 0) {
         return this.media
       }
@@ -60,10 +64,12 @@ export const useRelatedMediaStore = defineStore("related-media", {
       const url = `/api/${mediaSlug(mediaType)}/${id}/related/`
       const params = mediaType === "audio" ? { peaks: true } : {}
 
-      // TODO: Check if baseURL works in prod.
-      const nitroOrigin = useRequestEvent()?.context?.siteConfigNitroOrigin
-      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
-      baseURL = baseURL.replace("localhost", "0.0.0.0")
+      let baseURL = baseUrl ? baseUrl : null
+      if (!baseURL) {
+        const nitroOrigin = useRequestEvent()?.context?.siteConfigNitroOrigin
+        baseURL = nitroOrigin ? nitroOrigin : location?.origin
+        baseURL = baseURL.replace("localhost", "0.0.0.0")
+      }
       try {
         const res = await axios.get<PaginatedApiMediaResult>(url, {
           timeout: DEFAULT_REQUEST_TIMEOUT,

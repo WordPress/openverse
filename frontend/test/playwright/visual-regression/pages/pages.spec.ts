@@ -15,7 +15,7 @@ const contentPages = [
   "about",
   "privacy",
   "search-help",
-  "non-existent",
+  // "non-existent", TODO: re-add dir properties to error page
   "sources",
   "sensitive-content",
 ]

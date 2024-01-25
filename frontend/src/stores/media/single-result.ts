@@ -1,4 +1,9 @@
-import { decodeMediaData, useRequestEvent } from "#imports"
+import {
+  createError,
+  decodeMediaData,
+  isServer,
+  useRequestEvent,
+} from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -17,9 +22,14 @@ import type { SupportedMediaType } from "~/constants/media"
 import { useMediaStore } from "~/stores/media/index"
 import { useProviderStore } from "~/stores/provider"
 import { parseFetchingError } from "~/utils/errors"
-import { DEFAULT_REQUEST_TIMEOUT, mediaSlug } from "~/utils/query-utils"
+import {
+  DEFAULT_REQUEST_TIMEOUT,
+  mediaSlug,
+  validateUUID,
+} from "~/utils/query-utils"
 
 import { FetchingError, FetchState } from "~/types/fetch-state"
+import { useRelatedMediaStore } from "~/stores/media/related-media"
 
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
@@ -144,12 +154,28 @@ export const useSingleResultStore = defineStore("single-result", {
      * is already fetched. If middleware only set the `id` and
      * did not set the media, fetch the media item.
      */
-    async fetch<T extends SupportedMediaType>(type: T, id: string) {
+    async fetch<T extends SupportedMediaType>(type: T, id: string | null) {
+      if (!id || !validateUUID(id)) {
+        throw createError({
+          message: "Invalid media ID",
+          statusCode: 400,
+        })
+      }
       const existingItem = this.getExistingItem(type, id)
 
-      return existingItem
+      const item = existingItem
         ? existingItem
         : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
+      if (item && isServer) {
+        const baseURL =
+          useRequestEvent()?.context.siteConfigNitroOrigin.replace(
+            "localhost",
+            "0.0.0.0"
+          )
+        const relatedMediaStore = useRelatedMediaStore()
+        await relatedMediaStore.fetchMedia(type, id, baseURL)
+      }
+      return item
     },
 
     /**
@@ -187,8 +213,8 @@ export const useSingleResultStore = defineStore("single-result", {
         })
         this._updateFetchState("end", errorData)
 
-        console.warn(error, { extra: errorData })
-        throw createError(errorData)
+        console.warn("Error fetching single media", error, { extra: errorData })
+        return null
       }
     },
   },

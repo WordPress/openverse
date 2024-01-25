@@ -4,7 +4,7 @@ import { isProd } from "./src/utils/node-env"
 import locales from "./src/locales/scripts/valid-locales.json"
 import { meta as commonMeta } from "./src/constants/meta"
 
-import type { LocaleObject } from "vue-i18n-routing"
+import type { LocaleObject } from "@nuxtjs/i18n"
 
 const favicons = [
   // SVG favicon

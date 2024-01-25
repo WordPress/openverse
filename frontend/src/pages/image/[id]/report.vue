@@ -41,14 +41,8 @@
   </main>
 </template>
 
-<script lang="ts">
-import {
-  defineNuxtComponent,
-  definePageMeta,
-  useAsyncData,
-  useI18n,
-  useRoute,
-} from "#imports"
+<script setup lang="ts">
+import { definePageMeta, useAsyncData, useI18n, useRoute } from "#imports"
 
 import { ref } from "vue"
 
@@ -63,47 +57,28 @@ import type { ImageDetail } from "~/types/media"
 import VButton from "~/components/VButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
 
-export default defineNuxtComponent({
-  name: "ReportImage",
-  components: {
-    VButton,
-    VContentReportForm,
-  },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
+definePageMeta({
+  layout: "content-layout",
+})
+
+const route = useRoute()
+const singleResultStore = useSingleResultStore()
+
+const image = ref<ImageDetail>()
+const attributionMarkup = ref<string>()
+
+const i18n = useI18n({ useScope: "global" })
+
+await useAsyncData("image-report", async () => {
+  const imageId = firstParam(route.params.id)
+  if (imageId) {
+    image.value = await singleResultStore.fetch(IMAGE, imageId)
+    attributionMarkup.value = getAttribution(image.value, i18n, {
+      includeIcons: false,
     })
-    const route = useRoute()
-    const singleResultStore = useSingleResultStore()
-
-    const image = ref<ImageDetail>()
-    const attributionMarkup = ref<string>()
-
-    const i18n = useI18n({ useScope: "global" })
-
-    useAsyncData("image-report", async () => {
-      const imageId = firstParam(route.params.id)
-      if (imageId) {
-        image.value = await singleResultStore.fetch(IMAGE, imageId)
-        attributionMarkup.value = getAttribution(image.value, i18n, {
-          includeIcons: false,
-        })
-      } else {
-        // TODO: Handle Error
-        console.log(
-          i18n
-            .t("error.imageNotFound", {
-              id: imageId,
-            })
-            .toString()
-        )
-      }
-    })
-    return {
-      image,
-      attributionMarkup,
-      skipToContentTargetId,
-    }
-  },
+  } else {
+    // TODO: Handle Error
+    console.warn("Not found image")
+  }
 })
 </script>

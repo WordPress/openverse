@@ -63,7 +63,6 @@
     "@floating-ui/dom": "^1.5.3",
     "@intlify/core-base": "^9.8.0",
     "@intlify/message-compiler": "^9.8.0",
-    "@nuxtjs/i18n": "^8.0.0",
     "@nuxtjs/plausible": "^0.2.4",
     "@nuxtjs/sitemap": "^5.0.2",
     "@nuxtjs/tailwindcss": "^6.10.3",
@@ -88,6 +87,7 @@
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.9.0",
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge@8.0.0-28432155.c9bdcd7",
     "@playwright/test": "1.40.1",
     "@testing-library/user-event": "^14.5.2",
     "@testing-library/vue": "^8.0.1",

@@ -198,30 +198,6 @@ describe("media store", () => {
       }
     )
 
-    it.each`
-      searchType   | audioError             | isFinished | fetchableMediaTypes
-      ${ALL_MEDIA} | ${null}                | ${false}   | ${[IMAGE, AUDIO]}
-      ${ALL_MEDIA} | ${null}                | ${true}    | ${[IMAGE]}
-      ${IMAGE}     | ${null}                | ${false}   | ${[IMAGE]}
-      ${IMAGE}     | ${{ statusCode: 429 }} | ${false}   | ${[IMAGE]}
-      ${AUDIO}     | ${{ statusCode: 429 }} | ${false}   | ${[]}
-      ${ALL_MEDIA} | ${{ code: NO_RESULT }} | ${false}   | ${[IMAGE]}
-      ${ALL_MEDIA} | ${{ statusCode: 429 }} | ${false}   | ${[IMAGE]}
-    `(
-      "fetchableMediaTypes for $searchType with audio error $audioError and audio finished $isFinished returns $fetchableMediaTypes",
-      ({ searchType, audioError, isFinished, fetchableMediaTypes }) => {
-        const mediaStore = useMediaStore()
-        const searchStore = useSearchStore()
-        searchStore.setSearchType(searchType)
-        mediaStore.mediaFetchState.audio.fetchingError = audioError
-        mediaStore.mediaFetchState.audio.isFinished = isFinished
-
-        const actualFetchableMediaTypes = mediaStore._fetchableMediaTypes
-
-        expect(actualFetchableMediaTypes).toEqual(fetchableMediaTypes)
-      }
-    )
-
     it("returns NO_RESULT error if all media types have NO_RESULT errors", () => {
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()

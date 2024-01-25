@@ -103,7 +103,7 @@ import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-const emit = defineEmits(["close"])
+const emit = defineEmits(["close", "open"])
 const menuButtonRef = ref<{ $el: HTMLElement } | null>(null)
 const nodeRef = ref<HTMLElement | null>(null)
 const modalContentRef = ref<{
