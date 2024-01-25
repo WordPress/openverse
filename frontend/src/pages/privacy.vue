@@ -79,9 +79,7 @@ definePageMeta({
 })
 const featureFlagStore = useFeatureFlagStore()
 
-const isChecked = computed(
-  () => featureFlagStore.featureState("analytics") === ON
-)
+const isChecked = computed(() => featureFlagStore.isOn("analytics"))
 
 const handleChange = ({ checked }: { checked?: boolean }) => {
   featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)

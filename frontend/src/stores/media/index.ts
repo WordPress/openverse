@@ -285,17 +285,6 @@ export const useMediaStore = defineStore("media", {
 
       return newResults
     },
-    _fetchableMediaTypes(): SupportedMediaType[] {
-      return (
-        (this._searchType !== ALL_MEDIA
-          ? [this._searchType]
-          : [IMAGE, AUDIO]) as SupportedMediaType[]
-      ).filter(
-        (type) =>
-          !this.mediaFetchState[type].fetchingError &&
-          !this.mediaFetchState[type].isFinished
-      )
-    },
   },
 
   actions: {
@@ -417,7 +406,17 @@ export const useMediaStore = defineStore("media", {
       if (!shouldPersistMedia) {
         this.clearMedia()
       }
-      const fetchRequests = this._fetchableMediaTypes.map((mediaType) =>
+      const mediaTypes =
+        this._searchType === ALL_MEDIA
+          ? supportedMediaTypes
+          : [this._searchType]
+      const fetchableMediaTypes = mediaTypes.filter(
+        (type) =>
+          !this.mediaFetchState[type].fetchingError &&
+          !this.mediaFetchState[type].isFinished
+      )
+
+      const fetchRequests = fetchableMediaTypes.map((mediaType) =>
         this.fetchSingleMediaType({
           mediaType,
           shouldPersistMedia,

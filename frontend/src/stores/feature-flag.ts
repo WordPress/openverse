@@ -97,16 +97,6 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
         }
       },
     /**
-     * Proxy for `featureState` to simplify the majority of flag state checks.
-     *
-     * Prefer this for most use cases over using `featureState` directly.
-     *
-     * @returns `true` if the flag is on, false otherwise
-     */
-    isOn() {
-      return (name: FlagName): boolean => this.featureState(name) === ON
-    },
-    /**
      * Get the mapping of switchable features to their preferred states.
      */
     flagStateMap:
@@ -122,6 +112,16 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       },
   },
   actions: {
+    /**
+     * Proxy for `featureState` to simplify the majority of flag state checks.
+     *
+     * Prefer this for most use cases over using `featureState` directly.
+     *
+     * @returns `true` if the flag is on, false otherwise
+     */
+    isOn(name: FlagName): boolean {
+      return this.featureState(name) === ON
+    },
     /**
      * Given a list of key value pairs of flags and their preferred states,
      * populate the store state to match the cookie. The cookie may be

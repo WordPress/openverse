@@ -455,7 +455,9 @@ export const useSearchStore = defineStore("search", {
      *
      */
     clearFilters() {
-      for (const filterCategory of this.filterCategories) {
+      for (const filterCategory of Object.keys(
+        this.filters
+      ) as FilterCategory[]) {
         for (const filterItem of this.filters[filterCategory]) {
           filterItem.checked = false
         }
@@ -474,22 +476,26 @@ export const useSearchStore = defineStore("search", {
         return [...acc, ...mediaUniqueFilterKeys[type]]
       }, [] as FilterCategory[])
 
-      this.filterCategories.forEach((filterCategory) => {
+      for (const filterCategory of Object.keys(
+        this.filters
+      ) as FilterCategory[]) {
         if (filterKeysToClear.includes(filterCategory)) {
           this.filters[filterCategory] = this.filters[filterCategory].map(
             (f) => ({ ...f, checked: false })
           )
         }
-      })
+      }
     },
     /**
      * Replaces filters with the newFilterData object that was created using initial filters,
      * and setting parameters from the search query to checked.
      */
     replaceFilters(newFilterData: Filters) {
-      this.filterCategories.forEach((filterCategory) => {
+      for (const filterCategory of Object.keys(
+        this.filters
+      ) as FilterCategory[]) {
         this.filters[filterCategory] = newFilterData[filterCategory]
-      })
+      }
     },
     setCollectionState(
       collectionParams: CollectionParams,
