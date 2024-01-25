@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, isServer, useRuntimeConfig } from "#imports"
+import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
 
 import * as Sentry from "@sentry/vue"
 
@@ -9,10 +9,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   if (!sentry.dsn) {
     return
-  }
-
-  if (isServer) {
-    console.log("Initializing Sentry with config", sentry)
   }
 
   Sentry.init({
