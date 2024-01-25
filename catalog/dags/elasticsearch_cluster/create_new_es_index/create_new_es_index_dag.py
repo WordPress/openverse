@@ -110,6 +110,7 @@ from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import 
     CreateNewIndex,
 )
 
+
 logger = logging.getLogger(__name__)
 
 

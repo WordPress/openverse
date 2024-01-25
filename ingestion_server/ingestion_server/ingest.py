@@ -26,7 +26,7 @@ from psycopg2.sql import SQL, Identifier, Literal
 from ingestion_server import slack
 from ingestion_server.cleanup import clean_image_data
 from ingestion_server.constants.internal_types import ApproachType
-from ingestion_server.db_helpers import database_connect, DB_UPSTREAM_CONFIG
+from ingestion_server.db_helpers import DB_UPSTREAM_CONFIG, database_connect
 from ingestion_server.queries import (
     get_copy_data_query,
     get_create_ext_query,

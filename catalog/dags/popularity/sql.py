@@ -4,12 +4,12 @@ from textwrap import dedent
 
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
-from popularity.popularity_refresh_types import PopularityRefresh
 
 from common.constants import DAG_DEFAULT_ARGS, SQLInfo
 from common.sql import PostgresHook, single_value
 from common.storage import columns as col
 from common.utils import setup_sql_info_for_media_type
+from popularity.popularity_refresh_types import PopularityRefresh
 
 
 DEFAULT_PERCENTILE = 0.85

@@ -1,6 +1,5 @@
-from test.unit_tests.conftest import create_mock_image
-
 from ingestion_server.elasticsearch_models import Image
+from test.unit_tests.conftest import create_mock_image
 
 
 class TestImage:

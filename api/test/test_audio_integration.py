@@ -6,6 +6,12 @@ Run with the `pytest -s` command from this directory.
 """
 
 import json
+
+import pytest
+import requests
+from django_redis import get_redis_connection
+
+from api.utils.check_dead_links import CACHE_PREFIX
 from test.constants import API_URL
 from test.media_integration import (
     creator_collection,
@@ -27,12 +33,6 @@ from test.media_integration import (
     tag_collection,
     uuid_validation,
 )
-
-import pytest
-import requests
-from django_redis import get_redis_connection
-
-from api.utils.check_dead_links import CACHE_PREFIX
 
 
 @pytest.fixture

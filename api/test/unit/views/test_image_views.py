@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-from test.factory.models.image import ImageFactory
 from unittest.mock import patch
 
 import pook
@@ -8,6 +7,7 @@ import pytest
 from PIL import UnidentifiedImageError
 
 from api.views.image_views import ImageViewSet
+from test.factory.models.image import ImageFactory
 
 
 _MOCK_IMAGE_PATH = Path(__file__).parent / ".." / ".." / "factory"

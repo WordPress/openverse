@@ -1,5 +1,3 @@
-from test.factory.faker import Faker
-
 from django.utils import timezone
 
 import factory
@@ -11,6 +9,7 @@ from api.models.oauth import (
     OAuth2Verification,
     ThrottledApplication,
 )
+from test.factory.faker import Faker
 
 
 class ThrottledApplicationFactory(DjangoModelFactory):

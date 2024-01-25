@@ -1,4 +1,3 @@
-from test.factory.faker import Faker
 from uuid import uuid4
 
 from django.conf import settings
@@ -11,6 +10,7 @@ from factory.django import DjangoModelFactory
 
 from api.constants.licenses import ALL_LICENSES
 from api.models.media import AbstractMedia
+from test.factory.faker import Faker
 
 
 CREATED_BY_FIXTURE_MARKER = "__created_by_test_fixture"
