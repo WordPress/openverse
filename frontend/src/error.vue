@@ -1,12 +1,10 @@
 <template>
   <div>
-    <Html :lang="head.htmlAttrs?.lang" :dir="head.htmlAttrs?.dir">
-      <VSkipToContentButton />
-      <NuxtLayout name="default">
-        <VFourOhFour class="flex-grow" :error="error" />
-      </NuxtLayout>
-      <div id="modal"></div>
-    </Html>
+    <VSkipToContentButton />
+    <NuxtLayout name="default">
+      <VFourOhFour class="flex-grow" :error="error" />
+    </NuxtLayout>
+    <div id="modal"></div>
   </div>
 </template>
 
@@ -15,7 +13,6 @@ import {
   onMounted,
   useCookie,
   useFeatureFlagStore,
-  useLocaleHead,
   useRoute,
   useUiStore,
 } from "#imports"
@@ -31,12 +28,6 @@ const { updateBreakpoint } = useLayout()
 
 const route = useRoute()
 const uiStore = useUiStore()
-
-const head = useLocaleHead({
-  addDirAttribute: true,
-  identifierAttribute: "id",
-  addSeoAttributes: true,
-})
 
 /**
  * Update the breakpoint value in the cookie on mounted.

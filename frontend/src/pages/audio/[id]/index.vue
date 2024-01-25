@@ -44,7 +44,6 @@ import {
   handledClientSide,
   showError,
   useAsyncData,
-  useHead,
   useRoute,
 } from "#imports"
 
@@ -60,7 +59,6 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
@@ -85,13 +83,6 @@ const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
 const audioId = computed(() => firstParam(route.params.id))
 
 const { isHidden, reveal } = useSensitiveMedia(audio.value)
-
-const { pageTitle, detailPageMeta } = useSingleResultPageMeta(audio)
-
-useHead(() => ({
-  ...detailPageMeta,
-  title: pageTitle.value,
-}))
 
 const { error } = await useAsyncData(
   "single-audio",

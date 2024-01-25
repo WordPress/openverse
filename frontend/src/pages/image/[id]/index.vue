@@ -79,7 +79,6 @@ import {
   handledClientSide,
   showError,
   useAsyncData,
-  useHead,
   useRoute,
 } from "#imports"
 
@@ -92,7 +91,6 @@ import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
@@ -139,13 +137,6 @@ const isLoadingThumbnail = ref(true)
 const imageId = computed(() => firstParam(route.params.id))
 
 const { reveal, isHidden } = useSensitiveMedia(image.value)
-
-const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
-
-useHead(() => ({
-  ...detailPageMeta,
-  title: pageTitle.value,
-}))
 
 const featureFlagStore = useFeatureFlagStore()
 const isAdditionalSearchView = computed(() => {
