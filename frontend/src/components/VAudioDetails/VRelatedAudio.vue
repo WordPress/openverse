@@ -32,9 +32,9 @@ const media = computed(() => (relatedMediaStore.media ?? []) as AudioDetail[])
 const idRef = toRef(props, "mediaId")
 watch(
   idRef,
-  async (newId) => {
+  (newId) => {
     if (newId !== relatedMediaStore.mainMediaId) {
-      await relatedMediaStore.fetchMedia("audio", newId)
+      return relatedMediaStore.fetchMedia("audio", newId)
     }
   },
   { immediate: true }

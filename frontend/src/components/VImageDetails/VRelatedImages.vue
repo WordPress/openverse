@@ -29,8 +29,8 @@ const mediaId = toRef(props, "mediaId")
 
 watch(
   mediaId,
-  async (newMediaId) => {
-    await relatedMediaStore.fetchMedia("image", newMediaId)
+  (newMediaId) => {
+    return relatedMediaStore.fetchMedia("image", newMediaId)
   },
   { immediate: true }
 )

@@ -14,32 +14,32 @@ const isSearchPath = (fullPath: string) => {
 const isSearchOrCollectionPath = (path: string) =>
   isSearchPath(path) || path.includes("/source/") || path.includes("/tag/")
 
-export const singleResultMiddleware = defineNuxtRouteMiddleware(
-  async (to, from) => {
-    const mediaType = to.fullPath.includes("/image/") ? IMAGE : AUDIO
-    const mediaId = firstParam(to.params.id)
-    if (!mediaId) {
-      return
-    }
+export const singleResultMiddleware = defineNuxtRouteMiddleware((to, from) => {
+  const mediaType = to.fullPath.includes("/image/") ? IMAGE : AUDIO
+  const mediaId = firstParam(to.params.id)
+  if (!mediaId) {
+    return
+  }
 
-    const singleResultStore = useSingleResultStore()
-    singleResultStore.setMediaById(mediaType, mediaId)
-    if (process.server) {
-      const relatedMediaStore = useRelatedMediaStore()
-      await relatedMediaStore.fetchMedia(mediaType, mediaId)
-    } else {
-      if (from && isSearchOrCollectionPath(from.fullPath)) {
-        const searchStore = useSearchStore()
-        searchStore.setBackToSearchPath(from.fullPath)
+  const singleResultStore = useSingleResultStore()
+  singleResultStore.setMediaById(mediaType, mediaId)
+  if (process.server) {
+    const relatedMediaStore = useRelatedMediaStore()
+    relatedMediaStore.fetchMedia(mediaType, mediaId).then(() => {
+      console.log("Fetched related media on the server")
+    })
+  } else {
+    if (from && isSearchOrCollectionPath(from.fullPath)) {
+      const searchStore = useSearchStore()
+      searchStore.setBackToSearchPath(from.fullPath)
 
-        if (isSearchPath(from.path)) {
-          const searchTerm = firstParam(to.query.q)
+      if (isSearchPath(from.path)) {
+        const searchTerm = firstParam(to.query.q)
 
-          if (searchTerm) {
-            searchStore.setSearchTerm(searchTerm)
-          }
+        if (searchTerm) {
+          searchStore.setSearchTerm(searchTerm)
         }
       }
     }
   }
-)
+})
