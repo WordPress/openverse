@@ -45,37 +45,22 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineNuxtComponent({
-  name: "VSearchHelpPage",
-  components: { VLink, VContentPage },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
-    })
-    const i18n = useI18n({ useScope: "global" })
-    const searchStore = useSearchStore()
-
-    useHead({
-      title: `${i18n.t("searchGuide.title", {
-        openverse: "Openverse",
-      })} | Openverse`,
-      meta: [{ key: "robots", name: "robots", content: "all" }],
-    })
-
-    const pathFromQuery = (queryString: string) => {
-      return searchStore.getSearchPath({
-        query: { q: queryString },
-      })
-    }
-    return { pathFromQuery }
-  },
+definePageMeta({
+  layout: "content-layout",
 })
+const searchStore = useSearchStore()
+
+const pathFromQuery = (queryString: string) => {
+  return searchStore.getSearchPath({
+    query: { q: queryString },
+  })
+}
 </script>

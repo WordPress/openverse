@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, isSearchTypeSupported, useHead } from "#imports"
+import { definePageMeta, isSearchTypeSupported } from "#imports"
 
 import { computed, inject, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
@@ -75,9 +75,4 @@ const pageTitle = ref(`${searchTerm.value} | Openverse`)
 watch(searchTerm, (newTerm) => {
   pageTitle.value = `${newTerm} | Openverse`
 })
-
-useHead(() => ({
-  title: pageTitle.value,
-  meta: [{ key: "robots", name: "robots", content: "all" }],
-}))
 </script>

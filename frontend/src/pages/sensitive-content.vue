@@ -136,25 +136,13 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineNuxtComponent({
-  name: "SensitiveContent",
-  components: { VLink, VContentPage },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
-    })
-    const i18n = useI18n({ useScope: "global" })
-
-    useHead({
-      title: `${i18n.t("sensitive.title")} | Openverse`,
-      meta: [{ key: "robots", name: "robots", content: "all" }],
-    })
-  },
+definePageMeta({
+  layout: "content-layout",
 })
 </script>

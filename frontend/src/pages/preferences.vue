@@ -81,8 +81,8 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import { computed } from "vue"
 
@@ -93,75 +93,51 @@ import {
   getFlagStatus,
   isFlagName,
 } from "~/stores/feature-flag"
-import { SWITCHABLE, ON, OFF, FEATURE_STATES } from "~/constants/feature-flag"
+import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
 
 import type { FeatureFlag } from "~/types/feature-flag"
 
 import VContentPage from "~/components/VContentPage.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 
-export default defineNuxtComponent({
-  name: "VPreferences",
-  components: {
-    VContentPage,
-    VCheckbox,
-  },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
-    })
-    const featureFlagStore = useFeatureFlagStore()
-
-    const flags = computed(() => featureFlagStore.flags)
-
-    /**
-     * Toggle the state of the switchable flag to the preferred value.
-     * @param name
-     * @param checked
-     */
-    const handleChange = ({
-      name,
-      checked,
-    }: {
-      name: string
-      checked?: boolean
-    }) => {
-      if (!isFlagName(name)) {
-        throw new Error(
-          `Cannot change the state of flag ${name}: it does not exist.`
-        )
-      }
-      featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-    }
-
-    const isSwitchable = (name: string) => {
-      if (!isFlagName(name)) {
-        throw new Error(
-          `Error getting switchable status for flag ${name}: it does not exist.`
-        )
-      }
-      // TS does not convert the statuses for flag from string to FlagStatus.
-      // It parses the JSON values for env-based statuses as { staging: string; production: string; }
-      const flag = featureData.features[name] as FeatureFlag
-      return getFlagStatus(flag) === SWITCHABLE
-    }
-
-    return {
-      ON,
-      OFF,
-      SWITCHABLE,
-      FEATURE_STATES,
-
-      flags,
-      featureState: featureFlagStore.featureState,
-
-      handleChange,
-      getFlagStatus,
-      isSwitchable,
-
-      featureData,
-    }
-  },
-  methods: { isFlagName },
+definePageMeta({
+  layout: "content-layout",
 })
+const featureFlagStore = useFeatureFlagStore()
+
+const flags = computed(() => featureFlagStore.flags)
+
+/**
+ * Toggle the state of the switchable flag to the preferred value.
+ * @param name
+ * @param checked
+ */
+const handleChange = ({
+  name,
+  checked,
+}: {
+  name: string
+  checked?: boolean
+}) => {
+  if (!isFlagName(name)) {
+    throw new Error(
+      `Cannot change the state of flag ${name}: it does not exist.`
+    )
+  }
+  featureFlagStore.toggleFeature(name, checked ? ON : OFF)
+}
+
+const isSwitchable = (name: string) => {
+  if (!isFlagName(name)) {
+    throw new Error(
+      `Error getting switchable status for flag ${name}: it does not exist.`
+    )
+  }
+  // TS does not convert the statuses for flag from string to FlagStatus.
+  // It parses the JSON values for env-based statuses as { staging: string; production: string; }
+  const flag = featureData.features[name] as FeatureFlag
+  return getFlagStatus(flag) === SWITCHABLE
+}
+
+const featureState = featureFlagStore.featureState
 </script>

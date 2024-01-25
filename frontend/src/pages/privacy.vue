@@ -62,8 +62,8 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import { computed } from "vue"
 
@@ -74,35 +74,16 @@ import VLink from "~/components/VLink.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VContentPage from "~/components/VContentPage.vue"
 
-export default defineNuxtComponent({
-  name: "VPrivacyPage",
-  components: { VLink, VCheckbox, VContentPage },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
-    })
-    const i18n = useI18n({ useScope: "global" })
-    const featureFlagStore = useFeatureFlagStore()
-
-    useHead({
-      title: `${i18n.t("privacy.title", {
-        openverse: "Openverse",
-      })} | Openverse`,
-      meta: [{ key: "robots", name: "robots", content: "all" }],
-    })
-
-    const isChecked = computed(
-      () => featureFlagStore.featureState("analytics") === ON
-    )
-
-    const handleChange = ({ checked }: { checked?: boolean }) => {
-      featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
-    }
-
-    return {
-      isChecked,
-      handleChange,
-    }
-  },
+definePageMeta({
+  layout: "content-layout",
 })
+const featureFlagStore = useFeatureFlagStore()
+
+const isChecked = computed(
+  () => featureFlagStore.featureState("analytics") === ON
+)
+
+const handleChange = ({ checked }: { checked?: boolean }) => {
+  featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
+}
 </script>

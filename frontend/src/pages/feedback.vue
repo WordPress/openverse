@@ -38,8 +38,8 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -58,24 +58,7 @@ const forms = {
 } as const
 const tabs = Object.keys(forms) as (keyof typeof forms)[]
 
-export default defineNuxtComponent({
-  name: "FeedbackPage",
-  components: { VLink, VContentPage, VTabs, VTab, VTabPanel },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
-    })
-    const i18n = useI18n({ useScope: "global" })
-
-    useHead({
-      title: `${i18n.t("feedback.title")} | Openverse`,
-      meta: [{ name: "robots", content: "all" }],
-    })
-
-    return {
-      forms,
-      tabs,
-    }
-  },
+definePageMeta({
+  layout: "content-layout",
 })
 </script>

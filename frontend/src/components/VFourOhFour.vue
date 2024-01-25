@@ -35,8 +35,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, navigateTo, useHead } from "#imports"
+<script setup lang="ts">
+import { navigateTo } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -48,39 +48,20 @@ import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-export default defineNuxtComponent({
-  name: "VFourOhFour",
-  components: {
-    VLink,
-    VStandaloneSearchBar,
-    VSvg,
-  },
-  props: ["error"],
-  setup() {
-    const searchStore = useSearchStore()
+defineProps({ error: Object })
 
-    const { sendCustomEvent } = useAnalytics()
+const searchStore = useSearchStore()
 
-    const handleSearch = async (searchTerm: string) => {
-      sendCustomEvent("SUBMIT_SEARCH", {
-        searchType: ALL_MEDIA,
-        query: searchTerm,
-      })
+const { sendCustomEvent } = useAnalytics()
 
-      return navigateTo(
-        searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
-      )
-    }
+const handleSearch = async (searchTerm: string) => {
+  sendCustomEvent("SUBMIT_SEARCH", {
+    searchType: ALL_MEDIA,
+    query: searchTerm,
+  })
 
-    useHead({
-      meta: [{ key: "theme-color", name: "theme-color", content: "#ffe033" }],
-    })
-
-    return {
-      handleSearch,
-
-      skipToContentTargetId,
-    }
-  },
-})
+  return navigateTo(
+    searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+  )
+}
 </script>

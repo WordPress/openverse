@@ -87,8 +87,8 @@
   </VContentPage>
 </template>
 
-<script lang="ts">
-import { defineNuxtComponent, definePageMeta, useHead, useI18n } from "#imports"
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -97,21 +97,7 @@ import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
 import VSourcesTable from "~/components/VSourcesTable.vue"
 
-export default defineNuxtComponent({
-  name: "SourcePage",
-  components: { VButton, VContentPage, VLink, VSourcesTable },
-  setup() {
-    definePageMeta({
-      layout: "content-layout",
-    })
-    const i18n = useI18n({ useScope: "global" })
-
-    useHead({
-      title: `${i18n.t("sources.title")} | Openverse`,
-      meta: [{ key: "robots", name: "robots", content: "all" }],
-    })
-
-    return { supportedMediaTypes }
-  },
+definePageMeta({
+  layout: "content-layout",
 })
 </script>
