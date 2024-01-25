@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { definePageMeta, isSearchTypeSupported } from "#imports"
 
-import { computed, inject, ref, watch } from "vue"
+import { computed, inject, ref } from "vue"
 import { storeToRefs } from "pinia"
 
 import { searchMiddleware } from "~/middleware/search"
@@ -70,9 +70,4 @@ const results = computed(() => {
 const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
 const isAllView = computed(() => searchType.value === ALL_MEDIA)
-
-const pageTitle = ref(`${searchTerm.value} | Openverse`)
-watch(searchTerm, (newTerm) => {
-  pageTitle.value = `${newTerm} | Openverse`
-})
 </script>
