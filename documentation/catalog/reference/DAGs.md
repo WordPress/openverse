@@ -93,6 +93,7 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
 | --------------------------------------------------------------- | ----------------- | ------- | ------------- |
+| [`auckland_museum_workflow`](#auckland_museum_workflow)         | `@daily`          | `True`  | image         |
 | `brooklyn_museum_workflow`                                      | `@monthly`        | `False` | image         |
 | [`cc_mixter_workflow`](#cc_mixter_workflow)                     | `@monthly`        | `False` | audio         |
 | `cleveland_museum_workflow`                                     | `@monthly`        | `False` | image         |
@@ -114,7 +115,7 @@ The following are DAGs grouped by their primary tag:
 | [`smk_workflow`](#smk_workflow)                                 | `@monthly`        | `False` | image         |
 | [`stocksnap_workflow`](#stocksnap_workflow)                     | `@monthly`        | `False` | image         |
 | [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)     | `@daily`          | `True`  | image, audio  |
-| [`wordpress_workflow`](#wordpress_workflow)                     | `@monthly`        | `False` | image         |
+| [`wordpress_workflow`](#wordpress_workflow)                     | `@weekly`         | `False` | image         |
 
 ### Provider Reingestion
 
@@ -131,6 +132,7 @@ The following is documentation associated with each DAG (where available):
 
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
+1.  [`auckland_museum_workflow`](#auckland_museum_workflow)
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
@@ -212,6 +214,24 @@ airflow dags trigger --conf
 
 - maxLogAgeInDays:<INT> - Optional
 - enableDelete:<BOOLEAN> - Optional
+
+### `auckland_museum_workflow`
+
+Content Provider: Auckland War Memorial Museum Tāmaki Paenga Hira
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: https://api.aucklandmuseum.com/
+
+Resource: https://api.aucklandmuseum.com/
+https://github.com/AucklandMuseum/API/wiki/Tutorial
+
+| Resource     | Requests per second | Requests per day |
+| ------------ | ------------------- | ---------------- |
+| /search, /id | 10                  | 1000             |
+| /id/media    | 10                  | 1000             |
 
 ### `audio_data_refresh`
 
