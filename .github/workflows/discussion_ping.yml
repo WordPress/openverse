@@ -13,7 +13,7 @@ jobs:
     env:
       discussion_url: ${{ github.event.discussion.html_url }}
       discussion_number: ${{ github.event.discussion.number }}
-      discussion_title: ${{ toJSON(github.event.discussion.title) }}
+      discussion_title: ${{ format('{0}', github.event.discussion.title) }}
       discussion_author: ${{ github.event.discussion.user.login }}
       discussion_repo: ${{ github.event.repository.full_name }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
