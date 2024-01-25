@@ -29,6 +29,7 @@
             </template>
           </VMediaDetails>
           <VRelatedAudio
+            :media-id="audio.id"
             @interacted="sendAudioEvent($event, 'VRelatedAudio')"
           />
         </div>

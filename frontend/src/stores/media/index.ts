@@ -208,6 +208,16 @@ export const useMediaStore = defineStore("media", {
       }
     },
 
+    canLoadMore(): boolean {
+      const searchStore = useSearchStore()
+      const fetchState = this.fetchState
+      return (
+        searchStore.searchStarted &&
+        !fetchState.fetchingError &&
+        !fetchState.isFinished
+      )
+    },
+
     /**
      * Returns a mixed bag of search results across media types.
      *

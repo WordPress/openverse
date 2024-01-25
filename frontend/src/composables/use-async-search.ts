@@ -77,7 +77,7 @@ export const useAsyncSearch = async () => {
 
   const page = ref(1)
 
-  const { error } = await useAsyncData(
+  const { error, pending } = await useAsyncData(
     "search",
     async () => {
       const isFirstPageRequest = page.value < 2
@@ -127,5 +127,5 @@ export const useAsyncSearch = async () => {
   const handleLoadMore = () => {
     page.value = page.value + 1
   }
-  return { handleLoadMore, fetchingError }
+  return { handleLoadMore, fetchingError, isFetching: pending }
 }

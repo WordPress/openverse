@@ -29,7 +29,12 @@
       :results="results.items"
     />
     <footer class="mt-4">
-      <VLoadMore @load-more="$emit('load-more')" />
+      <VLoadMore
+        :is-fetching="isFetching"
+        search-term=""
+        :search-type="mediaType"
+        @load-more="$emit('load-more')"
+      />
     </footer>
   </div>
 </template>

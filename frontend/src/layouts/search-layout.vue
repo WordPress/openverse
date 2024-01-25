@@ -46,7 +46,13 @@
         <template v-else>
           <slot :is-filter-sidebar-visible="isSidebarVisible" />
           <footer :class="isAllView ? 'mb-6 mt-4 lg:mb-10' : 'mt-4'">
-            <VLoadMore v-if="supported" @load-more="handleLoadMore" />
+            <VLoadMore
+              v-if="isSearchTypeSupported(searchType)"
+              :is-fetching="isFetching"
+              :search-term="searchTerm"
+              :search-type="searchType"
+              @load-more="handleLoadMore"
+            />
           </footer>
           <VExternalSearchForm
             v-if="!isAllView"
@@ -74,7 +80,7 @@ import { useScroll } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 
 import { useUiStore } from "~/stores/ui"
-import { useSearchStore } from "~/stores/search"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
 import { useAsyncSearch } from "~/composables/use-async-search"
 
@@ -101,8 +107,11 @@ import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchFor
 const uiStore = useUiStore()
 const searchStore = useSearchStore()
 
-const { searchTerm, searchTypeIsSupported: supported } =
-  storeToRefs(searchStore)
+const {
+  searchTerm,
+  searchType,
+  searchTypeIsSupported: supported,
+} = storeToRefs(searchStore)
 
 const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 
@@ -142,9 +151,9 @@ const headerBorder = computed(() =>
     ? "border-b-dark-charcoal-20"
     : "border-b-tx"
 )
-const isAllView = computed(() => searchStore.searchType === ALL_MEDIA)
+const isAllView = computed(() => searchType.value === ALL_MEDIA)
 
-const { handleLoadMore, fetchingError } = await useAsyncSearch()
+const { handleLoadMore, fetchingError, isFetching } = await useAsyncSearch()
 </script>
 
 <style scoped>

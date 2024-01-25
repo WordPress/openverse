@@ -5,7 +5,6 @@
     </h2>
     <VAudioCollection
       :results="media"
-      :fetch-state="fetchState"
       kind="related"
       :collection-label="$t('audioDetails.relatedAudios')"
       class="mb-12"
@@ -13,55 +12,33 @@
   </section>
 </template>
 
-<script lang="ts">
-import { firstParam, useRoute } from "#imports"
-
-import { computed, defineComponent, watch } from "vue"
+<script setup lang="ts">
+import { computed, toRef, watch } from "vue"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
-import { defineEvent } from "~/types/emits"
 import type { AudioDetail } from "~/types/media"
-import type { AudioInteractionData } from "~/types/analytics"
 
 import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
 
-export default defineComponent({
-  name: "VRelatedAudio",
-  components: { VAudioCollection },
-  emits: {
-    interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
-  },
-  setup() {
-    const relatedMediaStore = useRelatedMediaStore()
+const props = defineProps<{
+  mediaId: string
+}>()
 
-    const route = useRoute()
+const relatedMediaStore = useRelatedMediaStore()
 
-    const media = computed(
-      () => (relatedMediaStore.media ?? []) as AudioDetail[]
-    )
-    watch(
-      route,
-      async (newRoute) => {
-        const mediaId = firstParam(newRoute.params.id)
-        if (mediaId && mediaId !== relatedMediaStore.mainMediaId) {
-          await relatedMediaStore.fetchMedia("audio", mediaId)
-        }
-      },
-      { immediate: true }
-    )
+const media = computed(() => (relatedMediaStore.media ?? []) as AudioDetail[])
 
-    const showRelated = computed(
-      () => media.value.length > 0 || relatedMediaStore.fetchState.isFetching
-    )
-
-    const fetchState = computed(() => relatedMediaStore.fetchState)
-
-    return {
-      media,
-      showRelated,
-      fetchState,
+const idRef = toRef(props, "mediaId")
+watch(
+  idRef,
+  async (newId) => {
+    if (newId !== relatedMediaStore.mainMediaId) {
+      await relatedMediaStore.fetchMedia("audio", newId)
     }
   },
-})
+  { immediate: true }
+)
+
+const showRelated = computed(() => media.value.length > 0)
 </script>

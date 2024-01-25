@@ -21,9 +21,7 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script setup lang="ts">
 import type { AudioDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
@@ -35,38 +33,10 @@ import VSnackbar from "~/components/VSnackbar.vue"
  * This component shows a loading skeleton if the results are not yet loaded,
  * and then shows the list of audio, with the Load more button if needed.
  */
-export default defineComponent({
-  name: "VAudioCollection",
-  components: {
-    VSnackbar,
-    VAudioList,
-  },
-  props: {
-    results: {
-      type: Array as PropType<AudioDetail[]>,
-      default: () => [],
-    },
-    /**
-     * If used for Related audio, do not show the Load more button.
-     */
-    kind: {
-      type: String as PropType<ResultKind>,
-      required: true,
-    },
-    /**
-     * The label used for the list of audio for accessibility.
-     */
-    collectionLabel: {
-      type: String,
-      required: true,
-    },
-  },
-  setup() {
-    const { isVisible: isSnackbarVisible } = useAudioSnackbar()
-
-    return {
-      isSnackbarVisible,
-    }
-  },
-})
+defineProps<{
+  results: AudioDetail[]
+  kind: ResultKind
+  collectionLabel: string
+}>()
+const { isVisible: isSnackbarVisible } = useAudioSnackbar()
 </script>

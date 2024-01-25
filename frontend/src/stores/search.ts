@@ -138,6 +138,11 @@ export const useSearchStore = defineStore("search", {
     state.recentSearches = useStorage<string[]>("recent-searches", [])
   },
   getters: {
+    searchStarted(state) {
+      return state.strategy === "default"
+        ? state.searchTerm !== ""
+        : state.collectionParams !== null
+    },
     filterCategories(state) {
       return Object.keys(state.filters) as FilterCategory[]
     },

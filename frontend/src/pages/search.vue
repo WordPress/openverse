@@ -13,7 +13,7 @@
       data-testid="search-results"
     />
     <VGridSkeleton
-      v-if="fetchState.isFetching && !results.length"
+      v-if="isFetching && !results.length"
       :is-sidebar-visible="isFilterSidebarVisible"
       :is-for-tab="isSearchTypeSupported(searchType) ? searchType : 'all'"
     />
@@ -67,7 +67,7 @@ const results = computed(() => {
     : []
 })
 
-const { fetchState } = storeToRefs(mediaStore)
+const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
 const isAllView = computed(() => searchType.value === ALL_MEDIA)
 
