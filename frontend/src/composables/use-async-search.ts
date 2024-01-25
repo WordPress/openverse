@@ -85,7 +85,7 @@ export const useAsyncSearch = async () => {
       if (isFirstPageRequest && isClient) {
         scrollToTop()
       }
-      return await mediaStore.fetchMedia({
+      return mediaStore.fetchMedia({
         shouldPersistMedia: !isFirstPageRequest,
       })
     },
@@ -98,7 +98,7 @@ export const useAsyncSearch = async () => {
         debouncedQuery,
       ],
       immediate: true,
-      lazy: isClient ?? false,
+      lazy: true,
       /**
        * We need to return data from useAsyncData to prevent re-fetching on the server.
        * However, we use the data from the store in the components because it's updated

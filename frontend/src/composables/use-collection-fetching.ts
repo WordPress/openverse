@@ -4,8 +4,6 @@ import { ref, watch } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 
-import { isClient } from "~/constants/window"
-
 export const useCollectionFetching = async ({
   collectionId,
 }: {
@@ -22,7 +20,7 @@ export const useCollectionFetching = async ({
     async () => {
       return await mediaStore.fetchMedia({ shouldPersistMedia: page.value > 1 })
     },
-    { lazy: isClient, watch: [page] }
+    { lazy: true, watch: [page] }
   )
 
   watch(error, () => {

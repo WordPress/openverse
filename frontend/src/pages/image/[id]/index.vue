@@ -77,7 +77,6 @@ import {
   definePageMeta,
   firstParam,
   handledClientSide,
-  isClient,
   showError,
   useAsyncData,
   useHead,
@@ -154,7 +153,7 @@ const { error } = await useAsyncData(
   },
   {
     immediate: true,
-    lazy: isClient,
+    lazy: true,
     watch: [imageId],
   }
 )
