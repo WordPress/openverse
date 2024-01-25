@@ -40,8 +40,8 @@
     />
   </header>
 </template>
-<script lang="ts">
-import { computed, defineComponent, inject, ref } from "vue"
+<script setup lang="ts">
+import { computed, inject, ref } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -67,77 +67,46 @@ import type { Ref } from "vue"
 /**
  * The desktop search header.
  */
-export default defineComponent({
-  name: "VHeaderDesktop",
-  components: {
-    VFilterButton,
-    VLogoButton,
-    VSearchBarButton,
-    VSearchTypePopover,
-    VSearchBar,
-  },
-  setup() {
-    const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
-    const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
+const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
+const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
 
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
-    const uiStore = useUiStore()
+const mediaStore = useMediaStore()
+const searchStore = useSearchStore()
+const uiStore = useUiStore()
 
-    const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
+const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
 
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
+const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { sendCustomEvent } = useAnalytics()
+const { sendCustomEvent } = useAnalytics()
 
-    const { updateSearchState, searchTerm, searchStatus } =
-      useSearch(sendCustomEvent)
+const { updateSearchState, searchTerm, searchStatus } =
+  useSearch(sendCustomEvent)
 
-    const clearSearchTerm = () => {
-      searchTerm.value = ""
-      ensureFocus(searchBarRef.value?.$el.querySelector("input") as HTMLElement)
-    }
+const clearSearchTerm = () => {
+  searchTerm.value = ""
+  ensureFocus(searchBarRef.value?.$el.querySelector("input") as HTMLElement)
+}
 
-    const handleSearch = async () => {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-      const activeElement = document.activeElement as HTMLElement
-      activeElement?.blur()
-      updateSearchState()
-    }
+const handleSearch = async () => {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+  const activeElement = document.activeElement as HTMLElement
+  activeElement?.blur()
+  updateSearchState()
+}
 
-    const areFiltersDisabled = computed(
-      () => !searchStore.searchTypeIsSupported
-    )
+const areFiltersDisabled = computed(() => !searchStore.searchTypeIsSupported)
 
-    const toggleSidebar = () => {
-      const toState = isSidebarVisible?.value ? "closed" : "opened"
-      sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
-        searchType: searchStore.searchType,
-        toState,
-      })
-      uiStore.toggleFilters()
-    }
+const toggleSidebar = () => {
+  const toState = isSidebarVisible?.value ? "closed" : "opened"
+  sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
+    searchType: searchStore.searchType,
+    toState,
+  })
+  uiStore.toggleFilters()
+}
 
-    const isXl = computed(() => uiStore.isBreakpoint("xl"))
+const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
-    const { doneHydrating } = useHydrating()
-
-    return {
-      filterButtonRef,
-      searchBarRef,
-      isFetching,
-
-      isSidebarVisible,
-      areFiltersDisabled,
-      doneHydrating,
-      isXl,
-
-      handleSearch,
-      clearSearchTerm,
-      searchStatus,
-      searchTerm,
-      toggleSidebar,
-    }
-  },
-})
+const { doneHydrating } = useHydrating()
 </script>
