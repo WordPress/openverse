@@ -1,81 +1,41 @@
 """
 Catalog Data Cleaner DAG
 
-Use CSV files created during the clean step of the ingestion process to bring the
+Use TSV files created during the clean step of the ingestion process to bring the
 changes into the catalog.
 """
 
 import logging
 from datetime import timedelta
-from pathlib import Path
 
-from airflow.decorators import dag
+from airflow.decorators import dag, task
+from airflow.models import Variable
+from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.param import Param
-from airflow.operators.python import PythonOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
-from common.sql import PGExecuteQueryOperator, PostgresHook, RETURN_ROW_COUNT
+from common.sql import PGExecuteQueryOperator, single_value
+from database.batched_update.batched_update import run_sql
+from database.catalog_cleaner import constants
 
 
 logger = logging.getLogger(__name__)
 
 DAG_ID = "catalog_cleaner"
-pg = PostgresHook()
 
 
-def load_temp_tables(columns: list[str]):
-    copy_sql = (
-        "COPY cleaned_image_{column} (identifier, {column}) FROM STDIN "
-        "DELIMITER E'\t' CSV QUOTE '''' "
+@task
+def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
+    count = run_sql.function(
+        dry_run=False,
+        sql_template=f"SELECT COUNT(*) FROM {temp_table_name}",
+        query_id=f"{temp_table_name}_count",
+        handler=single_value,
+        task=task,
     )
-    for column in columns:
-        file_path = str(Path(__file__).parent / f"{column}.tsv")
-        pg.copy_expert(copy_sql.format(column=column), file_path)
-
-
-def count_dirty_rows(columns: list[str]):
-    count_sql = (
-        "SELECT COUNT(identifier) FROM cleaned_image_{} AS tmp "
-        "WHERE tmp.identifier IN (SELECT identifier FROM image)"
-    )
-    for column in columns:
-        count = pg.get_first(count_sql.format(column))[0]
-        logger.info(f"Dirty rows found for ´{column}´: {count}")
-
-
-def update_batches(column: str, total_row_count: int, batch_size: int):
-    pg_ = PostgresHook(log_sql=False)
-    batch_start = updated_count = 0
-    update_sql = """
-        UPDATE image SET {column} = tmp.{column}, updated_on = NOW()
-        FROM cleaned_image_{column} AS tmp
-        WHERE image.identifier = tmp.identifier AND image.identifier IN (
-            SELECT identifier FROM cleaned_image_{column}
-            WHERE row_id > {batch_start} AND row_id <= {batch_end}
-            FOR UPDATE SKIP LOCKED
-        );
-    """
-
-    while batch_start <= total_row_count:
-        batch_end = batch_start + batch_size
-        logger.info(f"Going through rows with id {batch_start:,} to {batch_end:,}.")
-        query = update_sql.format(
-            column=column, batch_start=batch_start, batch_end=batch_end
-        )
-        count = pg_.run(query, handler=RETURN_ROW_COUNT)
-
-        batch_start += batch_size
-        updated_count += count
-        logger.info(f"Updated {updated_count:,} rows of the ´{column}´ column so far.")
-
-
-def update_from_temp_tables(columns: list[str], batch_size):
-    for column in columns:
-        total_row_count = pg.get_first(
-            f"SELECT COUNT(identifier) FROM cleaned_image_{column}"
-        )[0]
-        logger.info(f"Total rows found for ´{column}´: {total_row_count}")
-        update_batches(column, total_row_count, int(batch_size))
+    logger.info(f"Found {count:,} rows in the `{temp_table_name}` table.")
+    return count
 
 
 @dag(
@@ -90,60 +50,62 @@ def update_from_temp_tables(columns: list[str], batch_size):
     tags=["database"],
     doc_md=__doc__,
     params={
+        "s3_bucket": Param(
+            default="openverse-catalog",
+            type="string",
+            description="The S3 bucket where the TSV file is stored.",
+        ),
+        "s3_path": Param(
+            default="shared/data-refresh-cleaned-data/<file_name>.tsv",
+            type="string",
+            description="The S3 path to the TSV file within the bucket.",
+        ),
+        "column": Param(
+            type="string", description="The column of the table to apply the updates."
+        ),
+        # "table": Param(type="str", description="The media table to update."),
         "batch_size": Param(
             default=10000,
             type="integer",
-            description=("The number of records to update per batch."),
+            description="The number of records to update per batch.",
         ),
     },
 )
 def catalog_cleaner():
-    columns = {
-        "url": 3000,
-        "creator_url": 2000,
-        # "foreign_landing_url": 1000
-    }
-    create_sql = """
-    DROP TABLE IF EXISTS cleaned_image_{column};
-    CREATE UNLOGGED TABLE cleaned_image_{column} (
-        identifier uuid PRIMARY KEY,
-        {column} character varying({length}) NOT NULL,
-        row_id SERIAL
-    );
-    """
+    aws_region = Variable.get("AWS_DEFAULT_REGION", default_var="us-east-1")
+    column = "{{ params.column }}"
+    temp_table_name = f"temp_cleaned_image_{column}"
 
     create = PGExecuteQueryOperator(
-        task_id="create_temporary_tables",
+        task_id="create_temp_table",
         postgres_conn_id=POSTGRES_CONN_ID,
-        sql="\n".join(
-            [
-                create_sql.format(column=col, length=length)
-                for col, length in columns.items()
-            ]
-        ),
+        sql=constants.CREATE_SQL.format(temp_table_name=temp_table_name, column=column),
         execution_timeout=timedelta(minutes=1),
     )
 
-    load = PythonOperator(
-        task_id="load_temporary_tables",
-        python_callable=load_temp_tables,
-        op_kwargs={"columns": columns.keys()},
+    load = PGExecuteQueryOperator(
+        task_id="load_temp_table_from_s3",
+        postgres_conn_id=POSTGRES_CONN_ID,
+        sql=constants.IMPORT_SQL.format(
+            temp_table_name=temp_table_name,
+            column=column,
+            bucket="{{ params.s3_bucket }}",
+            s3_path_to_file="{{ params.s3_path }}",
+            aws_region=aws_region,
+        ),
         execution_timeout=timedelta(hours=1),
     )
 
-    count = PythonOperator(
-        task_id="count_dirty_rows",
-        python_callable=count_dirty_rows,
-        op_kwargs={"columns": columns.keys()},
-        execution_timeout=timedelta(minutes=15),
-    )
+    count = count_dirty_rows.override(
+        trigger_rule=TriggerRule.NONE_FAILED,
+    )(temp_table_name)
 
-    update = PythonOperator(
-        task_id="update_from_temporary_tables",
-        python_callable=update_from_temp_tables,
-        op_kwargs={"columns": columns.keys(), "batch_size": "{{ params.batch_size }}"},
-        execution_timeout=timedelta(hours=1),
-    )
+    # update = PythonOperator(
+    #     task_id="update_from_temporary_tables",
+    #     python_callable=update_from_temp_tables,
+    #     op_kwargs={"columns": columns.keys(), "batch_size": "{{ params.batch_size }}"},
+    #     execution_timeout=timedelta(hours=1),
+    # )
 
     # drop = PGExecuteQueryOperator(
     #     task_id="drop_temp_tables",
@@ -152,7 +114,7 @@ def catalog_cleaner():
     #     execution_timeout=timedelta(minutes=1)
     # )
 
-    create >> load >> count >> update
+    create >> load >> count  # >> update
     # update >> drop
 
 
