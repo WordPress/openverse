@@ -14,7 +14,7 @@ from airflow.models.param import Param
 from airflow.operators.python import PythonOperator
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
-from common.sql import PGExecuteQueryOperator, PostgresHook, RETURN_ROW_COUNT
+from common.sql import RETURN_ROW_COUNT, PGExecuteQueryOperator, PostgresHook
 
 
 logger = logging.getLogger(__name__)
