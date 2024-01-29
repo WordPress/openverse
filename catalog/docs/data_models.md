@@ -1,6 +1,8 @@
-_<TODO: This documentation is temporary and should be replaced by more thorough
-documentation of our DB fields in
-https://github.com/WordPress/openverse-catalog/issues/783>_
+> **Note**
+>
+> This documentation is temporary and should be replaced by more thorough
+> documentation of our DB fields in
+> https://github.com/WordPress/openverse/issues/412.
 
 # Data Models
 

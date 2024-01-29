@@ -266,8 +266,8 @@ different editor if you have a preference.
 
 - [VS Code](https://code.visualstudio.com/) is an option with good
   out-of-the-box support for our entire stack.
-- [PyCharm and WebStorm](https://www.jetbrains.com/) are other very popular
-  options with lots of bells and whistles.
+- [PyCharm and WebStorm](https://www.jetbrains.com/) are other popular options
+  with lots of bells and whistles.
 - [Sublime Text](https://www.sublimetext.com/) is a minimalistic option that can
   get you off the ground quickly with lots of room for expansion through it's
   package system.
@@ -276,7 +276,7 @@ different editor if you have a preference.
 
 ## Optional development setup
 
-The following setup steps are only needed in very specific scenarios.
+The following setup steps are only needed in a narrow set of scenarios.
 
 ### coreutils
 

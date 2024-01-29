@@ -178,10 +178,10 @@ automatically by Playwright and will be placed in the `test-results` folder
 under the fully qualified name of the test that failed (with every parent
 describe block included).
 
-Additionally, you can run run the tests in debug mode. This will run the tests
-with a headed browser as opposed to a headless (invisible) one and allow you to
-watch the test happen in real time. It's not possible for a headed browser to
-run inside the docker container, however, so be aware that when debugging the
+Additionally, you can run the tests in debug mode. This will run the tests with
+a headed browser as opposed to a headless (invisible) one and allow you to watch
+the test happen in real time. It's not possible for a headed browser to run
+inside the docker container, however, so be aware that when debugging the
 environment will be slightly different. For example, if you're on any OS other
 than Linux, the browser you're running will have small differences in how it
 renders the page compared to the docker container.

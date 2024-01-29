@@ -110,6 +110,7 @@ repos:
         entry: bash -c 'pnpm run -r types'
         language: system
         pass_filenames: false
+
       - id: eslint
         name: eslint
         files: (frontend|automations|packages).*?\.(js|ts|vue|json5|json)$
@@ -117,6 +118,7 @@ repos:
         language: system
         pass_filenames: false
         entry: bash -c 'pnpm run eslint --fix'
+
       - id: test:unit
         name: test:unit
         files: ^(frontend|packages)/.*$
@@ -125,12 +127,20 @@ repos:
         pass_filenames: false
         stages:
           - push
+
       - id: render-release-drafter
         name: render-release-drafter
         files: ^templates/.*$
         entry: bash -c 'just automations/js/render-release-drafter'
         language: system
         pass_filenames: false
+
+      - id: vale
+        name: vale
+        language: system
+        entry: bash -c 'just .vale/run'
+        pass_filesnames: false
+        files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
     rev: 37.116.0

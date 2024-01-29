@@ -1,12 +1,13 @@
 # Search Algorithm
 
 Openverse currently uses a relatively simple and naïve search algorithm with
-very limited options. The documentation on this page was written by referencing
-the code in Openverse as well as parts of Openverse's historical development.
-Parts of the story for how Openverse's indexes came to be configured as they are
-today are likely missing. Future improvements to Openverse's indexing and search
-will be more carefully documented here and in the code to ensure there is
-greater longevity of understanding.
+restricted modifications to the default Elasticsearch behaviour. The
+documentation on this page was written by referencing the code in Openverse as
+well as parts of Openverse's historical development. Parts of the story for how
+Openverse's indexes came to be configured as they are today are likely missing.
+Future improvements to Openverse's indexing and search will be more carefully
+documented here and in the code to ensure there is greater longevitiy of
+understanding.
 
 > **Note**: This document avoids covering details covered in the
 > [Openverse Search Guide](https://wordpress.org/openverse/search-help).
@@ -176,7 +177,7 @@ aspects of a document:
 > to potentially change this fact.
 
 Of these, title is weighted 10000 times more heavily than the description and
-tags. This makes searches that match a title very closely rise to the "top" of
+tags. This makes works whose titles closely match the query rise to the "top" of
 the results, even if the same text is present word-for-word in a description. It
 also breaks ties between documents, if, for example, two documents are returned,
 one because the title matches and one because a tag matches, the title-matched

@@ -175,8 +175,8 @@ sustainable expectation, however, if deployments take a "short" amount of time.
 What "short" means is up for debate, but an initial benchmark can be the
 Openverse production frontend deployments, which currently take about 10
 minutes. Longer than this seems generally unreasonable to expect someone to keep
-a very close eye on the process. Sticking to zero-downtime deployments helps
-keep short deployments the norm. Even though it sometimes asks us to deploy more
+a close eye on the process. Sticking to zero-downtime deployments helps keep
+short deployments the norm. Even though it sometimes asks us to deploy more
 _often_, those deployments can—and in all likelihood, should—be spread over
 multiple days. This makes the expectation of keeping a close watch on the
 deployment more sustainable long-term and helps encourage us to deploy more
@@ -200,10 +200,11 @@ that the instructions above are followed to prevent the need for downtime, it is
 reasonable to take alternative approaches to deploying the migration.
 
 At the moment we do not have specific recommendations or policies regarding
-these hopefully rare instances. If you come across the need for this, please
-carefully consider the reasons why it is necessary in the particular case and
-document the steps taken to prepare and deploy the migration. Please update this
-document with any general findings or advice, as applicable.
+these instances, because they have not proven to be common. If you come across
+the need for this, please carefully consider the reasons why it is necessary in
+the particular case and document the steps taken to prepare and deploy the
+migration. Please update this document with any general findings or advice, as
+applicable.
 
 ## Django management command based data transformations
 
@@ -237,7 +238,7 @@ details:
 
 With those two key details in mind, the main deficiency of using migrations for
 data transformations may already be evident: time. Django migration based data
-transformations dealing with certain smaller tables may not take very long and
+transformations dealing with certain smaller tables may not take a long time and
 this issue, in some cases, might not be applicable. However, because it is
 extremely difficult to predetermine the amount of time a migration will take,
 even data transformations for small datasets should still heed the
@@ -361,7 +362,7 @@ different running versions of the application. For environment variables, the
 previously running version of the application will continue to use the
 environment variable configuration defined in the previous task definition
 revision used to run that instance. Environment variables are not automatically
-updated for the running application. This means that if a deployment was very
+updated for the running application. This means that if a deployment was
 carefully orchestrated, we do not necessarily need to worry about backwards
 incompatible changes, and even in the
 [worst case described below](#manual-rollbacks-after-removing-an-environment-variable-or-updating-its-format),

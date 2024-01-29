@@ -46,5 +46,5 @@ with these particular requests.
 
 Potential future improvements to logging in Openverse could include:
 
-1. Even more uniform data logging format like formatting all logs as JSON.
+1. Structured logging format like formatting all logs as JSON.
 2. Establishing clearer practices around what log levels to use and when.

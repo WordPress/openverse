@@ -44,7 +44,7 @@ jobs:
   steps:
     - name: amazing step
       with:
-        misspelled-action-argment: hello world!!!!!
+        misspelled-action-argment: hello world!
 ```
 
 The line in `ignore_lines.txt` must include all eight of the leading whitespace
@@ -52,13 +52,13 @@ characters to ignore the misspelled action argument. The following will not
 work:
 
 ```
-misspelled-action-argment: hello world!!!!!
+misspelled-action-argment: hello world!
 ```
 
 It must be:
 
 ```
-        misspelled-action-argment: hello world!!!!!
+        misspelled-action-argment: hello world!
 ```
 
 When documenting ignored lines, please include an explanation and the targeted

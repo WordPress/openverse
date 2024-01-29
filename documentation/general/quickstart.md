@@ -8,8 +8,8 @@ the ingestion server and the frontend.
 
 ## Stack-specific quickstarts
 
-It is very unlikely that you want to contribute to everything, everywhere, all
-at once. In all likelihood, you intend to contribute to a narrower slice of the
+It is unlikely that you want to contribute to everything, everywhere, all at
+once. In all likelihood, you intend to contribute to a narrower slice of the
 stack. In such cases, you might find it more beneficial to go through one of
 these stack-specific quickstart guides.
 
@@ -18,7 +18,7 @@ these stack-specific quickstart guides.
 - [Ingestion server](/ingestion_server/guides/quickstart.md)
 - [Documentation](/meta/documentation/quickstart.md)
 
-That said, there is something very appealing about running the full stack
+That said, there is something useful and appealing about running the full stack
 locally, which this guide is all about.
 
 ## Prerequisites

@@ -25,6 +25,7 @@ tsconfig.base.json  @WordPress/openverse-frontend
 
 # Specific assignments for the 'openverse-maintainers' group
 .codespell/                 @WordPress/openverse-maintainers
+.vale/                 @WordPress/openverse-maintainers
 .devcontainer/              @WordPress/openverse-maintainers
 .github/                    @WordPress/openverse-maintainers
 automations/                @WordPress/openverse-maintainers
