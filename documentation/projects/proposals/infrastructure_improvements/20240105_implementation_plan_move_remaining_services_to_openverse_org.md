@@ -70,6 +70,7 @@ milestones like when a feature flag could be made available in a particular envi
 1. Move the `access` module that configures Cloudflare Access to a new
    `cloudflare` root module, maintaining the existing configuration.
    [The rationale for the new root module is explained in this section](#moving-cloudflare-access-and-the-new-cloudflare-root-module).
+1. Rename the `org` root module to `github`.
 1. Extract load balancer listener rules out of `generic/service` and
    `generic/ec2-service` in favour of a more generic form of the existing
    `service-alias` called `service-domain` (effects all existing services in the
@@ -278,11 +279,22 @@ of Cloudflare page and WAF rules (we already have heaps, they're just not in
 Terraform), I think this is a good opportunity to prevent unnecessarily
 increasing the size of `next/production`.
 
+```{admonition} Question to reviewers
 Reviewers, I am curious what y'all think about renaming `org` to `github`. If we
 want to keep that change super minimal, we can just rename the directory and
 tfvars file. Nothing else technically needs to change, we don't even need to
 move resources out of the `github` child module. This would serve to clarify the
 boundary and purpose of that root module.
+```
+
+```{important}
+Madison and Dhruv gave approval for this approach during review of the proposal.
+We will use a new `cloudflare` root module and rename `org` to `github`. We will
+remove the `github` child module from `org`/`github` root module: that's a "nice to
+have" but is not strictly necessary, nor does it provide any significant benefit
+making the work to move each resource into the root module out of a child module
+worth it.
+```
 
 #### `register_with_target_group` removal
 
@@ -609,8 +621,8 @@ to point to the existing API service, and then turning the
 to notify registered applications of the change, including a management command
 to email them and a Make post to draft and publish.
 
-Potentially the most complex aspect of this is actually the Cloudflare
-redirect rule to send API traffic from the `openverse.engineering` domains to
+Potentially the most complex aspect of this is actually the Cloudflare redirect
+rule to send API traffic from the `openverse.engineering` domains to
 `openverse.org`. I am 95% confident that we can do this with a single dynamic
 redirect rule, which is available in the free tier.
 
