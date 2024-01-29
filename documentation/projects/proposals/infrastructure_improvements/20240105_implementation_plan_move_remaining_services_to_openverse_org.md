@@ -93,6 +93,8 @@ milestones like when a feature flag could be made available in a particular envi
    the basis with Ansible used to configure the service (compose file, settings,
    and cron job), to start the service, and to register it with the target
    group.
+1. Spin down the existing Airflow EC2 service to prevent any potential issues
+   with multiple running instances.
 1. Deploy the `next` Airflow module and use the new `service-domain` to point
    `airflow.openverse.org` to the new service.
 1. Port all Airflow Cloudflare rules from `openverse.engineering` to
@@ -352,7 +354,7 @@ interchangeably with ECS and EC2 based services:
   such should only need access on HTTP ports from origins within our VPC (in
   other words, no external HTTP access directly to public IPs or DNS endpoints).
 - That SSH access to EC2 instances always runs through the SSH bastion (as of
-  https://github.com/WordPress/openverse-infrastructure/pull/743) and as such
+  <https://github.com/WordPress/openverse-infrastructure/pull/743>) and as such
   port 22 only needs to accept connections from the SSH bastion and no where
   else.
 - That services may have multiple names/aliases (for example, `api.` and
@@ -607,7 +609,7 @@ to point to the existing API service, and then turning the
 to notify registered applications of the change, including a management command
 to email them and a Make post to draft and publish.
 
-Potentially the most complexity aspect of this is actually the Cloudflare
+Potentially the most complex aspect of this is actually the Cloudflare
 redirect rule to send API traffic from the `openverse.engineering` domains to
 `openverse.org`. I am 95% confident that we can do this with a single dynamic
 redirect rule, which is available in the free tier.
@@ -675,7 +677,7 @@ These will be removed by the time their relevant steps are complete.
 This entire project is fundamentally an infrastructure one, with small changes
 to the API and frontend code to support it.
 
-As covered above, the effect of this is a savings of 200 USD per month, once we
+As covered above, the effect of this is a savings of 250 USD per month, once we
 can downgrade the `openverse.engineering` Cloudflare account to the free tier.
 
 ### Other projects or work
