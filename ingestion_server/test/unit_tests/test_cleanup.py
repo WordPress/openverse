@@ -1,8 +1,7 @@
-from unittest.mock import MagicMock
-
+import pook
 from psycopg2._json import Json
 
-from ingestion_server.cleanup import CleanupFunctions, TlsTest
+from ingestion_server.cleanup import CleanupFunctions
 from test.unit_tests.conftest import create_mock_image
 
 
@@ -42,14 +41,16 @@ class TestCleanup:
         assert result == expected
 
     @staticmethod
+    @pook.on
     def test_url_protocol_fix():
         bad_url = "flickr.com"
         tls_support_cache = {}
+        pook.get("https://flickr.com").reply(200)
         result = CleanupFunctions.cleanup_url(bad_url, tls_support_cache)
         expected = "'https://flickr.com'"
 
         bad_http = "neverssl.com"
-        TlsTest.test_tls_supported = MagicMock(return_value=False)
+        pook.get("https://neverssl.com").reply(500)
         result_http = CleanupFunctions.cleanup_url(bad_http, tls_support_cache)
         expected_http = "'http://neverssl.com'"
         assert result == expected
