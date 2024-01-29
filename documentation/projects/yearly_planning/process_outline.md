@@ -80,9 +80,8 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
       descriptions. Descriptions should define the scope of the project and the
       benefit. Describing projects on our own, without collaborating right away,
       helps to identify shared project ideas as well as potentially different
-      ideas of very similar projects. These "duplicate" descriptions will
-      uncover assumptions and nuances. Each project idea should have the
-      following:
+      ideas of similar projects. These "duplicate" descriptions will uncover
+      assumptions and nuances. Each project idea should have the following:
       - Title
       - Summary
       - Description
@@ -108,9 +107,12 @@ See: [Project Themes](/projects/yearly_planning/project_themes.md)
 - **Example spreadsheet**:
   [Project Ideas Effort & Impact Voting](https://docs.google.com/spreadsheets/d/1a_xBQvgirYF7Tzmbr5bbfvxaV0RKyBmoJ3FvCVs5zG8/edit?usp=sharing)
 - **Notes**:
+  <!-- "very" is intentional in "very small" to emphasise the intentional imprecision of this scale. -->
+  <!-- vale proselint.Very = NO -->
   - Fibonacci's numbers are used here instead of linear sequence: 2, 3, 5, 8, 13
-    instead of 1, 2, 3, 4, 5. This helps communicate the big difference between
-    a "huge project" and a "very small" project.
+  instead of 1, 2, 3, 4, 5. This helps communicate the big difference between a
+  "huge project" and a "very small" project.
+  <!-- vale proselint.Very = YES -->
   - Maintainer's _confidence_ when voting is also recorded, on a scale of 1-3.
     This is useful in the analysis after-the-fact for showing which projects
     maintainers felt less confident about assessing.
