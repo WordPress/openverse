@@ -49,11 +49,16 @@ command runner installed.
 
 To set up the local python environment along with the pre-commit hook, run:
 
+<!-- Ignore `venv` repetition below as it is correct -->
+<!-- vale Vale.Repetition = NO -->
+
 ```shell
 python3 -m venv venv
 source venv/bin/activate
 just catalog/install
 ```
+
+<!-- vale Vale.Repetition = YES -->
 
 The containers will be built when starting the stack up for the first time. If
 you'd like to build them prior to that, run:
