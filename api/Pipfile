@@ -19,7 +19,7 @@ pook = {ref = "master", git = "git+https://github.com/h2non/pook.git"}
 
 [packages]
 adrf = "~=0.1.2"
-aiohttp = "~=3.8"
+aiohttp = "~=3.9"
 aws-requests-auth = "~=0.4"
 deepdiff = "~=6.4"
 Django = "~=4.2"
