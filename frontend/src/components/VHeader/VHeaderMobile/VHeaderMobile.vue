@@ -118,7 +118,6 @@ import { cyclicShift } from "~/utils/math"
 
 import { keycodes } from "~/constants/key-codes"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useSearch } from "~/composables/use-search"
 
@@ -161,10 +160,7 @@ export default defineComponent({
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { sendCustomEvent } = useAnalytics()
-
-    const { updateSearchState, searchTerm, searchStatus } =
-      useSearch(sendCustomEvent)
+    const { updateSearchState, searchTerm, searchStatus } = useSearch()
 
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })

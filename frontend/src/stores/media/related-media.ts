@@ -1,6 +1,5 @@
 import { defineStore } from "pinia"
 
-import { parseFetchingError } from "~/utils/errors"
 import { initServices } from "~/stores/media/services"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
@@ -59,9 +58,14 @@ export const useRelatedMediaStore = defineStore("related-media", {
 
         return this.media.length
       } catch (error) {
-        const errorData = parseFetchingError(error, mediaType, "related", {
-          id,
-        })
+        const errorData = this.$nuxt.$processFetchingError(
+          error,
+          mediaType,
+          "related",
+          {
+            id,
+          }
+        )
 
         this._endFetching(errorData)
         this.$nuxt.$sentry.captureException(error, { extra: { errorData } })

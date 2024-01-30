@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
-import { isRetriable, parseFetchingError } from "~/utils/errors"
+import { isRetriable } from "~/utils/errors"
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -490,15 +490,17 @@ export const useMediaStore = defineStore("media", {
         })
         return mediaCount
       } catch (error: unknown) {
-        const errorData = parseFetchingError(error, mediaType, "search", {
-          searchTerm: queryParams.q ?? "",
-        })
+        const errorData = this.$nuxt.$processFetchingError(
+          error,
+          mediaType,
+          "search",
+          {
+            searchTerm: queryParams.q ?? "",
+          }
+        )
 
         this._updateFetchState(mediaType, "end", errorData)
 
-        this.$nuxt.$sentry.captureException(error, {
-          extra: { errorData },
-        })
         return null
       }
     },

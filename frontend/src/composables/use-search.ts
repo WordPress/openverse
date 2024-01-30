@@ -6,14 +6,13 @@ import { useMediaStore } from "~/stores/media"
 
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 import { useMatchSearchRoutes } from "~/composables/use-match-routes"
-import type { EventName, Events } from "~/types/analytics"
+import { useAnalytics } from "~/composables/use-analytics"
 
-export const useSearch = (
-  sendCustomEvent: <T extends EventName>(name: T, payload: Events[T]) => void
-) => {
+export const useSearch = () => {
   const mediaStore = useMediaStore()
   const searchStore = useSearchStore()
   const router = useRouter()
+  const { sendCustomEvent } = useAnalytics()
 
   const { matches: isSearchRoute } = useMatchSearchRoutes()
 
