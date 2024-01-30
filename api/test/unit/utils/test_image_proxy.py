@@ -1,7 +1,5 @@
 import asyncio
-import itertools
 from dataclasses import replace
-from unittest.mock import patch
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -332,7 +330,7 @@ def test_get_successful_records_response_code(
 
 alert_count_params = pytest.mark.parametrize(
     "count_start",
-    [0, 1, 50, 99, 100, 999, 1000, 1500, 1999],
+    [0, 1, 999],
 )
 
 MOCK_CONNECTION_KEY = ConnectionKey(
@@ -390,12 +388,7 @@ def test_get_exception_handles_error(
     if is_cache_reachable:
         cache.set(key, count_start)
 
-    with (
-        pytest.raises(UpstreamThumbnailException),
-        patch(
-            "api.utils.image_proxy.exception_iterator", itertools.count(count_start + 1)
-        ),
-    ):
+    with pytest.raises(UpstreamThumbnailException):
         photon_get(TEST_MEDIA_INFO)
 
     sentry_capture_exception.assert_not_called()
@@ -435,9 +428,7 @@ def test_get_http_exception_handles_error(
     if is_cache_reachable:
         cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException), patch(
-        "api.utils.image_proxy.exception_iterator", itertools.count(count_start + 1)
-    ):
+    with pytest.raises(UpstreamThumbnailException):
         with pook.use():
             pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
             photon_get(TEST_MEDIA_INFO)

@@ -1,4 +1,3 @@
-import itertools
 import logging
 from dataclasses import dataclass
 from typing import Literal
@@ -23,8 +22,6 @@ from api.utils.tallies import get_monthly_timestamp
 
 
 parent_logger = logging.getLogger(__name__)
-
-exception_iterator = itertools.count()
 
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
