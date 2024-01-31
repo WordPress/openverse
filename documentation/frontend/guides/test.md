@@ -47,9 +47,15 @@ Storybook visual regression tests, read
 ## Updating snapshots
 
 If you've made changes to the frontend that require updating snapshots, you can
-run the playwright tests with the `-u` flag. For example, this will update the
-snapshots for the app visual regression tests:
+run both the playwright and storybook tests with the `-u` flag. For example,
+this will update the snapshots for the app visual regression tests:
 
 ```console
 $ just frontend/run test:playwright visual-regression -u
+```
+
+This will similarly update the storybook snapshots:
+
+```console
+$ just frontend/run test:storybook -u
 ```
