@@ -10,8 +10,8 @@ Once you've made some changes to the codebase, it is important to run tests.
 
 2. Install the Python dependencies, including dev-dependencies.
 
-   ```console
-   $ just ingestion_server/install
+   ```bash
+   just ingestion_server/install
    ```
 
    ```{caution}
@@ -21,8 +21,8 @@ Once you've made some changes to the codebase, it is important to run tests.
 
 3. Run the integration tests.
 
-   ```console
-   $ just ingestion_server/test-local
+   ```bash
+   just ingestion_server/test-local
    ```
 
    Note that if an `.env` file exists in the folder you're running `just` from,

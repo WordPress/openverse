@@ -23,15 +23,15 @@ the size of a test/staging index. To do so, follow these steps.
 
 2. SSH into the machine using it's public IP.
 
-   ```console
-   $ ssh ec2-user@<public-ip>
+   ```bash
+   ssh ec2-user@<public-ip>
    ```
 
 3. Determine the name of the active `indexer_worker` container and pause it.
 
-   ```console
-   $ docker ps
-   $ docker pause <container_id>
+   ```bash
+   docker ps
+   docker pause <container_id>
    ```
 
 4. Repeat steps 2 and 3 for each active ingestion worker machine. Leave the SSH
@@ -44,8 +44,8 @@ the size of a test/staging index. To do so, follow these steps.
 6. From each of the open SSH sessions, send a completion notification to the
    ingestion server's internal IP address.
 
-   ```console
-   $ curl \
+   ```bash
+   curl \
      -X POST \
      -H "Content-Type: application/json" \
      -d '{"error":false}' \

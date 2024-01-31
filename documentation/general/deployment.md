@@ -178,8 +178,8 @@ the available list of tags and the workflow will fail if the tag is determined
 not to exist in the image repository. You can find a list of release tags for
 specific apps by filtering git tags based on the tag prefix for the app:
 
-```
-$ git tag -l '<app slug>-*'
+```bash
+git tag -l '<app slug>-*'
 ```
 
 Replace `<app slug>` with `api`, `frontend`, or `ingestion_server` as needed.

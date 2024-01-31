@@ -27,8 +27,8 @@ otherwise a random UUID will be used.
 
 ### Example
 
-```console
-$ curl \
+```bash
+curl \
   -X POST \
   -H 'Content-Type: application/json' \
   -d '{"model": "image", "action": "REINDEX", "index_suffix": "20231106"}' \
@@ -59,8 +59,8 @@ suffix.
 
 ### Example
 
-```console
-$ curl \
+```bash
+curl \
   -X POST \
   -H 'Content-Type: application/json' \
   -d '{"model": "image", "action": "CREATE_AND_POPULATE_FILTERED_INDEX", "destination_index_suffix": "20231106"}' \
@@ -86,8 +86,8 @@ the default or filtered index for that media type respectively.
 
 ### Example
 
-```console
-$ curl \
+```bash
+curl \
   -X POST \
   -H 'Content-Type: application/json' \
   -d '{"model": "image", "action": "POINT_ALIAS", "index_suffix": "20231106", "alias": "image-filtered"}' \
@@ -116,8 +116,8 @@ for a media type.
 
 ### Example
 
-```console
-$ curl \
+```bash
+curl \
   -X POST \
   -H 'Content-Type: application/json' \
   -d '{"model": "image", "action": "DELETE_INDEX", "index_suffix": "20231106"}' \

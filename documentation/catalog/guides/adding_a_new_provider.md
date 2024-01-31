@@ -159,15 +159,15 @@ manually turn the DAG on in production.
 2. Run individual test by creating a testing session within Docker, then
    selecting only the tests associated with the provider.
 
-   ```console
-   $ just catalog/test-session
-   $ pytest -k <provider_name>
+   ```bash
+   just catalog/test-session
+   pytest -k <provider_name>
    ```
 
    Alternatively, the test selection can be run in Docker directly with:
 
-   ```console
-   $ just catalog/test -k <provider_name>
+   ```bash
+   just catalog/test -k <provider_name>
    ```
 
 ```{note}

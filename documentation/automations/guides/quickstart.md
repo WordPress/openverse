@@ -26,8 +26,8 @@ If you wish to install only dependencies for automations, run the following:
 Run Python automation scripts using the `automations/python/run` just recipe.
 Ex.:
 
-```
-$ just automations/python/run print_labels.py
+```bash
+just automations/python/run print_labels.py
 ```
 
 The recipe is an alias for running `pipenv run <script>` inside the
@@ -38,8 +38,8 @@ configuration as expected by many scripts.
 
 Run Node.js automation scripts using the `automations/js/run` just recipe. Ex.:
 
-```
-$ just automations/js/run render-jinja.js
+```bash
+just automations/js/run render-jinja.js
 ```
 
 The recipe is an alias for running `pnpm exec <script>` inside the
