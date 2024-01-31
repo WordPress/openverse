@@ -4,9 +4,11 @@ https://github.com/awsdocs/aws-doc-sdk-examples/blob/54c3b82d8f9a12a862f9fcec449
 """
 
 import logging
+
 import boto3
-from botocore.exceptions import ClientError
 from airflow.models import Variable
+from botocore.exceptions import ClientError
+
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +51,8 @@ class CloudWatchWrapper:
 
 
 def enable_or_disable_alarms(enable):
-    skip_toggling = Variable.get("SKIP_TOGGLING_CLOUDWATCH_ALARMS", False)
-    if skip_toggling:
+    toggle = Variable.get("TOGGLE_CLOUDWATCH_ALARMS", True)
+    if not toggle:
         logger.info("Skipping toggling CloudWatch alarms.")
         return
 
