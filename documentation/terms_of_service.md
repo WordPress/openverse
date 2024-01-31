@@ -1,6 +1,12 @@
 # Openverse Terms of Service
 
+```{note}
 _Effective as of 5 May 2022_
+```
+
+```{admonition} Change history
+[View the full set of changes for this file here](https://github.com/WordPress/openverse/commits/main/documentation/terms_of_service.md).
+```
 
 ## 1. Your Agreement to the Terms
 
