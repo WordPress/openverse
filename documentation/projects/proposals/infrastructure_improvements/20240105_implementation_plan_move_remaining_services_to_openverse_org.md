@@ -9,8 +9,8 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] @AetherUnbound
-- [ ] @dhruvkb
+- [x] @AetherUnbound
+- [x] @dhruvkb
 
 ## Project links
 
@@ -228,8 +228,9 @@ We'll move this to a new `cloudflare` root module rather than one of the `next`
 environment root modules, because there is no specific environment related to
 these settings, and it's best to keep these all together in a single place.
 Later on, in the Airflow and API work, we'll expand the Cloudflare configuration
-in `cloudflare` to include the page and WAF rules related to these services that
-are currently configured by hand in the `openverse.engineering` zone.
+in `cloudflare` to include the Page, Cache, and WAF rules related to these
+services that are currently configured by hand in the `openverse.engineering`
+zone.
 
 Cloudflare rules also have priority ordering, they are matched in a specific
 order, and we need to be able to manage that ordering explicitly. We cannot
@@ -275,8 +276,8 @@ per-application root modules when connected root modules change.
 
 However, having smaller root modules is good for Terraform performance (it's
 already rather slow in `next/production`), and considering the potential volume
-of Cloudflare page and WAF rules (we already have heaps, they're just not in
-Terraform), I think this is a good opportunity to prevent unnecessarily
+of Cloudflare Page, Cache, and WAF rules (we already have heaps, they're just
+not in Terraform), I think this is a good opportunity to prevent unnecessarily
 increasing the size of `next/production`.
 
 ```{admonition} Question to reviewers
@@ -547,10 +548,10 @@ next section, we'll want to preemptively set up Cloudflare Access for the new
 Cloudflare Access configuration
 [in the new `cloudflare` root module](#moving-cloudflare-access-and-the-new-cloudflare-root-module).
 
-When doing this, we should also add all Cloudflare Page and WAF rules related to
-Airflow over from `openverse.engineering` into the `cloudflare` root module onto
-the `openverse.org` zone. Right now these are not configured in Terraform, so we
-will take the opportunity now to do so.
+When doing this, we should also add all Cloudflare Page, Cache, and WAF rules
+related to Airflow over from `openverse.engineering` into the `cloudflare` root
+module onto the `openverse.org` zone. Right now these are not configured in
+Terraform, so we will take the opportunity now to do so.
 
 To clarify the redirect expectations, we will _not_ redirect
 `airflow.openverse.engineering` to `airflow.openverse.org`. This is an internal
