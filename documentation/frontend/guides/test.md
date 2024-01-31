@@ -18,7 +18,7 @@ Storybook visual regression tests, read
 2. Run unit tests for the frontend.
 
    ```console
-   $ just frontend/run test:unit
+   just frontend/run test:unit
    ```
 
    ````{note}
@@ -26,7 +26,7 @@ Storybook visual regression tests, read
    up pre-commit's Git hooks by running the following command.
 
    ```console
-   $ just precommit
+   just precommit
    ```
 
    ````
@@ -35,13 +35,13 @@ Storybook visual regression tests, read
    visual regression tests.
 
    ```console
-   $ just frontend/run test:playwright
+   just frontend/run test:playwright
    ```
 
 4. Run the Storybook visual regression tests.
 
    ```console
-   $ just frontend/run test:storybook
+   just frontend/run test:storybook
    ```
 
 ## Updating snapshots
@@ -51,11 +51,11 @@ run both the playwright and storybook tests with the `-u` flag. For example,
 this will update the snapshots for the app visual regression tests:
 
 ```console
-$ just frontend/run test:playwright visual-regression -u
+just frontend/run test:playwright visual-regression -u
 ```
 
 This will similarly update the storybook snapshots:
 
 ```console
-$ just frontend/run test:storybook -u
+just frontend/run test:storybook -u
 ```
