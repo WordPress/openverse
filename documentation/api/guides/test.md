@@ -9,8 +9,8 @@ Once you've made some changes to the codebase, it is important to run tests.
 
 2. Run the tests.
 
-   ```console
-   $ just api/test
+   ```bash
+   just api/test
    ```
 
    ```{note}

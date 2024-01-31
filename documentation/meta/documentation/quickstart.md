@@ -17,32 +17,32 @@ you need to run this.
 2. Clone the repository to your computer. Then switch to the cloned directory.
    If you're planning to contribute, fork the repo and clone your fork instead.
 
-   ```console
-   $ git clone https://github.com/WordPress/openverse.git # or your fork
-   $ cd openverse/
+   ```bash
+   git clone https://github.com/WordPress/openverse.git # or your fork
+   cd openverse/
    ```
 
    If you followed the general setup guide and installed
    [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
    using the `gh` command.
 
-   ```console
-   $ gh repo clone WordPress/openverse # or your fork
-   $ cd openverse/
+   ```bash
+   gh repo clone WordPress/openverse # or your fork
+   cd openverse/
    ```
 
 3. Install only the Python dependencies. You do not need to install any Node.js
    dependencies to run the documentation.
 
-   ```console
-   $ just documentation/install
+   ```bash
+   just documentation/install
    ```
 
 4. Run the documentation live server. Once this is done, you should be able to
    see the documentation on [http://127.0.0.1:50230](http://127.0.0.1:50230).
 
-   ```console
-   $ just documentation/live
+   ```bash
+   just documentation/live
    ```
 
    ````{admonition} Troubleshooting
@@ -50,9 +50,9 @@ you need to run this.
    of contents or changes to the file system. In those cases, you can clean the
    caches and restart the live server.
 
-   ```console
-   $ just documentation/clean
-   $ just documentation/live
+   ```bash
+   just documentation/clean
+   just documentation/live
    ```
    ````
 

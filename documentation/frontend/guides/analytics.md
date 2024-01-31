@@ -13,12 +13,12 @@ Use the following `just` recipes to set Plausible up locally:
 
 ```sh
 # Runs the portion of the docker-compose stack that includes Plausible
-$ just frontend/up
+just frontend/up
 
 # Sets up Plausible with a default user and the localhost testing site
 # Only necessary the first time you run Plausible locally, when adding
 # new custom events, or any time after you run `just down -v`
-$ just frontend/init
+just frontend/init
 ```
 
 If you have already run `just up` and `just init` at the root of the repository,
