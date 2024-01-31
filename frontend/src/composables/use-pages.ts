@@ -36,6 +36,11 @@ export default function usePages() {
       link: "https://api.openverse.engineering/v1/",
     },
     {
+      id: "terms",
+      name: "navigation.terms",
+      link: "https://docs.openverse.org/terms_of_service.html",
+    },
+    {
       id: "privacy",
       name: "navigation.privacy",
       link: app.localePath("/privacy"),
