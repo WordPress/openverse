@@ -11,15 +11,15 @@ repos:
         entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
         language: system
         pass_filenames: false
-      - id: check-no-console-code-block
-        name: Check that the "console" block is not used in docs
+      - id: fix-console-code-block
+        name: Ensure "bash" code block is used over "console"
+        files: ^documentation/.*\.md$
         # Check that we are not using the ```console block in our documentation
         # -R recursively checks files
         # -l suppresses normal input and only lists files with errors
         # Print an error message if any files are found
-        entry: bash -c 'grep -Rl --include="*.md" '\''```console'\'' documentation/ && { printf "\n[ERROR] The \"bash\" syntax selection in the above files should be used in place of \"console\" in code blocks"; exit 1; } || exit 0'
+        entry: sed -i -e 's/```console/```bash/g'
         language: system
-        pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
