@@ -11,7 +11,7 @@ type Options = readonly [
 
 const messages = {
   maxLengthExceeded:
-    "The maximum translated string length is {{ maxLength }} words. Please split this string into multiple smaller strings, and add a translator comment on each indicating their relationship to one another. Avoid splitting individually sentences if possible, and prefer a greater number of smaller strings over a set of strings that are complex to combine.",
+    "The maximum translated string length is {{ maxLength }} words. Please split this string into multiple smaller strings, and add a translator comment on each indicating their relationship to one another. Avoid splitting sentences if possible, and prefer a greater number of smaller strings over a set of strings that are linguistically complex to combine.",
 }
 
 type MessageIds = keyof typeof messages
