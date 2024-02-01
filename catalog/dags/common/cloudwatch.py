@@ -3,7 +3,6 @@ CloudwatchWrapper extracted partially from
 https://github.com/awsdocs/aws-doc-sdk-examples/blob/54c3b82d8f9a12a862f9fcec44909829bda849af/python/example_code/cloudwatch/cloudwatch_basics.py
 """
 import logging
-import os
 
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
@@ -11,8 +10,6 @@ from botocore.exceptions import ClientError
 
 
 logger = logging.getLogger(__name__)
-
-AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 
 
 class CloudWatchWrapper:
@@ -61,8 +58,8 @@ def enable_or_disable_alarms(enable):
     cloudwatch = AwsBaseHook(
         aws_conn_id="aws_default",
         resource_type="cloudwatch",
-        region_name=AWS_DEFAULT_REGION,
     )
+
     cw_wrapper = CloudWatchWrapper(cloudwatch.get_conn())
 
     sensitive_alarms_list = [
