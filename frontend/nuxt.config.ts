@@ -29,6 +29,10 @@ const favicons = [
   // SVG favicon
   {
     rel: "icon",
+    href: "/favicon.ico",
+  },
+  {
+    rel: "icon",
     href: "/openverse-logo.svg",
   },
   // SVG favicon for Safari
