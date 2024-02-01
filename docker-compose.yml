@@ -186,7 +186,7 @@ services:
   cache:
     profiles:
       - api
-    image: docker.io/redis:7.2.3
+    image: docker.io/redis:7.2.4
     ports:
       - "50263:6379"
 
