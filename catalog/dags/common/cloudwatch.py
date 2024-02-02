@@ -9,6 +9,8 @@ from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
 from botocore.exceptions import ClientError
 
+from common.constants import AWS_CLOUDWATCH_CONN_ID
+
 
 logger = logging.getLogger(__name__)
 
@@ -56,10 +58,9 @@ def enable_or_disable_alarms(enable):
         raise AirflowSkipException("TOGGLE_CLOUDWATCH_ALARMS is set to False.")
 
     cloudwatch = AwsBaseHook(
-        aws_conn_id="aws_default",
+        aws_conn_id=AWS_CLOUDWATCH_CONN_ID,
         resource_type="cloudwatch",
     )
-
     cw_wrapper = CloudWatchWrapper(cloudwatch.get_conn())
 
     sensitive_alarms_list = [
