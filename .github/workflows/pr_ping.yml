@@ -26,7 +26,7 @@ jobs:
       - name: Send notification for new PR
         if: github.event.action == 'opened'
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1.25.0
         env:
           pr_status: ${{ github.event.pull_request.draft && ' draft ' || ' ' }}
           pr_icon: ${{ github.event.pull_request.draft && ':pr-draft:' || ':pull-request:' }}
@@ -47,7 +47,7 @@ jobs:
       - name: Send notification for PR marked ready
         if: github.event.action == 'ready_for_review'
         id: slack-notifications
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
             {
