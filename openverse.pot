@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2023-12-05T15:43:42+00:00\n"
+"POT-Creation-Date: 2024-02-02T00:28:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -110,7 +110,7 @@ msgctxt "header.aria.primary"
 msgid "primary"
 msgstr ""
 
-#: src/components/VHeader/VHeaderInternal.vue:21
+#: src/components/VHeader/VHeaderInternal.vue:22
 #: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:3
 msgctxt "header.aria.menu"
 msgid "menu"
@@ -199,6 +199,10 @@ msgstr ""
 
 msgctxt "navigation.api"
 msgid "API"
+msgstr ""
+
+msgctxt "navigation.terms"
+msgid "Terms"
 msgstr ""
 
 msgctxt "navigation.privacy"
@@ -1201,12 +1205,12 @@ msgctxt "browsePage.contentLink.audio.countMore"
 msgid "See over ###localeCount### audio found for ###query###."
 msgstr ""
 
-#: src/components/VLoadMore.vue:108
+#: src/components/VLoadMore.vue:110
 msgctxt "browsePage.load"
 msgid "Load more results"
 msgstr ""
 
-#: src/components/VLoadMore.vue:107
+#: src/components/VLoadMore.vue:109
 msgctxt "browsePage.loading"
 msgid "Loading..."
 msgstr ""
@@ -1342,7 +1346,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:178
+#: src/components/VImageCell/VImageCell.vue:180
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -1476,12 +1480,12 @@ msgctxt "mediaDetails.reuse.copyLicense.plain"
 msgid "Plain text"
 msgstr ""
 
-#: src/components/VCopyButton.vue:11
+#: src/components/VCopyButton.vue:12
 msgctxt "mediaDetails.reuse.copyLicense.copyText"
 msgid "Copy text"
 msgstr ""
 
-#: src/components/VCopyButton.vue:14
+#: src/components/VCopyButton.vue:15
 msgctxt "mediaDetails.reuse.copyLicense.copied"
 msgid "Copied!"
 msgstr ""
@@ -1851,7 +1855,7 @@ msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:523
+#: src/components/VAudioTrack/VAudioTrack.vue:546
 #: src/components/VAudioTrack/VGlobalAudioTrack.vue:79
 msgctxt "audioTrack.ariaLabel"
 msgid "Audio: ###title###"
@@ -1863,7 +1867,7 @@ msgid "Audio: ###title### - interactive player - press the space bar to play and
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:520
+#: src/components/VAudioTrack/VAudioTrack.vue:543
 msgctxt "audioTrack.ariaLabelInteractiveSeekable"
 msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track."
 msgstr ""
@@ -1993,13 +1997,13 @@ msgctxt "interpunct"
 msgid "•"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportPopover.vue:15
+#: src/components/VContentReport/VContentReportPopover.vue:14
 #: src/components/VExternalSearch/VExternalSearchForm.vue:49
 msgctxt "modal.close"
 msgid "Close"
 msgstr ""
 
-#: src/components/VModal/VModalContent.vue:39
+#: src/components/VModal/VModalContent.vue:54
 msgctxt "modal.ariaClose"
 msgid "Close the modal"
 msgstr ""
@@ -2015,7 +2019,7 @@ msgctxt "modal.closeContentSettings"
 msgid "Close the content settings menu"
 msgstr ""
 
-#: src/components/VHeader/VHeaderInternal.vue:61
+#: src/components/VHeader/VHeaderInternal.vue:62
 msgctxt "modal.closePagesMenu"
 msgid "Close the pages menu"
 msgstr ""
@@ -2103,7 +2107,7 @@ msgid "See all audio"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VContentSwitcher/VSearchTypeButton.vue:7
+#: src/components/VContentSwitcher/VSearchTypeButton.vue:8
 msgctxt "searchType.selectLabel"
 msgid "Select a content type: ###type###"
 msgstr ""
@@ -2232,7 +2236,7 @@ msgstr ""
 
 #: src/components/VImageCell/VImageCell.vue:30
 #: src/components/VImageCell/VImageCell.vue:49
-#: src/components/VImageCell/VImageCell.vue:177
+#: src/components/VImageCell/VImageCell.vue:179
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
