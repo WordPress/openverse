@@ -1107,7 +1107,7 @@ jobs:
         run: python generate_report.py
 
       - name: Send report
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: ${{ steps.report.outputs.payload }}
         env:
