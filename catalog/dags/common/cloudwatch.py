@@ -53,7 +53,7 @@ class CloudWatchWrapper:
 
 
 def enable_or_disable_alarms(enable):
-    toggle = Variable.get("TOGGLE_CLOUDWATCH_ALARMS", True)
+    toggle = Variable.get("TOGGLE_CLOUDWATCH_ALARMS", True, deserialize_json=True)
     if not toggle:
         raise AirflowSkipException("TOGGLE_CLOUDWATCH_ALARMS is set to False.")
 
