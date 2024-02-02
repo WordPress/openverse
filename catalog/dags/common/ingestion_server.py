@@ -8,6 +8,7 @@ from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
+from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
 
 from common.constants import (
@@ -111,6 +112,7 @@ def trigger_task(
     model: str,
     data: dict | None = None,
     http_conn_id: str = "data_refresh",
+    trigger_rule: TriggerRule = TriggerRule.ALL_SUCCESS,
 ) -> HttpOperator:
     data = {
         **(data or {}),
@@ -124,6 +126,7 @@ def trigger_task(
         data=data,
         response_check=lambda response: response.status_code == 202,
         response_filter=response_filter_status_check_endpoint,
+        trigger_rule=trigger_rule,
     )
 
 

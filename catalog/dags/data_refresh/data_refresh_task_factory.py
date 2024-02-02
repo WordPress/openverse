@@ -149,7 +149,10 @@ def create_data_refresh_task_group(
         # completion. This task copies the media table for the given model from the
         # Catalog into the API DB and builds the elasticsearch index. The new table
         # and index are not promoted until a later step.
-        with TaskGroup(group_id="ingest_upstream") as ingest_upstream_tasks:
+        with TaskGroup(
+            group_id="ingest_upstream",
+            default_args={"trigger_rule": TriggerRule.NONE_FAILED},
+        ) as ingest_upstream_tasks:
             ingestion_server.trigger_and_wait_for_task(
                 action="ingest_upstream",
                 model=data_refresh.media_type,
@@ -219,6 +222,7 @@ def create_data_refresh_task_group(
                     get_current_index.task_id, "return_value"
                 ),
             },
+            trigger_rule=TriggerRule.NONE_FAILED,
         )
         tasks.append(delete_old_index)
 
