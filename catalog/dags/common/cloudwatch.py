@@ -4,6 +4,7 @@ https://github.com/awsdocs/aws-doc-sdk-examples/blob/54c3b82d8f9a12a862f9fcec449
 """
 import logging
 
+from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
 from botocore.exceptions import ClientError
@@ -52,8 +53,7 @@ class CloudWatchWrapper:
 def enable_or_disable_alarms(enable):
     toggle = Variable.get("TOGGLE_CLOUDWATCH_ALARMS", True)
     if not toggle:
-        logger.info("Skipping toggling CloudWatch alarms.")
-        return
+        raise AirflowSkipException("TOGGLE_CLOUDWATCH_ALARMS is set to False.")
 
     cloudwatch = AwsBaseHook(
         aws_conn_id="aws_default",
