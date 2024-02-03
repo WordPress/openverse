@@ -36,10 +36,11 @@
         />
       </template>
 
-      <template #audio-control="audioControlProps">
+      <template #audio-control="{ size: controlSize, ...audioControlProps }">
         <VAudioControl
           ref="audioControlRef"
           :status="status"
+          :size="controlSize"
           v-bind="audioControlProps"
           @toggle="handleToggle"
         />
@@ -87,6 +88,8 @@ import type { AudioDetail } from "~/types/media"
 import { defineEvent } from "~/types/emits"
 
 import type { AudioTrackClickEvent } from "~/types/events"
+
+import { keycodes } from "~/constants/key-codes"
 
 import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
@@ -148,6 +151,7 @@ export default defineComponent({
     "shift-tab": defineEvent<[KeyboardEvent]>(),
     interacted: defineEvent<[Omit<AudioInteractionData, "component">]>(),
     mousedown: defineEvent<[AudioTrackClickEvent]>(),
+    keydown: defineEvent<[KeyboardEvent]>(),
     focus: defineEvent<[FocusEvent]>(),
   },
   setup(props, { emit }) {
@@ -566,6 +570,9 @@ export default defineComponent({
       onTogglePlayback: togglePlayback,
     })
     const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === keycodes.Enter) {
+        emit("keydown", event)
+      }
       seekable.listeners.keydown(event)
     }
 

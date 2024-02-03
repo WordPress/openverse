@@ -58,7 +58,6 @@ import { validateUUID } from "~/utils/query-utils"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
@@ -72,16 +71,23 @@ import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 definePageMeta({
   layout: "content-layout",
-  middleware: singleResultMiddleware,
 })
-const singleResultStore = useSingleResultStore()
 
 const route = useRoute()
+const audioId = computed(() => firstParam(route.params.id))
+
+if (!audioId.value || !validateUUID(audioId.value)) {
+  console.log("!!! Audio ID not found")
+  showError({
+    statusCode: 404,
+    message: "Invalid audio id",
+    fatal: true,
+  })
+}
+const singleResultStore = useSingleResultStore()
 
 const audio = ref<AudioDetail | null>(singleResultStore.audio)
 const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
-
-const audioId = computed(() => firstParam(route.params.id))
 
 const { isHidden, reveal } = useSensitiveMedia(audio.value)
 

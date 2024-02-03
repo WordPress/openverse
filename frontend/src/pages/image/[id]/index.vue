@@ -94,7 +94,6 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import { singleResultMiddleware } from "~/middleware/single-result"
 
 import { validateUUID } from "~/utils/query-utils"
 
@@ -114,8 +113,18 @@ import errorImage from "~/assets/image_not_available_placeholder.png"
 
 definePageMeta({
   layout: "content-layout",
-  middleware: singleResultMiddleware,
 })
+const route = useRoute()
+const imageId = computed(() => firstParam(route.params.id))
+
+if (!imageId.value || !validateUUID(imageId.value)) {
+  showError({
+    statusCode: 404,
+    message: "Invalid image id",
+    fatal: true,
+  })
+}
+
 const singleResultStore = useSingleResultStore()
 
 const image = ref<ImageDetail | null>(singleResultStore.image)
@@ -132,8 +141,6 @@ onMounted(() => {
 const imageSrc = ref(image.value?.thumbnail)
 
 const isLoadingThumbnail = ref(true)
-const route = useRoute()
-const imageId = computed(() => firstParam(route.params.id))
 
 const { reveal, isHidden } = useSensitiveMedia(image.value)
 
