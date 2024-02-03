@@ -1,5 +1,10 @@
 <template>
-  <section>
+  <VErrorSection
+    v-if="fetchingError"
+    :fetching-error="fetchingError"
+    class="w-full py-10"
+  />
+  <section v-else>
     <header v-if="supported" class="my-0 md:mb-8 md:mt-4">
       <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">{{
         searchTerm
@@ -17,11 +22,31 @@
       :is-sidebar-visible="isFilterSidebarVisible"
       :is-for-tab="isSearchTypeSupported(searchType) ? searchType : 'all'"
     />
+    <footer :class="isAllView ? 'mb-6 mt-4 lg:mb-10' : 'mt-4'">
+      <VLoadMore
+        v-if="isSearchTypeSupported(searchType)"
+        :is-fetching="isFetching"
+        :search-term="searchTerm"
+        :search-type="searchType"
+        @load-more="handleLoadMore"
+      />
+    </footer>
+    <VExternalSearchForm
+      v-if="!isAllView"
+      :search-term="searchTerm"
+      :is-supported="supported"
+      :has-no-results="false"
+    />
+    <VScrollButton
+      v-show="showScrollButton"
+      :is-filter-sidebar-visible="isFilterSidebarVisible"
+      data-testid="scroll-button"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, isSearchTypeSupported } from "#imports"
+import { definePageMeta, isSearchTypeSupported, useAsyncSearch } from "#imports"
 
 import { computed, inject, ref } from "vue"
 import { storeToRefs } from "pinia"
@@ -31,10 +56,14 @@ import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
 
-import { IsSidebarVisibleKey } from "~/types/provides"
+import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
+import VScrollButton from "~/components/VScrollButton.vue"
+import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
+import VLoadMore from "~/components/VLoadMore.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 definePageMeta({
   layout: "search-layout",
@@ -43,7 +72,14 @@ definePageMeta({
 const mediaStore = useMediaStore()
 const searchStore = useSearchStore()
 
+const {
+  searchTerm,
+  searchType,
+  searchTypeIsSupported: supported,
+} = storeToRefs(searchStore)
+
 const isFilterSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
+const showScrollButton = inject(IsHeaderScrolledKey, ref(false))
 
 // I don't know *exactly* why this is necessary, but without it
 // transitioning from the homepage to this page breaks the
@@ -51,12 +87,6 @@ const isFilterSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
 // properly. It is something related to Pinia, Nuxt SSR,
 // hydration and Vue reactives. Hopefully fixed in Nuxt 3.
 searchStore.refreshRecentSearches()
-
-const {
-  searchTerm,
-  searchType,
-  searchTypeIsSupported: supported,
-} = storeToRefs(searchStore)
 
 const results = computed(() => {
   const st = searchType.value
@@ -67,7 +97,7 @@ const results = computed(() => {
     : []
 })
 
-const isFetching = computed(() => mediaStore.fetchState.isFetching)
-
 const isAllView = computed(() => searchType.value === ALL_MEDIA)
+
+const { handleLoadMore, fetchingError, isFetching } = await useAsyncSearch()
 </script>

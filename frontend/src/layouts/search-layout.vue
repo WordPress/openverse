@@ -38,34 +38,7 @@
         tabindex="-1"
         class="browse-page flex w-full flex-col px-6 lg:px-10"
       >
-        <VErrorSection
-          v-if="fetchingError"
-          :fetching-error="fetchingError"
-          class="w-full py-10"
-        />
-        <template v-else>
-          <slot :is-filter-sidebar-visible="isSidebarVisible" />
-          <footer :class="isAllView ? 'mb-6 mt-4 lg:mb-10' : 'mt-4'">
-            <VLoadMore
-              v-if="isSearchTypeSupported(searchType)"
-              :is-fetching="isFetching"
-              :search-term="searchTerm"
-              :search-type="searchType"
-              @load-more="handleLoadMore"
-            />
-          </footer>
-          <VExternalSearchForm
-            v-if="!isAllView"
-            :search-term="searchTerm"
-            :is-supported="supported"
-            :has-no-results="false"
-          />
-          <VScrollButton
-            v-show="showScrollButton"
-            :is-filter-sidebar-visible="isSidebarVisible"
-            data-testid="scroll-button"
-          />
-        </template>
+        <slot />
       </div>
       <VFooter
         mode="content"
@@ -77,17 +50,13 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref, watch } from "vue"
 import { useScroll } from "@vueuse/core"
-import { storeToRefs } from "pinia"
 
 import { useUiStore } from "~/stores/ui"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
-import { useAsyncSearch } from "~/composables/use-async-search"
-
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
 import { skipToContentTargetId } from "~/constants/window"
-import { ALL_MEDIA } from "~/constants/media"
 
 import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
@@ -95,10 +64,6 @@ import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
 import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
-import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
-import VScrollButton from "~/components/VScrollButton.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
-import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -107,13 +72,8 @@ import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchFor
 const uiStore = useUiStore()
 const searchStore = useSearchStore()
 
-const {
-  searchTerm,
-  searchType,
-  searchTypeIsSupported: supported,
-} = storeToRefs(searchStore)
-
 const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
+const supported = computed(() => isSearchTypeSupported(searchStore.searchType))
 
 /**
  * Filters sidebar is visible only on desktop layouts
@@ -151,9 +111,6 @@ const headerBorder = computed(() =>
     ? "border-b-dark-charcoal-20"
     : "border-b-tx"
 )
-const isAllView = computed(() => searchType.value === ALL_MEDIA)
-
-const { handleLoadMore, fetchingError, isFetching } = await useAsyncSearch()
 </script>
 
 <style scoped>

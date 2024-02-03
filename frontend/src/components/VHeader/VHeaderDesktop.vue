@@ -19,12 +19,14 @@
         class="hidden group-focus-within:flex"
         @click="clearSearchTerm"
       />
-      <span
-        v-show="Boolean(searchStatus)"
-        class="info mx-4 hidden whitespace-nowrap text-xs text-dark-charcoal-70 group-focus-within:hidden group-hover:text-dark-charcoal group-focus:text-dark-charcoal lg:block"
+      <ClientOnly>
+        <span
+          v-show="Boolean(searchStatus)"
+          class="info mx-4 hidden whitespace-nowrap text-xs text-dark-charcoal-70 group-focus-within:hidden group-hover:text-dark-charcoal group-focus:text-dark-charcoal lg:block"
+        >
+          {{ searchStatus }}
+        </span></ClientOnly
       >
-        {{ searchStatus }}
-      </span>
     </VSearchBar>
 
     <VSearchTypePopover :show-label="isXl" placement="header" />
