@@ -5,14 +5,14 @@
   >
     <section class="mx-auto max-w-2xl px-8 text-sm leading-relaxed">
       <h1 class="heading-5 mb-2">
-        {{ $t("sensitiveContent.singleResult.title") }}
+        {{ t("sensitiveContent.singleResult.title") }}
       </h1>
       <p class="mb-2">
-        {{ $t("sensitiveContent.singleResult.explanation") }}
+        {{ t("sensitiveContent.singleResult.explanation") }}
       </p>
       <p v-for="reason in media.sensitivity" :key="reason">
         {{
-          $t(`sensitiveContent.reasons.${camelCase(reason)}`, {
+          t(`sensitiveContent.reasons.${camelCase(reason)}`, {
             openverse: "Openverse",
           })
         }}
@@ -26,7 +26,7 @@
         <template #openverse>Openverse</template>
         <template #link>
           <VLink class="text-pink hover:underline" href="/sensitive-content">{{
-            $t("sensitiveContent.singleResult.link")
+            t("sensitiveContent.singleResult.link")
           }}</VLink>
           {{ " " }}
         </template>
@@ -43,7 +43,7 @@
           :href="backToSearchPath || '/'"
           @mousedown="handleBack"
         >
-          {{ $t("singleResult.back") }}
+          {{ t("singleResult.back") }}
         </VButton>
         <VButton
           size="large"
@@ -52,7 +52,7 @@
           has-icon-end
           @click="handleShow"
         >
-          {{ $t("sensitiveContent.singleResult.show") }}
+          {{ t("sensitiveContent.singleResult.show") }}
           <VIcon name="eye-open" />
         </VButton>
       </div>
@@ -60,59 +60,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import { PropType, computed, defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useAnalytics } from "~/composables/use-analytics"
 import { camelCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
-import { defineEvent } from "~/types/emits"
-
 import VLink from "~/components/VLink.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VSafetyWall",
-  components: {
-    VButton,
-    VIcon,
-    VLink,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-  emits: {
-    reveal: defineEvent(),
-  },
-  setup(props, { emit }) {
-    const searchStore = useSearchStore()
-    const backToSearchPath = computed(() => searchStore.backToSearchPath)
+const props = defineProps<{
+  media: AudioDetail | ImageDetail
+}>()
+const emit = defineEmits(["reveal"])
 
-    const { sendCustomEvent } = useAnalytics()
-    const handleBack = () => {
-      sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
-        id: props.media.id,
-        sensitivities: props.media.sensitivity.join(","),
-      })
-    }
-    const handleShow = () => {
-      emit("reveal")
-    }
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    return {
-      backToSearchPath,
-      handleBack,
-      handleShow,
-      camelCase,
-    }
-  },
-})
+const searchStore = useSearchStore()
+const backToSearchPath = computed(() => searchStore.backToSearchPath)
+
+const { sendCustomEvent } = useAnalytics()
+const handleBack = () => {
+  sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
+    id: props.media.id,
+    sensitivities: props.media.sensitivity.join(","),
+  })
+}
+const handleShow = () => {
+  emit("reveal")
+}
 </script>
 
 <style scoped>

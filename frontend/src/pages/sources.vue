@@ -1,14 +1,14 @@
 <template>
   <VContentPage>
     <h1>
-      {{ $t("sources.title") }}
+      {{ t("sources.title") }}
     </h1>
 
     <h2>
-      {{ $t("sources.ccContent.where", { openverse: "Openverse" }) }}
+      {{ t("sources.ccContent.where", { openverse: "Openverse" }) }}
     </h2>
     <p>
-      {{ $t("sources.ccContent.content", { openverse: "Openverse" }) }}
+      {{ t("sources.ccContent.content", { openverse: "Openverse" }) }}
     </p>
     <i18n-t scope="global" keypath="sources.ccContent.provider" tag="p">
       <template #flickr>
@@ -16,7 +16,7 @@
       </template>
       <template #smithsonian>
         <VLink href="https://www.si.edu/">{{
-          $t("sources.ccContent.smithsonian")
+          t("sources.ccContent.smithsonian")
         }}</VLink>
       </template>
     </i18n-t>
@@ -27,31 +27,31 @@
       </template>
       <template #linkApi>
         <VLink href="https://pro.europeana.eu/page/apis">{{
-          $t("sources.ccContent.europeanaApi")
+          t("sources.ccContent.europeanaApi")
         }}</VLink>
       </template>
     </i18n-t>
 
     <h2>
-      {{ $t("sources.newContent.next") }}
+      {{ t("sources.newContent.next") }}
     </h2>
     <p>
-      {{ $t("sources.newContent.integrate") }}
+      {{ t("sources.newContent.integrate") }}
     </p>
     <ul>
       <li>
-        {{ $t("sources.newContent.impact") }}
+        {{ t("sources.newContent.impact") }}
       </li>
       <li>
-        {{ $t("sources.newContent.reuse") }}
+        {{ t("sources.newContent.reuse") }}
       </li>
       <li>
-        {{ $t("sources.newContent.totalItems") }}
+        {{ t("sources.newContent.totalItems") }}
       </li>
     </ul>
 
     <h2>
-      {{ $t("sources.suggestions") }}
+      {{ t("sources.suggestions") }}
     </h2>
 
     <p class="mt-5 inline-block">
@@ -65,19 +65,19 @@
         has-icon-end
         href="https://github.com/WordPress/openverse/issues/new?assignees=&labels=%F0%9F%9A%A6+status%3A+awaiting+triage%2C+%F0%9F%A7%B9+status%3A+ticket+work+required%2C+%E2%98%81%EF%B8%8F+provider%3A+any&template=new-source-suggestion.md&title=[Source+Suggestion]+Insert+source+name+here"
       >
-        {{ $t("sources.issueButton") }}
+        {{ t("sources.issueButton") }}
       </VButton>
     </p>
 
     <i18n-t scope="global" keypath="sources.detail" tag="p">
       <template #singleName>
         <strong>
-          {{ $t("sources.singleName") }}
+          {{ t("sources.singleName") }}
         </strong>
       </template>
     </i18n-t>
     <template v-for="(mediaType, i) in supportedMediaTypes" :key="mediaType">
-      <h3>{{ $t(`sources.heading.${mediaType}`) }}</h3>
+      <h3>{{ t(`sources.heading.${mediaType}`) }}</h3>
       <VSourcesTable
         :media="mediaType"
         class="mt-4"
@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from "#imports"
+import { definePageMeta, useNuxtApp } from "#imports"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -100,4 +100,8 @@ import VSourcesTable from "~/components/VSourcesTable.vue"
 definePageMeta({
   layout: "content-layout",
 })
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

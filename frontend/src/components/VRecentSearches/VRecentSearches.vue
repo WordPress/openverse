@@ -10,17 +10,17 @@
     >
       <!-- Left margin to align with the text of recent searches. -->
       <span class="category mx-2 my-1">
-        {{ $t("recentSearches.heading") }}
+        {{ t("recentSearches.heading") }}
       </span>
       <VButton
         v-show="entries.length"
         variant="transparent-gray"
         class="label-bold"
         size="small"
-        :aria-label="$t('recentSearches.clear.label')"
+        :aria-label="t('recentSearches.clear.label')"
         @click="handleClear"
       >
-        {{ $t("recentSearches.clear.text") }}
+        {{ t("recentSearches.clear.text") }}
       </VButton>
     </div>
 
@@ -28,7 +28,7 @@
       v-if="entries.length"
       id="recent-searches-list"
       role="listbox"
-      :aria-label="$t('recentSearches.heading')"
+      :aria-label="t('recentSearches.heading')"
     >
       <!-- eslint-disable vuejs-accessibility/interactive-supports-focus Combobox descendants only have visual focus. -->
       <!-- eslint-disable vuejs-accessibility/click-events-have-key-events Key events handled by input field of combobox. -->
@@ -47,19 +47,17 @@
       <!-- eslint-enable -->
     </ul>
     <span v-else class="description-regular mx-2 my-3">
-      {{ $t("recentSearches.none") }}
+      {{ t("recentSearches.none") }}
     </span>
 
     <span class="caption-regular mx-2 my-3 text-dark-charcoal-70">
-      {{ $t("recentSearches.disclaimer") }}
+      {{ t("recentSearches.disclaimer") }}
     </span>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, type PropType } from "vue"
-
-import { defineEvent } from "~/types/emits"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import VButton from "~/components/VButton.vue"
 
@@ -67,47 +65,38 @@ import VButton from "~/components/VButton.vue"
  * List the recent searches of the user allowing them to go back to a previous
  * search. These searches are saved locally and never shared with the server.
  */
-export default defineComponent({
-  name: "VRecentSearches",
-  components: { VButton },
-  props: {
+withDefaults(
+  defineProps<{
     /**
      * the list of saved past searches
      */
-    entries: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
+    entries?: string[]
     /**
      * the index of the currently selected entry
      */
-    selectedIdx: {
-      type: Number,
-    },
+    selectedIdx?: number
     /**
      * the desktop popover is bordered, and the mobile element is not
      */
-    bordered: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    select: defineEvent<[number]>(),
-    clear: defineEvent(),
-  },
-  setup(_, { emit }) {
-    const handleClick = (idx: number) => {
-      emit("select", idx)
-    }
-    const handleClear = () => {
-      emit("clear")
-    }
+    bordered?: boolean
+  }>(),
+  {
+    entries: () => [] as string[],
+    bordered: true,
+  }
+)
+const emit = defineEmits<{
+  select: [number]
+  clear: []
+}>()
 
-    return {
-      handleClick,
-      handleClear,
-    }
-  },
-})
+const {
+  $i18n: { t },
+} = useNuxtApp()
+const handleClick = (idx: number) => {
+  emit("select", idx)
+}
+const handleClear = () => {
+  emit("clear")
+}
 </script>

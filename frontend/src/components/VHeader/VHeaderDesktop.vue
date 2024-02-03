@@ -14,7 +14,7 @@
       <VSearchBarButton
         v-show="searchTerm !== ''"
         icon="close-small"
-        :label="$t('browsePage.searchForm.clear')"
+        :label="t('browsePage.searchForm.clear')"
         variant="filled-white"
         class="hidden group-focus-within:flex"
         @click="clearSearchTerm"
@@ -43,6 +43,8 @@
   </header>
 </template>
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { computed, inject, ref } from "vue"
 
 import { useMediaStore } from "~/stores/media"
@@ -69,6 +71,9 @@ import type { Ref } from "vue"
 /**
  * The desktop search header.
  */
+const {
+  $i18n: { t },
+} = useNuxtApp()
 const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
 const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
 

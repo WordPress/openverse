@@ -1,7 +1,7 @@
 <template>
   <VContentPage>
     <h1 id="feedback">
-      {{ $t("feedback.title") }}
+      {{ t("feedback.title") }}
     </h1>
     <i18n-t scope="global" keypath="feedback.intro" tag="p">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
@@ -20,17 +20,17 @@
       <VTabs label="#feedback" variant="plain" :selected-id="tabs[0]" manual>
         <template #tabs>
           <VTab v-for="tab in tabs" :id="tab" :key="tab">
-            {{ $t(`feedback.${tab}`) }}
+            {{ t(`feedback.${tab}`) }}
           </VTab>
         </template>
         <VTabPanel v-for="tab in tabs" :id="tab" :key="tab">
           <iframe
             class="h-[1200px] w-full border-0"
             :src="forms[tab]"
-            :aria-label="$t(`feedback.aria.${tab}`)"
-            :title="$t(`feedback.aria.${tab}`)"
+            :aria-label="t(`feedback.aria.${tab}`)"
+            :title="t(`feedback.aria.${tab}`)"
           >
-            {{ $t("feedback.loading") }}
+            {{ t("feedback.loading") }}
           </iframe>
         </VTabPanel>
       </VTabs>
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from "#imports"
+import { definePageMeta, useNuxtApp } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -61,4 +61,8 @@ const tabs = Object.keys(forms) as (keyof typeof forms)[]
 definePageMeta({
   layout: "content-layout",
 })
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

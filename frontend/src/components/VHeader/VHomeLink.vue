@@ -2,7 +2,7 @@
   <VButton
     as="VLink"
     href="/"
-    :aria-label="$t('header.homeLink', { openverse: 'Openverse' })"
+    :aria-label="t('header.homeLink', { openverse: 'Openverse' })"
     variant="transparent-tx"
     size="disabled"
     :class="
@@ -20,8 +20,8 @@
   </VButton>
 </template>
 
-<script lang="ts">
-import { type PropType, defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import VButton from "~/components/VButton.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
@@ -30,23 +30,19 @@ import VSvg from "~/components/VSvg/VSvg.vue"
  * The home link for the internal header. Shows the Openverse logo and wordmark,
  * and does not have a loading state.
  */
-export default defineComponent({
-  name: "VHomeLink",
-  components: {
-    VButton,
-    VSvg,
-  },
-  props: {
+withDefaults(
+  defineProps<{
     /**
      * In `light` mode, the links are white and the background is dark charcoal.
      * In `dark` mode, the links are dark charcoal and the background is transparent.
      *
      * @default 'light'
      */
-    variant: {
-      type: String as PropType<"light" | "dark">,
-      default: "light",
-    },
-  },
-})
+    variant: "light" | "dark"
+  }>(),
+  {}
+)
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

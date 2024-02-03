@@ -22,7 +22,7 @@
       :external-icon-size="6"
       :href="url"
       @click="sendAnalyticsEvent"
-      >{{ $t(`collection.link.${collection}`) }}</VButton
+      >{{ t(`collection.link.${collection}`) }}</VButton
     >
     <p
       class="results caption-regular md:label-regular mt-2 text-dark-charcoal-70 md:mt-0"
@@ -32,8 +32,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import { useUiStore } from "~/stores/ui"
 import type { CollectionParams } from "~/types/search"
@@ -58,112 +60,92 @@ const icons = {
 /**
  * Renders the header of a tag/creator/source collection page.
  */
-export default defineComponent({
-  name: "VCollectionHeader",
-  components: { VIcon, VButton },
-  props: {
-    collectionParams: {
-      type: Object as PropType<CollectionParams>,
-      required: true,
-    },
-    creatorUrl: {
-      type: String,
-    },
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const mediaStore = useMediaStore()
-    const providerStore = useProviderStore()
-    const uiStore = useUiStore()
+const props = defineProps<{
+  collectionParams: CollectionParams
+  creatorUrl?: string
+  mediaType: SupportedMediaType
+}>()
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const iconName = computed(() => icons[props.collectionParams.collection])
-    const collection = computed(() => props.collectionParams.collection)
+const mediaStore = useMediaStore()
+const providerStore = useProviderStore()
+const uiStore = useUiStore()
 
-    const sourceName = computed(() => {
-      if (props.collectionParams.collection === "tag") {
-        return ""
-      }
-      return providerStore.getProviderName(
-        props.collectionParams.source,
-        props.mediaType
-      )
-    })
+const iconName = computed(() => icons[props.collectionParams.collection])
+const collection = computed(() => props.collectionParams.collection)
 
-    const title = computed(() => {
-      if (props.collectionParams.collection === "tag") {
-        return props.collectionParams.tag
-      } else if (props.collectionParams.collection === "creator") {
-        return props.collectionParams.creator
-      }
-      return sourceName.value
-    })
-
-    const url = computed(() => {
-      if (props.collectionParams.collection === "tag") {
-        return undefined
-      } else if (props.collectionParams.collection === "creator") {
-        return props.creatorUrl
-      }
-      return providerStore.getSourceUrl(
-        props.collectionParams.source,
-        props.mediaType
-      )
-    })
-    const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
-
-    const resultsLabel = computed(() => {
-      if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
-        return ""
-      }
-      const resultsCount = mediaStore.results[props.mediaType].count
-      if (props.collectionParams.collection === "creator") {
-        return getI18nCollectionResultCountLabel(
-          resultsCount,
-          props.mediaType,
-          "creator",
-          { source: sourceName.value }
-        )
-      }
-      return getI18nCollectionResultCountLabel(
-        resultsCount,
-        props.mediaType,
-        props.collectionParams.collection
-      )
-    })
-
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
-
-    const { sendCustomEvent } = useAnalytics()
-
-    const sendAnalyticsEvent = () => {
-      if (props.collectionParams.collection === "tag") {
-        return
-      }
-
-      const eventName =
-        props.collectionParams.collection === "creator"
-          ? "VISIT_CREATOR_LINK"
-          : "VISIT_SOURCE_LINK"
-      sendCustomEvent(eventName, {
-        url: url.value,
-        source: props.collectionParams.source,
-      })
-    }
-
-    return {
-      collection,
-      title,
-      resultsLabel,
-      url,
-      iconName,
-      isMd,
-      sendAnalyticsEvent,
-    }
-  },
+const sourceName = computed(() => {
+  if (props.collectionParams.collection === "tag") {
+    return ""
+  }
+  return providerStore.getProviderName(
+    props.collectionParams.source,
+    props.mediaType
+  )
 })
+
+const title = computed(() => {
+  if (props.collectionParams.collection === "tag") {
+    return props.collectionParams.tag
+  } else if (props.collectionParams.collection === "creator") {
+    return props.collectionParams.creator
+  }
+  return sourceName.value
+})
+
+const url = computed(() => {
+  if (props.collectionParams.collection === "tag") {
+    return undefined
+  } else if (props.collectionParams.collection === "creator") {
+    return props.creatorUrl
+  }
+  return providerStore.getSourceUrl(
+    props.collectionParams.source,
+    props.mediaType
+  )
+})
+const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
+
+const resultsLabel = computed(() => {
+  if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
+    return ""
+  }
+  const resultsCount = mediaStore.results[props.mediaType].count
+  if (props.collectionParams.collection === "creator") {
+    return getI18nCollectionResultCountLabel(
+      resultsCount,
+      props.mediaType,
+      "creator",
+      { source: sourceName.value }
+    )
+  }
+  return getI18nCollectionResultCountLabel(
+    resultsCount,
+    props.mediaType,
+    props.collectionParams.collection
+  )
+})
+
+const isMd = computed(() => uiStore.isBreakpoint("md"))
+
+const { sendCustomEvent } = useAnalytics()
+
+const sendAnalyticsEvent = () => {
+  if (props.collectionParams.collection === "tag") {
+    return
+  }
+
+  const eventName =
+    props.collectionParams.collection === "creator"
+      ? "VISIT_CREATOR_LINK"
+      : "VISIT_SOURCE_LINK"
+  sendCustomEvent(eventName, {
+    url: url.value,
+    source: props.collectionParams.source,
+  })
+}
 </script>
 
 <style scoped>

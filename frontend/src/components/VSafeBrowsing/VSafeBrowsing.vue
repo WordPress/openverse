@@ -2,7 +2,7 @@
   <section id="safe-browsing" aria-labelledby="safe-browsing-heading">
     <header class="relative mb-6 flex items-center justify-between">
       <h4 id="safe-browsing-heading" class="caption-bold uppercase">
-        {{ $t("filters.safeBrowsing.title") }}
+        {{ t("filters.safeBrowsing.title") }}
       </h4>
     </header>
     <i18n-t
@@ -13,7 +13,7 @@
     >
       <template #sensitive>
         <VLink :href="sensitivityPath">{{
-          $t("filters.safeBrowsing.sensitive")
+          t("filters.safeBrowsing.sensitive")
         }}</VLink>
       </template>
     </i18n-t>
@@ -30,14 +30,14 @@
             @change="toggle.switchFn"
           >
             <span class="label-bold">{{
-              $t(`filters.safeBrowsing.toggles.${toggle.name}.title`)
+              t(`filters.safeBrowsing.toggles.${toggle.name}.title`)
             }}</span>
           </VCheckbox>
           <p
             class="label-regular mt-2"
             :class="{ 'text-dark-charcoal-40': isDisabled(toggle.name) }"
           >
-            {{ $t(`filters.safeBrowsing.toggles.${toggle.name}.desc`) }}
+            {{ t(`filters.safeBrowsing.toggles.${toggle.name}.desc`) }}
           </p>
         </div>
       </fieldset>
@@ -45,10 +45,10 @@
   </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useNuxtApp } from "#imports"
 
-import { computed, defineComponent } from "vue"
+import { computed } from "vue"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
@@ -63,60 +63,49 @@ import VLink from "~/components/VLink.vue"
  * that may contain sensitive content and subsequently blurring them to prevent
  * accidental exposure or showing them directly.
  */
-export default defineComponent({
-  name: "VSafeBrowsing",
-  components: { VCheckbox, VLink },
-  setup() {
-    const localePath = useNuxtApp().$localePath
+const {
+  $i18n: { t },
+  $localePath,
+} = useNuxtApp()
 
-    const sensitivityPath = computed(() => localePath("/sensitive-content"))
+const sensitivityPath = computed(() => $localePath("/sensitive-content"))
 
-    const featureFlagStore = useFeatureFlagStore()
-    const { sendCustomEvent } = useAnalytics()
+const featureFlagStore = useFeatureFlagStore()
+const { sendCustomEvent } = useAnalytics()
 
-    let fetchSensitive = computed(() =>
-      featureFlagStore.isOn("fetch_sensitive")
-    )
-    let setFetchSensitive = ({ checked }: { checked: boolean }) => {
-      featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
-      sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
+let fetchSensitive = computed(() => featureFlagStore.isOn("fetch_sensitive"))
+let setFetchSensitive = ({ checked }: { checked: boolean }) => {
+  featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
+  sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
 
-      if (!checked) {
-        // If sensitive content is not fetched, there is nothing to blur/unblur.
-        // In this case, we reset blurring to its default value.
-        setBlurSensitive({ checked: true })
-      }
-    }
+  if (!checked) {
+    // If sensitive content is not fetched, there is nothing to blur/unblur.
+    // In this case, we reset blurring to its default value.
+    setBlurSensitive({ checked: true })
+  }
+}
 
-    const uiStore = useUiStore()
-    let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
-    let setBlurSensitive = ({ checked }: { checked: boolean }) => {
-      uiStore.setShouldBlurSensitive(checked)
-      sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
-    }
+const uiStore = useUiStore()
+let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
+let setBlurSensitive = ({ checked }: { checked: boolean }) => {
+  uiStore.setShouldBlurSensitive(checked)
+  sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
+}
 
-    const toggles = [
-      {
-        name: "fetchSensitive",
-        state: fetchSensitive,
-        switchFn: setFetchSensitive,
-      },
-      {
-        name: "blurSensitive",
-        state: blurSensitive,
-        switchFn: setBlurSensitive,
-      },
-    ]
-
-    const isDisabled = (name: string) =>
-      name === "blurSensitive" && !fetchSensitive.value
-
-    return {
-      sensitivityPath,
-
-      toggles,
-      isDisabled,
-    }
+const toggles = [
+  {
+    name: "fetchSensitive",
+    state: fetchSensitive,
+    switchFn: setFetchSensitive,
   },
-})
+  {
+    name: "blurSensitive",
+    state: blurSensitive,
+    switchFn: setBlurSensitive,
+  },
+]
+
+const isDisabled = (name: string) => {
+  return name === "blurSensitive" && !fetchSensitive.value
+}
 </script>

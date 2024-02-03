@@ -12,16 +12,21 @@
         class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-dark-charcoal"
         :class="{ 'blur-text': shouldBlur }"
       >
-        {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
+        {{ shouldBlur ? t("sensitiveContent.title.audio") : audio.title }}
       </VLink>
     </div>
-    <slot name="audio-control" size="medium" layout="global" />
+    <slot
+      name="audio-control"
+      v-bind="{ size: 'medium', layout: 'global' } as const"
+    />
     <slot name="controller" :usable-frac="1" />
   </div>
 </template>
 
-<script lang="ts">
-import { toRefs, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { toRefs } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 
@@ -30,27 +35,15 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VGlobalLayout",
-  components: {
-    VAudioThumbnail,
-    VLink,
-  },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { audio } = toRefs(props)
-    const { isHidden: shouldBlur } = useSensitiveMedia(audio)
+const props = defineProps<{
+  audio: AudioDetail
+}>()
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    return {
-      shouldBlur,
-    }
-  },
-})
+const { audio } = toRefs(props)
+const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 </script>
 
 <style scoped>

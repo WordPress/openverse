@@ -129,6 +129,12 @@ export default defineNuxtConfig({
    * Disable debug mode to prevent excessive timing logs.
    */
   debug: false,
+  experimental: {
+    /**
+     * Improve router performance, see https://nuxt.com/blog/v3-10#%EF%B8%8F-build-time-route-metadata
+     */
+    scanPageMeta: true,
+  },
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",

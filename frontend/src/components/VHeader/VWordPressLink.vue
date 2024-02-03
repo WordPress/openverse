@@ -1,7 +1,7 @@
 <template>
   <VLink
     href="https://wordpress.org"
-    :aria-label="$t('footer.wordpressAffiliation', { wordpress: 'WordPress' })"
+    :aria-label="t('footer.wordpressAffiliation', { wordpress: 'WordPress' })"
     :class="mode === 'light' ? 'text-dark-charcoal' : 'text-white'"
     class="hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
   >
@@ -18,6 +18,8 @@
   </VLink>
 </template>
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import VLink from "~/components/VLink.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
@@ -27,4 +29,7 @@ withDefaults(
   }>(),
   { mode: "light" }
 )
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

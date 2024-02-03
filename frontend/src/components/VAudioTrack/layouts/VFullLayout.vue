@@ -22,7 +22,10 @@
       <div
         class="row-start-1 flex justify-between gap-x-6 sm:col-start-2 sm:mt-1"
       >
-        <slot name="audio-control" layout="full" size="medium" />
+        <slot
+          name="audio-control"
+          v-bind="{ layout: 'full', size: 'medium' } as const"
+        />
         <VGetMediaButton
           :media="audio"
           media-type="audio"
@@ -36,7 +39,10 @@
       class="mx-auto grid grid-cols-1 grid-rows-[auto,auto] gap-6 p-6 pb-0 lg:mb-6 lg:max-w-5xl lg:flex-nowrap"
     >
       <div class="row-start-1 flex justify-between gap-x-6 sm:col-start-2">
-        <slot name="audio-control" layout="full" size="medium" />
+        <slot
+          name="audio-control"
+          v-bind="{ layout: 'full', size: 'medium' } as const"
+        />
         <VGetMediaButton
           :media="audio"
           media-type="audio"
@@ -74,11 +80,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import type { AudioDetail } from "~/types/media"
-import { audioFeatures, AudioSize, AudioStatus } from "~/constants/audio"
+import {
+  audioFeatures,
+  type AudioSize,
+  type AudioStatus,
+} from "~/constants/audio"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
@@ -86,38 +96,17 @@ import VLink from "~/components/VLink.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
 
-export default defineComponent({
-  name: "VFullLayout",
-  components: { VMediaInfo, VGetMediaButton, VLink },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-    size: {
-      type: String as PropType<AudioSize>,
-    },
-    status: {
-      type: String as PropType<AudioStatus>,
-    },
-    currentTime: {
-      type: Number,
-      required: true,
-    },
-  },
-  setup() {
-    const featureFlagStore = useFeatureFlagStore()
-    const additionalSearchViews = computed(() =>
-      featureFlagStore.isOn("additional_search_views")
-    )
+defineProps<{
+  audio: AudioDetail
+  size?: AudioSize
+  status?: AudioStatus
+  currentTime: number
+}>()
 
-    return {
-      audioFeatures,
-
-      additionalSearchViews,
-    }
-  },
-})
+const featureFlagStore = useFeatureFlagStore()
+const additionalSearchViews = computed(() =>
+  featureFlagStore.isOn("additional_search_views")
+)
 </script>
 
 <style>

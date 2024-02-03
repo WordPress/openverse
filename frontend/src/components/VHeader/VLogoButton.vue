@@ -2,7 +2,7 @@
   <VButton
     as="VLink"
     href="/"
-    :aria-label="$t('header.homeLink', { openverse: 'Openverse' })"
+    :aria-label="t('header.homeLink', { openverse: 'Openverse' })"
     variant="transparent-tx"
     size="large"
     icon-only
@@ -14,8 +14,8 @@
     />
   </VButton>
 </template>
-<script>
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
 import VButton from "~/components/VButton.vue"
@@ -24,14 +24,16 @@ import VButton from "~/components/VButton.vue"
  * The home link for the search header. Shows the Openverse logo and the loading state.
  * When the results are being fetched, the logo is animated.
  */
-export default defineComponent({
-  name: "VLogoButton",
-  components: { VLogoLoader, VButton },
-  props: {
-    isFetching: {
-      type: Boolean,
-      default: false,
-    },
-  },
-})
+withDefaults(
+  defineProps<{
+    isFetching: boolean
+  }>(),
+  {
+    isFetching: false,
+  }
+)
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

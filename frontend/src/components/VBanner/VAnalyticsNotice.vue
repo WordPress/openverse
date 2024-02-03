@@ -1,45 +1,32 @@
 <template>
   <VNotificationBanner
-    v-bind="$attrs"
     id="analytics"
     nature="info"
-    :close-button-label="$t('notification.analytics.close')"
+    :close-button-label="t('notification.analytics.close')"
     @close="$emit('close')"
   >
     <i18n-t scope="global" tag="span" keypath="notification.analytics.text">
       <template #link>
         <VLink :href="privacyPath" class="text-curr underline">{{
-          $t("notification.analytics.link")
+          t("notification.analytics.link")
         }}</VLink>
       </template>
     </i18n-t>
   </VNotificationBanner>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useNuxtApp } from "#imports"
 
-import { computed, defineComponent } from "vue"
-
-import { defineEvent } from "~/types/emits"
+import { computed } from "vue"
 
 import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
-export default defineComponent({
-  name: "VAnalyticsNotice",
-  components: { VLink, VNotificationBanner },
-  inheritAttrs: false,
-  emits: {
-    close: defineEvent(),
-  },
-  setup() {
-    const localePath = useNuxtApp().$localePath
-    const privacyPath = computed(() => localePath("/privacy"))
-
-    return {
-      privacyPath,
-    }
-  },
-})
+defineEmits(["close"])
+const {
+  $i18n: { t },
+  $localePath,
+} = useNuxtApp()
+const privacyPath = computed(() => $localePath("/privacy"))
 </script>

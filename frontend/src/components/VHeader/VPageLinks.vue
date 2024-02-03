@@ -16,7 +16,7 @@
       @click="onClick"
     >
       <div class="flex w-full flex-row justify-between">
-        <span class="pe-2">{{ $t(page.name) }}</span>
+        <span class="pe-2">{{ t(page.name) }}</span>
         <VIcon
           v-if="isLinkExternal(page)"
           name="external-link"
@@ -38,7 +38,7 @@
         ]"
         :href="page.link"
         @click="onClick"
-        >{{ $t(page.name)
+        >{{ t(page.name)
         }}<VIcon
           v-if="isLinkExternal(page)"
           name="external-link"
@@ -51,6 +51,8 @@
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { computed } from "vue"
 
 import usePages from "~/composables/use-pages"
@@ -80,6 +82,9 @@ const props = withDefaults(
   }>(),
   { mode: "light", navLinkClasses: "", variant: "links", isInModal: false }
 )
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
 const emit = defineEmits(["open", "close"])
 

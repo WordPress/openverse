@@ -5,22 +5,21 @@
     has-icon-end
     class="label-bold"
   >
-    <span class="md:hidden">{{ $t("mediaDetails.contentReport.short") }}</span>
+    <span class="md:hidden">{{ t("mediaDetails.contentReport.short") }}</span>
     <span class="hidden md:inline">{{
-      $t("mediaDetails.contentReport.long")
+      t("mediaDetails.contentReport.long")
     }}</span>
     <VIcon name="flag" />
   </VButton>
 </template>
 
-<script>
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
-export default defineComponent({
-  name: "VContentReportButton",
-  components: { VButton, VIcon },
-})
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

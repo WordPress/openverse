@@ -85,7 +85,7 @@
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.9.0",
-    "@nuxtjs/i18n": "8.0.1",
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge@8.0.1-28448146.2145ce5",
     "@playwright/test": "1.40.1",
     "@testing-library/user-event": "^14.5.2",
     "@testing-library/vue": "^8.0.1",

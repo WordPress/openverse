@@ -3,7 +3,7 @@
     variant="filled-pink"
     size="large"
     class="label-bold relative ms-auto"
-    @click="$emit('click')"
+    @click="emit('click')"
   >
     <!-- Loading animation -->
     <span
@@ -30,22 +30,22 @@
         />
       </svg>
       <span class="sr-only">
-        {{ $t("header.loading") }}
+        {{ t("header.loading") }}
       </span>
     </span>
 
     <!-- To preserve the button width when state changes, this element is not
     removed from the DOM, only hidden and muted. -->
     <span :class="{ 'opacity-0': isFetching }" :aria-hidden="isFetching">
-      {{ $t("header.seeResults") }}
+      {{ t("header.seeResults") }}
     </span>
   </VButton>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { defineEvent } from "~/types/emits"
+import { computed } from "vue"
 
 import VButton from "~/components/VButton.vue"
 
@@ -53,36 +53,33 @@ import VButton from "~/components/VButton.vue"
  * This button dismisses the open modal for changing content types or applying
  * filters and takes the user back to the results.
  */
-export default defineComponent({
-  name: "VShowResultsButton",
-  components: { VButton },
-  props: {
+withDefaults(
+  defineProps<{
     /**
-     * whether the results are being updated behind the open modal
+     * Whether the button should display the loading animation.
      */
-    isFetching: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    click: defineEvent(),
-  },
-  setup() {
-    const diameter = 8 // px
-    const spacing = 8 // px
+    isFetching: boolean
+  }>(),
+  {
+    isFetching: false,
+  }
+)
+const emit = defineEmits<{
+  /**
+   * Emitted when the button is clicked.
+   */
+  click: []
+}>()
 
-    const radius = computed(() => diameter / 2)
-    const width = computed(() => diameter * 3 + spacing * 2)
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    return {
-      diameter,
-      spacing,
-      radius,
-      width,
-    }
-  },
-})
+const diameter = 8 // px
+const spacing = 8 // px
+
+const radius = computed(() => diameter / 2)
+const width = computed(() => diameter * 3 + spacing * 2)
 </script>
 
 <style>

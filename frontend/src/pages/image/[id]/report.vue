@@ -27,7 +27,7 @@
         size="medium"
         class="label-bold"
       >
-        {{ $t("report.imageDetails") }}
+        {{ t("report.imageDetails") }}
       </VButton>
     </figure>
 
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useAsyncData, useI18n, useRoute } from "#imports"
+import { definePageMeta, useAsyncData, useNuxtApp, useRoute } from "#imports"
 
 import { ref } from "vue"
 
@@ -60,20 +60,19 @@ import VContentReportForm from "~/components/VContentReport/VContentReportForm.v
 definePageMeta({
   layout: "content-layout",
 })
-
+const { $i18n } = useNuxtApp()
+const { t } = $i18n
 const route = useRoute()
 const singleResultStore = useSingleResultStore()
 
 const image = ref<ImageDetail>()
 const attributionMarkup = ref<string>()
 
-const i18n = useI18n({ useScope: "global" })
-
 await useAsyncData("image-report", async () => {
   const imageId = firstParam(route.params.id)
   if (imageId) {
     image.value = await singleResultStore.fetch(IMAGE, imageId)
-    attributionMarkup.value = getAttribution(image.value, i18n, {
+    attributionMarkup.value = getAttribution(image.value, $i18n, {
       includeIcons: false,
     })
   } else {

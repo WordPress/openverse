@@ -2,7 +2,7 @@
   <VPopover
     ref="popoverEl"
     :hide-on-click-outside="false"
-    :label="$t('mediaDetails.contentReport.long')"
+    :label="t('mediaDetails.contentReport.long')"
     placement="bottom-end"
   >
     <template #trigger="{ a11yProps }">
@@ -11,7 +11,7 @@
     <template #default="{ close }">
       <div class="grid w-80 items-stretch justify-stretch">
         <VIconButton
-          :label="$t('modal.close')"
+          :label="t('modal.close')"
           :icon-props="{ name: 'close' }"
           variant="transparent-gray"
           size="small"
@@ -29,8 +29,8 @@
   </VPopover>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
@@ -39,22 +39,14 @@ import VContentReportForm from "~/components/VContentReport/VContentReportForm.v
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-export default defineComponent({
-  name: "VContentReportPopover",
-  components: {
-    VIconButton,
-    VContentReportButton,
-    VContentReportForm,
-    VPopover,
-  },
-  props: {
-    /**
-     * the media item to report; This can either be an audio track or an image.
-     */
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-})
+defineProps<{
+  /**
+   * the media item to report; This can either be an audio track or an image.
+   */
+  media: AudioDetail | ImageDetail
+}>()
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

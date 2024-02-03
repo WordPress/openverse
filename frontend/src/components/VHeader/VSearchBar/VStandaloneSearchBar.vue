@@ -18,10 +18,10 @@
         ref="inputRef"
         type="search"
         name="q"
-        :placeholder="$t('hero.search.placeholder')"
+        :placeholder="t('hero.search.placeholder')"
         class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 focus:outline-none"
         :aria-label="
-          $t('search.searchBarLabel', {
+          t('search.searchBarLabel', {
             openverse: 'Openverse',
           })
         "
@@ -33,10 +33,10 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, ref } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { defineEvent } from "~/types/emits"
+import { ref } from "vue"
 
 import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
 
@@ -47,46 +47,39 @@ import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
  * hydrating the server-rendered code, so the value entered before full hydration
  * is not removed.
  */
-export default defineComponent({
-  name: "VStandaloneSearchBar",
-  components: { VSearchButton },
-  props: {
-    route: {
-      type: String as PropType<"home" | "404">,
-      default: "home",
-    },
+withDefaults(
+  defineProps<{
+    route?: "home" | "404"
     /**
      * Search bar should not have a focus box when a popover is open.
      */
-    hasPopover: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    submit: defineEvent<[string]>(),
-  },
-  expose: ["focusInput"],
-  setup(_, { emit }) {
-    const inputRef = ref<HTMLInputElement | null>(null)
+    hasPopover?: boolean
+  }>(),
+  {
+    route: "home",
+    hasPopover: false,
+  }
+)
 
-    // Only emit `submit` if the input value is not blank
-    const handleSearch = () => {
-      const searchTerm = inputRef.value?.value.trim()
-      if (searchTerm) {
-        emit("submit", searchTerm)
-      }
-    }
+const emit = defineEmits<{
+  submit: [string]
+}>()
+const inputRef = ref<HTMLInputElement | null>(null)
 
-    const focusInput = () => {
-      inputRef.value?.focus()
-    }
+// Only emit `submit` if the input value is not blank
+const handleSearch = () => {
+  const searchTerm = inputRef.value?.value.trim()
+  if (searchTerm) {
+    emit("submit", searchTerm)
+  }
+}
 
-    return {
-      inputRef,
-      handleSearch,
-      focusInput,
-    }
-  },
-})
+const focusInput = () => {
+  inputRef.value?.focus()
+}
+
+defineExpose({ focusInput })
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

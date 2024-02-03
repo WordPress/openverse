@@ -45,13 +45,13 @@
           class="flex items-center justify-between pe-5 ps-7 pt-5 sm:pe-7 sm:ps-9 sm:pt-7"
         >
           <h2 class="heading-6" tabindex="-1">
-            {{ $t("externalSources.title") }}
+            {{ t("externalSources.title") }}
           </h2>
           <VIconButton
             size="small"
             :icon-props="{ name: 'close' }"
             variant="transparent-gray"
-            :label="$t('modal.close')"
+            :label="t('modal.close')"
             @click="close"
           />
         </header>
@@ -61,12 +61,12 @@
   </section>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed, ref } from "vue"
 
 import { storeToRefs } from "pinia"
-
-import { defineEvent } from "~/types/emits"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
@@ -81,61 +81,40 @@ import VIcon from "~/components/VIcon/VIcon.vue"
 import VModal from "~/components/VModal/VModal.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
-export default defineComponent({
-  name: "VExternalSearchForm",
-  components: {
-    VModal,
-    VIconButton,
-    VIcon,
-    VButton,
-    VExternalSourceList,
-  },
-  props: {
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    isSupported: {
-      type: Boolean,
-      default: false,
-    },
-    hasNoResults: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    tab: defineEvent<[KeyboardEvent]>(),
-  },
-  setup() {
-    const sectionRef = ref<HTMLElement | null>(null)
-    const searchStore = useSearchStore()
-    const uiStore = useUiStore()
+withDefaults(
+  defineProps<{
+    searchTerm: string
+    isSupported?: boolean
+    hasNoResults?: boolean
+  }>(),
+  {
+    isSupported: false,
+    hasNoResults: true,
+  }
+)
 
-    const { sendCustomEvent } = useAnalytics()
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const mediaStore = useMediaStore()
-    const { currentPage } = storeToRefs(mediaStore)
+const sectionRef = ref<HTMLElement | null>(null)
+const searchStore = useSearchStore()
+const uiStore = useUiStore()
 
-    const handleModalOpen = () => {
-      sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
-        searchType: searchStore.searchType,
-        query: searchStore.searchTerm,
-        resultPage: currentPage.value || 1,
-      })
-    }
+const { sendCustomEvent } = useAnalytics()
 
-    const { externalSourcesType } = useExternalSources()
+const mediaStore = useMediaStore()
+const { currentPage } = storeToRefs(mediaStore)
 
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
+const handleModalOpen = () => {
+  sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+    searchType: searchStore.searchType,
+    query: searchStore.searchTerm,
+    resultPage: currentPage.value || 1,
+  })
+}
 
-    return {
-      externalSourcesType,
-      sectionRef,
-      isMd,
+const { externalSourcesType } = useExternalSources()
 
-      handleModalOpen,
-    }
-  },
-})
+const isMd = computed(() => uiStore.isBreakpoint("md"))
 </script>

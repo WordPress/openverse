@@ -2,10 +2,10 @@
   <div class="license-explanation w-70 max-w-xs p-6">
     <h5 class="text-base font-semibold">
       <template v-if="isLicense(license)">{{
-        $t("filters.licenseExplanation.licenseDefinition")
+        t("filters.licenseExplanation.licenseDefinition")
       }}</template>
       <template v-else>{{
-        $t("filters.licenseExplanation.markDefinition", {
+        t("filters.licenseExplanation.markDefinition", {
           mark: license.toUpperCase(),
         })
       }}</template>
@@ -28,7 +28,7 @@
     >
       <template #readMore>
         <VLink :href="`${getLicenseUrl(license)}`">{{
-          $t("filters.licenseExplanation.more.readMore")
+          t("filters.licenseExplanation.more.readMore")
         }}</VLink>
       </template>
       <template #mark>{{ license.toUpperCase() }}</template>
@@ -36,8 +36,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import { getLicenseUrl, isLicense } from "~/utils/license"
 
@@ -50,26 +50,15 @@ import VLink from "~/components/VLink.vue"
  * Renders the explanation of the license passed to it by breaking it down to
  * its constituent clauses.
  */
-export default defineComponent({
-  name: "VLicenseExplanation",
-  components: {
-    VLicenseElements,
-    VLink,
-  },
-  props: {
-    /**
-     * the code of the license whose elements need to be explained
-     */
-    license: {
-      type: String as PropType<License>,
-      required: true,
-    },
-  },
-  setup() {
-    return {
-      isLicense,
-      getLicenseUrl,
-    }
-  },
-})
+
+defineProps<{
+  /**
+   * the code of the license whose elements need to be explained
+   */
+  license: License
+}>()
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

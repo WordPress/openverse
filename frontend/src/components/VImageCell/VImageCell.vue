@@ -28,7 +28,7 @@
             { 'scale-150 blur-image': shouldBlur },
           ]"
           :alt="
-            shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
+            shouldBlur ? `${t('sensitiveContent.title.image')}` : image.title
           "
           :src="imageUrl"
           :width="imgWidth"
@@ -47,7 +47,7 @@
         >
           <h2 class="sr-only">
             {{
-              shouldBlur ? `${$t("sensitiveContent.title.image")}` : image.title
+              shouldBlur ? `${t("sensitiveContent.title.image")}` : image.title
             }}
           </h2>
           <VLicense
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n, useRoute, useSearchStore } from "#imports"
+import { useNuxtApp, useRoute, useSearchStore } from "#imports"
 
 import { computed } from "vue"
 
@@ -118,12 +118,15 @@ const props = withDefaults(
   }
 )
 
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
 const isSquare = computed(() => props.aspectRatio === "square")
 const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
   imageSize: { width: props.image.width, height: props.image.height },
   isSquare,
 })
-const i18n = useI18n({ useScope: "global" })
 
 const imageUrl = computed(() => {
   // TODO: check if we have blurry panorama thumbnails
@@ -168,8 +171,8 @@ const getImgDimension = (event: Event) => {
 
 const contextSensitiveTitle = computed(() => {
   return shouldBlur.value
-    ? i18n.t("sensitiveContent.title.image")
-    : i18n.t("browsePage.aria.imageTitle", {
+    ? t("sensitiveContent.title.image")
+    : t("browsePage.aria.imageTitle", {
         title: props.image.title,
       })
 })

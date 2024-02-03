@@ -1,10 +1,10 @@
 <template>
   <VContentPage>
     <h1>
-      {{ $t("about.title", { openverse: "Openverse" }) }}
+      {{ t("about.title", { openverse: "Openverse" }) }}
     </h1>
     <p>
-      {{ $t("about.description.content", { openverse: "Openverse" }) }}
+      {{ t("about.description.content", { openverse: "Openverse" }) }}
     </p>
 
     <i18n-t scope="global" keypath="about.collection.content" tag="p">
@@ -18,27 +18,27 @@
       <template #openverse>Openverse</template>
       <template #frontend>
         <VLink href="https://github.com/wordpress/openverse-frontend/">{{
-          $t("about.planning.frontend", { openverse: "Openverse" })
+          t("about.planning.frontend", { openverse: "Openverse" })
         }}</VLink>
       </template>
       <template #api>
         <VLink href="https://github.com/wordpress/openverse-api/">{{
-          $t("about.planning.api", { openverse: "Openverse" })
+          t("about.planning.api", { openverse: "Openverse" })
         }}</VLink>
       </template>
       <template #catalog>
         <VLink href="https://github.com/wordpress/openverse-catalog/">{{
-          $t("about.planning.catalog", { openverse: "Openverse" })
+          t("about.planning.catalog", { openverse: "Openverse" })
         }}</VLink>
       </template>
       <template #community>
         <VLink href="https://make.wordpress.org/openverse/">{{
-          $t("about.planning.community")
+          t("about.planning.community")
         }}</VLink>
       </template>
       <template #working>
         <VLink href="https://github.com/orgs/WordPress/projects/3">{{
-          $t("about.planning.working")
+          t("about.planning.working")
         }}</VLink>
       </template>
     </i18n-t>
@@ -62,62 +62,62 @@
       <template #openverse>Openverse</template>
       <template #terms>
         <VLink href="https://creativecommons.org/terms/">{{
-          $t("about.declaration.terms", { openverse: "Openverse" })
+          t("about.declaration.terms", { openverse: "Openverse" })
         }}</VLink>
       </template>
     </i18n-t>
 
     <h2 id="external-sources">
-      {{ $t("externalSourcesPage.title") }}
+      {{ t("externalSourcesPage.title") }}
     </h2>
 
     <i18n-t scope="global" keypath="externalSourcesPage.intro" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
-        <VLink href="/sources">{{ $t("externalSourcesPage.link") }}</VLink>
+        <VLink href="/sources">{{ t("externalSourcesPage.link") }}</VLink>
       </template>
     </i18n-t>
     <p>
-      {{ $t("externalSourcesPage.license", { openverse: "Openverse" }) }}
+      {{ t("externalSourcesPage.license", { openverse: "Openverse" }) }}
     </p>
     <p>
-      {{ $t("externalSourcesPage.explanation", { openverse: "Openverse" }) }}
+      {{ t("externalSourcesPage.explanation", { openverse: "Openverse" }) }}
     </p>
     <p>
-      {{ $t("externalSourcesPage.relationships", { openverse: "Openverse" }) }}
+      {{ t("externalSourcesPage.relationships", { openverse: "Openverse" }) }}
     </p>
     <h2>
-      {{ $t("externalSourcesPage.new.title") }}
+      {{ t("externalSourcesPage.new.title") }}
     </h2>
     <i18n-t scope="global" keypath="externalSourcesPage.new.content" tag="p">
       <template #issue>
         <VLink
           aria-label="issue"
           href="https://github.com/WordPress/openverse/issues"
-          >{{ $t("externalSourcesPage.new.issue") }}</VLink
+          >{{ t("externalSourcesPage.new.issue") }}</VLink
         >
       </template>
       <template #email>
         <VLink aria-label="email" href="mailto:openverse@wordpress.org">{{
-          $t("externalSourcesPage.new.email")
+          t("externalSourcesPage.new.email")
         }}</VLink>
       </template>
     </i18n-t>
     <h2>
-      {{ $t("externalSourcesPage.why.title") }}
+      {{ t("externalSourcesPage.why.title") }}
     </h2>
     <i18n-t scope="global" keypath="externalSourcesPage.why.content" tag="p">
       <template #old>
         <VLink
           aria-label="email"
           href="https://oldsearch.creativecommons.org"
-          >{{ $t("externalSourcesPage.why.old") }}</VLink
+          >{{ t("externalSourcesPage.why.old") }}</VLink
         >
       </template>
     </i18n-t>
 
     <p>
-      {{ $t("externalSourcesPage.why.new", { openverse: "Openverse" }) }}
+      {{ t("externalSourcesPage.why.new", { openverse: "Openverse" }) }}
     </p>
     <i18n-t
       scope="global"
@@ -126,9 +126,9 @@
     >
       <template #feedback>
         <VLink
-          :aria-label="$t('externalSourcesPage.why.ariaLabel')"
+          :aria-label="t('externalSourcesPage.why.ariaLabel')"
           href="/feedback"
-          >{{ $t("externalSourcesPage.why.feedbackLink") }}</VLink
+          >{{ t("externalSourcesPage.why.feedbackLink") }}</VLink
         >
       </template>
     </i18n-t>
@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from "#imports"
+import { definePageMeta, useNuxtApp } from "#imports"
 
 import VLink from "~/components/VLink.vue"
 import VContentPage from "~/components/VContentPage.vue"
@@ -144,4 +144,7 @@ import VContentPage from "~/components/VContentPage.vue"
 definePageMeta({
   layout: "content-layout",
 })
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

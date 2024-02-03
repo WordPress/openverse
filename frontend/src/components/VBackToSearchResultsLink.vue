@@ -11,12 +11,12 @@
     @mousedown="handleClick"
   >
     <VIcon name="chevron-back" :rtl-flip="true" />
-    {{ $t("singleResult.back") }}
+    {{ t("singleResult.back") }}
   </VButton>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSearchStore } from "~/stores/search"
@@ -28,38 +28,26 @@ import VButton from "~/components/VButton.vue"
  * This link takes the user from a single result back to the list of all
  * results. It only appears if the user navigated from the search results.
  */
-export default defineComponent({
-  components: {
-    VIcon,
-    VButton,
-  },
-  props: {
-    /**
-     * The unique ID of the media
-     */
-    id: {
-      type: String,
-      required: true,
-    },
-    href: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { sendCustomEvent } = useAnalytics()
-    const searchStore = useSearchStore()
 
-    const handleClick = () => {
-      sendCustomEvent("BACK_TO_SEARCH", {
-        id: props.id,
-        searchType: searchStore.searchType,
-      })
-    }
+const props = defineProps<{
+  /**
+   * The unique ID of the media
+   */
+  id: string
+  href: string
+}>()
 
-    return {
-      handleClick,
-    }
-  },
-})
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+const { sendCustomEvent } = useAnalytics()
+const searchStore = useSearchStore()
+
+const handleClick = () => {
+  sendCustomEvent("BACK_TO_SEARCH", {
+    id: props.id,
+    searchType: searchStore.searchType,
+  })
+}
 </script>

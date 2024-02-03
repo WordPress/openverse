@@ -3,11 +3,11 @@
     <h1
       class="mb-2 mt-auto text-[40px] font-light leading-tight lg:text-[63px]"
     >
-      {{ $t("hero.subtitle") }}
+      {{ t("hero.subtitle") }}
     </h1>
 
     <p class="text-base leading-relaxed">
-      {{ $t("hero.description") }}
+      {{ t("hero.description") }}
     </p>
 
     <VStandaloneSearchBar
@@ -68,14 +68,16 @@
         <VLink
           href="https://creativecommons.org/licenses/"
           class="text-dark-charcoal underline hover:text-dark-charcoal"
-          >{{ $t("hero.disclaimer.license") }}</VLink
+          >{{ t("hero.disclaimer.license") }}</VLink
         >
       </template>
     </i18n-t>
   </div>
 </template>
-<script lang="ts">
-import { computed, defineComponent, ref, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed, ref } from "vue"
 
 import type { SearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -92,97 +94,59 @@ import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.v
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 
-export default defineComponent({
-  name: "VHomepageContent",
-  components: {
-    VContentSettingsModalContent,
-    VSearchTypes,
-    VPopoverContent,
-    VSearchTypeButton,
-    VStandaloneSearchBar,
-    VLink,
-  },
-  props: {
-    handleSearch: {
-      type: Function as PropType<(query: string) => void>,
-      required: true,
-    },
-    searchType: {
-      type: String as PropType<SearchType>,
-      required: true,
-    },
-    setSearchType: {
-      type: Function as PropType<(searchType: SearchType) => void>,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const searchTypeButtonRef = ref<InstanceType<
-      typeof VSearchTypeButton
-    > | null>(null)
-    const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(
-      null
-    )
-    const nodeRef = computed(() => searchBarRef.value?.$el ?? null)
+const props = defineProps<{
+  handleSearch: (query: string) => void
+  searchType: SearchType
+  setSearchType: (searchType: SearchType) => void
+}>()
 
-    const { getSearchTypeProps } = useSearchType()
-    const uiStore = useUiStore()
+const emit = defineEmits(["open", "close"])
 
-    const searchTypeProps = computed(() => getSearchTypeProps())
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const isContentSwitcherVisible = ref(false)
+const searchTypeButtonRef = ref<InstanceType<typeof VSearchTypeButton> | null>(
+  null
+)
+const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(null)
+const nodeRef = computed(() => searchBarRef.value?.$el ?? null)
 
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
-    const isLg = computed(() => uiStore.isBreakpoint("lg"))
+const { getSearchTypeProps } = useSearchType()
+const uiStore = useUiStore()
 
-    const triggerElement = computed(
-      () => searchTypeButtonRef.value?.$el || null
-    )
+const searchTypeProps = computed(() => getSearchTypeProps())
 
-    const lockBodyScroll = computed(() => !isLg.value)
+const isContentSwitcherVisible = ref(false)
 
-    /**
-     * When a search type is selected, we close the popover or modal,
-     * and focus the search input.
-     *
-     * @param searchType
-     */
-    const handleSelect = (searchType: SearchType) => {
-      props.setSearchType(searchType)
-      searchBarRef.value?.focusInput()
-      closeContentSwitcher()
-    }
+const isSm = computed(() => uiStore.isBreakpoint("sm"))
+const isLg = computed(() => uiStore.isBreakpoint("lg"))
 
-    const {
-      close: closeContentSwitcher,
-      open: openContentSwitcher,
-      onTriggerClick,
-      triggerA11yProps,
-    } = useDialogControl({
-      visibleRef: isContentSwitcherVisible,
-      nodeRef,
-      lockBodyScroll,
-      emit,
-    })
+const triggerElement = computed(() => searchTypeButtonRef.value?.$el || null)
 
-    return {
-      searchTypeButtonRef,
-      searchBarRef,
+const lockBodyScroll = computed(() => !isLg.value)
 
-      isLg,
-      isSm,
+/**
+ * When a search type is selected, we close the popover or modal,
+ * and focus the search input.
+ *
+ * @param searchType
+ */
+const handleSelect = (searchType: SearchType) => {
+  props.setSearchType(searchType)
+  searchBarRef.value?.focusInput()
+  closeContentSwitcher()
+}
 
-      triggerElement,
-      onTriggerClick,
-      handleSelect,
-      searchTypeProps,
-      closeContentSwitcher,
-      openContentSwitcher,
-      isContentSwitcherVisible,
-      triggerA11yProps,
-
-      skipToContentTargetId,
-    }
-  },
+const {
+  close: closeContentSwitcher,
+  open: openContentSwitcher,
+  onTriggerClick,
+  triggerA11yProps,
+} = useDialogControl({
+  visibleRef: isContentSwitcherVisible,
+  nodeRef,
+  lockBodyScroll,
+  emit: emit as (event: string) => void,
 })
 </script>

@@ -16,7 +16,7 @@
         class="z-10 grow-[3] space-y-4 lg:space-y-6"
       >
         <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
-          {{ $t("404.title") }}
+          {{ t("404.title") }}
         </h1>
         <p class="label-bold lg:heading-6">
           <i18n-t scope="global" keypath="404.main" tag="span">
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { navigateTo } from "#imports"
+import { navigateTo, useNuxtApp } from "#imports"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -49,6 +49,9 @@ import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSea
 import VSvg from "~/components/VSvg/VSvg.vue"
 
 defineProps({ error: Object })
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
 const searchStore = useSearchStore()
 

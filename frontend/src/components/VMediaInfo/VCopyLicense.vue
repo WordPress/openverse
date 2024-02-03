@@ -1,13 +1,13 @@
 <template>
   <div>
     <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
-      {{ $t("mediaDetails.reuse.copyLicense.title") }}
+      {{ t("mediaDetails.reuse.copyLicense.title") }}
     </h3>
 
     <VTabs label="#copy-license-title" :selected-id="tabs[0]">
       <template #tabs>
         <VTab v-for="tab in tabs" :id="tab" :key="tab">
-          {{ $t(`mediaDetails.reuse.copyLicense.${tab}`) }}
+          {{ t(`mediaDetails.reuse.copyLicense.${tab}`) }}
         </VTab>
       </template>
       <VLicenseTabPanel
@@ -43,10 +43,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useI18n } from "#imports"
+<script setup lang="ts">
+import { useI18n, useNuxtApp } from "#imports"
 
-import { defineComponent, onBeforeUnmount, onMounted, PropType, ref } from "vue"
+import { onBeforeUnmount, onMounted, ref } from "vue"
 
 import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
 import type { Media } from "~/types/media"
@@ -58,52 +58,40 @@ import VLicenseTabPanel from "~/components/VMediaInfo/VLicenseTabPanel.vue"
 
 const tabs = ["rich", "html", "plain"] as const
 
-export default defineComponent({
-  name: "VCopyLicense",
-  components: { VTabs, VTab, VLicenseTabPanel },
-  props: {
-    media: {
-      type: Object as PropType<Media>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const richRef = ref<HTMLElement | null>(null)
+const props = defineProps<{
+  media: Media
+}>()
 
-    const i18n = useI18n({ useScope: "global" })
-    const getAttributionMarkup = (options?: AttributionOptions) =>
-      getAttribution(props.media, i18n, options)
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const { sendCustomEvent } = useAnalytics()
+const richRef = ref<HTMLElement | null>(null)
 
-    const sendAnalyticsEvent = (event: MouseEvent) => {
-      if (!event.currentTarget) {
-        return
-      }
+const i18n = useI18n({ useScope: "global" })
+const getAttributionMarkup = (options?: AttributionOptions) =>
+  getAttribution(props.media, i18n, options)
 
-      const url = (event.currentTarget as HTMLAnchorElement).href
-      sendCustomEvent("EXTERNAL_LINK_CLICK", { url })
-    }
+const { sendCustomEvent } = useAnalytics()
 
-    onMounted(() => {
-      richRef.value?.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", sendAnalyticsEvent)
-      })
-    })
+const sendAnalyticsEvent = (event: MouseEvent) => {
+  if (!event.currentTarget) {
+    return
+  }
 
-    onBeforeUnmount(() => {
-      richRef.value?.querySelectorAll("a").forEach((link) => {
-        link.removeEventListener("click", sendAnalyticsEvent)
-      })
-    })
+  const url = (event.currentTarget as HTMLAnchorElement).href
+  sendCustomEvent("EXTERNAL_LINK_CLICK", { url })
+}
 
-    return {
-      richRef,
+onMounted(() => {
+  richRef.value?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", sendAnalyticsEvent)
+  })
+})
 
-      tabs,
-
-      getAttributionMarkup,
-    }
-  },
+onBeforeUnmount(() => {
+  richRef.value?.querySelectorAll("a").forEach((link) => {
+    link.removeEventListener("click", sendAnalyticsEvent)
+  })
 })
 </script>

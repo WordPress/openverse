@@ -1,16 +1,14 @@
 <template>
   <label class="other-form block" for="description">
     <span class="flex flex-row items-center justify-between">
-      <span>{{ $t("mediaDetails.contentReport.form.other.note") }}</span>
-      <span>{{
-        $t(`mediaDetails.contentReport.form.${reason}.subLabel`)
-      }}</span>
+      <span>{{ t("mediaDetails.contentReport.form.other.note") }}</span>
+      <span>{{ t(`mediaDetails.contentReport.form.${reason}.subLabel`) }}</span>
     </span>
     <textarea
       id="description"
       v-model="text"
       class="mt-2 h-20 w-full border border-dark-charcoal-20 p-2 placeholder-dark-charcoal-70"
-      :placeholder="$t(`mediaDetails.contentReport.form.${reason}.placeholder`)"
+      :placeholder="t(`mediaDetails.contentReport.form.${reason}.placeholder`)"
       :required="isRequired"
       :minlength="isRequired ? 20 : 0"
       maxlength="500"
@@ -18,49 +16,44 @@
   </label>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { reasons, OTHER, ReportReason } from "~/constants/content-report"
-import { defineEvent } from "~/types/emits"
+import { computed } from "vue"
 
-export default defineComponent({
-  name: "VReportDescForm",
-  model: {
-    prop: "content",
-    event: "update:content",
-  },
-  props: {
+import { OTHER, ReportReason } from "~/constants/content-report"
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+const props = withDefaults(
+  defineProps<{
     /**
      * the contents of the textarea
      */
-    content: {
-      type: String,
-      default: "",
-    },
+    content?: string
     /**
      * the reason selected for reporting the content
      */
-    reason: {
-      type: String as PropType<ReportReason>,
-      validator: (val: ReportReason) => reasons.includes(val),
-    },
-  },
-  emits: {
-    "update:content": defineEvent<[string]>(),
-  },
-  setup(props, { emit }) {
-    const text = computed({
-      get: () => props.content,
-      set: (val) => emit("update:content", val),
-    })
+    reason: ReportReason
+  }>(),
+  {
+    content: "",
+  }
+)
 
-    const isRequired = computed(() => props.reason === OTHER)
+const emit = defineEmits<{
+  /**
+   * emits the updated content of the textarea
+   */
+  "update:content": [string]
+}>()
 
-    return {
-      isRequired,
-      text,
-    }
-  },
+const text = computed({
+  get: () => props.content,
+  set: (val) => emit("update:content", val),
 })
+
+const isRequired = computed(() => props.reason === OTHER)
 </script>

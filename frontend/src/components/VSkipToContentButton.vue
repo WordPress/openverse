@@ -5,23 +5,19 @@
     variant="filled-pink"
     size="medium"
     class="skip-button z-50 focus:fixed focus:absolute focus:ms-2 focus:mt-2"
-    >{{ $t("skipToContent") }}
+    >{{ t("skipToContent") }}
   </VButton>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { skipToContentTargetId } from "~/constants/window"
 
 import VButton from "~/components/VButton.vue"
 
-export default {
-  name: "VSkipToContentButton",
-  components: { VButton },
-  setup() {
-    return {
-      skipToContentTargetId,
-    }
-  },
-}
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>
 <style scoped>
 .skip-button:not(:focus) {

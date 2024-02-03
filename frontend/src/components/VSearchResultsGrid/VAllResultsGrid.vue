@@ -13,7 +13,7 @@
     <VSnackbar size="large" :is-visible="isSnackbarVisible">
       <i18n-t scope="global" keypath="allResults.snackbar.text" tag="p">
         <template #spacebar>
-          <kbd class="font-sans">{{ $t(`allResults.snackbar.spacebar`) }}</kbd>
+          <kbd class="font-sans">{{ t(`allResults.snackbar.spacebar`) }}</kbd>
         </template>
       </i18n-t>
     </VSnackbar>
@@ -24,7 +24,7 @@
           ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
           : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
       "
-      :aria-label="$t('browsePage.aria.results', { query: searchTerm })"
+      :aria-label="t('browsePage.aria.results', { query: searchTerm })"
     >
       <template v-for="item in results">
         <VImageCell
@@ -48,8 +48,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 import { storeToRefs } from "pinia"
 
 import { useMediaStore } from "~/stores/media"
@@ -65,52 +67,27 @@ import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
-export default defineComponent({
-  name: "VAllResultsGrid",
-  components: {
-    VSnackbar,
-    VImageCell,
-    VAudioResult,
-    VContentLink,
-  },
-  props: {
-    results: {
-      type: Array as PropType<(AudioDetail | ImageDetail)[]>,
-      required: true,
-    },
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-  },
-  setup() {
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
+defineProps<{
+  results: (AudioDetail | ImageDetail)[]
+  searchTerm: string
+}>()
 
-    const contentLinkPath = (mediaType: SupportedMediaType) =>
-      searchStore.getSearchPath({ type: mediaType })
+const {
+  $i18n: { t },
+} = useNuxtApp()
+const mediaStore = useMediaStore()
+const searchStore = useSearchStore()
 
-    const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
+const contentLinkPath = (mediaType: SupportedMediaType) =>
+  searchStore.getSearchPath({ type: mediaType })
 
-    const uiStore = useUiStore()
-    const {
-      areInstructionsVisible: isSnackbarVisible,
-      isFilterVisible: isSidebarVisible,
-    } = storeToRefs(uiStore)
+const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
 
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+const uiStore = useUiStore()
+const {
+  areInstructionsVisible: isSnackbarVisible,
+  isFilterVisible: isSidebarVisible,
+} = storeToRefs(uiStore)
 
-    return {
-      resultCounts,
-
-      contentLinkPath,
-
-      isSidebarVisible,
-      isSnackbarVisible,
-      isSm,
-
-      isDetail,
-    }
-  },
-})
+const isSm = computed(() => uiStore.isBreakpoint("sm"))
 </script>

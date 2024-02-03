@@ -1,5 +1,5 @@
 <template>
-  <div ref="searchBarEl" class="relative" :class="$attrs.class">
+  <div ref="searchBarEl" class="relative" :class="attrs.class">
     <!-- Form action is a fallback for when JavaScript is disabled. -->
     <form
       action="/search"
@@ -11,9 +11,9 @@
         ref="inputFieldRef"
         v-bind="nonClassAttrs"
         v-model="modelMedium"
-        :placeholder="placeholder || $t('hero.search.placeholder')"
+        :placeholder="placeholder || t('hero.search.placeholder')"
         class="search-field flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white focus:border-pink group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white"
-        :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
+        :label-text="t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         :size="size"
         field-id="search-bar"
@@ -54,12 +54,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed, ref, useAttrs } from "vue"
 
 import { onClickOutside } from "@vueuse/core"
-
-import { defineEvent } from "~/types/emits"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -80,179 +80,156 @@ import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
  * that fires a search request. The loading state and number of hits are also
  * displayed in the bar itself.
  */
-export default defineComponent({
-  name: "VSearchBar",
-  components: { VRecentSearches, VInputField, VSearchButton },
+defineOptions({
   inheritAttrs: false,
-  props: {
+})
+const props = withDefaults(
+  defineProps<{
     /**
      * the search query given as input to the field
      */
-    modelValue: {
-      type: String,
-      default: "",
-    },
-    size: {
-      type: String as PropType<keyof typeof FIELD_SIZES>,
-      required: true,
-    },
-    placeholder: {
-      type: String,
-      required: false,
-    },
+    modelValue?: string
+    size: keyof typeof FIELD_SIZES
+    placeholder?: string
+  }>(),
+  {
+    modelValue: "",
+    size: "medium",
+    placeholder: undefined,
+  }
+)
+const emit = defineEmits<{
+  "update:modelValue": [string]
+  submit: []
+}>()
+const attrs = useAttrs()
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+const searchBarEl = ref<HTMLElement | null>(null)
+const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
+
+const modelMedium = computed<string>({
+  get: () => props.modelValue ?? "",
+  set: (value: string) => {
+    emit("update:modelValue", value)
   },
-  emits: {
-    "update:modelValue": defineEvent<[string]>(),
-    submit: defineEvent(),
-  },
-  setup(props, { attrs, emit }) {
-    const searchBarEl = ref<HTMLElement | null>(null)
-    const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
+})
 
-    const modelMedium = computed<string>({
-      get: () => props.modelValue ?? "",
-      set: (value: string) => {
-        emit("update:modelValue", value)
-      },
-    })
+const handleSearch = () => {
+  emit("submit")
+}
 
-    const handleSearch = () => {
-      emit("submit")
-    }
+/* Recent searches */
+const searchStore = useSearchStore()
 
-    /* Recent searches */
-    const searchStore = useSearchStore()
+const isRecentVisible = ref(false)
+const recentClasses = computed(() => {
+  // Calculated by adding 8px to all heights defined in `VInputField.vue`.
+  const FIELD_OFFSETS = {
+    medium: "top-14",
+  } as const
+  return FIELD_OFFSETS[props.size]
+})
 
-    const isRecentVisible = ref(false)
-    const recentClasses = computed(() => {
-      // Calculated by adding 8px to all heights defined in `VInputField.vue`.
-      const FIELD_OFFSETS = {
-        medium: "top-14",
-      } as const
-      return FIELD_OFFSETS[props.size]
-    })
+/**
+ * Show and hide recent searches.
+ */
+const showRecentSearches = () => {
+  isRecentVisible.value = true
+}
+const hideRecentSearches = () => {
+  isRecentVisible.value = false
+}
+/**
+ * Hide recent searches on blur and click outside.
+ */
+const handleSearchBlur = () => {
+  if (!entries.value.length) {
+    hideRecentSearches()
+  }
+}
+onClickOutside(searchBarEl, hideRecentSearches)
 
-    /**
-     * Show and hide recent searches.
-     */
-    const showRecentSearches = () => {
-      isRecentVisible.value = true
-    }
-    const hideRecentSearches = () => {
-      isRecentVisible.value = false
-    }
-    /**
-     * Hide recent searches on blur and click outside.
-     */
-    const handleSearchBlur = () => {
-      if (!entries.value.length) {
-        hideRecentSearches()
-      }
-    }
-    onClickOutside(searchBarEl, hideRecentSearches)
+/**
+ * Refers to the current suggestion that has visual focus (not DOM focus)
+ * and is the active descendant. This should be set to `undefined` when the
+ * visual focus is on the input field.
+ */
+const selectedIdx = ref<number | undefined>(undefined)
+const entries = computed(() => searchStore.recentSearches)
 
-    /**
-     * Refers to the current suggestion that has visual focus (not DOM focus)
-     * and is the active descendant. This should be set to `undefined` when the
-     * visual focus is on the input field.
-     */
-    const selectedIdx = ref<number | undefined>(undefined)
-    const entries = computed(() => searchStore.recentSearches)
+const handleVerticalArrows = (event: KeyboardEvent) => {
+  event.preventDefault() // Prevent the cursor from moving horizontally.
+  const { key, altKey } = event
 
-    const handleVerticalArrows = (event: KeyboardEvent) => {
-      event.preventDefault() // Prevent the cursor from moving horizontally.
-      const { key, altKey } = event
+  showRecentSearches()
+  if (altKey) {
+    return
+  }
 
-      showRecentSearches()
-      if (altKey) {
-        return
-      }
+  // Shift selection (if Alt was not pressed with arrow keys)
+  let defaultValue: number
+  let offset: number
+  if (key == keycodes.ArrowUp) {
+    defaultValue = 0
+    offset = -1
+  } else {
+    defaultValue = -1
+    offset = 1
+  }
+  selectedIdx.value = cyclicShift(
+    selectedIdx.value ?? defaultValue,
+    offset,
+    0,
+    entries.value.length
+  )
+}
 
-      // Shift selection (if Alt was not pressed with arrow keys)
-      let defaultValue: number
-      let offset: number
-      if (key == keycodes.ArrowUp) {
-        defaultValue = 0
-        offset = -1
-      } else {
-        defaultValue = -1
-        offset = 1
-      }
-      selectedIdx.value = cyclicShift(
-        selectedIdx.value ?? defaultValue,
-        offset,
-        0,
-        entries.value.length
-      )
-    }
+const handleOtherKeys = (event: KeyboardEvent) => {
+  const { key } = event
 
-    const handleOtherKeys = (event: KeyboardEvent) => {
-      const { key } = event
+  if (key === keycodes.Enter && selectedIdx.value) {
+    // If a recent search is selected, populate its value into the input.
+    modelMedium.value = entries.value[selectedIdx.value]
+  }
 
-      if (key === keycodes.Enter && selectedIdx.value) {
-        // If a recent search is selected, populate its value into the input.
-        modelMedium.value = entries.value[selectedIdx.value]
-      }
+  // Hide the recent searches popover when the user presses Enter, Escape or Shift+Tab on the input.
+  if (
+    (key === keycodes.Tab && event.shiftKey) ||
+    ([keycodes.Escape, keycodes.Enter] as string[]).includes(key)
+  ) {
+    hideRecentSearches()
+  }
 
-      // Hide the recent searches popover when the user presses Enter, Escape or Shift+Tab on the input.
-      if (
-        (key === keycodes.Tab && event.shiftKey) ||
-        ([keycodes.Escape, keycodes.Enter] as string[]).includes(key)
-      ) {
-        hideRecentSearches()
-      }
+  selectedIdx.value = undefined // Lose visual focus from entries.
+}
+const handleKeydown = (event: KeyboardEvent) => {
+  const { key } = event
 
-      selectedIdx.value = undefined // Lose visual focus from entries.
-    }
-    const handleKeydown = (event: KeyboardEvent) => {
-      const { key } = event
+  return ([keycodes.ArrowUp, keycodes.ArrowDown] as string[]).includes(key)
+    ? handleVerticalArrows(event)
+    : handleOtherKeys(event)
+}
 
-      return ([keycodes.ArrowUp, keycodes.ArrowDown] as string[]).includes(key)
-        ? handleVerticalArrows(event)
-        : handleOtherKeys(event)
-    }
+/* Populate the input with the clicked entry and execute the search. */
+const handleSelect = (idx: number) => {
+  modelMedium.value = entries.value[idx]
 
-    /* Populate the input with the clicked entry and execute the search. */
-    const handleSelect = (idx: number) => {
-      modelMedium.value = entries.value[idx]
+  hideRecentSearches()
+  selectedIdx.value = undefined // Lose visual focus from entries.
+  handleSearch() // Immediately execute the search manually.
+}
+/* Clear all recent searches from the store. */
+const handleClear = () => {
+  inputFieldRef.value?.focusInput()
+  searchStore.clearRecentSearches()
+}
 
-      hideRecentSearches()
-      selectedIdx.value = undefined // Lose visual focus from entries.
-      handleSearch() // Immediately execute the search manually.
-    }
-    /* Clear all recent searches from the store. */
-    const handleClear = () => {
-      inputFieldRef.value?.focusInput()
-      searchStore.clearRecentSearches()
-    }
-
-    const nonClassAttrs = computed(() => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { class: _, ...rest } = attrs
-      return rest
-    })
-
-    return {
-      searchBarEl,
-      inputFieldRef,
-
-      handleSearch,
-      modelMedium,
-
-      showRecentSearches,
-      hideRecentSearches,
-      handleSearchBlur,
-
-      isRecentVisible,
-      recentClasses,
-      selectedIdx,
-      entries,
-      nonClassAttrs,
-
-      handleKeydown,
-      handleSelect,
-      handleClear,
-    }
-  },
+const nonClassAttrs = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { class: _, ...rest } = attrs
+  return rest
 })
 </script>

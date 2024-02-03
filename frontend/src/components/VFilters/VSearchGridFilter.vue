@@ -5,7 +5,7 @@
       class="relative mb-6 flex items-center justify-between"
     >
       <h4 id="filters-heading" class="caption-bold uppercase">
-        {{ $t("filterList.filterBy") }}
+        {{ t("filterList.filterBy") }}
       </h4>
       <VButton
         v-show="isAnyFilterApplied"
@@ -15,7 +15,7 @@
         class="label-bold absolute end-0 !text-pink"
         @click="clearFilters"
       >
-        {{ $t("filterList.clear") }}
+        {{ t("filterList.clear") }}
       </VButton>
     </header>
     <form class="filters-form">
@@ -31,10 +31,10 @@
   </section>
 </template>
 
-<script lang="ts">
-import { useI18n } from "#imports"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { computed, defineComponent } from "vue"
+import { computed } from "vue"
 import { storeToRefs } from "pinia"
 
 import { useSearchStore } from "~/stores/search"
@@ -45,77 +45,63 @@ import { useAnalytics } from "~/composables/use-analytics"
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
 import VButton from "~/components/VButton.vue"
 
-export default defineComponent({
-  name: "VSearchGridFilter",
-  components: {
-    VButton,
-    VFilterChecklist,
-  },
-  props: {
+withDefaults(
+  defineProps<{
     /**
      * Whether to show the header with the title and the clear button.
      */
-    showFilterHeader: {
-      type: Boolean,
-      default: true,
-    },
+    showFilterHeader?: boolean
     /**
      * When the filters are in the sidebar, we change the keyboard tabbing order:
      * the focus moves from the Filters button to the filter,
      * and from the last tabbable element to the main content on Tab,
      * and from the filters to the filters button on Shift Tab.
      */
-    changeTabOrder: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup() {
-    const searchStore = useSearchStore()
+    changeTabOrder?: boolean
+  }>(),
+  {
+    showFilterHeader: true,
+    changeTabOrder: true,
+  }
+)
 
-    const i18n = useI18n({ useScope: "global" })
+const searchStore = useSearchStore()
 
-    const { sendCustomEvent } = useAnalytics()
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const {
-      isAnyFilterApplied,
-      searchTerm,
-      searchType,
-      searchFilters: filters,
-    } = storeToRefs(searchStore)
+const { sendCustomEvent } = useAnalytics()
 
-    const filterTypes = computed(
-      () => Object.keys(filters.value) as FilterCategory[]
-    )
-    const filterTypeTitle = (filterType: FilterCategory) => {
-      return i18n.t(`filters.${filterType}.title`)
-    }
+const {
+  isAnyFilterApplied,
+  searchTerm,
+  searchType,
+  searchFilters: filters,
+} = storeToRefs(searchStore)
 
-    const toggleFilter = ({
-      filterType,
-      code,
-    }: {
-      filterType: FilterCategory
-      code: string
-    }) => {
-      const checked = searchStore.toggleFilter({ filterType, code })
-      sendCustomEvent("APPLY_FILTER", {
-        category: filterType,
-        key: code,
-        checked,
-        searchType: searchType.value,
-        query: searchTerm.value,
-      })
-    }
+const filterTypes = computed(
+  () => Object.keys(filters.value) as FilterCategory[]
+)
+const filterTypeTitle = (filterType: FilterCategory) => {
+  return t(`filters.${filterType}.title`)
+}
 
-    return {
-      isAnyFilterApplied,
-      filters,
-      filterTypes,
-      filterTypeTitle,
-      clearFilters: searchStore.clearFilters,
-      toggleFilter,
-    }
-  },
-})
+const toggleFilter = ({
+  filterType,
+  code,
+}: {
+  filterType: FilterCategory
+  code: string
+}) => {
+  const checked = searchStore.toggleFilter({ filterType, code })
+  sendCustomEvent("APPLY_FILTER", {
+    category: filterType,
+    key: code,
+    checked,
+    searchType: searchType.value,
+    query: searchTerm.value,
+  })
+}
+const clearFilters = searchStore.clearFilters
 </script>

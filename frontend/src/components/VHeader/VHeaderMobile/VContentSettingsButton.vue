@@ -4,10 +4,10 @@
     icon="source"
     :label="
       appliedFilterCount
-        ? $t('header.contentSettingsButton.withCount', {
+        ? t('header.contentSettingsButton.withCount', {
             count: appliedFilterCount,
           })
-        : $t('header.contentSettingsButton.simple')
+        : t('header.contentSettingsButton.simple')
     "
     aria-haspopup="dialog"
     :aria-expanded="isPressed"
@@ -22,21 +22,22 @@
     </template>
   </VSearchBarButton>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
-export default {
-  name: "VContentSettingsButton",
-  components: { VSearchBarButton },
-  props: {
-    isPressed: {
-      type: Boolean,
-      default: false,
-    },
-    appliedFilterCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-}
+withDefaults(
+  defineProps<{
+    isPressed?: boolean
+    appliedFilterCount?: number
+  }>(),
+  {
+    isPressed: false,
+    appliedFilterCount: 0,
+  }
+)
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

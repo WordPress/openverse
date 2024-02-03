@@ -1,6 +1,6 @@
 <template>
   <VContentPage>
-    <h1>{{ $t("prefPage.title") }}</h1>
+    <h1>{{ t("prefPage.title") }}</h1>
 
     <!-- TODO: Extract this to preferences modal. -->
     <!--
@@ -13,11 +13,11 @@
       class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
-        {{ $t(`prefPage.groups.${group.title}.title`) }}
+        {{ t(`prefPage.groups.${group.title}.title`) }}
       </h2>
       <p class="label-regular mb-4">
         {{
-          $t(`prefPage.groups.${group.title}.desc`, { openverse: "Openverse" })
+          t(`prefPage.groups.${group.title}.desc`, { openverse: "Openverse" })
         }}
       </p>
       <ul>
@@ -33,7 +33,7 @@
             :checked="featureState(name) === ON"
             is-switch
             @change="handleChange"
-            >{{ $t(`prefPage.features.${name}`) }}</VCheckbox
+            >{{ t(`prefPage.features.${name}`) }}</VCheckbox
           >
         </li>
       </ul>
@@ -45,10 +45,10 @@
       class="not-prose border-b border-dark-charcoal-20 py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
-        {{ $t(`prefPage.${isFlagSwitchable ? "s" : "nonS"}witchable.title`) }}
+        {{ t(`prefPage.${isFlagSwitchable ? "s" : "nonS"}witchable.title`) }}
       </h2>
       <p class="label-regular mb-4">
-        {{ $t(`prefPage.${isFlagSwitchable ? "s" : "nonS"}witchable.desc`) }}
+        {{ t(`prefPage.${isFlagSwitchable ? "s" : "nonS"}witchable.desc`) }}
       </p>
       <ul>
         <template v-for="(feature, name) in flags">
@@ -76,13 +76,13 @@
       </ul>
     </div>
 
-    <h2>{{ $t("prefPage.storeState") }}</h2>
+    <h2>{{ t("prefPage.storeState") }}</h2>
     <pre><code>{{ flags }}</code></pre>
   </VContentPage>
 </template>
 
 <script setup lang="ts">
-import { definePageMeta } from "#imports"
+import { definePageMeta, useNuxtApp } from "#imports"
 
 import { computed } from "vue"
 
@@ -103,6 +103,10 @@ import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 definePageMeta({
   layout: "content-layout",
 })
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 const featureFlagStore = useFeatureFlagStore()
 
 const flags = computed(() => featureFlagStore.flags)

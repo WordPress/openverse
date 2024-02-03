@@ -20,7 +20,7 @@
         :class="bordered ? 'ps-0' : 'ps-6'"
         class="category pb-4 pt-6"
       >
-        {{ $t(`searchType.${category.heading}`) }}
+        {{ t(`searchType.${category.heading}`) }}
       </h4>
       <VSearchTypeItem
         v-for="(item, idx) in category.items"
@@ -35,12 +35,13 @@
     </div>
   </VItemGroup>
 </template>
-<script lang="ts">
-import { computed, defineComponent, type PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
 import type { SearchType } from "~/constants/media"
-import { defineEvent } from "~/types/emits"
 
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VSearchTypeItem from "~/components/VContentSwitcher/VSearchTypeItem.vue"
@@ -50,65 +51,56 @@ type ContentTypeGroup = {
   items: SearchType[]
 }
 
-export default defineComponent({
-  name: "VSearchTypes",
-  components: { VItemGroup, VSearchTypeItem },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * 'Small' size is used in the popover,
      * 'medium' size is used in the mobile modal.
      */
-    size: {
-      type: String as PropType<"small" | "medium">,
-      default: "small",
-    },
+    size?: "small" | "medium"
     /**
      * Whether to use buttons for search type selection, or links to the specific search type search pages.
      */
-    useLinks: {
-      type: Boolean,
-      default: true,
+    useLinks?: boolean
+  }>(),
+  {
+    size: "small",
+    useLinks: true,
+  }
+)
+
+const emit = defineEmits<{
+  select: [SearchType]
+}>()
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+const content = useSearchType()
+const bordered = computed(() => props.size === "medium")
+
+const isActive = (item: SearchType) => item === content.activeType.value
+
+const contentTypeGroups = computed<ContentTypeGroup[]>(() => {
+  const base: ContentTypeGroup[] = [
+    {
+      heading: "heading",
+      items: content.types,
     },
-  },
-  emits: {
-    select: defineEvent<[SearchType]>(),
-  },
-  setup(props, { emit }) {
-    const content = useSearchType()
-    const bordered = computed(() => props.size === "medium")
+  ]
 
-    const isActive = (item: SearchType) => item === content.activeType.value
-
-    const contentTypeGroups = computed<ContentTypeGroup[]>(() => {
-      const base: ContentTypeGroup[] = [
-        {
-          heading: "heading",
-          items: content.types,
-        },
-      ]
-
-      if (content.additionalTypes.value.length) {
-        base.push({
-          heading: "additional",
-          items: [...content.additionalTypes.value],
-        })
-      }
-
-      return base
+  if (content.additionalTypes.value.length) {
+    base.push({
+      heading: "additional",
+      items: [...content.additionalTypes.value],
     })
+  }
 
-    const selectItem = (item: SearchType) => {
-      content.setActiveType(item)
-      emit("select", item)
-    }
-
-    return {
-      content,
-      contentTypeGroups,
-      isActive,
-      bordered,
-      selectItem,
-    }
-  },
+  return base
 })
+
+const selectItem = (item: SearchType) => {
+  content.setActiveType(item)
+  emit("select", item)
+}
 </script>

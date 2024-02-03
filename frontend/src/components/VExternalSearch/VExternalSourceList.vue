@@ -4,7 +4,7 @@
     data-testid="source-list-popover"
   >
     <p class="label-regular px-3 py-4 text-start !leading-normal">
-      {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
+      {{ t("externalSources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton
       v-for="source in externalSources"
@@ -25,8 +25,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -38,36 +38,26 @@ import VButton from "~/components/VButton.vue"
  * This component renders a list of pre-populated links to additional sources
  * when there are insufficient or zero search results.
  */
-export default defineComponent({
-  name: "VExternalSourceList",
-  components: { VButton },
-  props: {
-    /**
-     * The search term for which the external sources links are generated.
-     */
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { externalSources, externalSourcesType } = useExternalSources()
+const props = defineProps<{
+  /**
+   * The search term for which the external sources links are generated.
+   */
+  searchTerm: string
+}>()
 
-    const { sendCustomEvent } = useAnalytics()
-    const handleClick = (sourceName: string) => {
-      sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
-        name: sourceName,
-        mediaType: externalSourcesType.value,
-        query: props.searchTerm,
-        component: "VExternalSourceList",
-      })
-    }
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    return {
-      externalSources,
-      externalSourcesType,
-      handleClick,
-    }
-  },
-})
+const { externalSources, externalSourcesType } = useExternalSources()
+
+const { sendCustomEvent } = useAnalytics()
+const handleClick = (sourceName: string) => {
+  sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
+    name: sourceName,
+    mediaType: externalSourcesType.value,
+    query: props.searchTerm,
+    component: "VExternalSourceList",
+  })
+}
 </script>

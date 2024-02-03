@@ -30,7 +30,7 @@
             <VSearchBarButton
               v-show="searchBarIsActive"
               icon="chevron-back"
-              :label="$t('header.backButton')"
+              :label="t('header.backButton')"
               :rtl-flip="true"
               variant="filled-gray"
               @click="handleBack"
@@ -41,12 +41,12 @@
             id="search-bar"
             ref="searchInputRef"
             name="q"
-            :placeholder="$t('hero.search.placeholder')"
+            :placeholder="t('hero.search.placeholder')"
             type="search"
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
             :value="searchTerm"
             :aria-label="
-              $t('search.searchBarLabel', {
+              t('search.searchBarLabel', {
                 openverse: 'Openverse',
               })
             "
@@ -66,7 +66,7 @@
             <VSearchBarButton
               v-show="searchBarIsActive && searchTerm"
               icon="close-small"
-              :label="$t('browsePage.searchForm.clear')"
+              :label="t('browsePage.searchForm.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
             />
@@ -112,6 +112,8 @@
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { computed, nextTick, ref, watch } from "vue"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
@@ -128,8 +130,6 @@ import { useSearchStore } from "~/stores/search"
 
 import { useHydrating } from "~/composables/use-hydrating"
 
-import { defineEvent } from "~/types/emits"
-
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VInputModal from "~/components/VModal/VInputModal.vue"
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
@@ -142,10 +142,14 @@ import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButto
  * that fires a search request. The loading state and number of hits are also
  * displayed in the bar itself.
  */
-const emit = defineEmits({
-  open: defineEvent<[]>(),
-  close: defineEvent<[]>(),
-})
+const emit = defineEmits<{
+  open: []
+  close: []
+}>()
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 const searchInputRef = ref<HTMLInputElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
 
@@ -216,6 +220,7 @@ const handleBack = () => {
  * visual focus is on the input field.
  */
 const selectedIdx = ref<number | undefined>(undefined)
+
 const entries = computed(() => searchStore.recentSearches)
 const handleVerticalArrows = (event: KeyboardEvent) => {
   event.preventDefault() // Prevent the cursor from moving horizontally.

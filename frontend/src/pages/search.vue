@@ -46,9 +46,15 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, isSearchTypeSupported, useAsyncSearch } from "#imports"
+import {
+  definePageMeta,
+  isSearchTypeSupported,
+  useAsyncSearch,
+  useHead,
+  useNuxtApp,
+} from "#imports"
 
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 
 import { searchMiddleware } from "~/middleware/search"
@@ -98,6 +104,26 @@ const results = computed(() => {
 })
 
 const isAllView = computed(() => searchType.value === ALL_MEDIA)
+
+const pageTitle = ref(`${searchTerm.value} | Openverse`)
+watch(searchTerm, () => {
+  pageTitle.value = `${searchTerm.value} | Openverse`
+})
+const i18n = useNuxtApp().$i18n
+
+const lang = computed(() => {
+  const lp = i18n.localeProperties.value
+  return {
+    lang: lp.code,
+    dir: lp.dir,
+  }
+})
+
+useHead({
+  title: pageTitle.value,
+  meta: [{ key: "robots", name: "robots", content: "all" }],
+  htmlAttrs: lang.value,
+})
 
 const { handleLoadMore, fetchingError, isFetching } = await useAsyncSearch()
 </script>

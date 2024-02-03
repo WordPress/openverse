@@ -1,6 +1,6 @@
 <template>
   <table
-    :aria-label="$t('sources.aria.table')"
+    :aria-label="t('sources.aria.table')"
     role="region"
     class="not-prose table w-full table-fixed text-base"
   >
@@ -12,7 +12,7 @@
           @keypress.enter="sortTable('display_name')"
         >
           <span class="flex w-full flex-row items-center justify-between">
-            {{ $t("sources.providers.source") }}
+            {{ t("sources.providers.source") }}
             <TableSortIcon :active="sorting.field === 'display_name'" />
           </span>
         </th>
@@ -22,7 +22,7 @@
           @keypress.enter="sortTable('source_url')"
         >
           <span class="flex w-full flex-row items-center justify-between">
-            {{ $t("sources.providers.domain") }}
+            {{ t("sources.providers.domain") }}
             <TableSortIcon :active="sorting.field === 'source_url'" />
           </span>
         </th>
@@ -32,7 +32,7 @@
           @keypress.enter="sortTable('media_count')"
         >
           <span class="flex w-full flex-row items-center justify-between">
-            {{ $t("sources.providers.item") }}
+            {{ t("sources.providers.item") }}
             <TableSortIcon :active="sorting.field === 'media_count'" />
           </span>
         </th>
@@ -59,10 +59,10 @@
   </table>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { computed, useFeatureFlagStore, useNuxtApp } from "#imports"
 
-import { defineComponent, PropType, reactive, ref } from "vue"
+import { reactive, ref } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
@@ -73,96 +73,79 @@ import type { MediaProvider } from "~/types/media-provider"
 import TableSortIcon from "~/components/TableSortIcon.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VSourcesTable",
-  components: {
-    TableSortIcon,
-    VLink,
-  },
-  props: {
-    media: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const featureFlagStore = useFeatureFlagStore()
-    const additionalSearchViews = computed(() => {
-      return featureFlagStore.isOn("additional_search_views")
-    })
-    const sorting = reactive({
-      direction: "asc",
-      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
-    })
+const props = defineProps<{
+  media: SupportedMediaType
+}>()
 
-    const providerStore = useProviderStore()
-    const sortedProviders = ref<MediaProvider[]>(
-      providerStore.providers[props.media].sort(compareProviders)
-    )
+const {
+  $i18n: { t },
+  $localePath,
+} = useNuxtApp()
 
-    function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
-      let direction = "asc"
-      if (field === sorting.field) {
-        direction = sorting.direction === "asc" ? "desc" : "asc"
-      }
-
-      sorting.direction = direction
-      sorting.field = field
-
-      sortedProviders.value =
-        sorting.direction === "asc"
-          ? sortedProviders.value.sort(compareProviders)
-          : sortedProviders.value.sort(compareProviders).reverse()
-    }
-
-    function cleanSourceUrlForPresentation(url: string) {
-      const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
-      const stripLeadingWww = (s: string) =>
-        s.startsWith("www.") ? s.replace("www.", "") : s
-      const removeAfterSlash = (s: string) => s.split("/")[0]
-
-      return removeAfterSlash(stripLeadingWww(stripProtocol(url)))
-    }
-
-    const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
-
-    function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
-      let field1 = prov1[sorting.field]
-      let field2 = prov2[sorting.field]
-      if (sorting.field === "display_name") {
-        field1 = prov1[sorting.field].toLowerCase()
-        field2 = prov2[sorting.field].toLowerCase()
-      }
-
-      if (sorting.field === "source_url") {
-        field1 = cleanSourceUrlForPresentation(field1 as string)
-        field2 = cleanSourceUrlForPresentation(field2 as string)
-      }
-      if (field1 > field2) {
-        return 1
-      }
-      if (field1 < field2) {
-        return -1
-      }
-      return 0
-    }
-
-    const { $localePath } = useNuxtApp()
-    const providerViewUrl = (provider: MediaProvider) => {
-      return $localePath(`/${props.media}/source/${provider.source_name}`)
-    }
-
-    return {
-      getLocaleFormattedNumber,
-      sortedProviders,
-      sorting,
-      sortTable,
-      cleanSourceUrlForPresentation,
-      providerViewUrl,
-      additionalSearchViews,
-    }
-  },
+const featureFlagStore = useFeatureFlagStore()
+const additionalSearchViews = computed(() => {
+  return featureFlagStore.isOn("additional_search_views")
 })
+const sorting = reactive({
+  direction: "asc",
+  field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
+})
+
+const providerStore = useProviderStore()
+const sortedProviders = ref<MediaProvider[]>(
+  providerStore.providers[props.media].sort(compareProviders)
+)
+
+function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
+  let direction = "asc"
+  if (field === sorting.field) {
+    direction = sorting.direction === "asc" ? "desc" : "asc"
+  }
+
+  sorting.direction = direction
+  sorting.field = field
+
+  sortedProviders.value =
+    sorting.direction === "asc"
+      ? sortedProviders.value.sort(compareProviders)
+      : sortedProviders.value.sort(compareProviders).reverse()
+}
+
+function cleanSourceUrlForPresentation(url: string) {
+  const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
+  const stripLeadingWww = (s: string) =>
+    s.startsWith("www.") ? s.replace("www.", "") : s
+  const removeAfterSlash = (s: string) => s.split("/")[0]
+
+  return removeAfterSlash(stripLeadingWww(stripProtocol(url)))
+}
+
+const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
+
+function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
+  let field1 = prov1[sorting.field]
+  let field2 = prov2[sorting.field]
+  if (sorting.field === "display_name") {
+    field1 = prov1[sorting.field].toLowerCase()
+    field2 = prov2[sorting.field].toLowerCase()
+  }
+
+  if (sorting.field === "source_url") {
+    field1 = cleanSourceUrlForPresentation(field1 as string)
+    field2 = cleanSourceUrlForPresentation(field2 as string)
+  }
+  if (field1 > field2) {
+    return 1
+  }
+  if (field1 < field2) {
+    return -1
+  }
+  return 0
+}
+
+const providerViewUrl = (provider: MediaProvider) => {
+  return $localePath(`/${props.media}/source/${provider.source_name}`)
+}
 </script>
 
 <style scoped>

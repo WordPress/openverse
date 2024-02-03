@@ -1,21 +1,25 @@
 <template>
   <VTab id="filters" size="medium" class="gap-x-2">
     <VFilterIconOrCounter :applied-filter-count="appliedFilterCount" />
-    <h2 class="label-regular">{{ $t("filters.title") }}</h2>
+    <h2 class="label-regular">{{ t("filters.title") }}</h2>
   </VTab>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
 import VTab from "~/components/VTabs/VTab.vue"
 
-export default {
-  name: "VFilterTab",
-  components: { VFilterIconOrCounter, VTab },
-  props: {
-    appliedFilterCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-}
+withDefaults(
+  defineProps<{
+    appliedFilterCount: number
+  }>(),
+  {
+    appliedFilterCount: 0,
+  }
+)
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

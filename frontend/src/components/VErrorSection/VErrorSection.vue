@@ -8,60 +8,48 @@
       <div v-else>
         <h1 class="heading-4 md:heading-2 text-center !font-semibold">
           {{
-            isTimeout ? $t("serverTimeout.heading") : $t("unknownError.heading")
+            isTimeout ? t("serverTimeout.heading") : t("unknownError.heading")
           }}
         </h1>
       </div>
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineAsyncComponent } from "#imports"
+<script setup lang="ts">
+import { defineAsyncComponent, useNuxtApp } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import { ECONNABORTED, NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
 
 import type { FetchingError } from "~/types/fetch-state"
 
-export default defineComponent({
-  components: {
-    VNoResults: defineAsyncComponent(
-      () => import("~/components/VErrorSection/VNoResults.vue")
-    ),
-    VErrorImage: defineAsyncComponent(
-      () => import("~/components/VErrorSection/VErrorImage.vue")
-    ),
-  },
-  props: {
-    fetchingError: {
-      type: Object as PropType<FetchingError>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const searchTerm = computed(
-      () => props.fetchingError.details?.searchTerm ?? ""
-    )
-    /**
-     * The code used for the error page image.
-     * For now, NO_RESULT image is used for searches without result,
-     * and SERVER_TIMEOUT image is used as a fall-back for all other errors.
-     */
-    const errorCode = computed(() =>
-      props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
-    )
+const VNoResults = defineAsyncComponent(
+  () => import("~/components/VErrorSection/VNoResults.vue")
+)
+const VErrorImage = defineAsyncComponent(
+  () => import("~/components/VErrorSection/VErrorImage.vue")
+)
 
-    const isTimeout = computed(() =>
-      [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
-    )
+const props = defineProps<{
+  fetchingError: FetchingError
+}>()
 
-    return {
-      errorCode,
-      isTimeout,
-      NO_RESULT,
-      searchTerm,
-    }
-  },
-})
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+const searchTerm = computed(() => props.fetchingError.details?.searchTerm ?? "")
+/**
+ * The code used for the error page image.
+ * For now, NO_RESULT image is used for searches without result,
+ * and SERVER_TIMEOUT image is used as a fall-back for all other errors.
+ */
+const errorCode = computed(() =>
+  props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
+)
+
+const isTimeout = computed(() =>
+  [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
+)
 </script>

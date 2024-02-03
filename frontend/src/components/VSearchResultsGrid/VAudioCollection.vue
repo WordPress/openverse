@@ -8,7 +8,7 @@
           #[keyboardKey]
         >
           <kbd class="font-sans">{{
-            $t(`audioResults.snackbar.${keyboardKey}`)
+            t(`audioResults.snackbar.${keyboardKey}`)
           }}</kbd>
         </template>
       </i18n-t>
@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import type { AudioDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
@@ -38,5 +40,10 @@ defineProps<{
   kind: ResultKind
   collectionLabel: string
 }>()
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
 const { isVisible: isSnackbarVisible } = useAudioSnackbar()
 </script>

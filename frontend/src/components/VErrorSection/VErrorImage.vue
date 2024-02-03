@@ -1,16 +1,16 @@
 <template>
   <figure class="error-image">
-    <img :src="image.src" :alt="$t(image.alt)" :title="$t(image.alt)" />
+    <img :src="image.src" :alt="t(image.alt)" :title="t(image.alt)" />
     <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
     <!-- eslint-disable-next-line vue/no-v-html -->
     <figcaption class="attribution" v-html="image.attribution" />
   </figure>
 </template>
 
-<script lang="ts">
-import { useI18n } from "#imports"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import type { License, LicenseVersion } from "~/constants/license"
 import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
@@ -27,42 +27,32 @@ interface ErrorImage extends AttributableMedia {
  * Displays a sad image to convey the negative outcome such as absence of
  * results or a server error.
  */
-export default defineComponent({
-  name: "VErrorImage",
-  props: {
-    /**
-     * the code of the error, used to identify and render the appropriate image
-     */
-    errorCode: {
-      type: String as PropType<"NO_RESULT" | "SERVER_TIMEOUT">,
-      required: true,
-    },
-  },
-  setup(props) {
-    const i18n = useI18n({ useScope: "global" })
+const props = defineProps<{
+  /**
+   * the code of the error, used to identify and render the appropriate image
+   */
+  errorCode: "NO_RESULT" | "SERVER_TIMEOUT"
+}>()
 
-    const images = Object.fromEntries(
-      imageInfo.errors.map((errorItem) => {
-        let image = errorItem.image
-        const errorImage: ErrorImage = {
-          ...image,
-          originalTitle: image.title,
-          src: `/error_images/${image.file}.jpg`,
-          alt: `errorImages.${image.id}`,
-          license: image.license as License,
-          license_version: image.license_version as LicenseVersion,
-        }
-        errorImage.attribution = getAttribution(errorImage, i18n)
-        return [errorItem.error, errorImage]
-      })
-    )
-    const image = computed(() => images[props.errorCode])
+const { $i18n } = useNuxtApp()
+const { t } = $i18n
 
-    return {
-      image,
+const images = Object.fromEntries(
+  imageInfo.errors.map((errorItem) => {
+    let image = errorItem.image
+    const errorImage: ErrorImage = {
+      ...image,
+      originalTitle: image.title,
+      src: `/error_images/${image.file}.jpg`,
+      alt: `errorImages.${image.id}`,
+      license: image.license as License,
+      license_version: image.license_version as LicenseVersion,
     }
-  },
-})
+    errorImage.attribution = getAttribution(errorImage, $i18n)
+    return [errorItem.error, errorImage]
+  })
+)
+const image = computed(() => images[props.errorCode])
 </script>
 
 <style scoped>

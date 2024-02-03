@@ -2,7 +2,7 @@
   <div id="content-report-form">
     <div v-if="status === SENT">
       <h2 class="heading-6 mb-4">
-        {{ $t("mediaDetails.contentReport.success.title") }}
+        {{ t("mediaDetails.contentReport.success.title") }}
       </h2>
       <i18n-t
         scope="global"
@@ -22,22 +22,22 @@
 
     <div v-else-if="status === FAILED">
       <h2 class="heading-6 mb-4">
-        {{ $t("mediaDetails.contentReport.failure.title") }}
+        {{ t("mediaDetails.contentReport.failure.title") }}
       </h2>
       <p class="text-sm">
-        {{ $t("mediaDetails.contentReport.failure.note") }}
+        {{ t("mediaDetails.contentReport.failure.note") }}
       </p>
     </div>
 
     <!-- Main form -->
     <div v-else>
       <div class="heading-6 mb-4">
-        {{ $t("mediaDetails.contentReport.long") }}
+        {{ t("mediaDetails.contentReport.long") }}
       </div>
 
       <p class="mb-4 text-sm">
         {{
-          $t("mediaDetails.contentReport.form.disclaimer", {
+          t("mediaDetails.contentReport.form.disclaimer", {
             openverse: "Openverse",
           })
         }}
@@ -46,7 +46,7 @@
       <form class="text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col">
           <legend class="label-bold mb-4">
-            {{ $t("mediaDetails.contentReport.form.question") }}
+            {{ t("mediaDetails.contentReport.form.question") }}
           </legend>
           <VRadio
             v-for="reason in reasons"
@@ -57,7 +57,7 @@
             name="reason"
             :value="reason"
           >
-            {{ $t(`mediaDetails.contentReport.form.${reason}.option`) }}
+            {{ t(`mediaDetails.contentReport.form.${reason}.option`) }}
           </VRadio>
         </fieldset>
 
@@ -85,7 +85,7 @@
             class="label-bold"
             @click="handleCancel"
           >
-            {{ $t("mediaDetails.contentReport.form.cancel") }}
+            {{ t("mediaDetails.contentReport.form.cancel") }}
           </VButton>
 
           <VButton
@@ -102,7 +102,7 @@
             :send-external-link-click-event="false"
             @click="handleDmcaSubmit"
           >
-            {{ $t("mediaDetails.contentReport.form.dmca.open") }}
+            {{ t("mediaDetails.contentReport.form.dmca.open") }}
           </VButton>
           <VButton
             v-else
@@ -113,9 +113,9 @@
             variant="filled-dark"
             size="medium"
             class="label-bold"
-            :value="$t('mediaDetails.contentReport.form.submit')"
+            :value="t('mediaDetails.contentReport.form.submit')"
           >
-            {{ $t("mediaDetails.contentReport.form.submit") }}
+            {{ t("mediaDetails.contentReport.form.submit") }}
           </VButton>
         </div>
       </form>
@@ -123,10 +123,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useRuntimeConfig } from "#imports"
+<script setup lang="ts">
+import { useNuxtApp, useRuntimeConfig } from "#imports"
 
-import { computed, defineComponent, PropType, ref } from "vue"
+import { computed, ref } from "vue"
 
 import axios from "axios"
 
@@ -152,114 +152,81 @@ import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
 import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VContentReportForm",
-  components: {
-    VButton,
-    VLink,
-    VRadio,
-    VDmcaNotice,
-    VReportDescForm,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-    providerName: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    closeFn: {
-      type: Function,
-      required: true,
-    },
-    allowCancel: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup(props) {
-    const description = ref("")
+const props = withDefaults(
+  defineProps<{
+    media: AudioDetail | ImageDetail
+    providerName: string
+    closeFn: () => void
+    allowCancel?: boolean
+  }>(),
+  {
+    allowCancel: true,
+  }
+)
 
-    const status = ref<string | null>(WIP)
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const selectedReason = ref<ReportReason>(DMCA)
+const description = ref("")
 
-    /* Buttons */
-    const handleCancel = () => {
-      selectedReason.value = DMCA
-      description.value = ""
-      props.closeFn()
-    }
+const status = ref<string | null>(WIP)
 
-    const isSubmitDisabled = computed(() => {
-      return selectedReason.value === OTHER && description.value.length < 20
-    })
+const selectedReason = ref<ReportReason>(DMCA)
 
-    const { sendCustomEvent } = useAnalytics()
+/* Buttons */
+const handleCancel = () => {
+  selectedReason.value = DMCA
+  description.value = ""
+  props.closeFn()
+}
 
-    const handleDmcaSubmit = () => {
-      sendCustomEvent("REPORT_MEDIA", {
-        id: props.media.id,
-        mediaType: props.media.frontendMediaType,
-        provider: props.media.provider,
-        reason: selectedReason.value,
-      })
-      status.value = SENT
-    }
-    const handleSubmit = async (event: Event) => {
-      event.preventDefault()
-      // Submit report
-      try {
-        const mediaType = props.media.frontendMediaType
-        const reason = selectedReason.value
-
-        const {
-          public: { apiUrl },
-        } = useRuntimeConfig()
-
-        // Not proxied through the Nuxt `/api/` because it is a POST request
-        await axios.post(
-          `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
-          {
-            mediaType,
-            reason,
-            identifier: props.media.id,
-            description: description.value,
-          }
-        )
-
-        sendCustomEvent("REPORT_MEDIA", {
-          mediaType,
-          reason,
-          id: props.media.id,
-          provider: props.media.provider,
-        })
-        status.value = SENT
-      } catch (error) {
-        status.value = FAILED
-      }
-    }
-
-    return {
-      reasons,
-      DMCA,
-      OTHER,
-      SENT,
-      FAILED,
-      DMCA_FORM_URL,
-
-      selectedReason,
-      status,
-      description,
-
-      handleCancel,
-
-      isSubmitDisabled,
-      handleSubmit,
-      handleDmcaSubmit,
-    }
-  },
+const isSubmitDisabled = computed(() => {
+  return selectedReason.value === OTHER && description.value.length < 20
 })
+
+const { sendCustomEvent } = useAnalytics()
+
+const handleDmcaSubmit = () => {
+  sendCustomEvent("REPORT_MEDIA", {
+    id: props.media.id,
+    mediaType: props.media.frontendMediaType,
+    provider: props.media.provider,
+    reason: selectedReason.value,
+  })
+  status.value = SENT
+}
+const handleSubmit = async (event: Event) => {
+  event.preventDefault()
+  // Submit report
+  try {
+    const mediaType = props.media.frontendMediaType
+    const reason = selectedReason.value
+
+    const {
+      public: { apiUrl },
+    } = useRuntimeConfig()
+
+    // Not proxied through the Nuxt `/api/` because it is a POST request
+    await axios.post(
+      `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
+      {
+        mediaType,
+        reason,
+        identifier: props.media.id,
+        description: description.value,
+      }
+    )
+
+    sendCustomEvent("REPORT_MEDIA", {
+      mediaType,
+      reason,
+      id: props.media.id,
+      provider: props.media.provider,
+    })
+    status.value = SENT
+  } catch (error) {
+    status.value = FAILED
+  }
+}
 </script>

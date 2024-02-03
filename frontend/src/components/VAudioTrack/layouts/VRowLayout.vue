@@ -15,9 +15,8 @@
       >
         <slot
           name="audio-control"
-          size="small"
-          layout="row"
           :is-tabbable="false"
+          v-bind="{ size: 'small', layout: 'row' } as const"
         />
       </div>
     </div>
@@ -30,7 +29,7 @@
           isSmall ? 'label-bold' : 'description-bold',
         ]"
       >
-        {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
+        {{ shouldBlur ? t("sensitiveContent.title.audio") : audio.title }}
       </h2>
 
       <div
@@ -48,7 +47,7 @@
           :class="{ 'blur-text': shouldBlur }"
         >
           <template #creator>{{
-            shouldBlur ? $t("sensitiveContent.creator") : audio.creator
+            shouldBlur ? t("sensitiveContent.creator") : audio.creator
           }}</template>
         </i18n-t>
         <!-- Small layout only -->
@@ -56,7 +55,7 @@
           <div class="flex flex-row">
             <span class="flex">{{ timeFmt(audio.duration || 0, true) }}</span
             ><span v-if="audio.category" class="dot-before">{{
-              $t(`filters.audioCategories.${audio.category}`)
+              t(`filters.audioCategories.${audio.category}`)
             }}</span>
           </div>
           <VLicense :hide-name="true" :license="audio.license" />
@@ -64,7 +63,7 @@
         <!-- Medium and large layouts -->
         <div v-else class="flex flex-shrink-0 flex-row">
           <span v-if="audio.category" :class="{ 'dot-before': isMedium }">{{
-            $t(`filters.audioCategories.${audio.category}`)
+            t(`filters.audioCategories.${audio.category}`)
           }}</span>
           <VLicense
             :hide-name="!isMd"
@@ -82,8 +81,7 @@
     >
       <slot
         name="audio-control"
-        :size="isLarge ? 'large' : 'medium'"
-        layout="row"
+        v-bind="{ size: audioControlSize, layout: 'row' } as const"
         :is-tabbable="false"
       />
       <slot
@@ -96,8 +94,10 @@
   </article>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import { timeFmt } from "~/utils/time-fmt"
 import type { AudioDetail } from "~/types/media"
@@ -110,52 +110,30 @@ import { useUiStore } from "~/stores/ui"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 
-export default defineComponent({
-  name: "VRowLayout",
-  components: {
-    VAudioThumbnail,
-    VLicense,
-  },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-    size: {
-      type: String as PropType<AudioSize>,
-      required: false,
-    },
-  },
-  setup(props) {
-    const featureNotices: {
-      timestamps?: string
-      duration?: string
-      seek?: string
-    } = {}
+const props = defineProps<{
+  audio: AudioDetail
+  size?: AudioSize
+}>()
 
-    const isSmall = computed(() => props.size === "s")
-    const isMedium = computed(() => props.size === "m")
-    const isLarge = computed(() => props.size === "l")
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+const featureNotices: Partial<
+  Record<"seek" | "duration" | "timestamps", boolean>
+> = {}
 
-    const uiStore = useUiStore()
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
+const isSmall = computed(() => props.size === "s")
+const isMedium = computed(() => props.size === "m")
+const isLarge = computed(() => props.size === "l")
 
-    return {
-      timeFmt,
+const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 
-      audioFeatures,
-      featureNotices,
+const uiStore = useUiStore()
+const isMd = computed(() => uiStore.isBreakpoint("md"))
 
-      isSmall,
-      isMedium,
-      isLarge,
-      isMd,
-
-      shouldBlur,
-    }
-  },
+const audioControlSize = computed(() => {
+  return isMedium.value ? ("medium" as const) : ("large" as const)
 })
 </script>
 

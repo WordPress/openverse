@@ -19,7 +19,7 @@
         size="large"
         :disabled="!doneHydrating"
         :icon-props="{ name: 'menu' }"
-        :label="$t('header.aria.menu')"
+        :label="t('header.aria.menu')"
         v-bind="triggerA11yProps"
         @click="onTriggerClick"
       />
@@ -59,7 +59,7 @@
                 size="large"
                 :icon-props="{ name: 'close' }"
                 class="text-white focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10"
-                :label="$t('modal.closePagesMenu')"
+                :label="t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
             </div>
@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "#imports"
+import { useNuxtApp, useRoute } from "#imports"
 
 import { computed, ref, watch } from "vue"
 
@@ -104,7 +104,7 @@ import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 const emit = defineEmits(["close", "open"])
-const menuButtonRef = ref<{ $el: HTMLElement } | null>(null)
+const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
 const nodeRef = ref<HTMLElement | null>(null)
 const modalContentRef = ref<{
   $el: HTMLElement
@@ -159,4 +159,8 @@ watch(route, () => {
     closePageMenu()
   }
 })
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
 </script>

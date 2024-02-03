@@ -6,10 +6,10 @@
       class="label-bold"
       size="small"
       has-icon-end
-      @click="$emit('click')"
+      @click="emit('click')"
     >
       <span class="hidden md:block">{{
-        $t("sensitiveContent.singleResult.hide")
+        t("sensitiveContent.singleResult.hide")
       }}</span>
       <VIcon name="eye-closed" />
     </VButton>
@@ -18,29 +18,27 @@
       variant="transparent-gray"
       :icon-props="{ name: 'eye-closed' }"
       size="small"
-      :label="$t('sensitiveContent.singleResult.hide')"
-      @click="$emit('click')"
+      :label="t('sensitiveContent.singleResult.hide')"
+      @click="emit('click')"
     />
   </div>
 </template>
 
-<script>
-import { computed, defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import { useUiStore } from "~/stores/ui"
-import { defineEvent } from "~/types/emits"
 
-export default defineComponent({
-  emits: {
-    click: defineEvent(),
-  },
-  setup() {
-    const uiStore = useUiStore()
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
+const emit = defineEmits<{
+  click: []
+}>()
 
-    return {
-      isMd,
-    }
-  },
-})
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+const uiStore = useUiStore()
+const isMd = computed(() => uiStore.isBreakpoint("md"))
 </script>

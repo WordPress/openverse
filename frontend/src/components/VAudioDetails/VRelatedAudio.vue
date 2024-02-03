@@ -1,18 +1,20 @@
 <template>
   <section v-if="showRelated">
     <h2 class="heading-6 lg:heading-6 mb-6">
-      {{ $t("audioDetails.relatedAudios") }}
+      {{ t("audioDetails.relatedAudios") }}
     </h2>
     <VAudioCollection
       :results="media"
       kind="related"
-      :collection-label="$t('audioDetails.relatedAudios')"
+      :collection-label="t('audioDetails.relatedAudios')"
       class="mb-12"
     />
   </section>
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { computed, toRef, watch } from "vue"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
@@ -24,6 +26,9 @@ import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.v
 const props = defineProps<{
   mediaId: string
 }>()
+const {
+  $i18n: { t },
+} = useNuxtApp()
 
 const relatedMediaStore = useRelatedMediaStore()
 

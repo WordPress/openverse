@@ -22,7 +22,7 @@
           <VLink
             v-if="image.creator_url"
             :aria-label="
-              $t('mediaDetails.aria.creatorUrl', {
+              t('mediaDetails.aria.creatorUrl', {
                 creator: image.creator,
               })
             "
@@ -38,49 +38,30 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import { ImageDetail } from "~/types/media"
-import { IMAGE } from "~/constants/media"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VLink from "~/components/VLink.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 
-export default defineComponent({
-  name: "VImageTitleButton",
-  components: { VGetMediaButton, VLink },
-  props: {
-    image: {
-      type: Object as PropType<ImageDetail>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { sendCustomEvent } = useAnalytics()
+const props = defineProps<{
+  image: ImageDetail
+}>()
 
-    const sendGetMediaEvent = () => {
-      if (!props.image) {
-        return
-      }
-      sendCustomEvent("GET_MEDIA", {
-        id: props.image.id,
-        provider: props.image.provider,
-        mediaType: IMAGE,
-      })
-    }
-    const sendVisitCreatorLinkEvent = () => {
-      sendCustomEvent("VISIT_CREATOR_LINK", {
-        id: props.image.id,
-        source: props.image.source ?? props.image.provider,
-        url: props.image.creator_url ?? "",
-      })
-    }
-    return {
-      sendGetMediaEvent,
-      sendVisitCreatorLinkEvent,
-    }
-  },
-})
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+const { sendCustomEvent } = useAnalytics()
+
+const sendVisitCreatorLinkEvent = () => {
+  sendCustomEvent("VISIT_CREATOR_LINK", {
+    id: props.image.id,
+    source: props.image.source ?? props.image.provider,
+    url: props.image.creator_url ?? "",
+  })
+}
 </script>
