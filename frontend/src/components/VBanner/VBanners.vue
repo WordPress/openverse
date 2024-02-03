@@ -26,6 +26,8 @@ import usePages from "~/composables/use-pages"
 
 import type { TranslationBannerId, BannerId } from "~/types/banners"
 
+import type { LocaleObject } from "@nuxtjs/i18n"
+
 const VTranslationStatusBanner = defineAsyncComponent(
   () => import("~/components/VBanner/VTranslationStatusBanner.vue")
 )
@@ -38,7 +40,7 @@ const {
 } = useNuxtApp()
 
 const shouldShowTranslationBanner = computed(() =>
-  uiStore.shouldShowTranslationBanner(localeProperties.value)
+  uiStore.shouldShowTranslationBanner(localeProperties.value as LocaleObject)
 )
 const shouldShowAnalyticsBanner = computed(
   () => uiStore.shouldShowAnalyticsBanner

@@ -33,6 +33,8 @@ import { defineEvent } from "~/types/emits"
 import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
+import type { LocaleObject } from "@nuxtjs/i18n"
+
 export default defineComponent({
   name: "VTranslationStatusBanner",
   components: {
@@ -54,7 +56,7 @@ export default defineComponent({
      */
     const currentLocale = computed(() => {
       const localeObject = useI18n({ useScope: "global" }).localeProperties
-        .value
+        .value as LocaleObject
 
       return {
         link: createTranslationLink(localeObject),
