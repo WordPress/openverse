@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // Using jsdom as the test environment because we need to mock axios
-import axios from "axios"
+import { ofetch } from "ofetch"
 
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
@@ -11,8 +11,8 @@ import { DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 import { useSearchStore } from "~/stores/search"
 
 const DEFAULT_REQUEST_PARAMS = {
-  baseURL: "https://0.0.0.0:8443",
   timeout: DEFAULT_REQUEST_TIMEOUT,
+  retry: 0,
 }
 
 const DEFAULT_ADDITIONAL_MEDIA_PARAMS = (mediaType) => ({
@@ -52,14 +52,6 @@ const items = (mediaType) =>
     tags: [],
   }))
 
-vi.mock("#app/composables/ssr", () => ({
-  useRequestEvent: vi.fn(() => ({
-    context: {
-      siteConfigNitroOrigin: "https://localhost:8443",
-    },
-  })),
-}))
-
 vi.mock("#app/nuxt", async () => {
   const original = await import("#app/nuxt")
   return {
@@ -71,15 +63,14 @@ vi.mock("#app/nuxt", async () => {
     })),
   }
 })
-vi.mock("axios", async (importOriginal) => {
+vi.mock("ofetch", async (importOriginal) => {
   const original = await importOriginal()
   return {
-    default: {
-      ...original,
-      isAxiosError: vi.fn(() => true),
-      get: vi.fn(() =>
+    ...original,
+    ofetch: {
+      raw: vi.fn(() =>
         Promise.resolve({
-          data: { result_count: 10000, page: 1, page_count: 50, results: [] },
+          _data: { result_count: 10000, page: 1, page_count: 50, results: [] },
         })
       ),
     },
@@ -90,7 +81,7 @@ vi.resetModules()
 
 describe("fetchMedia", () => {
   beforeEach(() => {
-    axios.get.mockClear()
+    ofetch.raw.mockClear()
     setActivePinia(createPinia())
   })
 
@@ -102,10 +93,10 @@ describe("fetchMedia", () => {
     const media = await mediaStore.fetchMedia()
 
     expect(media).toEqual([])
-    expect(axios.get).toHaveBeenCalledTimes(2)
+    expect(ofetch.raw).toHaveBeenCalledTimes(2)
 
     // The order of calls is random, so we sort them by URL.
-    const mockCallArgs = axios.get.mock.calls.sort((a, b) =>
+    const mockCallArgs = ofetch.raw.mock.calls.sort((a, b) =>
       a[0].localeCompare(b[0])
     )
     const [[audioUrl, audioParams], [imageUrl, imageParams]] = mockCallArgs
@@ -122,9 +113,9 @@ describe("fetchMedia", () => {
   })
 
   it("fetchMedia should fetch only the specified media type from the API if search type is not ALL_MEDIA", async () => {
-    axios.get.mockImplementation(() =>
+    ofetch.raw.mockImplementation(() =>
       Promise.resolve({
-        data: {
+        _data: {
           result_count: 10000,
           page: 1,
           page_count: 50,
@@ -140,8 +131,8 @@ describe("fetchMedia", () => {
     const media = await mediaStore.fetchMedia()
 
     expect(media.length).toEqual(4)
-    expect(axios.get).toHaveBeenCalledTimes(1)
-    expect(axios.get).toHaveBeenCalledWith("/api/images/", {
+    expect(ofetch.raw).toHaveBeenCalledTimes(1)
+    expect(ofetch.raw).toHaveBeenCalledWith("/api/images/", {
       ...DEFAULT_REQUEST_PARAMS,
       params: {
         q: "cat",
@@ -151,9 +142,9 @@ describe("fetchMedia", () => {
   })
 
   it("fetchMedia fetches the next page of results", async () => {
-    axios.get.mockImplementation(() =>
+    ofetch.raw.mockImplementation(() =>
       Promise.resolve({
-        data: {
+        _data: {
           result_count: 10000,
           page: 1,
           page_count: 50,
@@ -170,7 +161,7 @@ describe("fetchMedia", () => {
     await mediaStore.fetchMedia({ shouldPersistMedia: true })
 
     expect(mediaStore.currentPage).toEqual(3)
-    expect(axios.get).toHaveBeenCalledWith("/api/images/", {
+    expect(ofetch.raw).toHaveBeenCalledWith("/api/images/", {
       ...DEFAULT_REQUEST_PARAMS,
       params: {
         page: "3",
@@ -180,9 +171,9 @@ describe("fetchMedia", () => {
   })
 
   it("fetchMedia handles rejected promises", async () => {
-    axios.get.mockImplementation(() =>
+    ofetch.raw.mockImplementation(() =>
       Promise.resolve({
-        data: { result_count: 10000, page: 1, page_count: 50, results: items },
+        _data: { result_count: 10000, page: 1, page_count: 50, results: items },
       })
     )
 
@@ -199,14 +190,14 @@ describe("fetchMedia", () => {
 
 describe("fetchSingleMediaType", () => {
   beforeEach(() => {
-    axios.get.mockClear()
+    ofetch.raw.mockClear()
     setActivePinia(createPinia())
   })
 
   it("fetchSingleMediaType should fetch a single media from the API", async () => {
-    axios.get.mockImplementation(() =>
+    ofetch.raw.mockImplementation(() =>
       Promise.resolve({
-        data: { result_count: 10000, page: 1, page_count: 50, results: [] },
+        _data: { result_count: 10000, page: 1, page_count: 50, results: [] },
       })
     )
     const mediaStore = useMediaStore()
@@ -216,7 +207,7 @@ describe("fetchSingleMediaType", () => {
     })
 
     expect(media).toEqual(10000)
-    expect(axios.get).toHaveBeenCalledWith("/api/images/", {
+    expect(ofetch.raw).toHaveBeenCalledWith("/api/images/", {
       ...DEFAULT_REQUEST_PARAMS,
       params: {
         q: "",
@@ -225,9 +216,9 @@ describe("fetchSingleMediaType", () => {
   })
 
   it("fetchSingleMediaType augments item returned from the API", async () => {
-    axios.get.mockImplementation(() =>
+    ofetch.raw.mockImplementation(() =>
       Promise.resolve({
-        data: {
+        _data: {
           result_count: 1,
           page: 1,
           page_count: 1,
@@ -249,16 +240,16 @@ describe("fetchSingleMediaType", () => {
       ...DEFAULT_ADDITIONAL_MEDIA_PARAMS(IMAGE),
     })
 
-    expect(axios.get).toHaveBeenCalledWith("/api/images/", {
+    expect(ofetch.raw).toHaveBeenCalledWith("/api/images/", {
       params: { q: "" },
       ...DEFAULT_REQUEST_PARAMS,
     })
   })
 
-  it("fetchSingleMediaType handles no results", async () => {
-    axios.get.mockImplementation(() =>
+  it("fetchSingleMediaType throws an error no results", async () => {
+    ofetch.raw.mockImplementation(() =>
       Promise.resolve({
-        data: {
+        _data: {
           result_count: 0,
           page: 1,
           page_count: 0,
@@ -268,12 +259,15 @@ describe("fetchSingleMediaType", () => {
     )
 
     const mediaStore = useMediaStore()
-    const media = await mediaStore.fetchSingleMediaType({
-      mediaType: IMAGE,
-      shouldPersistMedia: false,
-    })
+    await expect(async () =>
+      mediaStore.fetchSingleMediaType({
+        mediaType: IMAGE,
+        shouldPersistMedia: false,
+      })
+    ).rejects.toThrowError("No results found")
 
-    expect(media).toEqual(0)
+    const media = mediaStore.results.image.items
+    expect(Object.keys(media).length).toEqual(0)
 
     expect(mediaStore.fetchState).toEqual({
       fetchingError: null,

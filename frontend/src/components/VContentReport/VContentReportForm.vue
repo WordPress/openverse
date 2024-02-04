@@ -126,9 +126,9 @@
 <script setup lang="ts">
 import { useNuxtApp, useRuntimeConfig } from "#imports"
 
-import { computed, ref } from "vue"
+import { ofetch } from "ofetch"
 
-import axios from "axios"
+import { computed, ref } from "vue"
 
 import {
   reasons,
@@ -138,7 +138,7 @@ import {
   FAILED,
   WIP,
   DMCA_FORM_URL,
-  ReportReason,
+  type ReportReason,
 } from "~/constants/content-report"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
@@ -208,13 +208,16 @@ const handleSubmit = async (event: Event) => {
     } = useRuntimeConfig()
 
     // Not proxied through the Nuxt `/api/` because it is a POST request
-    await axios.post(
+    await ofetch(
       `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
       {
-        mediaType,
-        reason,
-        identifier: props.media.id,
-        description: description.value,
+        method: "POST",
+        body: {
+          mediaType,
+          reason,
+          identifier: props.media.id,
+          description: description.value,
+        },
       }
     )
 

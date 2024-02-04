@@ -99,9 +99,12 @@ const parseTags = (tags: Tag[]) => {
  * @returns the given media object with the text fields decoded
  */
 export const decodeMediaData = <T extends Media>(
-  media: ApiMedia,
+  media: ApiMedia | undefined | null,
   mediaType: T["frontendMediaType"]
 ): T => {
+  if (!media) {
+    throw new Error("Media is undefined or null")
+  }
   // Fake ~50% of results as sensitive.
   const featureFlagStore = useFeatureFlagStore()
   const sensitivity =

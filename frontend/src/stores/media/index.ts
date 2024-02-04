@@ -1,8 +1,7 @@
-import { decodeMediaData, useRequestEvent } from "#imports"
+import { createError, decodeMediaData } from "#imports"
 
+import { ofetch } from "ofetch"
 import { defineStore } from "pinia"
-
-import axios from "axios"
 
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
@@ -20,9 +19,9 @@ import {
   AUDIO,
   IMAGE,
   isAdditionalSearchType,
-  SupportedMediaType,
   supportedMediaTypes,
-  SupportedSearchType,
+  type SupportedMediaType,
+  type SupportedSearchType,
 } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
@@ -31,6 +30,10 @@ import { deepFreeze } from "~/utils/deep-freeze"
 import { mediaSlug, DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
 import type { PaginatedApiMediaResult } from "~/types/api"
+import type {
+  PaginatedCollectionQuery,
+  PaginatedSearchQuery,
+} from "~/types/search"
 
 export type MediaStoreResult = {
   count: number
@@ -459,34 +462,18 @@ export const useMediaStore = defineStore("media", {
     }) {
       this._updateFetchState(mediaType, "start")
 
-      let page = this.results[mediaType].page + 1
+      const page = this.results[mediaType].page + 1
       const { pathSlug, queryParams } = this.getSearchUrlParts(
         mediaType,
         page,
         shouldPersistMedia
       )
-      const { url, baseURL } = this.getFetchUrl(mediaType, pathSlug)
+      const url = `/api/${mediaSlug(mediaType)}/${pathSlug}`
 
       try {
-        const res = await axios.get<PaginatedApiMediaResult>(url, {
-          baseURL,
-          params: queryParams,
-          timeout: DEFAULT_REQUEST_TIMEOUT,
-        })
-
-        const data = this.decodeData(res.data, mediaType)
-
+        const data = await this.fetchAndDecode(mediaType, url, queryParams)
+        this._updateFetchState(mediaType, "end")
         const mediaCount = data.result_count
-        if (!mediaCount) {
-          page = 1
-        }
-        const errorData = createNoResultErrorData(
-          queryParams.q ?? "",
-          mediaType,
-          mediaCount
-        )
-        this._updateFetchState(mediaType, "end", errorData)
-
         this.setMedia({
           mediaType,
           media: data.results,
@@ -497,17 +484,48 @@ export const useMediaStore = defineStore("media", {
         })
         return mediaCount
       } catch (error: unknown) {
-        const errorData = parseFetchingError(error, mediaType, "search", {
-          searchTerm: queryParams.q ?? "",
-        })
-        this._updateFetchState(mediaType, "end", errorData)
-
-        console.warn(error, { extra: errorData })
-        throw createError(errorData)
+        this.handleFetchingError(error, mediaType, queryParams.q)
       }
     },
 
-    decodeData(data: PaginatedApiMediaResult, mediaType: SupportedMediaType) {
+    async fetchAndDecode(
+      mediaType: SupportedMediaType,
+      url: string,
+      queryParams: PaginatedSearchQuery | PaginatedCollectionQuery
+    ) {
+      const res = await ofetch.raw<PaginatedApiMediaResult>(url, {
+        params: queryParams,
+        retry: 0,
+        timeout: DEFAULT_REQUEST_TIMEOUT,
+      })
+      const data = this.decodeData(res._data, mediaType)
+      if (!data.result_count) {
+        throw new Error(NO_RESULT)
+      }
+      return data
+    },
+
+    handleFetchingError(
+      error: unknown,
+      mediaType: SupportedMediaType,
+      searchTerm: string
+    ) {
+      const errorData = parseFetchingError(error, mediaType, "search", {
+        searchTerm,
+      })
+      this._updateFetchState(mediaType, "end", errorData)
+
+      console.warn(error, { extra: errorData })
+      throw createError(errorData)
+    },
+
+    decodeData(
+      data: PaginatedApiMediaResult | undefined,
+      mediaType: SupportedMediaType
+    ) {
+      if (!data) {
+        throw new Error("No data to decode")
+      }
       return {
         ...data,
         results: (data.results ?? []).reduce((acc, item) => {
@@ -532,16 +550,6 @@ export const useMediaStore = defineStore("media", {
         queryParams.peaks = "true"
       }
       return { pathSlug, queryParams }
-    },
-
-    getFetchUrl(mediaType: SupportedMediaType, pathSlug: string) {
-      const url = `/api/${mediaSlug(mediaType)}/${pathSlug}`
-
-      // TODO: Check if baseURL works in prod.
-      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
-      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
-      baseURL = baseURL.replace("localhost", "0.0.0.0")
-      return { url, baseURL }
     },
 
     setMediaProperties(
@@ -576,21 +584,4 @@ const findNoResultError = (errors: FetchingError[]): FetchingError | null => {
     errors.every(({ code }) => code === NO_RESULT)
     ? { ...errors[0], searchType: ALL_MEDIA }
     : null
-}
-
-export const createNoResultErrorData = (
-  searchTerm: string,
-  mediaType: SupportedMediaType,
-  mediaCount: number
-) => {
-  if (mediaCount) {
-    return undefined
-  }
-  return {
-    message: `No results found for ${searchTerm}`,
-    code: NO_RESULT,
-    requestKind: "search",
-    searchType: mediaType,
-    details: { searchTerm },
-  } as const
 }

@@ -84,7 +84,7 @@ import {
 
 import { computed, onMounted, ref, watch } from "vue"
 
-import axios from "axios"
+import { ofetch } from "ofetch"
 
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
@@ -181,8 +181,8 @@ const sketchFabUid = computed(() => {
 })
 
 const fetchFiletype = async (url: string) => {
-  const response = await axios.head(url)
-  const contentType = response.headers["content-type"]
+  const response = await ofetch.raw(url, { method: "HEAD" })
+  const contentType = response.headers.get("content-type")
   if (contentType?.includes("image")) {
     return contentType.split("/")[1]
   }

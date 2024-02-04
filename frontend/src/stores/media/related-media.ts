@@ -1,13 +1,11 @@
-import { decodeMediaData, useRequestEvent } from "#imports"
+import { decodeMediaData } from "#imports"
 
 import { defineStore } from "pinia"
-
-import axios from "axios"
 
 import { parseFetchingError } from "~/utils/errors"
 import { mediaSlug, DEFAULT_REQUEST_TIMEOUT } from "~/utils/query-utils"
 
-import { FetchingError, FetchState } from "~/types/fetch-state"
+import type { FetchingError, FetchState } from "~/types/fetch-state"
 import type { AudioDetail, ImageDetail, Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
 import type { PaginatedApiMediaResult } from "~/types/api"
@@ -49,11 +47,7 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.fetchState.fetchingError = null
     },
 
-    async fetchMedia(
-      mediaType: SupportedMediaType,
-      id: string,
-      baseUrl?: string
-    ) {
+    async fetchMedia(mediaType: SupportedMediaType, id: string) {
       if (this.mainMediaId === id && this.media.length > 0) {
         return this.media
       }
@@ -64,19 +58,12 @@ export const useRelatedMediaStore = defineStore("related-media", {
       const url = `/api/${mediaSlug(mediaType)}/${id}/related/`
       const params = mediaType === "audio" ? { peaks: true } : {}
 
-      let baseURL = baseUrl ? baseUrl : null
-      if (!baseURL) {
-        const nitroOrigin = useRequestEvent()?.context?.siteConfigNitroOrigin
-        baseURL = nitroOrigin ? nitroOrigin : location?.origin
-        baseURL = baseURL.replace("localhost", "0.0.0.0")
-      }
       try {
-        const res = await axios.get<PaginatedApiMediaResult>(url, {
+        const res = await $fetch.raw<PaginatedApiMediaResult>(url, {
           timeout: DEFAULT_REQUEST_TIMEOUT,
           params,
-          baseURL,
         })
-        this.media = (res.data.results ?? []).map(
+        this.media = (res._data?.results ?? []).map(
           (item: AudioDetail | ImageDetail) => decodeMediaData(item, mediaType)
         )
         this._endFetching()

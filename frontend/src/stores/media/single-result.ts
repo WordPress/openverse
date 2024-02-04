@@ -1,13 +1,6 @@
-import {
-  createError,
-  decodeMediaData,
-  isServer,
-  useRequestEvent,
-} from "#imports"
+import { createError, decodeMediaData, isServer } from "#imports"
 
 import { defineStore } from "pinia"
-
-import axios from "axios"
 
 import type {
   ApiMedia,
@@ -167,13 +160,8 @@ export const useSingleResultStore = defineStore("single-result", {
         ? existingItem
         : ((await this.fetchMediaItem<T>(type, id)) as DetailFromMediaType<T>)
       if (item && isServer) {
-        const baseURL =
-          useRequestEvent()?.context.siteConfigNitroOrigin.replace(
-            "localhost",
-            "0.0.0.0"
-          )
         const relatedMediaStore = useRelatedMediaStore()
-        await relatedMediaStore.fetchMedia(type, id, baseURL)
+        await relatedMediaStore.fetchMedia(type, id)
       }
       return item
     },
@@ -188,19 +176,15 @@ export const useSingleResultStore = defineStore("single-result", {
     ) {
       this._updateFetchState("start")
 
-      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
-
-      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
-      baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
-        const rawItem = await axios.get<ApiMedia>(
+        const rawItem = await $fetch.raw<ApiMedia>(
           `/api/${mediaSlug(type)}/${id}/`,
           {
             timeout: DEFAULT_REQUEST_TIMEOUT,
-            baseURL,
           }
         )
-        const transformedItem = decodeMediaData(rawItem.data, type)
+
+        const transformedItem = decodeMediaData(rawItem._data, type)
         const item = this._addProviderName(transformedItem)
 
         this.setMediaItem(item)

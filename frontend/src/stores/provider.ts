@@ -1,15 +1,13 @@
-import { useRuntimeConfig, useRequestEvent } from "#imports"
+import { useRuntimeConfig } from "#imports"
 
 import { defineStore } from "pinia"
-
-import axios from "axios"
 
 import { capitalCase } from "~/utils/case"
 import { parseFetchingError } from "~/utils/errors"
 import {
   AUDIO,
   IMAGE,
-  SupportedMediaType,
+  type SupportedMediaType,
   supportedMediaTypes,
 } from "~/constants/media"
 
@@ -139,18 +137,14 @@ export const useProviderStore = defineStore("provider", {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
 
-      const nitroOrigin = useRequestEvent()?.context.siteConfigNitroOrigin
-      let baseURL = nitroOrigin ? nitroOrigin : location?.origin
-      baseURL = baseURL.replace("localhost", "0.0.0.0")
       try {
-        const res: { data: MediaProvider[] } = await axios.get(
+        const res = await $fetch.raw(
           `/api/${mediaType === "image" ? "images" : "audio"}/stats/`,
           {
-            baseURL,
             timeout: DEFAULT_REQUEST_TIMEOUT,
           }
         )
-        sortedProviders = sortProviders(res.data ?? [])
+        sortedProviders = sortProviders(res._data ?? [])
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
         const errorData = parseFetchingError(error, mediaType, "provider")

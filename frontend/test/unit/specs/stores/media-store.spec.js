@@ -6,11 +6,7 @@ import { image as imageObject } from "~~/test/unit/fixtures/image"
 
 import { deepClone } from "~/utils/clone"
 
-import {
-  createNoResultErrorData,
-  initialResults,
-  useMediaStore,
-} from "~/stores/media"
+import { initialResults, useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import {
   ALL_MEDIA,
@@ -461,15 +457,6 @@ describe("media store", () => {
     }
   )
 
-  it("getFetchUrl returns default values", () => {
-    const mediaStore = useMediaStore()
-    const { url, baseURL } = mediaStore.getFetchUrl("image", "")
-
-    expect(baseURL).toEqual("http://0.0.0.0:3000")
-
-    expect(url).toEqual(`/api/images/`)
-  })
-
   it("decodeData returns correct data", () => {
     const mediaStore = useMediaStore()
     const apiResult = testApiResult(IMAGE)
@@ -491,23 +478,4 @@ describe("media store", () => {
       expect(data.results[id].originalTitle).toEqual(item.title)
     }
   })
-
-  it.each`
-    searchTerm | mediaType | mediaCount | expectedData
-    ${"cat"}   | ${IMAGE}  | ${0}       | ${{ code: NO_RESULT, details: { searchTerm: "cat" }, message: "No results found for cat", requestKind: "search", searchType: IMAGE }}
-    ${"cat"}   | ${AUDIO}  | ${0}       | ${{ code: NO_RESULT, details: { searchTerm: "cat" }, message: "No results found for cat", requestKind: "search", searchType: AUDIO }}
-    ${"cat"}   | ${IMAGE}  | ${1}       | ${undefined}
-    ${"cat"}   | ${AUDIO}  | ${1}       | ${undefined}
-  `(
-    "createNoResultErrorData returns correct data",
-    ({ searchTerm, mediaType, mediaCount, expectedData }) => {
-      const actualErrorData = createNoResultErrorData(
-        searchTerm,
-        mediaType,
-        mediaCount
-      )
-
-      expect(actualErrorData).toEqual(expectedData)
-    }
-  )
 })
