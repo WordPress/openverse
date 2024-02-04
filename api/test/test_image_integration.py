@@ -147,7 +147,11 @@ def test_image_uuid_validation():
 
 
 def test_image_tag_collection():
-    tag_collection("images")
+    tag_collection("images", "cat")
+
+
+def test_image_tag_collection_case_sensitive():
+    tag_collection("images", "Cat")
 
 
 def test_image_source_collection():

@@ -174,8 +174,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="tag/(?P<tag>[^/.]+)")
     def tag_collection(self, request, tag, *_, **__):
-        tag_lower = tag.lower()
-        return self.collection(request, tag_lower, None, None)
+        return self.collection(request, tag, None, None)
 
     @action(detail=False, methods=["get"], url_path="source/(?P<source>[^/.]+)")
     def source_collection(self, request, source, *_, **__):

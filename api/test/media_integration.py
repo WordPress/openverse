@@ -28,14 +28,14 @@ def search_by_category(media_path, category, fixture):
     assert all(audio_item["category"] == category for audio_item in results)
 
 
-def tag_collection(media_path):
-    response = requests.get(f"{API_URL}/v1/{media_path}/tag/cat")
+def tag_collection(media_path, tag="cat"):
+    response = requests.get(f"{API_URL}/v1/{media_path}/tag/{tag}")
     assert response.status_code == 200
 
     results = response.json()["results"]
     for r in results:
         tag_names = [tag["name"] for tag in r["tags"]]
-        assert "cat" in tag_names
+        assert tag in tag_names
 
 
 def source_collection(media_path):
