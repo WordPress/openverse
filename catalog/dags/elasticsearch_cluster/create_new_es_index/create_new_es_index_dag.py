@@ -109,6 +109,7 @@ from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import 
     CREATE_NEW_INDEX_CONFIGS,
     CreateNewIndex,
 )
+from elasticsearch_cluster.shared import get_es_host
 
 
 logger = logging.getLogger(__name__)
@@ -188,7 +189,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
     with dag:
         prevent_concurrency = prevent_concurrency_with_dags(config.blocking_dags)
 
-        es_host = es.get_es_host(environment=config.environment)
+        es_host = get_es_host(environment=config.environment)
 
         index_name = es.get_index_name(
             media_type="{{ params.media_type }}",

@@ -2,7 +2,6 @@ import logging
 from datetime import timedelta
 
 from airflow.decorators import task, task_group
-from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.python import PythonSensor
 
@@ -19,12 +18,6 @@ EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
 
 GET_FINAL_INDEX_CONFIG_TASK_NAME = "get_final_index_configuration"
 GET_CURRENT_INDEX_CONFIG_TASK_NAME = "get_current_index_configuration"
-
-
-@task
-def get_es_host(environment: str):
-    conn = Connection.get_connection_from_secrets(f"elasticsearch_http_{environment}")
-    return conn.host
 
 
 @task
