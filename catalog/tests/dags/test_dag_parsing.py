@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from airflow.models import DagBag
 
-from common.constants import MEDIA_TYPES
+from common.constants import ENVIRONMENTS, MEDIA_TYPES
 from providers.provider_reingestion_workflows import (
     PROVIDER_REINGESTION_WORKFLOWS as REINGESTION_WORKFLOW_CONFIGS,
 )
@@ -25,6 +25,7 @@ DAG_PATHS = [
     "data_refresh/dag_factory.py",
     "data_refresh/create_filtered_index_dag.py",
     "elasticsearch_cluster/recreate_staging_index/recreate_full_staging_index_dag.py",
+    "elasticsearch_cluster/healthcheck_dag.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
     "database/delete_records/delete_records_dag.py",
@@ -41,6 +42,7 @@ EXPECTED_COUNT = {
     "popularity/popularity_refresh_dag_factory.py": len(MEDIA_TYPES),
     "data_refresh/dag_factory.py": len(MEDIA_TYPES),
     "data_refresh/create_filtered_index_dag.py": len(MEDIA_TYPES),
+    "elasticsearch_cluster/healthcheck_dag.py": len(ENVIRONMENTS),
 }
 
 
