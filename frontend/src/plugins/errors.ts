@@ -29,7 +29,7 @@ function isDetailedResponseData(data: unknown): data is { detail: string } {
  * @param details - Any additional details to attach to the error
  * @returns Normalized error object
  */
-function normalizeFetchingError(
+export function normalizeFetchingError(
   error: unknown,
   searchType: SupportedSearchType,
   requestKind: RequestKind,
