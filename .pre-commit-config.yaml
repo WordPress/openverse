@@ -148,7 +148,7 @@ repos:
         name: vale
         language: system
         entry: bash -c 'just .vale/run'
-        pass_filesnames: false
+        pass_filenames: false
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
