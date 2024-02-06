@@ -6,11 +6,13 @@ import {
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import { t } from "~~/test/playwright/utils/i18n"
-import { getH1, getHomeLink } from "~~/test/playwright/utils/components"
+import { getH1 } from "~~/test/playwright/utils/components"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
+
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -42,14 +44,14 @@ test.describe("sensitive_results", () => {
 
     // Check the sensitive toggle on a search page
     await filters.open(page)
-    await getSensitiveToggle(page).click()
 
-    // Search from the home page
-    await getHomeLink(page).click()
-    // Make sure we navigated to the homepage
-    await page.waitForURL("/")
-    await page.locator('main input[type="search"]').fill("cat")
-    await page.keyboard.press("Enter")
+    // Wait for the request that includes the sensitive query param
+    const requestPromise = page.waitForRequest((req) => {
+      return req.url().includes(INCLUDE_SENSITIVE_QUERY_PARAM)
+    })
+    await getSensitiveToggle(page).click()
+    const request = await requestPromise
+    expect(request.url()).toContain("cat")
 
     // Check the sensitive media on the search page
     await expect(getH1(page, /cat/i)).toBeVisible()
