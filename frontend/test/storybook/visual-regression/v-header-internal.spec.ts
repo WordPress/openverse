@@ -40,7 +40,7 @@ test.describe("VHeaderInternal", () => {
         // To prevent this, move the mouse away.
         await page.mouse.move(0, 0)
         // Wait for the fonts to load.
-        await sleep(300)
+        await sleep(500)
         await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
       })
     })
