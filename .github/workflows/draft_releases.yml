@@ -1,0 +1,44 @@
+name: Draft releases
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Freely interrupt release drafting workflows, they do not depend on each other and always generate the full release based on the previous one
+  cancel-in-progress: true
+
+jobs:
+  draft-release:
+    name: "Draft ${{ matrix.app }} release"
+    runs-on: ubuntu-latest
+    permissions:
+      # write permission is required to create a github release
+      contents: write
+
+    strategy:
+      matrix:
+        app:
+          - api
+          - frontend
+          - catalog
+          - ingestion_server
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: release-drafter/release-drafter@v5
+        id: release-drafter
+        with:
+          config-name: release-drafter-${{ matrix.app }}.yml
+          version: ${{ matrix.app }}-draft
+          tag: ${{ matrix.app }}-draft
+          name: "TESTING ${{ matrix.app }}-draft"
+          draft: true
+          commitish: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
