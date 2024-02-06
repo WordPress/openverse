@@ -106,6 +106,8 @@ from common import elasticsearch as es
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from common.sensors.utils import prevent_concurrency_with_dags
 from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
+    GET_CURRENT_INDEX_CONFIG_TASK_NAME,
+    GET_FINAL_INDEX_CONFIG_TASK_NAME,
     check_override_config,
     get_final_index_configuration,
     get_index_name,
@@ -205,7 +207,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         check_override = check_override_config(override="{{ params.override_config }}")
 
         current_index_config = es.get_index_configuration.override(
-            task_id=es.GET_CURRENT_INDEX_CONFIG_TASK_NAME
+            task_id=GET_CURRENT_INDEX_CONFIG_TASK_NAME
         )(
             source_index="{{ params.source_index or params.media_type }}",
             es_host=es_host,
@@ -217,7 +219,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         )
 
         final_index_config = get_final_index_configuration.override(
-            task_id=es.GET_FINAL_INDEX_CONFIG_TASK_NAME,
+            task_id=GET_FINAL_INDEX_CONFIG_TASK_NAME,
             trigger_rule=TriggerRule.NONE_FAILED,
         )(
             override_config="{{ params.override_config }}",

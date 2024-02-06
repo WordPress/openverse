@@ -42,15 +42,16 @@ The following are DAGs grouped by their primary tag:
 
 ### Database
 
-| DAG ID                                                                            | Schedule Interval |
-| --------------------------------------------------------------------------------- | ----------------- |
-| [`batched_update`](#batched_update)                                               | `None`            |
-| [`delete_records`](#delete_records)                                               | `None`            |
-| [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
-| [`recreate_full_staging_index`](#recreate_full_staging_index)                     | `None`            |
-| [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
-| [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
-| [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
+| DAG ID                                                                                        | Schedule Interval |
+| --------------------------------------------------------------------------------------------- | ----------------- |
+| [`batched_update`](#batched_update)                                                           | `None`            |
+| [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index) | `None`            |
+| [`delete_records`](#delete_records)                                                           | `None`            |
+| [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)             | `None`            |
+| [`recreate_full_staging_index`](#recreate_full_staging_index)                                 | `None`            |
+| [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)             | `None`            |
+| [`report_pending_reported_media`](#report_pending_reported_media)                             | `@weekly`         |
+| [`staging_database_restore`](#staging_database_restore)                                       | `@monthly`        |
 
 ### Elasticsearch
 
@@ -144,6 +145,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
 1.  [`create_new_production_es_index`](#create_new_production_es_index)
 1.  [`create_new_staging_es_index`](#create_new_staging_es_index)
+1.  [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)
 1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
@@ -696,6 +698,48 @@ The resulting, merged configuration will be:
 }
 ```
 
+### `create_proportional_by_source_staging_index`
+
+#### Create Proportional By Source Staging Index DAG
+
+This DAG is used to create a new staging Elasticsearch index that is a subset of
+a production source index, such that the proportions of records by source is
+equal to the proportions of records by source in the provider API.
+
+Note that proportions match the proportions by source in the unfiltered media
+index, not necessarily the source index which may differ. The size of the new
+index is also calculated based on a percentage of the unfiltered media index,
+rather than the source index.
+
+Required Dagrun Configuration parameters:
+
+- media_type: The media type for which to create a new index.
+- percentage_of_prod: A float indicating the proportion of items to take from
+  each source from the total amount existing in the production source index
+
+Optional params:
+
+- source_index: An existing production Elasticsearch index to use as the basis
+  for the new index. If not provided, the index aliased to
+  `<media_type>-filtered` will be used.
+
+##### When this DAG runs
+
+This DAG is on a `None` schedule and is run manually.
+
+##### Race conditions
+
+Because this DAG runs on the staging ingestion server and staging elasticsearch
+cluster, it does _not_ interfere with the `data_refresh` or
+`create_filtered_index` DAGs.
+
+However, as the DAG operates on the staging API database it will exit
+immediately if any of the following DAGs are running:
+
+- `staging_database_restore`
+- `recreate_full_staging_index`
+- `create_new_staging_es_index`
+
 ### `delete_records`
 
 #### Delete Records DAG
@@ -1086,9 +1130,10 @@ code is deployed for the calculation.
 #### Recreate Full Staging Index DAG
 
 This DAG is used to fully recreate a new staging Elasticsearch index for a given
-`media_type`, using records pulled from the staging API database. It is used to
-decouple the steps of creating a new index from the rest of the data refresh
-process.
+`media_type`, using records pulled from the staging API database rather than
+from a source index (like the `create_new_staging_es_index` DAG does). It is
+used to decouple the steps of creating a new index from the rest of the data
+refresh process.
 
 Staging index creation is handled by the _staging_ ingestion server. The DAG
 triggers the ingestion server `REINDEX` action to create a new index in the
@@ -1117,8 +1162,12 @@ Because this DAG runs on the staging ingestion server and staging elasticsearch
 cluster, it does _not_ interfere with the `data_refresh` or
 `create_filtered_index` DAGs.
 
-However, the DAG will exit immediately if the `staging_database_restore` DAG is
-running, as it operates on the staging API database.
+However, as the DAG operates on the staging API database it will exit
+immediately if any of the following DAGs are running:
+
+- `staging_database_restore`
+- `create_proportional_by_provider_staging_index`
+- `create_new_staging_es_index`
 
 ### `recreate_image_popularity_calculation`
 
