@@ -5,6 +5,7 @@ from airflow.decorators import task, task_group
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.python import PythonSensor
+from airflow.utils.trigger_rule import TriggerRule
 
 from common.constants import REFRESH_POKE_INTERVAL
 
@@ -148,3 +149,57 @@ def trigger_and_wait_for_reindex(
     )
 
     trigger_reindex_task >> wait_for_reindex
+
+
+@task_group(group_id="point_alias")
+def point_alias(index_name: str, alias: str, es_host: str):
+    """
+    Point the target alias to the given index. If the alias is already being
+    used by one or more indices, it will first be removed from all of them.
+    """
+
+    @task.branch
+    def check_if_alias_exists(alias: str, es_host: str):
+        """Check if the alias already exists."""
+        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+        return (
+            "point_alias.remove_existing_alias"
+            if es_conn.indices.exists_alias(name=alias)
+            else "point_alias.point_new_alias"
+        )
+
+    @task
+    def remove_existing_alias(alias: str, es_host: str):
+        """Remove the given alias from any indices to which it  points."""
+        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+        response = es_conn.indices.delete_alias(
+            name=alias,
+            # Remove the alias from _all_ indices to which it currently
+            # applies
+            index="_all",
+        )
+        return response.get("acknowledged")
+
+    @task
+    def point_new_alias(
+        es_host: str,
+        index_name: str,
+        alias: str,
+    ):
+        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+        response = es_conn.indices.put_alias(index=index_name, name=alias)
+        return response.get("acknowledged")
+
+    exists_alias = check_if_alias_exists(alias, es_host)
+
+    remove_alias = remove_existing_alias.override(task_id="remove_existing_alias")(
+        alias, es_host
+    )
+
+    point_alias = point_new_alias.override(
+        # The remove_alias task may be skipped.
+        trigger_rule=TriggerRule.NONE_FAILED,
+    )(es_host, index_name, alias)
+
+    exists_alias >> [remove_alias, point_alias]
+    remove_alias >> point_alias

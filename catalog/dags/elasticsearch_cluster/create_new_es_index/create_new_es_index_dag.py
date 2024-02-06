@@ -105,7 +105,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from common import elasticsearch as es
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from common.sensors.utils import prevent_concurrency_with_dags
-from elasticsearch_cluster.create_new_es_index import (
+from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
     check_override_config,
     get_final_index_configuration,
     get_index_name,
