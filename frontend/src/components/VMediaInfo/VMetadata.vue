@@ -3,7 +3,7 @@
     <div v-for="datum in metadata" :key="datum.label">
       <VSourceProviderTooltip
         v-if="tooltipId(datum)"
-        :describedby="tooltipId(datum)"
+        :described-by="tooltipId(datum)"
         class="label-regular mb-1 flex flex-row items-center ps-1"
         :datum="datum"
       />
@@ -21,7 +21,7 @@
       <VSourceProviderTooltip
         v-if="tooltipId(datum)"
         :key="datum.label"
-        :describedby="tooltipId(datum)"
+        :described-by="tooltipId(datum)"
         class="label-regular flex flex-row items-center p-1 sm:py-0 sm:pe-0"
         :datum="datum"
       />

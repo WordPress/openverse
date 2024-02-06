@@ -1,7 +1,7 @@
 <template>
   <dt>
     {{ $t(datum.label) }}
-    <VTooltip placement="top" :describedby="describedby" class="ms-1">
+    <VTooltip placement="top" :described-by="describedBy" class="ms-1">
       <template #default>
         <p
           class="caption-regular rounded-sm bg-dark-charcoal px-2 py-1 text-white"
@@ -28,7 +28,7 @@ export default defineComponent({
       type: Object as PropType<Metadata>,
       required: true,
     },
-    describedby: {
+    describedBy: {
       type: String,
       required: true,
     },

@@ -14,8 +14,8 @@
       -->
       <slot name="trigger" :open="open">
         <VIconButton
-          :label="describedby"
-          :aria-describedby="describedby"
+          :label="describedBy"
+          :aria-describedby="describedBy"
           variant="bordered-white"
           size="disabled"
           class="h-4 w-4 hover:!border-tx"
@@ -26,7 +26,7 @@
     </div>
     <div
       v-show="visibleRef"
-      :id="describedby"
+      :id="describedBy"
       ref="tooltipRef"
       role="tooltip"
       :class="`z-${zIndex} w-max-content absolute left-0 top-0`"
@@ -89,7 +89,7 @@ export default defineComponent({
      * The id of the element labelling the popover content.
      * The owning element must have `aria-describedby` set to this value.
      */
-    describedby: {
+    describedBy: {
       type: String,
       required: true,
     },
