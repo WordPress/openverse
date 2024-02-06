@@ -108,6 +108,7 @@ _mount-test command: up-deps
         {{ command }}
 
 # Launch a Bash shell in a test container under `SERVICE`
+# Run pytest with `--pdb` to workaround xdist breaking pdb.set_trace()
 test-session:
     just _mount-test bash
 
