@@ -2,6 +2,7 @@ name: Release app
 
 on:
   release:
+    types: [released]
 
 # The app-name expression is duplicated between here and `env` below because neither context is able to reference the other
 # but both need it
@@ -42,15 +43,12 @@ jobs:
       - name: Calculate tag name
         id: tag
         run: |
-          # Format example: 2023.03.22.04.56.29
-          # `-u` forces UTC
-          formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
+          release_date=$(echo '${{ github.ref_name }}' | sed 's/${{ env.APP_NAME }}//')
 
-          # Split image and git tag to avoid app name duplicated in the fully qualified image name
+          # Generate `rel-` prefixed image tag to avoid duplicated app name between image and tag
           {
-            echo "date=$formatted_date";
-            echo "git-tag=${{ env.APP_NAME }}-$formatted_date";
-            echo "image-tag=rel-$formatted_date";
+            echo "date=$release_date";
+            echo "image-tag=rel-$release_date";
           } >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Docker Registry
@@ -60,7 +58,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add new tag to existing docker image
+      - name: Tag latest with release tag
         run: |
           docker buildx imagetools create ghcr.io/wordpress/openverse-${{ env.APP_NAME }}:latest --tag ghcr.io/wordpress/openverse-${{ env.APP_NAME }}:${{ steps.tag.outputs.image-tag }}
 
@@ -90,24 +88,11 @@ jobs:
           # minutes is reached. On the other hand, we do want to wait
           # so that there is a record of the successful deployment.
 
-      - name: Publish release
-        uses: release-drafter/release-drafter@v5
-        id: release-drafter
-        with:
-          config-name: release-drafter-${{ env.APP_NAME }}.yml
-          version: ${{ steps.tag.outputs.date }}
-          tag: ${{ steps.tag.outputs.git-tag }}
-          name: ${{ steps.tag.outputs.git-tag }}
-          publish: true
-          commitish: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Add new changelog file to documentation
         env:
           APP: ${{ env.APP_NAME }}
           DATE: ${{ steps.tag.outputs.date }}
-          RELEASE_BODY: ${{ steps.release-drafter.outputs.body }}
+          RELEASE_BODY: ${{ github.event.release.body }}
         working-directory: automations/python/workflows
         run: python write_changelog.py
 
@@ -135,7 +120,7 @@ jobs:
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v5
-        if: ${{ !cancelled() }}
+        if: "!cancelled()"
         with:
           # Access token necessary for PRs to run with CI
           token: ${{ secrets.ACCESS_TOKEN }}

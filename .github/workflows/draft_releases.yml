@@ -29,13 +29,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Calculate tag name
+        id: tag
+        run: |
+          # Format example: 2023.03.22.04.56.29
+          # `-u` forces UTC
+          formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
+
+          {
+            echo "date=$formatted_date";
+            echo "git-tag=${{ env.APP_NAME }}-$formatted_date";
+          } >> "$GITHUB_OUTPUT"
+
+      # Each time this runs, it should replace the previous drafted release matching the tag prefix set in the release drafter config
+      # This means there will always be a running drafted release for all apps
+      # Publishing the drafted release triggers the `release-app` workflow
       - uses: release-drafter/release-drafter@v5
         id: release-drafter
         with:
           config-name: release-drafter-${{ matrix.app }}.yml
-          version: ${{ matrix.app }}-draft
-          tag: ${{ matrix.app }}-draft
-          name: ${{ matrix.app }}-draft
+          version: ${{ steps.tag.outputs.date }}
+          tag: ${{ matrix.app }}-${{ steps.tag.outputs.git-tag }}
+          name: ${{ matrix.app }}-${{ steps.tag.outputs.git-tag }}
           draft: true
           commitish: main
         env:
