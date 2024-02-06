@@ -13,13 +13,10 @@
    unpause it back.
    ```
 
-1. Visit the
-   [Catalog Docker image](https://github.com/WordPress/openverse/pkgs/container/openverse-catalog)
-   page and copy the SHA of the image tagged `latest`.
-1. Release the app via
-   [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
-   Click the "Run workflow" button, choose "catalog" from the dropdown, and
-   supply the SHA identified in the previous step
+1. [Publish the drafted catalog release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=catalog-)
+   - Here you can preview the changes included in the catalog release and decide
+     whether a release is necessary and adjust monitoring during the deployment
+     accordingly.
 
 ## Deployment
 
