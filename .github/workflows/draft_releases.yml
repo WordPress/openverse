@@ -1,8 +1,6 @@
 name: Draft releases
 
 on:
-  pull_request:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -37,7 +35,7 @@ jobs:
           config-name: release-drafter-${{ matrix.app }}.yml
           version: ${{ matrix.app }}-draft
           tag: ${{ matrix.app }}-draft
-          name: "TESTING ${{ matrix.app }}-draft"
+          name: ${{ matrix.app }}-draft
           draft: true
           commitish: main
         env:
