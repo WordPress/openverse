@@ -1,5 +1,4 @@
 import logging
-import math
 
 from airflow.decorators import task, task_group
 from airflow.providers.http.operators.http import HttpOperator
@@ -127,8 +126,14 @@ def get_proportional_source_count_kwargs(
         for source, production_count in production_source_counts.items()
     }
 
-    # The total number of records in the proportional subset index
-    subset_total = math.floor(production_total * percentage_of_prod)
+    # The total number of records in the proportional subset index. Note that
+    # the final count of the subset may be different if the proportions do not
+    # divide evenly into the desired total, because we must round to the nearest
+    # integer.
+    # For example, if the desired index size is 1,000 records but each of the
+    # sources must represent 1/3 of the index, we will round the count for each
+    # source to 333 and have a final index with only 999 records.
+    subset_total = round(production_total * percentage_of_prod)
 
     # Return a list of kwargs that will be passed to the mapped reindex
     # tasks, for reindexing each source into the new index.
