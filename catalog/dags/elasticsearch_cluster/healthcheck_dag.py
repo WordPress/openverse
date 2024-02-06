@@ -30,20 +30,11 @@ from elasticsearch_cluster.shared import get_es_host
 logger = logging.getLogger(__name__)
 
 
-_DAG_ID = "{env}_cluster_healthcheck"
+_DAG_ID = "{env}_elasticsearch_cluster_healthcheck"
 
 EXPECTED_NODE_COUNT = 6
 EXPECTED_DATA_NODE_COUNT = 3
 EXPECTED_MASTER_NODE_COUNT = 3
-
-
-def _alert_no_response(env: Environment):
-    send_alert(
-        f"Elasticsearch {env} cluster failed to respond to healthcheck request",
-        _DAG_ID.format(env=env),
-    )
-
-    logger.error("Cluster failed to respond to healthcheck")
 
 
 def _format_response_body(response_body: dict) -> str:
@@ -55,59 +46,52 @@ def _format_response_body(response_body: dict) -> str:
     """
 
 
-def _alert_unexpected_status(env: Environment, response_body: dict):
-    status = response_body["status"]
+def _compose_red_status(env: Environment, response_body: dict):
+    message = f"""
+    Elasticsearch {env} cluster status is **red**.
 
-    send_alert(
-        f"""
-        Elasticsearch {env} cluster status is {status}.
+    This is a critical status change, **investigate ASAP**.
 
-        {_format_response_body(response_body)}
-        """,
-        _DAG_ID.format(env=env),
-    )
-    logger.error(f"Unexpected cluster health status; {json.dumps(response_body)}")
+    {_format_response_body(response_body)}
+    """
+    return message
 
 
-def _alert_unexpected_node_count(env: Environment, response_body: dict):
+def _compose_unexpected_node_count(env: Environment, response_body: dict):
     node_count = response_body["number_of_nodes"]
     data_node_count = response_body["number_of_data_nodes"]
     master_node_count = node_count - data_node_count
 
-    send_alert(
-        f"""
-        Elasticsearch {env} cluster node count is **{node_count}**.
-        Expected {EXPECTED_NODE_COUNT} total nodes.
+    message = f"""
+    Elasticsearch {env} cluster node count is **{node_count}**.
+    Expected {EXPECTED_NODE_COUNT} total nodes.
 
-        Master nodes: **{master_node_count}** of expected {EXPECTED_MASTER_NODE_COUNT}
-        Data nodes: **{data_node_count}** of expected {EXPECTED_DATA_NODE_COUNT}
+    Master nodes: **{master_node_count}** of expected {EXPECTED_MASTER_NODE_COUNT}
+    Data nodes: **{data_node_count}** of expected {EXPECTED_DATA_NODE_COUNT}
 
-        This is a critical status change, **investigate ASAP**.
-        If this is expected (e.g., during controlled node or cluster changes), acknowledge immediately with explanation.
+    This is a critical status change, **investigate ASAP**.
+    If this is expected (e.g., during controlled node or cluster changes), acknowledge immediately with explanation.
 
-        {_format_response_body(response_body)}
-        """,
-        _DAG_ID.format(env=env),
-    )
+    {_format_response_body(response_body)}
+    """
     logger.error(f"Unexpected node count; {json.dumps(response_body)}")
+    return message
 
 
-def _notify_yellow_cluster_health(env: Environment, response_body: dict):
-    send_message(
-        f"""
-        Elasticsearch {env} cluster health is **yellow**.
+def _compose_yellow_cluster_health(env: Environment, response_body: dict):
+    message = f"""
+    Elasticsearch {env} cluster health is **yellow**.
 
-        This does not mean something is necessarily wrong, but if this is not expected (e.g., data refresh) then investigate cluster health now.
+    This does not mean something is necessarily wrong, but if this is not expected (e.g., data refresh) then investigate cluster health now.
 
-        {_format_response_body(response_body)}
-        """,
-        _DAG_ID.format(env=env),
-    )
+    {_format_response_body(response_body)}
+    """
     logger.info(f"Cluster health was yellow; {json.dumps(response_body)}")
+    return message
 
 
 @task
-def ping_healthcheck(es_host: str):
+def ping_healthcheck(env: str, es_host: str):
     es_conn: Elasticsearch = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
     response = es_conn.cluster.health()
@@ -116,26 +100,37 @@ def ping_healthcheck(es_host: str):
 
 
 @task
-def notify(env: Environment, response_body: dict):
+def compose_notification(env: Environment, response_body: dict):
     status = response_body["status"]
 
     if status == "red":
-        return _alert_unexpected_status(env, response_body)
+        return "alert", _compose_red_status(env, response_body)
 
     if response_body["number_of_nodes"] != EXPECTED_NODE_COUNT:
-        return _alert_unexpected_node_count(env, response_body)
+        return "alert", _compose_unexpected_node_count(env, response_body)
 
     if status == "yellow":
-        return _notify_yellow_cluster_health(env, response_body)
+        return "notification", _compose_yellow_cluster_health(env, response_body)
 
     logger.info(f"Cluster health was green; {json.dumps(response_body)}")
+    return None, None
+
+
+@task
+def notify(env: str, message_type_and_string: tuple[str, str]):
+    message_type, message = message_type_and_string
+
+    if message_type == "alert":
+        send_alert(message, dag_id=_DAG_ID.format(env=env))
+    elif message_type == "notification":
+        send_message(message, dag_id=_DAG_ID.format(env=env))
 
 
 def _cluster_healthcheck_dag(env: Environment):
     es_host = get_es_host(env)
-    healthcheck_response = ping_healthcheck(es_host)
-
-    es_host >> healthcheck_response >> notify(env, healthcheck_response)
+    healthcheck_response = ping_healthcheck(env, es_host)
+    notification = compose_notification(env, healthcheck_response)
+    es_host >> healthcheck_response >> notification >> notify(env, notification)
 
 
 _SHARED_DAG_ARGS = {
@@ -150,14 +145,14 @@ _SHARED_DAG_ARGS = {
 
 
 @dag(dag_id=_DAG_ID.format(env=STAGING), **_SHARED_DAG_ARGS)
-def staging_cluster_healthcheck():
+def staging_elasticsearch_cluster_healthcheck():
     _cluster_healthcheck_dag(STAGING)
 
 
 @dag(dag_id=_DAG_ID.format(env=PRODUCTION), **_SHARED_DAG_ARGS)
-def production_cluster_healthcheck():
+def production_elasticsearch_cluster_healthcheck():
     _cluster_healthcheck_dag(PRODUCTION)
 
 
-staging_cluster_healthcheck()
-production_cluster_healthcheck()
+staging_elasticsearch_cluster_healthcheck()
+production_elasticsearch_cluster_healthcheck()
