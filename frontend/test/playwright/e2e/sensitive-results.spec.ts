@@ -46,6 +46,8 @@ test.describe("sensitive_results", () => {
 
     // Search from the home page
     await getHomeLink(page).click()
+    // Make sure we navigated to the homepage
+    await page.waitForURL("/")
     await page.locator('main input[type="search"]').fill("cat")
     await page.keyboard.press("Enter")
 
