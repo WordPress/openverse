@@ -1,7 +1,6 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { sleep } from "~~/test/playwright/utils/navigation"
 import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 const headerSelector = ".main-header"
@@ -35,12 +34,17 @@ test.describe("VHeaderInternal", () => {
       })
       test(`mobile-header-internal-modal-${dir}`, async ({ page }) => {
         await page.goto(pageUrl(dir))
+
+        // Ensure fonts are loaded before taking the snapshot.
+        const requestPromise = page.waitForRequest((req) =>
+          req.url().includes("var.woff2")
+        )
         await page.locator('button[aria-haspopup="dialog"]').click()
+        await requestPromise
         // Mouse stays over the button, so the close button is hovered.
         // To prevent this, move the mouse away.
         await page.mouse.move(0, 0)
-        // Wait for the fonts to load.
-        await sleep(500)
+
         await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
       })
     })
