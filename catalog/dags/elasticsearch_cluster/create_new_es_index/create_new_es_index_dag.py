@@ -102,9 +102,15 @@ from airflow import DAG
 from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
 
+from common import elasticsearch as es
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from common.sensors.utils import prevent_concurrency_with_dags
-from elasticsearch_cluster.create_new_es_index import create_new_es_index as es
+from elasticsearch_cluster.create_new_es_index import (
+    check_override_config,
+    get_final_index_configuration,
+    get_index_name,
+    merge_index_configurations,
+)
 from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
     CREATE_NEW_INDEX_CONFIGS,
     CreateNewIndex,
@@ -191,28 +197,26 @@ def create_new_es_index_dag(config: CreateNewIndex):
 
         es_host = get_es_host(environment=config.environment)
 
-        index_name = es.get_index_name(
+        index_name = get_index_name(
             media_type="{{ params.media_type }}",
             index_suffix="{{ params.index_suffix or ts_nodash }}",
         )
 
-        check_override = es.check_override_config(
-            override="{{ params.override_config }}"
-        )
+        check_override = check_override_config(override="{{ params.override_config }}")
 
-        current_index_config = es.get_current_index_configuration.override(
+        current_index_config = es.get_index_configuration.override(
             task_id=es.GET_CURRENT_INDEX_CONFIG_TASK_NAME
         )(
             source_index="{{ params.source_index or params.media_type }}",
             es_host=es_host,
         )
 
-        merged_index_config = es.merge_index_configurations(
+        merged_index_config = merge_index_configurations(
             new_index_config="{{ params.index_config }}",
             current_index_config=current_index_config,
         )
 
-        final_index_config = es.get_final_index_configuration.override(
+        final_index_config = get_final_index_configuration.override(
             task_id=es.GET_FINAL_INDEX_CONFIG_TASK_NAME,
             trigger_rule=TriggerRule.NONE_FAILED,
         )(
@@ -228,7 +232,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         )
 
         reindex = es.trigger_and_wait_for_reindex(
-            index_name=index_name,
+            destination_index=index_name,
             source_index="{{ params.source_index or params.media_type }}",
             query="{{ params.query }}",
             timeout=config.reindex_timeout,
