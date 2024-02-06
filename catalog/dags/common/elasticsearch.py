@@ -20,7 +20,7 @@ EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
 @task
 def get_es_host(environment: str):
     conn = Connection.get_connection_from_secrets(f"elasticsearch_http_{environment}")
-    return conn.host
+    return conn.get_uri()
 
 
 @task
