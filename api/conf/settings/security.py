@@ -30,6 +30,7 @@ if DEBUG:
         "localhost",
         "127.0.0.1",
         "0.0.0.0",
+        "web",
     ]
 
 BASE_URL = config("BASE_URL", default="https://openverse.org/")

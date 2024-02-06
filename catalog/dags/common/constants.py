@@ -9,6 +9,9 @@ from common import slack
 AUDIO = "audio"
 IMAGE = "image"
 MEDIA_TYPES = [AUDIO, IMAGE]
+# The resource slugs used in API endpoints is not necessarily identical to the
+# media type (for example, pluralized 'image' is 'images)
+MEDIA_RESOURCE_SLUGS = {AUDIO: "audio", IMAGE: "images"}
 
 MediaType = Literal["audio", "image"]
 
@@ -43,6 +46,7 @@ AWS_CONN_ID = "aws_default"
 AWS_CLOUDWATCH_CONN_ID = os.environ.get("AWS_CLOUDWATCH_CONN_ID", AWS_CONN_ID)
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
 ES_PROD_HTTP_CONN_ID = "elasticsearch_http_production"
+API_HTTP_CONN_ID = "api_http"
 REFRESH_POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))
 
 
