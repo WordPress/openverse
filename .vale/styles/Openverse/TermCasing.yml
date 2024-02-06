@@ -1,0 +1,21 @@
+# While Vale.Terms could be used for these, it is too inflexible, and thus incapable
+# of ignoring common false-positives like GitHub usernames or GitHub team names
+extends: substitution
+message: "Incorrect casing. Use '%s' instead of '%s'."
+level: error
+ignorecase: false
+scope:
+  - paragraph
+swap:
+  # [^/\.] prevents matching things that look like URLs, file paths, or GitHub team mentions
+  # For example: @WordPress/openverse-maintainers
+  '[^/\.]openverse[^.\.]': Openverse
+  # OpenVerse should never be used, except as an example of something that is always wrong,
+  # in which case we'll tell Vale to ignore that line.
+  "OpenVerse": Openverse
+  '[^/\.]wordpress[^.\.]': WordPress
+  # Wordpress is the same as OpenVerse
+  "Wordpress": WordPress
+  '[^/\.]github[^.\.]': GitHub
+  # Github is the same as Wordpress and OpenVerse
+  "Github": GitHub

@@ -23,7 +23,7 @@ proof-of-functionality for different use-cases.
 
 ### Catalog
 
-The tests for the catalog in `test-cat` are very comprehensive and rigorous,
+The tests for the catalog in `test-cat` are comprehensive and rigorous,
 including extended test suites using the `--extended` flag. Passing these tests
 conclusively proves that the catalog works as intended.
 

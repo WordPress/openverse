@@ -3,7 +3,7 @@
     as="VLink"
     size="small"
     has-icon-start
-    class="label-bold !bg-dark-charcoal-10 hover:!bg-dark-charcoal hover:text-white sm:!bg-tx"
+    class="label-bold !bg-dark-charcoal-10 hover:!bg-dark-charcoal hover:!text-white sm:!bg-tx"
     variant="transparent-gray"
     :href="href"
   >

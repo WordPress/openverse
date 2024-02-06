@@ -1,0 +1,64 @@
+COLOR := "\\033[0;34m"
+NO_COLOR := "\\033[0m"
+
+
+# Show all available recipes
+@_default:
+    printf "\n{{ COLOR }}# Vale (path: \`.vale/\`)\n"
+    printf "===================={{ NO_COLOR }}\n"
+    just --list --unsorted
+
+
+# Build a local version of `openverse-vale:local` for testing
+build:
+    docker build . -t openverse-vale:local
+
+
+# The --glob setting excludes things that should not be linted, including
+# build artefacts, dependencies, and automatically generated files like
+# the changelogs (without excluding `changelogs/index.md`). Project proposals
+# are also excluded for want of a good way to ignore existing proposals and only
+# lint _new_ proposals. Project proposals aren't "living documents" in the way
+# the rest of our documentation is, so it doesn't seem right to retroactively
+# edit them for mere editorial purposes (rather than, for example, to correct
+# some grave inacurracy).
+# Leading `,` compensates for lack of trailing comma support
+# Note the lack of space before the trailing \ on each line, this is to prevent
+# the addition of a space between each pattern, which isn't supported by Vale's glob
+# If you change this and Vale takes a very long time to run (more than 30 seconds)
+# then chances are the change is breaking the glob pattern. Unfortunately the only
+# feedback you get when the glob pattern is not working as intended is a very long
+# run time for Vale as it checks everything that should have otherwise been ignored,
+# but wasn't due to some minor issue in the pattern syntax.
+# This is fiddly, but I can't find a good way around it.
+_IGNORE_PATTERNS := """
+    _build\
+    ,_static\
+    ,venv\
+    ,.venv\
+    ,.nuxt\
+    ,.pnpm-store\
+    ,node_modules\
+    ,test-results\
+    ,storebook-static\
+    ,.ruff-cache\
+    ,projects/proposals\
+    ,changelogs/api\
+    ,changelogs/frontend\
+    ,changelogs/catalog\
+    ,changelogs/ingestion_server\
+"""
+
+VALE_GLOB := "--glob='!*{" + _IGNORE_PATTERNS + "}*'"
+
+
+# Run Vale configured for Openverse in Docker.
+# Using Docker avoids the need for contributors to install the Vale binary.
+#Configuration defaults to what is used for CI.
+run +files=".": build
+    docker run --rm \
+        -v $PWD/..:/src:rw,Z \
+        --workdir=/src \
+        openverse-vale:local \
+        {{ files }} \
+        {{ VALE_GLOB }}

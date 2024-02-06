@@ -4,7 +4,7 @@ Due to a CSS ordering bug that we haven't been able to find any other solutions 
 
 ## Described changes
 
-There are two basic changes we're making all with a single goal: stop the importing of our custom `error.vue` component coming before our static CSS assets. The generated page apparently depends on this specific ordering of file imports, which is far far from ideal. Alas, there doesn't appear to be another clear solution to this problem at the moment, so we're stuck with this hack.
+There are two basic changes we're making all with a single goal: stop the importing of our custom `error.vue` component coming before our static CSS assets. The generated page apparently depends on this specific ordering of file imports, which is far from ideal. Alas, there doesn't appear to be another clear solution to this problem at the moment, so we're stuck with this hack.
 
 To update these files, it's probably easiest to just copy `App.js` and `index.js` from `node_modules/@nuxt/vue-app/template` into this directory and then apply the following transformations.
 

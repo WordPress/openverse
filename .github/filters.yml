@@ -60,6 +60,7 @@ lint:
   - .pre-commit-config.yaml
   - tsconfig.base.json
   - .codespell
+  - .vale
 mgmt:
   - .github/**
   - .devcontainer/**

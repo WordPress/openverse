@@ -28,15 +28,15 @@ from datetime import datetime
 from airflow import DAG
 from airflow.decorators import task
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+
+from common import slack
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
+from database.batched_update.constants import DAG_ID as BATCHED_UPDATE_DAG_ID
 from popularity import sql
 from popularity.popularity_refresh_types import (
     POPULARITY_REFRESH_CONFIGS,
     PopularityRefresh,
 )
-
-from common import slack
-from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
-from database.batched_update.constants import DAG_ID as BATCHED_UPDATE_DAG_ID
 
 
 logger = logging.getLogger(__name__)

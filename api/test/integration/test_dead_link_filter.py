@@ -8,20 +8,6 @@ import pytest
 from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
 
 
-@pytest.fixture(autouse=True)
-def turn_off_db_read(monkeypatch):
-    """
-    Prevent DB lookup for ES results because DB is empty.
-
-    Since ImageSerializer has set ``needs_db`` to ``True``, all results from ES will be
-    mapped to DB models. Since the test DB is empty, results array will be empty. By
-    patching ``needs_db`` to ``False``, we can test the dead link filtering process
-    without needing to populate the test DB.
-    """
-
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
-
 @pytest.fixture
 def unique_query_hash(redis, monkeypatch):
     def get_unique_hash(*args, **kwargs):
@@ -79,20 +65,24 @@ def test_dead_link_filtering(mocked_map, api_client):
     query_params = {"q": "*", "page_size": 20}
 
     # Make a request that does not filter dead links...
-    res_with_dead_links = api_client.get(
-        path,
-        query_params | {"filter_dead": False},
-    )
-    # ...and ensure that our patched function was not called
-    mocked_map.assert_not_called()
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
+        res_with_dead_links = api_client.get(
+            path,
+            query_params | {"filter_dead": False},
+        )
+        # ...and ensure that our patched function was not called
+        mocked_map.assert_not_called()
 
-    # Make a request that filters dead links...
-    res_without_dead_links = api_client.get(
-        path,
-        query_params | {"filter_dead": True},
-    )
-    # ...and ensure that our patched function was called
-    mocked_map.assert_called()
+        # Make a request that filters dead links...
+        res_without_dead_links = api_client.get(
+            path,
+            query_params | {"filter_dead": True},
+        )
+        # ...and ensure that our patched function was called
+        mocked_map.assert_called()
 
     assert res_with_dead_links.status_code == 200
     assert res_without_dead_links.status_code == 200
@@ -129,11 +119,15 @@ def test_dead_link_filtering_all_dead_links(
     path = "/v1/images/"
     query_params = {"q": "*", "page_size": page_size}
 
-    with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
-        response = api_client.get(
-            path,
-            query_params | {"filter_dead": filter_dead},
-        )
+    with patch(
+        "api.views.image_views.ImageViewSet.get_db_results"
+    ) as mock_get_db_result:
+        mock_get_db_result.side_effect = lambda value: value
+        with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
+            response = api_client.get(
+                path,
+                query_params | {"filter_dead": filter_dead},
+            )
 
     assert response.status_code == 200
 

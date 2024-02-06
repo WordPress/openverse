@@ -1,6 +1,5 @@
 import time
 import uuid
-from test.constants import API_URL
 
 from django.urls import reverse
 
@@ -8,6 +7,7 @@ import pytest
 from oauth2_provider.models import AccessToken
 
 from api.models import OAuth2Verification, ThrottledApplication
+from test.constants import API_URL
 
 
 cache_availability_params = pytest.mark.parametrize(
@@ -204,15 +204,13 @@ def test_unauthed_response_headers(api_client):
         ("asc", "2022-01-01"),
     ],
 )
-def test_sorting_authed(
-    api_client, monkeypatch, test_auth_token_exchange, sort_dir, exp_indexed_on
-):
-    # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
+def test_sorting_authed(api_client, test_auth_token_exchange, sort_dir, exp_indexed_on):
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
-    query_params = {"unstable__sort_by": "indexed_on", "unstable__sort_dir": sort_dir}
+    query_params = {
+        "unstable__sort_by": "indexed_on",
+        "unstable__sort_dir": sort_dir,
+    }
     res = api_client.get(
         "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
     )
@@ -232,11 +230,8 @@ def test_sorting_authed(
     ],
 )
 def test_authority_authed(
-    api_client, monkeypatch, test_auth_token_exchange, authority_boost, exp_source
+    api_client, test_auth_token_exchange, authority_boost, exp_source
 ):
-    # Prevent DB lookup for ES results because DB is empty.
-    monkeypatch.setattr("api.views.image_views.ImageSerializer.needs_db", False)
-
     time.sleep(1)
     token = test_auth_token_exchange["access_token"]
     query_params = {

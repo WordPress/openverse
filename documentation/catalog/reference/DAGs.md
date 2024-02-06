@@ -17,6 +17,7 @@ The following are DAGs grouped by their primary tag:
 1.  [Data Normalization](#data-normalization)
 1.  [Data Refresh](#data-refresh)
 1.  [Database](#database)
+1.  [Elasticsearch](#elasticsearch)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Other](#other)
@@ -50,6 +51,13 @@ The following are DAGs grouped by their primary tag:
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
+
+### Elasticsearch
+
+| DAG ID                                                              | Schedule Interval |
+| ------------------------------------------------------------------- | ----------------- |
+| [`create_new_production_es_index`](#create_new_production_es_index) | `None`            |
+| [`create_new_staging_es_index`](#create_new_staging_es_index)       | `None`            |
 
 ### Maintenance
 
@@ -85,6 +93,7 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
 | --------------------------------------------------------------- | ----------------- | ------- | ------------- |
+| [`auckland_museum_workflow`](#auckland_museum_workflow)         | `@daily`          | `True`  | image         |
 | `brooklyn_museum_workflow`                                      | `@monthly`        | `False` | image         |
 | [`cc_mixter_workflow`](#cc_mixter_workflow)                     | `@monthly`        | `False` | audio         |
 | `cleveland_museum_workflow`                                     | `@monthly`        | `False` | image         |
@@ -106,7 +115,7 @@ The following are DAGs grouped by their primary tag:
 | [`smk_workflow`](#smk_workflow)                                 | `@monthly`        | `False` | image         |
 | [`stocksnap_workflow`](#stocksnap_workflow)                     | `@monthly`        | `False` | image         |
 | [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)     | `@daily`          | `True`  | image, audio  |
-| [`wordpress_workflow`](#wordpress_workflow)                     | `@monthly`        | `False` | image         |
+| [`wordpress_workflow`](#wordpress_workflow)                     | `@weekly`         | `False` | image         |
 
 ### Provider Reingestion
 
@@ -123,6 +132,7 @@ The following is documentation associated with each DAG (where available):
 
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
+1.  [`auckland_museum_workflow`](#auckland_museum_workflow)
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
@@ -130,6 +140,8 @@ The following is documentation associated with each DAG (where available):
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
+1.  [`create_new_production_es_index`](#create_new_production_es_index)
+1.  [`create_new_staging_es_index`](#create_new_staging_es_index)
 1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
@@ -202,6 +214,24 @@ airflow dags trigger --conf
 
 - maxLogAgeInDays:<INT> - Optional
 - enableDelete:<BOOLEAN> - Optional
+
+### `auckland_museum_workflow`
+
+Content Provider: Auckland War Memorial Museum Tāmaki Paenga Hira
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: https://api.aucklandmuseum.com/
+
+Resource: https://api.aucklandmuseum.com/
+https://github.com/AucklandMuseum/API/wiki/Tutorial
+
+| Resource     | Requests per second | Requests per day |
+| ------------ | ------------------- | ---------------- |
+| /search, /id | 10                  | 1000             |
+| /id/media    | 10                  | 1000             |
 
 ### `audio_data_refresh`
 
@@ -464,6 +494,204 @@ There are two mechanisms that prevent this from happening:
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
 
+### `create_new_production_es_index`
+
+#### Create New ES Index DAG
+
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options are
+available:
+
+- `media_type` : media type for which to create the new index
+- `index_suffix` : optional suffix to be added to the new index name. If not
+  supplied, a creation timestamp is used.
+- `source_index` : the existing index on which to base the new index, and from
+  which to copy records
+- `index_config` : a JSON object containing the configuration for the new index.
+  By default, this will be merged into the configuration of the source index
+  according to the merging policy documented below.
+- `query` : an optional Elasticsearch query, used to filter the documents copied
+  from the source index into the new index. If not supplied, all records are
+  copied.
+- `override_config`: boolean override; when True, the `index_config` will be
+  used for the new index configuration _without_ merging any values from the
+  source index config.
+
+##### Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config`
+overwrites the entire value present in the source configuration at that key. The
+leaf values are merged naively, so a list for instance is replaced entirely
+(rather than appending values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+### `create_new_staging_es_index`
+
+#### Create New ES Index DAG
+
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options are
+available:
+
+- `media_type` : media type for which to create the new index
+- `index_suffix` : optional suffix to be added to the new index name. If not
+  supplied, a creation timestamp is used.
+- `source_index` : the existing index on which to base the new index, and from
+  which to copy records
+- `index_config` : a JSON object containing the configuration for the new index.
+  By default, this will be merged into the configuration of the source index
+  according to the merging policy documented below.
+- `query` : an optional Elasticsearch query, used to filter the documents copied
+  from the source index into the new index. If not supplied, all records are
+  copied.
+- `override_config`: boolean override; when True, the `index_config` will be
+  used for the new index configuration _without_ merging any values from the
+  source index config.
+
+##### Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config`
+overwrites the entire value present in the source configuration at that key. The
+leaf values are merged naively, so a list for instance is replaced entirely
+(rather than appending values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
 ### `delete_records`
 
 #### Delete Records DAG
@@ -491,6 +719,20 @@ provider due to deadlinks would look like this:
     "reason": "deadlink"
 }
 ```
+
+##### Multiple deletions
+
+When a record is deleted, it is added to the corresponding Deleted Media table.
+If the record is reingested back into the media table, the delete*records DAG
+may be run additional times to delete the same record. When this occurs, only
+one row will be kept in the Deleted Media table for the record (as uniquely
+identified by the provider and foreign identifier pair). This row is not
+updated, so the `deleted_on` time will reflect the \_first* time the record was
+deleted.
+
+When restoring records from the Deleted Media table, it is important to note
+that these records have not been updated through reingestion, so fields such as
+popularity data may be out of date.
 
 ##### Warnings
 
@@ -630,9 +872,9 @@ Notes: The iNaturalist API is not intended for data scraping.
 https://api.inaturalist.org/v1/docs/ But there is a full dump intended for
 sharing on S3.
 https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata
-Because these are very large normalized tables, as opposed to more document
-oriented API responses, we found that bringing the data into postgres first was
-the most effective approach. More detail in slack here:
+Because these are exceptionally large normalized tables, as opposed to more
+document oriented API responses, we found that bringing the data into postgres
+first was the most effective approach. More detail in slack here:
 https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N
 We use the table structure defined here,
 https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql

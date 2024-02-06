@@ -11,17 +11,28 @@ jobs:
     name: Send Slack message
     runs-on: ubuntu-latest
     env:
-      slack_url: ${{ secrets.SLACK_WEBHOOK_URL }}
       discussion_url: ${{ github.event.discussion.html_url }}
       discussion_number: ${{ github.event.discussion.number }}
-      discussion_title: ${{ github.event.discussion.title }}
+      discussion_title: ${{ format('{0}', github.event.discussion.title) }}
       discussion_author: ${{ github.event.discussion.user.login }}
       discussion_repo: ${{ github.event.repository.full_name }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
       - name: Send notification for new discussion
-        run: |
-          curl \
-            "$slack_url" \
-            -X POST \
-            -H 'Content-Type: application/json' \
-            -d '{"text":"New discussion opened by '"$discussion_author"' in '"$discussion_repo"': #'"$discussion_number"' - '"$discussion_title"'","blocks":[{"type":"section","text":{"type":"mrkdwn","text":":github: New discussion opened by *'"$discussion_author"'* in `'"$discussion_repo"'`:\n<'"$discussion_url"'|#'"$discussion_number"' - '"$discussion_title"'>"}}]}'
+        id: slack
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+             "text": "New discussion opened by ${{ env.discussion_author }} in ${{ env.discussion_repo }}: #${{ env.discussion_number }} - ${{ env.discussion_title }}",
+             "blocks": [
+               {
+                 "type": "section",
+                 "text": {
+                   "type": "mrkdwn",
+                   "text": ":github: New discussion opened by *${{ env.discussion_author }}* in ${{ env.discussion_repo }}:\n<${{ env.discussion_url }}|#${{ env.discussion_number }} - ${{ env.discussion_title }}>"
+                 }
+               }
+             ]
+            }

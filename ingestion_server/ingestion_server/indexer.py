@@ -23,7 +23,6 @@ from collections import deque
 from typing import Any
 
 import elasticsearch
-import psycopg2
 import requests
 from decouple import config
 from elasticsearch import Elasticsearch, helpers
@@ -32,6 +31,7 @@ from psycopg2.sql import SQL, Identifier, Literal
 from requests import RequestException
 
 from ingestion_server import slack
+from ingestion_server.db_helpers import database_connect
 from ingestion_server.distributed_reindex_scheduler import schedule_distributed_index
 from ingestion_server.elasticsearch_models import media_type_to_elasticsearch_model
 from ingestion_server.es_helpers import get_stat
@@ -40,11 +40,10 @@ from ingestion_server.queries import get_existence_queries
 from ingestion_server.utils.sensitive_terms import get_sensitive_terms
 
 
-DATABASE_HOST = config("DATABASE_HOST", default="localhost")
-DATABASE_PORT = config("DATABASE_PORT", default=5432, cast=int)
-DATABASE_USER = config("DATABASE_USER", default="deploy")
-DATABASE_PASSWORD = config("DATABASE_PASSWORD", default="deploy")
-DATABASE_NAME = config("DATABASE_NAME", default="openledger")
+# See https://www.elastic.co/guide/en/elasticsearch/reference/8.8/docs-reindex.html#docs-reindex-throttle
+ES_FILTERED_INDEX_THROTTLING_RATE = config(
+    "ES_FILTERED_INDEX_THROTTLING_RATE", default=20_000, cast=int
+)
 
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = config("DB_BUFFER_SIZE", default=100000, cast=int)
@@ -56,34 +55,6 @@ SYNCER_POLL_INTERVAL = config("SYNCER_POLL_INTERVAL", default=60, cast=int)
 REP_TABLES = config(
     "COPY_TABLES", default="image", cast=lambda var: [s.strip() for s in var.split(",")]
 )
-
-
-def database_connect(autocommit=False):
-    """
-    Repeatedly try to connect to the downstream (API) database until successful.
-
-    :return: A database connection object
-    """
-    while True:
-        try:
-            conn = psycopg2.connect(
-                dbname=DATABASE_NAME,
-                user=DATABASE_USER,
-                password=DATABASE_PASSWORD,
-                host=DATABASE_HOST,
-                port=DATABASE_PORT,
-                connect_timeout=5,
-            )
-            if autocommit:
-                conn.set_session(autocommit=True)
-        except psycopg2.OperationalError as e:
-            log.exception(e)
-            log.error("Reconnecting to database in 5 seconds. . .")
-            time.sleep(5)
-            continue
-        break
-
-    return conn
 
 
 def get_last_item_ids(table):
@@ -486,7 +457,7 @@ class TableIndexer:
         final alias used.
         """
         # Allow relying on the model-name-based alias by
-        # not suppliying `origin_index_suffix`
+        # not supplying `origin_index_suffix`
         source_index = (
             f"{model_name}-{origin_index_suffix}" if origin_index_suffix else model_name
         )
@@ -523,9 +494,7 @@ class TableIndexer:
             },
             slices="auto",
             wait_for_completion=True,
-            # 10k derived from in-production testing
-            # See https://github.com/WordPress/openverse/issues/2963
-            requests_per_second=15_000,
+            requests_per_second=ES_FILTERED_INDEX_THROTTLING_RATE,
             # Temporary workaround to allow the action to complete.
             request_timeout=48 * 3600,
         )

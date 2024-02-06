@@ -81,10 +81,12 @@
               :is-pressed="contentSettingsOpen"
               :applied-filter-count="appliedFilterCount"
               v-bind="triggerA11yProps"
+              :disabled="!doneHydrating"
               @click="toggleContentSettings"
             />
             <VContentSettingsModalContent
               v-show="!searchBarIsActive"
+              variant="two-thirds"
               :visible="contentSettingsOpen"
               :is-fetching="isFetching"
               :close="closeContentSettings"
@@ -122,6 +124,8 @@ import { useSearch } from "~/composables/use-search"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+
+import { useHydrating } from "~/composables/use-hydrating"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VInputModal from "~/components/VModal/VInputModal.vue"
@@ -291,6 +295,8 @@ export default defineComponent({
       emit,
     })
 
+    const { doneHydrating } = useHydrating()
+
     return {
       searchInputRef,
       headerRef,
@@ -299,6 +305,7 @@ export default defineComponent({
 
       appliedFilterCount,
 
+      doneHydrating,
       contentSettingsOpen,
       openContentSettings,
       closeContentSettings,

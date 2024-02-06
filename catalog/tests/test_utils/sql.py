@@ -52,6 +52,11 @@ CREATE_DELETED_IMAGE_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
     {DELETED_IMAGE_TABLE_COLUMN_DEFINITIONS}
 );"""
 
+DELETED_IMAGE_TABLE_UNIQUE_CONDITION_QUERY = (
+    "CREATE UNIQUE INDEX {table}_provider_fid_idx"
+    " ON public.{table}"
+    " USING btree (provider, md5(foreign_identifier));"
+)
 
 PostgresRef = namedtuple("PostgresRef", ["cursor", "connection"])
 ti = mock.Mock(spec=TaskInstance)

@@ -134,7 +134,7 @@ generate-dag-docs fail_on_diff="false":
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e
-      git diff --exit-code -- documentation/catalog/reference/DAGs.md
+      git diff --exit-code -- ../documentation/catalog/reference/DAGs.md
       if [ $? -ne 0 ]; then
           printf "\n\n\e[31m!! Changes found in DAG documentation, please run 'just generate-dag-docs' locally and commit difference !!\n\n"
           exit 1

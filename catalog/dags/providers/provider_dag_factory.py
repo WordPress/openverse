@@ -76,9 +76,8 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
-from common.constants import XCOM_PULL_TEMPLATE
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
@@ -304,7 +303,7 @@ def create_ingestion_workflow(
 
         if conf.create_postingestion_tasks:
             postingestion_tasks = conf.create_postingestion_tasks()
-            pull_data >> postingestion_tasks
+            load_tasks >> postingestion_tasks
 
     ingestion_metrics = {
         "duration": XCOM_PULL_TEMPLATE.format(pull_data.task_id, "duration"),
@@ -397,6 +396,15 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
                 description=(
                     "A list of `query_params` dicts. When supplied, the ingester will"
                     " be run for just these sets of params."
+                ),
+            ),
+            "additional_query_params": Param(
+                default={},
+                type=["object", "null"],
+                description=(
+                    "Supplement the `query_params` on each request. This option is used"
+                    " to run a DAG but restrict the search by specifying extra query"
+                    " params."
                 ),
             ),
             "skip_ingestion_errors": Param(

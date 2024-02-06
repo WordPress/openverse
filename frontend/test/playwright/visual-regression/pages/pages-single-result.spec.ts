@@ -3,12 +3,13 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
-  languageDirections,
   openFirstResult,
   pathWithDir,
   preparePageForTests,
-  setCookies,
+  sleep,
 } from "~~/test/playwright/utils/navigation"
+
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -21,10 +22,10 @@ for (const isOn of [true, false]) {
         test(`${mediaType} ${dir} single-result page snapshots from search results, additional search views: ${isOn}`, async ({
           page,
         }) => {
-          await setCookies(page.context(), {
+          await preparePageForTests(page, breakpoint, {
             features: { additional_search_views: isOn ? "on" : "off" },
           })
-          await preparePageForTests(page, breakpoint)
+
           await page.route("**", (route) => {
             const url = route.request().url()
             // For audio, use the generated image instead of requesting the
@@ -42,7 +43,7 @@ for (const isOn of [true, false]) {
           await goToSearchTerm(page, "birds", { dir, mode: "SSR" })
 
           // This will include the "Back to results" link.
-          await openFirstResult(page, mediaType)
+          await openFirstResult(page, mediaType, dir)
           await expectSnapshot(
             `${mediaType}-${dir}-from-search-results${
               isOn ? "-with-additional-search-views" : ""
@@ -66,7 +67,15 @@ for (const dir of languageDirections) {
       const path = pathWithDir(`/image/${IMAGE_ID}/report`, dir)
 
       await page.goto(path)
-      await expectSnapshot(`${dir}-full-page-report`, page, { fullPage: true })
+
+      // Wait for the language select to hydrate.
+      await sleep(500)
+      await expectSnapshot(
+        `${dir}-full-page-report`,
+        page,
+        { fullPage: true },
+        { maxDiffPixelRatio: undefined, maxDiffPixels: 2 }
+      )
     })
   })
 }

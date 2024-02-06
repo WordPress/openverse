@@ -82,9 +82,10 @@ Read the release notes for all ES client versions after the current client
 version. **Check `Pipfile.lock` to confirm the current version as it may not
 necessarily be the version in the `Pipfile`, particularly if it is only minor
 version constrained (uses `~=X.X`)**. Patch versions shouldn't include breaking
-changes, and neither should minor versions, but we're better safe than sorry. If
-this is a major version upgrade, you should spend extra time reading through the
-first major version release notes.
+changes, and neither should minor versions, but it's better to read the release
+notes anyway than to find out later that there was an issue we needed to be
+aware of ahead of time. If this is a major version upgrade, you should spend
+extra time reading through the first major version release notes.
 [Elastic publishes comprehensive and straightforward client migration documentation for major version releases](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/migration.html):
 these notes are required reading for upgrading between major versions.
 
@@ -239,7 +240,7 @@ If the client versions were not upgraded in
 deploy all updated services through to production. Confirm the data refresh
 works before proceeding to the new step.
 
-#### 10. Celebrate, breathe a sigh of relief, and deprovision the old clusters
+#### 10. Celebrate and deprovision the old clusters
 
 Congrats! We should now be on the new Elasticsearch version. We can tear down
 the old clusters and say goodbye to that Elasticsearch version. Be sure to

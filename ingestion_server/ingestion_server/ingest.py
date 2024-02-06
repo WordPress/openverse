@@ -26,7 +26,7 @@ from psycopg2.sql import SQL, Identifier, Literal
 from ingestion_server import slack
 from ingestion_server.cleanup import clean_image_data
 from ingestion_server.constants.internal_types import ApproachType
-from ingestion_server.indexer import database_connect
+from ingestion_server.db_helpers import DB_UPSTREAM_CONFIG, database_connect
 from ingestion_server.queries import (
     get_copy_data_query,
     get_create_ext_query,
@@ -36,21 +36,15 @@ from ingestion_server.queries import (
 from ingestion_server.utils.config import get_record_limit
 
 
-UPSTREAM_DB_HOST = config("UPSTREAM_DB_HOST", default="localhost")
-UPSTREAM_DB_PORT = config("UPSTREAM_DB_PORT", default=5433, cast=int)
-UPSTREAM_DB_USER = config("UPSTREAM_DB_USER", default="deploy")
-UPSTREAM_DB_PASSWORD = config("UPSTREAM_DB_PASSWORD", default="deploy")
-UPSTREAM_DB_NAME = config("UPSTREAM_DB_NAME", default="openledger")
-
 RELATIVE_UPSTREAM_DB_HOST = config(
     "RELATIVE_UPSTREAM_DB_HOST",
-    default=UPSTREAM_DB_HOST,
+    default=DB_UPSTREAM_CONFIG.host,
 )
 #: the hostname of the upstream DB from the POV of the downstream DB
 
 RELATIVE_UPSTREAM_DB_PORT = config(
     "RELATIVE_UPSTREAM_DB_PORT",
-    default=UPSTREAM_DB_PORT,
+    default=DB_UPSTREAM_CONFIG.port,
     cast=int,
 )
 #: the port of the upstream DB from the POV of the downstream DB
@@ -282,14 +276,7 @@ def refresh_api_table(
         "Starting ingestion server data refresh | _Next: copying data from upstream_",
     )
     downstream_db = database_connect()
-    upstream_db = psycopg2.connect(
-        dbname=UPSTREAM_DB_NAME,
-        user=UPSTREAM_DB_USER,
-        port=UPSTREAM_DB_PORT,
-        password=UPSTREAM_DB_PASSWORD,
-        host=UPSTREAM_DB_HOST,
-        connect_timeout=5,
-    )
+    upstream_db = database_connect(dbconfig=DB_UPSTREAM_CONFIG)
     shared_cols = _get_shared_cols(
         downstream_db, upstream_db, upstream_table, downstream_table
     )
@@ -309,9 +296,9 @@ def refresh_api_table(
         init_fdw = get_fdw_query(
             RELATIVE_UPSTREAM_DB_HOST,
             RELATIVE_UPSTREAM_DB_PORT,
-            UPSTREAM_DB_NAME,
-            UPSTREAM_DB_USER,
-            UPSTREAM_DB_PASSWORD,
+            DB_UPSTREAM_CONFIG.dbname,
+            DB_UPSTREAM_CONFIG.user,
+            DB_UPSTREAM_CONFIG.password,
             upstream_table,
         )
         downstream_cur.execute(init_fdw)

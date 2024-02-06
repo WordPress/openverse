@@ -174,8 +174,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="tag/(?P<tag>[^/.]+)")
     def tag_collection(self, request, tag, *_, **__):
-        tag_lower = tag.lower()
-        return self.collection(request, tag_lower, None, None)
+        return self.collection(request, tag, None, None)
 
     @action(detail=False, methods=["get"], url_path="source/(?P<source>[^/.]+)")
     def source_collection(self, request, source, *_, **__):
@@ -237,9 +236,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         serializer_context = search_context | self.get_serializer_context()
 
-        serializer_class = self.get_serializer()
-        if params.needs_db or serializer_class.needs_db:
-            results = self.get_db_results(results)
+        results = self.get_db_results(results)
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
@@ -280,9 +277,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         serializer_context = self.get_serializer_context()
 
-        serializer_class = self.get_serializer()
-        if serializer_class.needs_db:
-            results = self.get_db_results(results)
+        results = self.get_db_results(results)
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)

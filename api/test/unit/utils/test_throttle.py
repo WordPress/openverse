@@ -1,6 +1,3 @@
-from test.factory.models.image import ImageFactory
-from test.factory.models.oauth2 import AccessTokenFactory
-
 from django.http import HttpResponse
 from rest_framework.settings import api_settings
 from rest_framework.test import force_authenticate
@@ -10,6 +7,8 @@ import pytest
 
 from api.utils import throttle
 from api.views.media_views import MediaViewSet
+from test.factory.models.image import ImageFactory
+from test.factory.models.oauth2 import AccessTokenFactory
 
 
 cache_availability_params = pytest.mark.parametrize(

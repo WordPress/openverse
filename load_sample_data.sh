@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 set -e
 WEB_SERVICE_NAME="${WEB_SERVICE_NAME:-web}"
 CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
@@ -21,20 +21,22 @@ done
 # Upstream DB #
 ###############
 
+function exec_sql {
+  echo "$2" | just dc exec -T "$1" psql -AXqt
+}
+
 # Load sample data
 function load_sample_data {
-  docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql <<-EOF
-		DELETE FROM $1;
-		\copy $1 \
-			from './sample_data/sample_$1.csv' \
-			with (FORMAT csv, HEADER true);
-		EOF"
+  exec_sql "$UPSTREAM_DB_SERVICE_NAME" "
+  	DELETE FROM $1;
+	\copy $1 \
+		from './sample_data/sample_$1.csv' \
+		with (FORMAT csv, HEADER true);
+"
 }
 
 function verify_loaded_data {
-  COUNT=$(docker-compose exec -T "$UPSTREAM_DB_SERVICE_NAME" bash -c "psql -AXqt <<-EOF
-		SELECT COUNT(*) FROM $1;
-		EOF")
+  COUNT=$(exec_sql "$UPSTREAM_DB_SERVICE_NAME" "SELECT COUNT(*) FROM $1;")
   if [ "$COUNT" -ne 5000 ]; then
     echo "Error: table $1 count differs from expected."
     exit 1
@@ -56,35 +58,35 @@ fi
 #######
 
 # Set up API database and upstream
-docker-compose exec -T "$WEB_SERVICE_NAME" bash -c "python3 manage.py migrate --noinput"
+just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py migrate --noinput
+
 # Create a superuser and a user for integration testing
-# Not that the Python code uses 4 spaces for indentation after the tab that is stripped by <<-
-docker-compose exec -T "$WEB_SERVICE_NAME" bash -c "python3 manage.py shell <<-EOF
-	from django.contrib.auth.models import User
-	usernames = ['continuous_integration', 'deploy']
-	for username in usernames:
-	    if User.objects.filter(username=username).exists():
-	        print(f'User {username} already exists')
-	        continue
-	    if username == 'deploy':
-	        user = User.objects.create_superuser(username, f'{username}@example.com', 'deploy')
-	    else:
-	        user = User.objects.create_user(username, f'{username}@example.com', 'deploy')
-	    user.save()
-	EOF"
+echo "
+from django.contrib.auth.models import User
+usernames = ['continuous_integration', 'deploy']
+for username in usernames:
+	if User.objects.filter(username=username).exists():
+		print(f'User {username} already exists')
+		continue
+	if username == 'deploy':
+		user = User.objects.create_superuser(username, f'{username}@example.com', 'deploy')
+	else:
+		user = User.objects.create_user(username, f'{username}@example.com', 'deploy')
+	user.save()
+" | just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py shell
 
 # Load content providers
-docker-compose exec -T "$DB_SERVICE_NAME" bash -c "psql <<-EOF
-	DELETE FROM content_provider;
-	INSERT INTO content_provider
-		(created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
-	VALUES
-		(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
-		(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
-		(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
-		(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
-		(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
-	EOF"
+exec_sql "$DB_SERVICE_NAME" "
+DELETE FROM content_provider;
+INSERT INTO content_provider
+	(created_on, provider_identifier, provider_name, domain_name, filter_content, media_type)
+VALUES
+	(now(), 'flickr', 'Flickr', 'https://www.flickr.com', false, 'image'),
+	(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
+	(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
+	(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
+	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
+"
 
 #############
 # Ingestion #
@@ -127,5 +129,8 @@ just docker/es/wait-for-index "image-filtered" "image-init-filtered"
 #########
 
 # Clear source cache since it's out of date after data has been loaded
-docker-compose exec -T "$CACHE_SERVICE_NAME" bash -c 'echo "del :1:sources-image" | redis-cli'
-docker-compose exec -T "$CACHE_SERVICE_NAME" bash -c 'echo "del :1:sources-audio" | redis-cli'
+function exec_redis {
+  echo "$1" | just dc exec -T "$CACHE_SERVICE_NAME" redis-cli
+}
+exec_redis "del :1:sources-image"
+exec_redis "del :1:sources-audio"

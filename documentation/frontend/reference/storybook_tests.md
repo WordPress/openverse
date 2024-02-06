@@ -32,15 +32,14 @@ just frontend/run test:storybook
 ```
 
 This will run the tests inside a docker container. Should you wish to run the
-tests locally, you can use the following:
+tests locally, you can use the command below. However, please note that unless
+you are running the same operating system (down to the distro, in some cases)
+there are likely to be visual rendering differences that will cause snapshot
+tests to fail on false-positives.
 
 ```bash
 just frontend/run test:storybook:local
 ```
-
-But please note that unless you are running the same operating system (down to
-the distro, in some cases) there are likely to be visual rendering differences
-that will cause snapshot tests to fail on false-positives.
 
 ## Writing tests
 

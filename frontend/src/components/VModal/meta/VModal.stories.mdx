@@ -34,13 +34,13 @@ export const Template = (args) => ({
         <VButton variant="bordered-gray" size="medium" v-bind="a11yProps">{{ visible ? 'Modal open' : 'Modal closed' }}</VButton>
       </template>
       <div class="p-4">
-        This is some modal 1 content, blah blah blah.
+        This is some modal 1 content, blah etc.
         <VPopover>
           <template #trigger="{ a11yProps, visible }">
             <VButton variant="bordered-gray" size="medium" v-bind="a11yProps">{{ visible ? 'Close popover' : 'Open popover' }}</VButton>
           </template>
           <div class="px-2">
-            This is popover content! Woohoo! I'm inside a modal!!! Wow!!!
+            This is popover content! Woohoo! I'm inside a modal! Wow!
           </div>
         </VPopover>
         <!-- Lots of bogus stuff to test scrolling -->

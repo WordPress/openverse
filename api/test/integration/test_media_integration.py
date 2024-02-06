@@ -16,7 +16,8 @@ class MediaType:
     name: str  # the name of the media type
     path: str  # the version of the media type in the URL paths
     providers: list[str]  # providers for the media type from the sample data
-    categories: list[str]  #
+    categories: list[str]  # categories for the media type from the sample data
+    tags: list[str]  # tags for the media type from the sample data
     q: str  # a search query for this media type that yields some results
 
 
@@ -50,6 +51,7 @@ def media_type(request):
             path="audio",
             providers=["freesound", "jamendo", "wikimedia_audio"],
             categories=["music", "pronunciation"],
+            tags=["cat"],
             q="love",
         ),
         "image": MediaType(
@@ -57,6 +59,7 @@ def media_type(request):
             path="images",
             providers=["flickr", "stocksnap"],
             categories=["photograph"],
+            tags=["cat", "Cat"],
             q="dog",
         ),
     }[name]
@@ -404,14 +407,16 @@ def test_report_is_created(single_result, api_client):
 
 
 def test_collection_by_tag(media_type: MediaType, api_client):
-    res = api_client.get(f"/v1/{media_type.path}/tag/cat/")
-    assert res.status_code == 200
+    tags = media_type.tags
+    for tag in tags:
+        res = api_client.get(f"/v1/{media_type.path}/tag/{tag}/")
+        assert res.status_code == 200
 
-    data = res.json()
-    assert data["result_count"] > 0
-    for result in data["results"]:
-        tag_names = [tag["name"] for tag in result["tags"]]
-        assert "cat" in tag_names
+        data = res.json()
+        assert data["result_count"] > 0
+        for result in data["results"]:
+            tag_names = [tag["name"] for tag in result["tags"]]
+            assert tag in tag_names
 
 
 def test_collection_by_source(media_type: MediaType, api_client):

@@ -17,25 +17,25 @@ you need to run this.
 2. Clone the repository to your computer. Then switch to the cloned directory.
    If you're planning to contribute, fork the repo and clone your fork instead.
 
-   ```console
-   $ git clone https://github.com/WordPress/openverse.git # or your fork
-   $ cd openverse/
+   ```bash
+   git clone https://github.com/WordPress/openverse.git # or your fork
+   cd openverse/
    ```
 
    If you followed the general setup guide and installed
    [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
    using the `gh` command.
 
-   ```console
-   $ gh repo clone WordPress/openverse # or your fork
-   $ cd openverse/
+   ```bash
+   gh repo clone WordPress/openverse # or your fork
+   cd openverse/
    ```
 
 3. Bring the ingestion server and API up, along with all their dependent
    services.
 
-   ```console
-   $ just api/up
+   ```bash
+   just api/up
    ```
 
    The `api/up` recipe orchestrates the following services: `cache`, `db`,
@@ -49,24 +49,24 @@ you need to run this.
 
 4. Load the sample data. This step can take a few minutes to complete.
 
-   ```console
-   $ just api/init
+   ```bash
+   just api/init
    ```
 
    ````{admonition} Troubleshooting
    If this step fails, cleaning up and restarting usually fixes it.
 
-   ```console
-   $ just down -v
-   $ just api/init
+   ```bash
+   just down -v
+   just api/init
    ```
    ````
 
 5. With the data loaded, the API can now return JSON responses to your HTTP
    requests.
 
-   ```console
-   $ just api/stats
+   ```bash
+   just api/stats
    just _curl-get "images/stats/" http://localhost:50280
    curl "http://localhost:50280/v1/images/stats/"
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
@@ -77,8 +77,8 @@ you need to run this.
    JSON data. If you have `jq` installed, you can pipe the response to it and
    transform it.
 
-   ```console
-   $ just api/stats | jq '.[0]'
+   ```bash
+   just api/stats | jq '.[0]'
    {
      "source_name": "flickr",
      "display_name": "Flickr",
@@ -87,7 +87,7 @@ you need to run this.
      "media_count": 2500
    }
 
-   $ just api/stats 'audio' | jq '[.[] | .source_name]'
+   just api/stats 'audio' | jq '[.[] | .source_name]'
    [
      "freesound",
      "jamendo",

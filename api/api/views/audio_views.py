@@ -15,9 +15,9 @@ from api.docs.audio_docs import (
     source_collection,
     stats,
     tag_collection,
+    waveform,
 )
 from api.docs.audio_docs import thumbnail as thumbnail_docs
-from api.docs.audio_docs import waveform
 from api.models import Audio
 from api.serializers.audio_serializers import (
     AudioCollectionRequestSerializer,

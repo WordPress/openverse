@@ -1,7 +1,5 @@
 import subprocess
 from io import StringIO
-from test.factory.faker import WaveformProvider
-from test.factory.models.audio import AudioAddOnFactory, AudioFactory
 from unittest import mock
 
 from django.core.management import call_command
@@ -12,6 +10,8 @@ import pytest
 from psycopg.errors import NotNullViolation
 
 from api.models.audio import Audio, AudioAddOn
+from test.factory.faker import WaveformProvider
+from test.factory.models.audio import AudioAddOnFactory, AudioFactory
 
 
 @mock.patch("api.models.audio.generate_peaks")

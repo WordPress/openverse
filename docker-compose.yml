@@ -50,6 +50,8 @@ services:
     build:
       context: ./docker/upstream_db/
       target: db
+      args: # Automatically inferred from env vars, unless specified
+        - PGCLI_VERSION
     image: openverse-upstream_db
     ports:
       - "50255:5432"
@@ -184,7 +186,7 @@ services:
   cache:
     profiles:
       - api
-    image: docker.io/redis:4.0.14
+    image: docker.io/redis:7.2.4
     ports:
       - "50263:6379"
 

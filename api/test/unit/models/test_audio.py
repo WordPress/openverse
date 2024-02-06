@@ -1,10 +1,10 @@
 import uuid
-from test.factory.faker import WaveformProvider
 from unittest import mock
 
 import pytest
 
 from api.models.audio import Audio, AudioAddOn
+from test.factory.faker import WaveformProvider
 
 
 @pytest.fixture

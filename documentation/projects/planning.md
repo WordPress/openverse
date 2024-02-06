@@ -47,7 +47,7 @@ accepts one argument as the project name, followed optionally by any number of
 implementation plans.
 
 ```bash
-$ just documentation/create-project 'Project name' 'First IP' 'Second IP'
+just documentation/create-project 'Project name' 'First IP' 'Second IP'
 ```
 
 This will create the directory structure for your project with the specified
@@ -67,7 +67,7 @@ plan, you can use the `just` recipe `create-ip`. It accepts the directory name
 (not full path) of the project and the plan name as arguments.
 
 ```bash
-$ just documentation/create-ip project_name 'New IP'
+just documentation/create-ip project_name 'New IP'
 ```
 ````
 
@@ -499,7 +499,7 @@ in the earlier project stages but is likely to be implemented here.
 ## Managing and working with projects
 
 We use a new
-[Github Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
+[GitHub Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
 track all of the projects in Openverse. This board gives us a single view to see
 all projects and some additional metadata:
 

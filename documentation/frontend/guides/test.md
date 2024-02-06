@@ -17,16 +17,16 @@ Storybook visual regression tests, read
 
 2. Run unit tests for the frontend.
 
-   ```console
-   $ just frontend/run test:unit
+   ```bash
+   just frontend/run test:unit
    ```
 
    ````{note}
    Unit tests are automatically run by pre-commit before Git push, if you've set
    up pre-commit's Git hooks by running the following command.
 
-   ```console
-   $ just precommit
+   ```bash
+   just precommit
    ```
 
    ````
@@ -34,22 +34,28 @@ Storybook visual regression tests, read
 3. Run the Playwright tests. This will run both the end-to-end tests and the app
    visual regression tests.
 
-   ```console
-   $ just frontend/run test:playwright
+   ```bash
+   just frontend/run test:playwright
    ```
 
 4. Run the Storybook visual regression tests.
 
-   ```console
-   $ just frontend/run test:storybook
+   ```bash
+   just frontend/run test:storybook
    ```
 
 ## Updating snapshots
 
 If you've made changes to the frontend that require updating snapshots, you can
-run the playwright tests with the `-u` flag. For example, this will update the
-snapshots for the app visual regression tests:
+run both the playwright and storybook tests with the `-u` flag. For example,
+this will update the snapshots for the app visual regression tests:
 
-```console
-$ just frontend/run test:playwright visual-regression -u
+```bash
+just frontend/run test:playwright visual-regression -u
+```
+
+This will similarly update the storybook snapshots:
+
+```bash
+just frontend/run test:storybook -u
 ```

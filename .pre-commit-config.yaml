@@ -11,6 +11,15 @@ repos:
         entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
         language: system
         pass_filenames: false
+      - id: fix-console-code-block
+        name: Ensure "bash" code block is used over "console"
+        files: ^documentation/.*\.md$
+        # Check that we are not using the ```console block in our documentation
+        # -R recursively checks files
+        # -l suppresses normal input and only lists files with errors
+        # Print an error message if any files are found
+        entry: sed -i -e 's/```console/```bash/g'
+        language: system
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -36,7 +45,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.8
+    rev: v0.2.0
     hooks:
       - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
         args:
@@ -110,6 +119,7 @@ repos:
         entry: bash -c 'pnpm run -r types'
         language: system
         pass_filenames: false
+
       - id: eslint
         name: eslint
         files: (frontend|automations|packages).*?\.(js|ts|vue|json5|json)$
@@ -117,6 +127,7 @@ repos:
         language: system
         pass_filenames: false
         entry: bash -c 'pnpm run eslint --fix'
+
       - id: test:unit
         name: test:unit
         files: ^(frontend|packages)/.*$
@@ -125,6 +136,7 @@ repos:
         pass_filenames: false
         stages:
           - push
+
       - id: render-release-drafter
         name: render-release-drafter
         files: ^templates/.*$
@@ -132,9 +144,27 @@ repos:
         language: system
         pass_filenames: false
 
+      - id: vale
+        name: vale
+        language: system
+        entry: bash -c 'just .vale/run'
+        pass_filesnames: false
+        files: (.vale/.*|.mdx?)$
+
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 37.89.2
+    rev: 37.168.1
     hooks:
       - id: renovate-config-validator
         args:
           - --strict
+
+  - repo: local
+    hooks:
+      - id: codeowners-validator
+        name: CODEOWNERS validator
+        language: docker_image
+        pass_filenames: false
+        entry: >
+          -e REPOSITORY_PATH="."
+          -e CHECKS="files,duppatterns,syntax"
+          ghcr.io/mszostok/codeowners-validator:v0.7.4

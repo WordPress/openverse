@@ -78,6 +78,9 @@ that can be used to generate the files you'll need and get you started:
 
 You should see output similar to this:
 
+<!-- Ignore "NOTE" in the codeblock below. It is verbatim output from a script so should not be changed. -->
+<!-- vale proselint.Annotations = NO -->
+
 ```
 Creating files in /Users/staci/projects/openverse-projects/openverse
 API script:        openverse/catalog/dags/providers/provider_api_scripts/foobar_museum.py
@@ -85,6 +88,8 @@ API script test:   openverse/catalog/tests/dags/providers/provider_api_scripts/t
 
 NOTE: You will also need to add a new ProviderWorkflow dataclass configuration to the PROVIDER_WORKFLOWS list in `openverse-catalog/dags/providers/provider_workflows.py`.
 ```
+
+<!-- vale proselint.Annotations = YES -->
 
 This generates a provider script with a templated `ProviderDataIngester` for you
 in the
@@ -154,15 +159,15 @@ manually turn the DAG on in production.
 2. Run individual test by creating a testing session within Docker, then
    selecting only the tests associated with the provider.
 
-   ```console
-   $ just catalog/test-session
-   $ pytest -k <provider_name>
+   ```bash
+   just catalog/test-session
+   pytest -k <provider_name>
    ```
 
    Alternatively, the test selection can be run in Docker directly with:
 
-   ```console
-   $ just catalog/test -k <provider_name>
+   ```bash
+   just catalog/test -k <provider_name>
    ```
 
 ```{note}

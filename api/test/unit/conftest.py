@@ -1,10 +1,4 @@
 from dataclasses import dataclass
-from test.factory import models as model_factories
-from test.factory.models.media import (
-    CREATED_BY_FIXTURE_MARKER,
-    MediaFactory,
-    MediaReportFactory,
-)
 from unittest.mock import MagicMock
 
 import pook
@@ -34,6 +28,12 @@ from api.serializers.media_serializers import (
     MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
     MediaSerializer,
+)
+from test.factory import models as model_factories
+from test.factory.models.media import (
+    CREATED_BY_FIXTURE_MARKER,
+    MediaFactory,
+    MediaReportFactory,
 )
 
 

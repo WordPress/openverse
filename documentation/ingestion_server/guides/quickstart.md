@@ -18,24 +18,24 @@ you need to run this.
 2. Clone the repository to your computer. Then switch to the cloned directory.
    If you're planning to contribute, fork the repo and clone your fork instead.
 
-   ```console
-   $ git clone https://github.com/WordPress/openverse.git # or your fork
-   $ cd openverse/
+   ```bash
+   git clone https://github.com/WordPress/openverse.git # or your fork
+   cd openverse/
    ```
 
    If you followed the general setup guide and installed
    [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
    using the `gh` command.
 
-   ```console
-   $ gh repo clone WordPress/openverse # or your fork
-   $ cd openverse/
+   ```bash
+   gh repo clone WordPress/openverse # or your fork
+   cd openverse/
    ```
 
 3. Bring the ingestion server up, along with all their dependent services.
 
-   ```console
-   $ just ingestion_server/up
+   ```bash
+   just ingestion_server/up
    ```
 
    The `ingestion_server/up` recipe orchestrates the following services: `db`,

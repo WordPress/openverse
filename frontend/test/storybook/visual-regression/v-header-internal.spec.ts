@@ -1,7 +1,8 @@
 import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { languageDirections, sleep } from "~~/test/playwright/utils/navigation"
+import { sleep } from "~~/test/playwright/utils/navigation"
+import { languageDirections } from "~~/test/playwright/utils/i18n"
 
 const headerSelector = ".main-header"
 const defaultUrl =

@@ -1,4 +1,3 @@
-import itertools
 import logging
 from dataclasses import dataclass
 from typing import Literal
@@ -10,11 +9,9 @@ from rest_framework.exceptions import UnsupportedMediaType
 
 import aiohttp
 import django_redis
-import sentry_sdk
 from aiohttp.client_exceptions import ClientResponseError
 from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
-from sentry_sdk import push_scope, set_context
 
 from api.utils.aiohttp import get_aiohttp_session
 from api.utils.asyncio import do_not_wait_for
@@ -25,8 +22,6 @@ from api.utils.tallies import get_monthly_timestamp
 
 
 parent_logger = logging.getLogger(__name__)
-
-exception_iterator = itertools.count()
 
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
@@ -192,28 +187,10 @@ async def get(
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
         try:
-            count = await tallies_incr(key)
+            await tallies_incr(key)
         except ConnectionError:
             logger.warning("Redis connect failed, thumbnail errors not tallied.")
-            # We will use a counter to space out Sentry logs.
-            count = next(exception_iterator)
 
-        if count <= settings.THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD or (
-            count % settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY == 0
-        ):
-            with push_scope() as scope:
-                set_context(
-                    "upstream_url",
-                    {
-                        "url": upstream_url,
-                        "params": params,
-                        "headers": headers,
-                    },
-                )
-                scope.set_tag(
-                    "occurrences", settings.THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY
-                )
-                sentry_sdk.capture_exception(exc)
         if isinstance(exc, ClientResponseError):
             status = exc.status
             do_not_wait_for(

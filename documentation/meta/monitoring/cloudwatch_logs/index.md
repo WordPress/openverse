@@ -117,10 +117,10 @@ only match log events from the Django application (or vice-versa).
 
 ### Logs Insights
 
-Logs Insights is very powerful. It is particular useful for deriving numerical
-and statistical data from both structured and unstructured logs, though the
-latter require additional parsing. Logs Insights has its own SQL-like query
-syntax,
+Logs Insights is a powerful tool for querying our logs. It is particular useful
+for deriving numerical and statistical data from both structured and
+unstructured logs, though the latter require additional parsing. Logs Insights
+has its own SQL-like query syntax,
 [the documentation for which](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html)
 should be the read before attempting to use Logs Insights for anything serious.
 
@@ -239,10 +239,10 @@ time they are executed. You can minimise costs in the following ways:
   to reduce the number of log lines processed during each iteration. Avoid
   searching the full relevant data set until you're confident that the query
   works and extracts the data you expect.
-- When trying to find examples of specific logs, use `limit` with a very low
-  number. If you just need one example, use `limit 1`. If you need multiple, try
-  to keep the number low. This is especially useful when developing `parse`
-  statements.
+- When trying to find examples of specific logs, use `limit` with a low number.
+  If you just need one example, use `limit 1`. If you need multiple, try to keep
+  the number low, for example, less than 25. This is especially useful when
+  developing `parse` statements.
 
 ### Logs are not retained forever
 
