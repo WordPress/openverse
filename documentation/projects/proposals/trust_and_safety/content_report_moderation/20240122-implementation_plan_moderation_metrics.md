@@ -4,8 +4,8 @@
 
 ## Reviewers
 
-- [ ] TBD Perhaps @AetherUnbound
-- [ ] TBD Not @sarayourfriend
+- [ ] TBD
+- [ ] TBD
 
 ## Project links
 
