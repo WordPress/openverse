@@ -103,7 +103,7 @@ def is_concurrent_with_any(external_dag_ids: list[str], **context):
     """
     for dag_id in external_dag_ids:
         try:
-            prevent_concurrency_with_dag.function(dag_id)
+            prevent_concurrency_with_dag.function(dag_id, **context)
         except ValueError:
             return dag_id
 
