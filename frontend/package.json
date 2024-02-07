@@ -111,7 +111,7 @@
     "@testing-library/user-event": "^14.0.0",
     "@testing-library/vue": "^5.8.2",
     "@types/express-useragent": "^1.0.2",
-    "@types/jest": "^29.5.4",
+    "@types/jest": "^26.0.14",
     "@types/node": "18.19.14",
     "@types/throttle-debounce": "^5.0.0",
     "@types/uuid": "^9.0.6",
