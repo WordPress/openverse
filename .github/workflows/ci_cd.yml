@@ -125,6 +125,19 @@ jobs:
           just precommit
           just lint
 
+  validate-codeowners:
+    name: Validate CODEOWNERS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: mszostok/codeowners-validator@v0.7.4
+        with:
+          checks: "files,duppatterns,syntax"
+          experimental_checks: "notowned,avoid-shadowing"
+
   add-stack-label:
     name: Add stack label
     if: |
