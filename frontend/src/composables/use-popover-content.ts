@@ -1,16 +1,28 @@
 import { computed, ref } from "vue"
 
-import {
-  PopoverContentProps,
-  useFloatingUi,
-} from "~/composables/use-floating-ui"
+import { useFloatingUi } from "~/composables/use-floating-ui"
 
 import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { Properties as CSSProperties } from "csstype"
 
 import type { Ref, ToRefs, SetupContext } from "vue"
+import type { Placement, Strategy } from "@floating-ui/dom"
 
+export type PopoverContentProps = {
+  visible: boolean
+  hide: () => void
+  hideOnEsc: boolean
+  hideOnClickOutside: boolean
+  autoFocusOnShow: boolean
+  autoFocusOnHide: boolean
+  triggerElement: HTMLElement | null
+  placement: Placement
+  strategy: Strategy
+  clippable: boolean
+  trapFocus: boolean
+  zIndex: number | string
+}
 type Props = {
   popoverRef: Ref<HTMLElement | null>
   popoverPropsRefs: ToRefs<PopoverContentProps>

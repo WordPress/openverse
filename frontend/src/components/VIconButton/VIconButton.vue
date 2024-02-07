@@ -44,7 +44,7 @@ export default defineComponent({
      * The size of the button, matches the sizes of VButton component.
      */
     size: {
-      type: String as PropType<Exclude<ButtonSize, "disabled">>,
+      type: String as PropType<ButtonSize>,
       required: true,
     },
     /**
