@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-02-02T00:28:29+00:00\n"
+"POT-Creation-Date: 2024-02-07T03:49:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1502,6 +1502,14 @@ msgstr ""
 
 msgctxt "mediaDetails.sourceLabel"
 msgid "Source"
+msgstr ""
+
+msgctxt "mediaDetails.providerDescription"
+msgid "Website where the content is hosted"
+msgstr ""
+
+msgctxt "mediaDetails.sourceDescription"
+msgid "Organization that created or owns the original content"
 msgstr ""
 
 msgctxt "mediaDetails.loading"
