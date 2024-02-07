@@ -1,6 +1,13 @@
 """
 CloudwatchWrapper extracted partially from
 https://github.com/awsdocs/aws-doc-sdk-examples/blob/54c3b82d8f9a12a862f9fcec44909829bda849af/python/example_code/cloudwatch/cloudwatch_basics.py
+
+The CloudwatchWrapper requires the AWS_CLOUDWATCH_CONN_ID, or the `aws_default`
+connection, to be set in the Airflow Connections.
+
+Modifying alarms can be skipped by setting the `TOGGLE_CLOUDWATCH_ALARMS` to `False`
+in the Airflow Variables, which is particularly the desired behavior when running
+the Data Refresh DAGs locally or in a development environment.
 """
 import logging
 
