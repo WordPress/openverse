@@ -1,6 +1,6 @@
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 
-from rest_framework.exceptions import ValidationError, NotFound, PermissionDenied
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
 from api.examples import (
@@ -27,7 +27,6 @@ from api.serializers.audio_serializers import (
     AudioSerializer,
     AudioWaveformSerializer,
 )
-
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.provider_serializers import ProviderSerializer
 

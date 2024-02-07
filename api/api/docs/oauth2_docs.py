@@ -1,4 +1,4 @@
-from rest_framework.exceptions import ValidationError, PermissionDenied, APIException
+from rest_framework.exceptions import APIException, PermissionDenied, ValidationError
 
 from api.docs.base_docs import custom_extend_schema
 from api.examples import (
@@ -10,7 +10,6 @@ from api.examples import (
     auth_token_200_example,
     auth_token_curl,
 )
-
 from api.serializers.oauth2_serializers import (
     OAuth2ApplicationSerializer,
     OAuth2KeyInfoSerializer,

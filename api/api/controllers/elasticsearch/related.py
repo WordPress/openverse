@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Match, Q, Term
 from elasticsearch_dsl.response import Hit
