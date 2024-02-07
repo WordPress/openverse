@@ -22,7 +22,7 @@ from airflow.decorators import dag, task
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from elasticsearch import Elasticsearch
 
-from common.constants import PRODUCTION, STAGING, Environment
+from common.constants import ENVIRONMENTS, Environment
 from common.slack import send_alert, send_message
 from elasticsearch_cluster.shared import get_es_host
 
@@ -126,13 +126,6 @@ def notify(env: str, message_type_and_string: tuple[str, str]):
         send_message(message, dag_id=_DAG_ID.format(env=env))
 
 
-def _cluster_healthcheck_dag(env: Environment):
-    es_host = get_es_host(env)
-    healthcheck_response = ping_healthcheck(env, es_host)
-    notification = compose_notification(env, healthcheck_response)
-    es_host >> healthcheck_response >> notification >> notify(env, notification)
-
-
 _SHARED_DAG_ARGS = {
     # Every 15 minutes
     "schedule": "*/15 * * * *",
@@ -144,15 +137,13 @@ _SHARED_DAG_ARGS = {
 }
 
 
-@dag(dag_id=_DAG_ID.format(env=STAGING), **_SHARED_DAG_ARGS)
-def staging_elasticsearch_cluster_healthcheck():
-    _cluster_healthcheck_dag(STAGING)
+for env in ENVIRONMENTS:
 
+    @dag(dag_id=_DAG_ID.format(env=env), **_SHARED_DAG_ARGS)
+    def cluster_healthcheck_dag():
+        es_host = get_es_host(env)
+        healthcheck_response = ping_healthcheck(env, es_host)
+        notification = compose_notification(env, healthcheck_response)
+        es_host >> healthcheck_response >> notification >> notify(env, notification)
 
-@dag(dag_id=_DAG_ID.format(env=PRODUCTION), **_SHARED_DAG_ARGS)
-def production_elasticsearch_cluster_healthcheck():
-    _cluster_healthcheck_dag(PRODUCTION)
-
-
-staging_elasticsearch_cluster_healthcheck()
-production_elasticsearch_cluster_healthcheck()
+    cluster_healthcheck_dag()
