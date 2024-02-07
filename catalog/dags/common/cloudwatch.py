@@ -63,9 +63,4 @@ def enable_or_disable_alarms(enable):
     )
     cw_wrapper = CloudWatchWrapper(cloudwatch.get_conn())
 
-    sensitive_alarms_list = [
-        "ES Production CPU utilization above 50%",
-    ]
-
-    for alarm in sensitive_alarms_list:
-        cw_wrapper.enable_alarm_actions(alarm, enable)
+cw_wrapper.enable_alarm_actions("ES Production CPU utilization above 50%", enable)

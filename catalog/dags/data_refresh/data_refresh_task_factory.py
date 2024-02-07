@@ -141,7 +141,9 @@ def create_data_refresh_task_group(
         disable_alarms = PythonOperator(
             task_id="disable_sensitive_cloudwatch_alarms",
             python_callable=cloudwatch.enable_or_disable_alarms,
-            op_args=[False],
+            op_kwargs={
+                "enable": False,
+            },
         )
         tasks.append([generate_index_suffix, disable_alarms])
 
@@ -193,7 +195,9 @@ def create_data_refresh_task_group(
         enable_alarms = PythonOperator(
             task_id="enable_sensitive_cloudwatch_alarms",
             python_callable=cloudwatch.enable_or_disable_alarms,
-            op_args=[True],
+            op_kwargs={
+                "enable": True,
+            },
             trigger_rule=TriggerRule.ALL_DONE,
         )
 
