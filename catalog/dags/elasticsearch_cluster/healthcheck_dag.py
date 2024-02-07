@@ -20,11 +20,14 @@ from datetime import datetime
 from textwrap import dedent, indent
 
 from airflow.decorators import dag, task
+from airflow.exceptions import AirflowSkipException
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from elasticsearch import Elasticsearch
 
-from common.constants import ENVIRONMENTS, Environment
+from common.constants import ENVIRONMENTS, PRODUCTION, Environment
+from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
+from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 from elasticsearch_cluster.shared import get_es_host
 
 
@@ -110,7 +113,9 @@ def ping_healthcheck(env: str, es_host: str):
 
 
 @task
-def compose_notification(env: Environment, response_body: dict):
+def compose_notification(
+    env: Environment, response_body: dict, is_data_refresh_running: bool
+):
     status = response_body["status"]
 
     if status == "red":
@@ -120,6 +125,12 @@ def compose_notification(env: Environment, response_body: dict):
         return "alert", _compose_unexpected_node_count(env, response_body)
 
     if status == "yellow":
+        if is_data_refresh_running and env == PRODUCTION:
+            raise AirflowSkipException(
+                "Production cluster health status is yellow during data refresh. "
+                "This is an expected state, so no alert is sent."
+            )
+
         return "notification", _compose_yellow_cluster_health(env, response_body)
 
     logger.info(f"Cluster health was green; {json.dumps(response_body)}")
@@ -148,17 +159,26 @@ _SHARED_DAG_ARGS = {
     "catchup": False,
     "max_active_runs": 1,
     "doc_md": __doc__,
-    "tags": ["elasticsearch", "monitoring"],
+    "tags": ["elasticsearch", "mon?itoring"],
 }
+
+
+_DATA_REFRESH_DAG_IDS = []
+for config in DATA_REFRESH_CONFIGS.values():
+    _DATA_REFRESH_DAG_IDS += [config.dag_id, config.filtered_index_dag_id]
 
 
 for env in ENVIRONMENTS:
 
     @dag(dag_id=_DAG_ID.format(env=env), **_SHARED_DAG_ARGS)
     def cluster_healthcheck_dag():
+        is_data_refresh_running = is_concurrent_with_any(_DATA_REFRESH_DAG_IDS)
+
         es_host = get_es_host(env)
         healthcheck_response = ping_healthcheck(env, es_host)
-        notification = compose_notification(env, healthcheck_response)
+        notification = compose_notification(
+            env, healthcheck_response, is_data_refresh_running
+        )
         es_host >> healthcheck_response >> notification >> notify(env, notification)
 
     cluster_healthcheck_dag()

@@ -1,5 +1,7 @@
 import pytest
+from airflow.exceptions import AirflowSkipException
 
+from common.constants import PRODUCTION
 from elasticsearch_cluster.healthcheck_dag import compose_notification
 
 
@@ -91,9 +93,31 @@ def test_compose_notification(
     expected_message_type, message_keys, cluster_health_response
 ):
     message_type, message = compose_notification.function(
-        _TEST_ENV, cluster_health_response
+        _TEST_ENV, cluster_health_response, is_data_refresh_running=False
     )
 
     assert message_type == expected_message_type
     for message_key in message_keys:
         assert message_key in message
+
+
+def test_production_compose_notification_data_refresh_running():
+    with pytest.raises(AirflowSkipException):
+        cluster_health_response = _make_response_body(status="yellow")
+        compose_notification.function(
+            PRODUCTION,
+            cluster_health_response,
+            is_data_refresh_running=True,
+        )
+
+
+def test_production_compose_notification_data_refresh_not_running():
+    cluster_health_response = _make_response_body(status="yellow")
+    message_type, message = compose_notification.function(
+        PRODUCTION,
+        cluster_health_response,
+        is_data_refresh_running=False,
+    )
+
+    assert message_type == "notification"
+    assert "Elasticsearch production cluster health is **yellow**." in message
