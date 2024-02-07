@@ -17,6 +17,7 @@ logic that ignores yellow cluster health during data refresh or other similar op
 import json
 import logging
 from datetime import datetime
+from textwrap import dedent, indent
 
 from airflow.decorators import dag, task
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
@@ -38,10 +39,19 @@ EXPECTED_MASTER_NODE_COUNT = 3
 
 
 def _format_response_body(response_body: dict) -> str:
+    body_str = indent(json.dumps(response_body, indent=4), prefix=" " * 4)
+    # body_str is indented in, because the f string added an indentation to
+    # the front, causing the first curly brace to be incorrectly indented
+    # and interpolating a multi-line string into the f string led subsequent lines
+    # to have incorrect indentation (they did not incorporate the f-strings
+    # own indentation.
+    # Adding our own indentation using `indent` to match the f-strings
+    # allows us to correctly dedent later on without issue, with a uniform indentation
+    # on every line.
     return f"""
     Full healthcheck response body:
     ```
-    {json.dumps(response_body, indent=4)}
+{body_str}
     ```
     """
 
@@ -121,8 +131,9 @@ def notify(env: str, message_type_and_string: tuple[str, str]):
     message_type, message = message_type_and_string
 
     if message_type == "alert":
-        send_alert(message, dag_id=_DAG_ID.format(env=env))
+        send_alert(dedent(message), dag_id=_DAG_ID.format(env=env))
     elif message_type == "notification":
+        send_message(dedent(message), dag_id=_DAG_ID.format(env=env))
     else:
         raise ValueError(
             f"Invalid message_type. Expected 'alert' or 'notification', "
