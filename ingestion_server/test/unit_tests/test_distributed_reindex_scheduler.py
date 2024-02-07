@@ -1,4 +1,3 @@
-import json
 from unittest import mock
 
 import pook
@@ -42,9 +41,17 @@ def test_assign_work(estimated_records, record_limit, workers, expected_ranges):
         mock_wait_for_healthcheck.return_value = True
         mock_get_record_limit.return_value = record_limit
 
-        post_mocks = [
-            pook.post(f"http://{worker}:8002/indexing_task") for worker in workers
-        ]
+        # Set up pook matches
+        for worker, (start_id, end_id) in zip(workers, expected_ranges):
+            pook.post(f"http://{worker}:8002/indexing_task").json(
+                {
+                    "model_name": "sample_model",
+                    "table_name": "sample_table",
+                    "target_index": "sample_index",
+                    "start_id": start_id,
+                    "end_id": end_id,
+                }
+            )
 
         distributed_reindex_scheduler._assign_work(
             mock_db,
@@ -54,19 +61,8 @@ def test_assign_work(estimated_records, record_limit, workers, expected_ranges):
             "sample_index",
         )
 
-        for worker, mock_post, (start_id, end_id) in zip(
-            workers, post_mocks, expected_ranges
-        ):
-            assert mock_post.calls > 0
-            data = json.loads(mock_post.matches[0].body)
-            print(f"{data=}")
-            assert data == {
-                "model_name": "sample_model",
-                "table_name": "sample_table",
-                "target_index": "sample_index",
-                "start_id": start_id,
-                "end_id": end_id,
-            }
+        # Pook will raise an exception here if any requests don't match the above
+        assert pook.isdone()
 
 
 def test_assign_work_workers_fail():
