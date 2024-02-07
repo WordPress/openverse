@@ -14,15 +14,17 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
             [
                 {
                     "max_docs": 2_500,
-                    "query": {"term": {"source.keyword": "jamendo"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "jamendo"}}]}},
                 },
                 {
                     "max_docs": 5_000,
-                    "query": {"term": {"source.keyword": "freesound"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "freesound"}}]}},
                 },
                 {
                     "max_docs": 2_500,
-                    "query": {"term": {"source.keyword": "wikimedia_audio"}},
+                    "query": {
+                        "bool": {"filter": [{"term": {"source": "wikimedia_audio"}}]}
+                    },
                 },
             ],
         ),
@@ -35,11 +37,11 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
             [
                 {
                     "max_docs": 0,
-                    "query": {"term": {"source.keyword": "jamendo"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "jamendo"}}]}},
                 },
                 {
                     "max_docs": 0,
-                    "query": {"term": {"source.keyword": "freesound"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "freesound"}}]}},
                 },
             ],
         ),
@@ -52,11 +54,11 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
             [
                 {
                     "max_docs": 982,
-                    "query": {"term": {"source.keyword": "jamendo"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "jamendo"}}]}},
                 },
                 {
                     "max_docs": 423,
-                    "query": {"term": {"source.keyword": "freesound"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "freesound"}}]}},
                 },
             ],
         ),
@@ -70,15 +72,15 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
                     # Note that each source gets 1_667 records (because it is
                     # rounded up), for a total of 5_001 records in the new index.
                     "max_docs": 1_667,
-                    "query": {"term": {"source.keyword": "flickr"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "flickr"}}]}},
                 },
                 {
                     "max_docs": 1_667,
-                    "query": {"term": {"source.keyword": "stocksnap"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "stocksnap"}}]}},
                 },
                 {
                     "max_docs": 1_667,
-                    "query": {"term": {"source.keyword": "smk"}},
+                    "query": {"bool": {"filter": [{"term": {"source": "smk"}}]}},
                 },
             ],
         ),

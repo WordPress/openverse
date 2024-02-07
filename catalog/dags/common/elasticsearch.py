@@ -104,9 +104,6 @@ def trigger_and_wait_for_reindex(
     ):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
-        logger.info(query)
-        logger.info(max_docs)
-
         source = {"index": source_index}
         # An empty query is not accepted; only pass it
         # if a query was actually supplied

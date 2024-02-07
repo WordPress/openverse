@@ -31,7 +31,7 @@ def get_destination_index_name(
     percentage_str = round(percentage_of_prod * 100)
 
     return (
-        f"{media_type}-{percentage_str}-percent-of-providers"
+        f"{media_type}-{percentage_str}-percent-proportional"
         f"-{current_datetime_str.lower()}"
     )
 
@@ -140,7 +140,7 @@ def get_proportional_source_count_kwargs(
     return [
         {
             "max_docs": round(subset_total * source_proportion),
-            "query": {"term": {"source.keyword": source}},
+            "query": {"bool": {"filter": [{"term": {"source": source}}]}},
         }
         for source, source_proportion in production_source_proportions.items()
     ]
