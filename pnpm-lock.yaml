@@ -212,8 +212,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       '@types/jest':
-        specifier: ^29.5.4
-        version: 29.5.4
+        specifier: ^26.0.14
+        version: 26.0.24
       '@types/node':
         specifier: 18.19.21
         version: 18.19.21
@@ -7466,11 +7466,11 @@ packages:
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
 
-  /@types/jest@29.5.4:
-    resolution: {integrity: sha512-PhglGmhWeD46FYOVLt3X7TiWjzwuVGW9wG/4qocPevXMjCmrIc5b6db9WjeGE4QYVpUAWMDv3v0IiBwObY289A==}
+  /@types/jest@26.0.24:
+    resolution: {integrity: sha512-E/X5Vib8BWqZNRlDxj9vYXhsDwPYbPINqKF9BsnSoon4RQ0D9moEuLD8txgyypFLH7J4+Lho9Nr/c8H0Fi+17w==}
     dependencies:
-      expect: 29.6.4
-      pretty-format: 29.6.3
+      jest-diff: 26.6.2
+      pretty-format: 26.6.2
     dev: true
 
   /@types/json-schema@7.0.12:
@@ -7636,7 +7636,7 @@ packages:
   /@types/testing-library__jest-dom@5.14.2:
     resolution: {integrity: sha512-vehbtyHUShPxIa9SioxDwCvgxukDMH//icJG90sXQBUm5lJOHLT5kNeU9tnivhnA/TkOFMzGIXN2cTc4hY8/kg==}
     dependencies:
-      '@types/jest': 29.5.4
+      '@types/jest': 26.0.24
     dev: true
 
   /@types/throttle-debounce@5.0.0:
