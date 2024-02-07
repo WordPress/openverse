@@ -33,7 +33,7 @@ to the `/task` endpoint on the data refresh server with relevant data. A
 successful response will include the `status_check` url used to check on the
 status of the refresh, which is passed on to the next task via XCom.
 
-3. Finally the `wait_for_data_refresh` task waits for the data refresh to be
+3. Finally, the `wait_for_data_refresh` task waits for the data refresh to be
 complete by polling the `status_url`. Note this task does not need to be
 able to suspend itself and free the worker slot, because we want to lock the
 entire pool on waiting for a particular data refresh to run.
