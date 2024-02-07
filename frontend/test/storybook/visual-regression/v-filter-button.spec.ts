@@ -2,6 +2,7 @@ import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
+import { sleep } from "~~/test/playwright/utils/navigation"
 
 const gotoWithArgs = makeGotoWithArgs(
   "components-vheader-vfilterbutton--default-story"
@@ -61,6 +62,7 @@ test.describe("VFilterButton", () => {
           appliedFilters: filterCount,
           pressed: true,
         })
+        await sleep(500)
         await expectSnapshot(
           `filter-button-pressed-${filterCount}-checked`,
           page.locator(wrapper)

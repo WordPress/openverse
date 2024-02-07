@@ -92,6 +92,17 @@ precommit:
 lint hook="" *files="": precommit
     python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
 
+# Run codeowners validator locally. Only enable experimental hooks if there are no uncommitted changes.
+lint-codeowners checks="stable":
+    docker run --rm \
+        -u 1000:1000 \
+        -v $PWD:/src:rw,Z \
+        --workdir=/src \
+        -e REPOSITORY_PATH="." \
+        -e CHECKS="files,duppaterns,syntax" \
+        {{ if checks != "stable" { "-e EXPERIMENTAL_CHECKS='notowned,avoid-shadowing'" } else { "" } }} \
+        ghcr.io/mszostok/codeowners-validator:v0.7.4
+
 ########
 # Init #
 ########
