@@ -82,22 +82,12 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
                 },
             ],
         ),
-        (
-            "Updated {count} records",
-            2,
-            "Updated 2 records",
-        ),
-        (
-            "A message without a count",
-            None,
-            "A message without a count",
-        ),
     ],
 )
 def test_get_proportional_source_count_kwargs(
     production_source_counts, percentage_of_prod, expected_results
 ):
-    actual_results = get_proportional_source_count_kwargs(
+    actual_results = get_proportional_source_count_kwargs.function(
         production_source_counts, percentage_of_prod
     )
     assert actual_results == expected_results
