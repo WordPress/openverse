@@ -159,7 +159,7 @@ _SHARED_DAG_ARGS = {
     "catchup": False,
     "max_active_runs": 1,
     "doc_md": __doc__,
-    "tags": ["elasticsearch", "mon?itoring"],
+    "tags": ["elasticsearch", "monitoring"],
 }
 
 
