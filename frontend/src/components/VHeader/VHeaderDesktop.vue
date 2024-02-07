@@ -88,7 +88,8 @@ export default defineComponent({
 
     const { sendCustomEvent } = useAnalytics()
 
-    const { updateSearchState, searchTerm, searchStatus } = useSearch()
+    const { updateSearchState, searchTerm, searchStatus } =
+      useSearch(sendCustomEvent)
 
     const clearSearchTerm = () => {
       searchTerm.value = ""
