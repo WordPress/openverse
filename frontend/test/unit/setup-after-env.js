@@ -5,8 +5,6 @@ import failOnConsole from "jest-fail-on-console"
 
 import { i18n } from "~~/test/unit/test-utils/i18n"
 
-import { normalizeFetchingError } from "~/plugins/errors"
-
 failOnConsole()
 
 Vue.prototype.$nuxt = {
@@ -17,6 +15,5 @@ Vue.prototype.$nuxt = {
     },
     // i18n returned by `useI18n` composable (`useContext().i18n`)
     i18n,
-    $processFetchingError: jest.fn(normalizeFetchingError),
   },
 }
