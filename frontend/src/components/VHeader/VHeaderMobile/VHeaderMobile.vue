@@ -126,6 +126,7 @@ import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
 import { useHydrating } from "~/composables/use-hydrating"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VInputModal from "~/components/VModal/VInputModal.vue"
@@ -161,7 +162,10 @@ export default defineComponent({
 
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { updateSearchState, searchTerm, searchStatus } = useSearch()
+    const { sendCustomEvent } = useAnalytics()
+
+    const { updateSearchState, searchTerm, searchStatus } =
+      useSearch(sendCustomEvent)
 
     const handleSearch = async () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
