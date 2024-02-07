@@ -123,7 +123,11 @@ def notify(env: str, message_type_and_string: tuple[str, str]):
     if message_type == "alert":
         send_alert(message, dag_id=_DAG_ID.format(env=env))
     elif message_type == "notification":
-        send_message(message, dag_id=_DAG_ID.format(env=env))
+    else:
+        raise ValueError(
+            f"Invalid message_type. Expected 'alert' or 'notification', "
+            f"received {message_type}"
+        )
 
 
 _SHARED_DAG_ARGS = {
