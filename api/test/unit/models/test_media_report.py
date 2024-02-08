@@ -6,7 +6,7 @@ import pook
 import pytest
 from elasticsearch import BadRequestError, NotFoundError
 
-from api.models import DeletedAudio, DeletedImage, MatureAudio, MatureImage
+from api.models import DeletedAudio, DeletedImage, SensitiveAudio, SensitiveImage
 from api.models.media import (
     DEINDEXED,
     DMCA,
@@ -15,7 +15,7 @@ from api.models.media import (
     OTHER,
     PENDING,
     AbstractDeletedMedia,
-    AbstractMatureMedia,
+    AbstractSensitiveMedia,
 )
 
 
@@ -42,18 +42,20 @@ def test_pending_reports_have_no_subreport_models(
     report = media_type_config.report_factory.create(media_obj=media, reason=reason)
 
     assert report.status == PENDING
-    assert not media_type_config.mature_class.objects.filter(media_obj=media).exists()
+    assert not media_type_config.sensitive_class.objects.filter(
+        media_obj=media
+    ).exists()
     assert not media_type_config.deleted_class.objects.filter(media_obj=media).exists()
 
 
-def test_mature_filtering_creates_mature_image_instance(media_type_config, settings):
+def test_mature_filtering_creates_sensitive_image_instance(media_type_config, settings):
     media = media_type_config.model_factory.create()
 
     media_type_config.report_factory.create(
         media_obj=media, reason=MATURE, status=MATURE_FILTERED
     )
 
-    assert media_type_config.mature_class.objects.filter(media_obj=media).exists()
+    assert media_type_config.sensitive_class.objects.filter(media_obj=media).exists()
 
     for index in media_type_config.indexes:
         doc = settings.ES.get(
@@ -67,17 +69,19 @@ def test_mature_filtering_creates_mature_image_instance(media_type_config, setti
         assert doc["found"]
         assert doc["_source"]["mature"]
 
-    assert media.mature
+    assert media.sensitive
 
 
-def test_deleting_mature_image_instance_resets_mature_flag(media_type_config, settings):
+def test_deleting_sensitive_image_instance_resets_mature_flag(
+    media_type_config, settings
+):
     media = media_type_config.model_factory.create()
     # Mark as mature.
     media_type_config.report_factory.create(
         media_obj=media, reason=MATURE, status=MATURE_FILTERED
     )
-    # Delete mature instance.
-    media_type_config.mature_class.objects.get(media_obj=media).delete()
+    # Delete sensitive instance.
+    media_type_config.sensitive_class.objects.get(media_obj=media).delete()
 
     # Assert the media are back to mature=False
     # The previous test asserts they get set to mature=True
@@ -96,7 +100,7 @@ def test_deleting_mature_image_instance_resets_mature_flag(media_type_config, se
         assert not doc["_source"]["mature"]
 
     media.refresh_from_db()
-    assert not media.mature
+    assert not media.sensitive
 
 
 def test_deindexing_creates_deleted_image_instance(media_type_config, settings):
@@ -135,13 +139,16 @@ def test_all_deleted_media_covered():
     assert set(AbstractDeletedMedia.__subclasses__()) == {DeletedAudio, DeletedImage}
 
 
-def test_all_mature_media_covered():
+def test_all_sensitive_media_covered():
     """
     Imperfect test to ensure all subclasses are covered by the tests
     in this module. Relies on all models being present in
     ``catalog.api.models`` (i.e., exported from `__init__`).
     """
-    assert set(AbstractMatureMedia.__subclasses__()) == {MatureAudio, MatureImage}
+    assert set(AbstractSensitiveMedia.__subclasses__()) == {
+        SensitiveAudio,
+        SensitiveImage,
+    }
 
 
 def test_deleted_media_deletes_from_all_indexes(
@@ -221,7 +228,7 @@ def test_deleted_media_raises_elasticsearch_400_errors(settings, media_type_conf
 
 
 @pook.on
-def test_mature_media_ignores_elasticsearch_404_errors(
+def test_sensitive_media_ignores_elasticsearch_404_errors(
     settings,
     media_type_config,
 ):
@@ -238,7 +245,7 @@ def test_mature_media_ignores_elasticsearch_404_errors(
         )
 
     # This should pass despite the 404 enforced above
-    media_type_config.mature_factory.create(
+    media_type_config.sensitive_factory.create(
         media_obj=media,
     )
 
@@ -247,7 +254,7 @@ def test_mature_media_ignores_elasticsearch_404_errors(
 
 
 @pook.on
-def test_mature_media_reraises_elasticsearch_400_errors(settings, media_type_config):
+def test_sensitive_media_reraises_elasticsearch_400_errors(settings, media_type_config):
     media = media_type_config.model_factory.create()
 
     es_mocks = []
@@ -262,7 +269,7 @@ def test_mature_media_reraises_elasticsearch_400_errors(settings, media_type_con
 
     # This should fail due to the 400 enforced above
     with pytest.raises(BadRequestError):
-        media_type_config.mature_factory.create(
+        media_type_config.sensitive_factory.create(
             media_obj=media,
         )
 

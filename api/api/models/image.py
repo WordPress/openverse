@@ -6,10 +6,10 @@ from uuslug import uuslug
 from api.constants.media_types import IMAGE_TYPE
 from api.models.media import (
     AbstractDeletedMedia,
-    AbstractMatureMedia,
     AbstractMedia,
     AbstractMediaList,
     AbstractMediaReport,
+    AbstractSensitiveMedia,
 )
 from api.models.mixins import FileMixin
 
@@ -53,8 +53,8 @@ class Image(ImageFileMixin, AbstractMedia):
         db_table = "image"
 
     @property
-    def mature(self) -> bool:
-        return hasattr(self, "mature_image")
+    def sensitive(self) -> bool:
+        return hasattr(self, "sensitive_image")
 
 
 class DeletedImage(AbstractDeletedMedia):
@@ -80,7 +80,7 @@ class DeletedImage(AbstractDeletedMedia):
     )
 
 
-class MatureImage(AbstractMatureMedia):
+class SensitiveImage(AbstractSensitiveMedia):
     """
     Stores all images that have been flagged as 'mature'.
 
@@ -98,7 +98,7 @@ class MatureImage(AbstractMatureMedia):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="mature_image",
+        related_name="sensitive_image",
         help_text="The reference to the sensitive image.",
     )
 
@@ -108,7 +108,7 @@ class MatureImage(AbstractMatureMedia):
 
 class ImageReport(AbstractMediaReport):
     media_class = Image
-    mature_class = MatureImage
+    sensitive_class = SensitiveImage
     deleted_class = DeletedImage
 
     media_obj = models.ForeignKey(
