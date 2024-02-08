@@ -61,7 +61,7 @@ def test_assign_work(estimated_records, record_limit, workers, expected_ranges):
             "sample_index",
         )
 
-        # Pook will raise an exception here if any requests don't match the above
+        # Raise an exception to ensure all pook requests were matched
         assert pook.isdone()
 
 
