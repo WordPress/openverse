@@ -102,6 +102,9 @@ class MatureImage(AbstractMatureMedia):
         help_text="The reference to the sensitive image.",
     )
 
+    class Meta:
+        db_table = "api_matureimage"
+
 
 class ImageReport(AbstractMediaReport):
     media_class = Image

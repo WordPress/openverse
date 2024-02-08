@@ -283,6 +283,7 @@ class MatureAudio(AbstractMatureMedia):
     )
 
     class Meta:
+        db_table = "api_matureaudio"
         verbose_name_plural = "Mature audio"
 
 
