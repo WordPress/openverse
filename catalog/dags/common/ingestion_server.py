@@ -136,6 +136,7 @@ def wait_for_task(
     timeout: timedelta,
     poke_interval: int = REFRESH_POKE_INTERVAL,
     http_conn_id: str = "data_refresh",
+    trigger_rule: TriggerRule = TriggerRule.ALL_SUCCESS,
 ) -> HttpSensor:
     return HttpSensor(
         task_id=f"wait_for_{action.lower()}",
@@ -146,6 +147,7 @@ def wait_for_task(
         mode="reschedule",
         poke_interval=poke_interval,
         timeout=timeout.total_seconds(),
+        trigger_rule=trigger_rule,
     )
 
 
@@ -156,9 +158,12 @@ def trigger_and_wait_for_task(
     data: dict | None = None,
     poke_interval: int = REFRESH_POKE_INTERVAL,
     http_conn_id: str = "data_refresh",
+    trigger_rule: TriggerRule = TriggerRule.ALL_SUCCESS,
 ) -> tuple[HttpOperator, HttpSensor]:
-    trigger = trigger_task(action, model, data, http_conn_id)
-    waiter = wait_for_task(action, trigger, timeout, poke_interval, http_conn_id)
+    trigger = trigger_task(action, model, data, http_conn_id, trigger_rule)
+    waiter = wait_for_task(
+        action, trigger, timeout, poke_interval, http_conn_id, trigger_rule
+    )
     trigger >> waiter
     return trigger, waiter
 
