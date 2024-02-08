@@ -34,6 +34,7 @@ jobs:
   run:
     name: Save event info
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'WordPress'
     steps:
       - name: Save event info
         run: |

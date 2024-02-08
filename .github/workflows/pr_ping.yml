@@ -12,7 +12,8 @@ jobs:
     name: Send Slack message
     if: |
       github.actor != 'dependabot[bot]' &&
-      !startsWith(github.event.pull_request.title, '🔄')
+      !startsWith(github.event.pull_request.title, '🔄') &&
+      github.repository_owner == 'WordPress'
     runs-on: ubuntu-latest
     env:
       pr_url: ${{ github.event.pull_request.html_url }}

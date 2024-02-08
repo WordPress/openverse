@@ -10,6 +10,7 @@ jobs:
   sync_labels:
     name: Sync labels
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

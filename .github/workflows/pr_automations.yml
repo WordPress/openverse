@@ -33,6 +33,7 @@ jobs:
   run:
     name: Perform PR automations
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

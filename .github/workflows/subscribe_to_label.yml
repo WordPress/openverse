@@ -8,6 +8,7 @@ on:
 jobs:
   subscribe:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'WordPress'
     steps:
       - uses: bytecodealliance/subscribe-to-label-action@v1
         with:

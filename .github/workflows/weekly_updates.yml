@@ -15,6 +15,7 @@ jobs:
   make_post:
     name: Create post on Make site
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

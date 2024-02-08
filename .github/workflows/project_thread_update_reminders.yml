@@ -8,6 +8,7 @@ on:
 jobs:
   send-reminders:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'WordPress'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/github-script@v6
