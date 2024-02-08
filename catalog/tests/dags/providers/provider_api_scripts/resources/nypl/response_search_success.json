@@ -17,7 +17,7 @@
       "numResults": "1275",
       "result": [
         {
-          "apiUri": "http://api.repo.nypl.org/api/v1/items/mods/0cabe3d0-3d50-0134-a8e0-00505686a51c",
+          "apiUri": "http://api.repo.nypl.org/api/v2/items/mods/0cabe3d0-3d50-0134-a8e0-00505686a51c",
           "imageID": "56738462",
           "itemLink": "http://digitalcollections.nypl.org/items/0cabe3d0-3d50-0134-a8e0-00505686a51c",
           "rightsStatement": "To the extent that a jurisdiction grants The New York Public Library a copyright in this item, NYPL makes this item available under a Creative Commons CC0 1.0 Universal Public Domain Dedication. Though not required, if you want to credit us as the source, please use the following statement, \"From The New York Public Library,\" and provide a link back to the item on our Digital Collections site. Doing so helps us track how our collection is used and helps justify freely releasing even more content in the future.",

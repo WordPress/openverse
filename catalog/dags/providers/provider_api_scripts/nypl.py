@@ -44,7 +44,7 @@ def get_value_from_dict_or_list(
 
 class NyplDataIngester(ProviderDataIngester):
     providers = {"image": prov.NYPL_DEFAULT_PROVIDER}
-    endpoint_base = "http://api.repo.nypl.org/api/v1/items"
+    endpoint_base = "http://api.repo.nypl.org/api/v2/items"
     endpoint = f"{endpoint_base}/search/"
     metadata_endpoint = f"{endpoint_base}/item_details/"
     batch_limit = 500
