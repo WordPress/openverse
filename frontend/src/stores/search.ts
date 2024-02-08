@@ -121,10 +121,10 @@ export function buildCollectionQuery(
   const { collection, ...params } = collectionParams
 
   const query: PaginatedCollectionQuery = {
+    collection,
+    unstable__collection: collection,
     ...params,
     ...getSensitiveQuery("API"),
-    unstable__collection: collection,
-    collection,
   }
   if ("tag" in query) {
     query.unstable__tag = query.tag

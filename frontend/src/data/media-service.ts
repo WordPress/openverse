@@ -6,8 +6,13 @@ import type {
 import type { ApiService } from "~/data/api-service"
 import type { DetailFromMediaType, Media } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
+import type { Events } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
+
+export type SearchTimeEvent =
+  | Events["AUDIO_SEARCH_RESPONSE_TIME"]
+  | Events["IMAGE_SEARCH_RESPONSE_TIME"]
 
 export interface MediaResult<
   T extends Media | Media[] | Record<string, Media>,
@@ -26,6 +31,53 @@ class MediaService<T extends Media> {
   constructor(apiService: ApiService, mediaType: T["frontendMediaType"]) {
     this.apiService = apiService
     this.mediaType = mediaType
+  }
+
+  /**
+   * Processes AxiosResponse from a search query to
+   * construct SEARCH_RESPONSE_TIME analytics event.
+   * @param response - Axios response
+   * @param requestDatetime - datetime before request was sent
+   */
+  buildSearchTimeEvent(
+    response: AxiosResponse,
+    requestDatetime: Date
+  ): SearchTimeEvent | undefined {
+    const REQUIRED_HEADERS = ["date", "cf-cache-status", "cf-ray"]
+
+    const responseHeaders = response.headers
+    if (!REQUIRED_HEADERS.every((header) => header in responseHeaders)) {
+      return
+    }
+
+    const responseDatetime = new Date(responseHeaders["date"])
+    if (responseDatetime < requestDatetime) {
+      // response returned was from the local cache
+      return
+    }
+
+    const cfRayIATA = responseHeaders["cf-ray"].split("-")[1]
+    if (cfRayIATA === undefined) {
+      return
+    }
+
+    const elapsedSeconds = Math.floor(
+      (responseDatetime.getTime() - requestDatetime.getTime()) / 1000
+    )
+
+    const responseUrl =
+      response.request?.responseURL ?? response.request?.res?.responseUrl
+    if (!responseUrl) {
+      return
+    }
+    const url = new URL(responseUrl)
+
+    return {
+      cfCacheStatus: String(responseHeaders["cf-cache-status"]),
+      cfRayIATA: String(cfRayIATA),
+      elapsedTime: elapsedSeconds,
+      queryString: url.search,
+    }
   }
 
   /**
@@ -54,17 +106,25 @@ class MediaService<T extends Media> {
    */
   async search(
     params: PaginatedSearchQuery | PaginatedCollectionQuery
-  ): Promise<MediaResult<Record<string, Media>>> {
+  ): Promise<{
+    searchTimeEvent: SearchTimeEvent | undefined
+    data: MediaResult<Record<string, Media>>
+  }> {
     // Add the `peaks` param to all audio searches automatically
     if (this.mediaType === AUDIO) {
       params.peaks = "true"
     }
 
+    const requestDatetime = new Date()
+
     const res = await this.apiService.query<MediaResult<T[]>>(
       this.mediaType,
       params as unknown as Record<string, string>
     )
-    return this.transformResults(res.data)
+
+    const searchTimeEvent = this.buildSearchTimeEvent(res, requestDatetime)
+
+    return { searchTimeEvent, data: this.transformResults(res.data) }
   }
 
   /**
