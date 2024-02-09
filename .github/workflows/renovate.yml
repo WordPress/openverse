@@ -28,7 +28,8 @@ env:
 jobs:
   renovate:
     runs-on: ubuntu-latest
-    if: github.repository == 'WordPress/openverse'
+    # Prevent running this workflow on forks, it's unnecessary for external contributors
+    if: github.repository_owner == 'WordPress'
     steps:
       - uses: actions/checkout@v4
 

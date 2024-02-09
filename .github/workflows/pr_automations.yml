@@ -33,6 +33,8 @@ jobs:
   run:
     name: Perform PR automations
     runs-on: ubuntu-latest
+    # Prevent running this workflow on forks, it's unnecessary for external contributors
+    if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
