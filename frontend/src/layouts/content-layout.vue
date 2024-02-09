@@ -2,7 +2,7 @@
   <div>
     <VSkipToContentButton />
     <div
-      class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr,auto] bg-white"
+      class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] bg-white"
       :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]"
     >
       <div class="header-el sticky top-0 z-40 block bg-white">
@@ -23,10 +23,10 @@
           mode="internal"
           class="border-t border-dark-charcoal-20 bg-white"
         />
+        <VGlobalAudioSection />
       </div>
-
-      <VModalTarget class="modal" />
     </div>
+    <VModalTarget class="modal" />
   </div>
 </template>
 <script lang="ts">
@@ -44,6 +44,7 @@ import VFooter from "~/components/VFooter/VFooter.vue"
 import VModalTarget from "~/components/VModal/VModalTarget.vue"
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
+import VGlobalAudioSection from "~/components/VGlobalAudioSection/VGlobalAudioSection.vue"
 
 /**
  * This is the ContentLayout: the search page, the single result page,
@@ -53,6 +54,7 @@ import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 export default defineComponent({
   name: "ContentLayout",
   components: {
+    VGlobalAudioSection,
     VSkipToContentButton,
     VBanners,
     VHeaderInternal,
@@ -108,7 +110,7 @@ export default defineComponent({
 
 <style scoped>
 .app {
-  grid-template-areas: "header" "main" "global-audio";
+  grid-template-areas: "header" "main";
 }
 .header-el {
   grid-area: header;

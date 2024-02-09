@@ -118,8 +118,8 @@ something.
 
 2.  Take the list of suspicious traffic source IDs and go to the
     `Security => Bots` section of Cloudflare. Here, you'll see more lists of IP
-    Addresses, ASNs, and User Agents below a graph of known bot traffic. It's
-    very likely you'll see items from your lists in these graphs.
+    Addresses, ASNs, and User Agents below a graph of known bot traffic. It is
+    likely you'll see items from your lists in these graphs.
 
 3.  Use the "add filter" button and filter by your listed resources
     individually. Write down which of the identified resources are comprised of

@@ -29,6 +29,8 @@ import { useUiStore } from "~/stores/ui"
 
 import { createTranslationLink } from "~/utils/translation-banner"
 
+import { defineEvent } from "~/types/emits"
+
 import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
@@ -44,6 +46,9 @@ export default defineComponent({
       type: String as PropType<BannerId>,
       required: true,
     },
+  },
+  emits: {
+    close: defineEvent(),
   },
   setup() {
     const uiStore = useUiStore()

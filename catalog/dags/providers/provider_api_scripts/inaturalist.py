@@ -7,7 +7,7 @@ Notes:      The iNaturalist API is not intended for data scraping.
             https://api.inaturalist.org/v1/docs/
             But there is a full dump intended for sharing on S3.
             https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata
-            Because these are very large normalized tables, as opposed to more document
+            Because these are exceptionally large normalized tables, as opposed to more document
             oriented API responses, we found that bringing the data into postgres first
             was the most effective approach. More detail in slack here:
             https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N
@@ -371,7 +371,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                         sql=(SCRIPT_DIR / f"{source_name}.sql").read_text(),
                         doc_md=f"Load iNaturalist {source_name} from s3 to postgres",
                         execution_timeout=timedelta(minutes=10),
-                    ),
+                    )
 
             with TaskGroup(group_id="load_image_data") as loader_tasks:
                 # Using the existing set up, but the indexes on the temporary table
@@ -391,14 +391,13 @@ class INaturalistDataIngester(ProviderDataIngester):
                     task_id="get_batches",
                     python_callable=INaturalistDataIngester.get_batches,
                     op_kwargs={
-                        "batch_length": 2_000_000,
+                        "batch_length": 1_000_000,
                     },
                     execution_timeout=timedelta(minutes=1),
                 )
 
-                # In testing this locally, the longest full iteration took 39 minutes,
-                # median was 18 minutes. We should probably adjust the timeouts with
-                # more info from production runs.
+                # In testing this locally with batch length 2_000_000, the longest full
+                # iteration took 39 minutes, median was 18 minutes.
                 load_transformed_data = PythonOperator.partial(
                     task_id="load_transformed_data",
                     python_callable=INaturalistDataIngester.load_transformed_data,
@@ -413,6 +412,14 @@ class INaturalistDataIngester(ProviderDataIngester):
                     doc_md=(
                         "Load one batch of data from source tables to target table."
                     ),
+                    # Use all of the available pool slots.
+                    pool_slots=128,
+                    # Default priority_weight is 1, higher numbers are more important.
+                    priority_weight=0,
+                    # Particularly towards the beginning there will be lots of
+                    # of downstream / dependent tasks, and we don't want airflow to
+                    # consider that in scheduling.
+                    weight_rule="absolute",
                 ).expand(
                     op_args=XComArg(get_batches, "return_value"),
                 )

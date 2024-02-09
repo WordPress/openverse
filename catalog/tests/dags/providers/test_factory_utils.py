@@ -23,6 +23,8 @@ def dagrun_mock() -> DagRun:
 @pytest.fixture
 def internal_func_mock():
     """
+    Get an empty ``MagicMock`` instance.
+
     This mock, along with the value, get handed into the provided function.
     For fake_provider_module.main, the mock will be called with the provided value.
     """

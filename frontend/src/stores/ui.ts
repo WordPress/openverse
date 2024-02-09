@@ -38,7 +38,6 @@ export interface UiState {
   /**
    * whether the request user agent is mobile or not.
    */
-  isMobileUa: boolean
   dismissedBanners: BannerId[]
   /**
    * Whether to blur sensitive content in search and single result pages.
@@ -59,13 +58,20 @@ export const useUiStore = defineStore("ui", {
     isFilterDismissed: false,
     isDesktopLayout: false,
     breakpoint: "sm",
-    isMobileUa: true,
     dismissedBanners: [],
     shouldBlurSensitive: true,
     revealedSensitiveResults: [],
   }),
 
   getters: {
+    cookieState(state): OpenverseCookieState["ui"] {
+      return {
+        instructionsSnackbarState: state.instructionsSnackbarState,
+        isFilterDismissed: state.isFilterDismissed,
+        breakpoint: state.breakpoint,
+        dismissedBanners: Array.from(this.dismissedBanners),
+      }
+    },
     areInstructionsVisible(state): boolean {
       return state.instructionsSnackbarState === "visible"
     },
@@ -148,49 +154,36 @@ export const useUiStore = defineStore("ui", {
      *
      * @param cookies - mapping of UI state parameters and their states.
      */
-    initFromCookies(cookies: OpenverseCookieState) {
+    initFromCookies(cookies: OpenverseCookieState["ui"]) {
       let breakpoint = this.breakpoint
       if (
-        cookies.uiBreakpoint &&
-        Object.keys(ALL_SCREEN_SIZES).includes(cookies.uiBreakpoint)
-      )
-        breakpoint = cookies.uiBreakpoint
+        cookies.breakpoint &&
+        Object.keys(ALL_SCREEN_SIZES).includes(cookies.breakpoint)
+      ) {
+        breakpoint = cookies.breakpoint
+      }
       this.updateBreakpoint(breakpoint)
 
-      if (typeof cookies.uiIsFilterDismissed === "boolean") {
-        this.isFilterDismissed = cookies.uiIsFilterDismissed
-      }
-
-      this.isMobileUa = false
-      if (typeof cookies.uiIsMobileUa === "boolean") {
-        this.isMobileUa = cookies.uiIsMobileUa
+      if (typeof cookies.isFilterDismissed === "boolean") {
+        this.isFilterDismissed = cookies.isFilterDismissed
       }
 
       this.innerFilterVisible = this.isDesktopLayout
         ? !this.isFilterDismissed
         : false
 
-      if (Array.isArray(cookies.uiDismissedBanners)) {
-        this.dismissedBanners = cookies.uiDismissedBanners
+      if (Array.isArray(cookies.dismissedBanners)) {
+        this.dismissedBanners = cookies.dismissedBanners
       }
 
-      this.updateCookies()
+      this.writeToCookie()
     },
-
-    updateCookies() {
-      const opts = { ...cookieOptions }
-
-      this.$nuxt.$cookies.setAll([
-        {
-          name: "uiInstructionsSnackbarState",
-          value: this.instructionsSnackbarState,
-          opts,
-        },
-        { name: "uiIsFilterDismissed", value: this.isFilterDismissed, opts },
-        { name: "uiBreakpoint", value: this.breakpoint, opts },
-        { name: "uiIsMobileUa", value: this.isMobileUa, opts },
-        { name: "uiDismissedBanners", value: this.dismissedBanners, opts },
-      ])
+    /**
+     * Write the current state of the ui store to the cookie. These cookies
+     * are read in the corresponding `initFromCookies` method.
+     */
+    writeToCookie() {
+      this.$nuxt.$cookies.set("ui", this.cookieState, { ...cookieOptions })
     },
 
     /**
@@ -205,9 +198,8 @@ export const useUiStore = defineStore("ui", {
 
       this.breakpoint = breakpoint
 
-      this.$nuxt.$cookies.set("uiBreakpoint", this.breakpoint, {
-        ...cookieOptions,
-      })
+      this.writeToCookie()
+
       this.isDesktopLayout = desktopBreakpoints.includes(breakpoint)
     },
 
@@ -223,9 +215,7 @@ export const useUiStore = defineStore("ui", {
       if (this.isDesktopLayout) {
         this.isFilterDismissed = !visible
 
-        this.$nuxt.$cookies.set("uiIsFilterDismissed", this.isFilterDismissed, {
-          ...cookieOptions,
-        })
+        this.writeToCookie()
       }
     },
 
@@ -246,9 +236,7 @@ export const useUiStore = defineStore("ui", {
 
       this.dismissedBanners.push(bannerId)
 
-      this.$nuxt.$cookies.set("uiDismissedBanners", this.dismissedBanners, {
-        ...cookieOptions,
-      })
+      this.writeToCookie()
     },
     isBannerDismissed(bannerId: BannerId) {
       return this.dismissedBanners.includes(bannerId)

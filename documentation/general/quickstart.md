@@ -8,8 +8,8 @@ the ingestion server and the frontend.
 
 ## Stack-specific quickstarts
 
-It is very unlikely that you want to contribute to everything, everywhere, all
-at once. In all likelihood, you intend to contribute to a narrower slice of the
+It is unlikely that you want to contribute to everything, everywhere, all at
+once. In all likelihood, you intend to contribute to a narrower slice of the
 stack. In such cases, you might find it more beneficial to go through one of
 these stack-specific quickstart guides.
 
@@ -18,7 +18,7 @@ these stack-specific quickstart guides.
 - [Ingestion server](/ingestion_server/guides/quickstart.md)
 - [Documentation](/meta/documentation/quickstart.md)
 
-That said, there is something very appealing about running the full stack
+That said, there is something useful and appealing about running the full stack
 locally, which this guide is all about.
 
 ## Prerequisites
@@ -34,18 +34,18 @@ prerequisites.
 2. Clone the repository to your computer. Then switch to the cloned directory.
    If you're planning to contribute, fork the repo and clone your fork instead.
 
-   ```console
-   $ git clone https://github.com/WordPress/openverse.git # or your fork
-   $ cd openverse/
+   ```bash
+   git clone https://github.com/WordPress/openverse.git # or your fork
+   cd openverse/
    ```
 
    If you followed the setup guide and installed
    [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
    using the `gh` command.
 
-   ```console
-   $ gh repo clone WordPress/openverse # or your fork
-   $ cd openverse/
+   ```bash
+   gh repo clone WordPress/openverse # or your fork
+   cd openverse/
    ```
 
 3. Install all dependencies. This step installs dependencies for the frontend,
@@ -53,21 +53,21 @@ prerequisites.
    install API or ingestion server dependencies because they are meant to run
    using Docker containers.
 
-   ```console
-   $ just install
+   ```bash
+   just install
    ```
 
    To be more specific with your install, you can run either of the following.
 
-   ```console
-   $ just node-install # only frontend and Node.js automations
-   $ just py-install # only documentation and Python automations
+   ```bash
+   just node-install # only frontend and Node.js automations
+   just py-install # only documentation and Python automations
    ```
 
 4. Spin up and orchestrate all Docker services.
 
-   ```console
-   $ just up
+   ```bash
+   just up
    ```
 
    The `up` recipe orchestrates the following services: `cache`, `db`,
@@ -112,24 +112,24 @@ prerequisites.
 
 5. Load the sample data. This step can take a few minutes to complete.
 
-   ```console
-   $ just init
+   ```bash
+   just init
    ```
 
    ````{admonition} Troubleshooting
    If this step fails, cleaning up and restarting usually fixes it.
 
-   ```console
-   $ just down -v
-   $ just api/init
+   ```bash
+   just down -v
+   just api/init
    ```
    ````
 
 6. With the data loaded, the API can now return JSON responses to your HTTP
    requests.
 
-   ```console
-   $ just api/stats
+   ```bash
+   just api/stats
    just _curl-get "images/stats/" http://localhost:50280
    curl "http://localhost:50280/v1/images/stats/"
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
@@ -140,8 +140,8 @@ prerequisites.
    JSON data. If you have `jq` installed, you can pipe the response to it and
    transform it.
 
-   ```console
-   $ just api/stats | jq '.[0]'
+   ```bash
+   just api/stats | jq '.[0]'
    {
      "source_name": "flickr",
      "display_name": "Flickr",
@@ -150,7 +150,7 @@ prerequisites.
      "media_count": 2500
    }
 
-   $ just api/stats 'audio' | jq '[.[] | .source_name]'
+   just api/stats 'audio' | jq '[.[] | .source_name]'
    [
      "freesound",
      "jamendo",
@@ -165,8 +165,8 @@ prerequisites.
 7. To bring up the frontend, we have another `just` recipe. We have `just`
    recipes for almost everything.
 
-   ```console
-   $ env API_URL="http://localhost:50280" just frontend/run dev
+   ```bash
+   env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
    Now you should be able to access the following endpoints:
@@ -181,15 +181,15 @@ prerequisites.
 2. For services running inside Docker, like the API, ingestion server and
    Plausible, use another `just` recipe to bring them down.
 
-   ```console
-   $ just down
+   ```bash
+   just down
    ```
 
    ````{tip}
    If you include the `-v` flag, all Docker volumes (including their data) will
    be deleted too, which is useful in case you want a fresh start.
 
-   ```console
-   $ just down -v
+   ```bash
+   just down -v
    ```
    ````

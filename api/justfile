@@ -15,10 +15,14 @@ NO_COLOR := "\\033[0m"
 ###########
 
 export API_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
+export PGCLI_VERSION := `grep 'pgcli' Pipfile | awk -F' = ' '{print $2}' | sed 's/\~//g; s/"//g; s/=//g'`
 
 # Print the Python version specified in the `Pipfile`
 @py-version:
     echo $API_PY_VERSION
+
+@pgcli-version:
+    echo $PGCLI_VERSION
 
 ###########
 # Install #

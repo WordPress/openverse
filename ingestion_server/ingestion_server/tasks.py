@@ -13,6 +13,7 @@ from ingestion_server.constants.media_types import MediaType
 from ingestion_server.es_helpers import elasticsearch_connect
 from ingestion_server.indexer import TableIndexer
 from ingestion_server.ingest import promote_api_table, refresh_api_table
+from ingestion_server.state import has_active_workers_for_task_id
 
 
 class TaskTypes(Enum):
@@ -91,7 +92,7 @@ class TaskTracker:
         } | kwargs
 
     @staticmethod
-    def serialize_task_info(task_info: dict) -> dict:
+    def serialize_task_info(task_id: str, task_info: dict) -> dict:
         """
         Generate a response dictionary containing all relevant information about a task.
 
@@ -111,12 +112,13 @@ class TaskTracker:
                 return None
             return str(datetime.datetime.utcfromtimestamp(timestamp))
 
-        active = task_info["task"].is_alive()
+        active = task_info["task"].is_alive() or has_active_workers_for_task_id(task_id)
         start_time = task_info["start_time"]
         finish_time = task_info["finish_time"].value
         progress = task_info["progress"].value
         active_workers = task_info["active_workers"].value
         is_bad_request = task_info["is_bad_request"].value
+
         return {
             "active": active,
             "model": task_info["model"],
@@ -127,6 +129,9 @@ class TaskTracker:
             "finish_timestamp": finish_time,
             "finish_time": _time_fmt(finish_time),
             "active_workers": bool(active_workers),
+            # The task is considered to have errored if the task is no longer alive, or
+            # else it does not have any associated active workers, but progress did not
+            # reach 100%.
             "error": progress < 100 and not active,
             "is_bad_request": bool(is_bad_request),
         }
@@ -153,7 +158,7 @@ class TaskTracker:
         self._prune_old_tasks()
 
         task_info = self.tasks[task_id]
-        return {"task_id": task_id} | self.serialize_task_info(task_info)
+        return {"task_id": task_id} | self.serialize_task_info(task_id, task_info)
 
 
 def _with_sentry(fn):

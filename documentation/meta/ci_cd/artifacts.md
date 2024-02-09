@@ -7,7 +7,7 @@ the Summary page of a workflow run.
 https://github.com/WordPress/openverse/actions/runs/<run_id>
 ```
 
-These artifacts are classified into TODO types:
+These artifacts are classified into the following types:
 
 - Docker images
 - Logs
@@ -37,7 +37,7 @@ The following artifacts are logs for debugging.
 - `api_logs`
 
   This log file contains all the logs from all the Docker services written in
-  the course of the API tests. This artifact is created by by the
+  the course of the API tests. This artifact is created by the
   [`test-api`](/meta/ci_cd/jobs/api.md#test-api) job.
 
 - `ing_logs`

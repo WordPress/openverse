@@ -2,11 +2,9 @@ import { expect, test } from "@playwright/test"
 
 import {
   changeSearchType,
-  filters,
   goToSearchTerm,
-  isPageDesktop,
+  preparePageForTests,
   searchFromHeader,
-  t,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 
@@ -30,9 +28,10 @@ import { AUDIO, IMAGE } from "~/constants/media"
 test.describe.configure({ mode: "parallel" })
 
 test.describe("search query on CSR", () => {
-  breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
+  breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
+    test.beforeEach(async ({ context, page }) => {
       await mockProviderApis(context)
+      await preparePageForTests(page, breakpoint)
     })
 
     test("q query parameter is set as the search term", async ({ page }) => {
@@ -100,45 +99,6 @@ test.describe("search query on CSR", () => {
       await expect(page).toHaveURL(
         "/search/image?q=dog&license=by&extension=jpg"
       )
-    })
-
-    test("can set `includeSensitiveResults` filter by toggling the UI", async ({
-      page,
-    }) => {
-      await page.goto("/preferences")
-      // Feature flag labels are not translated
-      await page
-        .getByLabel(/Turn on sensitive content fetching and blurring/i)
-        .check()
-      await page
-        .getByLabel(/Mark 50% of results as sensitive to test content safety./i)
-        .check()
-
-      await goToSearchTerm(page, "cat", { mode: "CSR" })
-
-      await filters.open(page)
-
-      await page
-        .getByLabel(t("filters.safeBrowsing.toggles.fetchSensitive.title"))
-        .check()
-
-      const searchButtonLabel = new RegExp(
-        t(
-          isPageDesktop(page)
-            ? "browsePage.searchForm.button"
-            : "header.seeResults"
-        ),
-        "i"
-      )
-      await page.getByRole("button", { name: searchButtonLabel }).click()
-
-      const sensitiveImageLink = page
-        .getByRole("link", {
-          name: /This image may contain sensitive content/i,
-        })
-        .first()
-
-      await expect(sensitiveImageLink).toBeVisible()
     })
   })
 })

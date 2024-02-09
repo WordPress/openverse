@@ -15,11 +15,3 @@ PHOTON_ENDPOINT = config("PHOTON_ENDPOINT", default="https://i0.wp.com/")
 # to cast them in assertions to match the parsed param types)
 THUMBNAIL_WIDTH_PX = config("THUMBNAIL_WIDTH_PX", default="600")
 THUMBNAIL_QUALITY = config("THUMBNAIL_JPG_QUALITY", default="80")
-
-THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD = config(
-    "THUMBNAIL_ERROR_INITIAL_ALERT_THRESHOLD", default=100, cast=int
-)
-
-THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY = config(
-    "THUMBNAIL_ERROR_REPEATED_ALERT_FREQUENCY", default=1000, cast=int
-)

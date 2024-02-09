@@ -6,9 +6,9 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
+import { capitalCase } from "~/utils/case"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import { capital } from "case"
 
 <Meta title="Components/VButton" components={VButton} />
 
@@ -101,7 +101,7 @@ export const VariantsTemplate = (args) => ({
   components: { VButton },
   methods: {
     capitalize(str) {
-      return capital(str)
+      return capitalCase(str)
     },
   },
   setup() {

@@ -17,6 +17,7 @@ The following are DAGs grouped by their primary tag:
 1.  [Data Normalization](#data-normalization)
 1.  [Data Refresh](#data-refresh)
 1.  [Database](#database)
+1.  [Elasticsearch](#elasticsearch)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
 1.  [Other](#other)
@@ -44,10 +45,19 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                                                            | Schedule Interval |
 | --------------------------------------------------------------------------------- | ----------------- |
 | [`batched_update`](#batched_update)                                               | `None`            |
+| [`delete_records`](#delete_records)                                               | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
+| [`recreate_full_staging_index`](#recreate_full_staging_index)                     | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
+
+### Elasticsearch
+
+| DAG ID                                                              | Schedule Interval |
+| ------------------------------------------------------------------- | ----------------- |
+| [`create_new_production_es_index`](#create_new_production_es_index) | `None`            |
+| [`create_new_staging_es_index`](#create_new_staging_es_index)       | `None`            |
 
 ### Maintenance
 
@@ -83,7 +93,9 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                          | Schedule Interval | Dated   | Media Type(s) |
 | --------------------------------------------------------------- | ----------------- | ------- | ------------- |
+| [`auckland_museum_workflow`](#auckland_museum_workflow)         | `@daily`          | `True`  | image         |
 | `brooklyn_museum_workflow`                                      | `@monthly`        | `False` | image         |
+| [`cc_mixter_workflow`](#cc_mixter_workflow)                     | `@monthly`        | `False` | audio         |
 | `cleveland_museum_workflow`                                     | `@monthly`        | `False` | image         |
 | [`europeana_workflow`](#europeana_workflow)                     | `@daily`          | `True`  | image         |
 | [`finnish_museums_workflow`](#finnish_museums_workflow)         | `@daily`          | `True`  | image         |
@@ -103,7 +115,7 @@ The following are DAGs grouped by their primary tag:
 | [`smk_workflow`](#smk_workflow)                                 | `@monthly`        | `False` | image         |
 | [`stocksnap_workflow`](#stocksnap_workflow)                     | `@monthly`        | `False` | image         |
 | [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)     | `@daily`          | `True`  | image, audio  |
-| [`wordpress_workflow`](#wordpress_workflow)                     | `@monthly`        | `False` | image         |
+| [`wordpress_workflow`](#wordpress_workflow)                     | `@weekly`         | `False` | image         |
 
 ### Provider Reingestion
 
@@ -120,12 +132,17 @@ The following is documentation associated with each DAG (where available):
 
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
+1.  [`auckland_museum_workflow`](#auckland_museum_workflow)
 1.  [`audio_data_refresh`](#audio_data_refresh)
 1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
+1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
 1.  [`create_filtered_image_index`](#create_filtered_image_index)
+1.  [`create_new_production_es_index`](#create_new_production_es_index)
+1.  [`create_new_staging_es_index`](#create_new_staging_es_index)
+1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
 1.  [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow)
@@ -148,6 +165,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`pr_review_reminders`](#pr_review_reminders)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
 1.  [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
+1.  [`recreate_full_staging_index`](#recreate_full_staging_index)
 1.  [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)
 1.  [`report_pending_reported_media`](#report_pending_reported_media)
 1.  [`rotate_db_snapshots`](#rotate_db_snapshots)
@@ -196,6 +214,24 @@ airflow dags trigger --conf
 
 - maxLogAgeInDays:<INT> - Optional
 - enableDelete:<BOOLEAN> - Optional
+
+### `auckland_museum_workflow`
+
+Content Provider: Auckland War Memorial Museum Tāmaki Paenga Hira
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: https://api.aucklandmuseum.com/
+
+Resource: https://api.aucklandmuseum.com/
+https://github.com/AucklandMuseum/API/wiki/Tutorial
+
+| Resource     | Requests per second | Requests per day |
+| ------------ | ------------------- | ---------------- |
+| /search, /id | 10                  | 1000             |
+| /id/media    | 10                  | 1000             |
 
 ### `audio_data_refresh`
 
@@ -311,6 +347,18 @@ used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step.
 
+### `cc_mixter_workflow`
+
+Content Provider: ccMixter
+
+ETL Process: Use the API to identify all CC licensed media.
+
+Output: TSV file containing the media and the respective meta-data.
+
+Notes: Documentation: https://ccmixter.org/query-api ccMixter sends bad JSON and
+extremely huge headers, both of which need workarounds that are handled by this
+DAG.
+
 ### `check_silenced_dags`
 
 #### Silenced DAGs check
@@ -344,21 +392,29 @@ This module creates the filtered index creation DAGs for each media type using a
 factory function.
 
 Filtered index creation is handled by the ingestion server. The DAGs generated
-by the `build_create_filtered_index_dag` function in this module are responsible
-for triggering the ingestion server action to create and populate the filtered
-index for a given media type. The DAG awaits the completion of the filtered
-index creation and then points the filtered index alias for the media type to
-the newly created index.
+by the `create_filtered_index_creation_dag` function in this module are
+responsible for triggering the ingestion server action to create and populate
+the filtered index for a given media type. The DAG awaits the completion of the
+filtered index creation and then points the filtered index alias for the media
+type to the newly created index. They make use of the
+`create_filtered_index_creation_task_groups` factory, which is also used by the
+data refreshes to perform the same functions. The purpose of these DAGs is to
+allow the filtered index creation steps to be run in isolation from the data
+refresh.
 
 ##### When this DAG runs
 
-The DAGs generated in this module are triggered by the data refresh DAGs.
-Maintaining this process separate from the data refresh DAGs, while still
-triggering it there, allows us to run filtered index creation independently of
-the full data refresh. This is primarily useful in two cases: for testing
-changes to the filtered index creation; and for re-running filtered index
-creation if an urgent change to the sensitive terms calls for an immediate
-recreation of the filtered indexes.
+The DAGs generated by the `create_filtered_index_creation_dag` can be used to
+manually run the filtered index creation and promotion steps described above in
+isolation from the rest of the data refresh. These DAGs also include checks to
+ensure that race conditions with the data refresh DAGs are not encountered (see
+`Race conditions` section below).
+
+The DAGs generated in this module are on a `None` schedule and are only
+triggered manually. This is primarily useful in two cases: for testing changes
+to the filtered index creation; and for re-running filtered index creation if an
+urgent change to the sensitive terms calls for an immediate recreation of the
+filtered indexes.
 
 ##### Race conditions
 
@@ -382,12 +438,6 @@ There are two mechanisms that prevent this from happening:
 
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
-
-Because the data refresh DAG triggers the filtered index creation DAG, we do
-allow a `force` param to be passed to the DAGs generated by this module. This
-parameter is only for use by the data refresh DAG and should not be used when
-manually triggering the DAG unless you are absolutely certain of what you are
-doing.
 
 ### `create_filtered_image_index`
 
@@ -397,21 +447,29 @@ This module creates the filtered index creation DAGs for each media type using a
 factory function.
 
 Filtered index creation is handled by the ingestion server. The DAGs generated
-by the `build_create_filtered_index_dag` function in this module are responsible
-for triggering the ingestion server action to create and populate the filtered
-index for a given media type. The DAG awaits the completion of the filtered
-index creation and then points the filtered index alias for the media type to
-the newly created index.
+by the `create_filtered_index_creation_dag` function in this module are
+responsible for triggering the ingestion server action to create and populate
+the filtered index for a given media type. The DAG awaits the completion of the
+filtered index creation and then points the filtered index alias for the media
+type to the newly created index. They make use of the
+`create_filtered_index_creation_task_groups` factory, which is also used by the
+data refreshes to perform the same functions. The purpose of these DAGs is to
+allow the filtered index creation steps to be run in isolation from the data
+refresh.
 
 ##### When this DAG runs
 
-The DAGs generated in this module are triggered by the data refresh DAGs.
-Maintaining this process separate from the data refresh DAGs, while still
-triggering it there, allows us to run filtered index creation independently of
-the full data refresh. This is primarily useful in two cases: for testing
-changes to the filtered index creation; and for re-running filtered index
-creation if an urgent change to the sensitive terms calls for an immediate
-recreation of the filtered indexes.
+The DAGs generated by the `create_filtered_index_creation_dag` can be used to
+manually run the filtered index creation and promotion steps described above in
+isolation from the rest of the data refresh. These DAGs also include checks to
+ensure that race conditions with the data refresh DAGs are not encountered (see
+`Race conditions` section below).
+
+The DAGs generated in this module are on a `None` schedule and are only
+triggered manually. This is primarily useful in two cases: for testing changes
+to the filtered index creation; and for re-running filtered index creation if an
+urgent change to the sensitive terms calls for an immediate recreation of the
+filtered indexes.
 
 ##### Race conditions
 
@@ -436,11 +494,258 @@ There are two mechanisms that prevent this from happening:
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
 
-Because the data refresh DAG triggers the filtered index creation DAG, we do
-allow a `force` param to be passed to the DAGs generated by this module. This
-parameter is only for use by the data refresh DAG and should not be used when
-manually triggering the DAG unless you are absolutely certain of what you are
-doing.
+### `create_new_production_es_index`
+
+#### Create New ES Index DAG
+
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options are
+available:
+
+- `media_type` : media type for which to create the new index
+- `index_suffix` : optional suffix to be added to the new index name. If not
+  supplied, a creation timestamp is used.
+- `source_index` : the existing index on which to base the new index, and from
+  which to copy records
+- `index_config` : a JSON object containing the configuration for the new index.
+  By default, this will be merged into the configuration of the source index
+  according to the merging policy documented below.
+- `query` : an optional Elasticsearch query, used to filter the documents copied
+  from the source index into the new index. If not supplied, all records are
+  copied.
+- `override_config`: boolean override; when True, the `index_config` will be
+  used for the new index configuration _without_ merging any values from the
+  source index config.
+
+##### Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config`
+overwrites the entire value present in the source configuration at that key. The
+leaf values are merged naively, so a list for instance is replaced entirely
+(rather than appending values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+### `create_new_staging_es_index`
+
+#### Create New ES Index DAG
+
+This file generates our Create New ES Index DAGs using a factory function. A
+separate DAG is generated for the staging and production environments.
+
+Each DAG can be used to create new Elasticsearch indices in their respective
+environment, based on an existing index. The following configuration options are
+available:
+
+- `media_type` : media type for which to create the new index
+- `index_suffix` : optional suffix to be added to the new index name. If not
+  supplied, a creation timestamp is used.
+- `source_index` : the existing index on which to base the new index, and from
+  which to copy records
+- `index_config` : a JSON object containing the configuration for the new index.
+  By default, this will be merged into the configuration of the source index
+  according to the merging policy documented below.
+- `query` : an optional Elasticsearch query, used to filter the documents copied
+  from the source index into the new index. If not supplied, all records are
+  copied.
+- `override_config`: boolean override; when True, the `index_config` will be
+  used for the new index configuration _without_ merging any values from the
+  source index config.
+
+##### Merging policy
+
+The configuration will be merged such that a leaf key in the `index_config`
+overwrites the entire value present in the source configuration at that key. The
+leaf values are merged naively, so a list for instance is replaced entirely
+(rather than appending values). For example, if the base configuration is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": [
+                        "animals => animal",
+                        "animal => animal",
+                        "anime => anime",
+                        "animate => animate",
+                        "animated => animate",
+                        "universe => universe"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+And the `index_config` passed in is:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+The resulting, merged configuration will be:
+
+```
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 2,
+            "number_of_replicas": 1
+        },
+        "analysis": {
+            "filter": {
+                "stem_overrides": {
+                    "type": "stemmer_override",
+                    "rules": ["crim => cribble"]
+                }
+            }
+        }
+    }
+}
+```
+
+### `delete_records`
+
+#### Delete Records DAG
+
+This DAG is used to delete records from the Catalog media tables, after creating
+a corresponding record in the associated `deleted_<media_type>` table for each
+record to be deleted. It is important to note that records deleted by this DAG
+will still be available in the API until the next data refresh runs.
+
+Required Dagrun Configuration parameters:
+
+- table_name: the name of the table to delete from. Must be a valid media table
+- select_query: a SQL `WHERE` clause used to select the rows that will be
+  deleted
+- reason: a string explaining the reason for deleting the records. Ex
+  ('deadlink')
+
+An example dag_run configuration used to delete all records for the "foo" image
+provider due to deadlinks would look like this:
+
+```
+{
+    "table_name": "image",
+    "select_query": "WHERE provider='foo'",
+    "reason": "deadlink"
+}
+```
+
+##### Multiple deletions
+
+When a record is deleted, it is added to the corresponding Deleted Media table.
+If the record is reingested back into the media table, the delete*records DAG
+may be run additional times to delete the same record. When this occurs, only
+one row will be kept in the Deleted Media table for the record (as uniquely
+identified by the provider and foreign identifier pair). This row is not
+updated, so the `deleted_on` time will reflect the \_first* time the record was
+deleted.
+
+When restoring records from the Deleted Media table, it is important to note
+that these records have not been updated through reingestion, so fields such as
+popularity data may be out of date.
+
+##### Warnings
+
+Presently, there is no logic to prevent records that have an entry in a Deleted
+Media table from simply being reingested during provider ingestion. Therefore in
+its current state, the DAG should _only_ be used to delete records that we can
+guarantee will not be reingested (for example, because the provider is
+archived).
+
+This DAG does not have automated handling for deadlocks, so you must be certain
+that records selected for deletion in this DAG are not also being written to by
+a provider DAG, for instance. The simplest way to do this is to ensure that any
+affected provider DAGs are not currently running.
 
 ### `europeana_workflow`
 
@@ -567,9 +872,9 @@ Notes: The iNaturalist API is not intended for data scraping.
 https://api.inaturalist.org/v1/docs/ But there is a full dump intended for
 sharing on S3.
 https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata
-Because these are very large normalized tables, as opposed to more document
-oriented API responses, we found that bringing the data into postgres first was
-the most effective approach. More detail in slack here:
+Because these are exceptionally large normalized tables, as opposed to more
+document oriented API responses, we found that bringing the data into postgres
+first was the most effective approach. More detail in slack here:
 https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N
 We use the table structure defined here,
 https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql
@@ -755,6 +1060,45 @@ popularity constants and standardized popularity scores using the new functions.
 These DAGs are not on a schedule, and should only be run manually when new SQL
 code is deployed for the calculation.
 
+### `recreate_full_staging_index`
+
+#### Recreate Full Staging Index DAG
+
+This DAG is used to fully recreate a new staging Elasticsearch index for a given
+`media_type`, using records pulled from the staging API database. It is used to
+decouple the steps of creating a new index from the rest of the data refresh
+process.
+
+Staging index creation is handled by the _staging_ ingestion server. The DAG
+triggers the ingestion server `REINDEX` action to create a new index in the
+staging elasticsearch cluster for the given media type, suffixed by the current
+timestamp. The DAG awaits the completion of the index creation and then points
+the `<media_type>-full` alias to the newly created index.
+
+Required Dagrun Configuration parameters:
+
+- media_type: the media type for which to create a new index.
+
+Optional params:
+
+- target_alias_override: Override the alias that is pointed to the new index. By
+  default this is `<media_type>-full`.
+- delete_old_index: Whether to delete the index previously pointed to by the
+  target alias, if applicable. Defaults to False.
+
+##### When this DAG runs
+
+This DAG is on a `None` schedule and is run manually.
+
+##### Race conditions
+
+Because this DAG runs on the staging ingestion server and staging elasticsearch
+cluster, it does _not_ interfere with the `data_refresh` or
+`create_filtered_index` DAGs.
+
+However, the DAG will exit immediately if the `staging_database_restore` DAG is
+running, as it operates on the staging API database.
+
 ### `recreate_image_popularity_calculation`
 
 This file generates Apache Airflow DAGs that, for the given media type,
@@ -791,7 +1135,7 @@ manage this for us.
 
 It runs on Saturdays at 00:00 UTC in order to happen before the data refresh.
 
-The DAG will automatically delete the oldest snapshots when more snaphots exist
+The DAG will automatically delete the oldest snapshots when more snapshots exist
 than it is configured to retain.
 
 Requires two variables:

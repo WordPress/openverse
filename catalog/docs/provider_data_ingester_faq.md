@@ -63,8 +63,10 @@ def get_record_data(self, data: dict) -> dict | list[dict] | None:
     ...
 ```
 
-**NOTE**: When doing this, keep in mind that adding too many requests may slow
-down ingestion. Be aware of rate limits from your provider API as well.
+> **Note**
+>
+> When doing this, keep in mind that adding too many requests may slow down
+> ingestion. Be aware of rate limits from your provider API as well.
 
 ## What if my API endpoint isn't static and needs to change from one request to another?
 

@@ -93,8 +93,7 @@ def skip_report_completion(
 ) -> bool:
     return (
         # Duration must be provided and be a value greater than 1 second
-        duration is None
-        or duration in ("inf", "less than 1 sec")
+        duration is None or duration in ("inf", "less than 1 sec")
     ) and (
         # Record counts by media type must be provided and at least one value must
         # be truthy (i.e. not None)

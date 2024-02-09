@@ -5,9 +5,11 @@ These are not tests and cannot be invoked.
 """
 
 import json
-from test.constants import API_URL
+import re
 
 import requests
+
+from test.constants import API_URL
 
 
 def search(fixture):
@@ -24,6 +26,46 @@ def search_by_category(media_path, category, fixture):
     results = data["results"]
     # Make sure each result is from the specified category
     assert all(audio_item["category"] == category for audio_item in results)
+
+
+def tag_collection(media_path, tag="cat"):
+    response = requests.get(f"{API_URL}/v1/{media_path}/tag/{tag}")
+    assert response.status_code == 200
+
+    results = response.json()["results"]
+    for r in results:
+        tag_names = [tag["name"] for tag in r["tags"]]
+        assert tag in tag_names
+
+
+def source_collection(media_path):
+    source = requests.get(f"{API_URL}/v1/{media_path}/stats").json()[0]["source_name"]
+
+    response = requests.get(f"{API_URL}/v1/{media_path}/source/{source}")
+    assert response.status_code == 200
+
+    results = response.json()["results"]
+    assert all(result["source"] == source for result in results)
+
+
+def creator_collection(media_path):
+    source = requests.get(f"{API_URL}/v1/{media_path}/stats").json()[0]["source_name"]
+
+    first_res = requests.get(f"{API_URL}/v1/{media_path}/source/{source}").json()[
+        "results"
+    ][0]
+    if not (creator := first_res.get("creator")):
+        raise AttributeError(f"No creator in {first_res}")
+
+    response = requests.get(
+        f"{API_URL}/v1/{media_path}/source/{source}/creator/{creator}"
+    )
+    assert response.status_code == 200
+
+    results = response.json()["results"]
+    for result in results:
+        assert result["source"] == source, f"{result['source']} != {source}"
+        assert result["creator"] == creator, f"{result['creator']} != {creator}"
 
 
 def search_all_excluded(media_path, excluded_source):
@@ -51,11 +93,20 @@ def search_quotes(media_path, q="test"):
 def search_quotes_exact(media_path, q):
     """Return only exact matches for the given query."""
 
-    url_format = f"{API_URL}/v1/{media_path}?q={{q}}"
+    url_format = (
+        f"{API_URL}/v1/{media_path}?q={{q}}&unstable__include_sensitive_results=true"
+    )
     unquoted_response = requests.get(url_format.format(q=q), verify=False)
     assert unquoted_response.status_code == 200
     unquoted_result_count = unquoted_response.json()["result_count"]
     assert unquoted_result_count > 0
+    unquoted_results = unquoted_response.json()["results"]
+    titles = [res["title"] for res in unquoted_results]
+    exact_match_count = sum([1 for t in titles if q in t])
+    assert exact_match_count > 0, f"No results contain `{q}` in title: {titles}"
+    assert exact_match_count < len(
+        titles
+    ), f"Unquoted search returned only exact matches: {titles}"
 
     quoted_response = requests.get(url_format.format(q=f'"{q}"'), verify=False)
     assert quoted_response.status_code == 200
@@ -67,6 +118,11 @@ def search_quotes_exact(media_path, q):
     # strict causing it to return fewer results.
     # Above we check that the results are not 0 to confirm that we do still get results back.
     assert quoted_result_count < unquoted_result_count
+
+    quoted_result_titles = [res["title"] for res in quoted_response.json()["results"]]
+    assert all(
+        [q in title for title in quoted_result_titles]
+    ), f"Not all titles contain exact match for `{q}`: {quoted_result_titles}"
 
 
 def search_special_chars(media_path, q="test"):
@@ -150,9 +206,31 @@ def uuid_validation(media_type, identifier):
 
 
 def related(fixture):
-    related_url = fixture["results"][0]["related_url"]
-    response = requests.get(related_url)
-    assert response.status_code == 200
+    item = fixture["results"][0]
+
+    response = requests.get(item["related_url"]).json()
+    results = response["results"]
+
+    assert response["result_count"] == len(results) == 10
+    assert response["page_count"] == 1
+
+    def get_terms_set(res):
+        # The title is analyzed in ES, we try to mimic it here.
+        terms = [t["name"] for t in res["tags"]] + re.split(" |-", res["title"])
+        return {t.lower() for t in terms}
+
+    terms_set = get_terms_set(item)
+    # Make sure each result has at least one word in common with the original item,
+    # or is by the same creator.
+    for result in results:
+        assert (
+            len(terms_set.intersection(get_terms_set(result))) > 0
+            or result["creator"] == item["creator"]
+        ), f"{terms_set} {get_terms_set(result)}/{result['creator']}-{item['creator']}"
+
+        assert result["license_version"] is not None
+        assert result["attribution"] is not None
+        assert result["creator_url"] is not None
 
 
 def sensitive_search_and_detail(media_type):

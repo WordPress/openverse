@@ -66,6 +66,7 @@
     licenses: "Licenses",
     getInvolved: "Get involved",
     api: "API",
+    terms: "Terms",
     privacy: "Privacy",
     feedback: "Feedback",
     sources: "Sources",
@@ -78,7 +79,7 @@
       content: "{openverse} is a tool that allows openly licensed and public domain works to be discovered and used by everyone.",
     },
     collection: {
-      content: "{openverse} searches across more than 300 million images from open APIs and the {commonCrawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+      content: "{openverse} searches across more than 700 million images and audio from open APIs and the {commonCrawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
     },
     planning: {
       content: "Currently {openverse} only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source ({frontend}, {api}, {catalog}) and we {community}. You can see what {working}.",
@@ -177,70 +178,14 @@
       title: "Search for an exact match",
       ariaLabel: "quote unquote Claude Monet",
       claudeMonet: '"Claude Monet"',
-      content: "Put a word or phrase inside quotes. For example, {link}.",
+      content: "To search for an exact word or phrase, put it inside quotes. For example, {link}.",
     },
-    combine: {
-      title: "Combining terms",
-      description: "If you want to combine terms, you can use the following operators to perform more complex queries",
-      and: "{symbol} signifies AND operation",
-      or: "{symbol} signifies OR operation",
-      not: "{symbol} negates a single token",
-      prefix: "{symbol} at the end of a term signifies a prefix query",
-      precedence: "{symbol} signify precedence",
-      fuzziness: "{symbol} after a word signifies edit distance (fuzziness)",
-      ariaLabels: {
-        fuzziness: "tilde N",
-        open: "open parenthesis",
-        close: "close parenthesis",
-        star: "star symbol",
-        not: "minus symbol",
-        and: "plus symbol",
-        or: "vertical bar symbol",
-        prefix: "asterisk symbol",
-        verticalBar: "vertical bar symbol",
-        precedence: "parentheses",
-      },
-    },
-    example: {
-      and: {
-        description: "Example: {link}{br} This will search for images related to both dog and cat.",
-        ariaLabel: "dog plus cat",
-        example: "dog+cat",
-      },
-      or: {
-        description: "Example: {link}{br} This will search for images related to dog or cat, but not necessarily both.",
-        ariaLabel: "dog vertical bar cat",
-        example: "dog|cat",
-      },
-      negate: {
-        description: "You can use the {operator} to exclude a search term from the results.",
-        operatorName: "operator (signifies NOT)",
-        operatorAriaLabel: "minus operator (signifies NOT)",
-        ariaLabel: "dog minus pug",
-        example: "dog -pug",
-        content: "Example: {link}{br} This will search for images related to dog but won't include results related to 'pug'",
-      },
-      prefix: {
-        description: "You can use the {operatorName} to mark a prefix term. This will match anything after the *.",
-        operatorName: "operator (wildcard)",
-        operatorAriaLabel: "star operator (wildcard)",
-        ariaLabel: "net star symbol",
-        example: "net*",
-        content: "Example: {link}{br} This will search for images matching anything with 'net'. This might include 'network', 'Netflix', 'Netherlands', etc.",
-      },
-      precedence: {
-        description: "You can use parentheses {highlight} to specify precedence of terms or combine more complex queries.",
-        ariaLabel: "dogs plus open parenthesis corgis vertical bar labrador close parenthesis",
-        example: "dogs + (corgis | labrador)",
-        content: "Example: {link}{br} This will search for images that match dogs that are either corgis or labrador.",
-      },
-      fuzziness: {
-        description: "You can use {highlight} to specify some fuzzy logic to the term according to the {link} — the number of one character changes that need to be made to one string to make it the same as another string.",
-        linkText: "Levenshtein Edit Distance",
-        ariaLabel: "theatre tilde 1",
-        example: "theatre~1",
-        content: "Example: {link}{br} This will search for images that match strings close to the term 'theatre' with a difference of one character. Results might include terms with different spellings like 'theater'.",
-      },
+    negate: {
+      title: "Excluding terms",
+      operatorName: "minus operator",
+      ariaLabel: "dog minus pug",
+      example: "dog -pug",
+      content: 'To exclude a term from your results, put the {operator} in front of it. Example: {link}{br} This will search for media related to "dog" but won\'t include results related to "pug".',
     },
   },
   feedback: {
@@ -253,6 +198,58 @@
       ccUsability: "slack cc-usability channel",
       improve: "help us improve form",
       report: "report a bug form",
+    },
+  },
+  // translation keys used on the /sensitive-content page
+  sensitive: {
+    title: "Sensitive content",
+    description: {
+      content: "{openverse} operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible. Therefore, {openverse} only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on {openverse}.org and in the {openverse} API. In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project. Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverse}.org website should be accessible by default. Everyone, regardless of background, should feel safe and included in {openverse}, whether they are a contributor to the technical aspects of the {openverse} services, a creator whose works are included in {openverse}, or an {openverse} user. {openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+      wpCoc: "WordPress’s Community Code of Conduct",
+      deiStatement: "diversity, equity, and inclusion statement",
+    },
+    sensitivity: {
+      what: '{openverse} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion. This means that some content is designated "sensitive" that would not fall into a category of what is generally understood to be "mature" content (in other words, content specifically for an adult audience). The designation does not, however, imply that {openverse} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement. We consider "sensitive" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people.',
+      how: "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise. {openverse} relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms. These are described in more detail below.",
+    },
+    onOff: {
+      title: "Turning sensitive content on and off",
+      sensitiveResults: "By default, {openverse} does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch.",
+      blurSensitive: "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure. Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch.",
+      where: "Both these toggles are available in the filter sidebar (on desktops) and in the “Filter” tab of the search settings pane (on mobile devices) on the search results page.",
+    },
+    designations: {
+      title: "Sensitive content designations",
+      description: "{openverse} designates sensitive content in the API and on the {openverse}.org website using two methods: reports from {openverse} users and automated sensitive textual content detection. These designations are not exclusive of each other and a single work may have one or both applied to it.",
+      userReported: {
+        title: "User reported sensitivity",
+        description: "{openverse} users are invited to report sensitive content via the {openverse}.org website and the {openverse} API. Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content. An individual work’s page includes the ability to report content as sensitive (or to report rights violations). {openverse} moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from {openverse}’s services.",
+        gutenbergMediaInserter: "Gutenberg editor’s {openverse} media inserter",
+      },
+      sensitiveText: {
+        title: "Sensitive textual content",
+        description: "{openverse} scans some of the textual metadata related to works as provided by our sources for sensitive terms. {openverse}’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited. Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature. The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive. For more context on why we’ve chosen this approach despite that, refer to the {imperfect} of our project planning document related to this feature.",
+        sensitiveTermsList: "sensitive terms list",
+        imperfect: '"{sectionName}" section',
+        metadata: "It is important to note that some textual metadata for a work is {notAvailable} through the {openverse} API or the {openverse}.org website. However, such metadata is still scanned for sensitive terms and is not treated as a special case. If {openverse}’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through {openverse}. {openverse} takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works. As above, {openverse} understands that this is not perfect.",
+        notAvailable: "not available",
+      },
+    },
+    faq: {
+      title: "Frequently asked questions",
+      one: {
+        question: "I’ve found content I think is sensitive that does not have a sensitivity designation. What should I do?",
+        answer: "Please report sensitive content by visiting the individual work’s page on the {openverse}.org website and using the “report this content” button below the attribution information and above the tags. {openverse} moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work.",
+      },
+      two: {
+        question: "I disagree with the sensitivity designation on a work. Can you please remove it?",
+        answerPt1: "For text-based designations, {openverse} does not at the moment have a method for removing the designation. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
+        answerPt2: "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+      },
+      three: {
+        question: "I’ve found content on {openverse} that may be illegal. Besides reporting it to {openverse}, are there any other steps I can take?",
+        answer: "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+      },
     },
   },
   error: {
@@ -451,6 +448,10 @@
       unknown: "Unknown",
       category: "Category",
     },
+    scroll: {
+      forward: "Scroll forward",
+      back: "Scroll backward",
+    },
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
@@ -485,6 +486,8 @@
     },
     providerLabel: "Provider",
     sourceLabel: "Source",
+    providerDescription: "Website where the content is hosted",
+    sourceDescription: "Organization that created or owns the original content",
     loading: "Loading...",
     relatedError: "Error fetching related media",
     aria: {
@@ -773,6 +776,58 @@
     link: {
       source: "Open source site",
       creator: "Open creator page",
+    },
+    ariaLabel: {
+      creator: {
+        audio: "Audio files by {creator} in {source}",
+        image: "Images by {creator} in {source}",
+      },
+      source: {
+        audio: "Audio files from {source}",
+        image: "Images from {source}",
+      },
+      tag: {
+        audio: "Audio files with the tag {tag}",
+        image: "Images with the tag {tag}",
+      },
+    },
+    resultCountLabel: {
+      creator: {
+        audio: {
+          zero: "No audio files by this creator in {source}",
+          count: "{count} audio file by this creator in {source}|{count} audio files by this creator in {source}",
+          countMore: "Over {count} audio files by this creator in {source}",
+        },
+        image: {
+          zero: "No images by this creator in {source}",
+          count: "{count} image by this creator in {source}|{count} images by this creator in {source}",
+          countMore: "Over {count} images by this creator in {source}",
+        },
+      },
+      source: {
+        audio: {
+          zero: "No audio files provided by this source",
+          count: "{count} audio file provided by this source|{count} audio files provided by this source",
+          countMore: "Over {count} audio files provided by this source",
+        },
+        image: {
+          zero: "No images provided by this source",
+          count: "{count} image provided by this source|{count} images provided by this source",
+          countMore: "Over {count} images provided by this source",
+        },
+      },
+      tag: {
+        audio: {
+          zero: "No audio files with the selected tag",
+          count: "{count} audio file with the selected tag|{count} audio files with the selected tag",
+          countMore: "Over {count} audio files with the selected tag",
+        },
+        image: {
+          zero: "No images with the selected tag",
+          count: "{count} image with the selected tag|{count} images with the selected tag",
+          countMore: "Over {count} images with the selected tag",
+        },
+      },
     },
   },
 }

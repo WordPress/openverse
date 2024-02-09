@@ -1,21 +1,19 @@
 # Run Book: Unhealthy hosts for ECS service
 
 ```{admonition} Metadata
-Status: **Unstable**
+Status: **Stable**
 
 
 Alarm links:
 - [production-api](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/production-api+has+unhealthy+hosts)
 - [staging-api](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/staging-api+has+unhealthy+hosts)
-- [productoin-api-thumbnails](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/production-api-thumbnails+has+unhealthy+hosts)
-- [staging-api-thumbnails](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/staging-api-thumbnails+has+unhealthy+hosts)
 - [production-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/production-nuxt+has+unhealthy+hosts)
 - [staging-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/staging-nuxt+has+unhealthy+hosts)
 ```
 
 ```{note}
 This run book is shared between all unhealthy host count alarms _for ECS services_.
-Our infrastructure is slightly different for non-ECS services so do not re-use this
+Our infrastructure is slightly different for non-ECS services so do not reuse this
 run book for anything not deployed using ECS (though feel free to reference relevant
 parts of it).
 ```

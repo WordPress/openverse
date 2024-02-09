@@ -24,22 +24,52 @@ maintainer in the #openverse channel of the
 ## Where documents are kept, how they are named, and how they are reviewed
 
 For each project, planning documents should be kept in the
-`/documentation/projects/proposals/` directory of this repository. Each project
-should have its own subdirectory. Projects predating this document have been
-updated to follow this structure. Individual documents should be date-stamped in
-the `YYYYMMDD` format. An example of this entire structure follows:
+`/documentation/projects/proposals/` directory of this repository.
+
+- Each project should have its own subdirectory. This is named after the
+  project, converted to `snake_case`.
+- Individual documents should be date-stamped in the `YYYYMMDD` format.
+- This subdirectory must contain an `index.md` file in a
+  [standard format](/projects/templates/index.md).
+- This subdirectory must contain a project proposal in a
+  [standard format](/projects/templates/project_proposal.md). This is named
+  `YYYYMMDD-project_proposal.md`.
+- This subdirectory can contain any number of implementation plans, each in a
+  [standard format](/projects/templates/implementation_plan.md). These are named
+  `YYYYMMDD-implementation_plan_<name>.md` where the `<name>` is the plan name,
+  converted to `snake_case`.
+
+Refer to the existing projects for reference.
+
+````{tip}
+You can initialise a new project using the `just` recipe `create-project`. It
+accepts one argument as the project name, followed optionally by any number of
+implementation plans.
+
+```bash
+just documentation/create-project 'Project name' 'First IP' 'Second IP'
+```
+
+This will create the directory structure for your project with the specified
+implementation plans.
 
 ```
-| documentation/projects/proposals/
-   | service_metrics/
-      - YYYYMMDD-project_proposal.md
-      - YYYYMMDD-implementation_plan.md
-   | 3d_model_support/
-      - YYYYMMDD-project_proposal.md
-      - YYYYMMDD-implementation_plan_(catalogue).md
-      - YYYYMMDD-implementation_plan_(api).md
-      - YYYYMMDD-implementation_plan_(frontend).md
+documentation/projects/proposals/
+└─ project_name/
+   ├─ index.md
+   ├─ 20230101-project_proposal.md
+   ├─ 20230101-implementation_plan_first_ip.md
+   └─ 20230101-implementation_plan_second_ip.md
 ```
+
+If you already have a project directory and want to add a new implementation
+plan, you can use the `just` recipe `create-ip`. It accepts the directory name
+(not full path) of the project and the plan name as arguments.
+
+```bash
+just documentation/create-ip project_name 'New IP'
+```
+````
 
 Using subdirectories makes it slightly easier to navigate an ever-growing list
 of planning documents. This is especially the case in projects similar to the 3D
@@ -56,6 +86,10 @@ Subdirectories require an `index.md` in order to be included in the documentatio
 Because project documents prefix their titles with a date, we can safely use a glob to include all project planning documents in a project directory and have them intuitively ordered by date.
 
 Refer to the [project `index.md` templates](/projects/templates/index.md) for a starting point.
+```
+
+```{note}
+Projects predating this document have been updated to follow this structure.
 ```
 
 All project documentation can be authored with any tool, but must be written in
@@ -147,7 +181,7 @@ section of this document.
 
 ### Kickoff (`status: In Kickoff`)
 
-- [Kickoff/Project Proposal template](./templates/project-proposal.md)
+- [Kickoff/Project Proposal template](./templates/project_proposal.md)
 
 In the kickoff stage, a **project proposal** is written and shared with the team
 by the project lead. The primary goals of this document are that of discovery;
@@ -239,7 +273,7 @@ them.
 
 ### Implementation Plans (`status: In RFC`)
 
-- [Implementation Plan Template](./templates/implementation-plan.md)
+- [Implementation Plan Template](./templates/implementation_plan.md)
 
 Implementation plans are the next type of RFC created for a project. The main
 goal of an implementation plan is to produce a discrete and ordered list of
@@ -465,7 +499,7 @@ in the earlier project stages but is likely to be implemented here.
 ## Managing and working with projects
 
 We use a new
-[Github Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
+[GitHub Project Board](https://github.com/orgs/WordPress/projects/70/views/1) to
 track all of the projects in Openverse. This board gives us a single view to see
 all projects and some additional metadata:
 

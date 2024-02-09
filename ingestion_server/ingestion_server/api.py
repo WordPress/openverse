@@ -1,9 +1,9 @@
 """A small RPC API server for scheduling data refresh and indexing tasks."""
-
 import logging
 import os
 import time
 import uuid
+from collections import defaultdict
 from multiprocessing import Process, Value
 from pathlib import Path
 from urllib.parse import urlparse
@@ -15,6 +15,11 @@ from sentry_sdk.integrations.falcon import FalconIntegration
 
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MEDIA_TYPES, MediaType
+from ingestion_server.db_helpers import (
+    DB_API_CONFIG,
+    DB_UPSTREAM_CONFIG,
+    database_connect,
+)
 from ingestion_server.es_helpers import elasticsearch_connect, get_stat
 from ingestion_server.indexer import TableIndexer
 from ingestion_server.state import clear_state, worker_finished
@@ -38,9 +43,44 @@ sentry_sdk.init(
 
 class HealthResource:
     @staticmethod
-    def on_get(_, resp):
+    def on_get(req, resp):
+        """
+        Health check for the service. Optionally check on resources with the
+        check_deps=true parameter.
+        """
+        # Set the initial response, but change it if necessary
         resp.status = falcon.HTTP_200
         resp.media = {"status": "200 OK"}
+
+        if not req.get_param_as_bool("check_deps", blank_as_true=False):
+            return
+
+        messages = defaultdict(list)
+        # Elasticsearch checks
+        es = elasticsearch_connect(timeout=3)
+        if not es:
+            messages["es"].append("Elasticsearch could not be reached")
+        else:
+            es_health = es.cluster.health(timeout="3s")
+            if es_health["timed_out"]:
+                messages["es"].append("Elasticsearch health check timed out")
+            if (es_status := es_health["status"]) != "green":
+                messages["es"].append(f"Elasticsearch cluster health: {es_status}")
+
+        # Database checks
+        for name, dbconfig in zip(
+            ["upstream", "api"],
+            [DB_UPSTREAM_CONFIG, DB_API_CONFIG],
+        ):
+            db = database_connect(dbconfig=dbconfig, timeout=3, attempt_reconnect=False)
+            if not db:
+                messages["db"].append(
+                    f"Database connection for '{name}' could not be established"
+                )
+
+        if messages:
+            resp.status = falcon.HTTP_503
+            resp.media = {"status": "503 Service Unavailable", "dependencies": messages}
 
 
 class StatResource:

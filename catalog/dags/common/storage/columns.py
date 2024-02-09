@@ -172,7 +172,7 @@ class Column(ABC):
             )
 
     def __enforce_char_limit(self, string, limit, truncate=True):
-        if not type(string) == str:
+        if not isinstance(string, str):
             logger.debug(
                 f"Cannot limit characters on non-string type {type(string)}."
                 f"Input was {string}."
@@ -766,4 +766,14 @@ AUDIO_SET_FOREIGN_IDENTIFIER = StringColumn(
     required=False,
     size=1000,
     truncate=False,
+)
+
+# Columns used by the Deleted Media tables
+
+DELETED_ON = TimestampColumn(
+    name="deleted_on", required=True, upsert_strategy=UpsertStrategy.no_change
+)
+
+DELETED_REASON = StringColumn(
+    name="deleted_reason", required=True, size=80, truncate=True
 )

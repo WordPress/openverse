@@ -45,6 +45,8 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
+import { defineEvent } from "~/types/emits"
+
 import VButton from "~/components/VButton.vue"
 
 /**
@@ -62,6 +64,9 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  emits: {
+    click: defineEvent(),
   },
   setup() {
     const diameter = 8 // px

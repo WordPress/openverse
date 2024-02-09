@@ -2,25 +2,26 @@ import io
 
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
-from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
-import requests
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from PIL import Image as PILImage
 
 from api.constants.media_types import IMAGE_TYPE
 from api.docs.image_docs import (
+    creator_collection,
     detail,
     oembed,
     related,
     report,
     search,
+    source_collection,
     stats,
-    thumbnail,
+    tag_collection,
 )
+from api.docs.image_docs import thumbnail as thumbnail_docs
 from api.docs.image_docs import watermark as watermark_doc
 from api.models import Image
 from api.serializers.image_serializers import (
@@ -31,9 +32,11 @@ from api.serializers.image_serializers import (
     OembedSerializer,
     WatermarkRequestSerializer,
 )
-from api.serializers.media_serializers import MediaThumbnailRequestSerializer
-from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
-from api.utils.watermark import watermark
+from api.serializers.media_serializers import PaginatedRequestSerializer
+from api.utils import image_proxy
+from api.utils.aiohttp import get_aiohttp_session
+from api.utils.asyncio import aget_object_or_404
+from api.utils.watermark import UpstreamWatermarkException, watermark
 from api.views.media_views import MediaViewSet
 
 
@@ -48,10 +51,12 @@ class ImageViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to images."""
 
     model_class = Image
+    media_type = IMAGE_TYPE
     query_serializer_class = ImageSearchRequestSerializer
     default_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
 
     serializer_class = ImageSerializer
+    collection_serializer_class = PaginatedRequestSerializer
 
     OEMBED_HEADERS = {
         "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="OEmbed"),
@@ -61,6 +66,32 @@ class ImageViewSet(MediaViewSet):
         return super().get_queryset().select_related("mature_image")
 
     # Extra actions
+    @creator_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
+    )
+    def creator_collection(self, request, source, creator):
+        return super().creator_collection(request, source, creator)
+
+    @source_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="source/(?P<source>[^/.]+)",
+    )
+    def source_collection(self, request, source, *_, **__):
+        return super().source_collection(request, source)
+
+    @tag_collection
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="tag/(?P<tag>[^/.]+)",
+    )
+    def tag_collection(self, request, tag, *_, **__):
+        return super().tag_collection(request, tag, *_, **__)
 
     @oembed
     @action(
@@ -69,7 +100,7 @@ class ImageViewSet(MediaViewSet):
         url_name="oembed",
         serializer_class=OembedSerializer,
     )
-    def oembed(self, request, *_, **__):
+    async def oembed(self, request, *_, **__):
         """
         Retrieve the structured data for a specified image URL as per the
         [oEmbed spec](https://oembed.com/).
@@ -80,14 +111,16 @@ class ImageViewSet(MediaViewSet):
 
         params = OembedRequestSerializer(data=request.query_params)
         params.is_valid(raise_exception=True)
-
+        identifier = params.validated_data["identifier"]
         context = self.get_serializer_context()
 
-        identifier = params.validated_data["url"]
-        image = get_object_or_404(Image, identifier=identifier)
+        image = await aget_object_or_404(Image, identifier=identifier)
+
         if not (image.height and image.width):
-            image_file = requests.get(image.url, headers=self.OEMBED_HEADERS)
-            width, height = PILImage.open(io.BytesIO(image_file.content)).size
+            session = await get_aiohttp_session()
+            image_file = await session.get(image.url, headers=self.OEMBED_HEADERS)
+            image_content = await image_file.content.read()
+            width, height = PILImage.open(io.BytesIO(image_content)).size
             context |= {
                 "width": width,
                 "height": height,
@@ -96,31 +129,31 @@ class ImageViewSet(MediaViewSet):
         serializer = self.get_serializer(image, context=context)
         return Response(data=serializer.data)
 
-    @thumbnail
-    @action(
-        detail=True,
-        url_path="thumb",
-        url_name="thumb",
-        serializer_class=MediaThumbnailRequestSerializer,
-        throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
-    )
-    def thumbnail(self, request, *_, **__):
-        """Retrieve the scaled down and compressed thumbnail of the image."""
-
-        image = self.get_object()
+    async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
+        image = await self.aget_object()
         image_url = image.url
         # Hotfix to use thumbnails for SMK images
         # TODO: Remove when small thumbnail issues are resolved
         if "iip.smk.dk" in image_url and image.thumbnail:
             image_url = image.thumbnail
 
-        return super().thumbnail(request, image, image_url)
+        return image_proxy.MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+        )
+
+    @thumbnail_docs
+    @MediaViewSet.thumbnail_action
+    async def thumbnail(self, *args, **kwargs):
+        """Retrieve the scaled down and compressed thumbnail of the image."""
+        return await super().thumbnail(*args, **kwargs)
 
     @watermark_doc
     @action(detail=True, url_path="watermark", url_name="watermark")
     def watermark(self, request, *_, **__):  # noqa: D401
         """
-        This endpoint is deprecated.
+        Note that this endpoint is deprecated.
 
         ---
 
@@ -135,6 +168,12 @@ class ImageViewSet(MediaViewSet):
 
         image = self.get_object()
         image_url = image.url
+
+        if image_url.endswith(".svg") or getattr(image, "filetype") == "svg":
+            raise UpstreamWatermarkException(
+                "Unsupported media type: SVG images are not supported for watermarking."
+            )
+
         image_info = {
             attr: getattr(image, attr)
             for attr in ["title", "creator", "license", "license_version"]

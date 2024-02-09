@@ -1,6 +1,6 @@
-import rtlMessages from "~~/test/locales/ar.json"
+import { expect } from "@playwright/test"
 
-import enMessages from "~/locales/en.json"
+import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
 import {
   ALL_MEDIA,
@@ -17,61 +17,12 @@ import type { Breakpoint } from "~/constants/screens"
 
 import type { BrowserContext, Locator, Page } from "@playwright/test"
 
-const messages: Record<string, Record<string, unknown>> = {
-  ltr: enMessages,
-  rtl: rtlMessages,
-}
-
-const getNestedProperty = (
-  obj: Record<string, unknown>,
-  path: string
-): string => {
-  const value = path
-    .split(".")
-    .reduce((acc: string | Record<string, unknown>, part) => {
-      if (typeof acc === "string") {
-        return acc
-      }
-      if (Object.keys(acc as Record<string, unknown>).includes(part)) {
-        return (acc as Record<string, string | Record<string, unknown>>)[part]
-      }
-      return ""
-    }, obj)
-  return typeof value === "string" ? value : JSON.stringify(value)
-}
-
-/**
- * Simplified i18n t function that returns English messages for `ltr` and Arabic for `rtl`.
- * It can handle nested labels that use the dot notation ('header.title').
- * @param path - The label to translate.
- * @param dir - The language direction.
- */
-export const t = (path: string, dir: LanguageDirection = "ltr"): string => {
-  let value = ""
-  if (dir === "rtl") {
-    value = getNestedProperty(messages.rtl, path)
-  }
-  return value === "" ? getNestedProperty(messages.ltr, path) : value
-}
-
-export const languageDirections = ["ltr", "rtl"] as const
-
-export const renderingContexts = [
-  ["SSR", "ltr"],
-  ["SSR", "rtl"],
-  ["CSR", "ltr"],
-  ["CSR", "rtl"],
-] as const
-
 export const renderModes = ["SSR", "CSR"] as const
 export type RenderMode = (typeof renderModes)[number]
-export type LanguageDirection = (typeof languageDirections)[number]
 
 export function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
-
-export type CheckboxStatus = "checked" | "unchecked" | "disabled"
 
 export const searchTypeNames = {
   ltr: {
@@ -141,12 +92,15 @@ export const setContentSwitcherState = async (
   const shouldBePressed = state === "open"
 
   if (isDesktop) {
-    if (isPressed === shouldBePressed) return null
+    if (isPressed === shouldBePressed) {
+      return null
+    }
     return await buttonLocator.click()
   }
 
   if (shouldBePressed) {
     if (!isPressed) {
+      await buttonLocator.isEnabled()
       await buttonLocator.click()
     }
     return openContentSettingsTab(page, contentSwitcherKind, dir)
@@ -175,7 +129,9 @@ export const searchTypes = {
 
 export const isPageDesktop = (page: Page) => {
   const pageWidth = page.viewportSize()?.width
-  if (!pageWidth) return false
+  if (!pageWidth) {
+    return false
+  }
   const desktopMinWidth = 1024
   return pageWidth >= desktopMinWidth
 }
@@ -197,9 +153,7 @@ export const isDialogOpen = async (page: Page) => {
 export const changeSearchType = async (page: Page, to: SupportedSearchType) => {
   await searchTypes.open(page)
 
-  const changedUrl = new RegExp(
-    to === ALL_MEDIA ? `/search/?` : `/search/${to}`
-  )
+  const changedUrl = new RegExp(to === ALL_MEDIA ? `/search?` : `/search/${to}`)
   await page.getByRole("radio", { name: searchTypeNames.ltr[to] }).click()
   await page.waitForURL(changedUrl)
 
@@ -221,67 +175,59 @@ export const currentContentType = async (page: Page) => {
   return currentContentType
 }
 
-export const dismissAllBannersUsingCookies = async (page: Page) => {
-  const uiDismissedBanners = [
-    ...["ru", "en", "ar", "es"].map((lang) => `translation-${lang}`),
-    "analytics",
-  ]
-  await setCookies(page.context(), { uiDismissedBanners })
-}
-
-/**
- * Dismisses the translation banner if it is visible. It does not wait for the banner to become visible,
- * so the page should finish rendering before calling `dismissTranslationBanner`.
- */
-export const dismissTranslationBanner = async (page: Page) => {
-  await dismissAllBannersUsingCookies(page)
-  const bannerCloseButton = page.locator(
-    '[data-testid="banner-translation"] button'
-  )
-  if (await bannerCloseButton.isVisible()) {
-    await bannerCloseButton.click()
-  }
-}
-
-/**
- * Dismisses the analytics banner if it is visible. It does not wait for the banner to become visible,
- * so the page should finish rendering before calling `dismissAnalyticsBanner`.
- */
-export const dismissAnalyticsBanner = async (page: Page) => {
-  await dismissAllBannersUsingCookies(page)
-  const bannerCloseButton = page.locator(
-    '[data-testid="banner-analytics"] button'
-  )
-  if (await bannerCloseButton.isVisible()) {
-    await bannerCloseButton.click()
-  }
-}
-
 export const selectHomepageSearchType = async (
   page: Page,
   searchType: SupportedSearchType,
   dir: LanguageDirection = "ltr"
 ) => {
-  await page
-    .getByRole("button", { name: searchTypeNames[dir][ALL_MEDIA] })
-    .click()
+  // Wait for hydration to complete
+  const searchTypeButton = page.getByRole("button", {
+    name: searchTypeNames[dir][ALL_MEDIA],
+  })
+  await searchTypeButton.click()
   await page
     .getByRole("radio", { name: searchTypeNames[dir][searchType] })
     .click()
 }
 
-export const dismissBannersUsingCookies = async (page: Page) => {
-  await dismissAnalyticsBanner(page)
-  await dismissTranslationBanner(page)
-}
-
+const ALL_TEST_BANNERS = [
+  ...["ru", "en", "ar", "es"].map((lang) => `translation-${lang}`),
+  "analytics",
+]
 export const preparePageForTests = async (
   page: Page,
-  breakpoint: Breakpoint
+  breakpoint: Breakpoint,
+  options: Partial<{
+    features: Record<string, "on" | "off">
+    dismissBanners: boolean
+    dismissFilter: boolean
+  }> = {}
 ) => {
-  await dismissAllBannersUsingCookies(page)
-  await closeFiltersUsingCookies(page)
-  await setBreakpointCookie(page, breakpoint)
+  const { dismissBanners = true, dismissFilter = true } = options
+  const defaultFeatures: Record<string, "on" | "off"> = {
+    fetch_sensitive: "off",
+    fake_sensitive: "off",
+    analytics: "on",
+    additional_search_types: "off",
+    additional_search_views: "off",
+  }
+  const features = {
+    ...defaultFeatures,
+    ...options.features,
+  }
+  const featuresCookie: Record<string, "on" | "off"> = {}
+  for (const [feature, status] of Object.entries(features)) {
+    featuresCookie[feature] = status
+  }
+
+  await setCookies(page.context(), {
+    features: featuresCookie,
+    ui: {
+      dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
+      isFilterDismissed: dismissFilter ?? false,
+      breakpoint,
+    },
+  })
 }
 
 export const goToSearchTerm = async (
@@ -291,45 +237,50 @@ export const goToSearchTerm = async (
     searchType?: SupportedSearchType
     mode?: RenderMode
     dir?: LanguageDirection
+    locale?: "ar" | "es" | "ru"
     query?: string // Only for SSR mode
   } = {}
 ) => {
   const searchType = options.searchType || ALL_MEDIA
   const dir = options.dir || "ltr"
+
+  const locale = options.locale
   const mode = options.mode ?? "SSR"
   const query = options.query ? `&${options.query}` : ""
 
-  await dismissAllBannersUsingCookies(page)
   if (mode === "SSR") {
     const path = `${searchPath(searchType)}?q=${term}${query}`
-    await page.goto(pathWithDir(path, dir))
+    await page.goto(pathWithDir(path, dir, locale))
   } else {
-    await page.goto(pathWithDir("/", dir))
+    await page.goto(pathWithDir("/", dir, locale))
+    // Wait for hydration to complete
+    const submitButton = page.getByRole("button", {
+      name: t("search.search", dir),
+    })
+    await submitButton.isEnabled()
     // Select the search type
     if (searchType !== "all") {
       await selectHomepageSearchType(page, searchType, dir)
     }
     // Type search term
     const searchInput = page.locator('main input[type="search"]')
-    await searchInput.type(term)
+    await searchInput.fill(term)
     // Click search button
     // Wait for navigation
-    await page.getByRole("button", { name: t("search.search", dir) }).click()
+    await submitButton.click()
     await page.waitForURL(/search/, { waitUntil: "load" })
   }
   await scrollDownAndUp(page)
 }
 
 /**
- * Fills the search input in the page header, clicks on submit
- * and waits for navigation.
+ * Fills the search input in the page header, clicks on submit.
  */
 export const searchFromHeader = async (page: Page, term: string) => {
   // Double-click on the search bar to remove previous value
   await page.dblclick("id=search-bar")
   await page.fill("id=search-bar", term)
   await page.keyboard.press("Enter")
-  await page.waitForURL(/search/)
 }
 
 /**
@@ -338,15 +289,28 @@ export const searchFromHeader = async (page: Page, term: string) => {
  * because localized routes start with the locale prefix (e.g. /ar/image/).
  * Scroll down and up to load all lazy-loaded content.
  */
-export const openFirstResult = async (page: Page, mediaType: MediaType) => {
+export const openFirstResult = async (
+  page: Page,
+  mediaType: MediaType,
+  dir: LanguageDirection = "ltr",
+  locale?: "es" | "ru"
+) => {
   const firstResult = page.locator(`a[href*="/${mediaType}/"]`).first()
   const firstResultHref = await getLocatorHref(firstResult)
+
   await firstResult.click({ position: { x: 32, y: 32 } })
+
+  // Make sure that navigation to single result page is complete.
+  // Using URL is not enough because it changes before navigation is complete.
+  await expect(
+    page.getByRole("heading", {
+      name: t("mediaDetails.reuse.title", dir, locale),
+    })
+  ).toBeVisible()
+
   await scrollDownAndUp(page)
-  // Wait for all pending requests to finish, at which point we know
-  // that all lazy-loaded content is available
-  // eslint-disable-next-line playwright/no-networkidle
-  await page.waitForURL(firstResultHref, { waitUntil: "networkidle" })
+
+  await page.waitForURL(firstResultHref)
   await page.mouse.move(0, 0)
 }
 
@@ -399,49 +363,63 @@ export const scrollDownAndUp = async (page: Page) => {
 }
 
 /**
- * Adds '/ar' prefix to a rtl route. The path should start with '/'
+ * Adds '/ar' prefix to a rtl route, or a set locale. The path should start with '/'
  */
-export const pathWithDir = (rawPath: string, dir: string) => {
+export const pathWithDir = (
+  rawPath: string,
+  dir: string,
+  locale?: "es" | "ar" | "ru"
+) => {
   const path = rawPath.startsWith("/") ? rawPath : `/${rawPath}`
-  return dir === "rtl" ? `/ar${path}` : path
+  return locale ? `/${locale}${path}` : dir === "rtl" ? `/ar${path}` : path
 }
 
 export interface CookieMap {
   [key: string]: string | boolean | string[] | CookieMap
 }
 
-export const getCookies = async (
-  context: BrowserContext,
-  name: string
-): Promise<string> => {
-  const cookies = await context.cookies()
-  return cookies.find((cookie) => cookie.name === name)?.value ?? "[]"
-}
-
 export const setCookies = async (
   context: BrowserContext,
   cookies: CookieMap
 ) => {
-  await context.addCookies(
-    Object.entries(cookies).map(([name, value]) => ({
+  const existingCookies = await context.cookies()
+  const cookiesToSet = Object.entries(cookies).map(([name, value]) => {
+    let existingValue = existingCookies.find((c) => c.name === name)?.value
+
+    // If cookie was URI encoded, it starts with %7B%22 `{"` or %5B%22 `["`
+    if (
+      existingValue &&
+      (existingValue.includes("%7B%22") || existingValue.includes("%5B%22"))
+    ) {
+      existingValue = decodeURIComponent(existingValue)
+    }
+    let newCookieValue = ""
+    if (existingValue) {
+      if (Array.isArray(value)) {
+        newCookieValue = JSON.stringify(
+          Array.from(new Set([...JSON.parse(existingValue), ...value]))
+        )
+      } else if (typeof value === "string") {
+        newCookieValue = value
+      } else if (typeof value === "object") {
+        newCookieValue = JSON.stringify({
+          ...JSON.parse(existingValue),
+          ...value,
+        })
+      } else if (typeof value === "boolean") {
+        newCookieValue = String(value)
+      }
+    } else {
+      newCookieValue = typeof value === "string" ? value : JSON.stringify(value)
+    }
+
+    return {
       name,
-      value: typeof value === "string" ? value : JSON.stringify(value),
+      value: newCookieValue,
       domain: "localhost",
       path: "/",
       maxAge: 60 * 5,
-    }))
-  )
-}
-
-export const closeFiltersUsingCookies = async (page: Page) => {
-  await setCookies(page.context(), { uiIsFilterDismissed: true })
-}
-
-export const setBreakpointCookie = async (page: Page, breakpoint: string) => {
-  await setCookies(page.context(), { uiBreakpoint: breakpoint })
-}
-
-export const turnOnAnalytics = async (page: Page) => {
-  await page.goto("/preferences")
-  await page.getByLabel("Record custom events and page views.").click()
+    }
+  })
+  await context.addCookies(cookiesToSet)
 }

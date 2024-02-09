@@ -4,6 +4,7 @@ import {
   currentContentType,
   filters,
   goToSearchTerm,
+  preparePageForTests,
   searchTypeNames,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
@@ -27,14 +28,15 @@ import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 test.describe.configure({ mode: "parallel" })
 
 test.describe("search query on SSR", () => {
-  breakpoints.describeMobileAndDesktop(() => {
-    test.beforeEach(async ({ context }) => {
+  breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
+    test.beforeEach(async ({ context, page }) => {
       await mockProviderApis(context)
+      await preparePageForTests(page, breakpoint)
     })
 
     test("q query parameter is set as the search term", async ({ page }) => {
       await goToSearchTerm(page, "cat", {
-        query: "license=cc0&license_type=commercial&searchBy=creator",
+        query: "license=cc0&license_type=commercial",
       })
 
       const searchInput = page.locator('input[type="search"]')
@@ -66,7 +68,7 @@ test.describe("search query on SSR", () => {
       page,
     }) => {
       await goToSearchTerm(page, "cat", {
-        query: "license=cc0&license_type=commercial&searchBy=creator",
+        query: "license=cc0&license_type=commercial",
       })
 
       await filters.open(page)
@@ -83,7 +85,7 @@ test.describe("search query on SSR", () => {
     }) => {
       await goToSearchTerm(page, "cat", {
         searchType: IMAGE,
-        query: "searchBy=creator&extension=jpg,png,gif,svg",
+        query: "extension=jpg,png,gif,svg",
       })
       await filters.open(page)
       const checkboxes = ["JPEG", "PNG", "GIF", "SVG"]

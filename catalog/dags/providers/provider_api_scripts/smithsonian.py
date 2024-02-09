@@ -357,7 +357,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
             [
                 i
                 for i in self._check_type(freetext.get("name"), list)
-                if type(i) == dict
+                if isinstance(i, dict)
                 and (
                     self._check_type(i.get("label"), str).lower() in self.creator_types
                 )
@@ -370,7 +370,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
         indexed_structured_creator_generator = (
             i["content"]
             for i in self._check_type(indexed_structured.get("name"), list)
-            if type(i) == dict
+            if isinstance(i, dict)
             and (self._check_type(i.get("type"), str).lower() == "personal_main")
             and (self._check_type(i.get("content"), str))
         )

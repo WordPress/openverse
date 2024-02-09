@@ -62,7 +62,9 @@ export function useDialogControl({
   const shouldLockBodyScroll = computed(() => unref(lockBodyScroll) ?? false)
   watch(shouldLockBodyScroll, (shouldLock) => {
     if (shouldLock) {
-      if (internalVisibleRef.value) lock()
+      if (internalVisibleRef.value) {
+        lock()
+      }
     } else {
       unlock()
     }
@@ -72,7 +74,9 @@ export function useDialogControl({
 
   const close = () => {
     const fn = toValue(deactivateFocusTrap)
-    if (fn) fn()
+    if (fn) {
+      fn()
+    }
     internalVisibleRef.value = false
   }
 

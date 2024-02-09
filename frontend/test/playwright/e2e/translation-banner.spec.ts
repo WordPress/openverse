@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 
-import { dismissBannersUsingCookies } from "~~/test/playwright/utils/navigation"
+import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 const russianSearchPath = "/ru/search?q=dog"
 
@@ -29,7 +29,7 @@ test.describe("translation banner", () => {
   test("Banner is not shown if dismissed state is saved in a cookie", async ({
     page,
   }) => {
-    await dismissBannersUsingCookies(page)
+    await preparePageForTests(page, "xl")
 
     await page.goto(russianSearchPath)
     await expect(page.locator('[data-testid="banner-translation"]')).toBeHidden(

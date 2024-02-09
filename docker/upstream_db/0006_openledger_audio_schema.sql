@@ -60,3 +60,17 @@ CREATE UNIQUE INDEX audio_identifier_key
 CREATE UNIQUE INDEX audio_url_key
     ON public.audio
     USING btree (url);
+
+
+CREATE TABLE public.deleted_audio (
+    LIKE public.audio,
+    deleted_on timestamp with time zone NOT NULL,
+    deleted_reason character varying(80)
+);
+ALTER TABLE public.deleted_audio OWNER TO deploy;
+CREATE UNIQUE INDEX deleted_audio_provider_fid_idx
+    ON public.deleted_audio
+        USING btree (provider, md5(foreign_identifier));
+CREATE UNIQUE INDEX deleted_audio_identifier_key
+    ON public.deleted_audio
+        USING btree (identifier);

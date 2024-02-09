@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test"
 
+import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+
 test.describe.configure({ mode: "parallel" })
 const DESCRIPTION =
   "Search over 700 million free and openly licensed images, photos, audio, and other media types for reuse and remixing."
@@ -59,9 +61,10 @@ const pages = {
     robots: "all",
   },
 }
-test.describe("Page metadata", () => {
+test.describe("page metadata", () => {
   for (const openversePage of Object.values(pages)) {
     test(`${openversePage.url}`, async ({ page }) => {
+      await preparePageForTests(page, "xl")
       await page.goto(openversePage.url)
       await expect(page).toHaveTitle(openversePage.title)
       const metaDescription = page.locator('meta[name="description"]')
@@ -70,13 +73,13 @@ test.describe("Page metadata", () => {
       const metaRobots = page.locator('meta[name="robots"]')
       await expect(metaRobots).toHaveAttribute("content", openversePage.robots)
 
-      const metaOgImage = page.locator('meta[name="og:image"]')
+      const metaOgImage = page.locator('meta[property="og:image"]')
       await expect(metaOgImage).toHaveAttribute(
         "content",
         openversePage.ogImage
       )
 
-      const metaOgTitle = page.locator('meta[name="og:title"]')
+      const metaOgTitle = page.locator('meta[property="og:title"]')
       await expect(metaOgTitle).toHaveAttribute(
         "content",
         openversePage.ogTitle

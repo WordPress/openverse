@@ -36,10 +36,10 @@ describe("VLink", () => {
     }
   )
   it.each`
-    href                  | component
-    ${"/about"}           | ${"NuxtLink"}
-    ${"http://localhost"} | ${"A"}
-  `("VLink as a $component handles click", async ({ href }) => {
+    href
+    ${"/about"}
+    ${"http://localhost"}
+  `("VLink handles click", async ({ href }) => {
     const createVLinkWrapper = (href) =>
       // eslint-disable-next-line vue/one-component-per-file
       Vue.component("VLinkWrapper", {
@@ -66,41 +66,5 @@ describe("VLink", () => {
     await fireEvent.click(linkBefore)
     const linkAfter = await screen.findByText("Code is Poetry")
     expect(linkAfter.tagName).toBe("A")
-  })
-})
-
-describe("VLink custom events", () => {
-  const sendCustomEventMock = jest.fn()
-  const href = "https://example.com"
-  useAnalytics.mockImplementation(() => ({
-    sendCustomEvent: sendCustomEventMock,
-  }))
-
-  afterEach(() => {
-    sendCustomEventMock.mockReset()
-  })
-
-  it("External link sends a custom event", async () => {
-    render(VLink, {
-      props: { href },
-      slots: { default: "Code is Poetry" },
-    })
-    const link = screen.getByRole("link")
-    await fireEvent.click(link)
-
-    expect(sendCustomEventMock).toHaveBeenCalledWith("EXTERNAL_LINK_CLICK", {
-      url: href,
-    })
-  })
-
-  it("External link does not send a custom event if prop is false", async () => {
-    render(VLink, {
-      props: { href: "https://example.com", sendExternalLinkClickEvent: false },
-      slots: { default: "Code is Poetry" },
-    })
-    const link = screen.getByRole("link")
-    await fireEvent.click(link)
-
-    expect(sendCustomEventMock).not.toHaveBeenCalled()
   })
 })

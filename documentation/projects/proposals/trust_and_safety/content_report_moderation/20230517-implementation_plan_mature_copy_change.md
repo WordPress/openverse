@@ -56,22 +56,36 @@ are broken into two aspects (code and copy).
 
 #### Code
 
+```{note}
+**Update 2023-12-20**: The maintainers determined after the fact that the multi-step
+process for updating the table names themselves would be too complicated, so this
+plan was modified to only change the names referenced within the code and within
+the tables themselves. The previous plan is kept for posterity below.
+```
+
 The following model names will need to be updated:
 
-- [`AbstractMatureMedia`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L334-L333)
-- [`MatureImage`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/image.py#L83)
-- [`MatureAudio`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/audio.py#L263)
+- [`AbstractMatureMedia`](https://github.com/WordPress/openverse/blob/aa16d4f1be7607b12c428886b9890bdd947cc71c/api/api/models/media.py#L332)
+- [`MatureImage`](https://github.com/WordPress/openverse/blob/eb0e906e7300e32fae945eb9222ed47a50fb72a2/api/api/models/image.py#L83)
+- [`MatureAudio`](https://github.com/WordPress/openverse/blob/aa16d4f1be7607b12c428886b9890bdd947cc71c/api/api/models/audio.py#L263)
+
+The database table name for these models will _not_ be changed, and they will
+need to be referenced using
+[the `db_table` model attribute](https://docs.djangoproject.com/en/5.0/ref/models/options/#django.db.models.Options.db_table).
+This can be accomplished in a zero-downtime manner with a single deployment.
 
 The
 [`mature` reason](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L22-L21)
 (and
 [`mature_filtered`](https://github.com/WordPress/openverse/blob/2041c5df1e9d5d1f9f37e7c177f2e70f61ea5dba/api/api/models/media.py#L18-L17)
-value) in `AbstractMediaReport` definition will also need to be changed to
-`sensitive` and `sensitive_filtered` respectively. The migration necessary for
-changing the data is described below, however the API will need to continue to
-accept `mature` as a report reason and convert it internally to `sensitive` (at
-least until we decide to make a version change to the API). The media report
-tables already use table aliases as well
+value) in `AbstractMediaReport` were initially going to be changed as part of
+this, they will actually be deprecated in further steps as described by the
+[Django admin tools and access control for moderators plan](20231208-implementation_plan_django_admin_moderator_access.md).
+They will not be changed at this time.
+
+<details> <summary>Prior plan involving table changes</summary>
+
+The media report tables already use table aliases as well
 ([`ImageReport`](https://github.com/WordPress/openverse/blob/7b95a4c8eaa9804f53b4be7ac969e04ca437695a/api/api/models/image.py#L121-L122)
 and
 [`AudioReport`](https://github.com/WordPress/openverse/blob/7b95a4c8eaa9804f53b4be7ac969e04ca437695a/api/api/models/audio.py#L304-L305)) -
@@ -119,6 +133,8 @@ the following steps will need to be taken:
 9. Remove the old models (`MatureImage`, `MatureAudio`, `NsfwReport`,
    `NsfwReportAudio`) from the API codebase and deploy this version of the API.
    This will remove the old tables from the database.
+
+</details>
 
 Per the
 [detecting sensitive textual content project plan](https://docs.openverse.org/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html#designation-of-results-with-sensitive-terms),

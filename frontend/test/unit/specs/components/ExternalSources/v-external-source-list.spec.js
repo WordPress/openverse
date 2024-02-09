@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/vue"
-import userEvent from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
@@ -37,21 +36,5 @@ describe("VExternalSourceList", () => {
     expect(screen.queryAllByRole("link")).toHaveLength(
       expectedImageSources.length
     )
-  })
-
-  it("should send SELECT_EXTERNAL_SOURCE analytics event on CTA button click", async () => {
-    const source1Link = screen.getByRole("link", {
-      name: expectedImageSources[0].name,
-    })
-
-    const user = userEvent.setup()
-    await user.click(source1Link)
-
-    expect(sendCustomEventMock).toHaveBeenCalledWith("SELECT_EXTERNAL_SOURCE", {
-      mediaType: IMAGE,
-      name: expectedImageSources[0].name,
-      query: propsData.searchTerm,
-      component: "VExternalSourceList",
-    })
   })
 })

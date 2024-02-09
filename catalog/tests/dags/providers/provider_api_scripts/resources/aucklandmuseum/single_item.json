@@ -1,0 +1,183 @@
+{
+  "_index": "collectionsonline-2022-05-04-1",
+  "_type": "_doc",
+  "_id": "http://api.aucklandmuseum.com/id/naturalsciences/object/691102",
+  "_score": 2.0630994,
+  "_source": {
+    "copyright": ["© Auckland Museum CC BY"],
+    "notes": [],
+    "references": [
+      {
+        "person": {
+          "secondary_maker": [],
+          "primary_maker": [],
+          "classified": ["http://api.aucklandmuseum.com/id/person/28441"],
+          "collected": ["http://api.aucklandmuseum.com/id/person/25299"],
+          "_all": [
+            "http://api.aucklandmuseum.com/id/person/28441",
+            "http://api.aucklandmuseum.com/id/person/25299"
+          ],
+          "referred": []
+        }
+      },
+      { "object": { "childOf": [], "_all": [], "referred": [] } }
+    ],
+    "documentType": [],
+    "geoSubject": [],
+    "language": [],
+    "type": "ecrm:E20_Biological_Object",
+    "content": [],
+    "localityDescription": ["[Western Samoa, Savai'i]   Hinter [behind] Safai"],
+    "acquisitionStatement": [],
+    "recordScore": 40,
+    "responsibility": [],
+    "dc_contributor": ["R. O. Gardner"],
+    "isTaonga": false,
+    "place": {
+      "found": { "_all": [] },
+      "made": { "_all": [] },
+      "associated": { "_all": [] },
+      "captured": { "_all": [] },
+      "published": { "_all": [] },
+      "acquired": { "_all": ["Samoa"] },
+      "_all": ["Samoa"]
+    },
+    "appellation": {
+      "Common Name": [],
+      "Classification Display Value": ["Cypholophus macrocephalus mollis"],
+      "Primary Title": [
+        "Cypholophus macrocephalus mollis (Blume) Wedd. var. mollis (Wedd.) Wedd."
+      ],
+      "Other Title": [],
+      "_all_suggest": {
+        "input": [
+          "mollis",
+          "Cypholophus macrocephalus mollis",
+          "Cypholophus macrocephalus mollis (Blume) Wedd. var. mollis (Wedd.) Wedd."
+        ],
+        "contexts": { "type_context": "ecrm:E20_Biological_Object" }
+      },
+      "Maori Name": [],
+      "Classification Value": ["mollis"],
+      "_all": [
+        "mollis",
+        "Cypholophus macrocephalus mollis",
+        "Cypholophus macrocephalus mollis (Blume) Wedd. var. mollis (Wedd.) Wedd."
+      ]
+    },
+    "keyword": [],
+    "department": ["botany"],
+    "dc_identifier": ["AK28252"],
+    "process": [],
+    "period": {
+      "made": [{ "exact": "2010-07-08T00:00:00.000Z" }],
+      "associated": [],
+      "published": [],
+      "accession": [
+        {
+          "end": "2010-07-08T00:00:00.000Z",
+          "text": "08 Jul 2010",
+          "begin": "2010-07-08T00:00:00.000Z"
+        }
+      ],
+      "acquired": [
+        {
+          "end": "1905-06-22T00:00:00.000Z",
+          "text": "22 Jun 1905",
+          "begin": "1905-06-22T00:00:00.000Z"
+        }
+      ],
+      "time_period": [],
+      "_all": [
+        {
+          "end": "2010-07-08T00:00:00.000Z",
+          "text": "08 Jul 2010",
+          "begin": "2010-07-08T00:00:00.000Z"
+        },
+        {
+          "end": "1905-06-22T00:00:00.000Z",
+          "text": "22 Jun 1905",
+          "begin": "1905-06-22T00:00:00.000Z"
+        },
+        { "exact": "2010-07-08T00:00:00.000Z" }
+      ]
+    },
+    "subjectStatus": [],
+    "geopos": [],
+    "primaryRepresentation": "http://api.aucklandmuseum.com/id/media/v/214749",
+    "dc_date": ["Jul 1989"],
+    "typeStatus": [],
+    "collection": [],
+    "classification": [
+      {
+        "object": [
+          {
+            "Kingdom": "Linnaean",
+            "Genus": "Linnaean",
+            "Linnaean System": "Linnaean",
+            "Family": "Linnaean",
+            "Species": "Linnaean",
+            "_all": [
+              "Mollis",
+              "Macrocephalus",
+              "Cypholophus",
+              "Urticaceae",
+              "Plantae",
+              "Linnaean",
+              "Mollis",
+              "Macrocephalus",
+              "Cypholophus",
+              "Urticaceae",
+              "Plantae",
+              "Linnaean",
+              "Mollis",
+              "Macrocephalus",
+              "Cypholophus",
+              "Urticaceae",
+              "Plantae",
+              "Linnaean",
+              "Mollis",
+              "Macrocephalus",
+              "Cypholophus",
+              "Urticaceae",
+              "Plantae",
+              "Linnaean",
+              "Mollis",
+              "Macrocephalus",
+              "Cypholophus",
+              "Urticaceae",
+              "Plantae",
+              "Linnaean",
+              "Mollis",
+              "Macrocephalus",
+              "Cypholophus",
+              "Urticaceae",
+              "Plantae",
+              "Linnaean"
+            ],
+            "Var.": "Linnaean"
+          }
+        ]
+      },
+      { "material": [] },
+      { "place": [] }
+    ],
+    "subjectCategory": [],
+    "lastModifiedOn": ["2022-06-23T09:44:41.824Z"],
+    "tags": { "official": [], "user": [], "_all": [] },
+    "dc_place": ["Samoa"],
+    "kindOfSpecimen": ["1F- Foreign dry"],
+    "unit": [],
+    "culturalOrigin": [],
+    "isSensitive": false,
+    "series": [],
+    "dc_title": [
+      "mollis",
+      "Cypholophus macrocephalus mollis",
+      "Cypholophus macrocephalus mollis (Blume) Wedd. var. mollis (Wedd.) Wedd."
+    ],
+    "location": [],
+    "isInLibrary": false,
+    "support": []
+  }
+}

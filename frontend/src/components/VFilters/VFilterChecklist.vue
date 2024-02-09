@@ -39,10 +39,13 @@
         </template>
         <template #default="{ close }">
           <div class="relative">
-            <VCloseButton
+            <VIconButton
               :label="getLicenseExplanationCloseAria(item.code)"
-              class="!absolute end-0 top-0"
-              @close="close"
+              :icon-props="{ name: 'close' }"
+              variant="transparent-gray"
+              size="small"
+              class="!absolute end-1 top-1"
+              @click="close"
             />
             <VLicenseExplanation :license="item.code" />
           </div>
@@ -67,8 +70,8 @@ import { getElements } from "~/utils/license"
 
 import VButton from "~/components/VButton.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
-import VCloseButton from "~/components/VCloseButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
 import VPopover from "~/components/VPopover/VPopover.vue"
@@ -81,7 +84,7 @@ type toggleFilterPayload = {
 export default defineComponent({
   name: "VFilterCheckList",
   components: {
-    VCloseButton,
+    VIconButton,
     VCheckbox,
     VButton,
     VIcon,

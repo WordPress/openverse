@@ -102,8 +102,10 @@ class IssueReferences(SphinxTransform):
         tracker_config = TrackerConfig.from_sphinx_config(config)
         issue_pattern = config.issuetracker_issue_pattern
         title_template = None
+
         if isinstance(issue_pattern, str):
             issue_pattern = re.compile(issue_pattern)
+
         for node in self.document.traverse(nodes.Text):
             parent = node.parent
             if isinstance(parent, (nodes.literal, nodes.FixedTextElement)):
@@ -111,6 +113,7 @@ class IssueReferences(SphinxTransform):
                 continue
             if isinstance(parent, nodes.reference):
                 continue
+
             text = str(node)
             new_nodes = []
             last_issue_ref_end = 0
@@ -119,13 +122,15 @@ class IssueReferences(SphinxTransform):
                 if len(match.groups()) != 1:
                     raise ValueError(
                         "issuetracker_issue_pattern must have "
-                        "exactly one group: {!r}".format(match.groups())
+                        f"exactly one group: {match.groups()!r}"
                     )
+
                 # extract the text between the last issue reference and the
                 # current issue reference and put it into a new text node
                 head = text[last_issue_ref_end : match.start()]
                 if head:
                     new_nodes.append(nodes.Text(head))
+
                 # adjust the position of the last issue reference in the
                 # text
                 last_issue_ref_end = match.end()
@@ -366,7 +371,6 @@ def connect_builtin_tracker(app: Sphinx) -> None:
 
 
 def setup(app: Sphinx) -> t.Dict[str, t.Any]:
-    app.add_config_value("mybase", "https://github.com/cihai/unihan-etl", "env")
     app.add_event("issuetracker-lookup-issue")
     app.connect("builder-inited", connect_builtin_tracker)
     app.add_config_value("issuetracker", None, "env")

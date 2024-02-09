@@ -10,4 +10,5 @@ playwright_tests
 storybook_tests
 miscellaneous
 healthcheck
+nginx
 ```

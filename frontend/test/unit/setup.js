@@ -20,6 +20,7 @@ Vue.use(VueI18n)
  */
 config.stubs["nuxt-link"] = Vue.component("NuxtLink", {
   props: ["to"],
+  emits: ["click", "mousedown"],
   methods: {
     handleClick() {
       // This is an adaptation to mimic NuxtLink's behavior,

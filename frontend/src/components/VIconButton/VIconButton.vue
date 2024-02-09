@@ -44,7 +44,7 @@ export default defineComponent({
      * The size of the button, matches the sizes of VButton component.
      */
     size: {
-      type: String as PropType<Exclude<ButtonSize, "disabled">>,
+      type: String as PropType<ButtonSize>,
       required: true,
     },
     /**
@@ -66,7 +66,7 @@ export default defineComponent({
      * Connections to pass down to the `VButton` component nested inside the button.
      */
     connections: {
-      type: String as PropType<ButtonConnections>,
+      type: Array as PropType<ButtonConnections[]>,
     },
     /**
      * The label used for accessibility purposes.

@@ -45,6 +45,31 @@ Runs the linting steps defined in the repository's
 [pre-commit configuration](https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml).
 This is executed via `just lint`.
 
+## `validate-codeowners`
+
+This job should be considered a complement to `lint` and would ideally be part
+of it, as a pre-commit hook. However, the docker image we relied on for the
+pre-commit hook causes issues with arm64 computers (which includes recent Apply
+devices). Therefore, we run the hook as a CI step instead.
+
+It is still possible to run this hook locally, assuming the docker image works
+on your computer's architecture, by invoking the `lint-codeowners` just recipe:
+
+```bash
+just lint-codeowners
+```
+
+````{tip}
+In CI we run the set of "experimental" checks as well, which are disabled
+in the just recipe because they fail if there are uncommitted changes.
+To run precisely the check that CI uses, enable experimental checks:
+
+```bash
+just lint-codeowners all
+```
+
+````
+
 ## `add-stack-label`
 
 ```{note}

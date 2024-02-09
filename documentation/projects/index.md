@@ -14,10 +14,11 @@ All Openverse projects can be viewed in the
 ```{toctree}
 :titlesonly:
 :glob:
-:maxdepth: 2
+:maxdepth: 1
 
 planning
 templates/*
+yearly_planning/index
 ```
 
 ## Proposals

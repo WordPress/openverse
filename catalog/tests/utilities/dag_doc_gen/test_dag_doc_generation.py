@@ -185,7 +185,7 @@ def test_generate_dag_doc():
 this one has a doc
 """
     )
-    with (mock.patch(f"{_MODULE}.get_dags_info") as get_dags_info_mock,):
+    with mock.patch(f"{_MODULE}.get_dags_info") as get_dags_info_mock:
         # Return in reverse order to ensure they show up in the correct order
         get_dags_info_mock.return_value = [
             DagInfo("b", None, "this one has a doc", "t1", False, None),

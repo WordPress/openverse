@@ -62,8 +62,8 @@ Openverse is Git-tracked. To clone Openverse locally, you will need to install
 if it's not always the latest version. To know if you have Git installed, run
 the following command.
 
-```console
-$ git --version
+```bash
+git --version
 ```
 
 If you see `git version x.y.z`, you have Git installed. If you see an error, you
@@ -86,9 +86,9 @@ for some operating systems.
 If you run `just` inside the Openverse root repo without a recipe name, you can
 see a huge list of all the different recipes present in the project.
 
-```console
-$ cd openverse/
-$ just
+```bash
+cd openverse/
+just
 ```
 ````
 
@@ -125,8 +125,8 @@ will already have this installed, even if it's not always the latest version. To
 know if you have Python (specifically version 3) installed, run the following
 command.
 
-```console
-$ python3 --version
+```bash
+python3 --version
 ```
 
 If you see `Python x.y.z`, you have Python installed. If you see an error, you
@@ -140,7 +140,7 @@ set up a virtualenv, provided you have the version of Python mentioned in the
 `Pipfile` installed and accessible locally.
 
 You can install Pipenv by following the
-[official instructions](https://pipenv.pypa.io/en/latest/installation/#installing-pipenv).
+[official instructions](https://pipenv.pypa.io/en/latest/installation.html#installing-pipenv).
 
 ### Node.js
 
@@ -155,8 +155,8 @@ We use Node.js in the frontend of our stack. So to work with that part of the
 codebase, you will need Node.js installed. To know if you have Node.js
 installed, run the following command.
 
-```console
-$ node --version
+```bash
+node --version
 ```
 
 If you see `vx.y.z`, you have Node.js installed. If you see an error, you need
@@ -176,9 +176,9 @@ onwards. So no installation is needed.
 Enable Corepack in the monorepo root. Then, check if Corepack can discover the
 right package manager, pnpm, by running the following commands.
 
-```console
-$ corepack enable
-$ pnpm --version
+```bash
+corepack enable
+pnpm --version
 ```
 
 You should see a version number and no error message.
@@ -212,8 +212,8 @@ Engine include steps to also install the Buildx plugin.
 
 To know if your Docker setup is using Buildx, run the following command.
 
-```console
-$ docker build --help
+```bash
+docker build --help
 ```
 
 If you see `docker buildx build` under 'Aliases', you have Buildx set up as the
@@ -228,8 +228,8 @@ and indexer workers locally during development.
 Docker Compose is a part of the Docker Desktop installation. To know if you have
 Docker Compose installed, run the following command.
 
-```console
-$ docker compose version
+```bash
+docker compose version
 ```
 
 If you see `Docker Compose version vx.y.z`, you have Docker Compose installed.
@@ -266,8 +266,8 @@ different editor if you have a preference.
 
 - [VS Code](https://code.visualstudio.com/) is an option with good
   out-of-the-box support for our entire stack.
-- [PyCharm and WebStorm](https://www.jetbrains.com/) are other very popular
-  options with lots of bells and whistles.
+- [PyCharm and WebStorm](https://www.jetbrains.com/) are other popular options
+  with lots of bells and whistles.
 - [Sublime Text](https://www.sublimetext.com/) is a minimalistic option that can
   get you off the ground quickly with lots of room for expansion through it's
   package system.
@@ -276,7 +276,7 @@ different editor if you have a preference.
 
 ## Optional development setup
 
-The following setup steps are only needed in very specific scenarios.
+The following setup steps are only needed in a narrow set of scenarios.
 
 ### coreutils
 

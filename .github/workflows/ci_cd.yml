@@ -10,7 +10,14 @@ on:
       image_tag:
         description: "The tag to assign to the images built in the workflow."
         type: string
-        required: true
+        required: false
+        default: ""
+      # This is useful when dispatching on a branch other than `main`.
+      perform_deploy:
+        description: "Publish images and deploy staging?"
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -56,10 +63,10 @@ jobs:
       - name: Get image tag
         id: get-image-tag
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-              echo "image_tag=${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.image_tag }}" != "" ]]; then
+              echo "image_tag=${{ inputs.image_tag }}" | tee "$GITHUB_OUTPUT"
           else
-              echo "image_tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+              echo "image_tag=${{ github.sha }}" | tee "$GITHUB_OUTPUT"
           fi
 
   determine-images:
@@ -112,9 +119,24 @@ jobs:
           key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Run pre-commit to lint files
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           just precommit
           just lint
+
+  validate-codeowners:
+    name: Validate CODEOWNERS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: mszostok/codeowners-validator@v0.7.4
+        with:
+          checks: "files,duppatterns,syntax"
+          experimental_checks: "notowned,avoid-shadowing"
 
   add-stack-label:
     name: Add stack label
@@ -134,20 +156,31 @@ jobs:
           # - list of stack filters: `.github/filters.yml`
           # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
           script: |
-            const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
-            const labels = JSON
-              .parse('${{ needs.get-changes.outputs.changes }}')
-              .filter(change => stacks.includes(change))
-              .map(change => `🧱 stack: ${change.replace("_", " ")}`)
-            if (!labels.length) {
-              labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
-            }
-            github.rest.issues.addLabels({
+            const labels = await github.rest.issues.listLabelsOnIssue({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels,
             })
+            console.log(labels.data)
+            if (labels.data.some(label => label.name.startsWith("🧱 stack: "))) {
+              console.log("Stack label already applied, skipping.")
+            } else {
+              const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
+              const labels = JSON
+                .parse('${{ needs.get-changes.outputs.changes }}')
+                .filter(change => stacks.includes(change))
+                .map(change => `🧱 stack: ${change.replace("_", " ")}`)
+              if (!labels.length) {
+                console.log("Couldn't determine stack, applying triage labels.")
+                labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
+              }
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels,
+              })
+            }
 
   build-images:
     name: Build Docker images
@@ -179,8 +212,7 @@ jobs:
       - name: Prepare build args
         id: prepare-build-args
         run: |
-          just versions
-          just versions >> "$GITHUB_OUTPUT"
+          just versions | tee "$GITHUB_OUTPUT"
 
       # ℹ️Step only applies for frontend image.
       # This step
@@ -199,10 +231,11 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v5
         with:
-          context: ${{ matrix.context || matrix.image }}
-          target: ${{ matrix.target }}
+          context: ${{ matrix.context }}
+          target: ${{ matrix.target || '' }}
           push: false
           tags: openverse-${{ matrix.image }}
+          file: ${{ matrix.file }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
@@ -215,12 +248,18 @@ jobs:
             INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
+            PGCLI_VERSION=${{ steps.prepare-build-args.outputs.pgcli_version }}
 
       - name: Upload image `${{ matrix.image }}`
-        uses: actions/upload-artifact@v3
+        id: upload-img
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
+
+      - name: Show artifact ID
+        run: |
+          echo '${{ matrix.image }} artifact ID is ${{ steps.upload-img.outputs.artifact-id }}'
 
   ###########
   # Catalog #
@@ -253,6 +292,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
       - name: Run tests
@@ -284,6 +324,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
       - name: Check DAG documentation
@@ -320,6 +361,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server
 
       - name: Run ingestion-server tests
@@ -332,7 +374,7 @@ jobs:
 
       - name: Upload ingestion test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
@@ -369,6 +411,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server api
 
       - name: Start API, ingest and index test data
@@ -385,7 +428,7 @@ jobs:
 
       - name: Upload API test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api_logs
           path: api_logs
@@ -413,7 +456,7 @@ jobs:
           - name: validate_openapi
             recipe: api/dj spectacular --format openapi-json --validate --file openapi.json
           - name: check_migrations
-            recipe: api/dj makemigrations --check --noinput --merge
+            recipe: api/dj makemigrations --check
           - name: test_doc
             recipe: api/doc-test
 
@@ -433,6 +476,7 @@ jobs:
       - name: Load Docker images
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: upstream_db ingestion_server api
 
       - name: Run check recipe
@@ -442,7 +486,7 @@ jobs:
 
       - name: Upload schema
         if: matrix.name == 'test_doc'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: openapi.json
           path: ./api/openapi.json
@@ -510,12 +554,9 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
         include:
           - name: unit_test
             script: "test:unit"
-          - name: storybook_smoke_test
-            script: "storybook:smoke"
 
     steps:
       - name: Checkout repository
@@ -545,7 +586,6 @@ jobs:
       matrix:
         name:
           - unit_test
-          - storybook_smoke_test
 
     steps:
       - name: Pass
@@ -643,7 +683,7 @@ jobs:
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         id: test-results
         with:
@@ -716,8 +756,7 @@ jobs:
           $EOF
           HEREDOC
           )
-          echo "$MESSAGE"
-          echo "$MESSAGE" >> "$GITHUB_OUTPUT"
+          echo "$MESSAGE" | tee "$GITHUB_OUTPUT"
 
       - uses: peter-evans/create-or-update-comment@v3
         id: create-comment
@@ -761,7 +800,7 @@ jobs:
         # Docs will be located at `/tmp/docs`.
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: /tmp/docs/
@@ -799,7 +838,7 @@ jobs:
 
     steps:
       - name: Download documentation
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: documentation
           path: /tmp/docs
@@ -880,8 +919,10 @@ jobs:
     # prevent running on fork PRs
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
-      github.repository == 'WordPress/openverse' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
       needs.determine-images.outputs.do_publish == 'true' &&
       (needs.test-ing.result == 'success' || needs.test-ing.result == 'skipped') &&
       (needs.test-api.result == 'success' || needs.test-api.result == 'skipped') &&
@@ -916,6 +957,7 @@ jobs:
       - name: Load Docker image `${{ matrix.image }}`
         uses: ./.github/actions/load-img
         with:
+          run_id: ${{ github.run_id }}
           setup_images: ${{ matrix.image }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
@@ -938,7 +980,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
       needs.get-changes.outputs.frontend == 'true' &&
       needs.playwright.result == 'success' &&
       needs.publish-images.result == 'success'
@@ -980,7 +1025,10 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !failure() && !cancelled() &&
-      github.event_name == 'push' &&
+      (
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
       needs.get-changes.outputs.api == 'true' &&
       needs.publish-images.result == 'success'
     needs:
@@ -1015,22 +1063,6 @@ jobs:
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
 
-      - name: Deploy staging thumbnails
-        uses: felixp8/dispatch-and-wait@v0.1.0
-        with:
-          owner: WordPress
-          repo: openverse-infrastructure
-          token: ${{ secrets.ACCESS_TOKEN }}
-          event_type: deploy_staging_api_thumbnails
-          client_payload: |
-            {
-              "actor": "${{ github.actor }}",
-              "tag": "${{ needs.get-image-tag.outputs.image_tag }}",
-              "run_name": "${{ steps.commit.outputs.commit_message }}"
-            }
-          wait_time: 60 # check every minute
-          max_time: 1800 # allow up to 30 minutes for a deployment
-
   ################
   # Notification #
   ################
@@ -1040,10 +1072,12 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       !cancelled() &&
-      github.event_name == 'push' &&
-      github.repository == 'WordPress/openverse' &&
       (
-        (needs.get-changes.outputs.documentation == 'true' && needs.emit-docs.result != 'success') ||
+        (github.event_name == 'push' && github.repository == 'WordPress/openverse') ||
+        (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)
+      ) &&
+      (
+        ((github.event_name == 'push' && needs.get-changes.outputs.documentation == 'true') && needs.emit-docs.result != 'success') ||
         (needs.determine-images.outputs.do_publish == 'true' && needs.publish-images.result != 'success') ||
         (needs.get-changes.outputs.frontend == 'true' && needs.deploy-frontend.result != 'success') ||
         (needs.get-changes.outputs.api == 'true' && needs.deploy-api.result != 'success')
@@ -1086,7 +1120,7 @@ jobs:
         run: python generate_report.py
 
       - name: Send report
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: ${{ steps.report.outputs.payload }}
         env:

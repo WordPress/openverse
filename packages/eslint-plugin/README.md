@@ -1,3 +1,4 @@
 # `@openverse/eslint-plugin`
 
-Refer to <https://docs.openverse.org/packages/eslint_plugin> for documentation.
+This service is documented at
+[docs.openverse.org/packages/eslint_plugin](https://docs.openverse.org/packages/eslint_plugin).

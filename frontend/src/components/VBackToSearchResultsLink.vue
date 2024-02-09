@@ -10,7 +10,7 @@
     v-bind="$attrs"
     @mousedown="handleClick"
   >
-    <VIcon name="chevron-left" :rtl-flip="true" />
+    <VIcon name="chevron-back" :rtl-flip="true" />
     {{ $t("singleResult.back") }}
   </VButton>
 </template>

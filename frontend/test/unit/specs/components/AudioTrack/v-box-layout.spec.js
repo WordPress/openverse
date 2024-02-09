@@ -21,11 +21,14 @@ describe("VBoxLayout", () => {
   it("renders audio title, license and category in v-box-layout", () => {
     props.audio.category = "music"
     render(VBoxLayout, options)
-    expect(() => {
-      screen.getByText(props.audio.title)
-      screen.getByLabelText("Attribution-NonCommercial-Share-Alike")
-      screen.getByText("Music")
-    }).not.toThrow()
+    const title = screen.getByText(props.audio.title)
+    expect(title).toBeVisible()
+    const license = screen.getByLabelText(
+      "Attribution-NonCommercial-Share-Alike"
+    )
+    expect(license).toBeInTheDocument() // Not visible unless hovered
+    const category = screen.getByText("Music")
+    expect(category).toBeVisible()
   })
 
   it("should not render category string if category is null", () => {

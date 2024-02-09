@@ -1,4 +1,6 @@
 import pytest
+from airflow.models import DagRun, Pool, TaskInstance
+from airflow.utils.session import create_session
 
 
 def pytest_addoption(parser):
@@ -24,3 +26,36 @@ def pytest_addoption(parser):
 # Use this decorator on tests which are expected to take a long time and would best be
 # run on CI only
 mark_extended = pytest.mark.skipif("not config.getoption('extended')")
+
+
+def _normalize_test_module_name(request) -> str:
+    # Extract the test name
+    name = request.module.__name__
+    # Replace periods with two underscores
+    return name.replace(".", "__")
+
+
+@pytest.fixture
+def sample_dag_id_fixture(request):
+    return f"{_normalize_test_module_name(request)}_dag"
+
+
+@pytest.fixture
+def sample_pool_fixture(request):
+    return f"{_normalize_test_module_name(request)}_pool"
+
+
+@pytest.fixture
+def clean_db(sample_dag_id_fixture, sample_pool_fixture):
+    with create_session() as session:
+        # synchronize_session='fetch' required here to refresh models
+        # https://stackoverflow.com/a/51222378 CC BY-SA 4.0
+        session.query(DagRun).filter(
+            DagRun.dag_id.startswith(sample_dag_id_fixture)
+        ).delete(synchronize_session="fetch")
+        session.query(TaskInstance).filter(
+            TaskInstance.dag_id.startswith(sample_dag_id_fixture)
+        ).delete(synchronize_session="fetch")
+        session.query(Pool).filter(Pool.pool.startswith(sample_pool_fixture)).delete(
+            synchronize_session="fetch"
+        )

@@ -5,6 +5,7 @@ import type {
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 import type { FilterCategory } from "~/constants/filters"
+import { ResultKind } from "~/types/result"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -254,6 +255,8 @@ export type Events = {
     id: string
     /** If the result is a related result, provide the ID of the 'original' result */
     relatedTo: string | null
+    /** Kind of the result selected: search/related/collection */
+    kind: ResultKind
     /** The media type being searched */
     mediaType: SearchType
     /** The slug (not the prettified name) of the provider */
@@ -408,6 +411,34 @@ export type Events = {
     id: string
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
+  }
+
+  /**
+   * Description: Time client-side search responses. Gives us observability into
+   * real user experience of search timings.
+   * Questions:
+   * - How long does it take for the client to receive a response to search requests?
+   */
+  IMAGE_SEARCH_RESPONSE_TIME: {
+    /** the Cloudflare cache status, denoting whether the request hit Cloudflare or went all the way to our servers */
+    cfCacheStatus: string
+    /** the IATA location identifier as part of the `cf-ray` header, indicating the data centre the request passed through */
+    cfRayIATA: string
+    /** how many seconds it took to receive a response for the request */
+    elapsedTime: number
+    /** full query string */
+    queryString: string
+  }
+
+  AUDIO_SEARCH_RESPONSE_TIME: {
+    /** the Cloudflare cache status, denoting whether the request hit Cloudflare or went all the way to our servers */
+    cfCacheStatus: string
+    /** the IATA location identifier as part of the `cf-ray` header, indicating the data centre the request passed through */
+    cfRayIATA: string
+    /** how many seconds it took to receive a response for the request */
+    elapsedTime: number
+    /** full query string */
+    queryString: string
   }
 }
 

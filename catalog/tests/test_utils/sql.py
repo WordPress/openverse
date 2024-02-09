@@ -1,4 +1,5 @@
 import os
+import uuid
 from collections import namedtuple
 from unittest import mock
 
@@ -6,7 +7,7 @@ from airflow.models import TaskInstance
 
 from common.loader.sql import create_column_definitions
 from common.storage import columns as col
-from common.storage.db_columns import IMAGE_TABLE_COLUMNS
+from common.storage.db_columns import DELETED_IMAGE_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
 from common.storage.tsv_columns import CURRENT_IMAGE_TSV_COLUMNS
 
 
@@ -43,6 +44,19 @@ UNIQUE_CONDITION_QUERY = (
     " USING btree (url);"
 )
 
+DELETED_IMAGE_TABLE_COLUMN_DEFINITIONS = create_column_definitions(
+    DELETED_IMAGE_TABLE_COLUMNS
+)
+
+CREATE_DELETED_IMAGE_TABLE_QUERY = f"""CREATE TABLE public.{{}} (
+    {DELETED_IMAGE_TABLE_COLUMN_DEFINITIONS}
+);"""
+
+DELETED_IMAGE_TABLE_UNIQUE_CONDITION_QUERY = (
+    "CREATE UNIQUE INDEX {table}_provider_fid_idx"
+    " ON public.{table}"
+    " USING btree (provider, md5(foreign_identifier));"
+)
 
 PostgresRef = namedtuple("PostgresRef", ["cursor", "connection"])
 ti = mock.Mock(spec=TaskInstance)
@@ -74,6 +88,9 @@ width_idx = COLUMN_NAMES.index(col.WIDTH.db_name)
 height_idx = COLUMN_NAMES.index(col.HEIGHT.db_name)
 standardized_popularity_idx = COLUMN_NAMES.index(col.STANDARDIZED_POPULARITY.db_name)
 
+DELETED_MEDIA_COLUMN_NAMES = [column.db_name for column in DELETED_IMAGE_TABLE_COLUMNS]
+deleted_reason_idx = DELETED_MEDIA_COLUMN_NAMES.index(col.DELETED_REASON.db_name)
+
 
 def create_query_values(
     column_values: dict,
@@ -90,3 +107,20 @@ def create_query_values(
             val = f"'{str(val)}'"
         result.append(val)
     return ",".join(result)
+
+
+def _get_insert_query(image_table, values: dict):
+    # Append the required identifier
+    values[col.IDENTIFIER.db_name] = uuid.uuid4()
+
+    query_values = create_query_values(values, columns=IMAGE_TABLE_COLUMNS)
+
+    return f"INSERT INTO {image_table} VALUES({query_values});"
+
+
+def load_sample_data_into_image_table(image_table, postgres, records):
+    for record in records:
+        load_data_query = _get_insert_query(image_table, record)
+        postgres.cursor.execute(load_data_query)
+
+    postgres.connection.commit()

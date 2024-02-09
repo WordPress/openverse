@@ -1,6 +1,6 @@
 # Flow
 
-Since the CI + CD workflow is very complex, to simplify and understand it, we
+Since the CI + CD workflow is highly complex, to simplify and understand it, we
 can assume it to take place across several stages.
 
 ```{mermaid}
@@ -50,7 +50,7 @@ stage depends.
 
 ## Preparation
 
-This is the stage of jobs get executed at the very start of the workflow. Since
+This is the stage for jobs that get executed at the start of the workflow. Since
 they are depended upon by other jobs, once this stage is complete, we can use
 their resulting state and outputs wherever needed.
 
@@ -107,9 +107,9 @@ flowchart TD
 
 The frontend tests run outside the Docker containers, so they don't need to wait
 for Docker containers to be built. This stage happens in parallel with the
-[Docker preparation](#docker-preparation) stage. The Playwright tests are very
-time-consuming so this stage extends long enough to be contemporary with the
-[Dockerised tests](#dockerised-tests) stage.
+[Docker preparation](#docker-preparation) stage. The Playwright tests take much
+longer to run than other steps, so it is run simultaneously with the
+[Dockerised tests](#dockerised-tests) stage to save time.
 
 These tests are only executed if the frontend has changed. Else they will be
 skipped and bypass jobs for `nuxt-build` and `playwright` will run instead.

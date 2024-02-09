@@ -33,7 +33,6 @@
           :trap-focus="false"
           :visible="isContentSwitcherVisible"
           :trigger-element="triggerElement"
-          width="w-66"
           aria-labelledby="search-type-button"
         >
           <VSearchTypes
@@ -50,6 +49,7 @@
           :visible="isContentSwitcherVisible"
           :use-links="false"
           :show-filters="false"
+          variant="fit-content"
           @open="openContentSwitcher"
           @select="handleSelect"
         />

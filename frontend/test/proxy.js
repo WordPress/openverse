@@ -135,8 +135,9 @@ const getBodyUtil = (tape) =>
  * @type {TalkbackOptions['tapeDecorator']}
  */
 const tapeDecorator = (tape) => {
-  if (!tape.res || tape.req.url.endsWith("/thumb/") || tape.res.status >= 399)
+  if (!tape.res || tape.req.url.endsWith("/thumb/") || tape.res.status >= 399) {
     return tape
+  }
 
   const bodyUtil = getBodyUtil(tape)
   const responseBody = bodyUtil.read(tape.res.body).toString()
@@ -167,7 +168,11 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
 
 const server = talkback(opts)
 
-server.start(() => console.log("Talkback started with record mode", recordMode))
+server.start(() =>
+  console.log(
+    `Talkback started at http://localhost:${port} with record mode ${recordMode}`
+  )
+)
 function closeServer() {
   server.close()
   console.log("Server closed, exiting process")

@@ -55,6 +55,8 @@ import { type PropType, defineComponent, computed } from "vue"
 
 import usePages from "~/composables/use-pages"
 
+import { defineEvent } from "~/types/emits"
+
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -96,6 +98,9 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  emits: {
+    close: defineEvent(),
   },
   setup(props, { emit }) {
     const { all: allPages, current: currentPage } = usePages()

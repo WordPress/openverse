@@ -24,8 +24,10 @@ DAG_PATHS = [
     "popularity/popularity_refresh_dag_factory.py",
     "data_refresh/dag_factory.py",
     "data_refresh/create_filtered_index_dag.py",
+    "elasticsearch_cluster/recreate_staging_index/recreate_full_staging_index_dag.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
+    "database/delete_records/delete_records_dag.py",
 ]
 
 # Expected count from the DagBag once a file has been parsed

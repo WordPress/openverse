@@ -91,14 +91,15 @@ def test_get_timestamp_pairs_returns_full_day_when_few_records_found():
 def test_get_timestamp_pairs_with_large_record_counts():
     with patch.object(ingester, "_get_record_count") as mock_count:
         # Mock the calls to _get_record_count in order
-        mock_count.side_effect = [
-            150_000,  # Getting total count for the entire day
-            0,  # Get count for first hour, count == 0
-            10,  # Get count for second hour, count < max_records
-            101_000,  # Get count for third hour, count > division_threshold
-            49_090,  # Get count for fourth hour, max_records < count < division_threshold
-        ] + list(
-            repeat(0, 20)
+        mock_count.side_effect = (
+            [
+                150_000,  # Getting total count for the entire day
+                0,  # Get count for first hour, count == 0
+                10,  # Get count for second hour, count < max_records
+                101_000,  # Get count for third hour, count > division_threshold
+                49_090,  # Get count for fourth hour, max_records < count < division_threshold
+            ]
+            + list(repeat(0, 20))
         )  # Fill list with count == 0 for the remaining hours
 
         # We only get timestamp pairs for the hours that had records. For the

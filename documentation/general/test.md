@@ -31,8 +31,8 @@ triage the issue:
 1. Create an issue with critical priority documenting the flaky test. Link to
    failed CI runs or copy/paste relevant logs and output if they exist. The goal
    of this issue is not to document the solution, merely to document the fact of
-   the flakiness and to prioritise someone picking the issue up very soon to fix
-   it. Of course, if you have additional details or ideas, proactively share
+   the flakiness and to prioritise someone picking the issue up much sooner to
+   fix it. Of course, if you have additional details or ideas, proactively share
    those in the issue description or discussion.
 1. Open a PR that skips the flaky test with a link to the issue as a comment or
    in the explanatory note of the skip annotation. This PR should also be marked

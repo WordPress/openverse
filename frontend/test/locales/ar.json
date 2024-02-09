@@ -227,7 +227,7 @@
       }
     },
     "aria": {
-      "creatorUrl": "اسم المؤلف}",
+      "creatorUrl": "اسم {creator}",
       "attribution": {
         "license": "اقرأ المزيد عن الترخيص",
         "tool": "اقرأ المزيد عن الأداة"
@@ -678,6 +678,7 @@
     "licenses": "التراخيص",
     "getInvolved": "شارك",
     "api": "API",
+    "terms": "شروط",
     "privacy": "خصوصية",
     "feedback": "استجابة",
     "sources": "مصادر",

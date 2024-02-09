@@ -49,7 +49,9 @@ def run_diff() -> str:
     command = " ".join(
         [
             "diff",
-            "-qbr",
+            "--brief",
+            "--ignore-space-change",
+            "--recursive",
             *exclusion_args,
             str(OUTPUT_FOLDER),
             str(ORIGINAL_FOLDER / "_preview" / str(PR_NUMBER)),
@@ -66,11 +68,15 @@ def run_diff() -> str:
     return completed.stdout
 
 
-def convert_path_to_url(path: str) -> str:
+def convert_file_path_to_url(path: str) -> str:
     """
-    Convert a path to a URL that can be used to view the file on the docs
+    Convert a file path to a URL that can be used to view the file on the docs
     preview site.
+
+    :param path: the file path to transform
+    :return: the transformed file path
     """
+
     # Remove the piece of the path before _preview
     path = "/_preview/" + path.split("/_preview/")[1]
     # Remove the _sources subfolder
@@ -79,6 +85,29 @@ def convert_path_to_url(path: str) -> str:
     path = path.replace(".md.txt", ".html")
     # Prepend the base URL
     return f"{BASE_URL}{path}"
+
+
+def convert_file_or_dir_path_to_url(path: str) -> list[str]:
+    """
+    Convert a file or directory path to URLs.
+
+    This function applies the transformation ``convert_file_path_to_url`` to the
+    given file or every descendant file in the given directory.
+
+    :param path: the file or directory path to transform
+    :return: the list of transformed file paths
+    """
+
+    if (path_obj := Path(path)).is_dir():
+        paths = [
+            str(item)
+            for item in path_obj.rglob("*")
+            if item.is_file()
+            and not any(item.match(exclusion) for exclusion in EXCLUSIONS)
+        ]
+    else:
+        paths = [path]
+    return list(map(convert_file_path_to_url, paths))
 
 
 def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
@@ -94,17 +123,17 @@ def process_diff(diff_output: str) -> tuple[list[str], list[str]]:
         if line.startswith("Files"):
             # e.g.: Files /tmp/gh-pages-for-diff/_sources/meta/index.md.txt and /tmp/gh-pages/_preview/2647/_sources/meta/index.md.txt differ  # noqa: E501
             updated = line.split()[3]
-            converted = convert_path_to_url(updated)
+            converted = convert_file_path_to_url(updated)
             if converted.endswith("html"):
                 changed.append(converted)
         elif line.startswith("Only in"):
             if PR_NUMBER not in line:
                 continue
             # e.g. Only in /tmp/gh-pages/_preview/2647/_sources/meta: examplefile.md.txt
+            # Note that the new addition could be a directory.
             added = line.replace(": ", "/").split()[2]
-            converted = convert_path_to_url(added)
-            if converted.endswith("html"):
-                new.append(converted)
+            converted = convert_file_or_dir_path_to_url(added)
+            new.extend(item for item in converted if item.endswith("html"))
     return changed, new
 
 

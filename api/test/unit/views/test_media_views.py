@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock, patch
 from uuid import uuid4
 
+from rest_framework.response import Response
+
 import pytest
 import pytest_django.asserts
 
@@ -11,21 +13,26 @@ from api.models.models import ContentProvider
 @pytest.mark.django_db
 def test_list_query_count(api_client, media_type_config):
     num_results = 20
+
+    # Since controller returns a list of ``Hit``s, not model instances, we must
+    # set the ``meta`` param on each of them to match the shape of ``Hit``.
+    results = media_type_config.model_factory.create_batch(size=num_results)
+    for result in results:
+        result.meta = None
+
     controller_ret = (
-        media_type_config.model_factory.create_batch(size=num_results),  # results
+        results,
         1,  # num_pages
         num_results,
         {},  # search_context
     )
     with patch(
         "api.views.media_views.search_controller",
-        search=MagicMock(return_value=controller_ret),
+        query_media=MagicMock(return_value=controller_ret),
     ), patch(
         "api.serializers.media_serializers.search_controller",
         get_sources=MagicMock(return_value={}),
-    ), pytest_django.asserts.assertNumQueries(
-        1
-    ):
+    ), pytest_django.asserts.assertNumQueries(1):
         res = api_client.get(f"/v1/{media_type_config.url_prefix}/")
 
     assert res.status_code == 200
@@ -40,6 +47,36 @@ def test_retrieve_query_count(api_client, media_type_config):
         res = api_client.get(f"/v1/{media_type_config.url_prefix}/{media.identifier}/")
 
     assert res.status_code == 200
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "path, expected_params",
+    [
+        pytest.param("tag/cat/", {"tag": "cat"}, id="tag"),
+        pytest.param("source/flickr/", {"source": "flickr"}, id="source"),
+        pytest.param(
+            "source/flickr/creator/cat/",
+            {"source": "flickr", "creator": "cat"},
+            id="source_creator",
+        ),
+    ],
+)
+def test_collection_parameters(path, expected_params, api_client):
+    mock_get_media_results = MagicMock(return_value=Response())
+
+    with patch(
+        "api.views.media_views.MediaViewSet.get_media_results",
+        new_callable=lambda: mock_get_media_results,
+    ) as mock_get_media_results:
+        api_client.get(f"/v1/images/{path}")
+
+    actual_params = mock_get_media_results.call_args[0][3]
+    request_kind = mock_get_media_results.call_args[0][1]
+
+    assert mock_get_media_results.called
+    assert actual_params == expected_params
+    assert request_kind == "collection"
 
 
 @pytest.mark.parametrize(

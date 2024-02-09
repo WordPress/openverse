@@ -85,8 +85,8 @@ def postgres_with_load_and_image_table(load_table, sql_info, mock_pg_hook_task):
 
 def _load_local_tsv(tmpdir, bucket, tsv_file_name, identifier, mock_pg_hook_task):
     """
-    This wraps sql.load_local_data_to_intermediate_table so we can test it
-    under various conditions.
+    Wrap ``sql.load_local_data_to_intermediate_table`` so we can test it under
+    various conditions.
     """
     tsv_file_path = os.path.join(RESOURCES, tsv_file_name)
     with open(tsv_file_path) as f:

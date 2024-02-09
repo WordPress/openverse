@@ -19,8 +19,7 @@ const pwCommand =
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   webServer: {
-    command: `./node_modules/.bin/npm-run-all -p -r talkback ${pwCommand}`,
-    cwd: "/frontend",
+    command: `pnpm exec npm-run-all -p -r talkback ${pwCommand}`,
     timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
@@ -48,7 +47,7 @@ const config: PlaywrightTestConfig = {
   expect: {
     toMatchSnapshot: {
       // If the visual regression tests are flaky, we can increase this to 0.1 or 0.2.
-      maxDiffPixelRatio: 0,
+      maxDiffPixelRatio: 0.01,
     },
   },
 }

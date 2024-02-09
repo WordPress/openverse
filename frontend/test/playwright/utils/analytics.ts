@@ -27,7 +27,7 @@ export function expectEventPayloadToMatch<T extends EventName>(
 
 export const collectAnalyticsEvents = (context: BrowserContext) => {
   const sentAnalyticsEvents: AnalyticEventResponses = []
-  context.route("/api/event", (route, request) => {
+  context.route(/\/api\/event$/, (route, request) => {
     const postData = request.postData()
     if (postData) {
       const parsedData = JSON.parse(postData)

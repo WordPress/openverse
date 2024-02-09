@@ -65,10 +65,12 @@ import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
   components: {
+    VErrorSection,
     VAudioThumbnail,
     VSingleResultControls,
     VSafetyWall,

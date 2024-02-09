@@ -12,6 +12,7 @@ import os
 
 
 # Default provider names
+AUCKLAND_MUSEUM_IMAGE_PROVIDER = "aucklandmuseum_tamakipaengahira"
 BROOKLYN_DEFAULT_PROVIDER = "brooklynmuseum"
 CLEVELAND_DEFAULT_PROVIDER = "clevelandmuseum"
 EUROPEANA_DEFAULT_PROVIDER = "europeana"
@@ -35,6 +36,7 @@ WIKIMEDIA_AUDIO_PROVIDER = "wikimedia_audio"
 WIKIMEDIA_DEFAULT_PROVIDER = "wikimedia"
 WORDPRESS_DEFAULT_PROVIDER = "wordpress"
 PHYLOPIC_DEFAULT_PROVIDER = "phylopic"
+CC_MIXTER_DEFAULT_PROVIDER = "ccmixter"
 
 # Finnish parameters
 FINNISH_SUB_PROVIDERS = {

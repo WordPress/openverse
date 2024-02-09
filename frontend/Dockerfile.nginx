@@ -1,0 +1,30 @@
+# Keeping this as a separate Dockerfile prevents the need to rely on additional
+# contexts required for the frontend build (namely, `repo_root`). These are
+# possible with compose as of https://github.com/docker/compose/pull/10369
+# and do appear to work, but it increases the complexity and these features
+# are not yet all available in every containerd implementation or distribution
+# (Debian, for example, still distributes an older version of compose without
+# this new feature). For the sake of keeping the local setup simpler and not
+# requiring contributors to have bleeding-edge Docker and compose plugin versions,
+# we can simply use a separate file for the time being. Once/if we start to use
+# nginx to serve static files for the frontend, we will need to integrate this
+# target into the shared Dockerfile.
+#########
+# NGINX #
+#########
+
+FROM docker.io/nginx:1.25.3-alpine as nginx
+
+LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
+
+WORKDIR /app
+
+COPY nginx.conf.template /etc/nginx/templates/openverse-frontend.conf.template
+
+# Only environment variables with this prefix will be available in the template
+ENV NGINX_ENVSUBST_FILTER="OPENVERSE_NGINX_"
+ENV OPENVERSE_NGINX_ENVIRONMENT="local"
+# Add the release version to the docker container
+ARG SEMANTIC_VERSION
+ENV OPENVERSE_NGINX_GIT_REVISION=$SEMANTIC_VERSION
+ENV OPENVERSE_NGINX_LISTEN_PORT="8080"

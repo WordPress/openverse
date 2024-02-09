@@ -37,6 +37,21 @@ class TaskData(NamedTuple):
     percent_completed: float
 
 
+def is_indexing_in_progress(db):
+    """
+    Determine whether any indexing is in progress, by checking to see if there are any
+    registered workers with the RUNNING status.
+
+    :param db: the Shelf object representing worker state on disk.
+    :return: True if there are any active indexer workers.
+    """
+    if "worker_statuses" in db:
+        for worker in db["worker_statuses"]:
+            if db["worker_statuses"][worker] == WorkerStatus.RUNNING:
+                return True
+    return False
+
+
 def register_indexing_job(worker_ips, target_index, task_id):
     """
     Track the active indexer workers to prevent concurrent indexing jobs.
@@ -49,13 +64,7 @@ def register_indexing_job(worker_ips, target_index, task_id):
     :return: Return True if scheduling succeeds
     """
     with FileLock(lock_path), shelve.open(shelf_path, writeback=True) as db:
-        # Wipe last job out if it has finished.
-        indexing_in_progress = False
-        if "worker_statuses" in db:
-            for worker in db["worker_statuses"]:
-                if db["worker_statuses"][worker] == WorkerStatus.RUNNING:
-                    indexing_in_progress = True
-        if indexing_in_progress:
+        if is_indexing_in_progress(db):
             log.error("Failed to schedule indexing job; another one is running.")
             return False
 
@@ -68,6 +77,24 @@ def register_indexing_job(worker_ips, target_index, task_id):
         db["target_index"] = target_index
         db["task_id"] = task_id
         return True
+
+
+def has_active_workers_for_task_id(task_id):
+    """
+    Determine whether there are any actively running indexer-worker instances
+    for the given task_id, even if the parent task has completed.
+
+    :param task_id: The id of the data_refresh task to check.
+    :return: Return True if there are any active workers for this task.
+    """
+    with FileLock(lock_path), shelve.open(shelf_path) as db:
+        if "task_id" in db and db["task_id"] == task_id:
+            return is_indexing_in_progress(db)
+
+        # There can only be one indexing job happening at a time, so if the currently
+        # registered `task_id` does not match the one we're looking for, we can
+        # be sure there are no active workers for this task.
+        return False
 
 
 def worker_finished(worker_ip, error):

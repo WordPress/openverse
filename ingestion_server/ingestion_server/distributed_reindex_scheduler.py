@@ -20,9 +20,11 @@ import requests
 from decouple import config
 
 from ingestion_server.state import register_indexing_job
+from ingestion_server.utils.config import get_record_limit
 
 
 client = boto3.client("ec2", region_name=config("AWS_REGION", default="us-east-1"))
+worker_limit = config("INDEXER_WORKER_LIMIT", default=0, cast=int)
 
 
 def schedule_distributed_index(db_conn, model_name, table_name, target_index, task_id):
@@ -39,15 +41,26 @@ def _assign_work(db_conn, workers, model_name, table_name, target_index):
     with db_conn.cursor() as cur:
         cur.execute(est_records_query)
         estimated_records = cur.fetchone()[0]
+
+    # If a record_limit has been set, cap the number of records to be indexed.
+    if record_limit := get_record_limit():
+        estimated_records = min(estimated_records, record_limit)
+
     records_per_worker = math.floor(estimated_records / len(workers))
 
     worker_url_template = "http://{}:8002"
     # Wait for the workers to start.
+    failures = []
     for worker in workers:
         worker_url = worker_url_template.format(worker)
         succeeded = _wait_for_healthcheck(f"{worker_url}/healthcheck")
         if not succeeded:
-            return False
+            failures.append(worker)
+    if failures:
+        raise ValueError(
+            f"Some workers didn't respond to health check: {','.join(failures)}"
+        )
+
     for idx, worker in enumerate(workers):
         worker_url = worker_url_template.format(worker)
         params = {
@@ -87,6 +100,13 @@ def _prepare_workers():
         servers.append(server)
         ids.append(_id)
     log.info(f"Selected worker instances {servers}")
+
+    if worker_limit > 0:
+        log.info(f"Truncating worker instances under limit {worker_limit}")
+        servers = servers[:worker_limit]
+        ids = ids[:worker_limit]
+        log.info(f"Truncated worker instances {servers}")
+
     client.start_instances(InstanceIds=ids)
     return servers
 

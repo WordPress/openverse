@@ -25,10 +25,9 @@ runs:
     - name: Build Storybook
       shell: bash
       run: |
-        just frontend/run storybook:build
+        just frontend/run storybook:build-for-docs
 
     # Storybook will be available at `/storybook`
-    # Tailwind will be available at `/tailwind`
     - name: Merge all docs
       shell: bash
       run: |

@@ -60,9 +60,11 @@ workflow is completely automated and auditable via GitHub Workflows.**
 
 1. Build and publish the docker image(s) for the application and tag
    appropriately for the deployment.
-   - This happens inside the
-     [`ci_cd.yml` workflow](https://github.com/WordPress/openverse/blob/2646c5ead465603b42c70f58a190f7b50861d698/.github/workflows/ci_cd.yml#L866)
+   - This happens for every commit on the `main` branch inside the
+     [`ci_cd.yml` workflow](https://github.com/WordPress/openverse/blob/ce5424f2dfce97772ebd887f09e8943f89c56171/.github/workflows/ci_cd.yml#L905)
      rather than the deployment workflows.
+   - If wishing to publish from a non-`main` branch, use the
+     [`perform_deploy` input on the `ci_cd.yml` workflow](https://github.com/WordPress/openverse/blob/ce5424f2dfce97772ebd887f09e8943f89c56171/.github/workflows/ci_cd.yml#L16).
 2. Download the template task definition from AWS for the environment and
    application being deployed. Render a new task definition based on the
    template, changing the following:
@@ -176,8 +178,8 @@ the available list of tags and the workflow will fail if the tag is determined
 not to exist in the image repository. You can find a list of release tags for
 specific apps by filtering git tags based on the tag prefix for the app:
 
-```
-$ git tag -l '<app slug>-*'
+```bash
+git tag -l '<app slug>-*'
 ```
 
 Replace `<app slug>` with `api`, `frontend`, or `ingestion_server` as needed.

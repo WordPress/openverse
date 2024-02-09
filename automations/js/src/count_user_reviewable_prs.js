@@ -49,39 +49,46 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
     '🟥 priority: critical',
   ]
   const [owner, repo] = GITHUB_REPOSITORY.split('/')
+  const isRelevantPrFromGraphql = (pr) =>
+    pr.author.login === context.actor &&
+    !pr.isDraft &&
+    !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
+  const isRelevantPrFromContext = (pr) =>
+    !pr.draft && !pr.labels.some((label) => ignoredLabels.includes(label.name))
 
   try {
     let hasNextPage = true
     let cursor = null
-    let reviewablePRs = []
-
-    while (hasNextPage) {
-      const result = await github.graphql(GET_PULL_REQUESTS, {
-        repoOwner: owner,
-        repo: repo,
-        cursor: cursor,
-      })
-
-      const { nodes, pageInfo } = result.repository.pullRequests
-      const validPRs = nodes.filter(
-        (pr) =>
-          pr.author.login === context.actor &&
-          !pr.isDraft &&
-          !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
-      )
-      reviewablePRs.push(...validPRs)
-
-      if (pageInfo.hasNextPage) {
-        cursor = pageInfo.endCursor
-      } else {
-        hasNextPage = false
-      }
-    }
-
+    let reviewablePrs = []
+    const pullRequest = context.payload.pull_request
     const result = {
-      pr_count: reviewablePRs.length,
+      pr_count: 0,
       slack_id: slackID,
     }
+
+    // Check that this pull request is relevant, otherwise skip the action entirely
+    if (isRelevantPrFromContext(pullRequest)) {
+      while (hasNextPage) {
+        const result = await github.graphql(GET_PULL_REQUESTS, {
+          repoOwner: owner,
+          repo: repo,
+          cursor: cursor,
+        })
+
+        const { nodes, pageInfo } = result.repository.pullRequests
+        const relevantPrs = nodes.filter(isRelevantPrFromGraphql)
+        reviewablePrs.push(...relevantPrs)
+
+        if (pageInfo.hasNextPage) {
+          cursor = pageInfo.endCursor
+        } else {
+          hasNextPage = false
+        }
+      }
+
+      result.pr_count = reviewablePrs.length
+    }
+
     core.info(`Current user has ${result.pr_count} PR(s).`)
     core.setOutput('pr_count', result.pr_count)
     core.setOutput('slack_id', result.slack_id)
