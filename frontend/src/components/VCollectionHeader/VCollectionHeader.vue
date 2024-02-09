@@ -192,15 +192,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
 .collection-header {
   grid-template-areas: "icon title" "button button" "results results";
 }
