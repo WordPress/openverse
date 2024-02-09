@@ -20,8 +20,10 @@ EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
 
 @task
 def get_es_host(environment: str):
-    conn = Connection.get_connection_from_secrets(f"elasticsearch_http_{environment}")
-    return conn.get_uri()
+    es_conn = Connection.get_connection_from_secrets(
+        f"elasticsearch_http_{environment}"
+    )
+    return es_conn.get_uri()
 
 
 @task
@@ -103,7 +105,6 @@ def trigger_and_wait_for_reindex(
         max_docs: int | None,
     ):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-
         source = {"index": source_index}
         # An empty query is not accepted; only pass it
         # if a query was actually supplied
@@ -124,13 +125,18 @@ def trigger_and_wait_for_reindex(
             # Throttle
             requests_per_second=requests_per_second,
         )
-
         return response["task"]
 
-    def _wait_for_reindex(task_id: str, es_host: str):
+    def _wait_for_reindex(task_id: str, expected_docs: int, es_host: str):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
+
+        count = response.get("task", {}).get("status", {}).get("total")
+        if count != expected_docs:
+            raise ValueError(
+                f"Reindexed {count} documents, but {expected_docs}" " were expected."
+            )
         return response.get("completed")
 
     trigger_reindex_task = trigger_reindex(
@@ -142,7 +148,11 @@ def trigger_and_wait_for_reindex(
         python_callable=_wait_for_reindex,
         timeout=timeout,
         poke_interval=REFRESH_POKE_INTERVAL,
-        op_kwargs={"task_id": trigger_reindex_task, "es_host": es_host},
+        op_kwargs={
+            "task_id": trigger_reindex_task,
+            "expected_docs": max_docs,
+            "es_host": es_host,
+        },
     )
 
     trigger_reindex_task >> wait_for_reindex
