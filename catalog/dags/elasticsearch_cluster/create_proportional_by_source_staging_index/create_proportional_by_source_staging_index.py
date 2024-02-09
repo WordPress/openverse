@@ -1,13 +1,8 @@
 import logging
 
-from airflow.decorators import task, task_group
-from airflow.providers.http.operators.http import HttpOperator
-from requests import Response
+from airflow.decorators import task
+from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 
-from common.constants import (
-    API_HTTP_CONN_ID,
-    MEDIA_RESOURCE_SLUGS,
-)
 from common.elasticsearch import remove_excluded_index_settings
 
 
@@ -54,52 +49,28 @@ def get_destination_index_config(source_config: dict, destination_index_name: st
     return destination_config
 
 
-@task_group(group_id="get_production_source_counts")
-def get_production_source_counts(media_type: str) -> HttpOperator:
+@task
+def get_production_source_counts(source_index: str, es_host: str):
     """
     Get the count of records per source for the given media type in the
-    production media index.
-
-    Currently, the counts are taken from the main media index. In the
-    future, this should be updated to actually query production elasticsearch
-    for the counts from the `source_index` (which may be different, for
-    for example the filtered media index).
+    production source index.
     """
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
-    def response_filter_source_counts(response: Response) -> dict[str, int]:
-        """
-        Handle the response for the `get_production_source_counts` task.
-
-        Extracts a dictionary mapping source names to their record count.
-        """
-        data = response.json()
-        return {item["source_name"]: item["media_count"] for item in data}
-
-    @task
-    def get_media_stats_endpoint(media_type):
-        """
-        Get the stats endpoint for the given media type, from which to get source
-        information. It is necessary to split this out into a separate task
-        because the `media_type` Param can only be accessed by template in the
-        HttpOperator, but we need to look up the appropriate media resource
-        slug which may be different (e.g. "images" rather than "image")
-        """
-        return f"{MEDIA_RESOURCE_SLUGS.get(media_type)}/stats"
-
-    endpoint = get_media_stats_endpoint(media_type)
-
-    source_counts = HttpOperator(
-        task_id="get_source_counts",
-        http_conn_id=API_HTTP_CONN_ID,
-        endpoint=endpoint,
-        method="GET",
-        response_check=lambda response: response.status_code == 200,
-        response_filter=response_filter_source_counts,
+    response = es_conn.search(
+        index=source_index,
+        size=0,
+        aggregations={
+            "unique_sources": {
+                "terms": {"field": "source", "size": 100, "order": {"_key": "desc"}}
+            }
+        },
     )
 
-    # Return the output from the task group so that it can be used in
-    # subsequent tasks
-    return source_counts.output
+    sources = (
+        response.get("aggregations", {}).get("unique_sources", {}).get("buckets", [])
+    )
+    return {source["key"]: source["doc_count"] for source in sources}
 
 
 @task
