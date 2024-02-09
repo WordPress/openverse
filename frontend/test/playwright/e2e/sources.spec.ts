@@ -10,7 +10,10 @@ test("sources table has links to source pages", async ({ page }) => {
     features: { additional_search_views: "on" },
   })
   await page.goto("/sources")
-  await page.getByRole("table").getByRole("link", { name: "Flickr" }).click()
+  await page
+    .getByRole("cell", { name: "Flickr", exact: true })
+    .getByRole("link")
+    .click()
   await page.waitForURL("/image/source/flickr")
 
   await expect(getH1(page, "Flickr")).toBeVisible()
