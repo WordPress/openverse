@@ -9,7 +9,6 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.exceptions import AuthenticationFailed
 
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.generators import generate_client_secret
