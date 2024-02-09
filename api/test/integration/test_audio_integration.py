@@ -4,6 +4,8 @@ End-to-end API tests for audio.
 Can be used to verify a live deployment is functioning as designed.
 Run with the `pytest -s` command from this directory, inside the Docker
 container.
+
+Tests common to all media types are in ``test_media_integration.py``.
 """
 
 import pytest
