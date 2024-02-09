@@ -25,9 +25,23 @@
       >{{ $t(`collection.link.${collection}`) }}</VButton
     >
     <p
+      v-if="collectionParams.collection !== 'creator'"
       class="results caption-regular md:label-regular mt-2 text-dark-charcoal-70 md:mt-0"
     >
       {{ resultsLabel }}
+    </p>
+
+    <p
+      v-else-if="
+        collectionParams.collection === 'creator' && resultsLabel.length === 2
+      "
+      class="results caption-regular md:label-regular mt-2 text-dark-charcoal-70 md:mt-0"
+    >
+      {{ resultsLabel[0]
+      }}<VLink :href="source.link" class="!gap-x-1" show-external-icon>{{
+        source.name
+      }}</VLink
+      ><span v-if="resultsLabel[1]">{{ resultsLabel[1] }}</span>
     </p>
   </div>
 </template>
@@ -48,6 +62,7 @@ import { useMediaStore } from "~/stores/media"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
+import VLink from "~/components/VLink.vue"
 
 const icons = {
   tag: "tag",
@@ -60,7 +75,7 @@ const icons = {
  */
 export default defineComponent({
   name: "VCollectionHeader",
-  components: { VIcon, VButton },
+  components: { VLink, VIcon, VButton },
   props: {
     collectionParams: {
       type: Object as PropType<CollectionParams>,
@@ -82,14 +97,23 @@ export default defineComponent({
     const iconName = computed(() => icons[props.collectionParams.collection])
     const collection = computed(() => props.collectionParams.collection)
 
-    const sourceName = computed(() => {
+    const source = computed(() => {
       if (props.collectionParams.collection === "tag") {
-        return ""
+        return {
+          name: "",
+          link: "",
+        }
       }
-      return providerStore.getProviderName(
-        props.collectionParams.source,
-        props.mediaType
-      )
+      return {
+        name: providerStore.getProviderName(
+          props.collectionParams.source,
+          props.mediaType
+        ),
+        link: providerStore.getSourceUrl(
+          props.collectionParams.source,
+          props.mediaType
+        ),
+      }
     })
 
     const title = computed(() => {
@@ -98,7 +122,7 @@ export default defineComponent({
       } else if (props.collectionParams.collection === "creator") {
         return props.collectionParams.creator
       }
-      return sourceName.value
+      return source.value.name
     })
 
     const url = computed(() => {
@@ -107,10 +131,7 @@ export default defineComponent({
       } else if (props.collectionParams.collection === "creator") {
         return props.creatorUrl
       }
-      return providerStore.getSourceUrl(
-        props.collectionParams.source,
-        props.mediaType
-      )
+      return source.value.link
     })
     const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
 
@@ -119,19 +140,22 @@ export default defineComponent({
         return ""
       }
       const resultsCount = mediaStore.results[props.mediaType].count
-      if (props.collectionParams.collection === "creator") {
-        return getI18nCollectionResultCountLabel(
-          resultsCount,
-          props.mediaType,
-          "creator",
-          { source: sourceName.value }
-        )
-      }
-      return getI18nCollectionResultCountLabel(
+      const params =
+        props.collectionParams.collection === "creator"
+          ? { source: source.value.name }
+          : undefined
+
+      const label = getI18nCollectionResultCountLabel(
         resultsCount,
         props.mediaType,
-        props.collectionParams.collection
+        props.collectionParams.collection,
+        params
       )
+      if (props.collectionParams.collection === "creator") {
+        const splitLabel = label.split(source.value.name)
+        return splitLabel.length === 2 ? splitLabel : ["", ""]
+      }
+      return label
     })
 
     const isMd = computed(() => uiStore.isBreakpoint("md"))
@@ -157,6 +181,7 @@ export default defineComponent({
       collection,
       title,
       resultsLabel,
+      source,
       url,
       iconName,
       isMd,
@@ -167,6 +192,15 @@ export default defineComponent({
 </script>
 
 <style scoped>
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
 .collection-header {
   grid-template-areas: "icon title" "button button" "results results";
 }
