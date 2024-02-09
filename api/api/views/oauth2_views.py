@@ -12,9 +12,9 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from drf_spectacular.utils import extend_schema
+from oauth2_provider.contrib.rest_framework import TokenHasScope
 from oauth2_provider.generators import generate_client_secret
 from oauth2_provider.views import TokenView as BaseTokenView
-from oauth2_provider.contrib.rest_framework import TokenHasScope
 from redis.exceptions import ConnectionError
 
 from api.docs.oauth2_docs import key_info, register, token
