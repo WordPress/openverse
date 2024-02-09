@@ -14,6 +14,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.generators import generate_client_secret
 from oauth2_provider.views import TokenView as BaseTokenView
+from oauth2_provider.contrib.rest_framework import TokenHasScope
 
 from api.docs.oauth2_docs import key_info, register, token
 from api.models import OAuth2Verification, ThrottledApplication
@@ -161,6 +162,8 @@ class TokenView(BaseTokenView, APIView):
 @extend_schema(tags=["auth"])
 class CheckRates(APIView):
     throttle_classes = (OnePerSecond,)
+    permission_classes = (TokenHasScope,)
+    required_scopes = ["read"]
 
     @key_info
     def get(self, request, format=None):
@@ -174,14 +177,14 @@ class CheckRates(APIView):
         > token has expired.
         """
 
-        if "Authorization" in request.headers and not request.auth:
-            raise AuthenticationFailed(detail="Invalid credentials")
+        if not request.auth:
+            return Response(status=403, data="Forbidden")
 
         access_token = str(request.auth)
         client_id, rate_limit_model, verified = get_token_info(access_token)
 
         if not client_id:
-            raise AuthenticationFailed(detail="Invalid credentials")
+            return Response(status=403, data="Forbidden")
 
         throttle_type = rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
