@@ -10,6 +10,8 @@ on:
 jobs:
   send_message:
     name: Send Slack message
+    # Prevent running this workflow on forks, it's unnecessary for external contributors
+    # Also prevent running this for bot-related PRs
     if: |
       github.actor != 'dependabot[bot]' &&
       !startsWith(github.event.pull_request.title, '🔄') &&

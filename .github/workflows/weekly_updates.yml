@@ -15,6 +15,7 @@ jobs:
   make_post:
     name: Create post on Make site
     runs-on: ubuntu-latest
+    # Prevent running this workflow on forks, it's unnecessary for external contributors
     if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
