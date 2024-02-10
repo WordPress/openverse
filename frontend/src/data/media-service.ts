@@ -6,8 +6,6 @@ import type {
 import type { ApiService } from "~/data/api-service"
 import type { DetailFromMediaType, Media } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
-import { useAnalytics } from "~/composables/use-analytics"
-import type { EventName } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
 
@@ -24,52 +22,10 @@ export interface MediaResult<
 class MediaService<T extends Media> {
   private readonly apiService: ApiService
   private readonly mediaType: T["frontendMediaType"]
-  private readonly searchEvent: EventName
 
   constructor(apiService: ApiService, mediaType: T["frontendMediaType"]) {
     this.apiService = apiService
     this.mediaType = mediaType
-    this.searchEvent =
-      `${this.mediaType.toUpperCase()}_SEARCH_RESPONSE_TIME` as EventName
-  }
-
-  /**
-   * Processes AxiosResponse from a search query to
-   * construct SEARCH_RESPONSE_TIME analytics event.
-   * @param response - Axios response
-   * @param requestDatetime - datetime before request was sent
-   */
-  recordSearchTime(response: AxiosResponse, requestDatetime: Date) {
-    const REQUIRED_HEADERS = ["date", "cf-cache-status", "cf-ray"]
-
-    const responseHeaders = response.headers
-    if (!REQUIRED_HEADERS.every((header) => header in responseHeaders)) {
-      return
-    }
-
-    const responseDatetime = new Date(responseHeaders["date"])
-    if (responseDatetime < requestDatetime) {
-      // response returned was from the local cache
-      return
-    }
-
-    const cfRayIATA = responseHeaders["cf-ray"].split("-")[1]
-    if (cfRayIATA === undefined) {
-      return
-    }
-
-    const elapsedSeconds = Math.floor(
-      (responseDatetime.getTime() - requestDatetime.getTime()) / 1000
-    )
-    const url = new URL(response.request?.responseURL)
-
-    const { sendCustomEvent } = useAnalytics()
-    sendCustomEvent(this.searchEvent, {
-      cfCacheStatus: responseHeaders["cf-cache-status"],
-      cfRayIATA: cfRayIATA,
-      elapsedTime: elapsedSeconds,
-      queryString: url.search,
-    })
   }
 
   /**
@@ -103,16 +59,11 @@ class MediaService<T extends Media> {
       params.peaks = "true"
     }
 
-    const requestDatetime = new Date()
-
     const res = await this.apiService.query<MediaResult<T[]>>(
       this.mediaType,
       slug,
       params as unknown as Record<string, string>
     )
-
-    this.recordSearchTime(res, requestDatetime)
-
     return this.transformResults(res.data)
   }
 
