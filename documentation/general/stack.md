@@ -5,29 +5,29 @@ This page is your gateway to understanding our diverse technology stack. Explore
 1. Catalog
    - Powered by Apache Airflow, it stores Openverse metadata efficiently.
    - [Code](https://github.com/WordPress/openverse/blob/main/catalog)
-   - [Documentation]()
+   - [Documentation](https://docs.openverse.org/catalog/index.html)
    - Language: Python
    - Tools and Framework:
-     - [Apache Airflow]()
+     - [Apache Airflow](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/datacatalog.html)
 2. Ingestion Server
-   - Powered by Apache Airflow, it stores Openverse metadata efficiently.
-   - [Code](https://github.com/WordPress/openverse/blob/main/catalog)
-   - [Documentation]()
+   - The mechanism for refreshing the data from the catalog to the API.
+   - [Code](https://github.com/WordPress/openverse/blob/main/ingestion_server)
+   - [Documentation](https://docs.openverse.org/ingestion_server/index.html)
    - Language: Python
    - Tools and Framework:
-     - [Elasticsearch]()
-     - [Docker]()
+     - [Elasticsearch](https://www.elastic.co/guide/index.html)
+     - [Docker](https://docs.docker.com/)
 3. API
-   - Powered by Apache Airflow, it stores Openverse metadata efficiently.
-   - [Code](https://github.com/WordPress/openverse/blob/main/catalog)
+   - Built with Django REST, it enables database querying for the Frontend.
+   - [Code](https://github.com/WordPress/openverse/blob/main/api)
    - [Documentation]()
    - Language: Python
    - Tools and Framework:
      - [Django REST Framework]()
      - [Docker]()
 4. Frontend
-   - Powered by Apache Airflow, it stores Openverse metadata efficiently.
-   - [Code](https://github.com/WordPress/openverse/blob/main/catalog)
+   - The public search engine at [openverse.org](https://openverse.org/), built with Vue and Nuxt.
+   - [Code]()
    - [Documentation]()
    - Language: JavaScript, HTML, CSS
    - Tools and Framework:
@@ -36,8 +36,8 @@ This page is your gateway to understanding our diverse technology stack. Explore
      - [Node.js]()
      - [Tailwind CSS]()
 5. Automation
-   - Powered by Apache Airflow, it stores Openverse metadata efficiently.
-   - [Code](https://github.com/WordPress/openverse/blob/main/catalog)
+   - Scripts used for various workflows around Openverse repositories and processes.
+   - [Code]()
    - [Documentation]()
    - Language: Python
    - Tools and Framework:
