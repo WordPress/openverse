@@ -7,7 +7,8 @@ ARG API_PY_VERSION
 # Audio waveform #
 ##################
 
-FROM docker.io/realies/audiowaveform:latest AS awf
+# Pull the audiowaveform image from the realies repository with version 1.10.1 and assign an alias ` awf `.
+FROM docker.io/realies/audiowaveform:1.10.1 AS awf
 
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
