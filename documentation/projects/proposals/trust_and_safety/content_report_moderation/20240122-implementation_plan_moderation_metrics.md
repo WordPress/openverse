@@ -130,6 +130,7 @@ moderation pipeline, whenever one of the following event occurs.
 - report confirmed
 - report rejected
 - report deduplicated
+- decision created
 
 ```{todo}
 Find answers to these questions:
@@ -145,9 +146,18 @@ Find answers to these questions:
 The log line must contain a JSON that matches this type definition.
 
 ```typescript
-interface Message {
+interface ReportMessage {
   message_type: "ModerationReport"
   event_type: "created" | "confirmed" | "rejected" | "deduplicated"
+  media_type: "image" | "audio"
+}
+```
+
+```typescript
+interface DecisionMessage {
+  message_type: "ModerationDecision"
+  event_type: "created"
+  action_type: "confirmed" | "rejected" | "deduplicated"
   media_type: "image" | "audio"
 }
 ```
@@ -175,6 +185,18 @@ fields @timestamp, message_type, event_type
     sum(case when event_type = 'confirmed' then 1 else 0 end) as confirmedCount,
     sum(case when event_type = 'rejected' then 1 else 0 end) as rejectedCount,
     sum(case when event_type = 'deduplicated' then 1 else 0 end) as duplicateCount,
+  by bin(5m)
+| sort @timestamp desc
+```
+
+```text
+fields @timestamp, message_type, event_type
+| filter message_type like "ModerationDecision"
+| stats
+    sum(case when event_type = 'created' then 1 else 0 end) as createdCount,
+    sum(case when action_type = 'confirmed' then 1 else 0 end) as confirmedCount,
+    sum(case when action_type = 'rejected' then 1 else 0 end) as rejectedCount,
+    sum(case when action_type = 'deduplicated' then 1 else 0 end) as duplicateCount,
   by bin(5m)
 | sort @timestamp desc
 ```
@@ -207,11 +229,11 @@ from datetime import timedelta
 
 # 1. Report Accuracy
 total_reports = Report.objects.count()
-confirmed_reports = Report.objects.filter(decision__status='confirmed').count()
+confirmed_reports = Report.objects.filter(decision__action='confirmed').count()
 report_accuracy = (confirmed_reports / total_reports) * 100 if total_reports else 0
 
 # 2. Report Duplication
-duplicate_reports = Report.objects.filter(decision__status='duplicate').count()
+duplicate_reports = Report.objects.filter(decision__action='deduplicated').count()
 report_duplication = (duplicate_reports / total_reports) * 100 if total_reports else 0
 
 # 3. Most Reported Items
