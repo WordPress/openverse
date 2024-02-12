@@ -117,6 +117,9 @@ SMITHSONIAN_SUB_PROVIDERS = {
     "smithsonian_american_art_museum": {"SAAM"},  # Smithsonian American Art Museum
     "smithsonian_institution_archives": {"SIA"},  # Smithsonian Institution Archives
     "smithsonian_libraries": {"SIL"},  # Smithsonian Libraries
+    "smithsonian_ralph_rinzler_archive": {
+        "CFCHFOLKLIFE"  # Ralph Rinzler Folklife Archives and Collections
+    },
 }
 
 # User-Agent header for APIs that require it
