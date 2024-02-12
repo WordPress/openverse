@@ -29,6 +29,12 @@ on:
       - ready_for_review
       - closed
   pull_request_review:
+    types:
+      - submitted
+      - dismissed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.node_id }}
 
 jobs:
   run:
