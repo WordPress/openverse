@@ -18,7 +18,10 @@
       <template #openverse>Openverse</template>
       <template #repository>
         <VLink href="https://github.com/wordpress/openverse">{{
-          $t("about.planning.repository", { openverse: "Openverse" })
+          $t("about.planning.repository", {
+            openverse: "Openverse",
+            github: "GitHub",
+          })
         }}</VLink>
       </template>
       <template #community>

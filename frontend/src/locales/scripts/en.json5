@@ -83,7 +83,7 @@
     },
     planning: {
       content: "Currently {openverse} only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source and can be accessed at the {repository}. We {community}. You can see what {working}.",
-      repository: "{openverse} GitHub repository",
+      repository: "{openverse} {github} repository",
       community: "welcome community contribution",
       working: "we’re currently working on",
     },
