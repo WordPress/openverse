@@ -38,7 +38,7 @@ jobs:
 
           {
             echo "date=$formatted_date";
-            echo "git-tag=${{ env.APP_NAME }}-$formatted_date";
+            echo "git-tag=${{ matrix.app }}-$formatted_date";
           } >> "$GITHUB_OUTPUT"
 
       # Each time this runs, it should replace the previous drafted release matching the tag prefix set in the release drafter config
@@ -49,8 +49,8 @@ jobs:
         with:
           config-name: release-drafter-${{ matrix.app }}.yml
           version: ${{ steps.tag.outputs.date }}
-          tag: ${{ matrix.app }}-${{ steps.tag.outputs.git-tag }}
-          name: ${{ matrix.app }}-${{ steps.tag.outputs.git-tag }}
+          tag: ${{ steps.tag.outputs.git-tag }}
+          name: ${{ steps.tag.outputs.git-tag }}
           draft: true
           commitish: main
         env:

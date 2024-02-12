@@ -45,7 +45,7 @@ jobs:
       - name: Calculate tag name
         id: tag
         run: |
-          release_date=$(echo '${{ github.ref_name }}' | sed 's/${{ env.APP_NAME }}//')
+          release_date=$(echo '${{ github.ref_name }}' | sed 's/${{ env.APP_NAME }}-//')
 
           # Generate `rel-` prefixed image tag to avoid duplicated app name between image and tag
           {
