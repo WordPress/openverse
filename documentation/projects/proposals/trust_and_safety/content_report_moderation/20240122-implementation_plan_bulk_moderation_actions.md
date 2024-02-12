@@ -115,7 +115,7 @@ record will ever be added.)
 We will need to add new actions for making moderation decisions directly from a
 list of Media, as well as two new actions for the `reversed_<x>` action types.
 
-_All_ actions go through an intermediate confirmation page which:
+_All bulk_ actions go through an intermediate confirmation page which:
 
 - Indicates the number of records that will be affected by the action
 - Collects the required `explanation` text (all other columns, such as
@@ -123,10 +123,11 @@ _All_ actions go through an intermediate confirmation page which:
 
 ### Bulk Mark Sensitive: mark the works as sensitive
 
-This action takes a queryset of `AbstractMedia` records. It creates a
-ModerationDecision with type `marked_sensitive` and adds all records from the
-queryset **which do not already have a related `SensitiveMedia` record**. It
-then creates and saves `SensitiveMedia` records for each of these.
+This action takes a queryset of `AbstractMedia` records. It filters the queryset
+for those records **which do not already have a related `SensitiveMedia`
+record**, then adds them to a new ModerationDecision with type
+`marked_sensitive`. It then creates and saves `SensitiveMedia` records for each
+of the added records.
 
 The confirmation page for this action should indicate the number of records that
 will actually be affected. If some records are already marked sensitive, that
@@ -137,7 +138,7 @@ should be indicated on the confirmation page as well.
 This action takes a queryset of `AbstractMedia` records. It creates a
 ModerationDecision with type `deindexed_sensitive` and adds all records from the
 queryset. It then creates and saves `DeletedMedia` records for each of these,
-deleting the record from the API and deindexing it in elasticsearch. The
+deleting the record from the API and deindexing it in Elasticsearch. The
 confirmation page for this action should include a highly visible warning that
 once records are deindexed, they cannot be restored immediately.
 
@@ -157,11 +158,12 @@ This action takes a queryset of `SensitiveMedia` records, rather than
 are what will be added to the ModerationDecision. It creates a
 ModerationDecision with type `reversed_mark_sensitive`, and adds the related
 media. Then it first calls `_update_es` on the `SensitiveMedia` records to
-update the elasticsearch index with the "sensitive" field for each media record,
+update the Elasticsearch index with the "sensitive" field for each media record,
 and finally deletes the actual `SensitiveMedia` records.
 
 Although the `SensitiveMedia` records are deleted, the ModerationDecisions
-preserve the history of these actions.
+preserve the history of these actions, and Django's LogEntry table will also
+automatically record the creation and deletion of the `SensitiveMedia` records.
 
 ### Reverse Deindex: undo deindexing the selected works
 
@@ -172,13 +174,14 @@ ModerationDecision with type `reversed_deindex` and adds the related records.
 Then it deletes the `DeletedMedia` records.
 
 It is extremely important to note that this action does not immediately result
-in deindexed records being added back to the DB and elasticsearch indices. When
+in deindexed records being added back to the DB and Elasticsearch indices. When
 the records were originally deindexed, they were deleted from both, and there is
 no quick way to restore them without running a data refresh. The confirmation
 page should contain a highly visible `info` block explaining this to the user.
 
 Although the `DeletedMedia` records are deleted, the ModerationDecisions
-preserve the history of these actions.
+preserve the history of these actions, and Django's LogEntry table will also
+automatically record the creation and deletion of the `DeletedMedia` records.
 
 ### Other actions
 
@@ -199,19 +202,17 @@ Bulk moderation decisions of these types will be created by taking these
 actions.
 
 However the current Media views only allow filtering records by uuid. To
-facilitate selecting records for bulk action, we'll update the `search_fields`
-for the main searchbar to search text fields (title, description, tags). We'll
-also add some additional text filters to the sidebar:
+facilitate selecting records for bulk action, we'll add some additional custom
+text filters to the sidebar:
 
-- `uuid` - it may still be necessary to search by uuid, so we should preserve
-  this functionality. We include it in a separate filter (rather than keeping it
-  in `search_fields`) for search efficiency.
+- `query` - this field searches for a match in `description`, `tags`, or `title`
 - `provider`
 - `creator` - this field should have helptext reminding the user to also filter
   by provider in order to disambiguate a specific creator.
 
-Additional or more sophisticated filters may be added in the future as
-appropriate.
+The custom filters should be implemented to query Elasticsearch rather than
+Postgres for records, for significantly improved search efficiency. Additional
+filters may be added in the future as appropriate.
 
 ### DeletedMedia List View
 
@@ -243,10 +244,15 @@ view. In the view, decisions will be sorted by creation date, and will display:
 - `record_count` - a count for the number of records affected by this decision
 
 This view is useful for getting the id of a moderation decision that you want to
-reverse. Clicking on an individual ModerationDecision will take you to a detail
-view that is entirely read-only, as a moderation decision should not be edited
-after it is created. We will add a custom filter to display only bulk moderation
-decisions, defined as a ModerationDecision with more than one media record.
+reverse. We will add a custom filter to display only bulk moderation decisions,
+defined as a ModerationDecision with more than one media record.
+
+Clicking on an individual ModerationDecision will take you to a detail view that
+is entirely read-only, as a moderation decision should not be edited after it is
+created. For ModerationDecisions with a `deindexed_sensitive`,
+`deindexed_copyright`, or `marked_sensitive` action type, we will include a link
+to the SensitiveMedia or DeletedMedia view, filtered by the ModerationDecision
+id for convenience.
 
 We will disable the option to add a ModerationDecision object directly.
 
@@ -359,7 +365,8 @@ Create the custom admin actions for:
 
 - Add the actions for bulk deindexing and marking sensitive to the media views,
   available only for maintainers
-- Add the new filters for search terms, provider, and creator
+- Add the new filters for search terms, provider, and creator, querying
+  Elasticsearch
 
 ### Add action and filter to the DeletedMedia view
 
@@ -472,9 +479,7 @@ The project proposal's requirements indicate that we need to be able to make
 bulk decisions with selections from admin views. However, I considered adding a
 DAG in addition to the custom actions that would allow for maximum flexibility.
 The DAG which would take an arbitrary SELECT query for selecting records to add
-to a new ModerationDecision. This DAG could even be modified to query
-elasticsearch for performance improvements, and to take advantage of the
-stemming behavior in search.
+to a new ModerationDecision.
 
 However, this duplicates some logic and may be excessive optimization for now.
 It would also prevent us from easily extending permission to moderators if
