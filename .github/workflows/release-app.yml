@@ -122,14 +122,13 @@ jobs:
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v5
-        if: "!cancelled()"
         with:
           # Access token necessary for PRs to run with CI
           token: ${{ secrets.ACCESS_TOKEN }}
           base: main
-          branch: changelog/${{ steps.tag.outputs.git-tag }}
-          commit-message: Publish changelog for ${{ steps.tag.outputs.git-tag }}
-          title: Publish changelog for ${{ steps.tag.outputs.git-tag }}
+          branch: changelog/${{ github.ref_name }}
+          commit-message: Publish changelog for ${{ github.ref_name }}
+          title: Publish changelog for ${{ github.ref_name }}
           # Add labels to pass CI
           labels: |
             🧱 stack: ${{ env.APP_NAME == 'ingestion_server' && 'ingestion server' || env.APP_NAME }}
