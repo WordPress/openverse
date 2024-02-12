@@ -16,28 +16,21 @@
 
     <i18n path="about.planning.content" tag="p">
       <template #openverse>Openverse</template>
-      <template #frontend>
-        <VLink href="https://github.com/wordpress/openverse-frontend/">{{
-          $t("about.planning.frontend", { openverse: "Openverse" })
-        }}</VLink>
-      </template>
-      <template #api>
-        <VLink href="https://github.com/wordpress/openverse-api/">{{
-          $t("about.planning.api", { openverse: "Openverse" })
-        }}</VLink>
-      </template>
-      <template #catalog>
-        <VLink href="https://github.com/wordpress/openverse-catalog/">{{
-          $t("about.planning.catalog", { openverse: "Openverse" })
+      <template #repository>
+        <VLink href="https://github.com/wordpress/openverse">{{
+          $t("about.planning.repository", {
+            openverse: "Openverse",
+            github: "GitHub",
+          })
         }}</VLink>
       </template>
       <template #community>
-        <VLink href="https://make.wordpress.org/openverse/">{{
+        <VLink href="https://docs.openverse.org/general/contributing">{{
           $t("about.planning.community")
         }}</VLink>
       </template>
       <template #working>
-        <VLink href="https://github.com/orgs/WordPress/projects/3">{{
+        <VLink href="https://github.com/orgs/WordPress/projects/75">{{
           $t("about.planning.working")
         }}</VLink>
       </template>

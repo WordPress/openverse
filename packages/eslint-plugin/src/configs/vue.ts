@@ -90,6 +90,7 @@ export = {
           "Flickr",
           "Openverse",
           "WordPress",
+          "GitHub",
           "openverse@wordpress.org",
         ],
       },
