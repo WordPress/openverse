@@ -50,11 +50,17 @@ def _assign_work(db_conn, workers, model_name, table_name, target_index):
 
     worker_url_template = "http://{}:8002"
     # Wait for the workers to start.
+    failures = []
     for worker in workers:
         worker_url = worker_url_template.format(worker)
         succeeded = _wait_for_healthcheck(f"{worker_url}/healthcheck")
         if not succeeded:
-            return False
+            failures.append(worker)
+    if failures:
+        raise ValueError(
+            f"Some workers didn't respond to health check: {','.join(failures)}"
+        )
+
     for idx, worker in enumerate(workers):
         worker_url = worker_url_template.format(worker)
         params = {
