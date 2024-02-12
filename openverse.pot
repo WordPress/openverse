@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-02-07T03:49:08+00:00\n"
+"POT-Creation-Date: 2024-02-12T11:32:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -227,7 +227,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:4
-#: src/pages/about.vue:150
+#: src/pages/about.vue:143
 msgctxt "about.title"
 msgid "About ###openverse###"
 msgstr ""
@@ -247,51 +247,39 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:17
 msgctxt "about.planning.content"
-msgid "Currently ###openverse### only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source (###frontend###, ###api###, ###catalog###) and we ###community###. You can see what ###working###."
+msgid "Currently ###openverse### only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source and can be accessed at the ###repository###. We ###community###. You can see what ###working###."
 msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:21
-msgctxt "about.planning.frontend"
-msgid "###openverse### frontend"
+msgctxt "about.planning.repository"
+msgid "###openverse### ###github### repository"
 msgstr ""
 
-#. Do not translate words between ### ###.
-#: src/pages/about.vue:26
-msgctxt "about.planning.api"
-msgid "###openverse### API"
-msgstr ""
-
-#. Do not translate words between ### ###.
-#: src/pages/about.vue:31
-msgctxt "about.planning.catalog"
-msgid "###openverse### Catalog"
-msgstr ""
-
-#: src/pages/about.vue:36
+#: src/pages/about.vue:29
 msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
-#: src/pages/about.vue:41
+#: src/pages/about.vue:34
 msgctxt "about.planning.working"
 msgid "we’re currently working on"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:46
+#: src/pages/about.vue:39
 msgctxt "about.transfer.content"
 msgid "###openverse### is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###creativeCommons### and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:61
+#: src/pages/about.vue:54
 msgctxt "about.declaration.content"
 msgid "Please note that ###openverse### does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:65
+#: src/pages/about.vue:58
 msgctxt "about.declaration.terms"
 msgid "###openverse### Terms of Use"
 msgstr ""
@@ -410,95 +398,95 @@ msgctxt "sources.heading.audio"
 msgid "Audio Sources"
 msgstr ""
 
-#: src/pages/about.vue:71
+#: src/pages/about.vue:64
 msgctxt "externalSourcesPage.title"
 msgid "External Sources"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:74
+#: src/pages/about.vue:67
 msgctxt "externalSourcesPage.intro"
 msgid "###openverse### is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our ###link###."
 msgstr ""
 
-#: src/pages/about.vue:77
+#: src/pages/about.vue:70
 msgctxt "externalSourcesPage.link"
 msgid "sources here"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:81
+#: src/pages/about.vue:74
 msgctxt "externalSourcesPage.license"
 msgid "However, there are many sources of CC-licensed and public domain media which we aren’t able to surface results from within the ###openverse### interface yet. This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into Openverse. These are valued sources and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
 msgstr ""
 
-#: src/pages/about.vue:90
+#: src/pages/about.vue:83
 msgctxt "externalSourcesPage.new.title"
 msgid "Can I suggest new external sources?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:92
+#: src/pages/about.vue:85
 msgctxt "externalSourcesPage.new.content"
 msgid "Yes, please! Create an ###issue### in our GitHub repository or send us an ###email### and tell us about the new sources you’d like to see included."
 msgstr ""
 
-#: src/pages/about.vue:97
+#: src/pages/about.vue:90
 msgctxt "externalSourcesPage.new.issue"
 msgid "issue"
 msgstr ""
 
-#: src/pages/about.vue:102
+#: src/pages/about.vue:95
 msgctxt "externalSourcesPage.new.email"
 msgid "email"
 msgstr ""
 
-#: src/pages/about.vue:107
+#: src/pages/about.vue:100
 msgctxt "externalSourcesPage.why.title"
 msgid "Why did you build this?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:109
+#: src/pages/about.vue:102
 msgctxt "externalSourcesPage.why.content"
 msgid "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at ###old###."
 msgstr ""
 
-#: src/pages/about.vue:114
+#: src/pages/about.vue:107
 msgctxt "externalSourcesPage.why.old"
 msgid "oldsearch.creativecommons.org"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:120
+#: src/pages/about.vue:113
 msgctxt "externalSourcesPage.why.new"
 msgid "For users of the legacy CC Meta Search site, the \"External Sources\" feature on ###openverse### will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the \"External Sources\" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future, as we expand."
 msgstr ""
 
-#: src/pages/about.vue:125
+#: src/pages/about.vue:118
 msgctxt "externalSourcesPage.why.ariaLabel"
 msgid "feedback"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:122
+#: src/pages/about.vue:115
 msgctxt "externalSourcesPage.why.feedbackSuggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
-#: src/pages/about.vue:127
+#: src/pages/about.vue:120
 msgctxt "externalSourcesPage.why.feedbackLink"
 msgid "feedback"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:87
+#: src/pages/about.vue:80
 msgctxt "externalSourcesPage.relationships"
 msgid "This functionality also allows us to start conversations and build relationships with sources that may like to be included in ###openverse### in the future. Finally, we can also offer external sources of media types we do not include in ###openverse### yet, but plan to."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:84
+#: src/pages/about.vue:77
 msgctxt "externalSourcesPage.explanation"
 msgid "You can find links to external sources at the bottom of every ###openverse### search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to."
 msgstr ""
