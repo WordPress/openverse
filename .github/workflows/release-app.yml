@@ -29,13 +29,9 @@ jobs:
       # Needed to open the changelog PR
       pull-requests: write
     env:
-      APP_NAME: >
-        ${{
-          startsWith(github.ref_name, 'api-') && 'api'
-          || startsWith(github.ref_name, 'ingestion_server-') && 'ingestion_server'
-          || startsWith(github.ref_name, 'catalog-') && 'catalog'
-          || startsWith(github.ref_name, 'frontend-') && 'frontend'
-        }}
+      # Do not split this into multiple lines, it will not work:
+      # https://github.com/WordPress/openverse/pull/3789#pullrequestreview-1876525552
+      APP_NAME: ${{ startsWith(github.ref_name, 'api-') && 'api' || startsWith(github.ref_name, 'ingestion_server-') && 'ingestion_server' || startsWith(github.ref_name, 'catalog-') && 'catalog' || startsWith(github.ref_name, 'frontend-') && 'frontend' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -122,14 +118,13 @@ jobs:
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v5
-        if: "!cancelled()"
         with:
           # Access token necessary for PRs to run with CI
           token: ${{ secrets.ACCESS_TOKEN }}
           base: main
-          branch: changelog/${{ steps.tag.outputs.git-tag }}
-          commit-message: Publish changelog for ${{ steps.tag.outputs.git-tag }}
-          title: Publish changelog for ${{ steps.tag.outputs.git-tag }}
+          branch: changelog/${{ github.ref_name }}
+          commit-message: Publish changelog for ${{ github.ref_name }}
+          title: Publish changelog for ${{ github.ref_name }}
           # Add labels to pass CI
           labels: |
             🧱 stack: ${{ env.APP_NAME == 'ingestion_server' && 'ingestion server' || env.APP_NAME }}
