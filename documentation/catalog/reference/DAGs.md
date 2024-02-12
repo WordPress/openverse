@@ -54,10 +54,12 @@ The following are DAGs grouped by their primary tag:
 
 ### Elasticsearch
 
-| DAG ID                                                              | Schedule Interval |
-| ------------------------------------------------------------------- | ----------------- |
-| [`create_new_production_es_index`](#create_new_production_es_index) | `None`            |
-| [`create_new_staging_es_index`](#create_new_staging_es_index)       | `None`            |
+| DAG ID                                                                                          | Schedule Interval |
+| ----------------------------------------------------------------------------------------------- | ----------------- |
+| [`create_new_production_es_index`](#create_new_production_es_index)                             | `None`            |
+| [`create_new_staging_es_index`](#create_new_staging_es_index)                                   | `None`            |
+| [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck) | `*/15 * * * *`    |
+| [`staging_elasticsearch_cluster_healthcheck`](#staging_elasticsearch_cluster_healthcheck)       | `*/15 * * * *`    |
 
 ### Maintenance
 
@@ -163,6 +165,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)
 1.  [`phylopic_workflow`](#phylopic_workflow)
 1.  [`pr_review_reminders`](#pr_review_reminders)
+1.  [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
 1.  [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
 1.  [`recreate_full_staging_index`](#recreate_full_staging_index)
@@ -173,6 +176,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
 1.  [`staging_database_restore`](#staging_database_restore)
+1.  [`staging_elasticsearch_cluster_healthcheck`](#staging_elasticsearch_cluster_healthcheck)
 1.  [`stocksnap_workflow`](#stocksnap_workflow)
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_reingestion_workflow)
@@ -1032,6 +1036,23 @@ Unfortunately the DAG does not know when someone is on vacation. It is up to the
 author of the PR to re-assign review if one of the randomly selected reviewers
 is unavailable for the time period during which the PR should be reviewed.
 
+### `production_elasticsearch_cluster_healthcheck`
+
+Monitor staging and production Elasticsearch cluster health endpoint.
+
+Requests the cluster health and alerts under the following conditions:
+
+- Red cluster health
+- Unexpected number of nodes
+- Unresponsive cluster
+
+Additionally, the DAG will notify (rather than alert) when the cluster health is
+yellow. Yellow cluster health may or may not be an issue, depending on whether
+it is expected, and occurs whenever shards and replicas are being relocated
+(e.g., during reindexes). It is worthwhile to notify in these cases, as an
+assurance, but we could choose to add logic that ignores yellow cluster health
+during data refresh or other similar operations.
+
 ### `rawpixel_workflow`
 
 Content Provider: Rawpixel
@@ -1198,6 +1219,23 @@ the RDS operations run using a different hook:
   `aws_rds`)
 - `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the
   above example, it might be `AIRFLOW_CONN_AWS_RDS`)
+
+### `staging_elasticsearch_cluster_healthcheck`
+
+Monitor staging and production Elasticsearch cluster health endpoint.
+
+Requests the cluster health and alerts under the following conditions:
+
+- Red cluster health
+- Unexpected number of nodes
+- Unresponsive cluster
+
+Additionally, the DAG will notify (rather than alert) when the cluster health is
+yellow. Yellow cluster health may or may not be an issue, depending on whether
+it is expected, and occurs whenever shards and replicas are being relocated
+(e.g., during reindexes). It is worthwhile to notify in these cases, as an
+assurance, but we could choose to add logic that ignores yellow cluster health
+during data refresh or other similar operations.
 
 ### `stocksnap_workflow`
 

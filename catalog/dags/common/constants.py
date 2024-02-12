@@ -15,6 +15,9 @@ MediaType = Literal["audio", "image"]
 STAGING = "staging"
 PRODUCTION = "production"
 
+Environment = Literal["staging", "production"]
+ENVIRONMENTS = [STAGING, PRODUCTION]
+
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
 
 DAG_DEFAULT_ARGS = {
