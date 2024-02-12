@@ -29,13 +29,9 @@ jobs:
       # Needed to open the changelog PR
       pull-requests: write
     env:
-      APP_NAME: >-
-        ${{
-          startsWith(github.ref_name, 'api-') && 'api'
-          || startsWith(github.ref_name, 'ingestion_server-') && 'ingestion_server'
-          || startsWith(github.ref_name, 'catalog-') && 'catalog'
-          || startsWith(github.ref_name, 'frontend-') && 'frontend'
-        }}
+      # Do not split this into multiple lines, it will not work:
+      # https://github.com/WordPress/openverse/pull/3789#pullrequestreview-1876525552
+      APP_NAME: ${{ startsWith(github.ref_name, 'api-') && 'api' || startsWith(github.ref_name, 'ingestion_server-') && 'ingestion_server' || startsWith(github.ref_name, 'catalog-') && 'catalog' || startsWith(github.ref_name, 'frontend-') && 'frontend' }}
     steps:
       - uses: actions/checkout@v4
         with:
