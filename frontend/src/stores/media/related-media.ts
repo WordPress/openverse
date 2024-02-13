@@ -4,12 +4,12 @@ import { parseFetchingError } from "~/utils/errors"
 import { initServices } from "~/stores/media/services"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
-import type { Media } from "~/types/media"
+import type { MediaDetail } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
 
 interface RelatedMediaState {
   mainMediaId: null | string
-  media: Media[]
+  media: MediaDetail[]
   fetchState: FetchState
 }
 
@@ -23,7 +23,7 @@ export const useRelatedMediaStore = defineStore("related-media", {
   getters: {
     getItemById:
       (state) =>
-      (id: string): Media | undefined =>
+      (id: string): MediaDetail | undefined =>
         state.media.find((item) => item.id === id),
   },
 

@@ -1,5 +1,5 @@
 import { decodeData as decodeString } from "~/utils/decode-data"
-import type { ApiMedia, Media, Tag } from "~/types/media"
+import type { ApiMedia, MediaDetail, Tag } from "~/types/media"
 import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
 import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
@@ -98,7 +98,7 @@ const parseTags = (tags: Tag[]) => {
  * @param mediaType - the type of the media
  * @returns the given media object with the text fields decoded
  */
-export const decodeMediaData = <T extends Media>(
+export const decodeMediaData = <T extends MediaDetail>(
   media: ApiMedia,
   mediaType: T["frontendMediaType"]
 ): T => {

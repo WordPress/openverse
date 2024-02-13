@@ -1,10 +1,10 @@
 import { AUDIO, IMAGE } from "~/constants/media"
-import type { AudioDetail, ImageDetail, Media } from "~/types/media"
+import type { AudioDetail, ImageDetail, MediaDetail } from "~/types/media"
 import { ApiService, createApiService } from "~/data/api-service"
 import type { MediaProvider } from "~/types/media-provider"
 import { warn } from "~/utils/console"
 
-export class MediaProviderService<T extends Media> {
+export class MediaProviderService<T extends MediaDetail> {
   private readonly apiService: ApiService
   private readonly mediaType: T["frontendMediaType"]
 

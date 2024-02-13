@@ -1,36 +1,35 @@
 <template>
-  <VImageGrid
+  <VMediaCollection
     :results="results"
-    :fetch-state="fetchState"
-    kind="search"
-    :image-grid-label="
+    :metadata="{ searchTerm, kind: 'search' }"
+    :collection-label="
       $t('browsePage.aria.results', { query: searchTerm }).toString()
     "
+    @load-more="handleLoadMore"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
-import type { ImageDetail } from "~/types/media"
-import type { FetchState } from "~/types/fetch-state"
+import type { ImageResults } from "~/types/result"
 
-import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
+import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
 
 export default defineComponent({
   name: "ImageSearch",
-  components: { VImageGrid },
+  components: { VMediaCollection },
   props: {
     results: {
-      type: Array as PropType<ImageDetail[]>,
-      required: true,
-    },
-    fetchState: {
-      type: Object as PropType<FetchState>,
+      type: Object as PropType<ImageResults>,
       required: true,
     },
     searchTerm: {
       type: String,
+      required: true,
+    },
+    handleLoadMore: {
+      type: Function as PropType<() => void>,
       required: true,
     },
   },

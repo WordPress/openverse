@@ -10,25 +10,26 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
-  SearchType,
-  SupportedMediaType,
-  supportedMediaTypes,
-  SupportedSearchType,
-  supportedSearchTypes,
   isAdditionalSearchType,
   searchPath,
+  type SearchType,
+  type SupportedMediaType,
+  supportedMediaTypes,
+  type SupportedSearchType,
+  supportedSearchTypes,
 } from "~/constants/media"
 import {
   filtersToQueryData,
-  queryDictionaryToQueryParams,
   pathToSearchType,
+  queryDictionaryToQueryParams,
   queryToFilterData,
 } from "~/utils/search-query-transform"
+import { encodeAndReplaceSlash } from "~/utils/parse-collection-path"
 import {
-  FilterCategory,
-  FilterItem,
-  Filters,
   filterData,
+  type FilterCategory,
+  type FilterItem,
+  type Filters,
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from "~/constants/filters"
@@ -38,16 +39,15 @@ import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 
-import {
-  SearchQuery,
-  SearchStrategy,
-  PaginatedSearchQuery,
+import type {
   CollectionParams,
   PaginatedCollectionQuery,
+  PaginatedSearchQuery,
+  SearchQuery,
+  SearchStrategy,
 } from "~/types/search"
 
 import type { Ref } from "vue"
-
 import type { Dictionary } from "vue-router/types/router"
 import type { Context } from "@nuxt/types"
 
@@ -106,18 +106,42 @@ export function computeQueryParams(
   return searchQuery
 }
 
+/**
+ * Converts the collectionParams to a path, encoding `creator` and `tag`.
+ */
 export function collectionToPath(collectionParams: CollectionParams) {
   switch (collectionParams.collection) {
     case "tag": {
-      return `tag/${collectionParams.tag}/`
+      return `tag/${encodeAndReplaceSlash(collectionParams.tag)}/`
     }
     case "creator": {
-      return `source/${collectionParams.source}/creator/${collectionParams.creator}/`
+      return `source/${collectionParams.source}/creator/${encodeAndReplaceSlash(
+        collectionParams.creator
+      )}/`
     }
     case "source": {
       return `source/${collectionParams.source}/`
     }
   }
+}
+
+export function collectionParamsEqual(
+  a: CollectionParams,
+  b: CollectionParams
+): boolean {
+  return (
+    (a.collection === b.collection &&
+      a.collection === "tag" &&
+      b.collection === "tag" &&
+      a.tag === b.tag) ||
+    (a.collection === "source" &&
+      b.collection === "source" &&
+      a.source === b.source) ||
+    (a.collection === "creator" &&
+      b.collection === "creator" &&
+      a.source === b.source &&
+      a.creator === b.creator)
+  )
 }
 
 export const useSearchStore = defineStore("search", {
@@ -136,6 +160,11 @@ export const useSearchStore = defineStore("search", {
     state.recentSearches = useStorage<string[]>("recent-searches", [])
   },
   getters: {
+    searchStarted(state) {
+      return state.strategy === "default"
+        ? state.searchTerm.length > 0
+        : state.collectionParams !== null
+    },
     filterCategories(state) {
       return Object.keys(state.filters) as FilterCategory[]
     },
@@ -197,15 +226,17 @@ export const useSearchStore = defineStore("search", {
     },
   },
   actions: {
+    /**
+     * Returns the URL parts for the API search request.
+     */
     getSearchUrlParts(mediaType: SupportedMediaType) {
       const query: PaginatedSearchQuery | PaginatedCollectionQuery =
         this.strategy === "default"
           ? computeQueryParams(mediaType, this.filters, this.searchTerm, "API")
           : {}
-      const pathSlug =
-        this.collectionParams === null
-          ? ""
-          : collectionToPath(this.collectionParams)
+      const pathSlug = this.collectionParams
+        ? collectionToPath(this.collectionParams)
+        : ""
       return { query, pathSlug }
     },
     setBackToSearchPath(path: string) {
@@ -487,11 +518,21 @@ export const useSearchStore = defineStore("search", {
     },
     setCollectionState(
       collectionParams: CollectionParams,
-      mediaType: SupportedMediaType
+      mediaType?: SupportedMediaType
     ) {
+      // If the collection has changed, reset the media.
+      if (
+        !this.collectionParams ||
+        !collectionParamsEqual(this.collectionParams, collectionParams)
+      ) {
+        const mediaStore = useMediaStore()
+        mediaStore.clearMedia()
+      }
       this.collectionParams = collectionParams
-      this.strategy = collectionParams?.collection
-      this.setSearchType(mediaType)
+      this.strategy = collectionParams.collection
+      if (mediaType) {
+        this.setSearchType(mediaType)
+      }
       this.clearFilters()
     },
     /**

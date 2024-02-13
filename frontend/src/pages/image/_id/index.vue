@@ -119,7 +119,7 @@ import {
   useRoute,
 } from "@nuxtjs/composition-api"
 
-import { IMAGE, isAdditionalSearchType } from "~/constants/media"
+import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 import type { ImageDetail } from "~/types/media"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -341,7 +341,6 @@ export default defineComponent({
   },
   // Necessary for useMeta
   head: {},
-  methods: { isAdditionalSearchType },
   // Fetching on the server is disabled because it is
   // handled by the `singleResultMiddleware`.
   fetchOnServer: false,

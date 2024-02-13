@@ -7,7 +7,7 @@ import type {
   AudioDetail,
   DetailFromMediaType,
   ImageDetail,
-  Media,
+  MediaDetail,
 } from "~/types/media"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 import {
@@ -28,7 +28,7 @@ export type MediaStoreResult = {
   count: number
   pageCount: number
   page: number
-  items: Record<string, Media>
+  items: Record<string, MediaDetail>
 }
 
 export interface MediaState {
@@ -92,7 +92,10 @@ export const useMediaStore = defineStore("media", {
      * @param state - the media store state
      */
     getItemById: (state) => {
-      return (mediaType: SupportedMediaType, id: string): Media | undefined => {
+      return (
+        mediaType: SupportedMediaType,
+        id: string
+      ): MediaDetail | undefined => {
         const itemFromSearchResults = state.results[mediaType].items[id]
         if (itemFromSearchResults) {
           return itemFromSearchResults
@@ -286,6 +289,14 @@ export const useMediaStore = defineStore("media", {
           !this.mediaFetchState[type].isFinished
       )
     },
+
+    canLoadMore(): boolean {
+      return (
+        !this.fetchState.fetchingError &&
+        !this.fetchState.isFinished &&
+        this.resultCount > 0
+      )
+    },
   },
 
   actions: {
@@ -405,7 +416,9 @@ export const useMediaStore = defineStore("media", {
      * If the search query changed, fetch state is reset, otherwise only the media types for which
      * fetchState.isFinished is not true are fetched.
      */
-    async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
+    async fetchMedia(
+      payload: { shouldPersistMedia?: boolean } = {}
+    ): Promise<AudioDetail[] | ImageDetail[] | (AudioDetail | ImageDetail)[]> {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
       if (!shouldPersistMedia) {
@@ -414,20 +427,19 @@ export const useMediaStore = defineStore("media", {
 
       const mediaToFetch = this._fetchableMediaTypes
 
-      const resultCounts = await Promise.all(
+      await Promise.allSettled(
         mediaToFetch.map((mediaType) =>
           this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-      const resultCount = resultCounts.includes(null)
-        ? null
-        : (resultCounts as number[]).reduce((a, b) => a + b, 0)
 
       this.currentPage =
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
-      return resultCount
+      return mediaType === ALL_MEDIA
+        ? this.allMedia
+        : this.resultItems[mediaType]
     },
 
     clearMedia() {

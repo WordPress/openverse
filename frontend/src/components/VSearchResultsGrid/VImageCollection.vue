@@ -1,10 +1,6 @@
 <template>
-  <section class="pt-2 sm:pt-0">
-    <VGridSkeleton
-      v-if="results && !results.length && !fetchState.isFinished"
-      is-for-tab="image"
-    />
-    <ol class="image-grid flex flex-wrap gap-4" :aria-label="imageGridLabel">
+  <section>
+    <ol class="image-grid flex flex-wrap gap-4" :aria-label="collectionLabel">
       <VImageCell
         v-for="image in results"
         :key="image.id"
@@ -15,9 +11,6 @@
         :related-to="relatedTo"
       />
     </ol>
-    <footer v-if="kind !== 'related'" class="pt-4">
-      <VLoadMore />
-    </footer>
   </section>
 </template>
 
@@ -25,44 +18,34 @@
 /**
  * This component receives an array of images as a prop, and
  * is responsible for displaying them as a grid.
- * It can also fetch more images when 'Load More' is clicked.
- * Used to display both image search results, and related images.
  */
-import { computed, defineComponent, PropType } from "vue"
+import { computed, defineComponent, type PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
-import type { FetchState } from "~/types/fetch-state"
-import type { ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
+import type { ImageDetail } from "~/types/media"
 
-import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
 export default defineComponent({
-  name: "ImageGrid",
-  components: { VGridSkeleton, VLoadMore, VImageCell },
+  name: "VImageCollection",
+  components: { VImageCell },
   props: {
     results: {
       type: Array as PropType<ImageDetail[]>,
-      default: () => [],
+      required: true,
     },
     /**
      * `VImageGrid` is used for the image search results, related images,
      * and the image collection page.
-     * The load more button is not shown for related images.
      */
     kind: {
       type: String as PropType<ResultKind>,
       default: "search",
     },
-    fetchState: {
-      type: Object as PropType<FetchState>,
-      required: true,
-    },
-    imageGridLabel: {
+    collectionLabel: {
       type: String,
       required: true,
     },

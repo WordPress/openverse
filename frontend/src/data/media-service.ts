@@ -4,13 +4,13 @@ import type {
   PaginatedSearchQuery,
 } from "~/types/search"
 import type { ApiService } from "~/data/api-service"
-import type { DetailFromMediaType, Media } from "~/types/media"
+import type { DetailFromMediaType, MediaDetail } from "~/types/media"
 import { AUDIO, type SupportedMediaType } from "~/constants/media"
 
 import type { AxiosResponse } from "axios"
 
 export interface MediaResult<
-  T extends Media | Media[] | Record<string, Media>
+  T extends MediaDetail | MediaDetail[] | Record<string, MediaDetail>
 > {
   result_count: number
   page_count: number
@@ -19,11 +19,11 @@ export interface MediaResult<
   results: T
 }
 
-class MediaService<T extends Media> {
+class MediaService<T extends SupportedMediaType> {
   private readonly apiService: ApiService
-  private readonly mediaType: T["frontendMediaType"]
+  private readonly mediaType: T
 
-  constructor(apiService: ApiService, mediaType: T["frontendMediaType"]) {
+  constructor(apiService: ApiService, mediaType: T) {
     this.apiService = apiService
     this.mediaType = mediaType
   }
@@ -34,14 +34,16 @@ class MediaService<T extends Media> {
    * objects into an object with media id as keys.
    * @param data - search result data
    */
-  transformResults(data: MediaResult<T[]>): MediaResult<Record<string, T>> {
-    const mediaResults = <T[]>data.results ?? []
+  transformResults(
+    data: MediaResult<DetailFromMediaType<T>[]>
+  ): MediaResult<Record<string, DetailFromMediaType<T>>> {
+    const mediaResults = <DetailFromMediaType<T>[]>data.results ?? []
     return {
       ...data,
       results: mediaResults.reduce((acc, item) => {
         acc[item.id] = decodeMediaData(item, this.mediaType)
         return acc
-      }, {} as Record<string, T>),
+      }, {} as Record<string, DetailFromMediaType<T>>),
     }
   }
 
@@ -53,17 +55,15 @@ class MediaService<T extends Media> {
   async search(
     params: PaginatedSearchQuery | PaginatedCollectionQuery,
     slug: string = ""
-  ): Promise<MediaResult<Record<string, Media>>> {
+  ): Promise<MediaResult<Record<string, MediaDetail>>> {
     // Add the `peaks` param to all audio searches automatically
     if (this.mediaType === AUDIO) {
       params.peaks = "true"
     }
 
-    const res = await this.apiService.query<MediaResult<T[]>>(
-      this.mediaType,
-      slug,
-      params as unknown as Record<string, string>
-    )
+    const res = await this.apiService.query<
+      MediaResult<DetailFromMediaType<T>[]>
+    >(this.mediaType, slug, params as unknown as Record<string, string>)
     return this.transformResults(res.data)
   }
 
@@ -72,14 +72,17 @@ class MediaService<T extends Media> {
    * SSR-called
    * @param id - the media id to fetch
    */
-  async getMediaDetail(id: string): Promise<T> {
+  async getMediaDetail(id: string): Promise<DetailFromMediaType<T>> {
     if (!id) {
       throw new Error(
         `MediaService.getMediaDetail() id parameter required to retrieve ${this.mediaType} details.`
       )
     }
-    const res = await this.apiService.get<T>(this.mediaType, id)
-    return decodeMediaData(res.data, this.mediaType)
+    const res = await this.apiService.get<DetailFromMediaType<T>>(
+      this.mediaType,
+      id
+    )
+    return decodeMediaData<DetailFromMediaType<T>>(res.data, this.mediaType)
   }
 
   /**

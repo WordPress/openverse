@@ -5,7 +5,6 @@
     </h2>
     <VAudioCollection
       :results="media"
-      :fetch-state="fetchState"
       kind="related"
       :collection-label="$t('audioDetails.relatedAudios').toString()"
       class="mb-12"
@@ -53,12 +52,9 @@ export default defineComponent({
       () => media.value.length > 0 || relatedMediaStore.fetchState.isFetching
     )
 
-    const fetchState = computed(() => relatedMediaStore.fetchState)
-
     return {
       media,
       showRelated,
-      fetchState,
     }
   },
 })

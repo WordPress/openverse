@@ -1,15 +1,23 @@
 <template>
-  <VCollectionPage media-type="image" />
+  <VCollectionPage
+    v-if="collectionParams"
+    :results="results"
+    :collection-params="collectionParams"
+    @load-more="handleLoadMore"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, useFetch, useRoute } from "@nuxtjs/composition-api"
+import { defineComponent, useFetch } from "@nuxtjs/composition-api"
 
+import { computed } from "vue"
+
+import { useCollectionResults } from "~/composables/use-collection-results"
 import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
-import { parseCollectionPath } from "~/utils/parse-collection-path"
-import { IMAGE } from "~/constants/media"
 import { collectionMiddleware } from "~/middleware/collection"
+
+import { IMAGE } from "~/constants/media"
+import { useSearchStore } from "~/stores/search"
 
 import VCollectionPage from "~/components/VCollectionPage.vue"
 
@@ -19,18 +27,25 @@ export default defineComponent({
   layout: "content-layout",
   middleware: collectionMiddleware,
   setup() {
-    const route = useRoute()
-    const collectionParams = parseCollectionPath(route.value.params.pathMatch)
-    if (!collectionParams) {
-      throw new Error("Invalid collection path")
-    }
-    useSearchStore().setCollectionState(collectionParams, IMAGE)
     const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
+
+    const collectionParams = computed(() => searchStore.collectionParams)
+
+    const { results, fetchMedia, handleLoadMore, creatorUrl } =
+      useCollectionResults<typeof IMAGE>(IMAGE)
 
     useFetch(async () => {
-      await mediaStore.fetchMedia()
+      if (mediaStore.resultItems[IMAGE].length === 0) {
+        await fetchMedia({ shouldPersistMedia: false })
+      }
     })
-    return {}
+    return {
+      results,
+      creatorUrl,
+      collectionParams,
+      handleLoadMore,
+    }
   },
 })
 </script>

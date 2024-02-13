@@ -3,11 +3,11 @@
     <h2 class="heading-6 md:heading-5 mb-6">
       {{ $t("imageDetails.relatedImages") }}
     </h2>
-    <VImageGrid
+    <VImageCollection
       kind="related"
       :results="media"
-      :fetch-state="fetchState"
-      :image-grid-label="$t('imageDetails.relatedImages').toString()"
+      :collection-label="$t('imageDetails.relatedImages').toString()"
+      class="pt-2 sm:pt-0"
     />
   </aside>
 </template>
@@ -19,11 +19,11 @@ import { useRoute } from "@nuxtjs/composition-api"
 import type { ImageDetail } from "~/types/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
-import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
+import VImageCollection from "~/components/VSearchResultsGrid/VImageCollection.vue"
 
 export default defineComponent({
   name: "VRelatedImages",
-  components: { VImageGrid },
+  components: { VImageCollection },
   setup() {
     const relatedMediaStore = useRelatedMediaStore()
 
@@ -47,14 +47,10 @@ export default defineComponent({
       () => (relatedMediaStore.media ?? []) as ImageDetail[]
     )
 
-    const fetchState = computed(() => relatedMediaStore.fetchState)
-
     return {
       showRelated,
 
       media,
-
-      fetchState,
     }
   },
 })

@@ -1,13 +1,13 @@
 import { defineStore } from "pinia"
 
 import type { SupportedMediaType } from "~/constants/media"
-import type { Media } from "~/types/media"
+import type { MediaDetail } from "~/types/media"
 
 export type MediaStatus = "ejected" | "playing" | "paused" // 'ejected' means player is closed
 
 export interface ActiveMediaState {
   type: SupportedMediaType | null
-  id: Media["id"] | null
+  id: MediaDetail["id"] | null
   status: MediaStatus
   /**
    * The i18n key for the message to display when rendering the active media.
@@ -45,7 +45,7 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
       status = "playing",
     }: {
       type: SupportedMediaType
-      id: Media["id"]
+      id: MediaDetail["id"]
       status?: MediaStatus
     }) {
       this.type = type

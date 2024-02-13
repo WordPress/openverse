@@ -88,8 +88,10 @@ export interface AudioDetail extends Media {
   hasLoaded?: boolean
 }
 
+export type MediaDetail = AudioDetail | ImageDetail
+
 export type DetailFromMediaType<T extends SupportedMediaType> =
-  T extends "audio" ? AudioDetail : ImageDetail
+  T extends "audio" ? AudioDetail : T extends "image" ? ImageDetail : never
 
 /**
  * This interface is a subset of `Media` that types dictionaries sent by the API
