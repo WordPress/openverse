@@ -94,6 +94,7 @@ def trigger_and_wait_for_reindex(
     requests_per_second: int,
     es_host: str,
     max_docs: int | None = None,
+    conflicts: str = "abort",
 ):
     @task
     def trigger_reindex(
@@ -103,6 +104,7 @@ def trigger_and_wait_for_reindex(
         query: dict,
         requests_per_second: int,
         max_docs: int | None,
+        conflicts: str,
     ):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
         source = {"index": source_index}
@@ -124,6 +126,7 @@ def trigger_and_wait_for_reindex(
             refresh=True,
             # Throttle
             requests_per_second=requests_per_second,
+            conflicts=conflicts,
         )
         return response["task"]
 
@@ -134,13 +137,19 @@ def trigger_and_wait_for_reindex(
 
         count = response.get("task", {}).get("status", {}).get("total")
         if count != expected_docs:
-            raise ValueError(
+            logger.info(
                 f"Reindexed {count} documents, but {expected_docs}" " were expected."
             )
         return response.get("completed")
 
     trigger_reindex_task = trigger_reindex(
-        es_host, destination_index, source_index, query, requests_per_second, max_docs
+        es_host,
+        destination_index,
+        source_index,
+        query,
+        requests_per_second,
+        max_docs,
+        conflicts,
     )
 
     wait_for_reindex = PythonSensor(
