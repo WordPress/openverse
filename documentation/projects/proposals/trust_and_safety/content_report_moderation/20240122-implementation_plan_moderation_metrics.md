@@ -4,8 +4,8 @@
 
 ## Reviewers
 
-- [ ] TBD
-- [ ] TBD
+- [ ] @AetherUnbound
+- [ ] @stacimc
 
 ## Project links
 
