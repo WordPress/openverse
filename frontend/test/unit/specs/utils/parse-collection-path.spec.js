@@ -45,4 +45,14 @@ describe("validateCollectionParams", () => {
       collection: "creator",
     })
   })
+
+  it("handles slashes in creator name", () => {
+    const collection = parseCollectionPath("/flickr/creator/me/you-and-them/")
+
+    expect(collection).toEqual({
+      source: "flickr",
+      creator: "me/you-and-them",
+      collection: "creator",
+    })
+  })
 })
