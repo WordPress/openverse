@@ -4,17 +4,10 @@
 For more information on how deployments work, please see the [general deployment guide](/general/deployment.md).
 ```
 
-1. Visit
-   [https://api-staging.openverse.engineering/version](https://api-staging.openverse.engineering/version)
-   and
-   [the API Docker image](https://github.com/wordpress/openverse/pkgs/container/openverse-api).
-   Verify that the commit SHA live on the staging site is also tagged with
-   `latest` in the Docker image.
-   ![GitHub package directory screenshot](/_static/package_directory_example.png)
-1. Release the app via
-   [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
-   Click the "Run workflow" button, choose "api" from the dropdown, and supply
-   the SHA identified in step 1.
+1. [Publish the drafted API release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=api-)
+   - Here you can preview the changes included in the API release and decide
+     whether a release is necessary and adjust monitoring during the deployment
+     accordingly.
 1. That's it! The API will be deployed. You can monitor the deployment in the
    maintainers `#openverse-notifications` channel and in the
    [infrastructure repository's workflow listing](https://github.com/WordPress/openverse-infrastructure/actions).

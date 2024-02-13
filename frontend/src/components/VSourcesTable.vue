@@ -39,10 +39,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(provider, index) in sortedProviders" :key="index">
-        <td>
-          {{ provider.display_name }}
+      <tr v-for="provider in sortedProviders" :key="provider.display_name">
+        <td v-if="additionalSearchViews">
+          <VLink :href="providerViewUrl(provider)">{{
+            provider.display_name
+          }}</VLink>
         </td>
+        <td v-else>{{ provider.display_name }}</td>
         <td class="truncate font-semibold">
           <VLink :href="provider.source_url">
             {{ cleanSourceUrlForPresentation(provider.source_url) }}
@@ -59,11 +62,15 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, reactive } from "vue"
 
+import { useContext } from "@nuxtjs/composition-api"
+
 import { useProviderStore } from "~/stores/provider"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { MediaProvider } from "~/types/media-provider"
+
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import TableSortIcon from "~/components/TableSortIcon.vue"
 import VLink from "~/components/VLink.vue"
@@ -81,6 +88,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { app } = useContext()
+
     const sorting = reactive({
       direction: "asc",
       field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
@@ -129,18 +138,27 @@ export default defineComponent({
       return 0
     }
 
-    const sortedProviders = computed(() => {
+    const sortedProviders = computed<MediaProvider[]>(() => {
       const providers = providerStore.providers[props.media]
       providers.sort(compareProviders)
       return sorting.direction === "asc" ? providers : providers.reverse()
     })
 
+    const featureFlagStore = useFeatureFlagStore()
+    const additionalSearchViews = computed(() => {
+      return featureFlagStore.isOn("additional_search_views")
+    })
+    const providerViewUrl = (provider: MediaProvider) => {
+      return app.localePath(`/${props.media}/source/${provider.source_name}`)
+    }
     return {
       getLocaleFormattedNumber,
       sortedProviders,
       sorting,
       sortTable,
       cleanSourceUrlForPresentation,
+      providerViewUrl,
+      additionalSearchViews,
     }
   },
 })
