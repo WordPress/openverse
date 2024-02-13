@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+from typing import Literal, Union
 
 from airflow.decorators import task, task_group
 from airflow.models.connection import Connection
@@ -94,7 +95,7 @@ def trigger_and_wait_for_reindex(
     requests_per_second: int,
     es_host: str,
     max_docs: int | None = None,
-    conflicts: str = "abort",
+    slices: Union[int, Literal["auto"]] = "auto",
 ):
     @task
     def trigger_reindex(
@@ -104,7 +105,7 @@ def trigger_and_wait_for_reindex(
         query: dict,
         requests_per_second: int,
         max_docs: int | None,
-        conflicts: str,
+        slices: Union[int, Literal["auto"]],
     ):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
         source = {"index": source_index}
@@ -117,8 +118,8 @@ def trigger_and_wait_for_reindex(
             source=source,
             dest={"index": destination_index},
             max_docs=max_docs,
-            # Parallelize indexing
-            slices="auto",
+            # Parallelize indexing when not None
+            slices=slices,
             # Do not hold the slot while awaiting completion
             wait_for_completion=False,
             # Immediately refresh the index after completion to make
@@ -126,7 +127,6 @@ def trigger_and_wait_for_reindex(
             refresh=True,
             # Throttle
             requests_per_second=requests_per_second,
-            conflicts=conflicts,
         )
         return response["task"]
 
@@ -149,7 +149,7 @@ def trigger_and_wait_for_reindex(
         query,
         requests_per_second,
         max_docs,
-        conflicts,
+        slices,
     )
 
     wait_for_reindex = PythonSensor(

@@ -160,11 +160,9 @@ def create_proportional_by_source_staging_index():
         requests_per_second=Variable.get(
             "ES_INDEX_THROTTLING_RATE", 20_000, deserialize_json=True
         ),
-        # In cases where max_docs is less than or equal to the scroll size
-        # Elasticsearch will disable scroll, resulting in an error with
-        # auto slicing. Setting conflicts to "proceed" prevents this, and
-        # is safe because records are being reindexed into an empty index.
-        conflicts="proceed",
+        # When slices are used to parallelize indexing, max_docs does
+        # not work reliably and the final proportions may be incorrect.
+        slices=None,
         es_host=es_host,
     ).expand_kwargs(desired_source_counts)
 
