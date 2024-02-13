@@ -71,7 +71,6 @@ def search_results(media_type: MediaType, api_client) -> tuple[MediaType, dict]:
     assert res.status_code == 200
 
     data = res.json()
-    # force_result_validity(data)
     return media_type, data
 
 
