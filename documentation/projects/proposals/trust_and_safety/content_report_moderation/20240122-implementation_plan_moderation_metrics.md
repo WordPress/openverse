@@ -132,17 +132,6 @@ moderation pipeline, whenever one of the following event occurs.
 - report deduplicated
 - decision created
 
-```{todo}
-Find answers to these questions:
-
-- Why does the
-  [Django Admin IP](/projects/proposals/trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.md)
-  have separate events for `confirmed_sensitive` and `deindexed_sensitive`?
-
-- Additionally shouldn't the action just be `confirmed` (with deindexing being
-  a consequence of that action)?
-```
-
 The log line must contain a JSON that matches this type definition.
 
 ```typescript
@@ -157,10 +146,14 @@ interface ReportMessage {
 interface DecisionMessage {
   message_type: "ModerationDecision"
   event_type: "created"
-  action_type: "confirmed" | "rejected" | "deduplicated"
+  action_type: "confirmed" | "rejected" | "deduplicated" | "deindexed"
   media_type: "image" | "audio"
 }
 ```
+
+Note that a deindexing decision also implicitly confirms the report. So a report
+message with `confirmed` event-type should be emitted for every decision message
+with a `deindexed` action-type.
 
 This logging can be abstracted into a specific utility module in the API. These
 utilities must be invoked from the `save` method on the Report and Decision
@@ -197,6 +190,7 @@ fields @timestamp, message_type, event_type
     sum(case when action_type = 'confirmed' then 1 else 0 end) as confirmedCount,
     sum(case when action_type = 'rejected' then 1 else 0 end) as rejectedCount,
     sum(case when action_type = 'deduplicated' then 1 else 0 end) as duplicateCount,
+    sum(case when action_type = 'deindexed' then 1 else 0 end) as deindexedCount,
   by bin(5m)
 | sort @timestamp desc
 ```
@@ -206,9 +200,8 @@ and our various responses over time. Similar queries can be used to create
 charts for other metrics. Ultimately a dashboard can be put together in
 CloudWatch, that tracks all relevant metrics.
 
-```{todo}
-Should we have this dashboard tracked in the infrastructure repository?
-```
+This dashboard will also be tracked in the infrastructure repo for backup and
+restoration purposes.
 
 ### Implement deferred metrics
 
