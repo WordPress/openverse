@@ -97,7 +97,7 @@ DAG_ID = "create_proportional_by_source_staging_index"
             default=None,
             type=["string", "null"],
             description=(
-                "Optionally, the existing production Elasticsearch index"
+                "Optionally, the existing staging Elasticsearch index"
                 " to use as the basis for the new index. If not provided,"
                 " the index aliased to `<media_type>-filtered` will be used."
             ),
@@ -142,14 +142,14 @@ def create_proportional_by_source_staging_index():
 
     new_index = es.create_index(index_config=destination_index_config, es_host=es_host)
 
-    production_source_counts = create_index.get_production_source_counts(
+    staging_source_counts = create_index.get_staging_source_counts(
         source_index=source_index_name, es_host=es_host
     )
 
     desired_source_counts = create_index.get_proportional_source_count_kwargs.override(
         task_id="get_desired_source_counts"
     )(
-        production_source_counts=production_source_counts,
+        staging_source_counts=staging_source_counts,
         percentage_of_prod="{{ params.percentage_of_prod }}",
     )
 
@@ -180,8 +180,8 @@ def create_proportional_by_source_staging_index():
     # Setup additional dependencies
     prevent_concurrency >> es_host
     es_host >> [source_index_name, destination_index_name, destination_alias]
-    production_source_counts >> desired_source_counts
-    new_index >> production_source_counts
+    staging_source_counts >> desired_source_counts
+    new_index >> staging_source_counts
     reindex >> point_alias >> notify_completion
 
 

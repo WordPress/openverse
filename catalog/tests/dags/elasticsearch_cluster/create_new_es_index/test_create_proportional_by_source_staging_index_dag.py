@@ -6,7 +6,7 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
 
 
 @pytest.mark.parametrize(
-    "production_source_counts, percentage_of_prod, expected_results",
+    "staging_source_counts, percentage_of_prod, expected_results",
     [
         (
             {"jamendo": 10_000, "freesound": 20_000, "wikimedia_audio": 10_000},
@@ -69,17 +69,17 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
             0.5,
             [
                 {
-                    # Note that each source gets 1_667 records (because it is
-                    # rounded up), for a total of 5_001 records in the new index.
-                    "max_docs": 1_667,
+                    # Note that each source gets 1_666 records (because it is
+                    # rounded), for a total of 4_998 records in the new index.
+                    "max_docs": 1_666,
                     "query": {"bool": {"filter": [{"term": {"source": "flickr"}}]}},
                 },
                 {
-                    "max_docs": 1_667,
+                    "max_docs": 1_666,
                     "query": {"bool": {"filter": [{"term": {"source": "stocksnap"}}]}},
                 },
                 {
-                    "max_docs": 1_667,
+                    "max_docs": 1_666,
                     "query": {"bool": {"filter": [{"term": {"source": "smk"}}]}},
                 },
             ],
@@ -87,9 +87,9 @@ from elasticsearch_cluster.create_proportional_by_source_staging_index.create_pr
     ],
 )
 def test_get_proportional_source_count_kwargs(
-    production_source_counts, percentage_of_prod, expected_results
+    staging_source_counts, percentage_of_prod, expected_results
 ):
     actual_results = get_proportional_source_count_kwargs.function(
-        production_source_counts, percentage_of_prod
+        staging_source_counts, percentage_of_prod
     )
     assert actual_results == expected_results
