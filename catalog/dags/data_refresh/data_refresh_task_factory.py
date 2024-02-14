@@ -33,7 +33,7 @@ to the `/task` endpoint on the data refresh server with relevant data. A
 successful response will include the `status_check` url used to check on the
 status of the refresh, which is passed on to the next task via XCom.
 
-3. Finally the `wait_for_data_refresh` task waits for the data refresh to be
+3. Finally, the `wait_for_data_refresh` task waits for the data refresh to be
 complete by polling the `status_url`. Note this task does not need to be
 able to suspend itself and free the worker slot, because we want to lock the
 entire pool on waiting for a particular data refresh to run.
@@ -49,10 +49,11 @@ import os
 from collections.abc import Sequence
 
 from airflow.models.baseoperator import chain
+from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common import ingestion_server
+from common import cloudwatch, ingestion_server
 from common.constants import PRODUCTION, XCOM_PULL_TEMPLATE
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags
@@ -137,7 +138,14 @@ def create_data_refresh_task_group(
         generate_index_suffix = ingestion_server.generate_index_suffix.override(
             trigger_rule=TriggerRule.NONE_FAILED,
         )()
-        tasks.append(generate_index_suffix)
+        disable_alarms = PythonOperator(
+            task_id="disable_sensitive_cloudwatch_alarms",
+            python_callable=cloudwatch.enable_or_disable_alarms,
+            op_kwargs={
+                "enable": False,
+            },
+        )
+        tasks.append([generate_index_suffix, disable_alarms])
 
         # Trigger the 'ingest_upstream' task on the ingestion server and await its
         # completion. This task copies the media table for the given model from the
@@ -147,10 +155,9 @@ def create_data_refresh_task_group(
             ingestion_server.trigger_and_wait_for_task(
                 action="ingest_upstream",
                 model=data_refresh.media_type,
-                data={
-                    "index_suffix": generate_index_suffix,
-                },
+                data={"index_suffix": generate_index_suffix},
                 timeout=data_refresh.data_refresh_timeout,
+                trigger_rule=TriggerRule.NONE_FAILED,
             )
             tasks.append(ingest_upstream_tasks)
 
@@ -181,6 +188,15 @@ def create_data_refresh_task_group(
         # running against an index that is already promoted in production.
         tasks.append(create_filtered_index)
 
+        enable_alarms = PythonOperator(
+            task_id="enable_sensitive_cloudwatch_alarms",
+            python_callable=cloudwatch.enable_or_disable_alarms,
+            op_kwargs={
+                "enable": True,
+            },
+            trigger_rule=TriggerRule.ALL_DONE,
+        )
+
         # Trigger the `promote` task on the ingestion server and await its completion.
         # This task promotes the newly created API DB table and elasticsearch index. It
         # does not include promotion of the filtered index, which must be promoted
@@ -195,7 +211,7 @@ def create_data_refresh_task_group(
                 },
                 timeout=data_refresh.data_refresh_timeout,
             )
-            tasks.append(promote_tasks)
+            tasks.append([enable_alarms, promote_tasks])
 
         # Delete the alias' previous target index, now unused.
         delete_old_index = ingestion_server.trigger_task(
@@ -206,6 +222,7 @@ def create_data_refresh_task_group(
                     get_current_index.task_id, "return_value"
                 ),
             },
+            trigger_rule=TriggerRule.NONE_FAILED,
         )
         tasks.append(delete_old_index)
 
@@ -219,7 +236,8 @@ def create_data_refresh_task_group(
         #       └─ create_filtered_index
         #          └─ promote (trigger_promote + wait_for_promote)
         #             └─ delete_old_index
-        #                └─ promote_filtered_index (including delete filtered index)
+        #                └─ promote_filtered_index (including delete filtered index) +
+        #                   enable_alarms
         chain(*tasks)
 
     return data_refresh_group
