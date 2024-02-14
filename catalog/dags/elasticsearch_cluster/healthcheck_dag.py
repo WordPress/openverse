@@ -30,6 +30,7 @@ from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
+
 logger = logging.getLogger(__name__)
 
 
