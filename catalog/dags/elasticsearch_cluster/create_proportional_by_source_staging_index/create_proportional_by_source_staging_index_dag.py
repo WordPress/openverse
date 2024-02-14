@@ -2,7 +2,7 @@
 # Create Proportional By Source Staging Index DAG
 
 This DAG is used to create a new staging Elasticsearch index that is a subset
-of a production source index, such that the proportions of records by source in
+of a staging source index, such that the proportions of records by source in
 the new index is equal to the proportions of records by source in the source
 index.
 
@@ -11,12 +11,12 @@ Required Dagrun Configuration parameters:
 
 * media_type:         The media type for which to create a new index.
 * percentage_of_prod: A float indicating the proportion of items to take from each
-                      source from the total amount existing in the production
+                      source from the total amount existing in the staging
                       source index
 
 Optional params:
 
-* source_index: An existing production Elasticsearch index to use as the basis for
+* source_index: An existing staging Elasticsearch index to use as the basis for
                 the new index. If not provided, the index aliased to
                 `<media_type>-filtered` will be used.
 
@@ -164,7 +164,6 @@ def create_proportional_by_source_staging_index():
         # not work reliably and the final proportions may be incorrect.
         slices=None,
         es_host=es_host,
-        max_active_tis_per_dagrun=1,
     ).expand_kwargs(desired_source_counts)
 
     point_alias = es.point_alias(
