@@ -136,10 +136,12 @@ def trigger_and_wait_for_reindex(
         response = es_conn.tasks.get(task_id=task_id)
 
         count = response.get("task", {}).get("status", {}).get("total")
-        if count != expected_docs:
+        if expected_docs and count != expected_docs:
             logger.info(
-                f"Reindexed {count} documents, but {expected_docs}" " were expected."
+                f"Reindexed {count} documents, but {expected_docs} were expected."
             )
+        else:
+            logger.info(f"Reindexed {count} documents.")
         return response.get("completed")
 
     trigger_reindex_task = trigger_reindex(
