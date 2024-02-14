@@ -43,6 +43,15 @@
         @click="handleClick(idx)"
       >
         {{ entry }}
+        <VIconButton
+          variant="transparent-gray"
+          :icon-props="{ name: 'close-small' }"
+          size="small"
+          :label="$t('recentSearches.clearSingle.label', { entry }).toString()"
+          class="ms-auto group-focus-within/entry:opacity-100 group-hover/entry:opacity-100"
+          :class="{ 'opacity-0': bordered }"
+          @click.stop="handleClearSingle(idx)"
+        />
       </li>
       <!-- eslint-enable -->
     </ul>
@@ -62,6 +71,7 @@ import { defineComponent, type PropType } from "vue"
 import { defineEvent } from "~/types/emits"
 
 import VButton from "~/components/VButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 /**
  * List the recent searches of the user allowing them to go back to a previous
@@ -69,7 +79,7 @@ import VButton from "~/components/VButton.vue"
  */
 export default defineComponent({
   name: "VRecentSearches",
-  components: { VButton },
+  components: { VIconButton, VButton },
   props: {
     /**
      * the list of saved past searches
@@ -95,6 +105,7 @@ export default defineComponent({
   emits: {
     select: defineEvent<[number]>(),
     clear: defineEvent(),
+    "clear-single": defineEvent<[number]>(),
   },
   setup(_, { emit }) {
     const handleClick = (idx: number) => {
@@ -103,10 +114,14 @@ export default defineComponent({
     const handleClear = () => {
       emit("clear")
     }
+    const handleClearSingle = (idx: number) => {
+      emit("clear-single", idx)
+    }
 
     return {
       handleClick,
       handleClear,
+      handleClearSingle,
     }
   },
 })

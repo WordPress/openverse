@@ -744,6 +744,9 @@
       text: "Clear",
       label: "Clear recent searches",
     },
+    clearSingle: {
+      label: "Clear recent search '{entry}'",
+    },
     none: "No recent searches to show.",
     disclaimer: "Openverse does not store your recent searches, this information is kept locally in your browser.",
   },
