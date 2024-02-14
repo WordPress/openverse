@@ -1,15 +1,15 @@
 <template>
   <div
-    class="flex flex-col gap-1 rounded-sm border bg-white"
-    :class="bordered ? 'border-dark-charcoal-20 p-4 shadow-el-2' : 'border-tx'"
+    class="flex flex-col rounded-sm bg-white"
+    :class="bordered ? 'border border-dark-charcoal-20 p-2 shadow-el-2' : 'p-3'"
     data-testid="recent-searches"
   >
     <div
-      class="flex flex-row items-center justify-between py-2"
-      :class="{ 'pe-2': !bordered }"
+      class="flex h-10 flex-row items-center justify-between ps-3"
+      :class="{ 'pe-1': !bordered }"
     >
       <!-- Left margin to align with the text of recent searches. -->
-      <span class="category mx-2 my-1">
+      <span class="category">
         {{ $t("recentSearches.heading") }}
       </span>
       <VButton
@@ -37,29 +37,37 @@
         :id="`option-${idx}`"
         :key="idx"
         role="option"
-        class="description-regular my-1 rounded-sm border-1.5 p-2 hover:bg-dark-charcoal-10"
+        class="group/entry description-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-dark-charcoal-10"
         :class="idx === selectedIdx ? 'border-pink' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"
       >
+        <VIcon name="search" />
         {{ entry }}
         <VIconButton
           variant="transparent-gray"
           :icon-props="{ name: 'close-small' }"
           size="small"
           :label="$t('recentSearches.clearSingle.label', { entry }).toString()"
-          class="ms-auto group-focus-within/entry:opacity-100 group-hover/entry:opacity-100"
-          :class="{ 'opacity-0': bordered }"
+          class="ms-auto group-hover/entry:flex"
+          :class="{ hidden: bordered }"
           @click.stop="handleClearSingle(idx)"
         />
       </li>
       <!-- eslint-enable -->
     </ul>
-    <span v-else class="description-regular mx-2 my-3">
+    <span
+      v-else
+      class="description-regular flex h-10 flex-row items-center ps-3"
+      :class="{ 'pe-1': !bordered }"
+    >
       {{ $t("recentSearches.none") }}
     </span>
 
-    <span class="caption-regular mx-2 my-3 text-dark-charcoal-70">
+    <span
+      class="caption-regular mt-auto flex flex-row items-center px-3 pt-3 text-dark-charcoal-70"
+      :class="{ 'h-10': bordered }"
+    >
       {{ $t("recentSearches.disclaimer") }}
     </span>
   </div>
@@ -71,6 +79,7 @@ import { defineComponent, type PropType } from "vue"
 import { defineEvent } from "~/types/emits"
 
 import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 /**
@@ -79,7 +88,7 @@ import VIconButton from "~/components/VIconButton/VIconButton.vue"
  */
 export default defineComponent({
   name: "VRecentSearches",
-  components: { VIconButton, VButton },
+  components: { VIconButton, VIcon, VButton },
   props: {
     /**
      * the list of saved past searches
