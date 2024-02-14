@@ -164,6 +164,7 @@ def create_proportional_by_source_staging_index():
         # not work reliably and the final proportions may be incorrect.
         slices=None,
         es_host=es_host,
+        max_active_tis_per_dagrun=1,
     ).expand_kwargs(desired_source_counts)
 
     point_alias = es.point_alias(

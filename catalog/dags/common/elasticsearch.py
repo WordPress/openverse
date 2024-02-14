@@ -96,8 +96,9 @@ def trigger_and_wait_for_reindex(
     es_host: str,
     max_docs: int | None = None,
     slices: Union[int, Literal["auto"]] = "auto",
+    max_active_tis_per_dagrun: int | None = None,
 ):
-    @task
+    @task(max_active_tis_per_dagrun=max_active_tis_per_dagrun)
     def trigger_reindex(
         es_host: str,
         destination_index: str,
@@ -162,6 +163,7 @@ def trigger_and_wait_for_reindex(
             "expected_docs": max_docs,
             "es_host": es_host,
         },
+        max_active_tis_per_dagrun=max_active_tis_per_dagrun,
     )
 
     trigger_reindex_task >> wait_for_reindex
