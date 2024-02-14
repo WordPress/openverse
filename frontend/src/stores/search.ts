@@ -112,7 +112,9 @@ export function collectionToPath(collectionParams: CollectionParams) {
       return `tag/${collectionParams.tag}/`
     }
     case "creator": {
-      return `source/${collectionParams.source}/creator/${collectionParams.creator}/`
+      return `source/${collectionParams.source}/creator/${encodeURIComponent(
+        collectionParams.creator
+      )}/`
     }
     case "source": {
       return `source/${collectionParams.source}/`
