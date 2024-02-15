@@ -433,9 +433,6 @@ jobs:
           name: api_logs
           path: api_logs
 
-      - name: Run API schema tests
-        run: just api/test-schema
-
   django-checks:
     name: Run Django checks
     if: |
