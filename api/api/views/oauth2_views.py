@@ -7,6 +7,7 @@ from textwrap import dedent
 from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
+from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -182,14 +183,14 @@ class CheckRates(APIView):
 
         # TODO: Replace 403 responses with DRF `authentication_classes`.
         if not request.auth or not hasattr(request.auth, "application"):
-            return Response(status=403, data="Forbidden")
+            raise PermissionDenied("Forbidden", 403)
 
         application: ThrottledApplication = request.auth.application
 
         client_id = application.client_id
 
         if not client_id:
-            return Response(status=403, data="Forbidden")
+            raise PermissionDenied("Forbidden", 403)
 
         throttle_type = application.rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
@@ -213,8 +214,7 @@ class CheckRates(APIView):
                 scope="exempt_oauth2_client_credentials_burst", client_id=client_id
             )
         else:
-            # TODO: Replace 500 response with exception.
-            return Response(status=500, data="Unknown API key rate limit type")
+            return APIException("Unknown API key rate limit type")
 
         try:
             sustained_requests_list = cache.get(sustained_throttle_key)
