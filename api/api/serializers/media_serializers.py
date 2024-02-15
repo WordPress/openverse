@@ -685,7 +685,6 @@ def get_hyperlinks_serializer(media_type):
 
         thumbnail = SchemableHyperlinkedIdentityField(
             read_only=True,
-            allow_null=True,
             view_name=f"{media_type}-thumb",
             lookup_field="identifier",
             help_text="A direct link to the miniature artwork.",
