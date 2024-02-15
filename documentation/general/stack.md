@@ -31,8 +31,4 @@ This page is your gateway to understanding our diverse technology stack. Explore
    - Tools and Framework:
      - [Nuxt.js](https://nuxt.com/docs/getting-started/introduction)
      - [Vue.js](https://vuejs.org/guide/introduction.html)
-5. Automation
-   - Scripts used for various workflows around Openverse repositories and processes.
-   - [Code](https://github.com/WordPress/openverse/tree/main/automations)
-   - [Documentation](https://docs.openverse.org/automations/index.html)
-   - Language: Python
+5. 
