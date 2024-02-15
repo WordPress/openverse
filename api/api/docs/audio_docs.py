@@ -1,4 +1,8 @@
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
+from rest_framework.exceptions import (
+    NotAuthenticated,
+    NotFound,
+    ValidationError,
+)
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
@@ -52,7 +56,7 @@ search = custom_extend_schema(
     res={
         200: (AudioSerializer, audio_search_200_example),
         400: (ValidationError, audio_search_400_example),
-        403: (PermissionDenied, None),
+        401: (NotAuthenticated, None),
     },
     eg=[audio_search_list_curl],
     external_docs={

@@ -3,7 +3,7 @@ from collections import namedtuple
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from rest_framework import serializers
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.exceptions import NotAuthenticated
 
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
@@ -70,11 +70,13 @@ class PaginatedRequestSerializer(serializers.Serializer):
         if is_anonymous:
             try:
                 validator(value)
-            except ValidationError as e:
-                raise PermissionDenied(
-                    detail=e.message,
-                    code=e.code,
-                )
+            except Exception as e:
+                # TODO: figure out why except ValidationError doesn't catch this
+                if type(e).__name__ == "ValidationError":
+                    raise NotAuthenticated(
+                        detail=e.message,
+                        code=e.code,
+                    )
         else:
             validator(value)
 

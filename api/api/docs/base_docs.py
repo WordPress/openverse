@@ -2,7 +2,11 @@ from http.client import responses as http_responses
 from textwrap import dedent
 from typing import Literal
 
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import (
+    NotAuthenticated,
+    NotFound,
+    ValidationError,
+)
 
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import (
@@ -220,13 +224,19 @@ def collection_schema(
         serializer = AudioSerializer
 
     if collection == "tag":
-        responses = {200: serializer(many=True), 404: NotFound, 400: ValidationError}
+        responses = {
+            200: serializer(many=True),
+            404: NotFound,
+            400: ValidationError,
+            401: (NotAuthenticated, None),
+        }
         path_parameters = [tag_path_parameter]
     else:
         responses = {
             200: serializer(many=True),
             404: source_404_response,
             400: ValidationError,
+            401: (NotAuthenticated, None),
         }
         path_parameters = [build_source_path_parameter(media_type)]
         if collection == "creator":
