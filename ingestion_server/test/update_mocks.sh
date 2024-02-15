@@ -22,12 +22,12 @@ docker run \
 		EOF
 
 # Remove search path so we can refer to the public schema implicitly
-sed -i "" '/search_path/d' mock_schemas/image.sql
-sed -i "" '/search_path/d' mock_schemas/audio.sql
-sed -i "" '/search_path/d' mock_schemas/audioset.sql
-sed -i "" '/search_path/d' mock_schemas/image_view.sql
-sed -i "" '/search_path/d' mock_schemas/audio_view.sql
-sed -i "" '/search_path/d' mock_schemas/audioset_view.sql
+perl -i -pe '/search_path/d' mock_schemas/image.sql
+perl -i -pe '/search_path/d' mock_schemas/audio.sql
+perl -i -pe '/search_path/d' mock_schemas/audioset.sql
+perl -i -pe '/search_path/d' mock_schemas/image_view.sql
+perl -i -pe '/search_path/d' mock_schemas/audio_view.sql
+perl -i -pe '/search_path/d' mock_schemas/audioset_view.sql
 
 # Select some media samples and export them to CSV
 docker run \
