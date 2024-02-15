@@ -64,10 +64,7 @@
       {{ $t("recentSearches.none") }}
     </span>
 
-    <span
-      class="caption-regular mt-auto flex flex-row items-center px-3 pt-3 text-dark-charcoal-70"
-      :class="{ 'h-10': bordered }"
-    >
+    <span class="caption-regular mt-auto p-3 text-dark-charcoal-70">
       {{ $t("recentSearches.disclaimer") }}
     </span>
   </div>
