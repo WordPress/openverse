@@ -759,7 +759,7 @@ jobs:
           )
           echo "$MESSAGE" | tee "$GITHUB_OUTPUT"
 
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         id: create-comment
         # Do not leave a comment on forks
         if: |
@@ -898,7 +898,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Full-stack documentation
 
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         if: github.event_name == 'pull_request'
         with:
           issue-number: ${{ github.event.pull_request.number }}
