@@ -10,7 +10,7 @@
         <div
           ref="dialogRef"
           v-bind="$attrs"
-          class="flex w-full flex-col px-4 py-4"
+          class="flex w-full flex-col px-3 py-4"
           role="dialog"
           aria-modal="true"
           @keydown="onKeyDown"

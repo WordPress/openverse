@@ -10,7 +10,7 @@
       aria-label="inputmodal"
       @close="deactivate"
     >
-      <div class="flex w-full" :class="{ 'px-2': isRecentSearchesModalOpen }">
+      <div class="flex w-full" :class="{ 'px-3': isRecentSearchesModalOpen }">
         <!-- Form action is a fallback for when JavaScript is disabled. -->
         <form
           action="/search"

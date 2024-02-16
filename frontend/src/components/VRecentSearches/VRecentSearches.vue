@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex flex-col rounded-sm bg-white"
-    :class="bordered ? 'border border-dark-charcoal-20 p-2 shadow-el-2' : 'p-3'"
+    :class="{ 'border border-dark-charcoal-20 shadow-el-2': bordered }"
     data-testid="recent-searches"
   >
     <div
