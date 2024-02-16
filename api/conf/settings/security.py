@@ -32,7 +32,7 @@ if DEBUG:
         "0.0.0.0",
     ]
 
-BASE_URL = config("BASE_URL", default="https://openverse.org/")
+BASE_URL = config("BASE_URL", default="https://api.openverse.engineering/")
 
 # Trusted origins for CSRF
 # https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-trusted-origins
