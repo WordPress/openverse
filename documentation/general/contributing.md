@@ -8,7 +8,7 @@ project.
 ## Code of Conduct
 
 You should read and agree to abide by the
-[code of conduct](https://github.com/WordPress/openverse/blob/main/CODE_OF_CONDUCT.md)
+[code of conduct](https://make.wordpress.org/handbook/community-code-of-conduct/)
 before contributing to WordPress projects. This applies to all Openverse
 repositories because Openverse is a WordPress Foundation project.
 
