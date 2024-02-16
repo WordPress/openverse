@@ -14,6 +14,6 @@ runs:
 
     - id: paths-filter
       name: Check changed paths
-      uses: dorny/paths-filter@v2
+      uses: dorny/paths-filter@v3
       with:
         filters: ./.github/filters.yml
