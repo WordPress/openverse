@@ -80,6 +80,26 @@ def test_get_creators_failure():
     assert actual_creator is None
 
 
+@pytest.mark.parametrize("subject_container", [lambda x: [x], lambda x: x])
+@pytest.mark.parametrize("topic_container", [lambda x: [x], lambda x: x])
+@pytest.mark.parametrize(
+    "topic, expected_tags",
+    [
+        # No topics
+        [{}, []],
+        # Unrelated topics
+        [{"Unrelated": "Foo"}, []],
+        # Relevant topics
+        [{"$": "value"}, ["value"]],
+    ],
+)
+def test_get_tags(subject_container, topic_container, topic, expected_tags):
+    topics = topic_container(topic)
+    subject = subject_container({"topic": topics})
+    actual_tags = nypl._get_tags({"subject": subject})
+    assert actual_tags == expected_tags
+
+
 def test_get_metadata():
     item_response = _get_resource_json("response_itemdetails_success.json")
     mods = item_response.get("nyplAPI").get("response").get("mods")

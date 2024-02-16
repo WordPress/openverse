@@ -236,7 +236,7 @@ class NyplDataIngester(ProviderDataIngester):
                     tags.extend([t.get("$") for t in topic])
                 else:
                     tags.append(topic.get("$"))
-        return tags
+        return [tag for tag in tags if tag]
 
     @staticmethod
     def _get_type_of_resource(mods: dict) -> str | None:
