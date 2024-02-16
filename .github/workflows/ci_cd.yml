@@ -722,7 +722,7 @@ jobs:
       - playwright
 
     steps:
-      - uses: peter-evans/find-comment@v2
+      - uses: peter-evans/find-comment@v3
         id: test-results-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -890,7 +890,7 @@ jobs:
           force_orphan: true
           cname: docs.openverse.org
 
-      - uses: peter-evans/find-comment@v2
+      - uses: peter-evans/find-comment@v3
         if: github.event_name == 'pull_request'
         id: final-preview-comment
         with:
