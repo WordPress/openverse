@@ -37,7 +37,7 @@
         :id="`option-${idx}`"
         :key="idx"
         role="option"
-        class="group/entry description-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-dark-charcoal-10"
+        class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-dark-charcoal-10"
         :class="idx === selectedIdx ? 'border-pink' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"
@@ -64,7 +64,9 @@
       {{ $t("recentSearches.none") }}
     </span>
 
-    <span class="caption-regular mt-auto p-3 text-dark-charcoal-70">
+    <span
+      class="mt-auto p-3 text-sm leading-close text-dark-charcoal-70 lg:leading-snug"
+    >
       {{ $t("recentSearches.disclaimer") }}
     </span>
   </div>
