@@ -14,7 +14,8 @@ jobs:
       should_alert: ${{ steps.count-prs.outputs.should_alert }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/github-script@v6
+      - name: Count user PRs
+        uses: actions/github-script@v7
         id: count-prs
         env:
           GH_SLACK_USERNAME_MAP: ${{ secrets.GH_SLACK_USERNAME_MAP }}
@@ -22,7 +23,7 @@ jobs:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
             const script = require('./automations/js/src/count_user_reviewable_prs.js')
-            await script({github,context,core})
+            await script({github, context, core})
 
   send_message:
     needs: analyze-user-prs

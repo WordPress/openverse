@@ -12,7 +12,8 @@ jobs:
     if: github.repository_owner == 'WordPress'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/github-script@v6
+      - name: Send reminders to update project threads
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |

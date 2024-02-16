@@ -24,7 +24,8 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: This PR has migrations
 
-      - uses: actions/github-script@v6
+      - name: Delete existing migration warning comment
+        uses: actions/github-script@v7
         if: steps.existing-warning.outputs.comment-id != 0
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}

@@ -150,7 +150,7 @@ jobs:
 
     steps:
       - name: Apply stack labels
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           # Also see
           # - list of stack filters: `.github/filters.yml`
@@ -728,7 +728,8 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Playwright failure test results
 
-      - uses: actions/github-script@v6
+      - name: Delete existing results comment
+        uses: actions/github-script@v7
         if: steps.test-results-comment.outputs.comment-id != 0
         with:
           script: |

@@ -30,7 +30,7 @@ runs:
         pnpm install @actions/artifact -w
 
     - name: Download images
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           const { DefaultArtifactClient } = require('@actions/artifact')
