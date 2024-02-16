@@ -41,7 +41,6 @@ utilities/                  @WordPress/openverse-maintainers
 .gitattributes              @WordPress/openverse-maintainers
 .gitignore                  @WordPress/openverse-maintainers
 .pre-commit-config.yaml     @WordPress/openverse-maintainers
-CODE_OF_CONDUCT.md          @WordPress/openverse-maintainers
 CONTRIBUTING.md             @WordPress/openverse-maintainers
 LICENSE                     @WordPress/openverse-maintainers
 README.md                   @WordPress/openverse-maintainers
