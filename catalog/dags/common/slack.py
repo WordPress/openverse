@@ -295,7 +295,7 @@ def should_send_message(
 
     # Exit early if this DAG is configured to skip Slack messaging
     if should_silence_message(text, username, dag_id, task_id):
-        log.info(f"Skipping Slack notification for {dag_id}::{task_id}.")
+        log.info(f"Skipping silenced Slack notification for {dag_id}::{task_id}.")
         return False
 
     # Exit early if we aren't on production or if force alert is not set
@@ -303,7 +303,15 @@ def should_send_message(
     force_message = Variable.get(
         "SLACK_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
     )
-    return environment == "prod" or force_message
+    if not (environment == "prod" or force_message):
+        log.info(
+            f"Skipping Slack notification for {dag_id}:{task_id} in"
+            f" `{environment}` environment. To send the notification, enable"
+            " the`SLACK_MESSAGE_OVERRIDE` variable."
+        )
+        return False
+
+    return True
 
 
 def send_message(
