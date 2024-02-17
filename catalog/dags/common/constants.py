@@ -15,6 +15,9 @@ MediaType = Literal["audio", "image"]
 STAGING = "staging"
 PRODUCTION = "production"
 
+Environment = Literal["staging", "production"]
+ENVIRONMENTS = [STAGING, PRODUCTION]
+
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
 
 DAG_DEFAULT_ARGS = {
@@ -37,6 +40,7 @@ POSTGRES_CONN_ID = "postgres_openledger_upstream"
 OPENLEDGER_API_CONN_ID = "postgres_openledger_api"
 POSTGRES_API_STAGING_CONN_ID = "postgres_openledger_api_staging"
 AWS_CONN_ID = "aws_default"
+AWS_CLOUDWATCH_CONN_ID = os.environ.get("AWS_CLOUDWATCH_CONN_ID", AWS_CONN_ID)
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
 ES_PROD_HTTP_CONN_ID = "elasticsearch_http_production"
 REFRESH_POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))

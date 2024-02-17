@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from unittest.mock import MagicMock
 
-from rest_framework.test import APIClient, APIRequestFactory
-
 import pook
 import pytest
 from elasticsearch import Elasticsearch
@@ -39,24 +37,12 @@ from test.factory.models.media import (
 )
 
 
-@pytest.fixture
-def api_client():
-    return APIClient()
-
-
 @pytest.fixture(autouse=True)
 def sentry_capture_exception(monkeypatch):
     mock = MagicMock()
     monkeypatch.setattr("sentry_sdk.capture_exception", mock)
 
     yield mock
-
-
-@pytest.fixture
-def request_factory() -> APIRequestFactory():
-    request_factory = APIRequestFactory(defaults={"REMOTE_ADDR": "192.0.2.1"})
-
-    return request_factory
 
 
 @dataclass
@@ -158,3 +144,12 @@ def cleanup_elasticsearch_test_documents(request, settings):
         query={"match": {"tags.name": CREATED_BY_FIXTURE_MARKER}},
         refresh=True,
     )
+
+
+__all__ = [
+    "sentry_capture_exception",
+    "image_media_type_config",
+    "audio_media_type_config",
+    "media_type_config",
+    "cleanup_elasticsearch_test_documents",
+]

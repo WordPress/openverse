@@ -80,6 +80,26 @@ def test_get_creators_failure():
     assert actual_creator is None
 
 
+@pytest.mark.parametrize("subject_container", [lambda x: [x], lambda x: x])
+@pytest.mark.parametrize("topic_container", [lambda x: [x], lambda x: x])
+@pytest.mark.parametrize(
+    "topic, expected_tags",
+    [
+        # No topics
+        [{}, []],
+        # Unrelated topics
+        [{"Unrelated": "Foo"}, []],
+        # Relevant topics
+        [{"$": "value"}, ["value"]],
+    ],
+)
+def test_get_tags(subject_container, topic_container, topic, expected_tags):
+    topics = topic_container(topic)
+    subject = subject_container({"topic": topics})
+    actual_tags = nypl._get_tags({"subject": subject})
+    assert actual_tags == expected_tags
+
+
 def test_get_metadata():
     item_response = _get_resource_json("response_itemdetails_success.json")
     mods = item_response.get("nyplAPI").get("response").get("mods")
@@ -138,12 +158,12 @@ def test_get_record_data_success():
             "date_issued": "1981",
             "genre": "Maps",
             "publisher": "New York Public Library, Local History and Genealogy Division",
-            "tags": "Census districts",
             "type_of_resource": "cartographic",
             "physical_description": "4 polyester film encapsulations, some containing 2 sheets back-to-back. "
             "Accompanying text formatted as 1 large sheet (46 x 59 cm), in one of "
             "the encapsulations.",
         },
+        "raw_tags": ["Census districts"],
         "title": "1900 census enumeration districts, Manhattan and Bronx",
         "license_info": CC0,
     }

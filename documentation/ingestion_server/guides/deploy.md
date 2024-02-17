@@ -4,13 +4,10 @@
 
 1. Check [Airflow](https://airflow.openverse.engineering/home?tags=data_refresh)
    to make sure a data refresh isn't occurring.
-1. Visit the
-   [Ingestion Server Docker image](https://github.com/WordPress/openverse/pkgs/container/openverse-ingestion_server)
-   page and copy the SHA of the image tagged `latest`.
-1. Release the app via
-   [GitHub workflow](https://github.com/WordPress/openverse/actions/workflows/release-app.yml).
-   Click the "Run workflow" button, choose "ingestion_server" from the dropdown,
-   and supply the SHA identified in the previous step.
+1. [Publish the drafted ingestion server release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=ingestion_server-)
+   - Here you can preview the changes included in the ingestion server release
+     and decide whether a release is necessary and adjust monitoring during the
+     deployment accordingly.
 
 ## Deployment
 

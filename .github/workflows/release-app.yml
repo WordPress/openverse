@@ -1,23 +1,19 @@
 name: Release app
 
 on:
-  workflow_dispatch:
-    inputs:
-      app:
-        type: choice
-        options:
-          - api
-          - ingestion_server
-          - frontend
-          - catalog
-        required: true
-        description: Application to release. If `api` or `frontend`, the deployment workflow will automatically be dispatched for you.
-      image-sha:
-        type: string
-        required: true
-        description: The SHA of the staging image to tag.
+  release:
+    types: [released]
 
-concurrency: ${{ github.workflow }}-${{ inputs.app }}
+# The app-name expression is duplicated between here and `env` below because neither context is able to reference the other
+# but both need it
+concurrency: >
+  ${{ github.workflow }}-
+  ${{
+    startsWith(github.ref_name, 'api-') && 'api'
+    || startsWith(github.ref_name, 'ingestion_server-') && 'ingestion_server'
+    || startsWith(github.ref_name, 'catalog-') && 'catalog'
+    || startsWith(github.ref_name, 'frontend-') && 'frontend'
+  }}
 
 jobs:
   release-app:
@@ -32,55 +28,25 @@ jobs:
       packages: write
       # Needed to open the changelog PR
       pull-requests: write
+    env:
+      # Do not split this into multiple lines, it will not work:
+      # https://github.com/WordPress/openverse/pull/3789#pullrequestreview-1876525552
+      APP_NAME: ${{ startsWith(github.ref_name, 'api-') && 'api' || startsWith(github.ref_name, 'ingestion_server-') && 'ingestion_server' || startsWith(github.ref_name, 'catalog-') && 'catalog' || startsWith(github.ref_name, 'frontend-') && 'frontend' }}
     steps:
       - uses: actions/checkout@v4
         with:
           # Creating the tag requires having the whole history of `main`
           fetch-depth: 0
 
-      - name: Validate `sha-tag` input
-        uses: actions/github-script@v6
-        with:
-          script: |
-            let exists = undefined,
-              page = 0
-            while (!exists) {
-              page += 1
-              const { data: versions } =
-                await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
-                  package_type: 'container',
-                  // We do not have to validate that auxiliary images also exist as they're built at the same time
-                  // as the "main" image. e.g., `api_nginx` is always built when `api` is built and they'll have
-                  // the same set of tags.
-                  package_name: 'openverse-${{ inputs.app }}',
-                  org: 'WordPress',
-                  page,
-                  // max of `per_page`
-                  per_page: 100,
-                })
-              if (!versions.length) {
-                break
-              }
-              exists = versions.some((v) => v.metadata.container.tags.includes('${{ inputs.image-sha }}'))
-            }
-            if (!exists) {
-              throw new Error(
-                `'${{ inputs.image-sha }}' does not appear to be a valid SHA tag for ${{ inputs.app }}.`
-              )
-            }
-
       - name: Calculate tag name
         id: tag
         run: |
-          # Format example: 2023.03.22.04.56.29
-          # `-u` forces UTC
-          formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
+          release_date=$(echo '${{ github.ref_name }}' | sed 's/${{ env.APP_NAME }}-//')
 
-          # Split image and git tag to avoid app name duplicated in the fully qualified image name
+          # Generate `rel-` prefixed image tag to avoid duplicated app name between image and tag
           {
-            echo "date=$formatted_date";
-            echo "git-tag=${{ inputs.app }}-$formatted_date";
-            echo "image-tag=rel-$formatted_date";
+            echo "date=$release_date";
+            echo "image-tag=rel-$release_date";
           } >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Docker Registry
@@ -90,22 +56,22 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add new tag to existing docker image
+      - name: Tag latest with release tag
         run: |
-          docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}:${{ steps.tag.outputs.image-tag }}
+          docker buildx imagetools create ghcr.io/wordpress/openverse-${{ env.APP_NAME }}:latest --tag ghcr.io/wordpress/openverse-${{ env.APP_NAME }}:${{ steps.tag.outputs.image-tag }}
 
-          if [[ "${{ inputs.app }}" == "api" ]] || [[ "${{ inputs.app }}" == "frontend" ]]; then
-            docker buildx imagetools create ghcr.io/wordpress/openverse-${{ inputs.app }}_nginx:${{ inputs.image-sha }} --tag ghcr.io/wordpress/openverse-${{ inputs.app }}_nginx:${{ steps.tag.outputs.image-tag }}
+          if [[ "${{ env.APP_NAME }}" == "api" ]] || [[ "${{ env.APP_NAME }}" == "frontend" ]]; then
+            docker buildx imagetools create ghcr.io/wordpress/openverse-${{ env.APP_NAME }}_nginx:latest --tag ghcr.io/wordpress/openverse-${{ env.APP_NAME }}_nginx:${{ steps.tag.outputs.image-tag }}
           fi
 
       - name: Deploy production application
-        if: inputs.app == 'frontend' || inputs.app == 'api'
+        if: env.APP_NAME == 'frontend' || env.APP_NAME == 'api'
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
           owner: WordPress
           repo: openverse-infrastructure
           token: ${{ secrets.ACCESS_TOKEN }}
-          event_type: deploy_production_${{ inputs.app == 'frontend' && 'nuxt' || inputs.app }}
+          event_type: deploy_production_${{ env.APP_NAME == 'frontend' && 'nuxt' || env.APP_NAME }}
           client_payload: |
             {
               "actor": "${{ github.actor }}",
@@ -120,24 +86,11 @@ jobs:
           # minutes is reached. On the other hand, we do want to wait
           # so that there is a record of the successful deployment.
 
-      - name: Create and publish release
-        uses: release-drafter/release-drafter@v5
-        id: release-drafter
-        with:
-          config-name: release-drafter-${{ inputs.app }}.yml
-          version: ${{ steps.tag.outputs.date }}
-          tag: ${{ steps.tag.outputs.git-tag }}
-          name: ${{ steps.tag.outputs.git-tag }}
-          publish: true
-          commitish: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Add new changelog file to documentation
         env:
-          APP: ${{ inputs.app }}
+          APP: ${{ env.APP_NAME }}
           DATE: ${{ steps.tag.outputs.date }}
-          RELEASE_BODY: ${{ steps.release-drafter.outputs.body }}
+          RELEASE_BODY: ${{ github.event.release.body }}
         working-directory: automations/python/workflows
         run: python write_changelog.py
 
@@ -158,24 +111,23 @@ jobs:
       - name: Lint the changelog file so that it passes CI
         run: |
           # Add the new changelog file to git so that pre-commit can lint it.
-          git add documentation/changelogs/${{ inputs.app }}/${{ steps.tag.outputs.date }}.md
+          git add documentation/changelogs/${{ env.APP_NAME }}/${{ steps.tag.outputs.date }}.md
           just precommit
           # Ensure this step passes even if linting has made changes so the workflow can continue
           just lint || true
 
       - name: Open changelog PR
         uses: peter-evans/create-pull-request@v5
-        if: ${{ !cancelled() }}
         with:
           # Access token necessary for PRs to run with CI
           token: ${{ secrets.ACCESS_TOKEN }}
           base: main
-          branch: changelog/${{ steps.tag.outputs.git-tag }}
-          commit-message: Publish changelog for ${{ steps.tag.outputs.git-tag }}
-          title: Publish changelog for ${{ steps.tag.outputs.git-tag }}
+          branch: changelog/${{ github.ref_name }}
+          commit-message: Publish changelog for ${{ github.ref_name }}
+          title: Publish changelog for ${{ github.ref_name }}
           # Add labels to pass CI
           labels: |
-            🧱 stack: ${{ inputs.app == 'ingestion_server' && 'ingestion server' || inputs.app }}
+            🧱 stack: ${{ env.APP_NAME == 'ingestion_server' && 'ingestion server' || env.APP_NAME }}
             🌟 goal: addition
             📄 aspect: text
             🟩 priority: low

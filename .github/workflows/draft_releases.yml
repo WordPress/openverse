@@ -1,0 +1,57 @@
+name: Draft releases
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Freely interrupt release drafting workflows, they do not depend on each other and always generate the full release based on the previous one
+  cancel-in-progress: true
+
+jobs:
+  draft-release:
+    name: "Draft ${{ matrix.app }} release"
+    runs-on: ubuntu-latest
+    permissions:
+      # write permission is required to create a github release
+      contents: write
+
+    strategy:
+      matrix:
+        app:
+          - api
+          - frontend
+          - catalog
+          - ingestion_server
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Calculate tag name
+        id: tag
+        run: |
+          # Format example: 2023.03.22.04.56.29
+          # `-u` forces UTC
+          formatted_date="$(date -u +%Y.%m.%d.%H.%M.%S)"
+
+          {
+            echo "date=$formatted_date";
+            echo "git-tag=${{ matrix.app }}-$formatted_date";
+          } >> "$GITHUB_OUTPUT"
+
+      # Each time this runs, it should replace the previous drafted release matching the tag prefix set in the release drafter config
+      # This means there will always be a running drafted release for all apps
+      # Publishing the drafted release triggers the `release-app` workflow
+      - uses: release-drafter/release-drafter@v5
+        id: release-drafter
+        with:
+          config-name: release-drafter-${{ matrix.app }}.yml
+          version: ${{ steps.tag.outputs.date }}
+          tag: ${{ steps.tag.outputs.git-tag }}
+          name: ${{ steps.tag.outputs.git-tag }}
+          draft: true
+          commitish: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

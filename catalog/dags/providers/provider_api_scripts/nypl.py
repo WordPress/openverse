@@ -44,7 +44,7 @@ def get_value_from_dict_or_list(
 
 class NyplDataIngester(ProviderDataIngester):
     providers = {"image": prov.NYPL_DEFAULT_PROVIDER}
-    endpoint_base = "http://api.repo.nypl.org/api/v1/items"
+    endpoint_base = "http://api.repo.nypl.org/api/v2/items"
     endpoint = f"{endpoint_base}/search/"
     metadata_endpoint = f"{endpoint_base}/item_details/"
     batch_limit = 500
@@ -138,6 +138,7 @@ class NyplDataIngester(ProviderDataIngester):
                 "filetype": filetype,
                 "category": category,
                 "meta_data": metadata,
+                "raw_tags": NyplDataIngester._get_tags(mods) or None,
             }
             images.append(image_data)
         return images
@@ -222,6 +223,22 @@ class NyplDataIngester(ProviderDataIngester):
         return None
 
     @staticmethod
+    def _get_tags(mods: dict) -> list[str]:
+        subject_list = mods.get("subject", [])
+        if isinstance(subject_list, dict):
+            subject_list = [subject_list]
+        # Topic can be a dictionary or a list
+        topics = [subject["topic"] for subject in subject_list if "topic" in subject]
+        tags = []
+        if topics:
+            for topic in topics:
+                if isinstance(topic, list):
+                    tags.extend([t.get("$") for t in topic])
+                else:
+                    tags.append(topic.get("$"))
+        return [tag for tag in tags if tag]
+
+    @staticmethod
     def _get_type_of_resource(mods: dict) -> str | None:
         type_of_resource = mods.get("typeOfResource", {})
         if isinstance(type_of_resource, list):
@@ -278,21 +295,6 @@ class NyplDataIngester(ProviderDataIngester):
             mods, ["physicalDescription", "note", "$"]
         ):
             metadata["physical_description"] = physical_description
-
-        subject_list = mods.get("subject", [])
-        if isinstance(subject_list, dict):
-            subject_list = [subject_list]
-        # Topic can be a dictionary or a list
-        topics = [subject["topic"] for subject in subject_list if "topic" in subject]
-        if topics:
-            tags = []
-            for topic in topics:
-                if isinstance(topic, list):
-                    tags.extend([t.get("$") for t in topic])
-                else:
-                    tags.append(topic.get("$"))
-            if tags:
-                metadata["tags"] = ", ".join(tags)
 
         return metadata
 

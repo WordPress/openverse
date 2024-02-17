@@ -93,6 +93,24 @@ def prevent_concurrency_with_dag(external_dag_id: str, **context):
         raise ValueError(f"Concurrency check with {external_dag_id} failed.")
 
 
+@task(retries=0)
+def is_concurrent_with_any(external_dag_ids: list[str], **context):
+    """
+    Detect whether any of the external DAG are running.
+
+    Returns the ID of the first DAG found to be running. Otherwise,
+    returns None.
+    """
+    for dag_id in external_dag_ids:
+        try:
+            prevent_concurrency_with_dag.function(dag_id, **context)
+        except ValueError:
+            return dag_id
+
+    # Explicit return None to clarify expectations
+    return None
+
+
 @task_group(group_id="prevent_concurrency")
 def prevent_concurrency_with_dags(external_dag_ids: list[str]):
     """Fail immediately if any of the given external dags are in progress."""

@@ -82,12 +82,12 @@ shell:
     env DC_USER="airflow" just ../exec {{ SERVICE }} /bin/bash
 
 # Launch an IPython shell in a new container under `SERVICE`
-ipython: up-deps
+ipython *args: up-deps
     env DC_USER="airflow" just ../run \
         --rm \
         --workdir /opt/airflow/catalog/dags \
         {{ SERVICE }} \
-        bash -c \'ipython\'
+        bash -c \'ipython {{ args }}\'
 
 # Launch a `pgcli` shell in the PostgreSQL container
 pgcli db_user_pass="deploy" db_name="openledger": up
@@ -108,6 +108,7 @@ _mount-test command: up-deps
         {{ command }}
 
 # Launch a Bash shell in a test container under `SERVICE`
+# Run pytest with `--pdb` to workaround xdist breaking pdb.set_trace()
 test-session:
     just _mount-test bash
 
