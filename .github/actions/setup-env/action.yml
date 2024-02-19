@@ -19,14 +19,14 @@ runs:
   steps:
     # Just
     - name: Setup just
-      uses: extractions/setup-just@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      uses: taiki-e/install-action@v2
+      with:
+        tool: just
 
     # Python
     - name: Setup Python
       if: inputs.setup_python == 'true'
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         # Ensure that it matches `python_version` field in the following files:
         # - `automations/python/Pipfile`
@@ -46,12 +46,12 @@ runs:
     # Node.js
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@v3
       # Automatically reads `packageManager` field from root `package.json`.
 
     - name: Setup Node.js
       if: inputs.setup_nodejs == 'true'
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version-file: "package.json"
         cache: pnpm

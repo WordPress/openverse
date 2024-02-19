@@ -18,13 +18,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: peter-evans/find-comment@v2
+      - uses: peter-evans/find-comment@v3
         id: existing-warning
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: This PR has migrations
 
-      - uses: actions/github-script@v6
+      - name: Delete existing migration warning comment
+        uses: actions/github-script@v7
         if: steps.existing-warning.outputs.comment-id != 0
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
@@ -35,7 +36,7 @@ jobs:
               comment_id: ${{ steps.existing-warning.outputs.comment-id }},
             })
 
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
