@@ -498,6 +498,11 @@
     },
     imageInfo: "Image information",
     audioInfo: "Audio information",
+    tags: {
+      title: "Tags",
+      showAll: "Show all tags",
+      seeLess: "See less",
+    },
     contentReport: {
       short: "Report",
       long: "Report this content",

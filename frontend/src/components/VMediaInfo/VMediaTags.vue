@@ -1,32 +1,73 @@
 <template>
-  <ul v-if="tags.length && additionalSearchViews" class="flex flex-wrap gap-3">
-    <VTag
-      v-for="(tag, index) in tags"
-      :key="index"
-      :href="localizedTagPath(tag)"
-      :title="tag.name"
-    />
-  </ul>
-  <ul v-else class="flex flex-wrap gap-2">
-    <VMediaTag v-for="(tag, index) in tags" :key="index" tag="li">{{
-      tag.name
+  <div v-if="normalizedTags.length && additionalSearchViews">
+    <ul
+      ref="tagsContainerRef"
+      :aria-label="$t('mediaDetails.tags.title').toString()"
+      class="flex flex-wrap gap-3 overflow-y-hidden p-1.5px"
+      :class="heightClass"
+    >
+      <li v-for="tag in visibleTags" :key="tag">
+        <VTag :href="localizedTagPath(tag)" :title="tag" />
+      </li>
+    </ul>
+    <VButton
+      v-if="hasOverflow"
+      size="small"
+      variant="transparent-tx"
+      has-icon-end
+      class="label-bold -ms-2 mt-4 hover:underline"
+      @click="handleClick"
+      >{{
+        $t(
+          buttonStatus === "show"
+            ? "mediaDetails.tags.showAll"
+            : "mediaDetails.tags.seeLess"
+        )
+      }}<VIcon
+        name="caret-down"
+        :size="4"
+        :class="{ '-scale-y-100 transform': buttonStatus === 'hide' }"
+    /></VButton>
+  </div>
+
+  <ul
+    v-else
+    class="flex flex-wrap gap-2"
+    :aria-label="$t('mediaDetails.tags').toString()"
+  >
+    <VMediaTag v-for="(tag, index) in normalizedTags" :key="index" tag="li">{{
+      tag
     }}</VMediaTag>
   </ul>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  type PropType,
+  ref,
+} from "vue"
+import { useContext } from "@nuxtjs/composition-api"
+
+import { useResizeObserver, watchDebounced } from "@vueuse/core"
 
 import type { Tag } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 
+import { focusElement } from "~/utils/focus-management"
+
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 import VTag from "~/components/VTag/VTag.vue"
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
 
 export default defineComponent({
   name: "VMediaTags",
-  components: { VMediaTag, VTag },
+  components: { VIcon, VButton, VMediaTag, VTag },
   props: {
     tags: {
       type: Array as PropType<Tag[]>,
@@ -38,6 +79,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const tagsContainerRef = ref<HTMLElement>()
+
     const searchStore = useSearchStore()
     const featureFlagStore = useFeatureFlagStore()
 
@@ -52,7 +95,129 @@ export default defineComponent({
       })
     }
 
-    return { additionalSearchViews, localizedTagPath }
+    const normalizedTags = computed(() => {
+      return Array.from(new Set(props.tags.map((tag) => tag.name)))
+    })
+
+    const fourthRowStartsAt = ref<number>()
+
+    function findFourthRowStartsAt(parent: HTMLElement) {
+      const children = Array.from(parent.children)
+      if (!children.length) {
+        return 0
+      }
+      let rowCount = 0
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as HTMLElement
+        if (
+          !child.previousElementSibling ||
+          (child.previousElementSibling as HTMLElement).offsetLeft >
+            child.offsetLeft
+        ) {
+          rowCount++
+        }
+        if (rowCount === 4) {
+          return i
+        }
+      }
+      return children.length
+    }
+
+    const visibleTags = computed(() => {
+      return fourthRowStartsAt.value && buttonStatus.value === "show"
+        ? normalizedTags.value.slice(0, fourthRowStartsAt.value)
+        : normalizedTags.value
+    })
+
+    const hasOverflow = computed(() => {
+      return (
+        fourthRowStartsAt.value &&
+        fourthRowStartsAt.value < normalizedTags.value.length
+      )
+    })
+
+    onMounted(() => {
+      /**
+       * Find the index of the first item after the third row of tags. This is used
+       * to determine which tags to hide.
+       */
+      if (tagsContainerRef.value) {
+        fourthRowStartsAt.value = findFourthRowStartsAt(tagsContainerRef.value)
+      }
+    })
+
+    const buttonStatus = ref<"show" | "hide">("show")
+    /**
+     * Toggles the text for the "Show more" button. When showing more tags, we also
+     * focus the first tag in the newly-opened row for a11y.
+     */
+    const handleClick = () => {
+      buttonStatus.value = buttonStatus.value === "show" ? "hide" : "show"
+      if (buttonStatus.value === "hide" && fourthRowStartsAt.value) {
+        nextTick(() => {
+          if (!fourthRowStartsAt.value) {
+            return
+          }
+          const firstTagInFourthRow = tagsContainerRef.value?.children.item(
+            fourthRowStartsAt.value
+          ) as HTMLElement
+          focusElement(firstTagInFourthRow?.querySelector("a"))
+        })
+      }
+    }
+
+    const heightClass = computed(() => {
+      if (!hasOverflow.value) {
+        return "max-h-none"
+      }
+      /**
+       * Height is 3 rows of tags, gaps, and a padding for the focus rings.
+       */
+      return buttonStatus.value === "show" ? "max-h-[7.6875rem]" : "mah-h-none"
+    })
+
+    const listWidth = ref<number>()
+    useResizeObserver(tagsContainerRef, (entries) => {
+      listWidth.value = entries[0].contentRect.width
+    })
+
+    watchDebounced(
+      listWidth,
+      (newWidth, oldWidth) => {
+        if (!tagsContainerRef.value) {
+          return
+        }
+        const isWidening = oldWidth && newWidth && newWidth > oldWidth
+
+        if (isWidening) {
+          fourthRowStartsAt.value = normalizedTags.value.length
+        }
+        nextTick(() => {
+          if (tagsContainerRef.value) {
+            fourthRowStartsAt.value = findFourthRowStartsAt(
+              tagsContainerRef.value
+            )
+          }
+        })
+      },
+      { debounce: 300 }
+    )
+
+    return {
+      tagsContainerRef,
+
+      additionalSearchViews,
+      localizedTagPath,
+
+      normalizedTags,
+      visibleTags,
+
+      hasOverflow,
+      buttonStatus,
+      heightClass,
+
+      handleClick,
+    }
   },
 })
 </script>

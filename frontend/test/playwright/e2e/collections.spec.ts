@@ -12,6 +12,7 @@ import {
   getH1,
   // getLoadMoreButton,
 } from "~~/test/playwright/utils/components"
+import { t } from "~~/test/playwright/utils/i18n"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -60,4 +61,21 @@ test.describe("collections", () => {
     // await expect(getLoadMoreButton(page)).toBeEnabled()
     // expect(await page.locator("figure").count()).toEqual(20)
   })
+})
+test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
+  await preparePageForTests(page, "xl", {
+    features: { additional_search_views: "on" },
+  })
+  await page.goto("/image/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750")
+
+  const tags = page.getByRole("list", { name: t("mediaDetails.tags.title") })
+  await expect(tags).toBeVisible()
+  const tagsCount = await tags.locator("li").count()
+  const showMoreButton = page.getByRole("button", {
+    name: t("mediaDetails.tags.showAll"),
+  })
+  await expect(showMoreButton).toBeVisible()
+
+  await showMoreButton.click()
+  expect(await tags.locator("li").count()).toBeGreaterThan(tagsCount)
 })
