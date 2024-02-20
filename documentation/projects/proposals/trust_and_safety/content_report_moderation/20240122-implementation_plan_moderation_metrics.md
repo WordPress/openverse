@@ -94,16 +94,31 @@ the future):
 
 - Metrics about reports
   - number of reports (time-series, real-time)
-    <!-- TODO: - per media type (time-series, real-time) -->
-    - per violation (copyright, sensitive, other)
+    - per event (created | reviewed)
+    - per violation (copyright | sensitive | other)
+    - per decision action (marked_sensitive | deindexed_sensitive |
+      deindexed_copyright | reversed_mark_sensitive | reversed_deindex_sensitive
+      | reversed_deindex_copyright | rejected_reports | discarded_reports)
   - most reported creator/source/provider (deferred)
   - accuracy of reports (deferred)
   - duplication in reports (deferred)
 - Metrics about decisions
   - number of decisions (time-series, real-time)
+    - per scope (single | bulk)
+    - per action (marked_sensitive | deindexed_sensitive | deindexed_copyright |
+      reversed_mark_sensitive | reversed_deindex_sensitive |
+      reversed_deindex_copyright | rejected_reports | discarded_reports)
+  - number of affected records (time-series, real-time)
+    - per action (marked_sensitive | deindexed_sensitive | deindexed_copyright |
+      reversed_mark_sensitive | reversed_deindex_sensitive |
+      reversed_deindex_copyright)
+    - per action type (decision | reversed-decision)
   - time to decision (deferred)
     - average
     - P99
+
+All of the above metrics must also be computed for each media type individually
+since in Django these will be separate models for each media type.
 
 The real-time metrics will be plotted as a time-series on a visual dashboard.
 They can be used to observe trends and spikes in reports (which is useful to
@@ -120,36 +135,58 @@ brings them closer to where the moderation is being performed.
 ### Implement real-time metrics
 
 Real-time metrics are implemented by emitting structured log lines from the
-moderation pipeline, whenever one of the following event occurs.
+moderation pipeline, whenever one of the following event occurs. The log line
+must contain a JSON that matches this type definition.
 
-- report created
-- report confirmed
-- report rejected
-- report deduplicated
-- decision created
+```typescript
+type DecisionAction =
+  | "marked_sensitive"
+  | "deindexed_sensitive"
+  | "deindexed_copyright"
+  | "reversed_mark_sensitive"
+  | "reversed_deindex_sensitive"
+  | "reversed_deindex_copyright"
+  | "rejected_reports"
+  | "discarded_reports"
+```
 
-The log line must contain a JSON that matches this type definition.
+#### Reports
+
+Logs are emitted when a report is created (it will be in the pending state as
+there is no `decision_id`) or reviewed (the reports has an associated decision).
 
 ```typescript
 interface ReportMessage {
   message_type: "ModerationReport"
-  event_type: "created" | "confirmed" | "rejected" | "deduplicated"
   media_type: "image" | "audio"
+  event: "created" | "reviewed"
+  violation: "sensitive" | "copyright" | "other"
+  decision_action?: DecisionAction // only if `event_type` is "reviewed"
 }
 ```
+
+If a decision is created that applies to multiple reports simultaneously, each
+report, when updated with the `decision_id`, will emit a report-message with
+event set to "reviewed".
+
+#### Decisions
+
+Logs are emitted when a decision is created. A decision can affect one or more
+records and can be associated with one or more reports.
 
 ```typescript
 interface DecisionMessage {
   message_type: "ModerationDecision"
-  event_type: "created"
-  action_type: "confirmed" | "rejected" | "deduplicated" | "deindexed"
   media_type: "image" | "audio"
+  action: DecisionAction
+  affected_records: number // scope is "single" if `affected_rows` is 1 else "bulk"
 }
 ```
 
-Note that a deindexing decision also implicitly confirms the report. So a report
-message with `confirmed` event-type should be emitted for every decision message
-with a `deindexed` action-type.
+Regardless of the affected report count or affected record count, one decision
+creation will only emit one decision-message.
+
+#### Implementation
 
 This logging can be abstracted into a specific utility module in the API. These
 utilities must be invoked from the `save` method on the Report and Decision
@@ -162,31 +199,39 @@ moderation happens via a view (like the admin site) or via a console interface
 Real-time metrics will be delivered to CloudWatch via Logs Insights. We can then
 create a dashboard in CloudWatch to visualise these metrics.
 
-Here is a sample Logs Insights query that represents the volume of reports and
-our various decisions.
+Here are sample queries for Logs Insights that represents the real time metrics
+we want to track about reports and decisions.
 
 ```text
-fields @timestamp, message_type, event_type
+fields @timestamp, message_type, media_type, event, violation, decision_action
 | filter message_type like "ModerationReport"
 | stats
-    sum(case when event_type = 'created' then 1 else 0 end) as createdCount,
-    sum(case when event_type != 'created' then 1 else 0 end) as moderatedCount,
-    sum(case when event_type = 'confirmed' then 1 else 0 end) as confirmedCount,
-    sum(case when event_type = 'rejected' then 1 else 0 end) as rejectedCount,
-    sum(case when event_type = 'deduplicated' then 1 else 0 end) as duplicateCount,
+    sum(case when event = 'created' then 1 else 0 end) as createdCount,
+    sum(case when event = 'reviewed' then 1 else 0 end) as reviewedCount,
+    sum(case when violation = 'sensitive' then 1 else 0 end) as sensitiveCount,
+    sum(case when violation = 'copyright' then 1 else 0 end) as copyrightCount,
+    sum(case when violation = 'other' then 1 else 0 end) as otherCount,
+    sum(case when decision_action = 'marked_sensitive' or decision_action = 'deindexed_sensitive' or decision_action = 'deindexed_copyright' then 1 else 0 end) as confirmedCount,
+    sum(case when decision_action = 'rejected_reports' then 1 else 0 end) as rejectedCount,
+    sum(case when decision_action = 'discarded_reports' then 1 else 0 end) as duplicateCount,
   by bin(5m)
 | sort @timestamp desc
 ```
 
 ```text
-fields @timestamp, message_type, event_type
+fields @timestamp, message_type, media_type, action, affected_records
 | filter message_type like "ModerationDecision"
 | stats
-    sum(case when event_type = 'created' then 1 else 0 end) as createdCount,
-    sum(case when action_type = 'confirmed' then 1 else 0 end) as confirmedCount,
-    sum(case when action_type = 'rejected' then 1 else 0 end) as rejectedCount,
-    sum(case when action_type = 'deduplicated' then 1 else 0 end) as duplicateCount,
-    sum(case when action_type = 'deindexed' then 1 else 0 end) as deindexedCount,
+    sum(case when action = 'marked_sensitive' then 1 else 0 end) as markedSensitiveCount,
+    sum(case when action = 'deindexed_sensitive' then 1 else 0 end) as deindexedSensitiveCount,
+    sum(case when action = 'deindexed_copyright' then 1 else 0 end) as deindexedCopyrightCount,
+    sum(case when action = 'reversed_mark_sensitive' then 1 else 0 end) as reversedMarkSensitiveCount,
+    sum(case when action = 'reversed_deindex_sensitive' then 1 else 0 end) as reversedDeindexSensitiveCount,
+    sum(case when action = 'reversed_deindex_copyright' then 1 else 0 end) as reversedDeindexCopyrightCount,
+    sum(case when action = 'rejected_reports' then 1 else 0 end) as rejectedCount,
+    sum(case when action = 'discarded_reports' then 1 else 0 end) as discardedCount,
+    sum(case when affected_records = 1 then 1 else 0 end) as singleCount,
+    sum(case when affected_records != 1 then 1 else 0 end) as bulkCount,
   by bin(5m)
 | sort @timestamp desc
 ```
