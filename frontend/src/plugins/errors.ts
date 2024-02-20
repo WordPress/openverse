@@ -78,19 +78,8 @@ function recordError(
   originalError: unknown,
   fetchingError: FetchingError
 ) {
-  if (fetchingError.code === "ERR_NETWORK") {
-    /**
-     * Record network errors in Plausible so that we can evaluate potential
-     * regional or device configuration issues, for which Sentry is not
-     * as good a tool. Additionally, the number of these events are trivial
-     * for Plausible, but do actually affect our Sentry quota enough that it
-     * is worth diverting them.
-     */
-    context.$sendCustomEvent("NETWORK_ERROR", {
-      requestKind: fetchingError.requestKind,
-      searchType: fetchingError.searchType,
-    })
-
+  if (fetchingError.statusCode === 429) {
+    // These are more readily monitored via the Cloudflare dashboard.
     return
   }
 
@@ -105,15 +94,32 @@ function recordError(
      *    to distinguish between truly not found works and bad requests from
      *    the client side.
      * 3. There isn't much we can do other than monitor for an anomalously high
-     *    number of 404 responses from the frontend that could indicate a frontend
+     *    number of 404 responses from the frontend server that could indicate a frontend
      *    implementation or configuration error suddenly causing malformed
      *    identifiers to be used. Neither Sentry nor Plausible are the right tool
-     *    for that task.
+     *    for that task. If the 404s are caused by an API issue, we'd see that in
+     *    API response code monitoring, where we can more easily trace the cause
      */
     return
   }
 
-  context.$sentry.captureException(originalError, { extra: { fetchingError } })
+  if (process.client && fetchingError.code === "ERR_NETWORK") {
+    /**
+     * Record network errors in Plausible so that we can evaluate potential
+     * regional or device configuration issues, for which Sentry is not
+     * as good a tool. Additionally, the number of these events are trivial
+     * for Plausible, but do actually affect our Sentry quota enough that it
+     * is worth diverting them.
+     */
+    context.$sendCustomEvent("NETWORK_ERROR", {
+      requestKind: fetchingError.requestKind,
+      searchType: fetchingError.searchType,
+    })
+  } else {
+    context.$sentry.captureException(originalError, {
+      extra: { fetchingError },
+    })
+  }
 }
 
 function createProcessFetchingError(
