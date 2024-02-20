@@ -8,6 +8,11 @@
  */
 import { expect, test } from "@playwright/test"
 
+import { API_URL } from "~~/test/playwright/playwright.config"
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
@@ -39,4 +44,21 @@ test("scroll to top on new search term submitted", async ({ page }) => {
   )
 
   expect(scrollY).toBe(0)
+})
+
+test("Ignore network errors", async ({ context, page }) => {
+  const analyticsEvents = collectAnalyticsEvents(context)
+  await context.route(/\/v1\/(images|audio)\//, (route) =>
+    route.abort("connectionaborted")
+  )
+
+  await goToSearchTerm(page, "galah", { mode: "CSR" })
+
+  const networkErrorEvent = analyticsEvents.find(
+    (event) => event.n === "NETWORK_ERROR"
+  )
+  expectEventPayloadToMatch(networkErrorEvent, {
+    requestKind: "single-result",
+    searchType: "all",
+  })
 })

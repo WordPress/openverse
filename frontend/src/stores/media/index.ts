@@ -499,6 +499,7 @@ export const useMediaStore = defineStore("media", {
         })
         return mediaCount
       } catch (error: unknown) {
+        console.error()
         const errorData = this.$nuxt.$processFetchingError(
           error,
           mediaType,
