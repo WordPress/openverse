@@ -307,7 +307,7 @@ def should_send_message(
         log.info(
             f"Skipping Slack notification for {dag_id}:{task_id} in"
             f" `{environment}` environment. To send the notification, enable"
-            " the`SLACK_MESSAGE_OVERRIDE` variable."
+            " the `SLACK_MESSAGE_OVERRIDE` variable."
         )
         return False
 
