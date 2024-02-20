@@ -146,6 +146,7 @@ const config: NuxtConfig = {
     "~/plugins/api-token.server.ts",
     "~/plugins/polyfills.client.ts",
     "~/plugins/sentry.ts",
+    "~/plugins/analytics.ts",
   ],
   css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
   head,
