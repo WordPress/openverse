@@ -42,12 +42,15 @@ def copy_file_to_s3(
     s3_prefix,
     aws_conn_id,
     ti,
+    extra_args=None,
 ):
     """
     Copy a TSV file to S3 with the given prefix.
     The TSV's version is pushed to the `tsv_version` XCom, and the constructed
     S3 key is pushed to the `s3_key` XCom.
     The TSV is removed after the upload is complete.
+
+    ``extra_args`` refers to the S3Hook argument.
     """
     if tsv_file_path is None:
         raise FileNotFoundError("No TSV file path was provided")
@@ -57,7 +60,10 @@ def copy_file_to_s3(
     tsv_version = paths.get_tsv_version(tsv_file_path)
     s3_key = f"{s3_prefix}/{tsv_file.name}"
     logger.info(f"Uploading {tsv_file_path} to {s3_bucket}:{s3_key}")
-    s3 = S3Hook(aws_conn_id=aws_conn_id)
+    s3 = S3Hook(
+        aws_conn_id=aws_conn_id,
+        extra_args=extra_args or {},
+    )
     s3.load_file(tsv_file_path, s3_key, bucket_name=s3_bucket)
     ti.xcom_push(key="tsv_version", value=tsv_version)
     ti.xcom_push(key="s3_key", value=s3_key)
