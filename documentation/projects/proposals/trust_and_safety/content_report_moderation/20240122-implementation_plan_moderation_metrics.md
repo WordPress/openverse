@@ -23,7 +23,7 @@ appropriate channels to surface them to the team, which will enable us to
 monitor the performance and effectiveness of the content moderation pipeline.
 
 These metrics can be helpful for visualising both the accuracy and volume of
-incoming reports, and the speed and volume of our response to these reports.
+incoming reports, and the speed and volume of our decisions about these reports.
 
 ## Expected Outcomes
 
@@ -86,7 +86,7 @@ used directly!
 
 The metrics we aim to measure can be classified along two axes:
 
-- Whether they measure user-submitted reports or moderator-generated responses
+- Whether they measure user-submitted reports or moderator-generated decisions
 - Whether they are real-time or deferred
 
 The following metrics can be considered to begin with (we can always add more in
@@ -99,21 +99,17 @@ the future):
   - most reported creator/source/provider (deferred)
   - accuracy of reports (deferred)
   - duplication in reports (deferred)
-- Metrics about responses
+- Metrics about decisions
   - number of decisions (time-series, real-time)
-    <!-- TODO: - per media type (time-series, real-time) -->
-  - number of resolutions (time-series, real-time)
-    <!-- TODO: - per media type (time-series, real-time) -->
-    - per resolution type (confirmation, rejection, deduplication)
-  - time to resolution (deferred)
+  - time to decision (deferred)
     - average
     - P99
 
-The real-time metrics can go to a visual dashboard where they can be plotted as
-a time-series. They can be used to observe trends and spikes in reports (which
-is useful to understand usage and detect abuse of our reporting mechanisms) and
-in resolutions (which is useful to know how our resolution volume compares to
-reporting volume and when we need to scale our moderation resources).
+The real-time metrics will be plotted as a time-series on a visual dashboard.
+They can be used to observe trends and spikes in reports (which is useful to
+understand usage and detect abuse of our reporting mechanisms) and in decisions
+(which is useful to know how our decision volume compares to reporting volume
+and when we need to scale our moderation resources).
 
 The deferred metrics are computed periodically from our database. They can be
 used to build reports that can be presented inside Django's admin interface
@@ -167,7 +163,7 @@ Real-time metrics will be delivered to CloudWatch via Logs Insights. We can then
 create a dashboard in CloudWatch to visualise these metrics.
 
 Here is a sample Logs Insights query that represents the volume of reports and
-our various responses.
+our various decisions.
 
 ```text
 fields @timestamp, message_type, event_type
@@ -196,7 +192,7 @@ fields @timestamp, message_type, event_type
 ```
 
 This query can be used to create a line chart that shows the volume of reports
-and our various responses over time. Similar queries can be used to create
+and our various decisions over time. Similar queries can be used to create
 charts for other metrics. Ultimately a dashboard can be put together in
 CloudWatch, that tracks all relevant metrics.
 
@@ -234,16 +230,16 @@ most_reported_media = Report.objects.values('media_id').annotate(report_count=Co
 most_reported_creator = Report.objects.values('media__creator').annotate(report_count=Count('id')).order_by('-report_count').first()
 most_reported_source = Report.objects.values('media__source').annotate(report_count=Count('id')).order_by('-report_count').first()
 
-# 4. Average and P99 Time to Resolution
+# 4. Average and P99 Time to Decision
 time_differences = Report.objects.annotate(
-  resolution_time=Avg(F('decision__created_on') - F('created_on'))
-).values_list('resolution_time', flat=True)
+  decision_time=Avg(F('decision__created_on') - F('created_on'))
+).values_list('decision_time', flat=True)
 
-average_resolution_time = sum(time_differences, timedelta()) / len(time_differences) if time_differences else timedelta()
-p99_resolution_time = Report.objects.annotate(
-  resolution_time=F('decision__created_on') - F('created_on')
+average_decision_time = sum(time_differences, timedelta()) / len(time_differences) if time_differences else timedelta()
+p99_decision_time = Report.objects.annotate(
+  decision_time=F('decision__created_on') - F('created_on')
 ).aggregate(
-  percentile_99=Percentile('resolution_time', 0.99)
+  percentile_99=Percentile('decision_time', 0.99)
 )['percentile_99']
 ```
 
