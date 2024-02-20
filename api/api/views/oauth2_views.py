@@ -169,8 +169,8 @@ class TokenView(APIView, BaseTokenView):
 
         try:
             res = super().post(request._request)
-        except DataError as e:
-            raise InvalidCredentials(e)
+        except DataError:
+            raise InvalidCredentials()
         data = json.loads(res.content)
         return Response(data, status=res.status_code)
 
