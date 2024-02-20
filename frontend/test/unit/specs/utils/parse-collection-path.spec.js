@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 import { parseCollectionPath } from "~/utils/parse-collection-path"
 import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { IMAGE } from "~/constants/media"
 
 describe("validateCollectionParams", () => {
   /** @type { import("pinia").Pinia } **/
@@ -16,18 +17,39 @@ describe("validateCollectionParams", () => {
   })
 
   it("returns source collection", () => {
-    const collection = parseCollectionPath("/flickr")
+    const collection = parseCollectionPath(
+      "flickr",
+      "/image/source/flickr/",
+      IMAGE
+    )
+
+    expect(collection).toEqual({ source: "flickr", collection: "source" })
+  })
+  it("returns source collection from a localized path", () => {
+    const collection = parseCollectionPath(
+      "flickr",
+      "/en-za/image/source/flickr/",
+      IMAGE
+    )
 
     expect(collection).toEqual({ source: "flickr", collection: "source" })
   })
 
   it("returns null if `creator` parameter is blank", () => {
-    const collection = parseCollectionPath("/flickr/creator/")
+    const collection = parseCollectionPath(
+      "flickr/creator/",
+      "/image/source/flickr/creator/",
+      IMAGE
+    )
 
     expect(collection).toBeNull()
   })
   it("returns creator collection without trailing slash", () => {
-    const collection = parseCollectionPath("/flickr/creator/me")
+    const collection = parseCollectionPath(
+      "flickr/creator/me",
+      "/image/source/flickr/creator/me",
+      IMAGE
+    )
 
     expect(collection).toEqual({
       source: "flickr",
@@ -37,7 +59,11 @@ describe("validateCollectionParams", () => {
   })
 
   it("returns creator collection with trailing slash", () => {
-    const collection = parseCollectionPath("/flickr/creator/me/")
+    const collection = parseCollectionPath(
+      "flickr/creator/me/",
+      "/image/source/flickr/creator/me/",
+      IMAGE
+    )
 
     expect(collection).toEqual({
       source: "flickr",
@@ -46,12 +72,40 @@ describe("validateCollectionParams", () => {
     })
   })
 
-  it("handles slashes in creator name", () => {
-    const collection = parseCollectionPath("/flickr/creator/me/you-and-them/")
+  it("returns null if creator name contains non-encoded slashes", () => {
+    const collection = parseCollectionPath(
+      "flickr/creator/me/you-and-them/",
+      "/image/source/flickr/creator/me/you-and-them/",
+      IMAGE
+    )
+
+    expect(collection).toBeNull()
+  })
+
+  it("handles encoded slashes in creator name", () => {
+    const collection = parseCollectionPath(
+      "flickr/creator/me%2Fyou-and-them/",
+      "/image/source/flickr/creator/me%2Fyou-and-them/",
+      IMAGE
+    )
 
     expect(collection).toEqual({
       source: "flickr",
-      creator: "me/you-and-them",
+      creator: "me%2Fyou-and-them",
+      collection: "creator",
+    })
+  })
+
+  it("handles creator names starting with encoded slashes", () => {
+    const collection = parseCollectionPath(
+      "flickr/creator/%2Fme%2Fyou-and-them/",
+      "/image/source/flickr/creator/%2Fme%2Fyou-and-them/",
+      IMAGE
+    )
+
+    expect(collection).toEqual({
+      source: "flickr",
+      creator: "%2Fme%2Fyou-and-them",
       collection: "creator",
     })
   })

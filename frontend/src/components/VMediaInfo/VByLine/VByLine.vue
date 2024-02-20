@@ -57,9 +57,10 @@ import {
   ref,
 } from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
-import { useSearchStore } from "~/stores/search"
+import { collectionToPath } from "~/stores/search"
 import type { SupportedMediaType } from "~/constants/media"
 
 import VSourceCreatorButton from "~/components/VMediaInfo/VByLine/VSourceCreatorButton.vue"
@@ -222,30 +223,33 @@ export default defineComponent({
       { debounce: 100 }
     )
 
-    const searchStore = useSearchStore()
+    const route = useRoute()
+
+    /**
+     * Not using `$nuxt.localePath` in these href functions because it
+     * converts the URI-encoded slash (`%2F`) in the creator name to `/`
+     */
+    const localePrefix = computed(
+      () => route.value.fullPath.split(`/${props.mediaType}/`)[0]
+    )
 
     const creatorHref = computed(() => {
       if (!props.creator) {
         return undefined
       }
-      return searchStore.getCollectionPath({
-        type: props.mediaType,
-        collectionParams: {
-          collection: "creator",
-          source: props.sourceSlug,
-          creator: props.creator,
-        },
+      const creatorPath = collectionToPath({
+        collection: "creator" as const,
+        source: props.sourceSlug,
+        creator: props.creator ? props.creator : "",
       })
+      return `${localePrefix.value}/${props.mediaType}/${creatorPath}`
     })
 
     const sourceHref = computed(() => {
-      return searchStore.getCollectionPath({
-        type: props.mediaType,
-        collectionParams: {
-          collection: "source",
-          source: props.sourceSlug,
-        },
-      })
+      return `${localePrefix.value}/${props.mediaType}/${collectionToPath({
+        collection: "source" as const,
+        source: props.sourceSlug,
+      })}`
     })
 
     return {

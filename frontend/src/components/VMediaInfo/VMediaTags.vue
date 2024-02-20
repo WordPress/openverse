@@ -14,11 +14,12 @@
   </ul>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
+import { computed, defineComponent, type PropType } from "vue"
+import { useRoute } from "@nuxtjs/composition-api"
 
-import type { Tag } from "~/types/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import type { Tag } from "~/types/media"
+import type { SupportedMediaType } from "~/constants/media"
 
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 import VTag from "~/components/VTag/VTag.vue"
@@ -31,9 +32,13 @@ export default defineComponent({
       type: Array as PropType<Tag[]>,
       required: true,
     },
+    mediaType: {
+      type: String as PropType<SupportedMediaType>,
+      required: true,
+    },
   },
-  setup() {
-    const { app } = useContext()
+  setup(props) {
+    const route = useRoute()
     const featureFlagStore = useFeatureFlagStore()
 
     const additionalSearchViews = computed(() =>
@@ -41,7 +46,11 @@ export default defineComponent({
     )
 
     const localizedTagPath = (tag: Tag) => {
-      return app.localePath({ path: `tag/${tag.name}` })
+      // Not using `localePath` because it decodes the path and converts `%2F` to `/`.
+      const localePrefix = route.value.fullPath.split(`/${props.mediaType}/`)[0]
+      return `${localePrefix}/${props.mediaType}/tag/${encodeURIComponent(
+        tag.name
+      )}`
     }
 
     return { additionalSearchViews, localizedTagPath }
