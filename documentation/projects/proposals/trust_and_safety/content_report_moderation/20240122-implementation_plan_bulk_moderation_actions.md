@@ -100,7 +100,9 @@ For consistency we will also update the existing action type
 `confirmed_sensitive` to `marked_sensitive` to describe the effect of the action
 without the use of the word "confirm", which is accurate when describing single
 decisions made by moderators but potentially inappropriate for describing bulk
-actions that do not include individual review of records.
+actions that do not include individual review of records. We will also update
+the existing action type `duplicate_reports` to `deduplicated_reports` for
+clarity and consistency.
 
 ## Actions
 
@@ -186,8 +188,8 @@ automatically record the creation and deletion of the `DeletedMedia` records.
 ### Other actions
 
 We do _not_ need to add any new action types for `rejected_reports` and
-`duplicate_reports`, which are only applicable to the Report view flow described
-in the related IP.
+`deduplicated_reports`, which are only applicable to the Report view flow
+described in the related IP.
 
 ## Views
 
