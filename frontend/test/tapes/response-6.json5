@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/tag/cat/',
+        url: '/v1/images/tag/animals%2Fcats%26dogs/',
         method: 'GET',
         body: '',
     },

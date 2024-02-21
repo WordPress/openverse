@@ -45,11 +45,7 @@ describe("validateCollectionParams", () => {
     expect(collection).toBeNull()
   })
   it("returns creator collection without trailing slash", () => {
-    const collection = parseCollectionPath(
-      "flickr/creator/me",
-      "/image/source/flickr/creator/me",
-      IMAGE
-    )
+    const collection = parseCollectionPath("flickr/creator/me", "me", IMAGE)
 
     expect(collection).toEqual({
       source: "flickr",
@@ -59,11 +55,7 @@ describe("validateCollectionParams", () => {
   })
 
   it("returns creator collection with trailing slash", () => {
-    const collection = parseCollectionPath(
-      "flickr/creator/me/",
-      "/image/source/flickr/creator/me/",
-      IMAGE
-    )
+    const collection = parseCollectionPath("flickr/creator/me/", "me", IMAGE)
 
     expect(collection).toEqual({
       source: "flickr",
@@ -85,13 +77,13 @@ describe("validateCollectionParams", () => {
   it("handles encoded slashes in creator name", () => {
     const collection = parseCollectionPath(
       "flickr/creator/me%2Fyou-and-them/",
-      "/image/source/flickr/creator/me%2Fyou-and-them/",
+      "me%2Fyou-and-them",
       IMAGE
     )
 
     expect(collection).toEqual({
       source: "flickr",
-      creator: "me%2Fyou-and-them",
+      creator: "me/you-and-them",
       collection: "creator",
     })
   })
@@ -99,13 +91,13 @@ describe("validateCollectionParams", () => {
   it("handles creator names starting with encoded slashes", () => {
     const collection = parseCollectionPath(
       "flickr/creator/%2Fme%2Fyou-and-them/",
-      "/image/source/flickr/creator/%2Fme%2Fyou-and-them/",
+      "%2Fme%2Fyou-and-them",
       IMAGE
     )
 
     expect(collection).toEqual({
       source: "flickr",
-      creator: "%2Fme%2Fyou-and-them",
+      creator: "/me/you-and-them",
       collection: "creator",
     })
   })

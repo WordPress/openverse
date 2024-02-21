@@ -9,7 +9,7 @@ import {
 
 test.describe.configure({ mode: "parallel" })
 
-test.describe("collections", () => {
+test.describe("collections CSR", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl", {
       features: {
@@ -23,11 +23,12 @@ test.describe("collections", () => {
 
   test("can open tags collection page from image page", async ({ page }) => {
     // Using the href because there are multiple links with the same text.
-    await page.click('[href*="/tag/cat"]')
+    const tag = "animals/cats&dogs"
+    await page.getByRole("link", { name: tag }).click()
 
-    await page.waitForURL(/image\/tag\/cat/)
+    await page.waitForURL(/image\/tag\//)
 
-    await expect(getH1(page, /cat/i)).toBeVisible()
+    await expect(getH1(page, tag)).toBeVisible()
     await expect(getLoadMoreButton(page)).toBeEnabled()
     expect(await page.locator("figure").count()).toEqual(20)
   })
@@ -45,13 +46,77 @@ test.describe("collections", () => {
   })
 
   test("can open creator collection page from image page", async ({ page }) => {
-    const creatorPattern = /strogoscope/i
-    await page.getByRole("link", { name: creatorPattern }).first().click()
+    const creator = "/strogoscope&ref=profile"
+    await page.getByRole("link", { name: creator }).first().click()
 
-    await page.waitForURL(/image\/source\/flickr\/creator\/strogoscope\//)
+    await page.waitForURL(/image\/source\/flickr\/creator\//)
 
-    await expect(getH1(page, creatorPattern)).toBeVisible()
+    await expect(getH1(page, creator)).toBeVisible()
     await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
+  })
+})
+
+test.describe("collections", () => {
+  test.beforeEach(async ({ page }) => {
+    await preparePageForTests(page, "xl", {
+      features: {
+        additional_search_views: "on",
+      },
+    })
+  })
+
+  test("can open localized creator collection page from image page", async ({
+    page,
+  }) => {
+    await page.goto("/ar/image/f9384235-b72e-4f1e-9b05-e1b116262a29?q=cat")
+
+    const creator = "/strogoscope&ref=profile"
+    await page.getByRole("link", { name: creator }).first().click()
+
+    await page.waitForURL(/image\/source\/flickr\/creator\//)
+
+    await expect(getH1(page, creator)).toBeVisible()
+    await expect(getLoadMoreButton(page, "rtl")).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
+  })
+
+  test("can open tags collection on SSR", async ({ page }) => {
+    const tag = "animals/cats&dogs"
+    await page.goto(`/image/tag/${encodeURIComponent(tag)}`)
+
+    await expect(getH1(page, tag)).toBeVisible()
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
+  })
+
+  test("can open source collection on SSR", async ({ page }) => {
+    await page.goto(`/image/source/flickr/`)
+
+    await expect(getH1(page, "Flickr")).toBeVisible()
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
+  })
+
+  test("can open creator collection on SSR", async ({ page }) => {
+    const creator = "/strogoscope&ref=profile"
+    await page.goto(
+      `/image/source/flickr/creator/${encodeURIComponent(creator)}`
+    )
+
+    await expect(getH1(page, creator)).toBeVisible()
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
+  })
+
+  test("can open localized creator collection on SSR", async ({ page }) => {
+    const creator = "/strogoscope&ref=profile"
+    await page.goto(
+      `/ar/image/source/flickr/creator/${encodeURIComponent(creator)}`
+    )
+
+    await expect(getH1(page, creator)).toBeVisible()
+    await expect(getLoadMoreButton(page, "rtl")).toBeEnabled()
     expect(await page.locator("figure").count()).toEqual(20)
   })
 })

@@ -85,7 +85,7 @@
             title: 'Cat',
             foreign_landing_url: 'https://www.flickr.com/photos/7788419@N05/15218475961',
             url: 'https://live.staticflickr.com/3903/15218475961_963a4c116e_b.jpg',
-            creator: 'strogoscope',
+            creator: '/strogoscope&ref=profile',
             creator_url: 'https://www.flickr.com/photos/7788419@N05',
             license: 'by',
             license_version: '2.0',
@@ -99,6 +99,9 @@
                 {
                     name: 'cat',
                 },
+                {
+                    name: 'animals/cats&dogs'
+                }
             ],
             attribution: '"Cat" by strogoscope is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',
             fields_matched: [],
