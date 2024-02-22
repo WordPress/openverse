@@ -18,6 +18,8 @@ jobs:
   get_label_groups:
     name: Get label groups
     runs-on: ubuntu-latest
+    # Without `.github/dependabot.yml` Dependabot PRs are incorrectly labeled
+    if: github.actor != 'dependabot[bot]'
     outputs:
       aspect: ${{ steps.get_groups.outputs.aspect }}
       goal: ${{ steps.get_groups.outputs.goal }}
