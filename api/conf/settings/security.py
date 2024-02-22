@@ -48,6 +48,7 @@ if middleware not in MIDDLEWARE:
 
 CORS_ALLOW_ALL_ORIGINS = True
 # https://github.com/adamchainz/django-cors-headers?tab=readme-ov-file#cors_expose_headers-sequencestr
+# These headers are required for search response time analytics
 CORS_EXPOSE_HEADERS = [
     "cf-cache-status",
     "cf-ray",
