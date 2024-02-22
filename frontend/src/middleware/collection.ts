@@ -21,9 +21,9 @@ export const collectionMiddleware: Middleware = async ({
     })
   }
 
-  const mediaType = route.fullPath.includes("/image/")
+  const mediaType = route.path.includes("/image/")
     ? IMAGE
-    : route.fullPath.includes("/audio/")
+    : route.path.includes("/audio/")
     ? AUDIO
     : null
   // This should never happen, but adding it for type safety.
@@ -33,7 +33,7 @@ export const collectionMiddleware: Middleware = async ({
 
   const searchStore = useSearchStore($pinia)
 
-  if (route.fullPath.includes(`${mediaType}/tag/`)) {
+  if (route.path.includes(`${mediaType}/tag/`)) {
     const tag = decodeURI(route.params.tag)
 
     if (!tag) {
@@ -47,11 +47,9 @@ export const collectionMiddleware: Middleware = async ({
   }
 
   let creator = ""
-  if (route.fullPath.includes("/creator/")) {
+  if (route.path.includes("/creator/")) {
     // Extract `creator` from path, decode and remove trailing slash
-    creator = decodeURI(
-      removeTrailingSlash(route.fullPath.split("/creator/")[1])
-    )
+    creator = decodeURI(removeTrailingSlash(route.path.split("/creator/")[1]))
   }
   const collectionParams = parseCollectionPath(
     route.params.pathMatch,
