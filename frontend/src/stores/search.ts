@@ -10,25 +10,26 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
-  SearchType,
-  SupportedMediaType,
-  supportedMediaTypes,
-  SupportedSearchType,
-  supportedSearchTypes,
   isAdditionalSearchType,
   searchPath,
+  type SearchType,
+  type SupportedMediaType,
+  supportedMediaTypes,
+  type SupportedSearchType,
+  supportedSearchTypes,
 } from "~/constants/media"
 import {
   filtersToQueryData,
-  queryDictionaryToQueryParams,
   pathToSearchType,
+  queryDictionaryToQueryParams,
   queryToFilterData,
 } from "~/utils/search-query-transform"
+import { encodeAndReplaceSlash } from "~/utils/parse-collection-path"
 import {
-  FilterCategory,
-  FilterItem,
-  Filters,
   filterData,
+  type FilterCategory,
+  type FilterItem,
+  type Filters,
   mediaFilterKeys,
   mediaUniqueFilterKeys,
 } from "~/constants/filters"
@@ -38,16 +39,15 @@ import { useProviderStore } from "~/stores/provider"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 
-import {
-  SearchQuery,
-  SearchStrategy,
-  PaginatedSearchQuery,
+import type {
   CollectionParams,
   PaginatedCollectionQuery,
+  PaginatedSearchQuery,
+  SearchQuery,
+  SearchStrategy,
 } from "~/types/search"
 
 import type { Ref } from "vue"
-
 import type { Dictionary } from "vue-router/types/router"
 import type { Context } from "@nuxt/types"
 
@@ -112,10 +112,10 @@ export function computeQueryParams(
 export function collectionToPath(collectionParams: CollectionParams) {
   switch (collectionParams.collection) {
     case "tag": {
-      return `tag/${encodeURIComponent(collectionParams.tag)}/`
+      return `tag/${encodeAndReplaceSlash(collectionParams.tag)}/`
     }
     case "creator": {
-      return `source/${collectionParams.source}/creator/${encodeURIComponent(
+      return `source/${collectionParams.source}/creator/${encodeAndReplaceSlash(
         collectionParams.creator
       )}/`
     }

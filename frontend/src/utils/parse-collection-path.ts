@@ -2,8 +2,11 @@ import { useProviderStore } from "~/stores/provider"
 import type { CreatorCollection, SourceCollection } from "~/types/search"
 import type { SupportedMediaType } from "~/constants/media"
 
-const removeTrailingSlash = (path: string): string => {
+export const removeTrailingSlash = (path: string): string => {
   return path.replace(/\/$/g, "")
+}
+export const encodeAndReplaceSlash = (s: string) => {
+  return encodeURIComponent(s.replace(/\//g, "%2F"))
 }
 
 /**

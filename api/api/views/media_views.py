@@ -157,9 +157,12 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     def collection(self, request, tag, source, creator, *_, **__):
         if tag:
-            collection_params = {"tag": tag}
+            collection_params = {"tag": tag.replace("%2F", "/")}
         elif creator:
-            collection_params = {"creator": creator, "source": source}
+            collection_params = {
+                "creator": creator.replace("%2F", "/"),
+                "source": source,
+            }
         else:
             collection_params = {"source": source}
         if source:

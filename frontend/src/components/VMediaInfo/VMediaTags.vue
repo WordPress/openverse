@@ -15,9 +15,10 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
+import { useContext } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { encodeAndReplaceSlash } from "~/utils/parse-collection-path"
 import type { Tag } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -37,8 +38,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    const route = useRoute()
+  setup() {
+    const { app } = useContext()
     const featureFlagStore = useFeatureFlagStore()
 
     const additionalSearchViews = computed(() =>
@@ -46,11 +47,7 @@ export default defineComponent({
     )
 
     const localizedTagPath = (tag: Tag) => {
-      // Not using `localePath` because it decodes the path and converts `%2F` to `/`.
-      const localePrefix = route.value.fullPath.split(`/${props.mediaType}/`)[0]
-      return `${localePrefix}/${props.mediaType}/tag/${encodeURIComponent(
-        tag.name
-      )}`
+      return app.localePath({ path: `tag/${encodeAndReplaceSlash(tag.name)}` })
     }
 
     return { additionalSearchViews, localizedTagPath }

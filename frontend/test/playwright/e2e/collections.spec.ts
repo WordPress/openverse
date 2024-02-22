@@ -9,6 +9,12 @@ import {
 
 test.describe.configure({ mode: "parallel" })
 
+const creator = "/strogoscope&ref=profile"
+const encodedCreator = encodeURIComponent(creator.replace(/\//g, "%2F"))
+
+const tag = "animals/cats&dogs"
+const encodedTag = encodeURIComponent(tag.replace(/\//g, "%2F"))
+
 test.describe("collections CSR", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl", {
@@ -23,7 +29,6 @@ test.describe("collections CSR", () => {
 
   test("can open tags collection page from image page", async ({ page }) => {
     // Using the href because there are multiple links with the same text.
-    const tag = "animals/cats&dogs"
     await page.getByRole("link", { name: tag }).click()
 
     await page.waitForURL(/image\/tag\//)
@@ -46,9 +51,22 @@ test.describe("collections CSR", () => {
   })
 
   test("can open creator collection page from image page", async ({ page }) => {
-    const creator = "/strogoscope&ref=profile"
     await page.getByRole("link", { name: creator }).first().click()
 
+    await page.waitForURL(/image\/source\/flickr\/creator\//)
+
+    await expect(getH1(page, creator)).toBeVisible()
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
+  })
+
+  test("can reload creator collection page opened from image page", async ({
+    page,
+  }) => {
+    await page.getByRole("link", { name: creator }).first().click()
+    await page.waitForURL(/image\/source\/flickr\/creator\//)
+
+    await page.reload()
     await page.waitForURL(/image\/source\/flickr\/creator\//)
 
     await expect(getH1(page, creator)).toBeVisible()
@@ -71,7 +89,6 @@ test.describe("collections", () => {
   }) => {
     await page.goto("/ar/image/f9384235-b72e-4f1e-9b05-e1b116262a29?q=cat")
 
-    const creator = "/strogoscope&ref=profile"
     await page.getByRole("link", { name: creator }).first().click()
 
     await page.waitForURL(/image\/source\/flickr\/creator\//)
@@ -82,8 +99,7 @@ test.describe("collections", () => {
   })
 
   test("can open tags collection on SSR", async ({ page }) => {
-    const tag = "animals/cats&dogs"
-    await page.goto(`/image/tag/${encodeURIComponent(tag)}`)
+    await page.goto(`/image/tag/${encodedTag}`)
 
     await expect(getH1(page, tag)).toBeVisible()
     await expect(getLoadMoreButton(page)).toBeEnabled()
@@ -99,10 +115,9 @@ test.describe("collections", () => {
   })
 
   test("can open creator collection on SSR", async ({ page }) => {
-    const creator = "/strogoscope&ref=profile"
-    await page.goto(
-      `/image/source/flickr/creator/${encodeURIComponent(creator)}`
-    )
+    const url = `/image/source/flickr/creator/${encodedCreator}`
+
+    await page.goto(url)
 
     await expect(getH1(page, creator)).toBeVisible()
     await expect(getLoadMoreButton(page)).toBeEnabled()
@@ -110,10 +125,7 @@ test.describe("collections", () => {
   })
 
   test("can open localized creator collection on SSR", async ({ page }) => {
-    const creator = "/strogoscope&ref=profile"
-    await page.goto(
-      `/ar/image/source/flickr/creator/${encodeURIComponent(creator)}`
-    )
+    await page.goto(`/ar/image/source/flickr/creator/${encodedCreator}`)
 
     await expect(getH1(page, creator)).toBeVisible()
     await expect(getLoadMoreButton(page, "rtl")).toBeEnabled()

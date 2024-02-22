@@ -57,7 +57,7 @@ import {
   ref,
 } from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
-import { useRoute } from "@nuxtjs/composition-api"
+import { useContext } from "@nuxtjs/composition-api"
 
 import { useI18n } from "~/composables/use-i18n"
 import { collectionToPath } from "~/stores/search"
@@ -95,6 +95,8 @@ export default defineComponent({
   setup(props) {
     const containerRef = ref<HTMLElement | null>(null)
     const buttonsRef = ref<HTMLElement | null>(null)
+
+    const { app } = useContext()
 
     const showCreator = computed(() => {
       return Boolean(
@@ -223,33 +225,24 @@ export default defineComponent({
       { debounce: 100 }
     )
 
-    const route = useRoute()
-
-    /**
-     * Not using `$nuxt.localePath` in these href functions because it
-     * converts the URI-encoded slash (`%2F`) in the creator name to `/`
-     */
-    const localePrefix = computed(
-      () => route.value.fullPath.split(`/${props.mediaType}/`)[0]
-    )
-
     const creatorHref = computed(() => {
       if (!props.creator) {
         return undefined
       }
-      const creatorPath = collectionToPath({
+      const path = collectionToPath({
         collection: "creator" as const,
         source: props.sourceSlug,
         creator: props.creator ? props.creator : "",
       })
-      return `${localePrefix.value}/${props.mediaType}/${creatorPath}`
+      return app.localePath({ path })
     })
 
     const sourceHref = computed(() => {
-      return `${localePrefix.value}/${props.mediaType}/${collectionToPath({
+      const path = collectionToPath({
         collection: "source" as const,
         source: props.sourceSlug,
-      })}`
+      })
+      return app.localePath({ path })
     })
 
     return {

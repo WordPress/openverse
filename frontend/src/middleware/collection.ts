@@ -1,10 +1,11 @@
-import { isClient } from "@vueuse/core"
-
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { AUDIO, IMAGE } from "~/constants/media"
 import { useSearchStore } from "~/stores/search"
-import { parseCollectionPath } from "~/utils/parse-collection-path"
+import {
+  parseCollectionPath,
+  removeTrailingSlash,
+} from "~/utils/parse-collection-path"
 
 import type { Middleware } from "@nuxt/types"
 
@@ -33,7 +34,8 @@ export const collectionMiddleware: Middleware = async ({
   const searchStore = useSearchStore($pinia)
 
   if (route.fullPath.includes(`${mediaType}/tag/`)) {
-    const tag = route.params.tag
+    const tag = decodeURI(route.params.tag)
+
     if (!tag) {
       nuxtError({
         statusCode: 404,
@@ -46,12 +48,10 @@ export const collectionMiddleware: Middleware = async ({
 
   let creator = ""
   if (route.fullPath.includes("/creator/")) {
-    creator = route.fullPath.split("/creator/")[1]
-    if (isClient) {
-      // On the client, the slashes in the creator part of the path are decoded.
-      // We encode them back to correctly parse the path below.
-      creator = creator.replace(/\/$/g, "").replace("/", "%2F")
-    }
+    // Extract `creator` from path, decode and remove trailing slash
+    creator = decodeURI(
+      removeTrailingSlash(route.fullPath.split("/creator/")[1])
+    )
   }
   const collectionParams = parseCollectionPath(
     route.params.pathMatch,
