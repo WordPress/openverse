@@ -2,6 +2,8 @@ from http.client import responses as http_responses
 from textwrap import dedent
 from typing import Literal
 
+from django.conf import settings
+
 from rest_framework.exceptions import (
     NotAuthenticated,
     NotFound,
@@ -114,7 +116,7 @@ source_404_response = OpenApiResponse(
 def build_source_path_parameter(media_type: MediaType):
     valid_description = (
         f"Valid values are source_names from the stats endpoint: "
-        f"https://api.openverse.engineering/v1/{media_type}/stats/."
+        f"{settings.CANONICAL_ORIGIN}/v1/{media_type}/stats/."
     )
 
     return OpenApiParameter(

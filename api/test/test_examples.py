@@ -2,14 +2,13 @@ import json
 import os
 import subprocess
 
+from django.conf import settings
+
 import pytest
 
-from test.constants import API_URL
 
-
-os.environ["AUDIO_REQ_TOKEN"] = ""
-os.environ["AUDIO_REQ_ORIGIN"] = API_URL
-os.environ["AUDIO_REQ_IDX"] = "8624ba61-57f1-4f98-8a85-ece206c319cf"
+os.environ["REQUEST_TOKEN"] = ""
+os.environ["CANONICAL_DOMAIN"] = settings.CANONICAL_DOMAIN
 
 from api.examples import (  # noqa: E402 | Set env vars before import
     audio_mappings,

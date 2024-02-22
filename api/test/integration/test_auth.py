@@ -1,13 +1,13 @@
 import time
 import uuid
 
+from django.conf import settings
 from django.urls import reverse
 
 import pytest
 from oauth2_provider.models import AccessToken
 
 from api.models import OAuth2Verification, ThrottledApplication
-from test.constants import API_URL
 
 
 cache_availability_params = pytest.mark.parametrize(
@@ -98,7 +98,7 @@ def _integration_verify_most_recent_token(api_client):
 )
 @cache_availability_params
 @pytest.mark.skipif(
-    API_URL != "http://localhost:8000",
+    "localhost" not in settings.CANONICAL_DOMAIN,
     reason=(
         "This test needs to cheat by looking in the database,"
         " so it needs to skip in non-local environments where"
