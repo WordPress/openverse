@@ -13,6 +13,9 @@
     "schedule:monthly",
     "group:monorepos"
   ],
+  "vulnerabilityAlerts": {
+    "schedule": ["at any time"]
+  },
   "prCommitsPerRunLimit": 3,
   "labels": [
     "dependencies",
