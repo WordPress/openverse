@@ -54,7 +54,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
     def validate_page_size(self, value):
         request = self.context.get("request")
-        is_anonymous = getattr(request, "auth", None) is not None
+        is_anonymous = getattr(request, "auth", None) is None
         max_value = (
             settings.MAX_ANONYMOUS_PAGE_SIZE
             if is_anonymous
@@ -247,7 +247,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
 
     def is_request_anonymous(self):
         request = self.context.get("request")
-        return getattr(request, "auth", None) is not None
+        return getattr(request, "auth", None) is None
 
     @staticmethod
     def _truncate(value):
