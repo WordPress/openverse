@@ -72,8 +72,10 @@ decision is related to), will be updated to `media_identifiers` _plural_: a
 many-to-many relationship to potentially multiple media records the decision is
 related to. Under the covers, this will be implemented by a join table. As
 pointed out in the related IP, the media identifiers must be non-constrained
-(indexed non-unique UUIDs rather than foreign keys), because deindexing media
-removes them from the API database.
+(indexed non-unique UUIDs rather than foreign keys, using the
+[`db_constrained` argument](https://docs.djangoproject.com/en/5.0/ref/models/fields/#django.db.models.ManyToManyField.db_constraint)
+to the ManyToManyField), because deindexing media removes them from the API
+database.
 
 The relationship is many-to-many because:
 
