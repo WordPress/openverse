@@ -8,9 +8,9 @@ This page is your gateway to understanding our diverse technology stack. Explore
    - [Documentation](https://docs.openverse.org/catalog/index.html)
    - Language: Python
    - Tools and Framework:
-     - [Apache Airflow](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/operators/cloud/datacatalog.html)
+     - [Apache Airflow](https://airflow.apache.org/docs/apache-airflow/stable/index.html)
 2. Ingestion Server
-   - The mechanism for refreshing the data from the catalog to the API
+   - The mechanism for refreshing the data from the catalog to the API DB and Elasticsearch indices
    - [Code](https://github.com/WordPress/openverse/blob/main/ingestion_server)
    - [Documentation](https://docs.openverse.org/ingestion_server/index.html)
    - Language: Python
