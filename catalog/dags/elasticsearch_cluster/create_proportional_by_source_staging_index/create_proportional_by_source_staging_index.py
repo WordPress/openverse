@@ -57,12 +57,18 @@ def get_staging_source_counts(source_index: str, es_host: str):
     """
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
+    # `size` is the max number of buckets to return for the aggregation
+    # query, and should be set to a number that exceeds the known
+    # number of sources. Read more at:
+    # https://github.com/elastic/elasticsearch/issues/18838
+    size = 100
+
     response = es_conn.search(
         index=source_index,
         size=0,
         aggregations={
             "unique_sources": {
-                "terms": {"field": "source", "size": 100, "order": {"_key": "desc"}}
+                "terms": {"field": "source", "size": size, "order": {"_key": "desc"}}
             }
         },
     )
