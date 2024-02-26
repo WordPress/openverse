@@ -252,6 +252,10 @@ Here is how these deferred metrics can be calculated. Assume `Report`,
 example uses [package `tailslide`](https://github.com/ankane/tailslide) but a
 fairly basic aggregator could be implemented by us if needed.
 
+Reversal of sensitive marking or deindexing does not invalidate the accuracy of
+previous reports as they were accurate at the time of the decision and they
+still hold the `decision_id` that agrees with them.
+
 ```python
 from tailslide import Percentile
 from django.db.models import Avg, Count, F
