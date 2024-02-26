@@ -43,7 +43,7 @@ class DelayedRequester:
     delay:   an integer giving the minimum number of seconds to wait
              between consecutive requests via the `get` method.
     headers: a dict that will be passed in all requests, unless overridden
-             by kwargs in specific calls to the get method
+             by kwargs in specific calls to the `get` method
     """
 
     def __init__(self, delay: int = 0, headers: dict | None = None):
