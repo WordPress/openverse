@@ -97,8 +97,8 @@ the future):
     - per event (created | reviewed)
     - per violation (copyright | sensitive | other)
     - per decision action (marked_sensitive | deindexed_sensitive |
-      deindexed_copyright | reversed_mark_sensitive | reversed_deindex_sensitive
-      | reversed_deindex_copyright | rejected_reports | discarded_reports)
+      deindexed_copyright | reversed_mark_sensitive | reversed_deindex |
+      rejected_reports | deduplicated_reports)
   - most reported creator/source/provider (deferred)
   - accuracy of reports (deferred)
   - duplication in reports (deferred)
@@ -106,12 +106,11 @@ the future):
   - number of decisions (time-series, real-time)
     - per scope (single | bulk)
     - per action (marked_sensitive | deindexed_sensitive | deindexed_copyright |
-      reversed_mark_sensitive | reversed_deindex_sensitive |
-      reversed_deindex_copyright | rejected_reports | discarded_reports)
+      reversed_mark_sensitive | reversed_deindex | rejected_reports |
+      deduplicated_reports)
   - number of affected records (time-series, real-time)
     - per action (marked_sensitive | deindexed_sensitive | deindexed_copyright |
-      reversed_mark_sensitive | reversed_deindex_sensitive |
-      reversed_deindex_copyright)
+      reversed_mark_sensitive | reversed_deindex)
     - per action type (decision | reversed-decision)
   - time to decision (deferred)
     - average
@@ -144,10 +143,9 @@ type DecisionAction =
   | "deindexed_sensitive"
   | "deindexed_copyright"
   | "reversed_mark_sensitive"
-  | "reversed_deindex_sensitive"
-  | "reversed_deindex_copyright"
+  | "reversed_deindex"
   | "rejected_reports"
-  | "discarded_reports"
+  | "deduplicated_reports"
 ```
 
 #### Reports
@@ -213,7 +211,7 @@ fields @timestamp, message_type, media_type, event, violation, decision_action
     sum(case when violation = 'other' then 1 else 0 end) as otherCount,
     sum(case when decision_action = 'marked_sensitive' or decision_action = 'deindexed_sensitive' or decision_action = 'deindexed_copyright' then 1 else 0 end) as confirmedCount,
     sum(case when decision_action = 'rejected_reports' then 1 else 0 end) as rejectedCount,
-    sum(case when decision_action = 'discarded_reports' then 1 else 0 end) as duplicateCount,
+    sum(case when decision_action = 'dededuplicated_reports' then 1 else 0 end) as deduplicatedCount,
   by bin(5m)
 | sort @timestamp desc
 ```
@@ -226,10 +224,9 @@ fields @timestamp, message_type, media_type, action, affected_records
     sum(case when action = 'deindexed_sensitive' then 1 else 0 end) as deindexedSensitiveCount,
     sum(case when action = 'deindexed_copyright' then 1 else 0 end) as deindexedCopyrightCount,
     sum(case when action = 'reversed_mark_sensitive' then 1 else 0 end) as reversedMarkSensitiveCount,
-    sum(case when action = 'reversed_deindex_sensitive' then 1 else 0 end) as reversedDeindexSensitiveCount,
-    sum(case when action = 'reversed_deindex_copyright' then 1 else 0 end) as reversedDeindexCopyrightCount,
+    sum(case when action = 'reversed_deindex' then 1 else 0 end) as reversedDeindexCount,
     sum(case when action = 'rejected_reports' then 1 else 0 end) as rejectedCount,
-    sum(case when action = 'discarded_reports' then 1 else 0 end) as discardedCount,
+    sum(case when action = 'deduplicated_reports' then 1 else 0 end) as deduplicatedCount,
     sum(case when affected_records = 1 then 1 else 0 end) as singleCount,
     sum(case when affected_records != 1 then 1 else 0 end) as bulkCount,
   by bin(5m)
