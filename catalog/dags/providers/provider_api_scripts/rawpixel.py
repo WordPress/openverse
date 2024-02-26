@@ -89,7 +89,6 @@ class RawpixelDataIngester(ProviderDataIngester):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.api_key: str = Variable.get("API_KEY_RAWPIXEL")
-        self.headers = {"User-Agent": prov.UA_STRING}
 
     def get_media_type(self, record: dict) -> str:
         return constants.IMAGE
