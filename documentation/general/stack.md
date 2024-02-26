@@ -16,6 +16,7 @@ This page is your gateway to understanding our diverse technology stack. Explore
    - Language: Python
    - Tools and Framework:
      - [Elasticsearch](https://www.elastic.co/guide/index.html)
+     - [PostgreSQL](https://www.postgresql.org/docs/)
 3. API
    - The Django REST API for querying the database, used by the frontend
    - [Code](https://github.com/WordPress/openverse/blob/main/api)
