@@ -86,7 +86,7 @@ DAG_ID = "create_proportional_by_source_staging_index"
         "percentage_of_prod": Param(
             default=0.5,
             type="number",
-            minimum=0,
+            exclusiveMinimum=0,
             maximum=1,
             description=(
                 "The proportion of items to take of each provider from"
