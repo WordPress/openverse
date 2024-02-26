@@ -7,6 +7,7 @@ from airflow.exceptions import AirflowException
 from requests.exceptions import JSONDecodeError
 
 import oauth2
+from common.loader import provider_details as prov
 
 
 # pytest_socket will not be available in production, so we must create a shim for
@@ -45,9 +46,10 @@ class DelayedRequester:
              by kwargs in specific calls to the get method
     """
 
-    def __init__(self, delay=0, headers=None):
+    def __init__(self, delay: int = 0, headers: dict | None = None):
+        headers = {} if headers is None else headers
         self._DELAY = delay
-        self.headers = headers or {}
+        self.headers = {"User-Agent": prov.UA_STRING} | headers
         self._last_request = 0
         self.session = requests.Session()
 
