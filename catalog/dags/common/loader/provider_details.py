@@ -124,7 +124,8 @@ SMITHSONIAN_SUB_PROVIDERS = {
 
 # User-Agent header for APIs that require it
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
-UA_STRING = f"Openverse/0.1 (https://wordpress.org/openverse; {CONTACT_EMAIL})"
+CANONICAL_ORIGIN = os.getenv("CANONICAL_ORIGIN", "https://openverse.org")
+UA_STRING = f"Openverse/0.1 ({CANONICAL_ORIGIN}; {CONTACT_EMAIL})"
 
 
 # Available Image Categories for API
