@@ -5,7 +5,7 @@
     variant="filled-gray"
     class="label-bold"
     v-bind ="$props"
-    >{{ title }}</VButton
+    ><slot></slot></VButton
   >
 </template>
 
