@@ -56,7 +56,7 @@
       </template>
     </ol>
 
-    <VLoadMore class="mb-6 mt-4 lg:mb-10" />
+    <VLoadMoreOld class="mb-6 mt-4 lg:mb-10" />
   </div>
 </template>
 
@@ -77,7 +77,7 @@ import type { SupportedMediaType } from "~/constants/media"
 import VSnackbar from "~/components/VSnackbar.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
+import VLoadMoreOld from "~/components/VLoadMoreOld.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 
@@ -87,7 +87,7 @@ export default defineComponent({
     VSnackbar,
     VImageCell,
     VAudioResult,
-    VLoadMore,
+    VLoadMoreOld,
     VGridSkeleton,
     VContentLink,
   },

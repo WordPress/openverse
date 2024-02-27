@@ -33,7 +33,7 @@
       />
     </ol>
     <footer v-if="kind !== 'related'" class="mt-4">
-      <VLoadMore />
+      <VLoadMoreOld />
     </footer>
   </section>
 </template>
@@ -50,7 +50,7 @@ import { useSearchStore } from "~/stores/search"
 
 import { useUiStore } from "~/stores/ui"
 
-import VLoadMore from "~/components/VLoadMore.vue"
+import VLoadMoreOld from "~/components/VLoadMoreOld.vue"
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VSnackbar from "~/components/VSnackbar.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
@@ -65,7 +65,7 @@ export default defineComponent({
     VAudioResult,
     VSnackbar,
     VGridSkeleton,
-    VLoadMore,
+    VLoadMoreOld,
   },
   props: {
     results: {

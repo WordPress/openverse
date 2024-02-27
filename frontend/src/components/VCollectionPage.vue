@@ -1,87 +1,71 @@
 <template>
-  <div class="p-6 pt-0 lg:p-10 lg:pt-2">
-    <VCollectionHeader
-      v-if="collectionParams"
-      :collection-params="collectionParams"
-      :creator-url="creatorUrl"
-      :media-type="mediaType"
-      :class="mediaType === 'image' ? 'mb-4' : 'mb-2'"
-    />
-    <VAudioList
-      v-if="results.type === 'audio'"
-      :collection-label="collectionLabel"
-      :fetch-state="fetchState"
-      kind="collection"
-      :results="results.items"
-    />
-    <VImageGrid
-      v-if="results.type === 'image'"
-      :image-grid-label="collectionLabel"
-      :fetch-state="fetchState"
-      kind="collection"
-      :results="results.items"
-    />
-  </div>
+  <VCollectionResults
+    v-if="collectionParams"
+    kind="collection"
+    :collection-params="collectionParams"
+    :creator-url="creatorUrl"
+    :collection-label="collectionLabel"
+    :search-term="searchTerm"
+    :results="results"
+    class="p-6 pt-0 lg:p-10 lg:pt-2"
+    @load-more="$emit('load-more')"
+  />
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
-import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
-import type { SupportedMediaType } from "~/constants/media"
-
-import { Results } from "~/types/result"
-
 import { useI18n } from "~/composables/use-i18n"
 
-import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
-import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
-import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
+import type { CollectionParams } from "~/types/search"
+import type { Results } from "~/types/result"
+
+import { defineEvent } from "~/types/emits"
+
+import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
 export default defineComponent({
   name: "VCollectionPage",
-  components: { VAudioList, VImageGrid, VCollectionHeader },
+  components: {
+    VCollectionResults,
+  },
   props: {
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
+    results: {
+      type: Object as PropType<Results>,
       required: true,
     },
+    collectionParams: {
+      type: Object as PropType<CollectionParams>,
+      required: true,
+    },
+    creatorUrl: {
+      type: String,
+    },
+  },
+  emits: {
+    "load-more": defineEvent(),
   },
   setup(props) {
     const i18n = useI18n()
-    const mediaStore = useMediaStore()
-
-    const fetchState = computed(() => mediaStore.fetchState)
-    const results = computed<Results>(() => {
-      return {
-        type: props.mediaType,
-        items: mediaStore.resultItems[props.mediaType],
-      } as Results
-    })
-
-    const creatorUrl = computed(() => {
-      const media = results.value.items
-      return media.length > 0 ? media[0].creator_url : undefined
-    })
-
-    const searchStore = useSearchStore()
-    const collectionParams = computed(() => searchStore.collectionParams)
 
     const collectionLabel = computed(() => {
-      if (!collectionParams.value) {
-        return ""
+      const params = props.collectionParams
+      const key = `collection.ariaLabel.${params.collection}.${props.results.type}`
+      return i18n.t(key, { ...params }).toString()
+    })
+
+    const searchTerm = computed(() => {
+      if (props.collectionParams.collection === "creator") {
+        return `${props.collectionParams.source}/${props.collectionParams.creator}`
+      } else if (props.collectionParams.collection === "source") {
+        return props.collectionParams.source
+      } else {
+        return props.collectionParams.tag
       }
-      const key = `collection.ariaLabel.${collectionParams.value.collection}.${props.mediaType}`
-      const params = collectionParams.value
-      return i18n.t(key, params).toString()
     })
 
     return {
-      fetchState,
-      results,
-      creatorUrl,
-      collectionParams,
       collectionLabel,
+      searchTerm,
     }
   },
 })

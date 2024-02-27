@@ -286,6 +286,14 @@ export const useMediaStore = defineStore("media", {
           !this.mediaFetchState[type].isFinished
       )
     },
+
+    canLoadMore(): boolean {
+      return (
+        !this.fetchState.fetchingError &&
+        !this.fetchState.isFinished &&
+        this.resultCount > 0
+      )
+    },
   },
 
   actions: {
@@ -414,20 +422,20 @@ export const useMediaStore = defineStore("media", {
 
       const mediaToFetch = this._fetchableMediaTypes
 
-      const resultCounts = await Promise.all(
+      await Promise.allSettled(
         mediaToFetch.map((mediaType) =>
           this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-      const resultCount = resultCounts.includes(null)
-        ? null
-        : (resultCounts as number[]).reduce((a, b) => a + b, 0)
 
       this.currentPage =
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
-      return resultCount
+
+      return mediaType === ALL_MEDIA
+        ? this.allMedia
+        : this.resultItems[mediaType]
     },
 
     clearMedia() {

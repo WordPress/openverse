@@ -16,18 +16,26 @@ describe("validateCollectionParams", () => {
   })
 
   it("returns source collection", () => {
-    const collection = parseCollectionPath("/flickr")
+    const collection = parseCollectionPath("/flickr", undefined, "image")
 
     expect(collection).toEqual({ source: "flickr", collection: "source" })
   })
 
   it("returns null if `creator` parameter is blank", () => {
-    const collection = parseCollectionPath("/flickr/creator/")
+    const collection = parseCollectionPath(
+      "flickr/creator/",
+      "/image/flickr/creator/",
+      "image"
+    )
 
     expect(collection).toBeNull()
   })
   it("returns creator collection without trailing slash", () => {
-    const collection = parseCollectionPath("/flickr/creator/me")
+    const collection = parseCollectionPath(
+      "flickr/creator/me",
+      "image/flickr/creator/me",
+      "image"
+    )
 
     expect(collection).toEqual({
       source: "flickr",
@@ -37,7 +45,11 @@ describe("validateCollectionParams", () => {
   })
 
   it("returns creator collection with trailing slash", () => {
-    const collection = parseCollectionPath("/flickr/creator/me/")
+    const collection = parseCollectionPath(
+      "flickr/creator/me/",
+      "image/flickr/creator/me/",
+      "image"
+    )
 
     expect(collection).toEqual({
       source: "flickr",
