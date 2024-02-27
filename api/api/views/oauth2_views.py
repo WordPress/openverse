@@ -7,6 +7,7 @@ from textwrap import dedent
 from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -22,7 +23,6 @@ from api.serializers.oauth2_serializers import (
     OAuth2KeyInfoSerializer,
     OAuth2RegistrationSerializer,
 )
-from api.utils.oauth2_helper import get_token_info
 from api.utils.throttle import OnePerSecond, TenPerDay
 
 
@@ -169,7 +169,7 @@ class CheckRates(APIView):
     throttle_classes = (OnePerSecond,)
 
     @key_info
-    def get(self, request, format=None):
+    def get(self, request: Request, format=None):
         """
         Get information about your API key.
 
@@ -181,23 +181,17 @@ class CheckRates(APIView):
         """
 
         # TODO: Replace 403 responses with DRF `authentication_classes`.
-        if not request.auth:
+        if not request.auth or not hasattr(request.auth, "application"):
             return Response(status=403, data="Forbidden")
 
-        access_token = str(request.auth)
-        token_info = get_token_info(access_token)
+        application: ThrottledApplication = request.auth.application
 
-        if not token_info:
-            # This shouldn't happen if `request.auth` was true above,
-            # but better safe than sorry
-            return Response(status=403, data="Forbidden")
-
-        client_id = token_info.client_id
+        client_id = application.client_id
 
         if not client_id:
             return Response(status=403, data="Forbidden")
 
-        throttle_type = token_info.rate_limit_model
+        throttle_type = application.rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
         if throttle_type == "standard":
             sustained_throttle_key = throttle_key.format(
@@ -242,7 +236,7 @@ class CheckRates(APIView):
                 "requests_this_minute": burst_requests,
                 "requests_today": sustained_requests,
                 "rate_limit_model": throttle_type,
-                "verified": token_info.verified,
+                "verified": application.verified,
             }
         )
         return Response(status=status, data=response_data.data)

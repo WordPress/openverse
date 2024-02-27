@@ -71,6 +71,7 @@ def enable_throttles(settings):
 def access_token():
     token = AccessTokenFactory.create()
     token.application.verified = True
+    token.application.client_id = 123
     token.application.save()
     return token
 
