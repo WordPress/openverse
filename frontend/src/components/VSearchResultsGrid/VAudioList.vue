@@ -1,45 +1,86 @@
 <template>
-  <!-- Negative margin compensates for the `p-4` padding in row layout. -->
-  <ol
-    :aria-label="collectionLabel"
-    class="-mx-2 flex flex-col md:-mx-4"
-    :class="kind === 'related' ? 'gap-4' : 'gap-2 md:gap-1'"
-  >
-    <VAudioResult
-      v-for="audio in results"
-      :key="audio.id"
-      :search-term="searchTerm"
-      :audio="audio"
-      layout="row"
-      :size="audioTrackSize"
-      :kind="kind"
+  <section>
+    <VGridSkeleton
+      v-if="results && results.length === 0 && !fetchState.isFinished"
+      is-for-tab="audio"
     />
-  </ol>
+    <VSnackbar size="large" :is-visible="isSnackbarVisible">
+      <i18n path="audioResults.snackbar.text" tag="p">
+        <template
+          v-for="keyboardKey in ['spacebar', 'left', 'right']"
+          #[keyboardKey]
+        >
+          <kbd :key="keyboardKey" class="font-sans">{{
+            $t(`audioResults.snackbar.${keyboardKey}`)
+          }}</kbd>
+        </template>
+      </i18n>
+    </VSnackbar>
+    <!-- Negative margin compensates for the `p-4` padding in row layout. -->
+    <ol
+      :aria-label="collectionLabel"
+      class="-mx-2 flex flex-col md:-mx-4"
+      :class="kind === 'related' ? 'gap-4' : 'gap-2 md:gap-1'"
+    >
+      <VAudioResult
+        v-for="audio in results"
+        :key="audio.id"
+        :search-term="searchTerm"
+        :audio="audio"
+        layout="row"
+        :size="audioTrackSize"
+        :kind="kind"
+      />
+    </ol>
+    <footer v-if="kind !== 'related'" class="mt-4">
+      <VLoadMore />
+    </footer>
+  </section>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
 import type { AudioDetail } from "~/types/media"
+import type { FetchState } from "~/types/fetch-state"
 import type { ResultKind } from "~/types/result"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
+
 import { useSearchStore } from "~/stores/search"
+
 import { useUiStore } from "~/stores/ui"
 
+import VLoadMore from "~/components/VLoadMore.vue"
+import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
+import VSnackbar from "~/components/VSnackbar.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 
 /**
- * The list of audio for the search results and the related audio.
+ * This component shows a loading skeleton if the results are not yet loaded,
+ * and then shows the list of audio, with the Load more button if needed.
  */
 export default defineComponent({
   name: "VAudioList",
-  components: { VAudioResult },
+  components: {
+    VAudioResult,
+    VSnackbar,
+    VGridSkeleton,
+    VLoadMore,
+  },
   props: {
     results: {
       type: Array as PropType<AudioDetail[]>,
       default: () => [],
     },
+    /**
+     * If used for Related audio, do not show the Load more button.
+     */
     kind: {
       type: String as PropType<ResultKind>,
+      required: true,
+    },
+    fetchState: {
+      type: Object as PropType<FetchState>,
       required: true,
     },
     /**
@@ -51,6 +92,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { isVisible: isSnackbarVisible } = useAudioSnackbar()
+
     const uiStore = useUiStore()
 
     const audioTrackSize = computed(() => {
@@ -71,6 +114,7 @@ export default defineComponent({
     return {
       audioTrackSize,
       searchTerm,
+      isSnackbarVisible,
     }
   },
 })

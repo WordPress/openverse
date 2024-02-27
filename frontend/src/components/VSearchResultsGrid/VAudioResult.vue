@@ -51,7 +51,11 @@ export default defineComponent({
     },
     kind: {
       type: String as PropType<ResultKind>,
-      default: "search",
+      required: true,
+    },
+    relatedTo: {
+      type: String as PropType<string | null>,
+      default: null,
     },
   },
   setup(props) {
@@ -76,7 +80,7 @@ export default defineComponent({
         mediaType: AUDIO,
         query: props.searchTerm,
         provider: audio.provider,
-        relatedTo: null,
+        relatedTo: props.relatedTo,
         sensitivities: audio.sensitivity?.join(",") ?? "",
         isBlurred: shouldBlur.value,
       })
