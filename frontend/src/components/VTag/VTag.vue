@@ -5,6 +5,7 @@
     variant="filled-gray"
     class="label-bold"
     v-bind ="$props"
+    v-on="$listeners"
     ><slot></slot></VButton
   >
 </template>
