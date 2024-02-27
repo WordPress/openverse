@@ -33,6 +33,7 @@ import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
 import { defineEvent } from "~/types/emits"
 
+import type { ResultKind } from "~/types/result"
 import type { SupportedSearchType } from "~/constants/media"
 
 import VButton from "~/components/VButton.vue"
@@ -47,8 +48,12 @@ export default defineComponent({
       type: String as PropType<SupportedSearchType>,
       required: true,
     },
-    resultsTerm: {
+    searchTerm: {
       type: String,
+      required: true,
+    },
+    kind: {
+      type: String as PropType<ResultKind>,
       required: true,
     },
     isFetching: {
@@ -101,7 +106,7 @@ export default defineComponent({
     const eventPayload = computed(() => {
       return {
         searchType: props.searchType,
-        query: props.resultsTerm,
+        query: props.searchTerm,
         resultPage: currentPage.value || 1,
       }
     })

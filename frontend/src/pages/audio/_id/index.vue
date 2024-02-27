@@ -28,8 +28,11 @@
               </div>
             </template>
           </VMediaDetails>
-          <VRelatedAudio
-            @interacted="sendAudioEvent($event, 'VRelatedAudio')"
+          <VRelatedMedia
+            v-if="audio"
+            media-type="audio"
+            :related-to="audio.id"
+            class="mb-12"
           />
         </div>
       </template>
@@ -53,19 +56,18 @@ import type { AudioDetail } from "~/types/media"
 import type { AudioInteractionData } from "~/types/analytics"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 import { singleResultMiddleware } from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
 
-import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
-
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
-import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+import VRelatedMedia from "~/components/VMediaInfo/VRelatedMedia.vue"
 
 export default defineComponent({
   name: "AudioDetailPage",
@@ -77,7 +79,7 @@ export default defineComponent({
     VMediaDetails,
     VAudioTrack,
     VMediaReuse,
-    VRelatedAudio,
+    VRelatedMedia,
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,

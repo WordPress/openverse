@@ -1,10 +1,8 @@
 <template>
-  <VMediaCollection
+  <VSearchResults
     :results="results"
-    :metadata="{ searchTerm, kind: 'search' }"
-    :collection-label="
-      $t('browsePage.aria.results', { query: searchTerm }).toString()
-    "
+    :search-term="searchTerm"
+    kind="search"
     @load-more="handleLoadMore"
   />
 </template>
@@ -14,11 +12,11 @@ import { defineComponent, type PropType } from "vue"
 
 import type { AllMediaResults } from "~/types/result"
 
-import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
+import VSearchResults from "~/components/VSearchResultsGrid/VSearchResults.vue"
 
 export default defineComponent({
   name: "SearchIndex",
-  components: { VMediaCollection },
+  components: { VSearchResults },
   props: {
     results: {
       type: Object as PropType<AllMediaResults>,

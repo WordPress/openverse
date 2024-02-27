@@ -28,8 +28,6 @@ import type { AudioDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 
 import { useUiStore } from "~/stores/ui"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
-import { useSearchStore } from "~/stores/search"
 
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 import VAudioInstructions from "~/components/VSearchResultsGrid/VAudioInstructions.vue"
@@ -63,14 +61,16 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    searchTerm: {
+      type: String,
+      required: true,
+    },
+    relatedTo: {
+      type: String as PropType<string | null>,
+      default: null,
+    },
   },
   setup(props) {
-    const relatedTo = computed(() => {
-      return props.kind === "related"
-        ? useRelatedMediaStore().mainMediaId
-        : null
-    })
-
     const uiStore = useUiStore()
 
     const audioTrackSize = computed(() => {
@@ -85,13 +85,8 @@ export default defineComponent({
       }
     })
 
-    const searchStore = useSearchStore()
-    const searchTerm = computed(() => searchStore.searchTerm)
-
     return {
       audioTrackSize,
-      searchTerm,
-      relatedTo,
     }
   },
 })

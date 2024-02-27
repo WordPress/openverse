@@ -1,8 +1,11 @@
 <template>
-  <VMediaCollection
+  <VCollectionResults
     v-if="collectionParams"
-    :metadata="{ collectionParams, creatorUrl, kind: 'collection' }"
+    kind="collection"
+    :collection-params="collectionParams"
+    :creator-url="creatorUrl"
     :collection-label="collectionLabel"
+    :search-term="searchTerm"
     :results="results"
     class="p-6 pt-0 lg:p-10 lg:pt-2"
     @load-more="$emit('load-more')"
@@ -18,12 +21,12 @@ import type { Results } from "~/types/result"
 
 import { defineEvent } from "~/types/emits"
 
-import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
+import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
 export default defineComponent({
   name: "VCollectionPage",
   components: {
-    VMediaCollection,
+    VCollectionResults,
   },
   props: {
     results: {
@@ -45,39 +48,24 @@ export default defineComponent({
     const i18n = useI18n()
 
     const collectionLabel = computed(() => {
-      const collection = props.collectionParams.collection
-      const type = props.results.type
-      switch (collection) {
-        case "tag": {
-          return i18n
-            .t(`collection.ariaLabel.tag.${type}`, {
-              tag: props.collectionParams.tag,
-            })
-            .toString()
-        }
-        case "source": {
-          return i18n
-            .t(`collection.ariaLabel.source.${type}`, {
-              source: props.collectionParams.source,
-            })
-            .toString()
-        }
-        case "creator": {
-          return i18n
-            .t(`collection.ariaLabel.creator.${type}`, {
-              creator: props.collectionParams.creator,
-              source: props.collectionParams.source,
-            })
-            .toString()
-        }
-        default: {
-          return ""
-        }
+      const params = props.collectionParams
+      const key = `collection.ariaLabel.${params.collection}.${props.results.type}`
+      return i18n.t(key, { ...params }).toString()
+    })
+
+    const searchTerm = computed(() => {
+      if (props.collectionParams.collection === "creator") {
+        return `${props.collectionParams.source}/${props.collectionParams.creator}`
+      } else if (props.collectionParams.collection === "source") {
+        return props.collectionParams.source
+      } else {
+        return props.collectionParams.tag
       }
     })
 
     return {
       collectionLabel,
+      searchTerm,
     }
   },
 })

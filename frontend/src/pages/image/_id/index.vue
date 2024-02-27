@@ -97,12 +97,18 @@
           :image-height="imageHeight"
           :image-type="imageType"
         />
-        <VRelatedImages />
+
+        <VRelatedMedia
+          v-if="image"
+          media-type="image"
+          :related-to="image.id"
+          class="pt-2 sm:pt-0"
+        />
       </template>
     </template>
     <VBone
       v-else-if="showLoadingState"
-      class="col-span-full row-span-full h-[500px] w-[500px] self-center"
+      class="col-span-full row-span-full mx-auto h-[500px] w-[500px]"
     />
   </main>
 </template>
@@ -134,14 +140,13 @@ import { singleResultMiddleware } from "~/middleware/single-result"
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
-import VRelatedImages from "~/components/VImageDetails/VRelatedImages.vue"
+import VRelatedMedia from "~/components/VMediaInfo/VRelatedMedia.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
-
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
@@ -158,7 +163,7 @@ export default defineComponent({
     VBone,
     VLink,
     VMediaReuse,
-    VRelatedImages,
+    VRelatedMedia,
     VSketchFabViewer,
   },
   layout: "content-layout",
@@ -353,8 +358,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-section,
-aside {
+section {
   @apply mb-10 w-full px-6 md:mb-16 md:max-w-screen-lg md:px-12 lg:mx-auto lg:px-16;
 }
 </style>

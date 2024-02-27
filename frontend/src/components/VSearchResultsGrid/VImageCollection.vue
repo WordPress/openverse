@@ -19,10 +19,7 @@
  * This component receives an array of images as a prop, and
  * is responsible for displaying them as a grid.
  */
-import { computed, defineComponent, type PropType } from "vue"
-
-import { useSearchStore } from "~/stores/search"
-import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { defineComponent, type PropType } from "vue"
 
 import type { ResultKind } from "~/types/result"
 import type { ImageDetail } from "~/types/media"
@@ -49,19 +46,14 @@ export default defineComponent({
       type: String,
       required: true,
     },
-  },
-  setup(props) {
-    const searchStore = useSearchStore()
-
-    const searchTerm = computed(() => searchStore.searchTerm)
-
-    const relatedTo = computed(() => {
-      return props.kind === "related"
-        ? useRelatedMediaStore().mainMediaId
-        : null
-    })
-
-    return { searchTerm, relatedTo }
+    searchTerm: {
+      type: String,
+      required: true,
+    },
+    relatedTo: {
+      type: String as PropType<string | null>,
+      default: null,
+    },
   },
 })
 </script>
