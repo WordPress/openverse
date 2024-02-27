@@ -15,7 +15,7 @@
       :class="{ 'pt-2 sm:pt-0': results.type === 'image' }"
     />
 
-    <slot name="footer" v-bind="{ isFetching }" />
+    <slot name="footer" :is-fetching="_isFetching" />
 
     <VScrollButton
       v-show="showScrollButton"
@@ -27,10 +27,10 @@
 <script lang="ts">
 import { computed, defineComponent, inject, type PropType, ref } from "vue"
 
-import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import type { Results } from "~/types/result"
-
+import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { defineEvent } from "~/types/emits"
+import { useMediaStore } from "~/stores/media"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VAllResultsGrid from "~/components/VSearchResultsGrid/VAllResultsGrid.vue"
@@ -68,9 +68,12 @@ export default defineComponent({
       type: String as PropType<string | null>,
       default: null,
     },
+    /**
+     * Overrides the value from the media store.
+     * Used for the related media which uses a different store.
+     */
     isFetching: {
       type: Boolean,
-      required: true,
     },
   },
   emits: {
@@ -80,8 +83,13 @@ export default defineComponent({
     const showScrollButton = inject(ShowScrollButtonKey, ref(false))
     const isSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
 
+    const mediaStore = useMediaStore()
+    const _isFetching = computed(
+      () => props.isFetching ?? mediaStore.fetchState.isFetching
+    )
+
     const showSkeleton = computed(() => {
-      return props.isFetching && props.results.items.length === 0
+      return _isFetching.value && props.results.items.length === 0
     })
 
     const component = computed(() => {
@@ -98,6 +106,7 @@ export default defineComponent({
       showSkeleton,
       showScrollButton,
       isSidebarVisible,
+      _isFetching,
       component,
     }
   },

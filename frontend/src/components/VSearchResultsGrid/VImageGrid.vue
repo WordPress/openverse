@@ -16,7 +16,7 @@
       />
     </ol>
     <footer v-if="kind !== 'related'" class="pt-4">
-      <VLoadMore />
+      <VLoadMoreOld />
     </footer>
   </section>
 </template>
@@ -38,12 +38,12 @@ import type { ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
-import VLoadMore from "~/components/VLoadMore.vue"
+import VLoadMoreOld from "~/components/VLoadMoreOld.vue"
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
 export default defineComponent({
   name: "ImageGrid",
-  components: { VGridSkeleton, VLoadMore, VImageCell },
+  components: { VGridSkeleton, VLoadMoreOld, VImageCell },
   props: {
     results: {
       type: Array as PropType<ImageDetail[]>,
