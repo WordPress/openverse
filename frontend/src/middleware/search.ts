@@ -47,7 +47,7 @@ export const searchMiddleware: Middleware = async ({
     const results = await mediaStore.fetchMedia()
 
     const fetchingError = mediaStore.fetchState.fetchingError
-    if (!results && fetchingError && !handledClientSide(fetchingError)) {
+    if (!results.length && fetchingError && !handledClientSide(fetchingError)) {
       nuxtError(fetchingError)
     }
   }

@@ -10,31 +10,13 @@
       class="w-full py-10"
     />
     <section v-else>
-      <header v-if="query.q && supported" class="my-0 md:mb-8 md:mt-4">
-        <VSearchResultsTitle :size="isAllView ? 'large' : 'default'">{{
-          searchTerm
-        }}</VSearchResultsTitle>
-      </header>
       <NuxtChild
         :key="$route.path"
-        :results="
-          isSupportedMediaType(searchType) ? resultItems[searchType] : null
-        "
-        :fetch-state="fetchState"
-        :search-term="query.q"
-        :supported="supported"
-        data-testid="search-results"
-      />
-      <VExternalSearchForm
-        v-if="!isAllView"
+        :results="searchResults"
         :search-term="searchTerm"
-        :is-supported="supported"
-        :has-no-results="false"
-      />
-      <VScrollButton
-        v-show="showScrollButton"
-        :is-filter-sidebar-visible="isSidebarVisible"
-        data-testid="scroll-button"
+        :supported="supported"
+        :handle-load-more="handleLoadMore"
+        data-testid="search-results"
       />
     </section>
   </div>
@@ -42,7 +24,7 @@
 
 <script lang="ts">
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
-import { computed, inject, ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 import {
@@ -57,33 +39,25 @@ import {
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
-import { ALL_MEDIA, isSupportedMediaType } from "~/constants/media"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { ALL_MEDIA } from "~/constants/media"
 
 import { skipToContentTargetId } from "~/constants/window"
-import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
+import type { Results } from "~/types/result"
 import { areQueriesEqual } from "~/utils/search-query-transform"
 import { handledClientSide, isRetriable } from "~/utils/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
-import VScrollButton from "~/components/VScrollButton.vue"
-import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
-import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 
 export default defineComponent({
   name: "BrowsePage",
   components: {
     VErrorSection,
-    VSearchResultsTitle,
-    VExternalSearchForm,
-    VScrollButton,
   },
   layout: "search-layout",
   middleware: searchMiddleware,
   fetchOnServer: false,
   setup() {
-    const showScrollButton = inject(ShowScrollButtonKey)
-    const isSidebarVisible = inject(IsSidebarVisibleKey)
     const featureFlagStore = useFeatureFlagStore()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -105,9 +79,7 @@ export default defineComponent({
       searchTypeIsSupported: supported,
     } = storeToRefs(searchStore)
 
-    const { resultCount, fetchState, resultItems } = storeToRefs(mediaStore)
-
-    const isAllView = computed(() => searchType.value === ALL_MEDIA)
+    const { resultCount, fetchState } = storeToRefs(mediaStore)
 
     const needsFetching = computed(() =>
       Boolean(supported.value && !resultCount.value && searchTerm.value !== "")
@@ -125,22 +97,41 @@ export default defineComponent({
 
     const { error: nuxtError } = useContext()
 
+    const searchResults = ref<Results | null>(
+      isSearchTypeSupported(searchType.value)
+        ? ({
+            type: searchType.value,
+            items:
+              searchType.value === ALL_MEDIA
+                ? mediaStore.allMedia
+                : mediaStore.resultItems[searchType.value],
+          } as Results)
+        : null
+    )
+
     const fetchMedia = async (
       payload: { shouldPersistMedia?: boolean } = {}
     ) => {
+      if (!isSearchTypeSupported(searchType.value)) {
+        return
+      }
       /**
        * If the fetch has already started in the middleware,
        * and there is an error status that will not change if retried, don't re-fetch.
        */
       const shouldNotRefetch =
-        mediaStore.fetchState.hasStarted &&
+        fetchState.value.hasStarted &&
         fetchingError.value !== null &&
         !isRetriable(fetchingError.value)
       if (shouldNotRefetch) {
         return
       }
+      if (!payload.shouldPersistMedia) {
+        searchResults.value = { type: searchType.value, items: [] }
+      }
 
-      await mediaStore.fetchMedia(payload)
+      const media = await mediaStore.fetchMedia(payload)
+      searchResults.value = { type: searchType.value, items: media } as Results
 
       if (
         fetchingError.value === null ||
@@ -151,7 +142,7 @@ export default defineComponent({
       return nuxtError(fetchingError.value)
     }
 
-    const fetchingError = computed(() => mediaStore.fetchState.fetchingError)
+    const fetchingError = computed(() => fetchState.value.fetchingError)
 
     /**
      * Search middleware runs when the path changes. This watcher
@@ -203,23 +194,21 @@ export default defineComponent({
         await fetchMedia()
       }
     })
+    const handleLoadMore = async () => {
+      await fetchMedia({ shouldPersistMedia: true })
+    }
 
     return {
-      showScrollButton,
       searchTerm,
       searchType,
       supported,
       query,
-      isSupportedMediaType,
 
       resultCount,
-      fetchState,
-      resultItems,
-      needsFetching,
-      isSidebarVisible,
+      searchResults,
       fetchingError,
 
-      isAllView,
+      handleLoadMore,
 
       skipToContentTargetId,
     }
