@@ -3,7 +3,8 @@ from django.contrib import admin
 from api.admin.site import openverse_admin
 from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
 from api.models.media import AbstractDeletedMedia, AbstractMatureMedia
-
+from api.models.oauth import ThrottledApplication
+from oauth2_provider.models import AccessToken
 
 admin.site = openverse_admin
 admin.sites.site = openverse_admin
@@ -83,3 +84,54 @@ class ProviderAdmin(admin.ModelAdmin):
     list_display = ("provider_name", "provider_identifier", "media_type")
     search_fields = ("provider_name", "provider_identifier")
     ordering = ("media_type", "provider_name")
+
+
+@admin.register(ThrottledApplication)
+class ThrottledApplicationAdmin(admin.ModelAdmin):
+    search_fields = ("client_id", "name")
+    list_display = ("client_id", "name", "user", "rate_limit_model")
+    ordering = ("client_id",)
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return []
+        readonly_fields = [
+            "skip_authorization",
+            "verified",
+            "client_id",
+            "name",
+            "user",
+            "rate_limit_model",
+            "algorithm",
+            "redirect_uris",
+            "post_logout_redirect_uris",
+            "client_type",
+            "authorization_grant_type",
+            "client_secret",
+        ]
+
+        return readonly_fields
+
+
+@admin.register(AccessToken)
+class AccessTokenAdmin(admin.ModelAdmin):
+    search_fields = ("token", "id")
+    list_display = ("token", "id", "scope", "expires")
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return []
+        readonly_fields = [
+            "id",
+            "user",
+            "source_refresh_token",
+            "token",
+            "id_token",
+            "application",
+            "expires",
+            "scope",
+            "created",
+            "updated",
+        ]
+
+        return readonly_fields
