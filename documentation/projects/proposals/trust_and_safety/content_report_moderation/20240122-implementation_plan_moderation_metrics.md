@@ -244,63 +244,179 @@ restoration purposes.
 ### Implement deferred metrics
 
 Deferred metrics are those that are computed periodically or on-demand from the
-data in our database. These metrics can be computed using the Django ORM when
-triggered using a management command and their results can be cached.
+data in our database. These metrics can be computed using the Django ORM and
+their results can be cached.
 
-Here is how these deferred metrics can be calculated. Assume `Report`,
-`Decision` and `Media` here refer to image and audio models respectively. This
-example uses [package `tailslide`](https://github.com/ankane/tailslide) but a
-fairly basic aggregator could be implemented by us if needed.
+In a future iteration, we can add functionality to dig into these values based
+on a rolling window for observing trends. For example, we can narrow down a
+metric for the last week or month.
 
 Reversal of sensitive marking or deindexing does not invalidate the accuracy of
 previous reports as they were accurate at the time of the decision and they
 still hold the `decision_id` that agrees with them.
 
-```python
-from tailslide import Percentile
-from django.db.models import Avg, Count, F
-from api.models import Report, Decision, Media
-from datetime import timedelta
+Deferred metrics can be broken down into two types, values and lists.
 
-# 1. Report Accuracy
-total_reports = Report.objects.count()
-confirmed_reports = Report.objects.filter(decision__action='confirmed').count()
+#### Values
+
+Values are calculations that result in single numerical values. For example,
+accuracy of reports and time to decision are of this type.
+
+The following code can be used to calculate these metrics. The outcomes of these
+calculations can be cached in Redis with the desired TTL.
+
+Assume `Report`, `Decision` and `Media` here refer to the models for one media
+type. This example uses
+[package `tailslide`](https://github.com/ankane/tailslide) but a fairly basic
+aggregator could be implemented by us if needed.
+
+```python
+from datetime import datetime, timedelta
+from django.utils import timezone
+from api.models import Report, Decision, Media
+
+# setup
+# =====
+# Assume n is an integer number of days set by the user.
+n_days_ago = timezone.now() - timedelta(days=n)
+reports_in_range = Report.objects.filter(created_at__gte=n_days_ago)
+
+# accuracy of reports
+# ===================
+total_reports = reports_in_range.count()
+confirmed_reports = reports_in_range.filter(decision__action__in=['marked_sensitive', 'deindexed_sensitive', 'deindexed_copyright']).count()
 report_accuracy = (confirmed_reports / total_reports) * 100 if total_reports else 0
 
-# 2. Report Duplication
-duplicate_reports = Report.objects.filter(decision__action='deduplicated').count()
+# duplication in reports
+# ======================
+duplicate_reports = reports_in_range.filter(decision__action='deduplicated_reports').count()
 report_duplication = (duplicate_reports / total_reports) * 100 if total_reports else 0
+```
 
-# 3. Most Reported Items
-most_reported_media = Report.objects.values('media_id').annotate(report_count=Count('id')).order_by('-report_count').first()
-most_reported_creator = Report.objects.values('media__creator').annotate(report_count=Count('id')).order_by('-report_count').first()
-most_reported_source = Report.objects.values('media__source').annotate(report_count=Count('id')).order_by('-report_count').first()
+```python
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.db.models import Avg, Count, F
+from tailslide import Percentile
+from api.models import Report, Decision, Media
 
-# 4. Average and P99 Time to Decision
-time_differences = Report.objects.annotate(
-  decision_time=Avg(F('decision__created_on') - F('created_on'))
+# setup
+# =====
+# Assume n is an integer number of days set by the user.
+n_days_ago = timezone.now() - timedelta(days=n)
+reports_in_range = Report.objects.filter(created_at__gte=n_days_ago)
+
+# time to decision
+# ================
+time_differences = reports_in_range.annotate(
+  decision_time=Avg(F('decision__created_at') - F('created_at'))
 ).values_list('decision_time', flat=True)
-
 average_decision_time = sum(time_differences, timedelta()) / len(time_differences) if time_differences else timedelta()
-p99_decision_time = Report.objects.annotate(
-  decision_time=F('decision__created_on') - F('created_on')
+
+p99_decision_time = reports_in_range.annotate(
+  decision_time=F('decision__created_at') - F('created_at')
 ).aggregate(
   percentile_99=Percentile('decision_time', 0.99)
 )['percentile_99']
 ```
 
+#### Lists
+
+Lists are calculations that result in a list of items. For example, the most
+reported "leaderboards" are of this type.
+
+The following code can be used to calculate these leaderboards.
+
+```python
+from datetime import datetime, timedelta
+from django.utils import timezone
+from api.models import Report, Decision, Media
+
+# setup
+# =====
+# Assume n is an integer number of days set by the user.
+n_days_ago = timezone.now() - timedelta(days=n)
+reports_in_range = Report.objects.filter(created_at__gte=n_days_ago)
+
+# leaderboards
+# ============
+most_reported_media = reports_in_range.values('media_id').annotate(report_count=Count('id')).order_by('-report_count')[:10]
+most_reported_creator = reports_in_range.values('media__creator').annotate(report_count=Count('id')).order_by('-report_count')[:10]
+most_reported_source = reports_in_range.values('media__source').annotate(report_count=Count('id')).order_by('-report_count')[:10]
+```
+
 ### Surface in Django Admin
+
+#### Values
 
 The admin site supports both adding
 [custom views](https://docs.djangoproject.com/en/5.0/ref/contrib/admin/#adding-views-to-admin-sites)
 and
 [overriding/extending existing templates](https://docs.djangoproject.com/en/5.0/ref/contrib/admin/#overriding-admin-templates).
-
 These approaches can be coupled together for a good experience in displaying
 these metrics to the moderators.
 
-The precise design of how these metrics will be rendered will depend on the UI
-of the moderation views as implemented when the previous IP is realised.
+Values related to image reports can be provided by editing the template that
+Django admin uses to render the "ImageReport" list view. Similar values for
+audio can be shown on the "AudioReport" view.
+
+#### Lists
+
+For the list of the most reported creator and most reported source, we can
+create pseudo-models with `managed = False`, register the model in the Django
+admin site and finally create custom filters to operate on the in-memory list.
+
+```python
+class Creator(models.Model):
+    # fields to uniquely identify a creator
+    name = models.CharField(max_length=100)
+    provider = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+
+class CreatorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'provider', 'report_count')
+    list_filter = ('provider',)
+
+    def report_count(self, obj):
+        return Report.objects.filter(media_provider=obj.provider).filter(media__creator=obj.name).count()
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # Convert creators from media models into `Creator` models
+        return Media.objects.values('creator', 'provider').map(lambda x: Creator(name=x['creator'], provider=x['provider'])
+
+class CustomFilter(admin.SimpleListFilter):
+    title = 'Filter Title'
+    parameter_name = 'parameter'
+
+    def lookups(self, request, model_admin):
+        # Return a list of tuples (value, verbose_value) for the filter.
+        # For example, in the provider filter, these can be a list of providers for that media type.
+        return (
+            ('option_one', 'Option 1'),
+            ('option_two', 'Option 2'),
+        )
+
+    def queryset(self, request, queryset):
+        # Manipulate the pseudo-queryset from `get_queryset` using `filter` or list comprehensions
+        # Use self.value() which will be the 0-th element of the tuple returned by `lookups`
+        return queryset
+```
+
+For the lists of most reported media item, we register the media model again
+using a proxy as Django disallows one model to be registered more than once.
+
+```python
+class ImageProxy(Image):
+    class Meta:
+        proxy = True
+
+class AudioProxy(Audio):
+    class Meta:
+        proxy = True
+```
 
 ## Dependencies
 
