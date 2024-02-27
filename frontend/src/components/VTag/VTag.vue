@@ -4,7 +4,7 @@
     size="small"
     variant="filled-gray"
     class="label-bold"
-    :href="href"
+    v-bind ="$props"
     >{{ title }}</VButton
   >
 </template>
