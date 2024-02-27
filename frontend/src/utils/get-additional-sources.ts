@@ -235,6 +235,16 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
       }
     },
   },
+
+  {
+    name: "Free Music Archive",
+    audio: (search) => ({
+      url: "https://freemusicarchive.org/search",
+      queryParams: {
+        quicksearch: search.q,
+      },
+    }),
+  },
 ]
 
 /**
