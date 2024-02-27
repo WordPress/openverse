@@ -168,7 +168,12 @@ export default defineComponent({
 
     const route = useRoute()
 
-    const image = ref<ImageDetail | null>(singleResultStore.image)
+    const image = ref<ImageDetail | null>(
+      singleResultStore.image?.id &&
+        singleResultStore.image.id === route.value.params.id
+        ? singleResultStore.image
+        : null
+    )
     const fetchingError = computed(
       () => singleResultStore.fetchState.fetchingError
     )
