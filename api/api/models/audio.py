@@ -284,7 +284,7 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
     class Meta:
         db_table = "api_matureaudio"
-        verbose_name_plural = "Mature audio"
+        verbose_name_plural = "Sensitive audio"
 
 
 class AudioReport(AbstractMediaReport):
