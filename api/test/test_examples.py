@@ -17,8 +17,12 @@ from api.examples import (  # noqa: E402 | Set env vars before import
 
 
 def execute_request(request):
-    proc = subprocess.run(request, check=True, capture_output=True, shell=True)
-    return json.loads(proc.stdout)
+    try:
+        proc = subprocess.run(request, check=True, capture_output=True, shell=True)
+        return json.loads(proc.stdout)
+    except subprocess.CalledProcessError as e:
+        print(e.stderr)
+        raise
 
 
 @pytest.mark.parametrize("in_val, out_val", list(audio_mappings.items()))
