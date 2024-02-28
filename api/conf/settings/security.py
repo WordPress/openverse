@@ -29,7 +29,11 @@ ADDITIONAL_DOMAINS: list[str] = config(
 
 ALL_DOMAINS = [CANONICAL_DOMAIN] + ADDITIONAL_DOMAINS
 
-ALLOWED_HOSTS = ALL_DOMAINS + [
+ALLOWED_HOSTS = [
+    # Strip ports off hosts, as ALLOWED_HOSTS does not work with ports, e.g., `localhost:8000` needs to be just `localhost`
+    domain.split(":")[0]
+    for domain in ALL_DOMAINS
+] + [
     gethostname(),
     gethostbyname(gethostname()),
 ]
@@ -37,7 +41,6 @@ ALLOWED_HOSTS = ALL_DOMAINS + [
 if DEBUG:
     ALLOWED_HOSTS += [
         "dev.openverse.test",  # used in local development
-        "localhost",
         "127.0.0.1",
         "0.0.0.0",
     ]
