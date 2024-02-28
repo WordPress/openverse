@@ -8,6 +8,10 @@ from requests_oauthlib import OAuth2Session
 
 from catalog.tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
 from common import requester
+from common.loader import provider_details as prov
+
+
+USER_AGENT = {"User-Agent": prov.UA_STRING}
 
 
 @patch("common.requester.time")
@@ -155,8 +159,12 @@ def test_oauth_requester_initializes_correctly(oauth_provider_var_mock):
 @pytest.mark.parametrize(
     "init_headers, request_kwargs, expected_request_kwargs",
     [
-        (None, None, {"headers": {}}),
-        ({"init_header": "test"}, None, {"headers": {"init_header": "test"}}),
+        (None, None, {"headers": USER_AGENT}),
+        (
+            {"init_header": "test"},
+            None,
+            {"headers": {"init_header": "test"} | USER_AGENT},
+        ),
         (
             None,
             {"headers": {"h1": "test1"}, "other_kwarg": "test"},

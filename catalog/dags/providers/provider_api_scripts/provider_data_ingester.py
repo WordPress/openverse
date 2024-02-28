@@ -8,6 +8,7 @@ from typing import TypedDict
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
 
+from common.loader import provider_details as prov
 from common.requester import DelayedRequester
 from common.storage.media import MediaStore
 from common.storage.util import get_media_store_class
@@ -144,6 +145,9 @@ class ProviderDataIngester(ABC):
 
         # Keep track of number of records ingested
         self.record_count = 0
+
+        # Set default headers
+        self.headers = {"User-Agent": prov.UA_STRING} | self.headers
 
         # Initialize the DelayedRequester and all necessary Media Stores.
         self.delayed_requester = DelayedRequester(
