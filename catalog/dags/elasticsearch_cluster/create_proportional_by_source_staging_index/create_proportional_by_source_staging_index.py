@@ -65,6 +65,8 @@ def get_staging_source_counts(source_index: str, es_host: str):
 
     response = es_conn.search(
         index=source_index,
+        # Return 0 records from the search query; we only care about the
+        # aggregations
         size=0,
         aggregations={
             "unique_sources": {
