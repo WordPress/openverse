@@ -10,10 +10,10 @@ from api.models import (
     DeletedAudio,
     DeletedImage,
     Image,
-    MatureAudio,
-    MatureImage,
+    SensitiveAudio,
+    SensitiveImage,
 )
-from api.models.media import AbstractDeletedMedia, AbstractMatureMedia, AbstractMedia
+from api.models.media import AbstractDeletedMedia, AbstractMedia, AbstractSensitiveMedia
 from api.serializers.audio_serializers import (
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
@@ -53,8 +53,8 @@ class MediaTypeConfig:
     filtered_index: str
     model_factory: MediaFactory
     model_class: AbstractMedia
-    mature_factory: MediaFactory
-    mature_class: AbstractMatureMedia
+    sensitive_factory: MediaFactory
+    sensitive_class: AbstractSensitiveMedia
     search_request_serializer: MediaSearchRequestSerializer
     model_serializer: MediaSerializer
     report_serializer: MediaReportRequestSerializer
@@ -74,12 +74,12 @@ MEDIA_TYPE_CONFIGS = {
         filtered_index="image-filtered",
         model_factory=model_factories.ImageFactory,
         model_class=Image,
-        mature_factory=model_factories.MatureImageFactory,
+        sensitive_factory=model_factories.SensitiveImageFactory,
         search_request_serializer=ImageSearchRequestSerializer,
         model_serializer=ImageSerializer,
         report_serializer=ImageReportRequestSerializer,
         report_factory=model_factories.ImageReportFactory,
-        mature_class=MatureImage,
+        sensitive_class=SensitiveImage,
         deleted_class=DeletedImage,
     ),
     "audio": MediaTypeConfig(
@@ -89,12 +89,12 @@ MEDIA_TYPE_CONFIGS = {
         filtered_index="audio-filtered",
         model_factory=model_factories.AudioFactory,
         model_class=Audio,
-        mature_factory=model_factories.MatureAudioFactory,
+        sensitive_factory=model_factories.SensitiveAudioFactory,
         search_request_serializer=AudioSearchRequestSerializer,
         model_serializer=AudioSerializer,
         report_serializer=AudioReportRequestSerializer,
         report_factory=model_factories.AudioReportFactory,
-        mature_class=MatureAudio,
+        sensitive_class=SensitiveAudio,
         deleted_class=DeletedAudio,
     ),
 }

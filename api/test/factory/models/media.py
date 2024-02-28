@@ -37,8 +37,8 @@ class MediaFactory(DjangoModelFactory):
     )
 
     # Sub-factories must set this to their corresponding
-    # ``AbstractMatureMedia`` subclass
-    _mature_factory = None
+    # ``AbstractSensitiveMedia`` subclass
+    _sensitive_factory = None
 
     _highest_pre_existing_pk = None
 
@@ -126,7 +126,7 @@ class MediaFactory(DjangoModelFactory):
             hit = None
 
         if mature_reported:
-            cls._mature_factory.create(media_obj=model)
+            cls._sensitive_factory.create(media_obj=model)
 
         if pook_active:
             # Reactivate pook if it was active

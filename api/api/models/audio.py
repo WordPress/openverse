@@ -9,10 +9,10 @@ from api.models import OpenLedgerModel
 from api.models.media import (
     AbstractAltFile,
     AbstractDeletedMedia,
-    AbstractMatureMedia,
     AbstractMedia,
     AbstractMediaList,
     AbstractMediaReport,
+    AbstractSensitiveMedia,
 )
 from api.models.mixins import FileMixin, ForeignIdentifierMixin, MediaMixin
 from api.utils.waveform import generate_peaks
@@ -189,8 +189,8 @@ class Audio(AudioFileMixin, AbstractMedia):
     )
 
     @property
-    def mature(self) -> bool:
-        return hasattr(self, "mature_audio")
+    def sensitive(self) -> bool:
+        return hasattr(self, "sensitive_audio")
 
     @property
     def alternative_files(self):
@@ -260,7 +260,7 @@ class DeletedAudio(AbstractDeletedMedia):
         verbose_name_plural = "Deleted audio"
 
 
-class MatureAudio(AbstractMatureMedia):
+class SensitiveAudio(AbstractSensitiveMedia):
     """
     Stores all audio tracks that have been flagged as 'mature'.
 
@@ -278,17 +278,18 @@ class MatureAudio(AbstractMatureMedia):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="mature_audio",
+        related_name="sensitive_audio",
         help_text="The reference to the sensitive audio.",
     )
 
     class Meta:
+        db_table = "api_matureaudio"
         verbose_name_plural = "Mature audio"
 
 
 class AudioReport(AbstractMediaReport):
     media_class = Audio
-    mature_class = MatureAudio
+    sensitive_class = SensitiveAudio
     deleted_class = DeletedAudio
 
     media_obj = models.ForeignKey(
