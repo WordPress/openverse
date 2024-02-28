@@ -49,6 +49,7 @@ LOADER_ARGS = {
     "media_type": IMAGE,
 }
 OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "/tmp/"))
+COL_URL = "https://download.checklistbank.org/col/latest_coldp.zip"
 
 
 class INaturalistDataIngester(ProviderDataIngester):
@@ -217,7 +218,6 @@ class INaturalistDataIngester(ProviderDataIngester):
 
     @staticmethod
     def load_catalog_of_life_names(task: PythonOperator, remove_api_files: bool):
-        COL_URL = "https://api.checklistbank.org/dataset/9840/export.zip?format=ColDP"
         local_zip_file = "COL_archive.zip"
         name_usage_file = "NameUsage.tsv"
         vernacular_file = "VernacularName.tsv"
