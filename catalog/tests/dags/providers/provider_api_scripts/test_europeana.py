@@ -9,6 +9,7 @@ from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
 from providers.provider_api_scripts.europeana import (
+    EmptyRequiredFieldException,
     EuropeanaDataIngester,
     EuropeanaRecordBuilder,
 )
@@ -252,6 +253,19 @@ def test_get_foreign_landing_url_without_edmIsShownAt(record_builder):
     assert (
         record_builder.get_record_data(image_data)["foreign_landing_url"] == expect_url
     )
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        {},
+        {"edmIsShownBy": None},
+        {"edmIsShownBy": ["dropbox.com/value"]},
+    ],
+)
+def test_get_image_url_empty(data, record_builder):
+    with pytest.raises(EmptyRequiredFieldException):
+        assert record_builder._get_image_url(data)
 
 
 @pytest.mark.parametrize(
