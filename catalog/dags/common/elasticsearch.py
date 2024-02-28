@@ -5,7 +5,7 @@ from typing import Literal, Union
 from airflow.decorators import task, task_group
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
-from airflow.sensors.python import PythonSensor
+from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 
 from common.constants import REFRESH_POKE_INTERVAL
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # Index settings that should not be copied over from the base configuration when
 # creating a new index.
-EXCLUDED_INDEX_SETTINGS = ["provided_name", "creation_date", "uuid", "version"]
+EXCLUDED_INDEX_SETTINGS = {"provided_name", "creation_date", "uuid", "version"}
 
 
 @task
@@ -88,13 +88,14 @@ def create_index(index_config, es_host: str):
 
 @task_group(group_id="trigger_and_wait_for_reindex")
 def trigger_and_wait_for_reindex(
+    es_host: str,
     destination_index: str,
     source_index: str,
-    query: dict,
     timeout: timedelta,
     requests_per_second: int,
-    es_host: str,
+    query: dict | None = None,
     max_docs: int | None = None,
+    refresh: bool = True,
     slices: Union[int, Literal["auto"]] = "auto",
 ):
     @task
@@ -122,15 +123,20 @@ def trigger_and_wait_for_reindex(
             slices=slices,
             # Do not hold the slot while awaiting completion
             wait_for_completion=False,
-            # Immediately refresh the index after completion to make
+            # Whether to immediately refresh the index after completion to make
             # the data available for search
-            refresh=True,
+            refresh=refresh,
             # Throttle
             requests_per_second=requests_per_second,
         )
         return response["task"]
 
-    def _wait_for_reindex(task_id: str, expected_docs: int, es_host: str):
+    @task.sensor(
+        poke_interval=REFRESH_POKE_INTERVAL, timeout=timeout, mode="reschedule"
+    )
+    def wait_for_reindex(
+        es_host: str, task_id: str, expected_docs: int | None = None
+    ) -> PokeReturnValue:
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
@@ -142,7 +148,8 @@ def trigger_and_wait_for_reindex(
             )
         else:
             logger.info(f"Reindexed {count} documents.")
-        return response.get("completed")
+
+        return PokeReturnValue(is_done=response.get("completed") is True)
 
     trigger_reindex_task = trigger_reindex(
         es_host,
@@ -154,19 +161,17 @@ def trigger_and_wait_for_reindex(
         slices,
     )
 
-    wait_for_reindex = PythonSensor(
-        task_id="wait_for_reindex",
-        python_callable=_wait_for_reindex,
-        timeout=timeout,
-        poke_interval=REFRESH_POKE_INTERVAL,
-        op_kwargs={
-            "task_id": trigger_reindex_task,
-            "expected_docs": max_docs,
-            "es_host": es_host,
-        },
+    wait_for_reindex_task = wait_for_reindex(
+        task_id=trigger_reindex_task, expected_docs=max_docs, es_host=es_host
     )
 
-    trigger_reindex_task >> wait_for_reindex
+    trigger_reindex_task >> wait_for_reindex_task
+
+
+@task
+def refresh_index(es_host: str, index_name: str):
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+    return es_conn.indices.refresh(index=index_name)
 
 
 @task_group(group_id="point_alias")
@@ -209,10 +214,7 @@ def point_alias(index_name: str, alias: str, es_host: str):
         return response.get("acknowledged")
 
     exists_alias = check_if_alias_exists(alias, es_host)
-
-    remove_alias = remove_existing_alias.override(task_id="remove_existing_alias")(
-        alias, es_host
-    )
+    remove_alias = remove_existing_alias(alias, es_host)
 
     point_alias = point_new_alias.override(
         # The remove_alias task may be skipped.

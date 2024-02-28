@@ -39,7 +39,6 @@ immediately if any of the following DAGs are running:
 from datetime import datetime, timedelta
 
 from airflow.decorators import dag
-from airflow.models import Variable
 from airflow.models.param import Param
 
 from common import elasticsearch as es
@@ -157,14 +156,18 @@ def create_proportional_by_source_staging_index():
         destination_index=destination_index_name,
         source_index=source_index_name,
         timeout=timedelta(hours=12),
-        requests_per_second=Variable.get(
-            "ES_INDEX_THROTTLING_RATE", 20_000, deserialize_json=True
-        ),
+        requests_per_second="{{ var.value.get('ES_INDEX_THROTTLING_RATE', 20_000) }}",
         # When slices are used to parallelize indexing, max_docs does
         # not work reliably and the final proportions may be incorrect.
         slices=None,
+        # Do not refresh the index after each partial reindex
+        refresh=False,
         es_host=es_host,
     ).expand_kwargs(desired_source_counts)
+
+    refresh_destination_index = es.refresh_index(
+        index_name=destination_index_name, es_host=es_host
+    )
 
     point_alias = es.point_alias(
         index_name=destination_index_name, alias=destination_alias, es_host=es_host
@@ -182,7 +185,7 @@ def create_proportional_by_source_staging_index():
     es_host >> [source_index_name, destination_index_name, destination_alias]
     staging_source_counts >> desired_source_counts
     new_index >> staging_source_counts
-    reindex >> point_alias >> notify_completion
+    reindex >> refresh_destination_index >> point_alias >> notify_completion
 
 
 create_proportional_by_source_staging_index()
