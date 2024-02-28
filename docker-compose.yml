@@ -228,7 +228,7 @@ services:
     volumes:
       - ./api:/api:z
     ports:
-      - "50280:8000" # Django
+      - "50280:50280"
     depends_on:
       - db
       - es
