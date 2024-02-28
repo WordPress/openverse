@@ -50,7 +50,7 @@ class AudioViewSet(MediaViewSet):
     collection_serializer_class = AudioCollectionRequestSerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related("mature_audio", "audioset")
+        return super().get_queryset().select_related("sensitive_audio", "audioset")
 
     # Extra actions
     @creator_collection

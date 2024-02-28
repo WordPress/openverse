@@ -2,12 +2,12 @@ from test.factory.models.audio import (
     AudioAddOnFactory,
     AudioFactory,
     AudioReportFactory,
-    MatureAudioFactory,
+    SensitiveAudioFactory,
 )
 from test.factory.models.image import (
     ImageFactory,
     ImageReportFactory,
-    MatureImageFactory,
+    SensitiveImageFactory,
 )
 from test.factory.models.oauth2 import (
     AccessTokenFactory,
