@@ -13,6 +13,12 @@
         })
       }}
     </p>
+    <p
+      v-if="media.frontendMediaType === 'image'"
+      class="description-regular mt-3"
+    >
+      {{ $t("mediaDetails.reuse.copyrightDisclaimer") }}
+    </p>
     <div v-if="media.license_url" class="mt-8 grid gap-6 md:grid-cols-2">
       <VMediaLicense
         :license="media.license"

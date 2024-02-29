@@ -453,6 +453,7 @@
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
+      copyrightDisclaimer: "Some photographs might contain copyrighted content, such as paintings, sculptures, or architectural works. Using these photographs may require additional permissions from the copyright holder of the depicted works.",
       licenseHeader: "License",
       toolHeader: "Public Domain",
       audio: "Audio",
