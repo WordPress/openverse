@@ -18,20 +18,20 @@ const getReportForm = (page: Page) => {
   })
 }
 
-breakpoints.describeMd(({ expectSnapshot }) => {
-  test("unfocused close button", async ({ page }) => {
-    await preparePageForTests(page, "md")
-    await page.goto(imageUrl)
-
-    await getReportButton(page).click()
-
-    await expectSnapshot("content-report-unfocused", getReportForm(page))
-  })
-})
-
+// Flaky: https://github.com/WordPress/openverse/issues/2020
 test.describe.skip("content report form", () => {
-  // Flaky: https://github.com/WordPress/openverse/issues/2020
   test.describe.configure({ retries: 2 })
+
+  breakpoints.describeMd(({ expectSnapshot }) => {
+    test("unfocused close button", async ({ page }) => {
+      await preparePageForTests(page, "md")
+      await page.goto(imageUrl)
+
+      await getReportButton(page).click()
+
+      await expectSnapshot("content-report-unfocused", getReportForm(page))
+    })
+  })
 
   breakpoints.describeMd(({ expectSnapshot }) => {
     test("focused close button", async ({ page }) => {
