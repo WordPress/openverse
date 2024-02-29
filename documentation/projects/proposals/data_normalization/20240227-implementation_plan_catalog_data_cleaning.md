@@ -4,8 +4,8 @@
 
 ## Reviewers
 
-- [ ] TBD
-- [ ] TBD
+- [ ] @obulat
+- [ ] @AetherUnbound
 
 ## Project links
 
