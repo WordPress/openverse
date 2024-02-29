@@ -7,14 +7,6 @@ import errorsPlugin from "~/plugins/errors"
 
 import { SupportedSearchType, supportedSearchTypes } from "~/constants/media"
 
-const mockSendCustomEvent = jest.fn()
-
-jest.mock("~/composables/use-analytics", () => ({
-  useAnalytics: () => ({
-    sendCustomEvent: mockSendCustomEvent,
-  }),
-}))
-
 const getNotFoundError = () =>
   new AxiosError(
     "Beep boop, something went wrong :(",
@@ -41,6 +33,7 @@ const getNetworkError = () =>
 
 describe("Errors plugin", () => {
   const mockContext = {
+    $sendCustomEvent: jest.fn(),
     $sentry: {
       captureException: jest.fn(),
     },
@@ -78,7 +71,7 @@ describe("Errors plugin", () => {
     })
 
     expect(mockContext.$sentry.captureException).not.toHaveBeenCalled()
-    expect(mockSendCustomEvent).not.toHaveBeenCalled()
+    expect(mockContext.$sendCustomEvent).not.toHaveBeenCalled()
   })
 
   it.each(["provider", "related", "search"] as RequestKind[])(
@@ -101,7 +94,7 @@ describe("Errors plugin", () => {
       expect(mockContext.$sentry.captureException).toHaveBeenCalledWith(error, {
         extra: { fetchingError },
       })
-      expect(mockSendCustomEvent).not.toHaveBeenCalled()
+      expect(mockContext.$sendCustomEvent).not.toHaveBeenCalled()
     }
   )
 
@@ -122,27 +115,77 @@ describe("Errors plugin", () => {
     [] as [RequestKind, SupportedSearchType][]
   )
 
-  it.each(combinations)(
-    "should send %s %s network errors to plausible instead of sentry",
-    async (requestKind, searchType) => {
-      await errorsPlugin(mockContext, mockInject)
+  const processClientForBlock = (value: boolean) => {
+    let originalValue: boolean
 
-      const plugin = getPluginInstance()
+    beforeAll(() => {
+      originalValue = process.client
+      process.client = value
+    })
 
-      const error = getNetworkError()
+    afterAll(() => {
+      process.client = originalValue
+    })
+  }
 
-      const fetchingError = plugin(error, searchType, requestKind, {})
+  describe("client-side network errors", () => {
+    processClientForBlock(true)
 
-      expect(fetchingError).toMatchObject({
-        message: error.message,
-        code: error.code,
-      })
+    it.each(combinations)(
+      "should send %s %s client-side network errors to plausible instead of sentry",
+      async (requestKind, searchType) => {
+        await errorsPlugin(mockContext, mockInject)
 
-      expect(mockContext.$sentry.captureException).not.toHaveBeenCalled()
-      expect(mockSendCustomEvent).toHaveBeenCalledWith("NETWORK_ERROR", {
-        requestKind,
-        searchType,
-      })
-    }
-  )
+        const plugin = getPluginInstance()
+
+        const error = getNetworkError()
+
+        const fetchingError = plugin(error, searchType, requestKind, {})
+
+        expect(fetchingError).toMatchObject({
+          message: error.message,
+          code: error.code,
+        })
+
+        expect(mockContext.$sentry.captureException).not.toHaveBeenCalled()
+        expect(mockContext.$sendCustomEvent).toHaveBeenCalledWith(
+          "NETWORK_ERROR",
+          {
+            requestKind,
+            searchType,
+          }
+        )
+      }
+    )
+  })
+
+  describe("server-side network errors", () => {
+    processClientForBlock(false)
+
+    it.each(combinations)(
+      "should send %s %s client-side network errors to plausible instead of sentry",
+      async (requestKind, searchType) => {
+        await errorsPlugin(mockContext, mockInject)
+
+        const plugin = getPluginInstance()
+
+        const error = getNetworkError()
+
+        const fetchingError = plugin(error, searchType, requestKind, {})
+
+        expect(fetchingError).toMatchObject({
+          message: error.message,
+          code: error.code,
+        })
+
+        expect(mockContext.$sendCustomEvent).not.toHaveBeenCalled()
+        expect(mockContext.$sentry.captureException).toHaveBeenCalledWith(
+          error,
+          {
+            extra: { fetchingError },
+          }
+        )
+      }
+    )
+  })
 })

@@ -8,7 +8,6 @@
  */
 import { expect, test } from "@playwright/test"
 
-import { API_URL } from "~~/test/playwright/playwright.config"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,

@@ -5,8 +5,6 @@ import { ERR_UNKNOWN, ErrorCode, errorCodes } from "~/constants/errors"
 import type { FetchingError, RequestKind } from "~/types/fetch-state"
 import type { SupportedSearchType } from "~/constants/media"
 
-import { useAnalytics } from "~/composables/use-analytics"
-
 const isValidErrorCode = (
   code: string | undefined | null
 ): code is ErrorCode => {
