@@ -54,58 +54,80 @@ https://www.itis.gov/dwca_format.html which also has vernacular names / synonyms
 DROP TABLE IF EXISTS inaturalist.col_vernacular;
 COMMIT;
 
+/* Table definition can be found here:
+   https://github.com/CatalogueOfLife/coldp/blob/master/README.md#vernacularname
+*/
 CREATE TABLE inaturalist.col_vernacular (
     taxonID varchar(5),
     sourceID decimal,
     taxon_name varchar(2000),
     transliteration text,
     name_language varchar(3),
+    preferred boolean,
     country varchar(3),
     area varchar(2000),
     sex decimal,
-    referenceID decimal
+    referenceID decimal,
+    remarks text
 );
 COMMIT;
 
 DROP TABLE IF EXISTS inaturalist.col_name_usage;
 COMMIT;
 
+/* Table definition can be found here:
+   https://github.com/CatalogueOfLife/coldp/blob/master/README.md#nameusage
+*/
 CREATE TABLE inaturalist.col_name_usage (
-    ID varchar(50),
+    ID text,
     alternativeID decimal,
     nameAlternativeID decimal,
     sourceID decimal,
-    parentID varchar(5),
-    basionymID varchar(5),
-    status varchar(22),
-    scientificName varchar(76),
-    authorship varchar(255),
-    rank varchar(21),
-    notho varchar(13),
-    uninomial varchar(50),
-    genericName varchar(50),
-    infragenericEpithet varchar(25),
-    specificEpithet varchar(50),
-    infraspecificEpithet varchar(50),
-    cultivarEpithet varchar(50),
-    namePhrase varchar(80),
-    nameReferenceID varchar(36),
+    parentID text,
+    basionymID text,
+    status text,
+    scientificName text,
+    authorship text,
+    rank text,
+    notho text,
+    originalSpelling boolean,
+    uninomial text,
+    genericName text,
+    infragenericEpithet text,
+    specificEpithet text,
+    infraspecificEpithet text,
+    cultivarEpithet text,
+    combinationAuthorship text,
+    combinationAuthorshipID text,
+    combinationExAuthorship text,
+    combinationExAuthorshipID text,
+    combinationAuthorshipYear text,
+    basionymAuthorship text,
+    basionymAuthorshipID text,
+    basionymExAuthorship text,
+    basionymExAuthorshipID text,
+    basionymAuthorshipYear text,
+    namePhrase text,
+    nameReferenceID text,
     publishedInYear decimal,
-    publishedInPage varchar(255),
-    publishedInPageLink varchar(255),
-    code varchar(10),
-    nameStatus varchar(15),
-    accordingToID varchar(36),
+    publishedInPage text,
+    publishedInPageLink text,
+    gender text,
+    genderAgreement boolean,
+    etymology text,
+    code text,
+    nameStatus text,
+    accordingToID text,
     accordingToPage decimal,
     accordingToPageLink decimal,
     referenceID text,
-    scrutinizer varchar(149),
+    scrutinizer text,
     scrutinizerID decimal,
-    scrutinizerDate varchar(10),
+    scrutinizerDate text,
     extinct boolean,
-    temporalRangeStart varchar(15),
-    temporalRangeEnd varchar(15),
-    environment varchar(38),
+    temporalRangeStart text,
+    temporalRangeEnd text,
+    environment text,
     species decimal,
     section decimal,
     subgenus decimal,
@@ -124,7 +146,7 @@ CREATE TABLE inaturalist.col_name_usage (
     kingdom decimal,
     sequenceIndex decimal,
     branchLength decimal,
-    link varchar(240),
+    link text,
     nameRemarks decimal,
     remarks text
 );
