@@ -11,4 +11,6 @@ docs/_build/
 # OpenAPI
 openapi.yaml
 openapi.json
+
+# Schemathesis
 .hypothesis
