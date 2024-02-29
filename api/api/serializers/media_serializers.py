@@ -1,10 +1,10 @@
 from collections import namedtuple
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import MaxValueValidator
 from rest_framework import serializers
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated, ValidationError
 
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
@@ -71,7 +71,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         if is_anonymous:
             try:
                 validator(value)
-            except ValidationError as e:
+            except (ValidationError, DjangoValidationError) as e:
                 raise NotAuthenticated(
                     detail=e.message,
                     code=e.code,
@@ -447,6 +447,7 @@ class TagSerializer(serializers.Serializer):
     )
     accuracy = serializers.FloatField(
         default=None,
+        allow_null=True,
         help_text="The accuracy of a machine-generated tag. Human-generated "
         "tags have a null accuracy field.",
     )
@@ -697,6 +698,8 @@ def get_hyperlinks_serializer(media_type):
             view_name=f"{media_type}-thumb",
             lookup_field="identifier",
             help_text="A direct link to the miniature artwork.",
+            # Some audio results do not have thumbnails
+            allow_null=media_type == "audio",
         )
         detail_url = SchemableHyperlinkedIdentityField(
             read_only=True,

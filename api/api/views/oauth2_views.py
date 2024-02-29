@@ -7,6 +7,8 @@ from textwrap import dedent
 from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
+from django.db import DataError
+from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -27,6 +29,12 @@ from api.utils.throttle import OnePerSecond, TenPerDay
 
 
 module_logger = log.getLogger(__name__)
+
+
+class InvalidCredentials(APIException):
+    status_code = 400
+    default_detail = "Invalid credentials"
+    default_code = "invalid_credentials"
 
 
 @extend_schema(tags=["auth"])
@@ -149,7 +157,7 @@ class TokenView(APIView, BaseTokenView):
 
         To authenticate your requests to the Openverse API, you need to provide
         an access token as a bearer token in the `Authorization` header of your
-        requests. This endpoints takes your client ID and secret, and issues an
+        requests. This endpoint takes your client ID and secret, and issues an
         access token.
 
         > **NOTE:** This endpoint only accepts data as
@@ -159,7 +167,10 @@ class TokenView(APIView, BaseTokenView):
         endpoint.
         """
 
-        res = super().post(request._request)
+        try:
+            res = super().post(request._request)
+        except DataError:
+            raise InvalidCredentials()
         data = json.loads(res.content)
         return Response(data, status=res.status_code)
 
@@ -182,14 +193,14 @@ class CheckRates(APIView):
 
         # TODO: Replace 403 responses with DRF `authentication_classes`.
         if not request.auth or not hasattr(request.auth, "application"):
-            return Response(status=403, data="Forbidden")
+            raise PermissionDenied("Forbidden", 403)
 
         application: ThrottledApplication = request.auth.application
 
         client_id = application.client_id
 
         if not client_id:
-            return Response(status=403, data="Forbidden")
+            raise PermissionDenied("Forbidden", 403)
 
         throttle_type = application.rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"
@@ -213,8 +224,7 @@ class CheckRates(APIView):
                 scope="exempt_oauth2_client_credentials_burst", client_id=client_id
             )
         else:
-            # TODO: Replace 500 response with exception.
-            return Response(status=500, data="Unknown API key rate limit type")
+            return APIException("Unknown API key rate limit type")
 
         try:
             sustained_requests_list = cache.get(sustained_throttle_key)

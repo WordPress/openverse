@@ -6,6 +6,7 @@ from api.models import ContentProvider
 
 
 @extend_schema_serializer(
+    many=True,
     deprecate_fields=["logo_url"],
 )
 class ProviderSerializer(serializers.ModelSerializer):

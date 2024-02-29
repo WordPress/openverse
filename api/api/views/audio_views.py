@@ -37,6 +37,9 @@ from api.views.media_views import MediaViewSet
     stats=stats,
     retrieve=detail,
     related=related,
+    tag_collection=tag_collection,
+    creator_collection=creator_collection,
+    source_collection=source_collection,
 )
 class AudioViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to audio."""
@@ -53,32 +56,6 @@ class AudioViewSet(MediaViewSet):
         return super().get_queryset().select_related("sensitive_audio", "audioset")
 
     # Extra actions
-    @creator_collection
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
-    )
-    def creator_collection(self, request, source, creator):
-        return super().creator_collection(request, source, creator)
-
-    @source_collection
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="source/(?P<source>[^/.]+)",
-    )
-    def source_collection(self, request, source):
-        return super().source_collection(request, source)
-
-    @tag_collection
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="tag/(?P<tag>[^/.]+)",
-    )
-    def tag_collection(self, request, tag, *_, **__):
-        return super().tag_collection(request, tag, *_, **__)
 
     async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
         audio = await self.aget_object()
