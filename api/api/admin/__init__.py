@@ -1,10 +1,12 @@
 from django.contrib import admin
 
+from oauth2_provider.models import AccessToken
+
 from api.admin.site import openverse_admin
 from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
 from api.models.media import AbstractDeletedMedia, AbstractMatureMedia
 from api.models.oauth import ThrottledApplication
-from oauth2_provider.models import AccessToken
+
 
 admin.site = openverse_admin
 admin.sites.site = openverse_admin
