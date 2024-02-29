@@ -37,5 +37,5 @@ All load tests are accessible through `just` scripts in this directory's
 
 To run API load tests against a local API instance, use `just api`. You can
 optionally specify a host (the default is to point to local). For example
-`just api https://api-dev.openverse.engineering` will run the load tests against
-the staging API.
+`just api https://api-staging.openverse.engineering` will run the load tests
+against the staging API.
