@@ -29,7 +29,7 @@ breakpoints.describeMd(({ expectSnapshot }) => {
   })
 })
 
-test.describe("content report form", () => {
+test.describe.skip("content report form", () => {
   // Flaky: https://github.com/WordPress/openverse/issues/2020
   test.describe.configure({ retries: 2 })
 
