@@ -58,8 +58,9 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
+        # Must include any plugins defined in prettier.config.js, along with TypeScript and Prettier themselves
         additional_dependencies:
-          - prettier@3.2.5
+          - prettier@3.2.5 # Should be regularly kept in sync with the prettier version in pnpm-lock.yaml
           - prettier-plugin-tailwindcss@0.5.11
           - typescript@5.2.2
 
