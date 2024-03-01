@@ -1,11 +1,24 @@
 <template>
-  <VRelatedResults
+  <VMediaCollection
     v-if="showRelated"
-    :collection-label="$t(labelKey).toString()"
     :results="results"
-    :search-term="searchTerm"
+    :is-fetching="isFetching"
+    :collection-label="collectionLabel"
+    kind="related"
     :related-to="relatedTo"
-  />
+    :search-term="searchTerm"
+    :aria-label="collectionLabel"
+  >
+    <template #header>
+      <h2
+        id="related-heading"
+        class="heading-6 mb-6"
+        :class="results.type === 'image' ? 'md:heading-5' : 'lg:heading-6'"
+      >
+        {{ collectionLabel }}
+      </h2>
+    </template>
+  </VMediaCollection>
 </template>
 
 <script lang="ts">
@@ -13,15 +26,16 @@ import { computed, defineComponent, PropType, watch } from "vue"
 import { useRoute } from "@nuxtjs/composition-api"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { useI18n } from "~/composables/use-i18n"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { AudioResults, ImageResults } from "~/types/result"
 
-import VRelatedResults from "~/components/VSearchResultsGrid/VRelatedResults.vue"
+import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
 
 export default defineComponent({
   name: "VRelatedMedia",
-  components: { VRelatedResults },
+  components: { VMediaCollection },
   props: {
     mediaType: {
       type: String as PropType<SupportedMediaType>,
@@ -56,10 +70,9 @@ export default defineComponent({
       { immediate: true }
     )
 
+    const isFetching = computed(() => relatedMediaStore.fetchState.isFetching)
     const showRelated = computed(
-      () =>
-        results.value.items.length > 0 ||
-        relatedMediaStore.fetchState.isFetching
+      () => results.value.items.length > 0 || isFetching.value
     )
 
     const searchTerm = computed(() => {
@@ -69,17 +82,23 @@ export default defineComponent({
       return q ?? ""
     })
 
-    const labelKey = computed(() => {
-      return props.mediaType === "audio"
-        ? "audioDetails.relatedAudios"
-        : "imageDetails.relatedImages"
+    const i18n = useI18n()
+
+    const collectionLabel = computed(() => {
+      const key =
+        props.mediaType === "audio"
+          ? "audioDetails.relatedAudios"
+          : "imageDetails.relatedImages"
+      return i18n.t(key).toString()
     })
 
     return {
       results,
       showRelated,
+      isFetching,
+
       searchTerm,
-      labelKey,
+      collectionLabel,
     }
   },
 })

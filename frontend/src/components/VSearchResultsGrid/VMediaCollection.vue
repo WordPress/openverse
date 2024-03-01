@@ -4,31 +4,19 @@
 
     <VGridSkeleton v-if="showSkeleton" :is-for-tab="results.type" />
 
-    <VImageCollection
-      v-if="results.type === 'image'"
+    <Component
+      :is="component"
+      v-if="!showSkeleton"
       :results="results.items"
       :kind="kind"
       :search-term="searchTerm"
       :related-to="relatedTo"
       :collection-label="collectionLabel"
-      class="pt-2 sm:pt-0"
+      :class="{ 'pt-2 sm:pt-0': results.type === 'image' }"
     />
-    <VAudioCollection
-      v-if="results.type === 'audio'"
-      :results="results.items"
-      :search-term="searchTerm"
-      :related-to="relatedTo"
-      :kind="kind"
-      :collection-label="collectionLabel"
-    />
-    <VAllResultsGrid
-      v-if="results.type === 'all'"
-      :results="results.items"
-      :search-term="searchTerm"
-      :related-to="relatedTo"
-      :collection-label="collectionLabel"
-    />
+
     <slot name="footer" v-bind="{ isFetching }" />
+
     <VScrollButton
       v-show="showScrollButton"
       :is-filter-sidebar-visible="isSidebarVisible"
@@ -41,8 +29,6 @@ import { computed, defineComponent, inject, type PropType, ref } from "vue"
 
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import type { Results } from "~/types/result"
-
-import { useMediaStore } from "~/stores/media"
 
 import { defineEvent } from "~/types/emits"
 
@@ -82,6 +68,10 @@ export default defineComponent({
       type: String as PropType<string | null>,
       default: null,
     },
+    isFetching: {
+      type: Boolean,
+      required: true,
+    },
   },
   emits: {
     "load-more": defineEvent(),
@@ -90,19 +80,25 @@ export default defineComponent({
     const showScrollButton = inject(ShowScrollButtonKey, ref(false))
     const isSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
 
-    const mediaStore = useMediaStore()
-
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
-
     const showSkeleton = computed(() => {
-      return isFetching.value && props.results.items.length === 0
+      return props.isFetching && props.results.items.length === 0
+    })
+
+    const component = computed(() => {
+      if (props.results.type === "image") {
+        return "VImageCollection"
+      } else if (props.results.type === "audio") {
+        return "VAudioCollection"
+      } else {
+        return "VAllResultsGrid"
+      }
     })
 
     return {
       showSkeleton,
       showScrollButton,
       isSidebarVisible,
-      isFetching,
+      component,
     }
   },
 })
