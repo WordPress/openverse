@@ -11,6 +11,7 @@ import { expect, test } from "@playwright/test"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
+  EventResponse,
 } from "~~/test/playwright/utils/analytics"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
@@ -45,19 +46,96 @@ test("scroll to top on new search term submitted", async ({ page }) => {
   expect(scrollY).toBe(0)
 })
 
-test("Ignore network errors", async ({ context, page }) => {
+test("Send network errors to Plausible", async ({ context, page }) => {
   const analyticsEvents = collectAnalyticsEvents(context)
-  await context.route(/\/v1\/(images|audio)\//, (route) =>
-    route.abort("connectionaborted")
+  await context.route(
+    (url) => {
+      // Only match the search requests, rather than any other API request the search page makes
+      return Boolean(
+        url.pathname.match(/v1\/(audio|images)/) &&
+          url.searchParams.has("q", "galah")
+      )
+    },
+    async (route) => route.abort("connectionaborted")
   )
 
   await goToSearchTerm(page, "galah", { mode: "CSR" })
 
-  const networkErrorEvent = analyticsEvents.find(
-    (event) => event.n === "NETWORK_ERROR"
+  const searchErrorEvents = analyticsEvents.filter(
+    (event) =>
+      event.n === "NETWORK_ERROR" &&
+      "requestKind" in event.p &&
+      event.p.requestKind === "search"
+  ) as EventResponse<"NETWORK_ERROR">[]
+  expect(searchErrorEvents).toHaveLength(2)
+  expectEventPayloadToMatch(
+    searchErrorEvents.find((e) => e.p.searchType == "image"),
+    { requestKind: "search", searchType: "image" }
   )
-  expectEventPayloadToMatch(networkErrorEvent, {
-    requestKind: "single-result",
-    searchType: "all",
-  })
+  expectEventPayloadToMatch(
+    searchErrorEvents.find((e) => e.p.searchType == "audio"),
+    { requestKind: "search", searchType: "audio" }
+  )
 })
+
+test("Do not send network errors to Plausible when SSR", async ({
+  context,
+  page,
+}) => {
+  // Plausible not supported server-side, so skip sending the event
+  const analyticsEvents = collectAnalyticsEvents(context)
+  await context.route(
+    (url) => {
+      // Only match the search requests, rather than any other API request the search page makes
+      return Boolean(
+        url.pathname.match(/v1\/(audio|images)/) &&
+          url.searchParams.has("q", "galah")
+      )
+    },
+    async (route) => route.abort("connectionaborted")
+  )
+
+  await goToSearchTerm(page, "galah", { mode: "SSR" })
+
+  const searchErrorEvents = analyticsEvents.filter(
+    (event) =>
+      event.n === "NETWORK_ERROR" &&
+      "requestKind" in event.p &&
+      event.p.requestKind === "search"
+  ) as EventResponse<"NETWORK_ERROR">[]
+  expect(searchErrorEvents).toHaveLength(0)
+})
+
+for (const renderMode of ["CSR", "SSR"] as const) {
+  test(`Do not send non-network errors to Plausible - ${renderMode}`, async ({
+    context,
+    page,
+  }) => {
+    // This tests a _negative_, which isn't ideal, but seeing as we have tests for the error handling plugin, and the previous test,
+    // `send errors to Plausible`, proves the plugin is being used (ignoring the possibility of conditionally calling the error
+    // handling function), so there shouldn't be any network error events. Everything would get sent to Sentry, but we don't have a
+    // way to assert Sentry requests in Playwright, so this approach will have to do.
+    const analyticsEvents = collectAnalyticsEvents(context)
+    await context.route(
+      (url) => {
+        // Only match the search requests, rather than any other API request the search page makes
+        return Boolean(
+          url.pathname.match(/v1\/(audio|images)/) &&
+            url.searchParams.has("q", "galah")
+        )
+      },
+      async (route) => {
+        await route.fulfill({
+          status: 500,
+        })
+      }
+    )
+
+    await goToSearchTerm(page, "galah", { mode: renderMode })
+
+    const searchErrorEvents = analyticsEvents.filter(
+      (event) => event.n === "NETWORK_ERROR"
+    ) as EventResponse<"NETWORK_ERROR">[]
+    expect(searchErrorEvents).toHaveLength(0)
+  })
+}
