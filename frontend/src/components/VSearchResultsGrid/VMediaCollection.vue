@@ -9,6 +9,7 @@
       :results="results.items"
       :kind="kind"
       :search-term="searchTerm"
+      :related-to="relatedTo"
       :collection-label="collectionLabel"
       class="pt-2 sm:pt-0"
     />
