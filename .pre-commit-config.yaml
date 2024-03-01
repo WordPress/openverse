@@ -55,11 +55,11 @@ repos:
 
   # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.2.5
+    rev: v3.1.0
     hooks:
       - id: prettier
         additional_dependencies:
-          - prettier@2.8.3
+          - prettier@3.2.5
           - prettier-plugin-tailwindcss@0.5.11
           - typescript@5.2.2
 

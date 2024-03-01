@@ -10,7 +10,7 @@ import { AUDIO, type SupportedMediaType } from "~/constants/media"
 import type { AxiosResponse } from "axios"
 
 export interface MediaResult<
-  T extends Media | Media[] | Record<string, Media>
+  T extends Media | Media[] | Record<string, Media>,
 > {
   result_count: number
   page_count: number
@@ -38,10 +38,13 @@ class MediaService<T extends Media> {
     const mediaResults = <T[]>data.results ?? []
     return {
       ...data,
-      results: mediaResults.reduce((acc, item) => {
-        acc[item.id] = decodeMediaData(item, this.mediaType)
-        return acc
-      }, {} as Record<string, T>),
+      results: mediaResults.reduce(
+        (acc, item) => {
+          acc[item.id] = decodeMediaData(item, this.mediaType)
+          return acc
+        },
+        {} as Record<string, T>
+      ),
     }
   }
 

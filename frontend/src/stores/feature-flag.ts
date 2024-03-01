@@ -77,7 +77,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
   state: () =>
     ({
       flags: featureData.features,
-    } as FeatureFlagState),
+    }) as FeatureFlagState,
   getters: {
     /**
      * Get the state of the named feature, based on config and cookie.

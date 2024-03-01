@@ -60,8 +60,8 @@ export default defineComponent({
         return !uiStore.isBreakpoint("sm")
           ? "s"
           : uiStore.isBreakpoint("xl")
-          ? "l"
-          : "m"
+            ? "l"
+            : "m"
       }
     })
 
