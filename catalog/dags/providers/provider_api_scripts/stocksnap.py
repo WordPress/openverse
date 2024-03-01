@@ -11,6 +11,7 @@ Notes:                  https://stocksnap.io/api/load-photos/date/desc/1
                         No rate limits or authorization required.
                         API is undocumented.
 """
+
 import json
 import logging
 

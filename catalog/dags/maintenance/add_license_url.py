@@ -9,6 +9,7 @@ This is a maintenance DAG that should be run once. If all the null values in
 the `meta_data` column are updated, the DAG will only run the first and the
 last step, logging the statistics.
 """
+
 import csv
 import logging
 from collections import defaultdict

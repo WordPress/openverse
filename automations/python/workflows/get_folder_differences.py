@@ -7,6 +7,7 @@ changed. It then converts the paths to URLs that can be used to view the
 files on the docs preview site. Finally, it outputs the preview site docs
 generated comment along with a list of new and changed files.
 """
+
 import os
 import shutil
 import subprocess

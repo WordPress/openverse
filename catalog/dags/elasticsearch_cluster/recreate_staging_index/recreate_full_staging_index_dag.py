@@ -40,6 +40,7 @@ immediately if any of the following DAGs are running:
 * `create_proportional_by_provider_staging_index`
 * `create_new_staging_es_index`
 """
+
 from datetime import datetime
 
 from airflow.decorators import dag

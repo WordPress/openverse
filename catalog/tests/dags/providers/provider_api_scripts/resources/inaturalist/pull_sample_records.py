@@ -7,7 +7,6 @@ Assumes that large files are saved outside of the Openverse repo to take pressur
 git and linting.
 """
 
-
 import csv
 import gzip
 import os

@@ -62,6 +62,7 @@ https://github.com/creativecommons/cccatalog/issues/333)
 - [DB Loader should take data from S3, rather than EC2 to load into PostgreSQL](
 https://github.com/creativecommons/cccatalog/issues/334)
 """
+
 import logging
 import os
 import re

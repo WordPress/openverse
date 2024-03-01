@@ -493,9 +493,9 @@ def test_get_audio_record_data_parses_wav_invalid_bit_rate(wmc):
     file_metadata = _get_resource_json("audio_filedata_wav.json")
     original_data = {"url": "myurl.com", "meta_data": {}}
     # Set the bit rate higher than the int max
-    file_metadata["metadata"][5]["value"][3]["value"][0]["value"][3][
-        "value"
-    ] = 4294967294
+    file_metadata["metadata"][5]["value"][3]["value"][0]["value"][3]["value"] = (
+        4294967294
+    )
     expected_parsed_data = {
         "url": "myurl.com",
         "bit_rate": None,

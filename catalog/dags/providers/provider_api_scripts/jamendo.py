@@ -15,6 +15,7 @@ Notes:                  https://api.jamendo.com/v3.0/tracks/
                         sample rate: 44.1 or 48 kHz
                         channels: 1/2
 """
+
 import logging
 from datetime import timedelta
 from urllib.parse import parse_qs, urlencode, urlsplit

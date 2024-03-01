@@ -50,7 +50,6 @@ DAG, for instance. The simplest way to do this is to ensure that any affected pr
 DAGs are not currently running.
 """
 
-
 import logging
 
 from airflow.decorators import dag

@@ -2,6 +2,7 @@
 This module has a number of public methods which are useful for working
 with licenses.
 """
+
 import logging
 from functools import lru_cache
 from typing import NamedTuple

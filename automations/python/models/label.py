@@ -4,7 +4,6 @@ from models.label_group import LabelGroup
 
 
 class Label:
-
     """
     Represents a single label.
 
