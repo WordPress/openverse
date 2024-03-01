@@ -3,6 +3,7 @@ Functions for processing data when it is imported into the catalog.
 
 This includes cleaning up malformed URLs and filtering out undesirable tags.
 """
+
 import csv
 import logging as log
 import multiprocessing

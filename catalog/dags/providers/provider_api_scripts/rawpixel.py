@@ -12,6 +12,7 @@ Notes:                  Rawpixel has given Openverse beta access to their API.
                         although the API key we've been given can circumvent this limit.
                         https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
 """
+
 import base64
 import hmac
 import html

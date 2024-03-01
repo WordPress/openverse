@@ -265,9 +265,9 @@ def test_pings_past_due(github, urgency, events):
 
     github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
     github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
-    github["events"][
-        old_but_not_due_pull["number"]
-    ] = make_non_urgent_reviewable_events(events)
+    github["events"][old_but_not_due_pull["number"]] = (
+        make_non_urgent_reviewable_events(events)
+    )
 
     post_reminders("not_set", dry_run=False)
 
@@ -307,9 +307,9 @@ def test_does_not_reping_past_due_if_reminder_is_current(github, urgency, events
 
     github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
     github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
-    github["events"][
-        old_but_not_due_pull["number"]
-    ] = make_non_urgent_reviewable_events(events)
+    github["events"][old_but_not_due_pull["number"]] = (
+        make_non_urgent_reviewable_events(events)
+    )
 
     post_reminders("not_set", dry_run=False)
 
@@ -343,9 +343,9 @@ def test_does_reping_past_due_if_reminder_is_outdated(github, urgency, events):
 
     github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
     github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
-    github["events"][
-        old_but_not_due_pull["number"]
-    ] = make_non_urgent_reviewable_events(events)
+    github["events"][old_but_not_due_pull["number"]] = (
+        make_non_urgent_reviewable_events(events)
+    )
 
     post_reminders("not_set", dry_run=False)
 
@@ -459,9 +459,9 @@ def test_does_not_ping_if_no_reviewers(github, urgency, events):
 
     github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
     github["events"][not_due_pull["number"]] = make_non_urgent_events(events)
-    github["events"][
-        old_but_not_due_pull["number"]
-    ] = make_non_urgent_reviewable_events(events)
+    github["events"][old_but_not_due_pull["number"]] = (
+        make_non_urgent_reviewable_events(events)
+    )
 
     for pr in [past_due_pull, not_due_pull]:
         _setup_branch_protection(github, pr)

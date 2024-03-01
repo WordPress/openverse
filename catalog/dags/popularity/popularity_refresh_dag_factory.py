@@ -22,6 +22,7 @@ implementation plan:
 - [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](
 https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 """
+
 import logging
 from datetime import datetime
 

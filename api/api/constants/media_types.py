@@ -1,4 +1,5 @@
 """Also see `ingestion_server/constants/media_types.py`."""
+
 from typing import Literal
 
 

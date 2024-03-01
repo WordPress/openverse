@@ -14,9 +14,9 @@ _SESSIONS: weakref.WeakKeyDictionary[
     asyncio.AbstractEventLoop, aiohttp.ClientSession
 ] = weakref.WeakKeyDictionary()
 
-_LOCKS: weakref.WeakKeyDictionary[
-    asyncio.AbstractEventLoop, asyncio.Lock
-] = weakref.WeakKeyDictionary()
+_LOCKS: weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Lock] = (
+    weakref.WeakKeyDictionary()
+)
 
 
 @asgi_shutdown.connect

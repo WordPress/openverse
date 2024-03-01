@@ -5,6 +5,7 @@ configuration for a Popularity Refresh DAG, and defines the actual
 `POPULARITY_REFRESH_CONFIGS` for each of our media types. This configuration info
 is used to generate the dynamic Popularity Refresh dags.
 """
+
 import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta

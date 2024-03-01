@@ -1,4 +1,5 @@
 """# OAuth Provider Token Refresh"""
+
 from datetime import datetime
 
 from airflow.models import DAG

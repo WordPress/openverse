@@ -7,6 +7,7 @@ Output:                 TSV file containing the media metadata.
 
 Notes:                  https://www.smk.dk/en/article/smk-api/
 """
+
 import logging
 import urllib.parse
 

@@ -96,6 +96,7 @@ The resulting, merged configuration will be:
 }
 ```
 """
+
 import logging
 
 from airflow import DAG

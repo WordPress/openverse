@@ -2,6 +2,7 @@
 MediaStore is an abstract class, so to test it we
 use one of the inheriting classes, ImageStore
 """
+
 import logging
 from unittest.mock import patch
 

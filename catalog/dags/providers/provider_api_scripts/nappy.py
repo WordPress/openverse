@@ -10,6 +10,7 @@ Notes:                  This api was written specially for Openverse.
                         https://nappy.co/
 
 """
+
 import logging
 
 from common import constants

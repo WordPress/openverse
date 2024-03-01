@@ -22,6 +22,7 @@ https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](
 https://github.com/WordPress/openverse-catalog/issues/453)
 """
+
 import logging
 from collections.abc import Sequence
 

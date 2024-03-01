@@ -36,6 +36,7 @@ immediately if any of the following DAGs are running:
 * `recreate_full_staging_index`
 * `create_new_staging_es_index`
 """
+
 from datetime import datetime, timedelta
 
 from airflow.decorators import dag

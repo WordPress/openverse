@@ -4,6 +4,7 @@ members.
 
 See the README for more information.
 """
+
 from pathlib import Path
 
 import click
