@@ -32,10 +32,6 @@ export default defineComponent({
       type: Array as PropType<ImageDetail[]>,
       required: true,
     },
-    /**
-     * `VImageGrid` is used for the image search results, related images,
-     * and the image collection page.
-     */
     kind: {
       type: String as PropType<ResultKind>,
       default: "search",

@@ -35,8 +35,8 @@ import { Results } from "~/types/result"
 import { useI18n } from "~/composables/use-i18n"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
-import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
+import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
 export default defineComponent({
   name: "VCollectionPage",
@@ -68,12 +68,34 @@ export default defineComponent({
     const collectionParams = computed(() => searchStore.collectionParams)
 
     const collectionLabel = computed(() => {
-      if (!collectionParams.value) {
-        return ""
+      const collection = collectionParams.value?.collection
+      switch (collection) {
+        case "tag": {
+          return i18n
+            .t(`collection.ariaLabel.tag.${props.mediaType}`, {
+              tag: collectionParams.value?.tag,
+            })
+            .toString()
+        }
+        case "source": {
+          return i18n
+            .t(`collection.ariaLabel.source.${props.mediaType}`, {
+              source: collectionParams.value?.source,
+            })
+            .toString()
+        }
+        case "creator": {
+          return i18n
+            .t(`collection.ariaLabel.creator.${props.mediaType}`, {
+              creator: collectionParams.value?.creator,
+              source: collectionParams.value?.source,
+            })
+            .toString()
+        }
+        default: {
+          return ""
+        }
       }
-      const key = `collection.ariaLabel.${collectionParams.value.collection}.${props.mediaType}`
-      const params = collectionParams.value
-      return i18n.t(key, params).toString()
     })
 
     return {
