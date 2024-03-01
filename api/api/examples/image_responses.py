@@ -154,6 +154,9 @@ image_oembed_200_example = {
 image_oembed_404_example = {
     "application/json": {"detail": "An internal server error occurred."}
 }
+image_oembed_400_example = {
+    "application/json": {"detail": {"url": ["Could not parse identifier from URL."]}}
+}
 
 image_complain_201_example = {
     "application/json": {

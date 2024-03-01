@@ -1,3 +1,9 @@
+from rest_framework.exceptions import (
+    NotAuthenticated,
+    NotFound,
+    ValidationError,
+)
+
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
@@ -19,10 +25,7 @@ from api.examples import (
     image_stats_200_example,
     image_stats_curl,
 )
-from api.serializers.error_serializers import (
-    InputErrorSerializer,
-    NotFoundErrorSerializer,
-)
+from api.examples.image_responses import image_oembed_400_example
 from api.serializers.image_serializers import (
     ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
@@ -54,7 +57,8 @@ search = custom_extend_schema(
     params=ImageSearchRequestSerializer,
     res={
         200: (ImageSerializer, image_search_200_example),
-        400: (InputErrorSerializer, image_search_400_example),
+        400: (ValidationError, image_search_400_example),
+        401: (NotAuthenticated, None),
     },
     eg=[image_search_list_curl],
     external_docs={
@@ -70,7 +74,7 @@ stats = custom_extend_schema(
 
         By using this endpoint, you can obtain info about content providers such
         as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
-    res={200: (ProviderSerializer, image_stats_200_example)},
+    res={200: (ProviderSerializer(many=True), image_stats_200_example)},
     eg=[image_stats_curl],
 )
 
@@ -82,7 +86,7 @@ detail = custom_extend_schema(
         {fields_to_md(ImageSerializer.Meta.fields)}""",
     res={
         200: (ImageSerializer, image_detail_200_example),
-        404: (NotFoundErrorSerializer, image_detail_404_example),
+        404: (NotFound, image_detail_404_example),
     },
     eg=[image_detail_curl],
 )
@@ -95,33 +99,35 @@ related = custom_extend_schema(
         {fields_to_md(ImageSerializer.Meta.fields)}.""",
     res={
         200: (ImageSerializer, image_related_200_example),
-        404: (NotFoundErrorSerializer, image_related_404_example),
+        404: (NotFound, image_related_404_example),
     },
     eg=[image_related_curl],
 )
 
 report = custom_extend_schema(
-    res={201: (ImageReportRequestSerializer, image_complain_201_example)},
+    res={
+        201: (ImageReportRequestSerializer, image_complain_201_example),
+        400: (ValidationError, None),
+    },
     eg=[image_complain_curl],
 )
 
 thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
-    responses={200: OpenApiResponse(description="Thumbnail image")},
+    responses={200: OpenApiResponse(description="Thumbnail image"), 404: NotFound},
 )
 
 oembed = custom_extend_schema(
     params=OembedRequestSerializer,
     res={
         200: (OembedSerializer, image_oembed_200_example),
-        404: (NotFoundErrorSerializer, image_oembed_404_example),
+        404: (NotFound, image_oembed_404_example),
+        400: (ValidationError, image_oembed_400_example),
     },
     eg=[image_oembed_curl],
 )
 
-watermark = custom_extend_schema(
-    deprecated=True,
-)
+watermark = extend_schema(deprecated=True, responses={404: NotFound})
 
 source_collection = collection_schema(
     media_type="images",

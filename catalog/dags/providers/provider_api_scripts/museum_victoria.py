@@ -25,7 +25,7 @@ class ImageDetails(TypedDict, total=False):
 class VictoriaDataIngester(ProviderDataIngester):
     providers = {"image": prov.VICTORIA_DEFAULT_PROVIDER}
     endpoint = "https://collections.museumsvictoria.com.au/api/search"
-    headers = {"User-Agent": prov.UA_STRING, "Accept": "application/json"}
+    headers = {"Accept": "application/json"}
     batch_limit = 100
     delay = 5
     LANDING_PAGE = "https://collections.museumsvictoria.com.au/"

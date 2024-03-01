@@ -1,10 +1,10 @@
 from collections import namedtuple
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import MaxValueValidator
 from rest_framework import serializers
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated, ValidationError
 
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
@@ -54,7 +54,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
     def validate_page_size(self, value):
         request = self.context.get("request")
-        is_anonymous = bool(request and request.user and request.user.is_anonymous)
+        is_anonymous = getattr(request, "auth", None) is None
         max_value = (
             settings.MAX_ANONYMOUS_PAGE_SIZE
             if is_anonymous
@@ -71,7 +71,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         if is_anonymous:
             try:
                 validator(value)
-            except ValidationError as e:
+            except (ValidationError, DjangoValidationError) as e:
                 raise NotAuthenticated(
                     detail=e.message,
                     code=e.code,
@@ -247,7 +247,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
 
     def is_request_anonymous(self):
         request = self.context.get("request")
-        return bool(request and request.user and request.user.is_anonymous)
+        return getattr(request, "auth", None) is None
 
     @staticmethod
     def _truncate(value):
@@ -447,6 +447,7 @@ class TagSerializer(serializers.Serializer):
     )
     accuracy = serializers.FloatField(
         default=None,
+        allow_null=True,
         help_text="The accuracy of a machine-generated tag. Human-generated "
         "tags have a null accuracy field.",
     )
@@ -516,6 +517,7 @@ class MediaSerializer(BaseModelSerializer):
 
     mature = serializers.BooleanField(
         help_text="Whether the media item is marked as mature",
+        source="sensitive",
     )
 
     # This should be promoted to a stable field alongside
@@ -540,9 +542,9 @@ class MediaSerializer(BaseModelSerializer):
         ):
             result.append(sensitivity.TEXT)
 
-        # ``obj.mature`` will either be `mature` from the ES document
-        # or the ``mature`` property on the Image or Audio model.
-        if obj.mature:
+        # ``obj.sensitive`` will either be `mature` from the ES document (see below)
+        # or the ``sensitive`` property on the Image or Audio model.
+        if obj.sensitive:
             # We do not currently have any documents marked `mature=true`
             # that were not marked so as a result of a confirmed user report.
             # This is despite the fact that the ingestion server _does_ copy
@@ -569,6 +571,16 @@ class MediaSerializer(BaseModelSerializer):
         return result
 
     def to_representation(self, *args, **kwargs):
+        # This serializer adapts both ES Hits *and* Media instances. Currently,
+        # ES has a `mature` field on it which represents if maturity was present on
+        # the record in the database. The attributes in the code have been renamed
+        # to `sensitive`, but for the time being this flag still exists on the ES index.
+        # In order to prevent failures in serialization (since the serializer is looking
+        # for the `sensitive` attribute), we rename it here.
+        obj = args[0]
+        if isinstance(obj, Hit):
+            obj.sensitive = obj.mature
+
         output = super().to_representation(*args, **kwargs)
 
         # Ensure lists are ``[]`` instead of ``None``
@@ -686,6 +698,8 @@ def get_hyperlinks_serializer(media_type):
             view_name=f"{media_type}-thumb",
             lookup_field="identifier",
             help_text="A direct link to the miniature artwork.",
+            # Some audio results do not have thumbnails
+            allow_null=media_type == "audio",
         )
         detail_url = SchemableHyperlinkedIdentityField(
             read_only=True,

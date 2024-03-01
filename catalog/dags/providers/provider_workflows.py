@@ -166,6 +166,25 @@ class ProviderWorkflow:
     tags: list[str] = field(default_factory=list)
     overrides: list[TaskOverride] = field(default_factory=list)
 
+    # Set when the object is uploaded, even though we access the object later in
+    # the DAG. IA incurs additional retrieval fees per request, unlike plain
+    # standard storage. However, as of writing, that costs 0.001 USD (1/10th of
+    # a US cent) per 1k requests. In other words, a minuscule amount, considering
+    # we will access the object once later in the DAG, to upsert it to the DB,
+    # and then in all likelihood never access it again.
+    # Even if we did, and had to pay the retrieval fee, we would still come out
+    # ahead on storage costs, because IA is so much less expensive than regular
+    # storage. We could set the storage class in a later task in the DAG, to
+    # avoid the one time retrieval fee. However, that adds complexity to the DAG
+    # that we can avoid by eagerly setting the storage class early, and the actual
+    # savings would probably be nil, factoring in the time spent in standard storage
+    # incurring standard storage costs. If it absolutely needs to be rationalised,
+    # consider the amount of energy spent on the extra request to S3 to update the
+    # storage cost to try to get around a retrieval fee (which, again, will not
+    # actually cost more, all things considered). Saving that energy could melt
+    # the glaciers all that much more slowly.
+    s3_tsv_storage_class: str = "STANDARD_IA"
+
     def _get_module_info(self):
         # Get the module the ProviderDataIngester was defined in
         provider_script = inspect.getmodule(self.ingester_class)
@@ -186,11 +205,29 @@ class ProviderWorkflow:
         if not self.doc_md:
             self.doc_md = provider_script.__doc__
 
-        # Check for custom configuration overrides, which will be applied when
-        # the DAG is generated.
+        self._process_configuration_overrides()
+
+    def _process_configuration_overrides(self):
+        """
+        Check for and apply custom configuration overrides.
+
+        These are only applied when the DAG is generated.
+        """
+
+        # Provider-specific configuration overrides
         self.overrides = Variable.get(
             "CONFIGURATION_OVERRIDES", default_var={}, deserialize_json=True
         ).get(self.dag_id, [])
+
+        # Allow forcing the default to something other than `STANDARD_IA`
+        # Primarily meant for use in local development where minio is used
+        # which does not support all AWS storage classes
+        # https://github.com/minio/minio/issues/5469
+        # This intentionally applies to all providers, rather than the provider-specific
+        # overrides above
+        self.s3_tsv_storage_class = Variable.get(
+            "DEFAULT_S3_TSV_STORAGE_CLASS", default_var=self.s3_tsv_storage_class
+        )
 
 
 PROVIDER_WORKFLOWS = [
@@ -218,7 +255,7 @@ PROVIDER_WORKFLOWS = [
         start_date=datetime(2022, 10, 27),
         schedule_string="@daily",
         dated=True,
-        pull_timeout=timedelta(weeks=1),
+        pull_timeout=timedelta(days=12),
     ),
     ProviderWorkflow(
         ingester_class=FinnishMuseumsDataIngester,

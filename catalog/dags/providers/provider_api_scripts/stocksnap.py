@@ -31,10 +31,7 @@ class StockSnapDataIngester(ProviderDataIngester):
     providers = {"image": prov.STOCKSNAP_DEFAULT_PROVIDER}
     batch_limit = 1000
     delay = 1  # in seconds
-    headers = {
-        "Accept": "application/json",
-        "User-Agent": prov.UA_STRING,
-    }
+    headers = {"Accept": "application/json"}
     license_url = "https://creativecommons.org/publicdomain/zero/1.0/"
     license_info = get_license_info(license_url=license_url)
 

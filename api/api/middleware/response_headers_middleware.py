@@ -1,4 +1,6 @@
-from api.utils.oauth2_helper import get_token_info
+from rest_framework.request import Request
+
+from api.models.oauth import ThrottledApplication
 
 
 def response_headers_middleware(get_response):
@@ -11,14 +13,15 @@ def response_headers_middleware(get_response):
     to identify malicious requesters or request patterns.
     """
 
-    def middleware(request):
+    def middleware(request: Request):
         response = get_response(request)
 
-        if hasattr(request, "auth") and request.auth:
-            token_info = get_token_info(str(request.auth))
-            if token_info:
-                response["x-ov-client-application-name"] = token_info.application_name
-                response["x-ov-client-application-verified"] = token_info.verified
+        if not (hasattr(request, "auth") and hasattr(request.auth, "application")):
+            return response
+
+        application: ThrottledApplication = request.auth.application
+        response["x-ov-client-application-name"] = application.name
+        response["x-ov-client-application-verified"] = application.verified
 
         return response
 

@@ -91,6 +91,7 @@ def test_overrides(configuration_overrides, expected_overrides):
     with mock.patch("providers.provider_workflows.Variable") as MockVariable:
         MockVariable.get.side_effect = [
             configuration_overrides,
+            MockVariable.get_original()[0],
         ]
         test_workflow = ProviderWorkflow(
             dag_id="my_dag_id",

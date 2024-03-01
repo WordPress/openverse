@@ -230,6 +230,9 @@ def create_ingestion_workflow(
                             else None,
                         ),
                         "aws_conn_id": AWS_CONN_ID,
+                        "extra_args": {
+                            "StorageClass": conf.s3_tsv_storage_class,
+                        },
                     },
                     trigger_rule=TriggerRule.NONE_SKIPPED,
                 )
