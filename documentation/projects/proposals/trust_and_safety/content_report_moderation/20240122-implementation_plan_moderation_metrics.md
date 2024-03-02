@@ -452,7 +452,7 @@ For the deferred metrics, as an alternative to Django Admin, we can have an
 endpoint that presents the information as JSON or as a web page. This approach
 was not preferred because Django Admin lets us build on top of the existing
 access control framework established by the
-[Django Admin implementation plan](/projects/proposals/trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.md).
+[Django Admin moderation views implementation plan](/projects/proposals/trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.md).
 That also puts the metrics closer to where the moderation is being performed and
 enables moderators to draw inferences from them.
 
@@ -478,8 +478,9 @@ version with no adverse consequences.
 All metrics collected by us will be aggregates and will not contain any
 information to identify a user or moderator at the individual level. Reports are
 anonymous so there is no possibility of PII in the reports. Decisions are
-associated with the maintainer that made them, so we will be careful to not make
-any reads on `maintainer_id` for our metrics.
+associated with the moderator that made them, so we will be careful to not make
+any reads on `moderator_id` for our metrics.
 
-We cannot add metrics like moderator leaderboards such as the moderator with the
-most reports moderated or the fastest response times.
+Because of this concern for anonymity, we will not add metrics like moderator
+leaderboards such as the moderator with the most reports moderated or the
+fastest response times.
