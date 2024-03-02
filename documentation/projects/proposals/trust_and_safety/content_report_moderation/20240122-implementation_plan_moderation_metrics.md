@@ -439,9 +439,15 @@ specifically, in the moderation pipeline.
 
 ### Other projects or work
 
-This project depends on our implementation of the moderation workflow. By having
-this implementation plan prepared we can design moderation workflow that
-accounts from metrics and analytics from the outset and not as an afterthought.
+This project depends on our implementation of the moderation workflow which is
+outlined by these plans:
+
+- [Django Admin moderation views](/projects/proposals/trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.md)
+- [Bulk moderation](/projects/proposals/trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.md)
+
+If this implementation plan is approved before work on the moderation pipeline
+commences, then the metric and their views can be co-developed with the
+moderation workflow instead of being added later.
 
 ## Alternatives
 
