@@ -99,7 +99,8 @@ the future):
     - per decision action (marked_sensitive | deindexed_sensitive |
       deindexed_copyright | reversed_mark_sensitive | reversed_deindex |
       rejected_reports | deduplicated_reports)
-  - most reported creator/source/provider (deferred)
+  - creator/source/provider with most reports (deferred)
+    - per report status (pending | reviewed | total)
   - accuracy of reports (deferred)
   - duplication in reports (deferred)
 - Metrics about decisions
@@ -367,6 +368,8 @@ create pseudo-models with `managed = False`, register the model in the Django
 admin site and finally create custom filters to operate on the in-memory list.
 
 ```python
+from collections import Counter
+
 class Creator(models.Model):
     # fields to uniquely identify a creator
     name = models.CharField(max_length=100)
@@ -383,9 +386,15 @@ class CreatorAdmin(admin.ModelAdmin):
         return Report.objects.filter(media_provider=obj.provider).filter(media__creator=obj.name).count()
 
     def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        # Convert creators from media models into `Creator` models
-        return Media.objects.values('creator', 'provider').map(lambda x: Creator(name=x['creator'], provider=x['provider'])
+        # Convert creators from report models into `Creator` models
+        creators = Counter()
+        for media_id in Report.objects.values('media_obj_id', flat=True):
+            try:
+              media = Media.objects.get(identifier=media_id)
+              creators[(media.creator, media.provider)] += 1
+            except Media.DoesNotExist:
+              pass
+        return [Creator(name=creator[0], provider=creator[1]) for (creator, _) in creators.most_common(len(c))]
 
 class CustomFilter(admin.SimpleListFilter):
     title = 'Filter Title'
