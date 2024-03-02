@@ -73,6 +73,8 @@ export default defineComponent({
   setup(props) {
     const uiStore = useUiStore()
 
+    // Determine the size of the audio track based on the kind
+    // of collection and the current breakpoint.
     const audioTrackSize = computed(() => {
       if (props.kind === "related") {
         return uiStore.isBreakpoint("sm") ? "m" : "s"
