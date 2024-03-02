@@ -62,6 +62,7 @@ https://github.com/creativecommons/cccatalog/issues/333)
 - [DB Loader should take data from S3, rather than EC2 to load into PostgreSQL](
 https://github.com/creativecommons/cccatalog/issues/334)
 """
+
 import logging
 import os
 import re
@@ -230,6 +231,9 @@ def create_ingestion_workflow(
                             else None,
                         ),
                         "aws_conn_id": AWS_CONN_ID,
+                        "extra_args": {
+                            "StorageClass": conf.s3_tsv_storage_class,
+                        },
                     },
                     trigger_rule=TriggerRule.NONE_SKIPPED,
                 )

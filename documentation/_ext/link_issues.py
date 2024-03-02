@@ -26,6 +26,7 @@ Changes by Openverse Contributors:
 
   Add GitHub token to prevent rate limiting
 """
+
 import dataclasses
 import os
 import re

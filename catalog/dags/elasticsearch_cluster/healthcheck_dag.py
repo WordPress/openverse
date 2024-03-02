@@ -25,10 +25,10 @@ from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPyt
 from elasticsearch import Elasticsearch
 
 from common.constants import ENVIRONMENTS, PRODUCTION, Environment
+from common.elasticsearch import get_es_host
 from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
-from elasticsearch_cluster.shared import get_es_host
 
 
 logger = logging.getLogger(__name__)

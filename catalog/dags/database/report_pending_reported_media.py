@@ -9,6 +9,7 @@ determine whether further action (such as deindexing the record) needs to be
 taken. If a record has been reported multiple times, it only needs to be
 reviewed once and so is only counted once in the reporting by this DAG.
 """
+
 import logging
 import os
 from textwrap import dedent

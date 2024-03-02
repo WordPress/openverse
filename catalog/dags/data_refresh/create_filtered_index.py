@@ -15,6 +15,7 @@ index, and then points the filtered index alias for the media type to the new in
 finally deleting the old, now unused filtered index. These TaskGroups are used in
 the data refresh DAGs to execute the filtered index steps.
 """
+
 from datetime import timedelta
 
 from airflow.operators.empty import EmptyOperator

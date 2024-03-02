@@ -36,7 +36,7 @@ function header() {
 if [ "$1" == help ] || [ "$1" == --help ]; then help_text && exit 0; fi
 sleep 0.1 # The $COLUMNS variable takes a moment to populate
 
-# Reformat Airflow connections that use https
+# Reformat Slack Airflow connections
 header "MODIFYING ENVIRONMENT"
 # Loop through environment variables, relying on naming conventions.
 # Bash loops with pipes occur in a subprocess, so we need to do some special
@@ -57,7 +57,8 @@ while read -r var_string; do
   echo "    New Value: $new_value"
   # set the environment variable
   export "$var_name"="$new_value"
-  # only include airflow connections with http somewhere in the string
-done < <(env | grep "^AIRFLOW_CONN[A-Z_]\+=http.*$")
+
+  # only include Slack airflow connections
+done < <(env | grep "^AIRFLOW_CONN_SLACK*")
 
 exec /entrypoint "$@"

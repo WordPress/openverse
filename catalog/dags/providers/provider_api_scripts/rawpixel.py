@@ -12,6 +12,7 @@ Notes:                  Rawpixel has given Openverse beta access to their API.
                         although the API key we've been given can circumvent this limit.
                         https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
 """
+
 import base64
 import hmac
 import html
@@ -89,7 +90,6 @@ class RawpixelDataIngester(ProviderDataIngester):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.api_key: str = Variable.get("API_KEY_RAWPIXEL")
-        self.headers = {"User-Agent": prov.UA_STRING}
 
     def get_media_type(self, record: dict) -> str:
         return constants.IMAGE

@@ -3,7 +3,7 @@ import http from "k6/http"
 import { randomItem } from "https://jslib.k6.io/k6-utils/1.2.0/index.js"
 
 export const API_URL =
-  __ENV.API_URL || "https://api-dev.openverse.engineering/v1/"
+  __ENV.API_URL || "https://api-staging.openverse.engineering/v1/"
 export const SLEEP_DURATION = 0.1
 // Use the random words list available locally, but filter any words that end with apostrophe-s
 const WORDS = open("/usr/share/dict/words")

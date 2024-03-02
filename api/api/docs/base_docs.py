@@ -2,6 +2,12 @@ from http.client import responses as http_responses
 from textwrap import dedent
 from typing import Literal
 
+from rest_framework.exceptions import (
+    NotAuthenticated,
+    NotFound,
+    ValidationError,
+)
+
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import (
     OpenApiExample,
@@ -15,7 +21,6 @@ from api.serializers.audio_serializers import (
     AudioCollectionRequestSerializer,
     AudioSerializer,
 )
-from api.serializers.error_serializers import NotFoundErrorSerializer
 from api.serializers.image_serializers import ImageSerializer
 from api.serializers.media_serializers import PaginatedRequestSerializer
 
@@ -96,7 +101,7 @@ class MediaSchema(AutoSchema):
 
 source_404_message = "Invalid source 'name'. Valid sources are ..."
 source_404_response = OpenApiResponse(
-    NotFoundErrorSerializer,
+    NotFound,
     examples=[
         OpenApiExample(
             name="404",
@@ -114,7 +119,10 @@ def build_source_path_parameter(media_type: MediaType):
 
     return OpenApiParameter(
         name="source",
-        type=str,
+        type={
+            "type": "string",
+            "pattern": "^[^/.]+?$",
+        },
         location=OpenApiParameter.PATH,
         description=f"The source of {media_type}. {valid_description}",
     )
@@ -122,14 +130,20 @@ def build_source_path_parameter(media_type: MediaType):
 
 creator_path_parameter = OpenApiParameter(
     name="creator",
-    type=str,
+    type={
+        "type": "string",
+        "pattern": "^.+$",
+    },
     location=OpenApiParameter.PATH,
     description="The name of the media creator. This parameter "
     "is case-sensitive, and matches exactly.",
 )
 tag_path_parameter = OpenApiParameter(
     name="tag",
-    type=str,
+    type={
+        "type": "string",
+        "pattern": "^[^/.]+?$",
+    },
     location=OpenApiParameter.PATH,
     description="The tag of the media. Not case-sensitive, matches exactly.",
 )
@@ -210,10 +224,20 @@ def collection_schema(
         serializer = AudioSerializer
 
     if collection == "tag":
-        responses = {200: serializer(many=True)}
+        responses = {
+            200: serializer(many=True),
+            404: NotFound,
+            400: ValidationError,
+            401: (NotAuthenticated, None),
+        }
         path_parameters = [tag_path_parameter]
     else:
-        responses = {200: serializer(many=True), 404: source_404_response}
+        responses = {
+            200: serializer(many=True),
+            404: source_404_response,
+            400: ValidationError,
+            401: (NotAuthenticated, None),
+        }
         path_parameters = [build_source_path_parameter(media_type)]
         if collection == "creator":
             path_parameters.append(creator_path_parameter)
@@ -225,5 +249,8 @@ def collection_schema(
         auth=[],
         description=description,
         responses=responses,
-        parameters=[request_serializer, *path_parameters],
+        parameters=[
+            request_serializer,
+            *path_parameters,
+        ],
     )

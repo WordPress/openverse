@@ -9,6 +9,7 @@ Notes:                  https://wordpress.org/photos/wp-json/wp/v2
                         Provide photos, media, users and more related resources.
                         No rate limit specified.
 """
+
 import logging
 
 import lxml.html as html

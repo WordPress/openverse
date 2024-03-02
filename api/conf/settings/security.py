@@ -32,7 +32,7 @@ if DEBUG:
         "0.0.0.0",
     ]
 
-BASE_URL = config("BASE_URL", default="https://openverse.org/")
+BASE_URL = config("BASE_URL", default="https://api.openverse.engineering/")
 
 # Trusted origins for CSRF
 # https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-trusted-origins
@@ -46,7 +46,14 @@ middleware = "corsheaders.middleware.CorsMiddleware"
 if middleware not in MIDDLEWARE:
     MIDDLEWARE.insert(0, middleware)
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
+# https://github.com/adamchainz/django-cors-headers?tab=readme-ov-file#cors_expose_headers-sequencestr
+# These headers are required for search response time analytics
+CORS_EXPOSE_HEADERS = [
+    "cf-cache-status",
+    "cf-ray",
+    "date",
+]
 
 # Proxy handling, for production
 if config("IS_PROXIED", default=True, cast=bool):

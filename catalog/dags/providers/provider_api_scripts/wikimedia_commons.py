@@ -130,7 +130,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
     }
     host = "commons.wikimedia.org"
     endpoint = f"https://{host}/w/api.php"
-    headers = {"User-Agent": prov.UA_STRING}
 
     # The 10000 is a bit arbitrary, but needs to be larger than the mean
     # number of uses per file (globally) in the response_json, or we will

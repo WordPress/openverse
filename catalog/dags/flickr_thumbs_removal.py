@@ -2,6 +2,7 @@
 One-time run DAG to remove progressively all the old Flickr thumbnails,
 as they were determined to be unsuitable for the Openverse UI requirements.
 """
+
 import logging
 from datetime import timedelta
 from textwrap import dedent

@@ -17,6 +17,7 @@ from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_i
     MockImageOnlyProviderDataIngester,
     MockProviderDataIngester,
 )
+from common.loader import provider_details as prov
 from common.requester import RetriesExceeded
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
@@ -90,6 +91,15 @@ def test_get_response_json(endpoint, expected):
         ingester.get_response_json({}, endpoint=endpoint)
         actual_endpoint = mock_get.call_args.args[0]
         assert actual_endpoint == expected
+
+
+def test_passes_user_agent_header():
+    ingester = MockProviderDataIngester()
+    with patch.object(ingester.delayed_requester, "get_response_json") as mock_get:
+        ingester.get_response_json({})
+        actual_headers = mock_get.call_args.kwargs["headers"]
+        assert "User-Agent" in actual_headers
+        assert actual_headers["User-Agent"] == prov.UA_STRING
 
 
 def test_batch_limit_is_capped_to_ingestion_limit():

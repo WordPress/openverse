@@ -10,6 +10,7 @@ Notes:                  This api was written specially for Openverse.
                         https://nappy.co/
 
 """
+
 import logging
 
 from common import constants
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 class NappyDataIngester(ProviderDataIngester):
     providers = {constants.IMAGE: prov.NAPPY_DEFAULT_PROVIDER}
     endpoint = "https://api.nappy.co/v1/openverse/images"
-    headers = {"User-Agent": prov.UA_STRING, "Accept": "application/json"}
+    headers = {"Accept": "application/json"}
 
     # Hardcoded to CC0, the only license Nappy.co uses
     license_info = get_license_info(

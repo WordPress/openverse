@@ -13,7 +13,7 @@
           class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
         >
           <VBone
-            v-if="isLoadingThumbnail"
+            v-if="showLoadingState"
             class="col-span-full row-span-full h-[500px] w-[500px] self-center"
           />
           <!--
@@ -33,12 +33,16 @@
             @error="onImageError"
             @contextmenu="handleRightClick($route.params.id)"
           />
-          <VSketchFabViewer
+          <div
             v-if="sketchFabUid"
-            :uid="sketchFabUid"
-            class="mx-auto rounded-se-sm rounded-ss-sm"
-            @failure="sketchFabfailure = true"
-          />
+            class="col-span-full row-span-full w-full lg:max-w-4xl lg:px-4"
+          >
+            <VSketchFabViewer
+              :uid="sketchFabUid"
+              class="rounded-se-sm rounded-ss-sm"
+              @failure="sketchFabfailure = true"
+            />
+          </div>
         </figure>
 
         <section
@@ -97,7 +101,7 @@
       </template>
     </template>
     <VBone
-      v-else-if="isLoadingThumbnail"
+      v-else-if="showLoadingState"
       class="col-span-full row-span-full h-[500px] w-[500px] self-center"
     />
   </main>
@@ -176,6 +180,12 @@ export default defineComponent({
     const imageSrc = ref(image.value?.thumbnail)
 
     const isLoadingThumbnail = ref(true)
+    const showLoadingState = computed(() => {
+      if (sketchFabUid.value) {
+        return false
+      }
+      return isLoadingThumbnail.value
+    })
 
     const { error: nuxtError } = useContext()
 
@@ -314,6 +324,7 @@ export default defineComponent({
       sketchFabUid,
 
       isLoadingThumbnail,
+      showLoadingState,
       onImageLoaded,
       onImageError,
       handleRightClick,

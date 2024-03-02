@@ -1,5 +1,5 @@
 <template>
-  <div class="block aspect-[2/1] max-h-[500px] max-w-[1000px]">
+  <div class="block aspect-[2/1]">
     <iframe
       id="sketchfab-iframe"
       ref="node"

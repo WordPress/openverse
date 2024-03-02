@@ -200,6 +200,10 @@ init:
 down *flags:
     just dc down {{ flags }}
 
+# Take all services down then call the specified app's up recipe. ex.: `just dup catalog` is useful for restarting the catalog with new environment variables
+dup app:
+    just down && just {{ app }}/up
+
 # Recreate all volumes and containers from scratch
 recreate:
     just down -v
