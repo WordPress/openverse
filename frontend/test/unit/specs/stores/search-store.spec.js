@@ -106,9 +106,9 @@ describe("Search Store", () => {
 
     it.each`
       type     | collectionParams                                                | expected
-      ${IMAGE} | ${{ collection: "tag", tag: "cat" }}                            | ${"/image/tag/cat/"}
-      ${AUDIO} | ${{ collection: "creator", source: "jamendo", creator: "cat" }} | ${"/audio/source/jamendo/creator/cat/"}
-      ${IMAGE} | ${{ collection: "source", source: "flickr" }}                   | ${"/image/source/flickr/"}
+      ${IMAGE} | ${{ collection: "tag", tag: "cat" }}                            | ${{ path: "/image/collection", query: { tag: "cat" } }}
+      ${AUDIO} | ${{ collection: "creator", source: "jamendo", creator: "cat" }} | ${{ path: "/audio/collection", query: { source: "jamendo", creator: "cat" } }}
+      ${IMAGE} | ${{ collection: "source", source: "flickr" }}                   | ${{ path: "/image/collection", query: { source: "flickr" } }}
     `(
       "getCollectionPath returns $expected for $type, $tag, $creator, $source",
       ({ type, collectionParams, expected }) => {

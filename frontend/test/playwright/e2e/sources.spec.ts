@@ -14,7 +14,7 @@ test("sources table has links to source pages", async ({ page }) => {
     .getByRole("cell", { name: "Flickr", exact: true })
     .getByRole("link")
     .click()
-  await page.waitForURL("/image/source/flickr")
+  await page.waitForURL("/image/collection?source=flickr")
 
   await expect(getH1(page, "Flickr")).toBeVisible()
 })
