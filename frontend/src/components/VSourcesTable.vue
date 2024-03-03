@@ -60,9 +60,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive } from "vue"
-
-import { useContext } from "@nuxtjs/composition-api"
+import { computed, defineComponent, type PropType, reactive } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
@@ -71,6 +69,7 @@ import type { SupportedMediaType } from "~/constants/media"
 import type { MediaProvider } from "~/types/media-provider"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useSearchStore } from "~/stores/search"
 
 import TableSortIcon from "~/components/TableSortIcon.vue"
 import VLink from "~/components/VLink.vue"
@@ -88,8 +87,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { app } = useContext()
-
     const sorting = reactive({
       direction: "asc",
       field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
@@ -148,8 +145,16 @@ export default defineComponent({
     const additionalSearchViews = computed(() => {
       return featureFlagStore.isOn("additional_search_views")
     })
+
+    const searchStore = useSearchStore()
     const providerViewUrl = (provider: MediaProvider) => {
-      return app.localePath(`/${props.media}/source/${provider.source_name}`)
+      return searchStore.getCollectionPath({
+        type: props.media,
+        collectionParams: {
+          collection: "source",
+          source: provider.source_name,
+        },
+      })
     }
     return {
       getLocaleFormattedNumber,
