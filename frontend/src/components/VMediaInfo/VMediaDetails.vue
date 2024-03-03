@@ -11,7 +11,7 @@
 
       <div class="flex w-full flex-grow flex-col gap-6">
         <p v-if="media.description">{{ media.description }}</p>
-        <VMediaTags :tags="media.tags" />
+        <VMediaTags :tags="media.tags" :media-type="media.frontendMediaType" />
         <VMetadata v-if="metadata" :metadata="metadata" />
       </div>
     </div>
