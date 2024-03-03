@@ -28,7 +28,7 @@ jobs:
           script: |
             let { writeFileSync } = await import('fs')
 
-            const repoName = `${repo.repo.owner}/${context.repo.repo}`
+            const repoName = `${context.repo.owner}/${context.repo.repo}`
             const { pull_request: pr } = context.payload
             const isNew = process.env.EVENT_ACTION === 'opened'
             const emoji = pr.draft ? ':pr-draft:' : ':pull-request:'
