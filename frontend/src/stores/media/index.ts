@@ -450,8 +450,7 @@ export const useMediaStore = defineStore("media", {
       shouldPersistMedia: boolean
     }) {
       const searchStore = useSearchStore()
-      const { pathSlug, query: queryParams } =
-        searchStore.getSearchUrlParts(mediaType)
+      const queryParams = searchStore.getApiRequestQuery(mediaType)
       let page = this.results[mediaType].page + 1
       if (shouldPersistMedia) {
         queryParams.page = `${page}`
@@ -461,7 +460,7 @@ export const useMediaStore = defineStore("media", {
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
-        const data = await service.search(queryParams, pathSlug)
+        const data = await service.search(queryParams)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

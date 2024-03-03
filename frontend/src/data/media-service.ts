@@ -51,11 +51,9 @@ class MediaService<T extends Media> {
   /**
    * Search for media items by keyword.
    * @param params - API search query parameters
-   * @param slug - optional slug to get a collection
    */
   async search(
-    params: PaginatedSearchQuery | PaginatedCollectionQuery,
-    slug: string = ""
+    params: PaginatedSearchQuery | PaginatedCollectionQuery
   ): Promise<MediaResult<Record<string, Media>>> {
     // Add the `peaks` param to all audio searches automatically
     if (this.mediaType === AUDIO) {
@@ -64,7 +62,6 @@ class MediaService<T extends Media> {
 
     const res = await this.apiService.query<MediaResult<T[]>>(
       this.mediaType,
-      slug,
       params as unknown as Record<string, string>
     )
     return this.transformResults(res.data)

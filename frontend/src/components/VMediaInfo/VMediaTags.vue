@@ -15,10 +15,11 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import type { Tag } from "~/types/media"
+import type { SupportedMediaType } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useSearchStore } from "~/stores/search"
 
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 import VTag from "~/components/VTag/VTag.vue"
@@ -31,9 +32,13 @@ export default defineComponent({
       type: Array as PropType<Tag[]>,
       required: true,
     },
+    mediaType: {
+      type: String as PropType<SupportedMediaType>,
+      required: true,
+    },
   },
-  setup() {
-    const { app } = useContext()
+  setup(props) {
+    const searchStore = useSearchStore()
     const featureFlagStore = useFeatureFlagStore()
 
     const additionalSearchViews = computed(() =>
@@ -41,7 +46,10 @@ export default defineComponent({
     )
 
     const localizedTagPath = (tag: Tag) => {
-      return app.localePath({ path: `tag/${tag.name}` })
+      return searchStore.getCollectionPath({
+        type: props.mediaType,
+        collectionParams: { collection: "tag", tag: tag.name },
+      })
     }
 
     return { additionalSearchViews, localizedTagPath }
