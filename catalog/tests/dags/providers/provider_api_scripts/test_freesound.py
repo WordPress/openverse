@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from requests.exceptions import HTTPError
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
@@ -100,7 +101,7 @@ def test_handles_failure_to_get_set_info():
     with patch.object(fsd.delayed_requester, "get") as get_mock, patch("time.sleep"):
         error_response = MagicMock()
         error_response.status_code = 404
-        get_mock.return_value = error_response
+        get_mock.side_effect = HTTPError(response=error_response)
 
         actual_id, actual_name, actual_url = fsd._get_audio_set_info(
             {"pack": "https://freesound.org/apiv2/packs/35596/"}
