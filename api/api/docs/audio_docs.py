@@ -6,7 +6,7 @@ from rest_framework.exceptions import (
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
+from api.docs.base_docs import custom_extend_schema, fields_to_md
 from api.examples import (
     audio_complain_201_example,
     audio_complain_curl,
@@ -121,17 +121,4 @@ waveform = custom_extend_schema(
         404: (NotFound, audio_waveform_404_example),
     },
     eg=[audio_waveform_curl],
-)
-
-source_collection = collection_schema(
-    media_type="audio",
-    collection="source",
-)
-creator_collection = collection_schema(
-    media_type="audio",
-    collection="creator",
-)
-tag_collection = collection_schema(
-    media_type="audio",
-    collection="tag",
 )

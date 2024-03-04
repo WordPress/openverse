@@ -11,15 +11,12 @@ from PIL import Image as PILImage
 
 from api.constants.media_types import IMAGE_TYPE
 from api.docs.image_docs import (
-    creator_collection,
     detail,
     oembed,
     related,
     report,
     search,
-    source_collection,
     stats,
-    tag_collection,
 )
 from api.docs.image_docs import thumbnail as thumbnail_docs
 from api.docs.image_docs import watermark as watermark_doc
@@ -32,7 +29,6 @@ from api.serializers.image_serializers import (
     OembedSerializer,
     WatermarkRequestSerializer,
 )
-from api.serializers.media_serializers import PaginatedRequestSerializer
 from api.utils import image_proxy
 from api.utils.aiohttp import get_aiohttp_session
 from api.utils.asyncio import aget_object_or_404
@@ -46,9 +42,6 @@ from api.views.media_views import MediaViewSet
     stats=stats,
     retrieve=detail,
     related=related,
-    tag_collection=tag_collection,
-    creator_collection=creator_collection,
-    source_collection=source_collection,
 )
 class ImageViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to images."""
@@ -59,7 +52,6 @@ class ImageViewSet(MediaViewSet):
     default_index = settings.MEDIA_INDEX_MAPPING[IMAGE_TYPE]
 
     serializer_class = ImageSerializer
-    collection_serializer_class = PaginatedRequestSerializer
 
     OEMBED_HEADERS = {
         "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="OEmbed"),

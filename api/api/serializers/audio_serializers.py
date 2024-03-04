@@ -11,7 +11,6 @@ from api.serializers.media_serializers import (
     MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
     MediaSerializer,
-    PaginatedRequestSerializer,
     get_hyperlinks_serializer,
     get_search_request_source_serializer,
 )
@@ -23,19 +22,6 @@ from api.serializers.media_serializers import (
 
 
 AudioSearchRequestSourceSerializer = get_search_request_source_serializer("audio")
-
-
-class AudioCollectionRequestSerializer(PaginatedRequestSerializer):
-    field_names = [
-        *PaginatedRequestSerializer.field_names,
-        "peaks",
-    ]
-
-    peaks = serializers.BooleanField(
-        help_text="Whether to include the waveform peaks or not",
-        required=False,
-        default=False,
-    )
 
 
 class AudioSearchRequestSerializer(

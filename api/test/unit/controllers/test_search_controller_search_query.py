@@ -283,22 +283,22 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     ("data", "expected_query_filter"),
     [
         pytest.param(
-            {"tag": "art"},
+            {"unstable__collection": "tag", "unstable__tag": "art"},
             [{"term": {"tags.name.keyword": "art"}}],
             id="filter_by_tag",
         ),
         pytest.param(
-            {"tag": "art, photography"},
+            {"unstable__collection": "tag", "unstable__tag": "art, photography"},
             [{"term": {"tags.name.keyword": "art, photography"}}],
             id="filter_by_tag_treats_punctuation_as_part_of_tag",
         ),
         pytest.param(
-            {"source": "flickr"},
+            {"unstable__collection": "source", "source": "flickr"},
             [{"term": {"source": "flickr"}}],
             id="filter_by_source",
         ),
         pytest.param(
-            {"source": "flickr", "creator": "nasa"},
+            {"unstable__collection": "creator", "source": "flickr", "creator": "nasa"},
             [
                 {"term": {"source": "flickr"}},
                 {"term": {"creator.keyword": "nasa"}},
@@ -308,9 +308,9 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     ],
 )
 def test_build_collection_query(image_media_type_config, data, expected_query_filter):
-    serializer = image_media_type_config.search_request_serializer(data={})
+    serializer = image_media_type_config.search_request_serializer(data=data)
     serializer.is_valid(raise_exception=True)
-    actual_query = search_controller.build_collection_query(serializer, data)
+    actual_query = search_controller.build_collection_query(serializer)
     expected_query = Q(
         "bool",
         filter=expected_query_filter,

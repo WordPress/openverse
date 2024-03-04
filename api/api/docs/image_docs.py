@@ -6,7 +6,7 @@ from rest_framework.exceptions import (
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from api.docs.base_docs import collection_schema, custom_extend_schema, fields_to_md
+from api.docs.base_docs import custom_extend_schema, fields_to_md
 from api.examples import (
     image_complain_201_example,
     image_complain_curl,
@@ -128,16 +128,3 @@ oembed = custom_extend_schema(
 )
 
 watermark = extend_schema(deprecated=True, responses={404: NotFound})
-
-source_collection = collection_schema(
-    media_type="images",
-    collection="source",
-)
-creator_collection = collection_schema(
-    media_type="images",
-    collection="creator",
-)
-tag_collection = collection_schema(
-    media_type="images",
-    collection="tag",
-)

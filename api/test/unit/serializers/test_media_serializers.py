@@ -3,7 +3,8 @@ import uuid
 from unittest.mock import MagicMock, patch
 
 from django.conf import settings
-from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.exceptions import NotAuthenticated
+from rest_framework.serializers import ValidationError
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 

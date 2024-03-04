@@ -91,6 +91,8 @@ class PaginatedRequestSerializer(serializers.Serializer):
         "unstable__authority",
         "unstable__authority_boost",
         "unstable__include_sensitive_results",
+        "unstable__collection",
+        "unstable__tag",
         "internal__index",
     ],
 )
@@ -120,6 +122,8 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         # "unstable__authority",
         # "unstable__authority_boost",
         # "unstable__include_sensitive_results",
+        # "unstable__collection",
+        # "unstable__tag",
         *PaginatedRequestSerializer.field_names,
     ]
     """
@@ -235,6 +239,24 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         default=False,
     )
 
+    unstable__tag = serializers.CharField(
+        label="tag",
+        source="tag",
+        help_text="Search by tag only. Cannot be used with `q`, should be used "
+        "with `unstable__collection`. The match is exact, so `tag=cat` will "
+        "not match values that include the word but are not exactly `cat`, such as "
+        "`cats` or `catfish`",
+        required=False,
+        max_length=200,
+    )
+    unstable__collection = serializers.ChoiceField(
+        source="collection",
+        label="collection",
+        choices=["tag", "source", "creator"],
+        help_text="The collection to search in. Should be used with `unstable__tag`, `source` or `creator`+`source`",
+        required=False,
+    )
+
     # The ``internal__`` prefix is used in the query params.
     # If you rename these fields, update the following references:
     #   - ``field_names`` in ``MediaSearchRequestSerializer``
@@ -269,6 +291,23 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
                 )
         # lowers the case of the value before returning
         return value.lower()
+
+    def validate_unstable__collection(self, value):
+        if value == "tag" and not self.initial_data.get("unstable__tag"):
+            raise serializers.ValidationError(
+                "The `unstable__tag` parameter is required when `unstable__collection` is set to `tag`."
+            )
+        if value == "source" and not self.initial_data.get("source"):
+            raise serializers.ValidationError(
+                "The `source` parameter is required when `unstable__collection` is set to `source`."
+            )
+        if value == "creator" and not (
+            self.initial_data.get("creator") and self.initial_data.get("source")
+        ):
+            raise serializers.ValidationError(
+                "The `creator` and `source` parameters are required when `unstable__collection` is set to `creator`."
+            )
+        return value
 
     @staticmethod
     def validate_license_type(value):
