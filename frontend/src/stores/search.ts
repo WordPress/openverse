@@ -183,7 +183,7 @@ export const useSearchStore = defineStore("search", {
     isAnyFilterApplied() {
       const filterEntries = Object.entries(this.searchFilters) as [
         string,
-        FilterItem[]
+        FilterItem[],
       ][]
       return filterEntries.some(([, filterItems]) =>
         filterItems.some((filter) => filter.checked)

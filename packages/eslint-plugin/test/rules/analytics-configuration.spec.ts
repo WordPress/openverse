@@ -65,7 +65,7 @@ tester.run(
                 data: { eventName: eventName.replace(/'/g, "") },
               },
             ],
-          } as const)
+          }) as const
       ),
       ...invalidPayloadTypes.map(
         (payloadType) =>
@@ -78,7 +78,7 @@ tester.run(
         }
       `,
             errors: [{ messageId: "emptyPayloadType" }],
-          } as const)
+          }) as const
       ),
       ...mockReservedPropNames.map(
         (propName) =>
@@ -100,7 +100,7 @@ tester.run(
             errors: [
               { messageId: "reservedPayloadPropNames", data: { propName } },
             ],
-          } as const)
+          }) as const
       ),
       ...invalidPayloadValueTypes.map(
         (payloadPropType) =>
@@ -115,7 +115,7 @@ tester.run(
         }
       `,
             errors: [{ messageId: "invalidPayloadFormat" }],
-          } as const)
+          }) as const
       ),
     ],
     valid: [
@@ -129,7 +129,7 @@ tester.run(
           ${eventName}: never
         }
       `,
-          } as const)
+          }) as const
       ),
       {
         ...baseTestCase,
@@ -169,7 +169,7 @@ tester.run(
           }
         }
       `,
-          } as const)
+          }) as const
       ),
     ],
   }

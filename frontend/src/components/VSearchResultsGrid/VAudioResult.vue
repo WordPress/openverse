@@ -88,8 +88,8 @@ export default defineComponent({
         props.kind === "related"
           ? "VRelatedAudio"
           : props.layout === "box"
-          ? "VAllResultsGrid"
-          : "AudioSearch"
+            ? "VAllResultsGrid"
+            : "AudioSearch"
       sendCustomEvent("AUDIO_INTERACTION", { ...data, component })
     }
 

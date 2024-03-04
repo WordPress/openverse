@@ -5,7 +5,7 @@ import type { TSESTree } from "@typescript-eslint/utils"
 type Options = readonly [
   {
     reservedPropNames: string[]
-  }
+  },
 ]
 
 const messages = {
