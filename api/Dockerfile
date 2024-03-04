@@ -122,7 +122,7 @@ CMD ["python", "run.py"]
 # NGINX #
 #########
 
-FROM docker.io/nginx:1.25.3-alpine as nginx
+FROM docker.io/nginx:1.25.4-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
