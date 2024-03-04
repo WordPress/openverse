@@ -6,6 +6,7 @@
     class="label-bold"
     v-bind ="$props"
     v-on="$listeners"
+    aria-label="Tag"
     ><slot></slot></VButton
   >
 </template>
