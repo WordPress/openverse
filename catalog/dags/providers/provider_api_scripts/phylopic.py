@@ -12,10 +12,14 @@ Notes:                  http://api-docs.phylopic.org/v2/
 
 import logging
 
+from requests.exceptions import HTTPError
+
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
-from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
+from providers.provider_api_scripts.provider_data_ingester import (
+    ProviderDataIngester,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -35,15 +39,43 @@ class PhylopicDataIngester(ProviderDataIngester):
 
     def ingest_records(self):
         self._get_initial_query_params()
-        super().ingest_records()
+        try:
+            super().ingest_records()
+
+        # Catch 410 error caused by the build_param changing while ingestion is ongoing
+        except HTTPError as error:
+            if error.response.status_code == 410:
+                # Refetch initial query params; this will update the build_param to the
+                # most recent value and reset the `current_page` to 1.
+                old_build_param = self.build_param
+                self._get_initial_query_params()
+
+                if old_build_param == self.build_param:
+                    # If the build_param could not be updated, there must be another
+                    # issue. Raise the original error.
+                    raise
+
+                # Otherwise, the build_param did in fact change. Attempt ingestion
+                # again with the new param.
+                logger.info(
+                    f"Build_param changed from {old_build_param} to {self.build_param}"
+                    " during ingestion. Restarting ingestion from the beginning."
+                )
+                super().ingest_records()
+
+            else:
+                # Raise all other errors
+                raise
 
     def _get_initial_query_params(self) -> None:
         """Get the required `build` param from the API and set the total pages."""
         resp = self.get_response_json(query_params={})
         if not resp:
             raise Exception("No response from Phylopic API.")
-        self.build_param = resp.get("build")
+        self.current_page = 1
         self.total_pages = resp.get("totalPages")
+        self.build_param = resp.get("build")
+
         logger.info(
             f"Total items to fetch: {resp.get('totalItems')}. "
             f"Total pages: {self.total_pages}."
