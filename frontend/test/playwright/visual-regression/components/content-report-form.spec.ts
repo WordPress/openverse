@@ -18,8 +18,18 @@ const getReportForm = (page: Page) => {
   })
 }
 
-// Flaky: https://github.com/WordPress/openverse/issues/2020
-test.describe.skip("content report form", () => {
+/**
+ * This test was previoiusly known to be flaky:
+ * https://github.com/WordPress/openverse/issues/2020
+ *
+ * The flake involved an offset of 1-2 pixels in both
+ * the content and width of the popover (the locator
+ * produced with `getReportButton`). To fix this, the
+ * test now uses a screenshot of the entire page, rather
+ * than the isolated report element, and an increased
+ * maxDiffPixel ratio.
+ */
+test.describe("content report form", () => {
   test.describe.configure({ retries: 2 })
 
   breakpoints.describeMd(({ expectSnapshot }) => {
@@ -29,7 +39,9 @@ test.describe.skip("content report form", () => {
 
       await getReportButton(page).click()
 
-      await expectSnapshot("content-report-unfocused", getReportForm(page))
+      await expectSnapshot("content-report-unfocused", page, undefined, {
+        maxDiffPixelRatio: 0.1,
+      })
     })
   })
 
@@ -44,7 +56,9 @@ test.describe.skip("content report form", () => {
 
       await form.getByRole("button", { name: t("modal.close") }).focus()
 
-      await expectSnapshot("content-report-focused", form)
+      await expectSnapshot("content-report-focused", page, undefined, {
+        maxDiffPixelRatio: 0.1,
+      })
     })
   })
 })
