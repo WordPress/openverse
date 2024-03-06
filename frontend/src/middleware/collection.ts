@@ -26,13 +26,17 @@ const queryToCollectionParams = (
       collection: "tag",
       tag: query.tag,
     } as TagCollection
-  } else if ("creator" in query && "source" in query) {
+  }
+
+  if ("creator" in query && "source" in query) {
     return {
       collection: "creator",
       creator: query.creator,
       source: query.source,
     } as CreatorCollection
-  } else if ("source" in query) {
+  }
+
+  if ("source" in query) {
     return {
       collection: "source",
       source: query.source,
