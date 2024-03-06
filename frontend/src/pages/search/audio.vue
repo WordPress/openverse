@@ -1,5 +1,5 @@
 <template>
-  <VAudioCollection
+  <VAudioList
     :results="results"
     kind="search"
     :fetch-state="fetchState"
@@ -15,12 +15,12 @@ import { useI18n } from "~/composables/use-i18n"
 import type { AudioDetail } from "~/types/media"
 import type { FetchState } from "~/types/fetch-state"
 
-import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
+import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
 
 export default defineComponent({
   name: "AudioSearch",
   components: {
-    VAudioCollection,
+    VAudioList,
   },
   props: {
     results: {

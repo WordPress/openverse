@@ -5,6 +5,7 @@ import {
   preparePageForTests,
   scrollDownAndUp,
 } from "~~/test/playwright/utils/navigation"
+import { t } from "~~/test/playwright/utils/i18n"
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
@@ -104,5 +105,36 @@ test("sends RIGHT_CLICK_IMAGE event on right-click", async ({
 
   expectEventPayloadToMatch(rightClickImageEvent, {
     id: imageObject.id,
+  })
+})
+
+test("sends SELECT_SEARCH_RESULT event on related image click", async ({
+  context,
+  page,
+}) => {
+  const analyticsEvents = collectAnalyticsEvents(context)
+
+  await goToCustomImagePage(page)
+
+  await page
+    .getByRole("region", { name: t("imageDetails.relatedImages") })
+    .locator("img")
+    .first()
+    .click()
+  await page.waitForURL(/image\/1c57f839-6be5-449a-b41a-b1c7de819182/)
+
+  const selectSearchResultEvent = analyticsEvents.find(
+    (event) => event.n === "SELECT_SEARCH_RESULT"
+  )
+
+  expectEventPayloadToMatch(selectSearchResultEvent, {
+    id: "1c57f839-6be5-449a-b41a-b1c7de819182",
+    relatedTo: imageObject.id,
+    kind: "related",
+    mediaType: "image",
+    provider: "flickr",
+    query: "",
+    sensitivities: "",
+    isBlurred: false,
   })
 })

@@ -51,7 +51,7 @@
           :search-term="searchTerm"
           layout="box"
           :size="isSm ? 'l' : 's'"
-          :is-related="false"
+          kind="search"
         />
       </template>
     </ol>
