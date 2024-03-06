@@ -87,8 +87,9 @@ export function getSensitiveQuery(
  * This is used, for instance, for content switcher links for `video`/`model_3d` search pages.
  * Only the filters that are relevant for the search type and have a value are included.
  *
- * `INCLUDE_SENSITIVE_QUERY_PARAM` is never added to the frontend search query. It is added
- * to the API search query if the setting is `on` in the featureFlagStore.
+ * `mode` parameter determines whether to add the `INCLUDE_SENSITIVE_QUERY_PARAM`
+ * or not: frontend never shows this parameter, but it is added to the API query if the
+ * feature flag is `on`.
  */
 export function computeQueryParams(
   searchType: SearchType,
@@ -116,13 +117,9 @@ export function computeQueryParams(
 // TODO: After the API changes are done, replace
 // `tags` with `unstable__tag`
 export function buildCollectionQuery(
-  collectionParams: CollectionParams,
-  mode: "frontend" | "API"
+  collectionParams: CollectionParams
 ): PaginatedCollectionQuery {
   const { collection, ...params } = collectionParams
-  if (mode === "frontend") {
-    return params
-  }
 
   const query: PaginatedCollectionQuery = {
     ...params,
@@ -217,7 +214,7 @@ export const useSearchStore = defineStore("search", {
       const query: PaginatedSearchQuery | PaginatedCollectionQuery =
         this.collectionParams === null
           ? computeQueryParams(mediaType, this.filters, this.searchTerm, "API")
-          : buildCollectionQuery(this.collectionParams, "API")
+          : buildCollectionQuery(this.collectionParams)
       return query
     },
     setBackToSearchPath(path: string) {
@@ -269,6 +266,7 @@ export const useSearchStore = defineStore("search", {
 
     /**
      * Returns localized frontend path for the given collection.
+     * Used for the tags, source and creator links throughout the app.
      */
     getCollectionPath({
       type,
@@ -278,7 +276,8 @@ export const useSearchStore = defineStore("search", {
       collectionParams: CollectionParams
     }) {
       const path = `/${type}/collection`
-      const query = buildCollectionQuery(collectionParams, "frontend")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { collection: _, ...query } = collectionParams
       return this.$nuxt.localePath({ path, query })
     },
 
