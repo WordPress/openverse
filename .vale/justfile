@@ -30,7 +30,7 @@ debug:
 # Using Docker avoids the need for contributors to install the Vale binary.
 #Configuration defaults to what is used for CI.
 run +files=FILES: build
-    docker run \
+    docker run --rm \
         -v $PWD/..:/src:rw,Z \
         --workdir=/src \
         openverse-vale:local \
