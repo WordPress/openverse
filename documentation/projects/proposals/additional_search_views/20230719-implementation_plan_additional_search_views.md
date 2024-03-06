@@ -170,7 +170,7 @@ The flag should be switchable, and off by default.
 
 We can reuse the search store as is for these pages.
 
-_Previously, frontend search store had a `searchBy` filter that allowed to
+_Previously, the frontend search store had a `searchBy` filter that allowed to
 search within the `creator` field. When `searchBy` value was set, the API `q`
 parameter was replaced with the `<searchBy>=<searchTerm>` API query parameter.
 This filter was removed because `searchBy` is not strictly a filter that can be
