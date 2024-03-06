@@ -143,7 +143,7 @@ class DelayedRequester:
         endpoint,
         retries=0,
         query_params=None,
-        requestMethod="get",
+        request_method="get",
         **kwargs,
     ):
         """
@@ -151,7 +151,7 @@ class DelayedRequester:
         there are no remaining retries, it will instead raise the error.
         """
         if retries <= 0:
-            logger.error("No retries remaining.  Failure.")
+            logger.error("No retries remaining. Failure.")
             raise error
 
         logger.warning(error)
@@ -166,20 +166,20 @@ class DelayedRequester:
             endpoint,
             retries=retries - 1,
             query_params=query_params,
-            requestMethod=requestMethod,
+            request_method=request_method,
             **kwargs,
         )
 
     def get_response_json(
-        self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs
+        self, endpoint, retries=0, query_params=None, request_method="get", **kwargs
     ):
         response_json = None
         response = None
 
         try:
-            if requestMethod == "get":
+            if request_method == "get":
                 response = self.get(endpoint, params=query_params, **kwargs)
-            elif requestMethod == "post":
+            elif request_method == "post":
                 response = self.post(endpoint, params=query_params, **kwargs)
 
             if response is not None and response.status_code == 200:
@@ -195,12 +195,12 @@ class DelayedRequester:
                     endpoint,
                     retries,
                     query_params,
-                    requestMethod,
+                    request_method,
                     **kwargs,
                 )
         except HTTPError as e:
             response_json = self._attempt_retry_get_response_json(
-                e, endpoint, retries, query_params, requestMethod, **kwargs
+                e, endpoint, retries, query_params, request_method, **kwargs
             )
 
         return response_json
