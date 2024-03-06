@@ -5,6 +5,7 @@ import {
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+import { t } from "~~/test/playwright/utils/i18n"
 import { getH1 } from "~~/test/playwright/utils/components"
 
 const audioObject = {
@@ -100,4 +101,39 @@ test("shows the 404 error page when no valid id", async ({ page }) => {
 test("shows the 404 error page when no id", async ({ page }) => {
   await page.goto("audio/")
   await expect(errorPageHeading(page)).toBeVisible()
+})
+
+test("sends SELECT_SEARCH_RESULT event on related audio click", async ({
+  context,
+  page,
+}) => {
+  const analyticsEvents = collectAnalyticsEvents(context)
+
+  await goToCustomAudioPage(page)
+
+  // Clicking on the link seeks the audio, that's why we click on the heading
+  const firstRelatedAudio = page
+    .getByRole("region", { name: t("audioDetails.relatedAudios") })
+    .locator("a")
+    .first()
+    .getByRole("heading", { level: 2 })
+
+  await firstRelatedAudio.click()
+
+  await page.waitForURL(/audio\/0b94484c-d7d1-43f2-8710-69399b6a0310/)
+
+  const selectSearchResultEvent = analyticsEvents.find(
+    (event) => event.n === "SELECT_SEARCH_RESULT"
+  )
+
+  expectEventPayloadToMatch(selectSearchResultEvent, {
+    id: "0b94484c-d7d1-43f2-8710-69399b6a0310",
+    relatedTo: audioObject.id,
+    kind: "related",
+    mediaType: "audio",
+    provider: "wikimedia_audio",
+    query: "",
+    sensitivities: "",
+    isBlurred: false,
+  })
 })
