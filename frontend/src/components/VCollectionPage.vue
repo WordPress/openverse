@@ -7,7 +7,7 @@
       :media-type="mediaType"
       :class="mediaType === 'image' ? 'mb-4' : 'mb-2'"
     />
-    <VAudioCollection
+    <VAudioList
       v-if="results.type === 'audio'"
       :collection-label="collectionLabel"
       :fetch-state="fetchState"
@@ -35,12 +35,12 @@ import { Results } from "~/types/result"
 import { useI18n } from "~/composables/use-i18n"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
-import VAudioCollection from "~/components/VSearchResultsGrid/VAudioCollection.vue"
+import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
 import VImageGrid from "~/components/VSearchResultsGrid/VImageGrid.vue"
 
 export default defineComponent({
   name: "VCollectionPage",
-  components: { VAudioCollection, VImageGrid, VCollectionHeader },
+  components: { VAudioList, VImageGrid, VCollectionHeader },
   props: {
     mediaType: {
       type: String as PropType<SupportedMediaType>,
