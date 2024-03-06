@@ -1,3 +1,9 @@
+/**
+ * The commented-out assertions will be re-enabled after the fetching
+ * of collections is fixed using `VMediaCollection` component
+ * introduced in https://github.com/WordPress/openverse/pull/3831
+ */
+
 import { test, expect } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
