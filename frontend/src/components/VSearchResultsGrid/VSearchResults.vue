@@ -2,6 +2,7 @@
   <VMediaCollection
     :collection-label="collectionLabel"
     :results="results"
+    :is-fetching="isFetching"
     :search-term="searchTerm"
     kind="search"
   >
@@ -27,7 +28,7 @@
         />
       </div>
     </template>
-    <template #footer="{ isFetching }">
+    <template #footer>
       <footer class="mb-6 mt-4 lg:mb-10">
         <VLoadMore
           :search-type="results.type"
@@ -81,6 +82,10 @@ export default defineComponent({
     },
     results: {
       type: Object as PropType<Results>,
+      required: true,
+    },
+    isFetching: {
+      type: Boolean,
       required: true,
     },
   },

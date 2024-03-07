@@ -1,8 +1,9 @@
 <template>
   <VSearchResults
     :results="results"
-    kind="search"
+    :is-fetching="isFetching"
     :search-term="searchTerm"
+    kind="search"
     @load-more="handleLoadMore"
   />
 </template>
@@ -20,6 +21,10 @@ export default defineComponent({
   props: {
     results: {
       type: Object as PropType<ImageResults>,
+      required: true,
+    },
+    isFetching: {
+      type: Boolean,
       required: true,
     },
     searchTerm: {
