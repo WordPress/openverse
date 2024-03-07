@@ -161,6 +161,9 @@ export default defineComponent({
         const { query: urlQuery, path } = newRoute
         searchStore.setSearchStateFromUrl({ urlQuery, path })
 
+        const mediaStore = useMediaStore()
+        mediaStore.clearMedia()
+
         /**
          * By default, Nuxt only scrolls to top when the path changes.
          * This is a workaround to scroll to top when the query changes.
