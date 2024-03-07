@@ -15,7 +15,7 @@
       :class="{ 'pt-2 sm:pt-0': results.type === 'image' }"
     />
 
-    <slot name="footer" :is-fetching="_isFetching" />
+    <slot name="footer" />
 
     <VScrollButton
       v-show="showScrollButton"
@@ -30,7 +30,6 @@ import { computed, defineComponent, inject, type PropType, ref } from "vue"
 import type { Results } from "~/types/result"
 import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { defineEvent } from "~/types/emits"
-import { useMediaStore } from "~/stores/media"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VAllResultsGrid from "~/components/VSearchResultsGrid/VAllResultsGrid.vue"
@@ -74,6 +73,7 @@ export default defineComponent({
      */
     isFetching: {
       type: Boolean,
+      required: true,
     },
   },
   emits: {
@@ -83,13 +83,8 @@ export default defineComponent({
     const showScrollButton = inject(ShowScrollButtonKey, ref(false))
     const isSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
 
-    const mediaStore = useMediaStore()
-    const _isFetching = computed(
-      () => props.isFetching ?? mediaStore.fetchState.isFetching
-    )
-
     const showSkeleton = computed(() => {
-      return _isFetching.value && props.results.items.length === 0
+      return props.isFetching && props.results.items.length === 0
     })
 
     const component = computed(() => {
@@ -106,7 +101,6 @@ export default defineComponent({
       showSkeleton,
       showScrollButton,
       isSidebarVisible,
-      _isFetching,
       component,
     }
   },

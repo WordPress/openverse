@@ -13,6 +13,7 @@
       <NuxtChild
         :key="$route.path"
         :results="searchResults"
+        :is-fetching="isFetching"
         :search-term="searchTerm"
         :supported="supported"
         :handle-load-more="handleLoadMore"
@@ -143,6 +144,7 @@ export default defineComponent({
     }
 
     const fetchingError = computed(() => fetchState.value.fetchingError)
+    const isFetching = computed(() => fetchState.value.isFetching)
 
     /**
      * Search middleware runs when the path changes. This watcher
@@ -206,6 +208,7 @@ export default defineComponent({
 
       resultCount,
       searchResults,
+      isFetching,
       fetchingError,
 
       handleLoadMore,

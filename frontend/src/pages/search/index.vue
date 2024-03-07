@@ -1,6 +1,7 @@
 <template>
   <VSearchResults
     :results="results"
+    :is-fetching="isFetching"
     :search-term="searchTerm"
     kind="search"
     @load-more="handleLoadMore"
@@ -20,6 +21,10 @@ export default defineComponent({
   props: {
     results: {
       type: Object as PropType<AllMediaResults>,
+      required: true,
+    },
+    isFetching: {
+      type: Boolean,
       required: true,
     },
     searchTerm: {
