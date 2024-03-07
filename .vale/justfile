@@ -17,7 +17,7 @@ build:
 # 4. Replace newlines with spaces
 FILES := ```
     find $PWD/.. -type f \( -name "*.md" -o -name "*.mdx" \) \
-    | grep -vE ".pnpm|changelogs|projects/proposals" \
+    | grep -vE ".pnpm|changelogs|projects/proposals|node_modules" \
     | sed "s|$PWD/../||" \
     | tr '\n' ' '
 ```
