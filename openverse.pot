@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-03-04T15:15:21+00:00\n"
+"POT-Creation-Date: 2024-03-07T08:14:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1670,8 +1670,6 @@ msgctxt "imageDetails.information.sizeInPixels"
 msgid "###width### × ###height### pixels"
 msgstr ""
 
-#: src/components/VImageDetails/VRelatedImages.vue:4
-#: src/components/VImageDetails/VRelatedImages.vue:10
 msgctxt "imageDetails.relatedImages"
 msgid "Related images"
 msgstr ""
@@ -1685,8 +1683,6 @@ msgctxt "audioDetails.genreLabel"
 msgid "Genre"
 msgstr ""
 
-#: src/components/VAudioDetails/VRelatedAudio.vue:4
-#: src/components/VAudioDetails/VRelatedAudio.vue:10
 msgctxt "audioDetails.relatedAudios"
 msgid "Related audio"
 msgstr ""
@@ -1723,7 +1719,7 @@ msgid "Spacebar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAudioCollection.vue:8
+#: src/components/VSearchResultsGrid/VAudioList.vue:8
 msgctxt "audioResults.snackbar.text"
 msgid "Press ###spacebar### to play or pause, and ###left### & ###right### to seek through the track."
 msgstr ""
@@ -2220,12 +2216,18 @@ msgctxt "recentSearches.clear.label"
 msgid "Clear recent searches"
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:50
+#. Do not translate words between ### ###.
+#: src/components/VRecentSearches/VRecentSearches.vue:51
+msgctxt "recentSearches.clearSingle.label"
+msgid "Clear recent search '###entry###'"
+msgstr ""
+
+#: src/components/VRecentSearches/VRecentSearches.vue:64
 msgctxt "recentSearches.none"
 msgid "No recent searches to show."
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:54
+#: src/components/VRecentSearches/VRecentSearches.vue:70
 msgctxt "recentSearches.disclaimer"
 msgid "Openverse does not store your recent searches, this information is kept locally in your browser."
 msgstr ""
