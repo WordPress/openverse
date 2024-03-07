@@ -50,6 +50,7 @@
         :class="recentClasses"
         @select="handleSelect"
         @clear="handleClear"
+        @clear-single="handleClearSingle"
         @keydown.tab.native="hideRecentSearches"
       />
     </ClientOnly>
@@ -227,6 +228,11 @@ export default defineComponent({
       inputFieldRef.value?.focusInput()
       searchStore.clearRecentSearches()
     }
+    /* Clear a specific recent search from the store. */
+    const handleClearSingle = (idx: number) => {
+      inputFieldRef.value?.focusInput()
+      searchStore.clearRecentSearch(idx)
+    }
 
     return {
       searchBarEl,
@@ -247,6 +253,7 @@ export default defineComponent({
       handleKeydown,
       handleSelect,
       handleClear,
+      handleClearSingle,
     }
   },
 })
