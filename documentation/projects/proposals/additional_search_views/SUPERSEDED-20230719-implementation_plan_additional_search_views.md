@@ -13,7 +13,7 @@
 - [x] @sarayourfriend
 
 ```{warning}
-This is the original version. For the current version, see [Current plan](/projects/proposals/additional_search_views/20230719-implementation_plan_additional_search_views.md) for the original version.
+This is the original version. For the current version, see [the updated plan](/projects/proposals/additional_search_views/20230719-implementation_plan_additional_search_views.md).
 ```
 
 ## Project links

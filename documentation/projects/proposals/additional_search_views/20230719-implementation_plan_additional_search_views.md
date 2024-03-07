@@ -32,8 +32,11 @@ API returns all media with the selected tag, from the selected source or by the
 selected creator, sorted by date added to Openverse.
 
 Frontend allows to browse media items by a selected creator, source, or with a
-selected tag. These pages are indexed by search engines, have relevant SEO
-properties and can be shared with an attractive thumbnail and relevant data.
+selected tag using URLs like `/<mediaType>/collection?tag=tagName`,
+`/<mediaType>/collection?source=flickr` and
+`/<mediaType>/collection?source=flickr&creator=Photographer`. These pages are
+indexed by search engines, have relevant SEO properties and can be shared with
+an attractive thumbnail and relevant data.
 
 The single result pages are updated to add the links to source, creator and tag
 collections.
@@ -118,13 +121,13 @@ for fuzzy matches.
 **Finally**, we apply the ranking and sorting parameters, and "highlight" the
 fields that were matched in the results.
 
-The search controller needs to be updated to extract the first 2 steps into
+The search controller needs to be updated to extract the first 2 steps into a
 `build_search_query` method. A new `build_collection_query` should be added and
 used when the `collection` parameter is present. This method should create a
 filter query for the relevant field and value.
 
 The pagination and dead link cleanup should be the same for additional search
-views as for the default search views.
+queries as for the default search queries.
 
 #### Search request serializer updates
 
@@ -142,20 +145,25 @@ launched. In the text below, for brevity, the prefix is omitted.
 ```
 
 The collections will use the `search` endpoint with `collection` query parameter
-set to `tag`, `creator` or `source`, and the relevant query parameters. The
-`collection` parameter validator will check that the request contains the
-necessary additional parameters: `source` for `collection=source`, `creator` and
-`source` for `collection=creator`, and `tag` for `collection=tag`. The value of
-the `source` parameter will also be checked to be an existing source using the
-provider store.
+set to `tag`, `creator` or `source`, and the following additional query
+parameters. The `collection` parameter validator will check that the request
+contains the necessary additional parameters: `source` for `collection=source`,
+`creator` and `source` for `collection=creator`, and `tag` for `collection=tag`.
+
+The middleware validates that the values of parameters is not empty, and that
+the `source` parameter is an existing source in the provider store. If the
+values are invalid, the 404 yellow error page is shown.
 
 For the tag route, the new singular `tag` parameter should be used, rather than
-the existing plural `tags` should be used for legibility since we are presenting
-a single tag.
+the existing plural `tags`, since we are only presenting a single tag.
 
 The existing `source` and `creator` parameters will be reused, but will be
 parsed differently when `collection` parameter is present: they will only allow
-a single value instead of being split by `,` as it is for the default search.
+a single value instead of being split by `,` as it is for the default search. If
+the `source` contains invalid values, such as `source=flickr,europeana`, when
+the `collection` parameter is present, a 400 error with `detail` of "Invalid
+source parameter for source collection: `flickr,europeana`" is returned. If
+possible, a list of valid sources should be returned in the error message.
 
 Their documentation should be updated to reflect that. The additional
 documentation for the search parameters should be added as a draft so that it's
@@ -164,7 +172,11 @@ remove the `unstable__` prefix.
 
 ### 2. Add the `additional_search_views` feature flag
 
-The flag should be switchable, and off by default.
+The flag should be switchable, and off by default. This will mean that the
+changes are visible on [staging](https://staging.openverse.org) when the flag is
+switched on using the preferences page. When the features are stable, we will
+turn the flag on to test the new views in production. After we conclude that the
+project is successful, we will remove the flag and the conditional rendering.
 
 ### 3. Nuxt store and API request changes
 
@@ -184,7 +196,7 @@ the current approach. If it is set to `"collection"`, the query will be
 constructed using the new method (`buildCollectionQuery`) to set `collection`
 and other relevant parameters using the new `collectionParams` object in the
 store. It will _not_ be setting the filter parameters such as license or
-category.
+category, and will ignore such unsupported query parameters.
 
 ### 4. Create collection pages
 
@@ -222,9 +234,14 @@ search engines.
 
 The following titles should be used for the pages:
 
-- "Images by Olga in Flickr" for the creator page
+- "Images by Olga at Flickr" for the creator page
 - "Audio from Wikimedia" for the source page
 - "Images with the cat tag" for the tag page
+
+There are i18n consideration for these titles that we will work on during the
+implementation. It is important to make the titles translatable, which is
+difficult if the non-translatable dynamic names are used inside the sentence due
+to different sentence structures.
 
 The generic Openverse thumbnail will be used. We could also generate a thumbnail
 for the collection pages in the future, but this is not in scope for this
@@ -359,7 +376,7 @@ Analytics events should be added or updated:
 
 - We should also a special event for visiting source `VISIT_SOURCE_LINK`,
   similar to `VISIT_CREATOR_LINK`.
--
+
 - The `REACH_RESULT_END`, `LOAD_MORE` and `SELECT_SEARCH_RESULT` events should
   add strategy (`search`/`tag`/`creator`/`source`) and set `query` to tag name,
   source name or source/creator pair: `cat`, `flickr` or `flickr/Olga`.
@@ -454,10 +471,6 @@ To roll back the changes, we would need to set the feature flag to `OFF`.
 The biggest risk I see is that this project might be seen as an "invitation" to
 scraping. Hopefully, frontend rate limiting and the work on providing the
 dataset would minimize such risks.
-
-## Prior art
-
-<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
 
 ## Plan revisions
 
