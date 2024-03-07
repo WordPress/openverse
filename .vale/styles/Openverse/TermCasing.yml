@@ -5,7 +5,7 @@ message: "Incorrect casing. Use '%s' instead of '%s'."
 level: error
 ignorecase: false
 scope:
-  - paragraph
+  - text
 swap:
   # [^/\.] prevents matching things that look like URLs, file paths, or GitHub team mentions
   # For example: @WordPress/openverse-maintainers

@@ -11,27 +11,31 @@ NO_COLOR := "\\033[0m"
 build:
     docker build . -t openverse-vale:local
 
-# 1. List all MD and MDX files in the repository
-# 2. Filter out the directories we do not want to lint
-# 3. Strip the absolute path from the beginning of the files
-# 4. Replace newlines with spaces
-FILES := ```
-    find $PWD/.. -type f \( -name "*.md" -o -name "*.mdx" \) \
-    | grep -vE ".pnpm|changelogs|projects/proposals|node_modules" \
-    | sed "s|$PWD/../||" \
-    | tr '\n' ' '
-```
+IGNORE_FILES_PATTERN := ".pnpm|changelogs|projects/proposals|node_modules|.?venv"
 
-# Print the list of FILES for Vale to lint
-debug:
-    echo {{ FILES }} | tr ' ' '\n'
+# This recipe generates a list of Markdown and MDX files to be processed, excluding those
+# matched by the IGNORE_FILES_PATTERN. Files are listed relative to the parent directory
+# of the current working directory. If a custom separator is specified, newlines are
+# replaced with this separator before outputting the file list.
+@files separator="\n":
+    #! /usr/bin/env sh
+    files=$(
+        find "$PWD/.." -type f \( -name "*.md" -o -name "*.mdx" \) \
+            | grep -vE "{{ IGNORE_FILES_PATTERN }}" \
+            | sed "s|$PWD/../||"
+    )
+    if [ '{{ separator }}' != '\n' ]; then
+        echo "$files" | tr '\n' '{{ separator }}'
+        exit 0
+    fi
+    echo "$files"
 
 # Run Vale configured for Openverse in Docker.
 # Using Docker avoids the need for contributors to install the Vale binary.
 #Configuration defaults to what is used for CI.
-run +files=FILES: build
+run: build
     docker run --rm \
         -v $PWD/..:/src:rw,Z \
         --workdir=/src \
         openverse-vale:local \
-        {{ files }}
+        {{ "`just files`" }}
