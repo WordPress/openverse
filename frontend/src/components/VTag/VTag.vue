@@ -6,8 +6,7 @@
     class="label-bold"
     v-bind ="$props"
     v-on="$listeners"
-    aria-label="Tag"
-    ><slot></slot></VButton
+    ><slot /></VButton
   >
 </template>
 
@@ -20,10 +19,6 @@ export default defineComponent({
   name: "VTag",
   components: { VButton },
   props: {
-    title: {
-      type: String,
-      required: true,
-    },
     href: {
       type: String,
       required: true,

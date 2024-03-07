@@ -4,7 +4,6 @@
       v-for="(tag, index) in tags"
       :key="index"
       :href="localizedTagPath(tag)"
-      :title="tag.name"
     >{{tag.name}}</VTag>
   </ul>
   <ul v-else class="flex flex-wrap gap-2">
