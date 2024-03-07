@@ -16,6 +16,7 @@
       variant="transparent-tx"
       has-icon-end
       class="label-bold -ms-2 mt-4 hover:underline"
+      :aria-expanded="buttonStatus === 'show' ? 'false' : 'true'"
       @click="handleClick"
       >{{
         $t(
