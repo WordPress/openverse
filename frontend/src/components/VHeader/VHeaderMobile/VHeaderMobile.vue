@@ -10,7 +10,7 @@
       aria-label="inputmodal"
       @close="deactivate"
     >
-      <div class="flex w-full" :class="{ 'px-2': isRecentSearchesModalOpen }">
+      <div class="flex w-full" :class="{ 'px-3': isRecentSearchesModalOpen }">
         <!-- Form action is a fallback for when JavaScript is disabled. -->
         <form
           action="/search"
@@ -104,6 +104,7 @@
           class="mt-4"
           @select="handleSelect"
           @clear="handleClear"
+          @clear-single="handleClearSingle"
         />
       </ClientOnly>
     </VInputModal>
@@ -278,6 +279,13 @@ export default defineComponent({
         ensureFocus(searchInputRef.value)
       }
     }
+    /* Clear a specific recent search from the store. */
+    const handleClearSingle = (idx: number) => {
+      searchStore.clearRecentSearch(idx)
+      if (searchInputRef.value) {
+        ensureFocus(searchInputRef.value)
+      }
+    }
 
     const showRecentSearches = computed(
       () => isRecentSearchesModalOpen.value && entries.value.length > 0
@@ -330,6 +338,7 @@ export default defineComponent({
       handleKeydown,
       handleSelect,
       handleClear,
+      handleClearSingle,
     }
   },
 })

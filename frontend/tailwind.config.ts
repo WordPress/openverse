@@ -212,6 +212,7 @@ export default {
         relaxed: "1.8",
         large: "1.7",
         normal: "1.5",
+        close: "1.4",
         snug: "1.3",
         tight: "1.2",
         none: "1.0",

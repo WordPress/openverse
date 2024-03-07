@@ -331,6 +331,9 @@ export const useSearchStore = defineStore("search", {
     clearRecentSearches() {
       this.recentSearches = []
     },
+    clearRecentSearch(idx: number) {
+      this.recentSearches.splice(idx, 1)
+    },
     /**
      * Initial filters do not include the provider filters. We create the provider filters object
      * when we fetch the provider data on the Nuxt server initialization.
