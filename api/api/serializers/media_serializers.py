@@ -686,18 +686,36 @@ def get_search_request_source_serializer(media_type):
             **_field_attrs,
         )
 
-        @staticmethod
-        def validate_source_field(value):
-            """Check whether source is a valid source."""
-
+        def validate_source(self, value):
+            """
+            For the regular searches, split the value.lower() by comma and only return the
+            source names that are in the search controller's sources list for the media type.
+            For the collection=tag, return the value as is. It is ignored in the query builder.
+            For source and creator collections, accept the value as is, without lower-casing
+             or splitting, and check if it's in the valid source name list.
+            This function validates the source and excluded_source fields, but `excluded_source`
+            is ignored for collection requests.
+            """
             allowed_sources = list(search_controller.get_sources(media_type).keys())
-            sources = value.lower().split(",")
-            sources = [source for source in sources if source in allowed_sources]
-            value = ",".join(sources)
-            return value
+            sources_list = ", ".join([f"'{s}'" for s in allowed_sources])
+            collection = self.initial_data.get("unstable__collection")
 
-        def validate_source(self, input_sources):
-            return self.validate_source_field(input_sources)
+            # For collection=tag, return the value as is. It is ignored in the query builder.
+            if collection == "tag":
+                return value
+
+            if collection:
+                if value not in allowed_sources:
+                    raise serializers.ValidationError(
+                        f"Invalid source parameter '{value}'. Use one of the valid sources: {sources_list}"
+                    )
+                return value
+            else:
+                sources = value.lower().split(",")
+                valid_sources = [
+                    source for source in sources if source in allowed_sources
+                ]
+                return ",".join(valid_sources)
 
         def validate_excluded_source(self, input_sources):
             return self.validate_source(input_sources)
