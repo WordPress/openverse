@@ -300,7 +300,7 @@ services:
     ports:
       - "50270:8080"
     environment:
-      DJANGO_NGINX_UPSTREAM_URL: web:8000
+      DJANGO_NGINX_UPSTREAM_URL: web:50280
     depends_on:
       - web
 

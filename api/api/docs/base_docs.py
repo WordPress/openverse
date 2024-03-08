@@ -3,7 +3,6 @@ from textwrap import dedent
 from typing import Literal
 
 from django.conf import settings
-
 from rest_framework.exceptions import (
     NotAuthenticated,
     NotFound,
