@@ -49,6 +49,7 @@ LOADER_ARGS = {
     "media_type": IMAGE,
 }
 OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "/tmp/"))
+COL_URL = "https://download.checklistbank.org/col/latest_coldp.zip"
 
 
 class INaturalistDataIngester(ProviderDataIngester):
@@ -86,16 +87,19 @@ class INaturalistDataIngester(ProviderDataIngester):
             postgres_conn_id=POSTGRES_CONN_ID,
             default_statement_timeout=PostgresHook.get_execution_timeout(task),
         )
-        max_id = pg.get_records("SELECT max(photo_id) FROM inaturalist.photos")[0][0]
-        if max_id is None:
+        min_id, max_id = pg.get_records(
+            "SELECT min(photo_id), max(photo_id) FROM inaturalist.photos"
+        )[0]
+        if min_id is None or max_id is None:
             # This would only happen if there were no data loaded to inaturalist.photos
             # yet, but just in case.
             return
-        else:
-            # Return the list of batch starts and ends, which will be passed to op_args,
-            # which expects each arg to be a list. So, it's a list of lists, not a list
-            # of tuples.
-            return [[(x, x + batch_length - 1)] for x in range(0, max_id, batch_length)]
+        # Return the list of batch starts and ends, which will be passed to op_args,
+        # which expects each arg to be a list. So, it's a list of lists, not a list
+        # of tuples.
+        return [
+            [(x, x + batch_length - 1)] for x in range(min_id, max_id, batch_length)
+        ]
 
     @staticmethod
     def load_transformed_data(
@@ -139,7 +143,10 @@ class INaturalistDataIngester(ProviderDataIngester):
         # TO DO: Would it be better to use loader.upsert_records here? Would need to
         # trace back the parameters that need to be passed in for different stats.
         upserted_records = sql.upsert_records_to_db_table(
-            postgres_conn_id=POSTGRES_CONN_ID, identifier=identifier, task=task
+            postgres_conn_id=POSTGRES_CONN_ID,
+            identifier=identifier,
+            task=task,
+            media_type=IMAGE,
         )
         logger.info(f"Upserted {upserted_records} records, from batch {batch_number}.")
         # Truncate the temp table
@@ -217,7 +224,6 @@ class INaturalistDataIngester(ProviderDataIngester):
 
     @staticmethod
     def load_catalog_of_life_names(task: PythonOperator, remove_api_files: bool):
-        COL_URL = "https://api.checklistbank.org/dataset/9840/export.zip?format=ColDP"
         local_zip_file = "COL_archive.zip"
         name_usage_file = "NameUsage.tsv"
         vernacular_file = "VernacularName.tsv"
@@ -230,6 +236,10 @@ class INaturalistDataIngester(ProviderDataIngester):
             # This is a static method so that it can be used to create preingestion
             # tasks for airflow. Unfortunately, that means it does not have access to
             # the delayed requester. So, we are just using requests for now.
+            logger.info(
+                f"Downloading Catalog of Life from "
+                f"{COL_URL} to {OUTPUT_DIR}/{local_zip_file}."
+            )
             with requests.get(COL_URL, stream=True) as response:
                 response.raise_for_status()
                 with open(OUTPUT_DIR / local_zip_file, "wb") as f:
