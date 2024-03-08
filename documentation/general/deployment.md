@@ -152,9 +152,12 @@ publishes the release is pinged in the PR description to help with the
 visibility of the PR.
 
 For the API and frontend, publishing the release also triggers an automated
-production deployment using the [release app workflow](https://github.com/WordPress/openverse/blob/main/.github/workflows/release-app.yml), which itself triggers the appropriate _deploy_ app workflow in the infrastructure repository. For the catalog and
-ingestion server, however, maintainers must manually deploy the changes to
-production using the Terraform deployment process.
+production deployment using the
+[release app workflow](https://github.com/WordPress/openverse/blob/main/.github/workflows/release-app.yml),
+which itself triggers the appropriate _deploy_ app workflow in the
+infrastructure repository. For the catalog and ingestion server, however,
+maintainers must manually deploy the changes to production using the Terraform
+deployment process.
 
 ## Rollbacks
 
