@@ -148,11 +148,14 @@ release for an application. Publishing a release automatically tags the latest
 docker image for the application and opens a PR to add the changelog to the
 [documentation site's changelog directory](https://docs.openverse.org/changelogs/index.html).
 This needs to be manually approved and merged by maintainers. The person who
-triggers the release app workflow is pinged in the PR description to help with
-the visibility of the PR.
+publishes the release is pinged in the PR description to help with the
+visibility of the PR.
 
 For the API and frontend, publishing the release also triggers an automated
-production deployment. For the catalog and ingestion server, however,
+production deployment using the
+[release app workflow](https://github.com/WordPress/openverse/blob/main/.github/workflows/release-app.yml),
+which itself triggers the appropriate _deploy_ app workflow in the
+infrastructure repository. For the catalog and ingestion server, however,
 maintainers must manually deploy the changes to production using the Terraform
 deployment process.
 
@@ -163,8 +166,11 @@ realise that the deployed code is not behaving as we expected. In these cases it
 may be necessary to force an environment to be deployed to a specific version,
 usually the previous version of the application.
 
-The same staging and production deployment workflows are used directly to
-rollback any environment for any service. Only members of the
+The same staging and production deployment workflows in the
+WordPress/openverse-infrastructure repository are used directly to rollback any
+environment for any service. **Do not attempt to perform a rollback using the
+release-app workflow in the monorepo, or by creating a new release; this will
+result in the creation of duplicate tags.** Only members of the
 @WordPress/openverse-maintainers GitHub team are able to dispatch the workflows
 to completion. Anyone else who tries to dispatch them will have the workflow
 automatically fail.
@@ -201,12 +207,12 @@ it. Please see the
      this yourself (i.e., if you do not have the ability to make changes to our
      Terraform configuration)
 
-2. Deploy the code that depends on the new or updated variable by dispatching
-   the appropriate deployment workflow for the application and environment that
-   was updated.
+2. Deploy the code that depends on the new or updated variable by publishing the
+   release for the application and environment that was updated.
    - If the application only needs to be re-deployed to the already
-     running-version, dispatch the workflow with the version present at the
-     version endpoint for the application. See the "version endpoint" in the
+     running-version, dispatch the appropriate deployment workflow in the
+     WordPress/openverse-infrastructure repository with the application's
+     current version. See the "version endpoint" in the
      [real-time deployment information](#real-time-deployment-information)
      tables above to determine the currently running version.
 
