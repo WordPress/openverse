@@ -171,7 +171,9 @@ def create_proportional_by_source_staging_index():
     )
 
     point_alias = es.point_alias(
-        index_name=destination_index_name, alias=destination_alias, es_host=es_host
+        es_host=es_host,
+        target_index=destination_index_name,
+        target_alias=destination_alias,
     )
 
     notify_completion = slack.notify_slack(
