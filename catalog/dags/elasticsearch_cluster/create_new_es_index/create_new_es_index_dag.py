@@ -22,8 +22,11 @@ are available:
 * `override_config`: boolean override; when True, the `index_config` will be used
                      for the new index configuration _without_ merging any values
                      from the source index config.
-* `target_alias`   : optional alias to be applied to the new index after reindexing. If the alias already applies to an existing index, it will be removed first.
-* `should_delete_old_index`: whether to remove the index previously pointed to by the target_alias, if it exists. Defaults to False.
+* `target_alias`   : optional alias to be applied to the new index after reindexing.
+                     If the alias already applies to an existing index, it will be
+                     removed first.
+* `should_delete_old_index`: whether to remove the index previously pointed to by
+                     the target_alias, if it exists. Defaults to False.
 
 ## Merging policy
 
