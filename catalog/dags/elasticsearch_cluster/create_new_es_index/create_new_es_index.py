@@ -68,13 +68,3 @@ def get_final_index_configuration(
     # Apply the desired index name
     config["index"] = index_name
     return config
-
-
-@task.branch
-def should_point_alias(target_alias):
-    if not target_alias:
-        # No target alias supplied, skip point_alias steps
-        return "notify_slack"
-
-    # Proceed to the first step of the `point_alias` taskgroup
-    return "point_alias.get_existing_index"

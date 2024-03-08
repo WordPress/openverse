@@ -116,7 +116,6 @@ from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
     get_final_index_configuration,
     get_index_name,
     merge_index_configurations,
-    should_point_alias,
 )
 from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
     CREATE_NEW_INDEX_CONFIGS,
@@ -263,8 +262,6 @@ def create_new_es_index_dag(config: CreateNewIndex):
             es_host=es_host,
         )
 
-        check_alias = should_point_alias(target_alias="{{ params.target_alias }}")
-
         point_alias = es.point_alias(
             es_host=es_host,
             target_index=index_name,
@@ -288,8 +285,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         prevent_concurrency >> [es_host, index_name]
         index_name >> check_override >> [current_index_config, final_index_config]
         current_index_config >> merged_index_config >> final_index_config
-        final_index_config >> create_new_index >> reindex >> check_alias
-        check_alias >> [point_alias, notify_completion]
+        final_index_config >> create_new_index >> reindex >> point_alias
         point_alias >> notify_completion
 
     return dag
