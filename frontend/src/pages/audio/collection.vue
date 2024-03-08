@@ -4,7 +4,7 @@
       v-if="collectionParams"
       search-term=""
       :is-fetching="isFetching"
-      :results="{ type: 'audio', items: media }"
+      :results="results"
       :collection-label="collectionLabel"
       :collection-params="collectionParams"
       @load-more="handleLoadMore"
@@ -14,15 +14,12 @@
 
 <script lang="ts">
 import { defineComponent, useFetch, useMeta } from "@nuxtjs/composition-api"
-import { computed, ref } from "vue"
+import { computed } from "vue"
 
-import { useMediaStore } from "~/stores/media"
 import { collectionMiddleware } from "~/middleware/collection"
-
 import { useSearchStore } from "~/stores/search"
-import type { AudioDetail } from "~/types/media"
+import { useCollection } from "~/composables/use-collection"
 import { AUDIO } from "~/constants/media"
-import { useI18n } from "~/composables/use-i18n"
 
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
@@ -32,46 +29,23 @@ export default defineComponent({
   layout: "content-layout",
   middleware: collectionMiddleware,
   setup() {
-    const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
     const collectionParams = computed(() => searchStore.collectionParams)
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const media = ref<AudioDetail[]>([])
-    const creatorUrl = ref<string>()
-
-    const fetchMedia = async (shouldPersistMedia: boolean = false) => {
-      if (mediaStore._searchType !== AUDIO) {
-        throw new Error(
-          `Search type is incorrectly set in the store to ${mediaStore._searchType} when it should be "audio"`
-        )
-      }
-      media.value = (await mediaStore.fetchMedia({
-        shouldPersistMedia,
-      })) as AudioDetail[]
-      creatorUrl.value =
-        media.value.length > 0 ? media.value[0].creator_url : undefined
-    }
+    const {
+      results,
+      creatorUrl,
+      fetchMedia,
+      handleLoadMore,
+      collectionLabel,
+      isFetching,
+    } = useCollection({
+      mediaType: AUDIO,
+    })
 
     useFetch(async () => {
       await fetchMedia()
-    })
-
-    const handleLoadMore = async () => {
-      await fetchMedia(true)
-    }
-
-    const i18n = useI18n()
-
-    const collectionLabel = computed(() => {
-      if (!collectionParams.value) {
-        return ""
-      }
-      const { collection, ...params } = collectionParams.value
-      return i18n
-        .t(`collection.label.${collection}.audio`, { ...params })
-        .toString()
     })
 
     useMeta({
@@ -79,8 +53,8 @@ export default defineComponent({
     })
 
     return {
+      results,
       collectionParams,
-      media,
       isFetching,
       creatorUrl,
       collectionLabel,
