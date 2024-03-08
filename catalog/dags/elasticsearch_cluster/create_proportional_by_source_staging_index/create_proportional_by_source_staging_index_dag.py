@@ -41,6 +41,7 @@ from datetime import datetime, timedelta
 
 from airflow.decorators import dag
 from airflow.models.param import Param
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import elasticsearch as es
 from common import slack
@@ -176,7 +177,9 @@ def create_proportional_by_source_staging_index():
         target_alias=destination_alias,
     )
 
-    notify_completion = slack.notify_slack(
+    notify_completion = slack.notify_slack.override(
+        trigger_rule=TriggerRule.NONE_FAILED
+    )(
         text=f"Reindexing complete for {destination_index_name}.",
         dag_id=DAG_ID,
         username="Proportional by Source Staging Index Creation",
