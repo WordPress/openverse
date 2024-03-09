@@ -16,27 +16,38 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")  # required
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",") + [
+# The domain we treat as "canonical" for this API instance, e.g., `api.` subdomain for production
+CANONICAL_DOMAIN: str = config("CANONICAL_DOMAIN")  # required
+
+_proto = "http" if "localhost" in CANONICAL_DOMAIN else "https"
+CANONICAL_ORIGIN: str = f"{_proto}://{CANONICAL_DOMAIN}"
+
+# Additional domains we serve for this API instance, e.g., `api-production.` subdomain for production
+ADDITIONAL_DOMAINS: list[str] = config(
+    "ADDITIONAL_DOMAINS", default="", cast=lambda x: x.split(",")
+)
+
+ALL_DOMAINS = [CANONICAL_DOMAIN] + ADDITIONAL_DOMAINS
+
+ALLOWED_HOSTS = [
+    # Strip ports off hosts, as ALLOWED_HOSTS does not work with ports, e.g., `localhost:8000` needs to be just `localhost`
+    domain.split(":")[0]
+    for domain in ALL_DOMAINS
+] + [
     gethostname(),
     gethostbyname(gethostname()),
 ]
 
-if lb_url := config("LOAD_BALANCER_URL", default=""):
-    ALLOWED_HOSTS.append(lb_url)
-
 if DEBUG:
     ALLOWED_HOSTS += [
         "dev.openverse.test",  # used in local development
-        "localhost",
         "127.0.0.1",
         "0.0.0.0",
     ]
 
-BASE_URL = config("BASE_URL", default="https://api.openverse.engineering/")
-
 # Trusted origins for CSRF
 # https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-trusted-origins
-CSRF_TRUSTED_ORIGINS = ["https://*.openverse.engineering"]
+CSRF_TRUSTED_ORIGINS = [f"{_proto}://{domain}" for domain in ALL_DOMAINS]
 
 # Allow anybody to access the API from any domain
 if "corsheaders" not in INSTALLED_APPS:
@@ -57,8 +68,6 @@ CORS_EXPOSE_HEADERS = [
 
 # Proxy handling, for production
 if config("IS_PROXIED", default=True, cast=bool):
-    # https://docs.djangoproject.com/en/4.0/ref/settings/#use-x-forwarded-host
-    USE_X_FORWARDED_HOST = True
     # https://docs.djangoproject.com/en/4.0/ref/settings/#secure-proxy-ssl-header
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 

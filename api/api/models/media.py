@@ -145,8 +145,6 @@ class AbstractMediaReport(models.Model):
     deleted_class: type[models.Model] = None
     """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
-    BASE_URL = settings.BASE_URL
-
     REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
 
     STATUS_CHOICES = [
@@ -201,9 +199,7 @@ class AbstractMediaReport(models.Model):
             )
 
     def url(self, media_type):
-        url = (
-            f"{AbstractMediaReport.BASE_URL}v1/{media_type}/{self.media_obj.identifier}"
-        )
+        url = f"{settings.CANONICAL_ORIGIN}v1/{media_type}/{self.media_obj.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):

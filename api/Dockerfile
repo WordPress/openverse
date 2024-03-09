@@ -102,6 +102,7 @@ COPY --chown=opener . /api/
 RUN env \
   SETUP_ES="False" \
   DJANGO_SECRET_KEY="any string" \
+  CANONICAL_DOMAIN="" \
   python manage.py collectstatic
 
 # Add the release version to the docker container

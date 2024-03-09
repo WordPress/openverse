@@ -1,15 +1,15 @@
-import os
-
 import uvicorn
+from decouple import config
 
 
 if __name__ == "__main__":
-    is_local = os.getenv("ENVIRONMENT") == "local"
+    is_local = config("ENVIRONMENT") == "local"
+    port: int = config("PORT", default="8000", cast=int)
 
     uvicorn.run(
         "conf.asgi:application",
         host="0.0.0.0",
-        port=8000,
+        port=port,
         workers=1,
         reload=is_local,
         log_level="debug",

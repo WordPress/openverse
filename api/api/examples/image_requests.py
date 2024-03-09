@@ -1,10 +1,7 @@
-import os
+from api.examples.environment import ORIGIN, TOKEN
 
 
-token = os.getenv("AUDIO_REQ_TOKEN", "DLBYIcfnKfolaXKcmMC8RIDCavc2hW")
-origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
-
-auth = f'-H "Authorization: Bearer {token}"' if token else ""
+auth = f'-H "Authorization: Bearer {TOKEN}"' if TOKEN else ""
 identifier = "4bc43a04-ef46-4544-a0c1-63c63f56e276"
 
 syntax_examples = {
@@ -25,7 +22,7 @@ image_search_list_curl = "\n".join(
 # Example {index}: Search for images {purpose}
 curl \\
   {auth} \\
-  "{origin}/v1/images/?q={syntax}"
+  "{ORIGIN}/v1/images/?q={syntax}"
 """
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 )
@@ -34,28 +31,28 @@ image_search_curl = f"""
 # Search for images titled "Bark" by Sullivan
 curl \\
   {auth} \\
-  "{origin}/v1/images/?title=Bark&creator=Sullivan"
+  "{ORIGIN}/v1/images/?title=Bark&creator=Sullivan"
 """
 
 image_stats_curl = f"""
 # Get the statistics for image sources
 curl \\
   {auth} \\
-  "{origin}/v1/images/stats/"
+  "{ORIGIN}/v1/images/stats/"
 """
 
 image_detail_curl = f"""
 # Get the details of image ID {identifier}
 curl \\
   {auth} \\
-  "{origin}/v1/images/{identifier}/"
+  "{ORIGIN}/v1/images/{identifier}/"
 """
 
 image_related_curl = f"""
 # Get related images for image ID {identifier}
 curl \\
   {auth} \\
-  "{origin}/v1/images/{identifier}/related/"
+  "{ORIGIN}/v1/images/{identifier}/related/"
 """
 
 image_complain_curl = f"""
@@ -65,12 +62,12 @@ curl \\
   -H "Content-Type: application/json" \\
   {auth} \\
   -d '{{"reason": "mature", "description": "Image contains sensitive content"}}' \\
-  "{origin}/v1/images/{identifier}/report/"
+  "{ORIGIN}/v1/images/{identifier}/report/"
 """
 
 image_oembed_curl = f"""
 # Retrieve embedded content from an image's URL
 curl \\
   {auth} \\
-  "{origin}/v1/images/oembed/?url=https://wordpress.org/openverse/photos/{identifier}"
+  "{ORIGIN}/v1/images/oembed/?url=https://wordpress.org/openverse/photos/{identifier}"
 """
