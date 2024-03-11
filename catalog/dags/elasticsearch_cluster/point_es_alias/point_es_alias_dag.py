@@ -26,15 +26,17 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     ENVIRONMENTS,
 )
+from common.sensors.constants import ES_CONCURRENCY_TAGS
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 
 
-def point_es_alias_dag(environment: str):
+def point_es_alias_dag(environment: str, dag_id: str):
     dag = DAG(
-        dag_id=f"point_{environment}_es_alias",
+        dag_id=dag_id,
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2024, 1, 31),
-        tags=["database", "elasticsearch"],
+        tags=["elasticsearch", ES_CONCURRENCY_TAGS[environment]],
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
@@ -67,6 +69,12 @@ def point_es_alias_dag(environment: str):
     )
 
     with dag:
+        # Fail early if any other DAG that operates on the elasticsearch cluster for
+        # this environment is running
+        prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+            tag=ES_CONCURRENCY_TAGS[environment], excluded_dag_ids=[dag_id]
+        )
+
         es_host = es.get_es_host(environment=environment)
 
         point_alias = es.point_alias(
@@ -85,8 +93,8 @@ def point_es_alias_dag(environment: str):
             icon_emoji=":elasticsearch:",
         )
 
-        es_host >> point_alias >> notify_completion
+        prevent_concurrency >> es_host >> point_alias >> notify_completion
 
 
 for environment in ENVIRONMENTS:
-    point_es_alias_dag(environment)
+    point_es_alias_dag(environment, f"point_{environment}_alias")
