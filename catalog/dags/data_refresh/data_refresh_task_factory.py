@@ -55,16 +55,14 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import cloudwatch, ingestion_server
-from common.constants import PRODUCTION, XCOM_PULL_TEMPLATE
+from common.constants import XCOM_PULL_TEMPLATE
+from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
-from common.sensors.utils import wait_for_external_dags
+from common.sensors.utils import wait_for_external_dags_with_tag
 from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
 from data_refresh.data_refresh_types import DataRefresh
-from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
-    CREATE_NEW_INDEX_CONFIGS,
-)
 
 
 logger = logging.getLogger(__name__)
@@ -123,11 +121,13 @@ def create_data_refresh_task_group(
         # Realistically the data refresh is too slow to beat the index creation process,
         # even if it was triggered immediately after one of these DAGs; however, it is
         # always safer to avoid the possibility of the race condition altogether.
-        wait_for_es_dags = wait_for_external_dags.override(group_id="wait_for_es_dags")(
-            external_dag_ids=[
-                data_refresh.filtered_index_dag_id,
-                CREATE_NEW_INDEX_CONFIGS[PRODUCTION].dag_id,
-            ]
+        wait_for_es_dags = wait_for_external_dags_with_tag.override(
+            group_id="wait_for_es_dags"
+        )(
+            tag=PRODUCTION_ES_CONCURRENCY_TAG,
+            # Exclude the current DAG id, as well as all other data refresh DAG ids (these
+            # are waited on in the previous task)
+            excluded_dag_ids=[*external_dag_ids, data_refresh.dag_id],
         )
         tasks.append([wait_for_data_refresh, wait_for_es_dags])
 

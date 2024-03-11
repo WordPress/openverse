@@ -56,15 +56,13 @@ from datetime import datetime
 from airflow import DAG
 from airflow.models.param import Param
 
-from common.constants import DAG_DEFAULT_ARGS, PRODUCTION
-from common.sensors.utils import prevent_concurrency_with_dags
+from common.constants import DAG_DEFAULT_ARGS
+from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
-from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
-    CREATE_NEW_INDEX_CONFIGS,
-)
 
 
 # Note: We can't use the TaskFlow `@dag` DAG factory decorator
@@ -88,7 +86,7 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2023, 4, 1),
-        tags=["data_refresh"],
+        tags=["data_refresh", PRODUCTION_ES_CONCURRENCY_TAG],
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
@@ -117,14 +115,12 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
         },
         render_template_as_native_obj=True,
     ) as dag:
-        # Immediately fail if the associated data refresh is running, or the
-        # create_new_production_es_index DAG is running. This prevents multiple
-        # DAGs from reindexing from a single production index simultaneously.
-        prevent_concurrency = prevent_concurrency_with_dags(
-            external_dag_ids=[
-                data_refresh.dag_id,
-                CREATE_NEW_INDEX_CONFIGS[PRODUCTION].dag_id,
-            ]
+        # Immediately fail if any DAG that operates on the production elasticsearch
+        # cluster is running. This prevents multiple DAGs from reindexing from a
+        # single production index simultaneously.
+        prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+            tag=PRODUCTION_ES_CONCURRENCY_TAG,
+            excluded_dag_ids=[data_refresh.filtered_index_dag_id],
         )
 
         # Once the concurrency check has passed, actually create the filtered

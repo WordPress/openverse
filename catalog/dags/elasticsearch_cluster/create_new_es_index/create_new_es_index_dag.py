@@ -111,7 +111,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from common import elasticsearch as es
 from common import slack
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
-from common.sensors.utils import prevent_concurrency_with_dags
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
     GET_CURRENT_INDEX_CONFIG_TASK_NAME,
     GET_FINAL_INDEX_CONFIG_TASK_NAME,
@@ -137,7 +137,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
-        tags=["elasticsearch"],
+        tags=["elasticsearch", config.concurrency_tag],
         render_template_as_native_obj=True,
         params={
             "media_type": Param(
@@ -218,7 +218,11 @@ def create_new_es_index_dag(config: CreateNewIndex):
     )
 
     with dag:
-        prevent_concurrency = prevent_concurrency_with_dags(config.blocking_dags)
+        # Fail early if any other DAG that operates on the relevant elasticsearch cluster
+        # is running
+        prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+            tag=config.concurrency_tag, excluded_dag_ids=[config.dag_id]
+        )
 
         es_host = es.get_es_host(environment=config.environment)
 

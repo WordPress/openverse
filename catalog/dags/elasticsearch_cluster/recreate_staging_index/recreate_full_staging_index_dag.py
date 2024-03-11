@@ -52,16 +52,10 @@ from common.constants import (
     AUDIO,
     DAG_DEFAULT_ARGS,
     MEDIA_TYPES,
-    STAGING,
     XCOM_PULL_TEMPLATE,
 )
-from common.sensors.utils import prevent_concurrency_with_dags
-from database.staging_database_restore.constants import (
-    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
-)
-from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
-    CREATE_NEW_INDEX_CONFIGS,
-)
+from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID,
     create_index,
@@ -76,7 +70,7 @@ from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index im
     default_args=DAG_DEFAULT_ARGS,
     schedule=None,
     start_date=datetime(2023, 4, 1),
-    tags=["database", "elasticsearch"],
+    tags=["database", "elasticsearch", STAGING_ES_CONCURRENCY_TAG],
     max_active_runs=1,
     catchup=False,
     doc_md=__doc__,
@@ -108,13 +102,10 @@ from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index im
     render_template_as_native_obj=True,
 )
 def recreate_full_staging_index():
-    # Fail early if the staging_db_restore DAG or the create_new_staging_es_index DAG
+    # Fail early if any other DAG that operates on the staging elasticsearch cluster
     # is running
-    prevent_concurrency = prevent_concurrency_with_dags(
-        external_dag_ids=[
-            STAGING_DB_RESTORE_DAG_ID,
-            CREATE_NEW_INDEX_CONFIGS[STAGING].dag_id,
-        ]
+    prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+        tag=STAGING_ES_CONCURRENCY_TAG, excluded_dag_ids=[DAG_ID]
     )
 
     target_alias = get_target_alias(
