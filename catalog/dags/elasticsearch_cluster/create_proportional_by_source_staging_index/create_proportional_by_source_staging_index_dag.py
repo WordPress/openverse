@@ -106,7 +106,7 @@ DAG_ID = "create_proportional_by_source_staging_index"
 def create_proportional_by_source_staging_index():
     # Fail early if any conflicting DAGs are running
     prevent_concurrency = prevent_concurrency_with_dags_with_tag(
-        tag=STAGING_ES_CONCURRENCY_TAG, excluded_dag_ids=[DAG_ID]
+        tag=STAGING_ES_CONCURRENCY_TAG,
     )
 
     es_host = es.get_es_host(environment=STAGING)

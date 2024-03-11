@@ -103,7 +103,7 @@ def recreate_full_staging_index():
     # Fail early if any other DAG that operates on the staging elasticsearch cluster
     # is running
     prevent_concurrency = prevent_concurrency_with_dags_with_tag(
-        tag=STAGING_ES_CONCURRENCY_TAG, excluded_dag_ids=[DAG_ID]
+        tag=STAGING_ES_CONCURRENCY_TAG,
     )
 
     target_alias = get_target_alias(

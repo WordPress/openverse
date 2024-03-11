@@ -228,7 +228,7 @@ def create_new_es_index_dag(config: CreateNewIndex):
         # Fail early if any other DAG that operates on the relevant elasticsearch cluster
         # is running
         prevent_concurrency = prevent_concurrency_with_dags_with_tag(
-            tag=config.concurrency_tag, excluded_dag_ids=[config.dag_id]
+            tag=config.concurrency_tag,
         )
 
         es_host = es.get_es_host(environment=config.environment)

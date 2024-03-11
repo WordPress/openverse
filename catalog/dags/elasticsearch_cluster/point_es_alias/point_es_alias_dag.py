@@ -37,9 +37,9 @@ from common.sensors.constants import ES_CONCURRENCY_TAGS
 from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 
 
-def point_es_alias_dag(environment: str, dag_id: str):
-    dag = DAG(
-        dag_id=dag_id,
+def point_es_alias_dag(environment: str):
+        dag = DAG(
+        dag_id=f"point_{environment}_alias",
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2024, 1, 31),
@@ -79,7 +79,7 @@ def point_es_alias_dag(environment: str, dag_id: str):
         # Fail early if any other DAG that operates on the elasticsearch cluster for
         # this environment is running
         prevent_concurrency = prevent_concurrency_with_dags_with_tag(
-            tag=ES_CONCURRENCY_TAGS[environment], excluded_dag_ids=[dag_id]
+            tag=ES_CONCURRENCY_TAGS[environment],
         )
 
         es_host = es.get_es_host(environment=environment)
@@ -104,4 +104,4 @@ def point_es_alias_dag(environment: str, dag_id: str):
 
 
 for environment in ENVIRONMENTS:
-    point_es_alias_dag(environment, f"point_{environment}_alias")
+    point_es_alias_dag(environment)

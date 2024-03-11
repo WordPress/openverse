@@ -125,9 +125,9 @@ def create_data_refresh_task_group(
             group_id="wait_for_es_dags"
         )(
             tag=PRODUCTION_ES_CONCURRENCY_TAG,
-            # Exclude the current DAG id, as well as all other data refresh DAG ids (these
-            # are waited on in the previous task)
-            excluded_dag_ids=[*external_dag_ids, data_refresh.dag_id],
+            # Exclude the other data refresh DAG ids, as waiting on these was handled in
+            # the previous task.
+            excluded_dag_ids=external_dag_ids,
         )
         tasks.append([wait_for_data_refresh, wait_for_es_dags])
 
