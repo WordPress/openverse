@@ -1,22 +1,28 @@
 <template>
   <div
-    class="collection-header grid grid-cols-[1.5rem,1fr] gap-x-2 gap-y-4 md:grid-rows-[auto,auto] md:gap-y-8"
-    :class="
-      collection === 'tag'
-        ? 'tags grid-rows-[auto,auto] md:grid-cols-[2.5rem,1fr]'
-        : 'grid-rows-[auto,auto,auto] md:grid-cols-[2.5rem,1fr,auto]'
-    "
+    class="collection-header grid auto-rows-auto gap-2 md:grid-cols-[1fr,auto]"
+    :class="{ 'no-link': !showCollectionExternalLink }"
   >
-    <VIcon :name="iconName" :size="isMd ? 10 : 6" class="icon" />
-    <h1 class="title text-3xl font-semibold leading-snug md:text-6xl">
-      {{ title }}
+    <h1 class="title flex flex-col gap-2 md:flex-row">
+      <VIcon
+        :name="iconName"
+        :title="collection"
+        :size="isMd ? 10 : 6"
+        class="icon hidden md:flex"
+      />
+      <span class="label-regular flex text-dark-charcoal-70 md:hidden">{{
+        $t(`collection.heading.${collection}`)
+      }}</span>
+      <span class="text-3xl font-semibold leading-snug md:text-6xl">{{
+        title
+      }}</span>
     </h1>
     <VButton
-      v-if="collection !== 'tag' && url"
+      v-if="showCollectionExternalLink"
       as="VLink"
       variant="filled-dark"
       size="medium"
-      class="button label-bold !flex-none md:ms-4 md:mt-1"
+      class="link label-bold mt-1 !flex-none md:ms-4"
       has-icon-end
       show-external-icon
       :external-icon-size="6"
@@ -24,45 +30,52 @@
       @click="sendAnalyticsEvent"
       >{{ $t(`collection.link.${collection}`) }}</VButton
     >
-    <p
-      v-if="collectionParams.collection !== 'creator'"
-      class="results caption-regular md:label-regular mt-2 text-dark-charcoal-70 md:mt-0"
+    <div
+      class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 md:mt-0 md:flex-row md:items-center"
     >
-      {{ resultsLabel }}
-    </p>
-
-    <p
-      v-else-if="
-        collectionParams.collection === 'creator' && resultsLabel.length === 2
-      "
-      class="results caption-regular md:label-regular mt-2 text-dark-charcoal-70 md:mt-0"
-    >
-      {{ resultsLabel[0]
-      }}<VLink :href="source.link" class="!gap-x-1" show-external-icon>{{
-        source.name
-      }}</VLink
-      ><span v-if="resultsLabel[1]">{{ resultsLabel[1] }}</span>
-    </p>
+      <p class="label-regular w-max text-dark-charcoal-70 md:whitespace-nowrap">
+        {{ resultsLabel }}
+      </p>
+      <VScrollableLine
+        v-if="collection === 'creator'"
+        class="-ms-2 -mt-1.5px h-8 w-[calc(100%+theme(space.4))] md:ms-0"
+      >
+        <VButton
+          as="VLink"
+          size="disabled"
+          variant="transparent-gray"
+          class="label-bold m-1.5px h-8 w-max gap-x-1 whitespace-nowrap p-1"
+          :href="sourceCollectionLink"
+          has-icon-start
+          ><VIcon
+            name="institution"
+            :title="$t('collection.link.source')"
+          /><span class="w-max whitespace-nowrap">{{
+            source.name
+          }}</span></VButton
+        >
+      </VScrollableLine>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { computed, defineComponent, type PropType } from "vue"
 
-import { useUiStore } from "~/stores/ui"
-import type { CollectionParams } from "~/types/search"
 import { useAnalytics } from "~/composables/use-analytics"
 
+import { useMediaStore } from "~/stores/media"
 import { useProviderStore } from "~/stores/provider"
-import { SupportedMediaType } from "~/constants/media"
+import { useSearchStore } from "~/stores/search"
+import { useUiStore } from "~/stores/ui"
+import type { CollectionParams } from "~/types/search"
+import type { SupportedMediaType } from "~/constants/media"
 
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
-import { useMediaStore } from "~/stores/media"
-
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
-import VLink from "~/components/VLink.vue"
+import VScrollableLine from "~/components/VScrollableLine.vue"
 
 const icons = {
   tag: "tag",
@@ -75,7 +88,7 @@ const icons = {
  */
 export default defineComponent({
   name: "VCollectionHeader",
-  components: { VLink, VIcon, VButton },
+  components: { VScrollableLine, VIcon, VButton },
   props: {
     collectionParams: {
       type: Object as PropType<CollectionParams>,
@@ -92,6 +105,7 @@ export default defineComponent({
   setup(props) {
     const mediaStore = useMediaStore()
     const providerStore = useProviderStore()
+    const searchStore = useSearchStore()
     const uiStore = useUiStore()
 
     const iconName = computed(() => icons[props.collectionParams.collection])
@@ -133,6 +147,24 @@ export default defineComponent({
       }
       return source.value.link
     })
+
+    const sourceCollectionLink = computed(() => {
+      if (props.collectionParams.collection !== "creator") {
+        return ""
+      }
+      return searchStore.getCollectionPath({
+        type: props.mediaType,
+        collectionParams: {
+          collection: "source",
+          source: props.collectionParams.source,
+        },
+      })
+    })
+
+    const showCollectionExternalLink = computed(() => {
+      return Boolean(props.collectionParams.collection !== "tag" && url.value)
+    })
+
     const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
 
     const resultsLabel = computed(() => {
@@ -140,22 +172,12 @@ export default defineComponent({
         return ""
       }
       const resultsCount = mediaStore.results[props.mediaType].count
-      const params =
-        props.collectionParams.collection === "creator"
-          ? { source: source.value.name }
-          : undefined
 
-      const label = getI18nCollectionResultCountLabel(
+      return getI18nCollectionResultCountLabel(
         resultsCount,
         props.mediaType,
-        props.collectionParams.collection,
-        params
+        props.collectionParams.collection
       )
-      if (props.collectionParams.collection === "creator") {
-        const splitLabel = label.split(source.value.name)
-        return splitLabel.length === 2 ? splitLabel : ["", ""]
-      }
-      return label
     })
 
     const isMd = computed(() => uiStore.isBreakpoint("md"))
@@ -183,6 +205,8 @@ export default defineComponent({
       resultsLabel,
       source,
       url,
+      sourceCollectionLink,
+      showCollectionExternalLink,
       iconName,
       isMd,
       sendAnalyticsEvent,
@@ -193,29 +217,28 @@ export default defineComponent({
 
 <style scoped>
 .collection-header {
-  grid-template-areas: "icon title" "button button" "results results";
+  grid-template-areas: "title" "link" "results";
 }
+.no-link {
+  grid-template-areas: "title" "results";
+}
+
 @screen md {
   .collection-header {
-    grid-template-areas: "icon title button" "results results results";
+    grid-template-rows: minmax(3.75rem, auto) minmax(2rem, auto);
+    grid-template-areas: "title link" "results results";
   }
-}
-.collection-header.tags {
-  grid-template-areas: "icon title" "results results";
-}
-@screen md {
-  .collection-header.tags {
-    grid-template-areas: "icon title" "results results";
+  .no-link {
+    grid-template-rows: minmax(3.625rem, auto) auto;
+    grid-template-columns: auto;
+    grid-template-areas: "title" "results";
   }
-}
-.icon {
-  grid-area: icon;
 }
 .title {
   grid-area: title;
 }
-.button {
-  grid-area: button;
+.link {
+  grid-area: link;
 }
 .results {
   grid-area: results;

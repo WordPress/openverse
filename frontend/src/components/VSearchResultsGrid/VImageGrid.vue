@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-2 sm:pt-0">
+  <section>
     <VGridSkeleton
       v-if="results && !results.length && !fetchState.isFinished"
       is-for-tab="image"

@@ -5,7 +5,7 @@
       :collection-params="collectionParams"
       :creator-url="creatorUrl"
       :media-type="mediaType"
-      :class="mediaType === 'image' ? 'mb-4' : 'mb-2'"
+      class="mb-2 md:mb-3"
     />
     <VAudioList
       v-if="results.type === 'audio'"
