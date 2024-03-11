@@ -23,11 +23,11 @@ _proto = "http" if "localhost" in CANONICAL_DOMAIN else "https"
 CANONICAL_ORIGIN: str = f"{_proto}://{CANONICAL_DOMAIN}"
 
 # Additional domains we serve for this API instance, e.g., `api-production.` subdomain for production
-ADDITIONAL_DOMAINS: list[str] = config(
-    "ADDITIONAL_DOMAINS", default="", cast=lambda x: x.split(",")
+ALTERNATIVE_DOMAINS: list[str] = config(
+    "ALTERNATIVE_DOMAINS", default="", cast=lambda x: x.split(",")
 )
 
-ALL_DOMAINS = [CANONICAL_DOMAIN] + ADDITIONAL_DOMAINS
+ALL_DOMAINS = [CANONICAL_DOMAIN] + ALTERNATIVE_DOMAINS
 
 ALLOWED_HOSTS = [
     # Strip ports off hosts, as ALLOWED_HOSTS does not work with ports, e.g., `localhost:8000` needs to be just `localhost`
