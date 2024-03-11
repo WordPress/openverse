@@ -100,6 +100,13 @@ The resulting, merged configuration will be:
     }
 }
 ```
+
+## Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`create_new_staging_es_index` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
 """
 
 import logging
