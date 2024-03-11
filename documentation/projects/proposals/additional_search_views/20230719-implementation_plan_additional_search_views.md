@@ -146,29 +146,49 @@ launched. In the text below, for brevity, the prefix is omitted.
 
 The collections will use the `search` endpoint with `collection` query parameter
 set to `tag`, `creator` or `source`, and the following additional query
-parameters. The `collection` parameter validator will check that the request
-contains the necessary additional parameters: `source` for `collection=source`,
-`creator` and `source` for `collection=creator`, and `tag` for `collection=tag`.
+parameters:
 
-The middleware validates that the values of parameters is not empty, and that
-the `source` parameter is an existing source in the provider store. If the
-values are invalid, the 404 yellow error page is shown.
+- `collection=tag` will require `tag` parameter to be set
+- `collection=source` will require `source` parameter to be set
+- `collection=creator` will require both `source` and `creator` parameter to be
+  set.
 
-For the tag route, the new singular `tag` parameter should be used, rather than
-the existing plural `tags`, since we are only presenting a single tag.
+This means that the existing `source` and `creator` parameters will be reused.
+For the tag collection, the new singular `tag` parameter should be used, rather
+than the existing plural `tags`, since we are only presenting a single tag.
 
-The existing `source` and `creator` parameters will be reused, but will be
-parsed differently when `collection` parameter is present: they will only allow
-a single value instead of being split by `,` as it is for the default search. If
-the `source` contains invalid values, such as `source=flickr,europeana`, when
-the `collection` parameter is present, a 400 error with `detail` of "Invalid
-source parameter for source collection: `flickr,europeana`" is returned. If
-possible, a list of valid sources should be returned in the error message.
+`MediaSearchRequestSerializer` should be updated to validate the `collection`
+parameter. This validator will check that the request contains the necessary
+additional parameters: `source` for `collection=source`, `creator` and `source`
+for `collection=creator`, and `tag` for `collection=tag`. It will only validate
+that the parameters _have_ values, but not the values themselves.
 
-Their documentation should be updated to reflect that. The additional
-documentation for the search parameters should be added as a draft so that it's
-not published on the API documentation site until we launch this project and
-remove the `unstable__` prefix.
+The `MediaSearchRequestSourceSerializer` currently splits the `source` parameter
+value by `,` and validates that each value is a valid source. This validator
+will be updated:
+
+- If the `collection` parameter is not present, it will behave as before.
+- If the `collection` parameter is set to `source` or `creator`, it will take
+  the value of `source` as is, and check if this value is present in the list of
+  valid sources, without splitting it by `,`. If the value is not valid, it will
+  return a 400 error, showing the invalid value, as well as a list of valid
+  sources for the media type.
+- If the `collection` parameter is set to `tag`, it will return the value as-is,
+- because it will be ignored in the search controller.
+
+The documentation for the `source` parameter should be updated to reflect that
+it accepts a single source when there is a `collection` parameter set to
+`source` or `creator`, and a comma-separated list of sources when there is no
+`collection` parameter. Similarly, the documentation for `creator` parameter
+should say that it accepts a comma-separated list of values when there is no `q`
+parameter, and a single URI-encoded value when the `collection=creator`
+parameter is present. The creator serializer does not need any changes as the
+parsing (splitting by comma for regular searches and URI-decoding for `creator`
+collections) is only done in the search controller.
+
+The additional documentation for the search parameters should be added as a
+draft so that it's not published on the API documentation site until we launch
+this project and remove the `unstable__` prefix.
 
 ### 2. Add the `additional_search_views` feature flag
 
@@ -215,6 +235,10 @@ parameters:
 - `source` parameter should be validated to be an existing source using the
   provider store
 - `creator` and `tag` parameters should be decoded using `decodeURIComponent`.
+
+The middleware validates that the values of parameters is not empty, and that
+the `source` parameter is an existing source in the provider store. If the
+values are invalid, the 404 yellow error page is shown.
 
 #### Fetching the media
 
