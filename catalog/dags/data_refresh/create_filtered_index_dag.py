@@ -42,8 +42,9 @@ no data source from which to pull documents.
 
 There are two mechanisms that prevent this from happening:
 
-1. The filtered index creation DAGs are not allowed to run if a data refresh
-for the media type is already running.
+1. The filtered index creation DAGs fail immediately if any of the DAGs that are
+tagged as prt of the `production-es-concurrency` group (including the data
+refreshes) are currently running.
 2. The data refresh DAGs will wait for any pre-existing filtered index creation
 DAG runs for the media type to finish before continuing.
 

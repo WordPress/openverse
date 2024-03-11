@@ -29,13 +29,9 @@ This DAG is on a `None` schedule and is run manually.
 ## Race conditions
 
 Because this DAG runs on the staging elasticsearch cluster, it does _not_ interfere
- with the `data_refresh` or `create_filtered_index` DAGs.
-
-However, as the DAG operates on the staging API database it will exit
-immediately if any of the following DAGs are running:
-* `staging_database_restore`
-* `recreate_full_staging_index`
-* `create_new_staging_es_index`
+ with the production `data_refresh` or `create_filtered_index` DAGs. However, it will
+ fail immediately if any of the DAGs tagged as part of the `staging-es-concurrency`
+ group are running.
 """
 
 from datetime import datetime, timedelta

@@ -34,11 +34,9 @@ Because this DAG runs on the staging ingestion server and staging elasticsearch
 cluster, it does _not_ interfere with the `data_refresh` or
 `create_filtered_index` DAGs.
 
-However, as the DAG operates on the staging API database it will exit
-immediately if any of the following DAGs are running:
-* `staging_database_restore`
-* `create_proportional_by_provider_staging_index`
-* `create_new_staging_es_index`
+However, as the DAG operates on the staging API database and ES cluster it will exit
+immediately if any of the DAGs tagged as part of the `staging_es_concurrency` group
+are already running.
 """
 
 from datetime import datetime

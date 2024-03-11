@@ -1,5 +1,5 @@
 """
-# Update the staging database
+# Staging Database Restore DAG
 
 This DAG is responsible for updating the staging database using the most recent
 snapshot of the production database.
@@ -19,6 +19,11 @@ run using a different hook:
   (e.g. `aws_rds`)
 - `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the above
   example, it might be `AIRFLOW_CONN_AWS_RDS`)
+
+## Race conditions
+
+Because this DAG completely replaces the staging database, it first waits on any
+running DAGs that are tagged as part of the `staging_es_concurrency` group.
 """
 
 import logging
