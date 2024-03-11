@@ -121,7 +121,6 @@ def create_filtered_index_creation_dag(data_refresh: DataRefresh):
         # single production index simultaneously.
         prevent_concurrency = prevent_concurrency_with_dags_with_tag(
             tag=PRODUCTION_ES_CONCURRENCY_TAG,
-            excluded_dag_ids=[data_refresh.filtered_index_dag_id],
         )
 
         # Once the concurrency check has passed, actually create the filtered

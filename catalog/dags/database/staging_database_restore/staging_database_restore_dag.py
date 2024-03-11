@@ -80,7 +80,6 @@ def restore_staging_database():
     # Wait for any DAGs that operate on the staging elasticsearch cluster
     wait_for_recreate_full_staging_index = wait_for_external_dags_with_tag(
         tag=STAGING_ES_CONCURRENCY_TAG,
-        excluded_dag_ids=[constants.DAG_ID],
     )
     should_skip = skip_restore()
     latest_snapshot = get_latest_prod_snapshot()
