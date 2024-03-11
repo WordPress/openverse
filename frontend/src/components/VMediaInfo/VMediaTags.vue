@@ -66,6 +66,9 @@ import VTag from "~/components/VTag/VTag.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
+// The number of rows to display before collapsing the tags
+const ROWS_TO_DISPLAY = 3
+
 export default defineComponent({
   name: "VMediaTags",
   components: { VIcon, VButton, VMediaTag, VTag },
@@ -84,15 +87,16 @@ export default defineComponent({
 
     const searchStore = useSearchStore()
     const featureFlagStore = useFeatureFlagStore()
+    const { app } = useContext()
 
     const additionalSearchViews = computed(() =>
       featureFlagStore.isOn("additional_search_views")
     )
 
-    const localizedTagPath = (tag: Tag) => {
+    const localizedTagPath = (tag: string) => {
       return searchStore.getCollectionPath({
         type: props.mediaType,
-        collectionParams: { collection: "tag", tag: tag.name },
+        collectionParams: { collection: "tag", tag },
       })
     }
 
@@ -100,7 +104,7 @@ export default defineComponent({
       return Array.from(new Set(props.tags.map((tag) => tag.name)))
     })
 
-    const fourthRowStartsAt = ref<number>()
+    const collapsibleRowsStartAt = ref<number>()
     const dir = computed(() => {
       return app.i18n.localeProperties.dir
     })
@@ -112,7 +116,7 @@ export default defineComponent({
       return previous.offsetLeft > current.offsetLeft
     }
 
-    function findFourthRowStartsAt(parent: HTMLElement) {
+    function findRowStartsAt(parent: HTMLElement) {
       const children = Array.from(parent.children)
       if (!children.length) {
         return 0
@@ -126,23 +130,23 @@ export default defineComponent({
         } else if (isFurtherInline(previous, child)) {
           rowCount++
         }
-        if (rowCount === 4) {
+        if (rowCount === ROWS_TO_DISPLAY + 1) {
           return i
         }
       }
       return children.length
     }
 
-    const visibleTags = computed(() => {
-      return fourthRowStartsAt.value && buttonStatus.value === "show"
-        ? normalizedTags.value.slice(0, fourthRowStartsAt.value)
+    const visibleTags = computed<string[]>(() => {
+      return collapsibleRowsStartAt.value && buttonStatus.value === "show"
+        ? normalizedTags.value.slice(0, collapsibleRowsStartAt.value)
         : normalizedTags.value
     })
 
     const hasOverflow = computed(() => {
       return (
-        fourthRowStartsAt.value &&
-        fourthRowStartsAt.value < normalizedTags.value.length
+        collapsibleRowsStartAt.value &&
+        collapsibleRowsStartAt.value < normalizedTags.value.length
       )
     })
 
@@ -152,7 +156,7 @@ export default defineComponent({
        * to determine which tags to hide.
        */
       if (tagsContainerRef.value) {
-        fourthRowStartsAt.value = findFourthRowStartsAt(tagsContainerRef.value)
+        collapsibleRowsStartAt.value = findRowStartsAt(tagsContainerRef.value)
       }
     })
 
@@ -163,13 +167,13 @@ export default defineComponent({
      */
     const handleClick = () => {
       buttonStatus.value = buttonStatus.value === "show" ? "hide" : "show"
-      if (buttonStatus.value === "hide" && fourthRowStartsAt.value) {
+      if (buttonStatus.value === "hide" && collapsibleRowsStartAt.value) {
         nextTick(() => {
-          if (!fourthRowStartsAt.value) {
+          if (!collapsibleRowsStartAt.value) {
             return
           }
           const firstTagInFourthRow = tagsContainerRef.value?.children.item(
-            fourthRowStartsAt.value
+            collapsibleRowsStartAt.value
           ) as HTMLElement
           focusElement(firstTagInFourthRow?.querySelector("a"))
         })
@@ -200,11 +204,11 @@ export default defineComponent({
         const isWidening = oldWidth && newWidth && newWidth > oldWidth
 
         if (isWidening) {
-          fourthRowStartsAt.value = normalizedTags.value.length
+          collapsibleRowsStartAt.value = normalizedTags.value.length
         }
         nextTick(() => {
           if (tagsContainerRef.value) {
-            fourthRowStartsAt.value = findFourthRowStartsAt(
+            collapsibleRowsStartAt.value = findRowStartsAt(
               tagsContainerRef.value
             )
           }
