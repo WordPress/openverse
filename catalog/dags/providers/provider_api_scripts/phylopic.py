@@ -17,9 +17,7 @@ from requests.exceptions import HTTPError
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
-from providers.provider_api_scripts.provider_data_ingester import (
-    ProviderDataIngester,
-)
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
 logger = logging.getLogger(__name__)
@@ -42,8 +40,8 @@ class PhylopicDataIngester(ProviderDataIngester):
         try:
             super().ingest_records()
 
-        # Catch 410 error caused by the build_param changing while ingestion is ongoing
         except HTTPError as error:
+            # Catch 410 error caused by the build_param changing while ingestion is ongoing
             if error.response.status_code == 410:
                 # Refetch initial query params; this will update the build_param to the
                 # most recent value and reset the `current_page` to 1.
