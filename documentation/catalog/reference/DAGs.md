@@ -47,8 +47,8 @@ The following are DAGs grouped by their primary tag:
 | [`batched_update`](#batched_update)                                                           | `None`            |
 | [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index) | `None`            |
 | [`delete_records`](#delete_records)                                                           | `None`            |
-| [`point_production_alias`](#point_production_alias)                                           | `None`            |
-| [`point_staging_alias`](#point_staging_alias)                                                 | `None`            |
+| [`point_production_es_alias`](#point_production_es_alias)                                     | `None`            |
+| [`point_staging_es_alias`](#point_staging_es_alias)                                           | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)             | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                                 | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)             | `None`            |
@@ -168,8 +168,8 @@ The following is documentation associated with each DAG (where available):
 1.  [`oauth2_token_refresh`](#oauth2_token_refresh)
 1.  [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)
 1.  [`phylopic_workflow`](#phylopic_workflow)
-1.  [`point_production_alias`](#point_production_alias)
-1.  [`point_staging_alias`](#point_staging_alias)
+1.  [`point_production_es_alias`](#point_production_es_alias)
+1.  [`point_staging_es_alias`](#point_staging_es_alias)
 1.  [`pr_review_reminders`](#pr_review_reminders)
 1.  [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
@@ -1066,33 +1066,33 @@ Output: TSV file containing the image, their respective meta-data.
 
 Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
-### `point_production_alias`
+### `point_production_es_alias`
 
-#### Point Alias DAG
+#### Point ES Alias DAG
 
-This file generates our Point Alias DAGs using a factory function. A separate
+This file generates our Point ES Alias DAGs using a factory function. A separate
 DAG is generated for the staging and production environments.
 
 The DAGs are used to point a `target_alias` to a `target_index` in the given
-environment. When the alias is applied, it is first removed from any existing
-index to which it already applies; optionally, it can also delete that index
-afterward.
+environment's elasticsearch cluster. When the alias is applied, it is first
+removed from any existing index to which it already applies; optionally, it can
+also delete that index afterward.
 
 ##### When this DAG runs
 
 This DAG is on a `None` schedule and is run manually.
 
-### `point_staging_alias`
+### `point_staging_es_alias`
 
-#### Point Alias DAG
+#### Point ES Alias DAG
 
-This file generates our Point Alias DAGs using a factory function. A separate
+This file generates our Point ES Alias DAGs using a factory function. A separate
 DAG is generated for the staging and production environments.
 
 The DAGs are used to point a `target_alias` to a `target_index` in the given
-environment. When the alias is applied, it is first removed from any existing
-index to which it already applies; optionally, it can also delete that index
-afterward.
+environment's elasticsearch cluster. When the alias is applied, it is first
+removed from any existing index to which it already applies; optionally, it can
+also delete that index afterward.
 
 ##### When this DAG runs
 
