@@ -9,7 +9,7 @@ SQL_PATH = {
     "image": LOCAL_POSTGRES_FOLDER / "0003_openledger_image_schema.sql",
     "audio": LOCAL_POSTGRES_FOLDER / "0006_openledger_audio_schema.sql",
 }
-sql_types = [
+SQL_TYPES = [
     "integer",
     "boolean",
     "uuid",
@@ -18,8 +18,9 @@ sql_types = [
     "timestamp with time zone",
     "character varying",
 ]
-sql_type_regex = re.compile(f"({'|'.join(sql_types)})")
+SQL_TYPE_REGEX = re.compile(f"({'|'.join(SQL_TYPES)})")
 MediaType = Literal["audio", "image"]
+CREATE_TABLE_REGEX = re.compile(r"CREATE\s+TABLE\s+\w+\.(\w+)\s+\(([\s\S]*?)\);")
 
 
 @dataclass
@@ -37,12 +38,10 @@ def create_db_props_dict(
     sql definitions.
     """
 
-    create_table_regex = re.compile(r"CREATE\s+TABLE\s+\w+\.(\w+)\s+\(([\s\S]*?)\);")
     sql_path = SQL_PATH[media_type]
+    contents = sql_path.read_text()
+    table_description_matches = CREATE_TABLE_REGEX.search(contents)
 
-    with open(sql_path) as f:
-        contents = f.read()
-        table_description_matches = create_table_regex.search(contents)
     if not table_description_matches:
         print(f"Could not find table description for {media_type} in {sql_path}")
         return {}
@@ -58,10 +57,9 @@ def create_db_props_dict(
     fields = {}
     for field in field_descriptions:
         field_name = field.split(" ")[0]
-        # False if "not null" in field.lower() else True
         field_constraint = ""
         try:
-            field_type = sql_type_regex.search(field).group(1)
+            field_type = SQL_TYPE_REGEX.search(field).group(1)
             if field_type == "character varying":
                 char_limit = field.split("(")[1].split(")")[0]
                 field_constraint = f"({char_limit})"

@@ -19,14 +19,7 @@ COLUMN = {
 
 COLUMN_PROPS = COLUMN.keys()
 
-
-def file_to_ast(file_name) -> ast.Module:
-    with open(file_name) as f:
-        file_contents = f.read()
-    return ast.parse(file_contents)
-
-
-CODE = file_to_ast(COLUMNS_PATH)
+CODE = ast.parse(COLUMNS_PATH.read_text())
 
 
 def format_python_column(
