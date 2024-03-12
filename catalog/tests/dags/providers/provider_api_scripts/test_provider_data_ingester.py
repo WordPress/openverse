@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 import requests
 from airflow.exceptions import AirflowException
+from requests.exceptions import HTTPError
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
@@ -18,7 +19,6 @@ from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_i
     MockProviderDataIngester,
 )
 from common.loader import provider_details as prov
-from common.requester import RetriesExceeded
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
 from providers.provider_api_scripts.provider_data_ingester import (
@@ -152,8 +152,8 @@ def test_get_batch_raises_error():
     r.status_code = 500
     r.json = MagicMock(return_value={"error": ""})
     with (
-        patch.object(ingester.delayed_requester, "get", return_value=r),
-        pytest.raises(RetriesExceeded),
+        patch.object(ingester.delayed_requester.session, "get", return_value=r),
+        pytest.raises(HTTPError),
     ):
         ingester.get_batch({})
 
