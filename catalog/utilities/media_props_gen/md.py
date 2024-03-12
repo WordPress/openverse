@@ -2,6 +2,8 @@ from pathlib import Path
 
 
 class Md:
+    horizontal_line = "\n---\n\n"
+
     @staticmethod
     def heading(level: int, text: str) -> str:
         """Add a heading to a markdown string."""
