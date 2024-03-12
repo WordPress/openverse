@@ -1,7 +1,7 @@
 """
-# Point Alias DAG
+# Point Elasticsearch Alias DAG
 
-This file generates our Point Alias DAGs using a factory function. A
+This file generates our Point ES Alias DAGs using a factory function. A
 separate DAG is generated for the staging and production environments.
 
 The DAGs are used to point a `target_alias` to a `target_index` in the
@@ -28,9 +28,9 @@ from common.constants import (
 )
 
 
-def point_alias_dag(environment: str):
+def point_es_alias_dag(environment: str):
     dag = DAG(
-        dag_id=f"point_{environment}_alias",
+        dag_id=f"point_{environment}_es_alias",
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2024, 1, 31),
@@ -89,4 +89,4 @@ def point_alias_dag(environment: str):
 
 
 for environment in ENVIRONMENTS:
-    point_alias_dag(environment)
+    point_es_alias_dag(environment)
