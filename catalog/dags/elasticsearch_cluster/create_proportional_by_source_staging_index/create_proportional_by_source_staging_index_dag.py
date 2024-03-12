@@ -103,6 +103,14 @@ DAG_ID = "create_proportional_by_source_staging_index"
                 " the index aliased to `<media_type>-filtered` will be used."
             ),
         ),
+        "should_delete_old_index": Param(
+            default=False,
+            type="boolean",
+            description=(
+                "Whether to delete the index previously pointed to by the"
+                " `{media_type}-subset-by-source` alias."
+            ),
+        ),
     },
     render_template_as_native_obj=True,
 )
@@ -175,6 +183,7 @@ def create_proportional_by_source_staging_index():
         es_host=es_host,
         target_index=destination_index_name,
         target_alias=destination_alias,
+        should_delete_old_index="{{ params.should_delete_old_index }}",
     )
 
     notify_completion = slack.notify_slack.override(

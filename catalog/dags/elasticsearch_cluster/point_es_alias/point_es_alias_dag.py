@@ -1,13 +1,13 @@
 """
-# Point Elasticsearch Alias DAG
+# Point ES Alias DAG
 
 This file generates our Point ES Alias DAGs using a factory function. A
 separate DAG is generated for the staging and production environments.
 
 The DAGs are used to point a `target_alias` to a `target_index` in the
-given environment. When the alias is applied, it is first removed from
-any existing index to which it already applies; optionally, it can also
-delete that index afterward.
+given environment's elasticsearch cluster. When the alias is applied, it
+is first removed from any existing index to which it already applies;
+optionally, it can also delete that index afterward.
 
 ## When this DAG runs
 
