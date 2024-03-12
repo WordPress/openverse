@@ -20,8 +20,7 @@ class Md:
         Parse the markdown documentation file and return a dictionary with the
         field name as key and the description as value.
         """
-        with open(file_name) as f:
-            contents = [line for line in f.readlines() if line.strip()]
+        contents = [line for line in file_name.read_text().split("\n") if line.strip()]
         current_field = ""
         properties = {}
         prop = ""
@@ -32,11 +31,9 @@ class Md:
                     properties[current_field] = value
                 current_field = line.replace("# ", "").strip()
                 value = {}
-                continue
             elif line.startswith("## "):
                 prop = line.replace("## ", "").strip()
                 value[prop] = ""
-                continue
             else:
                 value[prop] += line
 

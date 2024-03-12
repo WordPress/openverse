@@ -19,6 +19,7 @@ DOC_MD_PATH = PARENT / "media_properties.md"
 SOURCE_MD_PATH = PARENT / "media_props.md"
 
 PREAMBLE = open(Path(__file__).parent / "preamble.md").read()
+POSTAMBLE = open(Path(__file__).parent / "postamble.md").read()
 
 MEDIA_TYPES: list[MediaType] = ["audio", "image"]
 
@@ -122,6 +123,7 @@ def generate_markdown_doc() -> str:
 {Md.heading(2, "Image Properties")}{image_table}
 {Md.heading(2, "Audio Properties")}{audio_table}
 {Md.heading(2, "Media Property Descriptions")}{long_form_doc}
+{POSTAMBLE}
 """.strip()
     return media_props_doc
 
