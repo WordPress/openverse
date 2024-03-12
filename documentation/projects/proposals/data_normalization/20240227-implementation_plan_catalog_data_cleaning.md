@@ -4,8 +4,8 @@
 
 ## Reviewers
 
-- [ ] @obulat
-- [ ] @AetherUnbound
+- [x] @obulat
+- [x] @AetherUnbound
 
 ## Project links
 
@@ -139,7 +139,7 @@ used later to query it in batches. The following must be included:
   it up, to improve the query performance
 - An adaptation to handle the column type of tags (`jsonb`) and modify the
   `metadata`
-- Include an DAG task for reporting the number of rows affected by column to
+- Include a DAG task for reporting the number of rows affected by column to
   Slack
 
 ### Run an image data refresh to confirm cleaning time is reduced
