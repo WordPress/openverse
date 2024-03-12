@@ -501,7 +501,7 @@
     tags: {
       title: "Tags",
       showAll: "Show all tags",
-      seeLess: "See less",
+      showFewer: "Show fewer tags",
     },
     contentReport: {
       short: "Report",
