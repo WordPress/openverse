@@ -731,6 +731,8 @@ Optional params:
 - source_index: An existing staging Elasticsearch index to use as the basis for
   the new index. If not provided, the index aliased to `<media_type>-filtered`
   will be used.
+- should_delete_old_index: If True, the index previously pointed to by the
+  target alias (if one exists) will be deleted.
 
 ##### When this DAG runs
 
