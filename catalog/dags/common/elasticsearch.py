@@ -7,7 +7,6 @@ from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.base import PokeReturnValue
-from airflow.utils.trigger_rule import TriggerRule
 from elasticsearch.exceptions import NotFoundError
 
 from common.constants import REFRESH_POKE_INTERVAL
@@ -197,8 +196,8 @@ def point_alias(
 
     Optional Arguments:
 
-    should_delete_old_index:    If True, any indices with the target alias _other_
-                                  than the target index will be deleted.
+    should_delete_old_index:    If True, the index previously pointed to by the target
+                                alias (if one exists) will be deleted.
     """
 
     @task
@@ -222,60 +221,45 @@ def point_alias(
             return None
 
     @task
-    def remove_alias_from_existing_index(
-        es_host: str,
-        index_name: str,
-        target_alias: str,
-    ):
-        """Remove the given alias from the given index."""
-        if not index_name:
-            raise AirflowSkipException(
-                "No existing index from which to remove the target alias."
-            )
-
-        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-        response = es_conn.indices.delete_alias(
-            name=target_alias,
-            index=index_name,
-        )
-        return response.get("acknowledged")
-
-    @task
     def point_new_alias(
         es_host: str,
         target_index: str,
+        existing_index: str,
         target_alias: str,
     ):
+        """
+        Remove the target_alias from the existing index to which it applies, if
+        applicable, and point it to the target_index in one atomic operation.
+        """
         if not target_alias:
             raise AirflowSkipException("No target alias was provided.")
 
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-        response = es_conn.indices.put_alias(index=target_index, name=target_alias)
+
+        actions = []
+        if existing_index:
+            actions.append({"remove": {"index": existing_index, "alias": target_alias}})
+        actions.append({"add": {"index": target_index, "alias": target_alias}})
+        logger.info(f"Applying actions: {actions}")
+
+        response = es_conn.indices.update_aliases(body={"actions": actions})
         return response.get("acknowledged")
 
     @task
     def delete_old_index(es_host: str, index_name: str, should_delete_old_index: bool):
         if not should_delete_old_index:
             raise AirflowSkipException("`should_delete_old_index` is set to `False`.")
+        if not index_name:
+            raise AirflowSkipException("No applicable index to delete.")
 
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-        response = es_conn.indices.delete(
-            index=index_name,
-        )
+        response = es_conn.indices.delete(index=index_name)
         return response.get("acknowledged")
 
     existing_index = get_existing_index(es_host, target_alias)
-    remove_alias = remove_alias_from_existing_index(
-        es_host, existing_index, target_alias
-    )
 
-    point_alias = point_new_alias.override(
-        # `remove_alias_from_existing_index` is skipped if there is no
-        # existing index
-        trigger_rule=TriggerRule.NONE_FAILED
-    )(es_host, target_index, target_alias)
+    point_alias = point_new_alias(es_host, target_index, existing_index, target_alias)
 
     delete_index = delete_old_index(es_host, existing_index, should_delete_old_index)
 
-    existing_index >> remove_alias >> point_alias
-    point_alias >> delete_index
+    existing_index >> point_alias >> delete_index
