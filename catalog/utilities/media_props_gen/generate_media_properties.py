@@ -98,7 +98,7 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
         prop_doc = "".join(
             [f"{Md.heading(4, k)}{Md.line(v)}" for k, v in description.items()]
         )
-        media_docs += prop_heading + prop_doc
+        media_docs += prop_heading + prop_doc + Md.horizontal_line
 
     return media_docs
 
