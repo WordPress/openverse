@@ -193,7 +193,7 @@ class CcMixterDataIngester(ProviderDataIngester):
 
         files = [
             {
-                "url": file["download_url"],
+                "url": file["download_url"].replace(" ", "%20"),
                 "filesize": file["file_rawsize"],
                 "filetype": file["file_format_info"]["default-ext"],
                 "sample_rate": self._get_sample_rate(
