@@ -1,3 +1,4 @@
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -43,11 +44,15 @@ def create_db_props_dict(
     table_description_matches = CREATE_TABLE_REGEX.search(contents)
 
     if not table_description_matches:
-        print(f"Could not find table description for {media_type} in {sql_path}")
+        logging.warning(
+            f"Could not find table description for {media_type} in {sql_path}"
+        )
         return {}
     table_name = table_description_matches.group(1)
     if table_name != media_type:
-        print(f"Table name {table_name} does not match media type {media_type}")
+        logging.warning(
+            f"Table name {table_name} does not match media type {media_type}"
+        )
         return {}
     field_descriptions = [
         field.strip()
