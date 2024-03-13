@@ -46,12 +46,16 @@ maintainer burden through the development process of an issue.
 
 Descriptions should:
 
-- Clearly articulate the expected outcome of resolving the issue
+- Clearly articulate the expected outcome of resolving the issue. Include any of the following, when relevant:
+  - Changes (modifications or additions) to tests
+  - Link to instructions for updating Playwright snapshots if the change might require it
+  - Changes (modifications or additions) to documentation
 - Link to the relevant files and/or lines of code which need changing
 - Reference any past PRs which will help the contributor, for example:
   - A PR with a similar change
-  - A PR which oroginally implemented the feature being modified
-
+  - A PR which originally implemented the feature being modified
+- Relevant Openverse domain knowledge, either links to succinct documentation or links and a summary of the important aspects when documentation is detailed
+  - Ideally "good first issue"s require essentially no Openverse-specific domain knowledge, but if they at all do (for example, to explain why a non-obvious solution is requested) then it must be included
 ---
 
 ## Reply Templates
@@ -64,5 +68,5 @@ Descriptions should:
   Please check out our
   [welcome](https://docs.openverse.org/general/contributing.html) and
   [quickstart](https://docs.openverse.org/general/quickstart.html) documentation
-  pages for getting started.
+  pages for getting started with setting up your local environment.
   ```
