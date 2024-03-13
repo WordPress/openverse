@@ -30,14 +30,14 @@
     "VBR",
     "instrumental"
   ],
-  "url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.mp3",
+  "url": "https://ccmixter.org/content/testuser/testuser%20-%20Test_Music.mp3",
   "sample_rate": 44100,
   "filetype": "mp3",
   "filesize": 11150278,
   "duration": 346000,
   "alt_files": [
     {
-      "url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.flac",
+      "url": "https://ccmixter.org/content/testuser/testuser%20-%20Test_Music.flac",
       "sample_rate": 44000,
       "filetype": "flac",
       "filesize": 111502780,
