@@ -11,13 +11,17 @@ from common.storage.tsv_columns import CURRENT_VERSION
 
 logger = logging.getLogger(__name__)
 
-# Filter out tags that exactly match these terms. All terms should be
-# lowercase.
-TAG_BLACKLIST = {"no person", "squareformat"}
+# Filter out tags that exactly match these terms. All terms should be lowercase.
+TAG_DENYLIST = {
+    "no person",
+    "squareformat",
+    "uploaded:by=flickrmobile",
+    "uploaded:by=instagram",
+    "flickriosapp:filter=flamingo",
+}
 
-# Filter out tags that contain the following terms. All entrees should be
-# lowercase.
-TAG_CONTAINS_BLACKLIST = {
+# Filter out tags that contain the following terms. All entrées should be lowercase.
+TAG_CONTAINS_DENYLIST = {
     "flickriosapp",
     "uploaded",
     ":",
@@ -242,19 +246,19 @@ class MediaStore(metaclass=abc.ABCMeta):
         return buffer_length
 
     @staticmethod
-    def _tag_blacklisted(tag: str | dict) -> bool:
+    def _tag_denylisted(tag: str | dict) -> bool:
         """
-        Determine if the is banned or contains a banned substring.
+        Determine if the tag is banned or contains a banned substring.
 
         :param tag: the tag to be verified against the blacklist
         :return: true if tag is blacklisted, else returns false
         """
         if isinstance(tag, dict):  # check if the tag is already enriched
             tag = tag.get("name")
-        if tag in TAG_BLACKLIST:
+        if tag in TAG_DENYLIST:
             return True
-        for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
-            if blacklisted_substring in tag:
+        for denylisted_substring in TAG_CONTAINS_DENYLIST:
+            if denylisted_substring in tag:
                 return True
         return False
 
@@ -292,7 +296,7 @@ class MediaStore(metaclass=abc.ABCMeta):
             return [
                 self._format_raw_tag(tag)
                 for tag in raw_tags
-                if not self._tag_blacklisted(tag)
+                if not self._tag_denylisted(tag)
             ]
 
     def _format_raw_tag(self, tag):
