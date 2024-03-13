@@ -251,7 +251,7 @@ def test_extract_audio_data_handles_example_dict(audio_data, file_size_patch):
             "download": "https://freesound.org/apiv2/sounds/415362/download/",
             "num_downloads": 164,
         },
-        "raw_tags": ["eh", "disinterest", "low", "uh", "voice", "uncaring"],
+        "raw_tags": {"eh", "disinterest", "low", "uh", "voice", "uncaring"},
         "audio_set_foreign_identifier": "foo",
         "set_url": "https://freesound.org/apiv2/packs/23434/",
         "title": "Ehh disinterested.wav",
@@ -260,7 +260,8 @@ def test_extract_audio_data_handles_example_dict(audio_data, file_size_patch):
 
 
 def test_get_tags(audio_data, file_size_patch):
+    audio_data["tags"] += ["dup", "dup"]  # Add a duplicate tag
     item_data = fsd.get_record_data(audio_data)
     actual_tags = item_data["raw_tags"]
-    expected_tags = ["eh", "disinterest", "low", "uh", "voice", "uncaring"]
+    expected_tags = {"eh", "disinterest", "low", "uh", "voice", "uncaring", "dup"}
     assert expected_tags == actual_tags

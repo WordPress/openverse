@@ -91,7 +91,7 @@ def test_get_record_data():
             "release_date": "2005-04-12",
             "audiodownload_allowed": True,
         },
-        "raw_tags": ["instrumental", "speed_medium"],
+        "raw_tags": {"instrumental", "speed_medium"},
         "audio_set_foreign_identifier": "119",
         "set_position": 6,
         "set_thumbnail": "https://usercontent.jamendo.com/?type=album&id=119&width=200",
@@ -161,11 +161,11 @@ def test_get_tags():
             "tags": {
                 "genres": ["pop", "rock"],
                 "instruments": [],
-                "vartags": ["engage"],
+                "vartags": ["engage", "vocal"],
             },
         }
     }
-    expected_tags = ["vocal", "male", "speed_medium", "engage"]
+    expected_tags = {"vocal", "male", "speed_medium", "engage"}
     actual_tags = jamendo._get_tags(item_data)
     assert expected_tags == actual_tags
 

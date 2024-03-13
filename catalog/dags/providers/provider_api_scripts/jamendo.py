@@ -167,21 +167,20 @@ class JamendoDataIngester(ProviderDataIngester):
         return {k: v for k, v in metadata.items() if v is not None}
 
     @staticmethod
-    def _get_tags(data):
-        tags = []
+    def _get_tags(data) -> set:
+        tags = set()
 
         musicinfo = data.get("musicinfo", {})
         if music_type := musicinfo.get("vocalinstrumental"):
-            tags.append(music_type)
+            tags.add(music_type)
         if music_gender := musicinfo.get("gender"):
-            tags.append(music_gender)
+            tags.add(music_gender)
         if music_speed := musicinfo.get("speed"):
-            tags.append(f"speed_{music_speed}")
+            tags.add(f"speed_{music_speed}")
 
         for tag_name in ["instruments", "vartags"]:
-            tag_value = musicinfo.get("tags", {}).get(tag_name)
-            if tag_value:
-                tags.extend([tag for tag in tag_value if tag != "undefined"])
+            if tag_list := musicinfo.get("tags", {}).get(tag_name):
+                tags.update(tag_list)
 
         return tags
 
@@ -205,7 +204,6 @@ class JamendoDataIngester(ProviderDataIngester):
         genres = data.get("musicinfo", {}).get("tags", {}).get("genres")
         creator, creator_url = self._get_creator_data(data)
         metadata = self._get_metadata(data)
-        tags = self._get_tags(data)
         # Jamendo only has music
         category = "music"
         # We request only mp32 (VBR) files
@@ -235,7 +233,7 @@ class JamendoDataIngester(ProviderDataIngester):
             "thumbnail_url": thumbnail,
             "license_info": license_info,
             "meta_data": metadata,
-            "raw_tags": tags,
+            "raw_tags": self._get_tags(data),
             "category": category,
             "genres": genres,
             "audio_set_foreign_identifier": set_id,
