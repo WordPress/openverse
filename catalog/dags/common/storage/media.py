@@ -279,26 +279,28 @@ class MediaStore(metaclass=abc.ABCMeta):
             )
         return enriched_meta_data
 
-    def _enrich_tags(self, raw_tags) -> list | None:
+    def _enrich_tags(self, raw_tags: set | None) -> list | None:
         """
-        Add provider information to tags.
+        Add provider information to tags while filtering out denied terms.
 
         Args:
-            raw_tags: List of strings or dictionaries
+            raw_tags: Set of strings
 
         Returns:
             A list of 'enriched' tags:
             {"name": "tag_name", "provider": self._PROVIDER}
         """
-        if not isinstance(raw_tags, list):
-            logger.debug("`tags` is not a list.")
-            return None
-        else:
-            return [
-                self._format_raw_tag(tag)
-                for tag in raw_tags
-                if not self._tag_denylisted(tag)
-            ]
+        if not raw_tags:
+            return
+
+        if not isinstance(raw_tags, set):
+            raise TypeError(f"Expected set, got {type(raw_tags)}: {raw_tags}.")
+
+        return [
+            self._format_raw_tag(tag)
+            for tag in raw_tags
+            if not self._tag_denylisted(tag)
+        ]
 
     def _format_raw_tag(self, tag):
         if isinstance(tag, dict) and tag.get("name") and tag.get("provider"):
