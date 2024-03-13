@@ -5,8 +5,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from column_parser import parse_python_columns
-from db import MediaType, create_db_props_dict
+from db import create_db_props_dict
 from md import Md
+
+from common.constants import MEDIA_TYPES
 
 
 log = logging.getLogger(__name__)
@@ -20,8 +22,6 @@ SOURCE_MD_PATH = PARENT / "media_props.md"
 
 PREAMBLE = open(Path(__file__).parent / "preamble.md").read()
 POSTAMBLE = open(Path(__file__).parent / "postamble.md").read()
-
-MEDIA_TYPES: list[MediaType] = ["audio", "image"]
 
 
 @dataclass
@@ -99,7 +99,7 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
         prop_doc = "".join(
             [f"{Md.heading(4, k)}{Md.line(v)}" for k, v in description.items() if v]
         )
-        media_docs += prop_heading + prop_doc + Md.horizontal_line
+        media_docs += prop_heading + prop_doc
 
     return media_docs
 
@@ -123,7 +123,7 @@ def generate_markdown_doc() -> str:
 {Md.heading(2, "Image Properties")}{image_table}
 {Md.heading(2, "Audio Properties")}{audio_table}
 {Md.heading(2, "Media Property Descriptions")}{long_form_doc}
-{POSTAMBLE}
+{Md.horizontal_line + POSTAMBLE if POSTAMBLE else ''}
 """.strip()
     return media_props_doc
 
