@@ -29,14 +29,22 @@ The original version of this plan was significantly revised on 2024-03-01 due to
 <!-- List any succinct expected products from this implementation plan. -->
 
 API returns all media with the selected tag, from the selected source or by the
-selected creator within a given source, sorted by date added to Openverse.
+selected creator within a given source, sorted by date added to Openverse, when
+`collection` parameter is set in the search endpoints. Sample API URLs:
+
+- `/v1/<images|audio>/?collection=tag&tag=cat`
+- `/v1/<images|audio>/?collection=source&source=flickr`
+- `/v1/<images|audio>/?collection=creator&source=flickr&creator=Photographer`
 
 Frontend allows to browse media items by a selected creator, source, or with a
-selected tag using URLs like `/<mediaType>/collection?tag=tagName`,
-`/<mediaType>/collection?source=flickr` and
-`/<mediaType>/collection?source=flickr&creator=Photographer`. These pages are
-indexed by search engines, have relevant SEO properties and can be shared with
-an attractive thumbnail and relevant data.
+selected tag on `/collection` page. Sample frontend URLs:
+
+- `/<image|audio>/collection?tag=cat`,
+- `/<image|audio>/collection?source=flickr` and
+- `/<image|audio>/collection?source=flickr&creator=Photographer`.
+
+These pages are indexed by search engines, have relevant SEO properties and can
+be shared with an attractive thumbnail and relevant data.
 
 The single result pages are updated to add the links to source, creator and tag
 collections.
@@ -137,7 +145,9 @@ readable, easier to share, will be easier to cache or perform cache invalidation
 required by [#1969](https://github.com/WordPress/openverse/issues/1969).
 However, since tags and creator names contain characters that are special for
 path segments (`/`, `?` and `&`) that cannot be properly encoded, this approach
-turned out to be not feasible._
+turned out to be not feasible. See
+[PR#3793](https://github.com/WordPress/openverse/pull/3793) for attempts at
+making the path parameters work_
 
 ```{note}
 The new query parameters (`collection` and `tag`) will have `unstable__` prefix until this project is
