@@ -29,7 +29,7 @@ The original version of this plan was significantly revised on 2024-03-01 due to
 <!-- List any succinct expected products from this implementation plan. -->
 
 API returns all media with the selected tag, from the selected source or by the
-selected creator, sorted by date added to Openverse.
+selected creator within a given source, sorted by date added to Openverse.
 
 Frontend allows to browse media items by a selected creator, source, or with a
 selected tag using URLs like `/<mediaType>/collection?tag=tagName`,
