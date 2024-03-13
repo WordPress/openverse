@@ -82,3 +82,11 @@ Descriptions should:
   [quickstart](https://docs.openverse.org/general/quickstart.html) documentation
   pages for getting started with setting up your local environment.
   ```
+
+- Scenario: A community pull request author did not use the pull request
+  template or failed to fill out all sections correctly.
+  ```md
+  Hi @{user}, could you update your pr description to use the
+  [pull request template](https://github.com/WordPress/openverse/blob/main/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md)?
+  If you have any questions please let us know in the comments.
+  ```
