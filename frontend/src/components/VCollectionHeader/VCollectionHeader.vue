@@ -1,6 +1,6 @@
 <template>
   <div
-    class="collection-header grid auto-rows-auto gap-2 md:grid-cols-[1fr,auto]"
+    class="collection-header grid gap-2 md:grid-cols-[1fr,auto]"
     :class="{ 'no-link': !showCollectionExternalLink }"
   >
     <h1 class="title flex flex-col gap-2 md:flex-row">
@@ -22,7 +22,7 @@
       as="VLink"
       variant="filled-dark"
       size="medium"
-      class="link label-bold mt-1 !flex-none md:ms-4"
+      class="link label-bold mt-1 !w-full"
       has-icon-end
       show-external-icon
       :external-icon-size="6"
@@ -33,7 +33,10 @@
     <div
       class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 md:mt-0 md:flex-row md:items-center"
     >
-      <p class="label-regular w-max text-dark-charcoal-70 md:whitespace-nowrap">
+      <p
+        class="label-regular w-max text-dark-charcoal-70 md:whitespace-nowrap"
+        :class="{ 'pb-2 md:pb-0': collection !== 'creator' }"
+      >
         {{ resultsLabel }}
       </p>
       <VScrollableLine
@@ -229,7 +232,7 @@ export default defineComponent({
     grid-template-areas: "title link" "results results";
   }
   .no-link {
-    grid-template-rows: minmax(3.625rem, auto) auto;
+    grid-template-rows: minmax(3.625rem, auto) minmax(2rem, auto);
     grid-template-columns: auto;
     grid-template-areas: "title" "results";
   }
