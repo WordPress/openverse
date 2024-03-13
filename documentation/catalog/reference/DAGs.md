@@ -1094,9 +1094,6 @@ also delete that index afterward.
 
 This DAG is on a `None` schedule and is run manually.
 
-<<<<<<< HEAD
-### `point_staging_es_alias`
-=======
 ##### Race conditions
 
 Each DAG will fail immediately if any of the DAGs tagged as part of the
@@ -1104,8 +1101,7 @@ es-concurrency group for the DAG's environment is running. (E.g., the
 `point_staging_alias` DAG fails immediately if any DAGs tagged with
 `staging-es-concurrency` are running.)
 
-### `point_staging_alias`
->>>>>>> be549cdee (Update dag docs)
+### `point_staging_es_alias`
 
 #### Point ES Alias DAG
 

@@ -38,7 +38,7 @@ from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 
 
 def point_es_alias_dag(environment: str):
-        dag = DAG(
+    dag = DAG(
         dag_id=f"point_{environment}_alias",
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
