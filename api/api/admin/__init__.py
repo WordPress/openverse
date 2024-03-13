@@ -4,8 +4,17 @@ from django.contrib.auth.models import Group, User
 
 from oauth2_provider.models import AccessToken
 
+from api.admin.forms import UserPreferencesAdminForm
 from api.admin.site import openverse_admin
-from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
+from api.models import (
+    PENDING,
+    Audio,
+    AudioReport,
+    ContentProvider,
+    Image,
+    ImageReport,
+    UserPreferences,
+)
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.models.oauth import ThrottledApplication
 
@@ -127,3 +136,26 @@ class AccessTokenAdmin(admin.ModelAdmin):
         "created",
         "updated",
     )
+
+
+@admin.register(UserPreferences)
+class IndividualUserPreferencesAdmin(admin.ModelAdmin):
+    """
+    Model admin for showing user preferences. This should only ever show the
+    currently logged-in user's preferences
+    """
+
+    can_delete = False
+    verbose_name_plural = "My Preferences"
+    verbose_name = "My Preferences"
+    form = UserPreferencesAdminForm
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(user=request.user)
+
+    def has_change_permission(self, request, obj=None):
+        if not obj:
+            # the changelist itself
+            return True
+        return obj.user == request.user
