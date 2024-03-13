@@ -1,19 +1,19 @@
 <template>
   <div
-    class="collection-header grid gap-2 md:grid-cols-[1fr,auto]"
+    class="collection-header grid gap-2 sm:grid-cols-[1fr,auto]"
     :class="{ 'no-link': !showCollectionExternalLink }"
   >
-    <h1 class="title flex flex-col gap-2 md:flex-row">
+    <h1 class="title flex flex-col gap-2 sm:flex-row">
       <VIcon
         :name="iconName"
         :title="collection"
-        :size="isMd ? 10 : 6"
-        class="icon hidden md:flex"
+        :size="10"
+        class="icon hidden sm:flex"
       />
-      <span class="label-regular flex text-dark-charcoal-70 md:hidden">{{
+      <span class="label-regular flex text-dark-charcoal-70 sm:hidden">{{
         $t(`collection.heading.${collection}`)
       }}</span>
-      <span class="text-3xl font-semibold leading-snug md:text-6xl">{{
+      <span class="text-3xl font-semibold leading-snug sm:text-6xl">{{
         title
       }}</span>
     </h1>
@@ -31,17 +31,17 @@
       >{{ $t(`collection.link.${collection}`) }}</VButton
     >
     <div
-      class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 md:mt-0 md:flex-row md:items-center"
+      class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 sm:mt-0 sm:flex-row sm:items-center"
     >
       <p
-        class="label-regular w-max text-dark-charcoal-70 md:whitespace-nowrap"
-        :class="{ 'pb-2 md:pb-0': collection !== 'creator' }"
+        class="label-regular w-max text-dark-charcoal-70 sm:whitespace-nowrap"
+        :class="{ 'pb-2 sm:pb-0': collection !== 'creator' }"
       >
         {{ resultsLabel }}
       </p>
       <VScrollableLine
         v-if="collection === 'creator'"
-        class="-ms-2 -mt-1.5px h-8 w-[calc(100%+theme(space.4))] md:ms-0"
+        class="-ms-2 -mt-1.5px h-8 w-[calc(100%+theme(space.4))] sm:ms-0"
       >
         <VButton
           as="VLink"
@@ -70,7 +70,6 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
 import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
-import { useUiStore } from "~/stores/ui"
 import type { CollectionParams } from "~/types/search"
 import type { SupportedMediaType } from "~/constants/media"
 
@@ -109,7 +108,6 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const providerStore = useProviderStore()
     const searchStore = useSearchStore()
-    const uiStore = useUiStore()
 
     const iconName = computed(() => icons[props.collectionParams.collection])
     const collection = computed(() => props.collectionParams.collection)
@@ -183,8 +181,6 @@ export default defineComponent({
       )
     })
 
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
-
     const { sendCustomEvent } = useAnalytics()
 
     const sendAnalyticsEvent = () => {
@@ -211,7 +207,6 @@ export default defineComponent({
       sourceCollectionLink,
       showCollectionExternalLink,
       iconName,
-      isMd,
       sendAnalyticsEvent,
     }
   },
@@ -226,7 +221,7 @@ export default defineComponent({
   grid-template-areas: "title" "results";
 }
 
-@screen md {
+@screen sm {
   .collection-header {
     grid-template-rows: minmax(3.75rem, auto) minmax(2rem, auto);
     grid-template-areas: "title link" "results results";
