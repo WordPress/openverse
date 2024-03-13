@@ -2,7 +2,9 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
+
+from common.constants import MediaType
 
 
 LOCAL_POSTGRES_FOLDER = Path(__file__).parents[3] / "docker" / "upstream_db"
@@ -20,7 +22,6 @@ SQL_TYPES = [
     "character varying",
 ]
 SQL_TYPE_REGEX = re.compile(f"({'|'.join(SQL_TYPES)})")
-MediaType = Literal["audio", "image"]
 CREATE_TABLE_REGEX = re.compile(r"CREATE\s+TABLE\s+\w+\.(\w+)\s+\(([\s\S]*?)\);")
 
 

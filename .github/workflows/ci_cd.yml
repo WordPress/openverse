@@ -329,7 +329,7 @@ jobs:
 
       - name: Check DAG documentation
         run: |
-          just catalog/generate-dag-docs true
+          just catalog/generate-docs dag true
 
   ####################
   # Ingestion server #

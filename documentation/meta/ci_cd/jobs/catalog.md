@@ -17,7 +17,7 @@ for the catalog.
 
 ## `catalog-checks`
 
-Runs tests for the catalog using the `catalog/generate-dag-docs` recipe. The job
+Runs tests for the catalog using the `catalog/generate-docs` recipe. The job
 runs inside a Docker container so Python does not need to be installed. However,
 the job generates a new documentation page that must be linted, so
 [`setup-env`](/meta/ci_cd/actions.md#setup-env) in invoked to set up Node.js and
