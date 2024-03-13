@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.models import Group, User
 
 from api.admin.site import openverse_admin
 from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
@@ -7,6 +9,11 @@ from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 
 admin.site = openverse_admin
 admin.sites.site = openverse_admin
+
+
+# Show User and Group views in the Admin view
+admin.site.register(User, UserAdmin)
+admin.site.register(Group, GroupAdmin)
 
 
 @admin.register(Image)
