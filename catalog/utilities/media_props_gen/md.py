@@ -1,6 +1,3 @@
-from pathlib import Path
-
-
 class Md:
     horizontal_line = "\n---\n\n"
 
@@ -15,12 +12,12 @@ class Md:
         return f"{text}\n"
 
     @staticmethod
-    def parse(file_name: Path) -> dict[str, dict[str, str]]:
+    def parse(text: str) -> dict[str, dict[str, str]]:
         """
-        Parse the markdown documentation file and return a dictionary with the
+        Parse the text content of the markdown documentation file and return a dictionary with the
         field name as key and the description as value.
         """
-        contents = [line for line in file_name.read_text().split("\n") if line.strip()]
+        contents = [line for line in text.split("\n") if line.strip()]
         current_field = ""
         properties = {}
         prop = ""
@@ -32,8 +29,15 @@ class Md:
                 current_field = line.replace("# ", "").strip()
                 value = {}
             elif line.startswith("## "):
+                if prop and prop in value:
+                    value[prop] = value[prop].strip()
                 prop = line.replace("## ", "").strip()
                 value[prop] = ""
+            elif not prop:
+                continue
+            elif i == len(contents) - 1:
+                value[prop] = f"{value[prop]}{line}".strip()
+                properties[current_field] = value
             else:
                 value[prop] += line
 
