@@ -1,16 +1,18 @@
 """Run these tests locally with `just test -k cc_mixter`"""
 
 import json
-from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
 
+from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+    make_resource_json_func,
+)
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.cc_mixter import CcMixterDataIngester
 
 
-RESOURCES = Path(__file__).parent / "resources/cc_mixter"
+_get_resource_json = make_resource_json_func("cc_mixter")
 
 # Set up test class
 ingester = CcMixterDataIngester()
@@ -52,8 +54,7 @@ def test_durations_converted_to_ms(time_string, expected_ms):
 def test_audio_files(
     input_ext: list[str], output_ext: tuple[str, list[str]] | tuple[None, None]
 ):
-    with (RESOURCES / "single_item.json").open() as f:
-        single_item = json.load(f)
+    single_item = _get_resource_json("single_item.json")
 
     input_files = [
         file
@@ -94,17 +95,30 @@ def test_determines_when_to_continue(results_len: int, should_continue: bool):
     assert actual_result == should_continue
 
 
+@pytest.mark.parametrize(
+    "input_data, expected_tags",
+    [
+        ("", set()),  # void case
+        (",", set()),  # no tags
+        (",,", set()),  # no tags
+        (",remix,mp3,stereo,", {"remix", "mp3", "stereo"}),  # simple case
+        (",remix,mp3,stereo,mp3,", {"remix", "mp3", "stereo"}),  # no duplicates
+    ],
+)
+def test_get_tags(input_data, expected_tags):
+    actual_tags = ingester._get_tags({"upload_tags": input_data})
+    assert actual_tags == expected_tags
+
+
 def test_get_record_data():
     # Sample code for loading in the sample json
-    with (RESOURCES / "single_item.json").open() as f:
-        single_item = json.load(f)
-
+    single_item = _get_resource_json("single_item.json")
     single_record = ingester.get_record_data(single_item)
 
-    with (RESOURCES / "expected_single_record.json").open() as f:
-        expected_single_record = json.load(f)
+    expected_single_record = _get_resource_json("expected_single_record.json")
     expected_single_record["license_info"] = LicenseInfo(
         **expected_single_record["license_info"]
     )
+    expected_single_record["raw_tags"] = set(expected_single_record["raw_tags"])
 
     assert single_record == expected_single_record
