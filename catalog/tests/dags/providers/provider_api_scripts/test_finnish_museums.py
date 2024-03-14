@@ -129,7 +129,7 @@ def test_process_object_with_real_example():
         "title": "Vuokkiniemen koulu",
         "source": "finnish_military_museum",
         "creator": "Uomala, valokuvaaja",
-        "raw_tags": ["1942-03-02"],
+        "raw_tags": {"1942-03-02"},
     }
     object_data = _get_resource_json("object_complete_example.json")
     actual_data = fm.get_record_data(object_data)

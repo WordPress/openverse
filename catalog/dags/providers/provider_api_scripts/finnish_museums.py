@@ -124,7 +124,7 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
 
         raw_tags = None
         if tag_lists := data.get("subjects"):
-            raw_tags = list(chain(*tag_lists))
+            raw_tags = set(chain(*tag_lists))
 
         records = []
         for img in image_list:
