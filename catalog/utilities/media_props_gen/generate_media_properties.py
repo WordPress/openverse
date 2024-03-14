@@ -111,7 +111,7 @@ def generate_markdown_doc() -> str:
     Python objects characteristics, and a long-form documentation for each property.
     """
     media_properties = generate_media_properties()
-    markdown_descriptions = Md.parse(SOURCE_MD_PATH)
+    markdown_descriptions = Md.parse(SOURCE_MD_PATH.read_text())
 
     image_table = generate_media_props_table(media_properties["image"])
     audio_table = generate_media_props_table(media_properties["audio"])
