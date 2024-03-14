@@ -91,49 +91,39 @@ class ProviderAdmin(admin.ModelAdmin):
 @admin.register(ThrottledApplication)
 class ThrottledApplicationAdmin(admin.ModelAdmin):
     search_fields = ("client_id", "name")
-    list_display = ("client_id", "name", "user", "rate_limit_model")
-    ordering = ("client_id",)
+    list_display = ("client_id", "name", "created", "rate_limit_model")
+    ordering = ("-created",)
 
-    def get_readonly_fields(self, request, obj=None):
-        if obj is None:
-            return []
-        readonly_fields = [
-            "skip_authorization",
-            "verified",
-            "client_id",
-            "name",
-            "user",
-            "rate_limit_model",
-            "algorithm",
-            "redirect_uris",
-            "post_logout_redirect_uris",
-            "client_type",
-            "authorization_grant_type",
-            "client_secret",
-        ]
-
-        return readonly_fields
+    readonly_fields = (
+        "skip_authorization",
+        "verified",
+        "client_id",
+        "name",
+        "user",
+        "algorithm",
+        "redirect_uris",
+        "post_logout_redirect_uris",
+        "client_type",
+        "authorization_grant_type",
+        "client_secret",
+    )
 
 
 @admin.register(AccessToken)
 class AccessTokenAdmin(admin.ModelAdmin):
     search_fields = ("token", "id")
-    list_display = ("token", "id", "scope", "expires")
+    list_display = ("token", "id", "created", "scope", "expires")
+    ordering = ("-created",)
 
-    def get_readonly_fields(self, request, obj=None):
-        if obj is None:
-            return []
-        readonly_fields = [
-            "id",
-            "user",
-            "source_refresh_token",
-            "token",
-            "id_token",
-            "application",
-            "expires",
-            "scope",
-            "created",
-            "updated",
-        ]
-
-        return readonly_fields
+    readonly_fields = (
+        "id",
+        "user",
+        "source_refresh_token",
+        "token",
+        "id_token",
+        "application",
+        "expires",
+        "scope",
+        "created",
+        "updated",
+    )
