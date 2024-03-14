@@ -90,7 +90,7 @@ def test_get_meta_data(response_json, expected):
 
 
 @pytest.mark.parametrize(
-    "response_json, expected",
+    "response_json, expected_tags",
     [
         pytest.param(
             single_object_response,
@@ -104,9 +104,9 @@ def test_get_meta_data(response_json, expected):
         ),
     ],
 )
-def test_get_tag_list(response_json, expected):
-    actual = mma._get_tag_list(response_json)
-    assert expected == actual
+def test_get_tags(response_json, expected_tags):
+    actual_tags = mma._get_tags(response_json)
+    assert actual_tags == set(expected_tags)
 
 
 @pytest.mark.parametrize(
@@ -222,5 +222,7 @@ def test_get_record_data_returns_response_json_when_all_ok(
             for key, value in expected_result.items():
                 if key == "license_info":
                     assert actual_result.get(key) == CC0
+                elif key == "raw_tags":
+                    assert actual_result.get(key) == set(value)
                 else:
                     assert actual_result.get(key) == value

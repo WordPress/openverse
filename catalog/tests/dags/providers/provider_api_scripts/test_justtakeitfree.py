@@ -56,7 +56,7 @@ def test_get_record_data():
         "license_info": get_license_info(
             "https://creativecommons.org/licenses/by/4.0/"
         ),
-        "raw_tags": ["Baturyn fortress", "Baturyn citadel", "cossack fortress"],
+        "raw_tags": {"Baturyn fortress", "Baturyn citadel", "cossack fortress"},
         "thumbnail_url": "https://justtakeitfree.com/photos/2_800.jpg",
         "filesize": 100,
     }

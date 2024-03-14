@@ -72,7 +72,7 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
             # Optional fields
             "creator": self.creator,
             "creator_url": self.creator_url,
-            "raw_tags": data.get("tags"),
+            "raw_tags": set(data.get("tags")),
             "filesize": self.get_file_info(url),
             "thumbnail_url": data.get("preview_link"),
         }
