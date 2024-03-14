@@ -1,5 +1,8 @@
 # Dark Mode
 
-:titlesonly: :glob:
+```{toctree}
+:titlesonly:
+:glob:
 
--
+*
+```
