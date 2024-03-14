@@ -138,7 +138,7 @@ class NyplDataIngester(ProviderDataIngester):
                 "filetype": filetype,
                 "category": category,
                 "meta_data": metadata,
-                "raw_tags": NyplDataIngester._get_tags(mods) or None,
+                "raw_tags": self._get_tags(mods) or None,
             }
             images.append(image_data)
         return images
@@ -223,20 +223,21 @@ class NyplDataIngester(ProviderDataIngester):
         return None
 
     @staticmethod
-    def _get_tags(mods: dict) -> list[str]:
+    def _get_tags(mods: dict) -> set | None:
         subject_list = mods.get("subject", [])
         if isinstance(subject_list, dict):
             subject_list = [subject_list]
         # Topic can be a dictionary or a list
         topics = [subject["topic"] for subject in subject_list if "topic" in subject]
-        tags = []
-        if topics:
-            for topic in topics:
-                if isinstance(topic, list):
-                    tags.extend([t.get("$") for t in topic])
-                else:
-                    tags.append(topic.get("$"))
-        return [tag for tag in tags if tag]
+        if not topics:
+            return
+        tags = set()
+        for topic in topics:
+            if isinstance(topic, list):
+                tags.update({t.get("$") for t in topic})
+            else:
+                tags.add(topic.get("$"))
+        return {tag for tag in tags if tag}
 
     @staticmethod
     def _get_type_of_resource(mods: dict) -> str | None:
