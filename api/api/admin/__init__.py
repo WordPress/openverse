@@ -90,7 +90,7 @@ class ProviderAdmin(admin.ModelAdmin):
 
 @admin.register(ThrottledApplication)
 class ThrottledApplicationAdmin(admin.ModelAdmin):
-    search_fields = ("client_id", "name")
+    search_fields = ("client_id", "name", "rate_limit_model")
     list_display = ("client_id", "name", "created", "rate_limit_model")
     ordering = ("-created",)
 
