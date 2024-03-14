@@ -153,8 +153,8 @@ def test_get_metadata(ingester):
         "colors": ["brown", "orange"],
         "orientation": "landscape",
     }
-    expected_tags = ["bean", "coffee"]
-    # assert len(actual_metadata) == len(expected_metadata)
+    expected_tags = {"bean", "coffee"}
+
     assert actual_metadata == expected_metadata
     assert len(actual_tags) == len(expected_tags)
     assert actual_tags == expected_tags

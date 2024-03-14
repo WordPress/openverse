@@ -519,14 +519,14 @@ def test_extract_meta_data_dnr_fields(input_ft, input_dnr, expected_meta_data):
 @pytest.mark.parametrize(
     "input_is, expect_tags",
     [
-        ({}, []),
-        ({"nothing": "here"}, []),
+        ({}, set()),
+        ({"nothing": "here"}, set()),
         (
             {
                 "date": ["", ""],
                 "place": ["Indian Ocean"],
             },
-            ["Indian Ocean"],
+            {"Indian Ocean"},
         ),
         (
             {
@@ -535,14 +535,14 @@ def test_extract_meta_data_dnr_fields(input_ft, input_dnr, expected_meta_data):
                 "topic": ["Paleogeneral", "Protists"],
                 "place": ["Indian Ocean"],
             },
-            [
+            {
                 "2000s",
                 "Holotypes",
                 "Taxonomic type specimens",
                 "Paleogeneral",
                 "Protists",
                 "Indian Ocean",
-            ],
+            },
         ),
     ],
 )
@@ -648,7 +648,7 @@ def test_get_record_data():
                 "unit_code": "NMNHBIRDS",
                 "data_source": "NMNH - Vertebrate Zoology - Birds Division",
             },
-            "raw_tags": [
+            "raw_tags": {
                 "1950s",
                 "Animals",
                 "Birds",
@@ -656,7 +656,7 @@ def test_get_record_data():
                 "Pinal",
                 "North America",
                 "Arizona",
-            ],
+            },
         }
     ]
 

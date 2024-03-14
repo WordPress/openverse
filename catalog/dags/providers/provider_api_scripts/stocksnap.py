@@ -88,7 +88,6 @@ class StockSnapDataIngester(ProviderDataIngester):
 
         creator, creator_url = self._get_creator_data(data)
         metadata = self._get_metadata(data)
-        tags = self._get_tags(data)
         filesize = self._get_filesize(url)
 
         return {
@@ -104,7 +103,7 @@ class StockSnapDataIngester(ProviderDataIngester):
             "width": width,
             "license_info": self.license_info,
             "meta_data": metadata,
-            "raw_tags": tags,
+            "raw_tags": self._get_tags(data),
         }
 
     @staticmethod
@@ -166,8 +165,8 @@ class StockSnapDataIngester(ProviderDataIngester):
         return metadata
 
     @staticmethod
-    def _get_tags(item):
-        return item.get("keywords")
+    def _get_tags(item: dict) -> set:
+        return {keyword for keyword in item.get("keywords")}
 
 
 def main():

@@ -199,33 +199,33 @@ def test_get_record_data_handles_example_dict(filesize_mock):
             "downloads_raw": 0,
             "favorites_raw": 0,
         },
-        "raw_tags": [
+        "raw_tags": {
+            "active",
+            "athlete",
+            "day",
+            "fashion",
             "female",
+            "field",
+            "fit",
             "fitness",
-            "trainer",
+            "girl",
+            "health",
+            "lifestyle",
             "model",
             "outdoors",
-            "fit",
-            "workout",
-            "health",
-            "woman",
-            "field",
-            "girl",
-            "pose",
-            "sport",
-            "athlete",
-            "recreation",
-            "wellness",
             "people",
-            "fashion",
-            "day",
-            "active",
+            "pose",
+            "recreation",
+            "sport",
             "sports",
-            "track",
-            "stretch",
-            "lifestyle",
             "squat",
-        ],
+            "stretch",
+            "track",
+            "trainer",
+            "wellness",
+            "woman",
+            "workout",
+        },
     }
     assert actual_image_info == expected_image_info
 
@@ -254,6 +254,6 @@ def test_get_image_tags():
             "flower",
         ],
     }
-    expected_tags = ["sunflowers", "nature", "flower"]
+    expected_tags = {"sunflowers", "nature", "flower"}
     actual_tags = stocksnap._get_tags(item_data)
     assert expected_tags == actual_tags
