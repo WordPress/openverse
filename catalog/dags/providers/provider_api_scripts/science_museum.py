@@ -8,7 +8,7 @@ Output:                 TSV file containing the image, the respective
 
 Notes:                  https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API
                         Rate limited, no specific rate given.
-"""  # noqa: E501
+"""
 
 import logging
 import re

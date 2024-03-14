@@ -35,6 +35,8 @@ TAG_CONTAINS_DENYLIST = {
     "by-nc-nd",
     "by-nc-sa",
     "pdm",
+    "creative commons",
+    "public domain",
 }
 
 COMMON_CRAWL = "commoncrawl"

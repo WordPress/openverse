@@ -90,7 +90,7 @@ class NappyDataIngester(ProviderDataIngester):
             "saves": data.get("saves"),
             "downloads": data.get("downloads"),
         }
-        raw_tags = data.get("tags").split(",")
+        raw_tags = set(data.get("tags").split(","))
         width = data.get("width")
         height = data.get("height")
 
