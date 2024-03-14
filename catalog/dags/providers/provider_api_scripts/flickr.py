@@ -243,7 +243,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         creator = data.get("ownername")
         category = self._get_category(data)
         meta_data = self._create_meta_data_dict(data)
-        raw_tags = self._create_tags_list(data)
+        raw_tags = self._get_tags(data)
         # Flickr includes a collection of sub-providers which are available to a wide
         # audience. If this record belongs to a known sub-provider, we should indicate
         # that as the source. If not we fall back to the default provider.
@@ -311,16 +311,14 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         return {k: v for k, v in meta_data.items() if v is not None}
 
     @staticmethod
-    def _create_tags_list(image_data, max_tag_string_length=2000):
+    def _get_tags(image_data, max_tag_string_length=2000):
         raw_tags = None
         # We limit the input tag string length, not the number of tags,
         # since tags could otherwise be arbitrarily long, resulting in
         # arbitrarily large data in the DB.
         raw_tag_string = image_data.get("tags", "").strip()[:max_tag_string_length]
         if raw_tag_string:
-            # We sort for further consistency between runs, saving on
-            # inserts into the DB later.
-            raw_tags = sorted(list(set(raw_tag_string.split())))
+            raw_tags = set(raw_tag_string.split())
         return raw_tags
 
     @staticmethod

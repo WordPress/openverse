@@ -160,14 +160,14 @@ def test_get_record_data():
         "creator_url": "https://www.flickr.com/photos/71925535@N03",
         "title": "Surveying Ruperts Reef @reeflifesurvey #lapofaus #marineexplorer",
         "meta_data": expect_meta_data,
-        "raw_tags": [
+        "raw_tags": {
             "australia",
             "marine",
             "marineexplorer",
             "nature",
             "scuba",
             "underwater",
-        ],
+        },
         "source": flickr.provider_string,
         "category": "photograph",
     }
@@ -297,19 +297,16 @@ def test_create_meta_data(image_data, expected_meta_data):
 
 
 @pytest.mark.parametrize(
-    "image_data, expected_tags_list",
+    "image_data, expected_tags",
     [
-        # Happy path, handles whitespace
+        # Simple basic case
+        ({"tags": "tag3 tag1 tag2"}, {"tag1", "tag2", "tag3"}),
+        # Handles whitespace and duplicates
+        ({"tags": "tag1 tag2   tag3  tag3 "}, {"tag1", "tag2", "tag3"}),
+        # Truncates long input tags string
         (
-            _get_resource_json("image_data_varying_tags_whitespace.json"),
-            ["tag1", "tag2", "tag3"],
-        ),
-        # Sorts tags
-        (_get_resource_json("image_data_unsorted_tags.json"), ["tag1", "tag2", "tag3"]),
-        # Truncates long tags
-        (
-            _get_resource_json("image_data_long_tags_string.json"),
-            ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
+            {"tags": "tag1 tag2   tag3  tag3 tag4 tag5 tag6 tag7"},
+            {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6"},
         ),
         # Returns None when no tags key
         ({"id": "aslkjb"}, None),
@@ -317,9 +314,9 @@ def test_create_meta_data(image_data, expected_meta_data):
         ({"id": "aslkjb", "tags": ""}, None),
     ],
 )
-def test_create_tags_list(image_data, expected_tags_list):
-    actual_tags_list = flickr._create_tags_list(image_data, max_tag_string_length=37)
-    assert actual_tags_list == expected_tags_list
+def test_get_tags(image_data, expected_tags):
+    actual_tags = flickr._get_tags(image_data, max_tag_string_length=37)
+    assert actual_tags == expected_tags
 
 
 def test_get_record_data_with_sub_provider():
@@ -350,14 +347,14 @@ def test_get_record_data_with_sub_provider():
         "creator_url": "https://www.flickr.com/photos/35067687@N04",
         "title": "SpaceX Demo-2 Preflight (NHQ202005290001)",
         "meta_data": expect_meta_data,
-        "raw_tags": [
+        "raw_tags": {
             "capecanaveral",
             "commercialcrewprogram",
             "gophertortoise",
             "kennedyspacecenter",
             "nasa",
             "spacex",
-        ],
+        },
         "source": "nasa",
         "category": None,
     }
