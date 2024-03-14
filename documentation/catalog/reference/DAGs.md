@@ -20,7 +20,6 @@ The following are DAGs grouped by their primary tag:
 1.  [Elasticsearch](#elasticsearch)
 1.  [Maintenance](#maintenance)
 1.  [Oauth](#oauth)
-1.  [Other](#other)
 1.  [Popularity Refresh](#popularity-refresh)
 1.  [Provider](#provider)
 1.  [Provider Reingestion](#provider-reingestion)
@@ -78,12 +77,6 @@ The following are DAGs grouped by their primary tag:
 | ----------------------------------------------- | ----------------- |
 | [`oauth2_authorization`](#oauth2_authorization) | `None`            |
 | [`oauth2_token_refresh`](#oauth2_token_refresh) | `0 */12 * * *`    |
-
-### Other
-
-| DAG ID                                                    | Schedule Interval |
-| --------------------------------------------------------- | ----------------- |
-| [`flickr_thumbnails_removal`](#flickr_thumbnails_removal) | `None`            |
 
 ### Popularity Refresh
 
@@ -151,7 +144,6 @@ The following is documentation associated with each DAG (where available):
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
 1.  [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow)
 1.  [`flickr_reingestion_workflow`](#flickr_reingestion_workflow)
-1.  [`flickr_thumbnails_removal`](#flickr_thumbnails_removal)
 1.  [`flickr_workflow`](#flickr_workflow)
 1.  [`freesound_workflow`](#freesound_workflow)
 1.  [`image_data_refresh`](#image_data_refresh)
@@ -831,11 +823,6 @@ ETL Process: Use the API to identify all CC licensed images.
 Output: TSV file containing the images and the respective meta-data.
 
 Notes: https://www.flickr.com/help/terms/api Rate limit: 3600 requests per hour.
-
-### `flickr_thumbnails_removal`
-
-One-time run DAG to remove progressively all the old Flickr thumbnails, as they
-were determined to be unsuitable for the Openverse UI requirements.
 
 ### `flickr_workflow`
 
