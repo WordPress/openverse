@@ -58,8 +58,8 @@ The following are DAGs grouped by their primary tag:
 | [`create_new_production_es_index`](#create_new_production_es_index)                             | `None`            |
 | [`create_new_staging_es_index`](#create_new_staging_es_index)                                   | `None`            |
 | [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)   | `None`            |
-| [`point_production_es_alias`](#point_production_es_alias)                                       | `None`            |
-| [`point_staging_es_alias`](#point_staging_es_alias)                                             | `None`            |
+| [`point_production_alias`](#point_production_alias)                                             | `None`            |
+| [`point_staging_alias`](#point_staging_alias)                                                   | `None`            |
 | [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck) | `*/15 * * * *`    |
 | [`staging_elasticsearch_cluster_healthcheck`](#staging_elasticsearch_cluster_healthcheck)       | `*/15 * * * *`    |
 
@@ -160,8 +160,8 @@ The following is documentation associated with each DAG (where available):
 1.  [`oauth2_token_refresh`](#oauth2_token_refresh)
 1.  [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)
 1.  [`phylopic_workflow`](#phylopic_workflow)
-1.  [`point_production_es_alias`](#point_production_es_alias)
-1.  [`point_staging_es_alias`](#point_staging_es_alias)
+1.  [`point_production_alias`](#point_production_alias)
+1.  [`point_staging_alias`](#point_staging_alias)
 1.  [`pr_review_reminders`](#pr_review_reminders)
 1.  [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
@@ -1065,7 +1065,7 @@ Output: TSV file containing the image, their respective meta-data.
 
 Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
-### `point_production_es_alias`
+### `point_production_alias`
 
 #### Point ES Alias DAG
 
@@ -1081,9 +1081,6 @@ also delete that index afterward.
 
 This DAG is on a `None` schedule and is run manually.
 
-<<<<<<< HEAD
-### `point_staging_es_alias`
-=======
 ##### Race conditions
 
 Each DAG will fail immediately if any of the DAGs tagged as part of the
@@ -1092,7 +1089,6 @@ es-concurrency group for the DAG's environment is running. (E.g., the
 `staging-es-concurrency` are running.)
 
 ### `point_staging_alias`
->>>>>>> be549cdee (Update dag docs)
 
 #### Point ES Alias DAG
 
