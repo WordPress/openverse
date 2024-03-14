@@ -22,6 +22,11 @@ are available:
 * `override_config`: boolean override; when True, the `index_config` will be used
                      for the new index configuration _without_ merging any values
                      from the source index config.
+* `target_alias`   : optional alias to be applied to the new index after reindexing.
+                     If the alias already applies to an existing index, it will be
+                     removed first.
+* `should_delete_old_index`: whether to remove the index previously pointed to by
+                     the target_alias, if it exists. Defaults to False.
 
 ## Merging policy
 
@@ -104,6 +109,7 @@ from airflow.models.param import Param
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import elasticsearch as es
+from common import slack
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from common.sensors.utils import prevent_concurrency_with_dags
 from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
@@ -191,6 +197,23 @@ def create_new_es_index_dag(config: CreateNewIndex):
                     " configuration."
                 ),
             ),
+            "target_alias": Param(
+                default=None,
+                type=["string", "null"],
+                description=(
+                    "Optional alias which will be applied to the newly created index. If"
+                    " the alias already exists, it will first be removed from the"
+                    " index to which it previously pointed."
+                ),
+            ),
+            "should_delete_old_index": Param(
+                default=False,
+                type="boolean",
+                description=(
+                    "Whether to delete the index previously pointed to by the"
+                    " `target_alias`."
+                ),
+            ),
         },
     )
 
@@ -242,11 +265,31 @@ def create_new_es_index_dag(config: CreateNewIndex):
             es_host=es_host,
         )
 
+        point_alias = es.point_alias(
+            es_host=es_host,
+            target_index=index_name,
+            target_alias="{{ params.target_alias }}",
+            should_delete_old_index="{{ params.should_delete_old_index }}",
+        )
+
+        notify_completion = slack.notify_slack.override(
+            trigger_rule=TriggerRule.NONE_FAILED
+        )(
+            text=(
+                f"New index { index_name } was successfully created with alias"
+                "{{ params.target_alias }}."
+            ),
+            dag_id=dag.dag_id,
+            username="Create New ES Index",
+            icon_emoji=":elasticsearch:",
+        )
+
         # Set up dependencies
         prevent_concurrency >> [es_host, index_name]
         index_name >> check_override >> [current_index_config, final_index_config]
         current_index_config >> merged_index_config >> final_index_config
-        final_index_config >> create_new_index >> reindex
+        final_index_config >> create_new_index >> reindex >> point_alias
+        point_alias >> notify_completion
 
     return dag
 

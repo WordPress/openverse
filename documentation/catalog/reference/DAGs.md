@@ -46,6 +46,8 @@ The following are DAGs grouped by their primary tag:
 | [`batched_update`](#batched_update)                                                           | `None`            |
 | [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index) | `None`            |
 | [`delete_records`](#delete_records)                                                           | `None`            |
+| [`point_production_es_alias`](#point_production_es_alias)                                     | `None`            |
+| [`point_staging_es_alias`](#point_staging_es_alias)                                           | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)             | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                                 | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)             | `None`            |
@@ -158,6 +160,8 @@ The following is documentation associated with each DAG (where available):
 1.  [`oauth2_token_refresh`](#oauth2_token_refresh)
 1.  [`phylopic_reingestion_workflow`](#phylopic_reingestion_workflow)
 1.  [`phylopic_workflow`](#phylopic_workflow)
+1.  [`point_production_es_alias`](#point_production_es_alias)
+1.  [`point_staging_es_alias`](#point_staging_es_alias)
 1.  [`pr_review_reminders`](#pr_review_reminders)
 1.  [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
@@ -517,6 +521,11 @@ available:
 - `override_config`: boolean override; when True, the `index_config` will be
   used for the new index configuration _without_ merging any values from the
   source index config.
+- `target_alias` : optional alias to be applied to the new index after
+  reindexing. If the alias already applies to an existing index, it will be
+  removed first.
+- `should_delete_old_index`: whether to remove the index previously pointed to
+  by the target_alias, if it exists. Defaults to False.
 
 ##### Merging policy
 
@@ -616,6 +625,11 @@ available:
 - `override_config`: boolean override; when True, the `index_config` will be
   used for the new index configuration _without_ merging any values from the
   source index config.
+- `target_alias` : optional alias to be applied to the new index after
+  reindexing. If the alias already applies to an existing index, it will be
+  removed first.
+- `should_delete_old_index`: whether to remove the index previously pointed to
+  by the target_alias, if it exists. Defaults to False.
 
 ##### Merging policy
 
@@ -709,6 +723,8 @@ Optional params:
 - source_index: An existing staging Elasticsearch index to use as the basis for
   the new index. If not provided, the index aliased to `<media_type>-filtered`
   will be used.
+- should_delete_old_index: If True, the index previously pointed to by the
+  target alias (if one exists) will be deleted.
 
 ##### When this DAG runs
 
@@ -1038,6 +1054,38 @@ ETL Process: Use the API to identify all CC licensed images.
 Output: TSV file containing the image, their respective meta-data.
 
 Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
+
+### `point_production_es_alias`
+
+#### Point ES Alias DAG
+
+This file generates our Point ES Alias DAGs using a factory function. A separate
+DAG is generated for the staging and production environments.
+
+The DAGs are used to point a `target_alias` to a `target_index` in the given
+environment's elasticsearch cluster. When the alias is applied, it is first
+removed from any existing index to which it already applies; optionally, it can
+also delete that index afterward.
+
+##### When this DAG runs
+
+This DAG is on a `None` schedule and is run manually.
+
+### `point_staging_es_alias`
+
+#### Point ES Alias DAG
+
+This file generates our Point ES Alias DAGs using a factory function. A separate
+DAG is generated for the staging and production environments.
+
+The DAGs are used to point a `target_alias` to a `target_index` in the given
+environment's elasticsearch cluster. When the alias is applied, it is first
+removed from any existing index to which it already applies; optionally, it can
+also delete that index afterward.
+
+##### When this DAG runs
+
+This DAG is on a `None` schedule and is run manually.
 
 ### `pr_review_reminders`
 
