@@ -19,11 +19,6 @@ run using a different hook:
   (e.g. `aws_rds`)
 - `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the above
   example, it might be `AIRFLOW_CONN_AWS_RDS`)
-
-## Race conditions
-
-Because this DAG completely replaces the staging database, it first waits on any
-running DAGs that are tagged as part of the `staging_es_concurrency` group.
 """
 
 import logging
@@ -41,7 +36,7 @@ from common.constants import (
     POSTGRES_API_STAGING_CONN_ID,
 )
 from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
-from common.sensors.utils import wait_for_external_dags_with_tag
+from common.sensors.utils import wait_for_external_dag
 from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
@@ -53,6 +48,9 @@ from database.staging_database_restore.staging_database_restore import (
     notify_slack,
     restore_staging_from_snapshot,
     skip_restore,
+)
+from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
+    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
 
 
@@ -77,9 +75,12 @@ log = logging.getLogger(__name__)
     render_template_as_native_obj=True,
 )
 def restore_staging_database():
-    # Wait for any DAGs that operate on the staging elasticsearch cluster
-    wait_for_recreate_full_staging_index = wait_for_external_dags_with_tag(
-        tag=STAGING_ES_CONCURRENCY_TAG,
+    # If the `recreate_full_staging_index` DAG was manually triggered prior
+    # to the database restoration starting, we should wait for it to
+    # finish. It is not necessary to wait on any of the other ES DAGs as
+    # they do not directly affect the database.
+    wait_for_recreate_full_staging_index = wait_for_external_dag(
+        external_dag_id=RECREATE_STAGING_INDEX_DAG_ID,
     )
     should_skip = skip_restore()
     latest_snapshot = get_latest_prod_snapshot()
