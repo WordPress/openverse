@@ -403,13 +403,13 @@ class SmithsonianDataIngester(ProviderDataIngester):
             )
         return creator
 
-    def _extract_tags(self, row):
+    def _extract_tags(self, row) -> set:
         indexed_structured = self._get_content_dict(row, "indexedStructured")
         tag_lists_generator = (
             self._check_type(indexed_structured.get(key), list)
             for key in self.tag_types
         )
-        return [tag for tag_list in tag_lists_generator for tag in tag_list if tag]
+        return {tag for tag_list in tag_lists_generator for tag in tag_list if tag}
 
     def ingest_records(self, **kwargs) -> None:
         self.validate_unit_codes_from_api()

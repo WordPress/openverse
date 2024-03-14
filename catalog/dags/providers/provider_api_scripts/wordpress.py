@@ -184,7 +184,7 @@ class WordPressDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_metadata(media_data, media_details):
         raw_metadata = media_details.get("image_meta", {})
-        metadata, tags = {}, []
+        metadata, tags = {}, set()
         for key in WordPressDataIngester.metadata_extras:
             value = raw_metadata.get(key)
             if value not in [None, ""]:
@@ -199,7 +199,7 @@ class WordPressDataIngester(ProviderDataIngester):
                     resource_key = WordPressDataIngester.metadata_resource_mapping[txy]
                     resource_val = resource.get("name")
                     if txy == "photo_tag":
-                        tags.append(resource_val)
+                        tags.add(resource_val)
                     elif txy == "photo_orientation":
                         metadata["orientation"] = resource_val
                     else:
