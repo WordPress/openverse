@@ -110,7 +110,7 @@ class FreesoundDataIngester(ProviderDataIngester):
     def _get_creator_data(item):
         if creator := item.get("username"):
             creator = creator.strip()
-            creator_url = f"https://freesound.org/people/{creator}/"
+            creator_url = f"https://freesound.org/people/{creator}/".replace(" ", "%20")
         else:
             creator_url = None
         return creator, creator_url
