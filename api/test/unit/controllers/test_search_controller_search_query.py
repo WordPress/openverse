@@ -1,6 +1,7 @@
 import pytest
 from elasticsearch_dsl import Q
 
+from api.constants.parameters import COLLECTION, TAG
 from api.controllers import search_controller
 from api.controllers.search_controller import (
     DEFAULT_SQS_FLAGS,
@@ -283,22 +284,22 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     ("data", "expected_query_filter"),
     [
         pytest.param(
-            {"unstable__collection": "tag", "unstable__tag": "art"},
+            {COLLECTION: "tag", TAG: "art"},
             [{"term": {"tags.name.keyword": "art"}}],
             id="filter_by_tag",
         ),
         pytest.param(
-            {"unstable__collection": "tag", "unstable__tag": "art, photography"},
+            {COLLECTION: "tag", TAG: "art, photography"},
             [{"term": {"tags.name.keyword": "art, photography"}}],
             id="filter_by_tag_treats_punctuation_as_part_of_tag",
         ),
         pytest.param(
-            {"unstable__collection": "source", "source": "flickr"},
+            {COLLECTION: "source", "source": "flickr"},
             [{"term": {"source": "flickr"}}],
             id="filter_by_source",
         ),
         pytest.param(
-            {"unstable__collection": "creator", "source": "flickr", "creator": "nasa"},
+            {COLLECTION: "creator", "source": "flickr", "creator": "nasa"},
             [
                 {"term": {"source": "flickr"}},
                 {"term": {"creator.keyword": "nasa"}},

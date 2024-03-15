@@ -6,7 +6,11 @@ from rest_framework.exceptions import (
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
-from api.docs.base_docs import custom_extend_schema, fields_to_md
+from api.docs.base_docs import (
+    SEARCH_DESCRIPTION,
+    custom_extend_schema,
+    fields_to_md,
+)
 from api.examples import (
     audio_complain_201_example,
     audio_complain_curl,
@@ -35,23 +39,17 @@ from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.provider_serializers import ProviderSerializer
 
 
+audio_filter_fields = fields_to_md(
+    [f for f in AudioSearchRequestSerializer.field_names if f != "q"]
+)
+
+audio_search_description = SEARCH_DESCRIPTION % {
+    "filter_fields": audio_filter_fields,
+    "media_type": "audio files",
+}
+
 search = custom_extend_schema(
-    desc=f"""
-        Search audio files using a query string.
-
-        By using this endpoint, you can obtain search results based on specified
-        query and optionally filter results by
-        {fields_to_md(AudioSearchRequestSerializer.field_names)}.
-
-        Results are ranked in order of relevance and paginated on the basis of the
-        `page` param. The `page_size` param controls the total number of pages.
-
-        Although there may be millions of relevant records, only the most relevant
-        several thousand records can be viewed. This is by design: the search
-        endpoint should be used to find the top 10,000 most relevant results, not
-        for exhaustive search or bulk download of every barely relevant result. As
-        such, the caller should not try to access pages beyond `page_count`, or else
-        the server will reject the query.""",
+    desc=audio_search_description,
     params=AudioSearchRequestSerializer,
     res={
         200: (AudioSerializer, audio_search_200_example),

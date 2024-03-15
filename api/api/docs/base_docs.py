@@ -139,3 +139,65 @@ tag_path_parameter = OpenApiParameter(
     location=OpenApiParameter.PATH,
     description="The tag of the media. Not case-sensitive, matches exactly.",
 )
+
+SEARCH_DESCRIPTION_DEFAULT = """
+Return audio files that match the query.
+
+This endpoint allows you to search within specific fields, or to retrieve
+a collection of all audio files from a specific source, creator or tag.
+Results are paginated on the basis of the `page` parameter. The `page_size`
+parameter controls the total number of pages.
+
+Although there may be millions of relevant records, only the most relevant
+or the most recent several thousand records can be viewed. This is by design:
+the search endpoint should be used to find the top 10,000 most relevant
+results, not for exhaustive search or bulk download of every barely relevant
+result. As such, the caller should not try to access pages beyond `page_count`,
+or else the server will reject the query.
+
+### Default search
+The **default search** allows users to find media based on a query string.
+It supports a wide range of optional filters to narrow down search results
+according to specific needs.
+
+By default, this endpoint performs a full-text search for the value of `q` parameter.
+You can search within the `creator`, `title` or `tags` fields by omitting
+the `q` parameter and using one of these field parameters.
+These results can be filtered by %(filter_fields)s.
+
+The default search results are sorted by relevance.
+
+### Collection search
+The collection search allows to retrieve a collection of media from a specific source,
+creator or tag. The `collection` parameter is used to specify the type of collection to retrieve.
+
+- `collection=tag&tag=tagName` will return the media with tag `tagName`.
+- `collection=source&source=sourceName` will return the media from source `sourceName`.
+- `collection=creator&creator=creatorName` will return the media by creator `creatorName`.
+
+Collection results are sorted by the time they were added to Openverse, with the most recent
+additions appearing first. The filters such as `license` are not available for collections.
+"""
+
+SEARCH_DESCRIPTION_COLLECTIONS_DISABLED = """
+Search %(media_type)s using a query string.
+
+By using this endpoint, you can obtain search results based on specified
+query and optionally filter results by
+%(filter_fields)s.
+
+Results are ranked in order of relevance and paginated on the basis of the
+`page` param. The `page_size` param controls the total number of pages.
+
+Although there may be millions of relevant records, only the most relevant
+several thousand records can be viewed. This is by design: the search
+endpoint should be used to find the top 10,000 most relevant results, not
+for exhaustive search or bulk download of every barely relevant result. As
+such, the caller should not try to access pages beyond `page_count`, or else
+the server will reject the query."""
+
+SEARCH_DESCRIPTION = (
+    SEARCH_DESCRIPTION_DEFAULT
+    if settings.ENABLE_COLLECTIONS
+    else SEARCH_DESCRIPTION_COLLECTIONS_DISABLED
+)

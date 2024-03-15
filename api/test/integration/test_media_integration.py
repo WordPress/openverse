@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import pytest
 
 from api.constants.licenses import LICENSE_GROUPS
+from api.constants.parameters import COLLECTION, TAG
 
 
 pytestmark = pytest.mark.django_db
@@ -408,9 +409,7 @@ def test_report_is_created(single_result, api_client):
 def test_collection_by_tag(media_type: MediaType, api_client):
     tags = media_type.tags
     for tag in tags:
-        res = api_client.get(
-            f"/v1/{media_type.path}/?unstable__collection=tag&unstable__tag={tag}"
-        )
+        res = api_client.get(f"/v1/{media_type.path}/?{COLLECTION}=tag&{TAG}={tag}")
         assert res.status_code == 200
 
         data = res.json()
@@ -423,9 +422,7 @@ def test_collection_by_tag(media_type: MediaType, api_client):
 def test_collection_by_source(media_type: MediaType, api_client):
     source = api_client.get(f"/v1/{media_type.path}/stats/").json()[0]["source_name"]
 
-    res = api_client.get(
-        f"/v1/{media_type.path}/?unstable__collection=source&source={source}"
-    )
+    res = api_client.get(f"/v1/{media_type.path}/?{COLLECTION}=source&source={source}")
     assert res.status_code == 200
 
     data = res.json()
@@ -438,13 +435,13 @@ def test_collection_by_creator(media_type: MediaType, api_client):
     source = source_res.json()[0]["source_name"]
 
     first_res = api_client.get(
-        f"/v1/{media_type.path}/?unstable__collection=source&source={source}"
+        f"/v1/{media_type.path}/?{COLLECTION}=source&source={source}"
     )
     first = first_res.json()["results"][0]
     assert (creator := first.get("creator"))
 
     res = api_client.get(
-        f"/v1/{media_type.path}/?unstable__collection=creator&source={source}&creator={creator}"
+        f"/v1/{media_type.path}/?{COLLECTION}=creator&source={source}&creator={creator}"
     )
     assert res.status_code == 200
 

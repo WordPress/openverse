@@ -11,10 +11,18 @@ from elasticsearch_dsl.response import Hit
 
 from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
+from api.constants.parameters import COLLECTION, TAG
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
 from api.models.media import AbstractMedia
 from api.serializers.base import BaseModelSerializer
+from api.serializers.docs import (
+    COLLECTION_HELP_TEXT,
+    CREATOR_HELP_TEXT,
+    EXCLUDED_SOURCE_HELP_TEXT,
+    SOURCE_HELP_TEXT,
+    TAG_HELP_TEXT,
+)
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
 from api.utils.licenses import get_license_url
@@ -82,6 +90,11 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return value
 
 
+EXCLUDED_COLLECTION_REQUEST_FIELDS = (
+    [] if settings.ENABLE_COLLECTIONS else [COLLECTION, TAG]
+)
+
+
 @extend_schema_serializer(
     # Hide unstable and internal fields from documentation.
     # Also see `field_names` below.
@@ -91,9 +104,8 @@ class PaginatedRequestSerializer(serializers.Serializer):
         "unstable__authority",
         "unstable__authority_boost",
         "unstable__include_sensitive_results",
-        "unstable__collection",
-        "unstable__tag",
         "internal__index",
+        *EXCLUDED_COLLECTION_REQUEST_FIELDS,
     ],
 )
 class MediaSearchRequestSerializer(PaginatedRequestSerializer):
@@ -112,6 +124,9 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         "license_type",
         "creator",
         "tags",
+        # Uncomment after Additional search views project is launched
+        # "collection",
+        # "tag",
         "title",
         "filter_dead",
         "extension",
@@ -122,10 +137,15 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         # "unstable__authority",
         # "unstable__authority_boost",
         # "unstable__include_sensitive_results",
-        # "unstable__collection",
-        # "unstable__tag",
-        *PaginatedRequestSerializer.field_names,
     ]
+    if settings.ENABLE_COLLECTIONS:
+        field_names.extend(
+            [
+                TAG,
+                COLLECTION,
+            ]
+        )
+    field_names.extend(PaginatedRequestSerializer.field_names)
     """
     Keep the fields names in sync with the actual fields below as this list is
     used to generate Swagger documentation.
@@ -135,28 +155,6 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         label="query",
         help_text="A query string that should not exceed 200 characters in length",
         required=False,
-    )
-    license = serializers.CharField(
-        label="licenses",
-        help_text=make_comma_separated_help_text(LICENSE_GROUPS["all"], "licenses"),
-        required=False,
-    )
-    license_type = serializers.CharField(
-        label="license type",
-        help_text=make_comma_separated_help_text(
-            LICENSE_GROUPS.keys(), "license types"
-        ),
-        required=False,
-    )
-    creator = serializers.CharField(
-        label="creator",
-        help_text="Search by creator only. Cannot be used with `q`. The search "
-        "is fuzzy, so `creator=john` will match any value that includes the "
-        "word `john`. If the value contains space, items that contain any of "
-        "the words in the value will match. To search for several values, "
-        "join them with a comma.",
-        required=False,
-        max_length=200,
     )
     tags = serializers.CharField(
         label="tags",
@@ -176,6 +174,24 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         "value will match. To search for several values, join them with a comma.",
         required=False,
         max_length=200,
+    )
+    creator = serializers.CharField(
+        label="creator",
+        help_text=CREATOR_HELP_TEXT,
+        required=False,
+        max_length=200,
+    )
+    license = serializers.CharField(
+        label="licenses",
+        help_text=make_comma_separated_help_text(LICENSE_GROUPS["all"], "licenses"),
+        required=False,
+    )
+    license_type = serializers.CharField(
+        label="license type",
+        help_text=make_comma_separated_help_text(
+            LICENSE_GROUPS.keys(), "license types"
+        ),
+        required=False,
     )
     filter_dead = serializers.BooleanField(
         label="filter_dead",
@@ -242,10 +258,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     unstable__tag = serializers.CharField(
         label="tag",
         source="tag",
-        help_text="Search by tag only. Cannot be used with `q`, should be used "
-        "with `unstable__collection`. The match is exact, so `tag=cat` will "
-        "not match values that include the word but are not exactly `cat`, such as "
-        "`cats` or `catfish`",
+        help_text=TAG_HELP_TEXT,
         required=False,
         max_length=200,
     )
@@ -253,7 +266,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         source="collection",
         label="collection",
         choices=["tag", "source", "creator"],
-        help_text="The collection to search in. Should be used with `unstable__tag`, `source` or `creator`+`source`",
+        help_text=COLLECTION_HELP_TEXT,
         required=False,
     )
 
@@ -293,19 +306,23 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         return value.lower()
 
     def validate_unstable__collection(self, value):
-        if value == "tag" and not self.initial_data.get("unstable__tag"):
+        if self.initial_data.get("q", None) is not None:
             raise serializers.ValidationError(
-                "The `unstable__tag` parameter is required when `unstable__collection` is set to `tag`."
+                "The `collection` parameter cannot be used with the `q` parameter."
+            )
+        if value == "tag" and not self.initial_data.get(TAG):
+            raise serializers.ValidationError(
+                f"The `{TAG}` parameter is required when `{COLLECTION}` is set to `tag`."
             )
         if value == "source" and not self.initial_data.get("source"):
             raise serializers.ValidationError(
-                "The `source` parameter is required when `unstable__collection` is set to `source`."
+                f"The `source` parameter is required when `{COLLECTION}` is set to `source`."
             )
         if value == "creator" and not (
             self.initial_data.get("creator") and self.initial_data.get("source")
         ):
             raise serializers.ValidationError(
-                "The `creator` and `source` parameters are required when `unstable__collection` is set to `creator`."
+                f"The `creator` and `source` parameters are required when `{COLLECTION}` is set to `creator`."
             )
         return value
 
@@ -667,23 +684,24 @@ def get_search_request_source_serializer(media_type):
         Keep the fields names in sync with the actual fields below as this list is
         used to generate Swagger documentation.
         """
-
-        _field_attrs = {
-            "help_text": (
-                "A comma separated list of data sources; valid values are "
-                "``source_name``s from the stats endpoint: "
-                f"{settings.CANONICAL_ORIGIN}/v1/{media_path}/stats/."
-            ),
-            "required": False,
+        source_help_text = SOURCE_HELP_TEXT % {
+            "origin": settings.CANONICAL_ORIGIN,
+            "media_path": media_path,
+        }
+        excluded_help_text = EXCLUDED_SOURCE_HELP_TEXT % {
+            "origin": settings.CANONICAL_ORIGIN,
+            "media_path": media_path,
         }
 
         source = serializers.CharField(
             label="provider",
-            **_field_attrs,
+            help_text=source_help_text,
+            required=False,
         )
         excluded_source = serializers.CharField(
             label="excluded_provider",
-            **_field_attrs,
+            help_text=excluded_help_text,
+            required=False,
         )
 
         def validate_source(self, value):
@@ -698,7 +716,7 @@ def get_search_request_source_serializer(media_type):
             """
             allowed_sources = list(search_controller.get_sources(media_type).keys())
             sources_list = ", ".join([f"'{s}'" for s in allowed_sources])
-            collection = self.initial_data.get("unstable__collection")
+            collection = self.initial_data.get(COLLECTION)
 
             # For collection=tag, return the value as is. It is ignored in the query builder.
             if collection == "tag":
