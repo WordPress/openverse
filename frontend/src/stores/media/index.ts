@@ -416,9 +416,6 @@ export const useMediaStore = defineStore("media", {
     async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
-      if (!shouldPersistMedia) {
-        this.clearMedia()
-      }
 
       const mediaToFetch = this._fetchableMediaTypes
 

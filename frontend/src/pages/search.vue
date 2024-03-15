@@ -147,23 +147,15 @@ export default defineComponent({
     const isFetching = computed(() => fetchState.value.isFetching)
 
     /**
-     * Search middleware runs when the path changes. This watcher
-     * is necessary to handle the query changes.
-     *
-     * It updates the search store state from the URL query,
-     * fetches media, and scrolls to top if necessary.
+     * The search middleware updates the search store on every path or query
+     * change.
+     * This watcher fetches media, and scrolls to top if necessary.
      */
     watch(route, async (newRoute, oldRoute) => {
       if (
         newRoute.path !== oldRoute.path ||
         !isShallowEqualObjects(newRoute.query, oldRoute.query)
       ) {
-        const { query: urlQuery, path } = newRoute
-        searchStore.setSearchStateFromUrl({ urlQuery, path })
-
-        const mediaStore = useMediaStore()
-        mediaStore.clearMedia()
-
         /**
          * By default, Nuxt only scrolls to top when the path changes.
          * This is a workaround to scroll to top when the query changes.
