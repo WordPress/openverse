@@ -144,7 +144,7 @@ SEARCH_DESCRIPTION_DEFAULT = """
 Return audio files that match the query.
 
 This endpoint allows you to search within specific fields, or to retrieve
-a collection of all audio files from a specific source, creator or tag.
+a collection of all %(media_type)s from a specific source, creator or tag.
 Results are paginated on the basis of the `page` parameter. The `page_size`
 parameter controls the total number of pages.
 
