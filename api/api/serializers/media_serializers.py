@@ -710,7 +710,7 @@ def get_search_request_source_serializer(media_type):
             source names that are in the search controller's sources list for the media type.
             For the collection=tag, return the value as is. It is ignored in the query builder.
             For source and creator collections, accept the value as is, without lower-casing
-             or splitting, and check if it's in the valid source name list.
+            or splitting, and check if it's in the valid source name list.
             This function validates the source and excluded_source fields, but `excluded_source`
             is ignored for collection requests.
             """
