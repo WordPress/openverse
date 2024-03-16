@@ -44,7 +44,7 @@ Valid values are `source_name`s from the stats endpoint: %(origin)s/v1/%(media_p
 """
 SOURCE_HELP_TEXT_COLLECTIONS_DISABLED = """
 A comma separated list of data sources; valid values are
-``source_name``s from the stats endpoint: %(origin)s/v1/%(media_path)s/stats/."""
+`source_name`s from the stats endpoint: %(origin)s/v1/%(media_path)s/stats/."""
 
 SOURCE = """
 For default search, a comma separated list of data sources.
