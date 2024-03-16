@@ -14,7 +14,7 @@ CREATOR = """
 _When `q` parameter is present, `creator` parameter is ignored._
 
 **Creator collection**
-When used with `collection=creator`, returns the collection of media
+When used with `collection=creator&source=sourceName`, returns the collection of media
 by the specified creator. Notice that a single creator's media items
 can be found on several sources, but this collection only returns the
 items from the specified source.
