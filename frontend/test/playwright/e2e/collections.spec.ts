@@ -70,7 +70,7 @@ test.describe("collections", () => {
 const COLLAPSE_BUTTON = (page: Page) =>
   page.getByRole("button", { name: t("mediaDetails.tags.showLess") })
 const EXPAND_BUTTON = (page: Page) =>
-  page.getByRole("button", { name: t("mediaDetails.tags.showAll") })
+  page.getByRole("button", { name: t("mediaDetails.tags.showMore") })
 
 test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
   await preparePageForTests(page, "xl", {

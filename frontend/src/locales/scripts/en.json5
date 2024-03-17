@@ -500,8 +500,8 @@
     audioInfo: "Audio information",
     tags: {
       title: "Tags",
-      showAll: "Show all tags",
-      showFewer: "Show fewer tags",
+      showMore: "Show more",
+      showLess: "Show less",
     },
     contentReport: {
       short: "Report",

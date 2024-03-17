@@ -21,8 +21,8 @@
       >{{
         $t(
           buttonStatus === "show"
-            ? "mediaDetails.tags.showAll"
-            : "mediaDetails.tags.seeLess"
+            ? "mediaDetails.tags.showMore"
+            : "mediaDetails.tags.showLess"
         )
       }}<VIcon
         name="caret-down"

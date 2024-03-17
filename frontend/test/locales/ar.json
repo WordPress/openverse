@@ -193,8 +193,8 @@
     "audioInfo": "معلومات صوتية",
     "tags": {
       "title": "العلامات",
-      "showAll": "العلامات",
-      "seeLess": "انظر أقل"
+      "showMore": "أظهر المزيد",
+      "showLess": "تظهر أقل"
     },
     "contentReport": {
       "short": "تقرير",
