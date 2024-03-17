@@ -283,7 +283,7 @@ export type Events = {
     /** Pagination depth */
     resultPage: number
   }
-  /*
+  /**
    * Description: Whenever the user clicks the load more button
    * Questions:
    *   - On what page do users typically find a result?
@@ -301,7 +301,7 @@ export type Events = {
      * *before* loading more results.. */
     resultPage: number
   }
-  /*
+  /**
    * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
    * Questions:
    *  - Do most users filter their searches?
@@ -411,6 +411,17 @@ export type Events = {
     id: string
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
+  }
+  /**
+   * Description: The user expands collapsed tags or collapses the expanded ones.
+   *
+   * Questions:
+   * - Are the extra tags useful to users?
+   * - Do users ever collapse expanded tags?
+   */
+  TOGGLE_TAG_EXPANSION: {
+    /** The state of the tags after the user interaction. */
+    toState: "expanded" | "collapsed"
   }
 }
 

@@ -61,6 +61,8 @@ import { useSearchStore } from "~/stores/search"
 
 import { focusElement } from "~/utils/focus-management"
 
+import { useAnalytics } from "~/composables/use-analytics"
+
 import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 import VTag from "~/components/VTag/VTag.vue"
 import VButton from "~/components/VButton.vue"
@@ -160,6 +162,7 @@ export default defineComponent({
       }
     })
 
+    const { sendCustomEvent } = useAnalytics()
     const buttonStatus = ref<"show" | "hide">("show")
     /**
      * Toggles the text for the "Show more" button. When showing more tags, we also
@@ -167,6 +170,9 @@ export default defineComponent({
      */
     const handleClick = () => {
       buttonStatus.value = buttonStatus.value === "show" ? "hide" : "show"
+      sendCustomEvent("TOGGLE_TAG_EXPANSION", {
+        toState: buttonStatus.value === "show" ? "collapsed" : "expanded",
+      })
       if (buttonStatus.value === "hide" && collapsibleRowsStartAt.value) {
         nextTick(() => {
           if (!collapsibleRowsStartAt.value) {

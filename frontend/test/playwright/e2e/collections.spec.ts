@@ -4,7 +4,7 @@
  * introduced in https://github.com/WordPress/openverse/pull/3831
  */
 
-import { test, expect } from "@playwright/test"
+import { test, expect, Page } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 import {
@@ -13,6 +13,10 @@ import {
   // getLoadMoreButton,
 } from "~~/test/playwright/utils/components"
 import { t } from "~~/test/playwright/utils/i18n"
+import {
+  collectAnalyticsEvents,
+  expectEventPayloadToMatch,
+} from "~~/test/playwright/utils/analytics"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -62,6 +66,12 @@ test.describe("collections", () => {
     // expect(await page.locator("figure").count()).toEqual(20)
   })
 })
+
+const COLLAPSE_BUTTON = (page: Page) =>
+  page.getByRole("button", { name: t("mediaDetails.tags.showLess") })
+const EXPAND_BUTTON = (page: Page) =>
+  page.getByRole("button", { name: t("mediaDetails.tags.showAll") })
+
 test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
   await preparePageForTests(page, "xl", {
     features: { additional_search_views: "on" },
@@ -71,11 +81,28 @@ test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
   const tags = page.getByRole("list", { name: t("mediaDetails.tags.title") })
   await expect(tags).toBeVisible()
   const tagsCount = await tags.locator("li").count()
-  const showMoreButton = page.getByRole("button", {
-    name: t("mediaDetails.tags.showAll"),
-  })
-  await expect(showMoreButton).toBeVisible()
 
-  await showMoreButton.click()
+  await EXPAND_BUTTON(page).click()
   expect(await tags.locator("li").count()).toBeGreaterThan(tagsCount)
+})
+
+test("sends analytics events when tags are toggled", async ({
+  context,
+  page,
+}) => {
+  await preparePageForTests(page, "xl", {
+    features: { additional_search_views: "on" },
+  })
+  const analyticsEvents = collectAnalyticsEvents(context)
+  await page.goto("/image/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750")
+
+  await EXPAND_BUTTON(page).click()
+  await COLLAPSE_BUTTON(page).click()
+
+  const toggleEvents = analyticsEvents.filter(
+    (event) => event.n === "TOGGLE_TAG_EXPANSION"
+  )
+  expect(toggleEvents).toHaveLength(2)
+  expectEventPayloadToMatch(toggleEvents[0], { toState: "expanded" })
+  expectEventPayloadToMatch(toggleEvents[1], { toState: "collapsed" })
 })
