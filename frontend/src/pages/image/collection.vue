@@ -52,7 +52,7 @@ export default defineComponent({
       }
       const { collection, ...params } = collectionParams.value
       return i18n
-        .t(`collection.label.${collection}.image`, { ...params })
+        .t(`collection.ariaLabel.${collection}.image`, { ...params })
         .toString()
     })
 

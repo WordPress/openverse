@@ -53,7 +53,7 @@ export default defineComponent({
       }
       const { collection, ...params } = collectionParams.value
       return i18n
-        .t(`collection.label.${collection}.audio`, { ...params })
+        .t(`collection.ariaLabel.${collection}.audio`, { ...params })
         .toString()
     })
 
