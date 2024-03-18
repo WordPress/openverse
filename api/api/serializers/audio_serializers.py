@@ -133,18 +133,19 @@ class AudioAltFileSerializer(serializers.Serializer):
         help_text="URL of the alternative file.",
     )
     bit_rate = serializers.IntegerField(
-        help_text="Bit rate of the alternative file.",
-        min_value=0,
+        help_text="Bit rate of the alternative file.", min_value=0, required=False
     )
     filesize = serializers.IntegerField(
         help_text="Size of the alternative file in bytes.",
         min_value=0,
+        required=False,
     )
     filetype = serializers.CharField(
         help_text="File type of the alternative file.",
     )
     sample_rate = serializers.IntegerField(
         help_text="Sample rate of the alternative file.",
+        required=False,
         min_value=0,
     )
 
