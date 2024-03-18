@@ -4,7 +4,7 @@
 
 ## Reviewers
 
-- [ ] @AetherUnbound
+- [x] @AetherUnbound
 - [ ] @stacimc
 
 ## Project links
