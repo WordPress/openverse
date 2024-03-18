@@ -41,7 +41,7 @@ def _get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
 
 @task
 def get_dags_with_concurrency_tag(
-    tag: str, excluded_dag_ids: list[str], session=None, **context
+    tag: str, excluded_dag_ids: list[str], session=None, dag=None
 ):
     """
     Get a list of DAG ids with the given tag. The id of the running DAG is excluded,
@@ -50,7 +50,7 @@ def get_dags_with_concurrency_tag(
     dags = session.query(DagModel).filter(DagModel.tags.any(DagTag.name == tag)).all()
     dag_ids = [dag.dag_id for dag in dags]
 
-    running_dag_id = context["dag"].dag_id
+    running_dag_id = dag.dag_id
     if running_dag_id not in dag_ids:
         raise ValueError(
             f"The `{running_dag_id}` DAG tried preventing concurrency with the `{tag}`,"
@@ -61,7 +61,7 @@ def get_dags_with_concurrency_tag(
 
     # Return just the ids of DAGs to prevent concurrency with. This excludes the running dag id,
     # and any supplied `excluded_dag_ids`
-    return [id for id in dag_ids if id not in [*excluded_dag_ids, running_dag_id]]
+    return [id for id in dag_ids if id not in {*excluded_dag_ids, running_dag_id}]
 
 
 @task
