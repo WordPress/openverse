@@ -82,7 +82,7 @@ audio_stats_200_example = {
             "display_name": "Freesound",
             "source_url": "https://freesound.org/",
             "logo_url": None,
-            "media_count": 828,
+            "media_count": 827,
         },
         {
             "source_name": "jamendo",
