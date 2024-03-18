@@ -25,7 +25,7 @@ from airflow.exceptions import AirflowSkipException
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from elasticsearch import Elasticsearch
 
-from common.constants import ENVIRONMENTS, PRODUCTION, Environment
+from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, PRODUCTION, Environment
 from common.elasticsearch import get_es_host
 from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
@@ -161,6 +161,7 @@ _SHARED_DAG_ARGS = {
     "max_active_runs": 1,
     "doc_md": __doc__,
     "tags": ["elasticsearch", "monitoring"],
+    "default_args": DAG_DEFAULT_ARGS,
 }
 
 
