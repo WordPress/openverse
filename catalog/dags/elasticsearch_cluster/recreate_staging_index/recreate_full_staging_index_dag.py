@@ -52,7 +52,10 @@ from common.constants import (
     MEDIA_TYPES,
     XCOM_PULL_TEMPLATE,
 )
-from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
+from common.sensors.constants import (
+    STAGING_DB_CONCURRENCY_TAG,
+    STAGING_ES_CONCURRENCY_TAG,
+)
 from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID,
@@ -68,7 +71,12 @@ from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index im
     default_args=DAG_DEFAULT_ARGS,
     schedule=None,
     start_date=datetime(2023, 4, 1),
-    tags=["database", "elasticsearch", STAGING_ES_CONCURRENCY_TAG],
+    tags=[
+        "database",
+        "elasticsearch",
+        STAGING_DB_CONCURRENCY_TAG,
+        STAGING_ES_CONCURRENCY_TAG,
+    ],
     max_active_runs=1,
     catchup=False,
     doc_md=__doc__,
@@ -102,8 +110,19 @@ from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index im
 def recreate_full_staging_index():
     # Fail early if any other DAG that operates on the staging elasticsearch cluster
     # is running
-    prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+    prevent_concurrency_es = prevent_concurrency_with_dags_with_tag.override(
+        group_id="prevent_concurrency_with_elasticsearch_dags"
+    )(
         tag=STAGING_ES_CONCURRENCY_TAG,
+    )
+
+    # Because this DAG pulls records from the staging API database during reindexing
+    # rather than reindexing from another ES index, it must also prevent concurrency
+    # with DAGs that affect the staging DB.
+    prevent_concurrency_db = prevent_concurrency_with_dags_with_tag.override(
+        group_id="prevent_concurrency_with_api_db_dags"
+    )(
+        tag=STAGING_DB_CONCURRENCY_TAG,
     )
 
     target_alias = get_target_alias(
@@ -167,8 +186,10 @@ def recreate_full_staging_index():
     )
 
     # Set up dependencies
-    prevent_concurrency >> target_alias >> get_current_index_if_exists
-    get_current_index_if_exists >> new_index_suffix
+    prevent_concurrency_es >> target_alias
+    prevent_concurrency_db >> target_alias
+
+    target_alias >> get_current_index_if_exists >> new_index_suffix
     new_index_suffix >> do_create_index >> do_point_alias
     do_point_alias >> check_if_should_delete_index
     check_if_should_delete_index >> [delete_old_index, notify_complete]

@@ -35,8 +35,8 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     POSTGRES_API_STAGING_CONN_ID,
 )
-from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
-from common.sensors.utils import wait_for_external_dag
+from common.sensors.constants import STAGING_DB_CONCURRENCY_TAG
+from common.sensors.utils import wait_for_external_dags_with_tag
 from common.sql import PGExecuteQueryOperator
 from database.staging_database_restore import constants
 from database.staging_database_restore.staging_database_restore import (
@@ -49,9 +49,6 @@ from database.staging_database_restore.staging_database_restore import (
     restore_staging_from_snapshot,
     skip_restore,
 )
-from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
-    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
-)
 
 
 log = logging.getLogger(__name__)
@@ -61,7 +58,7 @@ log = logging.getLogger(__name__)
     dag_id=constants.DAG_ID,
     schedule="@monthly",
     start_date=datetime(2023, 5, 1),
-    tags=["database", STAGING_ES_CONCURRENCY_TAG],
+    tags=["database", STAGING_DB_CONCURRENCY_TAG],
     max_active_runs=1,
     dagrun_timeout=timedelta(days=1),
     catchup=False,
@@ -79,8 +76,8 @@ def restore_staging_database():
     # to the database restoration starting, we should wait for it to
     # finish. It is not necessary to wait on any of the other ES DAGs as
     # they do not directly affect the database.
-    wait_for_recreate_full_staging_index = wait_for_external_dag(
-        external_dag_id=RECREATE_STAGING_INDEX_DAG_ID,
+    wait_for_recreate_full_staging_index = wait_for_external_dags_with_tag(
+        tag=STAGING_DB_CONCURRENCY_TAG
     )
     should_skip = skip_restore()
     latest_snapshot = get_latest_prod_snapshot()
