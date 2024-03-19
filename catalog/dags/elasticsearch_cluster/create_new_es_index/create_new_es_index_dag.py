@@ -144,7 +144,7 @@ def create_new_es_index_dag(dag_config: CreateNewIndex):
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
-        tags=["elasticsearch", dag_config.concurrency_tag],
+        tags=["elasticsearch", dag_config.prevent_concurrency_tag],
         render_template_as_native_obj=True,
         params={
             "media_type": Param(
@@ -228,7 +228,7 @@ def create_new_es_index_dag(dag_config: CreateNewIndex):
         # Fail early if any other DAG that operates on the relevant elasticsearch cluster
         # is running
         prevent_concurrency = prevent_concurrency_with_dags_with_tag(
-            tag=dag_config.concurrency_tag,
+            tag=dag_config.prevent_concurrency_tag,
         )
 
         es_host = es.get_es_host(environment=dag_config.environment)
