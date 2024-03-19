@@ -191,6 +191,11 @@
     "relatedError": "خطأ في جلب الوسائط ذات الصلة",
     "imageInfo": "معلومات الصورة",
     "audioInfo": "معلومات صوتية",
+    "tags": {
+      "title": "العلامات",
+      "showMore": "أظهر المزيد",
+      "showLess": "تظهر أقل"
+    },
     "contentReport": {
       "short": "تقرير",
       "long": "الإبلاغ عن هذا المحتوى",

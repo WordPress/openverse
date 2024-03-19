@@ -1,0 +1,257 @@
+{
+    meta: {
+        createdAt: '2024-02-19T17:03:23.360Z',
+        host: 'https://api.openverse.engineering',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Mon, 19 Feb 2024 17:03:23 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '19',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '199',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                'f3cf70767a3e4dc3bf40b854158123ea',
+            ],
+            'cache-control': [
+                'max-age=14400',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '27135',
+            ],
+            'last-modified': [
+                'Mon, 19 Feb 2024 09:31:08 GMT',
+            ],
+            'strict-transport-security': [
+                'max-age=15552000; includeSubDomains; preload',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '8580153e2f57692b-FRA',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+            'alt-svc': [
+                'h3=":443"; ma=86400',
+            ],
+        },
+        body: {
+            id: '2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750',
+            title: 'August Great Horned Owl',
+            indexed_on: '2020-04-25T07:58:25.731612Z',
+            foreign_landing_url: 'https://www.flickr.com/photos/7327719@N06/3823784992',
+            url: 'https://live.staticflickr.com/3486/3823784992_a1dcf4a1d1_b.jpg',
+            creator: "Vicki's Nature",
+            creator_url: 'https://www.flickr.com/photos/7327719@N06',
+            license: 'by-nc-nd',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-nc-nd/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            filesize: null,
+            filetype: null,
+            tags: [
+                {
+                    name: '100commentgroup',
+                    accuracy: null,
+                },
+                {
+                    name: 'aas2010',
+                    accuracy: null,
+                },
+                {
+                    name: 'beautifulworldchallenges',
+                    accuracy: null,
+                },
+                {
+                    name: 'bird',
+                    accuracy: null,
+                },
+                {
+                    name: 'bwcgg',
+                    accuracy: null,
+                },
+                {
+                    name: 'canon',
+                    accuracy: null,
+                },
+                {
+                    name: 'cnc',
+                    accuracy: null,
+                },
+                {
+                    name: 'faves3539',
+                    accuracy: null,
+                },
+                {
+                    name: 'favescontestfavored',
+                    accuracy: null,
+                },
+                {
+                    name: 'favescontestwinner',
+                    accuracy: null,
+                },
+                {
+                    name: 'favesfavoredchallenge',
+                    accuracy: null,
+                },
+                {
+                    name: 'favesfavoredwinner',
+                    accuracy: null,
+                },
+                {
+                    name: 'favesrunnerupchallenge',
+                    accuracy: null,
+                },
+                {
+                    name: 'favesrunnerupwinner',
+                    accuracy: null,
+                },
+                {
+                    name: 'favestopseedchallenge',
+                    accuracy: null,
+                },
+                {
+                    name: 'favestopseedchallengex2',
+                    accuracy: null,
+                },
+                {
+                    name: 'faveswinner',
+                    accuracy: null,
+                },
+                {
+                    name: 'gameshotbefore2013bigbirdportraits',
+                    accuracy: null,
+                },
+                {
+                    name: 'gamesweep',
+                    accuracy: null,
+                },
+                {
+                    name: 'gamewinner',
+                    accuracy: null,
+                },
+                {
+                    name: 'georgia',
+                    accuracy: null,
+                },
+                {
+                    name: 'goldstaraward',
+                    accuracy: null,
+                },
+                {
+                    name: 'goldstarawardcontest78',
+                    accuracy: null,
+                },
+                {
+                    name: 'greathornedowl',
+                    accuracy: null,
+                },
+                {
+                    name: 'motherbirds',
+                    accuracy: null,
+                },
+                {
+                    name: 'natureoutpost',
+                    accuracy: null,
+                },
+                {
+                    name: 'natureselegantshots',
+                    accuracy: null,
+                },
+                {
+                    name: 'owl',
+                    accuracy: null,
+                },
+                {
+                    name: 'readygamex2',
+                    accuracy: null,
+                },
+                {
+                    name: 'return',
+                    accuracy: null,
+                },
+                {
+                    name: 's5',
+                    accuracy: null,
+                },
+                {
+                    name: 'specanimal',
+                    accuracy: null,
+                },
+                {
+                    name: 'sweep',
+                    accuracy: null,
+                },
+                {
+                    name: 'vickisnature',
+                    accuracy: null,
+                },
+            ],
+            attribution: '"August Great Horned Owl" by Vicki\'s Nature is licensed under CC BY-NC-ND 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/2.0/.',
+            fields_matched: [],
+            mature: false,
+            height: 1024,
+            width: 1024,
+            thumbnail: 'http://localhost:49153/v1/images/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750/',
+            related_url: 'http://localhost:49153/v1/images/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750/related/',
+            unstable__sensitivity: [],
+        },
+    },
+}
