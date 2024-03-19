@@ -136,15 +136,15 @@ from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import 
 logger = logging.getLogger(__name__)
 
 
-def create_new_es_index_dag(config: CreateNewIndex):
+def create_new_es_index_dag(dag_config: CreateNewIndex):
     dag = DAG(
-        dag_id=config.dag_id,
+        dag_id=dag_config.dag_id,
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
-        tags=["elasticsearch", config.concurrency_tag],
+        tags=["elasticsearch", dag_config.concurrency_tag],
         render_template_as_native_obj=True,
         params={
             "media_type": Param(
@@ -228,10 +228,10 @@ def create_new_es_index_dag(config: CreateNewIndex):
         # Fail early if any other DAG that operates on the relevant elasticsearch cluster
         # is running
         prevent_concurrency = prevent_concurrency_with_dags_with_tag(
-            tag=config.concurrency_tag,
+            tag=dag_config.concurrency_tag,
         )
 
-        es_host = es.get_es_host(environment=config.environment)
+        es_host = es.get_es_host(environment=dag_config.environment)
 
         index_name = get_index_name(
             media_type="{{ params.media_type }}",
@@ -271,8 +271,8 @@ def create_new_es_index_dag(config: CreateNewIndex):
             destination_index=index_name,
             source_index="{{ params.source_index or params.media_type }}",
             query="{{ params.query }}",
-            timeout=config.reindex_timeout,
-            requests_per_second=config.requests_per_second,
+            timeout=dag_config.reindex_timeout,
+            requests_per_second=dag_config.requests_per_second,
             es_host=es_host,
         )
 
@@ -305,6 +305,6 @@ def create_new_es_index_dag(config: CreateNewIndex):
     return dag
 
 
-for config in CREATE_NEW_INDEX_CONFIGS.values():
+for dag_config in CREATE_NEW_INDEX_CONFIGS.values():
     # Generate the DAG for this environment
-    globals()[config.dag_id] = create_new_es_index_dag(config)
+    globals()[dag_config.dag_id] = create_new_es_index_dag(dag_config)
