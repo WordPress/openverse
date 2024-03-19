@@ -58,7 +58,7 @@ Refine Search Experience
 
 <!-- What infrastructural considerations need to be made for this project? If there are none, say so explicitly rather than deleting the section. -->
 
-TBD
+This project only concerns frontend user interface code, and swapping colors. It should not require any changes to our infrastructure.
 
 ## Accessibility
 
