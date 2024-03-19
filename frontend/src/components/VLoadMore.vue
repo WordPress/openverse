@@ -25,11 +25,9 @@ import {
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
 
-import { useRoute } from "@nuxtjs/composition-api"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
 import { defineEvent } from "~/types/emits"
 
@@ -69,8 +67,7 @@ export default defineComponent({
     const route = useRoute()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
-    const { sendCustomEvent } = useAnalytics()
+    const { $sendCustomEvent } = useContext()
 
     const { currentPage } = storeToRefs(mediaStore)
 
@@ -84,13 +81,11 @@ export default defineComponent({
 
     /**
      * Whether we should show the "Load more" button.
-     * If the user has entered a search term, there is at least 1 page of results,
-     * there has been no fetching error, and there are more results to fetch,
-     * we show the button.
+     * If the fetching for the current query has started, there is at least
+     * 1 page of results, there has been no fetching error, and there are
+     * more results to fetch, we show the button.
      */
-    const canLoadMore = computed(
-      () => mediaStore.canLoadMore && searchStore.searchStarted
-    )
+    const canLoadMore = computed(() => mediaStore.canLoadMore)
 
     const reachResultEndEventSent = ref(false)
     /**
@@ -107,7 +102,7 @@ export default defineComponent({
 
       reachResultEndEventSent.value = false
 
-      sendCustomEvent("LOAD_MORE_RESULTS", eventPayload.value)
+      $sendCustomEvent("LOAD_MORE_RESULTS", eventPayload.value)
 
       emit("load-more")
     }
@@ -117,7 +112,7 @@ export default defineComponent({
       // currentPage is updated from 0, so we use the value or 1.
       // The currentPage can never be 0 here because then the loadMore
       // button would not be visible.
-      sendCustomEvent("REACH_RESULT_END", eventPayload.value)
+      $sendCustomEvent("REACH_RESULT_END", eventPayload.value)
     }
 
     const buttonLabel = computed(() =>

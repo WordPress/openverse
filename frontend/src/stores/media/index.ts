@@ -24,6 +24,10 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
+interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
+  hasStarted: boolean
+}
+
 export type MediaStoreResult = {
   count: number
   pageCount: number
@@ -37,8 +41,8 @@ export interface MediaState {
     image: MediaStoreResult
   }
   mediaFetchState: {
-    audio: FetchState
-    image: FetchState
+    audio: SearchFetchState
+    image: SearchFetchState
   }
   currentPage: number
 }
@@ -143,12 +147,12 @@ export const useMediaStore = defineStore("media", {
      * Search fetching state for selected search type. For 'All content', aggregates
      * the values for supported media types.
      */
-    fetchState(): FetchState {
+    fetchState(): SearchFetchState {
       if (this._searchType === ALL_MEDIA) {
         /**
          * For all_media, we return 'All media fetching error' if all types have some kind of error.
          */
-        const atLeastOne = (property: keyof FetchState) =>
+        const atLeastOne = (property: keyof SearchFetchState) =>
           supportedMediaTypes.some(
             (type) => this.mediaFetchState[type][property]
           )
@@ -289,6 +293,7 @@ export const useMediaStore = defineStore("media", {
 
     canLoadMore(): boolean {
       return (
+        this.fetchState.hasStarted &&
         !this.fetchState.fetchingError &&
         !this.fetchState.isFinished &&
         this.resultCount > 0
