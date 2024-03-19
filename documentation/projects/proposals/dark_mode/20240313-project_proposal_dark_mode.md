@@ -18,7 +18,7 @@ Include a feature that changes the UI from light to a dark color scheme.
 ### Motivation
 
 Dark mode is a customization level that is in the spirit of adapting the UI to
-people’s contexts. The benefits span a11y, personal preferences set on the
+user's contexts. The benefits span a11y, personal preferences set on the
 devices, energy efficiency in devices, and an alternative browsing experience of
 visual content due to the background contrast.
 
