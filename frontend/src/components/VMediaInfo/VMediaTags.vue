@@ -137,6 +137,11 @@ export default defineComponent({
       return children.length
     }
 
+    /**
+     * Only the first 3 rows of tags are visible by default.
+     * If we hide the tags using CSS only, they will be tabbable,
+     * even though they are not visible.
+     */
     const visibleTags = computed<string[]>(() => {
       return collapsibleRowsStartAt.value && buttonStatus.value === "show"
         ? normalizedTags.value.slice(0, collapsibleRowsStartAt.value)
@@ -189,6 +194,7 @@ export default defineComponent({
       }
       /**
        * Height is 3 rows of tags, gaps, and a padding for the focus rings.
+       * 3 * 2rem (tags) + 2 * 0.75rem (2 gaps) + 0.1875rem (margin for the focus ring)
        */
       return buttonStatus.value === "show" ? "max-h-[7.6875rem]" : "mah-h-none"
     })
