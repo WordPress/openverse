@@ -13,6 +13,7 @@
       <NuxtChild
         :key="$route.path"
         :results="searchResults"
+        :result-count="resultCount"
         :is-fetching="isFetching"
         :search-term="searchTerm"
         :supported="supported"

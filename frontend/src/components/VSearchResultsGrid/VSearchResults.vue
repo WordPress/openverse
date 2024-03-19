@@ -12,6 +12,11 @@
           :size="results.type === 'all' ? 'large' : 'default'"
           >{{ searchTerm }}</VSearchResultsTitle
         >
+        <h1 class="sr-only">
+          {{
+            $t("browsePage.aria.h1", { query: searchTerm, count: resultCount })
+          }}
+        </h1>
       </header>
 
       <div
@@ -82,6 +87,10 @@ export default defineComponent({
     },
     results: {
       type: Object as PropType<Results>,
+      required: true,
+    },
+    resultCount: {
+      type: Number,
       required: true,
     },
     isFetching: {

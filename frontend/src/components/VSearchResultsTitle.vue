@@ -1,6 +1,7 @@
 <template>
   <h1
-    class="sr-only break-words md:not-sr-only"
+    aria-hidden="true"
+    class="hidden break-words md:flex"
     :class="[
       size === 'large'
         ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'

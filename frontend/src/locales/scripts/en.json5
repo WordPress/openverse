@@ -438,6 +438,7 @@
       imageTitle: "Image: {title}",
       audioTitle: "Audio: {title}",
       results: "Search results for {query}.",
+      h1: "Search results for {query}, Number of results: {count}.",
     },
   },
   mediaDetails: {
