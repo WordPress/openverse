@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-03-14T11:51:56+00:00\n"
+"POT-Creation-Date: 2024-03-19T07:12:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1534,6 +1534,19 @@ msgstr ""
 
 msgctxt "mediaDetails.audioInfo"
 msgid "Audio information"
+msgstr ""
+
+#: src/components/VMediaInfo/VMediaTags.vue:5
+msgctxt "mediaDetails.tags.title"
+msgid "Tags"
+msgstr ""
+
+msgctxt "mediaDetails.tags.showMore"
+msgid "Show more"
+msgstr ""
+
+msgctxt "mediaDetails.tags.showLess"
+msgid "Show less"
 msgstr ""
 
 #: src/components/VContentReport/VContentReportButton.vue:8
