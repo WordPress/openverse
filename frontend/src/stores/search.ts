@@ -311,9 +311,6 @@ export const useSearchStore = defineStore("search", {
       this.strategy = "default"
 
       this.addRecentSearch(formattedTerm)
-
-      const mediaStore = useMediaStore()
-      mediaStore.clearMedia()
     },
     /**
      * Sets the collectionParams and mediaType for the collection page.
@@ -329,7 +326,8 @@ export const useSearchStore = defineStore("search", {
       this.clearFilters()
     },
     /**
-     * Called when a /search path is server-rendered.
+     * Called before navigating to a `/search` path, and when the
+     * path after `/search` or query parameters change.
      */
     setSearchStateFromUrl({
       path,
@@ -342,6 +340,9 @@ export const useSearchStore = defineStore("search", {
 
       this.strategy = "default"
       this.collectionParams = null
+
+      const mediaStore = useMediaStore()
+      mediaStore.clearMedia()
 
       this.setSearchTerm(query.q)
       this.searchType = pathToSearchType(path)
