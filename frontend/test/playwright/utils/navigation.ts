@@ -2,18 +2,18 @@ import { expect } from "@playwright/test"
 
 import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
+import type { MediaType, SupportedSearchType } from "~/constants/media"
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
-  MediaType,
   MODEL_3D,
   searchPath,
-  SupportedSearchType,
   VIDEO,
 } from "~/constants/media"
 
 import type { Breakpoint } from "~/constants/screens"
+import { keycodes } from "~/constants/key-codes"
 
 import type { BrowserContext, Locator, Page } from "@playwright/test"
 
@@ -422,4 +422,11 @@ export const setCookies = async (
     }
   })
   await context.addCookies(cookiesToSet)
+}
+
+export const skipToContent = async (page: Page) => {
+  // Go to skip to content button
+  await page.keyboard.press(keycodes.Tab)
+  // Skip to content
+  await page.keyboard.press(keycodes.Enter)
 }
