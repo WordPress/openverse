@@ -6,7 +6,7 @@ import type { TSESTree } from "@typescript-eslint/utils"
 type Options = readonly [
   {
     maxLength: number
-  }
+  },
 ]
 
 const messages = {

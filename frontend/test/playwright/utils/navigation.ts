@@ -191,7 +191,7 @@ export const selectHomepageSearchType = async (
 }
 
 const ALL_TEST_BANNERS = [
-  ...["ru", "en", "ar", "es"].map((lang) => `translation-${lang}`),
+  ...["ru", "en", "ar", "es", "pt"].map((lang) => `translation-${lang}`),
   "analytics",
 ]
 export const preparePageForTests = async (

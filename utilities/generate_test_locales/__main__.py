@@ -145,7 +145,7 @@ def generate_test_locales():
         out = to_json_paths[lang]
         new_json = _explode_json(new_to_json)
         out.unlink(missing_ok=True)
-        out.write_text(new_json)
+        out.write_text(f"{new_json}\n")
 
 
 if __name__ == "__main__":
