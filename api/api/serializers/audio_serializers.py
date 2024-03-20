@@ -114,6 +114,44 @@ class AudioSetSerializer(serializers.ModelSerializer):
 AudioHyperlinksSerializer = get_hyperlinks_serializer("audio")
 
 
+class AudioAltFileSerializer(serializers.Serializer):
+    """
+    A set of alternative files for a single audio object,
+    rendered as a part of the ``AudioSerializer`` output.
+    """
+
+    class Meta:
+        fields = [
+            "url",
+            "bit_rate",
+            "filesize",
+            "filetype",
+            "sample_rate",
+        ]
+
+    url = serializers.URLField(
+        help_text="URL of the alternative file.",
+    )
+    bit_rate = serializers.IntegerField(
+        help_text="Bit rate of the alternative file.",
+        min_value=0,
+        required=False,
+    )
+    filesize = serializers.IntegerField(
+        help_text="Size of the alternative file in bytes.",
+        min_value=0,
+        required=False,
+    )
+    filetype = serializers.CharField(
+        help_text="File type of the alternative file.",
+    )
+    sample_rate = serializers.IntegerField(
+        help_text="Sample rate of the alternative file.",
+        required=False,
+        min_value=0,
+    )
+
+
 class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
     """A single audio file. Used in search results."""
 
@@ -143,6 +181,13 @@ class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
         allow_null=True,
         help_text="Reference to set of which this track is a part.",
         read_only=True,
+    )
+
+    alt_files = AudioAltFileSerializer(
+        allow_null=True,
+        help_text="JSON describing alternative files for this audio.",
+        read_only=True,
+        many=True,
     )
 
     waveform = SchemableHyperlinkedIdentityField(

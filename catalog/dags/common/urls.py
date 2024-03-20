@@ -2,6 +2,7 @@
 This module has a number of public methods which are useful for
 verifying and cleaning URLs.
 """
+
 import logging
 import re
 from functools import lru_cache

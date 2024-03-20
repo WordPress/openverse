@@ -87,6 +87,13 @@ def _missing_node_keys(master_nodes: int, data_nodes: int):
             ),
             id="yellow-status-all-nodes-present",
         ),
+        pytest.param(
+            None,
+            None,
+            _make_response_body(status="green"),
+            id="green-status",
+            marks=pytest.mark.raises(exception=AirflowSkipException),
+        ),
     ),
 )
 def test_compose_notification(

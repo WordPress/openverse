@@ -63,7 +63,6 @@ for example, if there was a problem with the `update_query` which caused DAG
 failures during the `update_batches` step.
 """
 
-
 import logging
 
 from airflow.decorators import dag

@@ -12,39 +12,41 @@ const getReportButton = (page: Page) => {
   })
 }
 
-const getReportForm = (page: Page) => {
-  return page.getByRole("dialog", {
-    name: t("mediaDetails.contentReport.long"),
-  })
-}
-
-breakpoints.describeMd(({ expectSnapshot }) => {
-  test("unfocused close button", async ({ page }) => {
-    await preparePageForTests(page, "md")
-    await page.goto(imageUrl)
-
-    await getReportButton(page).click()
-
-    await expectSnapshot("content-report-unfocused", getReportForm(page))
-  })
-})
-
+/**
+ * This test was previoiusly known to be flaky:
+ * https://github.com/WordPress/openverse/issues/2020
+ *
+ * The flake involved an offset of 1-2 pixels in both
+ * the content and width of the popover (the locator
+ * produced with `getReportButton`). To fix this, the
+ * test now uses a screenshot of the entire page, rather
+ * than the isolated report element, and an increased
+ * maxDiffPixel ratio.
+ *
+ * Additionally, previously there were focused/unfocused
+ * tests to confirm the proper focus state of the
+ * report popover close button. However, that state
+ * only appears on focus visible and the snapshots
+ * were identical, so the tests were redundant.
+ */
 test.describe("content report form", () => {
-  // Flaky: https://github.com/WordPress/openverse/issues/2020
   test.describe.configure({ retries: 2 })
 
   breakpoints.describeMd(({ expectSnapshot }) => {
-    test("focused close button", async ({ page }) => {
+    test("unfocused close button", async ({ page }) => {
       await preparePageForTests(page, "md")
       await page.goto(imageUrl)
 
-      await getReportButton(page).click()
+      const button = getReportButton(page)
 
-      const form = getReportForm(page)
+      // Scroll the button to the bottom of the page
+      await button.evaluate((element) => element.scrollIntoView(false))
 
-      await form.getByRole("button", { name: t("modal.close") }).focus()
+      await button.click()
 
-      await expectSnapshot("content-report-focused", form)
+      await expectSnapshot("content-report", page, undefined, {
+        maxDiffPixelRatio: 0.1,
+      })
     })
   })
 })

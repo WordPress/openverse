@@ -12,6 +12,7 @@ the new functions.
 These DAGs are not on a schedule, and should only be run manually when new
 SQL code is deployed for the calculation.
 """
+
 from airflow import DAG
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
@@ -74,6 +75,6 @@ for popularity_refresh in POPULARITY_REFRESH_CONFIGS:
     recreate_popularity_calculation_dag = create_recreate_popularity_calculation_dag(
         popularity_refresh
     )
-    globals()[
-        recreate_popularity_calculation_dag.dag_id
-    ] = recreate_popularity_calculation_dag
+    globals()[recreate_popularity_calculation_dag.dag_id] = (
+        recreate_popularity_calculation_dag
+    )

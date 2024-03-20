@@ -162,17 +162,18 @@ def test_consolidate_load_statistics(all_results, expected):
 
 
 @pytest.mark.parametrize(
-    "batch_length, max_id, expected",
+    "batch_length, min_and_max, expected",
     [
-        pytest.param(10, [(22,)], [[(0, 9)], [(10, 19)], [(20, 29)]], id="happy_path"),
-        pytest.param(10, [(2,)], [[(0, 9)]], id="bigger_batch_than_id"),
-        pytest.param(10, [(None,)], None, id="no_data"),
+        pytest.param(10, (0, 22), [[(0, 9)], [(10, 19)], [(20, 29)]], id="happy_path"),
+        pytest.param(10, (0, 2), [[(0, 9)]], id="bigger_batch_than_id"),
+        pytest.param(10, (None, None), None, id="no_data"),
+        pytest.param(10, (8, 22), [[(8, 17)], [(18, 27)]], id="min_not_zero"),
     ],
 )
-def test_get_batches(batch_length, max_id, expected):
+def test_get_batches(batch_length, min_and_max, expected):
     task = mock.Mock()
     with mock.patch.object(PostgresHook, "get_execution_timeout", return_value=60):
-        with mock.patch.object(PostgresHook, "get_records", return_value=max_id):
+        with mock.patch.object(PostgresHook, "get_records", return_value=[min_and_max]):
             actual = INAT.get_batches(batch_length, task)
             assert actual == expected
 

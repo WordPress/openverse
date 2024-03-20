@@ -68,8 +68,8 @@ function getCountKey(resultsCount: number) {
   return resultsCount === 0
     ? "noResult"
     : resultsCount >= 10000
-    ? "more"
-    : "result"
+      ? "more"
+      : "result"
 }
 
 /**

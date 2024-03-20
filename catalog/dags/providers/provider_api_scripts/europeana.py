@@ -8,6 +8,7 @@ Output:                 TSV file containing the images and the
 
 Notes:                  https://pro.europeana.eu/page/search
 """
+
 import argparse
 import functools
 import logging
@@ -97,7 +98,15 @@ class EuropeanaRecordBuilder:
     @raise_if_empty
     def _get_image_url(self, data: dict) -> str | None:
         group = data.get("edmIsShownBy")
-        return group[0] if group else None
+        if not group:
+            return None
+        url = group[0]
+        # Some Europeana URLs may have prefixes, or reference Dropbox (which we can't
+        # include in our catalog because we cannot access them directly ourselves).
+        # E.g.: L-APC248-https://www.dropbox.com/s/i1pqizm1joof8y1/Belgium_Diptyque%20_MAR-SGP-CO1.jpg?raw=1
+        if "dropbox.com" in url:
+            return None
+        return url
 
     @raise_if_empty
     def _get_foreign_identifier(self, data: dict) -> str | None:

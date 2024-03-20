@@ -1,10 +1,7 @@
-import os
+from api.examples.environment import ORIGIN, TOKEN
 
 
-token = os.getenv("AUDIO_REQ_TOKEN", "DLBYIcfnKfolaXKcmMC8RIDCavc2hW")
-origin = os.getenv("AUDIO_REQ_ORIGIN", "https://api.openverse.engineering")
-
-auth = f'-H "Authorization: Bearer {token}"' if token else ""
+auth = f'-H "Authorization: Bearer {TOKEN}"' if TOKEN else ""
 identifier = "8624ba61-57f1-4f98-8a85-ece206c319cf"
 
 syntax_examples = {
@@ -25,7 +22,7 @@ audio_search_list_curl = "\n".join(
 # Example {index}: Search for audio {purpose}
 curl \\
   {auth} \\
-  "{origin}/v1/audio/?q={syntax}"
+  "{ORIGIN}/v1/audio/?q={syntax}"
 """
     for (index, (purpose, syntax)) in enumerate(syntax_examples.items())
 )
@@ -34,28 +31,28 @@ audio_search_curl = f"""
 # Search for music titled "Wish You Were Here" by The.madpix.project
 curl \\
   {auth} \\
-  "{origin}/v1/audio/?title=Wish%20You%20Were%20Here&creator=The.madpix.project"
+  "{ORIGIN}/v1/audio/?title=Wish%20You%20Were%20Here&creator=The.madpix.project"
 """
 
 audio_stats_curl = f"""
 # Get the statistics for audio sources
 curl \\
   {auth} \\
-  "{origin}/v1/audio/stats/"
+  "{ORIGIN}/v1/audio/stats/"
 """
 
 audio_detail_curl = f"""
 # Get the details of audio ID {identifier}
 curl \\
   {auth} \\
-  "{origin}/v1/audio/{identifier}/"
+  "{ORIGIN}/v1/audio/{identifier}/"
 """
 
 audio_related_curl = f"""
 # Get related audio files for audio ID {identifier}
 curl \\
   {auth} \\
-  "{origin}/v1/audio/{identifier}/related/"
+  "{ORIGIN}/v1/audio/{identifier}/related/"
 """
 
 audio_complain_curl = f"""
@@ -65,12 +62,12 @@ curl \\
   -H "Content-Type: application/json" \\
   {auth} \\
   -d '{{"reason": "mature", "description": "This audio contains sensitive content"}}' \\
-  "{origin}/v1/audio/{identifier}/report/"
+  "{ORIGIN}/v1/audio/{identifier}/report/"
 """
 
 audio_waveform_curl = f"""
 # Get the waveform of audio ID {identifier}
 curl \\
   {auth} \\
-  "{origin}/v1/audio/{identifier}/waveform/"
+  "{ORIGIN}/v1/audio/{identifier}/waveform/"
 """

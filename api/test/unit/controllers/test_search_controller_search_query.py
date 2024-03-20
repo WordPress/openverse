@@ -172,7 +172,6 @@ def test_create_search_query_q_search_with_filters(image_media_type_config):
                 }
             },
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},
-            {"rank_feature": {"boost": 25000, "field": "authority_boost"}},
         ],
     }
 

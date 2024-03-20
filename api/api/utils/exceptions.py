@@ -1,4 +1,4 @@
-from rest_framework.serializers import ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.views import exception_handler as drf_exception_handler
 
 

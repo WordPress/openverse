@@ -28,8 +28,11 @@
               </div>
             </template>
           </VMediaDetails>
-          <VRelatedAudio
-            @interacted="sendAudioEvent($event, 'VRelatedAudio')"
+          <VRelatedMedia
+            v-if="audio"
+            media-type="audio"
+            :related-to="audio.id"
+            class="mb-12"
           />
         </div>
       </template>
@@ -60,7 +63,7 @@ import { useSingleResultPageMeta } from "~/composables/use-single-result-page-me
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
-import VRelatedAudio from "~/components/VAudioDetails/VRelatedAudio.vue"
+import VRelatedMedia from "~/components/VMediaInfo/VRelatedMedia.vue"
 import VMediaDetails from "~/components/VMediaInfo/VMediaDetails.vue"
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 import VSingleResultControls from "~/components/VSingleResultControls.vue"
@@ -77,7 +80,7 @@ export default defineComponent({
     VMediaDetails,
     VAudioTrack,
     VMediaReuse,
-    VRelatedAudio,
+    VRelatedMedia,
   },
   layout: "content-layout",
   middleware: singleResultMiddleware,
@@ -89,7 +92,12 @@ export default defineComponent({
 
     const route = useRoute()
 
-    const audio = ref<AudioDetail | null>(singleResultStore.audio)
+    const audio = ref<AudioDetail | null>(
+      singleResultStore.audio?.id &&
+        singleResultStore.audio.id === route.value.params.id
+        ? singleResultStore.audio
+        : null
+    )
     const fetchingError = computed(
       () => singleResultStore.fetchState.fetchingError
     )

@@ -5,6 +5,7 @@ configuration for a Data Refresh DAG, and defines the actual `DATA_REFRESH_CONFI
 for each of our media types. This configuration information is used to generate
 the dynamic Data Refresh dags.
 """
+
 import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta

@@ -102,6 +102,7 @@ COPY --chown=opener . /api/
 RUN env \
   SETUP_ES="False" \
   DJANGO_SECRET_KEY="any string" \
+  CANONICAL_DOMAIN="" \
   python manage.py collectstatic
 
 # Add the release version to the docker container
@@ -122,7 +123,7 @@ CMD ["python", "run.py"]
 # NGINX #
 #########
 
-FROM docker.io/nginx:1.25.3-alpine as nginx
+FROM docker.io/nginx:1.25.4-alpine as nginx
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 

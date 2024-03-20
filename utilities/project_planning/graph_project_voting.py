@@ -3,6 +3,7 @@ Script for generating graphs of project voting results.
 
 See the README for more information.
 """
+
 from datetime import datetime
 from pathlib import Path
 

@@ -24,6 +24,10 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
+interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
+  hasStarted: boolean
+}
+
 export type MediaStoreResult = {
   count: number
   pageCount: number
@@ -37,8 +41,8 @@ export interface MediaState {
     image: MediaStoreResult
   }
   mediaFetchState: {
-    audio: FetchState
-    image: FetchState
+    audio: SearchFetchState
+    image: SearchFetchState
   }
   currentPage: number
 }
@@ -143,12 +147,12 @@ export const useMediaStore = defineStore("media", {
      * Search fetching state for selected search type. For 'All content', aggregates
      * the values for supported media types.
      */
-    fetchState(): FetchState {
+    fetchState(): SearchFetchState {
       if (this._searchType === ALL_MEDIA) {
         /**
          * For all_media, we return 'All media fetching error' if all types have some kind of error.
          */
-        const atLeastOne = (property: keyof FetchState) =>
+        const atLeastOne = (property: keyof SearchFetchState) =>
           supportedMediaTypes.some(
             (type) => this.mediaFetchState[type][property]
           )
@@ -286,6 +290,15 @@ export const useMediaStore = defineStore("media", {
           !this.mediaFetchState[type].isFinished
       )
     },
+
+    canLoadMore(): boolean {
+      return (
+        this.fetchState.hasStarted &&
+        !this.fetchState.fetchingError &&
+        !this.fetchState.isFinished &&
+        this.resultCount > 0
+      )
+    },
   },
 
   actions: {
@@ -408,26 +421,23 @@ export const useMediaStore = defineStore("media", {
     async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
-      if (!shouldPersistMedia) {
-        this.clearMedia()
-      }
 
       const mediaToFetch = this._fetchableMediaTypes
 
-      const resultCounts = await Promise.all(
+      await Promise.allSettled(
         mediaToFetch.map((mediaType) =>
           this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-      const resultCount = resultCounts.includes(null)
-        ? null
-        : (resultCounts as number[]).reduce((a, b) => a + b, 0)
 
       this.currentPage =
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
-      return resultCount
+
+      return mediaType === ALL_MEDIA
+        ? this.allMedia
+        : this.resultItems[mediaType]
     },
 
     clearMedia() {
@@ -450,8 +460,7 @@ export const useMediaStore = defineStore("media", {
       shouldPersistMedia: boolean
     }) {
       const searchStore = useSearchStore()
-      const { pathSlug, query: queryParams } =
-        searchStore.getSearchUrlParts(mediaType)
+      const queryParams = searchStore.getApiRequestQuery(mediaType)
       let page = this.results[mediaType].page + 1
       if (shouldPersistMedia) {
         queryParams.page = `${page}`
@@ -461,7 +470,7 @@ export const useMediaStore = defineStore("media", {
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
-        const data = await service.search(queryParams, pathSlug)
+        const data = await service.search(queryParams)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

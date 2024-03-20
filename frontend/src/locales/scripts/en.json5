@@ -453,6 +453,7 @@
     reuse: {
       title: "How to use",
       description: "Visit the {media}'s website to download and use it. Make sure to credit the creator by showing the attribution information where you are sharing your work.",
+      copyrightDisclaimer: "Some photographs might contain copyrighted content, such as paintings, sculptures, or architectural works. Using these photographs may require additional permissions from the copyright holder of the depicted works.",
       licenseHeader: "License",
       toolHeader: "Public Domain",
       audio: "Audio",
@@ -497,6 +498,11 @@
     },
     imageInfo: "Image information",
     audioInfo: "Audio information",
+    tags: {
+      title: "Tags",
+      showMore: "Show more",
+      showLess: "Show less",
+    },
     contentReport: {
       short: "Report",
       long: "Report this content",
@@ -744,6 +750,9 @@
       text: "Clear",
       label: "Clear recent searches",
     },
+    clearSingle: {
+      label: "Clear recent search '{entry}'",
+    },
     none: "No recent searches to show.",
     disclaimer: "Openverse does not store your recent searches, this information is kept locally in your browser.",
   },
@@ -771,6 +780,11 @@
     },
   },
   collection: {
+    heading: {
+      tag: "Tag",
+      creator: "Creator",
+      source: "Source",
+    },
     link: {
       source: "Open source site",
       creator: "Open creator page",
@@ -792,14 +806,14 @@
     resultCountLabel: {
       creator: {
         audio: {
-          zero: "No audio files by this creator in {source}",
-          count: "{count} audio file by this creator in {source}|{count} audio files by this creator in {source}",
-          countMore: "Over {count} audio files by this creator in {source}",
+          zero: "No audio files by this creator.",
+          count: "{count} audio file by this creator.|{count} audio files by this creator.",
+          countMore: "Over {count} audio files by this creator.",
         },
         image: {
-          zero: "No images by this creator in {source}",
-          count: "{count} image by this creator in {source}|{count} images by this creator in {source}",
-          countMore: "Over {count} images by this creator in {source}",
+          zero: "No images by this creator.",
+          count: "{count} image by this creator.|{count} images by this creator.",
+          countMore: "Over {count} images by this creator.",
         },
       },
       source: {

@@ -16,6 +16,7 @@ Resource | Requests per second | Requests per day
 /search, /id | 10 | 1000
 /id/media | 10 | 1000
 """
+
 import logging
 from datetime import datetime, timedelta
 

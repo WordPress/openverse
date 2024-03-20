@@ -133,19 +133,17 @@ class AbstractMediaReport(models.Model):
     """
     Generic model from which to inherit all reported media classes.
 
-    'Reported' here refers to content reports such as mature, copyright-violating or
-    deleted content. Subclasses must populate ``media_class``, ``mature_class`` and
+    'Reported' here refers to content reports such as sensitive, copyright-violating or
+    deleted content. Subclasses must populate ``media_class``, ``sensitive_class`` and
     ``deleted_class`` fields.
     """
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
-    mature_class: type[models.Model] = None
-    """the class storing mature media e.g. ``MatureImage`` or ``MatureAudio``"""
+    sensitive_class: type[models.Model] = None
+    """the class storing sensitive media e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
     deleted_class: type[models.Model] = None
     """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
-
-    BASE_URL = settings.BASE_URL
 
     REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
 
@@ -201,9 +199,7 @@ class AbstractMediaReport(models.Model):
             )
 
     def url(self, media_type):
-        url = (
-            f"{AbstractMediaReport.BASE_URL}v1/{media_type}/{self.media_obj.identifier}"
-        )
+        url = f"{settings.CANONICAL_ORIGIN}v1/{media_type}/{self.media_obj.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):
@@ -213,8 +209,8 @@ class AbstractMediaReport(models.Model):
         Extend the built-in ``save()`` functionality of Django with Elasticsearch
         integration to update records and refresh indices.
 
-        Media marked as mature or deleted also leads to instantiation of their
-        corresponding mature or deleted classes.
+        Media marked as sensitive or deleted also leads to instantiation of their
+        corresponding sensitive or deleted classes.
         """
 
         self.clean()
@@ -222,9 +218,9 @@ class AbstractMediaReport(models.Model):
         super().save(*args, **kwargs)
 
         if self.status == MATURE_FILTERED:
-            # Create an instance of the mature class for this media. This will
+            # Create an instance of the sensitive class for this media. This will
             # automatically set the ``mature`` field in the ES document.
-            self.mature_class.objects.create(media_obj=self.media_obj)
+            self.sensitive_class.objects.create(media_obj=self.media_obj)
         elif self.status == DEINDEXED:
             # Create an instance of the deleted class for this media, so that we don't
             # reindex it later. This will automatically delete the ES document and the
@@ -290,7 +286,7 @@ class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
     Generic model from which to inherit all deleted media classes.
 
     'Deleted' here refers to media which has been deleted at the source or intentionally
-    de-indexed by us. Unlike mature reports, this action is irreversible. Subclasses
+    de-indexed by us. Unlike sensitive reports, this action is irreversible. Subclasses
     must populate ``media_class`` and ``es_index`` fields.
     """
 
@@ -329,9 +325,9 @@ class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
         self.media_obj.delete()  # remove the actual model instance
 
 
-class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
+class AbstractSensitiveMedia(PerformIndexUpdateMixin, models.Model):
     """
-    Generic model from which to inherit all mature media classes.
+    Generic model from which to inherit all sensitive media classes.
 
     Subclasses must populate ``media_class`` and ``es_index`` fields.
     """
@@ -350,7 +346,7 @@ class AbstractMatureMedia(PerformIndexUpdateMixin, models.Model):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="mature_abstract_media",
+        related_name="sensitive_abstract_media",
         help_text="The reference to the sensitive media.",
     )
     """

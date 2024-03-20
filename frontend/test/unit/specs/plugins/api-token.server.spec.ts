@@ -47,7 +47,7 @@ const getMockContext = ($config: $config = defaultConfig) =>
       captureException: jest.fn(),
     },
     $config: $config,
-  } as unknown as Context)
+  }) as unknown as Context
 
 const mockInject = jest.fn()
 

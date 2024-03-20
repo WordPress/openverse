@@ -37,8 +37,8 @@
           localCheckedState
             ? ['bg-white', 'translate-x-[1.125rem]']
             : disabled
-            ? ['bg-dark-charcoal-40']
-            : ['bg-dark-charcoal']
+              ? ['bg-dark-charcoal-40']
+              : ['bg-dark-charcoal']
         "
         aria-hidden="true"
       />

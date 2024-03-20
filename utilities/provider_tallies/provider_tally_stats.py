@@ -5,6 +5,7 @@ This script assumes that the API Redis instance you care about is present
 on localhost (usually via tunneling). It will run through the provider result count
 entries in Redis and output them to CSV.
 """
+
 import pprint
 from datetime import datetime
 from pathlib import Path

@@ -8,6 +8,10 @@ from requests_oauthlib import OAuth2Session
 
 from catalog.tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
 from common import requester
+from common.loader import provider_details as prov
+
+
+USER_AGENT = {"User-Agent": prov.UA_STRING}
 
 
 @patch("common.requester.time")
@@ -39,10 +43,10 @@ def test_get_delays_processing(monkeypatch):
         r.status_code = 200
         return r
 
-    monkeypatch.setattr(requester.requests.Session, "get", mock_requests_get)
-
     delay = 1
     dq = requester.DelayedRequester(delay=delay)
+    monkeypatch.setattr(dq.session, "get", mock_requests_get)
+
     start = time.time()
     dq.get("http://fake_url")
     dq.get("http://fake_url")
@@ -58,34 +62,26 @@ def test_get_handles_exception(monkeypatch, caplog):
     monkeypatch.setattr(dq.session, "get", mock_requests_get)
 
     with caplog.at_level(logging.WARNING):
-        dq.get("https://google.com/")
-        assert "Error with the request for URL: https://google.com/" in caplog.text
+        with pytest.raises(requests.exceptions.ReadTimeout):
+            dq.get("https://google.com/")
+            assert "Error with the request for URL: https://google.com/" in caplog.text
 
 
-@pytest.mark.parametrize(
-    "code, log_level, expected_message",
-    [
-        (500, logging.WARNING, "Unable to request URL"),
-        (401, logging.ERROR, "Authorization failed for URL"),
-    ],
-)
-def test_get_handles_failure_status_codes(
-    code, log_level, expected_message, monkeypatch, caplog
-):
+@pytest.mark.parametrize("code", (500, 401))
+def test_get_handles_failure_status_codes(code, monkeypatch, caplog):
     url = "https://google.com/"
-    mock_response = MagicMock()
-    mock_response.status_code = code
-    mock_response.url = url
 
     def mock_requests_get(url, params, **kwargs):
-        return mock_response
+        r = requests.Response()
+        r.status_code = code
+        r.url = url
+        return r
 
     dq = requester.DelayedRequester(1)
     monkeypatch.setattr(dq.session, "get", mock_requests_get)
 
-    with caplog.at_level(log_level):
+    with pytest.raises(requests.exceptions.HTTPError, match=str(code)):
         dq.get(url)
-        assert f"{expected_message}: {url}" in caplog.text
 
 
 def test_get_response_json_retries_with_none_response():
@@ -113,6 +109,31 @@ def test_get_response_json_retries_with_non_ok():
             )
 
     assert mock_get.call_count == 3
+
+
+def test_get_response_json_gets_response_on_retry():
+    # Test that the response is returned when it fails initially but
+    # succeeds on a retry
+    dq = requester.DelayedRequester(1)
+    failure_response = requests.Response()
+    failure_response.status_code = 410
+    success_response = requests.Response()
+    success_response.status_code = 200
+    success_response.json = MagicMock(return_value={"foo": "bar"})
+
+    with patch.object(dq, "get") as mock_get:
+        mock_get.side_effect = [
+            # First try fails
+            failure_response,
+            # Second try succeeds
+            success_response,
+        ]
+        assert dq.get_response_json(
+            "https://google.com/",
+            retries=2,
+        ) == {"foo": "bar"}
+
+    assert mock_get.call_count == 2
 
 
 def test_get_response_json_retries_with_error_json():
@@ -155,8 +176,12 @@ def test_oauth_requester_initializes_correctly(oauth_provider_var_mock):
 @pytest.mark.parametrize(
     "init_headers, request_kwargs, expected_request_kwargs",
     [
-        (None, None, {"headers": {}}),
-        ({"init_header": "test"}, None, {"headers": {"init_header": "test"}}),
+        (None, None, {"headers": USER_AGENT}),
+        (
+            {"init_header": "test"},
+            None,
+            {"headers": {"init_header": "test"} | USER_AGENT},
+        ),
         (
             None,
             {"headers": {"h1": "test1"}, "other_kwarg": "test"},
@@ -185,7 +210,7 @@ def test_handles_optional_headers(
     init_headers, request_kwargs, expected_request_kwargs
 ):
     dq = requester.DelayedRequester(0, headers=init_headers)
-    dq.session.get = MagicMock(return_value=None)
+    dq.session.get = MagicMock(return_value=MagicMock())
     url = "http://test"
     params = {"testy": "test"}
     dq.get(url, params, **(request_kwargs or {}))

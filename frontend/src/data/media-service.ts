@@ -10,7 +10,7 @@ import { AUDIO, type SupportedMediaType } from "~/constants/media"
 import type { AxiosResponse } from "axios"
 
 export interface MediaResult<
-  T extends Media | Media[] | Record<string, Media>
+  T extends Media | Media[] | Record<string, Media>,
 > {
   result_count: number
   page_count: number
@@ -38,21 +38,22 @@ class MediaService<T extends Media> {
     const mediaResults = <T[]>data.results ?? []
     return {
       ...data,
-      results: mediaResults.reduce((acc, item) => {
-        acc[item.id] = decodeMediaData(item, this.mediaType)
-        return acc
-      }, {} as Record<string, T>),
+      results: mediaResults.reduce(
+        (acc, item) => {
+          acc[item.id] = decodeMediaData(item, this.mediaType)
+          return acc
+        },
+        {} as Record<string, T>
+      ),
     }
   }
 
   /**
    * Search for media items by keyword.
    * @param params - API search query parameters
-   * @param slug - optional slug to get a collection
    */
   async search(
-    params: PaginatedSearchQuery | PaginatedCollectionQuery,
-    slug: string = ""
+    params: PaginatedSearchQuery | PaginatedCollectionQuery
   ): Promise<MediaResult<Record<string, Media>>> {
     // Add the `peaks` param to all audio searches automatically
     if (this.mediaType === AUDIO) {
@@ -61,7 +62,6 @@ class MediaService<T extends Media> {
 
     const res = await this.apiService.query<MediaResult<T[]>>(
       this.mediaType,
-      slug,
       params as unknown as Record<string, string>
     )
     return this.transformResults(res.data)

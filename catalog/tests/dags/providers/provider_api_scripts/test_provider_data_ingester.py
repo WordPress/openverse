@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 import requests
 from airflow.exceptions import AirflowException
+from requests.exceptions import HTTPError
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
@@ -17,7 +18,7 @@ from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_i
     MockImageOnlyProviderDataIngester,
     MockProviderDataIngester,
 )
-from common.requester import RetriesExceeded
+from common.loader import provider_details as prov
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore
 from providers.provider_api_scripts.provider_data_ingester import (
@@ -92,6 +93,15 @@ def test_get_response_json(endpoint, expected):
         assert actual_endpoint == expected
 
 
+def test_passes_user_agent_header():
+    ingester = MockProviderDataIngester()
+    with patch.object(ingester.delayed_requester, "get_response_json") as mock_get:
+        ingester.get_response_json({})
+        actual_headers = mock_get.call_args.kwargs["headers"]
+        assert "User-Agent" in actual_headers
+        assert actual_headers["User-Agent"] == prov.UA_STRING
+
+
 def test_batch_limit_is_capped_to_ingestion_limit():
     with patch(
         "providers.provider_api_scripts.provider_data_ingester.Variable"
@@ -142,8 +152,8 @@ def test_get_batch_raises_error():
     r.status_code = 500
     r.json = MagicMock(return_value={"error": ""})
     with (
-        patch.object(ingester.delayed_requester, "get", return_value=r),
-        pytest.raises(RetriesExceeded),
+        patch.object(ingester.delayed_requester.session, "get", return_value=r),
+        pytest.raises(HTTPError),
     ):
         ingester.get_batch({})
 

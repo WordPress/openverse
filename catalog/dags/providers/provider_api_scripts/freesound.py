@@ -11,18 +11,18 @@ Notes:                  https://freesound.org/docs/api/
                         This script can be run either to ingest the full dataset or
                         as a dated DAG.
 """
+
 import functools
 import logging
 from datetime import datetime
 
 from airflow.models import Variable
-from requests.exceptions import ConnectionError, SSLError
+from requests.exceptions import ConnectionError, HTTPError, SSLError
 from retry import retry
 
 from common import constants
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
-from common.requester import RetriesExceeded
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -110,7 +110,7 @@ class FreesoundDataIngester(ProviderDataIngester):
     def _get_creator_data(item):
         if creator := item.get("username"):
             creator = creator.strip()
-            creator_url = f"https://freesound.org/people/{creator}/"
+            creator_url = f"https://freesound.org/people/{creator}/".replace(" ", "%20")
         else:
             creator_url = None
         return creator, creator_url
@@ -141,12 +141,15 @@ class FreesoundDataIngester(ProviderDataIngester):
             set_id = response_json.get("id")
             set_name = response_json.get("name")
             return set_id, set_name
-        except RetriesExceeded:
+        except HTTPError as error:
             # https://github.com/WordPress/openverse-catalog/issues/659
             # This should be temporary for the full run of Freesound, as
             # some historical audio sets 404.
-            logger.warning("Unable to fetch audio_set information")
-            return None, None
+            if error.response.status_code == 404:
+                logger.warning("Unable to fetch audio_set information")
+                return None, None
+            else:
+                raise
 
     def _get_audio_set_info(self, media_data):
         # set id, set name, set url

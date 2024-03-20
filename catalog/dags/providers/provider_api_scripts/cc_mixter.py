@@ -25,7 +25,7 @@ from providers.provider_api_scripts.provider_data_ingester import ProviderDataIn
 
 logger = logging.getLogger(__name__)
 
-JSON_OCTALS = re.compile(r":\s*0+(?P<num>\d+)\s*(?P<sep>[,}])")
+JSON_OCTALS = re.compile(r":\s*0+(?P<num>\d+\.?\d*)\s*(?P<sep>[,}])")
 
 
 class CcMixterDelayedRequester(DelayedRequester):
@@ -193,7 +193,7 @@ class CcMixterDataIngester(ProviderDataIngester):
 
         files = [
             {
-                "url": file["download_url"],
+                "url": file["download_url"].replace(" ", "%20"),
                 "filesize": file["file_rawsize"],
                 "filetype": file["file_format_info"]["default-ext"],
                 "sample_rate": self._get_sample_rate(

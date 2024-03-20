@@ -2,7 +2,8 @@
 # Recreate Full Staging Index DAG
 
 This DAG is used to fully recreate a new staging Elasticsearch index for a
-given `media_type`, using records pulled from the staging API database. It is
+given `media_type`, using records pulled from the staging API database rather than
+from a source index (like the `create_new_staging_es_index` DAG does). It is
 used to decouple the steps of creating a new index from the rest of the
 data refresh process.
 
@@ -33,9 +34,13 @@ Because this DAG runs on the staging ingestion server and staging elasticsearch
 cluster, it does _not_ interfere with the `data_refresh` or
 `create_filtered_index` DAGs.
 
-However, the DAG will exit immediately if the `staging_database_restore` DAG is
-running, as it operates on the staging API database.
+However, as the DAG operates on the staging API database it will exit
+immediately if any of the following DAGs are running:
+* `staging_database_restore`
+* `create_proportional_by_provider_staging_index`
+* `create_new_staging_es_index`
 """
+
 from datetime import datetime
 
 from airflow.decorators import dag

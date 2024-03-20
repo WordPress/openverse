@@ -43,8 +43,7 @@ def ensure_asgi_lifecycle(session_loop: asyncio.AbstractEventLoop):
     """
     scope = {"type": "lifespan"}
 
-    async def noop(*args, **kwargs):
-        ...
+    async def noop(*args, **kwargs): ...
 
     async def shutdown():
         return {"type": "lifespan.shutdown"}

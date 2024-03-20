@@ -84,8 +84,8 @@ export const setContentSwitcherState = async (
     !isDesktop
       ? "#content-settings-button"
       : contentSwitcherKind === "filters"
-      ? "#filter-button"
-      : "#search-type-button"
+        ? "#filter-button"
+        : "#search-type-button"
   )
 
   const isPressed = await getSelectorPressed(buttonLocator)

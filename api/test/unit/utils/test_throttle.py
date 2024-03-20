@@ -43,9 +43,9 @@ def enable_throttles(settings):
     # Put settings into base Django settings from which DRF reads
     # settings when we call `api_settings.reload()`
     settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = settings.DEFAULT_THROTTLE_RATES
-    settings.REST_FRAMEWORK[
-        "DEFAULT_THROTTLE_CLASSES"
-    ] = settings.DEFAULT_THROTTLE_CLASSES
+    settings.REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"] = (
+        settings.DEFAULT_THROTTLE_CLASSES
+    )
 
     # Reload the settings and read them from base Django settings
     # Also handles importing classes from class strings, etc
@@ -71,6 +71,7 @@ def enable_throttles(settings):
 def access_token():
     token = AccessTokenFactory.create()
     token.application.verified = True
+    token.application.client_id = 123
     token.application.save()
     return token
 

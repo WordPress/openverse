@@ -5,7 +5,7 @@
 ## Reviewers
 
 - [x] @obulat
-- [ ] @krysal
+- [x] @krysal
 
 ## Project summary
 

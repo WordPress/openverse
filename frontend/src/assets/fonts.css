@@ -24,7 +24,9 @@
     font-family: Inter;
     font-style: normal;
     font-weight: 400;
-    src: local("Inter-Regular"), local("Inter Regular"),
+    src:
+      local("Inter-Regular"),
+      local("Inter Regular"),
       url("~assets/fonts/Inter-Regular.woff2") format("woff2"),
       url("~assets/fonts/Inter-Regular.woff") format("woff");
   }
@@ -34,7 +36,9 @@
     font-family: Inter;
     font-style: italic;
     font-weight: 100 900;
-    src: local("Inter-Italic"), local("Inter Italic"),
+    src:
+      local("Inter-Italic"),
+      local("Inter Italic"),
       url("~assets/fonts/Inter-Italic.woff2") format("woff2"),
       url("~assets/fonts/Inter-Italic.woff") format("woff");
   }
@@ -44,7 +48,9 @@
     font-family: Inter;
     font-style: normal;
     font-weight: 600;
-    src: local("Inter-SemiBold"), local("Inter SemiBold"),
+    src:
+      local("Inter-SemiBold"),
+      local("Inter SemiBold"),
       url("~assets/fonts/Inter-SemiBold.woff2") format("woff2"),
       url("~assets/fonts/Inter-SemiBold.woff") format("woff");
   }
@@ -54,7 +60,9 @@
     font-family: Inter;
     font-style: italic;
     font-weight: 600;
-    src: local("Inter-SemiBoldItalic"), local("Inter SemiBoldItalic"),
+    src:
+      local("Inter-SemiBoldItalic"),
+      local("Inter SemiBoldItalic"),
       url("~assets/fonts/Inter-SemiBoldItalic.woff2") format("woff2"),
       url("~assets/fonts/Inter-SemiBoldItalic.woff") format("woff");
   }
@@ -64,7 +72,9 @@
     font-family: Inter;
     font-style: normal;
     font-weight: 700;
-    src: local("Inter-Bold"), local("Inter Bold"),
+    src:
+      local("Inter-Bold"),
+      local("Inter Bold"),
       url("~assets/fonts/Inter-Bold.woff2") format("woff2"),
       url("~assets/fonts/Inter-Bold.woff") format("woff");
   }
@@ -74,7 +84,9 @@
     font-family: Inter;
     font-style: italic;
     font-weight: 700;
-    src: local("Inter-BoldItalic"), local("Inter BoldItalic"),
+    src:
+      local("Inter-BoldItalic"),
+      local("Inter BoldItalic"),
       url("~assets/fonts/Inter-BoldItalic.woff2") format("woff2"),
       url("~assets/fonts/Inter-BoldItalic.woff") format("woff");
   }
@@ -85,7 +97,9 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local("JetBrainsMono-Regular"), local("JetBrains Mono Regular"),
+  src:
+    local("JetBrainsMono-Regular"),
+    local("JetBrains Mono Regular"),
     url("~assets/fonts/JetBrainsMono-Regular.woff2") format("woff2"),
     url("~assets/fonts/JetBrainsMono-Regular.woff") format("woff"),
     url("~assets/fonts/JetBrainsMono-Regular.otf") format("opentype");
@@ -95,7 +109,9 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: local("JetBrainsMono-Bold"), local("JetBrains Mono Bold"),
+  src:
+    local("JetBrainsMono-Bold"),
+    local("JetBrains Mono Bold"),
     url("~assets/fonts/JetBrainsMono-Bold.woff2") format("woff2"),
     url("~assets/fonts/JetBrainsMono-Bold.woff") format("woff"),
     url("~assets/fonts/JetBrainsMono-Bold.otf") format("opentype");

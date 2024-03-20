@@ -1,4 +1,5 @@
 """# OAuth Provider Authorization"""
+
 from datetime import datetime
 
 from airflow.models import DAG

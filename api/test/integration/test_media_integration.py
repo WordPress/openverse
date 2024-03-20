@@ -49,7 +49,7 @@ def media_type(request):
         "audio": MediaType(
             name="audio",
             path="audio",
-            providers=["freesound", "jamendo", "wikimedia_audio"],
+            providers=["freesound", "jamendo", "wikimedia_audio", "ccmixter"],
             categories=["music", "pronunciation"],
             tags=["cat"],
             q="love",

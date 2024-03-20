@@ -5,6 +5,7 @@ This script assumes that the API Redis instance you care about is present
 on localhost (usually via tunneling). It will run through the link validation
 entries in Redis.
 """
+
 import pprint
 from collections import defaultdict
 from urllib.parse import urlparse

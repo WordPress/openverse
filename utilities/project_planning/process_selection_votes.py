@@ -3,6 +3,7 @@ Script for gathering project selection votes and sharing the results
 
 See the README for more information.
 """
+
 from datetime import datetime
 from pathlib import Path
 

@@ -14,6 +14,7 @@ Notes:                  https://api.finna.fi/swagger-ui/
                         reingestion DAG, as updated data will be processed during
                         regular ingestion.
 """
+
 import logging
 from itertools import chain
 

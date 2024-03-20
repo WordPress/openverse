@@ -2,6 +2,7 @@
 This module contains the lists of database columns in the same order as in the
 main media tables within the database.
 """
+
 from common.constants import AUDIO, IMAGE
 from common.storage import columns as col
 from common.utils import setup_kwargs_for_media_type

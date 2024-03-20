@@ -5,7 +5,6 @@ For any changes made here, please make the corresponding changes in the
 frontend, or open an issue to track it.
 """
 
-
 from api.constants.licenses import (
     ALL_CC_LICENSES,
     DEPRECATED_CC_LICENSES,

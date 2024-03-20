@@ -50,6 +50,7 @@ DAG runs for the media type to finish before continuing.
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
 """
+
 from datetime import datetime
 
 from airflow import DAG

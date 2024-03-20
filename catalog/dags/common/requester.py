@@ -4,9 +4,10 @@ from collections.abc import Callable
 
 import requests
 from airflow.exceptions import AirflowException
-from requests.exceptions import JSONDecodeError
+from requests.exceptions import HTTPError, JSONDecodeError
 
 import oauth2
+from common.loader import provider_details as prov
 
 
 # pytest_socket will not be available in production, so we must create a shim for
@@ -20,12 +21,6 @@ except ImportError:
 
 
 logger = logging.getLogger(__name__)
-
-
-class RetriesExceeded(Exception):
-    """Custom exception for when the number of allowed retries has been exceeded."""
-
-    pass
 
 
 class DelayedRequester:
@@ -42,12 +37,13 @@ class DelayedRequester:
     delay:   an integer giving the minimum number of seconds to wait
              between consecutive requests via the `get` method.
     headers: a dict that will be passed in all requests, unless overridden
-             by kwargs in specific calls to the get method
+             by kwargs in specific calls to the `get` method
     """
 
-    def __init__(self, delay=0, headers=None):
+    def __init__(self, delay: int = 0, headers: dict | None = None):
+        headers = {} if headers is None else headers
         self._DELAY = delay
-        self.headers = headers or {}
+        self.headers = {"User-Agent": prov.UA_STRING} | headers
         self._last_request = 0
         self.session = requests.Session()
 
@@ -71,15 +67,8 @@ class DelayedRequester:
             request_kwargs["headers"] = self.headers
         try:
             response = method(url, **request_kwargs)
-            if response.status_code == requests.codes.ok:
-                logger.debug(f"Received response from url {response.url}")
-            elif response.status_code == requests.codes.unauthorized:
-                logger.error(f"Authorization failed for URL: {response.url}")
-            else:
-                logger.warning(
-                    f"Unable to request URL: {response.url}  "
-                    f"Status code: {response.status_code}"
-                )
+            response.raise_for_status()
+
             return response
         except SocketConnectBlockedError:
             # This exception will only be raised during testing, and it *must*
@@ -92,12 +81,14 @@ class DelayedRequester:
             # sent a SIGTERM, which means that the task should be stopped.
             raise
         except Exception as e:
+            # All other exceptions are logged and re-raised
             logger.error(f"Error with the request for URL: {url}")
             logger.info(f"{type(e).__name__}: {e}")
             if params := request_kwargs.get("params"):
                 logger.info(f"Using query parameters {params}")
             logger.info(f'Using headers {request_kwargs.get("headers")}')
-            return None
+
+            raise
 
     def get(self, url, params=None, **kwargs):
         """
@@ -146,36 +137,70 @@ class DelayedRequester:
         except JSONDecodeError as e:
             logger.warning(f"Could not get response_json.\n{e}")
 
+    def _attempt_retry_get_response_json(
+        self,
+        error,
+        endpoint,
+        retries=0,
+        query_params=None,
+        request_method="get",
+        **kwargs,
+    ):
+        """
+        Attempt to retry `get_response_json` after a failure, with the given arguments. If
+        there are no remaining retries, it will instead raise the error.
+        """
+        if retries <= 0:
+            logger.error("No retries remaining. Failure.")
+            raise error
+
+        logger.warning(error)
+        logger.warning(
+            "Retrying:\n_get_response_json(\n"
+            f"    {endpoint},\n"
+            f"    {query_params},\n"
+            f"    retries={retries - 1}"
+            ")"
+        )
+        return self.get_response_json(
+            endpoint,
+            retries=retries - 1,
+            query_params=query_params,
+            request_method=request_method,
+            **kwargs,
+        )
+
     def get_response_json(
-        self, endpoint, retries=0, query_params=None, requestMethod="get", **kwargs
+        self, endpoint, retries=0, query_params=None, request_method="get", **kwargs
     ):
         response_json = None
         response = None
-        if retries < 0:
-            logger.error("No retries remaining.  Failure.")
-            raise RetriesExceeded("Retries exceeded")
 
-        if requestMethod == "get":
-            response = self.get(endpoint, params=query_params, **kwargs)
-        elif requestMethod == "post":
-            response = self.post(endpoint, params=query_params, **kwargs)
+        try:
+            if request_method == "get":
+                response = self.get(endpoint, params=query_params, **kwargs)
+            elif request_method == "post":
+                response = self.post(endpoint, params=query_params, **kwargs)
 
-        if response is not None and response.status_code == 200:
-            response_json = self._get_json(response)
+            if response is not None and response.status_code == 200:
+                response_json = self._get_json(response)
 
-        if response_json is None or (
-            isinstance(response_json, dict) and response_json.get("error") is not None
-        ):
-            logger.warning(f"Bad response_json:  {response_json}")
-            logger.warning(
-                "Retrying:\n_get_response_json(\n"
-                f"    {endpoint},\n"
-                f"    {query_params},\n"
-                f"    retries={retries - 1}"
-                ")"
-            )
-            response_json = self.get_response_json(
-                endpoint, retries=retries - 1, query_params=query_params, **kwargs
+            if response_json is None or (
+                isinstance(response_json, dict)
+                and response_json.get("error") is not None
+            ):
+                # Status code was 200 but there was an error parsing response_json
+                response_json = self._attempt_retry_get_response_json(
+                    ValueError(f"Bad response_json: {response_json}"),
+                    endpoint,
+                    retries,
+                    query_params,
+                    request_method,
+                    **kwargs,
+                )
+        except HTTPError as e:
+            response_json = self._attempt_retry_get_response_json(
+                e, endpoint, retries, query_params, request_method, **kwargs
             )
 
         return response_json

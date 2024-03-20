@@ -44,6 +44,7 @@ issues and related PRs:
 - [[Feature] Data refresh orchestration DAG](
 https://github.com/WordPress/openverse-catalog/issues/353)
 """
+
 import logging
 import os
 from collections.abc import Sequence

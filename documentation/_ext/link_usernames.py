@@ -8,6 +8,7 @@ to the user's GitHub profile.
 
 The plugin ignores code inside of fixed text blocks, including code blocks and backticks.
 """
+
 import re
 
 from docutils import nodes

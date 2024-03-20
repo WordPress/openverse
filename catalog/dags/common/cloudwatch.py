@@ -9,6 +9,7 @@ Modifying alarms can be skipped by setting the `TOGGLE_CLOUDWATCH_ALARMS` to `Fa
 in the Airflow Variables, which is particularly the desired behavior when running
 the Data Refresh DAGs locally or in a development environment.
 """
+
 import logging
 
 from airflow.exceptions import AirflowSkipException
