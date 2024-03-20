@@ -597,7 +597,36 @@
       creator: "search by creator",
       imageTitle: "Image: {title}",
       audioTitle: "Audio: {title}",
-      results: "Search results for {query}.",
+      results: {
+        /**
+         * "imageResults" and "audioResults" are interpolated from the strings under
+         * browsePage.aria.allResultsHeadingCount.*
+         */
+        all: "All results for {query}, {imageResults} and {audioResults}.",
+        image: {
+          zero: "No image results for {query}",
+          count: "{localeCount} image result for {query}.|{localeCount} image results for {query}.",
+          countMore: "Over {localeCount} image results for {query}.",
+        },
+        audio: {
+          zero: "No audio results for {query}",
+          count: "{localeCount} audio result for {query}.|{localeCount} audio results for {query}.",
+          countMore: "Over {localeCount} audio results for {query}.",
+        },
+      },
+      /** These are interpolated into browsePage.aria.results.all */
+      allResultsHeadingCount: {
+        image: {
+          zero: "no images",
+          count: "{localeCount} image|{localeCount} images",
+          countMore: "over {localeCount} images",
+        },
+        audio: {
+          zero: "no audio",
+          count: "{localeCount} audio",
+          countMore: "over {localeCount} audio",
+        },
+      },
     },
   },
   mediaDetails: {
