@@ -13,7 +13,7 @@ from_lang = "en"
 # Must be generated using `just p frontend i18n:en`
 from_json_path = reporoot / "frontend" / "src" / "locales" / "en.json"
 
-to_langs = ["ar", "es", "ru"]
+to_langs = ["ar", "es"]
 to_json_paths = {
     lang: reporoot / "frontend" / "test" / "locales" / f"{lang}.json"
     for lang in to_langs
