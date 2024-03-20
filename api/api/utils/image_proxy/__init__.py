@@ -169,7 +169,6 @@ async def get(
         do_not_wait_for(
             _tally_response(tallies, media_info, month, domain, upstream_response)
         )
-        upstream_response.raise_for_status()
         status_code = upstream_response.status
         content_type = upstream_response.headers.get("Content-Type")
         logger.debug(
@@ -177,12 +176,25 @@ async def get(
             status_code,
             content_type,
         )
-        content = await upstream_response.content.read()
+        content = await upstream_response.read()
+        upstream_response.raise_for_status()
         return HttpResponse(
-            content,
-            status=status_code,
-            content_type=content_type,
+            content, 
+            status = status_code,
+            content_type = content_type,
         )
+    except ClientResponseError as exc:
+        status = exc.status
+        do_not_wait_for(
+            _tally_client_response_errors(tallies, month, domain, status)
+        )
+        logger.warning(
+            f"Failed to render thumbnail "
+            f"{upstream_url=} {status=} "
+            f"{media_info.media_provider=} "
+            f"{str(exc)=}"
+        )
+        raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}") from exc
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
@@ -190,16 +202,4 @@ async def get(
             await tallies_incr(key)
         except ConnectionError:
             logger.warning("Redis connect failed, thumbnail errors not tallied.")
-
-        if isinstance(exc, ClientResponseError):
-            status = exc.status
-            do_not_wait_for(
-                _tally_client_response_errors(tallies, month, domain, status)
-            )
-            logger.warning(
-                f"Failed to render thumbnail "
-                f"{upstream_url=} {status=} "
-                f"{media_info.media_provider=} "
-                f"{exc.message=}"
-            )
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
