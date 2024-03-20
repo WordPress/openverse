@@ -66,8 +66,21 @@ should not require any changes to our infrastructure.
 
 <!-- Are there specific accessibility concerns relevant to this project? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
 
-- Follow the advisor of WCAG 2.2 to meet AA. Put special attention to the
-  [Perceivable section](https://www.w3.org/WAI/WCAG22/quickref/?currentsidebar=%23col_overview&levels=aaa&showtechniques=321#principle1).
+Shifting the UI theme should be actioned through a mix of one or more of the
+following current elements:
+
+- VCheckbox
+- VRadio
+- VItemGroup
+- VSelectField
+- VPopover
+- VButton
+- VIconButton
+
+The designs of pages and components need to meet the contrast color requirements
+described in WCAG 2.2 to meet AA. See the
+[Perceivable section](https://www.w3.org/WAI/WCAG22/quickref/?currentsidebar=%23col_overview&levels=aaa&showtechniques=321#principle1)
+of the guideline for more context.
 
 ## Marketing
 
