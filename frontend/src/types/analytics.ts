@@ -7,6 +7,8 @@ import type { ReportReason } from "~/constants/content-report"
 import type { FilterCategory } from "~/constants/filters"
 import { ResultKind } from "~/types/result"
 
+import { RequestKind } from "./fetch-state"
+
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
   Events["AUDIO_INTERACTION"],
@@ -352,6 +354,7 @@ export type Events = {
     /** whether the switch was turned on or off */
     checked: boolean
   }
+
   /**
    * Description: The user flips the sidebar toggle to not blur sensitive
    * content in the search results.
@@ -364,6 +367,7 @@ export type Events = {
     /** whether the switch was turned on or off */
     checked: boolean
   }
+
   /**
    * Description: The user proceeds to see the sensitive content from the
    * content safety wall.
@@ -379,6 +383,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
   }
+
   /**
    * Description: The user opts not to see the sensitive content and to go back
    * to the search results from the content safety wall.
@@ -397,6 +402,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
   }
+
   /**
    * Description: The user opts to re-hide the sensitive content that has been
    * unblurred and presented to them.
@@ -422,6 +428,17 @@ export type Events = {
   TOGGLE_TAG_EXPANSION: {
     /** The state of the tags after the user interaction. */
     toState: "expanded" | "collapsed"
+  }
+  /**
+   * Description: Recorded when a network error occurs. Recorded in Plausible,
+   * rather than Sentry, because we never have sufficient information in Sentry
+   * to identify patterns that could be relevant, like regional issues.
+   */
+  NETWORK_ERROR: {
+    /** The kind of request the network error occurred during */
+    requestKind: RequestKind
+    /** The search type when the network error occurred */
+    searchType: SupportedSearchType
   }
 }
 
