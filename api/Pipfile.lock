@@ -676,10 +676,12 @@
         },
         "jwcrypto": {
             "hashes": [
-                "sha256:0815fbab613db99bad85691da5f136f8860423396667728a264bcfa6e1db36b0"
+                "sha256:150d2b0ebbdb8f40b77f543fb44ffd2baeff48788be71f67f03566692fd55789",
+                "sha256:771a87762a0c081ae6166958a954f80848820b2ab066937dc8b8379d65b1b039"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==1.5.4"
+            "version": "==1.5.6"
         },
         "limit": {
             "hashes": [
