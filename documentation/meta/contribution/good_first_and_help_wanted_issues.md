@@ -9,7 +9,11 @@ needs to be straightforward and repeatable for maintainers.
 Here you will find guidelines, predefined responses, and tools for creating
 these issues and guiding the contributors who seek to resolve them.
 
-# Good first issues
+> **Note**: Looking for quick information to deal with an open issue? See:
+>
+> - [Predefined responses](#reply-templates-and-behaviors)
+> - [Timing and process](#timing-and-process)
+> - [Good first issue template boilerplate](#additional-boilerplate-for-good-first-issue-templates)
 
 ## What makes an issue a good first issue?
 
@@ -68,7 +72,7 @@ Descriptions should:
     knowledge, but if they at all do (for example, to explain why a non-obvious
     solution is requested) then it must be included
 
-### Additional boilerplate for "good first issues"
+### Additional boilerplate for good first issue templates
 
 In addition to our standard issue template, good first issues should _also_
 contain the following block of requirements:
@@ -82,11 +86,38 @@ contain the following block of requirements:
   manually)
 - Do all the tests still pass?
   - If JavaScript changes, run `pnpm -r run test`
-  - If API changes, run ` just api/test`
+  - If API changes, run `just api/test`
   - If catalog changes, run `just catalog/test`
 ```
 
----
+## On "help wanted" issues
+
+All good first issues are naturally "help wanted" issues as well. "Help wanted"
+issues which do not also include the "good first issue" label are excellent
+candidates for second, third, fourth, and so on issues from repeat contributors.
+If a contributor is labeled as a "first time contributor" in the GitHub user
+interface, make sure the issue they are working on is indeed marked "good first
+issue", or that it is otherwise clear that they have advanced knowledge of the
+issue's problem space that makes them an appropriate candidate.
+
+For example, the maintainer of a 3rd party library we use might see we are
+having an issue with their code and offer a PR with a fix. This would be
+appropriate given their expertise.
+
+## Timing and process
+
+It can often be tricky to determine how and when to make requests of a comunity
+contributor. The following table provides guidelines for specific scenarios.
+
+Response times may be from the contributor _or_ from a maintainer depending on
+the situation.
+
+| Scenario                                     | Recommended Response Time (Days)                                 |
+| -------------------------------------------- | ---------------------------------------------------------------- |
+| New PR submitted                             | Typically priority based, but for community PRs should be 3 days |
+| Maintainer has pinged PR author              | 3-5                                                              |
+| Maintainer follow-up on previous PR feedback | 1-2                                                              |
+| PR is ready for merge                        | 1-2                                                              |
 
 ## Reply templates and behaviors
 
@@ -114,7 +145,9 @@ pages for getting started with setting up your local environment.
 
 #### Follow up
 
-Assign the issue to the user.
+Assign the issue to the user. Check on progress of the issue as part of our
+regular prioritization process. If the contributor doesn't reply or create the
+PR, move on to [scenario #3](#scenario-3-absent-contributor).
 
 ### Scenario 2: Improper PR Template
 
@@ -132,7 +165,9 @@ If you have any questions please let us know in the comments.
 #### Follow through
 
 If the contributor doesn't reply or update the PR, move on to
-[scenario #3](#scenario-3-absent-contributor).
+[scenario #3](#scenario-3-absent-contributor). If they update the template,
+proceed. If they ask for help or have other concerns, update the template for
+them.
 
 ### Scenario 3: Absent Contributor
 
