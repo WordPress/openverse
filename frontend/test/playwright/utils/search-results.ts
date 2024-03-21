@@ -1,6 +1,9 @@
 import { expect, Page } from "@playwright/test"
 
+import { skipToContent } from "~~/test/playwright/utils/navigation"
+
 import { keycodes } from "~/constants/key-codes"
+import type { SupportedMediaType } from "~/constants/media"
 
 export const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
   const isActiveElementOfType = () => {
@@ -19,11 +22,9 @@ export const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
     await page.keyboard.press(keycodes.Tab)
   }
 }
+
 export const walkToType = async (type: "image" | "audio", page: Page) => {
-  // Go to skip to content button
-  await page.keyboard.press(keycodes.Tab)
-  // Skip to content
-  await page.keyboard.press(keycodes.Enter)
+  await skipToContent(page)
 
   await walkToNextOfType(type, page)
 }
@@ -35,4 +36,16 @@ export const locateFocusedResult = async (page: Page) => {
   const url = new URL(href ?? "")
 
   return page.locator(`[href="${url.pathname}?q=birds"]`)
+}
+
+/**
+ * Returns the content link from the all content search results page
+ * for the given media type.
+ */
+export const getContentLink = async (
+  page: Page,
+  mediaType: SupportedMediaType
+) => {
+  const linkName = new RegExp(`See .+${mediaType}.+found for`)
+  return page.getByRole("link", { name: linkName })
 }
