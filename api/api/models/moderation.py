@@ -11,6 +11,22 @@ class UserPreferences(models.Model):
     def __str__(self):
         return f"{self.user.username}'s preferences"
 
+    @property
+    def moderator(self):
+        return self.preferences.get("moderator", {})
+
+    @moderator.setter
+    def moderator(self, value):
+        self.preferences["moderator"] = value
+
+    @property
+    def blur_images(self):
+        return self.moderator.get("blur_images", True)
+
+    @blur_images.setter
+    def blur_images(self, value):
+        self.moderator |= {"blur_images": value}
+
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

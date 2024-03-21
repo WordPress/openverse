@@ -12,22 +12,8 @@ class UserPreferencesAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.initial["blur_images"] = self._get_blur_images()
-
-    def _get_blur_images(self):
-        mod_preferences = self.instance.preferences.get("moderator", {})
-        return mod_preferences.get("blur_images", True)
-
-    @staticmethod
-    def _set_blur_images(instance, value):
-        mod_preferences = instance.preferences.get("moderator", {})
-        mod_preferences["blur_images"] = value
-        instance.preferences = instance.preferences | {"moderator": mod_preferences}
+        self.initial["blur_images"] = self.instance.blur_images
 
     def save(self, commit=True):
-        instance: UserPreferences = super().save(commit=False)
-        blur_images = self.cleaned_data.get("blur_images", True)
-        self._set_blur_images(instance, blur_images)
-        if commit:
-            instance.save()
-        return instance
+        self.instance.blur_images = self.cleaned_data.get("blur_images")
+        return super().save(commit=commit)
