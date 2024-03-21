@@ -185,9 +185,7 @@ async def get(
         )
     except ClientResponseError as exc:
         status = exc.status
-        do_not_wait_for(
-            _tally_client_response_errors(tallies, month, domain, status)
-        )
+        do_not_wait_for(_tally_client_response_errors(tallies, month, domain, status))
         logger.warning(
             f"Failed to render thumbnail "
             f"{upstream_url=} {status=} "
