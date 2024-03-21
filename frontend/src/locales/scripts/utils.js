@@ -40,28 +40,32 @@ exports.setToValue = function setValue(obj, path, value) {
   o[a[0]] = value
 }
 
-function replacer(_, match) {
-  // Replace ###<text>### from `po` files with {<text>} in `vue`.
-  // Additionally, the old kebab-cased keys that can still be in the
-  // translations are replaced with camelCased keys the app expects.
-  // TODO: Remove `camel` and warning once all translation strings are updated.
-  // https://github.com/WordPress/openverse/issues/2438
-  if (match.includes("-")) {
-    console.warn("Found kebab-cased key in translation strings:", match)
-  }
-  return `{${kebabToCamel(match)}}`
-}
-
 /**
  * Replace ###<text>### with {<text>}.
  *
  * @param json {any} - the JSON object to replace placeholders in
+ * @param locale {string} - the locale of the JSON object
  * @return {any} the sanitised JSON object
  */
-const replacePlaceholders = (json) => {
+const replacePlaceholders = (json, locale) => {
   if (json === null) {
     return null
   }
+
+  function replacer(_, match) {
+    // Replace ###<text>### from `po` files with {<text>} in `vue`.
+    // Additionally, the old kebab-cased keys that can still be in the
+    // translations are replaced with camelCased keys the app expects.
+    // TODO: Remove `camel` and warning once all translation strings are updated.
+    // https://github.com/WordPress/openverse/issues/2438
+    if (match.includes("-")) {
+      console.warn(
+        `${locale} locale kebab-cased key "${match}" converted to camelCase.`
+      )
+    }
+    return `{${kebabToCamel(match)}}`
+  }
+
   if (typeof json === "string") {
     return json.replace(/###([a-zA-Z-]*)###/g, replacer)
   }
@@ -69,7 +73,7 @@ const replacePlaceholders = (json) => {
 
   for (const row of Object.entries(currentJson)) {
     let [key, value] = row
-    currentJson[key] = replacePlaceholders(value)
+    currentJson[key] = replacePlaceholders(value, locale)
   }
   return currentJson
 }
@@ -82,7 +86,7 @@ exports.replacePlaceholders = replacePlaceholders
  * @param {any} rawTranslations
  */
 exports.writeLocaleFile = (locale, rawTranslations) => {
-  const translations = replacePlaceholders(rawTranslations)
+  const translations = replacePlaceholders(rawTranslations, locale)
   return writeFile(
     process.cwd() + `/src/locales/${locale}.json`,
     JSON.stringify(translations, null, 2) + os.EOL
