@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from requests.exceptions import HTTPError
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
@@ -100,7 +101,7 @@ def test_handles_failure_to_get_set_info():
     with patch.object(fsd.delayed_requester, "get") as get_mock, patch("time.sleep"):
         error_response = MagicMock()
         error_response.status_code = 404
-        get_mock.return_value = error_response
+        get_mock.side_effect = HTTPError(response=error_response)
 
         actual_id, actual_name, actual_url = fsd._get_audio_set_info(
             {"pack": "https://freesound.org/apiv2/packs/35596/"}
@@ -195,21 +196,26 @@ def test_get_audio_set_info(audio_data):
     assert (set_foreign_id, audio_set, set_url) == expected_audio_set_info
 
 
-def test_get_creator_data(audio_data):
-    actual_creator, actual_creator_url = fsd._get_creator_data(audio_data)
-    expected_creator = "owly-bee"
-    expected_creator_url = "https://freesound.org/people/owly-bee/"
-
+@pytest.mark.parametrize(
+    "creator_data, expected_creator, expected_creator_url",
+    [
+        (
+            {"username": "owly-bee"},
+            "owly-bee",
+            "https://freesound.org/people/owly-bee/",
+        ),
+        (
+            {"username": "Dingle Brumbus"},
+            "Dingle Brumbus",
+            "https://freesound.org/people/Dingle%20Brumbus/",
+        ),
+        ({}, None, None),
+    ],
+)
+def test_get_creator_data(creator_data, expected_creator, expected_creator_url):
+    actual_creator, actual_creator_url = fsd._get_creator_data(creator_data)
     assert actual_creator == expected_creator
     assert actual_creator_url == expected_creator_url
-
-
-def test_get_creator_data_returns_none_when_no_artist(audio_data):
-    audio_data.pop("username", None)
-    actual_creator, actual_creator_url = fsd._get_creator_data(audio_data)
-
-    assert actual_creator is None
-    assert actual_creator_url is None
 
 
 def test_extract_audio_data_handles_example_dict(audio_data, file_size_patch):

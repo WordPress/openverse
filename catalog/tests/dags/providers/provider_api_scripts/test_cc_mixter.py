@@ -16,7 +16,7 @@ RESOURCES = Path(__file__).parent / "resources/cc_mixter"
 ingester = CcMixterDataIngester()
 
 
-@pytest.mark.parametrize("bad_number", ["0123", "00123"])
+@pytest.mark.parametrize("bad_number", ["0123", "00123", "0123.0"])
 def test_custom_requester_parses_bad_json(bad_number):
     response = Mock(text=f'{{"value": {bad_number}}}')
 

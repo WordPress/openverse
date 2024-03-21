@@ -11,7 +11,6 @@ import {
   SearchType,
 } from "~/constants/media"
 
-import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
@@ -65,8 +64,14 @@ export default function useSearchType() {
       next: searchType,
       component: componentName,
     })
+
+    // `setActiveType` is called after the search middleware
+    // ran and updated the search store state
+    // TODO: Figure out why
+    if (activeType.value === searchType) {
+      return
+    }
     useSearchStore().setSearchType(searchType)
-    useMediaStore().clearMedia()
     previousSearchType.value = searchType
   }
 

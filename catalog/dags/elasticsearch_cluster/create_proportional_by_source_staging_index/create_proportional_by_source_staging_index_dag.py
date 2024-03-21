@@ -19,6 +19,8 @@ Optional params:
 * source_index: An existing staging Elasticsearch index to use as the basis for
                 the new index. If not provided, the index aliased to
                 `<media_type>-filtered` will be used.
+* should_delete_old_index:    If True, the index previously pointed to by the target
+                                alias (if one exists) will be deleted.
 
 ## When this DAG runs
 
@@ -41,6 +43,7 @@ from datetime import datetime, timedelta
 
 from airflow.decorators import dag
 from airflow.models.param import Param
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import elasticsearch as es
 from common import slack
@@ -100,6 +103,14 @@ DAG_ID = "create_proportional_by_source_staging_index"
                 "Optionally, the existing staging Elasticsearch index"
                 " to use as the basis for the new index. If not provided,"
                 " the index aliased to `<media_type>-filtered` will be used."
+            ),
+        ),
+        "should_delete_old_index": Param(
+            default=False,
+            type="boolean",
+            description=(
+                "Whether to delete the index previously pointed to by the"
+                " `{media_type}-subset-by-source` alias."
             ),
         ),
     },
@@ -171,10 +182,15 @@ def create_proportional_by_source_staging_index():
     )
 
     point_alias = es.point_alias(
-        index_name=destination_index_name, alias=destination_alias, es_host=es_host
+        es_host=es_host,
+        target_index=destination_index_name,
+        target_alias=destination_alias,
+        should_delete_old_index="{{ params.should_delete_old_index }}",
     )
 
-    notify_completion = slack.notify_slack(
+    notify_completion = slack.notify_slack.override(
+        trigger_rule=TriggerRule.NONE_FAILED
+    )(
         text=f"Reindexing complete for {destination_index_name}.",
         dag_id=DAG_ID,
         username="Proportional by Source Staging Index Creation",

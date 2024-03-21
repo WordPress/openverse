@@ -86,6 +86,7 @@ VALUES
 	(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
 	(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
 	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
+	(now(), 'ccmixter', 'CCMixter', 'https://ccmixter.org', false, 'audio');
 "
 
 #############

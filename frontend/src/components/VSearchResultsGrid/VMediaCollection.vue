@@ -15,7 +15,7 @@
       :class="{ 'pt-2 sm:pt-0': results.type === 'image' }"
     />
 
-    <slot name="footer" v-bind="{ isFetching }" />
+    <slot name="footer" />
 
     <VScrollButton
       v-show="showScrollButton"
@@ -27,9 +27,8 @@
 <script lang="ts">
 import { computed, defineComponent, inject, type PropType, ref } from "vue"
 
-import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import type { Results } from "~/types/result"
-
+import { IsSidebarVisibleKey, ShowScrollButtonKey } from "~/types/provides"
 import { defineEvent } from "~/types/emits"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
@@ -68,6 +67,10 @@ export default defineComponent({
       type: String as PropType<string | null>,
       default: null,
     },
+    /**
+     * Overrides the value from the media store.
+     * Used for the related media which uses a different store.
+     */
     isFetching: {
       type: Boolean,
       required: true,

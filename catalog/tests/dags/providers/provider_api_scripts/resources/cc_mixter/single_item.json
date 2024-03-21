@@ -46,7 +46,7 @@
       "file_order": 0,
       "file_is_remote": 0,
       "file_num_download": 0,
-      "download_url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.zip",
+      "download_url": "https://ccmixter.org/content/testuser/testuser - Test_Music.zip",
       "local_path": "/var/www/ccmixter/content/testuser/testuser_-_Test_Music.zip",
       "file_rawsize": 11150278
     },
@@ -74,7 +74,7 @@
       "file_order": 0,
       "file_is_remote": 0,
       "file_num_download": 0,
-      "download_url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.flac",
+      "download_url": "https://ccmixter.org/content/testuser/testuser - Test_Music.flac",
       "local_path": "/var/www/ccmixter/content/testuser/testuser_-_Test_Music.flac",
       "file_rawsize": 111502780
     },
@@ -100,7 +100,7 @@
       "file_order": 0,
       "file_is_remote": 0,
       "file_num_download": 0,
-      "download_url": "https://ccmixter.org/content/testuser/testuser_-_Test_Music.mp3",
+      "download_url": "https://ccmixter.org/content/testuser/testuser - Test_Music.mp3",
       "local_path": "/var/www/ccmixter/content/testuser/testuser_-_Test_Music.mp3",
       "file_rawsize": 11150278
     }

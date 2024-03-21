@@ -1,6 +1,8 @@
 from unittest.mock import patch
 
 import pytest
+import requests
+from requests.exceptions import HTTPError
 
 from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
@@ -151,3 +153,27 @@ def test_get_record_data_returns_none_when_required_values_missing(property):
 
     image = pp.get_record_data(data)
     assert image is None
+
+
+def test_build_param_is_recalculated_if_changes_during_ingestion():
+    pp = PhylopicDataIngester()
+
+    mock_410_response = requests.Response()
+    mock_410_response.status_code = 410
+
+    with patch.object(pp, "get_response_json") as mock_get_response_json:
+        mock_get_response_json.side_effect = [
+            # First is the call in _get_initial_query_params to fetch the build param
+            {"totalPages": 1, "build": 123},
+            # Second is the call from get_batch, which will use the initial build param.
+            # Simulate a 410 response due to the build param having changed
+            HTTPError(response=mock_410_response),
+            # _get_initial_query_params is called again
+            {"totalPages": 1, "build": 124},
+            # get_batch called with new build param, this time is successful.
+            # The empty batch will cause ingestion to stop gracefully
+            {"_embedded": {"items": []}},
+        ]
+
+        pp.ingest_records()
+        assert mock_get_response_json.call_count == 4

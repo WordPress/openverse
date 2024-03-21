@@ -6,7 +6,6 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import VLoadMore from "~/components/VLoadMore.vue"
-import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
 <Meta title="Components/CustomButtonComponents" />
@@ -17,9 +16,8 @@ export const Template = (args) => ({
   `,
   components: { VLoadMore },
   setup() {
-    const searchStore = useSearchStore()
-    searchStore.setSearchTerm("cat")
     const mediaStore = useMediaStore()
+    mediaStore._startFetching("image")
     mediaStore.results.image.count = 1
     return { args }
   },
@@ -36,6 +34,12 @@ export const Template = (args) => ({
     name="VLoadMore"
     parameters={{
       viewport: { defaultViewport: "sm" },
+    }}
+    args={{
+      kind: "search",
+      searchType: "image",
+      searchTerm: "cat",
+      isFetching: false,
     }}
   >
     {Template.bind({})}

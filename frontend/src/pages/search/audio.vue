@@ -1,49 +1,42 @@
 <template>
-  <VAudioList
+  <VSearchResults
     :results="results"
+    :is-fetching="isFetching"
+    :search-term="searchTerm"
     kind="search"
-    :fetch-state="fetchState"
-    :collection-label="collectionLabel"
+    @load-more="handleLoadMore"
   />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { defineComponent, PropType } from "vue"
 
-import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
-import type { AudioDetail } from "~/types/media"
-import type { FetchState } from "~/types/fetch-state"
+import type { AudioResults } from "~/types/result"
 
-import VAudioList from "~/components/VSearchResultsGrid/VAudioList.vue"
+import VSearchResults from "~/components/VSearchResultsGrid/VSearchResults.vue"
 
 export default defineComponent({
   name: "AudioSearch",
   components: {
-    VAudioList,
+    VSearchResults,
   },
   props: {
     results: {
-      type: Array as PropType<AudioDetail[]>,
+      type: Object as PropType<AudioResults>,
       required: true,
     },
-    fetchState: {
-      type: Object as PropType<FetchState>,
+    isFetching: {
+      type: Boolean,
       required: true,
     },
-  },
-  setup() {
-    const i18n = useI18n()
-
-    const collectionLabel = computed(() => {
-      const query = useSearchStore().searchTerm
-
-      return i18n.t("browsePage.aria.results", { query }).toString()
-    })
-
-    return {
-      collectionLabel,
-    }
+    searchTerm: {
+      type: String,
+      required: true,
+    },
+    handleLoadMore: {
+      type: Function as PropType<() => void>,
+      required: true,
+    },
   },
 })
 </script>

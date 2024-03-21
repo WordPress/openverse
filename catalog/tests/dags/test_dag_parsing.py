@@ -71,3 +71,20 @@ def test_dags_loads_correct_number_with_no_errors(relative_path, tmpdir):
     dag_bag.process_file(str(DAG_FOLDER / relative_path))
     assert len(dag_bag.import_errors) == 0, "Errors found during DAG import"
     assert len(dag_bag.dags) == expected_count, "An unexpected # of DAGs was found"
+
+
+def test_dag_uses_default_args():
+    # Attempt to load all DAGs in the DAG_FOLDER and check if they use the
+    # DAG_DEFAULT_ARGS settings
+    dagbag = DagBag(dag_folder=DAG_FOLDER, include_examples=False)
+
+    failures = []
+    for dag_id, dag in dagbag.dags.items():
+        # An easy proxy for this is checking if DAGs have an on_failure_callback
+        on_failure_callback = dag.default_args.get("on_failure_callback")
+        if on_failure_callback is None:
+            failures.append(dag_id)
+
+    assert (
+        not failures
+    ), f"The following DAGs do not have DAG_DEFAULT_ARGS defined: {failures}"

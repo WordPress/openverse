@@ -498,6 +498,11 @@
     },
     imageInfo: "Image information",
     audioInfo: "Audio information",
+    tags: {
+      title: "Tags",
+      showMore: "Show more",
+      showLess: "Show less",
+    },
     contentReport: {
       short: "Report",
       long: "Report this content",
@@ -775,6 +780,11 @@
     },
   },
   collection: {
+    heading: {
+      tag: "Tag",
+      creator: "Creator",
+      source: "Source",
+    },
     link: {
       source: "Open source site",
       creator: "Open creator page",
@@ -796,14 +806,14 @@
     resultCountLabel: {
       creator: {
         audio: {
-          zero: "No audio files by this creator in {source}",
-          count: "{count} audio file by this creator in {source}|{count} audio files by this creator in {source}",
-          countMore: "Over {count} audio files by this creator in {source}",
+          zero: "No audio files by this creator.",
+          count: "{count} audio file by this creator.|{count} audio files by this creator.",
+          countMore: "Over {count} audio files by this creator.",
         },
         image: {
-          zero: "No images by this creator in {source}",
-          count: "{count} image by this creator in {source}|{count} images by this creator in {source}",
-          countMore: "Over {count} images by this creator in {source}",
+          zero: "No images by this creator.",
+          count: "{count} image by this creator.|{count} images by this creator.",
+          countMore: "Over {count} images by this creator.",
         },
       },
       source: {

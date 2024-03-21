@@ -88,8 +88,10 @@ export function isFocusableElement(element: HTMLElement) {
   return element.matches(focusableSelector)
 }
 
-export function focusElement(element: HTMLElement | null) {
-  element?.focus()
+export function focusElement(element: HTMLElement | Element | null) {
+  if (element instanceof HTMLElement) {
+    element.focus()
+  }
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/select
