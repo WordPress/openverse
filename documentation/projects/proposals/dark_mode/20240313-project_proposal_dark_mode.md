@@ -42,10 +42,13 @@ Refine Search Experience
    other additional Figma files.
 6. Document the dark variant of every UI element on Storybook.
 7. Document the transition from current to new frontend implementation.
+8. Include an analytic event to record how users utilize the functionality.
 
 ## Success
 
 <!-- How do we measure the success of the project? How do we know our ideas worked? -->
+
+The use of this feature will be recorded and analyzed to assess its success.
 
 ## Participants and stakeholders
 
