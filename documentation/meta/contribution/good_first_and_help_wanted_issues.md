@@ -68,25 +68,92 @@ Descriptions should:
     knowledge, but if they at all do (for example, to explain why a non-obvious
     solution is requested) then it must be included
 
+### Additional boilerplate for "good first issues"
+
+In addition to our standard issue template, good first issues should _also_
+contain the following block of requirements:
+
+```md
+## Good first issue checks
+
+- Have I filled out the PR template correctly?
+  - Did I include testing instructions?
+- Does my PR pass linting? (Test either via precommit or by running `just lint`
+  manually)
+- Do all the tests still pass?
+  - If JavaScript changes, run `pnpm -r run test`
+  - If API changes, run ` just api/test`
+  - If catalog changes, run `just catalog/test`
+```
+
 ---
 
-## Reply Templates
+## Reply templates and behaviors
 
-- Scenario: A "first time contributor" asks if they can work on an issue.
+These predefined responses ("predefs") provide consistient solutions to common
+situations.
 
-  ```md
-  Hi @{user}, thank you for your interest in contributing to Openverse! I've
-  assigned this issue to you. If you have any questions, please leave them here.
-  Please check out our
-  [welcome](https://docs.openverse.org/general/contributing.html) and
-  [quickstart](https://docs.openverse.org/general/quickstart.html) documentation
-  pages for getting started with setting up your local environment.
-  ```
+If you find yourself dealing with a recurring scenario that _isn't_ included in
+this list, please submit a pull request to add it here.
 
-- Scenario: A community pull request author did not use the pull request
-  template or failed to fill out all sections correctly.
-  ```md
-  Hi @{user}, could you update your pr description to use the
-  [pull request template](https://github.com/WordPress/openverse/blob/main/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md)?
-  If you have any questions please let us know in the comments.
-  ```
+### Scenario 1: Issue Request
+
+A "first time contributor" asks if they can work on an issue.
+
+#### Initial Response
+
+```md
+Hi `@user`, thank you for your interest in contributing to Openverse! I've
+assigned this issue to you. If you have any questions, you may leave them here.
+
+Please check out our
+[welcome](https://docs.openverse.org/general/contributing.html) and
+[quickstart](https://docs.openverse.org/general/quickstart.html) documentation
+pages for getting started with setting up your local environment.
+```
+
+#### Follow up
+
+Assign the issue to the user.
+
+### Scenario 2: Improper PR Template
+
+A community pull request author did not use the pull request template or failed
+to fill out all sections correctly.
+
+#### Initial Response
+
+```md
+Hi `@user`, could you update your pr description to use the
+[pull request template](https://github.com/WordPress/openverse/blob/main/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md)?
+If you have any questions please let us know in the comments.
+```
+
+#### Follow through
+
+If the contributor doesn't reply or update the PR, move on to
+[scenario #3](#scenario-3-absent-contributor).
+
+### Scenario 3: Absent Contributor
+
+A contributor opened a pull request but hasn't updated it or responded to
+changes in the required timeframe.
+
+#### Initial Response
+
+```md
+Hi {@user}, are you still able to work on this PR? We appreciate all the work
+you have completed so far. If you are not able to finish this pull request we
+can unassign you, so a maintainer can take over the remaining work.
+```
+
+#### Follow through
+
+Wait 5 business days for the user to respond. If they do not respond, unassign
+the PR, draft the PR, and reply with the following:
+
+```md
+@{user} thank you again for your efforts here. I have unassigned this PR and
+drafted it to be picked up by a maintainer when avaliable. If you would ever
+like to resume work, do not hesitate to let us know here.
+```
