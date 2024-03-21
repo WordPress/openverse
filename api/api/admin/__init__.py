@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
+from django.http.response import HttpResponseRedirect
+from django.urls import reverse
 
 from oauth2_provider.models import AccessToken
 
@@ -159,3 +161,9 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
             # the changelist itself
             return True
         return obj.user == request.user
+
+    def changelist_view(self, request, extra_context=None):
+        obj = self.get_queryset(request).first()
+        return HttpResponseRedirect(
+            reverse("admin:api_userpreferences_change", args=[obj.id])
+        )
