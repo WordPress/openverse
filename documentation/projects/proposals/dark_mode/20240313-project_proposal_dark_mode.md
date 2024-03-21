@@ -87,10 +87,10 @@ of the guideline for more context.
 
 ## Marketing
 
-<!-- Are there potential marketing opportunities that we'd need to coordinate with the community to accomplish? If there are none, say so explicitly rather than deleting the section. -->
+<!-- Are there potential marketing opportunities that we'd need to coordinate with the community to accomplish? If there are none, say so explicitly rather than deleting the section.-->
 
-Since the project involves visual changes across the site, there is a marketing
-opportunity to introduce the benefits of the UI’s dark theme.
+An announcement showing the functionality will be created in conjunction with
+marketing team based on their existing workflows.
 
 ## Required implementation plans
 
