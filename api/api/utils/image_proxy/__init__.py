@@ -179,9 +179,9 @@ async def get(
         content = await upstream_response.read()
         upstream_response.raise_for_status()
         return HttpResponse(
-            content, 
-            status = status_code,
-            content_type = content_type,
+            content,
+            status=status_code,
+            content_type=content_type,
         )
     except ClientResponseError as exc:
         status = exc.status
