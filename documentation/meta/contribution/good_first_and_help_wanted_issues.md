@@ -106,7 +106,7 @@ appropriate given their expertise.
 
 ## Timing and process
 
-It can often be tricky to determine how and when to make requests of a comunity
+It can often be tricky to determine how and when to make requests of a community
 contributor. The following table provides guidelines for specific scenarios.
 
 Response times may be from the contributor _or_ from a maintainer depending on
@@ -189,6 +189,6 @@ the PR, draft the PR, and reply with the following:
 
 ```md
 @{user} thank you again for your efforts here. I have unassigned this PR and
-drafted it to be picked up by a maintainer when avaliable. If you would ever
+drafted it to be picked up by a maintainer when available. If you would ever
 like to resume work, do not hesitate to let us know here.
 ```

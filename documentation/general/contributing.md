@@ -86,7 +86,7 @@ issue be assigned to you when you're ready to work on it.
 - [Good first issues](https://github.com/WordPress/openverse/issues?q=is:issue+is:open+sort:updated-desc+label:%22good+first+issue%22)
 - [Issues wanting help](https://github.com/WordPress/openverse/issues?q=is:issue+is:open+sort:updated-desc+label:%22help+wanted%22)
 
-It is reccommended that first-time contributors begin with a "good first issue".
+It is recommended that first-time contributors begin with a "good first issue".
 For more information on how Openverse maintainers think about "good first
 issues", please see
 [our additional documentation](/meta/contribution/good_first_and_help_wanted_issues.md).
