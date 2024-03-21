@@ -56,7 +56,7 @@ The use of this feature will be recorded and analyzed to assess its success.
 
 - Lead: @fcoveram
 - Design: @fcoveram
-- Implementation: TBD
+- Implementation: @WordPress/openverse-frontend
 
 ## Infrastructure
 
