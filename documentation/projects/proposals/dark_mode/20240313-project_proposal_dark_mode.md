@@ -61,7 +61,7 @@ Refine Search Experience
 
 - Lead: @fcoveram
 - Design: @fcoveram
-- Implementation: @WordPress/openverse-frontend
+- Implementation: @obulat
 
 ## Infrastructure
 
