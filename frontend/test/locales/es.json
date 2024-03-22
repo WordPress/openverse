@@ -28,13 +28,13 @@
       "close": "Cerrar la contribución de la traducción ayuda a solicitar banner"
     },
     "analytics": {
-      "text": "Openverse utiliza análisis para mejorar la calidad de nuestro servicio. Visite PLACEHOLDER para aprender más o optar por salir.",
+      "text": "Openverse utiliza análisis para mejorar la calidad de nuestro servicio. Visite {link} para aprender más o optar por salir.",
       "link": "la página de privacidad",
       "close": "Cierra el banner de los análisis."
     }
   },
   "header": {
-    "homeLink": "PLACEHOLDER Home",
+    "homeLink": "{openverse} Home",
     "placeholder": "Buscar todos los contenidos",
     "aria": {
       "primary": "principal",
@@ -58,7 +58,7 @@
     "backButton": "Vuelve.",
     "contentSettingsButton": {
       "simple": "Menú",
-      "withCount": "Menú. Filtro PLACEHOLDER aplicado en WordPressMenu. Filtros PLACEHOLDER aplicados"
+      "withCount": "Menu. Filtro {count} aplicado en la práctica. Filtros {count} aplicados"
     }
   },
   "navigation": {
@@ -79,19 +79,33 @@
       "content": "{openverse} es una herramienta que permite descubrir obras con licencia abierta y de dominio público y ser usadas por todos."
     },
     "collection": {
-      "content": "{openverse} busca entre más de 300 millones de imágenes en API abiertas y el conjunto de datos de {commonCrawl}. Va más allá de la simple búsqueda para añadir los resultados a través de múltiples repositorios públicos en un solo catálogo y facilita la reutilización a través de características como las etiquetas autogeneradas y la atribución con un solo clic."
+      "content": {
+        "a": "{openverse} busca más de 700 millones de imágenes y audio de API abiertas y el conjunto de datos {commonCrawl}",
+        "b": "Agregamos obras de múltiples repositorios públicos y facilitamos el reutilizamiento a través de características como la atribución de un clic."
+      }
     },
     "planning": {
-      "content": "Actualmente, {openverse} solo busca imágenes, con búsqueda de audio y vídeo proporcionada a través de la {meta}. Pero planeamos añadir tipos de medios adicionales, como textos abiertos y audio, con el objetivo final de proporcionar acceso a la totalidad de 1.400 millones de obras con licencia CC y de dominio público de la web. Todo nuestro código es de código abierto ({search}, {api}, {catalog}) y nosotros {community}. Puedes ver en qué {working}.",
-      "repository": "PLACEHOLDER PLACEHOLDER repositorio",
+      "content": {
+        "a": "Actualmente {openverse} sólo busca imágenes y audio, con búsqueda de vídeo proporcionado a través de Fuentes Externas.",
+        "b": "Planeamos añadir nuevos tipos de medios tales como textos abiertos y modelos 3D, con el objetivo final de proporcionar acceso a los aproximadamente 2.500 millones de obras de CC con licencia y dominio público en la web.",
+        "c": "Todo nuestro código es de código abierto y se puede acceder en el {repository} Nosotros {community} Puedes ver lo que {working}"
+      },
+      "repository": "{openverse} Repositorio {github}",
       "community": "agradecemos la colaboración de la comunidad",
       "working": "estamos trabajando en este momento"
     },
     "transfer": {
-      "content": "{openverse} es el sucesor de CC Search, que Creative Commons lanzó en 2019, tras su migración a WordPress en 2021. Puedes leer más sobre esta transición en los anuncios oficiales de {creativeCommons} y {wordpress}. Seguimos comprometidos con nuestro objetivo de abordar el descubrimiento y la accesibilidad de los medios de acceso abierto."
+      "content": {
+        "a": "{openverse} es el sucesor de CC Search que fue lanzado por Creative Commons en 2019, después de su migración a WordPress en 2021.",
+        "b": "Puede leer más sobre esta transición en los anuncios oficiales de {creativeCommons} y {wordpress}",
+        "c": "Seguimos comprometidos con nuestro objetivo de abordar la descubribilidad y accesibilidad de los medios de acceso abierto."
+      }
     },
     "declaration": {
-      "content": "Por favor, ten en cuenta que {openverse} no verifica si las imágenes tienen la debida licencia CC o si la atribución y otra información de licencia que hemos añadido es precisa o completa. Por favor, verifica por tu cuenta el estado de la licencia y la información de atribución antes de reutilizar el contenido. Para más detalles, lee los {terms}.",
+      "content": {
+        "a": "{openverse} no verifica la información de licencia para trabajos individuales, o si la atribución generada es exacta o completa.",
+        "b": "Sírvase verificar independientemente el estado de licencia y la información de atribución antes de reutilizar el contenido. Para más detalles, lea el {terms}"
+      },
       "terms": "Términos de uso de {openverse}"
     }
   },
@@ -107,10 +121,11 @@
     "ccContent": {
       "where": "¿De dónde proceden los contenidos de {openverse}?",
       "content": "Hay contenidos con licencia abierta alojados en millones de dominios en toda la extensión de Internet. Nuestro equipo identifica sistemáticamente a los proveedores que alojan contenidos con licencia CC. Si son adecuados, los indexamos y los hacemos accesibles a través de {openverse}.",
-      "provider": "Algunos proveedores tienen varias agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA hasta la fotografía personal. El {smithsonian} comprende una docena de colecciones diversas. Wikimedia Commons abarca toda la gama de contenidos y es utilizado por varias galerías, bibliotecas, archivos y museos para destacar algunas o todas sus colecciones digitalizadas.",
-      "europeana": "{openverse} agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. {openverse} es capaz de indexar cientos de valiosas fuentes a través de una única integración con la {linkApi}.",
-      "europeanaApi": "API de Euroepeana",
-      "smithsonian": "Instituto Smithsonian"
+      "provider": {
+        "a": "Algunos proveedores tienen múltiples agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA a la fotografía personal. El {smithsonian} comprende una docena de colecciones diversas.",
+        "b": "Wikimedia Commons ejecuta la gama en términos de contenido, y es utilizado por varias galerías, bibliotecas, archivos y museos destacando algunas o todas sus colecciones digitalizadas."
+      },
+      "europeana": "{openverse} agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. {openverse} es capaz de indexar cientos de valiosas fuentes a través de una única integración con la {linkApi}."
     },
     "newContent": {
       "next": "¿Cómo decidimos cuáles serán las siguientes fuentes a añadir?",
@@ -133,7 +148,11 @@
     "title": "Búsqueda meta",
     "intro": "{openverse} está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestras {link}.",
     "link": "fuentes",
-    "license": "¡Internet es un lugar enorme! Hay muchos portales de búsqueda y colecciones, que albergan contenido con licencia CC y de dominio público, que no podemos indexar o mostrar sus resultados en la interfaz de {openverse}. Estas son fuentes importantes de contenido con licencia CC y de dominio público y queremos asegurarnos de que puedas encontrar los mejores materiales posibles con licencia abierta, independientemente de dónde se encuentren.",
+    "license": {
+      "a": "Sin embargo, hay muchas fuentes de los medios de comunicación de dominio público y licenciados por CC que todavía no podemos incluir en la búsqueda de {openverse}",
+      "b": "Esto puede ser porque no ofrecen una API pública, o que nuestros colaboradores aún no han tenido tiempo de integrarlos en {openverse}",
+      "c": "Estas son fuentes valoradas y queremos asegurarnos de que usted es capaz de encontrar los mejores materiales de licencia abierta posible, independientemente de dónde se encuentren."
+    },
     "new": {
       "title": "¿Puedo sugerir más fuentes para la búsqueda meta?",
       "content": "¡Sí, por favor! Crea un «{issue}» en nuestro repositorio de GitHub o envíanos un  {email} y dinos qué nuevas fuentes te gustaría ver incluidas.",
@@ -143,28 +162,37 @@
     "why": {
       "title": "¿Por qué habéis creado esto?",
       "content": "Durante muchos años, CC ha ofrecido a sus usuarios un portal de búsqueda dedicado para buscar plataformas que tienen filtros de licencias CC incorporados. Estas plataformas incluían Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter y SoundCloud. La experiencia de búsqueda tenía el siguiente aspecto:",
-      "old": "oldsearch.creativecommons.org",
-      "new": "A los usuarios del antiguo sitio de búsqueda meta de CC, la característica de búsqueda meta de {openverse} les resultará familiar. El objetivo era garantizar que la funcionalidad no se perdiera, sino que se actualizara y se integrara en nuestro nuevo motor de búsqueda de contenidos con licencia abierta. Además, la característica de la búsqueda meta se basa en esta funcionalidad, permitiéndonos añadir rápidamente nuevas fuentes a la búsqueda meta a medida que las descubrimos y ser compatibles con nuevos tipos de contenido en el futuro a medida que vayamos creciendo.",
+      "new": {
+        "a": "Para los usuarios del sitio web de CC Meta Search, la función \"External Sources\" en {openverse} se verá familiarizada.",
+        "b": "El objetivo era asegurar que la funcionalidad no se pierda, pero se actualiza e incorpora dentro de nuestro nuevo motor de búsqueda de contenido de licencia abierta.",
+        "c": "Además, la característica \"Fuerzas externas\" se basa en esta funcionalidad, permitiéndonos añadir rápidamente nuevas fuentes externas a medida que las descubrimos, y apoyar nuevos tipos de contenido en el futuro."
+      },
       "ariaLabel": "sugerencias",
       "feedbackSuggestions": "Esperamos que disfrutes y, si tienes sugerencias para mejorar, déjanos tu {feedback}.",
       "feedbackLink": "sugerencias"
     },
-    "relationships": "Esta funcionalidad también nos permite iniciar conversaciones y construir relaciones con fuentes que puedan ser incluidas en PLACEHOLDER en el futuro. Por último, también podemos ofrecer fuentes externas de tipos de medios que no incluimos en PLACEHOLDER todavía, sino planear.",
-    "explanation": "Usted puede encontrar enlaces a fuentes externas en la parte inferior de cada página de resultados de búsqueda de PLACEHOLDER; en páginas para búsquedas que no devuelven resultados; y en páginas para tipos de medios que todavía no soportamos pero que pretenden."
+    "relationships": {
+      "a": "Esta funcionalidad también nos permite iniciar conversaciones y construir relaciones con fuentes que puedan ser incluidas en {openverse} en el futuro.",
+      "b": "Por último, también podemos ofrecer fuentes externas de tipos de medios que no incluimos en {openverse} aún, pero planeamos hacerlo."
+    },
+    "explanation": "Usted puede encontrar enlaces a fuentes externas en la parte inferior de cada {openverse} search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to."
   },
   "privacy": {
     "title": "Privacidad",
     "intro": {
-      "content": "El proyecto PLACEHOLDER busca dar prioridad a la privacidad y seguridad de nuestros usuarios. PLACEHOLDER se adhiere al PLACEHOLDER. Vea este documento para una descripción completa de cómo PLACEHOLDER utiliza y protege cualquier información que nos proporcione.",
+      "content": "El proyecto {openverse} busca dar prioridad a la privacidad y seguridad de nuestros usuarios. {openverse} se adhiere al {link} Vea este documento para una descripción completa de cómo {openverse} utiliza y protege cualquier información que nos proporcione.",
       "link": "política de privacidad de todos los sitios web de WordPress.org"
     },
     "cookies": {
       "title": "Cookies",
-      "content": "PLACEHOLDER utiliza cookies para almacenar información sobre las preferencias de los visitantes e información sobre sus navegadores web. Utilizamos esta información para mejorar la experiencia de usuario del sitio. Estas son consideradas \"necesarias\" o \"cookies estrictamente necesarias\" y puede deshabilitarlas cambiando la configuración de su navegador, pero esto puede afectar cómo funciona PLACEHOLDER."
+      "content": {
+        "a": "{openverse} utiliza cookies para almacenar información sobre las preferencias de los visitantes e información sobre sus navegadores web. Utilizamos esta información para mejorar la experiencia de usuario del sitio.",
+        "b": "Estas son consideradas \"necesarias\" o \"cookies estrictamente necesarias\". Puede deshabilitarlos cambiando la configuración de su navegador, pero esto puede afectar cómo funciona {openverse}"
+      }
     },
     "contact": {
       "title": "Contáctenos",
-      "content": "Cualquier pregunta sobre PLACEHOLDER y privacidad puede ser enviada a PLACEHOLDER, compartida como PLACEHOLDER, o discutida con nuestra comunidad en el canal #openverso del PLACEHOLDER.",
+      "content": "Cualquier pregunta sobre {openverse} y privacidad puede ser enviada a {email}, compartida como {issue}, o discutida con nuestra comunidad en el canal #openverso del {chat}",
       "issue": "Cuestión de GitHub",
       "chat": "Hacer una palabra Chat de prensa"
     }
@@ -183,7 +211,7 @@
       "operatorName": "menos operador",
       "ariaLabel": "perro menos pug",
       "example": "perro -pug",
-      "content": "Para excluir un término de sus resultados, ponga el PLACEHOLDER delante de él. Ejemplo: PLACEHOLDERPLACEHOLDER Esto buscará medios relacionados con \"perro\" pero no incluirá resultados relacionados con \"pug\"."
+      "content": "Para excluir un término de sus resultados, ponga el {operator} delante de él. Ejemplo: {link}{br} Esto buscará medios relacionados con \"perro\" pero no incluirá resultados relacionados con \"pug\"."
     }
   },
   "feedback": {
@@ -201,34 +229,73 @@
   "sensitive": {
     "title": "Contenido sensible",
     "description": {
-      "content": "PLACEHOLDER opera a lo largo de un enfoque “seguro por defecto” en todos los aspectos de su funcionamiento y desarrollo, con la intención de ser lo más inclusivo y accesible posible. Por lo tanto, PLACEHOLDER sólo incluye resultados con contenido sensible cuando los usuarios han optado explícitamente por las características de “incluir resultados sensibles” en PLACEHOLDER.org y en la API de PLACEHOLDER. En cumplimiento de PLACEHOLDER y su PLACEHOLDER, PLACEHOLDER contribuye a grandes expectativas en relación con la conducta hacia otros contribuyentes, la accesibilidad de la contribución y los servicios, y por lo tanto, siendo un proyecto inclusivo. Asimismo, PLACEHOLDER tiene la expectativa de que los resultados devueltos de la API o mostrados en el sitio web de PLACEHOLDER.org deben ser accesibles por defecto. Todo el mundo, independientemente de su experiencia, debe sentirse seguro e incluido en PLACEHOLDER, ya sea contribuyente a los aspectos técnicos de los servicios de PLACEHOLDER, creador cuyas obras están incluidas en PLACEHOLDER o usuario de PLACEHOLDER. PLACEHOLDER reconoce su responsabilidad como una herramienta utilizada por personas de una amplia variedad de edades, incluyendo a jóvenes en entornos educativos, y presta especial atención a minimizar la interacción accidental con o la exposición a contenidos sensibles.",
+      "content": {
+        "a": "{openverse} opera a lo largo de un enfoque “seguro por defecto” en todos los aspectos de su funcionamiento y desarrollo, con la intención de ser lo más inclusivo y accesible posible.",
+        "b": "Por lo tanto, {openverse} solo incluye resultados con contenido sensible cuando los usuarios han optado explícitamente por las características de “incluye resultados sensibles” en {openverseOrg} y en el {openverse} API.",
+        "c": "En cumplimiento de {wpCoc} y su {deiStatement}, {openverse} aporta grandes expectativas en relación con la conducta hacia otros contribuyentes, la accesibilidad de la contribución y los servicios y, por lo tanto, siendo un proyecto inclusivo.",
+        "d": "Asimismo, {openverse} tiene la expectativa de que los resultados devueltos de la API o mostrados en el sitio web de {openverseOrg} deben ser accesibles por defecto.",
+        "e": "Todo el mundo, independientemente de su procedencia, debe sentirse seguro e incluido en {openverse}, ya sea que contribuya a los aspectos técnicos de los servicios de {openverse}, un creador cuyas obras están incluidas en {openverse}",
+        "f": "{openverse} reconoce su responsabilidad como herramienta utilizada por personas de una amplia variedad de edades, incluyendo jóvenes en entornos educativos, y presta especial atención a minimizar la interacción accidental con o la exposición al contenido sensible."
+      },
       "wpCoc": "Código comunitario de conducta de WordPress",
       "deiStatement": "Declaración de diversidad, equidad e inclusión"
     },
     "sensitivity": {
-      "what": "PLACEHOLDER utiliza el término \"sensible\" en lugar de \"maduro\", \"NSFW\" (no seguro para el trabajo), u otros términos para indicar que nuestra designación de contenido tan sensible es amplia, con un enfoque en accesibilidad e inclusión. Esto significa que algún contenido es designado \"sensible\" que no caería en una categoría de lo que generalmente se entiende que es \"madura\" contenido (en otras palabras, contenido específicamente para un público adulto). La designación no implica, sin embargo, que PLACEHOLDER o sus colaboradores vean el contenido como inapropiado para la plataforma en general y tampoco implica juicio moral o ético. Consideramos que el contenido \"sensible\" es un contenido ofensivo, perturbador, gráfico o inapropiado, prestando especial atención a los jóvenes.",
-      "how": "Esta definición de sensibilidad tiene un tremendo grado de flexibilidad y es intencionalmente imprecisa. PLACEHOLDER se basa en una variedad de herramientas para descubrir contenido potencialmente sensible, incluyendo informes de usuarios moderados sobre trabajo individual y escaneando el contenido textual relacionado con un trabajo para términos sensibles. Estos se describen con más detalle a continuación."
+      "what": {
+        "a": "{openverse} utiliza el término \"sensible\" en lugar de \"maduro\", \"NSFW\" (no seguro para el trabajo), u otros términos para indicar que nuestra designación de contenido tan sensible es amplia, con un enfoque en accesibilidad e inclusión.",
+        "b": "Esto significa que algún contenido es designado \"sensible\" que no caería en una categoría de lo que generalmente se entiende que es \"madura\" contenido (en otras palabras, contenido específicamente para un público adulto).",
+        "c": "La designación no implica, sin embargo, que {openverse} o sus sostenedores vean el contenido como inapropiado para la plataforma en general y no es igualmente una implicación del juicio moral o ético.",
+        "d": "Consideramos que el contenido \"sensible\" es un contenido ofensivo, perturbador, gráfico o inapropiado, prestando especial atención a los jóvenes."
+      },
+      "how": {
+        "a": "Esta definición de sensibilidad tiene un tremendo grado de flexibilidad y es intencionalmente imprecisa.",
+        "b": "{openverse} se basa en una variedad de herramientas para descubrir contenido potencialmente sensible, incluyendo informes de usuarios moderados sobre trabajo individual y escanear el contenido textual relacionado con un trabajo para términos sensibles.",
+        "c": "Estos se describen con más detalle a continuación."
+      }
     },
     "onOff": {
       "title": "Activando y apagando contenidos sensibles",
-      "sensitiveResults": "Por defecto, PLACEHOLDER no incluye contenido sensible en los resultados de búsqueda. La inclusión de los resultados sensibles requiere un opt-in explícito del usuario. El usuario puede optar por incluir contenido sensible en los resultados de búsqueda permitiendo el interruptor de “Resultados positivos”.",
-      "blurSensitive": "Cuando se incluye el contenido sensible, los resultados sensibles devueltos también están borrosos para evitar la exposición accidental. Desarreglarlos también requiere una opción explícita del usuario. El usuario puede optar por ver el contenido sensible no azulado desactivando el interruptor “Contenido azul”.",
+      "sensitiveResults": "Por defecto, {openverse} no incluye contenido sensible en los resultados de búsqueda. La inclusión de los resultados sensibles requiere un opt-in explícito del usuario. El usuario puede optar por incluir contenido sensible en los resultados de búsqueda permitiendo el interruptor de “Resultados positivos”.",
+      "blurSensitive": {
+        "a": "Cuando se incluye el contenido sensible, los resultados sensibles devueltos también están borrosos para evitar la exposición accidental.",
+        "b": "Desarreglarlos también requiere una opción explícita del usuario. El usuario puede optar por ver el contenido sensible no azulado desactivando el interruptor “Contenido azul”."
+      },
       "where": "Ambos toggles están disponibles en la barra lateral de filtro (en escritorios) y en la pestaña “Filter” del panel de configuración de búsqueda (en dispositivos móviles) en la página de resultados de búsqueda."
     },
     "designations": {
       "title": "Designaciones de contenido sensibles",
-      "description": "PLACEHOLDER designa contenido sensible en la API y en el sitio web de PLACEHOLDER.org utilizando dos métodos: informes de usuarios de PLACEHOLDER y detección de contenidos textuales sensibles automatizada. Estas denominaciones no son exclusivas entre sí y un solo trabajo puede tener uno o ambos aplicados a él.",
+      "description": {
+        "a": "{openverse} designa contenido sensible en la API y en el sitio web {openverseOrg} usando dos métodos: informes de usuarios de {openverse} y detección de contenidos textuales sensibles automatizada.",
+        "b": "Estas denominaciones no son exclusivas entre sí y un solo trabajo puede tener uno o ambos aplicados a él."
+      },
       "userReported": {
         "title": "Sensibilidad comunicada por el usuario",
-        "description": "Los usuarios de PLACEHOLDER son invitados a informar sobre contenidos sensibles a través del sitio web de PLACEHOLDER.org y la API de PLACEHOLDER. Algunas herramientas y aplicaciones que se integran con la API PLACEHOLDER, como PLACEHOLDER, también permiten a sus usuarios reportar contenido sensible. La página de un trabajo individual incluye la capacidad de reportar contenido como sensible (o de denunciar violaciones de derechos). Los moderadores de PLACEHOLDER revisan estos informes y toman decisiones sobre si añadir una designación de sensibilidad al trabajo o, en algunos casos como se describe anteriormente, deslistan el trabajo de los servicios de PLACEHOLDER.",
-        "gutenbergMediaInserter": "El editor de Gutenberg insertador de medios PLACEHOLDER"
+        "description": {
+          "a": "Los usuarios de {openverse} son invitados a informar sobre contenidos sensibles a través del sitio web de {openverseOrg} y {openverse} API.",
+          "b": "Algunas herramientas y aplicaciones que se integran con la API {openverse}, como la API {gutenbergMediaInserter}, también permiten a sus usuarios reportar contenido sensible.",
+          "c": "La página de un trabajo individual incluye la capacidad de reportar contenido como sensible (o de denunciar violaciones de derechos).",
+          "d": "Los moderadores de {openverse} verifican estos informes y toman decisiones sobre si añadir una designación de sensibilidad al trabajo o, en ciertos casos como se describe anteriormente, deslistan el trabajo de {openverse}’s services."
+        },
+        "gutenbergMediaInserter": "Editor de Gutenberg {openverse}"
       },
       "sensitiveText": {
         "title": "Contenido textual sensible",
-        "description": "PLACEHOLDER explora algunos de los metadatos textuales relacionados con obras como lo proporcionan nuestras fuentes para términos sensibles. El PLACEHOLDER de PLACEHOLDER es fuente abierta y las contribuciones y aportaciones de la comunidad son bienvenidas e invitadas. Ejemplos de textos potencialmente sensibles incluyen, pero no se limitan al texto de una naturaleza sexual, biológica, violenta, racista o de otro modo despectiva. El proyecto reconoce que este enfoque es imperfecto y que algunos trabajos pueden recibir inadvertidamente una designación de sensibilidad sin ser necesariamente sensibles. Para más contexto sobre por qué hemos elegido este enfoque a pesar de eso, consulte el PLACEHOLDER de nuestro documento de planificación de proyectos relacionado con esta característica.",
+        "description": {
+          "a": "{openverse} escanea algunos de los metadatos textuales relacionados con las obras según nuestras fuentes para términos sensibles.",
+          "b": "{openverse} {sensitiveTermsList} es fuente abierta y las contribuciones y aportaciones de la comunidad son bienvenidas e invitadas.",
+          "c": "Ejemplos de textos potencialmente sensibles incluyen, pero no se limitan al texto de una naturaleza sexual, biológica, violenta, racista o de otro modo despectiva.",
+          "d": "El proyecto reconoce que este enfoque es imperfecto y que algunos trabajos pueden recibir inadvertidamente una designación de sensibilidad sin ser necesariamente sensibles.",
+          "e": "Para más contexto sobre por qué hemos elegido este enfoque a pesar de eso, consulte el {imperfect} de nuestro documento de planificación de proyectos relacionado con esta característica."
+        },
         "sensitiveTermsList": "lista de términos sensibles",
-        "imperfect": "Sección \"PLACEHOLDER\"",
-        "metadata": "Es importante señalar que algunos metadatos textuales para un trabajo son PLACEHOLDER a través de la API PLACEHOLDER o el sitio web de PLACEHOLDER.org. Sin embargo, esos metadatos siguen siendo escaneados para términos sensibles y no se tratan como un caso especial. Si el escaneo de texto de PLACEHOLDER encuentra términos sensibles en esos campos de metadatos para un trabajo, el trabajo seguirá recibiendo una designación de sensibilidad basada en texto sensible, aunque el texto sensible en sí no esté disponible a través de PLACEHOLDER. PLACEHOLDER toma el enfoque que el contenido textual sensible en una descripción es un indicador correlativo relativamente alto de trabajos potencialmente sensibles. Como arriba, PLACEHOLDER entiende que esto no es perfecto.",
+        "imperfect": "Sección \"{sectionName}\"",
+        "metadata": {
+          "a": "Es importante señalar que algunos metadatos textuales para un trabajo son {notAvailable} a través de la API de {openverse} o el sitio web de {openverseOrg}",
+          "b": "Sin embargo, esos metadatos siguen siendo escaneados para términos sensibles y no se tratan como un caso especial.",
+          "c": "Si el escaneo de texto de {openverse} encuentra términos sensibles en esos campos de metadatos para un trabajo, el trabajo seguirá recibiendo una designación de sensibilidad basada en texto sensible aunque el texto sensible en sí mismo no esté disponible a través de {openverse}",
+          "d": "{openverse} toma el enfoque de que el contenido textual sensible en una descripción es un indicador correlativo relativamente alto de obras potencialmente sensibles.",
+          "e": "Como arriba, {openverse} entiende que esto no es perfecto."
+        },
         "notAvailable": "no disponible"
       }
     },
@@ -236,16 +303,27 @@
       "title": "Preguntas frecuentes",
       "one": {
         "question": "He encontrado contenido Creo que es sensible que no tiene una designación de sensibilidad. ¿Qué debo hacer?",
-        "answer": "Por favor reporte contenido sensible visitando la página de trabajo individual en el sitio web de PLACEHOLDER.org y utilizando el botón “reportar este contenido” debajo de la información de atribución y por encima de las etiquetas. PLACEHOLDER moderada informa individualmente y se reserva el derecho de rechazar respetuosamente la solicitud de añadir una designación de sensibilidad a un determinado trabajo."
+        "answer": {
+          "a": "Por favor reporte contenido sensible visitando la página de trabajo individual en el sitio web de {openverseOrg} y utilizando el botón “reportar este contenido” debajo de la información de atribución y por encima de las etiquetas.",
+          "b": "{openverse} informes moderados individualmente y se reserva el derecho a rechazar respetuosamente la solicitud de añadir una designación de sensibilidad a un determinado trabajo."
+        }
       },
       "two": {
         "question": "No estoy de acuerdo con la designación de sensibilidad en un trabajo. ¿Puedes, por favor, quitarlo?",
-        "answerPt1": "Para designaciones basadas en texto, PLACEHOLDER no tiene en este momento un método para eliminar la designación. Esta es una característica que se construirá eventualmente, pero no es parte de la característica de detección de contenidos sensibles a la base.",
-        "answerPt2": "Para los usuarios notificados, por favor presente un nuevo informe sobre la página del trabajo siguiendo las instrucciones en la pregunta anterior. En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad. Al agregar una nueva designación, PLACEHOLDER se reserva el derecho de rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
+        "answerPt1": "Para designaciones basadas en textos, {openverse} no tiene en este momento un método para eliminar la designación. Esta es una característica que se construirá eventualmente, pero no es parte de la característica de detección de contenidos sensibles a la base.",
+        "answerPt2": {
+          "a": "Para los usuarios notificados, por favor presente un nuevo informe sobre la página del trabajo siguiendo las instrucciones en la pregunta anterior.",
+          "b": "En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad.",
+          "c": "Al agregar una nueva designación, {openverse} se reserva el derecho a rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
+        }
       },
       "three": {
-        "question": "He encontrado contenido en PLACEHOLDER que puede ser ilegal. Además de informarlo a PLACEHOLDER, ¿hay otros pasos que pueda tomar?",
-        "answer": "Para los usuarios notificados, por favor presente un nuevo informe sobre la página del trabajo siguiendo las instrucciones en la pregunta anterior. En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad. Al agregar una nueva designación, PLACEHOLDER se reserva el derecho de rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
+        "question": "He encontrado contenido en {openverse} que puede ser ilegal. Además de informarlo a {openverse}, ¿hay otros pasos que pueda tomar?",
+        "answer": {
+          "a": "Para los usuarios notificados, por favor presente un nuevo informe sobre la página del trabajo siguiendo las instrucciones en la pregunta anterior.",
+          "b": "En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad.",
+          "c": "Al agregar una nueva designación, {openverse} se reserva el derecho a rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
+        }
       }
     }
   },
@@ -329,7 +407,7 @@
     },
     "safeBrowsing": {
       "title": "Cuervos seguros",
-      "desc": "El contenido marcado como PLACEHOLDER no se muestra por defecto.",
+      "desc": "El contenido marcado como {sensitive} no se muestra por defecto.",
       "sensitive": "sensible",
       "toggles": {
         "fetchSensitive": {
@@ -373,7 +451,7 @@
     "filterBy": "Filtrar por",
     "hide": "Ocultar los filtros",
     "clear": "Vaciar los filtros",
-    "clearNumbered": "Filtros claros (PLACEHOLDER)",
+    "clearNumbered": "Filtros claros ({number})",
     "show": "Mostrar los resultados",
     "categoryAria": "lista de filtros para la categoría {categoryName}"
   },
@@ -383,14 +461,14 @@
     "allResultCountMore": "Más de {localeCount} resultado|Más de {localeCount} resultados",
     "contentLink": {
       "image": {
-        "zero": "No se han encontrado imágenes para PLACEHOLDER.",
-        "count": "Ver imagen de PLACEHOLDER encontrada para PLACEHOLDER. sometidaVer imágenes de PLACEHOLDER encontradas para PLACEHOLDER.",
-        "countMore": "Ver más imágenes de PLACEHOLDER encontradas para PLACEHOLDER."
+        "zero": "No se han encontrado imágenes para {query}",
+        "count": "Véase {localeCount} imagen encontrada para {query} Ver imágenes {localeCount} encontradas para {query}",
+        "countMore": "Ver más imágenes de {localeCount} encontradas para {query}"
       },
       "audio": {
-        "zero": "No hay audio encontrado para PLACEHOLDER.",
-        "count": "Vea el audio de PLACEHOLDER encontrado para PLACEHOLDER.",
-        "countMore": "Ver más de PLACEHOLDER audio encontrado para PLACEHOLDER."
+        "zero": "No se encuentra audio para {query}",
+        "count": "Ver {localeCount} audio encontrado para {query}",
+        "countMore": "Ver más {localeCount} audio encontrado para {query}"
       }
     },
     "load": "Cargar más resultados",
@@ -434,9 +512,9 @@
       "removeFilter": "eliminar el filtro",
       "licenseExplanation": "explicación de la licencia",
       "creator": "buscar por creador",
-      "imageTitle": "Imagen: PLACEHOLDER",
-      "audioTitle": "Audio: PLACEHOLDER",
-      "results": "Resultados de búsqueda para PLACEHOLDER."
+      "imageTitle": "Imagen: {title}",
+      "audioTitle": "Audio: {title}",
+      "results": "Resultados de búsqueda para {query}"
     }
   },
   "mediaDetails": {
@@ -451,7 +529,7 @@
     },
     "reuse": {
       "title": "Reutilizar el contenido",
-      "description": "Visite el sitio web de PLACEHOLDER para descargarlo y utilizarlo. Asegúrese de acreditar al creador mostrando la información de atribución donde está compartiendo su trabajo.",
+      "description": "Visite el sitio web de {media} para descargarlo y utilizarlo. Asegúrese de acreditar al creador mostrando la información de atribución donde está compartiendo su trabajo.",
       "copyrightDisclaimer": "Algunas fotografías pueden contener contenido de copyright, como pinturas, esculturas o obras arquitectónicas. Utilizar estas fotografías puede requerir permisos adicionales del titular de derechos de autor de los trabajos representados.",
       "licenseHeader": "Licencia",
       "toolHeader": "Dominio público",
@@ -547,7 +625,7 @@
     "information": {
       "dimensions": "Dimensiones",
       "pixels": "píxeles",
-      "sizeInPixels": "PLACEHOLDER × Píxeles PLACEHOLDER"
+      "sizeInPixels": "{width} × {height} pixels"
     },
     "relatedImages": "Imágenes relacionadas",
     "aria": {
@@ -567,13 +645,13 @@
   },
   "allResults": {
     "snackbar": {
-      "text": "Presione PLACEHOLDER para jugar o parar la pista.",
+      "text": "Pulse {spacebar} para jugar o parar la pista.",
       "spacebar": "Spacebar"
     }
   },
   "audioResults": {
     "snackbar": {
-      "text": "Presione PLACEHOLDER para jugar o pausar, y PLACEHOLDER &amp; PLACEHOLDER para buscar a través de la pista.",
+      "text": "Pulse {spacebar} para jugar o parar, y {left} & {right} para buscar a través de la pista.",
       "spacebar": "Spacebar",
       "left": "←",
       "right": "→"
@@ -623,7 +701,7 @@
   "audioTrack": {
     "ariaLabel": "{title} - Reproductor de audio",
     "ariaLabelInteractive": "{title} - Reproductor de audio - Pulsa la barra de espacio para reproducir y pausar una muestra del audio",
-    "ariaLabelInteractiveSeekable": "Audio: PLACEHOLDER - reproductor interactivo - pulse la barra espaciadora para reproducir y pausar una vista previa del audio; utilice las teclas de flecha izquierda y derecha para buscar a través de la pista.",
+    "ariaLabelInteractiveSeekable": "Audio: {title} - reproductor interactivo - presione la barra espaciadora para reproducir y pausar una vista previa del audio; utilice las teclas de flecha izquierda y derecha para buscar a través de la pista.",
     "messages": {
       "err_aborted": "Has abortado la reproducción.",
       "err_network": "Ha ocurrido un error de red.",
@@ -644,7 +722,7 @@
   },
   "search": {
     "search": "Buscar",
-    "searchBarLabel": "Búsqueda de contenidos en PLACEHOLDER"
+    "searchBarLabel": "Buscar contenido en {openverse}"
   },
   "licenseReadableNames": {
     "cc0": "Cero",
@@ -704,7 +782,7 @@
     "statusBeta": "Beta",
     "seeImage": "Ver todas las imágenes",
     "seeAudio": "Ver todos los audios",
-    "selectLabel": "Seleccione un tipo de contenido: PLACEHOLDER"
+    "selectLabel": "Seleccione un tipo de contenido: {type}"
   },
   "skipToContent": "Saltar al contenido",
   "prefPage": {
@@ -712,7 +790,7 @@
     "groups": {
       "analytics": {
         "title": "Análisis",
-        "desc": "PLACEHOLDER utiliza análisis anónimos para mejorar nuestro servicio. No recopilamos ninguna información que pueda utilizarse para identificarte personalmente. Sin embargo, si desea no participar, puede optar aquí."
+        "desc": "{openverse} utiliza análisis anónimos para mejorar nuestro servicio. No recopilamos ninguna información que pueda utilizarse para identificarte personalmente. Sin embargo, si desea no participar, puede optar aquí."
       }
     },
     "features": {
@@ -737,7 +815,7 @@
     "off": "Fuera."
   },
   "footer": {
-    "wordpressAffiliation": "Parte del proyecto PLACEHOLDER",
+    "wordpressAffiliation": "Parte del proyecto {wordpress}",
     "wip": "🚧"
   },
   "language": {
@@ -750,7 +828,7 @@
       "label": "Búsquedas recientes claras"
     },
     "clearSingle": {
-      "label": "Búsqueda reciente clara 'PLACEHOLDER'"
+      "label": "Clear recent search '{entry} '"
     },
     "none": "No hay búsquedas recientes para mostrar.",
     "disclaimer": "Openverse no almacena sus búsquedas recientes, esta información se mantiene localmente en su navegador."
@@ -769,13 +847,13 @@
       "hide": "Ocultar contenido",
       "show": "Mostrar contenido",
       "explanation": "Este trabajo está marcado como sensible por las siguientes razones:",
-      "learnMore": "PLACEHOLDER sobre cómo PLACEHOLDER maneja contenido sensible.",
+      "learnMore": "{link} sobre cómo {openverse} maneja contenido sensible.",
       "link": "Aprender más"
     },
     "reasons": {
       "providerSuppliedSensitive": "La fuente de este trabajo lo ha marcado como sensible.",
-      "sensitiveText": "PLACEHOLDER ha detectado texto potencialmente sensible.",
-      "userReportedSensitive": "Los usuarios de PLACEHOLDER han reportado este trabajo como sensible."
+      "sensitiveText": "{openverse} ha detectado texto potencialmente sensible.",
+      "userReportedSensitive": "Los usuarios de {openverse} han reportado este trabajo como sensible."
     }
   },
   "collection": {
@@ -790,53 +868,53 @@
     },
     "ariaLabel": {
       "creator": {
-        "audio": "Archivos de audio por PLACEHOLDER en PLACEHOLDER",
-        "image": "Imágenes por PLACEHOLDER en PLACEHOLDER"
+        "audio": "Archivos de audio de {creator} en {source}",
+        "image": "Images by {creator} in {source}"
       },
       "source": {
-        "audio": "Archivos de audio de PLACEHOLDER",
-        "image": "Imágenes de PLACEHOLDER"
+        "audio": "Archivos de audio de {source}",
+        "image": "Imágenes de {source}"
       },
       "tag": {
-        "audio": "Archivos de audio con la etiqueta PLACEHOLDER",
-        "image": "Imágenes con la etiqueta PLACEHOLDER"
+        "audio": "Archivos de audio con la etiqueta {tag}",
+        "image": "Imágenes con la etiqueta {tag}"
       }
     },
     "resultCountLabel": {
       "creator": {
         "audio": {
           "zero": "No hay archivos de audio de este creador.",
-          "count": "archivo de audio de PLACEHOLDER por este creador. archivos de audio de WordPressPLACEHOLDER por este creador.",
-          "countMore": "Sobre archivos de audio de PLACEHOLDER por este creador."
+          "count": "{count} audio de este creador.|{count} archivos de audio de este creador.",
+          "countMore": "Sobre archivos de audio {count} de este creador."
         },
         "image": {
           "zero": "No hay imágenes de este creador.",
-          "count": "Imagen de PLACEHOLDER por este creador.",
-          "countMore": "Sobre las imágenes de PLACEHOLDER de este creador."
+          "count": "{count} imágen de este creador|{count} imágens de este creador.",
+          "countMore": "Sobre las imágenes de {count} de este creador."
         }
       },
       "source": {
         "audio": {
           "zero": "No hay archivos de audio proporcionados por esta fuente",
-          "count": "Archivo de audio PLACEHOLDER proporcionado por esta fuente archivos de audio de WordPressPLACEHOLDER proporcionados por esta fuente",
-          "countMore": "Más de archivos de audio PLACEHOLDER proporcionados por esta fuente"
+          "count": "{count} archivo de audio proporcionado por esta fuente Archivos de audio {count} proporcionados por esta fuente",
+          "countMore": "Más archivos de audio {count} proporcionados por esta fuente"
         },
         "image": {
           "zero": "No hay imágenes proporcionadas por esta fuente",
-          "count": "Imagen PLACEHOLDER proporcionada por esta fuente",
-          "countMore": "Sobre las imágenes de PLACEHOLDER proporcionadas por esta fuente"
+          "count": "{count} image provided by this source {count} images provided by this source",
+          "countMore": "Sobre imágenes {count} proporcionadas por esta fuente"
         }
       },
       "tag": {
         "audio": {
           "zero": "No hay archivos de audio con la etiqueta seleccionada",
-          "count": "Archivo de audio PLACEHOLDER con la etiqueta seleccionada archivos de audio de WordPressPLACEHOLDER con la etiqueta seleccionada",
-          "countMore": "Más de archivos de audio PLACEHOLDER con la etiqueta seleccionada"
+          "count": "Archivo de audio {count} con la etiqueta seleccionada {count} archivos de audio con la etiqueta seleccionada",
+          "countMore": "Sobre archivos de audio {count} con la etiqueta seleccionada"
         },
         "image": {
           "zero": "No hay imágenes con la etiqueta seleccionada",
-          "count": "Imagen PLACEHOLDER con la etiqueta seleccionada WordPressPLACEHOLDER imágenes con la etiqueta seleccionada",
-          "countMore": "Más de imágenes de PLACEHOLDER con la etiqueta seleccionada"
+          "count": "{count} image with the selected tag {count} imágenes con la etiqueta seleccionada",
+          "countMore": "Sobre {count} imágenes con la etiqueta seleccionada"
         }
       }
     }

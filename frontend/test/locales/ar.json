@@ -28,13 +28,13 @@
       "close": "إغلاق مساهمة الترجمة يساعد على طلب الملصق"
     },
     "analytics": {
-      "text": "المفرقعات تستخدم المحللين لتحسين نوعية خدمتنا زيارة (بليسفيلدر) لتعلم المزيد أو للاختيار",
+      "text": "المفرقعات تستخدم المحللين لتحسين نوعية خدمتنا زيارة {link} لتعلم المزيد أو اختيار.",
       "link": "صفحة الخصوصية",
       "close": "اغلق المحللين اللافتة"
     }
   },
   "header": {
-    "homeLink": "PLACEHOLDER البيت",
+    "homeLink": "{openverse} البيت",
     "placeholder": "البحث في كل المحتوى",
     "aria": {
       "primary": "الأولية",
@@ -58,7 +58,7 @@
     "backButton": "عُد",
     "contentSettingsButton": {
       "simple": "Menu",
-      "withCount": "مينو، مرشّحة PLACEHOLDER طُبقت"
+      "withCount": "(مينو) {count} filter applied.Menu. {count}"
     }
   },
   "navigation": {
@@ -79,19 +79,33 @@
       "content": "{openverse} هي أداة تسمح باكتشاف أعمال المجال العام والمرخصة بشكل مفتوح واستخدامها من قبل الجميع."
     },
     "collection": {
-      "content": "يبحث {openverse} عبر أكثر من 300 مليون صورة من واجهات برمجة التطبيقات المفتوحة ومجموعة البيانات {commonCrawl}. يتجاوز البحث البسيط إلى تجميع النتائج عبر مستودعات عامة متعددة في كتالوج واحد ، ويسهل إعادة الاستخدام من خلال ميزات مثل العلامات التي تم إنشاؤها آليًا والإسناد بنقرة واحدة."
+      "content": {
+        "a": "{openverse} searches across more than 700 million images and audio from open APIs and the {commonCrawl} dataset.",
+        "b": "نحن نجمع العمل من عدة مستودعات عامة، ونسهل إعادة الاستخدام من خلال سمات مثل العزو البقعة الواحدة."
+      }
     },
     "planning": {
-      "content": "حاليًا، يبحث {openverse} فقط في الصور والصوت، مع البحث عن الفيديو المقدم من خلال مصادر خارجية. لكننا نخطط لإضافة أنواع وسائط إضافية مثل النصوص المفتوحة والنماذج ثلاثية الأبعاد، مع الهدف النهائي المتمثل في توفير الوصول إلى ما يقدر بـ 2.5 مليار CC من الأعمال المرخصة والملكية العامة على الويب. جميع الأكواد البرمجية الخاصة بنا مفتوحة المصدر ويمكن الوصول إليها من خلال {repository}. نحن {community}. يمكنك أن ترى ما {working}.",
+      "content": {
+        "a": "وحالياً، لا تقوم شركة {openverse} إلا بتفتيش الصور والصوت، والبحث عن الفيديو المقدم من مصادر خارجية.",
+        "b": "ونخطط لإضافة أنواع إضافية من وسائط الإعلام مثل النصوص المفتوحة ونماذج الـ 3 دال، بهدف نهائي هو إتاحة إمكانية الوصول إلى ما يقدر بـ 2.5 بليون من دولارات الولايات المتحدة المرخص لها والمجالات العامة على الشبكة.",
+        "c": "جميع رموزنا هي مصدر مفتوح ويمكن الوصول إليها في {working} نحن {repository} يمكنك أن ترى ما هو {community}"
+      },
       "repository": "مستودع {openverse} {github}",
       "community": "نرحب بمساهمة المجتمع",
       "working": "نحن نعمل حاليا على"
     },
     "transfer": {
-      "content": "{openverse} هو خليفة CC Search الذي أطلقته Creative Commons في عام 2019 ، بعد انتقاله إلى WordPress في عام 2021. يمكنك قراءة المزيد حول هذا الانتقال في الإعلانات الرسمية من {creativeCommons} و {wordpress}. لا نزال ملتزمين بهدفنا المتمثل في معالجة قابلية الاكتشاف والوصول إلى الوسائط المفتوحة."
+      "content": {
+        "a": "{openverse} is the successor to CC search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021.",
+        "b": "يمكنك قراءة المزيد عن هذا الانتقال في الإعلانات الرسمية من {creativeCommons} and {wordpress}",
+        "c": "ولا نزال ملتزمين بتحقيق هدفنا المتمثل في معالجة إمكانية اكتشاف وسائل الإعلام المفتوحة والوصول إليها."
+      }
     },
     "declaration": {
-      "content": "يرجى ملاحظة أن {openverse} لا يتحقق مما إذا كانت الصور مرخصة بشكل صحيح CC ، أو ما إذا كانت الإسناد ومعلومات الترخيص الأخرى التي قمنا بتجميعها دقيقة أو كاملة. يرجى التحقق بشكل مستقل من حالة الترخيص ومعلومات الإسناد قبل إعادة استخدام المحتوى. لمزيد من التفاصيل ، اقرأ {terms}.",
+      "content": {
+        "a": "{openverse} does not verify licensing information for individual works, or whether the generated attribution is accurate or complete.",
+        "b": "يرجى التحقق بشكل مستقل من حالة الترخيص والمعلومات المتعلقة بالإسناد قبل إعادة استخدام المحتوى. للحصول على المزيد من التفاصيل، قراءة {terms}"
+      },
       "terms": "{openverse} شروط الاستخدام"
     }
   },
@@ -107,10 +121,11 @@
     "ccContent": {
       "where": "من أين يأتي المحتوى على {openverse}؟",
       "content": "هناك محتوى مرخص بشكل علني مستضاف على ملايين المجالات عبر اتساع الإنترنت. يحدد فريقنا بشكل منهجي مقدمي الخدمة الذين يستضيفون محتوى مرخصًا بـ CC. إذا كان ملائمًا ، فنحن نفهرس هذا المحتوى ونجعله قابلاً للاكتشاف من خلال {openverse}.",
-      "provider": "لدى بعض الموفرين مجموعات مختلفة من المحتوى بداخلهم. {flickr} له مصادر تتراوح من وكالة ناسا إلى التصوير الشخصي. يتألف {smithsonian} من عشرات المجموعات المتنوعة. تدير ويكيميديا كومنز سلسلة كاملة من حيث المحتوى ، وتستخدمها العديد من المعارض والمكتبات ودور المحفوظات والمتاحف لتسليط الضوء على بعض أو كل مجموعاتها الرقمية.",
-      "europeana": "{openverse} ممتن بشكل خاص لعمل {link} ، وهي منظمة تعمل على رقمنة وإنشاء أعمال التراث الثقافي القابلة للاكتشاف في جميع أنحاء أوروبا. {openverse} قادر على فهرسة مئات المصادر القيمة من خلال تكامل واحد مع {linkApi}.",
-      "europeanaApi": "واجهة برمجة تطبيقات Europeana",
-      "smithsonian": "معهد سميثسونيان"
+      "provider": {
+        "a": "ولدى بعض مقدمي الخدمات تجمعات متعددة مختلفة من المحتوى داخلهم. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections.",
+        "b": "ويدير مشاعات الويكيو القفازات من حيث المحتوى، ويستخدمها عدد من المجرات والمكتبات والمحفوظات والمتاحف التي تسلط الضوء على بعض أو كل مجموعاتها الرقمية."
+      },
+      "europeana": "{openverse} ممتن بشكل خاص لعمل {link} ، وهي منظمة تعمل على رقمنة وإنشاء أعمال التراث الثقافي القابلة للاكتشاف في جميع أنحاء أوروبا. {openverse} قادر على فهرسة مئات المصادر القيمة من خلال تكامل واحد مع {linkApi}."
     },
     "newContent": {
       "next": "كيف نقرر ما هي المصادر التي يجب إضافتها بعد ذلك؟",
@@ -133,7 +148,11 @@
     "title": "بحث ميتا",
     "intro": "تم إنشاء {openverse} فوق كتالوج يقوم بفهرسة المحتوى المرخص لـ CC والمحتوى العام من مصادر محددة. تعرف على المزيد حول {link} الخاص بنا.",
     "link": "مصادر",
-    "license": "الانترنت هو مكان كبير! هناك الكثير من بوابات البحث والمجموعات ، التي تستضيف المحتوى المرخص بواسطة المشاع الإبداعي والمحتوى العام ، والتي لا يمكننا فهرسة النتائج أو إظهارها من داخل واجهة {openverse}. هذه مصادر مهمة لمحتوى المجال العام المرخّص بترخيص المشاع الإبداعي ، ونريد التأكد من قدرتك على العثور على أفضل المواد المرخصة بشكل علني الممكنة ، بغض النظر عن مكان وجودها.",
+    "license": {
+      "a": "ومع ذلك، هناك مصادر عديدة لوسائط الإعلام المرخص بها من قبل لجنة مكافحة الإرهاب ووسائط الإعلام العامة التي لم نتمكن بعد من إدراجها في بحث {openverse}.",
+      "b": "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into {openverse}",
+      "c": "هذه مصادر قيّمة و نريد أن نتأكّد من أنّك قادر على إيجاد أفضل المواد المرخصة علناً، بغض النظر عن مكان وجودها."
+    },
     "new": {
       "title": "هل يمكنني اقتراح مصادر خارجية جديدة؟",
       "content": "نعم من فضلك! أنشئ {issue} في مستودع GitHub أو أرسل إلينا {email} وأخبرنا بالمصادر الجديدة التي ترغب في تضمينها.",
@@ -143,13 +162,19 @@
     "why": {
       "title": "لماذا بنيت هذا؟",
       "content": "لسنوات عديدة ، قدمت Creative Commons لمستخدميها بوابة بحث مخصصة لمنصات البحث التي تحتوي على عوامل تصفية ترخيص CC مضمنة. في الواقع ، لا يزال هذا قيد الصيانة في {old}.",
-      "old": "oldsearch.creativecommons.org",
-      "new": "بالنسبة لمستخدمي موقع CC Meta Search القديم ، ستبدو ميزة \\ \"مصادر خارجية \\\" على {openverse} مألوفة. كان الهدف هو ضمان عدم فقدان الوظيفة ، ولكن يتم تحديثها ودمجها في محرك البحث الجديد الخاص بنا للمحتوى المرخص بشكل علني. بالإضافة إلى ذلك ، تعتمد ميزة \\ \"المصادر الخارجية \\\" على هذه الوظيفة ، مما يسمح لنا بإضافة مصادر خارجية جديدة بسرعة عندما نكتشفها ، ودعم أنواع المحتويات الجديدة في المستقبل ، مع توسعنا.",
+      "new": {
+        "a": "بالنسبة لمستخدمي موقع البحث عن الميثان، سيبدو سمة &quot; المصادر الخارجية &quot; في {openverse} مألوفة.",
+        "b": "وكان الهدف هو ضمان عدم فقدان القدرة الوظيفية، ولكن يجري تحديثها وإدراجها في محرك البحث الجديد الخاص بمحتواها المرخص بشكل مفتوح.",
+        "c": "وبالإضافة إلى ذلك، تستند سمة &quot; المصادر الخارجية &quot; إلى هذه الوظيفة، مما يتيح لنا أن نضيف بسرعة مصادر خارجية جديدة عند اكتشافها، وأن ندعم أنواع المحتوى الجديدة في المستقبل."
+      },
       "ariaLabel": "استجابة",
       "feedbackSuggestions": "نأمل أن تستمتع ، وإذا كانت لديك اقتراحات للتحسين ، فاترك لنا {feedback}.",
       "feedbackLink": "استجابة"
     },
-    "relationships": "تتيح لنا هذه الوظيفة أيضًا بدء المحادثات وبناء علاقات مع المصادر التي قد ترغب في تضمينها في {openverse} في المستقبل. أخيرًا ، يمكننا أيضًا تقديم مصادر خارجية لأنواع الوسائط التي لم ندرجها في {openverse} حتى الآن ، ولكننا نخطط لذلك.",
+    "relationships": {
+      "a": "وهذه الوظيفة تتيح لنا أيضا البدء في المحادثات وبناء علاقات مع المصادر التي قد ترغب في إدراجها في قضية {openverse} في المستقبل.",
+      "b": "وأخيرا، يمكننا أيضا أن نعرض مصادر خارجية لأنواع وسائط الإعلام التي لا ندرجها في {openverse}، ولكن نخطط لذلك."
+    },
     "explanation": "يمكنك العثور على روابط لمصادر خارجية أسفل كل صفحة نتائج بحث {openverse} ؛ في صفحات عمليات البحث التي لا تظهر نتائج ؛ وعلى صفحات أنواع الوسائط التي لا ندعمها بعد ولكننا نعتزم ذلك."
   },
   "privacy": {
@@ -160,7 +185,10 @@
     },
     "cookies": {
       "title": "ملفات تعريف الارتباط",
-      "content": "يستخدم {openverse} ملفات تعريف الارتباط لتخزين معلومات حول تفضيلات الزوار ومعلومات حول متصفحات الويب الخاصة بهم. نحن نستخدم هذه المعلومات لتحسين تجربة المستخدم للموقع. تعتبر هذه ملفات تعريف الارتباط \"ضرورية\" أو \"ملفات تعريف الارتباط الضرورية للغاية\" ويمكنك تعطيلها عن طريق تغيير إعدادات المستعرض الخاص بك ، ولكن هذا قد يؤثر على كيفية عمل {openverse}."
+      "content": {
+        "a": "{openverse} تستخدم البسكويت لتخزين المعلومات عن أفضليات الزائرين ومعلومات عن مروجهم على الشبكة. ونحن نستخدم هذه المعلومات لتحسين خبرة مستخدمي الموقع.",
+        "b": "هذه تعتبر \"الوكالة\" أو \"الكوكيز الضروري جداً\" قد تبطلين هذه من خلال تغيير أطرك للطوارئ، ولكن هذا قد يؤثر على كيفية وظائف {openverse}"
+      }
     },
     "contact": {
       "title": "اتصل بنا",
@@ -183,7 +211,7 @@
       "operatorName": "ناقصا",
       "ariaLabel": "الكلب مطروحا منه",
       "example": "كلب",
-      "content": "لاستبعاد مصطلح من نتائجك، وضع PLACEHOLDER أمامه. مثال: PLACEHOLDERPLACEHOLDER هذا سيبحث عن وسائل الإعلام ذات الصلة بـ\"الكلب\" لكن لن يتضمن النتائج ذات الصلة بـ \"بوغ\""
+      "content": "لاستبعاد مصطلح من نتائجك، وضع {operator} أمامه. Example: {link}{br} هذا سيبحث عن وسائل الإعلام ذات الصلة بـ\"الكلب\" لكن لن يتضمن النتائج ذات الصلة بـ \"بوغ\""
     }
   },
   "feedback": {
@@ -201,34 +229,73 @@
   "sensitive": {
     "title": "المحتوى الحساس",
     "description": {
-      "content": "ويعمل البرنامج على أساس نهج &quot; مأمون &quot; في جميع جوانب عمله وتنميته، بهدف أن يكون شاملا وميسرا قدر الإمكان. ومن ثم، لا يتضمن البرنامج سوى النتائج ذات المحتوى الحساس عندما اختار المستعملون صراحة &quot; إدراج نتائج حساسة &quot; في نظام PLACEHOLDER.org وفي نظام تطبيقات برنامج المساعدة الإنسانية في الميدان. ولدى الانضمام إلى برنامج &quot; PLACEHOLDER &quot; و &quot; PLACEHOLDER &quot; (PLACEHOLDER) التابع له، تحتفظ المنظمة بتوقعات عالية فيما يتعلق بالسلوك تجاه المساهمين الآخرين، وإمكانية الحصول على المساهمة والخدمات، وبالتالي فهي مشروع شامل. وبالمثل، يتوقع PLACEHOLDER أن تكون النتائج التي تُعاد من مكتب المدعي العام أو التي تُعرض على موقع PLACEHOLDER.org على شبكة الإنترنت متاحة عن طريق التقصير. وينبغي للجميع، بغض النظر عن خلفيتهم، أن يشعروا بالأمان وأن يُدرجوا في برنامج المساعدة القانونية، سواء كانوا مساهمين في الجوانب التقنية لخدمات PLACEHOLDER، أو مبد ِّع يُدرَج أعماله في PLACEHOLDER، أو مستعمل للشركة. PLACEHOLDER recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+      "content": {
+        "a": "{openverse} operates along a “safe-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible.",
+        "b": "ومن ثم، فإن {openverse} لا تشمل سوى النتائج ذات المحتوى الحساس عندما اختار المستعملون صراحة &quot; تحقيق نتائج حساسة &quot; بشأن {openverseOrg} وفي {openverse} API.",
+        "c": "In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project.",
+        "d": "Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverseOrg} should be accessible by default.",
+        "e": "على الجميع، بغض النظر عن خلفيتهم، أن يشعروا بالأمان، وأنهم مشمولون في {openverse}، سواء كانوا مساهمين في الجوانب التقنية لخدمات {openverse}، وهو مبدع مشمول بأعماله في {openverse}",
+        "f": "{openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
+      },
       "wpCoc": "مدونة قواعد السلوك المجتمعية",
       "deiStatement": "التنوع والإنصاف وبيان الإدماج"
     },
     "sensitivity": {
-      "what": "PLACEHOLDER يستعمل مصطلح \"حساس\" بدلاً من \"المكانة\" أو \"NSFW\" وهذا يعني أن بعض المحتويات تُسمّى بـ \"حساسية\" التي لا تندرج في فئة مما يُفهم عموماً على أنها محتوى \"المكانة\" (أي بعبارة أخرى، المحتوى تحديداً لجمهور بالغ). غير أن التسمية لا تعني ضمناً أن PLACEHOLDER أو متعهديها يعتبرون المضمون غير ملائم للمنبر عموماً، كما أنه لا ينطوي على حكم أخلاقي أو أخلاقي. نحن نعتبر المحتوى \"الحساس\" مُحتوى مُهين أو مُزعج، أو غير لائق، مع إيلاء اهتمام خاص للشباب.",
-      "how": "ويتسم تعريف الحساسية هذا بدرجة كبيرة من المرونة وهو غير دقيق عن قصد. ويعتمد البرنامج على مجموعة متنوعة من الأدوات لاكتشاف المحتوى الذي يحتمل أن يكون حساسا، بما في ذلك تقارير المستعملين المعتدلة عن العمل الفردي ومسح المحتوى النصي المتصل بالعمل ذي الحساسية. ويرد أدناه وصف أكثر تفصيلا لهذه المسائل."
+      "what": {
+        "a": "{openverse} تستخدم مصطلح \"حساس\" بدلاً من \"المكانة\" أو \"الخدمة العامة\" (غير آمنة للعمل) أو مصطلحات أخرى للإشارة إلى أن تعريفنا للمحتوى حساس هو واسع، مع التركيز على إمكانية الوصول والإدماج.",
+        "b": "وهذا يعني أن بعض المحتويات تُسمّى بـ \"حساسية\" التي لا تندرج في فئة مما يُفهم عموماً على أنها محتوى \"المكانة\" (أي بعبارة أخرى، المحتوى تحديداً لجمهور بالغ).",
+        "c": "غير أن التسمية لا تعني ضمناً أن {openverse} أو متعهديها يعتبرون المضمون غير ملائم للمنبر بشكل عام، وهو أيضاً لا ينطوي على حكم أخلاقي أو أخلاقي.",
+        "d": "نحن نعتبر المحتوى \"الحساس\" مُحتوى مُهين أو مُزعج، أو غير لائق، مع إيلاء اهتمام خاص للشباب."
+      },
+      "how": {
+        "a": "ويتسم تعريف الحساسية هذا بدرجة كبيرة من المرونة وهو غير دقيق عن قصد.",
+        "b": "وتعتمد شركة {openverse} على مجموعة متنوعة من الأدوات لاكتشاف المحتوى الذي يمكن أن يكون حساسا، بما في ذلك تقارير معتدلة للمستعملين عن العمل الفردي ومسح المحتوى النصي المتصل بالعمل ذي الحساسية.",
+        "c": "ويرد أدناه وصف أكثر تفصيلا لهذه المسائل."
+      }
     },
     "onOff": {
       "title": "تغيير المحتوى الحساس",
-      "sensitiveResults": "By default, PLACEHOLDER does not include sensitive content in search results. ويتطلب إدراج النتائج الحساسة اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار إدراج المحتوى الحساس في نتائج البحث بتمكين مفتاح &quot; النتائج الحسية &quot; .",
-      "blurSensitive": "وعندما يُدرج المحتوى الحساس، تكون النتائج الحساسة التي تُعاد غير واضحة أيضاً لمنع التعرض العرضي. كما أن عدم طمسها يتطلب اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار أن يرى محتوى حساسا غير واضح من خلال تبديل مفتاح &quot; محتوى اللغم &quot; .",
+      "sensitiveResults": "بالخطأ {openverse} does not include sensitive content in search results. ويتطلب إدراج النتائج الحساسة اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار إدراج المحتوى الحساس في نتائج البحث بتمكين مفتاح &quot; النتائج الحسية &quot; .",
+      "blurSensitive": {
+        "a": "وعندما يُدرج المحتوى الحساس، تكون النتائج الحساسة التي تُعاد غير واضحة أيضاً لمنع التعرض العرضي.",
+        "b": "كما أن عدم طمسها يتطلب اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار أن يرى محتوى حساسا غير واضح من خلال تبديل مفتاح &quot; محتوى اللغم &quot; ."
+      },
       "where": "وكلاهما متاحان في قاذفة التصفية (على الحواسيب المكتبية) وفي شريط &quot; فليتر &quot; لأماكن البحث (على الأجهزة المحمولة) على صفحة نتائج البحث."
     },
     "designations": {
       "title": "تعيينات المحتوى الحساسة",
-      "description": "PLACEHOLDER designates sensitive content in the API and on the PLACEHOLDER.org website using two methods: reports from PLACEHOLDER users and automated sensitive textual content detection. ولا تقتصر هذه التسميات على بعضها البعض، ويمكن أن يطبق عليها عمل واحد أو كليهما.",
+      "description": {
+        "a": "{openverse} يعيّن محتوىً حساساً في API وفي موقع {openverseOrg} على شبكة الإنترنت باستخدام طريقتين: تقارير من مستعملي {openverse} واكتشاف النصوص الحساسة آلياً.",
+        "b": "ولا تقتصر هذه التسميات على بعضها البعض، ويمكن أن يطبق عليها عمل واحد أو كليهما."
+      },
       "userReported": {
         "title": "المستعمل أبلغ عن حساسية",
-        "description": "ويُدعى مستعملو برنامج PLACEHOLDER إلى الإبلاغ عن المحتوى الحساس عن طريق موقع PLACEHOLDER.org على شبكة الويب وPLACEHOLDER API. كما أن بعض الأدوات والتطبيقات التي تدمج مع نظام PLACEHOLDER API، مثل PLACEHOLDER، تسمح لمستعمليها بالإبلاغ عن المحتوى الحساس. وتشمل صفحة العمل الفردي القدرة على الإبلاغ عن المحتوى على أنه حساس (أو الإبلاغ عن انتهاكات الحقوق). ويتحقق مديرو إدارة برنامج المساعدة الإنسانية من هذه التقارير ويتخذون قرارات بشأن ما إذا كان ينبغي إضافة تسمية حساسية إلى العمل، أو في بعض الحالات، على النحو المبين أعلاه، شطب العمل من خدمات شركة PLACEHOLDER.",
-        "gutenbergMediaInserter": "Gutenberg editor’s PLACEHOLDER media inserter"
+        "description": {
+          "a": "{openverse} users are invited to report sensitive content via the {openverseOrg} website and the {openverse} API.",
+          "b": "Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content.",
+          "c": "وتشمل صفحة العمل الفردي القدرة على الإبلاغ عن المحتوى على أنه حساس (أو الإبلاغ عن انتهاكات الحقوق).",
+          "d": "وتحقق من هذه التقارير ويتخذون قرارات بشأن ما إذا كان ينبغي إضافة تسمية حساسية للعمل، أو في بعض الحالات، على النحو المبين أعلاه، شطب العمل من مكتب المدعي العام."
+        },
+        "gutenbergMediaInserter": "Gutenberg editor’s {openverse}"
       },
       "sensitiveText": {
         "title": "المحتوى النصي الحساس",
-        "description": "PLACEHOLDER يمسح بعض البيانات الوصفية النصية المتصلة بالأعمال التي توفرها مصادرنا بشروط حساسة. وشركة PLACEHOLDER هي مصدر مفتوح وإسهامات ومساهمات من المجتمع مدعوة. ومن أمثلة النصوص التي يمكن أن تكون حساسة النص، على سبيل المثال لا الحصر، نصوص ذات طابع جنسي أو بيولوجي أو عنيف أو عنصري أو غير ذلك من أشكال عدم التقيد. The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity nomination without necessarily being sensitive. ولمزيد من السياق بشأن السبب الذي جعلنا نختار هذا النهج على الرغم من ذلك، نشير إلى &quot; PLACEHOLDER &quot; في وثيقة تخطيط مشاريعنا المتعلقة بهذه السمة.",
+        "description": {
+          "a": "{openverse} يمسح بعض البيانات الوصفية النصية المتصلة بالأعمال التي توفرها مصادرنا بشروط حساسة.",
+          "b": "{openverse} {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited.",
+          "c": "ومن أمثلة النصوص التي يمكن أن تكون حساسة النص، على سبيل المثال لا الحصر، نصوص ذات طابع جنسي أو بيولوجي أو عنيف أو عنصري أو غير ذلك من أشكال عدم التقيد.",
+          "d": "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity nomination without necessarily being sensitive.",
+          "e": "ولمزيد من السياق بشأن السبب الذي جعلنا نختار هذا النهج على الرغم من ذلك، نشير إلى {imperfect} من وثيقة تخطيط مشاريعنا المتصلة بهذه السمة."
+        },
         "sensitiveTermsList": "قائمة المصطلحات الحساسة",
-        "imperfect": "قسم \"المروحية\"",
-        "metadata": "ومن المهم ملاحظة أن بعض البيانات الوصفية النصية للعمل هي PLACEHOLDER من خلال موقع PLACEHOLDER API أو موقع PLACEHOLDER.org. غير أن هذه البيانات الوصفية لا تزال مقصودة بشروط حساسة ولا تعامل كحالة خاصة. وفي حالة ما إذا وجد المسح النصي للشركة مصطلحات حساسة في ميادين البيانات الفوقية هذه من أجل العمل، فإن العمل سيظل يتلقى تسمية حساسية تستند إلى نص حساس على الرغم من أن النص الحساس نفسه غير متاح عن طريق PLACEHOLDER. ويتبع البرنامج النهج القائل بأن المحتوى النصي الحساس في وصف ما هو مؤشر مترابط كبير نسبيا للأعمال التي يمكن أن تكون حساسة. وكما سبق، فإن PLACEHOLDER يفهم أن هذا ليس مثاليا.",
+        "imperfect": "قسم شرطة لوس أنجلوس",
+        "metadata": {
+          "a": "It is important to note that some textual metadata for a work is {notAvailable} من خلال موقع {openverse} API أو موقع {openverseOrg}",
+          "b": "غير أن هذه البيانات الوصفية لا تزال مقصودة بشروط حساسة ولا تعامل كحالة خاصة.",
+          "c": "وفي حالة ما إذا وجد نص {openverse} شروطا حساسة في حقول البيانات الفوقية هذه للعمل، فإن العمل سيظل يتلقى تعيينا حساسا يستند إلى نص حساس حتى وإن لم يكن النص الحساس نفسه متاحا عن طريق {openverse}",
+          "d": "وتأخذ شركة {openverse} النهج القائل بأن المحتوى النصي الحساس في وصف ما هو مؤشر عال نسبيا من مؤشرات الأعمال الحساسة المحتملة.",
+          "e": "As above, {openverse} understands that this is not perfect."
+        },
         "notAvailable": "غير متاحة"
       }
     },
@@ -236,16 +303,27 @@
       "title": "الأسئلة المتكررة",
       "one": {
         "question": "وقد وجدت المحتوى الذي أعتقد أنه حساس لا يوجد فيه تحديد حساسية. ماذا يجب أن أفعل؟",
-        "answer": "يرجى الإبلاغ عن المحتوى الحساس عن طريق زيارة صفحة العمل الفردي على الموقع الشبكي PLACEHOLDER.org واستخدام زر &quot; إعادة الإبلاغ عن هذا المحتوى &quot; تحت معلومات الإسناد وفوق البطاقات. ويدير البرنامج تقارير فردية ويحتفظ بحقه في رفض الطلب على نحو محترم لإضافة تسمية حساسية لعمل معين."
+        "answer": {
+          "a": "يرجى الإبلاغ عن المحتوى الحساس عن طريق زيارة صفحة العمل الفردي على موقع {openverseOrg} على شبكة الإنترنت، واستخدام زر &quot; إعادة الإبلاغ عن هذا المحتوى &quot; تحت معلومات الإسناد وفوق البطاقات.",
+          "b": "{openverse}"
+        }
       },
       "two": {
         "question": "لا أوافق على تحديد الحساسية في العمل هل يمكنك أن تزيله من فضلك؟",
-        "answerPt1": "وفيما يتعلق بالتسميات المستندة إلى نصوص، لا توجد في الوقت الراهن طريقة لإزالة التعيين. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
-        "answerPt2": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق. في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية. وكما هو الحال عند إضافة تسمية جديدة، تحتفظ شركة PLACEHOLDER بحقها في أن تمتنع عن طلب إزالة تعيين مثبت لحساسية المستعملين."
+        "answerPt1": "بالنسبة للتسميات القائمة على النصوص، {openverse} does not at the moment have a method for removing the nomination. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
+        "answerPt2": {
+          "a": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق.",
+          "b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
+          "c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination."
+        }
       },
       "three": {
-        "question": "وقد وجدت مضمونا بشأن هذا المشروع قد يكون غير قانوني. إلى جانب إبلاغه إلى PLACEHOLDER، هل هناك أي خطوات أخرى يمكنني اتخاذها؟",
-        "answer": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق. في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية. وكما هو الحال عند إضافة تسمية جديدة، تحتفظ شركة PLACEHOLDER بحقها في أن تمتنع عن طلب إزالة تعيين مثبت لحساسية المستعملين."
+        "question": "وقد وجدت محتوى في {openverse} قد يكون غير قانوني. إلى جانب إبلاغه إلى {openverse}، هل هناك أي خطوات أخرى يمكنني اتخاذها؟",
+        "answer": {
+          "a": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق.",
+          "b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
+          "c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination."
+        }
       }
     }
   },
@@ -329,7 +407,7 @@
     },
     "safeBrowsing": {
       "title": "الحشد الآمن",
-      "desc": "ولا يُظهر التخلف عن السداد المضمون الذي يُعرف باسم PLACEHOLDER.",
+      "desc": "ولا يظهر التخلف المضمون الذي يُعرف باسم {sensitive}..",
       "sensitive": "حساسة",
       "toggles": {
         "fetchSensitive": {
@@ -373,7 +451,7 @@
     "filterBy": "مصنف بواسطة",
     "hide": "إخفاء عوامل التصفية",
     "clear": "مسح عوامل التصفية",
-    "clearNumbered": "مرشحات واضحة",
+    "clearNumbered": "مرشحات واضحة ({number})",
     "show": "أظهر النتائج",
     "categoryAria": "قائمة عوامل التصفية لفئة {categoryName}"
   },
@@ -383,14 +461,14 @@
     "allResultCountMore": "أكثر من {localeCount} نتيجة | أكثر من {localeCount} نتيجة",
     "contentLink": {
       "image": {
-        "zero": "لا توجد صور لـ(بليس هولدر)",
-        "count": "انظر صورة PLACEHOLDER وجدت ل PLACEHOLDER.",
-        "countMore": "انظر الى صور PLACEHOLDER وجدت ل PLACEHOLDER."
+        "zero": "لا توجد صور لـ {query}",
+        "count": "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
+        "countMore": "انظر على صور {query} {localeCount}"
       },
       "audio": {
-        "zero": "لم يعثر على أي صوت من أجل (بيرسهولدر)",
-        "count": "انظر صوت PLACEHOLDER وجدت ل PLACEHOLDER.",
-        "countMore": "انظر على صوت PLACEHOLDER وجدت ل PLACEHOLDER."
+        "zero": "لم يعثر على أي صوت لـ {query}.",
+        "count": "انظر {localeCount} {query}",
+        "countMore": "انظر فوق {query} {localeCount}"
       }
     },
     "load": "تحميل المزيد من النتائج",
@@ -434,9 +512,9 @@
       "removeFilter": "إزالة عامل التصفية",
       "licenseExplanation": "شرح الترخيص",
       "creator": "البحث عن طريق المنشئ",
-      "imageTitle": "الصورة:",
-      "audioTitle": "Audio: PLACEHOLDER",
-      "results": "\"بحث عن نتائج \"بليس هولدر"
+      "imageTitle": "Image: {title}",
+      "audioTitle": "Audio: {title}",
+      "results": "البحث عن نتائج لـ {query}"
     }
   },
   "mediaDetails": {
@@ -567,13 +645,13 @@
   },
   "allResults": {
     "snackbar": {
-      "text": "اضغط على (بليسفيلدر) لتلعب أو توقف المسار",
+      "text": "Press {spacebar} to play or pause the track.",
       "spacebar": "Spacebar"
     }
   },
   "audioResults": {
     "snackbar": {
-      "text": "Press PLACEHOLDER to play or pause, and PLACEHOLDER &quot; PLACEHOLDER to seek through the track.",
+      "text": "Press {spacebar} to play or pause, and {left} &quot;{right} to seek through the track.",
       "spacebar": "Spacebar",
       "left": "♪",
       "right": "?"
@@ -623,7 +701,7 @@
   "audioTrack": {
     "ariaLabel": "{title} - مشغل الصوت",
     "ariaLabelInteractive": "{title} - مشغل الصوت - اضغط على مفتاح المسافة لتشغيل معاينة الصوت وإيقافها مؤقتًا",
-    "ariaLabelInteractiveSeekable": "Audio: PLACEHOLDER - interactive players - press the space bar to play and pause a preview of the audio; use the left and right arrow key to seek through the track.",
+    "ariaLabelInteractiveSeekable": "Audio: {title} - اللاعب التفاعلي - اضغط على حانة الفضاء لتلعب وتتوقف عن النظرة المسبقة للصوت؛ استخدام مفاتيح السهم اليسرى واليمن للبحث عن طريق المسار.",
     "messages": {
       "err_aborted": "لقد أجهضت التشغيل.",
       "err_network": "حدث خطأ في الشبكة.",
@@ -750,7 +828,7 @@
       "label": "مسح عمليات البحث الأخيرة"
     },
     "clearSingle": {
-      "label": "البحث الأخير"
+      "label": "تم البحث مؤخراً عن '{entry}'"
     },
     "none": "لا توجد عمليات بحث حديثة لعرضها.",
     "disclaimer": "لا يقوم Openverse بتخزين عمليات البحث الأخيرة ، يتم الاحتفاظ بهذه المعلومات محليًا في متصفحك."
@@ -769,13 +847,13 @@
       "hide": "إخفاء المحتوى",
       "show": "محتوى العرض",
       "explanation": "وهذا العمل يتسم بالحساسية للأسباب التالية:",
-      "learnMore": "PLACEHOLDER حول كيفية PLACEHOLDER التعامل مع المحتوى الحساس.",
+      "learnMore": "{link} حول كيفية تعامل {openverse} مع المحتوى الحساس.",
       "link": "تعلم المزيد"
     },
     "reasons": {
       "providerSuppliedSensitive": "وقد اعتبر مصدر هذا العمل أنه حساس.",
-      "sensitiveText": "PLACEHOLDER قد اكتشف النص الحساس المحتمل.",
-      "userReportedSensitive": "وقد أبلغ مستعملو البرنامج عن هذا العمل على أنه حساس."
+      "sensitiveText": "{openverse} رصدت نصا يمكن أن يكون حساسا.",
+      "userReportedSensitive": "{openverse} Use have reported this work as sensitive."
     }
   },
   "collection": {
@@ -806,37 +884,37 @@
       "creator": {
         "audio": {
           "zero": "لا توجد ملفات صوتية من قبل هذا الصانع",
-          "count": "ملف صوتي من قبل هذا الصانع",
+          "count": "{count}",
           "countMore": "على الملفات الصوتية من قبل هذا الصانع"
         },
         "image": {
           "zero": "لا صور من هذا الصانع",
-          "count": "صورة (بلايس هولدر) من قبل هذا الصانع",
-          "countMore": "على صور PLACEHOLDER من قبل هذا الصانع."
+          "count": "{count} صورة من هذا المبتكر.",
+          "countMore": "على صور {count} بواسطة هذا الصانع."
         }
       },
       "source": {
         "audio": {
           "zero": "No audio files provided by this source",
-          "count": "PLACEHOLDER audio file provided by this source byPLACEHOLDER audio files provided by this source",
-          "countMore": "Over PLACEHOLDER audio files provided by this source"
+          "count": "{count} audio file provided by this source. {count}",
+          "countMore": "Over {count} audio files provided by this source"
         },
         "image": {
           "zero": "No images provided by this source",
-          "count": "PLACEHOLDER image provided by this sourcesPLACEHOLDER images provided by this source",
-          "countMore": "Over PLACEHOLDER images provided by this source"
+          "count": "{count} image provided by this source. {count} images provided by this source",
+          "countMore": "Over {count} images provided by this source"
         }
       },
       "tag": {
         "audio": {
           "zero": "لا ملفات صوتية مع علامة مختارة",
-          "count": "PLACEHOLDER audio file with the selected tag thePLACEHOLDER audio files with the selected tag",
-          "countMore": "أكثر من ملفات صوتية PLACEHOLDER مع علامة مختارة"
+          "count": "{count} {count}",
+          "countMore": "Over {count} audio files with the selected tag"
         },
         "image": {
           "zero": "لا صور مع العلامة المختارة",
-          "count": "صورة PLACEHOLDER مع الصور المختارة للعلامة",
-          "countMore": "على صور PLACEHOLDER مع علامة مختارة"
+          "count": "{count} {count} الصور مع علامة مختارة",
+          "countMore": "Over {count} images with the selected tag"
         }
       }
     }

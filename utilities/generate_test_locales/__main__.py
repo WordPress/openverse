@@ -85,6 +85,7 @@ def _explode_json(d: dict[str, str]) -> str:
 
 
 placeholders_pattern = re.compile(r"\{.*?\}")
+match_temporary_placeholder = re.compile(r"P\.L\.(A\.)?(C\.)?E\.H\.O\.L\.D\.E\.R\.?")
 
 
 def generate_test_locales():
@@ -98,6 +99,8 @@ def generate_test_locales():
     new_to_jsons: dict[str, dict[str, str | dict]] = {
         to_lang: {} for to_lang in to_langs
     }
+
+    faulty_placeholder_strings: list[str] = []
 
     # Traverse from_json
     # For each key, determine if that key is in the each to_json.
@@ -123,7 +126,7 @@ def generate_test_locales():
             would be in production (most importantly, to match a reasonable length).
             """
             placeholders.append(m.group(0))
-            return "PLACEHOLDER"
+            return "P.L.A.C.E.H.O.L.D.E.R."
 
         safe_value = placeholders_pattern.sub(
             replace_placeholder_with_translatable_text, from_value
@@ -137,15 +140,38 @@ def generate_test_locales():
                 new_to_json[key] = to_json[key]
             else:
                 print(f"Translating {key} to {to_lang}")
-                new_to_json[key] = argostranslate.translate.translate(
+                translated: str = argostranslate.translate.translate(
                     safe_value, from_lang, to_lang
                 )
+                for placeholder in placeholders:
+                    hole = match_temporary_placeholder.search(translated)
+                    if not hole:
+                        faulty_placeholder_strings.append(
+                            f"{to_lang}, {key}, {translated}"
+                        )
+                        # This will still add the translation to the resulting JSON,
+                        # but with the final message output at the end, we can
+                        # manually fix strings with issues
+                        break
+
+                    translated = (
+                        translated[: hole.start()]
+                        + placeholder
+                        + translated[hole.end() :]
+                    )
+
+                new_to_json[key] = translated
 
     for lang, new_to_json in new_to_jsons.items():
         out = to_json_paths[lang]
         new_json = _explode_json(new_to_json)
         out.unlink(missing_ok=True)
         out.write_text(f"{new_json}\n")
+
+    if faulty_placeholder_strings:
+        out = reporoot / "failed_placeholder_string_translations.txt"
+        out.unlink(missing_ok=True)
+        out.write_text(json.dumps(faulty_placeholder_strings, indent=4))
 
 
 if __name__ == "__main__":
