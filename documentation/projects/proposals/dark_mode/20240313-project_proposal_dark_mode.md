@@ -32,23 +32,28 @@ Refine Search Experience
 
 <!-- Detailed descriptions of the features required for the project. Include user stories if you feel they'd be helpful, but focus on describing a specification for how the feature would work with an eye towards edge cases. -->
 
-1. Add the dark theme to the site and set the Light theme as default.
-2. Allow visitors to change the UI in an reachable manner from the whole site
+1. Add the dark theme to the site and set the Light theme as default. The reason
+   comes from not changing the site settings without user consent through an
+   action.
+2. Introduce the feature to users on the site once deployed.
+3. Allow visitors to change the UI in an reachable manner from the whole site
    through three options: Light theme, Dark theme, or follow device setting.
-3. Design a dark theme preserving the brand identity.
-4. Design a dark theme that meet the color contrast requirements pointed out in
+4. Design a dark theme preserving the brand identity.
+5. Design a dark theme that meet the color contrast requirements pointed out in
    the accessibility section below.
-5. Document the design of pages and UI components in the Design Library and any
+6. Document the design of pages and UI components in the Design Library and any
    other additional Figma files.
-6. Document the dark variant of every UI element on Storybook.
-7. Document the transition from current to new frontend implementation.
-8. Include an analytic event to record how users utilize the functionality.
+7. Document the dark variant of every UI element on Storybook.
+8. Document the transition from current to new frontend implementation.
+9. Include an analytic event to record how users utilize the functionality.
 
 ## Success
 
 <!-- How do we measure the success of the project? How do we know our ideas worked? -->
 
-The use of this feature will be recorded and analyzed to assess its success.
+- The use of this feature will be recorded and analyzed to assess its success.
+- Evaluate the color contrast with an automated tool and a revision from
+  contributors.
 
 ## Participants and stakeholders
 
