@@ -208,6 +208,27 @@ export const useSearchStore = defineStore("search", {
     searchTypeIsSupported(state) {
       return isSearchTypeSupported(state.searchType)
     },
+    /**
+     * Returns the unique string representation of the current collection
+     * when making collection searches.
+     */
+    collectionValue(): null | string {
+      if (this.collectionParams === null) {
+        return null
+      }
+
+      switch (this.collectionParams.collection) {
+        case "creator": {
+          return `${this.collectionParams.source}/${this.collectionParams.creator}`
+        }
+        case "source": {
+          return this.collectionParams.source
+        }
+        case "tag": {
+          return this.collectionParams.tag
+        }
+      }
+    },
   },
   actions: {
     getApiRequestQuery(mediaType: SupportedMediaType) {

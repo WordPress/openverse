@@ -13,6 +13,7 @@
     </VButton>
   </div>
 </template>
+
 <script lang="ts">
 import {
   computed,
@@ -33,6 +34,8 @@ import { defineEvent } from "~/types/emits"
 
 import type { ResultKind } from "~/types/result"
 import type { SupportedSearchType } from "~/constants/media"
+
+import { useSearchStore } from "~/stores/search"
 
 import VButton from "~/components/VButton.vue"
 
@@ -67,15 +70,22 @@ export default defineComponent({
     const route = useRoute()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
+    const searchStore = useSearchStore()
     const { $sendCustomEvent } = useContext()
 
     const { currentPage } = storeToRefs(mediaStore)
 
     const eventPayload = computed(() => {
+      let kind: ResultKind =
+        searchStore.strategy === "default" ? "search" : "collection"
       return {
         searchType: props.searchType,
         query: props.searchTerm,
         resultPage: currentPage.value || 1,
+        kind,
+        collectionType:
+          searchStore.strategy !== "default" ? searchStore.strategy : null,
+        collectionValue: searchStore.collectionValue,
       }
     })
 
