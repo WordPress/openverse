@@ -1,18 +1,15 @@
 <template>
   <div>
     <h1
-      aria-hidden="true"
-      class="invisible break-words md:visible"
+      class="sr-only break-words md:not-sr-only"
       :class="[
         size === 'large'
           ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
           : 'heading-2 !leading-none',
       ]"
     >
-      {{ searchTerm }}
-    </h1>
-    <h1 class="sr-only">
-      {{ ariaHeading }}
+      <span aria-hidden="true">{{ searchTerm }}</span
+      ><span class="sr-only">{{ ariaHeading }}</span>
     </h1>
   </div>
 </template>
