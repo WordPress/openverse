@@ -31,4 +31,6 @@ module.exports = {
     "<rootDir>/src/**/*.ts",
     "!<rootDir>/src/**/*.stories.js",
   ],
+  // Jest does not support prettier 3
+  prettierPath: require.resolve("prettier-2"),
 }
