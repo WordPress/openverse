@@ -450,6 +450,9 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
             return None
         if not settings.ES.indices.exists(value):  # ``exists`` includes aliases.
             raise serializers.ValidationError(f"Invalid index name `{value}`.")
+
+        if not value.startswith(self.media_type):
+            raise serializers.ValidationError(f"Invalid index name `{value}`.")
         return value
 
     @staticmethod
