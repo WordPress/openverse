@@ -82,7 +82,8 @@ def anon_request(request_factory):
 def test_page_size_validation(page_size, authenticated, anon_request, authed_request):
     request = authed_request if authenticated else anon_request
     serializer = MediaSearchRequestSerializer(
-        context={"request": request}, data={"page_size": page_size}
+        context={"request": request, "media_type": "image"},
+        data={"page_size": page_size},
     )
     assert serializer.is_valid(raise_exception=True)
 
@@ -160,7 +161,9 @@ def test_media_serializer_sensitivity(
 def test_search_request_serializer_include_sensitive_results_validation_well_formed_request(
     data: dict, result
 ):
-    serializer = MediaSearchRequestSerializer(data=data)
+    serializer = MediaSearchRequestSerializer(
+        data=data, context={"media_type": "image"}
+    )
     assert serializer.is_valid()
     # The expected value should be mapped from the field actually
     # passed in data
@@ -177,7 +180,9 @@ def test_search_request_serializer_include_sensitive_results_validation_well_for
     ),
 )
 def test_search_request_serializer_include_sensitive_results_malformed_request(data):
-    serializer = MediaSearchRequestSerializer(data=data)
+    serializer = MediaSearchRequestSerializer(
+        data=data, context={"media_type": "image"}
+    )
     assert not serializer.is_valid()
 
 
@@ -197,7 +202,8 @@ def test_index_is_only_set_if_authenticated(
 
     request = authed_request if authenticated else anon_request
     serializer = ImageSearchRequestSerializer(
-        data={"internal__index": "image-some-index"}, context={"request": request}
+        data={"internal__index": "image-some-index"},
+        context={"request": request, "media_type": "image"},
     )
     assert serializer.is_valid()
     assert serializer.validated_data.get("index") == (
@@ -222,7 +228,8 @@ def test_index_is_only_set_if_valid(mock_es, index, is_valid, authed_request):
     mock_es.indices.exists = lambda index: "exists" in index
 
     serializer = ImageSearchRequestSerializer(
-        data={"internal__index": index}, context={"request": authed_request}
+        data={"internal__index": index},
+        context={"request": authed_request, "media_type": "image"},
     )
     assert serializer.is_valid() == is_valid
     assert serializer.validated_data.get("index") == (index if is_valid else None)
@@ -243,9 +250,11 @@ def test_index_is_only_set_if_matches_media_type(
     mock_es, serializer_class, index, is_valid, authed_request
 ):
     mock_es.indices.exists.return_value = True
+    media_type = "audio" if serializer_class.__name__.startswith("Audio") else "image"
 
     serializer = serializer_class(
-        data={"internal__index": index}, context={"request": authed_request}
+        data={"internal__index": index},
+        context={"request": authed_request, "media_type": media_type},
     )
     assert serializer.is_valid() == is_valid
     assert serializer.validated_data.get("index") == (index if is_valid else None)
