@@ -41,9 +41,8 @@ from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.provider_serializers import ProviderSerializer
 
 
-image_filter_fields = fields_to_md(
-    [f for f in ImageSearchRequestSerializer.field_names if f != "q"]
-)
+serializer = ImageSearchRequestSerializer(context={"media_type": "image"})
+image_filter_fields = fields_to_md([f for f in serializer.field_names if f != "q"])
 
 image_search_description = SEARCH_DESCRIPTION % {
     "filter_fields": image_filter_fields,
@@ -52,7 +51,7 @@ image_search_description = SEARCH_DESCRIPTION % {
 
 search = custom_extend_schema(
     desc=image_search_description,
-    params=ImageSearchRequestSerializer,
+    params=serializer,
     res={
         200: (ImageSerializer, image_search_200_example),
         400: (ValidationError, image_search_400_example),

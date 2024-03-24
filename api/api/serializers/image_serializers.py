@@ -14,7 +14,6 @@ from api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSerializer,
     get_hyperlinks_serializer,
-    get_search_request_source_serializer,
 )
 
 
@@ -23,18 +22,11 @@ from api.serializers.media_serializers import (
 #######################
 
 
-ImageSearchRequestSourceSerializer = get_search_request_source_serializer("image")
-
-
-class ImageSearchRequestSerializer(
-    ImageSearchRequestSourceSerializer,
-    MediaSearchRequestSerializer,
-):
+class ImageSearchRequestSerializer(MediaSearchRequestSerializer):
     """Parse and validate search query string parameters."""
 
     field_names = [
         *MediaSearchRequestSerializer.field_names,
-        *ImageSearchRequestSourceSerializer.field_names,
         "category",
         "aspect_ratio",
         "size",

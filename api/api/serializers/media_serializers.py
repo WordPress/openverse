@@ -120,6 +120,8 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     ]
     field_names = [
         "q",
+        "source",
+        "excluded_source",
         "license",
         "license_type",
         "creator",
@@ -154,6 +156,14 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     q = serializers.CharField(
         label="query",
         help_text="A query string that should not exceed 200 characters in length",
+        required=False,
+    )
+    source = serializers.CharField(
+        label="provider",
+        required=False,
+    )
+    excluded_source = serializers.CharField(
+        label="excluded_provider",
         required=False,
     )
     tags = serializers.CharField(
@@ -280,6 +290,22 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         required=False,
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.media_type = self.context.get("media_type")
+        if not self.media_type:
+            raise ValueError(
+                "The media request serializer's `media_type` context variable must be set."
+            )
+        media_path = {"image": "images", "audio": "audio"}[self.media_type]
+        variables = {
+            "origin": settings.CANONICAL_ORIGIN,
+            "media_path": media_path,
+        }
+
+        self.fields["source"].help_text = SOURCE_HELP_TEXT % variables
+        self.fields["excluded_source"].help_text = EXCLUDED_SOURCE_HELP_TEXT % variables
+
     def is_request_anonymous(self):
         request = self.context.get("request")
         return getattr(request, "auth", None) is None
@@ -305,6 +331,21 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         # lowers the case of the value before returning
         return value.lower()
 
+    @staticmethod
+    def validate_license_type(value):
+        """Check whether license type is a known collection of licenses."""
+
+        license_types = value.lower().split(",")
+        license_groups = []
+        for _type in license_types:
+            if _type not in LICENSE_GROUPS:
+                raise serializers.ValidationError(
+                    f"License type '{_type}' does not exist."
+                )
+            license_groups.append(LICENSE_GROUPS[_type])
+        intersected = set.intersection(*license_groups)
+        return ",".join(intersected)
+
     def validate_unstable__collection(self, value):
         if self.initial_data.get("q", None) is not None:
             raise serializers.ValidationError(
@@ -326,20 +367,42 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
             )
         return value
 
-    @staticmethod
-    def validate_license_type(value):
-        """Check whether license type is a known collection of licenses."""
+    def validate_source(self, value):
+        """
+        For the regular searches, split the value.lower() by comma and only return the
+        source names that are in the search controller's sources list for the media type.
+        For the collection=tag, return the value as is. It is ignored in the query builder.
+        For source and creator collections, accept the value as is, without lower-casing
+        or splitting, and check if it's in the valid source name list.
+        This function validates the source and excluded_source fields, but `excluded_source`
+        is ignored for collection requests.
+        """
+        allowed_sources = list(search_controller.get_sources(self.media_type).keys())
+        sources_list = ", ".join([f"'{s}'" for s in allowed_sources])
+        collection = self.initial_data.get(COLLECTION)
 
-        license_types = value.lower().split(",")
-        license_groups = []
-        for _type in license_types:
-            if _type not in LICENSE_GROUPS:
+        # For collection=tag, return the value as is. It is ignored in the query builder.
+        if collection == "tag":
+            return value
+
+        if collection:
+            if value not in allowed_sources:
                 raise serializers.ValidationError(
-                    f"License type '{_type}' does not exist."
+                    f"Invalid source parameter '{value}'. Use one of the valid sources: {sources_list}"
                 )
-            license_groups.append(LICENSE_GROUPS[_type])
-        intersected = set.intersection(*license_groups)
-        return ",".join(intersected)
+            return value
+        else:
+            sources = value.lower().split(",")
+            valid_sources = [source for source in sources if source in allowed_sources]
+            return ",".join(valid_sources)
+
+    def validate_excluded_source(self, input_sources):
+        if "source" in self.initial_data:
+            raise serializers.ValidationError(
+                "Cannot set both 'source' and 'excluded_source'. "
+                "Use exactly one of these."
+            )
+        return self.validate_source(input_sources)
 
     def validate_creator(self, value):
         return self._truncate(value)
@@ -665,89 +728,6 @@ class MediaSerializer(BaseModelSerializer):
 #######################
 # Dynamic serializers #
 #######################
-
-
-def get_search_request_source_serializer(media_type):
-    media_path = {
-        "image": "images",
-        "audio": "audio",
-    }[media_type]
-
-    class MediaSearchRequestSourceSerializer(serializers.Serializer):
-        """Parses and validates the source/not_source fields from the query params."""
-
-        field_names = [
-            "source",
-            "excluded_source",
-        ]
-        """
-        Keep the fields names in sync with the actual fields below as this list is
-        used to generate Swagger documentation.
-        """
-        source_help_text = SOURCE_HELP_TEXT % {
-            "origin": settings.CANONICAL_ORIGIN,
-            "media_path": media_path,
-        }
-        excluded_help_text = EXCLUDED_SOURCE_HELP_TEXT % {
-            "origin": settings.CANONICAL_ORIGIN,
-            "media_path": media_path,
-        }
-
-        source = serializers.CharField(
-            label="provider",
-            help_text=source_help_text,
-            required=False,
-        )
-        excluded_source = serializers.CharField(
-            label="excluded_provider",
-            help_text=excluded_help_text,
-            required=False,
-        )
-
-        def validate_source(self, value):
-            """
-            For the regular searches, split the value.lower() by comma and only return the
-            source names that are in the search controller's sources list for the media type.
-            For the collection=tag, return the value as is. It is ignored in the query builder.
-            For source and creator collections, accept the value as is, without lower-casing
-            or splitting, and check if it's in the valid source name list.
-            This function validates the source and excluded_source fields, but `excluded_source`
-            is ignored for collection requests.
-            """
-            allowed_sources = list(search_controller.get_sources(media_type).keys())
-            sources_list = ", ".join([f"'{s}'" for s in allowed_sources])
-            collection = self.initial_data.get(COLLECTION)
-
-            # For collection=tag, return the value as is. It is ignored in the query builder.
-            if collection == "tag":
-                return value
-
-            if collection:
-                if value not in allowed_sources:
-                    raise serializers.ValidationError(
-                        f"Invalid source parameter '{value}'. Use one of the valid sources: {sources_list}"
-                    )
-                return value
-            else:
-                sources = value.lower().split(",")
-                valid_sources = [
-                    source for source in sources if source in allowed_sources
-                ]
-                return ",".join(valid_sources)
-
-        def validate_excluded_source(self, input_sources):
-            return self.validate_source(input_sources)
-
-        def validate(self, data):
-            data = super().validate(data)
-            if "source" in self.initial_data and "excluded_source" in self.initial_data:
-                raise serializers.ValidationError(
-                    "Cannot set both 'source' and 'excluded_source'. "
-                    "Use exactly one of these."
-                )
-            return data
-
-    return MediaSearchRequestSourceSerializer
 
 
 def get_hyperlinks_serializer(media_type):

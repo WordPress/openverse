@@ -39,9 +39,8 @@ from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.provider_serializers import ProviderSerializer
 
 
-audio_filter_fields = fields_to_md(
-    [f for f in AudioSearchRequestSerializer.field_names if f != "q"]
-)
+serializer = AudioSearchRequestSerializer(context={"media_type": "audio"})
+audio_filter_fields = fields_to_md([f for f in serializer.field_names if f != "q"])
 
 audio_search_description = SEARCH_DESCRIPTION % {
     "filter_fields": audio_filter_fields,
@@ -50,7 +49,7 @@ audio_search_description = SEARCH_DESCRIPTION % {
 
 search = custom_extend_schema(
     desc=audio_search_description,
-    params=AudioSearchRequestSerializer,
+    params=serializer,
     res={
         200: (AudioSerializer, audio_search_200_example),
         400: (ValidationError, audio_search_400_example),

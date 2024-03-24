@@ -12,7 +12,6 @@ from api.serializers.media_serializers import (
     MediaSearchRequestSerializer,
     MediaSerializer,
     get_hyperlinks_serializer,
-    get_search_request_source_serializer,
 )
 
 
@@ -21,18 +20,11 @@ from api.serializers.media_serializers import (
 #######################
 
 
-AudioSearchRequestSourceSerializer = get_search_request_source_serializer("audio")
-
-
-class AudioSearchRequestSerializer(
-    AudioSearchRequestSourceSerializer,
-    MediaSearchRequestSerializer,
-):
+class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
     """Parse and validate search query string parameters."""
 
     field_names = [
         *MediaSearchRequestSerializer.field_names,
-        *AudioSearchRequestSourceSerializer.field_names,
         "category",
         "length",
     ]

@@ -97,7 +97,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     def _get_request_serializer(self, request):
         req_serializer = self.query_serializer_class(
-            data=request.query_params, context={"request": request}
+            data=request.query_params,
+            context={"request": request, "media_type": self.media_type},
         )
         req_serializer.is_valid(raise_exception=True)
         return req_serializer
