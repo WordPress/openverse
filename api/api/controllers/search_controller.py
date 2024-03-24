@@ -34,14 +34,7 @@ from api.utils.search_context import SearchContext
 
 # Using TYPE_CHECKING to avoid circular imports when importing types
 if TYPE_CHECKING:
-    from api.serializers.media_serializers import (
-        MediaSearchRequestSerializer,
-        PaginatedRequestSerializer,
-    )
-
-    MediaListRequestSerializer = (
-        MediaSearchRequestSerializer | PaginatedRequestSerializer
-    )
+    from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 module_logger = logging.getLogger(__name__)
 
@@ -217,7 +210,7 @@ def get_excluded_providers_query() -> Q | None:
 def get_index(
     exact_index: bool,
     origin_index: OriginIndex,
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> SearchIndex:
     if exact_index:
         return origin_index
@@ -231,7 +224,7 @@ def get_index(
 
 
 def create_search_filter_queries(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> dict[str, list[Q]]:
     """
     Create a list of Elasticsearch queries for filtering search results.
@@ -272,7 +265,7 @@ def create_search_filter_queries(
 
 
 def create_ranking_queries(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> list[Q]:
     queries = [Q("rank_feature", field="standardized_popularity", boost=DEFAULT_BOOST)]
     if search_params.data["unstable__authority"]:
@@ -283,7 +276,7 @@ def create_ranking_queries(
 
 
 def build_search_query(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> Q:
     # Apply filters from the url query search parameters.
     url_queries = create_search_filter_queries(search_params)
@@ -380,7 +373,7 @@ def log_query_features(query: str, query_name) -> None:
 
 
 def build_collection_query(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ):
     """
     Build the query to retrieve items in a collection.
@@ -421,7 +414,7 @@ query_builders = {
 
 
 def query_media(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
     origin_index: OriginIndex,
     exact_index: bool,
     page_size: int,
@@ -438,7 +431,7 @@ def query_media(
     For other queries, performs a ranked paginated search
     from the set of keywords and, optionally, filters.
 
-    :param search_params: Search query params, see :class: `MediaListRequestSerializer`.
+    :param search_params: Search query params, see :class: `MediaSearchRequestSerializer`.
     :param origin_index: The Elasticsearch index to search (e.g. 'image')
     :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
