@@ -91,7 +91,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
 
 EXCLUDED_COLLECTION_REQUEST_FIELDS = (
-    [] if settings.ENABLE_COLLECTIONS else [COLLECTION, TAG]
+    [] if settings.SHOW_COLLECTION_DOCS else [COLLECTION, TAG]
 )
 
 
@@ -138,7 +138,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         # "unstable__authority_boost",
         # "unstable__include_sensitive_results",
     ]
-    if settings.ENABLE_COLLECTIONS:
+    if settings.SHOW_COLLECTION_DOCS:
         field_names.extend(
             [
                 TAG,

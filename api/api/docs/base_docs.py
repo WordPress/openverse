@@ -198,6 +198,6 @@ the server will reject the query."""
 
 SEARCH_DESCRIPTION = (
     SEARCH_DESCRIPTION_DEFAULT
-    if settings.ENABLE_COLLECTIONS
+    if settings.SHOW_COLLECTION_DOCS
     else SEARCH_DESCRIPTION_COLLECTIONS_DISABLED
 )

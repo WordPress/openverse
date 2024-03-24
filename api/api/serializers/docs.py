@@ -31,7 +31,7 @@ join them with a comma.
 """
 
 CREATOR_HELP_TEXT = (
-    CREATOR if settings.ENABLE_COLLECTIONS else CREATOR_COLLECTIONS_DISABLED
+    CREATOR if settings.SHOW_COLLECTION_DOCS else CREATOR_COLLECTIONS_DISABLED
 )
 COLLECTION_HELP_TEXT = f"""
 The kind of media collection to return.
@@ -54,7 +54,7 @@ Valid values are `source_name`s from the stats endpoint: %(origin)s/v1/%(media_p
 """
 
 SOURCE_HELP_TEXT = (
-    SOURCE if settings.ENABLE_COLLECTIONS else SOURCE_HELP_TEXT_COLLECTIONS_DISABLED
+    SOURCE if settings.SHOW_COLLECTION_DOCS else SOURCE_HELP_TEXT_COLLECTIONS_DISABLED
 )
 
 TAG_HELP_TEXT = """
