@@ -195,6 +195,10 @@ Unlike that we will be documenting notes inside the model docstrings because it
 allows for the documentation to be close to the code and for the documentation
 to be updated alongside the code.
 
+Although we have used utility scripts for the catalog documentation, for the API
+we will be done using a management command as that is more idiomatic and gives
+us access to the Django ORM models.
+
 ## Future improvements
 
 This implementation plan does not document the schema for Django's `JSONField`
@@ -203,9 +207,4 @@ potential improvement.
 
 ## Prior art
 
-Although we have used a utilities and scripts for the catalog media properties
-documentation, the documentation generation for the API will be done using a
-Django management command for the following reasons:
-
-- This approach is idiomatic to Django as a way to run scripts.
-- The command will be able to access Django apps and models for introspection.
+- [Corresponding Catalog IP](/projects/proposals/document_all_media_properties/20230426-implementation_plan_documenting_media_properties.md)
