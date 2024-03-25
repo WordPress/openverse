@@ -33,6 +33,12 @@ class AbstractMedia(
     Generic model from which to inherit all media classes.
 
     This class stores information common to all media types indexed by Openverse.
+
+    Properties
+    ==========
+    id: >-
+        This is Django's automatic primary key, used for models that do not
+        define one explicitly.
     """
 
     watermarked = models.BooleanField(blank=True, null=True)

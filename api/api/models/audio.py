@@ -143,6 +143,12 @@ class Audio(AudioFileMixin, AbstractMedia):
     Inherited fields
     ================
     category: eg. music, sound_effect, podcast, news & audiobook
+
+    Properties
+    ==========
+    audioset: >-
+        This is a virtual foreign-key to `AudioSet` built on top of the fields
+        `audio_set_foreign_identifier` and `provider`.
     """
 
     audioset = models.ForeignObject(

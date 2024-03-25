@@ -11,4 +11,5 @@ decision_making/index
 documentation/index
 monitoring/index
 maintenance/index
+media_properties/index
 ```
