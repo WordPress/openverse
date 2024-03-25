@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col" :class="[active ? 'text-dark-blue' : 'text-gray']">
+  <div class="flex flex-col" :class="[active ? 'text-black' : 'text-gray']">
     <svg
       width="12"
       height="6"
