@@ -135,5 +135,7 @@ test("sends SELECT_SEARCH_RESULT event on related audio click", async ({
     query: "",
     sensitivities: "",
     isBlurred: false,
+    collectionType: null,
+    collectionValue: null,
   })
 })

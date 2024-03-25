@@ -63,15 +63,18 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
+import { useContext } from "@nuxtjs/composition-api"
+
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import { IMAGE } from "~/constants/media"
 
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+
+import { useSearchStore } from "~/stores/search"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
@@ -182,7 +185,8 @@ export default defineComponent({
           })
     })
 
-    const { sendCustomEvent } = useAnalytics()
+    const { $sendCustomEvent } = useContext()
+    const searchStore = useSearchStore()
 
     /**
      * If the user left clicks on a search result, send
@@ -194,7 +198,7 @@ export default defineComponent({
         return
       }
 
-      sendCustomEvent("SELECT_SEARCH_RESULT", {
+      $sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: props.image.id,
         kind: props.kind,
         mediaType: IMAGE,
@@ -203,6 +207,9 @@ export default defineComponent({
         relatedTo: props.relatedTo,
         sensitivities: props.image.sensitivity?.join(",") ?? "",
         isBlurred: shouldBlur.value,
+        collectionType:
+          searchStore.strategy !== "default" ? searchStore.strategy : null,
+        collectionValue: searchStore.collectionValue,
       })
     }
 
