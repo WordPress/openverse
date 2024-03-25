@@ -1,4 +1,4 @@
-# ingestion_server_removal
+# Ingestion server removal
 
 ```{toctree}
 :titlesonly:
