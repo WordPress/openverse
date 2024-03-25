@@ -6,9 +6,8 @@ import type {
 import type { ReportReason } from "~/constants/content-report"
 import type { FilterCategory } from "~/constants/filters"
 import { ResultKind } from "~/types/result"
-
-import { RequestKind } from "./fetch-state"
-import { Collection } from "./search"
+import { RequestKind } from "~/types/fetch-state"
+import { Collection } from "~/types/search"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
