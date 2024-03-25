@@ -6,8 +6,8 @@ import type {
 import type { ReportReason } from "~/constants/content-report"
 import type { FilterCategory } from "~/constants/filters"
 import { ResultKind } from "~/types/result"
-
-import { RequestKind } from "./fetch-state"
+import { RequestKind } from "~/types/fetch-state"
+import { Collection } from "~/types/search"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -20,6 +20,19 @@ export type AudioComponent =
   | "AudioSearch"
   | "AudioDetailPage"
   | "VAllResultsGrid"
+
+/**
+ * Common properties related to searches
+ * on collection pages, added in the
+ * "Additional Search Views" project.
+ */
+type CollectionProperties = {
+  /** If a collection page, the type of collection */
+  collectionType: Collection | null
+  /** A string representing a unique identifier for the collection */
+  collectionValue: string | null
+}
+
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
@@ -101,11 +114,13 @@ export type Events = {
   REACH_RESULT_END: {
     /** The media type being searched */
     searchType: SupportedSearchType
+    /** The kind of search reached (a collection, a standard search view, etc.)  */
+    kind: ResultKind
     /** The search term */
     query: string
     /** The current page of results the user is on. */
     resultPage: number
-  }
+  } & CollectionProperties
   /**
    * Description: The user clicks the CTA button to the external source to use the image
    * Questions:
@@ -269,7 +284,7 @@ export type Events = {
     sensitivities: string
     /** whether the result was blurred or visible when selected by the user */
     isBlurred: boolean | null
-  }
+  } & CollectionProperties
   /**
    * Description: When a user opens the external sources popover.
    * Questions:
@@ -297,12 +312,14 @@ export type Events = {
   LOAD_MORE_RESULTS: {
     /** The media type being searched */
     searchType: SearchType
+    /** The kind of search (a collection, a standard search view, etc.)  */
+    kind: ResultKind
     /** The search term */
     query: string
     /** The current page of results the user is on,
      * *before* loading more results.. */
     resultPage: number
-  }
+  } & CollectionProperties
   /**
    * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
    * Questions:

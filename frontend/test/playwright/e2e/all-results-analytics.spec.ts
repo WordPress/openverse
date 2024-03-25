@@ -41,6 +41,8 @@ test.describe("all results grid analytics test", () => {
       provider: "jamendo",
       sensitivities: "",
       isBlurred: false,
+      collectionType: null,
+      collectionValue: null,
     })
   })
 
@@ -64,6 +66,8 @@ test.describe("all results grid analytics test", () => {
       relatedTo: null,
       sensitivities: "",
       isBlurred: false,
+      collectionType: null,
+      collectionValue: null,
     })
   })
 
