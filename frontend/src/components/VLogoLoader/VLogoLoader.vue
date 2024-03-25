@@ -4,13 +4,11 @@
     xmlns="http://www.w3.org/2000/svg"
     :class="{
       loading: status === 'loading' && !prefersReducedMotion,
-      'h-10 w-10': autoResize,
-      'h-12 w-12': !autoResize,
     }"
     aria-hidden="true"
     :data-prefers-reduced-motion="prefersReducedMotion"
     data-testid="logo-loader"
-    class="inline-flex items-center justify-center rounded p-3 md:h-12 md:w-12"
+    class="inline-flex h-[18px] items-center justify-center rounded"
     fill="currentColor"
   >
     <path
@@ -51,10 +49,6 @@ export default defineComponent({
     status: {
       type: String as PropType<"loading" | "idle">,
       default: "idle",
-    },
-    autoResize: {
-      type: Boolean,
-      default: true,
     },
   },
   setup() {
