@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-03-19T07:12:56+00:00\n"
+"POT-Creation-Date: 2024-03-26T04:07:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -227,7 +227,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:4
-#: src/pages/about.vue:143
+#: src/pages/about.vue:167
 msgctxt "about.title"
 msgid "About ###openverse###"
 msgstr ""
@@ -239,47 +239,92 @@ msgid "###openverse### is a tool that allows openly licensed and public domain w
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:10
-msgctxt "about.collection.content"
-msgid "###openverse### searches across more than 700 million images and audio from open APIs and the ###commonCrawl### dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution."
+#: src/pages/about.vue:11
+msgctxt "about.collection.content.a"
+msgid "###openverse### searches across more than 700 million images and audio from open APIs and the ###commonCrawl### dataset."
 msgstr ""
 
-#. Do not translate words between ### ###.
 #: src/pages/about.vue:17
-msgctxt "about.planning.content"
-msgid "Currently ###openverse### only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source and can be accessed at the ###repository###. We ###community###. You can see what ###working###."
+msgctxt "about.collection.content.b"
+msgid "We aggregate works from multiple public repositories, and facilitate reuse through features like one-click attribution."
 msgstr ""
 
+#. about.planning.content.a-c are parts of a single statement
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:21
+msgctxt "about.planning.content.a"
+msgid "Currently ###openverse### only searches images and audio, with search for video provided through External Sources."
+msgstr ""
+
+#. about.planning.content.a-c are parts of a single statement
+#: src/pages/about.vue:22
+msgctxt "about.planning.content.b"
+msgid "We plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web."
+msgstr ""
+
+#. about.planning.content.a-c are parts of a single statement. "repository", "community" and "working" are interpolated from about.planning.frontend, about.planning.repository, about.planning.catalog, about.planning.community, and about.planning.working, respectively.
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:23
+msgctxt "about.planning.content.c"
+msgid "All of our code is open source and can be accessed at the ###repository###. We ###community###. You can see what ###working###."
+msgstr ""
+
+#. Interpolated into about.planning.content.c
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:27
 msgctxt "about.planning.repository"
 msgid "###openverse### ###github### repository"
 msgstr ""
 
-#: src/pages/about.vue:29
+#. Interpolated into about.planning.content.c
+#: src/pages/about.vue:35
 msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
-#: src/pages/about.vue:34
+#. Interpolated into about.planning.content.c
+#: src/pages/about.vue:40
 msgctxt "about.planning.working"
 msgid "we’re currently working on"
 msgstr ""
 
+#. Part of a single statement with about.transfer.content.b and about.transfer.content.c
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:39
-msgctxt "about.transfer.content"
-msgid "###openverse### is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from ###creativeCommons### and ###wordpress###. We remain committed to our goal of tackling discoverability and accessibility of open access media."
+#: src/pages/about.vue:47
+msgctxt "about.transfer.content.a"
+msgid "###openverse### is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021."
 msgstr ""
 
+#. Part of a single statement with about.transfer.content.a and about.transfer.content.c
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:54
-msgctxt "about.declaration.content"
-msgid "Please note that ###openverse### does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
+#: src/pages/about.vue:48
+msgctxt "about.transfer.content.b"
+msgid "You can read more about this transition in the official announcements from ###creativeCommons### and ###wordpress###."
 msgstr ""
 
+#. Part of a single statement with about.transfer.content.a and about.transfer.content.b
+#: src/pages/about.vue:61
+msgctxt "about.transfer.content.c"
+msgid "We remain committed to our goal of tackling discoverability and accessibility of open access media."
+msgstr ""
+
+#. about.declaration.content.a-b are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:58
+#: src/pages/about.vue:65
+msgctxt "about.declaration.content.a"
+msgid "###openverse### does not verify licensing information for individual works, or whether the generated attribution is accurate or complete."
+msgstr ""
+
+#. about.declaration.content.a-b are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:66
+msgctxt "about.declaration.content.b"
+msgid "Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
+msgstr ""
+
+#. Interpolated into about.declaration.content.b
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:69
 msgctxt "about.declaration.terms"
 msgid "###openverse### Terms of Use"
 msgstr ""
@@ -328,26 +373,23 @@ msgctxt "sources.ccContent.content"
 msgid "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through ###openverse###."
 msgstr ""
 
+#. sources.ccContent.provider.a-b are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sources.vue:13
-msgctxt "sources.ccContent.provider"
-msgid "Some providers have multiple different groupings of content within them. ###flickr### has sources ranging from NASA to personal photography. The ###smithsonian### comprises a dozen diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections."
+#: src/pages/sources.vue:14
+msgctxt "sources.ccContent.provider.a"
+msgid "Some providers have multiple different groupings of content within them. ###flickr### has sources ranging from NASA to personal photography. The ###smithsonian### comprises a dozen diverse collections."
+msgstr ""
+
+#. sources.ccContent.provider.a-b are parts of a single statement
+#: src/pages/sources.vue:22
+msgctxt "sources.ccContent.provider.b"
+msgid "Wikimedia Commons runs the gamut in terms of content, and is used by several galleries, libraries, archives, and museums highlighting some or all of their digitized collections."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/sources.vue:23
+#: src/pages/sources.vue:25
 msgctxt "sources.ccContent.europeana"
 msgid "###openverse### is especially grateful for the work of ###link###, an organization that works to digitize and make discoverable cultural heritage works across Europe. ###openverse### is able to index hundreds of valuable sources through a single integration with the ###linkApi###."
-msgstr ""
-
-#: src/pages/sources.vue:30
-msgctxt "sources.ccContent.europeanaApi"
-msgid "Europeana API"
-msgstr ""
-
-#: src/pages/sources.vue:19
-msgctxt "sources.ccContent.smithsonian"
-msgid "Smithsonian Institute"
 msgstr ""
 
 #: src/pages/sources.vue:36
@@ -398,101 +440,131 @@ msgctxt "sources.heading.audio"
 msgid "Audio Sources"
 msgstr ""
 
-#: src/pages/about.vue:64
+#: src/pages/about.vue:76
 msgctxt "externalSourcesPage.title"
 msgid "External Sources"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:67
+#: src/pages/about.vue:79
 msgctxt "externalSourcesPage.intro"
 msgid "###openverse### is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our ###link###."
 msgstr ""
 
-#: src/pages/about.vue:70
+#: src/pages/about.vue:82
 msgctxt "externalSourcesPage.link"
 msgid "sources here"
 msgstr ""
 
+#. externalSourcesPage.license.a-c are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:74
-msgctxt "externalSourcesPage.license"
-msgid "However, there are many sources of CC-licensed and public domain media which we aren’t able to surface results from within the ###openverse### interface yet. This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into Openverse. These are valued sources and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
+#: src/pages/about.vue:87
+msgctxt "externalSourcesPage.license.a"
+msgid "However, there are many sources of CC-licensed and public domain media that we are not yet able to include in ###openverse### search."
 msgstr ""
 
-#: src/pages/about.vue:83
+#. externalSourcesPage.license.a-c are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:88
+msgctxt "externalSourcesPage.license.b"
+msgid "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into ###openverse###."
+msgstr ""
+
+#. externalSourcesPage.license.a-c are parts of a single statement
+#: src/pages/about.vue:89
+msgctxt "externalSourcesPage.license.c"
+msgid "These are valued sources and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located."
+msgstr ""
+
+#: src/pages/about.vue:106
 msgctxt "externalSourcesPage.new.title"
 msgid "Can I suggest new external sources?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:85
+#: src/pages/about.vue:109
 msgctxt "externalSourcesPage.new.content"
 msgid "Yes, please! Create an ###issue### in our GitHub repository or send us an ###email### and tell us about the new sources you’d like to see included."
 msgstr ""
 
-#: src/pages/about.vue:90
+#: src/pages/about.vue:114
 msgctxt "externalSourcesPage.new.issue"
 msgid "issue"
 msgstr ""
 
-#: src/pages/about.vue:95
+#: src/pages/about.vue:119
 msgctxt "externalSourcesPage.new.email"
 msgid "email"
 msgstr ""
 
-#: src/pages/about.vue:100
+#: src/pages/about.vue:124
 msgctxt "externalSourcesPage.why.title"
 msgid "Why did you build this?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:102
+#: src/pages/about.vue:126
 msgctxt "externalSourcesPage.why.content"
 msgid "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at ###old###."
 msgstr ""
 
-#: src/pages/about.vue:107
-msgctxt "externalSourcesPage.why.old"
-msgid "oldsearch.creativecommons.org"
-msgstr ""
-
+#. externalSourcesPage.why.new.a-c are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:113
-msgctxt "externalSourcesPage.why.new"
-msgid "For users of the legacy CC Meta Search site, the \"External Sources\" feature on ###openverse### will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the \"External Sources\" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future, as we expand."
+#: src/pages/about.vue:135
+msgctxt "externalSourcesPage.why.new.a"
+msgid "For users of the legacy CC Meta Search site, the \"External Sources\" feature on ###openverse### will look familiar."
 msgstr ""
 
-#: src/pages/about.vue:118
+#. externalSourcesPage.why.new.a-c are parts of a single statement
+#: src/pages/about.vue:136
+msgctxt "externalSourcesPage.why.new.b"
+msgid "The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content."
+msgstr ""
+
+#. externalSourcesPage.why.new.a-c are parts of a single statement
+#: src/pages/about.vue:137
+msgctxt "externalSourcesPage.why.new.c"
+msgid "Additionally, the \"External Sources\" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future."
+msgstr ""
+
+#: src/pages/about.vue:142
 msgctxt "externalSourcesPage.why.ariaLabel"
 msgid "feedback"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:115
+#: src/pages/about.vue:139
 msgctxt "externalSourcesPage.why.feedbackSuggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
-#: src/pages/about.vue:120
+#: src/pages/about.vue:144
 msgctxt "externalSourcesPage.why.feedbackLink"
 msgid "feedback"
 msgstr ""
 
+#. externalSourcesPage.relationships.a-b are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:80
-msgctxt "externalSourcesPage.relationships"
-msgid "This functionality also allows us to start conversations and build relationships with sources that may like to be included in ###openverse### in the future. Finally, we can also offer external sources of media types we do not include in ###openverse### yet, but plan to."
+#: src/pages/about.vue:98
+msgctxt "externalSourcesPage.relationships.a"
+msgid "This functionality also allows us to start conversations and build relationships with sources that may like to be included in ###openverse### in the future."
+msgstr ""
+
+#. externalSourcesPage.relationships.a-b are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/about.vue:101
+msgctxt "externalSourcesPage.relationships.b"
+msgid "Finally, we can also offer external sources of media types we do not include in ###openverse### yet, but plan to."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:77
+#: src/pages/about.vue:93
 msgctxt "externalSourcesPage.explanation"
 msgid "You can find links to external sources at the bottom of every ###openverse### search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to."
 msgstr ""
 
 #: src/pages/privacy.vue:4
-#: src/pages/privacy.vue:86
+#: src/pages/privacy.vue:87
 msgctxt "privacy.title"
 msgid "Privacy"
 msgstr ""
@@ -513,29 +585,37 @@ msgctxt "privacy.cookies.title"
 msgid "Cookies"
 msgstr ""
 
+#. privacy.cookies.content.a-b are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/privacy.vue:18
-msgctxt "privacy.cookies.content"
-msgid "###openverse### uses cookies to store information about visitor's preferences and information about their web browsers. We use this information to improve the user experience of the site. These are considered \"Necessary\" or \"Strictly necessary cookies\" and you may disable these by changing your browser settings, but this may affect how ###openverse### functions."
+#: src/pages/privacy.vue:19
+msgctxt "privacy.cookies.content.a"
+msgid "###openverse### uses cookies to store information about visitor's preferences and information about their web browsers. We use this information to improve the user experience of the site."
 msgstr ""
 
-#: src/pages/privacy.vue:23
+#. privacy.cookies.content.a-b are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/privacy.vue:20
+msgctxt "privacy.cookies.content.b"
+msgid "These are considered \"Necessary\" or \"Strictly necessary cookies\". You may disable these by changing your browser settings, but this may affect how ###openverse### functions."
+msgstr ""
+
+#: src/pages/privacy.vue:24
 msgctxt "privacy.contact.title"
 msgid "Contact Us"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/privacy.vue:26
+#: src/pages/privacy.vue:27
 msgctxt "privacy.contact.content"
 msgid "Any questions about ###openverse### and privacy can be sent to ###email###, shared as a ###issue###, or discussed with our community in the #openverse channel of the ###chat###."
 msgstr ""
 
-#: src/pages/privacy.vue:35
+#: src/pages/privacy.vue:36
 msgctxt "privacy.contact.issue"
 msgid "GitHub issue"
 msgstr ""
 
-#: src/pages/privacy.vue:40
+#: src/pages/privacy.vue:41
 msgctxt "privacy.contact.chat"
 msgid "Making WordPress Chat"
 msgstr ""
@@ -637,164 +717,363 @@ msgid "report a bug form"
 msgstr ""
 
 #: src/pages/sensitive-content.vue:4
-#: src/pages/sensitive-content.vue:143
+#: src/pages/sensitive-content.vue:241
 msgctxt "sensitive.title"
 msgid "Sensitive content"
 msgstr ""
 
+#. sensitive.description.content.a-f are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:7
-msgctxt "sensitive.description.content"
-msgid "###openverse### operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible. Therefore, ###openverse### only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on ###openverse###.org and in the ###openverse### API. In adherence to ###wpCoc### and its ###deiStatement###, ###openverse### holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project. Similarly, ###openverse### holds the expectation that the results returned from the API or displayed on the ###openverse###.org website should be accessible by default. Everyone, regardless of background, should feel safe and included in ###openverse###, whether they are a contributor to the technical aspects of the ###openverse### services, a creator whose works are included in ###openverse###, or an ###openverse### user. ###openverse### recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
+#: src/pages/sensitive-content.vue:8
+msgctxt "sensitive.description.content.a"
+msgid "###openverse### operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:12
+#. sensitive.description.content.a-f are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:10
+msgctxt "sensitive.description.content.b"
+msgid "Therefore, ###openverse### only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on ###openverseOrg### and in the ###openverse### API."
+msgstr ""
+
+#. sensitive.description.content.a-are parts of a single statement f. "wpCoc" and "deiStatement" are interpolated with sensitive.description.wpCoc and sensitive.description.deiStatement respectively.
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:15
+msgctxt "sensitive.description.content.c"
+msgid "In adherence to ###wpCoc### and its ###deiStatement###, ###openverse### holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project."
+msgstr ""
+
+#. sensitive.description.content.a-f are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:31
+msgctxt "sensitive.description.content.d"
+msgid "Similarly, ###openverse### holds the expectation that the results returned from the API or displayed on the ###openverseOrg### website should be accessible by default."
+msgstr ""
+
+#. sensitive.description.content.a-f are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:36
+msgctxt "sensitive.description.content.e"
+msgid "Everyone, regardless of background, should feel safe and included in ###openverse###, whether they are a contributor to the technical aspects of the ###openverse### services, a creator whose works are included in ###openverse###, or an ###openverse### user."
+msgstr ""
+
+#. sensitive.description.content.a-f are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:37
+msgctxt "sensitive.description.content.f"
+msgid "###openverse### recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
+msgstr ""
+
+#. Interpolated into sensitive.description.content.c. Referencing https://make.wordpress.org/handbook/community-code-of-conduct/
+#: src/pages/sensitive-content.vue:20
 msgctxt "sensitive.description.wpCoc"
 msgid "WordPress’s Community Code of Conduct"
 msgstr ""
 
-#: src/pages/sensitive-content.vue:18
+#. Interpolated into sensitive.description.content.c. Referencing https://make.wordpress.org/handbook/diversity-equity-and-inclusion-in-wordpress/
+#: src/pages/sensitive-content.vue:26
 msgctxt "sensitive.description.deiStatement"
 msgid "diversity, equity, and inclusion statement"
 msgstr ""
 
+#. sensitive.sensitivity.what.a-d are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:23
-msgctxt "sensitive.sensitivity.what"
-msgid "###openverse### uses the term \"sensitive\" rather than \"mature\", \"NSFW\" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion. This means that some content is designated \"sensitive\" that would not fall into a category of what is generally understood to be \"mature\" content (in other words, content specifically for an adult audience). The designation does not, however, imply that ###openverse### or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement. We consider \"sensitive\" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people."
+#: src/pages/sensitive-content.vue:41
+msgctxt "sensitive.sensitivity.what.a"
+msgid "###openverse### uses the term \"sensitive\" rather than \"mature\", \"NSFW\" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion."
 msgstr ""
 
-#. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:24
-msgctxt "sensitive.sensitivity.how"
-msgid "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise. ###openverse### relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms. These are described in more detail below."
+#. sensitive.sensitivity.what.a-d are parts of a single statement
+#: src/pages/sensitive-content.vue:42
+msgctxt "sensitive.sensitivity.what.b"
+msgid "This means that some content is designated \"sensitive\" that would not fall into a category of what is generally understood to be \"mature\" content (in other words, content specifically for an adult audience)."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:27
+#. sensitive.sensitivity.what.a-d are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:43
+msgctxt "sensitive.sensitivity.what.c"
+msgid "The designation does not, however, imply that ###openverse### or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement."
+msgstr ""
+
+#. sensitive.sensitivity.what.a-d are parts of a single statement
+#: src/pages/sensitive-content.vue:44
+msgctxt "sensitive.sensitivity.what.d"
+msgid "We consider \"sensitive\" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people."
+msgstr ""
+
+#. Sensitive.sensitivity.how.a-c are parts of a single statement
+#: src/pages/sensitive-content.vue:48
+msgctxt "sensitive.sensitivity.how.a"
+msgid "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise."
+msgstr ""
+
+#. Sensitive.sensitivity.how.a-c are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:49
+msgctxt "sensitive.sensitivity.how.b"
+msgid "###openverse### relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms."
+msgstr ""
+
+#. Sensitive.sensitivity.how.a-c are parts of a single statement
+#: src/pages/sensitive-content.vue:50
+msgctxt "sensitive.sensitivity.how.c"
+msgid "These are described in more detail below."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:54
 msgctxt "sensitive.onOff.title"
 msgid "Turning sensitive content on and off"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:31
+#: src/pages/sensitive-content.vue:58
 msgctxt "sensitive.onOff.sensitiveResults"
 msgid "By default, ###openverse### does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:35
-msgctxt "sensitive.onOff.blurSensitive"
-msgid "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure. Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch."
+#. sensitive.onOff.blurSensitive.a-b are parts of a single statement
+#: src/pages/sensitive-content.vue:62
+msgctxt "sensitive.onOff.blurSensitive.a"
+msgid "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:39
+#. sensitive.onOff.blurSensitive.a-b are parts of a single statement
+#: src/pages/sensitive-content.vue:63
+msgctxt "sensitive.onOff.blurSensitive.b"
+msgid "Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:67
 msgctxt "sensitive.onOff.where"
 msgid "Both these toggles are available in the filter sidebar (on desktops) and in the “Filter” tab of the search settings pane (on mobile devices) on the search results page."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:43
+#: src/pages/sensitive-content.vue:71
 msgctxt "sensitive.designations.title"
 msgid "Sensitive content designations"
 msgstr ""
 
+#. sensitive.designations.description.a-b are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:47
-msgctxt "sensitive.designations.description"
-msgid "###openverse### designates sensitive content in the API and on the ###openverse###.org website using two methods: reports from ###openverse### users and automated sensitive textual content detection. These designations are not exclusive of each other and a single work may have one or both applied to it."
+#: src/pages/sensitive-content.vue:76
+msgctxt "sensitive.designations.description.a"
+msgid "###openverse### designates sensitive content in the API and on the ###openverseOrg### website using two methods: reports from ###openverse### users and automated sensitive textual content detection."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:51
+#. sensitive.designations.description.a-b are parts of a single statement
+#: src/pages/sensitive-content.vue:81
+msgctxt "sensitive.designations.description.b"
+msgid "These designations are not exclusive of each other and a single work may have one or both applied to it."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:85
 msgctxt "sensitive.designations.userReported.title"
 msgid "User reported sensitivity"
 msgstr ""
 
+#. sensitive.designations.userReported.description.a-d are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:54
-msgctxt "sensitive.designations.userReported.description"
-msgid "###openverse### users are invited to report sensitive content via the ###openverse###.org website and the ###openverse### API. Some tools and apps that integrate with the ###openverse### API, like the ###gutenbergMediaInserter###, also allow their users to report sensitive content. An individual work’s page includes the ability to report content as sensitive (or to report rights violations). ###openverse### moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from ###openverse###’s services."
+#: src/pages/sensitive-content.vue:90
+msgctxt "sensitive.designations.userReported.description.a"
+msgid "###openverse### users are invited to report sensitive content via the ###openverseOrg### website and the ###openverse### API."
 msgstr ""
 
+#. sensitive.designations.userReported.description.a-d are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:60
+#: src/pages/sensitive-content.vue:95
+msgctxt "sensitive.designations.userReported.description.b"
+msgid "Some tools and apps that integrate with the ###openverse### API, like the ###gutenbergMediaInserter###, also allow their users to report sensitive content."
+msgstr ""
+
+#. sensitive.designations.userReported.description.a-d are parts of a single statement
+#: src/pages/sensitive-content.vue:108
+msgctxt "sensitive.designations.userReported.description.c"
+msgid "An individual work’s page includes the ability to report content as sensitive (or to report rights violations)."
+msgstr ""
+
+#. sensitive.designations.userReported.description.a-d are parts of a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:110
+msgctxt "sensitive.designations.userReported.description.d"
+msgid "###openverse### moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from ###openverse###’s services."
+msgstr ""
+
+#. Interpolated into sensitive.designations.userReported.description.b
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:101
 msgctxt "sensitive.designations.userReported.gutenbergMediaInserter"
 msgid "Gutenberg editor’s ###openverse### media inserter"
 msgstr ""
 
-#: src/pages/sensitive-content.vue:69
+#: src/pages/sensitive-content.vue:117
 msgctxt "sensitive.designations.sensitiveText.title"
 msgid "Sensitive textual content"
 msgstr ""
 
+#. sensitive.designations.sensitiveText.description.a-e are a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:72
-msgctxt "sensitive.designations.sensitiveText.description"
-msgid "###openverse### scans some of the textual metadata related to works as provided by our sources for sensitive terms. ###openverse###’s ###sensitiveTermsList### is open source and contributions and input from the community are welcome and invited. Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature. The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive. For more context on why we’ve chosen this approach despite that, refer to the ###imperfect### of our project planning document related to this feature."
+#: src/pages/sensitive-content.vue:122
+msgctxt "sensitive.designations.sensitiveText.description.a"
+msgid "###openverse### scans some of the textual metadata related to works as provided by our sources for sensitive terms."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:76
+#. sensitive.designations.sensitiveText.description.a-e are a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:126
+msgctxt "sensitive.designations.sensitiveText.description.b"
+msgid "###openverse###’s ###sensitiveTermsList### is open source and contributions and input from the community are welcome and invited."
+msgstr ""
+
+#. sensitive.designations.sensitiveText.description.a-e are a single statement
+#: src/pages/sensitive-content.vue:141
+msgctxt "sensitive.designations.sensitiveText.description.c"
+msgid "Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature."
+msgstr ""
+
+#. sensitive.designations.sensitiveText.description.a-e are a single statement
+#: src/pages/sensitive-content.vue:145
+msgctxt "sensitive.designations.sensitiveText.description.d"
+msgid "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive."
+msgstr ""
+
+#. sensitive.designations.sensitiveText.description.a-e are a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:146
+msgctxt "sensitive.designations.sensitiveText.description.e"
+msgid "For more context on why we’ve chosen this approach despite that, refer to the ###imperfect### of our project planning document related to this feature."
+msgstr ""
+
+#. Interpolated into sensitive.designations.sensitiveText.description.b
+#: src/pages/sensitive-content.vue:135
 msgctxt "sensitive.designations.sensitiveText.sensitiveTermsList"
 msgid "sensitive terms list"
 msgstr ""
 
+#. Interpolated into sensitive.designations.sensitiveText.description.e
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:83
+#: src/pages/sensitive-content.vue:154
 msgctxt "sensitive.designations.sensitiveText.imperfect"
 msgid "\"###sectionName###\" section"
 msgstr ""
 
+#. sensitive.designations.sensitiveText.metadata.a-e are a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:91
-msgctxt "sensitive.designations.sensitiveText.metadata"
-msgid "It is important to note that some textual metadata for a work is ###notAvailable### through the ###openverse### API or the ###openverse###.org website. However, such metadata is still scanned for sensitive terms and is not treated as a special case. If ###openverse###’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through ###openverse###. ###openverse### takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works. As above, ###openverse### understands that this is not perfect."
+#: src/pages/sensitive-content.vue:164
+msgctxt "sensitive.designations.sensitiveText.metadata.a"
+msgid "It is important to note that some textual metadata for a work is ###notAvailable### through the ###openverse### API or the ###openverseOrg### website."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:95
+#. sensitive.designations.sensitiveText.metadata.a-e are a single statement
+#: src/pages/sensitive-content.vue:173
+msgctxt "sensitive.designations.sensitiveText.metadata.b"
+msgid "However, such metadata is still scanned for sensitive terms and is not treated as a special case."
+msgstr ""
+
+#. sensitive.designations.sensitiveText.metadata.a-e are a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:175
+msgctxt "sensitive.designations.sensitiveText.metadata.c"
+msgid "If ###openverse###’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through ###openverse###."
+msgstr ""
+
+#. sensitive.designations.sensitiveText.metadata.a-e are a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:180
+msgctxt "sensitive.designations.sensitiveText.metadata.d"
+msgid "###openverse### takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works."
+msgstr ""
+
+#. sensitive.designations.sensitiveText.metadata.a-e are a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:185
+msgctxt "sensitive.designations.sensitiveText.metadata.e"
+msgid "As above, ###openverse### understands that this is not perfect."
+msgstr ""
+
+#. Interpolated into sensitive.designations.sensitiveText.metadata.a
+#: src/pages/sensitive-content.vue:169
 msgctxt "sensitive.designations.sensitiveText.notAvailable"
 msgid "not available"
 msgstr ""
 
-#: src/pages/sensitive-content.vue:101
+#: src/pages/sensitive-content.vue:192
 msgctxt "sensitive.faq.title"
 msgid "Frequently asked questions"
 msgstr ""
 
-#: src/pages/sensitive-content.vue:105
+#: src/pages/sensitive-content.vue:196
 msgctxt "sensitive.faq.one.question"
 msgid "I’ve found content I think is sensitive that does not have a sensitivity designation. What should I do?"
 msgstr ""
 
+#. sensitive.faq.one.answer.a-b are a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:107
-msgctxt "sensitive.faq.one.answer"
-msgid "Please report sensitive content by visiting the individual work’s page on the ###openverse###.org website and using the “report this content” button below the attribution information and above the tags. ###openverse### moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work."
+#: src/pages/sensitive-content.vue:198
+msgctxt "sensitive.faq.one.answer.a"
+msgid "Please report sensitive content by visiting the individual work’s page on the ###openverseOrg### website and using the “report this content” button below the attribution information and above the tags."
 msgstr ""
 
-#: src/pages/sensitive-content.vue:111
+#. sensitive.faq.one.answer.a-b are a single statement
+#. Do not translate words between ### ###.
+#: src/pages/sensitive-content.vue:199
+msgctxt "sensitive.faq.one.answer.b"
+msgid "###openverse### moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work."
+msgstr ""
+
+#: src/pages/sensitive-content.vue:203
 msgctxt "sensitive.faq.two.question"
 msgid "I disagree with the sensitivity designation on a work. Can you please remove it?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:113
+#: src/pages/sensitive-content.vue:205
 msgctxt "sensitive.faq.two.answerPt1"
 msgid "For text-based designations, ###openverse### does not at the moment have a method for removing the designation. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature."
 msgstr ""
 
+#. sensitive.faq.two.a-c are a single
+#: src/pages/sensitive-content.vue:208
+msgctxt "sensitive.faq.two.answerPt2.a"
+msgid "For user reported designations, please file a new report on the work’s page following the instructions in the previous question."
+msgstr ""
+
+#. sensitive.faq.two.a-c are a single
+#: src/pages/sensitive-content.vue:209
+msgctxt "sensitive.faq.two.answerPt2.b"
+msgid "In the notes, describe why you believe the work should not have a sensitivity designation."
+msgstr ""
+
+#. sensitive.faq.two.a-c are a single
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:115
-msgctxt "sensitive.faq.two.answerPt2"
-msgid "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
+#: src/pages/sensitive-content.vue:210
+msgctxt "sensitive.faq.two.answerPt2.c"
+msgid "As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:119
+#: src/pages/sensitive-content.vue:215
 msgctxt "sensitive.faq.three.question"
 msgid "I’ve found content on ###openverse### that may be illegal. Besides reporting it to ###openverse###, are there any other steps I can take?"
 msgstr ""
 
+#. sensitive.faq.three.answer.a-c are a single statement
+#: src/pages/sensitive-content.vue:218
+msgctxt "sensitive.faq.three.answer.a"
+msgid "For user reported designations, please file a new report on the work’s page following the instructions in the previous question."
+msgstr ""
+
+#. sensitive.faq.three.answer.a-c are a single statement
+#: src/pages/sensitive-content.vue:219
+msgctxt "sensitive.faq.three.answer.b"
+msgid "In the notes, describe why you believe the work should not have a sensitivity designation."
+msgstr ""
+
+#. sensitive.faq.three.answer.a-c are a single statement
 #. Do not translate words between ### ###.
-#: src/pages/sensitive-content.vue:122
-msgctxt "sensitive.faq.three.answer"
-msgid "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
+#: src/pages/sensitive-content.vue:220
+msgctxt "sensitive.faq.three.answer.c"
+msgid "As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
 msgstr ""
 
 msgctxt "error.occurred"
@@ -1193,18 +1472,17 @@ msgctxt "browsePage.contentLink.audio.countMore"
 msgid "See over ###localeCount### audio found for ###query###."
 msgstr ""
 
-#: src/components/VLoadMore.vue:110
+#: src/components/VLoadMore.vue:131
 msgctxt "browsePage.load"
 msgid "Load more results"
 msgstr ""
 
-#: src/components/VLoadMore.vue:109
+#: src/components/VLoadMore.vue:130
 msgctxt "browsePage.loading"
 msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:120
 msgctxt "browsePage.fetchingError"
 msgid "Error fetching ###type###:"
 msgstr ""
@@ -1234,7 +1512,6 @@ msgctxt "browsePage.searchForm.image"
 msgid "images"
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:119
 msgctxt "browsePage.searchForm.audio"
 msgid "audio"
 msgstr ""
@@ -1334,7 +1611,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:180
+#: src/components/VImageCell/VImageCell.vue:183
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -1345,9 +1622,7 @@ msgid "Audio: ###title###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:36
-#: src/pages/search/audio.vue:41
-#: src/pages/search/image.vue:7
+#: src/components/VSearchResultsGrid/VSearchResults.vue:102
 msgctxt "browsePage.aria.results"
 msgid "Search results for ###query###."
 msgstr ""
@@ -1721,18 +1996,15 @@ msgid "Get this audio"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:17
 msgctxt "allResults.snackbar.text"
 msgid "Press ###spacebar### to play or pause the track."
 msgstr ""
 
-#: src/components/VSearchResultsGrid/VAllResultsGrid.vue:19
 msgctxt "allResults.snackbar.spacebar"
 msgid "Spacebar"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VAudioList.vue:8
 msgctxt "audioResults.snackbar.text"
 msgid "Press ###spacebar### to play or pause, and ###left### & ###right### to seek through the track."
 msgstr ""
@@ -2132,18 +2404,18 @@ msgctxt "prefPage.title"
 msgid "Preferences"
 msgstr ""
 
-#: src/pages/privacy.vue:45
+#: src/pages/privacy.vue:46
 msgctxt "prefPage.groups.analytics.title"
 msgid "Analytics"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/privacy.vue:48
+#: src/pages/privacy.vue:49
 msgctxt "prefPage.groups.analytics.desc"
 msgid "###openverse### uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here."
 msgstr ""
 
-#: src/pages/privacy.vue:59
+#: src/pages/privacy.vue:60
 msgctxt "prefPage.features.analytics"
 msgid "Record custom events and page views for analytics."
 msgstr ""
@@ -2252,7 +2524,7 @@ msgstr ""
 
 #: src/components/VImageCell/VImageCell.vue:30
 #: src/components/VImageCell/VImageCell.vue:49
-#: src/components/VImageCell/VImageCell.vue:179
+#: src/components/VImageCell/VImageCell.vue:182
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
