@@ -110,15 +110,14 @@ dbshell:
 gen-media-props fail_on_diff="true":
     #!/bin/bash
     set -e
-    FINAL_FILE="../documentation/meta/media_properties/api.md"
     just dj documentmedia
-    mv media_properties.md $FINAL_FILE
+    mv media_properties.md ../documentation/meta/media_properties/api.md
     echo -n "Running linting..."
-    just ../lint prettier $FINAL_FILE &>/dev/null || true
+    just ../lint prettier documentation/meta/media_properties/api.md &>/dev/null || true
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e
-      git diff --exit-code $FINAL_FILE
+      git diff --exit-code ../documentation/meta/media_properties/api.md
       if [ $? -ne 0 ]; then
           printf "\n\n\e[31m!! Changes found in media properties documentation, please run 'just gen-media-props' locally and commit difference !!\n\n"
           exit 1
