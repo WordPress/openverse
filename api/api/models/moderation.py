@@ -15,7 +15,7 @@ class UserPreferences(models.Model):
     def moderator(self):
         if "moderator" not in self.preferences:
             self.preferences["moderator"] = {}
-        
+
         return self.preferences["moderator"]
 
     @moderator.setter
