@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 set -e
+set -o pipefail
 WEB_SERVICE_NAME="${WEB_SERVICE_NAME:-web}"
 CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
@@ -85,7 +86,7 @@ VALUES
 	(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
 	(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
 	(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
-	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
+	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio'),
 	(now(), 'ccmixter', 'CCMixter', 'https://ccmixter.org', false, 'audio');
 "
 
