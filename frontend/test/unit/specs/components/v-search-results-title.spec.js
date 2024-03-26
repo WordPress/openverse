@@ -12,6 +12,41 @@ const DEFAULT_PROPS = {
   ],
 }
 
+/**
+ * Build test scenarios out of all possible
+ * result count combinations.
+ */
+function getScenarios() {
+  const counts = [0, 10, 4300, 10000, 10001]
+  let scenarios = []
+  counts.forEach((count) => {
+    counts.forEach((innerCount) => {
+      scenarios.push({
+        searchType: "all",
+        resultCounts: [
+          ["image", count],
+          ["audio", innerCount],
+        ],
+      })
+    })
+    scenarios.push({
+      searchType: "image",
+      resultCounts: [
+        ["image", count],
+        ["audio", 0],
+      ],
+    })
+    scenarios.push({
+      searchType: "audio",
+      resultCounts: [
+        ["audio", count],
+        ["image", 0],
+      ],
+    })
+  })
+  return scenarios.map((scenario) => [JSON.stringify(scenario), scenario])
+}
+
 describe("VSearchResultsTitle", () => {
   const getOptions = ({ props, ...options } = {}) => ({
     ...options,
@@ -27,39 +62,7 @@ describe("VSearchResultsTitle", () => {
   })
 
   describe("accessible heading", () => {
-    const cs = [0, 10, 4300, 10000, 10001]
-
-    const scenarios = [
-      ...cs.reduce(
-        (all, i) => [
-          ...all,
-          ...cs.map((a) => ({
-            searchType: "all",
-            resultCounts: [
-              ["image", i],
-              ["audio", a],
-            ],
-          })),
-        ],
-        []
-      ),
-      ...cs.map((count) => ({
-        searchType: "image",
-        resultCounts: [
-          ["image", count],
-          ["audio", 0],
-        ],
-      })),
-      ...cs.map((count) => ({
-        searchType: "audio",
-        resultCounts: [
-          ["audio", count],
-          ["image", 0],
-        ],
-      })),
-    ].map((scenario) => [JSON.stringify(scenario), scenario])
-
-    it.each(scenarios)("%s", (_, { searchType, resultCounts }) => {
+    it.each(getScenarios())("%s", (_, { searchType, resultCounts }) => {
       const { container } = render(
         VSearchResultsTitle,
         getOptions({
