@@ -113,7 +113,7 @@ gen-media-props fail_on_diff="true":
     just dj documentmedia
     mv media_properties.md ../documentation/meta/media_properties/api.md
     echo -n "Running linting..."
-    just ../lint prettier documentation/meta/media_properties/api.md &>/dev/null || true
+    just ../lint prettier documentation/meta/media_properties/api.md
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e
