@@ -80,22 +80,16 @@ const getItemsHtml = (title, items) => {
   const stacks = [
     ...new Set(
       items
-        .map((item) =>
-          item.labels
-            .map((label) => label.name)
-            .filter((name) => name.startsWith('🧱 stack'))
-        )
-        .flat()
+        .flatMap((item) => item.labels) // Flatten all labels into a single array
+        .map((label) => label.name) // Extract the name of each label
+        .filter((name) => name.startsWith('🧱 stack'))
     ),
   ].sort()
-  console.log(stacks)
 
   // Aggregate items by stack
   let itemsByStack = {}
 
   for (const stack of stacks) {
-    console.log(stack)
-    console.log(stack.split(':'))
     const stackName = stack.split(':')[1].trim()
     itemsByStack[stackName] = items
       .filter((item) => item.labels.map((label) => label.name).includes(stack))
