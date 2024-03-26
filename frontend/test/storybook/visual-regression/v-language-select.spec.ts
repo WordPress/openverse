@@ -3,10 +3,7 @@ import { Page, test, expect } from "@playwright/test"
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
 const expectSnapshot = async (name: string, page: Page) => {
-  expect(await page.screenshot()).toMatchSnapshot({
-    name: `${name}.png`,
-    maxDiffPixelRatio: 0.01, // for flake and variability in the component width
-  })
+  expect(await page.screenshot()).toMatchSnapshot({ name: `${name}.png` })
 }
 
 test.describe("VLanguageSelect", () => {
