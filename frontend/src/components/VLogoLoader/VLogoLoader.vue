@@ -8,7 +8,7 @@
     aria-hidden="true"
     :data-prefers-reduced-motion="prefersReducedMotion"
     data-testid="logo-loader"
-    class="inline-flex h-[18px] items-center justify-center rounded"
+    class="inline-flex h-4.5 items-center justify-center rounded"
     fill="currentColor"
   >
     <path
