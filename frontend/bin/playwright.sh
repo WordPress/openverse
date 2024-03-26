@@ -11,7 +11,7 @@ version() {
 
 PACKAGE_MANAGER=$(package_manager)
 export PACKAGE_MANAGER
-export USER_ID="${USER_ID:-$(id -u)}"
+export USER_ID="0"
 export PLAYWRIGHT_ARGS="$*"
 PLAYWRIGHT_VERSION=$(version)
 export PLAYWRIGHT_VERSION
