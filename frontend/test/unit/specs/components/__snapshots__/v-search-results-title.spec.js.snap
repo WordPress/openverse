@@ -13,7 +13,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, no images and no audio.
+      All results for "zack", no images and no audio.
     </span>
   </h1>
 </div>
@@ -32,7 +32,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, no images and 10 audio.
+      All results for "zack", no images and 10 audio.
     </span>
   </h1>
 </div>
@@ -51,7 +51,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, no images and 4,300 audio.
+      All results for "zack", no images and 4,300 audio.
     </span>
   </h1>
 </div>
@@ -70,7 +70,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, no images and over 10,000 audio.
+      All results for "zack", no images and over 10,000 audio.
     </span>
   </h1>
 </div>
@@ -89,7 +89,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, no images and over 10,001 audio.
+      All results for "zack", no images and over 10,001 audio.
     </span>
   </h1>
 </div>
@@ -108,7 +108,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 10 images and no audio.
+      All results for "zack", 10 images and no audio.
     </span>
   </h1>
 </div>
@@ -127,7 +127,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 10 images and 10 audio.
+      All results for "zack", 10 images and 10 audio.
     </span>
   </h1>
 </div>
@@ -146,7 +146,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 10 images and 4,300 audio.
+      All results for "zack", 10 images and 4,300 audio.
     </span>
   </h1>
 </div>
@@ -165,7 +165,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 10 images and over 10,000 audio.
+      All results for "zack", 10 images and over 10,000 audio.
     </span>
   </h1>
 </div>
@@ -184,7 +184,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 10 images and over 10,001 audio.
+      All results for "zack", 10 images and over 10,001 audio.
     </span>
   </h1>
 </div>
@@ -203,7 +203,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 4,300 images and no audio.
+      All results for "zack", 4,300 images and no audio.
     </span>
   </h1>
 </div>
@@ -222,7 +222,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 4,300 images and 10 audio.
+      All results for "zack", 4,300 images and 10 audio.
     </span>
   </h1>
 </div>
@@ -241,7 +241,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 4,300 images and 4,300 audio.
+      All results for "zack", 4,300 images and 4,300 audio.
     </span>
   </h1>
 </div>
@@ -260,7 +260,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 4,300 images and over 10,000 audio.
+      All results for "zack", 4,300 images and over 10,000 audio.
     </span>
   </h1>
 </div>
@@ -279,7 +279,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, 4,300 images and over 10,001 audio.
+      All results for "zack", 4,300 images and over 10,001 audio.
     </span>
   </h1>
 </div>
@@ -298,7 +298,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,000 images and no audio.
+      All results for "zack", over 10,000 images and no audio.
     </span>
   </h1>
 </div>
@@ -317,7 +317,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,000 images and 10 audio.
+      All results for "zack", over 10,000 images and 10 audio.
     </span>
   </h1>
 </div>
@@ -336,7 +336,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,000 images and 4,300 audio.
+      All results for "zack", over 10,000 images and 4,300 audio.
     </span>
   </h1>
 </div>
@@ -355,7 +355,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,000 images and over 10,000 audio.
+      All results for "zack", over 10,000 images and over 10,000 audio.
     </span>
   </h1>
 </div>
@@ -374,7 +374,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,000 images and over 10,001 audio.
+      All results for "zack", over 10,000 images and over 10,001 audio.
     </span>
   </h1>
 </div>
@@ -393,7 +393,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,001 images and no audio.
+      All results for "zack", over 10,001 images and no audio.
     </span>
   </h1>
 </div>
@@ -412,7 +412,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,001 images and 10 audio.
+      All results for "zack", over 10,001 images and 10 audio.
     </span>
   </h1>
 </div>
@@ -431,7 +431,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,001 images and 4,300 audio.
+      All results for "zack", over 10,001 images and 4,300 audio.
     </span>
   </h1>
 </div>
@@ -450,7 +450,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,001 images and over 10,000 audio.
+      All results for "zack", over 10,001 images and over 10,000 audio.
     </span>
   </h1>
 </div>
@@ -469,7 +469,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for zack, over 10,001 images and over 10,001 audio.
+      All results for "zack", over 10,001 images and over 10,001 audio.
     </span>
   </h1>
 </div>
@@ -488,7 +488,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      No audio results for zack
+      No audio tracks for "zack"
     </span>
   </h1>
 </div>
@@ -507,7 +507,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      10 audio results for zack.
+      10 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -526,7 +526,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      4,300 audio results for zack.
+      4,300 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -545,7 +545,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      Over 10,000 audio results for zack.
+      Over 10,000 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -564,7 +564,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      Over 10,001 audio results for zack.
+      Over 10,001 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -583,7 +583,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      No image results for zack
+      No image results for "zack"
     </span>
   </h1>
 </div>
@@ -602,7 +602,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      10 image results for zack.
+      10 image results for "zack".
     </span>
   </h1>
 </div>
@@ -621,7 +621,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      4,300 image results for zack.
+      4,300 image results for "zack".
     </span>
   </h1>
 </div>
@@ -640,7 +640,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      Over 10,000 image results for zack.
+      Over 10,000 image results for "zack".
     </span>
   </h1>
 </div>
@@ -659,7 +659,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      Over 10,001 image results for zack.
+      Over 10,001 image results for "zack".
     </span>
   </h1>
 </div>
@@ -678,7 +678,7 @@ exports[`VSearchResultsTitle should render an h1 tag containing the correct text
     <span
       class="sr-only"
     >
-      All results for zack, 10 images and 10 audio.
+      All results for "zack", 10 images and 10 audio.
     </span>
   </h1>
 </div>
