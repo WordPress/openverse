@@ -13,7 +13,10 @@ class UserPreferences(models.Model):
 
     @property
     def moderator(self):
-        return self.preferences.get("moderator", {})
+        if "moderator" not in self.preferences:
+            self.preferences["moderator"] = {}
+        
+        return self.preferences["moderator"]
 
     @moderator.setter
     def moderator(self, value):
