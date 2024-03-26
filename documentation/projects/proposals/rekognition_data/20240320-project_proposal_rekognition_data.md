@@ -14,10 +14,11 @@
 <!-- A brief one or two sentence summary of the project's features -->
 
 [AWS Rekognition data][aws_rekognition] in the form of object labels was
-collected by Creative Commons several years ago for roughly 100m image records
-in the Openverse catalog. This project intends augment the existing tags for the
-labeled results with the generated tags in order to improve search result
-relevancy.
+collected by
+[Creative Commons several years ago](https://creativecommons.org/2019/12/05/cc-receives-aws-grant-to-improve-cc-search/)
+for roughly 100m image records in the Openverse catalog. This project intends to
+augment the existing tags for the labeled results with the generated tags in
+order to improve search result relevancy.
 
 [aws_rekognition]: https://aws.amazon.com/rekognition/
 
@@ -44,14 +45,18 @@ respective implementation plans, below is a short description of each piece.
 
 ### Machine-generated tags in the API/Frontend
 
+Regardless of the specifics mentioned below, the implementation plans **must**
+include a mechanism for users of the API and the frontend to distinguish
+creator-generated tags and machine-generated ones.
+
 The API's [`tags` field][api_tags_field] already has a spot for `accuracy`,
-along with the tag `name` itself. This is where we should include the label
-accuracy that Rekognition provides alongside the label. We should also consider
-including a new `source` section within the array of tag objects, in order to
-communicate where this accuracy value came from. In the future, we may have
-multiple instances of the same label with different `source` and `accuracy`
-values (for instance, if we chose to apply multiple machine labeling processes
-to our media records).
+along with the tag `name` itself. This is where we will include the label
+accuracy that Rekognition provides alongside the label. We should also use the
+[existing `provider` key within the array of tag
+objects][catalog_tags_provider_field] in order to communicate where this
+accuracy value came from. In the future, we may have multiple instances of the
+same label with different `provider` and `accuracy` values (for instance, if we
+chose to apply multiple machine labeling processes to our media records).
 
 _NB: I'm not sure if this change to the API response shape for `tags` would
 constitute an API version change. I do think having a mechanism to share tag
@@ -59,6 +64,8 @@ source will be important going forward._
 
 [api_tags_field]:
   https://api.openverse.engineering/v1/#tag/images/operation/images_search
+[catalog_tags_provider_field]:
+  https://github.com/WordPress/openverse/blob/3ed38fc4b138af2f6ac03fcc065ec633d6905d73/catalog/dags/common/storage/media.py#L286
 
 We should also distinguish the machine-generated tags from the creator-added
 ones in the frontend. Particularly with the introduction of the
@@ -138,5 +145,7 @@ The requisite implementation plans reflect the primary pieces of the project
 described above:
 
 - Determine and design how machine-generated tags will be displayed/conveyed in
-  the API and the frontend
+  the API
+- Determine and design how machine-generated tags will be displayed/conveyed in
+  the frontend
 - Augment the catalog database with the suitable tags
