@@ -10,25 +10,25 @@
     <p>
       {{ $t("sources.ccContent.content", { openverse: "Openverse" }) }}
     </p>
-    <i18n path="sources.ccContent.provider" tag="p">
-      <template #flickr>
-        <VLink href="https://www.flickr.com/">Flickr</VLink>
-      </template>
-      <template #smithsonian>
-        <VLink href="https://www.si.edu/">{{
-          $t("sources.ccContent.smithsonian")
-        }}</VLink>
-      </template>
-    </i18n>
+    <p>
+      <i18n path="sources.ccContent.provider.a" tag="span">
+        <template #flickr>
+          <VLink href="https://www.flickr.com/">Flickr</VLink>
+        </template>
+        <template #smithsonian>
+          <VLink href="https://www.si.edu/">Smithsonian Institute</VLink>
+        </template>
+      </i18n>
+      <i18n path="sources.ccContent.provider.b" tag="span"></i18n>
+    </p>
+
     <i18n path="sources.ccContent.europeana" tag="p">
       <template #openverse>Openverse</template>
       <template #link>
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
       </template>
       <template #linkApi>
-        <VLink href="https://pro.europeana.eu/page/apis">{{
-          $t("sources.ccContent.europeanaApi")
-        }}</VLink>
+        <VLink href="https://pro.europeana.eu/page/apis"> Europeana API </VLink>
       </template>
     </i18n>
 
