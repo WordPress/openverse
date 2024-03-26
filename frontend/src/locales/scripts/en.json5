@@ -614,17 +614,22 @@
           countMore: 'Over {localeCount} audio tracks for "{query}".',
         },
       },
-      /** These are interpolated into browsePage.aria.results.all */
       allResultsHeadingCount: {
         image: {
+          /* Interpolated into browsePage.aria.results.all */
           zero: "no images",
+          /* Interpolated into browsePage.aria.results.all */
           count: "{localeCount} image|{localeCount} images",
+          /* Interpolated into browsePage.aria.results.all */
           countMore: "over {localeCount} images",
         },
         audio: {
-          zero: "no audio",
-          count: "{localeCount} audio",
-          countMore: "over {localeCount} audio",
+          /* Interpolated into browsePage.aria.results.all */
+          zero: "no audio tracks",
+          /* Interpolated into browsePage.aria.results.all */
+          count: "{localeCount} audio track|{localeCount} audio tracks",
+          /* Interpolated into browsePage.aria.results.all */
+          countMore: "over {localeCount} audio tracks",
         },
       },
     },
