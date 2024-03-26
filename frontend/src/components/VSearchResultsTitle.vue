@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <h1
-      class="sr-only break-words md:not-sr-only"
-      :class="[
-        size === 'large'
-          ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
-          : 'heading-2 !leading-none',
-      ]"
-    >
-      <span aria-hidden="true">{{ searchTerm }}</span
-      ><span class="sr-only">{{ ariaHeading }}</span>
-    </h1>
-  </div>
+  <h1
+    class="sr-only break-words md:not-sr-only"
+    :class="[
+      size === 'large'
+        ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
+        : 'heading-2 !leading-none',
+    ]"
+  >
+    <span aria-hidden="true">{{ searchTerm }}</span
+    ><span class="sr-only">{{ ariaHeading }}</span>
+  </h1>
 </template>
 
 <script lang="ts">
