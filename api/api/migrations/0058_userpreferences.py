@@ -5,6 +5,15 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def create_user_preferences(apps, schema_editor):
+    UserPreferences = apps.get_model("api", "UserPreferences")
+    User = apps.get_model("auth", "User")
+    for user in User.objects.all():
+        if not hasattr(user, "userpreferences"):
+            UserPreferences.objects.create(user=user)
+            user.userpreferences.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -21,4 +30,5 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
+        migrations.RunPython(create_user_preferences)
     ]
