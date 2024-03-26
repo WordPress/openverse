@@ -14,9 +14,6 @@ importers:
       prettier:
         specifier: 3.2.5
         version: 3.2.5
-      prettier-2:
-        specifier: npm:prettier@^2
-        version: /prettier@2.8.8
       prettier-plugin-tailwindcss:
         specifier: 0.5.11
         version: 0.5.11(prettier@3.2.5)
@@ -18480,6 +18477,7 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
     requiresBuild: true
+    optional: true
 
   /prettier@3.2.5:
     resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}

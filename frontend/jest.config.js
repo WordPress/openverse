@@ -2,6 +2,9 @@ module.exports = {
   globals: {
     "vue-jest": {
       experimentalCSSCompile: false,
+      templateCompiler: {
+        prettify: false,
+      },
     },
   },
   moduleFileExtensions: ["ts", "js", "vue", "json"],
@@ -31,6 +34,4 @@ module.exports = {
     "<rootDir>/src/**/*.ts",
     "!<rootDir>/src/**/*.stories.js",
   ],
-  // Jest does not support prettier 3
-  prettierPath: require.resolve("prettier-2"),
 }
