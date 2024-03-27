@@ -3,6 +3,8 @@
 from decouple import config
 
 
+SHOW_COLLECTION_DOCS = config("SHOW_COLLECTION_DOCS", cast=bool, default=False)
+
 FILTER_DEAD_LINKS_BY_DEFAULT = config(
     "FILTER_DEAD_LINKS_BY_DEFAULT", cast=bool, default=True
 )
