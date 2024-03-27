@@ -40,17 +40,17 @@ Should be used with `{TAG}`, `source` or `creator`+`source`"""
 
 EXCLUDED_SOURCE_HELP_TEXT = """
 A comma separated list of data sources to exclude from the search.
-Valid values are `source_name`s from the stats endpoint: %(origin)s/v1/%(media_path)s/stats/.
+Valid values are `source_name`s from the stats endpoint: {origin}/v1/{media_path}/stats/.
 """
 SOURCE_HELP_TEXT_COLLECTIONS_DISABLED = """
 A comma separated list of data sources; valid values are
-`source_name`s from the stats endpoint: %(origin)s/v1/%(media_path)s/stats/."""
+`source_name`s from the stats endpoint: {origin}/v1/{media_path}/stats/."""
 
 SOURCE = """
 For default search, a comma separated list of data sources.
 When the `collection` parameter is used, this parameter only accepts a single source.
 
-Valid values are `source_name`s from the stats endpoint: %(origin)s/v1/%(media_path)s/stats/.
+Valid values are `source_name`s from the stats endpoint: {origin}/v1/{media_path}/stats/.
 """
 
 SOURCE_HELP_TEXT = (

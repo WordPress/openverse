@@ -144,7 +144,7 @@ SEARCH_DESCRIPTION_DEFAULT = """
 Return audio files that match the query.
 
 This endpoint allows you to search within specific fields, or to retrieve
-a collection of all %(media_type)s from a specific source, creator or tag.
+a collection of all {media_type} from a specific source, creator or tag.
 Results are paginated on the basis of the `page` parameter. The `page_size`
 parameter controls the total number of pages.
 
@@ -163,7 +163,7 @@ according to specific needs.
 By default, this endpoint performs a full-text search for the value of `q` parameter.
 You can search within the `creator`, `title` or `tags` fields by omitting
 the `q` parameter and using one of these field parameters.
-These results can be filtered by %(filter_fields)s.
+These results can be filtered by {filter_fields}.
 
 The default search results are sorted by relevance.
 
@@ -180,11 +180,11 @@ additions appearing first. The filters such as `license` are not available for c
 """
 
 SEARCH_DESCRIPTION_COLLECTIONS_DISABLED = """
-Search %(media_type)s using a query string.
+Search {media_type} using a query string.
 
 By using this endpoint, you can obtain search results based on specified
 query and optionally filter results by
-%(filter_fields)s.
+{filter_fields}.
 
 Results are ranked in order of relevance and paginated on the basis of the
 `page` param. The `page_size` param controls the total number of pages.

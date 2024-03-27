@@ -44,10 +44,10 @@ from api.serializers.provider_serializers import ProviderSerializer
 serializer = ImageSearchRequestSerializer(context={"media_type": "image"})
 image_filter_fields = fields_to_md([f for f in serializer.field_names if f != "q"])
 
-image_search_description = SEARCH_DESCRIPTION % {
-    "filter_fields": image_filter_fields,
-    "media_type": "images",
-}
+image_search_description = SEARCH_DESCRIPTION.format(
+    filter_fields=image_filter_fields,
+    media_type="images",
+)
 
 search = custom_extend_schema(
     desc=image_search_description,

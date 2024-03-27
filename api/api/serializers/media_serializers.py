@@ -303,8 +303,10 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
             "media_path": media_path,
         }
 
-        self.fields["source"].help_text = SOURCE_HELP_TEXT % variables
-        self.fields["excluded_source"].help_text = EXCLUDED_SOURCE_HELP_TEXT % variables
+        self.fields["source"].help_text = SOURCE_HELP_TEXT.format(**variables)
+        self.fields["excluded_source"].help_text = EXCLUDED_SOURCE_HELP_TEXT.format(
+            **variables
+        )
 
     def is_request_anonymous(self):
         request = self.context.get("request")

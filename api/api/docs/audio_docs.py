@@ -42,10 +42,10 @@ from api.serializers.provider_serializers import ProviderSerializer
 serializer = AudioSearchRequestSerializer(context={"media_type": "audio"})
 audio_filter_fields = fields_to_md([f for f in serializer.field_names if f != "q"])
 
-audio_search_description = SEARCH_DESCRIPTION % {
-    "filter_fields": audio_filter_fields,
-    "media_type": "audio files",
-}
+audio_search_description = SEARCH_DESCRIPTION.format(
+    filter_fields=audio_filter_fields,
+    media_type="audio files",
+)
 
 search = custom_extend_schema(
     desc=audio_search_description,
