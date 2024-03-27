@@ -1,9 +1,7 @@
-# Documentation Guidelines
+# API Documentation Guidelines
 
 Interested in improving our documentation? Here’s what you need to know before
 making any changes to the documentation.
-
-<br/>
 
 ## Introduction
 
@@ -11,20 +9,15 @@ Openverse API uses [drf-yasg](https://github.com/axnsan12/drf-yasg), which is a
 tool that generates real Swagger/OpenAPI 2.0 specifications from a Django Rest
 Framework API.
 
-<br/>
-
 ## How to Start Contributing
 
-- Run the server locally by following this
-  [link](https://github.com/WordPress/openverse-api#running-the-server-locally)
+- Run the server locally by following the [API quickstart guide](quickstart.md)
 - Update documentation
-- Make sure the updates passed the automated tests in this
-  [file](https://github.com/WordPress/openverse-api/blob/main/.github/workflows/ci_cd.yml)
+- Make sure the updates passed the automated tests in defined in our
+  [CI/CD workflow](/meta/ci_cd/index.md)
 - Commit and push
-- Create pull request by following
-  [GitHub Repo Guidelines](https://opensource.creativecommons.org/contributing-code/github-repo-guidelines/)
-
-<br/>
+- Create pull request by following our
+  [contributing guidelines](/general/contributing.md)
 
 ## Documentation Styles
 
@@ -32,14 +25,10 @@ Framework API.
 - Descriptions must be written using simple yet concise explanations.
 - Codes are preferred over videos and screenshots.
 
-<br/>
-
 ## Cheat Sheet for drf-yasg
 
 This is a quick syntax guide with examples on how to add or update the
 documentation for API endpoints.
-
-<br/>
 
 ### Operation ID
 
@@ -50,8 +39,6 @@ The name of API endpoint.
 ```
 @swagger_auto_schema(operation_id='image_stats')
 ```
-
-<br/>
 
 ### Operation Description
 
@@ -75,8 +62,6 @@ image_stats_description = \
 @swagger_auto_schema(operation_id='image_stats',
                      operation_description=image_stats_description)
 ```
-
-<br/>
 
 ### Responses
 
@@ -108,8 +93,6 @@ image_stats_response = {
                      operation_description=image_stats_description,
                      responses=image_stats_response)
 ```
-
-<br/>
 
 ### Request Body
 
@@ -163,8 +146,6 @@ register_api_oauth2_request = openapi.Schema(
                      request_body=register_api_oauth2_request,
                      responses=register_api_oauth2_response)
 ```
-
-<br/>
 
 ### Code Examples
 
