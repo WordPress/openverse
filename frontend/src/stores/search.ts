@@ -332,9 +332,39 @@ export const useSearchStore = defineStore("search", {
 
       this.addRecentSearch(formattedTerm)
     },
+    isCollectionStateSame(
+      collectionParams: CollectionParams,
+      mediaType: SupportedMediaType
+    ) {
+      if (
+        mediaType !== this.searchType ||
+        collectionParams.collection !== this.strategy ||
+        this.collectionParams === null
+      ) {
+        return false
+      }
+      if (collectionParams.collection === "tag") {
+        return (
+          this.collectionParams.collection === "tag" &&
+          collectionParams.tag === this.collectionParams.tag
+        )
+      } else if (collectionParams.collection === "creator") {
+        return (
+          this.collectionParams.collection === "creator" &&
+          collectionParams.creator === this.collectionParams.creator &&
+          collectionParams.source === this.collectionParams.source
+        )
+      } else if (collectionParams.collection === "source") {
+        return (
+          this.collectionParams.collection === "source" &&
+          collectionParams.source === this.collectionParams.source
+        )
+      }
+      return false
+    },
     /**
      * Sets the collectionParams and mediaType for the collection page.
-     * Resets the filters and search term.
+     * Resets the filters, search term and clears media in the media store.
      */
     setCollectionState(
       collectionParams: CollectionParams,
@@ -344,6 +374,8 @@ export const useSearchStore = defineStore("search", {
       this.strategy = collectionParams.collection
       this.setSearchType(mediaType)
       this.clearFilters()
+      const mediaStore = useMediaStore()
+      mediaStore.clearMedia()
     },
     /**
      * Called before navigating to a `/search` path, and when the
