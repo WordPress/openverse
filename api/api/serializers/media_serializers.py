@@ -126,7 +126,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         "license_type",
         "creator",
         "tags",
-        # Uncomment after Additional search views project is launched
+        # TODO: Uncomment after https://github.com/WordPress/openverse/issues/3919
         # "collection",
         # "tag",
         "title",
@@ -140,6 +140,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         # "unstable__authority_boost",
         # "unstable__include_sensitive_results",
     ]
+    # TODO: Remove after https://github.com/WordPress/openverse/issues/3919
     if settings.SHOW_COLLECTION_DOCS:
         field_names.extend(
             [
