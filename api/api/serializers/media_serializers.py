@@ -653,7 +653,11 @@ def get_search_request_source_serializer(media_type):
 
             allowed_sources = list(search_controller.get_sources(media_type).keys())
             sources = value.lower().split(",")
-            sources = [source for source in sources if source in allowed_sources]
+            original_len = len(sources)
+            valid_sources = [source for source in sources if source in allowed_sources]
+            if original_len > len(sources):
+                invalid_sources = set(sources).difference(set(valid_sources))
+                logger.warn(f"Invalid sources in search query: {invalid_sources}")
             value = ",".join(sources)
             return value
 
