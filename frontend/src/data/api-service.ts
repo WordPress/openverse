@@ -122,16 +122,7 @@ export const createApiService = ({
     return config
   })
   client.interceptors.response.use(
-    (response) => {
-      const params = new URLSearchParams(response.config.params).toString()
-      console.log(
-        "> API response",
-        new URL(
-          `${response.config.baseURL}${response.config.url}${params ? "?" + params : ""}`
-        ).href
-      )
-      return response
-    },
+    (response) => response,
     (error) => {
       if (error.code === "ECONNABORTED") {
         error.message = `timeout of ${
