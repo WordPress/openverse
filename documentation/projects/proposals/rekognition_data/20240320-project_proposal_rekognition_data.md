@@ -96,9 +96,9 @@ ones in the frontend. Particularly with the introduction of the
 consider how these machine-generated tags are displayed and whether they can be
 interacted with in the same way. Similar to the API, it may also be useful to
 share the label accuracy with users (either visually or with extra content on
-mouse hover). It would be beneficial to have a page similar to our
+mouse hover). It would be beneficial to have a page much like our
 [sensitive content explanation](https://openverse.org/sensitive-content) (either
-similarly available in the frontend or in our documentation website) that
+similarly available in the frontend or on our documentation website) that
 describes the nature of the machine generated labels, the means by which they
 were determined, and how to report an insensitive label.
 
@@ -214,3 +214,8 @@ described above:
 - Determine and design how machine-generated tags will be displayed/conveyed in
   the frontend
 - Augment the catalog database with the suitable tags
+
+The most important, blocking aspect of this work is determining how the labels
+will be surfaced in API results. Once that is determined, the frontend can be
+modified to exclude those values visually while the designs and implementation
+are executed. All work after that point can occur simultaneously.
