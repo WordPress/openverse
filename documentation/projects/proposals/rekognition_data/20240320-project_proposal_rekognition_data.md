@@ -49,6 +49,8 @@ Regardless of the specifics mentioned below, the implementation plans **must**
 include a mechanism for users of the API and the frontend to distinguish
 creator-generated tags and machine-generated ones.
 
+#### API
+
 The API's [`tags` field][api_tags_field] already has a spot for `accuracy`,
 along with the tag `name` itself. This is where we will include the label
 accuracy that Rekognition provides alongside the label. We should also use the
@@ -58,14 +60,35 @@ accuracy value came from. In the future, we may have multiple instances of the
 same label with different `provider` and `accuracy` values (for instance, if we
 chose to apply multiple machine labeling processes to our media records).
 
+Multiple instances of the same label will also affect relevancy within
+Elasticsearch, as duplicates of a label will constitute multiple "hits" within a
+document and boost its score. While the exact determination should be made
+within the API's implementation plan, we will need to consider one of the
+following approaches for resolving this in Elasticsearch:
+
+- Prefer creator-generated tags and exclude machine-generated tags
+- Prefer machine-generated tags and exclude creator-generated tags
+- Keep both tags, acknowledging that this will increase the score of a
+  particular result for searches that match said tag
+- Prefer the creator-generated tags, but use the presence of an identical
+  machine-labeled tag to boost the score/weight of the creator-generated tag in
+  searches
+
 _NB: I'm not sure if this change to the API response shape for `tags` would
 constitute an API version change. I do think having a mechanism to share tag
-source will be important going forward._
+provider will be important going forward[^1]._
+
+[^1]:
+    It should be relatively easy to expose the `provider` in the `tags` field on
+    the API by adding it to the
+    [`TagSerializer`](https://github.com/WordPress/openverse/blob/3ed38fc4b138af2f6ac03fcc065ec633d6905d73/api/api/serializers/media_serializers.py#L442)
 
 [api_tags_field]:
   https://api.openverse.engineering/v1/#tag/images/operation/images_search
 [catalog_tags_provider_field]:
   https://github.com/WordPress/openverse/blob/3ed38fc4b138af2f6ac03fcc065ec633d6905d73/catalog/dags/common/storage/media.py#L286
+
+#### Frontend
 
 We should also distinguish the machine-generated tags from the creator-added
 ones in the frontend. Particularly with the introduction of the
@@ -73,7 +96,11 @@ ones in the frontend. Particularly with the introduction of the
 consider how these machine-generated tags are displayed and whether they can be
 interacted with in the same way. Similar to the API, it may also be useful to
 share the label accuracy with users (either visually or with extra content on
-mouse hover).
+mouse hover). It would be beneficial to have a page similar to our
+[sensitive content explanation](https://openverse.org/sensitive-content) (either
+similarly available in the frontend or in our documentation website) that
+describes the nature of the machine generated labels, the means by which they
+were determined, and how to report an insensitive label.
 
 None of the above is specific to Rekognition, but it will be necessary to
 determine for Rekognition or any other labels we wish to add in the future.
@@ -84,13 +111,44 @@ Once we have a clear sense of how the labels will be shared downstream, we can
 incorporate the labels themselves into the catalog database. This can be broken
 down into three steps:
 
-1. Determine which labels to use
-2. Determine an accuracy cutoff value, if any
+1. Determine which labels to use (see
+   [label determination](#label-determination))
+2. Determine an accuracy cutoff value
 3. Upsert the filtered labels into the database
 
 Once step 3 is performed, the next data refresh will make the tags available in
 the API and the frontend. The specifics for each step will be determined in the
-implementation plan for this piece.
+implementation plan for this piece. Note that once introduced, the tags will not
+be removed by subsequent updates to the catalog data. This means that any
+adjustment/removal of the tags will also need to occur on the catalog.
+
+#### Label determination
+
+The exhaustive list of AWS Rekognition labels can be downloaded here:
+[AWS Rekognition Labels](https://docs.aws.amazon.com/rekognition/latest/dg/samples/AmazonRekognitionLabels_v3.0.zip).
+While this list is already fairly demographically neutral, it is my opinion that
+we should exclude labels that have a demographic context in the following
+categories:
+
+- Age
+- Gender
+- Sexual orientation
+- Nationality
+- Race
+
+These seem the most likely to result in an incorrect or insensitive label (e.g.
+gender assumption of an individual in a photo). There are other categories which
+might be useful for search relevancy and are less likely to be applied in an
+insensitive manner. Some examples include:
+
+- Occupation
+- Marital status
+- Health and disability status
+- Political affiliation or preference
+- Religious affiliation or preference
+
+Specifics for how this will be tackled regarding the Rekognition data will be
+outlined in the associated implementation plan.
 
 ## Success
 
@@ -98,6 +156,13 @@ implementation plan for this piece.
 
 This project can be marked as success once the machine-generated tags from
 Rekognition are available in both the API and the frontend.
+
+If the labels themselves are observed to have a negative impact on search
+relevancy, we will need a mechanism or plan for the API for suppressing or
+deboosting the machine-labeled tags without having to remove them entirely (_NB:
+We may be able to leverage some of the DAGs created as a part of the
+[search relevancy sandbox](../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.md)
+project for this rollback_).
 
 ## Participants and stakeholders
 
