@@ -117,7 +117,7 @@ gen-media-props fail_on_diff="true":
       sudo chown $(whoami) ../documentation/meta/media_properties/api.md
     fi
     echo -n "Running linting..."
-    just ../lint prettier documentation/meta/media_properties/api.md
+    just ../lint prettier documentation/meta/media_properties/api.md &>/dev/null || true
     echo "Done!"
     if {{ fail_on_diff }}; then
       set +e
