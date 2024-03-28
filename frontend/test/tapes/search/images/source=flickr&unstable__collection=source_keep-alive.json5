@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?source=flickr&unstable__collection=source',
+        url: '/v1/images/?source=flickr&unstable__collection=source&collection=source',
         method: 'GET',
         body: '',
     },

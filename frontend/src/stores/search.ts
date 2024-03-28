@@ -114,8 +114,7 @@ export function computeQueryParams(
   return searchQuery
 }
 
-// TODO: After the API changes are done, replace
-// `tags` with `unstable__tag`
+// TODO: Remove `unstable__` parameters after https://github.com/WordPress/openverse/issues/3919
 export function buildCollectionQuery(
   collectionParams: CollectionParams
 ): PaginatedCollectionQuery {
@@ -125,10 +124,10 @@ export function buildCollectionQuery(
     ...params,
     ...getSensitiveQuery("API"),
     unstable__collection: collection,
+    collection,
   }
   if ("tag" in query) {
-    query.tags = query.tag
-    delete query.tag
+    query.unstable__tag = query.tag
   }
   return query
 }
