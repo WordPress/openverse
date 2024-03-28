@@ -14,4 +14,5 @@ communication_aliases
 becoming_a_committer
 maintainer_tasks
 codespell
+good_first_and_help_wanted_issues
 ```
