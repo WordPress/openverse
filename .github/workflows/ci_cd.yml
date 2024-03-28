@@ -450,6 +450,7 @@ jobs:
           - validate_openapi
           - check_migrations
           - test_doc
+          - test_media_props
         include:
           - name: check_django
             recipe: api/dj check
@@ -459,6 +460,8 @@ jobs:
             recipe: api/dj makemigrations --check
           - name: test_doc
             recipe: api/doc-test
+          - name: test_media_props
+            recipe: api/gen-media-props
 
     steps:
       - name: Checkout repository
