@@ -109,7 +109,8 @@ def create_query_values(
     return ",".join(result)
 
 
-def make_insert_query(table, values):
+def make_insert_query(table: str, values: str) -> str:
+    """Returns an SQL insert statement for the given table with the given values"""
     return f"INSERT INTO {table} VALUES({values});"
 
 
