@@ -1,5 +1,6 @@
 {
   "rules": {
-    "migrations": ["**/migrations/**/*"]
+    "migrations": ["**/migrations/**/*"],
+    "🧭 project: implementation plan": ["**/*implementation_plan*"]
   }
 }
