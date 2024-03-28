@@ -99,7 +99,6 @@ class MetMuseumDataIngester(ProviderDataIngester):
             return None
 
         meta_data = self._get_meta_data(object_json)
-        raw_tags = self._get_tag_list(object_json)
         title = self._get_title(object_json)
         artist = self._get_artist_name(object_json)
 
@@ -120,7 +119,7 @@ class MetMuseumDataIngester(ProviderDataIngester):
                 "creator": artist,
                 "title": title,
                 "meta_data": meta_data,
-                "raw_tags": raw_tags,
+                "raw_tags": self._get_tags(object_json),
             }
             for img in image_list
         ]
@@ -141,8 +140,8 @@ class MetMuseumDataIngester(ProviderDataIngester):
                 "accession_number": object_json.get("accessionNumber"),
             }
 
-    def _get_tag_list(self, object_json: dict) -> list:
-        tag_list = [
+    def _get_tags(self, object_json: dict) -> set:
+        raw_tags = {
             tag
             for tag in [
                 object_json.get("department"),
@@ -156,10 +155,10 @@ class MetMuseumDataIngester(ProviderDataIngester):
                 object_json.get("period"),
             ]
             if tag
-        ]
-        if object_json.get("tags"):
-            tag_list += [tag["term"] for tag in object_json.get("tags")]
-        return tag_list
+        }
+        if tags := object_json.get("tags"):
+            raw_tags.update({tag["term"] for tag in tags})
+        return raw_tags
 
     def _get_title(self, object_json: dict) -> str | None:
         # Use or to skip false-y (empty) titles: ""

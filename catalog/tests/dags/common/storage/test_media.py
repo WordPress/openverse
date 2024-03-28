@@ -9,7 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from common import urls
-from common.licenses import LicenseInfo, get_license_info
+from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage import image, media
 
@@ -513,11 +513,7 @@ def test_MediaStore_get_image_enriches_singleton_tags():
     image_store = image.ImageStore("test_provider")
 
     actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_="by-sa",
-            license_version="4.0",
-            license_url="https://license/url",
-        ),
+        license_info=BY_LICENSE_INFO,
         foreign_landing_url=TEST_FOREIGN_LANDING_URL,
         url=TEST_IMAGE_URL,
         thumbnail_url=None,
@@ -530,7 +526,7 @@ def test_MediaStore_get_image_enriches_singleton_tags():
         creator_url=None,
         title=None,
         meta_data=None,
-        raw_tags=["lone"],
+        raw_tags={"lone"},
         category=None,
         watermarked=None,
         source=None,
@@ -540,143 +536,57 @@ def test_MediaStore_get_image_enriches_singleton_tags():
     assert actual_image.tags == [{"name": "lone", "provider": "test_provider"}]
 
 
-def test_MediaStore_get_image_tag_blacklist():
-    raw_tags = [
-        "cc0",
-        "valid",
-        "garbage:=metacrap",
-        "uploaded:by=flickrmobile",
-        {"name": "uploaded:by=instagram", "provider": "test_provider"},
-    ]
-
+def test_MediaStore_get_image_tag_denylist():
+    mock_image_args = TEST_IMAGE_DICT | {
+        "license_info": BY_LICENSE_INFO,
+        "foreign_identifier": "02",
+        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
+        "url": TEST_IMAGE_URL,
+        "raw_tags": {
+            "cc0",
+            "valid",
+            "garbage:=metacrap",
+            "uploaded:by=flickrmobile",
+        },
+    }
     image_store = image.ImageStore("test_provider")
-
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        meta_data=None,
-        raw_tags=raw_tags,
-        category=None,
-        foreign_identifier="02",
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        watermarked=None,
-        ingestion_type=None,
-    )
+    actual_image = image_store._get_image(**mock_image_args)
 
     assert actual_image.tags == [{"name": "valid", "provider": "test_provider"}]
 
 
 def test_MediaStore_get_image_enriches_multiple_tags():
     image_store = image.ImageStore("test_provider")
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_url="https://license/url",
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=["tagone", "tag2", "tag3"],
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags == [
-        {"name": "tagone", "provider": "test_provider"},
+    mock_image_args = TEST_IMAGE_DICT | {
+        "license_info": BY_LICENSE_INFO,
+        "foreign_identifier": "02",
+        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
+        "url": TEST_IMAGE_URL,
+        "raw_tags": {"tagone", "tag2", "tag3"},
+    }
+    actual_image = image_store._get_image(**mock_image_args)
+    expected_tags = [
         {"name": "tag2", "provider": "test_provider"},
         {"name": "tag3", "provider": "test_provider"},
-    ]
-
-
-def test_MediaStore_get_image_leaves_preenriched_tags(setup_env):
-    image_store = image.ImageStore("test_provider")
-    tags = [
         {"name": "tagone", "provider": "test_provider"},
-        {"name": "tag2", "provider": "test_provider"},
-        {"name": "tag3", "provider": "test_provider"},
     ]
-
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_url="https://license/url",
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=tags,
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags == tags
+    assert len(actual_image.tags) == len(mock_image_args["raw_tags"])
+    for tag in actual_image.tags:
+        assert tag in expected_tags
 
 
-def test_MediaStore_get_image_nones_nonlist_tags():
+def test_MediaStore_get_image_nones_nonset_tags():
     image_store = image.ImageStore("test_provider")
-    tags = "notalist"
+    mock_image_args = TEST_IMAGE_DICT | {
+        "license_info": BY_LICENSE_INFO,
+        "foreign_identifier": "02",
+        "foreign_landing_url": TEST_FOREIGN_LANDING_URL,
+        "url": TEST_IMAGE_URL,
+        "raw_tags": "not_a_set",
+    }
 
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_url="https://license/url",
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=tags,
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags is None
+    with pytest.raises(TypeError, match="Expected set, got <class 'str'>: not_a_set."):
+        image_store._get_image(**mock_image_args)
 
 
 # Extracts `jpg` extension from the url.

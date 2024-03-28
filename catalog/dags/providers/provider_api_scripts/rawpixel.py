@@ -67,12 +67,6 @@ class RawpixelDataIngester(ProviderDataIngester):
         """,
         flags=re.IGNORECASE | re.VERBOSE,
     )
-    # Keywords which could be present in tags meaning they should be excluded
-    tags_exclude_list = {
-        "cc0",
-        "creative commons",
-        "public domain",
-    }
     # Image size options, without watermark.
     full_size_option = "editor_1024"  # Always serve webp format, "image_1000" can be used as an alternative with jpeg fallback
     png_full_size_option = "image_png_1300"  # Serve webp format if accepted else jpeg
@@ -250,18 +244,10 @@ class RawpixelDataIngester(ProviderDataIngester):
         return source or None
 
     @staticmethod
-    def _get_tags(metadata: dict) -> list[str]:
-        keywords = metadata.get("popular_keywords")
-        if keywords:
-            return [
-                keyword
-                for keyword in keywords
-                if not any(
-                    exclude_tag in keyword
-                    for exclude_tag in RawpixelDataIngester.tags_exclude_list
-                )
-            ]
-        return []
+    def _get_tags(metadata: dict) -> set | None:
+        if keywords := metadata.get("popular_keywords"):
+            return {k for k in keywords}
+        return None
 
     @staticmethod
     def _get_category(metadata: dict) -> str | None:

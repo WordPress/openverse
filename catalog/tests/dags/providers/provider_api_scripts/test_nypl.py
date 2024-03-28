@@ -86,11 +86,11 @@ def test_get_creators_failure():
     "topic, expected_tags",
     [
         # No topics
-        [{}, []],
+        [{}, set()],
         # Unrelated topics
-        [{"Unrelated": "Foo"}, []],
+        [{"Unrelated": "Foo"}, set()],
         # Relevant topics
-        [{"$": "value"}, ["value"]],
+        [{"$": "value"}, {"value"}],
     ],
 )
 def test_get_tags(subject_container, topic_container, topic, expected_tags):
@@ -163,7 +163,7 @@ def test_get_record_data_success():
             "Accompanying text formatted as 1 large sheet (46 x 59 cm), in one of "
             "the encapsulations.",
         },
-        "raw_tags": ["Census districts"],
+        "raw_tags": {"Census districts"},
         "title": "1900 census enumeration districts, Manhattan and Bronx",
         "license_info": CC0,
     }

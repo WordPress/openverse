@@ -210,6 +210,14 @@ class CcMixterDataIngester(ProviderDataIngester):
         main_file, *alt_files = sorted(files, key=lambda file: file["filesize"])
         return main_file, alt_files
 
+    @staticmethod
+    def _get_tags(data: dict) -> set:
+        """
+        ccMixter tags are comma-separated, and there is a leading and trailing comma,
+        so we need to filter out empty strings.
+        """
+        return set(filter(None, data.get("upload_tags").split(",")))
+
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         if not (foreign_identifier := data.get("upload_id")):
             logger.warning("Rejected record with no foreign identifier.")
@@ -221,9 +229,7 @@ class CcMixterDataIngester(ProviderDataIngester):
             )
             return None
 
-        # Use the `get_license_info` utility to get license information from a URL.
-        license_url = data.get("license_url")
-        license_info = get_license_info(license_url)
+        license_info = get_license_info(data.get("license_url"))
         if not license_info:
             logger.warning(
                 f"Rejected record {foreign_identifier} with no license info."
@@ -250,10 +256,6 @@ class CcMixterDataIngester(ProviderDataIngester):
             "upload_num_scores": data.get("upload_num_scores", 0),
         }
 
-        # ccMixter tags are comma-separated, and there is a leading and trailing
-        # comma, so we need to filter out empty strings.
-        raw_tags = list(filter(None, data.get("upload_tags").split(",")))
-
         return {
             "foreign_identifier": foreign_identifier,
             "foreign_landing_url": foreign_landing_url,
@@ -263,7 +265,7 @@ class CcMixterDataIngester(ProviderDataIngester):
             "creator_url": creator_url,
             "title": title,
             "meta_data": meta_data,
-            "raw_tags": raw_tags,
+            "raw_tags": self._get_tags(data),
             "alt_files": alt_files,
             # ``main_file`` contains the following fields:
             # - ``url``
