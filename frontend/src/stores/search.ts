@@ -208,6 +208,27 @@ export const useSearchStore = defineStore("search", {
     searchTypeIsSupported(state) {
       return isSearchTypeSupported(state.searchType)
     },
+    /**
+     * Returns the unique string representation of the current collection
+     * when making collection searches.
+     */
+    collectionValue(): null | string {
+      if (this.collectionParams === null) {
+        return null
+      }
+
+      switch (this.collectionParams.collection) {
+        case "creator": {
+          return `${this.collectionParams.source}/${this.collectionParams.creator}`
+        }
+        case "source": {
+          return this.collectionParams.source
+        }
+        case "tag": {
+          return this.collectionParams.tag
+        }
+      }
+    },
   },
   actions: {
     getApiRequestQuery(mediaType: SupportedMediaType) {
@@ -311,9 +332,6 @@ export const useSearchStore = defineStore("search", {
       this.strategy = "default"
 
       this.addRecentSearch(formattedTerm)
-
-      const mediaStore = useMediaStore()
-      mediaStore.clearMedia()
     },
     /**
      * Sets the collectionParams and mediaType for the collection page.
@@ -329,7 +347,8 @@ export const useSearchStore = defineStore("search", {
       this.clearFilters()
     },
     /**
-     * Called when a /search path is server-rendered.
+     * Called before navigating to a `/search` path, and when the
+     * path after `/search` or query parameters change.
      */
     setSearchStateFromUrl({
       path,
@@ -342,6 +361,9 @@ export const useSearchStore = defineStore("search", {
 
       this.strategy = "default"
       this.collectionParams = null
+
+      const mediaStore = useMediaStore()
+      mediaStore.clearMedia()
 
       this.setSearchTerm(query.q)
       this.searchType = pathToSearchType(path)

@@ -8,10 +8,7 @@
     icon-only
     class="text-dark-charcoal hover:bg-yellow"
   >
-    <VLogoLoader
-      :status="isFetching ? 'loading' : 'idle'"
-      :auto-resize="false"
-    />
+    <VLogoLoader :status="isFetching ? 'loading' : 'idle'" />
   </VButton>
 </template>
 <script>

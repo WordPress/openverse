@@ -12,7 +12,6 @@ import type { SupportedMediaType } from "~/constants/media"
 import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
 import { useProviderStore } from "~/stores/provider"
-import { parseFetchingError } from "~/utils/errors"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
@@ -168,11 +167,14 @@ export const useSingleResultStore = defineStore("single-result", {
 
         return item as DetailFromMediaType<MediaType>
       } catch (error) {
-        const errorData = parseFetchingError(error, type, "single-result", {
-          id,
-        })
+        const errorData = this.$nuxt.$processFetchingError(
+          error,
+          type,
+          "single-result",
+          { id }
+        )
         this._updateFetchState("end", errorData)
-        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
+
         return null
       }
     },

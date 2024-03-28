@@ -119,7 +119,6 @@ import { cyclicShift } from "~/utils/math"
 
 import { keycodes } from "~/constants/key-codes"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useSearch } from "~/composables/use-search"
 
@@ -127,6 +126,7 @@ import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
 import { useHydrating } from "~/composables/use-hydrating"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VInputModal from "~/components/VModal/VInputModal.vue"

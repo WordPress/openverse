@@ -1,4 +1,4 @@
-export const buttonForms = ["VLink", "button"] as const
+export const buttonForms = ["VLink", "button", "a"] as const
 
 export type ButtonForm = (typeof buttonForms)[number]
 

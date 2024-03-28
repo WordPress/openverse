@@ -31,6 +31,9 @@ const fetchBulkJed1x = async () => {
  * Extract all JSON file from the given ZIP file. Their names are sanitised to
  * be in the format `<locale_code>.json`.
  *
+ * TODO: Remove deprecated keys handling once all po keys are updated.
+ * https://github.com/WordPress/openverse/issues/2438
+ *
  * @param zipPath {string} - the path to the ZIP file to extract
  * @return {Promise<unknown[]>} - the outcome of writing all ZIP files
  */
@@ -47,9 +50,25 @@ const extractZip = async (zipPath) => {
         .replace(".jed.json", "")
       return [localeName, vueI18nObj]
     })
-  return await Promise.all(
-    localeJsonMap.map((args) => writeLocaleFile(...args))
+  const deprecatedKeys = { count: 0, keys: {} }
+
+  const result = await Promise.all(
+    localeJsonMap.map((args) => writeLocaleFile(...args, deprecatedKeys))
   )
+  const issue = "https://github.com/WordPress/openverse/issues/2438"
+  if (deprecatedKeys.count > 0) {
+    let warning = `${deprecatedKeys.count} deprecated kebab-case keys replaced in locale files. `
+    warning += `To see the keys, run \`just frontend/run i18n:get-translations --verbose\`. For more details, see ${issue}.`
+    if (process.argv.includes("--verbose")) {
+      warning += `\n${JSON.stringify(deprecatedKeys.keys, null, 2)}`
+    }
+    console.warn(warning)
+  } else {
+    console.log(
+      `No deprecated kebab-case keys found in locale files. 🎉 Please close issue ${issue}.`
+    )
+  }
+  return result
 }
 
 /**

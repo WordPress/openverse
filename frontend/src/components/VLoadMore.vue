@@ -5,7 +5,7 @@
       class="label-bold lg:description-bold h-16 w-full lg:h-18"
       variant="filled-gray"
       size="disabled"
-      :disabled="fetchState.isFetching"
+      :disabled="isFetching"
       data-testid="load-more"
       @click="onLoadMore"
     >
@@ -13,17 +13,29 @@
     </VButton>
   </div>
 </template>
+
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from "vue"
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  type PropType,
+  ref,
+  watch,
+} from "vue"
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
 
-import { useRoute } from "@nuxtjs/composition-api"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
+import { defineEvent } from "~/types/emits"
+
+import type { ResultKind } from "~/types/result"
+import type { SupportedSearchType } from "~/constants/media"
+
+import { useSearchStore } from "~/stores/search"
 
 import VButton from "~/components/VButton.vue"
 
@@ -32,64 +44,77 @@ export default defineComponent({
   components: {
     VButton,
   },
-  setup() {
+  props: {
+    searchType: {
+      type: String as PropType<SupportedSearchType>,
+      required: true,
+    },
+    searchTerm: {
+      type: String,
+      required: true,
+    },
+    kind: {
+      type: String as PropType<ResultKind>,
+      required: true,
+    },
+    isFetching: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  emits: {
+    "load-more": defineEvent(),
+  },
+  setup(props, { emit }) {
     const loadMoreSectionRef = ref(null)
     const route = useRoute()
     const i18n = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
-    const { sendCustomEvent } = useAnalytics()
+    const { $sendCustomEvent } = useContext()
 
-    // Use the `_searchType` from mediaStore because it falls back to ALL_MEDIA
-    // for unsupported search types.
-    const { fetchState, resultCount, currentPage, _searchType } =
-      storeToRefs(mediaStore)
-    const { searchTerm } = storeToRefs(searchStore)
+    const { currentPage } = storeToRefs(mediaStore)
 
-    const searchStarted = computed(() => {
-      return searchStore.strategy === "default"
-        ? searchTerm.value !== ""
-        : searchStore.collectionParams !== null
+    const eventPayload = computed(() => {
+      let kind: ResultKind =
+        searchStore.strategy === "default" ? "search" : "collection"
+      return {
+        searchType: props.searchType,
+        query: props.searchTerm,
+        resultPage: currentPage.value || 1,
+        kind,
+        collectionType:
+          searchStore.strategy !== "default" ? searchStore.strategy : null,
+        collectionValue: searchStore.collectionValue,
+      }
     })
 
     /**
      * Whether we should show the "Load more" button.
-     * If the user has entered a search term, there is at least 1 page of results,
-     * there has been no fetching error, and there are more results to fetch,
-     * we show the button.
+     * If the fetching for the current query has started, there is at least
+     * 1 page of results, there has been no fetching error, and there are
+     * more results to fetch, we show the button.
      */
-    const canLoadMore = computed(() => {
-      return Boolean(
-        searchStarted.value &&
-          !fetchState.value.fetchingError &&
-          !fetchState.value.isFinished &&
-          resultCount.value > 0
-      )
-    })
+    const canLoadMore = computed(() => mediaStore.canLoadMore)
 
     const reachResultEndEventSent = ref(false)
     /**
-     * On button click, fetch media, persisting the existing results.
+     * On button click, send the analytics events and emit `load-more` event.
+     *
      * The button is disabled when we are fetching, but we still check
      * whether we are currently fetching to be sure we don't fetch multiple times.
      *
      */
     const onLoadMore = async () => {
-      if (fetchState.value.isFetching) {
+      if (props.isFetching) {
         return
       }
 
       reachResultEndEventSent.value = false
 
-      sendCustomEvent("LOAD_MORE_RESULTS", {
-        query: searchStore.searchTerm,
-        searchType: searchStore.searchType,
-        resultPage: currentPage.value || 1,
-      })
+      $sendCustomEvent("LOAD_MORE_RESULTS", eventPayload.value)
 
-      await mediaStore.fetchMedia({
-        shouldPersistMedia: true,
-      })
+      emit("load-more")
     }
 
     const sendReachResultEnd = () => {
@@ -97,15 +122,11 @@ export default defineComponent({
       // currentPage is updated from 0, so we use the value or 1.
       // The currentPage can never be 0 here because then the loadMore
       // button would not be visible.
-      sendCustomEvent("REACH_RESULT_END", {
-        searchType: _searchType.value,
-        query: searchTerm.value,
-        resultPage: currentPage.value || 1,
-      })
+      $sendCustomEvent("REACH_RESULT_END", eventPayload.value)
     }
 
     const buttonLabel = computed(() =>
-      fetchState.value.isFetching
+      props.isFetching
         ? i18n.t("browsePage.loading")
         : i18n.t("browsePage.load")
     )
@@ -136,7 +157,6 @@ export default defineComponent({
 
     return {
       buttonLabel,
-      fetchState,
       onLoadMore,
       canLoadMore,
 

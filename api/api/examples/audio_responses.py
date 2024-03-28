@@ -82,7 +82,7 @@ audio_stats_200_example = {
             "display_name": "Freesound",
             "source_url": "https://freesound.org/",
             "logo_url": None,
-            "media_count": 828,
+            "media_count": 827,
         },
         {
             "source_name": "jamendo",
@@ -97,6 +97,13 @@ audio_stats_200_example = {
             "source_url": "https://commons.wikimedia.org",
             "logo_url": None,
             "media_count": 3992,
+        },
+        {
+            "display_name": "CCMixter",
+            "logo_url": None,
+            "media_count": 1,
+            "source_name": "ccmixter",
+            "source_url": "https://ccmixter.org",
         },
     ]
 }
