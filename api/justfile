@@ -112,6 +112,10 @@ gen-media-props fail_on_diff="true":
     set -e
     just dj documentmedia
     mv media_properties.md ../documentation/meta/media_properties/api.md
+    # Take ownership of media properties file.
+    if [ "$(ls -l ../documentation/meta/media_properties/api.md | awk '{print $3}')" != "$(whoami)" ]; then
+      sudo chown $(whoami) ../documentation/meta/media_properties/api.md
+    fi
     echo -n "Running linting..."
     just ../lint prettier documentation/meta/media_properties/api.md
     echo "Done!"
