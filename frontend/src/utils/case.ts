@@ -16,6 +16,10 @@ const SPLIT_REPLACE_VALUE = "$1\0$2"
  * Split any cased input strings into an array of words.
  */
 function split(input: string) {
+  if (!input) {
+    return []
+  }
+
   let result = input.trim()
 
   result = result
