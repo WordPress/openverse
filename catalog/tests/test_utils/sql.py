@@ -109,13 +109,17 @@ def create_query_values(
     return ",".join(result)
 
 
+def make_insert_query(table, values):
+    return f"INSERT INTO {table} VALUES({values});"
+
+
 def _get_insert_query(image_table, values: dict):
     # Append the required identifier
     values[col.IDENTIFIER.db_name] = uuid.uuid4()
 
     query_values = create_query_values(values, columns=IMAGE_TABLE_COLUMNS)
 
-    return f"INSERT INTO {image_table} VALUES({query_values});"
+    return make_insert_query(image_table, query_values)
 
 
 def load_sample_data_into_image_table(image_table, postgres, records):
