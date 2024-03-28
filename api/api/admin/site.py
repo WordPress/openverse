@@ -46,6 +46,22 @@ class OpenverseAdmin(admin.AdminSite):
             }
             app_list.insert(0, media_app)
 
+        # Move user preferences to its own section
+        for model in api_app["models"][:]:
+            if model["object_name"] == "UserPreferences":
+                model["name"] = "My Preferences"
+                api_app["models"].remove(model)
+                app_list.insert(
+                    -1,
+                    {
+                        "name": "User Preferences",
+                        "app_label": "preferences",
+                        "app_url": "/admin/api/userpreferences/",
+                        "has_module_perms": True,
+                        "models": [model],
+                    },
+                )
+
         return app_list
 
 
