@@ -1,0 +1,11 @@
+# 2023.05.23.17.02.26
+
+## Internal Improvements
+
+- Replace build-url with native functionality
+  ([#2140](https://github.com/WordPress/openverse/pull/2140)) by @obulat
+
+## Bug Fixes
+
+- Make analytics switchable in production
+  ([#2174](https://github.com/WordPress/openverse/pull/2174)) by @zackkrida

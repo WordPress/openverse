@@ -1,0 +1,11 @@
+# 2023.06.28.02.17.04
+
+## Improvements
+
+- Unified logging approach for api and ingestion server
+  ([#2380](https://github.com/WordPress/openverse/pull/2380)) by @ashiramin
+
+## Bug Fixes
+
+- Add CONN_MAX_AGE setting to API
+  ([#2475](https://github.com/WordPress/openverse/pull/2475)) by @sarayourfriend

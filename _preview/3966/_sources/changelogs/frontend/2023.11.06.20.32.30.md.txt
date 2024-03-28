@@ -1,0 +1,17 @@
+# 2023.11.06.20.32.30
+
+## Internal Improvements
+
+- Update TypeScript to v5.2.2
+  ([#3315](https://github.com/WordPress/openverse/pull/3315)) by @obulat
+- Update Nuxt template overrides to latest versions of templates
+  ([#3305](https://github.com/WordPress/openverse/pull/3305)) by @sarayourfriend
+- Update docker.io/nginx Docker tag to v1.25.3
+  ([#3279](https://github.com/WordPress/openverse/pull/3279)) by @renovate
+- Update Nuxt sentry dependency
+  ([#3248](https://github.com/WordPress/openverse/pull/3248)) by @khushi-kothari
+
+## Bug Fixes
+
+- Remove unused utils
+  ([#3239](https://github.com/WordPress/openverse/pull/3239)) by @obulat

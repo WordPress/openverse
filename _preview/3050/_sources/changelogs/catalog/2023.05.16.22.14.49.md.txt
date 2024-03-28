@@ -1,0 +1,42 @@
+# 2023.05.16.22.14.49
+
+## Improvements
+
+- Implementation Plan: Decoupling Popularity Calculations from Data Refresh
+  ([#1894](https://github.com/WordPress/openverse/pull/1894)) by @stacimc
+- Add Airflow variable for turning off provider DAG catchup
+  ([#1907](https://github.com/WordPress/openverse/pull/1907)) by @stacimc
+
+## Internal Improvements
+
+- Add checks for required parameters to Provider scripts (S-Z)
+  ([#1897](https://github.com/WordPress/openverse/pull/1897)) by @obulat
+- Add checks for required parameters to Provider scripts (A-J)
+  ([#1896](https://github.com/WordPress/openverse/pull/1896)) by @obulat
+- Update consistent python test module naming pattern
+  ([#2051](https://github.com/WordPress/openverse/pull/2051)) by
+  @harsitagarwalla187
+- Add checks for required parameters to Provider scripts (K-R)
+  ([#1884](https://github.com/WordPress/openverse/pull/1884)) by @obulat
+- Simplify and reorder parameters to `catalog/pgcli` recipe
+  ([#2023](https://github.com/WordPress/openverse/pull/2023)) by @AetherUnbound
+- Bump apache-airflow[amazon,http,postgres] from 2.5.3 to 2.6.0 in /catalog
+  ([#1949](https://github.com/WordPress/openverse/pull/1949)) by @dependabot
+- Refactor `LicenseInfo` to only hold valid license information
+  ([#1898](https://github.com/WordPress/openverse/pull/1898)) by @obulat
+- Bump tldextract from 3.4.0 to 3.4.1 in /catalog
+  ([#1950](https://github.com/WordPress/openverse/pull/1950)) by @dependabot
+
+## Bug Fixes
+
+- Paginate GitHub events query for PR reminders
+  ([#2081](https://github.com/WordPress/openverse/pull/2081)) by @AetherUnbound
+- Calculate PR urgency based on ready for review time
+  ([#2027](https://github.com/WordPress/openverse/pull/2027)) by @sarayourfriend
+- Simplify and reorder parameters to `catalog/pgcli` recipe
+  ([#2023](https://github.com/WordPress/openverse/pull/2023)) by @AetherUnbound
+- Fall back to `main` branch protection rules for PRs targeting branches without
+  protection rules ([#1900](https://github.com/WordPress/openverse/pull/1900))
+  by @sarayourfriend
+- Respect the task timeout in recreate popularity constants task
+  ([#1928](https://github.com/WordPress/openverse/pull/1928)) by @stacimc

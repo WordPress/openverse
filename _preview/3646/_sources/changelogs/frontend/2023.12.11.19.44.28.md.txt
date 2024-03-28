@@ -1,0 +1,22 @@
+# 2023.12.11.19.44.28
+
+## New Features
+
+- Add additional search view pages to the Nuxt app
+  ([#3140](https://github.com/WordPress/openverse/pull/3140)) by @obulat
+
+## Improvements
+
+- Enforce braces for `if`-`else` and `switch`-`case`
+  ([#3474](https://github.com/WordPress/openverse/pull/3474)) by @bhavik001
+- Replace popper.js with floating-ui
+  ([#3406](https://github.com/WordPress/openverse/pull/3406)) by @obulat
+- Make punctuation marks consistent for singular & plural strings
+  ([#3462](https://github.com/WordPress/openverse/pull/3462)) by @NekoJonez
+
+## Internal Improvements
+
+- Update dependency vue-tsc to v1.8.25
+  ([#3427](https://github.com/WordPress/openverse/pull/3427)) by @openverse-bot
+- Update dependency @types/node to v17.0.45
+  ([#3424](https://github.com/WordPress/openverse/pull/3424)) by @openverse-bot
