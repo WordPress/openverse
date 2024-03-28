@@ -95,5 +95,10 @@ export const collectionMiddleware: Middleware = async ({
     }
   }
 
-  searchStore.setCollectionState(collectionParams, mediaType)
+  // Update the search store with the new collection state
+  // This will also clear the media items in the media store,
+  // so we only call it if the collection state has changed.
+  if (!searchStore.isCollectionStateSame(collectionParams, mediaType)) {
+    searchStore.setCollectionState(collectionParams, mediaType)
+  }
 }
