@@ -447,9 +447,7 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
             col.HEIGHT.db_name: HEIGHT,
         }
     )
-    load_data_query = f"""INSERT INTO {load_table} VALUES(
-        {query_values}
-        );"""
+    load_data_query = utils.make_insert_query(load_table, query_values)
 
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
