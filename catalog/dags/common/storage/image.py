@@ -111,8 +111,8 @@ class ImageStore(MediaStore):
         category:            The image category, defaults to the default
                              category for the provider from
                              common/loader/provider_details.py.
-        watermarked:         A boolean, or 't' or 'f' string; whether
-                             the image has a noticeable watermark.
+        watermarked:         A boolean, whether the image has a noticeable
+                             watermark.
         source:              If different from the provider.  This might
                              be the case when we get information from
                              some aggregation of images.  In this case,
