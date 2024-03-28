@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 # Filter out tags that exactly match these terms. All terms should be lowercase.
 TAG_DENYLIST = {
-    "flickriosapp:filter=flamingo",
     "no person",
     "undefined",
     "uploaded:by=flickrmobile",
