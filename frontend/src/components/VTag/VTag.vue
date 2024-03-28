@@ -4,9 +4,10 @@
     size="small"
     variant="filled-gray"
     class="label-bold"
-    :href="href"
-    >{{ title }}</VButton
-  >
+    v-bind="$props"
+    v-on="$listeners"
+    ><slot
+  /></VButton>
 </template>
 
 <script lang="ts">
@@ -18,10 +19,6 @@ export default defineComponent({
   name: "VTag",
   components: { VButton },
   props: {
-    title: {
-      type: String,
-      required: true,
-    },
     href: {
       type: String,
       required: true,

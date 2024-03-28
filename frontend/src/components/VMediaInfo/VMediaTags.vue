@@ -7,7 +7,7 @@
       :class="heightClass"
     >
       <li v-for="tag in visibleTags" :key="tag">
-        <VTag :href="localizedTagPath(tag)" :title="tag" />
+        <VTag :href="localizedTagPath(tag)">{{ tag }}</VTag>
       </li>
     </ul>
     <VButton
