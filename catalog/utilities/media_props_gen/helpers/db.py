@@ -7,7 +7,7 @@ from typing import Any
 from common.constants import MediaType
 
 
-LOCAL_POSTGRES_FOLDER = Path(__file__).parents[3] / "docker" / "upstream_db"
+LOCAL_POSTGRES_FOLDER = Path(__file__).parents[4] / "docker" / "upstream_db"
 SQL_PATH = {
     "image": LOCAL_POSTGRES_FOLDER / "0003_openledger_image_schema.sql",
     "audio": LOCAL_POSTGRES_FOLDER / "0006_openledger_audio_schema.sql",

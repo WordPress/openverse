@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-COLUMNS_PATH = Path(__file__).parents[2] / "dags" / "common" / "storage" / "columns.py"
+COLUMNS_PATH = Path(__file__).parents[3] / "dags" / "common" / "storage" / "columns.py"
 
 COLUMNS_URL = "https://github.com/WordPress/openverse/blob/main/catalog/dags/common/storage/columns.py"  # noqa: E501
 

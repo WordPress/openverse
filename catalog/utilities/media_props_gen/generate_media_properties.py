@@ -1,13 +1,27 @@
 """Automatic media properties generation."""
 
 import logging
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from catalog.utilities.media_props_gen.column_parser import parse_python_columns
-from catalog.utilities.media_props_gen.db import FieldSqlInfo, create_db_props_dict
-from catalog.utilities.media_props_gen.md import Md
-from common.constants import MEDIA_TYPES
+
+# Avoid import error in tests
+sys.path.insert(0, str(Path(__file__).parents[3]))
+
+from catalog.utilities.media_props_gen.helpers.column_parser import (
+    parse_python_columns,
+)
+
+# noqa: E402
+from catalog.utilities.media_props_gen.helpers.db import (
+    FieldSqlInfo,
+    create_db_props_dict,
+)
+
+# noqa: E402
+from catalog.utilities.media_props_gen.helpers.md import Md  # noqa: E402
+from common.constants import MEDIA_TYPES  # noqa: E402
 
 
 log = logging.getLogger(__name__)
@@ -15,12 +29,12 @@ log = logging.getLogger(__name__)
 logging.getLogger("common.storage.media").setLevel(logging.WARNING)
 
 # Constants
-PARENT = Path(__file__).parent
-DOC_MD_PATH = PARENT / "media_properties.md"
-SOURCE_MD_PATH = PARENT / "media_props.md"
+DOCS = Path(__file__).parent / "docs"
+DOC_MD_PATH = Path(__file__).parent / "media_properties.md"
+SOURCE_MD_PATH = DOCS / "media_props.md"
 
-PREAMBLE = open(Path(__file__).parent / "preamble.md").read()
-POSTAMBLE = open(Path(__file__).parent / "postamble.md").read()
+PREAMBLE = open(DOCS / "preamble.md").read()
+POSTAMBLE = open(DOCS / "postamble.md").read()
 
 
 @dataclass
@@ -53,7 +67,7 @@ def generate_media_properties() -> dict:
 
 
 def generate_db_props_string(field: FieldSqlInfo) -> tuple[str, str]:
-    constraint = f"{' '+field.constraint if field.constraint else ''}"
+    constraint = f"{' ' + field.constraint if field.constraint else ''}"
     nullable = f"{'nullable' if field.nullable else 'non-nullable'}"
     props_string = f"{field.datatype}{constraint}, {nullable}"
 
