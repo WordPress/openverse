@@ -21,7 +21,8 @@ from catalog.utilities.media_props_gen.column_parser import COLUMN_DEFINITIONS, 
         pytest.param(
             {"name": "id", "db_name": "user_id", "python_type": "IntegerColumn"},
             True,
-            f'{COLUMN_DEFINITIONS["IntegerColumn"]} (`name="id", upsert_strategy=newest_non_null, nullable=True, required=False`)',
+            f'{COLUMN_DEFINITIONS["IntegerColumn"]} '
+            f'(`name="id", upsert_strategy=newest_non_null, nullable=True, required=False`)',
             id="name and db_name are different",
         ),
         pytest.param(
@@ -33,7 +34,8 @@ from catalog.utilities.media_props_gen.column_parser import COLUMN_DEFINITIONS, 
         pytest.param(
             {"name": "genres", "required": False, "base_column": "StringColumn"},
             True,
-            f"{COLUMN_DEFINITIONS['ArrayColumn']} (`name=\"genres\", upsert_strategy=newest_non_null, nullable=True, required=False`)",
+            f"{COLUMN_DEFINITIONS['ArrayColumn']} "
+            f'(`name="genres", upsert_strategy=newest_non_null, nullable=True, required=False`)',
             id="base_column",
             marks=pytest.mark.xfail(reason="base_column is not implemented"),
         ),
