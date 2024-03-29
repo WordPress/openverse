@@ -2,11 +2,11 @@ from unittest.mock import patch
 
 import pytest
 
-from catalog.utilities.media_props_gen.db import FieldSqlInfo
 from catalog.utilities.media_props_gen.generate_media_properties import (
     generate_db_props_string,
     generate_markdown_doc,
 )
+from catalog.utilities.media_props_gen.helpers.db import FieldSqlInfo
 
 
 DIRECTORY = "catalog.utilities.media_props_gen"
