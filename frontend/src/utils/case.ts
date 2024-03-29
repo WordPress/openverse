@@ -15,7 +15,7 @@ const SPLIT_REPLACE_VALUE = "$1\0$2"
 /**
  * Split any cased input strings into an array of words.
  */
-function split(input: string) {
+function split(input: string | undefined) {
   if (!input) {
     return []
   }
