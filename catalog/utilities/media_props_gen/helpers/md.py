@@ -1,5 +1,5 @@
 class Md:
-    horizontal_line = "\n---\n\n"
+    horizontal_line = "\n----\n\n"
 
     @staticmethod
     def heading(level: int, text: str) -> str:

@@ -149,7 +149,12 @@ generate-docs doc="dag" fail_on_diff="false":
     echo -n "Running linting..."
     # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
     just ../lint prettier $FINAL_FILE &>/dev/null || true
-    echo "Done!"
+    echo "Linting done!"
+    if [ "{{ doc }}" == "media-props" ]; then
+      echo -n "Replacing '\n---\n' with '\n----\n'..."
+      awk 'BEGIN{RS=ORS="\n"} {gsub(/\n---\n/, "\n----\n", $0); print}' "../$FINAL_FILE" > "../$FINAL_FILE.tmp" && mv "../$FINAL_FILE.tmp" "../$FINAL_FILE"
+      echo "Replacements done!"
+    fi
     if {{ fail_on_diff }}; then
       set +e
       git diff --exit-code -- ../$FINAL_FILE

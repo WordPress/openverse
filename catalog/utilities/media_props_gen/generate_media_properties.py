@@ -9,17 +9,13 @@ from pathlib import Path
 # Avoid import error in tests
 sys.path.insert(0, str(Path(__file__).parents[3]))
 
-from catalog.utilities.media_props_gen.helpers.column_parser import (
+from catalog.utilities.media_props_gen.helpers.column_parser import (  # noqa: E402
     parse_python_columns,
 )
-
-# noqa: E402
-from catalog.utilities.media_props_gen.helpers.db import (
+from catalog.utilities.media_props_gen.helpers.db import (  # noqa: E402
     FieldSqlInfo,
     create_db_props_dict,
 )
-
-# noqa: E402
 from catalog.utilities.media_props_gen.helpers.md import Md  # noqa: E402
 from common.constants import MEDIA_TYPES  # noqa: E402
 
@@ -96,7 +92,7 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
     Also uses `media_properties` dictionary to set which media types have
     the specific properties.
     """
-    media_docs = ""
+    prop_mds = []
     for prop, description in markdown_descriptions.items():
         prop_heading = f"{Md.heading(3, prop)}"
 
@@ -108,11 +104,10 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
         prop_heading += f"_Media Types_: {', '.join(media_types)}\n\n"
 
         prop_doc = "".join(
-            [f"{Md.heading(4, k)}{v}" for k, v in description.items() if v]
+            [f"{Md.heading(4, k)}{Md.line(v)}" for k, v in description.items() if v]
         )
-        media_docs += prop_heading + prop_doc + Md.horizontal_line
-
-    return media_docs
+        prop_mds += [prop_heading + prop_doc]
+    return Md.horizontal_line.join(prop_mds) + "\n"
 
 
 def parse_props_from_source() -> tuple[dict, dict, str]:
@@ -137,24 +132,24 @@ def generate_markdown_doc() -> str:
 
     markdown_descriptions, tables, long_form_doc = parse_props_from_source()
 
-    media_props_doc = f"""
+    media_props_doc = (
+        f"""
 {PREAMBLE}
 {Md.heading(2, "Image Properties")}{tables["image"]}
 {Md.heading(2, "Audio Properties")}{tables["audio"]}
 {Md.heading(2, "Media Property Descriptions")}{long_form_doc}
 {Md.horizontal_line + POSTAMBLE if POSTAMBLE else ''}
 """.strip()
-    # Remove trailing horizontal line that's causing
-    # `Document may not end with a transition.` error
-    if media_props_doc.endswith("---"):
-        media_props_doc = media_props_doc[:-3]
+        + "\n"
+    )
+
     return media_props_doc
 
 
 def write_media_props_doc(path: Path = DOC_MD_PATH) -> None:
     """Generate the DAG documentation and write it to a file."""
     doc_text = generate_markdown_doc()
-    log.info(f"Writing DAG doc to {path}")
+    log.info(f"Writing doc to {path}")
     path.write_text(doc_text)
 
 

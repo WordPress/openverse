@@ -40,7 +40,7 @@ def test_generate_markdown_doc(props_source_mock):
 ## Image Properties\n{tables_mock["image"]}
 ## Audio Properties\n{tables_mock["audio"]}
 ## Media Property Descriptions\n{long_form_doc_mock}\n
----\n\n{postamble_mock}"""
+----\n\n{postamble_mock}\n"""
 
     assert result == expected_result
 
@@ -112,6 +112,7 @@ def test_generate_markdown_doc(props_source_mock):
     ],
 )
 def test_generate_db_props_string(field, expected_output):
+    expected_column, expected_props = expected_output
     field_name, props_string = generate_db_props_string(field)
-    assert field_name == f"[`{expected_output[0]}`](#{expected_output[0]})"
-    assert props_string == expected_output[1]
+    assert field_name == f"[`{expected_column}`](#{expected_column})"
+    assert props_string == expected_props
