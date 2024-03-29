@@ -144,6 +144,10 @@ def generate_markdown_doc() -> str:
 {Md.heading(2, "Media Property Descriptions")}{long_form_doc}
 {Md.horizontal_line + POSTAMBLE if POSTAMBLE else ''}
 """.strip()
+    # Remove trailing horizontal line that's causing
+    # `Document may not end with a transition.` error
+    if media_props_doc.endswith("---"):
+        media_props_doc = media_props_doc[:-3]
     return media_props_doc
 
 

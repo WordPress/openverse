@@ -285,5 +285,3 @@ _Media Types_: `audio`
 ### set_position
 
 _Media Types_: `audio`
-
----
