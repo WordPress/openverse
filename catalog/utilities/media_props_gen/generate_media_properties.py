@@ -4,10 +4,9 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
-from column_parser import parse_python_columns
-from db import create_db_props_dict
-from md import Md
-
+from catalog.utilities.media_props_gen.column_parser import parse_python_columns
+from catalog.utilities.media_props_gen.db import FieldSqlInfo, create_db_props_dict
+from catalog.utilities.media_props_gen.md import Md
 from common.constants import MEDIA_TYPES
 
 
@@ -53,14 +52,12 @@ def generate_media_properties() -> dict:
     return media_props
 
 
-def generate_db_props_string(field_name: str, field: dict) -> tuple[str, str]:
-    field_sql = field["sql"]
+def generate_db_props_string(field: FieldSqlInfo) -> tuple[str, str]:
+    constraint = f"{' '+field.constraint if field.constraint else ''}"
+    nullable = f"{'nullable' if field.nullable else 'non-nullable'}"
+    props_string = f"{field.datatype}{constraint}, {nullable}"
 
-    constraint = f"{' '+field_sql.constraint if field_sql.constraint else ''}"
-    nullable = f"{'nullable' if field_sql.nullable else 'non-nullable'}"
-    props_string = f"{field_sql.datatype}{constraint}, {nullable}"
-
-    return f"[`{field_name}`](#{field_name})", props_string
+    return f"[`{field.name}`](#{field.name})", props_string
 
 
 def generate_media_props_table(media_properties) -> str:
@@ -70,7 +67,7 @@ def generate_media_props_table(media_properties) -> str:
     table = "| Name | DB Field | Python Column |\n"
     table += "| --- | --- | --- |\n"
     for field_name, field in media_properties.items():
-        name, db_properties = generate_db_props_string(field_name, field)
+        name, db_properties = generate_db_props_string(field["sql"])
 
         table += (
             f"| {name} | {db_properties} | " f"{field.get('python_column', '')} |\n"
@@ -104,24 +101,32 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
     return media_docs
 
 
+def parse_props_from_source() -> tuple[dict, dict, str]:
+    """Parse the media property descriptions from the source code and `media_props.md`"""
+    media_properties = generate_media_properties()
+    markdown_descriptions = Md.parse(SOURCE_MD_PATH.read_text())
+    tables = {}
+
+    for media_type in MEDIA_TYPES:
+        tables[media_type] = generate_media_props_table(media_properties[media_type])
+
+    long_form_doc = generate_long_form_doc(markdown_descriptions, media_properties)
+    return markdown_descriptions, tables, long_form_doc
+
+
 def generate_markdown_doc() -> str:
     """
     Parse the media property descriptions from the source code and `media_props.md`
     Generate the tables with media properties database column and
     Python objects characteristics, and a long-form documentation for each property.
     """
-    media_properties = generate_media_properties()
-    markdown_descriptions = Md.parse(SOURCE_MD_PATH.read_text())
 
-    image_table = generate_media_props_table(media_properties["image"])
-    audio_table = generate_media_props_table(media_properties["audio"])
-
-    long_form_doc = generate_long_form_doc(markdown_descriptions, media_properties)
+    markdown_descriptions, tables, long_form_doc = parse_props_from_source()
 
     media_props_doc = f"""
 {PREAMBLE}
-{Md.heading(2, "Image Properties")}{image_table}
-{Md.heading(2, "Audio Properties")}{audio_table}
+{Md.heading(2, "Image Properties")}{tables["image"]}
+{Md.heading(2, "Audio Properties")}{tables["audio"]}
 {Md.heading(2, "Media Property Descriptions")}{long_form_doc}
 {Md.horizontal_line + POSTAMBLE if POSTAMBLE else ''}
 """.strip()

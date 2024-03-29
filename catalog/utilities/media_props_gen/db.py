@@ -27,9 +27,54 @@ CREATE_TABLE_REGEX = re.compile(r"CREATE\s+TABLE\s+\w+\.(\w+)\s+\(([\s\S]*?)\);"
 
 @dataclass
 class FieldSqlInfo:
+    name: str
     nullable: bool
     datatype: str
     constraint: str
+
+
+def get_table_description_matches(
+    sql_file_contents: str, media_type: MediaType
+) -> re.Match[str] | None:
+    """
+    Return the table description matches for a given media type or None if
+    the table description could not be found or the table name is not `media_type`.
+    """
+    table_description_matches = CREATE_TABLE_REGEX.search(sql_file_contents)
+
+    if not table_description_matches:
+        logging.warning(f"Could not find table description for {media_type}")
+        return None
+    table_name = table_description_matches.group(1)
+    if table_name != media_type:
+        logging.warning(
+            f"Table name {table_name} does not match media type {media_type}"
+        )
+        return None
+    return table_description_matches
+
+
+def parse_field(field: str) -> FieldSqlInfo | None:
+    field_name = field.split(" ")[0]
+    field_constraint = ""
+    try:
+        field_type = SQL_TYPE_REGEX.search(field).group(1)
+        if field_type == "character varying":
+            char_limit = field.split("(")[1].split(")")[0]
+            field_constraint = f"({char_limit})"
+
+        if "[]" in field:
+            field_type = f"array of {field_type}"
+    except AttributeError:
+        logging.warning(f"Could not find type for field {field_name} in {field}")
+        return None
+
+    return FieldSqlInfo(
+        name=field_name,
+        nullable="NOT NULL" not in field,
+        datatype=field_type,
+        constraint=field_constraint,
+    )
 
 
 def create_db_props_dict(
@@ -39,47 +84,17 @@ def create_db_props_dict(
     Parse the DDL for a media type and returns a list of field
     sql definitions.
     """
-
     sql_path = SQL_PATH[media_type]
-    contents = sql_path.read_text()
-    table_description_matches = CREATE_TABLE_REGEX.search(contents)
+    logging.debug(f"Reading SQL file {sql_path}")
 
-    if not table_description_matches:
-        logging.warning(
-            f"Could not find table description for {media_type} in {sql_path}"
-        )
+    if not (matches := get_table_description_matches(sql_path.read_text(), media_type)):
         return {}
-    table_name = table_description_matches.group(1)
-    if table_name != media_type:
-        logging.warning(
-            f"Table name {table_name} does not match media type {media_type}"
-        )
-        return {}
+
     field_descriptions = [
-        field.strip()
-        for field in table_description_matches.group(2).split("\n")
-        if field.strip()
+        field.strip() for field in matches.group(2).split("\n") if field.strip()
     ]
     fields = {}
     for field in field_descriptions:
-        field_name = field.split(" ")[0]
-        field_constraint = ""
-        try:
-            field_type = SQL_TYPE_REGEX.search(field).group(1)
-            if field_type == "character varying":
-                char_limit = field.split("(")[1].split(")")[0]
-                field_constraint = f"({char_limit})"
-
-            if "[]" in field:
-                field_type = f"array of {field_type}"
-        except AttributeError:
-            raise ValueError(f"Could not find type for field {field_name} in {field}")
-
-        fields[field_name] = {
-            "sql": FieldSqlInfo(
-                nullable="NOT NULL" not in field,
-                datatype=field_type,
-                constraint=field_constraint,
-            )
-        }
+        if field_sql_info := parse_field(field):
+            fields[field_sql_info.name] = {"sql": field_sql_info}
     return fields
