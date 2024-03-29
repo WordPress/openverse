@@ -327,9 +327,10 @@ jobs:
           run_id: ${{ github.run_id }}
           setup_images: upstream_db catalog
 
-      - name: Check DAG documentation
+      - name: Check generated documentation
         run: |
           just catalog/generate-docs dag true
+          just catalog/generate-docs media-props true
 
   ####################
   # Ingestion server #
