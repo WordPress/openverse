@@ -4,50 +4,56 @@ import audio from "~~/test/playwright/utils/audio"
 import {
   goToSearchTerm,
   preparePageForTests,
+  skipToContent,
 } from "~~/test/playwright/utils/navigation"
 
 import {
+  getContentLink,
   locateFocusedResult,
   walkToNextOfType,
   walkToType,
 } from "~~/test/playwright/utils/search-results"
 
 import { keycodes } from "~/constants/key-codes"
+import { SupportedMediaType } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
+const singleResultRegex = (
+  mediaType: SupportedMediaType,
+  searchTerm?: string
+) => {
+  const query = searchTerm ? `\\?q=${searchTerm}` : ""
+  return new RegExp(
+    `/${mediaType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}${query}$`,
+    "i"
+  )
+}
+
 test.describe("all results grid keyboard accessibility test", () => {
+  const searchTerm = "birds"
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl")
-    await goToSearchTerm(page, "birds")
+    await goToSearchTerm(page, searchTerm)
   })
 
   test("should open image results as links", async ({ page }) => {
-    await walkToType("image", page)
+    const mediaType = "image"
+    await walkToType(mediaType, page)
     await page.keyboard.press("Enter")
-    const urlRegex = new RegExp(
-      `/image/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-      "i"
-    )
+    const urlRegex = singleResultRegex(mediaType, searchTerm)
+
     await page.waitForURL(urlRegex)
     expect(page.url()).toMatch(urlRegex)
   })
 
   test("should open audio results as links", async ({ page }) => {
-    await walkToType("audio", page)
+    const mediaType = "audio"
+    await walkToType(mediaType, page)
     await page.keyboard.press("Enter")
-    await page.waitForURL(
-      new RegExp(
-        `/audio/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-        "i"
-      )
-    )
-    expect(page.url()).toMatch(
-      new RegExp(
-        `/audio/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}\\?q=birds$`,
-        "i"
-      )
-    )
+    const urlRegex = singleResultRegex(mediaType, searchTerm)
+    await page.waitForURL(urlRegex)
+    expect(page.url()).toMatch(urlRegex)
   })
 
   test("should show instructions snackbar when focusing first audio", async ({
@@ -120,5 +126,20 @@ test.describe("all results grid keyboard accessibility test", () => {
 
     await expect(playButton).toBeVisible()
     await expect(pauseButton).toBeHidden()
+  })
+
+  // Test for https://github.com/WordPress/openverse/issues/3940
+  test("clicking on skip-to-content should not navigate", async ({ page }) => {
+    const getResultsLabel = async (type: SupportedMediaType) => {
+      const link = await getContentLink(page, type)
+      return link.textContent()
+    }
+    const imageResultsLabel = await getResultsLabel("image")
+    const audioResultsLabel = await getResultsLabel("audio")
+
+    await skipToContent(page)
+
+    expect(await getResultsLabel("image")).toEqual(imageResultsLabel)
+    expect(await getResultsLabel("audio")).toEqual(audioResultsLabel)
   })
 })

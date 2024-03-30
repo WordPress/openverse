@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?unstable__collection=tag&tags=cat',
+        url: '/v1/images/?unstable__collection=tag&unstable_tag=cat&collection=tag&tag=cat',
         method: 'GET',
         body: '',
     },

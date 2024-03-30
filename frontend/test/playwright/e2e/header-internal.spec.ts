@@ -88,6 +88,12 @@ test.describe("Header internal", () => {
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
       await page.waitForURL("/about")
+      // For some reason during this test the navigation overlay sometimes takes ~5-9 ms
+      // During that time, the page cannot scroll. We just need to wait for the
+      // page's title to be visible before going on.
+      await page
+        .locator("h1", { hasText: "About" })
+        .waitFor({ state: "visible" })
       await scrollToBottom(page)
       const scrollPosition = await page.evaluate(() => window.scrollY)
       expect(scrollPosition).toBeGreaterThan(100)

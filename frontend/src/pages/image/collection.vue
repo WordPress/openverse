@@ -1,5 +1,9 @@
 <template>
-  <div class="p-6 pt-0 lg:p-10 lg:pt-2">
+  <div
+    :id="skipToContentTargetId"
+    tabindex="-1"
+    class="p-6 pt-0 lg:p-10 lg:pt-2"
+  >
     <VCollectionResults
       v-if="collectionParams"
       search-term=""
@@ -24,8 +28,9 @@ import { computed, ref, watch } from "vue"
 import { collectionMiddleware } from "~/middleware/collection"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import type { ImageDetail } from "~/types/media"
+import { skipToContentTargetId } from "~/constants/window"
 import { useI18n } from "~/composables/use-i18n"
+import type { ImageDetail } from "~/types/media"
 
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
@@ -93,6 +98,7 @@ export default defineComponent({
       collectionLabel,
       loadMore,
       media,
+      skipToContentTargetId,
     }
   },
   head: {},

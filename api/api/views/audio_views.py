@@ -7,20 +7,16 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 
 from api.constants.media_types import AUDIO_TYPE
 from api.docs.audio_docs import (
-    creator_collection,
     detail,
     related,
     report,
     search,
-    source_collection,
     stats,
-    tag_collection,
     waveform,
 )
 from api.docs.audio_docs import thumbnail as thumbnail_docs
 from api.models import Audio
 from api.serializers.audio_serializers import (
-    AudioCollectionRequestSerializer,
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
@@ -37,9 +33,6 @@ from api.views.media_views import MediaViewSet
     stats=stats,
     retrieve=detail,
     related=related,
-    tag_collection=tag_collection,
-    creator_collection=creator_collection,
-    source_collection=source_collection,
 )
 class AudioViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to audio."""
@@ -50,7 +43,6 @@ class AudioViewSet(MediaViewSet):
     default_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
 
     serializer_class = AudioSerializer
-    collection_serializer_class = AudioCollectionRequestSerializer
 
     def get_queryset(self):
         return super().get_queryset().select_related("sensitive_audio", "audioset")

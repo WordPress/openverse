@@ -3,7 +3,6 @@ import { ssrRef } from "@nuxtjs/composition-api"
 
 import { capitalCase } from "~/utils/case"
 import { env } from "~/utils/env"
-import { parseFetchingError } from "~/utils/errors"
 import {
   AUDIO,
   IMAGE,
@@ -153,12 +152,15 @@ export const useProviderStore = defineStore("provider", {
         sortedProviders = sortProviders(res)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
-        const errorData = parseFetchingError(error, mediaType, "provider")
+        const errorData = this.$nuxt.$processFetchingError(
+          error,
+          mediaType,
+          "provider"
+        )
 
         // Fallback on existing providers if there was an error
         sortedProviders = this.providers[mediaType]
         this._updateFetchState(mediaType, "end", errorData)
-        this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
       } finally {
         this.providers[mediaType] = sortedProviders
         this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)

@@ -2,6 +2,8 @@ import type { PlaywrightTestConfig } from "@playwright/test"
 
 const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
 
+export const API_URL = "http://localhost:49153/"
+
 /**
  * Enabling `FASTSTART` allows you to bypass running the nuxt build
  * when rapidly debugging tests locally within the container. If you
@@ -13,8 +15,7 @@ const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
  * Note that visual-regression tests can be quite flaky when using
  * `FASTSTART`.
  */
-const pwCommand =
-  process.env.FASTSTART !== "false" ? "start:playwright" : "prod:playwright"
+const pwCommand = process.env.FASTSTART !== "false" ? "dev" : "prod:playwright"
 
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
@@ -24,7 +25,7 @@ const config: PlaywrightTestConfig = {
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
-      API_URL: "http://localhost:49153/",
+      API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
       PW: "true",
     },
@@ -44,12 +45,6 @@ const config: PlaywrightTestConfig = {
    * Playwright default of using 1/2 of the number of CPU cores continues to work otherwise.
    */
   workers: UPDATE_TAPES === "true" ? 1 : undefined,
-  expect: {
-    toMatchSnapshot: {
-      // If the visual regression tests are flaky, we can increase this to 0.1 or 0.2.
-      maxDiffPixelRatio: 0.01,
-    },
-  },
 }
 
 export default config
