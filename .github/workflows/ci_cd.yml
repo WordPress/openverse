@@ -559,7 +559,7 @@ jobs:
           - unit_test
         include:
           - name: unit_test
-            script: "test:unit"
+            recipe: frontend/run test:unit
 
     steps:
       - name: Checkout repository
@@ -571,8 +571,8 @@ jobs:
           setup_python: false
           install_recipe: node-install
 
-      - name: Run Nuxt checks
-        run: just frontend/run ${{ matrix.script }}
+      - name: Run check recipe
+        run: just ${{ matrix.recipe }}
 
   # This job runs when `nuxt-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
