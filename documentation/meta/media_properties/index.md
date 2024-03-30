@@ -7,4 +7,5 @@ Openverse stack.
 :titlesonly:
 
 api
+frontend
 ```
