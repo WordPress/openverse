@@ -69,6 +69,24 @@ init: wait-up
 run *args:
     pnpm run {{ args }}
 
+# Generate the media properties documentation
+gen-media-props fail_on_diff="true":
+    #!/bin/bash
+    set -e
+    just run doc:media-props
+    mv media_properties.md ../documentation/meta/media_properties/frontend.md
+    echo -n "Running linting..."
+    just ../lint prettier documentation/meta/media_properties/frontend.md &>/dev/null || true
+    echo "Done!"
+    if {{ fail_on_diff }}; then
+      set +e
+      git diff --exit-code ../documentation/meta/media_properties/frontend.md
+      if [ $? -ne 0 ]; then
+          printf "\n\n\e[31m!! Changes found in media properties documentation, please run 'just gen-media-props' locally and commit difference !!\n\n"
+          exit 1
+      fi
+    fi
+
 types:
     cd .. && pnpm exec vue-tsc -p frontend --noEmit
 

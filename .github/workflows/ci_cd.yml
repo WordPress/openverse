@@ -557,9 +557,12 @@ jobs:
       matrix:
         name:
           - unit_test
+          - test_media_props
         include:
           - name: unit_test
             recipe: frontend/run test:unit
+          - name: test_media_props
+            recipe: frontend/gen-media-props
 
     steps:
       - name: Checkout repository
