@@ -332,9 +332,10 @@ export const useSearchStore = defineStore("search", {
 
       this.addRecentSearch(formattedTerm)
     },
+
     /**
      * Sets the collectionParams and mediaType for the collection page.
-     * Resets the filters and search term.
+     * Resets the filters, search term and clears media in the media store.
      */
     setCollectionState(
       collectionParams: CollectionParams,
@@ -344,6 +345,8 @@ export const useSearchStore = defineStore("search", {
       this.strategy = collectionParams.collection
       this.setSearchType(mediaType)
       this.clearFilters()
+      const mediaStore = useMediaStore()
+      mediaStore.clearMedia()
     },
     /**
      * Called before navigating to a `/search` path, and when the
