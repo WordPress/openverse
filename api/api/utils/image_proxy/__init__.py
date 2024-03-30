@@ -177,7 +177,7 @@ async def get(
             content_type,
         )
         upstream_response.raise_for_status()
-        content = await upstream_response.read()
+        content = await upstream_response.content.read()
         return HttpResponse(
             content,
             status=status_code,
