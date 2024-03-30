@@ -237,11 +237,11 @@ def generate_notes(fields: list[FieldInfo]) -> str:
     for field in fields:
         field_output = f"### `{field.name}`\n\n"
         record = False
+        if field.notes:
+            field_output += f"{field.notes}\n\n"
+            record = True
         if not field.is_relation and field.value_info.help_text:
             field_output += f"**Help text:** {field.value_info.help_text}\n\n"
-            record = True
-        if field.notes:
-            field_output += f"**Notes:** {field.notes}\n\n"
             record = True
         if record:
             output += field_output

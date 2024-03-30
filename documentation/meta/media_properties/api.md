@@ -71,8 +71,8 @@ value). Note that relation fields are always nullable.
 
 ### `audioset`
 
-**Notes:** This is a virtual foreign-key to `AudioSet` built on top of the
-fields `audio_set_foreign_identifier` and `provider`.
+This is a virtual foreign-key to `AudioSet` built on top of the fields
+`audio_set_foreign_identifier` and `provider`.
 
 ### `bit_rate`
 
@@ -117,8 +117,8 @@ category, or `politics`, `sport`, `education` for `podcast` category
 
 ### `id`
 
-**Notes:** This is Django's automatic primary key, used for models that do not
-define one explicitly.
+This is Django's automatic primary key, used for models that do not define one
+explicitly.
 
 ### `identifier`
 
@@ -234,8 +234,8 @@ source=openimages, but provider=flickr.
 
 ### `id`
 
-**Notes:** This is Django's automatic primary key, used for models that do not
-define one explicitly.
+This is Django's automatic primary key, used for models that do not define one
+explicitly.
 
 ### `identifier`
 
