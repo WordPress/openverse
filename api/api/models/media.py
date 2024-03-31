@@ -187,6 +187,14 @@ class AbstractMediaReport(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
 
+    decision = models.ForeignKey(
+        to="AbstractMediaDecision",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="The moderation decision for this report.",
+    )
+
     class Meta:
         abstract = True
 

@@ -303,6 +303,13 @@ class AudioReport(AbstractMediaReport):
         related_name="audio_report",
         help_text="The reference to the audio being reported.",
     )
+    decision = models.ForeignKey(
+        to="AudioDecision",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="The moderation decision for this report.",
+    )
 
     class Meta:
         db_table = "nsfw_reports_audio"

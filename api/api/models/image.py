@@ -122,6 +122,13 @@ class ImageReport(AbstractMediaReport):
         related_name="image_report",
         help_text="The reference to the image being reported.",
     )
+    decision = models.ForeignKey(
+        to="ImageDecision",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="The moderation decision for this report.",
+    )
 
     class Meta:
         db_table = "nsfw_reports"
