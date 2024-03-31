@@ -290,8 +290,6 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
 class AudioReport(AbstractMediaReport):
     media_class = Audio
-    sensitive_class = SensitiveAudio
-    deleted_class = DeletedAudio
     url_frag = "audio"
 
     media_obj = models.ForeignKey(

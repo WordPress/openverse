@@ -135,16 +135,11 @@ class AbstractMediaReport(models.Model):
     Generic model from which to inherit all reported media classes.
 
     'Reported' here refers to content reports such as sensitive, copyright-violating or
-    deleted content. Subclasses must populate ``media_class``, ``sensitive_class`` and
-    ``deleted_class`` fields.
+    deleted content. Subclasses must populate fields ``media_class`` and ``url_frag``.
     """
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
-    sensitive_class: type[models.Model] = None
-    """the class storing sensitive media e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
-    deleted_class: type[models.Model] = None
-    """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
     url_frag: str = None
     """the fragment used in the URL path for the media item e.g. ``images`` or ``audio``"""
 
