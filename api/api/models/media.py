@@ -186,6 +186,10 @@ class AbstractMediaReport(models.Model):
         help_text="The explanation on why media is being reported.",
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+    """
+    All statuses except ``PENDING`` are deprecated. Instead refer to the
+    properties ``is_pending`` and ``is_moderated``.
+    """
 
     decision = models.ForeignKey(
         to="AbstractMediaDecision",
@@ -216,6 +220,28 @@ class AbstractMediaReport(models.Model):
             origin = f"{origin}/"
         url = f"{origin}v1/{self.url_frag}/{self.media_obj.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
+
+    @property
+    def is_pending(self) -> bool:
+        """
+        Determine if the report has not been moderated and does not have an
+        associated decision. Also see ``is_moderated``.
+
+        :return: whether the report is in the "pending" state
+        """
+
+        return self.decision_id is None
+
+    @property
+    def is_moderated(self) -> bool:
+        """
+        Determine if the report has been moderated and has an associated
+        decision. Also see ``is_pending``.
+
+        :return: whether the report is in the "moderated" state
+        """
+
+        return self.decision_id is not None
 
     def save(self, *args, **kwargs):
         """
