@@ -11,10 +11,18 @@ from elasticsearch_dsl.response import Hit
 
 from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
+from api.constants.parameters import COLLECTION, TAG
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
 from api.models.media import AbstractMedia
 from api.serializers.base import BaseModelSerializer
+from api.serializers.docs import (
+    COLLECTION_HELP_TEXT,
+    CREATOR_HELP_TEXT,
+    EXCLUDED_SOURCE_HELP_TEXT,
+    SOURCE_HELP_TEXT,
+    TAG_HELP_TEXT,
+)
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
 from api.utils.licenses import get_license_url
@@ -82,6 +90,11 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return value
 
 
+EXCLUDED_COLLECTION_REQUEST_FIELDS = (
+    [] if settings.SHOW_COLLECTION_DOCS else [COLLECTION, TAG]
+)
+
+
 @extend_schema_serializer(
     # Hide unstable and internal fields from documentation.
     # Also see `field_names` below.
@@ -92,6 +105,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         "unstable__authority_boost",
         "unstable__include_sensitive_results",
         "internal__index",
+        *EXCLUDED_COLLECTION_REQUEST_FIELDS,
     ],
 )
 class MediaSearchRequestSerializer(PaginatedRequestSerializer):
@@ -106,10 +120,15 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     ]
     field_names = [
         "q",
+        "source",
+        "excluded_source",
         "license",
         "license_type",
         "creator",
         "tags",
+        # TODO: Uncomment after https://github.com/WordPress/openverse/issues/3919
+        # "collection",
+        # "tag",
         "title",
         "filter_dead",
         "extension",
@@ -120,8 +139,16 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         # "unstable__authority",
         # "unstable__authority_boost",
         # "unstable__include_sensitive_results",
-        *PaginatedRequestSerializer.field_names,
     ]
+    # TODO: Remove after https://github.com/WordPress/openverse/issues/3919
+    if settings.SHOW_COLLECTION_DOCS:
+        field_names.extend(
+            [
+                TAG,
+                COLLECTION,
+            ]
+        )
+    field_names.extend(PaginatedRequestSerializer.field_names)
     """
     Keep the fields names in sync with the actual fields below as this list is
     used to generate Swagger documentation.
@@ -132,27 +159,13 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         help_text="A query string that should not exceed 200 characters in length",
         required=False,
     )
-    license = serializers.CharField(
-        label="licenses",
-        help_text=make_comma_separated_help_text(LICENSE_GROUPS["all"], "licenses"),
+    source = serializers.CharField(
+        label="provider",
         required=False,
     )
-    license_type = serializers.CharField(
-        label="license type",
-        help_text=make_comma_separated_help_text(
-            LICENSE_GROUPS.keys(), "license types"
-        ),
+    excluded_source = serializers.CharField(
+        label="excluded_provider",
         required=False,
-    )
-    creator = serializers.CharField(
-        label="creator",
-        help_text="Search by creator only. Cannot be used with `q`. The search "
-        "is fuzzy, so `creator=john` will match any value that includes the "
-        "word `john`. If the value contains space, items that contain any of "
-        "the words in the value will match. To search for several values, "
-        "join them with a comma.",
-        required=False,
-        max_length=200,
     )
     tags = serializers.CharField(
         label="tags",
@@ -172,6 +185,24 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         "value will match. To search for several values, join them with a comma.",
         required=False,
         max_length=200,
+    )
+    creator = serializers.CharField(
+        label="creator",
+        help_text=CREATOR_HELP_TEXT,
+        required=False,
+        max_length=200,
+    )
+    license = serializers.CharField(
+        label="licenses",
+        help_text=make_comma_separated_help_text(LICENSE_GROUPS["all"], "licenses"),
+        required=False,
+    )
+    license_type = serializers.CharField(
+        label="license type",
+        help_text=make_comma_separated_help_text(
+            LICENSE_GROUPS.keys(), "license types"
+        ),
+        required=False,
     )
     filter_dead = serializers.BooleanField(
         label="filter_dead",
@@ -235,6 +266,21 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         default=False,
     )
 
+    unstable__tag = serializers.CharField(
+        label="tag",
+        source="tag",
+        help_text=TAG_HELP_TEXT,
+        required=False,
+        max_length=200,
+    )
+    unstable__collection = serializers.ChoiceField(
+        source="collection",
+        label="collection",
+        choices=["tag", "source", "creator"],
+        help_text=COLLECTION_HELP_TEXT,
+        required=False,
+    )
+
     # The ``internal__`` prefix is used in the query params.
     # If you rename these fields, update the following references:
     #   - ``field_names`` in ``MediaSearchRequestSerializer``
@@ -244,6 +290,24 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         help_text="The index against which to perform the search.",
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.media_type = self.context.get("media_type")
+        if not self.media_type:
+            raise ValueError(
+                "The media request serializer's `media_type` context variable must be set."
+            )
+        media_path = {"image": "images", "audio": "audio"}[self.media_type]
+        variables = {
+            "origin": settings.CANONICAL_ORIGIN,
+            "media_path": media_path,
+        }
+
+        self.fields["source"].help_text = SOURCE_HELP_TEXT.format(**variables)
+        self.fields["excluded_source"].help_text = EXCLUDED_SOURCE_HELP_TEXT.format(
+            **variables
+        )
 
     def is_request_anonymous(self):
         request = self.context.get("request")
@@ -284,6 +348,64 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
             license_groups.append(LICENSE_GROUPS[_type])
         intersected = set.intersection(*license_groups)
         return ",".join(intersected)
+
+    def validate_unstable__collection(self, value):
+        if self.initial_data.get("q", None) is not None:
+            raise serializers.ValidationError(
+                "The `collection` parameter cannot be used with the `q` parameter."
+            )
+        if value == "tag" and not self.initial_data.get(TAG):
+            raise serializers.ValidationError(
+                f"The `{TAG}` parameter is required when `{COLLECTION}` is set to `tag`."
+            )
+        if value == "source" and not self.initial_data.get("source"):
+            raise serializers.ValidationError(
+                f"The `source` parameter is required when `{COLLECTION}` is set to `source`."
+            )
+        if value == "creator" and not (
+            self.initial_data.get("creator") and self.initial_data.get("source")
+        ):
+            raise serializers.ValidationError(
+                f"The `creator` and `source` parameters are required when `{COLLECTION}` is set to `creator`."
+            )
+        return value
+
+    def validate_source(self, value):
+        """
+        For the regular searches, split the value.lower() by comma and only return the
+        source names that are in the search controller's sources list for the media type.
+        For the collection=tag, return the value as is. It is ignored in the query builder.
+        For source and creator collections, accept the value as is, without lower-casing
+        or splitting, and check if it's in the valid source name list.
+        This function validates the source and excluded_source fields, but `excluded_source`
+        is ignored for collection requests.
+        """
+        allowed_sources = list(search_controller.get_sources(self.media_type).keys())
+        sources_list = ", ".join([f"'{s}'" for s in allowed_sources])
+        collection = self.initial_data.get(COLLECTION)
+
+        # For collection=tag, return the value as is. It is ignored in the query builder.
+        if collection == "tag":
+            return value
+
+        if collection:
+            if value not in allowed_sources:
+                raise serializers.ValidationError(
+                    f"Invalid source parameter '{value}'. Use one of the valid sources: {sources_list}"
+                )
+            return value
+        else:
+            sources = value.lower().split(",")
+            valid_sources = [source for source in sources if source in allowed_sources]
+            return ",".join(valid_sources)
+
+    def validate_excluded_source(self, input_sources):
+        if "source" in self.initial_data:
+            raise serializers.ValidationError(
+                "Cannot set both 'source' and 'excluded_source'. "
+                "Use exactly one of these."
+            )
+        return self.validate_source(input_sources)
 
     def validate_creator(self, value):
         return self._truncate(value)
@@ -330,6 +452,9 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         if self.is_request_anonymous():
             return None
         if not settings.ES.indices.exists(value):  # ``exists`` includes aliases.
+            raise serializers.ValidationError(f"Invalid index name `{value}`.")
+
+        if not value.startswith(self.media_type):
             raise serializers.ValidationError(f"Invalid index name `{value}`.")
         return value
 
@@ -609,70 +734,6 @@ class MediaSerializer(BaseModelSerializer):
 #######################
 # Dynamic serializers #
 #######################
-
-
-def get_search_request_source_serializer(media_type):
-    media_path = {
-        "image": "images",
-        "audio": "audio",
-    }[media_type]
-
-    class MediaSearchRequestSourceSerializer(serializers.Serializer):
-        """Parses and validates the source/not_source fields from the query params."""
-
-        field_names = [
-            "source",
-            "excluded_source",
-        ]
-        """
-        Keep the fields names in sync with the actual fields below as this list is
-        used to generate Swagger documentation.
-        """
-
-        _field_attrs = {
-            "help_text": (
-                "A comma separated list of data sources; valid values are "
-                "``source_name``s from the stats endpoint: "
-                f"{settings.CANONICAL_ORIGIN}/v1/{media_path}/stats/."
-            ),
-            "required": False,
-        }
-
-        source = serializers.CharField(
-            label="provider",
-            **_field_attrs,
-        )
-        excluded_source = serializers.CharField(
-            label="excluded_provider",
-            **_field_attrs,
-        )
-
-        @staticmethod
-        def validate_source_field(value):
-            """Check whether source is a valid source."""
-
-            allowed_sources = list(search_controller.get_sources(media_type).keys())
-            sources = value.lower().split(",")
-            sources = [source for source in sources if source in allowed_sources]
-            value = ",".join(sources)
-            return value
-
-        def validate_source(self, input_sources):
-            return self.validate_source_field(input_sources)
-
-        def validate_excluded_source(self, input_sources):
-            return self.validate_source(input_sources)
-
-        def validate(self, data):
-            data = super().validate(data)
-            if "source" in self.initial_data and "excluded_source" in self.initial_data:
-                raise serializers.ValidationError(
-                    "Cannot set both 'source' and 'excluded_source'. "
-                    "Use exactly one of these."
-                )
-            return data
-
-    return MediaSearchRequestSourceSerializer
 
 
 def get_hyperlinks_serializer(media_type):

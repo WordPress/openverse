@@ -100,6 +100,13 @@ The resulting, merged configuration will be:
     }
 }
 ```
+
+## Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`create_new_staging_es_index` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
 """
 
 import logging
@@ -111,7 +118,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from common import elasticsearch as es
 from common import slack
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
-from common.sensors.utils import prevent_concurrency_with_dags
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
     GET_CURRENT_INDEX_CONFIG_TASK_NAME,
     GET_FINAL_INDEX_CONFIG_TASK_NAME,
@@ -129,15 +136,15 @@ from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import 
 logger = logging.getLogger(__name__)
 
 
-def create_new_es_index_dag(config: CreateNewIndex):
+def create_new_es_index_dag(dag_config: CreateNewIndex):
     dag = DAG(
-        dag_id=config.dag_id,
+        dag_id=dag_config.dag_id,
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
-        tags=["elasticsearch"],
+        tags=["elasticsearch", dag_config.prevent_concurrency_tag],
         render_template_as_native_obj=True,
         params={
             "media_type": Param(
@@ -218,9 +225,13 @@ def create_new_es_index_dag(config: CreateNewIndex):
     )
 
     with dag:
-        prevent_concurrency = prevent_concurrency_with_dags(config.blocking_dags)
+        # Fail early if any other DAG that operates on the relevant elasticsearch cluster
+        # is running
+        prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+            tag=dag_config.prevent_concurrency_tag,
+        )
 
-        es_host = es.get_es_host(environment=config.environment)
+        es_host = es.get_es_host(environment=dag_config.environment)
 
         index_name = get_index_name(
             media_type="{{ params.media_type }}",
@@ -260,8 +271,8 @@ def create_new_es_index_dag(config: CreateNewIndex):
             destination_index=index_name,
             source_index="{{ params.source_index or params.media_type }}",
             query="{{ params.query }}",
-            timeout=config.reindex_timeout,
-            requests_per_second=config.requests_per_second,
+            timeout=dag_config.reindex_timeout,
+            requests_per_second=dag_config.requests_per_second,
             es_host=es_host,
         )
 
@@ -294,6 +305,6 @@ def create_new_es_index_dag(config: CreateNewIndex):
     return dag
 
 
-for config in CREATE_NEW_INDEX_CONFIGS.values():
+for dag_config in CREATE_NEW_INDEX_CONFIGS.values():
     # Generate the DAG for this environment
-    globals()[config.dag_id] = create_new_es_index_dag(config)
+    globals()[dag_config.dag_id] = create_new_es_index_dag(dag_config)

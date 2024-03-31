@@ -13,5 +13,6 @@ export = {
       },
     ],
     "@openverse/no-unexplained-disabled-test": ["error"],
+    "@openverse/translation-strings": ["error"],
   },
 } satisfies TSESLint.Linter.Config

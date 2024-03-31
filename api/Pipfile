@@ -16,7 +16,7 @@ pytest-django = "~=4.6"
 pytest-raises = "~=0.11"
 pytest-sugar = "~=0.9"
 remote-pdb = "~=2.1"
-schemathesis = "~=3.23"
+schemathesis = "~=3.25"
 
 [packages]
 adrf = "~=0.1.2"

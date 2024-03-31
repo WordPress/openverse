@@ -4,16 +4,13 @@ from elasticsearch_dsl.response import Hit
 
 from api.constants.field_order import field_position_map
 from api.constants.field_values import AUDIO_CATEGORIES, LENGTHS
-from api.constants.media_types import AUDIO_TYPE
 from api.models import Audio, AudioReport, AudioSet
 from api.serializers.fields import EnumCharField, SchemableHyperlinkedIdentityField
 from api.serializers.media_serializers import (
     MediaReportRequestSerializer,
     MediaSearchRequestSerializer,
     MediaSerializer,
-    PaginatedRequestSerializer,
     get_hyperlinks_serializer,
-    get_search_request_source_serializer,
 )
 
 
@@ -22,31 +19,11 @@ from api.serializers.media_serializers import (
 #######################
 
 
-AudioSearchRequestSourceSerializer = get_search_request_source_serializer("audio")
-
-
-class AudioCollectionRequestSerializer(PaginatedRequestSerializer):
-    field_names = [
-        *PaginatedRequestSerializer.field_names,
-        "peaks",
-    ]
-
-    peaks = serializers.BooleanField(
-        help_text="Whether to include the waveform peaks or not",
-        required=False,
-        default=False,
-    )
-
-
-class AudioSearchRequestSerializer(
-    AudioSearchRequestSourceSerializer,
-    MediaSearchRequestSerializer,
-):
+class AudioSearchRequestSerializer(MediaSearchRequestSerializer):
     """Parse and validate search query string parameters."""
 
     field_names = [
         *MediaSearchRequestSerializer.field_names,
-        *AudioSearchRequestSourceSerializer.field_names,
         "category",
         "length",
     ]
@@ -70,13 +47,6 @@ class AudioSearchRequestSerializer(
         required=False,
         default=False,
     )
-
-    def validate_internal__index(self, value):
-        if not (index := super().validate_internal__index(value)):
-            return None
-        if not index.startswith(AUDIO_TYPE):
-            raise serializers.ValidationError(f"Invalid index name `{value}`.")
-        return index
 
 
 class AudioReportRequestSerializer(MediaReportRequestSerializer):

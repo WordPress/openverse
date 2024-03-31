@@ -481,14 +481,15 @@ def test_search_tallies_pages_less_than_5(
         data={
             "q": "dogs",
             "unstable__include_sensitive_results": include_sensitive_results,
-        }
+        },
+        context={
+            "media_type": media_type_config.media_type,
+        },
     )
     serializer.is_valid()
 
     search_controller.query_media(
-        strategy="search",
         search_params=serializer,
-        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -523,13 +524,13 @@ def test_search_tallies_handles_empty_page(
 ):
     mock_post_process_results.return_value = None
 
-    serializer = media_type_config.search_request_serializer(data={"q": "dogs"})
+    serializer = media_type_config.search_request_serializer(
+        data={"q": "dogs"}, context={"media_type": media_type_config.media_type}
+    )
     serializer.is_valid()
 
     search_controller.query_media(
-        strategy="search",
         search_params=serializer,
-        collection_params=None,
         ip=0,
         origin_index=media_type_config.origin_index,
         exact_index=False,
@@ -567,14 +568,13 @@ def test_resolves_index(
     settings.ENABLE_FILTERED_INDEX_QUERIES = feature_enabled
 
     serializer = media_type_config.search_request_serializer(
-        data={"unstable__include_sensitive_results": include_sensitive_results}
+        data={"unstable__include_sensitive_results": include_sensitive_results},
+        context={"media_type": media_type_config.media_type},
     )
     serializer.is_valid()
 
     search_controller.query_media(
-        strategy="search",
         search_params=serializer,
-        collection_params=None,
         ip=0,
         origin_index=origin_index,
         exact_index=False,
@@ -635,13 +635,12 @@ def test_no_post_process_results_recursion(
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
         # the ES response regardless of the input
-        data={"q": "bird perched"}
+        data={"q": "bird perched"},
+        context={"media_type": image_media_type_config.media_type},
     )
     serializer.is_valid()
     results, _, _, _ = search_controller.query_media(
-        strategy="search",
         search_params=serializer,
-        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -775,13 +774,12 @@ def test_post_process_results_recurses_as_needed(
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
         # the ES response regardless of the input
-        data={"q": "bird perched"}
+        data={"q": "bird perched"},
+        context={"media_type": image_media_type_config.media_type},
     )
     serializer.is_valid()
     results, _, _, _ = search_controller.query_media(
-        strategy="search",
         search_params=serializer,
-        collection_params=None,
         ip=0,
         origin_index=image_media_type_config.origin_index,
         exact_index=True,
@@ -817,15 +815,14 @@ def test_excessive_recursion_in_post_process(
     serializer = image_media_type_config.search_request_serializer(
         # This query string does not matter, ultimately, as pook is mocking
         # the ES response regardless of the input
-        data={"q": "bird perched"}
+        data={"q": "bird perched"},
+        context={"media_type": image_media_type_config.media_type},
     )
     serializer.is_valid()
 
     with caplog.at_level(logging.INFO):
         results, _, _, _ = search_controller.query_media(
-            strategy="search",
             search_params=serializer,
-            collection_params=None,
             ip=0,
             origin_index=image_media_type_config.origin_index,
             exact_index=True,

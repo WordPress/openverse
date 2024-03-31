@@ -1,6 +1,7 @@
 import pytest
 from elasticsearch_dsl import Q
 
+from api.constants.parameters import COLLECTION, TAG
 from api.controllers import search_controller
 from api.controllers.search_controller import (
     DEFAULT_SQS_FLAGS,
@@ -32,7 +33,9 @@ def excluded_providers_cache(django_cache, monkeypatch):
 
 
 def test_create_search_query_empty(media_type_config):
-    serializer = media_type_config.search_request_serializer(data={})
+    serializer = media_type_config.search_request_serializer(
+        data={}, context={"media_type": "image"}
+    )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
@@ -48,7 +51,9 @@ def test_create_search_query_empty(media_type_config):
 
 def test_create_search_query_empty_no_ranking(media_type_config, settings):
     settings.USE_RANK_FEATURES = False
-    serializer = media_type_config.search_request_serializer(data={})
+    serializer = media_type_config.search_request_serializer(
+        data={}, context={"media_type": media_type_config.media_type}
+    )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
@@ -60,7 +65,9 @@ def test_create_search_query_empty_no_ranking(media_type_config, settings):
 
 
 def test_create_search_query_q_search_no_filters(media_type_config):
-    serializer = media_type_config.search_request_serializer(data={"q": "cat"})
+    serializer = media_type_config.search_request_serializer(
+        data={"q": "cat"}, context={"media_type": media_type_config.media_type}
+    )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
     actual_query_clauses = search_query.to_dict()["bool"]
@@ -93,7 +100,8 @@ def test_create_search_query_q_search_no_filters(media_type_config):
 
 def test_create_search_query_q_search_with_quotes_adds_raw_suffix(media_type_config):
     serializer = media_type_config.search_request_serializer(
-        data={"q": '"The cutest cat"'}
+        data={"q": '"The cutest cat"'},
+        context={"media_type": media_type_config.media_type},
     )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
@@ -139,7 +147,8 @@ def test_create_search_query_q_search_with_filters(image_media_type_config):
             "unstable__authority": True,
             "unstable__authority_boost": "2.5",
             "unstable__include_sensitive_results": True,
-        }
+        },
+        context={"media_type": image_media_type_config.media_type},
     )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
@@ -182,7 +191,8 @@ def test_create_search_query_non_q_query(image_media_type_config):
             "creator": "Artist From Openverse",
             "title": "kitten🐱",
             "tags": "cute",
-        }
+        },
+        context={"media_type": image_media_type_config.media_type},
     )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
@@ -226,7 +236,8 @@ def test_create_search_query_q_search_license_license_type_creates_2_terms_filte
         data={
             "license": "by-nc",
             "license_type": "commercial",
-        }
+        },
+        context={"media_type": image_media_type_config.media_type},
     )
     serializer.is_valid(raise_exception=True)
     search_query = search_controller.build_search_query(serializer)
@@ -261,7 +272,9 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     image_media_type_config,
     excluded_providers_cache,
 ):
-    serializer = image_media_type_config.search_request_serializer(data={})
+    serializer = image_media_type_config.search_request_serializer(
+        data={}, context={"media_type": image_media_type_config.media_type}
+    )
     serializer.is_valid(raise_exception=True)
 
     search_query = search_controller.build_search_query(serializer)
@@ -283,22 +296,22 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     ("data", "expected_query_filter"),
     [
         pytest.param(
-            {"tag": "art"},
+            {COLLECTION: "tag", TAG: "art"},
             [{"term": {"tags.name.keyword": "art"}}],
             id="filter_by_tag",
         ),
         pytest.param(
-            {"tag": "art, photography"},
+            {COLLECTION: "tag", TAG: "art, photography"},
             [{"term": {"tags.name.keyword": "art, photography"}}],
             id="filter_by_tag_treats_punctuation_as_part_of_tag",
         ),
         pytest.param(
-            {"source": "flickr"},
+            {COLLECTION: "source", "source": "flickr"},
             [{"term": {"source": "flickr"}}],
             id="filter_by_source",
         ),
         pytest.param(
-            {"source": "flickr", "creator": "nasa"},
+            {COLLECTION: "creator", "source": "flickr", "creator": "nasa"},
             [
                 {"term": {"source": "flickr"}},
                 {"term": {"creator.keyword": "nasa"}},
@@ -308,9 +321,11 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     ],
 )
 def test_build_collection_query(image_media_type_config, data, expected_query_filter):
-    serializer = image_media_type_config.search_request_serializer(data={})
+    serializer = image_media_type_config.search_request_serializer(
+        data=data, context={"media_type": image_media_type_config.media_type}
+    )
     serializer.is_valid(raise_exception=True)
-    actual_query = search_controller.build_collection_query(serializer, data)
+    actual_query = search_controller.build_collection_query(serializer)
     expected_query = Q(
         "bool",
         filter=expected_query_filter,

@@ -1,268 +1,357 @@
 {
   "404": {
-    "searchPlaceholder": "Buscar contenido para reutilizar",
-    "main": "Ve a {link} o busca algo similar en el siguiente campo.",
-    "title": "El contenido que estás buscando parece haber desaparecido."
+    "title": "El contenido que estás buscando parece haber desaparecido.",
+    "main": "Ve a {link} o busca algo similar en el siguiente campo."
   },
   "hero": {
-    "disclaimer": {
-      "license": "Licencia Creative Commons",
-      "content": "Todo el contenido de {openverse} está bajo una {license} o es de dominio público."
-    },
     "subtitle": "Explora entre más de 600 millones de elementos para reutilizar",
+    "description": "Una extensa biblioteca de fotos, imágenes y audio de stock gratuito, disponible para uso gratuito.",
     "search": {
       "placeholder": "Buscar contenidos"
     },
-    "aria": {
-      "searchType": "tipo de búsqueda",
-      "search": "buscar"
+    "disclaimer": {
+      "content": "Todo el contenido de {openverse} está bajo una {license} o es de dominio público.",
+      "license": "Licencia Creative Commons"
     },
     "licenseFilter": {
       "label": "Quiero algo que pueda"
-    }
-  },
-  "modal": {
-    "closeNamed": "Cerrar {name}",
-    "close": "Cerrar"
-  },
-  "sketchfabIframeTitle": "Visor {sketchfab}",
-  "mediaDetails": {
-    "reuse": {
-      "credit": {
-        "actualTitle": "«{title}»",
-        "genericTitle": "Esta obra",
-        "text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
-        "copyText": "una copia de esta licencia",
-        "termsText": "los términos",
-        "viewLegalText": "Para ver los {termsCopy}, visita {url}.",
-        "licensed": "está bajo la licencia",
-        "marked": "está marcado con",
-        "creatorText": "por {creatorName}"
-      },
-      "copyLicense": {
-        "copied": "¡Copiado!",
-        "copyText": "Copiar el texto",
-        "title": "Reconocer al creador",
-        "plain": "Texto sin formato",
-        "html": "HTML",
-        "rich": "Texto enriquecido"
-      },
-      "tool": {
-        "link": "aquí",
-        "content": "Lee más sobre la herramienta {link}."
-      },
-      "image": "Imagen",
-      "audio": "Audio",
-      "title": "Reutilizar el contenido",
-      "attribution": "Esta imagen se ha marcado con una licencia {link}:",
-      "toolHeader": "Dominio público",
-      "licenseHeader": "Licencia"
-    },
-    "contentReport": {
-      "short": "Informar",
-      "form": {
-        "dmca": {
-          "open": "Abrir el formulario",
-          "form": "Formulario DMCA",
-          "note": "Debes rellenar este {form} para informar de la infracción del copyright. No se realizará ninguna acción hasta que este formulario se haya rellenado y enviado. Recomendamos hacer lo mismo en la fuente, {source}.",
-          "option": "Infringe el copyright"
-        },
-        "mature": {
-          "placeholder": "Opcionalmente, proporciona una descripción.",
-          "subLabel": "Opcional",
-          "option": "Contiene contenido para adultos"
-        },
-        "other": {
-          "placeholder": "Por favor, introduce al menos 20 caracteres.",
-          "subLabel": "Obligatorio",
-          "note": "Describe el problema.",
-          "option": "Otra"
-        },
-        "cancel": "Cancelar",
-        "question": "¿Cuál es la razón?",
-        "submit": "Informar",
-        "disclaimer": "Por motivos de seguridad, {openverse} recopila y retiene direcciones IP anónimas de los que completan y envían este formulario."
-      },
-      "success": {
-        "note": "Gracias por informar de este contenido. Recomendamos hacer lo mismo en la fuente, {source}.",
-        "title": "Informe enviado correctamente"
-      },
-      "failure": {
-        "note": "Algo ha ido mal. Por favor, inténtalo de nuevo más tarde.",
-        "title": "No se ha podido enviar el informe"
-      },
-      "long": "Informar de este contenido"
     },
     "aria": {
-      "creatorUrl": "autor {name}",
-      "attribution": {
-        "tool": "lee más sobre la herramienta",
-        "license": "lee más sobre la licencia"
+      "search": "buscar",
+      "searchType": "tipo de búsqueda"
+    }
+  },
+  "notification": {
+    "translation": {
+      "text": "La traducción para el idioma local {locale} está incompleta. Ayúdanos a alcanzar el 100 % {link}.",
+      "link": "contribuyendo en la traducción",
+      "close": "Cerrar la contribución de la traducción ayuda a solicitar banner"
+    },
+    "analytics": {
+      "text": "Openverse utiliza análisis para mejorar la calidad de nuestro servicio. Visite {link} para aprender más o optar por salir.",
+      "link": "la página de privacidad",
+      "close": "Cierra el banner de los análisis."
+    }
+  },
+  "header": {
+    "homeLink": "{openverse} Home",
+    "placeholder": "Buscar todos los contenidos",
+    "aria": {
+      "primary": "principal",
+      "menu": "menú",
+      "search": "buscar",
+      "srSearch": "botón de búsqueda"
+    },
+    "aboutTab": "Acerca de",
+    "resourcesTab": "Recursos",
+    "notification": {
+      "text": "{example_notification_text}",
+      "dismiss": "Descartar",
+      "okay": "Aceptar"
+    },
+    "loading": "Cargando...",
+    "filterButton": {
+      "simple": "Filtros",
+      "withCount": "{count} filtro|{count} filtros"
+    },
+    "seeResults": "Ver resultados",
+    "backButton": "Vuelve.",
+    "contentSettingsButton": {
+      "simple": "Menú",
+      "withCount": "Menu. Filtro {count} aplicado en la práctica. Filtros {count} aplicados"
+    }
+  },
+  "navigation": {
+    "about": "Acerca de",
+    "licenses": "Licencias",
+    "getInvolved": "Participar",
+    "api": "API",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "feedback": "Feedback",
+    "sources": "Fuentes",
+    "externalSources": "Fuentes externas",
+    "searchHelp": "Buscar ayuda"
+  },
+  "about": {
+    "title": "Sobre {openverse}",
+    "description": {
+      "content": "{openverse} es una herramienta que permite descubrir obras con licencia abierta y de dominio público y ser usadas por todos."
+    },
+    "collection": {
+      "content": {
+        "a": "{openverse} busca más de 700 millones de imágenes y audio de API abiertas y el conjunto de datos {commonCrawl}",
+        "b": "Agregamos obras de múltiples repositorios públicos y facilitamos el reutilizamiento a través de características como la atribución de un clic."
       }
     },
-    "audioInfo": "Información del audio",
-    "imageInfo": "Información de la imagen",
-    "loading": "Cargando...",
-    "relatedError": "Error al recuperar los medios relacionados",
-    "sourceLabel": "Fuente",
-    "providerLabel": "Proveedor"
-  },
-  "prefPage": {
-    "nonSwitchable": {
-      "desc": "No puedes modificar el estado de estas características.",
-      "title": "Características que no se pueden cambiar."
+    "planning": {
+      "content": {
+        "a": "Actualmente {openverse} sólo busca imágenes y audio, con búsqueda de vídeo proporcionado a través de Fuentes Externas.",
+        "b": "Planeamos añadir nuevos tipos de medios tales como textos abiertos y modelos 3D, con el objetivo final de proporcionar acceso a los aproximadamente 2.500 millones de obras de CC con licencia y dominio público en la web.",
+        "c": "Todo nuestro código es de código abierto y se puede acceder en el {repository} Nosotros {community} Puedes ver lo que {working}"
+      },
+      "repository": "{openverse} Repositorio {github}",
+      "community": "agradecemos la colaboración de la comunidad",
+      "working": "estamos trabajando en este momento"
     },
-    "switchable": {
-      "desc": "Puedes activar o desactivar estas características a tu gusto y tus preferencias se guardarán en una cookie.",
-      "title": "Características que se pueden cambiar"
+    "transfer": {
+      "content": {
+        "a": "{openverse} es el sucesor de CC Search que fue lanzado por Creative Commons en 2019, después de su migración a WordPress en 2021.",
+        "b": "Puede leer más sobre esta transición en los anuncios oficiales de {creativeCommons} y {wordpress}",
+        "c": "Seguimos comprometidos con nuestro objetivo de abordar la descubribilidad y accesibilidad de los medios de acceso abierto."
+      }
     },
-    "explanation": "Mostrado porque {featName} es {featState}",
-    "contentFiltering": "Filtrado de contenido",
-    "storeState": "Provincia de la tienda",
-    "title": "Preferencias"
+    "declaration": {
+      "content": {
+        "a": "{openverse} no verifica la información de licencia para trabajos individuales, o si la atribución generada es exacta o completa.",
+        "b": "Sírvase verificar independientemente el estado de licencia y la información de atribución antes de reutilizar el contenido. Para más detalles, lea el {terms}"
+      },
+      "terms": "Términos de uso de {openverse}"
+    }
   },
   "sources": {
-    "heading": {
-      "audio": "Fuentes de audio",
-      "image": "Fuentes de imágenes"
+    "title": "Fuentes",
+    "detail": "Hacer clic en una {singleName} te permite explorar y filtrar los elementos dentro de esa fuente.",
+    "singleName": "Fuente",
+    "providers": {
+      "source": "Fuente",
+      "domain": "Dominio",
+      "item": "Elementos totales"
     },
+    "ccContent": {
+      "where": "¿De dónde proceden los contenidos de {openverse}?",
+      "content": "Hay contenidos con licencia abierta alojados en millones de dominios en toda la extensión de Internet. Nuestro equipo identifica sistemáticamente a los proveedores que alojan contenidos con licencia CC. Si son adecuados, los indexamos y los hacemos accesibles a través de {openverse}.",
+      "provider": {
+        "a": "Algunos proveedores tienen múltiples agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA a la fotografía personal. El {smithsonian} comprende una docena de colecciones diversas.",
+        "b": "Wikimedia Commons ejecuta la gama en términos de contenido, y es utilizado por varias galerías, bibliotecas, archivos y museos destacando algunas o todas sus colecciones digitalizadas."
+      },
+      "europeana": "{openverse} agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. {openverse} es capaz de indexar cientos de valiosas fuentes a través de una única integración con la {linkApi}."
+    },
+    "newContent": {
+      "next": "¿Cómo decidimos cuáles serán las siguientes fuentes a añadir?",
+      "integrate": "Tenemos una lista interminable de posibles fuentes para investigar antes de la integración. Nos hacemos preguntas como:",
+      "impact": " ¿Cuál es el impacto o la importancia de esta fuente para nuestros usuarios? Si existe dentro de un proveedor como Wikimedia Commons, ¿es valioso para nuestros usuarios poder filtrar por esta fuente directamente?",
+      "reuse": "¿Se muestra claramente la información sobre la licencia y la atribución para permitir una reutilización segura?",
+      "totalItems": "¿Cuántos nuevos elementos totales o nuevos tipos de elementos podemos aportar a nuestros usuarios a través de esta integración? Algunas fuentes son integraciones directas, mientras que otras pueden ser una fuente dentro de otra fuente."
+    },
+    "suggestions": "Apreciamos sugerencias de nuevas fuentes por parte de nuestra comunidad de usuarios.",
+    "issueButton": "Sugiere una nueva fuente",
     "aria": {
       "table": "tabla de fuentes"
     },
-    "title": "Fuentes",
-    "providers": {
-      "source": "Fuente",
-      "item": "Elementos totales",
-      "domain": "Dominio"
-    },
-    "issueButton": "Sugiere una nueva fuente",
-    "suggestions": "Apreciamos sugerencias de nuevas fuentes por parte de nuestra comunidad de usuarios.",
-    "newContent": {
-      "totalItems": "¿Cuántos nuevos elementos totales o nuevos tipos de elementos podemos aportar a nuestros usuarios a través de esta integración? Algunas fuentes son integraciones directas, mientras que otras pueden ser una fuente dentro de otra fuente.",
-      "reuse": "¿Se muestra claramente la información sobre la licencia y la atribución para permitir una reutilización segura?",
-      "impact": " ¿Cuál es el impacto o la importancia de esta fuente para nuestros usuarios? Si existe dentro de un proveedor como Wikimedia Commons, ¿es valioso para nuestros usuarios poder filtrar por esta fuente directamente?",
-      "integrate": "Tenemos una lista interminable de posibles fuentes para investigar antes de la integración. Nos hacemos preguntas como:",
-      "next": "¿Cómo decidimos cuáles serán las siguientes fuentes a añadir?"
-    },
-    "ccContent": {
-      "smithsonian": "Instituto Smithsonian",
-      "europeanaApi": "API de Euroepeana",
-      "europeana": "{openverse} agradece especialmente el trabajo de {link}, una organización que trabaja para digitalizar y hacer localizables las obras del patrimonio cultural en toda Europa. {openverse} es capaz de indexar cientos de valiosas fuentes a través de una única integración con la {linkApi}.",
-      "provider": "Algunos proveedores tienen varias agrupaciones diferentes de contenido dentro de ellos. {flickr} tiene fuentes que van desde la NASA hasta la fotografía personal. El {smithsonian} comprende una docena de colecciones diversas. Wikimedia Commons abarca toda la gama de contenidos y es utilizado por varias galerías, bibliotecas, archivos y museos para destacar algunas o todas sus colecciones digitalizadas.",
-      "content": "Hay contenidos con licencia abierta alojados en millones de dominios en toda la extensión de Internet. Nuestro equipo identifica sistemáticamente a los proveedores que alojan contenidos con licencia CC. Si son adecuados, los indexamos y los hacemos accesibles a través de {openverse}.",
-      "where": "¿De dónde proceden los contenidos de {openverse}?"
-    },
-    "singleName": "Fuente",
-    "detail": "Hacer clic en una {singleName} te permite explorar y filtrar los elementos dentro de esa fuente."
+    "heading": {
+      "image": "Fuentes de imágenes",
+      "audio": "Fuentes de audio"
+    }
   },
-  "audioTrack": {
-    "ariaLabelInteractive": "{title} - Reproductor de audio - Pulsa la barra de espacio para reproducir y pausar una muestra del audio",
-    "ariaLabel": "{title} - Reproductor de audio",
-    "messages": {
-      "loading": "Cargando...",
-      "err_unsupported": "Este formato de audio no es compatible con tu navegador.",
-      "err_decode": "No se ha podido decodificar el audio.",
-      "err_network": "Ha ocurrido un error de red.",
-      "err_aborted": "Has abortado la reproducción."
+  "externalSourcesPage": {
+    "title": "Búsqueda meta",
+    "intro": "{openverse} está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestras {link}.",
+    "link": "fuentes",
+    "license": {
+      "a": "Sin embargo, hay muchas fuentes de los medios de comunicación de dominio público y licenciados por CC que todavía no podemos incluir en la búsqueda de {openverse}",
+      "b": "Esto puede ser porque no ofrecen una API pública, o que nuestros colaboradores aún no han tenido tiempo de integrarlos en {openverse}",
+      "c": "Estas son fuentes valoradas y queremos asegurarnos de que usted es capaz de encontrar los mejores materiales de licencia abierta posible, independientemente de dónde se encuentren."
     },
-    "creator": "por {creator}"
-  },
-  "browsePage": {
-    "searchForm": {
-      "model_3d": "Modelos 3D",
-      "button": "Buscar",
-      "all": "contenido",
-      "video": "vídeos",
-      "audio": "audio",
-      "image": "imágenes",
-      "placeholder": "Buscar todo {type}",
-      "collectionPlaceholder": "Busca en esta colección"
+    "new": {
+      "title": "¿Puedo sugerir más fuentes para la búsqueda meta?",
+      "content": "¡Sí, por favor! Crea un «{issue}» en nuestro repositorio de GitHub o envíanos un  {email} y dinos qué nuevas fuentes te gustaría ver incluidas.",
+      "issue": "issue",
+      "email": "correo electrónico"
     },
-    "licenseDescription": {
-      "samplingPlus": "Se permiten muestras, integraciones y transformaciones creativas.",
-      "pd": "Este trabajo está marcado como de dominio público.",
-      "zero": "Este trabajo ha sido marcado como dedicado al dominio público.",
-      "by": "Reconocer al creador.",
-      "title": "Licencia CC",
-      "sa": "Comparte las adaptaciones bajo los mismos términos.",
-      "nd": "No se permiten derivados ni adaptaciones.",
-      "nc": "Solo para uso no comercial."
-    },
-    "searchRating": {
-      "content": "¿Son relevantes estos resultados?",
-      "feedbackThanks": "¡Gracias por tu opinión!",
-      "no": "No",
-      "yes": "Sí"
-    },
-    "aria": {
-      "creator": "buscar por creador",
-      "licenseExplanation": "explicación de la licencia",
-      "search": "buscar",
-      "close": "cerrar",
-      "relevance": {
-        "no": "¿resultado relevante? respuesta: no",
-        "yes": "¿resultado relevante? respuesta: sí"
+    "why": {
+      "title": "¿Por qué habéis creado esto?",
+      "content": "Durante muchos años, CC ha ofrecido a sus usuarios un portal de búsqueda dedicado para buscar plataformas que tienen filtros de licencias CC incorporados. Estas plataformas incluían Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter y SoundCloud. La experiencia de búsqueda tenía el siguiente aspecto:",
+      "new": {
+        "a": "Para los usuarios del sitio web de CC Meta Search, la función \"External Sources\" en {openverse} se verá familiarizada.",
+        "b": "El objetivo era asegurar que la funcionalidad no se pierda, pero se actualiza e incorpora dentro de nuestro nuevo motor de búsqueda de contenido de licencia abierta.",
+        "c": "Además, la característica \"Fuerzas externas\" se basa en esta funcionalidad, permitiéndonos añadir rápidamente nuevas fuentes externas a medida que las descubrimos, y apoyar nuevos tipos de contenido en el futuro."
       },
-      "removeFilter": "eliminar el filtro",
-      "scroll": "scroll al inicio"
+      "ariaLabel": "sugerencias",
+      "feedbackSuggestions": "Esperamos que disfrutes y, si tienes sugerencias para mejorar, déjanos tu {feedback}.",
+      "feedbackLink": "sugerencias"
     },
-    "allResultCount": "{localeCount} resultado|{localeCount} resultados",
-    "allNoResults": "No hay resultados",
-    "fetchingError": "Error al recuperar {type}:",
-    "load": "Cargar más resultados",
-    "allResultCountMore": "Más de {localeCount} resultado|Más de {localeCount} resultados"
+    "relationships": {
+      "a": "Esta funcionalidad también nos permite iniciar conversaciones y construir relaciones con fuentes que puedan ser incluidas en {openverse} en el futuro.",
+      "b": "Por último, también podemos ofrecer fuentes externas de tipos de medios que no incluimos en {openverse} aún, pero planeamos hacerlo."
+    },
+    "explanation": "Usted puede encontrar enlaces a fuentes externas en la parte inferior de cada {openverse} search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to."
   },
-  "searchType": {
-    "additional": "Fuentes adicionales",
-    "model_3d": "Modelos 3D",
-    "statusBeta": "Beta",
-    "heading": "Tipos de contenido",
-    "label": "Tipo de contenido a buscar",
-    "all": "Todo el contenido",
-    "seeAudio": "Ver todos los audios",
-    "seeImage": "Ver todas las imágenes",
-    "video": "Vídeos",
-    "audio": "Audio",
-    "image": "Imágenes"
+  "privacy": {
+    "title": "Privacidad",
+    "intro": {
+      "content": "El proyecto {openverse} busca dar prioridad a la privacidad y seguridad de nuestros usuarios. {openverse} se adhiere al {link} Vea este documento para una descripción completa de cómo {openverse} utiliza y protege cualquier información que nos proporcione.",
+      "link": "política de privacidad de todos los sitios web de WordPress.org"
+    },
+    "cookies": {
+      "title": "Cookies",
+      "content": {
+        "a": "{openverse} utiliza cookies para almacenar información sobre las preferencias de los visitantes e información sobre sus navegadores web. Utilizamos esta información para mejorar la experiencia de usuario del sitio.",
+        "b": "Estas son consideradas \"necesarias\" o \"cookies estrictamente necesarias\". Puede deshabilitarlos cambiando la configuración de su navegador, pero esto puede afectar cómo funciona {openverse}"
+      }
+    },
+    "contact": {
+      "title": "Contáctenos",
+      "content": "Cualquier pregunta sobre {openverse} y privacidad puede ser enviada a {email}, compartida como {issue}, o discutida con nuestra comunidad en el canal #openverso del {chat}",
+      "issue": "Cuestión de GitHub",
+      "chat": "Hacer una palabra Chat de prensa"
+    }
+  },
+  "searchGuide": {
+    "title": "Guía de sintaxis de {openverse}",
+    "intro": "Cuando buscas, puedes introducir símbolos especiales o palabras a tu término de búsqueda para hacer que tus resultados de búsqueda sean más precisos.",
+    "exact": {
+      "title": "Buscar una coincidencia exacta",
+      "ariaLabel": "cita cerrar cita Claude Monet ",
+      "claudeMonet": "\"Claude Monet\"",
+      "content": "Pon una palabra dentro de comillas. Por ejemplo, {link}."
+    },
+    "negate": {
+      "title": "Exclusión de los términos",
+      "operatorName": "menos operador",
+      "ariaLabel": "perro menos pug",
+      "example": "perro -pug",
+      "content": "Para excluir un término de sus resultados, ponga el {operator} delante de él. Ejemplo: {link}{br} Esto buscará medios relacionados con \"perro\" pero no incluirá resultados relacionados con \"pug\"."
+    }
+  },
+  "feedback": {
+    "title": "Comentarios",
+    "intro": "¡Gracias por usar {openverse}! Agradecemos tus ideas para mejorar la herramienta. Para ofrecer sugerencias normales, únete al canal de {slack} en el espacio de trabajo {makingWordpress} de Slack.",
+    "improve": "Ayúdanos a mejorar",
+    "report": "Informar de un fallo",
+    "loading": "Cargando...",
+    "aria": {
+      "ccUsability": "canal de slack de cc-usability",
+      "improve": "formulario para ayudarnos a mejorar",
+      "report": "formulario para informar de un fallo"
+    }
+  },
+  "sensitive": {
+    "title": "Contenido sensible",
+    "description": {
+      "content": {
+        "a": "{openverse} opera a lo largo de un enfoque “seguro por defecto” en todos los aspectos de su funcionamiento y desarrollo, con la intención de ser lo más inclusivo y accesible posible.",
+        "b": "Por lo tanto, {openverse} solo incluye resultados con contenido sensible cuando los usuarios han optado explícitamente por las características de “incluye resultados sensibles” en {openverseOrg} y en el {openverse} API.",
+        "c": "En cumplimiento de {wpCoc} y su {deiStatement}, {openverse} aporta grandes expectativas en relación con la conducta hacia otros contribuyentes, la accesibilidad de la contribución y los servicios y, por lo tanto, siendo un proyecto inclusivo.",
+        "d": "Asimismo, {openverse} tiene la expectativa de que los resultados devueltos de la API o mostrados en el sitio web de {openverseOrg} deben ser accesibles por defecto.",
+        "e": "Todo el mundo, independientemente de su procedencia, debe sentirse seguro e incluido en {openverse}, ya sea que contribuya a los aspectos técnicos de los servicios de {openverse}, un creador cuyas obras están incluidas en {openverse}",
+        "f": "{openverse} reconoce su responsabilidad como herramienta utilizada por personas de una amplia variedad de edades, incluyendo jóvenes en entornos educativos, y presta especial atención a minimizar la interacción accidental con o la exposición al contenido sensible."
+      },
+      "wpCoc": "Código comunitario de conducta de WordPress",
+      "deiStatement": "Declaración de diversidad, equidad e inclusión"
+    },
+    "sensitivity": {
+      "what": {
+        "a": "{openverse} utiliza el término \"sensible\" en lugar de \"maduro\", \"NSFW\" (no seguro para el trabajo), u otros términos para indicar que nuestra designación de contenido tan sensible es amplia, con un enfoque en accesibilidad e inclusión.",
+        "b": "Esto significa que algún contenido es designado \"sensible\" que no caería en una categoría de lo que generalmente se entiende que es \"madura\" contenido (en otras palabras, contenido específicamente para un público adulto).",
+        "c": "La designación no implica, sin embargo, que {openverse} o sus sostenedores vean el contenido como inapropiado para la plataforma en general y no es igualmente una implicación del juicio moral o ético.",
+        "d": "Consideramos que el contenido \"sensible\" es un contenido ofensivo, perturbador, gráfico o inapropiado, prestando especial atención a los jóvenes."
+      },
+      "how": {
+        "a": "Esta definición de sensibilidad tiene un tremendo grado de flexibilidad y es intencionalmente imprecisa.",
+        "b": "{openverse} se basa en una variedad de herramientas para descubrir contenido potencialmente sensible, incluyendo informes de usuarios moderados sobre trabajo individual y escanear el contenido textual relacionado con un trabajo para términos sensibles.",
+        "c": "Estos se describen con más detalle a continuación."
+      }
+    },
+    "onOff": {
+      "title": "Activando y apagando contenidos sensibles",
+      "sensitiveResults": "Por defecto, {openverse} no incluye contenido sensible en los resultados de búsqueda. La inclusión de los resultados sensibles requiere un opt-in explícito del usuario. El usuario puede optar por incluir contenido sensible en los resultados de búsqueda permitiendo el interruptor de “Resultados positivos”.",
+      "blurSensitive": {
+        "a": "Cuando se incluye el contenido sensible, los resultados sensibles devueltos también están borrosos para evitar la exposición accidental.",
+        "b": "Desarreglarlos también requiere una opción explícita del usuario. El usuario puede optar por ver el contenido sensible no azulado desactivando el interruptor “Contenido azul”."
+      },
+      "where": "Ambos toggles están disponibles en la barra lateral de filtro (en escritorios) y en la pestaña “Filter” del panel de configuración de búsqueda (en dispositivos móviles) en la página de resultados de búsqueda."
+    },
+    "designations": {
+      "title": "Designaciones de contenido sensibles",
+      "description": {
+        "a": "{openverse} designa contenido sensible en la API y en el sitio web {openverseOrg} usando dos métodos: informes de usuarios de {openverse} y detección de contenidos textuales sensibles automatizada.",
+        "b": "Estas denominaciones no son exclusivas entre sí y un solo trabajo puede tener uno o ambos aplicados a él."
+      },
+      "userReported": {
+        "title": "Sensibilidad comunicada por el usuario",
+        "description": {
+          "a": "Los usuarios de {openverse} son invitados a informar sobre contenidos sensibles a través del sitio web de {openverseOrg} y {openverse} API.",
+          "b": "Algunas herramientas y aplicaciones que se integran con la API {openverse}, como la API {gutenbergMediaInserter}, también permiten a sus usuarios reportar contenido sensible.",
+          "c": "La página de un trabajo individual incluye la capacidad de reportar contenido como sensible (o de denunciar violaciones de derechos).",
+          "d": "Los moderadores de {openverse} verifican estos informes y toman decisiones sobre si añadir una designación de sensibilidad al trabajo o, en ciertos casos como se describe anteriormente, deslistan el trabajo de {openverse}’s services."
+        },
+        "gutenbergMediaInserter": "Editor de Gutenberg {openverse}"
+      },
+      "sensitiveText": {
+        "title": "Contenido textual sensible",
+        "description": {
+          "a": "{openverse} escanea algunos de los metadatos textuales relacionados con las obras según nuestras fuentes para términos sensibles.",
+          "b": "{openverse} {sensitiveTermsList} es fuente abierta y las contribuciones y aportaciones de la comunidad son bienvenidas e invitadas.",
+          "c": "Ejemplos de textos potencialmente sensibles incluyen, pero no se limitan al texto de una naturaleza sexual, biológica, violenta, racista o de otro modo despectiva.",
+          "d": "El proyecto reconoce que este enfoque es imperfecto y que algunos trabajos pueden recibir inadvertidamente una designación de sensibilidad sin ser necesariamente sensibles.",
+          "e": "Para más contexto sobre por qué hemos elegido este enfoque a pesar de eso, consulte el {imperfect} de nuestro documento de planificación de proyectos relacionado con esta característica."
+        },
+        "sensitiveTermsList": "lista de términos sensibles",
+        "imperfect": "Sección \"{sectionName}\"",
+        "metadata": {
+          "a": "Es importante señalar que algunos metadatos textuales para un trabajo son {notAvailable} a través de la API de {openverse} o el sitio web de {openverseOrg}",
+          "b": "Sin embargo, esos metadatos siguen siendo escaneados para términos sensibles y no se tratan como un caso especial.",
+          "c": "Si el escaneo de texto de {openverse} encuentra términos sensibles en esos campos de metadatos para un trabajo, el trabajo seguirá recibiendo una designación de sensibilidad basada en texto sensible aunque el texto sensible en sí mismo no esté disponible a través de {openverse}",
+          "d": "{openverse} toma el enfoque de que el contenido textual sensible en una descripción es un indicador correlativo relativamente alto de obras potencialmente sensibles.",
+          "e": "Como arriba, {openverse} entiende que esto no es perfecto."
+        },
+        "notAvailable": "no disponible"
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "one": {
+        "question": "He encontrado contenido Creo que es sensible que no tiene una designación de sensibilidad. ¿Qué debo hacer?",
+        "answer": {
+          "a": "Por favor reporte contenido sensible visitando la página de trabajo individual en el sitio web de {openverseOrg} y utilizando el botón “reportar este contenido” debajo de la información de atribución y por encima de las etiquetas.",
+          "b": "{openverse} informes moderados individualmente y se reserva el derecho a rechazar respetuosamente la solicitud de añadir una designación de sensibilidad a un determinado trabajo."
+        }
+      },
+      "two": {
+        "question": "No estoy de acuerdo con la designación de sensibilidad en un trabajo. ¿Puedes, por favor, quitarlo?",
+        "answerPt1": "Para designaciones basadas en textos, {openverse} no tiene en este momento un método para eliminar la designación. Esta es una característica que se construirá eventualmente, pero no es parte de la característica de detección de contenidos sensibles a la base.",
+        "answerPt2": {
+          "a": "Para los usuarios notificados, por favor presente un nuevo informe sobre la página del trabajo siguiendo las instrucciones en la pregunta anterior.",
+          "b": "En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad.",
+          "c": "Al agregar una nueva designación, {openverse} se reserva el derecho a rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
+        }
+      },
+      "three": {
+        "question": "He encontrado contenido en {openverse} que puede ser ilegal. Además de informarlo a {openverse}, ¿hay otros pasos que pueda tomar?",
+        "answer": {
+          "a": "Para los usuarios notificados, por favor presente un nuevo informe sobre la página del trabajo siguiendo las instrucciones en la pregunta anterior.",
+          "b": "En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad.",
+          "c": "Al agregar una nueva designación, {openverse} se reserva el derecho a rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
+        }
+      }
+    }
+  },
+  "error": {
+    "occurred": "Ha ocurrido un error",
+    "imageNotFound": "No se ha podido encontrar la imagen con ID {id}",
+    "mediaNotFound": "No se ha podido encontrar {mediaType} con ID {id}",
+    "image": "imagen",
+    "audio": "audio"
   },
   "filters": {
-    "audioCategories": {
-      "sound_effect": "Efectos de sonido",
-      "news": "Noticias",
-      "audiobook": "Audiolibro",
-      "pronunciation": "Pronunciación",
-      "title": "Categoría de audio",
-      "podcast": "Podcast",
-      "sound": "Efectos de sonido",
-      "music": "Música"
-    },
-    "licenseExplanation": {
-      "more": {
-        "readMore": "Leer más",
-        "mark": "{readMore} sobre {mark}.",
-        "license": "{readMore} sobre esta licencia."
-      },
-      "markDefinition": "Definición de {mark}",
-      "licenseDefinition": "Definición de la licencia"
-    },
+    "title": "Filtros",
+    "filterBy": "Filtrar por",
     "licenses": {
       "title": "Licencias",
-      "byNcNd": "BY-NC-ND",
-      "byNcSa": "BY-NC-SA",
-      "byNd": "BY-ND",
-      "byNc": "BY-NC",
-      "bySa": "BY-SA",
-      "by": "BY",
+      "cc0": "CC0",
       "pdm": "Marca de dominio público",
-      "cc0": "CC0"
-    },
-    "aria": {
-      "removeFilter": "Eliminar el filtro {label}"
+      "by": "BY",
+      "bySa": "BY-SA",
+      "byNc": "BY-NC",
+      "byNd": "BY-ND",
+      "byNcSa": "BY-NC-SA",
+      "byNcNd": "BY-NC-ND"
     },
     "licenseTypes": {
       "title": "Uso",
-      "modification": "Modificar o adaptar",
-      "commercial": "Usar comercialmente"
+      "commercial": "Usar comercialmente",
+      "modification": "Modificar o adaptar"
     },
     "imageProviders": {
       "title": "Fuente"
@@ -270,335 +359,337 @@
     "audioProviders": {
       "title": "Fuente"
     },
+    "audioCategories": {
+      "title": "Categoría de audio",
+      "audiobook": "Audiolibro",
+      "music": "Música",
+      "news": "Noticias",
+      "podcast": "Podcast",
+      "pronunciation": "Pronunciación",
+      "sound_effect": "Efectos de sonido",
+      "sound": "Efectos de sonido"
+    },
     "imageCategories": {
       "title": "Tipo de imagen",
-      "digitized_artwork": "Obras de arte digitalizadas",
+      "photograph": "Fotografías",
       "illustration": "Ilustraciones",
-      "photograph": "Fotografías"
+      "digitized_artwork": "Obras de arte digitalizadas"
     },
     "audioExtensions": {
       "title": "Tipo de archivo",
       "flac": "FLAC",
+      "mid": "MID",
+      "mp3": "MP3",
+      "oga": "OGA",
       "ogg": "OGG",
-      "mp3": "MP3"
+      "opus": "OPUS",
+      "wav": "WAV",
+      "webm": "WEBM"
     },
     "imageExtensions": {
       "title": "Tipo de archivo",
-      "svg": "SVG",
-      "gif": "GIF",
+      "jpg": "JPEG",
       "png": "PNG",
-      "jpg": "JPEG"
+      "gif": "GIF",
+      "svg": "SVG"
     },
     "aspectRatios": {
       "title": "Relación de aspecto",
-      "square": "Cuadrada",
+      "tall": "Alargada",
       "wide": "Panorámica",
-      "tall": "Alargada"
+      "square": "Cuadrada"
     },
     "sizes": {
       "title": "Tamaño de la imagen",
-      "large": "Grande",
+      "small": "Pequeño",
       "medium": "Medio",
-      "small": "Pequeño"
+      "large": "Grande"
     },
-    "mature": {
-      "title": "Ajustes de búsqueda",
-      "enable": "Permitir contenido para adultos"
+    "safeBrowsing": {
+      "title": "Cuervos seguros",
+      "desc": "El contenido marcado como {sensitive} no se muestra por defecto.",
+      "sensitive": "sensible",
+      "toggles": {
+        "fetchSensitive": {
+          "title": "Resultados sensibles",
+          "desc": "Mostrar resultados marcados como sensibles en el área de resultados."
+        },
+        "blurSensitive": {
+          "title": "Contenido de Blur",
+          "desc": "Blur imágenes y textos para evitar ver material sensible."
+        }
+      }
     },
-    "durations": {
-      "medium": "Media",
-      "title": "Duraciones",
-      "long": "Largo",
-      "short": "Corto"
+    "lengths": {
+      "title": "Duración",
+      "shortest": "c) 30 segundos",
+      "short": "30 sec-2 min",
+      "medium": "2-10 min",
+      "long": "■ 10 min"
     },
     "creator": {
       "title": "Buscar por creador"
     },
     "searchBy": {
-      "creator": "Creador",
-      "title": "Buscar por"
+      "title": "Buscar por",
+      "creator": "Creador"
     },
-    "title": "Filtros",
-    "filterBy": "Filtrar por"
-  },
-  "licenseReadableNames": {
-    "ncSampling+": "Sampling Plus NoComercial",
-    "sampling+": "Sampling Plus",
-    "byNcNd": "Reconocimiento-NoComercial-SinObraDerivada",
-    "byNcSa": "Reconocimiento-NoComercial-CompartirIgual",
-    "byNd": "Reconocimiento-SinObraDerivada",
-    "byNc": "Reconocimiento-NoComercial",
-    "bySa": "Reconocimiento-CompartirIgual",
-    "by": "Reconocimiento",
-    "pdm": "Marca de dominio público",
-    "cc0": "Cero"
-  },
-  "errorImages": {
-    "waitingForABite": "Tres chicos sentados en un tronco roto mientras dos de ellos pescan.",
-    "depressedMusician": "Un pianista deprimido descansa la cabeza en sus manos."
-  },
-  "noResults": {
-    "alternatives": "Intenta una consulta diferente o usa una de las fuentes adicionales para ampliar tu búsqueda.",
-    "heading": "No hemos podido encontrar nada para «{query}»."
-  },
-  "serverTimeout": {
-    "heading": "¡Vaya! Parece que esa petición tarda demasiado en completarse. Por favor, inténtalo de nuevo."
-  },
-  "about": {
-    "title": "Sobre {openverse}",
-    "declaration": {
-      "terms": "Términos de uso de {openverse}",
-      "content": "Por favor, ten en cuenta que {openverse} no verifica si las imágenes tienen la debida licencia CC o si la atribución y otra información de licencia que hemos añadido es precisa o completa. Por favor, verifica por tu cuenta el estado de la licencia y la información de atribución antes de reutilizar el contenido. Para más detalles, lee los {terms}."
+    "licenseExplanation": {
+      "licenseDefinition": "Definición de la licencia",
+      "markDefinition": "Definición de {mark}",
+      "more": {
+        "license": "{readMore} sobre esta licencia.",
+        "mark": "{readMore} sobre {mark}.",
+        "readMore": "Leer más"
+      }
     },
-    "planning": {
-      "api": "API de {openverse}",
-      "working": "estamos trabajando en este momento",
-      "community": "agradecemos la colaboración de la comunidad",
-      "catalog": "Catálogo de {openverse}",
-      "meta": "Búsqueda meta",
-      "content": "Actualmente, {openverse} solo busca imágenes, con búsqueda de audio y vídeo proporcionada a través de la {meta}. Pero planeamos añadir tipos de medios adicionales, como textos abiertos y audio, con el objetivo final de proporcionar acceso a la totalidad de 1.400 millones de obras con licencia CC y de dominio público de la web. Todo nuestro código es de código abierto ({search}, {api}, {catalog}) y nosotros {community}. Puedes ver en qué {working}."
-    },
-    "transfer": {
-      "content": "{openverse} es el sucesor de CC Search, que Creative Commons lanzó en 2019, tras su migración a WordPress en 2021. Puedes leer más sobre esta transición en los anuncios oficiales de {creativeCommons} y {wordpress}. Seguimos comprometidos con nuestro objetivo de abordar el descubrimiento y la accesibilidad de los medios de acceso abierto."
-    },
-    "collection": {
-      "content": "{openverse} busca entre más de 300 millones de imágenes en API abiertas y el conjunto de datos de {commonCrawl}. Va más allá de la simple búsqueda para añadir los resultados a través de múltiples repositorios públicos en un solo catálogo y facilita la reutilización a través de características como las etiquetas autogeneradas y la atribución con un solo clic."
-    },
-    "description": {
-      "content": "{openverse} es una herramienta que permite descubrir obras con licencia abierta y de dominio público y ser usadas por todos."
+    "aria": {
+      "removeFilter": "Eliminar el filtro {label}"
     }
-  },
-  "audioDetails": {
-    "information": "Información del audio",
-    "table": {
-      "source": "Fuente",
-      "provider": "Proveedor",
-      "genre": "Género",
-      "filetype": "Formato",
-      "sampleRate": "Tasa de muestreo",
-      "category": "Tipo",
-      "album": "Álbum"
-    },
-    "relatedAudios": "Audios relacionados",
-    "genreLabel": "Género"
-  },
-  "skipToContent": "Saltar al contenido",
-  "imageDetails": {
-    "information": {
-      "unknown": "Desconocida",
-      "title": "Información de la imagen",
-      "source": "Fuente",
-      "provider": "Proveedor",
-      "pixels": "píxeles",
-      "dimensions": "Dimensiones",
-      "type": "Tipo"
-    },
-    "creator": "por {name}",
-    "aria": {
-      "creatorUrl": "Autor {creator}"
-    },
-    "relatedImages": "Imágenes relacionadas",
-    "weblink": "Ir a la web de la imagen"
-  },
-  "header": {
-    "filterButton": {
-      "withCount": "{count} filtro|{count} filtros",
-      "simple": "Filtros"
-    },
-    "loading": "Cargando...",
-    "aria": {
-      "search": "buscar",
-      "srSearch": "botón de búsqueda",
-      "menu": "menú",
-      "primary": "principal"
-    },
-    "placeholder": "Buscar todos los contenidos",
-    "notification": {
-      "okay": "Aceptar",
-      "dismiss": "Descartar",
-      "text": "{example_notification_text}"
-    },
-    "resourcesTab": "Recursos",
-    "aboutTab": "Acerca de"
   },
   "filterList": {
     "filterBy": "Filtrar por",
-    "categoryAria": "lista de filtros para la categoría {categoryName}",
-    "show": "Mostrar los resultados",
+    "hide": "Ocultar los filtros",
     "clear": "Vaciar los filtros",
-    "hide": "Ocultar los filtros"
+    "clearNumbered": "Filtros claros ({number})",
+    "show": "Mostrar los resultados",
+    "categoryAria": "lista de filtros para la categoría {categoryName}"
   },
-  "notification": {
-    "translation": {
-      "link": "contribuyendo en la traducción",
-      "text": "La traducción para el idioma local {locale} está incompleta. Ayúdanos a alcanzar el 100 % {link}."
+  "browsePage": {
+    "allNoResults": "No hay resultados",
+    "allResultCount": "{localeCount} resultado|{localeCount} resultados",
+    "allResultCountMore": "Más de {localeCount} resultado|Más de {localeCount} resultados",
+    "contentLink": {
+      "image": {
+        "zero": "No se han encontrado imágenes para {query}",
+        "count": "Véase {localeCount} imagen encontrada para {query} Ver imágenes {localeCount} encontradas para {query}",
+        "countMore": "Ver más imágenes de {localeCount} encontradas para {query}"
+      },
+      "audio": {
+        "zero": "No se encuentra audio para {query}",
+        "count": "Ver {localeCount} audio encontrado para {query}",
+        "countMore": "Ver más {localeCount} audio encontrado para {query}"
+      }
+    },
+    "load": "Cargar más resultados",
+    "loading": "Cargando...",
+    "fetchingError": "Error al recuperar {type}:",
+    "searchRating": {
+      "content": "¿Son relevantes estos resultados?",
+      "yes": "Sí",
+      "no": "No",
+      "feedbackThanks": "¡Gracias por tu opinión!"
+    },
+    "searchForm": {
+      "placeholder": "Buscar todo {type}",
+      "image": "imágenes",
+      "audio": "audio",
+      "video": "vídeos",
+      "model3d": "Modelos 3D",
+      "all": "contenido",
+      "collectionPlaceholder": "Busca en esta colección",
+      "button": "Buscar",
+      "clear": "Despejado"
+    },
+    "licenseDescription": {
+      "title": "Licencia CC",
+      "by": "Reconocer al creador.",
+      "nc": "Solo para uso no comercial.",
+      "nd": "No se permiten derivados ni adaptaciones.",
+      "sa": "Comparte las adaptaciones bajo los mismos términos.",
+      "zero": "Este trabajo ha sido marcado como dedicado al dominio público.",
+      "pd": "Este trabajo está marcado como de dominio público.",
+      "samplingPlus": "Se permiten muestras, integraciones y transformaciones creativas."
+    },
+    "aria": {
+      "close": "cerrar",
+      "scroll": "scroll al inicio",
+      "search": "buscar",
+      "relevance": {
+        "yes": "¿resultado relevante? respuesta: sí",
+        "no": "¿resultado relevante? respuesta: no"
+      },
+      "removeFilter": "eliminar el filtro",
+      "licenseExplanation": "explicación de la licencia",
+      "creator": "buscar por creador",
+      "imageTitle": "Imagen: {title}",
+      "audioTitle": "Audio: {title}",
+      "results": "Resultados de búsqueda para {query}"
     }
   },
-  "externalSourcesPage": {
-    "images": {
-      "notFinding": "Mira la sección «{notFinding}» debajo de los resultados.",
-      "demoLabel": "Diseño de la búsqueda meta para tipos de medios indexados, como las imágenes",
-      "title": "¿Cómo funciona la característica de búsqueda meta para tipos de medios indexados?",
-      "info": "La sección «{notFinding}» lista otras fuentes de contenido con licencia CC y de dominio público. Tu consulta de búsqueda será precargada y, si es compatible, puedes seleccionar un filtro de {use} para filtrar proactivamente tus resultados. Haz clic en el botón de la fuente externa que te gustaría buscar y tus resultados se abrirán en una nueva pestaña.",
-      "continue": "{loadMore} y sigue navegando en {openverse}.",
-      "content": "{openverse} es compatible con la búsqueda integrada de algunos tipos de medios. Cuando introduces una consulta en la página de inicio de {openverse}, se mostrará una página de resultados. Haciendo scroll hasta el final de la página, tienes dos opciones:"
+  "mediaDetails": {
+    "information": {
+      "type": "Tipo",
+      "unknown": "Desconocida",
+      "category": "Categoría"
     },
-    "audioVideo": {
-      "content": "{openverse} todavía no es compatible con la búsqueda integrada de algunos tipos de medios, como los vídeos. Para estos tipos de medios, haz clic en la pestaña apropiada y verás las fuentes donde puedes encontrar contenido con licencia CC.",
-      "demoLabel": "Diseño de la búsqueda meta para tipos de medios no indexados, como los vídeos",
-      "title": "¿Cómo funciona la característica de búsqueda meta para tipos de medios no indexados?",
-      "filter": "La barra de filtros de la izquierda incluye el filtro de {use}, que puede ser compatible con algunas fuentes de búsqueda meta. Aplícalos antes de hacer clic en el botón de la fuente externa en la que te gustaría buscar."
+    "scroll": {
+      "forward": "Desplazamiento hacia adelante",
+      "back": "Desplazarse hacia atrás"
     },
-    "new": {
-      "title": "¿Puedo sugerir más fuentes para la búsqueda meta?",
-      "email": "correo electrónico",
-      "issue": "issue",
-      "content": "¡Sí, por favor! Crea un «{issue}» en nuestro repositorio de GitHub o envíanos un  {email} y dinos qué nuevas fuentes te gustaría ver incluidas."
-    },
-    "why": {
-      "title": "¿Por qué habéis creado esto?",
-      "feedbackSuggestions": "Esperamos que disfrutes y, si tienes sugerencias para mejorar, déjanos tu {feedback}.",
-      "feedbackLink": "sugerencias",
-      "ariaLabel": "sugerencias",
-      "new": "A los usuarios del antiguo sitio de búsqueda meta de CC, la característica de búsqueda meta de {openverse} les resultará familiar. El objetivo era garantizar que la funcionalidad no se perdiera, sino que se actualizara y se integrara en nuestro nuevo motor de búsqueda de contenidos con licencia abierta. Además, la característica de la búsqueda meta se basa en esta funcionalidad, permitiéndonos añadir rápidamente nuevas fuentes a la búsqueda meta a medida que las descubrimos y ser compatibles con nuevos tipos de contenido en el futuro a medida que vayamos creciendo.",
-      "content": "Durante muchos años, CC ha ofrecido a sus usuarios un portal de búsqueda dedicado para buscar plataformas que tienen filtros de licencias CC incorporados. Estas plataformas incluían Europeana, Google Images, Flickr, Jamendo, Open Clip Art Library, SpinXpress, Wikimedia Commons, YouTube, ccMixter y SoundCloud. La experiencia de búsqueda tenía el siguiente aspecto:"
-    },
-    "link": "fuentes",
-    "title": "Búsqueda meta",
-    "use": "Uso",
-    "contentTypes": "La búsqueda meta en {openverse} actualmente es compatible con búsqueda de imágenes, audio y vídeo en sitios externos. ",
-    "content": "¿Qué tipos de contenido puedo buscar usando la característica de búsqueda meta?",
-    "license": "¡Internet es un lugar enorme! Hay muchos portales de búsqueda y colecciones, que albergan contenido con licencia CC y de dominio público, que no podemos indexar o mostrar sus resultados en la interfaz de {openverse}. Estas son fuentes importantes de contenido con licencia CC y de dominio público y queremos asegurarnos de que puedas encontrar los mejores materiales posibles con licencia abierta, independientemente de dónde se encuentren.",
-    "intro": "{openverse} está basado en un catálogo que indexa contenidos con licencia CC y de dominio público de fuentes seleccionadas. Más información sobre nuestras {link}."
-  },
-  "search": {
-    "search": "Buscar"
-  },
-  "playPause": {
-    "replay": "Volver a reproducir",
-    "pause": "Pausar",
-    "play": "Reproducir"
-  },
-  "searchGuide": {
-    "exact": {
-      "ariaLabel": "cita cerrar cita Claude Monet ",
-      "title": "Buscar una coincidencia exacta",
-      "content": "Pon una palabra dentro de comillas. Por ejemplo, {link}.",
-      "claudeMonet": "\"Claude Monet\""
-    },
-    "combine": {
-      "ariaLabels": {
-        "fuzziness": "tilde N",
-        "verticalBar": "símbolo de barra vertical",
-        "plus": "símbolo de más",
-        "minus": "símbolo de menos",
-        "star": "simbolo de asterisco",
-        "close": "paréntesis de cierre",
-        "open": "paréntesis de apertura"
+    "reuse": {
+      "title": "Reutilizar el contenido",
+      "description": "Visite el sitio web de {media} para descargarlo y utilizarlo. Asegúrese de acreditar al creador mostrando la información de atribución donde está compartiendo su trabajo.",
+      "copyrightDisclaimer": "Algunas fotografías pueden contener contenido de copyright, como pinturas, esculturas o obras arquitectónicas. Utilizar estas fotografías puede requerir permisos adicionales del titular de derechos de autor de los trabajos representados.",
+      "licenseHeader": "Licencia",
+      "toolHeader": "Dominio público",
+      "audio": "Audio",
+      "image": "Imagen",
+      "tool": {
+        "content": "Lee más sobre la herramienta {link}.",
+        "link": "aquí"
       },
-      "title": "Combinando términos",
-      "fuzziness": "{symbol} después de una palabra significa distancia de edición (confusión)",
-      "precedence": "{open} y {close} significa prioridad",
-      "prefix": "{symbol} al final de un término significa la consulta de un prefijo",
-      "negate": "{symbol} niega un único token",
-      "or": "{symbol} significa una operación OR",
-      "and": "{symbol} significa una operación AND",
-      "description": "Si quieres combinar términos, puedes usar los siguientes operadores para realizar consultas más complejas"
+      "credit": {
+        "genericTitle": "Esta obra",
+        "actualTitle": "«{title}»",
+        "text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
+        "creatorText": "por {creatorName}",
+        "marked": "está marcado con",
+        "licensed": "está bajo la licencia",
+        "viewLegalText": "Para ver los {termsCopy}, visita {url}.",
+        "termsText": "los términos",
+        "copyText": "una copia de esta licencia"
+      },
+      "copyLicense": {
+        "title": "Reconocer al creador",
+        "rich": "Texto enriquecido",
+        "html": "HTML",
+        "plain": "Texto sin formato",
+        "copyText": "Copiar el texto",
+        "copied": "¡Copiado!"
+      },
+      "attribution": "Esta imagen se ha marcado con una licencia {link}:"
     },
-    "example": {
-      "and": {
-        "example": "perro+gato",
-        "ariaLabel": "perro más gato",
-        "description": "Ejemplo: {link}{br} Esto buscará imágenes relacionadas tanto con perro como con gato."
-      },
-      "or": {
-        "example": "perro|gato",
-        "ariaLabel": "perro barra vertical gato",
-        "description": "Ejemplo: {link}{br} Esto buscará imágenes relacionadas con perro o gato, pero no necesariamente con ambos."
-      },
-      "negate": {
-        "example": "perro -carlino",
-        "ariaLabel": "perro menos carlino",
-        "description": "Puedes usar {operator} para excluir un término de búsqueda de los resultados.",
-        "content": "Ejemplo: {link}{br} Esto buscará imágenes relacionadas con perros pero no incluirá resultados relacionados con 'carlino'",
-        "operatorAriaLabel": "operador menos (significa NO)",
-        "operatorName": "operador (significa NO)"
-      },
-      "prefix": {
-        "example": "red*",
-        "ariaLabel": "red estrella símbolo",
-        "content": "Ejemplo: {link}{br} Esto buscará imágenes que coincidan con lo que sea con 'net'. Esto podría incluir 'network', 'Netflix', 'Netherlands', etc..",
-        "operatorAriaLabel": "operador de estrella (comodín)",
-        "operatorName": "operador (comodín)",
-        "description": "Puedes usar el {operatorName} para marcar un término como prefijo. Esto coincidirá con cualquier cosa después del *."
-      },
-      "precedence": {
-        "example": "perros + (corgis | labrador)",
-        "ariaLabel": "perros más abre paréntesis corgis barra vertical labrador cierra paréntesis",
-        "description": "Puedes usar paréntesis {highlight} para especificar la prioridad de los términos o combinar consultas más complejas.",
-        "content": "Ejemplo: {link}{br} Esto buscará imágenes que coincidan con perros que sean corgis o labrador."
-      },
-      "fuzziness": {
-        "example": "teatro~1",
-        "ariaLabel": "teatro tilde 1",
-        "content": "Ejemplo: {link}{br} Esto buscará imágenes con cadenas que coincidan con el término 'teatro' con la diferencia de un caracter. Los resultados pueden incluir términos con distintas variantes como 'teatrero'.",
-        "linkText": "Distancia de edición Levenshtein",
-        "description": "Puedes usar {highlight} para especificar alguna lógica difusa al término según el {link} — el número de cambios de un carácter que hay que hacer a una cadena para que sea igual a otra."
-      }
-    },
-    "title": "Guía de sintaxis de {openverse}",
-    "intro": "Cuando buscas, puedes introducir símbolos especiales o palabras a tu término de búsqueda para hacer que tus resultados de búsqueda sean más precisos."
-  },
-  "feedback": {
-    "title": "Comentarios",
-    "aria": {
-      "report": "formulario para informar de un fallo",
-      "improve": "formulario para ayudarnos a mejorar",
-      "ccUsability": "canal de slack de cc-usability"
-    },
+    "providerLabel": "Proveedor",
+    "sourceLabel": "Fuente",
+    "providerDescription": "Sitio web donde se hospeda el contenido",
+    "sourceDescription": "Organización que creó o posee el contenido original",
     "loading": "Cargando...",
-    "report": "Informar de un fallo",
-    "improve": "Ayúdanos a mejorar",
-    "intro": "¡Gracias por usar {openverse}! Agradecemos tus ideas para mejorar la herramienta. Para ofrecer sugerencias normales, únete al canal de {slack} en el espacio de trabajo {makingWordpress} de Slack."
-  },
-  "extension": {
-    "title": "Extensión web",
-    "conclusion": "Consigue tu contenido favorito mientras navegas por la web",
-    "features": {
-      "use": {
-        "content": "Descarga la imagen y pega la información de atribución en formatos compatibles.",
-        "heading": "Usa la imagen y da la atribución fácilmente al creador"
+    "relatedError": "Error al recuperar los medios relacionados",
+    "aria": {
+      "attribution": {
+        "license": "lee más sobre la licencia",
+        "tool": "lee más sobre la herramienta"
       },
-      "bookmark": {
-        "content": "Añade imágenes a tus favoritos y úsalas donde quieras sin interrumpir tu navegación.",
-        "heading": "Marca tus imágenes favoritas sin interrumpir tu navegación"
-      },
-      "search": {
-        "content": "Navega a través de millones de contenidos y usa los filtros para encontrar los que mejor se adapten a tus necesidades.",
-        "heading": "Busca y filtra contenido con licencia abierta y de dominio público"
-      }
+      "creatorUrl": "autor {name}"
     },
-    "description": {
-      "intro": "Una extensión del navegador que te permite buscar y usar imágenes con licencia abierta y de dominio público."
+    "imageInfo": "Información de la imagen",
+    "audioInfo": "Información del audio",
+    "tags": {
+      "title": "Etiquetas",
+      "showMore": "Mostrar más",
+      "showLess": "Mostrar menos"
+    },
+    "contentReport": {
+      "short": "Informar",
+      "long": "Informar de este contenido",
+      "form": {
+        "disclaimer": "Por motivos de seguridad, {openverse} recopila y retiene direcciones IP anónimas de los que completan y envían este formulario.",
+        "question": "¿Cuál es la razón?",
+        "dmca": {
+          "option": "Infringe el copyright",
+          "note": "Debes rellenar este {form} para informar de la infracción del copyright. No se realizará ninguna acción hasta que este formulario se haya rellenado y enviado. Recomendamos hacer lo mismo en la fuente, {source}.",
+          "form": "Formulario DMCA",
+          "open": "Abrir el formulario"
+        },
+        "sensitive": {
+          "option": "Contiene contenido sensible",
+          "subLabel": "Facultativo",
+          "placeholder": "Opcionalmente, proporcione una descripción."
+        },
+        "other": {
+          "option": "Otra",
+          "note": "Describe el problema.",
+          "subLabel": "Obligatorio",
+          "placeholder": "Por favor, introduce al menos 20 caracteres."
+        },
+        "submit": "Informar",
+        "cancel": "Cancelar"
+      },
+      "success": {
+        "title": "Informe enviado correctamente",
+        "note": "Gracias por informar de este contenido. Recomendamos hacer lo mismo en la fuente, {source}."
+      },
+      "failure": {
+        "title": "No se ha podido enviar el informe",
+        "note": "Algo ha ido mal. Por favor, inténtalo de nuevo más tarde."
+      }
+    }
+  },
+  "singleResult": {
+    "back": "Volver a los resultados de búsqueda"
+  },
+  "imageDetails": {
+    "creator": "por {name}",
+    "weblink": "Ir a la web de la imagen",
+    "information": {
+      "dimensions": "Dimensiones",
+      "pixels": "píxeles",
+      "sizeInPixels": "{width} × {height} pixels"
+    },
+    "relatedImages": "Imágenes relacionadas",
+    "aria": {
+      "creatorUrl": "Autor {creator}"
+    }
+  },
+  "audioDetails": {
+    "genreLabel": "Género",
+    "relatedAudios": "Audios relacionados",
+    "table": {
+      "album": "Álbum",
+      "sampleRate": "Tasa de muestreo",
+      "filetype": "Formato",
+      "genre": "Género"
+    },
+    "weblink": "Consigue este audio"
+  },
+  "allResults": {
+    "snackbar": {
+      "text": "Pulse {spacebar} para jugar o parar la pista.",
+      "spacebar": "Spacebar"
+    }
+  },
+  "audioResults": {
+    "snackbar": {
+      "text": "Pulse {spacebar} para jugar o parar, y {left} & {right} para buscar a través de la pista.",
+      "spacebar": "Spacebar",
+      "left": "←",
+      "right": "→"
     }
   },
   "externalSources": {
+    "caption": "{openverse} no indexa actualmente las fuentes listadas anteriormente, pero, a través de esta interfaz, ofrece un cómodo acceso a los servicios de búsqueda proporcionados por otras organizaciones independientes. {openverse} no tiene control sobre los resultados devueltos. No asumas que los resultados mostrados en este portal de búsqueda están bajo una licencia CC. Comprueba siempre que la obra está realmente bajo una licencia CC siguiendo el enlace. Si tienes dudas, debes contactar directamente con el titular del copyright o intentar contactar con el sitio donde has encontrado el contenido.",
+    "button": "Lista de fuentes",
+    "title": "Fuentes externas",
     "card": {
-      "checkboxes": {
-        "commercial": "Uso para fines comerciales",
-        "title": "Uso",
-        "modify": "Modificar o adaptar"
-      },
-      "caption": "Haz clic en una fuente de abajo para buscar directamente otras colecciones de imágenes con licencia CC. {break}Por favor, ten en cuenta que el uso de filtros no es compatible con la biblioteca de Open Clip Art o Nappy. ",
-      "search": "¿No encuentras lo que buscas? Prueba fuentes adicionales."
+      "search": "¿No encuentras lo que buscas? Prueba fuentes adicionales.",
+      "caption": "Haz clic en una fuente de abajo para buscar directamente otras colecciones de imágenes con licencia CC. {break}Por favor, ten en cuenta que el uso de filtros no es compatible con la biblioteca de Open Clip Art o Nappy. "
     },
     "form": {
+      "unsupportedTitle": "{openverse} todavía no es compatible con la búsqueda integrada de {type}.",
+      "supportedTitle": "¿No encuentras lo que buscas? Prueba fuentes adicionales de {type}.",
+      "supportedTitleSm": "Búsqueda en fuentes externas",
       "noResultsTitle": "Ningún resultado de {type} para «{query}».",
       "caption": "Haz clic en una fuente de abajo para buscar directamente otras colecciones de {type} con licencia CC. {break}Por favor, ten en cuenta que el uso de filtros no es compatible con {filter}.",
-      "supportedTitle": "¿No encuentras lo que buscas? Prueba fuentes adicionales de {type}.",
-      "unsupportedTitle": "{openverse} todavía no es compatible con la búsqueda integrada de {type}."
-    },
-    "caption": "{openverse} no indexa actualmente las fuentes listadas anteriormente, pero, a través de esta interfaz, ofrece un cómodo acceso a los servicios de búsqueda proporcionados por otras organizaciones independientes. {openverse} no tiene control sobre los resultados devueltos. No asumas que los resultados mostrados en este portal de búsqueda están bajo una licencia CC. Comprueba siempre que la obra está realmente bajo una licencia CC siguiendo el enlace. Si tienes dudas, debes contactar directamente con el titular del copyright o intentar contactar con el sitio donde has encontrado el contenido."
+      "types": {
+        "image": "imagen",
+        "audio": "audio",
+        "video": "video",
+        "model3d": "Modelo 3D"
+      },
+      "typesPlural": {
+        "image": "imágenes",
+        "audio": "audios",
+        "video": "videos",
+        "model3d": "Modelos 3D"
+      }
+    }
+  },
+  "browsers": {
+    "chrome": "Chrome",
+    "firefox": "Firefox",
+    "opera": "Opera",
+    "edge": "Edge"
   },
   "waveform": {
     "label": "Barra de búsqueda de audio",
@@ -607,32 +698,225 @@
   "audioThumbnail": {
     "alt": "Cubierta para «{title}» de {creator}"
   },
-  "downloadButton": {
-    "download": "Descargar",
-    "aria": {
-      "dropdownLabel": "Selecciona el formato de archivo para descargar"
-    }
+  "audioTrack": {
+    "ariaLabel": "{title} - Reproductor de audio",
+    "ariaLabelInteractive": "{title} - Reproductor de audio - Pulsa la barra de espacio para reproducir y pausar una muestra del audio",
+    "ariaLabelInteractiveSeekable": "Audio: {title} - reproductor interactivo - presione la barra espaciadora para reproducir y pausar una vista previa del audio; utilice las teclas de flecha izquierda y derecha para buscar a través de la pista.",
+    "messages": {
+      "err_aborted": "Has abortado la reproducción.",
+      "err_network": "Ha ocurrido un error de red.",
+      "err_decode": "No se ha podido decodificar el audio.",
+      "err_unallowed": "Reproducción no permitida.",
+      "err_unknown": "Ha ocurrido un error inesperado. Pruebe de nuevo en unos minutos o informe el tema si el problema persiste.",
+      "err_unsupported": "Este formato de audio no es compatible con tu navegador.",
+      "loading": "Cargando..."
+    },
+    "creator": "por {creator}",
+    "close": "Cerrar el reproductor de audio"
   },
-  "interpunct": "•",
-  "error": {
-    "audio": "audio",
-    "image": "imagen",
-    "mediaNotFound": "No se ha podido encontrar {mediaType} con ID {id}",
-    "imageNotFound": "No se ha podido encontrar la imagen con ID {id}",
-    "occurred": "Ha ocurrido un error"
+  "playPause": {
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "replay": "Volver a reproducir",
+    "loading": "Cargando"
+  },
+  "search": {
+    "search": "Buscar",
+    "searchBarLabel": "Buscar contenido en {openverse}"
+  },
+  "licenseReadableNames": {
+    "cc0": "Cero",
+    "pdm": "Marca de dominio público",
+    "by": "Reconocimiento",
+    "bySa": "Reconocimiento-CompartirIgual",
+    "byNc": "Reconocimiento-NoComercial",
+    "byNd": "Reconocimiento-SinObraDerivada",
+    "byNcSa": "Reconocimiento-NoComercial-CompartirIgual",
+    "byNcNd": "Reconocimiento-NoComercial-SinObraDerivada",
+    "sampling+": "Sampling Plus",
+    "ncSampling+": "Sampling Plus NoComercial"
   },
   "dropdownButton": {
     "aria": {
       "arrowLabel": "Desplegable"
     }
   },
-  "browsers": {
-    "edge": "Edge",
-    "opera": "Opera",
-    "firefox": "Firefox",
-    "chrome": "Chrome"
+  "downloadButton": {
+    "aria": {
+      "dropdownLabel": "Selecciona el formato de archivo para descargar"
+    },
+    "download": "Descargar"
   },
-  "singleResult": {
-    "back": "Volver a los resultados de búsqueda"
+  "interpunct": "•",
+  "modal": {
+    "close": "Cerrar",
+    "ariaClose": "Cerrar el modal",
+    "closeNamed": "Cerrar {name}",
+    "closeContentSettings": "Cerrar el menú de configuración del contenido",
+    "closePagesMenu": "Cerrar el menú de páginas",
+    "closeBanner": "Cierra la bandera"
+  },
+  "errorImages": {
+    "depressedMusician": "Un pianista deprimido descansa la cabeza en sus manos.",
+    "waitingForABite": "Tres chicos sentados en un tronco roto mientras dos de ellos pescan."
+  },
+  "noResults": {
+    "heading": "No hemos podido encontrar nada para «{query}».",
+    "alternatives": "Intenta una consulta diferente o usa una de las fuentes adicionales para ampliar tu búsqueda."
+  },
+  "serverTimeout": {
+    "heading": "¡Vaya! Parece que esa petición tarda demasiado en completarse. Por favor, inténtalo de nuevo."
+  },
+  "unknownError": {
+    "heading": "Parece que algo salió mal. Por favor, inténtalo de nuevo."
+  },
+  "searchType": {
+    "image": "Imágenes",
+    "audio": "Audio",
+    "all": "Todo el contenido",
+    "video": "Vídeos",
+    "model3d": "Modelos 3D",
+    "label": "Tipo de contenido a buscar",
+    "heading": "Tipos de contenido",
+    "additional": "Fuentes adicionales",
+    "statusBeta": "Beta",
+    "seeImage": "Ver todas las imágenes",
+    "seeAudio": "Ver todos los audios",
+    "selectLabel": "Seleccione un tipo de contenido: {type}"
+  },
+  "skipToContent": "Saltar al contenido",
+  "prefPage": {
+    "title": "Preferencias",
+    "groups": {
+      "analytics": {
+        "title": "Análisis",
+        "desc": "{openverse} utiliza análisis anónimos para mejorar nuestro servicio. No recopilamos ninguna información que pueda utilizarse para identificarte personalmente. Sin embargo, si desea no participar, puede optar aquí."
+      }
+    },
+    "features": {
+      "analytics": "Grabar eventos personalizados y vistas de página para análisis."
+    },
+    "nonSwitchable": {
+      "title": "Características que no se pueden cambiar.",
+      "desc": "No puedes modificar el estado de estas características."
+    },
+    "switchable": {
+      "title": "Características que se pueden cambiar",
+      "desc": "Puedes activar o desactivar estas características a tu gusto y tus preferencias se guardarán en una cookie."
+    },
+    "storeState": "Provincia de la tienda",
+    "contentFiltering": "Filtrado de contenido",
+    "explanation": "Mostrado porque {featName} es {featState}"
+  },
+  "sketchfabIframeTitle": "Visor {sketchfab}",
+  "flagStatus": {
+    "nonexistent": "Inexistentes",
+    "on": "On",
+    "off": "Fuera."
+  },
+  "footer": {
+    "wordpressAffiliation": "Parte del proyecto {wordpress}",
+    "wip": "🚧"
+  },
+  "language": {
+    "language": "Idioma"
+  },
+  "recentSearches": {
+    "heading": "Búsquedas recientes",
+    "clear": {
+      "text": "Despejado",
+      "label": "Búsquedas recientes claras"
+    },
+    "clearSingle": {
+      "label": "Clear recent search '{entry} '"
+    },
+    "none": "No hay búsquedas recientes para mostrar.",
+    "disclaimer": "Openverse no almacena sus búsquedas recientes, esta información se mantiene localmente en su navegador."
+  },
+  "report": {
+    "imageDetails": "Ver detalles de la imagen"
+  },
+  "sensitiveContent": {
+    "title": {
+      "image": "Esta imagen puede contener contenido sensible.",
+      "audio": "Esta pista de audio puede contener contenido sensible."
+    },
+    "creator": "Creador",
+    "singleResult": {
+      "title": "Contenido sensible",
+      "hide": "Ocultar contenido",
+      "show": "Mostrar contenido",
+      "explanation": "Este trabajo está marcado como sensible por las siguientes razones:",
+      "learnMore": "{link} sobre cómo {openverse} maneja contenido sensible.",
+      "link": "Aprender más"
+    },
+    "reasons": {
+      "providerSuppliedSensitive": "La fuente de este trabajo lo ha marcado como sensible.",
+      "sensitiveText": "{openverse} ha detectado texto potencialmente sensible.",
+      "userReportedSensitive": "Los usuarios de {openverse} han reportado este trabajo como sensible."
+    }
+  },
+  "collection": {
+    "heading": {
+      "tag": "Tag",
+      "creator": "Creador",
+      "source": "Fuente"
+    },
+    "link": {
+      "source": "Sitio de código abierto",
+      "creator": "Página de creador abierta"
+    },
+    "ariaLabel": {
+      "creator": {
+        "audio": "Archivos de audio de {creator} en {source}",
+        "image": "Images by {creator} in {source}"
+      },
+      "source": {
+        "audio": "Archivos de audio de {source}",
+        "image": "Imágenes de {source}"
+      },
+      "tag": {
+        "audio": "Archivos de audio con la etiqueta {tag}",
+        "image": "Imágenes con la etiqueta {tag}"
+      }
+    },
+    "resultCountLabel": {
+      "creator": {
+        "audio": {
+          "zero": "No hay archivos de audio de este creador.",
+          "count": "{count} audio de este creador.|{count} archivos de audio de este creador.",
+          "countMore": "Sobre archivos de audio {count} de este creador."
+        },
+        "image": {
+          "zero": "No hay imágenes de este creador.",
+          "count": "{count} imágen de este creador|{count} imágens de este creador.",
+          "countMore": "Sobre las imágenes de {count} de este creador."
+        }
+      },
+      "source": {
+        "audio": {
+          "zero": "No hay archivos de audio proporcionados por esta fuente",
+          "count": "{count} archivo de audio proporcionado por esta fuente Archivos de audio {count} proporcionados por esta fuente",
+          "countMore": "Más archivos de audio {count} proporcionados por esta fuente"
+        },
+        "image": {
+          "zero": "No hay imágenes proporcionadas por esta fuente",
+          "count": "{count} image provided by this source {count} images provided by this source",
+          "countMore": "Sobre imágenes {count} proporcionadas por esta fuente"
+        }
+      },
+      "tag": {
+        "audio": {
+          "zero": "No hay archivos de audio con la etiqueta seleccionada",
+          "count": "Archivo de audio {count} con la etiqueta seleccionada {count} archivos de audio con la etiqueta seleccionada",
+          "countMore": "Sobre archivos de audio {count} con la etiqueta seleccionada"
+        },
+        "image": {
+          "zero": "No hay imágenes con la etiqueta seleccionada",
+          "count": "{count} image with the selected tag {count} imágenes con la etiqueta seleccionada",
+          "countMore": "Sobre {count} imágenes con la etiqueta seleccionada"
+        }
+      }
+    }
   }
 }

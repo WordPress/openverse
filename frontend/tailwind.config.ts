@@ -17,16 +17,6 @@ export default {
     screens: SCREENS,
     zIndex: Z_INDICES,
     colors: {
-      // Accents
-      tomato: "#e23600",
-      gold: "#efbe00",
-      "forest-green": "#008300",
-      "dark-turquoise": "#05b5da",
-      "dark-slate-blue": "#3c5c99",
-      "trans-blue": "#3e58e1",
-      "trans-blue-action": "#5067e4",
-      "dark-blue": "#23282d",
-
       // Semantic
       "info-soft": "#dbe2ff",
       info: "#2349e7",
@@ -49,10 +39,6 @@ export default {
       gray: "#b0b0b0", // rgb(176, 176, 176)
       "light-gray": "#d8d8d8", // rgb(216, 216, 216)
       white: "white",
-
-      // WordPress
-      "admin-gray": "#dcdcde",
-
       // Dark Charcoal
       "dark-charcoal": {
         DEFAULT: "#30272e",

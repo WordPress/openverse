@@ -98,6 +98,13 @@ audio_stats_200_example = {
             "logo_url": None,
             "media_count": 3992,
         },
+        {
+            "display_name": "CCMixter",
+            "logo_url": None,
+            "media_count": 1,
+            "source_name": "ccmixter",
+            "source_url": "https://ccmixter.org",
+        },
     ]
 }
 

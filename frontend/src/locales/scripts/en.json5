@@ -79,19 +79,49 @@
       content: "{openverse} is a tool that allows openly licensed and public domain works to be discovered and used by everyone.",
     },
     collection: {
-      content: "{openverse} searches across more than 700 million images and audio from open APIs and the {commonCrawl} dataset. It goes beyond simple search to aggregate results across multiple public repositories into a single catalog, and facilitates reuse through features like machine-generated tags and one-click attribution.",
+      content: {
+        a: "{openverse} searches across more than 700 million images and audio from open APIs and the {commonCrawl} dataset.",
+        b: "We aggregate works from multiple public repositories, and facilitate reuse through features like one-click attribution.",
+      },
     },
     planning: {
-      content: "Currently {openverse} only searches images and audio, with search for video provided through External Sources. But we plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web. All of our code is open source and can be accessed at the {repository}. We {community}. You can see what {working}.",
+      content: {
+        /** about.planning.content.a-c are parts of a single statement */
+        a: "Currently {openverse} only searches images and audio, with search for video provided through External Sources.",
+        /** about.planning.content.a-c are parts of a single statement */
+        b: "We plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web.",
+        /**
+         * about.planning.content.a-c are parts of a single statement.
+         * "repository", "community" and "working" are interpolated from about.planning.frontend,
+         * about.planning.repository, about.planning.catalog, about.planning.community, and about.planning.working, respectively.
+         */
+        c: "All of our code is open source and can be accessed at the {repository}. We {community}. You can see what {working}.",
+      },
+      /** Interpolated into about.planning.content.c */
       repository: "{openverse} {github} repository",
+      /** Interpolated into about.planning.content.c */
       community: "welcome community contribution",
+      /** Interpolated into about.planning.content.c */
       working: "we’re currently working on",
     },
     transfer: {
-      content: "{openverse} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021. You can read more about this transition in the official announcements from {creativeCommons} and {wordpress}. We remain committed to our goal of tackling discoverability and accessibility of open access media.",
+      content: {
+        /** Part of a single statement with about.transfer.content.b and about.transfer.content.c */
+        a: "{openverse} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021.",
+        /** Part of a single statement with about.transfer.content.a and about.transfer.content.c */
+        b: "You can read more about this transition in the official announcements from {creativeCommons} and {wordpress}.",
+        /** Part of a single statement with about.transfer.content.a and about.transfer.content.b */
+        c: "We remain committed to our goal of tackling discoverability and accessibility of open access media.",
+      },
     },
     declaration: {
-      content: "Please note that {openverse} does not verify whether the images are properly CC licensed, or whether the attribution and other licensing information we have aggregated is accurate or complete. Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
+      content: {
+        /** about.declaration.content.a-b are parts of a single statement */
+        a: "{openverse} does not verify licensing information for individual works, or whether the generated attribution is accurate or complete.",
+        /** about.declaration.content.a-b are parts of a single statement */
+        b: "Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
+      },
+      /** Interpolated into about.declaration.content.b */
       terms: "{openverse} Terms of Use",
     },
   },
@@ -107,10 +137,13 @@
     ccContent: {
       where: "Where does the content on {openverse} come from?",
       content: "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through {openverse}.",
-      provider: "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections. Wikimedia Commons runs the gamut in terms of content, and is used by several Galleries, Libraries, Archives, and Museums highlighting some or all of their digitized collections.",
+      provider: {
+        /** sources.ccContent.provider.a-b are parts of a single statement */
+        a: "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections.",
+        /** sources.ccContent.provider.a-b are parts of a single statement */
+        b: "Wikimedia Commons runs the gamut in terms of content, and is used by several galleries, libraries, archives, and museums highlighting some or all of their digitized collections.",
+      },
       europeana: "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources through a single integration with the {linkApi}.",
-      europeanaApi: "Europeana API",
-      smithsonian: "Smithsonian Institute",
     },
     newContent: {
       next: "How do we decide what sources to add next?",
@@ -133,7 +166,14 @@
     title: "External Sources",
     intro: "{openverse} is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
     link: "sources here",
-    license: "However, there are many sources of CC-licensed and public domain media which we aren’t able to surface results from within the {openverse} interface yet. This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into Openverse. These are valued sources and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
+    license: {
+      /** externalSourcesPage.license.a-c are parts of a single statement */
+      a: "However, there are many sources of CC-licensed and public domain media that we are not yet able to include in {openverse} search.",
+      /** externalSourcesPage.license.a-c are parts of a single statement */
+      b: "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into {openverse}.",
+      /** externalSourcesPage.license.a-c are parts of a single statement */
+      c: "These are valued sources and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
+    },
     new: {
       title: "Can I suggest new external sources?",
       content: "Yes, please! Create an {issue} in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included.",
@@ -143,13 +183,24 @@
     why: {
       title: "Why did you build this?",
       content: "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at {old}.",
-      old: "oldsearch.creativecommons.org",
-      new: 'For users of the legacy CC Meta Search site, the "External Sources" feature on {openverse} will look familiar. The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content. In addition, the "External Sources" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future, as we expand.',
+      new: {
+        /** externalSourcesPage.why.new.a-c are parts of a single statement */
+        a: 'For users of the legacy CC Meta Search site, the "External Sources" feature on {openverse} will look familiar.',
+        /** externalSourcesPage.why.new.a-c are parts of a single statement */
+        b: "The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content.",
+        /** externalSourcesPage.why.new.a-c are parts of a single statement */
+        c: 'Additionally, the "External Sources" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future.',
+      },
       ariaLabel: "feedback",
       feedbackSuggestions: "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
       feedbackLink: "feedback",
     },
-    relationships: "This functionality also allows us to start conversations and build relationships with sources that may like to be included in {openverse} in the future. Finally, we can also offer external sources of media types we do not include in {openverse} yet, but plan to.",
+    relationships: {
+      /** externalSourcesPage.relationships.a-b are parts of a single statement */
+      a: "This functionality also allows us to start conversations and build relationships with sources that may like to be included in {openverse} in the future.",
+      /** externalSourcesPage.relationships.a-b are parts of a single statement */
+      b: "Finally, we can also offer external sources of media types we do not include in {openverse} yet, but plan to.",
+    },
     explanation: "You can find links to external sources at the bottom of every {openverse} search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to.",
   },
   privacy: {
@@ -160,7 +211,12 @@
     },
     cookies: {
       title: "Cookies",
-      content: '{openverse} uses cookies to store information about visitor\'s preferences and information about their web browsers. We use this information to improve the user experience of the site. These are considered "Necessary" or "Strictly necessary cookies" and you may disable these by changing your browser settings, but this may affect how {openverse} functions.',
+      content: {
+        /** privacy.cookies.content.a-b are parts of a single statement */
+        a: "{openverse} uses cookies to store information about visitor's preferences and information about their web browsers. We use this information to improve the user experience of the site.",
+        /** privacy.cookies.content.a-b are parts of a single statement */
+        b: 'These are considered "Necessary" or "Strictly necessary cookies". You may disable these by changing your browser settings, but this may affect how {openverse} functions.',
+      },
     },
     contact: {
       title: "Contact Us",
@@ -202,34 +258,119 @@
   sensitive: {
     title: "Sensitive content",
     description: {
-      content: "{openverse} operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible. Therefore, {openverse} only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on {openverse}.org and in the {openverse} API. In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project. Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverse}.org website should be accessible by default. Everyone, regardless of background, should feel safe and included in {openverse}, whether they are a contributor to the technical aspects of the {openverse} services, a creator whose works are included in {openverse}, or an {openverse} user. {openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+      content: {
+        /** sensitive.description.content.a-f are parts of a single statement */
+        a: "{openverse} operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible.",
+        /** sensitive.description.content.a-f are parts of a single statement */
+        b: "Therefore, {openverse} only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on {openverseOrg} and in the {openverse} API.",
+        /**
+         * sensitive.description.content.a-are parts of a single statement f.
+         * "wpCoc" and "deiStatement" are interpolated with sensitive.description.wpCoc and sensitive.description.deiStatement respectively.
+         */
+        c: "In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project.",
+        /** sensitive.description.content.a-f are parts of a single statement */
+        d: "Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverseOrg} website should be accessible by default.",
+        /** sensitive.description.content.a-f are parts of a single statement */
+        e: "Everyone, regardless of background, should feel safe and included in {openverse}, whether they are a contributor to the technical aspects of the {openverse} services, a creator whose works are included in {openverse}, or an {openverse} user.",
+        /** sensitive.description.content.a-f are parts of a single statement */
+        f: "{openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+      },
+      /**
+       * Interpolated into sensitive.description.content.c.
+       * Referencing https://make.wordpress.org/handbook/community-code-of-conduct/
+       */
       wpCoc: "WordPress’s Community Code of Conduct",
+      /**
+       * Interpolated into sensitive.description.content.c.
+       * Referencing https://make.wordpress.org/handbook/diversity-equity-and-inclusion-in-wordpress/
+       */
       deiStatement: "diversity, equity, and inclusion statement",
     },
     sensitivity: {
-      what: '{openverse} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion. This means that some content is designated "sensitive" that would not fall into a category of what is generally understood to be "mature" content (in other words, content specifically for an adult audience). The designation does not, however, imply that {openverse} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement. We consider "sensitive" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people.',
-      how: "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise. {openverse} relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms. These are described in more detail below.",
+      what: {
+        /** sensitive.sensitivity.what.a-d are parts of a single statement */
+        a: '{openverse} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion.',
+        /** sensitive.sensitivity.what.a-d are parts of a single statement */
+        b: 'This means that some content is designated "sensitive" that would not fall into a category of what is generally understood to be "mature" content (in other words, content specifically for an adult audience).',
+        /** sensitive.sensitivity.what.a-d are parts of a single statement */
+        c: "The designation does not, however, imply that {openverse} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement.",
+        /** sensitive.sensitivity.what.a-d are parts of a single statement */
+        d: 'We consider "sensitive" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people.',
+      },
+      how: {
+        /** Sensitive.sensitivity.how.a-c are parts of a single statement */
+        a: "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise.",
+        /** Sensitive.sensitivity.how.a-c are parts of a single statement */
+        b: "{openverse} relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms.",
+        /** Sensitive.sensitivity.how.a-c are parts of a single statement */
+        c: "These are described in more detail below.",
+      },
     },
     onOff: {
       title: "Turning sensitive content on and off",
       sensitiveResults: "By default, {openverse} does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch.",
-      blurSensitive: "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure. Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch.",
+      blurSensitive: {
+        /** sensitive.onOff.blurSensitive.a-b are parts of a single statement */
+        a: "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure.",
+        /** sensitive.onOff.blurSensitive.a-b are parts of a single statement */
+        b: "Unblurring them also requires an explicit opt-in from the user. The user can opt-in to see unblurred sensitive content by disabling the “Blur content” switch.",
+      },
       where: "Both these toggles are available in the filter sidebar (on desktops) and in the “Filter” tab of the search settings pane (on mobile devices) on the search results page.",
     },
     designations: {
       title: "Sensitive content designations",
-      description: "{openverse} designates sensitive content in the API and on the {openverse}.org website using two methods: reports from {openverse} users and automated sensitive textual content detection. These designations are not exclusive of each other and a single work may have one or both applied to it.",
+      description: {
+        /** sensitive.designations.description.a-b are parts of a single statement */
+        a: "{openverse} designates sensitive content in the API and on the {openverseOrg} website using two methods: reports from {openverse} users and automated sensitive textual content detection.",
+        /** sensitive.designations.description.a-b are parts of a single statement */
+        b: "These designations are not exclusive of each other and a single work may have one or both applied to it.",
+      },
       userReported: {
         title: "User reported sensitivity",
-        description: "{openverse} users are invited to report sensitive content via the {openverse}.org website and the {openverse} API. Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content. An individual work’s page includes the ability to report content as sensitive (or to report rights violations). {openverse} moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from {openverse}’s services.",
+        description: {
+          /** sensitive.designations.userReported.description.a-d are parts of a single statement */
+          a: "{openverse} users are invited to report sensitive content via the {openverseOrg} website and the {openverse} API.",
+          /** sensitive.designations.userReported.description.a-d are parts of a single statement */
+          b: "Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content.",
+          /** sensitive.designations.userReported.description.a-d are parts of a single statement */
+          c: "An individual work’s page includes the ability to report content as sensitive (or to report rights violations).",
+          /** sensitive.designations.userReported.description.a-d are parts of a single statement */
+          d: "{openverse} moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from {openverse}’s services.",
+        },
+        /** Interpolated into sensitive.designations.userReported.description.b */
         gutenbergMediaInserter: "Gutenberg editor’s {openverse} media inserter",
       },
       sensitiveText: {
         title: "Sensitive textual content",
-        description: "{openverse} scans some of the textual metadata related to works as provided by our sources for sensitive terms. {openverse}’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited. Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature. The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive. For more context on why we’ve chosen this approach despite that, refer to the {imperfect} of our project planning document related to this feature.",
+        description: {
+          /** sensitive.designations.sensitiveText.description.a-e are a single statement */
+          a: "{openverse} scans some of the textual metadata related to works as provided by our sources for sensitive terms.",
+          /** sensitive.designations.sensitiveText.description.a-e are a single statement */
+          b: "{openverse}’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited.",
+          /** sensitive.designations.sensitiveText.description.a-e are a single statement */
+          c: "Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature.",
+          /** sensitive.designations.sensitiveText.description.a-e are a single statement */
+          d: "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive.",
+          /** sensitive.designations.sensitiveText.description.a-e are a single statement */
+          e: "For more context on why we’ve chosen this approach despite that, refer to the {imperfect} of our project planning document related to this feature.",
+        },
+        /** Interpolated into sensitive.designations.sensitiveText.description.b */
         sensitiveTermsList: "sensitive terms list",
+        /** Interpolated into sensitive.designations.sensitiveText.description.e */
         imperfect: '"{sectionName}" section',
-        metadata: "It is important to note that some textual metadata for a work is {notAvailable} through the {openverse} API or the {openverse}.org website. However, such metadata is still scanned for sensitive terms and is not treated as a special case. If {openverse}’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through {openverse}. {openverse} takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works. As above, {openverse} understands that this is not perfect.",
+        metadata: {
+          /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
+          a: "It is important to note that some textual metadata for a work is {notAvailable} through the {openverse} API or the {openverseOrg} website.",
+          /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
+          b: "However, such metadata is still scanned for sensitive terms and is not treated as a special case.",
+          /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
+          c: "If {openverse}’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through {openverse}.",
+          /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
+          d: "{openverse} takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works.",
+          /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
+          e: "As above, {openverse} understands that this is not perfect.",
+        },
+        /** Interpolated into sensitive.designations.sensitiveText.metadata.a */
         notAvailable: "not available",
       },
     },
@@ -237,16 +378,35 @@
       title: "Frequently asked questions",
       one: {
         question: "I’ve found content I think is sensitive that does not have a sensitivity designation. What should I do?",
-        answer: "Please report sensitive content by visiting the individual work’s page on the {openverse}.org website and using the “report this content” button below the attribution information and above the tags. {openverse} moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work.",
+        answer: {
+          /** sensitive.faq.one.answer.a-b are a single statement */
+          a: "Please report sensitive content by visiting the individual work’s page on the {openverseOrg} website and using the “report this content” button below the attribution information and above the tags.",
+          /** sensitive.faq.one.answer.a-b are a single statement */
+          b: "{openverse} moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work.",
+        },
       },
       two: {
         question: "I disagree with the sensitivity designation on a work. Can you please remove it?",
         answerPt1: "For text-based designations, {openverse} does not at the moment have a method for removing the designation. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
-        answerPt2: "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+        answerPt2: {
+          /** sensitive.faq.two.a-c are a single */
+          a: "For user reported designations, please file a new report on the work’s page following the instructions in the previous question.",
+          /** sensitive.faq.two.a-c are a single */
+          b: "In the notes, describe why you believe the work should not have a sensitivity designation.",
+          /** sensitive.faq.two.a-c are a single */
+          c: "As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+        },
       },
       three: {
         question: "I’ve found content on {openverse} that may be illegal. Besides reporting it to {openverse}, are there any other steps I can take?",
-        answer: "For user reported designations, please file a new report on the work’s page following the instructions in the previous question. In the notes, describe why you believe the work should not have a sensitivity designation. As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+        answer: {
+          /** sensitive.faq.three.answer.a-c are a single statement */
+          a: "For user reported designations, please file a new report on the work’s page following the instructions in the previous question.",
+          /** sensitive.faq.three.answer.a-c are a single statement */
+          b: "In the notes, describe why you believe the work should not have a sensitivity designation.",
+          /** sensitive.faq.three.answer.a-c are a single statement */
+          c: "As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+        },
       },
     },
   },
