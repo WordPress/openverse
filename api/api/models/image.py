@@ -7,6 +7,7 @@ from api.constants.media_types import IMAGE_TYPE
 from api.models.media import (
     AbstractDeletedMedia,
     AbstractMedia,
+    AbstractMediaDecision,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -124,6 +125,18 @@ class ImageReport(AbstractMediaReport):
 
     class Meta:
         db_table = "nsfw_reports"
+
+
+class ImageDecision(AbstractMediaDecision):
+    """Represents moderation decisions taken for images."""
+
+    media_class = Image
+
+    media_objs = models.ManyToManyField(
+        to="Image",
+        db_constraint=False,
+        help_text="The image items being moderated.",
+    )
 
 
 class ImageList(AbstractMediaList):

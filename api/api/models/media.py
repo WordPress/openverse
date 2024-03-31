@@ -8,6 +8,7 @@ from django.utils.html import format_html
 
 from elasticsearch import Elasticsearch, NotFoundError
 
+from api.constants.moderation import DecisionAction
 from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
 from api.utils.attribution import get_attribution_text
@@ -243,6 +244,51 @@ class AbstractMediaReport(models.Model):
         # Prevent redundant update statement when creating the report
         if self.status != PENDING:
             same_reports.update(status=self.status)
+
+
+class AbstractMediaDecision(OpenLedgerModel):
+    """Generic model from which to inherit all moderation decision classes."""
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+
+    moderator = models.ForeignKey(
+        to="auth.User",
+        on_delete=models.DO_NOTHING,
+        help_text="The moderator who undertook this decision.",
+    )
+    """
+    The ``User`` referenced by this field must be a part of the moderators'
+    group.
+    """
+
+    media_objs = models.ManyToManyField(
+        to="AbstractMedia",
+        db_constraint=False,
+        help_text="The media items being moderated.",
+    )
+    """
+    This is a many-to-many relation, using a bridge table, to enable bulk
+    moderation which applies a single action to more than one media items.
+    """
+
+    notes = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="The moderator's explanation for the decision or additional notes.",
+    )
+
+    action = models.CharField(
+        max_length=15,
+        choices=DecisionAction.choices,
+        help_text="Action taken by the moderator.",
+    )
+
+    class Meta:
+        abstract = True
+
+    # TODO: Implement ``clean`` and ``save``, if needed.
 
 
 class PerformIndexUpdateMixin:

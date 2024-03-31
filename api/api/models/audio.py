@@ -10,6 +10,7 @@ from api.models.media import (
     AbstractAltFile,
     AbstractDeletedMedia,
     AbstractMedia,
+    AbstractMediaDecision,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -305,6 +306,18 @@ class AudioReport(AbstractMediaReport):
 
     class Meta:
         db_table = "nsfw_reports_audio"
+
+
+class AudioDecision(AbstractMediaDecision):
+    """Represents moderation decisions taken for audio tracks."""
+
+    media_class = Audio
+
+    media_objs = models.ManyToManyField(
+        to="Audio",
+        db_constraint=False,
+        help_text="The audio items being moderated.",
+    )
 
 
 class AudioList(AbstractMediaList):
