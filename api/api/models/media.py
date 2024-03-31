@@ -203,6 +203,8 @@ class AbstractMediaReport(models.Model):
     @property
     def url(self):
         origin = settings.CANONICAL_ORIGIN
+        if not origin.endswith("/"):
+            origin = f"{origin}/"
         url = f"{origin}v1/{self.url_frag}/{self.media_obj.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
 
