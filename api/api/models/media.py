@@ -144,6 +144,8 @@ class AbstractMediaReport(models.Model):
     """the class storing sensitive media e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
     deleted_class: type[models.Model] = None
     """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
+    url_frag: str = None
+    """the fragment used in the URL path for the media item e.g. ``images`` or ``audio``"""
 
     REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
 
@@ -198,8 +200,10 @@ class AbstractMediaReport(models.Model):
                 f"with identifier {self.media_obj.identifier}."
             )
 
-    def url(self, media_type):
-        url = f"{settings.CANONICAL_ORIGIN}v1/{media_type}/{self.media_obj.identifier}"
+    @property
+    def url(self):
+        origin = settings.CANONICAL_ORIGIN
+        url = f"{origin}v1/{self.url_frag}/{self.media_obj.identifier}"
         return format_html(f"<a href={url}>{url}</a>")
 
     def save(self, *args, **kwargs):

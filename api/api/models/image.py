@@ -110,6 +110,7 @@ class ImageReport(AbstractMediaReport):
     media_class = Image
     sensitive_class = SensitiveImage
     deleted_class = DeletedImage
+    url_frag = "images"
 
     media_obj = models.ForeignKey(
         to="Image",
@@ -123,10 +124,6 @@ class ImageReport(AbstractMediaReport):
 
     class Meta:
         db_table = "nsfw_reports"
-
-    @property
-    def image_url(self):
-        return super().url("images")
 
 
 class ImageList(AbstractMediaList):

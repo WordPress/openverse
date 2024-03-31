@@ -291,6 +291,7 @@ class AudioReport(AbstractMediaReport):
     media_class = Audio
     sensitive_class = SensitiveAudio
     deleted_class = DeletedAudio
+    url_frag = "audio"
 
     media_obj = models.ForeignKey(
         to="Audio",
@@ -304,10 +305,6 @@ class AudioReport(AbstractMediaReport):
 
     class Meta:
         db_table = "nsfw_reports_audio"
-
-    @property
-    def audio_url(self):
-        return super().url("audio")
 
 
 class AudioList(AbstractMediaList):
