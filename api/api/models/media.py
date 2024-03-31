@@ -242,40 +242,10 @@ class AbstractMediaReport(models.Model):
         return self.decision_id is not None
 
     def save(self, *args, **kwargs):
-        """
-        Save changes to the DB and sync them with Elasticsearch.
-
-        Extend the built-in ``save()`` functionality of Django with Elasticsearch
-        integration to update records and refresh indices.
-
-        Media marked as sensitive or deleted also leads to instantiation of their
-        corresponding sensitive or deleted classes.
-        """
+        """Perform a clean, and then save changes to the DB."""
 
         self.clean()
-
         super().save(*args, **kwargs)
-
-        if self.status == MATURE_FILTERED:
-            # Create an instance of the sensitive class for this media. This will
-            # automatically set the ``mature`` field in the ES document.
-            self.sensitive_class.objects.create(media_obj=self.media_obj)
-        elif self.status == DEINDEXED:
-            # Create an instance of the deleted class for this media, so that we don't
-            # reindex it later. This will automatically delete the ES document and the
-            # DB instance.
-            self.deleted_class.objects.create(media_obj=self.media_obj)
-
-        same_reports = self.__class__.objects.filter(
-            media_obj=self.media_obj,
-            status=PENDING,
-        )
-        if self.status != DEINDEXED:
-            same_reports = same_reports.filter(reason=self.reason)
-
-        # Prevent redundant update statement when creating the report
-        if self.status != PENDING:
-            same_reports.update(status=self.status)
 
 
 class AbstractMediaDecision(OpenLedgerModel):
