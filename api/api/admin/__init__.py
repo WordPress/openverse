@@ -30,9 +30,12 @@ class AudioAdmin(admin.ModelAdmin):
 
 
 class MediaReportAdmin(admin.ModelAdmin):
-    list_display = ("reason", "status", "description", "created_at", "url")
-    list_filter = ("status", "reason")
-    list_display_links = ("status",)
+    list_display = ("id", "reason", "is_pending", "description", "created_at", "url")
+    list_filter = (
+        ("decision", admin.EmptyFieldListFilter),  # ~status, i.e. pending or moderated
+        "reason",
+    )
+    list_display_links = ("id",)
     search_fields = ("description", "media_obj__identifier")
     autocomplete_fields = ("media_obj",)
     actions = None
