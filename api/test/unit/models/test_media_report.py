@@ -1,6 +1,6 @@
 import uuid
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
 import pook
 import pytest
@@ -26,7 +26,7 @@ reason_params = pytest.mark.parametrize("reason", [DMCA, MATURE, OTHER])
 
 @reason_params
 def test_cannot_report_invalid_identifier(media_type_config, reason):
-    with pytest.raises(ObjectDoesNotExist):
+    with pytest.raises(ValidationError):
         media_type_config.report_factory.create(
             media_obj_id=uuid.uuid4(),
             reason=reason,
