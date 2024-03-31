@@ -205,12 +205,10 @@ class AbstractMediaReport(models.Model):
     def clean(self):
         """Clean fields and raise errors that can be handled by Django Admin."""
 
-        if not self.media_class.objects.filter(
-            identifier=self.media_obj.identifier
-        ).exists():
+        if not self.media_class.objects.filter(identifier=self.media_obj_id).exists():
             raise ValidationError(
-                f"No '{self.media_class.__name__}' instance"
-                f"with identifier {self.media_obj.identifier}."
+                f"No '{self.media_class.__name__}' instance "
+                f"with identifier '{self.media_obj_id}'."
             )
 
     @property
