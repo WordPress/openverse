@@ -685,7 +685,41 @@
       creator: "search by creator",
       imageTitle: "Image: {title}",
       audioTitle: "Audio: {title}",
-      results: "Search results for {query}.",
+      results: {
+        /**
+         * "imageResults" and "audioResults" are interpolated from the strings under
+         * browsePage.aria.allResultsHeadingCount.*
+         */
+        all: 'All results for "{query}", {imageResults} and {audioResults}.',
+        image: {
+          zero: 'No image results for "{query}"',
+          count: '{localeCount} image result for "{query}".|{localeCount} image results for "{query}".',
+          countMore: 'Over {localeCount} image results for "{query}".',
+        },
+        audio: {
+          zero: 'No audio tracks for "{query}"',
+          count: '{localeCount} audio track for "{query}".|{localeCount} audio tracks for "{query}".',
+          countMore: 'Over {localeCount} audio tracks for "{query}".',
+        },
+      },
+      allResultsHeadingCount: {
+        image: {
+          /* Interpolated into browsePage.aria.results.all */
+          zero: "no images",
+          /* Interpolated into browsePage.aria.results.all */
+          count: "{localeCount} image|{localeCount} images",
+          /* Interpolated into browsePage.aria.results.all */
+          countMore: "over {localeCount} images",
+        },
+        audio: {
+          /* Interpolated into browsePage.aria.results.all */
+          zero: "no audio tracks",
+          /* Interpolated into browsePage.aria.results.all */
+          count: "{localeCount} audio track|{localeCount} audio tracks",
+          /* Interpolated into browsePage.aria.results.all */
+          countMore: "over {localeCount} audio tracks",
+        },
+      },
     },
   },
   mediaDetails: {

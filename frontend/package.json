@@ -25,7 +25,7 @@
     "talkback": "node ./test/proxy.js",
     "pretest": "pnpm install",
     "test": "pnpm test:unit && pnpm test:playwright",
-    "test:unit": "jest",
+    "test:unit": "pnpm run i18n:en && jest",
     "test:unit:watch": "pnpm test:unit --collectCoverage=false --watch",
     "test:playwright": "./bin/playwright.sh",
     "test:playwright:local": "playwright test -c test/playwright",

@@ -14,7 +14,8 @@ module.exports = {
     {
       files: ["frontend/**/*"],
       options: {
-        plugins: ["prettier-plugin-tailwindcss"],
+        // Do not include tailwind plugin in test environment, as it breaks jest
+        plugins: global.test ? [] : ["prettier-plugin-tailwindcss"],
         tailwindConfig: "frontend/tailwind.config.ts",
         vueIndentScriptAndStyle: false,
       },
