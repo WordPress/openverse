@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-03-26T04:07:48+00:00\n"
+"POT-Creation-Date: 2024-04-01T05:23:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -46,21 +46,10 @@ msgctxt "hero.disclaimer.content"
 msgid "All ###openverse### content is under a ###license### or is in the public domain."
 msgstr ""
 
+#. Interpolated into hero.disclaimer.content: _{license}_ part of "All Openverse content is under a {license} or is in the public domain."
 #: src/components/VHomepageContent.vue:66
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
-msgstr ""
-
-msgctxt "hero.licenseFilter.label"
-msgid "I want something I can"
-msgstr ""
-
-msgctxt "hero.aria.search"
-msgid "search"
-msgstr ""
-
-msgctxt "hero.aria.searchType"
-msgid "search type"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -69,6 +58,7 @@ msgctxt "notification.translation.text"
 msgid "The translation for ###locale### locale is incomplete. Help us get to 100 percent by ###link###."
 msgstr ""
 
+#. Interpolated into notification.translation.text: _{link}_ part of "The translation for English locale is incomplete. Help us get to 100 percent by _{link}_."
 #: src/components/VBanner/VTranslationStatusBanner.vue:13
 msgctxt "notification.translation.link"
 msgid "contributing a translation"
@@ -85,6 +75,7 @@ msgctxt "notification.analytics.text"
 msgid "Openverse uses analytics to improve the quality of our service. Visit ###link### to learn more or opt out."
 msgstr ""
 
+#. Interpolated into notification.analytics.text: _{link}_ part of "Visit _{link}_ to learn more or opt out."
 #: src/components/VBanner/VAnalyticsNotice.vue:12
 msgctxt "notification.analytics.link"
 msgid "the privacy page"
@@ -130,18 +121,6 @@ msgstr ""
 
 msgctxt "header.resourcesTab"
 msgid "Resources"
-msgstr ""
-
-msgctxt "header.notification.text"
-msgid "{example_notification_text}"
-msgstr ""
-
-msgctxt "header.notification.dismiss"
-msgid "Dismiss"
-msgstr ""
-
-msgctxt "header.notification.okay"
-msgid "OK"
 msgstr ""
 
 #: src/components/VHeader/VHeaderMobile/VShowResultsButton.vue:33
@@ -269,20 +248,20 @@ msgctxt "about.planning.content.c"
 msgid "All of our code is open source and can be accessed at the ###repository###. We ###community###. You can see what ###working###."
 msgstr ""
 
-#. Interpolated into about.planning.content.c
+#. Interpolated into about.planning.content.c: _{repository}_ part of "All of our code is open source and can be accessed at the _{repository}_.
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:27
 msgctxt "about.planning.repository"
 msgid "###openverse### ###github### repository"
 msgstr ""
 
-#. Interpolated into about.planning.content.c
+#. Interpolated into about.planning.content.c: _{community}_ part of "We {community}. You can see what we’re currently working on."
 #: src/pages/about.vue:35
 msgctxt "about.planning.community"
 msgid "welcome community contribution"
 msgstr ""
 
-#. Interpolated into about.planning.content.c
+#. Interpolated into about.planning.content.c: _{working}_ part of "You can see what _{working}_."
 #: src/pages/about.vue:40
 msgctxt "about.planning.working"
 msgid "we’re currently working on"
@@ -322,7 +301,7 @@ msgctxt "about.declaration.content.b"
 msgid "Please independently verify the licensing status and attribution information before reusing the content. For more details, read the ###terms###."
 msgstr ""
 
-#. Interpolated into about.declaration.content.b
+#. Interpolated into about.declaration.content.b: _{terms}_ part of "For more details, read the _{terms}_."
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:69
 msgctxt "about.declaration.terms"
@@ -341,6 +320,7 @@ msgctxt "sources.detail"
 msgid "Clicking on a ###singleName### allows you to browse and filter items within that source."
 msgstr ""
 
+#. Interpolated into sources.detail: _{singleName}_ part of "Clicking on a _{singleName}_ allows you to browse and filter items within that source."
 #: src/pages/sources.vue:75
 msgctxt "sources.singleName"
 msgid "Source"
@@ -487,11 +467,13 @@ msgctxt "externalSourcesPage.new.content"
 msgid "Yes, please! Create an ###issue### in our GitHub repository or send us an ###email### and tell us about the new sources you’d like to see included."
 msgstr ""
 
+#. Interpolated into externalSourcesPage.new.content: _{issue}_ part of "Create an _{issue}_ in our GitHub repository or send us an email and tell us about the new sources you’d like to see included."
 #: src/pages/about.vue:114
 msgctxt "externalSourcesPage.new.issue"
 msgid "issue"
 msgstr ""
 
+#. Interpolated into externalSourcesPage.new.content: _{email} part of "Create an issue in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included."
 #: src/pages/about.vue:119
 msgctxt "externalSourcesPage.new.email"
 msgid "email"
@@ -538,6 +520,7 @@ msgctxt "externalSourcesPage.why.feedbackSuggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
+#. Interpolated into externalSourcesPage.why.feedbackSuggestions: _{feedback}_ part of "We hope you enjoy, and if you have suggestions for improvement, leave us _{feedback}_"
 #: src/pages/about.vue:144
 msgctxt "externalSourcesPage.why.feedbackLink"
 msgid "feedback"
@@ -575,6 +558,7 @@ msgctxt "privacy.intro.content"
 msgid "The ###openverse### project seeks to make the privacy and safety of our users a priority. ###openverse### adheres to the ###link###. Please see that document for a full description of how ###openverse### uses and protects any information that you give us."
 msgstr ""
 
+#. Interpolated into privacy.intro.content: _{link}_ part of "Openverse adheres to the _{link}_."
 #: src/pages/privacy.vue:9
 msgctxt "privacy.intro.link"
 msgid "privacy policy of all WordPress.org websites"
@@ -610,11 +594,13 @@ msgctxt "privacy.contact.content"
 msgid "Any questions about ###openverse### and privacy can be sent to ###email###, shared as a ###issue###, or discussed with our community in the #openverse channel of the ###chat###."
 msgstr ""
 
+#. Interpolated into privacy.contact.content: _{issue}_ part of "Any questions about Openverse and privacy can be sent to openverse@wordpress.org, shared as a _{issue}_, or discussed with our community in the #openverse channel of the Making WordPress Chat."
 #: src/pages/privacy.vue:36
 msgctxt "privacy.contact.issue"
 msgid "GitHub issue"
 msgstr ""
 
+#. Interpolated into privacy.contact.content: _{chat}_ part of "Any questions about Openverse and privacy can be sent to openverse@wordpress.org, shared as a Github issue, or discussed with our community in the #openverse channel of the _{chat}_."
 #: src/pages/privacy.vue:41
 msgctxt "privacy.contact.chat"
 msgid "Making WordPress Chat"
@@ -658,17 +644,18 @@ msgctxt "searchGuide.negate.title"
 msgid "Excluding terms"
 msgstr ""
 
-#: src/pages/search-help.vue:24
+#. Interpolated into searchGuide.negate.content: _{operator}_ part of 'To exclude a term from your results, put the {operator} in front of it.'
+#: src/pages/search-help.vue:25
 msgctxt "searchGuide.negate.operatorName"
-msgid "minus operator"
+msgid "minus sign"
 msgstr ""
 
-#: src/pages/search-help.vue:30
+#: src/pages/search-help.vue:33
 msgctxt "searchGuide.negate.ariaLabel"
 msgid "dog minus pug"
 msgstr ""
 
-#: src/pages/search-help.vue:33
+#: src/pages/search-help.vue:32
 msgctxt "searchGuide.negate.example"
 msgid "dog -pug"
 msgstr ""
@@ -702,10 +689,6 @@ msgstr ""
 #: src/pages/feedback.vue:33
 msgctxt "feedback.loading"
 msgid "Loading..."
-msgstr ""
-
-msgctxt "feedback.aria.ccUsability"
-msgid "slack cc-usability channel"
 msgstr ""
 
 msgctxt "feedback.aria.improve"
@@ -770,7 +753,7 @@ msgctxt "sensitive.description.wpCoc"
 msgid "WordPress’s Community Code of Conduct"
 msgstr ""
 
-#. Interpolated into sensitive.description.content.c. Referencing https://make.wordpress.org/handbook/diversity-equity-and-inclusion-in-wordpress/
+#. Interpolated into sensitive.description.content.c: _{deiStatement}_ part of "In adherence to WordPress’s Community Code of Conduct and its _{deiStatement}_, Openverse holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project." Referencing https://make.wordpress.org/handbook/diversity-equity-and-inclusion-in-wordpress/
 #: src/pages/sensitive-content.vue:26
 msgctxt "sensitive.description.deiStatement"
 msgid "diversity, equity, and inclusion statement"
@@ -899,7 +882,7 @@ msgctxt "sensitive.designations.userReported.description.d"
 msgid "###openverse### moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from ###openverse###’s services."
 msgstr ""
 
-#. Interpolated into sensitive.designations.userReported.description.b
+#. Interpolated into sensitive.designations.userReported.description.b, _{gutenbergMediaInserter}_ part of "Some tools and apps that integrate with the Openverse API, like the _{gutenbergMediaInserter}_, also allow their users to report sensitive content."
 #. Do not translate words between ### ###.
 #: src/pages/sensitive-content.vue:101
 msgctxt "sensitive.designations.userReported.gutenbergMediaInserter"
@@ -944,13 +927,13 @@ msgctxt "sensitive.designations.sensitiveText.description.e"
 msgid "For more context on why we’ve chosen this approach despite that, refer to the ###imperfect### of our project planning document related to this feature."
 msgstr ""
 
-#. Interpolated into sensitive.designations.sensitiveText.description.b
+#. Interpolated into sensitive.designations.sensitiveText.description.b: _{sensitiveTermsList}_ part of "Openverse’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited."
 #: src/pages/sensitive-content.vue:135
 msgctxt "sensitive.designations.sensitiveText.sensitiveTermsList"
 msgid "sensitive terms list"
 msgstr ""
 
-#. Interpolated into sensitive.designations.sensitiveText.description.e
+#. Interpolated into sensitive.designations.sensitiveText.description.e: _{imperfect}_ part of "For more context on why we’ve chosen this approach despite that, refer to the _{imperfect}_ of our project planning document related to this feature." {sectionName} is replaced with "This will not be perfect"
 #. Do not translate words between ### ###.
 #: src/pages/sensitive-content.vue:154
 msgctxt "sensitive.designations.sensitiveText.imperfect"
@@ -991,7 +974,7 @@ msgctxt "sensitive.designations.sensitiveText.metadata.e"
 msgid "As above, ###openverse### understands that this is not perfect."
 msgstr ""
 
-#. Interpolated into sensitive.designations.sensitiveText.metadata.a
+#. Interpolated into sensitive.designations.sensitiveText.metadata.a: _{notAvailable}_ part of "It is important to note that some textual metadata for a work is _{notAvailable}_ through the Openverse API or the openverse.org website."
 #: src/pages/sensitive-content.vue:169
 msgctxt "sensitive.designations.sensitiveText.notAvailable"
 msgid "not available"
@@ -1091,10 +1074,12 @@ msgctxt "error.mediaNotFound"
 msgid "Couldn't find ###mediaType### with id ###id###"
 msgstr ""
 
+#. Interpolated into error.mediaNotFound: _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
 msgctxt "error.image"
 msgid "image"
 msgstr ""
 
+#. Interpolated into error.mediaNotFound: _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
 msgctxt "error.audio"
 msgid "audio"
 msgstr ""
@@ -1311,6 +1296,7 @@ msgctxt "filters.safeBrowsing.desc"
 msgid "Content marked as ###sensitive### is not shown by default."
 msgstr ""
 
+#. Interpolated into filters.safeBrowsing.desc: _{sensitive}_ part of "Content marked as _{sensitive}_ is not shown by default."
 #: src/components/VSafeBrowsing/VSafeBrowsing.vue:11
 msgctxt "filters.safeBrowsing.sensitive"
 msgid "sensitive"
@@ -1385,6 +1371,7 @@ msgctxt "filters.licenseExplanation.more.mark"
 msgid "###readMore### about ###mark###."
 msgstr ""
 
+#. Interpolated into filters.licenseExplanation.more.license and filters.licenseExplanation.more.mark: _{readMore}_ part of "_{readMore}_ about this license." and _"{readMore}_ about CC0."
 #: src/components/VFilters/VLicenseExplanation.vue:30
 msgctxt "filters.licenseExplanation.more.readMore"
 msgid "Read more"
@@ -1508,22 +1495,27 @@ msgctxt "browsePage.searchForm.placeholder"
 msgid "Search all ###type###"
 msgstr ""
 
+#. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
 msgctxt "browsePage.searchForm.image"
 msgid "images"
 msgstr ""
 
+#. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
 msgctxt "browsePage.searchForm.audio"
 msgid "audio"
 msgstr ""
 
+#. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
 msgctxt "browsePage.searchForm.video"
 msgid "videos"
 msgstr ""
 
+#. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
 msgctxt "browsePage.searchForm.model3d"
 msgid "3D Models"
 msgstr ""
 
+#. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
 msgctxt "browsePage.searchForm.all"
 msgid "content"
 msgstr ""
@@ -1585,14 +1577,6 @@ msgstr ""
 
 msgctxt "browsePage.aria.search"
 msgid "search"
-msgstr ""
-
-msgctxt "browsePage.aria.relevance.yes"
-msgid "relevant result? answer: yes"
-msgstr ""
-
-msgctxt "browsePage.aria.relevance.no"
-msgid "relevant result? answer: no"
 msgstr ""
 
 msgctxt "browsePage.aria.removeFilter"
@@ -1686,11 +1670,13 @@ msgctxt "mediaDetails.reuse.tool.content"
 msgid "Read more about the tool ###link###."
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.tool.content: _{link}_ part of "Read more about the tool {link}."
 #: src/components/VMediaInfo/VMediaLicense.vue:39
 msgctxt "mediaDetails.reuse.tool.link"
 msgid "here"
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.credit.text: _{title}_ part of "_{title}_ by creator is licensed with CC0 1.0."
 msgctxt "mediaDetails.reuse.credit.genericTitle"
 msgid "This work"
 msgstr ""
@@ -1705,15 +1691,18 @@ msgctxt "mediaDetails.reuse.credit.text"
 msgid "###title### ###creator### ###markedLicensed### ###license###. ###viewLegal###"
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.credit.text: _{creator}_ part of "This work _{creator}_ is licensed with CC0 1.0."
 #. Do not translate words between ### ###.
 msgctxt "mediaDetails.reuse.credit.creatorText"
 msgid "by ###creatorName###"
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.credit.text: _{markedLicensed}_ part of "This work by creator _{markedLicensed}_ CC0 1.0."
 msgctxt "mediaDetails.reuse.credit.marked"
 msgid "is marked with"
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.credit.text: _{markedLicensed}_ part of "This work by creator _{markedLicensed}_ CC BY 4.0."
 msgctxt "mediaDetails.reuse.credit.licensed"
 msgid "is licensed under"
 msgstr ""
@@ -1723,10 +1712,12 @@ msgctxt "mediaDetails.reuse.credit.viewLegalText"
 msgid "To view ###termsCopy###, visit ###url###."
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.credit.viewLegalText: _{termsCopy}_ part of "To view _{termsCopy}_, visit {url}."
 msgctxt "mediaDetails.reuse.credit.termsText"
 msgid "the terms"
 msgstr ""
 
+#. Interpolated into mediaDetails.reuse.credit.viewLegalText: _{termsCopy}_ part of "To view {termsCopy}, visit {url}."
 msgctxt "mediaDetails.reuse.credit.copyText"
 msgid "a copy of this license"
 msgstr ""
@@ -1857,6 +1848,7 @@ msgctxt "mediaDetails.contentReport.form.dmca.note"
 msgid "You must fill out this ###form### to report copyright infringement. No action will be taken until this form is filled out and submitted. We recommend doing the same at the source, ###source###."
 msgstr ""
 
+#. Interpolated into mediaDetails.contentReport.dmca.note: _{form}_ part of "You must fill out this {form} to report copyright infringement."
 #: src/components/VContentReport/VDmcaNotice.vue:9
 #: src/components/VContentReport/VDmcaNotice.vue:13
 msgctxt "mediaDetails.contentReport.form.dmca.form"
@@ -2000,6 +1992,7 @@ msgctxt "allResults.snackbar.text"
 msgid "Press ###spacebar### to play or pause the track."
 msgstr ""
 
+#. Interpolated into allResults.snackbar.text: _{spacebar}_ part of "Press {spacebar} to play or pause the track."
 msgctxt "allResults.snackbar.spacebar"
 msgid "Spacebar"
 msgstr ""
@@ -2009,6 +2002,7 @@ msgctxt "audioResults.snackbar.text"
 msgid "Press ###spacebar### to play or pause, and ###left### & ###right### to seek through the track."
 msgstr ""
 
+#. Interpolated into audioResults.snackbar.text: _{spacebar}_ part of "Press {spacebar} to play or pause, and ← & → to seek through the track."
 msgctxt "audioResults.snackbar.spacebar"
 msgid "Spacebar"
 msgstr ""
@@ -2045,11 +2039,6 @@ msgctxt "externalSources.card.caption"
 msgid "Click on a source below to directly search other collections of CC-licensed images.###break###Please note that Use filters are not supported for Open Clip Art Library or Nappy."
 msgstr ""
 
-#. Do not translate words between ### ###.
-msgctxt "externalSources.form.unsupportedTitle"
-msgid "###openverse### does not yet support built-in ###type### search."
-msgstr ""
-
 #: src/components/VExternalSearch/VExternalSearchForm.vue:26
 msgctxt "externalSources.form.supportedTitle"
 msgid "Not finding what you're looking for? Search in external sources"
@@ -2058,48 +2047,6 @@ msgstr ""
 #: src/components/VExternalSearch/VExternalSearchForm.vue:31
 msgctxt "externalSources.form.supportedTitleSm"
 msgid "Search in external sources"
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "externalSources.form.noResultsTitle"
-msgid "No ###type### results for \"###query###\"."
-msgstr ""
-
-#. Do not translate words between ### ###.
-msgctxt "externalSources.form.caption"
-msgid "Click on a source below to directly search other collections of CC-licensed ###type###."
-msgstr ""
-
-msgctxt "externalSources.form.types.image"
-msgid "image"
-msgstr ""
-
-msgctxt "externalSources.form.types.audio"
-msgid "audio"
-msgstr ""
-
-msgctxt "externalSources.form.types.video"
-msgid "video"
-msgstr ""
-
-msgctxt "externalSources.form.types.model3d"
-msgid "3D model"
-msgstr ""
-
-msgctxt "externalSources.form.typesPlural.image"
-msgid "images"
-msgstr ""
-
-msgctxt "externalSources.form.typesPlural.audio"
-msgid "audios"
-msgstr ""
-
-msgctxt "externalSources.form.typesPlural.video"
-msgid "videos"
-msgstr ""
-
-msgctxt "externalSources.form.typesPlural.model3d"
-msgid "3D models"
 msgstr ""
 
 msgctxt "browsers.chrome"
@@ -2261,18 +2208,6 @@ msgstr ""
 
 msgctxt "licenseReadableNames.ncSampling+"
 msgid "NonCommercial Sampling Plus"
-msgstr ""
-
-msgctxt "dropdownButton.aria.arrowLabel"
-msgid "Dropdown"
-msgstr ""
-
-msgctxt "downloadButton.aria.dropdownLabel"
-msgid "Select the download file format"
-msgstr ""
-
-msgctxt "downloadButton.download"
-msgid "Download"
 msgstr ""
 
 msgctxt "interpunct"
@@ -2569,6 +2504,7 @@ msgctxt "sensitiveContent.singleResult.learnMore"
 msgid "###link### about how ###openverse### handles sensitive content."
 msgstr ""
 
+#. Interpolated into sensitiveContent.singleResult.learnMore: _{link}_ part of "_{link}_ about how Openverse handles sensitive content."
 #: src/components/VSafetyWall/VSafetyWall.vue:24
 msgctxt "sensitiveContent.singleResult.link"
 msgid "Learn more"
