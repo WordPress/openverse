@@ -15,8 +15,6 @@ logger = logging.getLogger(__name__)
 TAG_DENYLIST = {
     "no person",
     "undefined",
-    "uploaded:by=flickrmobile",
-    "uploaded:by=instagram",
     "squareformat",
 }
 
@@ -303,13 +301,8 @@ class MediaStore(metaclass=abc.ABCMeta):
             if not self._tag_denylisted(tag)
         ]
 
-    def _format_raw_tag(self, tag):
-        if isinstance(tag, dict) and tag.get("name") and tag.get("provider"):
-            logger.debug(f"Tag already enriched: {tag}")
-            return tag
-        else:
-            logger.debug(f"Enriching tag: {tag}")
-            return {"name": tag, "provider": self.provider}
+    def _format_raw_tag(self, tag: str):
+        return {"name": tag, "provider": self.provider}
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """
