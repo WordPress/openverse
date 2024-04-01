@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-04-01T05:23:10+00:00\n"
+"POT-Creation-Date: 2024-04-01T23:38:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1605,10 +1605,83 @@ msgctxt "browsePage.aria.audioTitle"
 msgid "Audio: ###title###"
 msgstr ""
 
+#. "imageResults" and "audioResults" are interpolated from the strings under browsePage.aria.allResultsHeadingCount.
 #. Do not translate words between ### ###.
-#: src/components/VSearchResultsGrid/VSearchResults.vue:102
-msgctxt "browsePage.aria.results"
-msgid "Search results for ###query###."
+#: src/components/VSearchResultsTitle.vue:87
+msgctxt "browsePage.aria.results.all"
+msgid "All results for \"###query###\", ###imageResults### and ###audioResults###."
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.results.image.zero"
+msgid "No image results for \"###query###\""
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.results.image.count"
+msgid "###localeCount### image result for \"###query###\"."
+msgid_plural "###localeCount### image results for \"###query###\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.results.image.countMore"
+msgid "Over ###localeCount### image results for \"###query###\"."
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.results.audio.zero"
+msgid "No audio tracks for \"###query###\""
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.results.audio.count"
+msgid "###localeCount### audio track for \"###query###\"."
+msgid_plural "###localeCount### audio tracks for \"###query###\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.results.audio.countMore"
+msgid "Over ###localeCount### audio tracks for \"###query###\"."
+msgstr ""
+
+#. Interpolated into browsePage.aria.results.all
+msgctxt "browsePage.aria.allResultsHeadingCount.image.zero"
+msgid "no images"
+msgstr ""
+
+#. Interpolated into browsePage.aria.results.all
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.allResultsHeadingCount.image.count"
+msgid "###localeCount### image"
+msgid_plural "###localeCount### images"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Interpolated into browsePage.aria.results.all
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.allResultsHeadingCount.image.countMore"
+msgid "over ###localeCount### images"
+msgstr ""
+
+#. Interpolated into browsePage.aria.results.all
+msgctxt "browsePage.aria.allResultsHeadingCount.audio.zero"
+msgid "no audio tracks"
+msgstr ""
+
+#. Interpolated into browsePage.aria.results.all
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.allResultsHeadingCount.audio.count"
+msgid "###localeCount### audio track"
+msgid_plural "###localeCount### audio tracks"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Interpolated into browsePage.aria.results.all
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.allResultsHeadingCount.audio.countMore"
+msgid "over ###localeCount### audio tracks"
 msgstr ""
 
 msgctxt "mediaDetails.information.type"
