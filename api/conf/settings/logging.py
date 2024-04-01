@@ -2,7 +2,7 @@ from logging import LogRecord
 
 from decouple import config
 
-from conf.settings.base import MIDDLEWARE
+from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
 from conf.settings.security import DEBUG
 
 
@@ -10,6 +10,12 @@ def health_check_filter(record: LogRecord) -> bool:
     # Filter out health checks from the logs, they're verbose and happen frequently
     return not ("GET /healthcheck" in record.getMessage() and record.status_code == 200)
 
+
+# https://django-structlog.readthedocs.io/en/latest/getting_started.html#installation
+if "django_structlog" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("django_structlog")
+
+MIDDLEWARE.insert(0, "django_structlog.middlewares.RequestMiddleware")
 
 LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
 DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
