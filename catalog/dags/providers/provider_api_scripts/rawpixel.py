@@ -246,7 +246,7 @@ class RawpixelDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_tags(metadata: dict) -> set | None:
         if keywords := metadata.get("popular_keywords"):
-            return {k for k in keywords}
+            return set(keywords)
         return None
 
     @staticmethod

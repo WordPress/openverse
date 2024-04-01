@@ -166,7 +166,7 @@ class StockSnapDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_tags(item: dict) -> set:
-        return {keyword for keyword in item.get("keywords")}
+        return set(item.get("keywords", []))
 
 
 def main():

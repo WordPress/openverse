@@ -138,7 +138,7 @@ class NyplDataIngester(ProviderDataIngester):
                 "filetype": filetype,
                 "category": category,
                 "meta_data": metadata,
-                "raw_tags": self._get_tags(mods) or None,
+                "raw_tags": self._get_tags(mods),
             }
             images.append(image_data)
         return images
@@ -230,7 +230,7 @@ class NyplDataIngester(ProviderDataIngester):
         # Topic can be a dictionary or a list
         topics = [subject["topic"] for subject in subject_list if "topic" in subject]
         if not topics:
-            return
+            return None
         tags = set()
         for topic in topics:
             if isinstance(topic, list):
