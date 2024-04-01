@@ -11,24 +11,29 @@
     },
     disclaimer: {
       content: "All {openverse} content is under a {license} or is in the public domain.",
+      /**
+      Interpolated into hero.disclaimer.content:
+       _{license}_ part of "All Openverse content is under a {license} or is in the public domain."
+       */
       license: "Creative Commons license",
-    },
-    licenseFilter: {
-      label: "I want something I can",
-    },
-    aria: {
-      search: "search",
-      searchType: "search type",
     },
   },
   notification: {
     translation: {
       text: "The translation for {locale} locale is incomplete. Help us get to 100 percent by {link}.",
+      /**
+      Interpolated into notification.translation.text:
+      _{link}_ part of "The translation for English locale is incomplete. Help us get to 100 percent by _{link}_."
+      */
       link: "contributing a translation",
       close: "Close the translation contribution help request banner",
     },
     analytics: {
       text: "Openverse uses analytics to improve the quality of our service. Visit {link} to learn more or opt out.",
+      /**
+      Interpolated into notification.analytics.text:
+      _{link}_ part of "Visit _{link}_ to learn more or opt out."
+      */
       link: "the privacy page",
       close: "Close the analytics notice banner.",
     },
@@ -44,11 +49,6 @@
     },
     aboutTab: "About",
     resourcesTab: "Resources",
-    notification: {
-      text: "{example_notification_text}",
-      dismiss: "Dismiss",
-      okay: "OK",
-    },
     loading: "Loading...",
     filterButton: {
       simple: "Filters",
@@ -97,11 +97,20 @@
          */
         c: "All of our code is open source and can be accessed at the {repository}. We {community}. You can see what {working}.",
       },
-      /** Interpolated into about.planning.content.c */
+      /**
+       * Interpolated into about.planning.content.c:
+       * _{repository}_ part of "All of our code is open source and can be accessed at the _{repository}_.
+       */
       repository: "{openverse} {github} repository",
-      /** Interpolated into about.planning.content.c */
+      /**
+       * Interpolated into about.planning.content.c:
+       * _{community}_ part of "We {community}. You can see what we’re currently working on."
+       */
       community: "welcome community contribution",
-      /** Interpolated into about.planning.content.c */
+      /**
+       * Interpolated into about.planning.content.c:
+       * _{working}_ part of "You can see what _{working}_."
+       */
       working: "we’re currently working on",
     },
     transfer: {
@@ -121,13 +130,20 @@
         /** about.declaration.content.a-b are parts of a single statement */
         b: "Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
       },
-      /** Interpolated into about.declaration.content.b */
+      /**
+       * Interpolated into about.declaration.content.b:
+       * _{terms}_ part of "For more details, read the _{terms}_."
+       */
       terms: "{openverse} Terms of Use",
     },
   },
   sources: {
     title: "Sources",
     detail: "Clicking on a {singleName} allows you to browse and filter items within that source.",
+    /**
+     * Interpolated into sources.detail:
+     * _{singleName}_ part of "Clicking on a _{singleName}_ allows you to browse and filter items within that source."
+     */
     singleName: "Source",
     providers: {
       source: "Source",
@@ -177,7 +193,15 @@
     new: {
       title: "Can I suggest new external sources?",
       content: "Yes, please! Create an {issue} in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included.",
+      /**
+       * Interpolated into externalSourcesPage.new.content:
+       * _{issue}_ part of "Create an _{issue}_ in our GitHub repository or send us an email and tell us about the new sources you’d like to see included."
+       */
       issue: "issue",
+      /**
+       * Interpolated into externalSourcesPage.new.content:
+       * _{email} part of "Create an issue in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included."
+       */
       email: "email",
     },
     why: {
@@ -193,6 +217,10 @@
       },
       ariaLabel: "feedback",
       feedbackSuggestions: "We hope you enjoy, and if you have suggestions for improvement, leave us {feedback}.",
+      /**
+       * Interpolated into externalSourcesPage.why.feedbackSuggestions:
+       * _{feedback}_ part of "We hope you enjoy, and if you have suggestions for improvement, leave us _{feedback}_"
+       */
       feedbackLink: "feedback",
     },
     relationships: {
@@ -207,6 +235,9 @@
     title: "Privacy",
     intro: {
       content: "The {openverse} project seeks to make the privacy and safety of our users a priority. {openverse} adheres to the {link}. Please see that document for a full description of how {openverse} uses and protects any information that you give us.",
+      /**
+       * Interpolated into privacy.intro.content:
+       * _{link}_ part of "Openverse adheres to the _{link}_." */
       link: "privacy policy of all WordPress.org websites",
     },
     cookies: {
@@ -221,7 +252,15 @@
     contact: {
       title: "Contact Us",
       content: "Any questions about {openverse} and privacy can be sent to {email}, shared as a {issue}, or discussed with our community in the #openverse channel of the {chat}.",
+      /**
+       * Interpolated into privacy.contact.content:
+       * _{issue}_ part of "Any questions about Openverse and privacy can be sent to openverse@wordpress.org, shared as a _{issue}_, or discussed with our community in the #openverse channel of the Making WordPress Chat."
+       */
       issue: "GitHub issue",
+      /**
+       * Interpolated into privacy.contact.content:
+       * _{chat}_ part of "Any questions about Openverse and privacy can be sent to openverse@wordpress.org, shared as a Github issue, or discussed with our community in the #openverse channel of the _{chat}_."
+       */
       chat: "Making WordPress Chat",
     },
   },
@@ -236,7 +275,11 @@
     },
     negate: {
       title: "Excluding terms",
-      operatorName: "minus operator",
+      /**
+       * Interpolated into searchGuide.negate.content:
+       * _{operator}_ part of 'To exclude a term from your results, put the {operator} in front of it.'
+       */
+      operatorName: "minus sign",
       ariaLabel: "dog minus pug",
       example: "dog -pug",
       content: 'To exclude a term from your results, put the {operator} in front of it. Example: {link}{br} This will search for media related to "dog" but won\'t include results related to "pug".',
@@ -249,7 +292,6 @@
     report: "Report a Bug",
     loading: "Loading...",
     aria: {
-      ccUsability: "slack cc-usability channel",
       improve: "help us improve form",
       report: "report a bug form",
     },
@@ -281,7 +323,8 @@
        */
       wpCoc: "WordPress’s Community Code of Conduct",
       /**
-       * Interpolated into sensitive.description.content.c.
+       * Interpolated into sensitive.description.content.c:
+       _{deiStatement}_ part of "In adherence to WordPress’s Community Code of Conduct and its _{deiStatement}_, Openverse holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project."
        * Referencing https://make.wordpress.org/handbook/diversity-equity-and-inclusion-in-wordpress/
        */
       deiStatement: "diversity, equity, and inclusion statement",
@@ -337,7 +380,10 @@
           /** sensitive.designations.userReported.description.a-d are parts of a single statement */
           d: "{openverse} moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from {openverse}’s services.",
         },
-        /** Interpolated into sensitive.designations.userReported.description.b */
+        /**
+         * Interpolated into sensitive.designations.userReported.description.b,
+         * _{gutenbergMediaInserter}_ part of "Some tools and apps that integrate with the Openverse API, like the _{gutenbergMediaInserter}_, also allow their users to report sensitive content."
+         */
         gutenbergMediaInserter: "Gutenberg editor’s {openverse} media inserter",
       },
       sensitiveText: {
@@ -354,9 +400,16 @@
           /** sensitive.designations.sensitiveText.description.a-e are a single statement */
           e: "For more context on why we’ve chosen this approach despite that, refer to the {imperfect} of our project planning document related to this feature.",
         },
-        /** Interpolated into sensitive.designations.sensitiveText.description.b */
+        /**
+         * Interpolated into sensitive.designations.sensitiveText.description.b:
+         * _{sensitiveTermsList}_ part of "Openverse’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited."
+         */
         sensitiveTermsList: "sensitive terms list",
-        /** Interpolated into sensitive.designations.sensitiveText.description.e */
+        /**
+         * Interpolated into sensitive.designations.sensitiveText.description.e:
+         * _{imperfect}_ part of "For more context on why we’ve chosen this approach despite that, refer to the _{imperfect}_ of our project planning document related to this feature."
+         * {sectionName} is replaced with "This will not be perfect"
+         */
         imperfect: '"{sectionName}" section',
         metadata: {
           /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
@@ -370,7 +423,10 @@
           /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
           e: "As above, {openverse} understands that this is not perfect.",
         },
-        /** Interpolated into sensitive.designations.sensitiveText.metadata.a */
+        /**
+         * Interpolated into sensitive.designations.sensitiveText.metadata.a:
+         * _{notAvailable}_ part of "It is important to note that some textual metadata for a work is _{notAvailable}_ through the Openverse API or the openverse.org website."
+         */
         notAvailable: "not available",
       },
     },
@@ -414,7 +470,15 @@
     occurred: "An error occurred",
     imageNotFound: "Couldn't find image with id {id}",
     mediaNotFound: "Couldn't find {mediaType} with id {id}",
+    /**
+     * Interpolated into error.mediaNotFound:
+     * _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
+     */
     image: "image",
+    /**
+     * Interpolated into error.mediaNotFound:
+     * _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
+     */
     audio: "audio",
   },
   filters: {
@@ -491,6 +555,10 @@
     safeBrowsing: {
       title: "Safe Browsing",
       desc: "Content marked as {sensitive} is not shown by default.",
+      /**
+       * Interpolated into filters.safeBrowsing.desc:
+       * _{sensitive}_ part of "Content marked as _{sensitive}_ is not shown by default."
+       */
       sensitive: "sensitive",
       toggles: {
         fetchSensitive: {
@@ -523,6 +591,10 @@
       more: {
         license: "{readMore} about this license.",
         mark: "{readMore} about {mark}.",
+        /**
+         * Interpolated into filters.licenseExplanation.more.license and filters.licenseExplanation.more.mark:
+         * _{readMore}_ part of "_{readMore}_ about this license." and _"{readMore}_ about CC0."
+         */
         readMore: "Read more",
       },
     },
@@ -565,10 +637,30 @@
     },
     searchForm: {
       placeholder: "Search all {type}",
+      /**
+       * Interpolated into browsePage.searchForm.placeholder:
+       * _{type}_ part of "Search all {type}"
+       */
       image: "images",
+      /**
+       * Interpolated into browsePage.searchForm.placeholder:
+       * _{type}_ part of "Search all {type}"
+       */
       audio: "audio",
+      /**
+       * Interpolated into browsePage.searchForm.placeholder:
+       * _{type}_ part of "Search all {type}"
+       */
       video: "videos",
+      /**
+       * Interpolated into browsePage.searchForm.placeholder:
+       * _{type}_ part of "Search all {type}"
+       */
       model3d: "3D Models",
+      /**
+       * Interpolated into browsePage.searchForm.placeholder:
+       * _{type}_ part of "Search all {type}"
+       */
       all: "content",
       collectionPlaceholder: "Search this collection",
       button: "Search",
@@ -588,10 +680,6 @@
       close: "close",
       scroll: "scroll to top",
       search: "search",
-      relevance: {
-        yes: "relevant result? answer: yes",
-        no: "relevant result? answer: no",
-      },
       removeFilter: "remove filter",
       licenseExplanation: "license explanation",
       creator: "search by creator",
@@ -620,17 +708,45 @@
       image: "Image",
       tool: {
         content: "Read more about the tool {link}.",
+        /**
+         * Interpolated into mediaDetails.reuse.tool.content:
+         * _{link}_ part of "Read more about the tool {link}."
+         */
         link: "here",
       },
       credit: {
+        /**
+         * Interpolated into mediaDetails.reuse.credit.text:
+         * _{title}_ part of "_{title}_ by creator is licensed with CC0 1.0."
+         */
         genericTitle: "This work",
         actualTitle: '"{title}"',
         text: "{title} {creator} {markedLicensed} {license}. {viewLegal}",
+        /**
+         * Interpolated into mediaDetails.reuse.credit.text:
+         * _{creator}_ part of "This work _{creator}_ is licensed with CC0 1.0."
+         */
         creatorText: "by {creatorName}",
+        /**
+         * Interpolated into mediaDetails.reuse.credit.text:
+         * _{markedLicensed}_ part of "This work by creator _{markedLicensed}_ CC0 1.0."
+         */
         marked: "is marked with",
+        /**
+         * Interpolated into mediaDetails.reuse.credit.text:
+         * _{markedLicensed}_ part of "This work by creator _{markedLicensed}_ CC BY 4.0."
+         */
         licensed: "is licensed under",
         viewLegalText: "To view {termsCopy}, visit {url}.",
+        /**
+         * Interpolated into mediaDetails.reuse.credit.viewLegalText:
+         * _{termsCopy}_ part of "To view _{termsCopy}_, visit {url}."
+         */
         termsText: "the terms",
+        /**
+         * Interpolated into mediaDetails.reuse.credit.viewLegalText:
+         * _{termsCopy}_ part of "To view {termsCopy}, visit {url}."
+         */
         copyText: "a copy of this license",
       },
       copyLicense: {
@@ -672,6 +788,10 @@
         dmca: {
           option: "Infringes copyright",
           note: "You must fill out this {form} to report copyright infringement. No action will be taken until this form is filled out and submitted. We recommend doing the same at the source, {source}.",
+          /**
+           * Interpolated into mediaDetails.contentReport.dmca.note:
+           * _{form}_ part of "You must fill out this {form} to report copyright infringement."
+           */
           form: "DMCA form",
           open: "Open form",
         },
@@ -729,12 +849,20 @@
   allResults: {
     snackbar: {
       text: "Press {spacebar} to play or pause the track.",
+      /**
+       * Interpolated into allResults.snackbar.text:
+       * _{spacebar}_ part of "Press {spacebar} to play or pause the track."
+       */
       spacebar: "Spacebar",
     },
   },
   audioResults: {
     snackbar: {
       text: "Press {spacebar} to play or pause, and {left} & {right} to seek through the track.",
+      /**
+       * Interpolated into audioResults.snackbar.text:
+       * _{spacebar}_ part of "Press {spacebar} to play or pause, and ← & → to seek through the track."
+       */
       spacebar: "Spacebar",
       left: "←",
       right: "→",
@@ -749,23 +877,8 @@
       caption: "Click on a source below to directly search other collections of CC-licensed images.{break}Please note that Use filters are not supported for Open Clip Art Library or Nappy.",
     },
     form: {
-      unsupportedTitle: "{openverse} does not yet support built-in {type} search.",
       supportedTitle: "Not finding what you're looking for? Search in external sources",
       supportedTitleSm: "Search in external sources",
-      noResultsTitle: 'No {type} results for "{query}".',
-      caption: "Click on a source below to directly search other collections of CC-licensed {type}.",
-      types: {
-        image: "image",
-        audio: "audio",
-        video: "video",
-        model3d: "3D model",
-      },
-      typesPlural: {
-        image: "images",
-        audio: "audios",
-        video: "videos",
-        model3d: "3D models",
-      },
     },
   },
   browsers: {
@@ -818,17 +931,6 @@
     byNcNd: "Attribution-NonCommercial-NoDerivatives",
     "sampling+": "Sampling Plus",
     "ncSampling+": "NonCommercial Sampling Plus",
-  },
-  dropdownButton: {
-    aria: {
-      arrowLabel: "Dropdown",
-    },
-  },
-  downloadButton: {
-    aria: {
-      dropdownLabel: "Select the download file format",
-    },
-    download: "Download",
   },
   interpunct: "•",
   modal: {
@@ -931,6 +1033,10 @@
       show: "Show content",
       explanation: "This work is marked as sensitive for the following reasons:",
       learnMore: "{link} about how {openverse} handles sensitive content.",
+      /**
+       * Interpolated into sensitiveContent.singleResult.learnMore:
+       * _{link}_ part of "_{link}_ about how Openverse handles sensitive content."
+       */
       link: "Learn more",
     },
     reasons: {
