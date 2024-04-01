@@ -2,13 +2,17 @@ from logging import LogRecord
 
 from decouple import config
 
-from conf.settings.base import MIDDLEWARE
+from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
 from conf.settings.security import DEBUG
 
 
 def health_check_filter(record: LogRecord) -> bool:
     # Filter out health checks from the logs, they're verbose and happen frequently
     return not ("GET /healthcheck" in record.getMessage() and record.status_code == 200)
+
+
+if "django_structlog" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("django_structlog")
 
 
 LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
@@ -24,7 +28,7 @@ GC_DEBUG_LOGGING = config(
 LOG_REQUESTS = True
 
 # https://github.com/dabapps/django-log-request-id
-MIDDLEWARE.insert(0, "log_request_id.middleware.RequestIDMiddleware")
+MIDDLEWARE.insert(0, "django_structlog.middlewares.RequestMiddleware")
 # https://github.com/dabapps/django-log-request-id#installation-and-usage
 REQUEST_ID_RESPONSE_HEADER = "X-Request-Id"
 
