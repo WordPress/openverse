@@ -31,8 +31,6 @@ LOG_REQUESTS = True
 
 # https://github.com/dabapps/django-log-request-id
 MIDDLEWARE.insert(0, "log_request_id.middleware.RequestIDMiddleware")
-# https://github.com/dabapps/django-log-request-id#installation-and-usage
-REQUEST_ID_RESPONSE_HEADER = "X-Request-Id"
 
 # Logging configuration
 LOGGING = {

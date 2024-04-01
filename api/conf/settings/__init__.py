@@ -27,6 +27,7 @@ include(
     "security.py",
     "auth.py",
     "logging.py",
+    "signals.py",
     "i18n.py",
     "static.py",
     # services
