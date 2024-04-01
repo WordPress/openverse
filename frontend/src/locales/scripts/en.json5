@@ -1051,6 +1051,37 @@
       creator: "Creator",
       source: "Source",
     },
+    pageTitle: {
+      tag: {
+        /**
+         * {tag} will be a dynamic value such as "cat". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Images with the tag {tag}".
+         */
+        audio: "{tag} audio tracks | Openverse",
+
+        /**
+         * {tag} will be a dynamic value such as "cat". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Images with the tag {tag}".
+         */
+        image: "{tag} images | Openverse",
+      },
+      source: {
+        /**
+         * {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Audio tracks from {source}".
+         */
+        audio: "{source} audio tracks | Openverse",
+        /**
+         * {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Images from {source}".
+         */
+        image: "{source} images | Openverse",
+      },
+    },
     link: {
       source: "Open source site",
       creator: "Open creator page",
