@@ -2,7 +2,7 @@
 
 -r requirements-prod.txt
 
-flaky==3.7.0
+flaky==3.8.1
 ipython
 pook==1.4.3
 pytest-env
