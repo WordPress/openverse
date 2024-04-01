@@ -17,7 +17,7 @@ build:
 run script host: build
     docker run --rm -it -v {{ invocation_directory() }}:/app openverse-load-testing:latest ./{{ script }}.sh {{ host }}
 
-api host=("http://" + DOCKER_HOST + ":8000"):
+api host=("http://" + DOCKER_HOST + ":50280"):
     @just run api {{ host }}
 
 # Run the specified script in a load testing container
