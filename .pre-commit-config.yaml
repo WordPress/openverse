@@ -1,4 +1,4 @@
-exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired
+exclude: Pipfile\.lock|migrations|\.idea|node_modules|archive|retired|\.snap
 
 repos:
   - repo: local # More local hooks are defined at the bottom.
