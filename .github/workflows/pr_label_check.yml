@@ -42,7 +42,7 @@ jobs:
       - get_label_groups
     steps:
       - name: Check aspect label
-        uses: docker://agilepathway/pull-request-label-checker:v1.6.23
+        uses: docker://agilepathway/pull-request-label-checker:v1.6.29
         with:
           any_of: ${{ needs.get_label_groups.outputs.aspect }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
       - get_label_groups
     steps:
       - name: Check goal label
-        uses: docker://agilepathway/pull-request-label-checker:v1.6.23
+        uses: docker://agilepathway/pull-request-label-checker:v1.6.29
         with:
           one_of: ${{ needs.get_label_groups.outputs.goal }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -68,7 +68,7 @@ jobs:
       - get_label_groups
     steps:
       - name: Check priority label
-        uses: docker://agilepathway/pull-request-label-checker:v1.6.23
+        uses: docker://agilepathway/pull-request-label-checker:v1.6.29
         with:
           one_of: ${{ needs.get_label_groups.outputs.priority }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -81,7 +81,7 @@ jobs:
       - get_label_groups
     steps:
       - name: Check stack label
-        uses: docker://agilepathway/pull-request-label-checker:v1.6.23
+        uses: docker://agilepathway/pull-request-label-checker:v1.6.29
         with:
           any_of: ${{ needs.get_label_groups.outputs.stack }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
