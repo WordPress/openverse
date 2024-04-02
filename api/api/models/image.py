@@ -109,7 +109,6 @@ class SensitiveImage(AbstractSensitiveMedia):
 
 class ImageReport(AbstractMediaReport):
     media_class = Image
-    url_frag = "images"
 
     media_obj = models.ForeignKey(
         to="Image",
