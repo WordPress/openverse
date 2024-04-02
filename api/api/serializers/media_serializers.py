@@ -1,3 +1,4 @@
+import logging
 from collections import namedtuple
 
 from django.conf import settings
@@ -28,6 +29,8 @@ from api.utils.help_text import make_comma_separated_help_text
 from api.utils.licenses import get_license_url
 from api.utils.url import add_protocol
 
+
+logger = logging.getLogger(__name__)
 
 #######################
 # Request serializers #
@@ -396,7 +399,14 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
             return value
         else:
             sources = value.lower().split(",")
-            valid_sources = [source for source in sources if source in allowed_sources]
+            valid_sources = set(
+                [source for source in sources if source in allowed_sources]
+            )
+            if len(sources) > len(valid_sources):
+                invalid_sources = set(sources).difference(valid_sources)
+                logger.warning(
+                    f"Invalid sources in search query: {invalid_sources}; sources query: '{value}'"
+                )
             return ",".join(valid_sources)
 
     def validate_excluded_source(self, input_sources):
