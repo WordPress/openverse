@@ -68,7 +68,6 @@ export const useRelatedMediaStore = defineStore("related-media", {
         )
 
         this._endFetching(errorData)
-        // this.$nuxt.$sentry.captureException(error, { extra: { errorData } })
         return null
       }
     },
