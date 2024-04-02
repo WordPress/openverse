@@ -230,10 +230,35 @@ us access to the Django ORM models.
 ## Future improvements
 
 This implementation plan does not document the schema for Django's `JSONField`
-(`jsonb`) in much detail. For now, it is possible to document something about
-the shape of the JSON data in the additional notes. In future iterations, we can
-extract the schema from the JSONField using introspection of the models and/or
-DB, and document it in an automated and formalised manner.
+(`jsonb`) in much detail. This is because of several complications regarding
+JSON data.
+
+- JSON fields do not impose or enforce a schema. We can set expectations about
+  the schema coming out of the field but that currently does not exist and will
+  be unenforceable at the DB layer or in Python.
+- JSON can contain different representations of emptiness, such as a field being
+  `null` or being absent in the JSON. We need to define a standard and stick to
+  it or convert them into a standard version in Python.
+- Introspecting serializers to get the JSON field documentation is not accurate
+  because serializers describe our expectations about the data and not the
+  reality in the database. This defeats our ability to prevent errors that occur
+  when the DB does not contain what the serializer expects.
+
+For now, it is possible to document the shape of the JSON fields manually in the
+additional notes. In future iterations, we can try to use techniques to manage
+the data going into the JSON field during data-refresh.
+
+- validation in `clean`/`save`
+- validation in subclass of `JSONField`
+- [`CHECK` constraints](https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-CHECK-CONSTRAINTS)
+  in the DB
+- pre-(insert/update)
+  [triggers](https://www.postgresql.org/docs/8.1/triggers.html) in PostgreSQL
+
+These techniques can be used to ensure consistency and to document the shape of
+these fields. Since that scope goes beyond "documenting" media properties, we
+can consider it as a separate project or, by redefining the scope of this one,
+we can consider it as a separate implementation plan.
 
 ## Prior art
 
