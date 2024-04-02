@@ -7,16 +7,16 @@ class DecisionAction(models.TextChoices):
     a part of a moderation decision.
     """
 
-    MARKED_SENSITIVE = "mark", "Marked sensitive"
+    MARKED_SENSITIVE = "marked_sensitive", "Marked sensitive"
 
-    DEINDEXED_COPYRIGHT = "deidx_copyright", "Deindexed (copyright)"
-    DEINDEXED_SENSITIVE = "deidx_sensitive", "Deindexed (sensitive)"
+    DEINDEXED_COPYRIGHT = "deindexed_copyright", "Deindexed (copyright)"
+    DEINDEXED_SENSITIVE = "deindexed_sensitive", "Deindexed (sensitive)"
 
-    REJECTED_REPORTS = "rej", "Rejected"
-    DEDUPLICATED_REPORTS = "dedup", "De-duplicated"
+    REJECTED_REPORTS = "rejected_reports", "Rejected"
+    DEDUPLICATED_REPORTS = "deduplicated_reports", "De-duplicated"
 
-    REVERSED_MARK_SENSITIVE = "rev_mark", "Reversed deindex"
-    REVERSED_DEINDEX = "rev_deidx", "Reversed mark sensitive"
+    REVERSED_MARK_SENSITIVE = "reversed_mark_sensitive", "Reversed mark sensitive"
+    REVERSED_DEINDEX = "reversed_deindex", "Reversed deindex"
 
     @property
     def is_reversal(self):

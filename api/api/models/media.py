@@ -277,7 +277,7 @@ class AbstractMediaDecision(OpenLedgerModel):
     )
 
     action = models.CharField(
-        max_length=15,
+        max_length=32,
         choices=DecisionAction.choices,
         help_text="Action taken by the moderator.",
     )
