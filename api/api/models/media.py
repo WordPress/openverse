@@ -4,6 +4,7 @@ import mimetypes
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils.html import format_html
 
 from elasticsearch import Elasticsearch, NotFoundError
@@ -206,12 +207,22 @@ class AbstractMediaReport(models.Model):
                 f"with identifier '{self.media_obj_id}'."
             )
 
-    @property
-    def url(self):
-        origin = settings.CANONICAL_ORIGIN
-        if not origin.endswith("/"):
-            origin = f"{origin}/"
-        url = f"{origin}v1/{self.url_frag}/{self.media_obj.identifier}"
+    def url(self, request=None) -> str:
+        """
+        Build the URL of the media item. This uses ``reverse`` and
+        ``request.build_absolute_uri`` to build the URL without having to worry
+        about canonical URL or trailing slashes.
+
+        :param request: the current request object, to get absolute URLs
+        :return: the URL of the media item
+        """
+
+        url = reverse(
+            f"{self.media_class.__name__.lower()}-detail",
+            args=[self.media_obj_id],
+        )
+        if request is not None:
+            url = request.build_absolute_uri(url)
         return format_html(f"<a href={url}>{url}</a>")
 
     @property
