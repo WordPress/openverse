@@ -1058,14 +1058,14 @@
          * You can change the sentence to add more context and make the sentence
          * grammatically correct, for instance, to "Audio tracks with the tag {tag}".
          */
-        audio: "{tag} audio tracks | Openverse",
+        audio: "{tag} audio tracks",
 
         /**
          * {tag} will be a dynamic value such as "cat". We cannot change its case or form.
          * You can change the sentence to add more context and make the sentence
          * grammatically correct, for instance, to "Images with the tag {tag}".
          */
-        image: "{tag} images | Openverse",
+        image: "{tag} images",
       },
       source: {
         /**
@@ -1073,13 +1073,13 @@
          * You can change the sentence to add more context and make the sentence
          * grammatically correct, for instance, to "Audio tracks from {source}".
          */
-        audio: "{source} audio tracks | Openverse",
+        audio: "{source} audio tracks",
         /**
          * {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form.
          * You can change the sentence to add more context and make the sentence
          * grammatically correct, for instance, to "Images from {source}".
          */
-        image: "{source} images | Openverse",
+        image: "{source} images",
       },
     },
     link: {

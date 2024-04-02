@@ -1,5 +1,7 @@
 import { computed } from "vue"
 
+import { TranslateResult } from "vue-i18n"
+
 import type { SupportedMediaType } from "~/constants/media"
 import type { CollectionParams } from "~/types/search"
 import { useI18n } from "~/composables/use-i18n"
@@ -17,27 +19,38 @@ export const useCollectionMeta = ({
   i18n: ReturnType<typeof useI18n>
 }) => {
   const pageTitle = computed(() => {
-    const providerStore = useProviderStore()
+    // The default page title. It should be overwritten by the specific collection type.
+    let title: string | TranslateResult =
+      "Openly Licensed Images, Audio and More"
 
-    if (collectionParams.value?.collection === "creator") {
-      return `${collectionParams.value.creator} | Openverse`
-    } else if (collectionParams.value?.collection === "source") {
-      const sourceName = providerStore.getProviderName(
-        collectionParams.value.source,
-        mediaType
-      )
-      return i18n
-        .t(`collection.pageTitle.source.${mediaType}`, { source: sourceName })
-        .toString()
-    } else if (collectionParams.value?.collection === "tag") {
-      return i18n
-        .t(`collection.pageTitle.tag.${mediaType}`, {
+    switch (collectionParams.value?.collection) {
+      case "creator": {
+        title = collectionParams.value.creator
+        break
+      }
+
+      case "source": {
+        const sourceName = useProviderStore().getProviderName(
+          collectionParams.value.source,
+          mediaType
+        )
+        title = i18n.t(`collection.pageTitle.source.${mediaType}`, {
+          source: sourceName,
+        })
+        break
+      }
+
+      case "tag": {
+        title = i18n.t(`collection.pageTitle.tag.${mediaType}`, {
           tag: collectionParams.value.tag,
         })
-        .toString()
+        break
+      }
     }
-    return "Openverse"
+
+    return `${title} | Openverse`
   })
+
   return {
     pageTitle,
   }
