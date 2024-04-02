@@ -160,7 +160,7 @@ which will itself be included in the `documentation/meta/index.md` file.
 ```{note}
 If the catalog media properties documentation is already created at
 `documentation/meta/media_properties.md` by the time this implementation plan is
-implementation, it will need to be moved one-level deeper to
+implemented, it will need to be moved one-level deeper to
 `documentation/meta/media_properties/catalog.md`.
 ```
 
@@ -212,10 +212,10 @@ without needed any new packages.
 ## Alternatives
 
 The approach for the catalog uses SQL files. Unlike that, we will be using
-Django's introspection capabilities are quite powerful and allow for document
-generation from the models themselves. With Django's migration system, we can
-trust that the output of the introspection will be synced to the state of the
-database.
+Django's introspection capabilities which are quite powerful and allow for
+document generation from the models themselves. With Django's migration system,
+we can trust that the output of the introspection will be synced to the state of
+the database.
 
 The approach for the catalog uses a `media_props.md` file for additional notes.
 Unlike that we will be documenting notes inside the model docstrings because it
