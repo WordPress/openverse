@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
-import { i18n } from "~~/test/unit/test-utils/i18n"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
@@ -29,9 +28,6 @@ describe("AudioTrack", () => {
   let props = null
   let configureVue = null
   let captureExceptionMock = jest.fn()
-  const $nuxt = {
-    context: { i18n, $sentry: { captureException: captureExceptionMock } },
-  }
 
   beforeEach(() => {
     props = {
@@ -47,12 +43,14 @@ describe("AudioTrack", () => {
           state: "paused",
         },
       })
+      activeMediaStore.$nuxt.$sentry = {
+        captureException: captureExceptionMock,
+      }
     }
 
     options = {
       propsData: props,
       stubs,
-      mocks: { $nuxt },
     }
   })
 

@@ -33,7 +33,8 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue"
 
-import { useAnalytics } from "~/composables/use-analytics"
+import { useContext } from "@nuxtjs/composition-api"
+
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useI18n } from "~/composables/use-i18n"
@@ -73,7 +74,7 @@ export default defineComponent({
     const i18n = useI18n()
     const activeMediaStore = useActiveMediaStore()
     const activeAudio = useActiveAudio()
-    const { sendCustomEvent } = useAnalytics()
+    const { $sendCustomEvent } = useContext()
 
     const ariaLabel = computed(() =>
       i18n.t("audioTrack.ariaLabel", { title: props.audio.title }).toString()
@@ -157,7 +158,7 @@ export default defineComponent({
         )
 
         currentTime.value = audio.currentTime
-        if (audio.duration && !isNaN(audio.duration)) {
+        if (audio.duration && !Number.isNaN(audio.duration)) {
           duration.value = audio.duration
         }
 
@@ -193,18 +194,20 @@ export default defineComponent({
       { immediate: true }
     )
 
-    const play = () => activeAudio.obj.value?.play()
+    const play = () => activeMediaStore.playAudio(activeAudio.obj.value)
     const pause = () => activeAudio.obj.value?.pause()
 
     /* Timekeeping */
-    const message = computed<string | undefined>(
-      () => activeMediaStore.message ?? undefined
+    const message = computed(() =>
+      activeMediaStore.message
+        ? i18n.t(`audioTrack.messages.${activeMediaStore.message}`).toString()
+        : ""
     )
 
     /* Interface with VAudioControl */
 
     const sendAudioInteractionEvent = (event: AudioInteraction) => {
-      sendCustomEvent("AUDIO_INTERACTION", {
+      $sendCustomEvent("AUDIO_INTERACTION", {
         id: props.audio.id,
         provider: props.audio.provider,
         event,

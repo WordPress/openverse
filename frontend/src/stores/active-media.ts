@@ -2,6 +2,8 @@ import { defineStore } from "pinia"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { Media } from "~/types/media"
+import { audioErrorMessages } from "~/constants/audio"
+import { warn } from "~/utils/console"
 
 export type MediaStatus = "ejected" | "playing" | "paused" // 'ejected' means player is closed
 
@@ -69,6 +71,24 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
      */
     setMessage({ message }: { message: string | null }) {
       this.message = message
+    },
+    playAudio(audio: HTMLAudioElement | undefined) {
+      const playPromise = audio?.play()
+      // Check if the audio can be played successfully
+      if (playPromise === undefined) {
+        warn("Play promise is undefined")
+        return
+      }
+      playPromise.catch((err) => {
+        const message = Object.keys(audioErrorMessages).includes(err.name)
+          ? audioErrorMessages[err.name as keyof typeof audioErrorMessages]
+          : "err_unknown"
+        if (message === "err_unknown") {
+          this.$nuxt.$sentry.captureException(err)
+        }
+        this.setMessage({ message })
+        audio?.pause()
+      })
     },
   },
 })
