@@ -1056,7 +1056,7 @@
         /**
          * {tag} will be a dynamic value such as "cat". We cannot change its case or form.
          * You can change the sentence to add more context and make the sentence
-         * grammatically correct, for instance, to "Images with the tag {tag}".
+         * grammatically correct, for instance, to "Audio tracks with the tag {tag}".
          */
         audio: "{tag} audio tracks | Openverse",
 
