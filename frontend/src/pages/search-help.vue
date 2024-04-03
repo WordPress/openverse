@@ -20,17 +20,17 @@
     <i18n path="searchGuide.negate.content" tag="p" class="mb-4">
       <template #operator
         ><!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-        <em :aria-label="$t('searchGuide.negate.operatorAriaLabel').toString()"
+        <!-- eslint-disable vuejs-accessibility/aria-role -->
+        <em role="text"
           >- {{ $t("searchGuide.negate.operatorName").toString() }}</em
         >
+        <!-- eslint-enable vuejs-accessibility/aria-role -->
         <!-- eslint-enable @intlify/vue-i18n/no-raw-text -->
       </template>
       <template #link>
-        <VLink
-          :aria-label="$t('searchGuide.negate.ariaLabel')"
-          :href="pathFromQuery('dog -pug')"
-        >
-          <em>{{ $t("searchGuide.negate.example") }}</em>
+        <VLink :href="pathFromQuery('dog -pug')">
+          <em aria-hidden="true">{{ $t("searchGuide.negate.example") }}</em>
+          <span class="sr-only">{{ $t("searchGuide.negate.ariaLabel") }}</span>
         </VLink>
       </template>
       <template #br>

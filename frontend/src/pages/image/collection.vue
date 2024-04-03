@@ -28,6 +28,7 @@ import { computed, ref, watch } from "vue"
 import { collectionMiddleware } from "~/middleware/collection"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
+import { useCollectionMeta } from "~/composables/use-collection-meta"
 import { skipToContentTargetId } from "~/constants/window"
 import { useI18n } from "~/composables/use-i18n"
 import type { ImageDetail } from "~/types/media"
@@ -76,9 +77,19 @@ export default defineComponent({
       fetchMedia({ shouldPersistMedia: true })
     }
 
-    useMeta({
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+    const { pageTitle } = useCollectionMeta({
+      collectionParams,
+      mediaType: "image",
+      i18n,
     })
+
+    useMeta(() => ({
+      meta: [
+        { hid: "robots", name: "robots", content: "all" },
+        { hid: "og:title", property: "og:title", content: pageTitle.value },
+      ],
+      title: pageTitle.value,
+    }))
 
     useFetch(async () => {
       await fetchMedia()
