@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-04-01T23:38:02+00:00\n"
+"POT-Creation-Date: 2024-04-03T04:45:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2607,6 +2607,30 @@ msgstr ""
 
 msgctxt "collection.heading.source"
 msgid "Source"
+msgstr ""
+
+#. This will be the page title and must be SEO friendly. {tag} will be a dynamic value such as "cat". We cannot change its case or form. You can change the sentence to add more context and make the sentence grammatically correct, for instance, to "Audio tracks with the tag {tag}".
+#. Do not translate words between ### ###.
+msgctxt "collection.pageTitle.tag.audio"
+msgid "###tag### audio tracks"
+msgstr ""
+
+#. This will be the page title and must be SEO friendly. {tag} will be a dynamic value such as "cat". We cannot change its case or form. You can change the sentence to add more context and make the sentence grammatically correct, for instance, to "Images with the tag {tag}".
+#. Do not translate words between ### ###.
+msgctxt "collection.pageTitle.tag.image"
+msgid "###tag### images"
+msgstr ""
+
+#. This will be the page title and must be SEO friendly. {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form. You can change the sentence to add more context and make the sentence grammatically correct, for instance, to "Audio tracks from {source}".
+#. Do not translate words between ### ###.
+msgctxt "collection.pageTitle.source.audio"
+msgid "###source### audio tracks"
+msgstr ""
+
+#. This will be the page title and must be SEO friendly. {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form. You can change the sentence to add more context and make the sentence grammatically correct, for instance, to "Images from {source}".
+#. Do not translate words between ### ###.
+msgctxt "collection.pageTitle.source.image"
+msgid "###source### images"
 msgstr ""
 
 #: src/components/VCollectionHeader/VCollectionHeader.vue:55
