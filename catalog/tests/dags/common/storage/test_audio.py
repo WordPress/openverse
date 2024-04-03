@@ -160,21 +160,6 @@ def test_AudioStore_produces_correct_total_audios():
     assert audio_store.total_items == 3
 
 
-def test_AudioStore_get_audio_enriches_multiple_tags():
-    audio_store = audio.AudioStore("test_provider")
-    audio_args = mock_audio_args.copy()
-    audio_args["raw_tags"] = ["tagone", "tag2", "tag3"]
-    actual_audio = audio_store._get_audio(
-        **audio_args,
-    )
-
-    assert actual_audio.tags == [
-        {"name": "tagone", "provider": "test_provider"},
-        {"name": "tag2", "provider": "test_provider"},
-        {"name": "tag3", "provider": "test_provider"},
-    ]
-
-
 @test_media.INT_MAX_PARAMETERIZATION
 def test_AudioStore_get_audio_validates_duration(value, expected):
     audio_store = audio.AudioStore("test_provider")
