@@ -17,32 +17,27 @@ export const useCollectionMeta = ({
   i18n: ReturnType<typeof useI18n>
 }) => {
   const pageTitle = computed(() => {
-    // The default page title. It should be overwritten by the specific collection type.
-    const title = "Openly Licensed Images, Audio and More"
+    const params = collectionParams.value
 
-    switch (collectionParams.value?.collection) {
-      case "creator": {
-        return `${collectionParams.value.creator} | Openverse`
+    if (params) {
+      if (params.collection === "creator") {
+        return `${params.creator} | Openverse`
       }
 
-      case "source": {
+      if (params.collection === "source") {
         const sourceName = useProviderStore().getProviderName(
-          collectionParams.value.source,
+          params.source,
           mediaType
         )
-        return `${i18n.t(`collection.pageTitle.source.${mediaType}`, {
-          source: sourceName,
-        })} | Openverse`
+        return `${i18n.t(`collection.pageTitle.source.${mediaType}`, { source: sourceName })} | Openverse`
       }
 
-      case "tag": {
-        return `${i18n.t(`collection.pageTitle.tag.${mediaType}`, {
-          tag: collectionParams.value.tag,
-        })} | Openverse`
+      if (params.collection === "tag") {
+        return `${i18n.t(`collection.pageTitle.tag.${mediaType}`, { tag: params.tag })} | Openverse`
       }
     }
 
-    return `${title} | Openverse`
+    return "Openly Licensed Images, Audio and More | Openverse"
   })
 
   return {
