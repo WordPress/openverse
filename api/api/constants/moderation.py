@@ -20,4 +20,4 @@ class DecisionAction(models.TextChoices):
 
     @property
     def is_reversal(self):
-        return self in [self.REVERSED_DEINDEX, self.REVERSED_MARK_SENSITIVE]
+        return self in {self.REVERSED_DEINDEX, self.REVERSED_MARK_SENSITIVE}
