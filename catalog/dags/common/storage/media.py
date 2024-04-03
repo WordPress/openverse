@@ -274,9 +274,10 @@ class MediaStore(metaclass=abc.ABCMeta):
             )
         return enriched_meta_data
 
-    def _enrich_tags(self, raw_tags) -> list | None:
+    def _enrich_tags(self, raw_tags) -> list[dict] | None:
         """
-        Add provider information to tags.
+        Add provider information to tags, sorted for further consistency between runs,
+        saving on inserts into the DB later.
 
         Args:
             raw_tags: List or set of strings.
@@ -285,11 +286,13 @@ class MediaStore(metaclass=abc.ABCMeta):
             A list of 'enriched' tags:
             {"name": "tag_name", "provider": self._PROVIDER}
         """
-        if not isinstance(raw_tags, list) or not isinstance(raw_tags, set):
-            logger.debug("`tags` is not of an accepted type.")
+        if not isinstance(raw_tags, list) and not isinstance(raw_tags, set):
+            logger.debug("`raw_tags` is not of an accepted type.")
             return None
         elif isinstance(raw_tags, list):
-            raw_tags = set(raw_tags)
+            raw_tags = list(set(raw_tags))
+
+        raw_tags = sorted(raw_tags)
 
         return [
             self._format_raw_tag(tag)
@@ -297,13 +300,8 @@ class MediaStore(metaclass=abc.ABCMeta):
             if not self._tag_denylisted(tag)
         ]
 
-    def _format_raw_tag(self, tag):
-        if isinstance(tag, dict) and tag.get("name") and tag.get("provider"):
-            logger.debug(f"Tag already enriched: {tag}")
-            return tag
-        else:
-            logger.debug(f"Enriching tag: {tag}")
-            return {"name": tag, "provider": self.provider}
+    def _format_raw_tag(self, tag: str) -> dict:
+        return {"name": tag, "provider": self.provider}
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """
