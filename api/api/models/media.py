@@ -182,7 +182,7 @@ class AbstractMediaReport(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
     """
     All statuses except ``PENDING`` are deprecated. Instead refer to the
-    properties ``is_pending`` and ``is_moderated``.
+    property ``is_pending``.
     """
 
     decision = models.ForeignKey(
@@ -227,23 +227,13 @@ class AbstractMediaReport(models.Model):
     def is_pending(self) -> bool:
         """
         Determine if the report has not been moderated and does not have an
-        associated decision. Also see ``is_moderated``.
+        associated decision. Use the inverse of this function to determine
+        if a report has been reviewed and moderated.
 
         :return: whether the report is in the "pending" state
         """
 
         return self.decision_id is None
-
-    @property
-    def is_moderated(self) -> bool:
-        """
-        Determine if the report has been moderated and has an associated
-        decision. Also see ``is_pending``.
-
-        :return: whether the report is in the "moderated" state
-        """
-
-        return self.decision_id is not None
 
     def save(self, *args, **kwargs):
         """Perform a clean, and then save changes to the DB."""
