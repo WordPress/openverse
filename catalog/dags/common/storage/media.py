@@ -279,21 +279,23 @@ class MediaStore(metaclass=abc.ABCMeta):
         Add provider information to tags.
 
         Args:
-            raw_tags: List of strings or dictionaries
+            raw_tags: List or set of strings.
 
         Returns:
             A list of 'enriched' tags:
             {"name": "tag_name", "provider": self._PROVIDER}
         """
-        if not isinstance(raw_tags, list):
-            logger.debug("`tags` is not a list.")
+        if not isinstance(raw_tags, list) or not isinstance(raw_tags, set):
+            logger.debug("`tags` is not of an accepted type.")
             return None
-        else:
-            return [
-                self._format_raw_tag(tag)
-                for tag in raw_tags
-                if not self._tag_denylisted(tag)
-            ]
+        elif isinstance(raw_tags, list):
+            raw_tags = set(raw_tags)
+
+        return [
+            self._format_raw_tag(tag)
+            for tag in raw_tags
+            if not self._tag_denylisted(tag)
+        ]
 
     def _format_raw_tag(self, tag):
         if isinstance(tag, dict) and tag.get("name") and tag.get("provider"):
