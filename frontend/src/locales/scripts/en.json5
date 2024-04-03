@@ -1085,6 +1085,41 @@
       creator: "Creator",
       source: "Source",
     },
+    pageTitle: {
+      tag: {
+        /**
+         * This will be the page title and must be SEO friendly.
+         * {tag} will be a dynamic value such as "cat". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Audio tracks with the tag {tag}".
+         */
+        audio: "{tag} audio tracks",
+
+        /**
+         * This will be the page title and must be SEO friendly.
+         * {tag} will be a dynamic value such as "cat". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Images with the tag {tag}".
+         */
+        image: "{tag} images",
+      },
+      source: {
+        /**
+         * This will be the page title and must be SEO friendly.
+         * {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Audio tracks from {source}".
+         */
+        audio: "{source} audio tracks",
+        /**
+         * This will be the page title and must be SEO friendly.
+         * {source} will be a dynamic value such as "Wikimedia". We cannot change its case or form.
+         * You can change the sentence to add more context and make the sentence
+         * grammatically correct, for instance, to "Images from {source}".
+         */
+        image: "{source} images",
+      },
+    },
     link: {
       source: "Open source site",
       creator: "Open creator page",

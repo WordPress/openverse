@@ -23,10 +23,10 @@ import { computed, ref, watch } from "vue"
 
 import { collectionMiddleware } from "~/middleware/collection"
 import { useSearchStore } from "~/stores/search"
-
 import { useMediaStore } from "~/stores/media"
-import type { AudioDetail } from "~/types/media"
 import { useI18n } from "~/composables/use-i18n"
+import { useCollectionMeta } from "~/composables/use-collection-meta"
+import type { AudioDetail } from "~/types/media"
 
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
@@ -72,8 +72,18 @@ export default defineComponent({
       fetchMedia({ shouldPersistMedia: true })
     }
 
+    const { pageTitle } = useCollectionMeta({
+      collectionParams,
+      mediaType: "audio",
+      i18n,
+    })
+
     useMeta({
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
+      meta: [
+        { hid: "robots", name: "robots", content: "all" },
+        { hid: "og:title", property: "og:title", content: pageTitle.value },
+      ],
+      title: pageTitle.value,
     })
 
     useFetch(async () => {
