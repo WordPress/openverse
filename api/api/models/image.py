@@ -7,6 +7,7 @@ from api.constants.media_types import IMAGE_TYPE
 from api.models.media import (
     AbstractDeletedMedia,
     AbstractMedia,
+    AbstractMediaDecision,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -108,8 +109,6 @@ class SensitiveImage(AbstractSensitiveMedia):
 
 class ImageReport(AbstractMediaReport):
     media_class = Image
-    sensitive_class = SensitiveImage
-    deleted_class = DeletedImage
 
     media_obj = models.ForeignKey(
         to="Image",
@@ -120,13 +119,28 @@ class ImageReport(AbstractMediaReport):
         related_name="image_report",
         help_text="The reference to the image being reported.",
     )
+    decision = models.ForeignKey(
+        to="ImageDecision",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="The moderation decision for this report.",
+    )
 
     class Meta:
         db_table = "nsfw_reports"
 
-    @property
-    def image_url(self):
-        return super().url("images")
+
+class ImageDecision(AbstractMediaDecision):
+    """Represents moderation decisions taken for images."""
+
+    media_class = Image
+
+    media_objs = models.ManyToManyField(
+        to="Image",
+        db_constraint=False,
+        help_text="The image items being moderated.",
+    )
 
 
 class ImageList(AbstractMediaList):
