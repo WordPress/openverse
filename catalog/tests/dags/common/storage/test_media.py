@@ -549,39 +549,42 @@ def test_MediaStore_validates_filetype(filetype, url, expected_filetype):
 # Uses the `filetype` even if the `url` extension is different.
 @pytest.mark.parametrize(
     "raw_tags, expected_tags",
-    [  # enriches singleton tag
-        (["lone"], [{"name": "lone", "provider": "test_provider"}]),
-        # sort and enriches multiple tags
-        (
+    [
+        pytest.param(
+            ["lone"],
+            [{"name": "lone", "provider": "test_provider"}],
+            id="enriches singleton tag",
+        ),
+        pytest.param(
             ["tagone", "tag2", "tag3"],
             [
                 {"name": "tag2", "provider": "test_provider"},
                 {"name": "tag3", "provider": "test_provider"},
                 {"name": "tagone", "provider": "test_provider"},
             ],
+            id="sort and enriches multiple tags",
         ),
-        # exclude tags by the denylist
-        (
+        pytest.param(
             ["cc0", "valid", "garbage:=metacrap", "uploaded:by=flickrmobile"],
             [{"name": "valid", "provider": "test_provider"}],
+            id="exclude tags by the denylist",
         ),
-        # nonlist tags should be None
-        ("notalist", None),
-        # accepts set of tags
-        (
+        pytest.param("notalist", None, id="nonlist tags should be None"),
+        pytest.param(
             {"tag2", "tagone"},
             [
                 {"name": "tag2", "provider": "test_provider"},
                 {"name": "tagone", "provider": "test_provider"},
             ],
+            id="accepts set of tags",
         ),
-        # remove duplicates
-        (
+        pytest.param(
             ["tag2", "tagone", "tag2"],
             [
                 {"name": "tag2", "provider": "test_provider"},
                 {"name": "tagone", "provider": "test_provider"},
             ],
+            id="remove duplicates",
         ),
     ],
 )
