@@ -158,7 +158,7 @@ export default defineComponent({
         )
 
         currentTime.value = audio.currentTime
-        if (audio.duration && !Number.isNaN(audio.duration)) {
+        if (audio.duration && !isNaN(audio.duration)) {
           duration.value = audio.duration
         }
 
