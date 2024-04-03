@@ -1,4 +1,4 @@
-version: "2.4"
+version: "3.4"
 
 # Common build configuration for Airflow
 # Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields

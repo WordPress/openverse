@@ -106,8 +106,8 @@ test-local *args:
     {{ if IS_CI == "" { "just test-logs > test/ingestion_logs.txt && just test-clean-dc" } else { "" } }}
 
 test-logs:
-    docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml logs --no-color
+    docker compose --profile=ingestion_server -f test/integration-docker-compose.yml logs --no-color
 
 # Clean integration test docker-compose stack. Is run after tests are finished locally.
 test-clean-dc:
-    docker-compose --profile=ingestion_server -f test/integration-docker-compose.yml down -v
+    docker compose --profile=ingestion_server -f test/integration-docker-compose.yml down -v
