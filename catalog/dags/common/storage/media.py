@@ -14,24 +14,26 @@ logger = logging.getLogger(__name__)
 # Filter out tags that exactly match these terms. All terms should be lowercase.
 TAG_DENYLIST = {
     "no person",
-    "undefined",
     "squareformat",
+    "undefined",
 }
 
 # Filter out tags that contain the following terms. All entrées should be lowercase.
 TAG_CONTAINS_DENYLIST = {
-    "flickriosapp",
-    "uploaded",
     ":",
     "=",
-    "cc0",
     "by",
     "by-nc",
-    "by-nd",
-    "by-sa",
     "by-nc-nd",
     "by-nc-sa",
+    "by-nd",
+    "by-sa",
+    "cc0",
+    "creative commons",
+    "flickriosapp",
     "pdm",
+    "public domain",
+    "uploaded",
 }
 
 COMMON_CRAWL = "commoncrawl"
