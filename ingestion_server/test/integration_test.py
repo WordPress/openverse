@@ -166,7 +166,7 @@ def _load_data(conn, table_names):
 
 
 def _compose_cmd(compose_path, cmd: list[str], **kwargs):
-    """Run a Docker compose command"""
+    """Run a Docker Compose command"""
 
     cmd = [
         "docker",
