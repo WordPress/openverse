@@ -7,7 +7,7 @@ import type { ModuleOptions } from "@nuxtjs/sentry"
  */
 export const sentryConfig: ModuleOptions = {
   dsn: process.env.SENTRY_DSN,
-  logMockCalls: true,
+  logMockCalls: false,
   lazy: true,
   clientConfig: {
     // Only allow errors that come from openverse.org or a subdomain
