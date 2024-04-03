@@ -112,7 +112,7 @@ dbshell:
 
 # Run API tests inside the Docker container
 test *args: wait-up
-    env DC_USER="opener" just ../exec web pytest {{ args }}
+    env DC_USER="opener" just ../exec web pytest "{{ quote(args) }}"
 
 # Run API tests locally
 test-local *args:

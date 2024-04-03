@@ -226,7 +226,7 @@ attach service:
 
 # Execute statement in service containers using Docker Compose
 exec +args:
-    just dc exec -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} {{ args }}
+    just dc exec -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
 
 # Execute statement in a new service container using Docker Compose
 run +args:
