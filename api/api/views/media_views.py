@@ -1,6 +1,8 @@
 import logging
 from typing import Union
 
+from django.utils.decorators import method_decorator
+from django.utils.cache import patch_cache_control
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
@@ -19,6 +21,8 @@ from api.models.media import AbstractMedia
 from api.serializers import media_serializers
 from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
+from api.utils.cache_control import cache_control, never_cache, async_method_cache_control
+from api.utils.ttl import ttl
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
 from api.utils.throttle import (
@@ -131,6 +135,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     # Standard actions
 
+    # Single media result details can always be cached
+    @method_decorator(cache_control(max_age=ttl(days=30), public=True))
     def retrieve(self, request, *_, **__):
         instance = self.get_object()
         search_context = SearchContext.build(
@@ -143,7 +149,25 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     def list(self, request, *_, **__):
         params = self._get_request_serializer(request)
-        return self.get_media_results(request, params)
+        response = self.get_media_results(request, params)
+
+        # Do not use the cache-control decorator because we want to
+        # vary `public` based on the request which the decorator does not allow
+        cache_control = {
+            "max_age": ttl(days=7),
+        }
+        if params.public_cache_control_allowed():
+            # Do not assign this to `public_cache_control_allowed` directly
+            # because `patch_cache_control` only treats `True` _exactly_ as
+            # a special value, and anything else (including `False`) is added
+            # as a value. If `public` is `False` in the dictionary, then the
+            # patched header will have `public=False`, rather than public
+            # being excluded altogether like we want
+            cache_control["public"] = True
+
+        patch_cache_control(response, **cache_control)
+
+        return response
 
     def _validate_source(self, source):
         valid_sources = search_controller.get_sources(self.media_type)
@@ -202,7 +226,9 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     # Extra actions
 
+    # stats can always be cached
     @action(detail=False, serializer_class=ProviderSerializer, pagination_class=None)
+    @method_decorator(cache_control(max_age=ttl(days=3), public=True))
     def stats(self, *_, **__):
         source_counts = search_controller.get_sources(self.default_index)
         context = self.get_serializer_context() | {
@@ -215,7 +241,9 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         serializer = self.get_serializer(providers, many=True, context=context)
         return Response(serializer.data)
 
+    # Related can always be cached
     @action(detail=True)
+    @method_decorator(cache_control(max_age=ttl(weeks=1), public=True))
     def related(self, request, identifier=None, *_, **__):
         try:
             results = related_media(
@@ -241,6 +269,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
 
+    @method_decorator(never_cache)
     def report(self, request, identifier):
         serializer = self.get_serializer(data=request.data | {"identifier": identifier})
         serializer.is_valid(raise_exception=True)
@@ -265,6 +294,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         ],
     )
 
+    # Thumbnails can always be cached
+    @async_method_cache_control(max_age=ttl(weeks=52), public=True)
     async def thumbnail(self, request, *_, **__):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)

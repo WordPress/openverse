@@ -13,7 +13,7 @@ from elasticsearch_dsl.response import Hit
 from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.parameters import COLLECTION, TAG
-from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
+from api.constants.sorting import DEFAULT_SORT_DIRECTION, DEFAULT_SORT_FIELD, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
 from api.models.media import AbstractMedia
 from api.serializers.base import BaseModelSerializer
@@ -235,7 +235,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         help_text="The field which should be the basis for sorting results.",
         choices=SORT_FIELDS,
         required=False,
-        default=RELEVANCE,
+        default=DEFAULT_SORT_FIELD,
     )
     unstable__sort_dir = serializers.ChoiceField(
         source="sort_dir",
@@ -243,7 +243,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         "`relevance`.",
         choices=SORT_DIRECTIONS,
         required=False,
-        default=DESCENDING,
+        default=DEFAULT_SORT_DIRECTION,
     )
     unstable__authority = serializers.BooleanField(
         label="authority",
@@ -427,10 +427,10 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         return self._truncate(value)
 
     def validate_unstable__sort_by(self, value):
-        return RELEVANCE if self.is_request_anonymous() else value
+        return DEFAULT_SORT_FIELD if self.is_request_anonymous() else value
 
     def validate_unstable__sort_dir(self, value):
-        return DESCENDING if self.is_request_anonymous() else value
+        return DEFAULT_SORT_DIRECTION if self.is_request_anonymous() else value
 
     def validate_unstable__authority(self, value):
         return False if self.is_request_anonymous() else value
@@ -485,6 +485,34 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
             raise serializers.ValidationError(errors)
 
         return data
+
+    def public_cache_control_allowed(self):
+        """
+        Determine whether a search request's params allow public caching of the result.
+
+        Public caches (e.g., Cloudflare) by default ignore requests with authentication
+        headers. That makes sense for routes where the returned data is personalised
+        for the authenticated user. However, when there is overlap between the possible
+        results for authenticated and unauthenticated users, in the cases where the result
+        would be the same, we can set `public` on the cache-control headers to advise
+        public caches that it is safe to cache the response, despite the authentication header.
+
+        For Openverse search, any search request that does not utilise auth-only features
+        can be publicly cached.
+        """
+        if self.is_request_anonymous():
+            return True
+
+        validated_data = self.validated_data
+        # Check if any auth-only features are used.
+        # Only allow public cache control if
+        return (
+            validated_data["page_size"] <= settings.MAX_ANONYMOUS_PAGE_SIZE
+            and validated_data.get("internal__index", None) is None
+            and validated_data.get("sort_by", DEFAULT_SORT_FIELD) is DEFAULT_SORT_FIELD
+            and validated_data.get("sort_dir", DEFAULT_SORT_DIRECTION) is DEFAULT_SORT_DIRECTION
+            and not validated_data.get("unstable__authority", None)
+        )
 
 
 class MediaThumbnailRequestSerializer(serializers.Serializer):

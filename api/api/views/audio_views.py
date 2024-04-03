@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.decorators import method_decorator
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
@@ -23,6 +24,8 @@ from api.serializers.audio_serializers import (
     AudioWaveformSerializer,
 )
 from api.utils import image_proxy
+from api.utils.cache_control import cache_control
+from api.utils.ttl import ttl
 from api.utils.throttle import AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle
 from api.views.media_views import MediaViewSet
 
@@ -81,6 +84,7 @@ class AudioViewSet(MediaViewSet):
         serializer_class=AudioWaveformSerializer,
         throttle_classes=[AnonThumbnailRateThrottle, OAuth2IdThumbnailRateThrottle],
     )
+    @method_decorator(cache_control(max_age=ttl(weeks=52), public=True))
     def waveform(self, *_, **__):
         """
         Get the waveform peaks for an audio track.

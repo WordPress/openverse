@@ -8,6 +8,8 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db import DataError
+from django.utils.decorators import method_decorator
+
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -25,6 +27,7 @@ from api.serializers.oauth2_serializers import (
     OAuth2KeyInfoSerializer,
     OAuth2RegistrationSerializer,
 )
+from api.utils.cache_control import never_cache
 from api.utils.throttle import OnePerSecond, TenPerDay
 
 
@@ -42,6 +45,7 @@ class Register(APIView):
     throttle_classes = (TenPerDay,)
 
     @register
+    @method_decorator(never_cache)
     def post(self, request, format=None):
         """
         Register an application to access to API via OAuth2.
@@ -125,6 +129,7 @@ class VerifyEmail(APIView):
 
     schema = None  # Hide this view from the OpenAPI schema.
 
+    @method_decorator(never_cache)
     def get(self, request, code, format=None):
         try:
             verification = OAuth2Verification.objects.get(code=code)
@@ -151,6 +156,7 @@ class VerifyEmail(APIView):
 @extend_schema(tags=["auth"])
 class TokenView(APIView, BaseTokenView):
     @token
+    @method_decorator(never_cache)
     def post(self, request):
         """
         Get an access token using client credentials.
@@ -180,6 +186,7 @@ class CheckRates(APIView):
     throttle_classes = (OnePerSecond,)
 
     @key_info
+    @method_decorator(never_cache)
     def get(self, request: Request, format=None):
         """
         Get information about your API key.
@@ -187,7 +194,7 @@ class CheckRates(APIView):
         You can use this endpoint to get information about your API key such as
         `requests_this_minute`, `requests_today`, and `rate_limit_model`.
 
-        > ℹ️ **NOTE:** If you get a 403 Forbidden response, it means your access
+        > **NOTE:** If you get a 403 Forbidden response, it means your access
         > token has expired.
         """
 

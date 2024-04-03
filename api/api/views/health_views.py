@@ -1,11 +1,14 @@
 from django.conf import settings
 from django.db import connection
+from django.utils.decorators import method_decorator
+
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from api.utils.cache_control import never_cache
 from api.utils.throttle import ExemptOAuth2IdRateThrottle, HealthcheckAnonRateThrottle
 
 
@@ -49,6 +52,7 @@ class HealthCheck(APIView):
         if (es_status := es_health["status"]) != "green":
             raise ElasticsearchHealthcheckException(f"es_status_{es_status}")
 
+    @method_decorator(never_cache)
     def get(self, request: Request):
         if "check_es" in request.query_params:
             self._check_es()

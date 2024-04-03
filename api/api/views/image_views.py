@@ -32,6 +32,8 @@ from api.serializers.image_serializers import (
 from api.utils import image_proxy
 from api.utils.aiohttp import get_aiohttp_session
 from api.utils.asyncio import aget_object_or_404
+from api.utils.cache_control import async_method_cache_control
+from api.utils.ttl import ttl
 from api.utils.watermark import UpstreamWatermarkException, watermark
 from api.views.media_views import MediaViewSet
 
@@ -69,6 +71,7 @@ class ImageViewSet(MediaViewSet):
         url_name="oembed",
         serializer_class=OembedSerializer,
     )
+    @async_method_cache_control(max_age=ttl(days=30), public=True)
     async def oembed(self, request, *_, **__):
         """
         Retrieve the structured data for a specified image URL as per the
@@ -77,7 +80,6 @@ class ImageViewSet(MediaViewSet):
         This info can be used to embed the image on the consumer's website. Only
         JSON format is supported.
         """
-
         params = OembedRequestSerializer(data=request.query_params)
         params.is_valid(raise_exception=True)
         identifier = params.validated_data["identifier"]

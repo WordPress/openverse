@@ -187,13 +187,19 @@ def test_auth_response_headers(
         == test_auth_tokens_registration["name"]
     )
     assert res.headers["x-ov-client-application-verified"] == str(verified)
+    # public here because we did not use any special auth-only features
+    assert "public" in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
 
 
+@pytest.mark.django_db
 def test_unauthed_response_headers(api_client):
-    res = api_client.get("/v1/images")
+    res = api_client.get("/v1/images/")
 
     assert "x-ov-client-application-name" not in res.headers
     assert "x-ov-client-application-verified" not in res.headers
+    assert "public" in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
 
 
 @pytest.mark.django_db
@@ -219,6 +225,8 @@ def test_sorting_authed(api_client, test_auth_token_exchange, sort_dir, exp_inde
     res_data = res.json()
     indexed_on = res_data["results"][0]["indexed_on"][:10]  # ``indexed_on`` is ISO.
     assert indexed_on == exp_indexed_on
+    assert "public" not in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
 
 
 @pytest.mark.django_db
@@ -247,6 +255,8 @@ def test_authority_authed(
     res_data = res.json()
     source = res_data["results"][0]["source"]
     assert source == exp_source
+    assert "public" not in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
 
 
 @pytest.mark.django_db
@@ -254,9 +264,13 @@ def test_page_size_limit_unauthed(api_client):
     query_params = {"page_size": 20}
     res = api_client.get("/v1/images/", query_params)
     assert res.status_code == 200
+    assert "public" in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
+
     query_params["page_size"] = 21
     res = api_client.get("/v1/images/", query_params)
     assert res.status_code == 401
+    assert "cache-control" not in res.headers
 
 
 @pytest.mark.django_db
@@ -268,9 +282,13 @@ def test_page_size_limit_authed(api_client, test_auth_token_exchange):
         "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
     )
     assert res.status_code == 200
+    assert "public" not in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
 
     query_params = {"page_size": 500}
     res = api_client.get(
         "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
     )
     assert res.status_code == 200
+    assert "public" not in res.headers["cache-control"]
+    assert "max-age" in res.headers["cache-control"]
