@@ -6,9 +6,9 @@ import pytest
 import requests
 from requests_oauthlib import OAuth2Session
 
-from catalog.tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
 from common import requester
 from common.loader import provider_details as prov
+from tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
 
 
 USER_AGENT = {"User-Agent": prov.UA_STRING}

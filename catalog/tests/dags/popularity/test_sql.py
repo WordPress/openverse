@@ -8,10 +8,10 @@ import pytest
 from popularity import sql
 from popularity.popularity_refresh_types import PopularityRefresh
 
-from catalog.tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
 from common.constants import SQLInfo
 from common.loader.sql import create_column_definitions
 from common.storage.db_columns import IMAGE_TABLE_COLUMNS
+from tests.dags.common.conftest import POSTGRES_TEST_CONN_ID as POSTGRES_CONN_ID
 
 
 POSTGRES_TEST_URI = os.getenv("AIRFLOW_CONN_POSTGRES_OPENLEDGER_TESTING")

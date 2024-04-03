@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 import pytest
 from psycopg2.errors import QueryCanceled
 
-from catalog.tests.conftest import mark_extended
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.sql import PGExecuteQueryOperator, PostgresHook
+from tests.conftest import mark_extended
 
 
 logger = logging.getLogger(__name__)
