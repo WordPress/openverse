@@ -5,7 +5,7 @@ and use the Openverse Plausible integration. It is not necessary to set up
 Plausible for general frontend development unless specifically working on custom
 events.
 
-Running Plausible locally requires Docker and docker-compose.
+Running Plausible locally requires Docker (with Compose V2).
 
 ## Plausible set up and first run
 
