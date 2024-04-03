@@ -126,13 +126,11 @@ generate-docs doc="dag" fail_on_diff="false":
     set -e
     if [ "{{ doc }}" == "dag" ]; then
         SCRIPT_PATH="catalog/utilities/dag_doc_gen/dag_doc_generation.py"
-        GENERATED_ABS_PATH="/opt/airflow/catalog/utilities/dag_doc_gen/DAGs.md"
         GENERATED_REL_PATH="utilities/dag_doc_gen/DAGs.md"
         FINAL_FILE="documentation/catalog/reference/DAGs.md"
         NAME="DAG"
     elif [ "{{ doc }}" == "media-props" ]; then
         SCRIPT_PATH="catalog/utilities/media_props_gen/generate_media_properties.py"
-        GENERATED_ABS_PATH="/opt/airflow/catalog/utilities/media_props_gen/media_properties.md"
         GENERATED_REL_PATH="utilities/media_props_gen/media_properties.md"
         FINAL_FILE="documentation/meta/media_properties.md"
         NAME="Media properties"
@@ -140,21 +138,28 @@ generate-docs doc="dag" fail_on_diff="false":
         echo "Invalid documentation type specified, use \`dag\` or \`media-props\`. Exiting."
         exit 1
     fi
+    GENERATED_ABS_PATH="/opt/airflow/catalog/${GENERATED_REL_PATH}"
     just ../run \
       --volume {{ justfile_directory() }}/../docker:/opt/airflow/docker/ \
+      -e PYTHONPATH=/opt/airflow/catalog:/opt/airflow/catalog/dags \
       {{ SERVICE }} \
       "bash -c 'python $SCRIPT_PATH && chmod 666 $GENERATED_ABS_PATH'"
-    # Move the file to the documentation folder
-    mv $GENERATED_REL_PATH ../$FINAL_FILE
+    TEMP="documentation/meta/temp"
+    mv ../catalog/$GENERATED_REL_PATH ../$TEMP.md
+    echo "Moved the generated file to ../$TEMP.md"
     echo -n "Running linting..."
     # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
-    just ../lint prettier $FINAL_FILE &>/dev/null || true
+    just ../lint prettier $TEMP.md &>/dev/null || true
     echo "Linting done!"
+
     if [ "{{ doc }}" == "media-props" ]; then
-      echo -n "Replacing '\n---\n' with '\n----\n'..."
-      awk 'BEGIN{RS=ORS="\n"} {gsub(/\n---\n/, "\n----\n", $0); print}' "../$FINAL_FILE" > "../$FINAL_FILE.tmp" && mv "../$FINAL_FILE.tmp" "../$FINAL_FILE"
+      echo -n "Replacing linted md <hr> '---' with '----' required by sphinx..."
+      sed 's/^---$/----/' "../$TEMP.md" > "../$TEMP.tmp"
+      mv "../$TEMP.tmp" "../$TEMP.md"
       echo "Replacements done!"
     fi
+    mv ../$TEMP.md ../$FINAL_FILE
+    echo "Moved the generated file to ../$FINAL_FILE"
     if {{ fail_on_diff }}; then
       set +e
       git diff --exit-code -- ../$FINAL_FILE
