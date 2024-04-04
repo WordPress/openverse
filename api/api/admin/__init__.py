@@ -151,11 +151,6 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
     verbose_name = "My Preferences"
     form = UserPreferencesAdminForm
 
-    def render_change_form(self, request, context, *args, **kwargs):
-        """Remove the "Save and add another" button from the change form."""
-        context["show_save_and_add_another"] = False
-        return super().render_change_form(request, context, *args, **kwargs)
-
     def has_add_permission(self, request):
         """Remove functionality to add new ``UserPreferences`` objects."""
         return False
