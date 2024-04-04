@@ -728,7 +728,7 @@ class MediaSerializer(BaseModelSerializer):
         # Ensure license is lowercase
         output["license"] = output["license"].lower()
 
-        if output["license_url"] is None:
+        if output.get("license_url") is None:
             output["license_url"] = get_license_url(
                 output["license"], output["license_version"]
             )

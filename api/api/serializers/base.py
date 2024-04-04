@@ -16,9 +16,6 @@ class BaseModelSerializer(serializers.ModelSerializer):
         """
 
         klass, kwargs = super().build_property_field(field_name, model_class)
-        kwargs |= {
-            "allow_null": True,  # model computed properties are not present in ``Hit``
-        }
         if doc := getattr(model_class, field_name).__doc__:
             kwargs.setdefault("help_text", doc)
         return klass, kwargs
