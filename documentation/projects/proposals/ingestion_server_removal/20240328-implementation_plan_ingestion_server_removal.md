@@ -303,7 +303,7 @@ will be generated:
 - production_audio_data_refresh
 - production_image_data_refresh
 
-Because the `environment` is added as a suffix, there will be no collision with
+Because the `environment` is added as a prefix, there will be no collision with
 the existing DAG ids. In this initial step, we we will add only a small portion
 of the logic in order to make the PR easier to review. The first steps are
 already implemented in the current data refresh and can simply be copied:
