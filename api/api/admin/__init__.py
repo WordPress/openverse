@@ -156,6 +156,14 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
         context["show_save_and_add_another"] = False
         return super().render_change_form(request, context, *args, **kwargs)
 
+    def has_add_permission(self, request):
+        """Remove functionality to add new ``UserPreferences`` objects."""
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        """Remove functionality to delete ``UserPreferences`` objects."""
+        return False
+
     def get_queryset(self, request):
         """
         Restrict the user's ability to view and change only the
