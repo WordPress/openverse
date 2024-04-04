@@ -168,7 +168,16 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
     def changelist_view(self, request, extra_context=None):
-        obj = self.get_queryset(request).first()
+        """
+        Redirect to the change form for the logged-in user's preferences. This
+        view automatically creates the ``UserPreferences`` instance, if one does
+        not already exist for the current user.
+        """
+
+        if (qs := self.get_queryset(request)).exists():
+            obj = qs.first()
+        else:
+            obj = UserPreferences.objects.create(user=request.user)
         return HttpResponseRedirect(
             reverse("admin:api_userpreferences_change", args=[obj.id])
         )
