@@ -157,14 +157,15 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
         return super().render_change_form(request, context, *args, **kwargs)
 
     def get_queryset(self, request):
+        """
+        Restrict the user's ability to view and change only the
+        ``UserPreferences`` instance mapped to their own ``User`` instance.
+
+        :return: the queryset of just the logged-in user's preferences
+        """
+
         qs = super().get_queryset(request)
         return qs.filter(user=request.user)
-
-    def has_change_permission(self, request, obj=None):
-        if not obj:
-            # the changelist itself
-            return True
-        return obj.user == request.user
 
     def changelist_view(self, request, extra_context=None):
         obj = self.get_queryset(request).first()
