@@ -147,7 +147,6 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
     currently logged-in user's preferences
     """
 
-    can_delete = False
     verbose_name_plural = "My Preferences"
     verbose_name = "My Preferences"
     form = UserPreferencesAdminForm
