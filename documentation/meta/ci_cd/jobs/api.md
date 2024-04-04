@@ -46,6 +46,7 @@ recipes.
 | `validate_openapi` | `api/dj spectacular --format openapi-json --validate --file openapi.json` |
 | `check_migrations` | `api/dj makemigrations --check --noinput --merge`                         |
 | `test_doc`         | `api/doc-test`                                                            |
+| `test_media_props` | `api/generate-docs`                                                       |
 
 This job is skipped if the API codebase has not changed. Its counterpart is
 [`nuxt-checks`](/meta/ci_cd/jobs/frontend.md#nuxt-checks) for the frontend.
