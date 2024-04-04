@@ -47,7 +47,11 @@ respective implementation plans, below is a short description of each piece.
 
 Regardless of the specifics mentioned below, the implementation plans **must**
 include a mechanism for users of the API and the frontend to distinguish
-creator-generated tags and machine-generated ones.
+creator-generated tags and machine-generated ones. Even across providers,
+creator-generated tags can have quite different characteristics: some providers
+machine-generate their own tags, in some providers we use the categories the API
+provides as tags. It's important that we differentiate these tags from the ones
+we apply after-the-fact with our own ML/AI techniques.
 
 #### API
 
@@ -74,7 +78,7 @@ following approaches for resolving this in Elasticsearch:
   machine-labeled tag to boost the score/weight of the creator-generated tag in
   searches
 
-_NB: I'm not sure if this change to the API response shape for `tags` would
+_NB: We believe this change to the API response shape for `tags` would not
 constitute an API version change. I do think having a mechanism to share tag
 provider will be important going forward[^1]._
 
@@ -96,7 +100,9 @@ ones in the frontend. Particularly with the introduction of the
 consider how these machine-generated tags are displayed and whether they can be
 interacted with in the same way. Similar to the API, it may also be useful to
 share the label accuracy with users (either visually or with extra content on
-mouse hover). It would be beneficial to have a page much like our
+mouse hover) along with its provider (for cases where we may have multiples of
+the same machine-generated tags from different sources). It would be beneficial
+to have a page much like our
 [sensitive content explanation](https://openverse.org/sensitive-content) (either
 similarly available in the frontend or on our documentation website) that
 describes the nature of the machine generated labels, the means by which they
@@ -162,7 +168,11 @@ relevancy, we will need a mechanism or plan for the API for suppressing or
 deboosting the machine-labeled tags without having to remove them entirely (_NB:
 We may be able to leverage some of the DAGs created as a part of the
 [search relevancy sandbox](../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.md)
-project for this rollback_).
+project for this rollback_). We do not currently have the capacity to accurately
+and definitively assess result relevancy, though we plan to build those tools
+out in #421. We still feel that this project has value _now_, much like the
+[introduction of iNaturalist data did](https://make.wordpress.org/openverse/2023/01/14/preparing-for-inaturalist/)
+even though we incurred the same risks with that effort.
 
 ## Participants and stakeholders
 
