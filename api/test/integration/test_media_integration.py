@@ -330,12 +330,9 @@ def test_detail_view_for_invalid_uuids_returns_not_found(
 
 
 def test_search_with_only_valid_sources_produces_no_warning(media_type, api_client):
-    stats = api_client.get(f"/v1/{media_type.path}/stats/")
-    assert stats.status_code == 200
-
     search = api_client.get(
         f"/v1/{media_type.path}/",
-        {"source": ",".join([s["source_name"] for s in stats.json()])},
+        {"source": ",".join(media_type.providers)},
     )
     assert search.status_code == 200
     assert search.json()["warnings"] == []
@@ -344,10 +341,6 @@ def test_search_with_only_valid_sources_produces_no_warning(media_type, api_clie
 def test_search_with_partially_invalid_sources_produces_warning_but_still_succeeds(
     media_type: MediaType, api_client
 ):
-    stats = api_client.get(f"/v1/{media_type.path}/stats/")
-    assert stats.status_code == 200
-    valid_source = stats.json()[0]["source_name"]
-
     invalid_sources = [
         "surely_neither_this_one",
         "this_is_sure_not_to_ever_be_a_real_source_name",
@@ -355,7 +348,7 @@ def test_search_with_partially_invalid_sources_produces_warning_but_still_succee
 
     search = api_client.get(
         f"/v1/{media_type.path}/",
-        {"source": ",".join([valid_source] + invalid_sources)},
+        {"source": ",".join([media_type.providers[0]] + invalid_sources)},
     )
     assert search.status_code == 200
     result = search.json()
@@ -365,7 +358,7 @@ def test_search_with_partially_invalid_sources_produces_warning_but_still_succee
     }
     warning = result["warnings"][0]
     assert set(warning["invalid_sources"]) == set(invalid_sources)
-    assert warning["referenced_sources"] == [valid_source]
+    assert warning["referenced_sources"] == [media_type.providers[0]]
     assert f"v1/{media_type.path}/stats/" in warning["available_sources"]
 
 
