@@ -4,7 +4,7 @@ module.exports = {
       experimentalCSSCompile: false,
     },
   },
-  moduleFileExtensions: ["ts", "js", "vue", "json"],
+  moduleFileExtensions: ["ts", "js", "cjs", "vue", "json"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^~/(.*.svg)\\?inline$": "<rootDir>/src/$1",

@@ -9,7 +9,6 @@ import {
   SupportedMediaType,
   supportedMediaTypes,
 } from "~/constants/media"
-import { initProviderServices } from "~/data/media-provider-service"
 
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
@@ -145,13 +144,16 @@ export const useProviderStore = defineStore("provider", {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
       try {
-        const service = initProviderServices[mediaType](
-          this.$nuxt?.$config?.apiAccessToken
+        const res = await this.$nuxt.$apiClient(
+          `GET v1/${mediaType === "audio" ? "audio" : "images"}/stats/`
         )
-        const res = await service.getProviderStats()
-        sortedProviders = sortProviders(res)
+        if (res.meta.status !== 200) {
+          throw res
+        }
+        sortedProviders = sortProviders(res.body)
         this._updateFetchState(mediaType, "end")
       } catch (error: unknown) {
+        console.error(error)
         const errorData = this.$nuxt.$processFetchingError(
           error,
           mediaType,

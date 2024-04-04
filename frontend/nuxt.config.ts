@@ -143,6 +143,7 @@ const config: NuxtConfig = {
   plugins: [
     "~/plugins/ua-parse.ts",
     "~/plugins/focus-visible.client.ts",
+    "~/plugins/api-client.ts",
     "~/plugins/api-token.server.ts",
     "~/plugins/polyfills.client.ts",
     "~/plugins/sentry.ts",
@@ -267,7 +268,10 @@ const config: NuxtConfig = {
       // Enables use of IDE debuggers
       config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
     },
-    transpile: [({ isLegacy }) => (isLegacy ? "axios" : undefined)],
+    transpile: [
+      ({ isLegacy }) => (isLegacy ? "axios" : undefined),
+      "@openverse/api-client",
+    ],
   },
   typescript: {
     typeCheck: {

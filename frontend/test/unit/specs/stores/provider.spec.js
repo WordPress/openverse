@@ -1,12 +1,17 @@
 import { AxiosError } from "axios"
+import nock from "nock"
 
-import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
+import {
+  setActivePinia,
+  createPinia,
+  mockApiClient,
+} from "~~/test/unit/test-utils/pinia"
+import { baseUrl } from "~~/test/unit/test-utils/api-client"
 
 import { warn } from "~/utils/console"
 import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 import { useSearchStore } from "~/stores/search"
 import { useProviderStore } from "~/stores/provider"
-import { initProviderServices } from "~/data/media-provider-service"
 
 jest.mock("@nuxtjs/composition-api", () => ({
   ssrRef: (v) => jest.fn(v),
@@ -39,33 +44,22 @@ const mockData = [
   },
 ]
 
-const mockImplementation = () => Promise.resolve([...mockData])
-const mock = jest.fn().mockImplementation(mockImplementation)
-jest.mock("~/data/media-provider-service", () => ({
-  initProviderServices: {
-    audio: () =>
-      /** @type {typeof import('~/data/media-provider-services').MediaProviderService} */ ({
-        getProviderStats: mock,
-      }),
-    image: () =>
-      /** @type {typeof import('~/data/media-provider-services').MediaProviderService} */ ({
-        getProviderStats: mock,
-      }),
-  },
-}))
-
 describe("Provider Store", () => {
   let providerStore
   beforeEach(() => {
     setActivePinia(createPinia())
     providerStore = useProviderStore()
   })
-  afterEach(() => {
-    mock.mockClear()
-  })
   afterAll(() => {
     warn.mockReset()
   })
+
+  const mockSuccessApi = () =>
+    nock(baseUrl)
+      .get("/v1/audio/stats/")
+      .reply(200, mockData)
+      .get("/v1/images/stats/")
+      .reply(200, mockData)
 
   it("sets the default state", () => {
     expect(providerStore.providers).toEqual({
@@ -86,14 +80,17 @@ describe("Provider Store", () => {
   `(
     "getProviderName returns provider name or capitalizes providerCode",
     async ({ providerCode, displayName }) => {
+      const scope = mockSuccessApi()
       await providerStore.fetchMediaProviders()
       expect(providerStore.getProviderName(providerCode, IMAGE)).toEqual(
         displayName
       )
+      scope.done()
     }
   )
 
   it("fetchMediaProviders on success", async () => {
+    const scope = mockSuccessApi()
     await providerStore.fetchMediaProviders()
     expect(providerStore.fetchState[IMAGE]).toEqual({
       fetchingError: null,
@@ -101,30 +98,14 @@ describe("Provider Store", () => {
       isFetching: false,
     })
     expect(providerStore.providers[IMAGE]).toEqual(mockData)
+    scope.done()
   })
 
   it("fetchMediaProviders on error", async () => {
-    for (const mediaType of supportedMediaTypes) {
-      initProviderServices[mediaType] = () => ({
-        getProviderStats: jest.fn().mockImplementation(() =>
-          Promise.reject(
-            new AxiosError(
-              "Not found",
-              AxiosError.ERR_BAD_REQUEST,
-              {},
-              {},
-              {
-                data: { detail: "Not found" },
-                status: 404,
-                statusText: "Not found",
-                headers: {},
-                config: {},
-              }
-            )
-          )
-        ),
-      })
-    }
+    const scope = nock(baseUrl)
+      .get(/v1\/(images|audio)\/stats/)
+      .times(2)
+      .reply(404)
     const searchStore = useSearchStore()
     await providerStore.fetchMediaProviders()
     for (const mediaType of supportedMediaTypes) {
@@ -138,5 +119,6 @@ describe("Provider Store", () => {
       expect(providerStore.providers[mediaType]).toEqual([])
       expect(searchStore.filters[`${mediaType}Providers`]).toEqual([])
     }
+    scope.done()
   })
 })

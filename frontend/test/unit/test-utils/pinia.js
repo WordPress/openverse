@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import * as pinia from "pinia"
 
+import { apiClient } from "~~/test/unit/test-utils/api-client"
+
 import { normalizeFetchingError } from "~/plugins/errors"
 
 export const createPinia = () =>
@@ -8,6 +10,7 @@ export const createPinia = () =>
     $nuxt: {
       $openverseApiToken: "",
       $processFetchingError: jest.fn(normalizeFetchingError),
+      $apiClient: jest.fn(apiClient),
       $sentry: {
         captureException: jest.fn(),
         captureEvent: jest.fn(),
