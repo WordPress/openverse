@@ -21,6 +21,7 @@ DEFAULT_UPDATE_BATCH_TIMEOUT = 60 * 60  # 1 hour
 TEMP_TABLE_NAME = "{query_id}_rows_to_update"
 CREATE_TEMP_TABLE_QUERY = """
     CREATE TABLE {temp_table_name} AS
+    {with_query}
     SELECT ROW_NUMBER() OVER() row_id, identifier
     FROM {table_name}
     {select_query};
@@ -31,6 +32,7 @@ SELECT_TEMP_TABLE_COUNT_QUERY = """
     FROM {temp_table_name};
     """
 UPDATE_BATCH_QUERY = """
+    {with_query}
     UPDATE {table_name}
     {update_query}
     WHERE identifier in (

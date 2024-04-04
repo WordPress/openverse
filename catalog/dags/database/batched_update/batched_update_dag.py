@@ -108,7 +108,15 @@ logger = logging.getLogger(__name__)
         "table_name": Param(
             default=AUDIO,
             enum=MEDIA_TYPES,
-            description=("The name of the media table to be updated."),
+            description="The name of the media table to be updated.",
+        ),
+        "with_query": Param(
+            default="",
+            type=["null", "string"],
+            description=(
+                "An optional `WITH` clause that will be used in conjunction with the"
+                " `UPDATE` query."
+            ),
         ),
         "select_query": Param(
             default="WHERE...",
@@ -117,7 +125,7 @@ logger = logging.getLogger(__name__)
                 "The `WHERE` clause of a query that selects all the rows to"
                 " be updated."
             ),
-            pattern="^WHERE",
+            # pattern="^WHERE",
         ),
         "update_query": Param(
             default="SET...",
@@ -126,12 +134,12 @@ logger = logging.getLogger(__name__)
                 "The part of the SQL `UPDATE` command, beginning with `SET`, that"
                 " will be run for each batch."
             ),
-            pattern="^SET",
+            # pattern="^SET",
         ),
         "batch_size": Param(
             default=constants.DEFAULT_BATCH_SIZE,
             type="integer",
-            description=("The number of records to update per batch."),
+            description="The number of records to update per batch.",
         ),
         "update_timeout": Param(
             default=constants.DEFAULT_UPDATE_BATCH_TIMEOUT,
@@ -175,6 +183,7 @@ def batched_update():
         sql_template=constants.CREATE_TEMP_TABLE_QUERY,
         dry_run="{{ params.dry_run }}",
         query_id="{{ params.query_id }}",
+        with_query="{{ params.with_query }}",
         table_name="{{ params.table_name }}",
         select_query="{{ params.select_query }}",
     )
@@ -212,6 +221,7 @@ def batched_update():
         dry_run="{{ params.dry_run }}",
         table_name="{{ params.table_name }}",
         query_id="{{ params.query_id }}",
+        with_query="{{ params.with_query }}",
         update_query="{{ params.update_query }}",
         update_timeout="{{ params.update_timeout }}",
     )
