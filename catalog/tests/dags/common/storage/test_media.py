@@ -517,6 +517,11 @@ def test_MediaStore_get_image_enriches_singleton_tags():
     assert actual_image.tags == [{"name": "lone", "provider": "test_provider"}]
 
 
+# Extracts `jpg` extension from the url.
+# Converts `jpeg` to `jpg` to use the standard extension.
+# Extracts `tif` extension, and converts it to the standard, `tiff`.
+# Does not use extracted extension if it's not a valid image extension.
+# Uses the `filetype` even if the `url` extension is different.
 @pytest.mark.parametrize(
     "filetype, url, expected_filetype",
     [
@@ -542,11 +547,6 @@ def test_MediaStore_validates_filetype(filetype, url, expected_filetype):
     assert cleaned_data["filetype"] == expected_filetype
 
 
-# Extracts `jpg` extension from the url.
-# Converts `jpeg` to `jpg` to use the standard extension.
-# Extracts `tif` extension, and converts it to the standard, `tiff`.
-# Does not use extracted extension if it's not a valid image extension.
-# Uses the `filetype` even if the `url` extension is different.
 @pytest.mark.parametrize(
     "raw_tags, expected_tags",
     [

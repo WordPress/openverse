@@ -288,13 +288,10 @@ class MediaStore(metaclass=abc.ABCMeta):
             A list of 'enriched' tags:
             {"name": "tag_name", "provider": self._PROVIDER}
         """
-        if not isinstance(raw_tags, list) and not isinstance(raw_tags, set):
+        if not isinstance(raw_tags, (list, set)):
             logger.debug("`raw_tags` is not of an accepted type.")
             return None
-        elif isinstance(raw_tags, list):
-            raw_tags = list(set(raw_tags))
-
-        raw_tags = sorted(raw_tags)
+        raw_tags = sorted(set(raw_tags))
 
         return [
             self._format_raw_tag(tag)
