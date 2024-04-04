@@ -177,10 +177,7 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
         not already exist for the current user.
         """
 
-        if (qs := self.get_queryset(request)).exists():
-            obj = qs.first()
-        else:
-            obj = UserPreferences.objects.create(user=request.user)
+        obj = self.get_queryset(request).first()
         return HttpResponseRedirect(
             reverse("admin:api_userpreferences_change", args=[obj.id])
         )
