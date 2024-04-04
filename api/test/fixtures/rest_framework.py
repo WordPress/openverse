@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.fixture
-def api_client():
+def api_client() -> APIClient:
     return APIClient()
 
 

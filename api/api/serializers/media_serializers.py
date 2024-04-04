@@ -1,17 +1,21 @@
 import logging
 from collections import namedtuple
+from typing import TypedDict
 
 from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import MaxValueValidator
+from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.request import Request
 
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
 
 from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
+from api.constants.media_types import MediaType
 from api.constants.parameters import COLLECTION, TAG
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
@@ -294,8 +298,16 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         required=False,
     )
 
+    class Context(TypedDict, total=True):
+        warnings: list[dict]
+        media_type: MediaType
+        request: Request
+
+    context: Context
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.context["warnings"] = []
         self.media_type = self.context.get("media_type")
         if not self.media_type:
             raise ValueError(
@@ -398,15 +410,31 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
                 )
             return value
         else:
-            sources = value.lower().split(",")
-            valid_sources = set(
-                [source for source in sources if source in allowed_sources]
-            )
-            if len(sources) > len(valid_sources):
-                invalid_sources = set(sources).difference(valid_sources)
-                logger.warning(
-                    f"Invalid sources in search query: {invalid_sources}; sources query: '{value}'"
+            sources = set(value.lower().split(","))
+            valid_sources = {source for source in sources if source in allowed_sources}
+            if not valid_sources:
+                # Raise only if there are _no_ valid sources selected
+                # If the requester passed only `mispelled_museum_name1,mispelled_musesum_name2`
+                # the request cannot move forward, as all the top responses will likely be from Flickr
+                # which provides radically different responses than most other providers.
+                # If even one source is valid, it won't be a problem, in which case we'll issue a warning
+                raise serializers.ValidationError(
+                    f"Invalid source parameter '{value}'. No valid sources selected. "
+                    f"Refer to the source list for valid options: {sources_list}."
                 )
+            elif invalid_sources := (sources - valid_sources):
+                self.context["warnings"].append(
+                    {
+                        "code": "partially invalid source parameter",
+                        "message": "The source parameter was partially invalid.",
+                        "invalid_sources": invalid_sources,
+                        "referenced_sources": valid_sources,
+                        "available_sources": self.context["request"].build_absolute_uri(
+                            reverse(f"{self.media_type}-stats")
+                        ),
+                    }
+                )
+
             return ",".join(valid_sources)
 
     def validate_excluded_source(self, input_sources):
