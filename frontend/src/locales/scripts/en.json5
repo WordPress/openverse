@@ -5,7 +5,7 @@
   },
   hero: {
     subtitle: "Explore more than 700 million creative works",
-    description: "An extensive library of free stock photos, images, and audio track, available for free use.",
+    description: "An extensive library of free stock photos, images, and audio, available for free use.",
     search: {
       placeholder: "Search for content",
     },
@@ -80,14 +80,14 @@
     },
     collection: {
       content: {
-        a: "{openverse} searches across more than 700 million images and audio track from open APIs and the {commonCrawl} dataset.",
+        a: "{openverse} searches across more than 700 million images and audio tracks from open APIs and the {commonCrawl} dataset.",
         b: "We aggregate works from multiple public repositories, and facilitate reuse through features like one-click attribution.",
       },
     },
     planning: {
       content: {
         /** about.planning.content.a-c are parts of a single statement */
-        a: "Currently {openverse} only searches images and audio track, with search for video provided through External Sources.",
+        a: "Currently {openverse} only searches images and audio tracks, with search for video provided through External Sources.",
         /** about.planning.content.a-c are parts of a single statement */
         b: "We plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web.",
         /**
@@ -175,7 +175,7 @@
     },
     heading: {
       image: "Image Sources",
-      audio: "Audio track Sources",
+      audio: "Audio Sources",
     },
   },
   externalSourcesPage: {
@@ -622,8 +622,8 @@
       },
       audio: {
         zero: "No audio track found for {query}.",
-        count: "See {localeCount} audio track found for {query}.",
-        countMore: "See over {localeCount} audio track found for {query}.",
+        count: "See {localeCount} audio tracks found for {query}.",
+        countMore: "See over {localeCount} audio tracks found for {query}.",
       },
     },
     load: "Load more results",
@@ -646,7 +646,7 @@
        * Interpolated into browsePage.searchForm.placeholder:
        * _{type}_ part of "Search all {type}"
        */
-      audio: "audio track",
+      audio: "audio tracks",
       /**
        * Interpolated into browsePage.searchForm.placeholder:
        * _{type}_ part of "Search all {type}"
@@ -871,7 +871,7 @@
   },
   audioDetails: {
     genreLabel: "Genre",
-    relatedAudios: "Related audio track",
+    relatedAudios: "Related audio tracks",
     table: {
       album: "Album",
       sampleRate: "Sample Rate",
@@ -888,7 +888,7 @@
        * _{spacebar}_ part of "Press {spacebar} to play or pause the track."
        */
       spacebar: "Spacebar",
-    },
+    }, 
   },
   audioResults: {
     snackbar: {
@@ -938,11 +938,11 @@
       err_decode: "Could not decode audio track.",
       err_unallowed: "Reproduction not allowed.",
       err_unknown: "An unexpected error has occurred. Try again in a few minutes or report the item if the issue persists.",
-      err_unsupported: "This audio track format is not supported by your browser.",
+      err_unsupported: "This audio format is not supported by your browser.",
       loading: "Loading...",
     },
     creator: "by {creator}",
-    close: "Close the audio track player",
+    close: "Close the audio player",
   },
   playPause: {
     play: "Play",
@@ -991,7 +991,7 @@
   },
   searchType: {
     image: "Images",
-    audio: "Audio track",
+    audio: "Audio",
     all: "All content",
     video: "Videos",
     model3d: "3D Models",
@@ -1000,7 +1000,7 @@
     additional: "Coming soon",
     statusBeta: "Beta",
     seeImage: "See all images",
-    seeAudio: "See all audio track",
+    seeAudio: "See all audio tracks",
     selectLabel: "Select a content type: {type}",
   },
   skipToContent: "Skip to content",
@@ -1141,9 +1141,9 @@
     resultCountLabel: {
       creator: {
         audio: {
-          zero: "No audio track files by this creator.",
+          zero: "No audio files by this creator.",
           count: "{count} audio track file by this creator.|{count} audio track files by this creator.",
-          countMore: "Over {count} audio track files by this creator.",
+          countMore: "Over {count} audio files by this creator.",
         },
         image: {
           zero: "No images by this creator.",
@@ -1153,9 +1153,9 @@
       },
       source: {
         audio: {
-          zero: "No audio track files provided by this source",
-          count: "{count} audio track file provided by this source|{count} audio track files provided by this source",
-          countMore: "Over {count} audio track files provided by this source",
+          zero: "No audio files provided by this source",
+          count: "{count} audio file provided by this source|{count} audio track files provided by this source",
+          countMore: "Over {count} audio files provided by this source",
         },
         image: {
           zero: "No images provided by this source",
@@ -1165,9 +1165,9 @@
       },
       tag: {
         audio: {
-          zero: "No audio track files with the selected tag",
-          count: "{count} audio track file with the selected tag|{count} audio track files with the selected tag",
-          countMore: "Over {count} audio track files with the selected tag",
+          zero: "No audio files with the selected tag",
+          count: "{count} audio file with the selected tag|{count} audio track files with the selected tag",
+          countMore: "Over {count} audio files with the selected tag",
         },
         image: {
           zero: "No images with the selected tag",
