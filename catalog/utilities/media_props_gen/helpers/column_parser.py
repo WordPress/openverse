@@ -37,6 +37,7 @@ class Column:
     db_name: str | None = None
     python_type: str | None = None
     upsert_strategy: str | None = None
+    base_column: str | None = None
     nullable: bool | None = None
     required: bool = False
 

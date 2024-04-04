@@ -35,12 +35,16 @@ from catalog.utilities.media_props_gen.helpers.column_parser import (
             id="default upsert strategy",
         ),
         pytest.param(
-            {"name": "genres", "required": False, "base_column": "StringColumn"},
+            {
+                "name": "genres",
+                "python_type": "ArrayColumn",
+                "required": False,
+                "base_column": "StringColumn",
+            },
             True,
             f"{COLUMN_DEFINITIONS['ArrayColumn']} "
-            f'(`name="genres", upsert_strategy=newest_non_null, nullable=True, required=False`)',
+            f"(`upsert_strategy=merge_array, base_column=StringColumn, nullable=True, required=False`)",
             id="base_column",
-            marks=pytest.mark.xfail(reason="base_column is not implemented"),
         ),
         pytest.param(
             {
