@@ -1,5 +1,5 @@
 """
-Batched Update DAG
+# Batched Update DAG
 
 This DAG is used to run a batched SQL update on a media table in the Catalog database.
 It is automatically triggered by the `popularity_refresh` DAGs to refresh popularity
@@ -49,18 +49,29 @@ null would look like this:
 }
 ```
 
-The `update_batches` task automatically keeps track of its progress in an Airflow
-variable suffixed with the `query_id`. If the task fails, when it resumes (either
-through a retry or by being manually cleared), it will pick up from where it left
-off. Manually managing this Airflow variable should not be necessary.
+## Automatic Failure Recovery
 
-It is also possible to start an entirely new DagRun using an existing temp table,
-by setting the `resume_update` param to True. With this option enabled, the
-DAG will skip creating the temp table and instead attempt to run an update with an
-existing temp table matching the `query_id`. This option should only be used when
-the DagRun configuration needs to be changed after the table was already created:
+The `update_batches` task automatically keeps track of its progress in an Airflow
+variable suffixed with the `query_id`. If the task fails, when it retries it will
+pick up from where it left off. The DAG can still fail if the configured number of
+retries are exceeded.
+
+## Manual Recovery
+
+If the DAG does fail, the update can be manually resumed by triggering a new
+DagRun with the same `query_id` and `update_query`, and enabling the
+`resume_update` param. The DAG will skip temp table creation and resume progress
+using the Airflow variable created on the previous run. **Manually managing this
+Airflow variable should not be necessary.**
+
+It is also possible to start an entirely new update using an existing temp table,
+by setting the `resume_update` param to True but providing a new `update_query`. The
+DAG will begin running the new update on records selected from the existing temp
+table matching the `query_id`. This option should only be used when the DagRun
+configuration needs to be changed after the table was already created:
 for example, if there was a problem with the `update_query` which caused DAG
-failures during the `update_batches` step.
+failures during the `update_batches` step. In this case, verify that the BATCH_START
+var is set appropriately for your needs.
 """
 
 import logging
