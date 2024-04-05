@@ -120,7 +120,7 @@ test *args:
 # Utilities #
 #############
 
-# Generate the documentation
+# Generate the documentation (either "dag" or "media-props")
 generate-docs doc="dag" fail_on_diff="false":
     #!/bin/bash
     set -e
