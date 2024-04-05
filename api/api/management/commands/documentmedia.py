@@ -50,15 +50,15 @@ class FieldInfo:
     value_info: ValueInfo | None = None
 
 
-def parse_notes(model_klass: type[AbstractMedia]) -> dict[str, str]:
+def parse_notes(model_class: type[AbstractMedia]) -> dict[str, str]:
     """
     Parse additional notes about model fields from model docstring.
 
-    :param model_klass: the model class whose docstring is being parsed
+    :param model_class: the model class whose docstring is being parsed
     :return: the mapping of field name to manual notes about the field
     """
 
-    documentation = getdoc(model_klass)
+    documentation = getdoc(model_class)
     if not documentation:
         return {}
 
@@ -72,20 +72,20 @@ def parse_notes(model_klass: type[AbstractMedia]) -> dict[str, str]:
     return info
 
 
-def parse_fields(model_klass: type[AbstractMedia]) -> list[FieldInfo]:
+def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
     """
     Parse the fields from a model class. This function generates a list of
     ``FieldInfo`` objects representing the fields of the model.
 
-    :param model_klass: the model class to parse
+    :param model_class: the model class to parse
     :return: a list of ``FieldInfo`` objects
     """
 
     notes = {}
-    for ancestor in reversed(model_klass.__mro__):
+    for ancestor in reversed(model_class.__mro__):
         notes |= parse_notes(ancestor)
 
-    fields = list(model_klass._meta.get_fields()[:])
+    fields = list(model_class._meta.get_fields()[:])
     fields.sort(key=lambda x: x.name)
     field_infos = []
     for field in fields:
@@ -139,7 +139,7 @@ def parse_models() -> dict[str, list[FieldInfo]]:
 
     media_models = AbstractMedia.__subclasses__()
     return {
-        model_klass.__name__: parse_fields(model_klass) for model_klass in media_models
+        model_class.__name__: parse_fields(model_class) for model_class in media_models
     }
 
 
