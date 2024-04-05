@@ -132,7 +132,7 @@ generate-docs doc="dag" fail_on_diff="false":
     elif [ "{{ doc }}" == "media-props" ]; then
         SCRIPT_PATH="catalog/utilities/media_props_gen/generate_media_properties.py"
         GENERATED_REL_PATH="utilities/media_props_gen/media_properties.md"
-        FINAL_FILE="documentation/meta/media_properties.md"
+        FINAL_FILE="documentation/meta/media_properties/catalog.md"
         NAME="Media properties"
     else
         echo "Invalid documentation type specified, use \`dag\` or \`media-props\`. Exiting."

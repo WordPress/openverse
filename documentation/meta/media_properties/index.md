@@ -6,6 +6,7 @@ Openverse stack.
 ```{toctree}
 :titlesonly:
 
+catalog
 api
 frontend
 ```

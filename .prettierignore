@@ -4,7 +4,7 @@
 
 # Documentation
 # This file is linted when created, but the hr elements are replaced for correct rendering.
-documentation/meta/media_properties.md
+documentation/meta/media_properties/catalog.md
 
 # Frontend
 frontend/test/unit/coverage
