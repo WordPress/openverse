@@ -181,7 +181,8 @@ def generate_relation_table(relations: list[FieldInfo]) -> str:
     """
 
     columns = ["Name", "Type", "DB type", "Nature", "To"]
-    table = f"|{'|'.join(columns)}|\n"
+    table = "### Relations\n\n"
+    table += f"|{'|'.join(columns)}|\n"
     table += f"|{'-|'*len(columns)}\n"
     for relation in relations:
         cells = (
@@ -204,7 +205,8 @@ def generate_value_table(values: list[FieldInfo]) -> str:
     """
 
     columns = ["Name", "Type", "DB type", "Constraints", "Default"]
-    table = f"|{'|'.join(columns)}|\n"
+    table = "### Values\n\n"
+    table += f"|{'|'.join(columns)}|\n"
     table += f"|{'-|'*len(columns)}\n"
     for value in values:
         cells = (
@@ -229,10 +231,10 @@ def generate_notes(fields: list[FieldInfo]) -> str:
     :return: the notes section for all relation and value fields
     """
 
-    output = ""
+    output = "### Notes\n\n"
 
     for field in fields:
-        field_output = f"### `{field.name}`\n\n"
+        field_output = f"#### `{field.name}`\n\n"
         record = False
         if field.notes:
             field_output += f"{field.notes}\n\n"

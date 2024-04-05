@@ -15,6 +15,8 @@ value). Note that relation fields are always nullable.
 
 ## Audio
 
+### Relations
+
 | Name              | Type              | DB type | Nature       | To               |
 | ----------------- | ----------------- | ------- | ------------ | ---------------- |
 | `audio_report`    | `ForeignKey`      | `uuid`  | One To Many  | `AudioReport`    |
@@ -23,6 +25,8 @@ value). Note that relation fields are always nullable.
 | `deleted_audio`   | `OneToOneField`   | `uuid`  | One To One   | `DeletedAudio`   |
 | `lists`           | `ManyToManyField` |         | Many To Many | `AudioList`      |
 | `sensitive_audio` | `OneToOneField`   | `uuid`  | One To One   | `SensitiveAudio` |
+
+### Values
 
 | Name                           | Type            | DB type                    | Constraints                   | Default |
 | ------------------------------ | --------------- | -------------------------- | ----------------------------- | ------- |
@@ -58,112 +62,116 @@ value). Note that relation fields are always nullable.
 | `view_count`                   | `IntegerField`  | `integer`                  |                               | `0`     |
 | `watermarked`                  | `BooleanField`  | `boolean`                  |                               |         |
 
-### `alt_files`
+### Notes
+
+#### `alt_files`
 
 **Help text:** JSON describing alternative files for this audio.
 
-### `audio_set_foreign_identifier`
+#### `audio_set_foreign_identifier`
 
 **Help text:** Reference to set of which this track is a part.
 
-### `audio_set_position`
+#### `audio_set_position`
 
 **Help text:** Ordering of the audio in the set.
 
-### `audioset`
+#### `audioset`
 
 This is a virtual foreign-key to `AudioSet` built on top of the fields
 `audio_set_foreign_identifier` and `provider`.
 
-### `bit_rate`
+#### `bit_rate`
 
 **Help text:** Number in bits per second, eg. 128000.
 
-### `category`
+#### `category`
 
 **Help text:** The top-level classification of this media file.
 
-### `creator`
+#### `creator`
 
 **Help text:** The name of the media creator.
 
-### `creator_url`
+#### `creator_url`
 
 **Help text:** A direct link to the media creator.
 
-### `duration`
+#### `duration`
 
 **Help text:** The time length of the audio file in milliseconds.
 
-### `filesize`
+#### `filesize`
 
 **Help text:** Number in bytes, e.g. 1024.
 
-### `filetype`
+#### `filetype`
 
 **Help text:** The type of the file, related to the file extension.
 
-### `foreign_identifier`
+#### `foreign_identifier`
 
 **Help text:** The identifier provided by the upstream source.
 
-### `foreign_landing_url`
+#### `foreign_landing_url`
 
 **Help text:** The landing page of the work.
 
-### `genres`
+#### `genres`
 
 **Help text:** An array of audio genres such as `rock`, `electronic` for `music`
 category, or `politics`, `sport`, `education` for `podcast` category
 
-### `id`
+#### `id`
 
 This is Django's automatic primary key, used for models that do not define one
 explicitly.
 
-### `identifier`
+#### `identifier`
 
 **Help text:** Our unique identifier for an open-licensed work.
 
-### `license`
+#### `license`
 
 **Help text:** The name of license for the media.
 
-### `license_version`
+#### `license_version`
 
 **Help text:** The version of the media license.
 
-### `provider`
+#### `provider`
 
 **Help text:** The content provider, e.g. Flickr, Jamendo...
 
-### `sample_rate`
+#### `sample_rate`
 
 **Help text:** Number in hertz, eg. 44100.
 
-### `source`
+#### `source`
 
 **Help text:** The source of the data, meaning a particular dataset. Source and
 provider can be different. Eg: the Google Open Images dataset is
 source=openimages, but provider=flickr.
 
-### `tags`
+#### `tags`
 
 **Help text:** Tags with detailed metadata, such as accuracy.
 
-### `thumbnail`
+#### `thumbnail`
 
 **Help text:** The thumbnail for the media.
 
-### `title`
+#### `title`
 
 **Help text:** The name of the media.
 
-### `url`
+#### `url`
 
 **Help text:** The actual URL to the media file.
 
 ## Image
+
+### Relations
 
 | Name              | Type              | DB type | Nature       | To               |
 | ----------------- | ----------------- | ------- | ------------ | ---------------- |
@@ -172,6 +180,8 @@ source=openimages, but provider=flickr.
 | `imagedecision`   | `ManyToManyField` |         | Many To Many | `ImageDecision`  |
 | `lists`           | `ManyToManyField` |         | Many To Many | `ImageList`      |
 | `sensitive_image` | `OneToOneField`   | `uuid`  | One To One   | `SensitiveImage` |
+
+### Values
 
 | Name                      | Type            | DB type                    | Constraints                   | Default |
 | ------------------------- | --------------- | -------------------------- | ----------------------------- | ------- |
@@ -202,81 +212,83 @@ source=openimages, but provider=flickr.
 | `watermarked`             | `BooleanField`  | `boolean`                  |                               |         |
 | `width`                   | `IntegerField`  | `integer`                  |                               |         |
 
-### `category`
+### Notes
+
+#### `category`
 
 **Help text:** The top-level classification of this media file.
 
-### `creator`
+#### `creator`
 
 **Help text:** The name of the media creator.
 
-### `creator_url`
+#### `creator_url`
 
 **Help text:** A direct link to the media creator.
 
-### `filesize`
+#### `filesize`
 
 **Help text:** Number in bytes, e.g. 1024.
 
-### `filetype`
+#### `filetype`
 
 **Help text:** The type of the file, related to the file extension.
 
-### `foreign_identifier`
+#### `foreign_identifier`
 
 **Help text:** The identifier provided by the upstream source.
 
-### `foreign_landing_url`
+#### `foreign_landing_url`
 
 **Help text:** The landing page of the work.
 
-### `height`
+#### `height`
 
 **Help text:** The height of the image in pixels. Not always available.
 
-### `id`
+#### `id`
 
 This is Django's automatic primary key, used for models that do not define one
 explicitly.
 
-### `identifier`
+#### `identifier`
 
 **Help text:** Our unique identifier for an open-licensed work.
 
-### `license`
+#### `license`
 
 **Help text:** The name of license for the media.
 
-### `license_version`
+#### `license_version`
 
 **Help text:** The version of the media license.
 
-### `provider`
+#### `provider`
 
 **Help text:** The content provider, e.g. Flickr, Jamendo...
 
-### `source`
+#### `source`
 
 **Help text:** The source of the data, meaning a particular dataset. Source and
 provider can be different. Eg: the Google Open Images dataset is
 source=openimages, but provider=flickr.
 
-### `tags`
+#### `tags`
 
 **Help text:** Tags with detailed metadata, such as accuracy.
 
-### `thumbnail`
+#### `thumbnail`
 
 **Help text:** The thumbnail for the media.
 
-### `title`
+#### `title`
 
 **Help text:** The name of the media.
 
-### `url`
+#### `url`
 
 **Help text:** The actual URL to the media file.
 
-### `width`
+#### `width`
 
 **Help text:** The width of the image in pixels. Not always available.
