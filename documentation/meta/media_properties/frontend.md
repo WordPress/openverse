@@ -50,7 +50,9 @@ clarity.
 | `title`               | `string`               |           |
 | `url`                 | `string`               |           |
 
-### id
+### Notes
+
+#### `id`
 
 the UUID4 identifier of the media item
 
@@ -58,11 +60,11 @@ the UUID4 identifier of the media item
 
 - [UUID4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)
 
-### originalTitle
+#### `originalTitle`
 
 the raw name of the creative work, as returned by the API
 
-### title
+#### `title`
 
 the name of the creative work; This involves the following kinds of changes to
 the original title:
@@ -79,11 +81,13 @@ the original title:
 | `height`            | `number`  | ✓         |
 | `width`             | `number`  | ✓         |
 
-### height
+### Notes
+
+#### `height`
 
 the vertical length of the image in pixels
 
-### width
+#### `width`
 
 the horizontal length of the image in pixels
 
@@ -103,7 +107,9 @@ the horizontal length of the image in pixels
 | `sample_rate`       | `number`                                   | ✓         |
 | `waveform`          | `string`                                   | ✓         |
 
-### bit_rate
+### Notes
+
+#### `bit_rate`
 
 amount of digital audio data transmitted or processed in unit time; This field
 holds numbers measured in bits per second.
@@ -112,11 +118,11 @@ holds numbers measured in bits per second.
 
 - [Wikipedia](https://en.wikipedia.org/wiki/Bit_rate#Audio)
 
-### duration
+#### `duration`
 
 the time period of the track in milliseconds
 
-### sample_rate
+#### `sample_rate`
 
 number of samples for digital representation taken in unit time; This field
 holds numbers measured in hertz.

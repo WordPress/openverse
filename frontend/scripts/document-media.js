@@ -26,6 +26,8 @@ function documentInterface(node, ast) {
   const output = []
 
   output.push(`## Interface \`${node.name.text}\``)
+
+  // Table
   output.push("| Name | Type | Optional? |")
   output.push("|-|-|-|")
 
@@ -45,9 +47,12 @@ function documentInterface(node, ast) {
     output.push(`|${columns.join("|")}|`)
   }
 
+  // Notes
+  output.push("### Notes")
+
   for (const field of fields) {
     if (field.documentation) {
-      output.push(`### ${field.name}`)
+      output.push(`#### \`${field.name}\``)
       output.push(field.documentation.text)
       if (field.documentation.links.length) {
         output.push("\n**See also:**")
