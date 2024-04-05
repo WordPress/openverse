@@ -1,6 +1,6 @@
 import pytest
 
-from catalog.utilities.media_props_gen.helpers.md import Md
+from utilities.media_props_gen.helpers.md import Md
 
 
 @pytest.mark.parametrize(

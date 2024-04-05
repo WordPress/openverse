@@ -1,6 +1,6 @@
 import pytest
 
-from catalog.utilities.media_props_gen.helpers.column_parser import (
+from utilities.media_props_gen.helpers.column_parser import (
     COLUMN_DEFINITIONS,
     Column,
 )

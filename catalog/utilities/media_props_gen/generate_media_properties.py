@@ -1,23 +1,13 @@
 """Automatic media properties generation."""
 
 import logging
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-
-# Avoid import error in tests
-sys.path.insert(0, str(Path(__file__).parents[3]))
-
-from catalog.utilities.media_props_gen.helpers.column_parser import (  # noqa: E402
-    parse_python_columns,
-)
-from catalog.utilities.media_props_gen.helpers.db import (  # noqa: E402
-    FieldSqlInfo,
-    create_db_props_dict,
-)
-from catalog.utilities.media_props_gen.helpers.md import Md  # noqa: E402
-from common.constants import MEDIA_TYPES  # noqa: E402
+from common.constants import MEDIA_TYPES
+from utilities.media_props_gen.helpers.column_parser import parse_python_columns
+from utilities.media_props_gen.helpers.db import FieldSqlInfo, create_db_props_dict
+from utilities.media_props_gen.helpers.md import Md
 
 
 log = logging.getLogger(__name__)
