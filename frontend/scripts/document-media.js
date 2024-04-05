@@ -68,7 +68,6 @@ function documentInterface(node, ast) {
 
 /**
  * Determine whether the interface node is, or extends from, interface `Media`.
- * This
  *
  * @param node {ts.Node} the node to check for being, or extending from, `Media`
  * @returns {boolean} whether the node is, or extends from, interface `Media`
