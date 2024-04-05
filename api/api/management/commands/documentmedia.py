@@ -5,6 +5,7 @@ from pathlib import Path
 from django.core.management import BaseCommand
 from django.db import connection
 from django.db.models import NOT_PROVIDED
+from django.db.models.fields import Field
 
 import yaml
 
@@ -40,14 +41,43 @@ class FieldInfo:
     """Store common information that is applicable to all types of fields."""
 
     name: str
-    internal_type: str
-    dj_docs_url: str
+    field: type[Field]
     db_type: str
     is_relation: bool
     notes: str | None
 
     relation_info: RelationInfo | None = None
     value_info: ValueInfo | None = None
+
+    @staticmethod
+    def dj_docs_url(internal_type: str) -> str | None:
+        if internal_type == "ForeignObject":
+            # ``ForeignObject`` doesn't have any official documentation.
+            return None
+        if internal_type == "ArrayField":
+            # ``ArrayField`` is a PostgreSQL-specific field.
+            return "https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#arrayfield"
+        return f"https://docs.djangoproject.com/en/dev/ref/models/fields/#{internal_type.lower()}"
+
+    @property
+    def internal_type(self) -> str | tuple[str, str]:
+        internal_type = self.field.get_internal_type()
+        if internal_type == "ArrayField":
+            return internal_type, self.field.base_field.get_internal_type()
+        return internal_type
+
+    @property
+    def type_repr(self) -> str:
+        internal_types = self.internal_type
+        if not isinstance(internal_types, tuple):
+            internal_types = (internal_types,)
+        output = " of ".join(
+            f"[`{internal_type}`]({docs})"
+            if (docs := FieldInfo.dj_docs_url(internal_type))
+            else f"`{internal_type}`"
+            for internal_type in internal_types
+        )
+        return output
 
 
 def parse_notes(model_class: type[AbstractMedia]) -> dict[str, str]:
@@ -89,15 +119,9 @@ def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
     fields.sort(key=lambda x: x.name)
     field_infos = []
     for field in fields:
-        internal_type = field.get_internal_type()
-        dj_docs_url = f"https://docs.djangoproject.com/en/dev/ref/models/fields/#{internal_type.lower()}"
-        if internal_type == "ArrayField":
-            dj_docs_url = "https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#arrayfield"
-            internal_type = f"{field.base_field.get_internal_type()}[]"
         field_info = FieldInfo(
             name=field.name,
-            internal_type=internal_type,
-            dj_docs_url=dj_docs_url,
+            field=field,
             db_type=field.db_type(connection),
             is_relation=field.is_relation,
             notes=notes.get(field.name),
@@ -202,7 +226,7 @@ def generate_relation_table(
             name = f"[{name}](#{model}-{relation.name}-notes)"
         cells = (
             name,
-            f"[`{relation.internal_type}`]({relation.dj_docs_url})",
+            relation.type_repr,
             f"`{relation.db_type}`" if relation.db_type else " ",
             relation.relation_info.nature.replace("_", " ").title(),
             f"`{relation.relation_info.to}`",
@@ -235,7 +259,7 @@ def generate_value_table(
             name = f"[{name}](#{model}-{value.name}-notes)"
         cells = (
             name,
-            f"[`{value.internal_type}`]({value.dj_docs_url})",
+            value.type_repr,
             f"`{value.db_type}`" if value.db_type else " ",
             get_constraints(value.value_info),
             f"`{value.value_info.default}`"
