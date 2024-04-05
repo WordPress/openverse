@@ -56,7 +56,7 @@ class ImageStore(MediaStore):
         creator_url: str | None = None,
         title: str | None = None,
         meta_data: dict | str | None = None,
-        raw_tags=None,
+        raw_tags: list | set | None = None,
         category: str | None = None,
         watermarked: str | None = "f",
         source: str | None = None,
@@ -107,7 +107,7 @@ class ImageStore(MediaStore):
                              in this dictionary, and `license_url` is
                              given as an argument, the argument will
                              replace the one given in the dictionary.
-        raw_tags:            List of tags associated with the image.
+        raw_tags:            List or set of tags associated with the image.
         category:            The image category, defaults to the default
                              category for the provider from
                              common/loader/provider_details.py.
@@ -120,7 +120,7 @@ class ImageStore(MediaStore):
                              and the `provider` argument in the
                              ImageStore init function is the specific
                              provider of the image.
-        ingestion_type:      Set programmatically
+        ingestion_type:      Set programmatically.
         """
 
         image_data = {
