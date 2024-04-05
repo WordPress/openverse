@@ -166,20 +166,28 @@ def generate_docs(props: dict[str, list[FieldInfo]]) -> str:
             else:
                 values.append(field)
 
+        notes, noted_fields = generate_notes(model, fields)
+
         output += f"## {model}\n\n"
-        output += generate_relation_table(relations)
+        output += generate_relation_table(model, noted_fields, relations)
         output += "\n"
-        output += generate_value_table(values)
+        output += generate_value_table(model, noted_fields, values)
         output += "\n"
-        output += generate_notes(fields)
+        output += notes
 
     return output
 
 
-def generate_relation_table(relations: list[FieldInfo]) -> str:
+def generate_relation_table(
+    model: str,
+    noted_fields: set[str],
+    relations: list[FieldInfo],
+) -> str:
     """
     Generate the data-type table for the relation fields.
 
+    :param model: the parent model of the fields being documented
+    :param noted_fields: the set of fields that have associated notes
     :param relations: the list of relation fields
     :return: the table generated for the relation fields
     """
@@ -189,8 +197,11 @@ def generate_relation_table(relations: list[FieldInfo]) -> str:
     table += f"|{'|'.join(columns)}|\n"
     table += f"|{'-|'*len(columns)}\n"
     for relation in relations:
+        name = f"`{relation.name}`"
+        if relation.name in noted_fields:
+            name = f"[{name}](#{model}-{relation.name}-notes)"
         cells = (
-            f"`{relation.name}`",
+            name,
             f"[`{relation.internal_type}`]({relation.dj_docs_url})",
             f"`{relation.db_type}`" if relation.db_type else " ",
             relation.relation_info.nature.replace("_", " ").title(),
@@ -200,10 +211,16 @@ def generate_relation_table(relations: list[FieldInfo]) -> str:
     return table
 
 
-def generate_value_table(values: list[FieldInfo]) -> str:
+def generate_value_table(
+    model: str,
+    noted_fields: set[str],
+    values: list[FieldInfo],
+) -> str:
     """
     Generate the data-type table for the value fields.
 
+    :param model: the parent model of the fields being documented
+    :param noted_fields: the set of fields that have associated notes
     :param values: the list of value fields
     :return: the table generated for the value fields
     """
@@ -213,8 +230,11 @@ def generate_value_table(values: list[FieldInfo]) -> str:
     table += f"|{'|'.join(columns)}|\n"
     table += f"|{'-|'*len(columns)}\n"
     for value in values:
+        name = f"`{value.name}`"
+        if value.name in noted_fields:
+            name = f"[{name}](#{model}-{value.name}-notes)"
         cells = (
-            f"`{value.name}`",
+            name,
             f"[`{value.internal_type}`]({value.dj_docs_url})",
             f"`{value.db_type}`" if value.db_type else " ",
             get_constraints(value.value_info),
@@ -226,19 +246,22 @@ def generate_value_table(values: list[FieldInfo]) -> str:
     return table
 
 
-def generate_notes(fields: list[FieldInfo]) -> str:
+def generate_notes(model: str, fields: list[FieldInfo]) -> tuple[str, set[str]]:
     """
     Generate notes for the fields. These notes come from the help text and the
     model docstrings.
 
+    :param model: the parent model of the fields being documented
     :param fields: the fields for which to generate notes
     :return: the notes section for all relation and value fields
     """
 
     output = "### Notes\n\n"
 
+    noted_fields = set()
     for field in fields:
-        field_output = f"#### `{field.name}`\n\n"
+        field_output = f"({model}-{field.name}-notes)=\n"
+        field_output += f"#### `{field.name}`\n\n"
         record = False
         if field.notes:
             field_output += f"{field.notes}\n\n"
@@ -247,9 +270,10 @@ def generate_notes(fields: list[FieldInfo]) -> str:
             field_output += f"**Help text:** {field.value_info.help_text}\n\n"
             record = True
         if record:
+            noted_fields.add(field.name)
             output += field_output
 
-    return output
+    return output, noted_fields
 
 
 def get_constraints(value_info: ValueInfo) -> str:
