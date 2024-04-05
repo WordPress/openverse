@@ -85,7 +85,7 @@ def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
     for ancestor in reversed(model_class.__mro__):
         notes |= parse_notes(ancestor)
 
-    fields = list(model_class._meta.get_fields()[:])
+    fields = list(model_class._meta.get_fields())
     fields.sort(key=lambda x: x.name)
     field_infos = []
     for field in fields:
