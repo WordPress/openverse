@@ -58,6 +58,7 @@ import type { Tag } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
+import { useI18n } from "~/composables/use-i18n"
 
 import { focusElement } from "~/utils/focus-management"
 
@@ -87,7 +88,8 @@ export default defineComponent({
 
     const searchStore = useSearchStore()
     const featureFlagStore = useFeatureFlagStore()
-    const { app, $sendCustomEvent } = useContext()
+    const { $sendCustomEvent } = useContext()
+    const i18n = useI18n()
 
     const additionalSearchViews = computed(() =>
       featureFlagStore.isOn("additional_search_views")
@@ -106,7 +108,7 @@ export default defineComponent({
 
     const collapsibleRowsStartAt = ref<number>()
     const dir = computed(() => {
-      return app.i18n.localeProperties.dir
+      return i18n.localeProperties.dir
     })
 
     function isFurtherInline(previous: HTMLElement, current: HTMLElement) {
