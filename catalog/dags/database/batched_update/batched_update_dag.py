@@ -70,7 +70,7 @@ DAG will begin running the new update on records selected from the existing temp
 table matching the `query_id`. This option should only be used when the DagRun
 configuration needs to be changed after the table was already created:
 for example, if there was a problem with the `update_query` which caused DAG
-failures during the `update_batches` step. In this case, verify that the BATCH_START
+failures during the `update_batches` step. In this case, verify that the `BATCH_START`
 var is set appropriately for your needs.
 """
 
