@@ -25,7 +25,7 @@ describe("Media Service search and recordSearchTime", () => {
 
     const res = await initServices.image().search({})
 
-    expect(res.searchTimeEvent).not.toBeDefined()
+    expect(res.eventPayload).not.toBeDefined()
   })
 
   it("should not send a SEARCH_RESPONSE_TIME analytics event if the response was locally cached", async () => {
@@ -45,7 +45,7 @@ describe("Media Service search and recordSearchTime", () => {
 
     const res = await initServices.audio().search({})
 
-    expect(res.searchTimeEvent).not.toBeDefined()
+    expect(res.eventPayload).not.toBeDefined()
   })
 
   it("should not send a SEARCH_RESPONSE_TIME analytics event if the cf-ray is malformed", async () => {
@@ -67,7 +67,7 @@ describe("Media Service search and recordSearchTime", () => {
 
     const res = await initServices.audio().search({})
 
-    expect(res.searchTimeEvent).not.toBeDefined()
+    expect(res.eventPayload).not.toBeDefined()
   })
 
   it("should send SEARCH_RESPONSE_TIME analytics with correct parameters", async () => {
@@ -106,7 +106,7 @@ describe("Media Service search and recordSearchTime", () => {
     const IMAGE_QUERY_PARAMS = { q: "apple" }
     const imageRes = await initServices.image().search(IMAGE_QUERY_PARAMS)
 
-    expect(imageRes.searchTimeEvent).toEqual({
+    expect(imageRes.eventPayload).toEqual({
       cfCacheStatus: "HIT",
       cfRayIATA: "SJC",
       elapsedTime: 2,
@@ -116,7 +116,7 @@ describe("Media Service search and recordSearchTime", () => {
     const AUDIO_QUERY_PARAMS = { q: "table" }
     const audioRes = await initServices.audio().search(AUDIO_QUERY_PARAMS)
 
-    expect(audioRes.searchTimeEvent).toEqual({
+    expect(audioRes.eventPayload).toEqual({
       cfCacheStatus: "MISS",
       cfRayIATA: "LHR",
       elapsedTime: 3,

@@ -28,7 +28,7 @@ interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
   hasStarted: boolean
 }
 import type { EventName } from "~/types/analytics"
-import type { SearchTimeEvent } from "~/data/media-service"
+import type { SearchTimeEventPayload } from "~/data/media-service"
 
 export type MediaStoreResult = {
   count: number
@@ -451,13 +451,13 @@ export const useMediaStore = defineStore("media", {
     },
 
     recordSearchTime(
-      event: SearchTimeEvent | undefined,
+      payload: SearchTimeEventPayload | undefined,
       mediaType: SupportedMediaType
     ) {
-      if (event) {
-        const searchEvent =
+      if (payload) {
+        const eventName =
           `${mediaType.toUpperCase()}_SEARCH_RESPONSE_TIME` as EventName
-        this.$nuxt.$sendCustomEvent(searchEvent, event)
+        this.$nuxt.$sendCustomEvent(eventName, payload)
       }
     },
 
@@ -483,8 +483,8 @@ export const useMediaStore = defineStore("media", {
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
-        const { searchTimeEvent, data } = await service.search(queryParams)
-        this.recordSearchTime(searchTimeEvent, mediaType)
+        const { eventPayload, data } = await service.search(queryParams)
+        this.recordSearchTime(eventPayload, mediaType)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

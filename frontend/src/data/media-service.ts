@@ -10,7 +10,7 @@ import type { Events } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
 
-export type SearchTimeEvent =
+export type SearchTimeEventPayload =
   | Events["AUDIO_SEARCH_RESPONSE_TIME"]
   | Events["IMAGE_SEARCH_RESPONSE_TIME"]
 
@@ -34,15 +34,15 @@ class MediaService<T extends Media> {
   }
 
   /**
-   * Processes AxiosResponse from a search query to
-   * construct SEARCH_RESPONSE_TIME analytics event.
+   * Processes AxiosResponse from a search query to construct
+   * SEARCH_RESPONSE_TIME analytics event payload.
    * @param response - Axios response
    * @param requestDatetime - datetime before request was sent
    */
-  buildSearchTimeEvent(
+  buildEventPayload(
     response: AxiosResponse,
     requestDatetime: Date
-  ): SearchTimeEvent | undefined {
+  ): SearchTimeEventPayload | undefined {
     const REQUIRED_HEADERS = ["date", "cf-cache-status", "cf-ray"]
 
     const responseHeaders = response.headers
@@ -107,7 +107,7 @@ class MediaService<T extends Media> {
   async search(
     params: PaginatedSearchQuery | PaginatedCollectionQuery
   ): Promise<{
-    searchTimeEvent: SearchTimeEvent | undefined
+    eventPayload: SearchTimeEventPayload | undefined
     data: MediaResult<Record<string, Media>>
   }> {
     // Add the `peaks` param to all audio searches automatically
@@ -122,9 +122,9 @@ class MediaService<T extends Media> {
       params as unknown as Record<string, string>
     )
 
-    const searchTimeEvent = this.buildSearchTimeEvent(res, requestDatetime)
+    const eventPayload = this.buildEventPayload(res, requestDatetime)
 
-    return { searchTimeEvent, data: this.transformResults(res.data) }
+    return { eventPayload, data: this.transformResults(res.data) }
   }
 
   /**
