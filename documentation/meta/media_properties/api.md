@@ -18,6 +18,7 @@ value). Note that relation fields are always nullable.
 | Name              | Type              | DB type | Nature       | To               |
 | ----------------- | ----------------- | ------- | ------------ | ---------------- |
 | `audio_report`    | `ForeignKey`      | `uuid`  | One To Many  | `AudioReport`    |
+| `audiodecision`   | `ManyToManyField` |         | Many To Many | `AudioDecision`  |
 | `audioset`        | `ForeignObject`   |         | Many To One  | `AudioSet`       |
 | `deleted_audio`   | `OneToOneField`   | `uuid`  | One To One   | `DeletedAudio`   |
 | `lists`           | `ManyToManyField` |         | Many To Many | `AudioList`      |
@@ -168,6 +169,7 @@ source=openimages, but provider=flickr.
 | ----------------- | ----------------- | ------- | ------------ | ---------------- |
 | `deleted_image`   | `OneToOneField`   | `uuid`  | One To One   | `DeletedImage`   |
 | `image_report`    | `ForeignKey`      | `uuid`  | One To Many  | `ImageReport`    |
+| `imagedecision`   | `ManyToManyField` |         | Many To Many | `ImageDecision`  |
 | `lists`           | `ManyToManyField` |         | Many To Many | `ImageList`      |
 | `sensitive_image` | `OneToOneField`   | `uuid`  | One To One   | `SensitiveImage` |
 
