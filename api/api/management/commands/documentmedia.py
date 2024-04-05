@@ -90,8 +90,9 @@ def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
     field_infos = []
     for field in fields:
         internal_type = field.get_internal_type()
-        dj_docs_url = f"https://docs.djangoproject.com/en/5.0/ref/models/fields/#{internal_type.lower()}"
+        dj_docs_url = f"https://docs.djangoproject.com/en/dev/ref/models/fields/#{internal_type.lower()}"
         if internal_type == "ArrayField":
+            dj_docs_url = "https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#arrayfield"
             internal_type = f"{field.base_field.get_internal_type()}[]"
         field_info = FieldInfo(
             name=field.name,
