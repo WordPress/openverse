@@ -8,6 +8,9 @@ const ts = require("typescript")
  * @typedef {{name: string, type: string, isOptional: boolean, documentation: Comment | undefined}} Field
  */
 
+const preamblePath = path.resolve(__dirname, "preamble.md")
+const docsFilePath = path.resolve(__dirname, "../media_properties.md")
+
 /**
  * Generate Markdown documentation for an interface. This generates both the
  * data type table and the following long-form descriptions from the TSDoc
@@ -27,41 +30,54 @@ function documentInterface(node, ast) {
 
   output.push(`## Interface \`${node.name.text}\``)
 
+  output.push("### Fields")
+
+  // Notes
+  const notes = []
+  const noted_fields = []
+  for (const field of fields) {
+    if (field.documentation) {
+      noted_fields.push(field.name)
+      notes.push(`(${node.name.text}-${field.name}-notes)=`)
+      notes.push(`#### \`${field.name}\``)
+      notes.push(field.documentation.text)
+      if (field.documentation.links.length) {
+        notes.push("\n**See also:**")
+        for (const link of field.documentation.links) {
+          notes.push(`- [${link.text}](${link.dest || link.text})`)
+        }
+      }
+    }
+  }
+
   // Table
   output.push("| Name | Type | Optional? |")
   output.push("|-|-|-|")
 
   for (const field of fields) {
+    let fieldName = `\`${field.name}\``
+    if (noted_fields.includes(field.name)) {
+      fieldName = `[${fieldName}](#${node.name.text}-${field.name}-notes)`
+    }
+
     let fieldType = field.type.replace("|", "\\|")
     fieldType = `\`${fieldType}\``
     if (fieldType[1] >= "A" && fieldType[1] <= "Z") {
       // hack to identify custom types
-      fieldType = `_${fieldType}_`
+      fieldType = `${fieldType} (custom)`
+    }
+    if (fieldType[1] === '"' && fieldType.at(-2) === '"') {
+      // hack to identify literal types
+      fieldType = `${fieldType} (literal)`
     }
 
-    const columns = [
-      `\`${field.name}\``,
-      fieldType,
-      field.isOptional ? "✓" : "",
-    ]
+    const columns = [fieldName, fieldType, field.isOptional ? "✓" : ""]
     output.push(`|${columns.join("|")}|`)
   }
 
   // Notes
   output.push("### Notes")
-
-  for (const field of fields) {
-    if (field.documentation) {
-      output.push(`#### \`${field.name}\``)
-      output.push(field.documentation.text)
-      if (field.documentation.links.length) {
-        output.push("\n**See also:**")
-        for (const link of field.documentation.links) {
-          output.push(`- [${link.text}](${link.dest || link.text})`)
-        }
-      }
-    }
-  }
+  output.push(...notes)
 
   return output.join("\n")
 }
@@ -89,7 +105,7 @@ function isOfInterest(node) {
  * @param ast {ts.SourceFile} the AST for the media types file
  * @returns {Field[]} the fields of the interface
  */
-const getInterfaceFields = (node, ast) => {
+function getInterfaceFields(node, ast) {
   return node.members.map((member) => {
     if (ts.isPropertySignature(member) && member.name) {
       const name = member.name.text
@@ -199,13 +215,12 @@ function getMediaInterfaces(ast) {
 }
 
 /**
+ * Write the generated documentation with preamble to the output file.
  *
- * @param {string} docs
+ * @param docs {string} the generated documentation to write below the preamble
  */
 function writeDocs(docs) {
-  const preamblePath = path.resolve(__dirname, "preamble.md")
   const preamble = fs.readFileSync(preamblePath, "utf-8")
-  const docsFilePath = path.resolve(__dirname, "../media_properties.md")
   console.log(`Writing to ${docsFilePath}.`)
   fs.writeFileSync(docsFilePath, [preamble, docs].join("\n"))
 }

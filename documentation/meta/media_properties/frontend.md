@@ -20,37 +20,41 @@ clarity.
 
 ## Interface `Media`
 
-| Name                  | Type                   | Optional? |
-| --------------------- | ---------------------- | --------- |
-| `attribution`         | `string`               |           |
-| `category`            | `string \| null`       |           |
-| `creator`             | `string`               | ✓         |
-| `creator_url`         | `string`               | ✓         |
-| `description`         | `string`               | ✓         |
-| `detail_url`          | `string`               |           |
-| `fields_matched`      | `string[]`             | ✓         |
-| `filesize`            | `string`               | ✓         |
-| `filetype`            | `string`               | ✓         |
-| `foreign_landing_url` | `string`               |           |
-| `frontendMediaType`   | _`SupportedMediaType`_ |           |
-| `id`                  | `string`               |           |
-| `isSensitive`         | `boolean`              |           |
-| `license`             | _`License`_            |           |
-| `license_url`         | `string`               | ✓         |
-| `license_version`     | _`LicenseVersion`_     |           |
-| `originalTitle`       | `string`               |           |
-| `provider`            | `string`               |           |
-| `providerName`        | `string`               | ✓         |
-| `related_url`         | `string`               |           |
-| `sensitivity`         | _`Sensitivity[]`_      |           |
-| `source`              | `string`               | ✓         |
-| `sourceName`          | `string`               | ✓         |
-| `tags`                | _`Tag[]`_              |           |
-| `thumbnail`           | `string`               | ✓         |
-| `title`               | `string`               |           |
-| `url`                 | `string`               |           |
+### Fields
+
+| Name                                          | Type                          | Optional? |
+| --------------------------------------------- | ----------------------------- | --------- |
+| `attribution`                                 | `string`                      |           |
+| `category`                                    | `string \| null`              |           |
+| `creator`                                     | `string`                      | ✓         |
+| `creator_url`                                 | `string`                      | ✓         |
+| `description`                                 | `string`                      | ✓         |
+| `detail_url`                                  | `string`                      |           |
+| `fields_matched`                              | `string[]`                    | ✓         |
+| `filesize`                                    | `string`                      | ✓         |
+| `filetype`                                    | `string`                      | ✓         |
+| `foreign_landing_url`                         | `string`                      |           |
+| `frontendMediaType`                           | `SupportedMediaType` (custom) |           |
+| [`id`](#Media-id-notes)                       | `string`                      |           |
+| `isSensitive`                                 | `boolean`                     |           |
+| `license`                                     | `License` (custom)            |           |
+| `license_url`                                 | `string`                      | ✓         |
+| `license_version`                             | `LicenseVersion` (custom)     |           |
+| [`originalTitle`](#Media-originalTitle-notes) | `string`                      |           |
+| `provider`                                    | `string`                      |           |
+| `providerName`                                | `string`                      | ✓         |
+| `related_url`                                 | `string`                      |           |
+| `sensitivity`                                 | `Sensitivity[]` (custom)      |           |
+| `source`                                      | `string`                      | ✓         |
+| `sourceName`                                  | `string`                      | ✓         |
+| `tags`                                        | `Tag[]` (custom)              |           |
+| `thumbnail`                                   | `string`                      | ✓         |
+| [`title`](#Media-title-notes)                 | `string`                      |           |
+| `url`                                         | `string`                      |           |
 
 ### Notes
+
+(Media-id-notes)=
 
 #### `id`
 
@@ -59,10 +63,11 @@ the UUID4 identifier of the media item
 **See also:**
 
 - [UUID4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)
+  (Media-originalTitle-notes)=
 
 #### `originalTitle`
 
-the raw name of the creative work, as returned by the API
+the raw name of the creative work, as returned by the API (Media-title-notes)=
 
 #### `title`
 
@@ -75,17 +80,21 @@ the original title:
 
 ## Interface `ImageDetail`
 
-| Name                | Type      | Optional? |
-| ------------------- | --------- | --------- |
-| `frontendMediaType` | `"image"` |           |
-| `height`            | `number`  | ✓         |
-| `width`             | `number`  | ✓         |
+### Fields
+
+| Name                                  | Type                | Optional? |
+| ------------------------------------- | ------------------- | --------- |
+| `frontendMediaType`                   | `"image"` (literal) |           |
+| [`height`](#ImageDetail-height-notes) | `number`            | ✓         |
+| [`width`](#ImageDetail-width-notes)   | `number`            | ✓         |
 
 ### Notes
 
+(ImageDetail-height-notes)=
+
 #### `height`
 
-the vertical length of the image in pixels
+the vertical length of the image in pixels (ImageDetail-width-notes)=
 
 #### `width`
 
@@ -93,21 +102,25 @@ the horizontal length of the image in pixels
 
 ## Interface `AudioDetail`
 
-| Name                | Type                                       | Optional? |
-| ------------------- | ------------------------------------------ | --------- |
-| `alt_files`         | `{ provider: string; filetype: string }[]` | ✓         |
-| `audio_set`         | _`AudioSet`_                               | ✓         |
-| `bit_rate`          | `number`                                   | ✓         |
-| `duration`          | `number`                                   | ✓         |
-| `frontendMediaType` | `"audio"`                                  |           |
-| `genres`            | `string[]`                                 | ✓         |
-| `hasLoaded`         | `boolean`                                  | ✓         |
-| `length`            | `string`                                   | ✓         |
-| `peaks`             | `number[]`                                 | ✓         |
-| `sample_rate`       | `number`                                   | ✓         |
-| `waveform`          | `string`                                   | ✓         |
+### Fields
+
+| Name                                            | Type                                       | Optional? |
+| ----------------------------------------------- | ------------------------------------------ | --------- |
+| `alt_files`                                     | `{ provider: string; filetype: string }[]` | ✓         |
+| `audio_set`                                     | `AudioSet` (custom)                        | ✓         |
+| [`bit_rate`](#AudioDetail-bit_rate-notes)       | `number`                                   | ✓         |
+| [`duration`](#AudioDetail-duration-notes)       | `number`                                   | ✓         |
+| `frontendMediaType`                             | `"audio"` (literal)                        |           |
+| `genres`                                        | `string[]`                                 | ✓         |
+| `hasLoaded`                                     | `boolean`                                  | ✓         |
+| `length`                                        | `string`                                   | ✓         |
+| `peaks`                                         | `number[]`                                 | ✓         |
+| [`sample_rate`](#AudioDetail-sample_rate-notes) | `number`                                   | ✓         |
+| `waveform`                                      | `string`                                   | ✓         |
 
 ### Notes
+
+(AudioDetail-bit_rate-notes)=
 
 #### `bit_rate`
 
@@ -117,10 +130,11 @@ holds numbers measured in bits per second.
 **See also:**
 
 - [Wikipedia](https://en.wikipedia.org/wiki/Bit_rate#Audio)
+  (AudioDetail-duration-notes)=
 
 #### `duration`
 
-the time period of the track in milliseconds
+the time period of the track in milliseconds (AudioDetail-sample_rate-notes)=
 
 #### `sample_rate`
 
