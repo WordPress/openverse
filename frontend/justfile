@@ -79,7 +79,7 @@ generate-docs doc="media-props" fail_on_diff="true":
         just run doc:media-props
         mv media_properties.md ../$FINAL_FILE
     else
-        echo "Invalid documentation type specified, use \`dag\` or \`media-props\`. Exiting."
+        echo "Invalid documentation type specified, use \`media-props\`. Exiting."
         exit 1
     fi
     echo -n "Running linting..."

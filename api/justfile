@@ -120,7 +120,7 @@ generate-docs doc="media-props" fail_on_diff="true":
           sudo chown $(whoami) ../$FINAL_FILE
         fi
     else
-        echo "Invalid documentation type specified, use \`dag\` or \`media-props\`. Exiting."
+        echo "Invalid documentation type specified, use \`media-props\`. Exiting."
         exit 1
     fi
     echo -n "Running linting..."
