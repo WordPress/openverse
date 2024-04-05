@@ -11,6 +11,10 @@ import yaml
 from api.models.media import AbstractMedia
 
 
+preamble_path = Path(__file__).parents[2] / "docs" / "media_properties" / "preamble.md"
+output_path = Path(__file__).parents[3] / "media_properties.md"
+
+
 @dataclass
 class RelationInfo:
     """Store information about a relational field."""
@@ -150,11 +154,7 @@ def generate_docs(props: dict[str, list[FieldInfo]]) -> str:
 
     output = ""
 
-    preamble_path = (
-        Path(__file__).parents[2] / "docs" / "media_properties" / "preamble.md"
-    )
-    preamble = preamble_path.read_text()
-    output += preamble
+    output += preamble_path.read_text()
     output += "\n"
 
     for model, fields in props.items():
@@ -271,23 +271,10 @@ def get_constraints(value_info: ValueInfo) -> str:
     return "; ".join(constraints) or " "
 
 
-def write_docs(docs: str):
-    """
-    Write the documentation to the media properties file in the root of the
-    API project. Since this script typically runs inside Docker, we cannot write
-    the file directly to the documentation site.
-
-    :param docs: the documentation to write
-    """
-
-    path = Path(__file__).parents[3] / "media_properties.md"
-    path.write_text(docs)
-
-
 class Command(BaseCommand):
     help = "Update docs for media properties in the documentation site."
 
     def handle(self, **options):
         props = parse_models()
         docs = generate_docs(props)
-        write_docs(docs)
+        output_path.write_text(docs)
