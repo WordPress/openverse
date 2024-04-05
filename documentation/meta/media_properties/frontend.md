@@ -63,11 +63,14 @@ the UUID4 identifier of the media item
 **See also:**
 
 - [UUID4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)
-  (Media-originalTitle-notes)=
+
+(Media-originalTitle-notes)=
 
 #### `originalTitle`
 
-the raw name of the creative work, as returned by the API (Media-title-notes)=
+the raw name of the creative work, as returned by the API
+
+(Media-title-notes)=
 
 #### `title`
 
@@ -94,7 +97,9 @@ the original title:
 
 #### `height`
 
-the vertical length of the image in pixels (ImageDetail-width-notes)=
+the vertical length of the image in pixels
+
+(ImageDetail-width-notes)=
 
 #### `width`
 
@@ -130,11 +135,14 @@ holds numbers measured in bits per second.
 **See also:**
 
 - [Wikipedia](https://en.wikipedia.org/wiki/Bit_rate#Audio)
-  (AudioDetail-duration-notes)=
+
+(AudioDetail-duration-notes)=
 
 #### `duration`
 
-the time period of the track in milliseconds (AudioDetail-sample_rate-notes)=
+the time period of the track in milliseconds
+
+(AudioDetail-sample_rate-notes)=
 
 #### `sample_rate`
 

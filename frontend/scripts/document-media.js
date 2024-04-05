@@ -38,7 +38,7 @@ function documentInterface(node, ast) {
   for (const field of fields) {
     if (field.documentation) {
       noted_fields.push(field.name)
-      notes.push(`(${node.name.text}-${field.name}-notes)=`)
+      notes.push(`\n(${node.name.text}-${field.name}-notes)=`)
       notes.push(`#### \`${field.name}\``)
       notes.push(field.documentation.text)
       if (field.documentation.links.length) {
