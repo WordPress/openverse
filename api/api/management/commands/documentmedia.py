@@ -43,8 +43,7 @@ class FieldInfo:
     internal_type: str
     db_type: str
     is_relation: bool
-
-    notes: str | None = None
+    notes: str | None
 
     relation_info: RelationInfo | None = None
     value_info: ValueInfo | None = None
@@ -97,11 +96,9 @@ def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
             internal_type=internal_type,
             db_type=field.db_type(connection),
             is_relation=field.is_relation,
+            notes=notes.get(field.name),
         )
         field_infos.append(field_info)
-
-        if field_notes := notes.get(field.name):
-            field_info.notes = field_notes
 
         if field_info.is_relation:
             natures = [
