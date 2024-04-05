@@ -120,6 +120,7 @@ class ProviderDataIngester(ABC):
         dag_id: str = None,
         date: str = None,
         day_shift: int = None,
+        is_reingestion: bool = False,
     ):
         """
         Initialize the provider configuration.
@@ -129,6 +130,8 @@ class ProviderDataIngester(ABC):
         dag_id: The id of the running provider DAG
         date: Date String in the form YYYY-MM-DD. This is the date for
               which running the script will pull data
+        is_reingestion: Whether the ingester is being used to run reingestion,
+                        ie running ingestion for several days.
         """
         # An airflow variable used to cap the amount of records to be ingested.
         # This can be used for testing purposes to ensure a provider script
@@ -137,6 +140,8 @@ class ProviderDataIngester(ABC):
         self.limit = Variable.get(
             "INGESTION_LIMIT", deserialize_json=True, default_var=0
         )
+
+        self.is_reingestion = is_reingestion
 
         # If a test limit is imposed, ensure that the `batch_limit` does not
         # exceed this.
@@ -226,6 +231,7 @@ class ProviderDataIngester(ABC):
             return
 
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
+        logger.info(f"is reingestion? {self.is_reingestion}")
 
         while should_continue:
             query_params = self._get_query_params(query_params, **kwargs)
