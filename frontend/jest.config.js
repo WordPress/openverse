@@ -2,6 +2,9 @@ module.exports = {
   globals: {
     "vue-jest": {
       experimentalCSSCompile: false,
+      templateCompiler: {
+        prettify: false,
+      },
     },
   },
   moduleFileExtensions: ["ts", "js", "vue", "json"],

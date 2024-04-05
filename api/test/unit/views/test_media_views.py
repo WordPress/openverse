@@ -2,8 +2,6 @@ from datetime import datetime, timezone
 from unittest.mock import MagicMock, patch
 from uuid import uuid4
 
-from rest_framework.response import Response
-
 import pytest
 import pytest_django.asserts
 
@@ -47,36 +45,6 @@ def test_retrieve_query_count(api_client, media_type_config):
         res = api_client.get(f"/v1/{media_type_config.url_prefix}/{media.identifier}/")
 
     assert res.status_code == 200
-
-
-@pytest.mark.django_db
-@pytest.mark.parametrize(
-    "path, expected_params",
-    [
-        pytest.param("tag/cat/", {"tag": "cat"}, id="tag"),
-        pytest.param("source/flickr/", {"source": "flickr"}, id="source"),
-        pytest.param(
-            "source/flickr/creator/cat/",
-            {"source": "flickr", "creator": "cat"},
-            id="source_creator",
-        ),
-    ],
-)
-def test_collection_parameters(path, expected_params, api_client):
-    mock_get_media_results = MagicMock(return_value=Response())
-
-    with patch(
-        "api.views.media_views.MediaViewSet.get_media_results",
-        new_callable=lambda: mock_get_media_results,
-    ) as mock_get_media_results:
-        api_client.get(f"/v1/images/{path}")
-
-    actual_params = mock_get_media_results.call_args[0][3]
-    request_kind = mock_get_media_results.call_args[0][1]
-
-    assert mock_get_media_results.called
-    assert actual_params == expected_params
-    assert request_kind == "collection"
 
 
 @pytest.mark.parametrize(

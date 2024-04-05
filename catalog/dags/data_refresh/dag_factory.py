@@ -34,6 +34,7 @@ from common.constants import (
     OPENLEDGER_API_CONN_ID,
     XCOM_PULL_TEMPLATE,
 )
+from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
 from common.sql import PGExecuteQueryOperator, single_value
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
@@ -70,7 +71,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
-        tags=["data_refresh"],
+        tags=["data_refresh", PRODUCTION_ES_CONCURRENCY_TAG],
     )
 
     with dag:

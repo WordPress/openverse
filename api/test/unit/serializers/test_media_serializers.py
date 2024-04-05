@@ -3,7 +3,8 @@ import uuid
 from unittest.mock import MagicMock, patch
 
 from django.conf import settings
-from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.exceptions import NotAuthenticated
+from rest_framework.serializers import ValidationError
 from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
@@ -81,7 +82,8 @@ def anon_request(request_factory):
 def test_page_size_validation(page_size, authenticated, anon_request, authed_request):
     request = authed_request if authenticated else anon_request
     serializer = MediaSearchRequestSerializer(
-        context={"request": request}, data={"page_size": page_size}
+        context={"request": request, "media_type": "image"},
+        data={"page_size": page_size},
     )
     assert serializer.is_valid(raise_exception=True)
 
@@ -95,6 +97,27 @@ def test_media_serializer_adds_license_url_if_missing(
     del hit.license_url  # without the ``del``, the property is dynamically generated
     repr = serializer_class(hit, context={"request": anon_request}).data
     assert repr["license_url"] == "https://creativecommons.org/publicdomain/zero/1.0/"
+
+
+def test_media_serializer_logs_when_invalid_or_duplicate_source(media_type_config):
+    sources = {
+        "image": ("flickr,flickr,invalid", "flickr"),
+        "audio": ("freesound,freesound,invalid", "freesound"),
+    }
+    with patch("api.serializers.media_serializers.logger.warning") as mock_logger:
+        serializer_class = media_type_config.search_request_serializer(
+            context={"media_type": media_type_config.media_type},
+            data={"source": sources[media_type_config.media_type][0]},
+        )
+        assert serializer_class.is_valid()
+        assert (
+            serializer_class.validated_data["source"]
+            == sources[media_type_config.media_type][1]
+        )
+        mock_logger.assert_called_with(
+            f"Invalid sources in search query: {{'invalid'}}; "
+            f"sources query: '{sources[media_type_config.media_type][0]}'"
+        )
 
 
 @pytest.mark.parametrize(
@@ -159,7 +182,9 @@ def test_media_serializer_sensitivity(
 def test_search_request_serializer_include_sensitive_results_validation_well_formed_request(
     data: dict, result
 ):
-    serializer = MediaSearchRequestSerializer(data=data)
+    serializer = MediaSearchRequestSerializer(
+        data=data, context={"media_type": "image"}
+    )
     assert serializer.is_valid()
     # The expected value should be mapped from the field actually
     # passed in data
@@ -176,7 +201,9 @@ def test_search_request_serializer_include_sensitive_results_validation_well_for
     ),
 )
 def test_search_request_serializer_include_sensitive_results_malformed_request(data):
-    serializer = MediaSearchRequestSerializer(data=data)
+    serializer = MediaSearchRequestSerializer(
+        data=data, context={"media_type": "image"}
+    )
     assert not serializer.is_valid()
 
 
@@ -196,7 +223,8 @@ def test_index_is_only_set_if_authenticated(
 
     request = authed_request if authenticated else anon_request
     serializer = ImageSearchRequestSerializer(
-        data={"internal__index": "image-some-index"}, context={"request": request}
+        data={"internal__index": "image-some-index"},
+        context={"request": request, "media_type": "image"},
     )
     assert serializer.is_valid()
     assert serializer.validated_data.get("index") == (
@@ -221,7 +249,8 @@ def test_index_is_only_set_if_valid(mock_es, index, is_valid, authed_request):
     mock_es.indices.exists = lambda index: "exists" in index
 
     serializer = ImageSearchRequestSerializer(
-        data={"internal__index": index}, context={"request": authed_request}
+        data={"internal__index": index},
+        context={"request": authed_request, "media_type": "image"},
     )
     assert serializer.is_valid() == is_valid
     assert serializer.validated_data.get("index") == (index if is_valid else None)
@@ -242,9 +271,11 @@ def test_index_is_only_set_if_matches_media_type(
     mock_es, serializer_class, index, is_valid, authed_request
 ):
     mock_es.indices.exists.return_value = True
+    media_type = "audio" if serializer_class.__name__.startswith("Audio") else "image"
 
     serializer = serializer_class(
-        data={"internal__index": index}, context={"request": authed_request}
+        data={"internal__index": index},
+        context={"request": authed_request, "media_type": media_type},
     )
     assert serializer.is_valid() == is_valid
     assert serializer.validated_data.get("index") == (index if is_valid else None)

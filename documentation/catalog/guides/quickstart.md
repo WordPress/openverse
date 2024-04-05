@@ -39,8 +39,7 @@ For instructions geared specifically towards production deployments, see
 
 ### Requirements
 
-You'll need `docker` and `docker-compose` installed on your machine, with
-versions new enough to use version `3` of Docker Compose `.yml` files.
+You'll need `docker` with Compose V2 installed on your machine.
 
 You will also need the [`just`](https://github.com/casey/just#installation)
 command runner installed.

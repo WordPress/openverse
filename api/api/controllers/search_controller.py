@@ -34,17 +34,7 @@ from api.utils.search_context import SearchContext
 
 # Using TYPE_CHECKING to avoid circular imports when importing types
 if TYPE_CHECKING:
-    from api.serializers.audio_serializers import AudioCollectionRequestSerializer
-    from api.serializers.media_serializers import (
-        MediaSearchRequestSerializer,
-        PaginatedRequestSerializer,
-    )
-
-    MediaListRequestSerializer = (
-        AudioCollectionRequestSerializer
-        | MediaSearchRequestSerializer
-        | PaginatedRequestSerializer
-    )
+    from api.serializers.media_serializers import MediaSearchRequestSerializer
 
 module_logger = logging.getLogger(__name__)
 
@@ -220,7 +210,7 @@ def get_excluded_providers_query() -> Q | None:
 def get_index(
     exact_index: bool,
     origin_index: OriginIndex,
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> SearchIndex:
     if exact_index:
         return origin_index
@@ -234,7 +224,7 @@ def get_index(
 
 
 def create_search_filter_queries(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> dict[str, list[Q]]:
     """
     Create a list of Elasticsearch queries for filtering search results.
@@ -275,7 +265,7 @@ def create_search_filter_queries(
 
 
 def create_ranking_queries(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> list[Q]:
     queries = [Q("rank_feature", field="standardized_popularity", boost=DEFAULT_BOOST)]
     if search_params.data["unstable__authority"]:
@@ -286,7 +276,7 @@ def create_ranking_queries(
 
 
 def build_search_query(
-    search_params: MediaListRequestSerializer,
+    search_params: MediaSearchRequestSerializer,
 ) -> Q:
     # Apply filters from the url query search parameters.
     url_queries = create_search_filter_queries(search_params)
@@ -383,12 +373,10 @@ def log_query_features(query: str, query_name) -> None:
 
 
 def build_collection_query(
-    search_params: MediaListRequestSerializer,
-    collection_params: dict[str, str],
+    search_params: MediaSearchRequestSerializer,
 ):
     """
     Build the query to retrieve items in a collection.
-    :param collection_params: `tag`, `source` and/or `creator` values from the path.
     :param search_params: the validated search parameters.
     :return: the search client with the query applied.
     """
@@ -397,15 +385,12 @@ def build_collection_query(
     # with its corresponding field in Elasticsearch. "None" means that the
     # names are identical.
     filters = [
-        # Collection filters allow a single value.
         ("tag", "tags.name.keyword"),
         ("source", None),
         ("creator", "creator.keyword"),
     ]
     for serializer_field, es_field in filters:
-        if serializer_field in collection_params:
-            if not (argument := collection_params.get(serializer_field)):
-                continue
+        if argument := search_params.validated_data.get(serializer_field):
             parameter = es_field or serializer_field
             search_query["filter"].append({"term": {parameter: argument}})
 
@@ -422,20 +407,14 @@ def build_collection_query(
     return Q("bool", **search_query)
 
 
-def build_query(
-    strategy: SearchStrategy,
-    search_params: MediaListRequestSerializer,
-    collection_params: dict[str, str] | None,
-) -> Q:
-    if strategy == "collection":
-        return build_collection_query(search_params, collection_params)
-    return build_search_query(search_params)
+query_builders = {
+    "search": build_search_query,
+    "collection": build_collection_query,
+}
 
 
 def query_media(
-    strategy: SearchStrategy,
-    search_params: MediaListRequestSerializer,
-    collection_params: dict[str, str] | None,
+    search_params: MediaSearchRequestSerializer,
     origin_index: OriginIndex,
     exact_index: bool,
     page_size: int,
@@ -444,17 +423,15 @@ def query_media(
     page: int = 1,
 ) -> tuple[list[Hit], int, int, dict]:
     """
-    If ``strategy`` is ``search``, perform a ranked paginated search
+    Build the search or collection query, execute it and return
+    paginated result.
+    For queries with `collection` parameter, returns media filtered
+    by the `tag`, `source` or `source`/`creator` combination, ordered
+    by the time when they were added to Openverse.
+    For other queries, performs a ranked paginated search
     from the set of keywords and, optionally, filters.
-    If `strategy` is `collection`, perform a paginated search
-    for the `tag`, `source` or `source` and `creator` combination.
 
-    :param collection_params: The path parameters for collection search, if
-    strategy is `collection`.
-    :param strategy: Whether to perform a default search or retrieve a collection.
-    :param search_params: If `strategy` is `collection`, `PaginatedRequestSerializer`
-    or `AudioCollectionRequestSerializer`. If `strategy` is `search`, search
-    query params, see :class: `MediaRequestSerializer`.
+    :param search_params: Search query params, see :class: `MediaSearchRequestSerializer`.
     :param origin_index: The Elasticsearch index to search (e.g. 'image')
     :param exact_index: whether to skip all modifications to the index name
     :param page_size: The number of results to return per page.
@@ -468,7 +445,11 @@ def query_media(
     """
     index = get_index(exact_index, origin_index, search_params)
 
-    query = build_query(strategy, search_params, collection_params)
+    strategy: SearchStrategy = (
+        "collection" if search_params.validated_data.get("collection") else "search"
+    )
+
+    query = query_builders[strategy](search_params)
 
     s = Search(index=index).query(query)
 

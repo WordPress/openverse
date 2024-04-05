@@ -11,25 +11,29 @@ from common.storage.tsv_columns import CURRENT_VERSION
 
 logger = logging.getLogger(__name__)
 
-# Filter out tags that exactly match these terms. All terms should be
-# lowercase.
-TAG_BLACKLIST = {"no person", "squareformat"}
+# Filter out tags that exactly match these terms. All terms should be lowercase.
+TAG_DENYLIST = {
+    "no person",
+    "squareformat",
+    "undefined",
+}
 
-# Filter out tags that contain the following terms. All entrees should be
-# lowercase.
-TAG_CONTAINS_BLACKLIST = {
-    "flickriosapp",
-    "uploaded",
+# Filter out tags that contain the following terms. All entrées should be lowercase.
+TAG_CONTAINS_DENYLIST = {
     ":",
     "=",
-    "cc0",
     "by",
     "by-nc",
-    "by-nd",
-    "by-sa",
     "by-nc-nd",
     "by-nc-sa",
+    "by-nd",
+    "by-sa",
+    "cc0",
+    "creative commons",
+    "flickriosapp",
     "pdm",
+    "public domain",
+    "uploaded",
 }
 
 COMMON_CRAWL = "commoncrawl"
@@ -242,19 +246,17 @@ class MediaStore(metaclass=abc.ABCMeta):
         return buffer_length
 
     @staticmethod
-    def _tag_blacklisted(tag: str | dict) -> bool:
+    def _tag_denylisted(tag: str | dict) -> bool:
         """
-        Determine if the is banned or contains a banned substring.
+        Determine if the tag is banned or contains a banned substring.
 
         :param tag: the tag to be verified against the blacklist
-        :return: true if tag is blacklisted, else returns false
+        :return: true if tag is deny listed, else returns false.
         """
-        if isinstance(tag, dict):  # check if the tag is already enriched
-            tag = tag.get("name")
-        if tag in TAG_BLACKLIST:
+        if tag in TAG_DENYLIST:
             return True
-        for blacklisted_substring in TAG_CONTAINS_BLACKLIST:
-            if blacklisted_substring in tag:
+        for denylisted_substring in TAG_CONTAINS_DENYLIST:
+            if denylisted_substring in tag:
                 return True
         return False
 
@@ -274,34 +276,31 @@ class MediaStore(metaclass=abc.ABCMeta):
             )
         return enriched_meta_data
 
-    def _enrich_tags(self, raw_tags) -> list | None:
+    def _enrich_tags(self, raw_tags) -> list[dict] | None:
         """
-        Add provider information to tags.
+        Add provider information to tags, sorted for further consistency between runs,
+        saving on inserts into the DB later.
 
         Args:
-            raw_tags: List of strings or dictionaries
+            raw_tags: List or set of strings.
 
         Returns:
             A list of 'enriched' tags:
             {"name": "tag_name", "provider": self._PROVIDER}
         """
-        if not isinstance(raw_tags, list):
-            logger.debug("`tags` is not a list.")
+        if not isinstance(raw_tags, (list, set)):
+            logger.debug("`raw_tags` is not of an accepted type.")
             return None
-        else:
-            return [
-                self._format_raw_tag(tag)
-                for tag in raw_tags
-                if not self._tag_blacklisted(tag)
-            ]
+        raw_tags = sorted(set(raw_tags))
 
-    def _format_raw_tag(self, tag):
-        if isinstance(tag, dict) and tag.get("name") and tag.get("provider"):
-            logger.debug(f"Tag already enriched: {tag}")
-            return tag
-        else:
-            logger.debug(f"Enriching tag: {tag}")
-            return {"name": tag, "provider": self.provider}
+        return [
+            self._format_raw_tag(tag)
+            for tag in raw_tags
+            if not self._tag_denylisted(tag)
+        ]
+
+    def _format_raw_tag(self, tag: str) -> dict:
+        return {"name": tag, "provider": self.provider}
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """

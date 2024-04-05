@@ -161,12 +161,12 @@ def test_get_record_data():
         "title": "Surveying Ruperts Reef @reeflifesurvey #lapofaus #marineexplorer",
         "meta_data": expect_meta_data,
         "raw_tags": [
-            "australia",
-            "marine",
-            "marineexplorer",
-            "nature",
             "scuba",
+            "nature",
+            "marine",
             "underwater",
+            "australia",
+            "marineexplorer",
         ],
         "source": flickr.provider_string,
         "category": "photograph",
@@ -301,15 +301,13 @@ def test_create_meta_data(image_data, expected_meta_data):
     [
         # Happy path, handles whitespace
         (
-            _get_resource_json("image_data_varying_tags_whitespace.json"),
-            ["tag1", "tag2", "tag3"],
+            {"tags": "tag1 tag2   tag3  tag3 "},
+            ["tag1", "tag2", "tag3", "tag3"],
         ),
-        # Sorts tags
-        (_get_resource_json("image_data_unsorted_tags.json"), ["tag1", "tag2", "tag3"]),
         # Truncates long tags
         (
-            _get_resource_json("image_data_long_tags_string.json"),
-            ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"],
+            {"tags": "tag1 tag2   tag3  tag3 tag4 tag5 tag6 tag7"},
+            ["tag1", "tag2", "tag3", "tag3", "tag4", "tag5", "tag6"],
         ),
         # Returns None when no tags key
         ({"id": "aslkjb"}, None),
@@ -354,9 +352,9 @@ def test_get_record_data_with_sub_provider():
             "capecanaveral",
             "commercialcrewprogram",
             "gophertortoise",
-            "kennedyspacecenter",
-            "nasa",
             "spacex",
+            "nasa",
+            "kennedyspacecenter",
         ],
         "source": "nasa",
         "category": None,

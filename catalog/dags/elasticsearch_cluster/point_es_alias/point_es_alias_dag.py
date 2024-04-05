@@ -12,6 +12,13 @@ optionally, it can also delete that index afterward.
 ## When this DAG runs
 
 This DAG is on a `None` schedule and is run manually.
+
+## Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`point_staging_alias` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
 """
 
 from datetime import datetime
@@ -26,6 +33,8 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     ENVIRONMENTS,
 )
+from common.sensors.constants import ES_CONCURRENCY_TAGS
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 
 
 def point_es_alias_dag(environment: str):
@@ -34,7 +43,7 @@ def point_es_alias_dag(environment: str):
         default_args=DAG_DEFAULT_ARGS,
         schedule=None,
         start_date=datetime(2024, 1, 31),
-        tags=["database", "elasticsearch"],
+        tags=["elasticsearch", ES_CONCURRENCY_TAGS[environment]],
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
@@ -67,6 +76,12 @@ def point_es_alias_dag(environment: str):
     )
 
     with dag:
+        # Fail early if any other DAG that operates on the elasticsearch cluster for
+        # this environment is running
+        prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+            tag=ES_CONCURRENCY_TAGS[environment],
+        )
+
         es_host = es.get_es_host(environment=environment)
 
         point_alias = es.point_alias(
@@ -85,7 +100,7 @@ def point_es_alias_dag(environment: str):
             icon_emoji=":elasticsearch:",
         )
 
-        es_host >> point_alias >> notify_completion
+        prevent_concurrency >> es_host >> point_alias >> notify_completion
 
 
 for environment in ENVIRONMENTS:

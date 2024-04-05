@@ -447,9 +447,7 @@ def test_upsert_records_inserts_one_record_to_empty_image_table(
             col.HEIGHT.db_name: HEIGHT,
         }
     )
-    load_data_query = f"""INSERT INTO {load_table} VALUES(
-        {query_values}
-        );"""
+    load_data_query = utils.make_insert_query(load_table, query_values)
 
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
@@ -686,9 +684,8 @@ def test_upsert_records_replaces_data(
             col.HEIGHT.db_name: HEIGHT_A,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-       {query_values}
-       );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values)
+
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         load_data_query_a,
@@ -728,9 +725,8 @@ def test_upsert_records_replaces_data(
             col.HEIGHT.db_name: HEIGHT_B,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values)
+
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
@@ -817,9 +813,8 @@ def test_upsert_records_does_not_replace_with_nulls(
             col.HEIGHT.db_name: HEIGHT_A,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-        );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
+
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         load_data_query_a,
@@ -849,9 +844,8 @@ def test_upsert_records_does_not_replace_with_nulls(
             col.SOURCE.db_name: SOURCE,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
+
     postgres_with_load_and_image_table.cursor.execute(f"DELETE FROM {load_table};")
     postgres_with_load_and_image_table.connection.commit()
     postgres_with_load_and_image_table.cursor.execute(load_data_query_b)
@@ -910,9 +904,7 @@ def test_upsert_records_merges_meta_data(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-    );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
 
     query_values_b = utils.create_query_values(
         {
@@ -923,9 +915,8 @@ def test_upsert_records_merges_meta_data(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
+
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         load_data_query_a,
@@ -991,9 +982,7 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-        );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
 
     query_values_b = utils.create_query_values(
         {
@@ -1004,9 +993,8 @@ def test_upsert_records_does_not_replace_with_null_values_in_meta_data(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
+
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         load_data_query_a,
@@ -1081,9 +1069,7 @@ def test_upsert_records_merges_tags(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-        );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
 
     query_values_b = utils.create_query_values(
         {
@@ -1094,9 +1080,7 @@ def test_upsert_records_merges_tags(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         load_data_query_a,
@@ -1169,9 +1153,7 @@ def test_upsert_records_does_not_replace_tags_with_null(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-        );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
 
     query_values_b = utils.create_query_values(
         {
@@ -1181,9 +1163,8 @@ def test_upsert_records_does_not_replace_tags_with_null(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
+
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
         load_data_query_a,
@@ -1253,9 +1234,8 @@ def test_upsert_records_replaces_null_tags(
         }
     )
     logging.info(f"Query values a: {query_values_a}")
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-        );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
+
     query_values_b = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
@@ -1265,9 +1245,7 @@ def test_upsert_records_replaces_null_tags(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
 
     _set_up_std_popularity_func(
         postgres_with_load_and_image_table,
@@ -1342,9 +1320,7 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-    );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
 
     query_values_b = utils.create_query_values(
         {
@@ -1355,9 +1331,7 @@ def test_upsert_records_handles_duplicate_url_and_does_not_merge(
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
 
     # Simulate a DAG run where A is ingested into the loading table, upserted into
     # the image table, and finally the loading table is cleared for the next DAG run.
@@ -1438,9 +1412,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_a = f"""INSERT INTO {load_table} VALUES(
-        {query_values_a}
-    );"""
+    load_data_query_a = utils.make_insert_query(load_table, query_values_a)
 
     query_values_b = utils.create_query_values(
         {
@@ -1451,9 +1423,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_b = f"""INSERT INTO {load_table} VALUES(
-        {query_values_b}
-        );"""
+    load_data_query_b = utils.make_insert_query(load_table, query_values_b)
 
     # C is not a duplicate of anything, just a normal image
     query_values_c = utils.create_query_values(
@@ -1465,9 +1435,7 @@ def test_upsert_records_handles_duplicate_urls_in_a_single_batch_and_does_not_me
             col.PROVIDER.db_name: PROVIDER,
         }
     )
-    load_data_query_c = f"""INSERT INTO {load_table} VALUES(
-        {query_values_c}
-        );"""
+    load_data_query_c = utils.make_insert_query(load_table, query_values_c)
 
     # Simulate a DAG run where duplicates (A and B) and a non-duplicate (C) are all
     # ingested in a single batch from the provider script, and we attempt to upsert
@@ -1595,13 +1563,13 @@ def test_upsert_records_calculates_standardized_popularity(
     )
 
     # Queries to insert the two records into the load table.
-    load_data_query_old_record = f"""INSERT INTO {load_table} VALUES(
-        {query_values_update_old_record}
-    );"""
+    load_data_query_old_record = utils.make_insert_query(
+        load_table, query_values_update_old_record
+    )
 
-    load_data_query_new_record = f"""INSERT INTO {load_table} VALUES(
-        {query_values_update_new_record}
-    );"""
+    load_data_query_new_record = utils.make_insert_query(
+        load_table, query_values_update_new_record
+    )
 
     # Now actually insert the records into the load table. This simulates a DagRun which ingests both
     # records.

@@ -132,7 +132,7 @@ const parseComment = (commentNode) => {
     case "CommentBlock": {
       return commentNode.value
         .replace(/\n|\*+/g, "")
-        .replace(/\s+/, " ")
+        .replace(/\s+/g, " ")
         .trim()
     }
   }

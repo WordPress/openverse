@@ -318,9 +318,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # arbitrarily large data in the DB.
         raw_tag_string = image_data.get("tags", "").strip()[:max_tag_string_length]
         if raw_tag_string:
-            # We sort for further consistency between runs, saving on
-            # inserts into the DB later.
-            raw_tags = sorted(list(set(raw_tag_string.split())))
+            raw_tags = raw_tag_string.split()
         return raw_tags
 
     @staticmethod

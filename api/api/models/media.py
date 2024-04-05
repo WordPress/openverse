@@ -4,10 +4,12 @@ import mimetypes
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils.html import format_html
 
 from elasticsearch import Elasticsearch, NotFoundError
 
+from api.constants.moderation import DecisionAction
 from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
 from api.utils.attribution import get_attribution_text
@@ -140,16 +142,11 @@ class AbstractMediaReport(models.Model):
     Generic model from which to inherit all reported media classes.
 
     'Reported' here refers to content reports such as sensitive, copyright-violating or
-    deleted content. Subclasses must populate ``media_class``, ``sensitive_class`` and
-    ``deleted_class`` fields.
+    deleted content. Subclasses must populate the field ``media_class``.
     """
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
-    sensitive_class: type[models.Model] = None
-    """the class storing sensitive media e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
-    deleted_class: type[models.Model] = None
-    """the class storing deleted media e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
     REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
 
@@ -189,6 +186,18 @@ class AbstractMediaReport(models.Model):
         help_text="The explanation on why media is being reported.",
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+    """
+    All statuses except ``PENDING`` are deprecated. Instead refer to the
+    property ``is_pending``.
+    """
+
+    decision = models.ForeignKey(
+        to="AbstractMediaDecision",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="The moderation decision for this report.",
+    )
 
     class Meta:
         abstract = True
@@ -196,53 +205,92 @@ class AbstractMediaReport(models.Model):
     def clean(self):
         """Clean fields and raise errors that can be handled by Django Admin."""
 
-        if not self.media_class.objects.filter(
-            identifier=self.media_obj.identifier
-        ).exists():
+        if not self.media_class.objects.filter(identifier=self.media_obj_id).exists():
             raise ValidationError(
-                f"No '{self.media_class.__name__}' instance"
-                f"with identifier {self.media_obj.identifier}."
+                f"No '{self.media_class.__name__}' instance "
+                f"with identifier '{self.media_obj_id}'."
             )
 
-    def url(self, media_type):
-        url = f"{settings.CANONICAL_ORIGIN}v1/{media_type}/{self.media_obj.identifier}"
+    def url(self, request=None) -> str:
+        """
+        Build the URL of the media item. This uses ``reverse`` and
+        ``request.build_absolute_uri`` to build the URL without having to worry
+        about canonical URL or trailing slashes.
+
+        :param request: the current request object, to get absolute URLs
+        :return: the URL of the media item
+        """
+
+        url = reverse(
+            f"{self.media_class.__name__.lower()}-detail",
+            args=[self.media_obj_id],
+        )
+        if request is not None:
+            url = request.build_absolute_uri(url)
         return format_html(f"<a href={url}>{url}</a>")
 
+    @property
+    def is_pending(self) -> bool:
+        """
+        Determine if the report has not been moderated and does not have an
+        associated decision. Use the inverse of this function to determine
+        if a report has been reviewed and moderated.
+
+        :return: whether the report is in the "pending" state
+        """
+
+        return self.decision_id is None
+
     def save(self, *args, **kwargs):
-        """
-        Save changes to the DB and sync them with Elasticsearch.
-
-        Extend the built-in ``save()`` functionality of Django with Elasticsearch
-        integration to update records and refresh indices.
-
-        Media marked as sensitive or deleted also leads to instantiation of their
-        corresponding sensitive or deleted classes.
-        """
+        """Perform a clean, and then save changes to the DB."""
 
         self.clean()
-
         super().save(*args, **kwargs)
 
-        if self.status == MATURE_FILTERED:
-            # Create an instance of the sensitive class for this media. This will
-            # automatically set the ``mature`` field in the ES document.
-            self.sensitive_class.objects.create(media_obj=self.media_obj)
-        elif self.status == DEINDEXED:
-            # Create an instance of the deleted class for this media, so that we don't
-            # reindex it later. This will automatically delete the ES document and the
-            # DB instance.
-            self.deleted_class.objects.create(media_obj=self.media_obj)
 
-        same_reports = self.__class__.objects.filter(
-            media_obj=self.media_obj,
-            status=PENDING,
-        )
-        if self.status != DEINDEXED:
-            same_reports = same_reports.filter(reason=self.reason)
+class AbstractMediaDecision(OpenLedgerModel):
+    """Generic model from which to inherit all moderation decision classes."""
 
-        # Prevent redundant update statement when creating the report
-        if self.status != PENDING:
-            same_reports.update(status=self.status)
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+
+    moderator = models.ForeignKey(
+        to="auth.User",
+        on_delete=models.DO_NOTHING,
+        help_text="The moderator who undertook this decision.",
+    )
+    """
+    The ``User`` referenced by this field must be a part of the moderators'
+    group.
+    """
+
+    media_objs = models.ManyToManyField(
+        to="AbstractMedia",
+        db_constraint=False,
+        help_text="The media items being moderated.",
+    )
+    """
+    This is a many-to-many relation, using a bridge table, to enable bulk
+    moderation which applies a single action to more than one media items.
+    """
+
+    notes = models.TextField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="The moderator's explanation for the decision or additional notes.",
+    )
+
+    action = models.CharField(
+        max_length=32,
+        choices=DecisionAction.choices,
+        help_text="Action taken by the moderator.",
+    )
+
+    class Meta:
+        abstract = True
+
+    # TODO: Implement ``clean`` and ``save``, if needed.
 
 
 class PerformIndexUpdateMixin:
