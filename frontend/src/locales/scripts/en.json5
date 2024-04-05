@@ -928,7 +928,7 @@
   audioThumbnail: {
     alt: 'Cover art for "{title}" by {creator}',
   },
-  audioTrack: {
+  audioTrack: { 
     ariaLabel: "Audio: {title}",
     ariaLabelInteractive: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio track",
     ariaLabelInteractiveSeekable: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio track; use the left and right arrow keys to seek through the track.",
