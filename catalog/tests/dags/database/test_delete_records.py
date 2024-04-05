@@ -3,7 +3,6 @@ import logging
 import psycopg2
 import pytest
 
-from catalog.tests.test_utils import sql
 from common.storage import columns as col
 from common.storage.db_columns import DELETED_IMAGE_TABLE_COLUMNS, IMAGE_TABLE_COLUMNS
 from database.delete_records.delete_records import (
@@ -11,6 +10,7 @@ from database.delete_records.delete_records import (
     delete_records_from_media_table,
     notify_slack,
 )
+from tests.test_utils import sql
 
 
 logger = logging.getLogger(__name__)

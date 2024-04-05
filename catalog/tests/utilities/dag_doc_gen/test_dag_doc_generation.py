@@ -2,13 +2,13 @@ from typing import NamedTuple
 from unittest import mock
 
 import pytest
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
+from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MockProviderDataIngester,
 )
-from catalog.utilities.dag_doc_gen import dag_doc_generation
-from catalog.utilities.dag_doc_gen.dag_doc_generation import DagInfo
+
 from providers.provider_workflows import ProviderWorkflow
+from utilities.dag_doc_gen import dag_doc_generation
+from utilities.dag_doc_gen.dag_doc_generation import DagInfo
 
 
 class DagMock(NamedTuple):
@@ -24,7 +24,7 @@ DAG_ID = "sample_dag_123"
 SAMPLE_MEDIA_TYPES = ("m1", "m2")
 PROVIDER_WORKFLOW_INSTANCE = mock.MagicMock()
 PROVIDER_WORKFLOW_INSTANCE.media_types = SAMPLE_MEDIA_TYPES
-_MODULE = "catalog.utilities.dag_doc_gen.dag_doc_generation"
+_MODULE = "utilities.dag_doc_gen.dag_doc_generation"
 
 
 @pytest.mark.parametrize("schedule", ["@daily", None])

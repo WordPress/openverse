@@ -3,10 +3,10 @@ from unittest.mock import patch
 import pytest
 import requests
 from requests.exceptions import HTTPError
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
+
 from common.licenses import get_license_info
 from providers.provider_api_scripts.phylopic import PhylopicDataIngester
 

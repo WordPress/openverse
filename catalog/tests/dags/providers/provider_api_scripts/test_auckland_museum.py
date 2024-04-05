@@ -1,8 +1,9 @@
 from pathlib import Path
 
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
+
 from common.licenses import get_license_info
 from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIngester
 

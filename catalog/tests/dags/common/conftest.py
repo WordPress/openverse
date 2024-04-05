@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 import boto3
 import pytest
 
-from catalog.tests.dags.common.loader.test_s3 import (
+from tests.dags.common.loader.test_s3 import (
     ACCESS_KEY,
     S3_LOCAL_ENDPOINT,
     SECRET_KEY,

@@ -4,7 +4,12 @@ from datetime import datetime, timedelta
 import pytest
 from requests import HTTPError, Request, Response
 
-from catalog.tests.factories.github import (
+from maintenance.pr_review_reminders.pr_review_reminders import (
+    Urgency,
+    days_without_weekends,
+    post_reminders,
+)
+from tests.factories.github import (
     EventsConfig,
     make_branch_protection,
     make_current_pr_comment,
@@ -16,11 +21,6 @@ from catalog.tests.factories.github import (
     make_requested_reviewer,
     make_review,
     make_urgent_events,
-)
-from maintenance.pr_review_reminders.pr_review_reminders import (
-    Urgency,
-    days_without_weekends,
-    post_reminders,
 )
 
 
@@ -121,7 +121,7 @@ def github(monkeypatch):
 
     def patch_gh_fn(fn, impl):
         monkeypatch.setattr(
-            f"catalog.dags.maintenance.pr_review_reminders.pr_review_reminders.GitHubAPI.{fn}",
+            f"dags.maintenance.pr_review_reminders.pr_review_reminders.GitHubAPI.{fn}",
             impl,
         )
 
