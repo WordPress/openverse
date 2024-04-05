@@ -17,50 +17,50 @@ value). Note that relation fields are always nullable.
 
 ### Relations
 
-| Name              | Type              | DB type | Nature       | To               |
-| ----------------- | ----------------- | ------- | ------------ | ---------------- |
-| `audio_report`    | `ForeignKey`      | `uuid`  | One To Many  | `AudioReport`    |
-| `audiodecision`   | `ManyToManyField` |         | Many To Many | `AudioDecision`  |
-| `audioset`        | `ForeignObject`   |         | Many To One  | `AudioSet`       |
-| `deleted_audio`   | `OneToOneField`   | `uuid`  | One To One   | `DeletedAudio`   |
-| `lists`           | `ManyToManyField` |         | Many To Many | `AudioList`      |
-| `sensitive_audio` | `OneToOneField`   | `uuid`  | One To One   | `SensitiveAudio` |
+| Name              | Type                                                                                          | DB type | Nature       | To               |
+| ----------------- | --------------------------------------------------------------------------------------------- | ------- | ------------ | ---------------- |
+| `audio_report`    | [`ForeignKey`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `AudioReport`    |
+| `audiodecision`   | [`ManyToManyField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioDecision`  |
+| `audioset`        | [`ForeignObject`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#foreignobject)     |         | Many To One  | `AudioSet`       |
+| `deleted_audio`   | [`OneToOneField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedAudio`   |
+| `lists`           | [`ManyToManyField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioList`      |
+| `sensitive_audio` | [`OneToOneField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveAudio` |
 
 ### Values
 
-| Name                           | Type            | DB type                    | Constraints                   | Default |
-| ------------------------------ | --------------- | -------------------------- | ----------------------------- | ------- |
-| `alt_files`                    | `JSONField`     | `jsonb`                    |                               |         |
-| `audio_set_foreign_identifier` | `CharField`     | `varchar(1000)`            |                               |         |
-| `audio_set_position`           | `IntegerField`  | `integer`                  |                               |         |
-| `bit_rate`                     | `IntegerField`  | `integer`                  |                               |         |
-| `category`                     | `CharField`     | `varchar(80)`              |                               |         |
-| `created_on`                   | `DateTimeField` | `timestamp with time zone` | not null                      |         |
-| `creator`                      | `CharField`     | `varchar(2000)`            |                               |         |
-| `creator_url`                  | `CharField`     | `varchar(2000)`            |                               |         |
-| `duration`                     | `IntegerField`  | `integer`                  |                               |         |
-| `filesize`                     | `IntegerField`  | `integer`                  |                               |         |
-| `filetype`                     | `CharField`     | `varchar(80)`              |                               |         |
-| `foreign_identifier`           | `CharField`     | `varchar(1000)`            |                               |         |
-| `foreign_landing_url`          | `CharField`     | `varchar(1000)`            |                               |         |
-| `genres`                       | `CharField[]`   | `varchar(80)[]`            | not blank                     |         |
-| `id`                           | `AutoField`     | `integer`                  | not null; unique; primary key |         |
-| `identifier`                   | `UUIDField`     | `uuid`                     | not null; not blank; unique   |         |
-| `last_synced_with_source`      | `DateTimeField` | `timestamp with time zone` |                               |         |
-| `license`                      | `CharField`     | `varchar(50)`              | not null; not blank           |         |
-| `license_version`              | `CharField`     | `varchar(25)`              |                               |         |
-| `meta_data`                    | `JSONField`     | `jsonb`                    |                               |         |
-| `provider`                     | `CharField`     | `varchar(80)`              |                               |         |
-| `removed_from_source`          | `BooleanField`  | `boolean`                  | not null; not blank           | `False` |
-| `sample_rate`                  | `IntegerField`  | `integer`                  |                               |         |
-| `source`                       | `CharField`     | `varchar(80)`              |                               |         |
-| `tags`                         | `JSONField`     | `jsonb`                    |                               |         |
-| `thumbnail`                    | `CharField`     | `varchar(1000)`            |                               |         |
-| `title`                        | `CharField`     | `varchar(2000)`            |                               |         |
-| `updated_on`                   | `DateTimeField` | `timestamp with time zone` | not null                      |         |
-| `url`                          | `CharField`     | `varchar(1000)`            | unique                        |         |
-| `view_count`                   | `IntegerField`  | `integer`                  |                               | `0`     |
-| `watermarked`                  | `BooleanField`  | `boolean`                  |                               |         |
+| Name                           | Type                                                                                      | DB type                    | Constraints                   | Default |
+| ------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------- | ----------------------------- | ------- |
+| `alt_files`                    | [`JSONField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#jsonfield)         | `jsonb`                    |                               |         |
+| `audio_set_foreign_identifier` | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `audio_set_position`           | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `bit_rate`                     | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `category`                     | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `created_on`                   | [`DateTimeField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#datetimefield) | `timestamp with time zone` | not null                      |         |
+| `creator`                      | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(2000)`            |                               |         |
+| `creator_url`                  | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(2000)`            |                               |         |
+| `duration`                     | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `filesize`                     | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `filetype`                     | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `foreign_identifier`           | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `foreign_landing_url`          | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `genres`                       | [`CharField[]`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#arrayfield)      | `varchar(80)[]`            | not blank                     |         |
+| `id`                           | [`AutoField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#autofield)         | `integer`                  | not null; unique; primary key |         |
+| `identifier`                   | [`UUIDField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#uuidfield)         | `uuid`                     | not null; not blank; unique   |         |
+| `last_synced_with_source`      | [`DateTimeField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#datetimefield) | `timestamp with time zone` |                               |         |
+| `license`                      | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(50)`              | not null; not blank           |         |
+| `license_version`              | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(25)`              |                               |         |
+| `meta_data`                    | [`JSONField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#jsonfield)         | `jsonb`                    |                               |         |
+| `provider`                     | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `removed_from_source`          | [`BooleanField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#booleanfield)   | `boolean`                  | not null; not blank           | `False` |
+| `sample_rate`                  | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `source`                       | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `tags`                         | [`JSONField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#jsonfield)         | `jsonb`                    |                               |         |
+| `thumbnail`                    | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `title`                        | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(2000)`            |                               |         |
+| `updated_on`                   | [`DateTimeField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#datetimefield) | `timestamp with time zone` | not null                      |         |
+| `url`                          | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            | unique                        |         |
+| `view_count`                   | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               | `0`     |
+| `watermarked`                  | [`BooleanField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#booleanfield)   | `boolean`                  |                               |         |
 
 ### Notes
 
@@ -173,44 +173,44 @@ source=openimages, but provider=flickr.
 
 ### Relations
 
-| Name              | Type              | DB type | Nature       | To               |
-| ----------------- | ----------------- | ------- | ------------ | ---------------- |
-| `deleted_image`   | `OneToOneField`   | `uuid`  | One To One   | `DeletedImage`   |
-| `image_report`    | `ForeignKey`      | `uuid`  | One To Many  | `ImageReport`    |
-| `imagedecision`   | `ManyToManyField` |         | Many To Many | `ImageDecision`  |
-| `lists`           | `ManyToManyField` |         | Many To Many | `ImageList`      |
-| `sensitive_image` | `OneToOneField`   | `uuid`  | One To One   | `SensitiveImage` |
+| Name              | Type                                                                                          | DB type | Nature       | To               |
+| ----------------- | --------------------------------------------------------------------------------------------- | ------- | ------------ | ---------------- |
+| `deleted_image`   | [`OneToOneField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedImage`   |
+| `image_report`    | [`ForeignKey`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `ImageReport`    |
+| `imagedecision`   | [`ManyToManyField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageDecision`  |
+| `lists`           | [`ManyToManyField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageList`      |
+| `sensitive_image` | [`OneToOneField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveImage` |
 
 ### Values
 
-| Name                      | Type            | DB type                    | Constraints                   | Default |
-| ------------------------- | --------------- | -------------------------- | ----------------------------- | ------- |
-| `category`                | `CharField`     | `varchar(80)`              |                               |         |
-| `created_on`              | `DateTimeField` | `timestamp with time zone` | not null                      |         |
-| `creator`                 | `CharField`     | `varchar(2000)`            |                               |         |
-| `creator_url`             | `CharField`     | `varchar(2000)`            |                               |         |
-| `filesize`                | `IntegerField`  | `integer`                  |                               |         |
-| `filetype`                | `CharField`     | `varchar(80)`              |                               |         |
-| `foreign_identifier`      | `CharField`     | `varchar(1000)`            |                               |         |
-| `foreign_landing_url`     | `CharField`     | `varchar(1000)`            |                               |         |
-| `height`                  | `IntegerField`  | `integer`                  |                               |         |
-| `id`                      | `AutoField`     | `integer`                  | not null; unique; primary key |         |
-| `identifier`              | `UUIDField`     | `uuid`                     | not null; not blank; unique   |         |
-| `last_synced_with_source` | `DateTimeField` | `timestamp with time zone` |                               |         |
-| `license`                 | `CharField`     | `varchar(50)`              | not null; not blank           |         |
-| `license_version`         | `CharField`     | `varchar(25)`              |                               |         |
-| `meta_data`               | `JSONField`     | `jsonb`                    |                               |         |
-| `provider`                | `CharField`     | `varchar(80)`              |                               |         |
-| `removed_from_source`     | `BooleanField`  | `boolean`                  | not null; not blank           | `False` |
-| `source`                  | `CharField`     | `varchar(80)`              |                               |         |
-| `tags`                    | `JSONField`     | `jsonb`                    |                               |         |
-| `thumbnail`               | `CharField`     | `varchar(1000)`            |                               |         |
-| `title`                   | `CharField`     | `varchar(2000)`            |                               |         |
-| `updated_on`              | `DateTimeField` | `timestamp with time zone` | not null                      |         |
-| `url`                     | `CharField`     | `varchar(1000)`            | unique                        |         |
-| `view_count`              | `IntegerField`  | `integer`                  |                               | `0`     |
-| `watermarked`             | `BooleanField`  | `boolean`                  |                               |         |
-| `width`                   | `IntegerField`  | `integer`                  |                               |         |
+| Name                      | Type                                                                                      | DB type                    | Constraints                   | Default |
+| ------------------------- | ----------------------------------------------------------------------------------------- | -------------------------- | ----------------------------- | ------- |
+| `category`                | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `created_on`              | [`DateTimeField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#datetimefield) | `timestamp with time zone` | not null                      |         |
+| `creator`                 | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(2000)`            |                               |         |
+| `creator_url`             | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(2000)`            |                               |         |
+| `filesize`                | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `filetype`                | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `foreign_identifier`      | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `foreign_landing_url`     | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `height`                  | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
+| `id`                      | [`AutoField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#autofield)         | `integer`                  | not null; unique; primary key |         |
+| `identifier`              | [`UUIDField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#uuidfield)         | `uuid`                     | not null; not blank; unique   |         |
+| `last_synced_with_source` | [`DateTimeField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#datetimefield) | `timestamp with time zone` |                               |         |
+| `license`                 | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(50)`              | not null; not blank           |         |
+| `license_version`         | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(25)`              |                               |         |
+| `meta_data`               | [`JSONField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#jsonfield)         | `jsonb`                    |                               |         |
+| `provider`                | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `removed_from_source`     | [`BooleanField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#booleanfield)   | `boolean`                  | not null; not blank           | `False` |
+| `source`                  | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(80)`              |                               |         |
+| `tags`                    | [`JSONField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#jsonfield)         | `jsonb`                    |                               |         |
+| `thumbnail`               | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            |                               |         |
+| `title`                   | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(2000)`            |                               |         |
+| `updated_on`              | [`DateTimeField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#datetimefield) | `timestamp with time zone` | not null                      |         |
+| `url`                     | [`CharField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#charfield)         | `varchar(1000)`            | unique                        |         |
+| `view_count`              | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               | `0`     |
+| `watermarked`             | [`BooleanField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#booleanfield)   | `boolean`                  |                               |         |
+| `width`                   | [`IntegerField`](https://docs.djangoproject.com/en/5.0/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
 
 ### Notes
 

@@ -41,6 +41,7 @@ class FieldInfo:
 
     name: str
     internal_type: str
+    dj_docs_url: str
     db_type: str
     is_relation: bool
     notes: str | None
@@ -89,11 +90,13 @@ def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
     field_infos = []
     for field in fields:
         internal_type = field.get_internal_type()
+        dj_docs_url = f"https://docs.djangoproject.com/en/5.0/ref/models/fields/#{internal_type.lower()}"
         if internal_type == "ArrayField":
             internal_type = f"{field.base_field.get_internal_type()}[]"
         field_info = FieldInfo(
             name=field.name,
             internal_type=internal_type,
+            dj_docs_url=dj_docs_url,
             db_type=field.db_type(connection),
             is_relation=field.is_relation,
             notes=notes.get(field.name),
@@ -187,7 +190,7 @@ def generate_relation_table(relations: list[FieldInfo]) -> str:
     for relation in relations:
         cells = (
             f"`{relation.name}`",
-            f"`{relation.internal_type}`",
+            f"[`{relation.internal_type}`]({relation.dj_docs_url})",
             f"`{relation.db_type}`" if relation.db_type else " ",
             relation.relation_info.nature.replace("_", " ").title(),
             f"`{relation.relation_info.to}`",
@@ -211,7 +214,7 @@ def generate_value_table(values: list[FieldInfo]) -> str:
     for value in values:
         cells = (
             f"`{value.name}`",
-            f"`{value.internal_type}`",
+            f"[`{value.internal_type}`]({value.dj_docs_url})",
             f"`{value.db_type}`" if value.db_type else " ",
             get_constraints(value.value_info),
             f"`{value.value_info.default}`"
