@@ -1,3 +1,4 @@
+import json
 import subprocess
 import traceback
 from dataclasses import dataclass
@@ -27,20 +28,19 @@ class Service:
 
 def get_ps() -> list[str]:
     """
-    Invoke Docker "ps" with a filter to get the configuration for all services. The
-    info is returned as a list of plain text lines.
+    Invoke Docker Compose "ps" with the JSON format flag and
+    return a list of lines of JSON output.
 
     :return: the output printed by the subprocess to STDOUT
     """
 
     proc = subprocess.run(
         [
-            "docker",
+            "just",
+            "dc",
             "ps",
-            "--filter",
-            "network=openverse_default",
             "--format",
-            "{{.Names}}\t{{.Image}}\t{{.Ports}}\n",
+            "json",
         ],
         capture_output=True,
         text=True,
@@ -54,8 +54,9 @@ def get_ps() -> list[str]:
 
 def parse_ps() -> list[Service]:
     """
-    Convert the output lines given by Docker "ps" into a list of services and
-    their port mappings.
+    Convert the output lines given by Docker Compose "ps" into a list of
+    services and their port mappings.
+
     :return: a list of running services with their port
     """
 
@@ -64,32 +65,23 @@ def parse_ps() -> list[Service]:
     lines = get_ps()
     lines = [stripped for line in lines if (stripped := line.strip())]
     for line in lines:
-        parts = line.split("\t")
-        if len(parts) != 3:
-            raise ValueError(f"Unexpected line format from `docker ps`: {line}")
-        service, image, ports = parts
-        # Services are usually of the form openverse-<name>-1 or openverse_<name>_1,
-        # but we can't always tell which one is used.
-        strip_char = service.removeprefix("openverse")[0]
-        name = service.split(strip_char, 1)[1].rsplit(strip_char, 1)[0]
+        container_ps = json.loads(line)
+        service_name = container_ps["Service"]
+
         # Image names may start with "openverse-" or "openverse_" or be an upstream
-        # image name like redis:4.0.0
-        if "openverse" in image:
-            image_name = image[len("openverse") + 1 :]
+        # image name like docker.io/redis:4.0.0
+        container_image = container_ps["Image"]
+        if "openverse" in container_image:
+            image_name = container_image[len("openverse*") :]
         else:
-            image_name = image.split(":", 1)[0]
+            image_name = container_image.split(":", 1)[0]
         bindings = set()
-        for port_config in ports.split(","):
-            if "->" not in port_config:
-                # No published ports
-                continue
-            # Ports are of the form 0.0.0.0:50230->3000/tcp or :::50230->3000/tcp
-            host_port, container_port = (
-                port_config.split(":")[-1].split("/")[0].split("->")
-            )
-            bindings.add((host_port, container_port))
+        for port_config in container_ps["Publishers"]:
+            published_port = port_config["PublishedPort"]
+            if published_port:
+                bindings.add((port_config["TargetPort"], published_port))
         if bindings:
-            services.append(Service(name, image_name, bindings))
+            services.append(Service(service_name, image_name, bindings))
 
     return services
 
