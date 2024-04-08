@@ -28,16 +28,14 @@
         :media-id="media.id"
         :media-type="media.frontendMediaType"
       >
-        <p id="attribution-html" class="break-all font-mono" dir="ltr">
-          {{ getAttributionMarkup() }}
-        </p>
+        <p id="attribution-html" class="break-all font-mono" dir="ltr">{{ getAttributionMarkup() }}</p>
       </VLicenseTabPanel>
       <VLicenseTabPanel
         :tab="tabs[2]"
         :media-id="media.id"
         :media-type="media.frontendMediaType"
       >
-        {{ getAttributionMarkup({ isPlaintext: true }) }}
+        <p>{{ getAttributionMarkup({ isPlaintext: true }) }}</p>
       </VLicenseTabPanel>
     </VTabs>
   </div>
