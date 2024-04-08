@@ -28,6 +28,8 @@
         :media-id="media.id"
         :media-type="media.frontendMediaType"
       >
+        <!-- Ignore reason: the interpolated string cannot have any whitespace around it when inside <p>, else there will be unwanted whitespace -->
+        <!-- prettier-ignore -->
         <p id="attribution-html" class="break-all font-mono" dir="ltr">{{ getAttributionMarkup() }}</p>
       </VLicenseTabPanel>
       <VLicenseTabPanel
