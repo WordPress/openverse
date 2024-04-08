@@ -62,9 +62,9 @@ export const mockCreateApiService = (
   applyMocks: (mockAdapter: MockAdapter) => void
 ): void => {
   let apiService: apiService.ApiService | undefined
-  afterEach(() => {
-    apiService = undefined
-  })
+  // afterEach(() => {
+  //   apiService = undefined
+  // })
   createApiService.mockImplementation((options) => {
     // Only ever generate the mock once
     if (apiService) {

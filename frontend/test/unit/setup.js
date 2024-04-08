@@ -1,4 +1,4 @@
-import Vue from "vue"
+import Vue, { h } from "vue"
 import { config } from "@vue/test-utils"
 
 import VueI18n from "vue-i18n"
@@ -20,22 +20,16 @@ Vue.use(VueI18n)
  */
 config.stubs["nuxt-link"] = Vue.component("NuxtLink", {
   props: ["to"],
-  emits: ["click", "mousedown"],
-  methods: {
-    handleClick() {
-      // This is an adaptation to mimic NuxtLink's behavior,
-      // see https://github.com/WordPress/openverse/pull/1118
-      // We should try to remove it after migrating to Nuxt 3.
-      this.$emit("mousedown")
-      this.$emit("click", new MouseEvent("click"))
-    },
+  setup(props, { slots }) {
+    return () => h("a", { href: props.to }, slots.default())
   },
-  template: '<a :href="to" v-on="$listeners" @click="handleClick"><slot /></a>',
 })
 
-config.stubs["svg-icon"] = Vue.component("SvgIcon", {
+config.stubs["SvgIcon"] = Vue.component("SvgIcon", {
   props: ["name"],
-  template: '<svg title="name" />',
+  setup(props) {
+    return () => h("svg", { title: props.name })
+  },
 })
 /* eslint-enable vue/one-component-per-file */
 
