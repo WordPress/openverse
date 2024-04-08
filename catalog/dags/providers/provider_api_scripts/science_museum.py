@@ -98,10 +98,6 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             "date[to]": to_,
         }
 
-    def get_media_type(self, record):
-        # This provider only supports Images.
-        return "image"
-
     def get_batch_data(self, response_json):
         if response_json:
             return response_json.get("data")

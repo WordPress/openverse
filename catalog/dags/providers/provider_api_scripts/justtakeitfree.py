@@ -14,7 +14,6 @@ import logging
 
 from airflow.models import Variable
 
-from common.constants import IMAGE
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -44,9 +43,6 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
         if response_json and (data := response_json.get("data")):
             return data
         return None
-
-    def get_media_type(self, record: dict):
-        return IMAGE
 
     def get_record_data(self, data: list[dict]) -> dict | None:
         data = data[0]

@@ -17,7 +17,6 @@ from datetime import datetime, timedelta
 import lxml.html as html
 from airflow.models import Variable
 
-from common import constants
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
@@ -174,10 +173,6 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         else:
             # Increment the page number on subsequent requests
             return {**prev_query_params, "page": prev_query_params["page"] + 1}
-
-    def get_media_type(self, record):
-        # We only ingest images from Flickr
-        return constants.IMAGE
 
     def get_batch_data(self, response_json):
         self.requests_count += 1

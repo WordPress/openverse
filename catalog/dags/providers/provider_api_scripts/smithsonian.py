@@ -14,7 +14,6 @@ from airflow.exceptions import AirflowException
 from airflow.models import Variable
 from retry import retry
 
-from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -114,9 +113,6 @@ class SmithsonianDataIngester(ProviderDataIngester):
         self.license_info = get_license_info(
             license_url="https://creativecommons.org/publicdomain/zero/1.0/"
         )
-
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this

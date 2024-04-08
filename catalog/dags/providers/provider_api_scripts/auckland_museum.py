@@ -20,7 +20,6 @@ Resource | Requests per second | Requests per day
 import logging
 from datetime import datetime, timedelta
 
-from common.constants import IMAGE
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -98,9 +97,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             return False
 
         return True
-
-    def get_media_type(self, record: dict):
-        return IMAGE
 
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         # check if _id is empty then foreign_landing_url and

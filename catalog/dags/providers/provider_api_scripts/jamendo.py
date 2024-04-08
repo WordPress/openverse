@@ -45,9 +45,6 @@ class JamendoDataIngester(ProviderDataIngester):
     batch_limit = 200
     headers = {"Accept": "application/json"}
 
-    def get_media_type(self, record):
-        return constants.AUDIO
-
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:
             # On first request, build default params.
