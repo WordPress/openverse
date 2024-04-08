@@ -81,7 +81,7 @@ def parse_ps() -> list[Service]:
         for port_config in container_ps["Publishers"]:
             published_port = port_config["PublishedPort"]
             if published_port:
-                bindings.add((port_config["TargetPort"], published_port))
+                bindings.add((published_port, port_config["TargetPort"]))
         if bindings:
             services.append(Service(service_name, image_name, bindings))
 
