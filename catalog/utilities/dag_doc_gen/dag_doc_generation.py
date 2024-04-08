@@ -146,10 +146,10 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
 
 
 def generate_type_subsection(
-    name: str, 
-    dags_info: list[DagInfo], 
-    is_provider: bool, 
-    dag_by_doc_md: dict[str, str]
+    name: str,
+    dags_info: list[DagInfo],
+    is_provider: bool,
+    dag_by_doc_md: dict[str, str],
 ) -> str:
     """Generate the documentation for a "DAGs by type" subsection."""
     log.info(f"Building subsection for '{name}'")
