@@ -514,7 +514,7 @@ def test__get_extension_from_url(image_url, expected_ext):
 @pytest.mark.parametrize(
     "content_type","expected_ext",
     [
-        ("image/jpeg", "jpeg"),
+        ("image/jpeg", ".jpeg"),
         ("image/png", ".png"),
         ("image/gif", ".gif"),
         ("image/svg+xml", ".svg"),
