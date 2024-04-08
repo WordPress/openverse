@@ -11,7 +11,6 @@ Notes:                  https://www.smk.dk/en/article/smk-api/
 import logging
 import urllib.parse
 
-from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester

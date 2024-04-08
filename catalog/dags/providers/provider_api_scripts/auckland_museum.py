@@ -20,7 +20,6 @@ Resource | Requests per second | Requests per day
 import logging
 from datetime import datetime, timedelta
 
-from common.constants import IMAGE
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester

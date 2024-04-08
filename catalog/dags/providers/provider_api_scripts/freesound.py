@@ -20,7 +20,6 @@ from airflow.models import Variable
 from requests.exceptions import ConnectionError, HTTPError, SSLError
 from retry import retry
 
-from common import constants
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester

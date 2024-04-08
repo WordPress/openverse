@@ -18,7 +18,6 @@ Notes:                  https://api.finna.fi/swagger-ui/
 import logging
 from itertools import chain
 
-from common import constants
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.time_delineated_provider_data_ingester import (

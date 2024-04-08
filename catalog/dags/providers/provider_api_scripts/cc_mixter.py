@@ -14,9 +14,7 @@ Notes:                  Documentation: https://ccmixter.org/query-api
 import json
 import logging
 import re
-from typing import Literal
 
-from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
