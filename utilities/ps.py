@@ -6,6 +6,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Service:
+    """A dataclass to represent a running service with its name, image, and port bindings."""
+
     name: str
     image: str
     bindings: set[tuple[int, int]]
