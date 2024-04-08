@@ -79,5 +79,5 @@ def _get_file_extension_from_content_type(content_type: str) -> str | None:
     header.
     """
     if content_type and "/" in content_type:
-        return content_type.split("/")[1]
+        return content_type.split("/")[1].split(";")[0]
     return None
