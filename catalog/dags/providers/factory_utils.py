@@ -1,5 +1,6 @@
 import logging
 import time
+from collections.abc import Sequence
 from datetime import datetime
 
 from airflow.models import DagRun, TaskInstance
@@ -18,16 +19,17 @@ def pull_media_wrapper(
     media_types: list[MediaType],
     ti: TaskInstance,
     dag_run: DagRun,
-    ingestion_kwargs: dict,
+    args: Sequence = None,
 ):
     """
     Run the provided callable after pushing the output directories for each media
     store, which are generated when initializing the ingester class.
     """
+    args = args or []
     # Initialize the ProviderDataIngester class, which will initialize the
     # media stores and DelayedRequester.
     logger.info(f"Initializing ProviderIngester {ingester_class.__name__}")
-    ingester = ingester_class(dag_run.conf, dag_run.dag_id, **ingestion_kwargs)
+    ingester = ingester_class(dag_run.conf, dag_run.dag_id, *args)
     stores: dict[MediaType, MediaStore] = ingester.media_stores
 
     # Check that the ProviderDataIngester class has a store configuration for each

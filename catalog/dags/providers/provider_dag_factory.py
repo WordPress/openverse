@@ -172,24 +172,21 @@ def create_ingestion_workflow(
         if is_reingestion:
             identifier = f"{day_shift}_{identifier}"
 
-        pull_data_kwargs = {
+        ingestion_kwargs = {
             "ingester_class": conf.ingester_class,
             "media_types": conf.media_types,
-            "ingestion_kwargs": {"is_reingestion": is_reingestion},
         }
         if conf.dated:
-            pull_data_kwargs["ingestion_kwargs"].update(
-                {
-                    "date": DATE_RANGE_ARG_TEMPLATE.format(day_shift),
-                    "day_shift": day_shift,  # Pass day_shift in as the tsv_suffix
-                }
-            )
+            ingestion_kwargs["args"] = [
+                DATE_RANGE_ARG_TEMPLATE.format(day_shift),
+                day_shift,  # Pass day_shift in as the tsv_suffix
+            ]
 
         pull_data = PythonOperator(
             task_id=append_day_shift(f"pull_{media_type_name}_data"),
             python_callable=pull_media_wrapper,
             op_kwargs={
-                **pull_data_kwargs,
+                **ingestion_kwargs,
             },
             depends_on_past=False,
             execution_timeout=conf.pull_timeout,
