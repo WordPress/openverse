@@ -136,8 +136,8 @@ importers:
         specifier: ^2.1.7
         version: 2.1.7(vue@2.7.15)
       postcss-focus-visible:
-        specifier: ^6.0.4
-        version: 6.0.4(postcss@8.4.31)
+        specifier: ^9.0.0
+        version: 9.0.0(postcss@8.4.31)
       prom-client:
         specifier: ^14.0.1
         version: 14.0.1
@@ -16354,16 +16354,6 @@ packages:
       postcss: 7.0.39
     dev: true
 
-  /postcss-focus-visible@6.0.4(postcss@8.4.31):
-    resolution: {integrity: sha512-QcKuUU/dgNsstIK6HELFRT5Y3lbrMLEOwG+A4s5cA+fx3A3y/JTq3X9LaOj3OC3ALH0XqyrgQIgey/MIZ8Wczw==}
-    engines: {node: ^12 || ^14 || >=16}
-    peerDependencies:
-      postcss: ^8.4
-    dependencies:
-      postcss: 8.4.31
-      postcss-selector-parser: 6.0.11
-    dev: false
-
   /postcss-focus-visible@9.0.0(postcss@8.4.31):
     resolution: {integrity: sha512-zA4TbVaIaT8npZBEROhZmlc+GBKE8AELPHXE7i4TmIUEQhw/P/mSJfY9t6tBzpQ1rABeGtEOHYrW4SboQeONMQ==}
     engines: {node: ^14 || ^16 || >=18}
@@ -17151,14 +17141,6 @@ packages:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
     dev: true
-
-  /postcss-selector-parser@6.0.11:
-    resolution: {integrity: sha512-zbARubNdogI9j7WY4nQJBiNqQf3sLS3wCP4WfOidu+p28LofJqDH1tcXypGrcmMHhDk2t9wGhCsYe/+szLTy1g==}
-    engines: {node: '>=4'}
-    dependencies:
-      cssesc: 3.0.0
-      util-deprecate: 1.0.2
-    dev: false
 
   /postcss-selector-parser@6.0.13:
     resolution: {integrity: sha512-EaV1Gl4mUEV4ddhDnv/xtj7sxwrwxdetHdWUGnT4VJQf+4d05v6lHYZr8N573k5Z0BViss7BDhfWtKS3+sfAqQ==}
