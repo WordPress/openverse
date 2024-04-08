@@ -1,0 +1,5 @@
+#!/Users/tammydo/Programming_Projects/openverse/”/Users/tammydo/.pyenv”/versions/3.10.10/bin/python3.10
+
+import pydoc
+if __name__ == '__main__':
+    pydoc.cli()

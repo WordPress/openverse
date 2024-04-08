@@ -1,0 +1,5 @@
+#!/Users/tammydo/Programming_Projects/openverse/”/Users/tammydo/.pyenv”/versions/3.11.2/bin/python3.11
+
+from idlelib.pyshell import main
+if __name__ == '__main__':
+    main()
