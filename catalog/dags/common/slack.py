@@ -299,11 +299,15 @@ def should_send_message(
         return False
 
     # Exit early if we aren't on production or if force alert is not set
-    environment = Variable.get("ENVIRONMENT", default_var="dev")
+    environment = Variable.get("ENVIRONMENT", default_var="local")
     force_message = Variable.get(
         "SLACK_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
     )
-    if not (environment == "prod" or force_message):
+
+    # prevent circular import
+    from common.constants import PRODUCTION
+
+    if not (environment == PRODUCTION or force_message):
         log.info(
             f"Skipping Slack notification for {dag_id}:{task_id} in"
             f" `{environment}` environment. To send the notification, enable"
@@ -332,7 +336,7 @@ def send_message(
     ):
         return
 
-    environment = Variable.get("ENVIRONMENT", default_var="dev")
+    environment = Variable.get("ENVIRONMENT", default_var="local")
     s = SlackMessage(
         f"{username} | {environment}",
         icon_emoji,

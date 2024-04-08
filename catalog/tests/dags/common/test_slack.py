@@ -292,28 +292,28 @@ def test_send_fails(http_hook_mock):
 @pytest.mark.parametrize(
     "environment, slack_message_override, silenced_notifications, expected_result",
     [
-        # Dev
+        # non-production
         # Message is not sent by default. It is only sent if the override is enabled,
         # AND notifications are not silenced.
         # Default
-        ("dev", False, False, False),
+        ("local", False, False, False),
         # Override is not enabled AND notifications are silenced
-        ("dev", False, True, False),
+        ("local", False, True, False),
         # Override is enabled AND notifications NOT silenced
-        ("dev", True, False, True),
+        ("local", True, False, True),
         # Override is enabled but notifications are silenced
-        ("dev", True, True, False),
-        # Prod
+        ("local", True, True, False),
+        # Production
         # Message is sent by default; the override has no effect, but messages are
         # not sent when notifications are silenced.
         # Default
-        ("prod", False, False, True),
+        ("production", False, False, True),
         # Override not enabled, notifications ARE silenced
-        ("prod", False, True, False),
+        ("production", False, True, False),
         # Override enabled, notifications are NOT silenced
-        ("prod", True, False, True),
+        ("production", True, False, True),
         # Override enabled, notifications ARE silenced
-        ("prod", True, True, False),
+        ("production", True, True, False),
     ],
 )
 def test_should_send_message(
@@ -503,7 +503,7 @@ def test_should_silence_message(silenced_notifications, should_silence):
         )
 
 
-@pytest.mark.parametrize("environment", ["dev", "prod"])
+@pytest.mark.parametrize("environment", ["local", "production"])
 def test_send_message(environment, http_hook_mock):
     with mock.patch("common.slack.should_send_message", return_value=True), mock.patch(
         "common.slack.Variable"
@@ -546,25 +546,25 @@ def test_send_alert():
     "exception, environment, slack_message_override, call_expected",
     [
         # Message with exception
-        (ValueError("Whoops!"), "dev", False, False),
-        (ValueError("Whoops!"), "dev", True, True),
-        (ValueError("Whoops!"), "prod", False, True),
-        (ValueError("Whoops!"), "prod", True, True),
+        (ValueError("Whoops!"), "local", False, False),
+        (ValueError("Whoops!"), "local", True, True),
+        (ValueError("Whoops!"), "production", False, True),
+        (ValueError("Whoops!"), "production", True, True),
         # Strings should also be allowed
-        ("task marked as failed externally", "dev", False, False),
-        ("task marked as failed externally", "dev", True, True),
-        ("task marked as failed externally", "prod", False, True),
-        ("task marked as failed externally", "prod", True, True),
+        ("task marked as failed externally", "local", False, False),
+        ("task marked as failed externally", "local", True, True),
+        ("task marked as failed externally", "production", False, True),
+        ("task marked as failed externally", "production", True, True),
         # Message without exception
-        (None, "dev", False, False),
-        (None, "dev", True, True),
-        (None, "prod", False, True),
-        (None, "prod", True, True),
+        (None, "local", False, False),
+        (None, "local", True, True),
+        (None, "production", False, True),
+        (None, "production", True, True),
         # Exception with upstream failure message should never run
-        (ValueError("Upstream task(s) failed"), "dev", False, False),
-        (ValueError("Upstream task(s) failed"), "dev", True, False),
-        (ValueError("Upstream task(s) failed"), "prod", False, False),
-        (ValueError("Upstream task(s) failed"), "prod", True, False),
+        (ValueError("Upstream task(s) failed"), "local", False, False),
+        (ValueError("Upstream task(s) failed"), "local", True, False),
+        (ValueError("Upstream task(s) failed"), "production", False, False),
+        (ValueError("Upstream task(s) failed"), "production", True, False),
     ],
 )
 def test_on_failure_callback(

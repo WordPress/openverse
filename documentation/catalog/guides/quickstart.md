@@ -84,7 +84,7 @@ The `.env` file is split into four sections:
 3. Connection/Variable info - this will not likely need to be modified for local
    development, though the values will need to be changed in production
 4. Other config - misc. configuration settings, some of which are useful for
-   local dev
+   local development
 
 The `.env` file does not need to be modified if you only want to run the tests.
 
