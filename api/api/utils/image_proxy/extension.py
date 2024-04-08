@@ -1,6 +1,7 @@
 import logging
 from os.path import splitext
 from urllib.parse import urlparse
+import mimetypes
 
 import aiohttp
 import django_redis
@@ -79,5 +80,6 @@ def _get_file_extension_from_content_type(content_type: str) -> str | None:
     header.
     """
     if content_type and "/" in content_type:
-        return content_type.split("/")[1].split(";")[0]
+        #filtered_type = content_type.split("/")[1].split(";")[0].split("+")[0]
+        return mimetypes.guess_extension(content_type.split(";")[0], strict=False).strip('.')
     return None
