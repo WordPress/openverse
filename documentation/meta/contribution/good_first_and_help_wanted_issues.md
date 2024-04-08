@@ -164,10 +164,15 @@ If you have any questions please let us know in the comments.
 
 #### Follow through
 
-If the contributor doesn't reply or update the PR, move on to
-[scenario #3](#scenario-3-absent-contributor). If they update the template,
-proceed. If they ask for help or have other concerns, update the template for
-them.
+If the PR author updates the template, proceed. If they ask for help, continue
+work on the PR but do not update the template, or have other concerns, update
+the template for them, within reason. For example, if it's a matter of checking
+the completed checklist items, go ahead. If the PR requires detailed testing
+instructions, fix everything else with the template and ping the author again to
+request the testing instructions.
+
+If the contributor doesn't reply or update the PR description, move on to
+[scenario #3](#scenario-3-absent-contributor).
 
 ### Scenario 3: Absent Contributor
 
