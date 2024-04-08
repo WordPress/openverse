@@ -45,9 +45,6 @@ class StockSnapDataIngester(ProviderDataIngester):
         self._page_counter += 1
         return {}
 
-    def get_media_type(self, record):
-        return "image"
-
     @property
     def endpoint(self):
         return f"{ENDPOINT_BASE}/{self._page_counter}"

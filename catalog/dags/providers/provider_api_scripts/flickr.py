@@ -175,10 +175,6 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             # Increment the page number on subsequent requests
             return {**prev_query_params, "page": prev_query_params["page"] + 1}
 
-    def get_media_type(self, record):
-        # We only ingest images from Flickr
-        return constants.IMAGE
-
     def get_batch_data(self, response_json):
         self.requests_count += 1
         if response_json is None or response_json.get("stat") != "ok":

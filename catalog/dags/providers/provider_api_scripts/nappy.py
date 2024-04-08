@@ -52,9 +52,6 @@ class NappyDataIngester(ProviderDataIngester):
     def get_should_continue(self, response_json):
         return bool(response_json.get("next_page"))
 
-    def get_media_type(self, record: dict):
-        return constants.IMAGE
-
     @staticmethod
     def _convert_filesize(raw_filesize_string: str) -> int:
         """Convert sizes from strings to byte integers, ex. "187.8kB" to 188."""

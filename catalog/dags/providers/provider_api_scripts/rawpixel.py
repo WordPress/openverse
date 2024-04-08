@@ -91,9 +91,6 @@ class RawpixelDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self.api_key: str = Variable.get("API_KEY_RAWPIXEL")
 
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
-
     def _get_signature(self, query_params: dict) -> str:
         """
         Get the query signature for a request.

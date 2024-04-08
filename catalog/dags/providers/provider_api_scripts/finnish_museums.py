@@ -91,9 +91,6 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
             return response_json.get("resultCount", 0)
         return 0
 
-    def get_media_type(self, record):
-        return constants.IMAGE
-
     def get_batch_data(self, response_json):
         if (
             not response_json

@@ -22,9 +22,6 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         self.api_key = Variable.get("API_KEY_BROOKLYN_MUSEUM")
         self.headers = {"api_key": self.api_key}
 
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
-
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:
             return {

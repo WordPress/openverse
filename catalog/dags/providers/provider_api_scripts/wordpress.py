@@ -53,9 +53,6 @@ class WordPressDataIngester(ProviderDataIngester):
         self.total_pages = None
         self.current_page = 1
 
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
-
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if self.total_pages is None:
             # On the first request, make a HEAD request to get the number of pages of

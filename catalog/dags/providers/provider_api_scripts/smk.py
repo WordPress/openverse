@@ -27,9 +27,6 @@ class SmkDataIngester(ProviderDataIngester):
     headers = {"Accept": "application/json"}
     providers = {"image": prov.SMK_DEFAULT_PROVIDER}
 
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
-
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:
             return {

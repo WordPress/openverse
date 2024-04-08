@@ -141,9 +141,6 @@ class CcMixterDataIngester(ProviderDataIngester):
         # less than the batch limit.
         return len(response_json) >= self.batch_limit
 
-    def get_media_type(self, record: dict) -> Literal["audio"]:
-        return constants.AUDIO
-
     @staticmethod
     def _get_duration(ps: str | None) -> int | None:
         """

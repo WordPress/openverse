@@ -75,10 +75,6 @@ class NyplDataIngester(ProviderDataIngester):
                 "page": prev_query_params["page"] + 1,
             }
 
-    def get_media_type(self, record):
-        # This provider only supports Images.
-        return constants.IMAGE
-
     def get_batch_data(self, response_json):
         if response_json:
             return response_json.get("nyplAPI", {}).get("response", {}).get("result")

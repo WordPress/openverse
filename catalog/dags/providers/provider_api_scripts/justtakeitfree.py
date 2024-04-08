@@ -45,9 +45,6 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
             return data
         return None
 
-    def get_media_type(self, record: dict):
-        return IMAGE
-
     def get_record_data(self, data: list[dict]) -> dict | None:
         data = data[0]
         if not (foreign_landing_url := data.get("page_link")):

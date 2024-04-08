@@ -115,9 +115,6 @@ class SmithsonianDataIngester(ProviderDataIngester):
             license_url="https://creativecommons.org/publicdomain/zero/1.0/"
         )
 
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
-
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
         # and return our default params.

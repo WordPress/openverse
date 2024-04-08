@@ -99,9 +99,6 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
 
         return True
 
-    def get_media_type(self, record: dict):
-        return IMAGE
-
     def get_record_data(self, data: dict) -> dict | list[dict] | None:
         # check if _id is empty then foreign_landing_url and
         # foreign_identifier doesn't exist

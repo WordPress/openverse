@@ -114,9 +114,6 @@ class VictoriaDataIngester(ProviderDataIngester):
             images.append(image)
         return images
 
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
-
     @staticmethod
     def _get_image_data(
         media: dict,
