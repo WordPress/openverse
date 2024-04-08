@@ -117,7 +117,7 @@ jobs:
           just lint || true
 
       - name: Open changelog PR
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           # Access token necessary for PRs to run with CI
           token: ${{ secrets.ACCESS_TOKEN }}
