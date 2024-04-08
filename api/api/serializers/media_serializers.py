@@ -423,15 +423,18 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
                     f"Refer to the source list for valid options: {sources_list}."
                 )
             elif invalid_sources := (sources - valid_sources):
+                available_sources_uri = self.context["request"].build_absolute_uri(
+                    reverse(f"{self.media_type}-stats")
+                )
                 self.context["warnings"].append(
                     {
                         "code": "partially invalid source parameter",
-                        "message": "The source parameter was partially invalid.",
-                        "invalid_sources": invalid_sources,
-                        "referenced_sources": valid_sources,
-                        "available_sources": self.context["request"].build_absolute_uri(
-                            reverse(f"{self.media_type}-stats")
+                        "message": (
+                            "The source parameter included non-existent sources. "
+                            f"For a list of available sources, see {available_sources_uri}"
                         ),
+                        "invalid_sources": invalid_sources,
+                        "valid_sources": valid_sources,
                     }
                 )
 

@@ -64,7 +64,6 @@ audio_search_200_example = {
         "results": [
             base_audio | {"fields_matched": ["title"]},
         ],
-        "warnings": [],
     },
 }
 

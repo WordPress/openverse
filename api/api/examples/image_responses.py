@@ -72,7 +72,6 @@ image_search_200_example = {
         "page_size": 20,
         "page": 1,
         "results": [base_image | {"fields_matched": ["title"]}],
-        "warnings": [],
     },
 }
 

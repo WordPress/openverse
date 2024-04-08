@@ -335,7 +335,7 @@ def test_search_with_only_valid_sources_produces_no_warning(media_type, api_clie
         {"source": ",".join(media_type.providers)},
     )
     assert search.status_code == 200
-    assert search.json()["warnings"] == []
+    assert "warnings" not in search.json()
 
 
 def test_search_with_partially_invalid_sources_produces_warning_but_still_succeeds(
@@ -358,8 +358,8 @@ def test_search_with_partially_invalid_sources_produces_warning_but_still_succee
     }
     warning = result["warnings"][0]
     assert set(warning["invalid_sources"]) == set(invalid_sources)
-    assert warning["referenced_sources"] == [media_type.providers[0]]
-    assert f"v1/{media_type.path}/stats/" in warning["available_sources"]
+    assert warning["valid_sources"] == [media_type.providers[0]]
+    assert f"v1/{media_type.path}/stats/" in warning["message"]
 
 
 def test_search_with_all_invalid_sources_fails(media_type, api_client):

@@ -20,15 +20,23 @@ class StandardPagination(PageNumberPagination):
         self.warnings = []  # populated later as needed
 
     def get_paginated_response(self, data):
+        response = {
+            "result_count": self.result_count,
+            "page_count": min(settings.MAX_PAGINATION_DEPTH, self.page_count),
+            "page_size": self.page_size,
+            "page": self.page,
+            "results": data,
+        }
         return Response(
-            {
-                "result_count": self.result_count,
-                "page_count": min(settings.MAX_PAGINATION_DEPTH, self.page_count),
-                "page_size": self.page_size,
-                "page": self.page,
-                "results": data,
-                "warnings": list(self.warnings),
-            }
+            (
+                {
+                    # Put ``warnings`` first so it is as visible as possible.
+                    "warnings": list(self.warnings),
+                }
+                if self.warnings
+                else {}
+            )
+            | response
         )
 
     def get_paginated_response_schema(self, schema):
@@ -63,7 +71,7 @@ class StandardPagination(PageNumberPagination):
                 },
                 "description": (
                     "Warnings pertinent to the request. "
-                    "If there are no warnings, this list will be empty. "
+                    "If there are no warnings, this property will not be present on the response. "
                     "Warnings are non-critical problems with the request. "
                     "Responses with warnings should be treated as unstable. "
                     "Warning descriptions must not be treated as machine readable "
@@ -86,4 +94,5 @@ class StandardPagination(PageNumberPagination):
         return {
             "type": "object",
             "properties": properties,
+            "required": list(set(properties.keys()) - {"warnings"}),
         }
