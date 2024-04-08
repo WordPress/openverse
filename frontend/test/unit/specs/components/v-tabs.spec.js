@@ -2,7 +2,7 @@
 
 import Vue from "vue"
 
-import userEvent from "@testing-library/user-event"
+import { default as userEvent } from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
