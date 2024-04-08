@@ -527,8 +527,7 @@ def test__get_extension_from_url(image_url, expected_ext):
         ("audio/wav", None),
         ("video/webm", "webm"),
         (None, None),
-        (5, None),
-        ([], None)
+        ("foobar", None)
     ],
 )
 def test_get_extension_from_content_type(content_type, expected_ext):
