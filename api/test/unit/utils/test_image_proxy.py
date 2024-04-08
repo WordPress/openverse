@@ -511,8 +511,10 @@ def test_get_unsuccessful_request_raises_custom_exception(photon_get):
 def test__get_extension_from_url(image_url, expected_ext):
     assert extension._get_file_extension_from_url(image_url) == expected_ext
 
+
 @pytest.mark.parametrize(
-    "content_type","expected_ext",
+    "content_type",
+    "expected_ext",
     [
         ("image/jpeg", ".jpeg"),
         ("image/png", ".png"),
@@ -523,12 +525,13 @@ def test__get_extension_from_url(image_url, expected_ext):
         ("audio/ogg", ".oga"),
         ("application/ogg", ".ogx"),
         ("audio/opus", ".opus"),
-        ("audio/wav",".wav"),
-        ("video/webm", ".webm")
-    ]
+        ("audio/wav", ".wav"),
+        ("video/webm", ".webm"),
+    ],
 )
 def test_get_extension_from_content_type(content_type, expected_ext):
     assert extension._get_file_extension_from_content_type(content_type) == expected_ext
+
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("image_type", ["apng", "tiff", "bmp"])
