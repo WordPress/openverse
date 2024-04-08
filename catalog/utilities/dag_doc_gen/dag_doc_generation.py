@@ -146,7 +146,10 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
 
 
 def generate_type_subsection(
-    name: str, dags_info: list[DagInfo], is_provider: bool
+    name: str, 
+    dags_info: list[DagInfo], 
+    is_provider: bool, 
+    dag_by_doc_md: dict[str, str]
 ) -> str:
     """Generate the documentation for a "DAGs by type" subsection."""
     log.info(f"Building subsection for '{name}'")
@@ -171,7 +174,7 @@ def generate_type_subsection(
         # If we have documentation for the DAG, we'll want to link to it within the
         # markdown, so we reference it using the heading text (the DAG ID)
         if dag.doc:
-            dag_id = f"[{dag_id}](#{dag.dag_id})"
+            dag_id = f"[{dag_id}](#{dag_by_doc_md[dag.doc]})"
         text += f"\n| {dag_id} | `{dag.schedule}` |"
         if is_provider:
             text += f" `{dag.dated}` | {', '.join(dag.provider_workflow.media_types)} |"
@@ -210,7 +213,11 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
     for dag in dags_info:
         dags_by_type[dag.type_].append(dag)
 
+    dag_by_doc_md: dict[str, str] = {}
     for type_, dags in sorted(dags_by_type.items()):
+        for dag in dags:
+            if dag.doc not in dag_by_doc_md:
+                dag_by_doc_md[dag.doc] = dag.dag_id
         # Create a more human-readable name
         name = type_.replace("_", " ").replace("-", " ").title()
         # Special case for provider tables since they have extra information
@@ -219,7 +226,9 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
         # sub-list as part of a table of contents, but defer adding the sub-lists until
         # all are generated.
         text += f" 1. [{name}](#{type_.replace('_', '-')})\n"
-        dag_types.append(generate_type_subsection(name, dags, is_provider))
+        dag_types.append(
+            generate_type_subsection(name, dags, is_provider, dag_by_doc_md)
+        )
 
     text += "\n" + "\n\n".join(dag_types)
 
@@ -232,8 +241,10 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
         # Similar to the DAGs-by-type section, we add the reference to a table of
         # contents first, and then defer adding all the generated individual docs until
         # the very end.
-        text += f" 1. [`{dag.dag_id}`](#{dag.dag_id})\n"
-        dag_docs.append(generate_single_documentation(dag))
+        text += f" 1. [`{dag.dag_id}`](#{dag_by_doc_md[dag.doc]})\n"
+        # Only generate unique docs.
+        if dag.dag_id == dag_by_doc_md[dag.doc]:
+            dag_docs.append(generate_single_documentation(dag))
 
     text += "\n" + "".join(dag_docs)
 
