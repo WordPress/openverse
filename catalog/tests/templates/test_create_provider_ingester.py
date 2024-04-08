@@ -1,6 +1,6 @@
 import pytest
 
-from catalog.templates import create_provider_ingester
+from templates import create_provider_ingester
 
 
 @pytest.mark.parametrize(

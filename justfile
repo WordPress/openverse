@@ -154,10 +154,10 @@ versions:
     pgcli_version=$(just api/pgcli-version)
     EOF
 
-# Run `docker-compose` configured with the correct files and environment
+# Run `docker compose` configured with the correct files and environment
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker-compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker compose {{ DOCKER_FILE }} {{ args }}
 
 # Build all (or specified) services
 build *args:

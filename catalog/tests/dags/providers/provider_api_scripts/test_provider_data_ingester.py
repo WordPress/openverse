@@ -4,11 +4,10 @@ import pytest
 import requests
 from airflow.exceptions import AirflowException
 from requests.exceptions import HTTPError
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
-from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
+from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     AUDIO_PROVIDER,
     EXPECTED_BATCH_DATA,
     IMAGE_PROVIDER,
@@ -18,6 +17,7 @@ from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_i
     MockImageOnlyProviderDataIngester,
     MockProviderDataIngester,
 )
+
 from common.loader import provider_details as prov
 from common.storage.audio import AudioStore, MockAudioStore
 from common.storage.image import ImageStore, MockImageStore

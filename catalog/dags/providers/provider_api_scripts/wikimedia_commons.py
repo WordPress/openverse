@@ -238,7 +238,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         for _ in range(self.mean_global_usage_limit):
             response_json = super().get_response_json(
                 query_params,
-                timeout=60,
+                timeout=120,
             )
 
             # Update continue token for the next request

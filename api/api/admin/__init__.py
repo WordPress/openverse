@@ -30,16 +30,15 @@ class AudioAdmin(admin.ModelAdmin):
 
 
 class MediaReportAdmin(admin.ModelAdmin):
-    list_display = ("reason", "status", "description", "created_at")
-    media_specific_list_display = ()
-    list_filter = ("status", "reason")
-    list_display_links = ("status",)
+    list_display = ("id", "reason", "is_pending", "description", "created_at", "url")
+    list_filter = (
+        ("decision", admin.EmptyFieldListFilter),  # ~status, i.e. pending or moderated
+        "reason",
+    )
+    list_display_links = ("id",)
     search_fields = ("description", "media_obj__identifier")
     autocomplete_fields = ("media_obj",)
     actions = None
-
-    def get_list_display(self, request):
-        return self.list_display + self.media_specific_list_display
 
     def get_exclude(self, request, obj=None):
         # ``identifier`` cannot be edited on an existing report.
@@ -61,14 +60,8 @@ class MediaReportAdmin(admin.ModelAdmin):
         return readonly_fields
 
 
-@admin.register(ImageReport)
-class ImageReportAdmin(MediaReportAdmin):
-    media_specific_list_display = ("image_url",)
-
-
-@admin.register(AudioReport)
-class AudioReportAdmin(MediaReportAdmin):
-    media_specific_list_display = ("audio_url",)
+admin.site.register(AudioReport, MediaReportAdmin)
+admin.site.register(ImageReport, MediaReportAdmin)
 
 
 class MediaSubreportAdmin(admin.ModelAdmin):

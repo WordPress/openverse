@@ -4,7 +4,6 @@ import psycopg2
 import pytest
 from airflow.models import Variable
 
-from catalog.tests.test_utils import sql
 from common.storage import columns as col
 from database.batched_update import constants
 from database.batched_update.batched_update import (
@@ -12,6 +11,7 @@ from database.batched_update.batched_update import (
     notify_slack,
     update_batches,
 )
+from tests.test_utils import sql
 
 
 logger = logging.getLogger(__name__)

@@ -25,6 +25,12 @@ describe("VLink", () => {
       render(VLink, {
         props: { href },
         slots: { default: "Code is Poetry" },
+        stubs: {
+          NuxtLink: {
+            props: ["to"],
+            template: '<a :href="to"><slot /></a>',
+          },
+        },
       })
       const link = screen.getByRole("link")
       const expectedHref = href.startsWith("/")
@@ -57,9 +63,20 @@ describe("VLink", () => {
           </div>`,
       })
     const WrapperComponent = createVLinkWrapper(href)
-    render(WrapperComponent, {}, (localVue) => {
-      localVue.component("VLink", VLink)
-    })
+    render(
+      WrapperComponent,
+      {
+        stubs: {
+          NuxtLink: {
+            props: ["to"],
+            template: '<a :href="to"><slot /></a>',
+          },
+        },
+      },
+      (localVue) => {
+        localVue.component("VLink", VLink)
+      }
+    )
     const linkBefore = await screen.getByRole("link")
     expect(linkBefore.textContent).toEqual("Link Text")
 

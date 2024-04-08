@@ -99,6 +99,25 @@ def test_media_serializer_adds_license_url_if_missing(
     assert repr["license_url"] == "https://creativecommons.org/publicdomain/zero/1.0/"
 
 
+def test_media_serializer_recovers_invalid_or_duplicate_source(
+    media_type_config, request_factory
+):
+    sources = {
+        "image": ("flickr,flickr,invalid", "flickr"),
+        "audio": ("freesound,freesound,invalid", "freesound"),
+    }
+    request = request_factory.get("/v1/images/")
+    serializer_class = media_type_config.search_request_serializer(
+        context={"media_type": media_type_config.media_type, "request": request},
+        data={"source": sources[media_type_config.media_type][0]},
+    )
+    assert serializer_class.is_valid()
+    assert (
+        serializer_class.validated_data["source"]
+        == sources[media_type_config.media_type][1]
+    )
+
+
 @pytest.mark.parametrize(
     "has_sensitive_text",
     (True, False),

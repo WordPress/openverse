@@ -2,9 +2,9 @@ import logging
 
 import pytest
 
-from catalog.tests.dags.common.storage import test_media
 from common.licenses import LicenseInfo
 from common.storage import audio
+from tests.dags.common.storage import test_media
 
 
 logger = logging.getLogger(__name__)
@@ -158,21 +158,6 @@ def test_AudioStore_produces_correct_total_audios():
         license_info=PD_LICENSE_INFO,
     )
     assert audio_store.total_items == 3
-
-
-def test_AudioStore_get_audio_enriches_multiple_tags():
-    audio_store = audio.AudioStore("test_provider")
-    audio_args = mock_audio_args.copy()
-    audio_args["raw_tags"] = ["tagone", "tag2", "tag3"]
-    actual_audio = audio_store._get_audio(
-        **audio_args,
-    )
-
-    assert actual_audio.tags == [
-        {"name": "tagone", "provider": "test_provider"},
-        {"name": "tag2", "provider": "test_provider"},
-        {"name": "tag3", "provider": "test_provider"},
-    ]
 
 
 @test_media.INT_MAX_PARAMETERIZATION

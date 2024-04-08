@@ -84,7 +84,13 @@ export const main = async (octokit, core) => {
   if (eventName === 'pull_request_review') {
     if (pr.isDraft) {
       await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
-    } else {
+    } else if (!pr.isMerged) {
+      // Don't touch merged PRs to avoid race condition when a PR is merged
+      // right after the review and is already in a merged state when
+      // re-retrieved by the workflow, even though the triggering event was the
+      // second review.
+      // In that case we want our handling of merged PRs to take precedence,
+      // rather than updating the status based on the second review.
       await syncReviews(core, pr, prBoard, prCard)
     }
   } else {

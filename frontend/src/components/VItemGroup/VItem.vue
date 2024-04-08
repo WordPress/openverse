@@ -18,7 +18,7 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="group relative flex min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus:z-10"
+      class="group relative flex min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus-visible:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
         'p-3': contextProps.size === 'small',

@@ -160,6 +160,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
     ):
         page_size = self.paginator.page_size = params.data["page_size"]
         page = self.paginator.page = params.data["page"]
+        self.paginator.warnings = params.context["warnings"]
 
         hashed_ip = hash(self._get_user_ip(request))
         filter_dead = params.validated_data.get("filter_dead", True)

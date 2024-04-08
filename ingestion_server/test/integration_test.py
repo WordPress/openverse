@@ -169,7 +169,8 @@ def _compose_cmd(compose_path, cmd: list[str], **kwargs):
     """Run a Docker Compose command"""
 
     cmd = [
-        "docker-compose",
+        "docker",
+        "compose",
         "--profile",
         "ingestion_server",
         "-f",

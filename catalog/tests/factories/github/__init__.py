@@ -6,7 +6,7 @@ from functools import partial
 from pathlib import Path
 from typing import Literal
 
-from catalog.dags.maintenance.pr_review_reminders.pr_review_reminders import (
+from dags.maintenance.pr_review_reminders.pr_review_reminders import (
     COMMENT_MARKER,
     Urgency,
     parse_gh_date,
