@@ -396,8 +396,8 @@ def on_failure_callback(context: dict) -> None:
             log.info("Forgoing Slack alert due to upstream failures")
             return
         exception_message = f"""
-*Exception Type*: `{exception.__class__.__module__}.{exception.__class__.__name__}
-*Exception*: {exception}`
+*Exception Type*: `{exception.__class__.__module__}.{exception.__class__.__name__}`
+*Exception*: {exception}
 """
 
     message = f"""
