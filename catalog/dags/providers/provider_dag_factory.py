@@ -584,7 +584,7 @@ def report_aggregate_reingestion_errors(
 
     message = (
         f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
-        f" ingestion days while running the `{provider_conf.dag_id}`` DAG. See the following"
+        f" ingestion days while running the `{provider_conf.dag_id}` DAG. See the following"
         " logs for details:\n"
     ) + "\n".join(f"  - {task.log_url}" for task in failed_pull_data_tasks)
 
