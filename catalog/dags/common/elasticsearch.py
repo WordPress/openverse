@@ -79,6 +79,25 @@ def remove_excluded_index_settings(index_config):
 
 
 @task
+def get_record_count_group_by_sources(es_host: str, index: str):
+    es_hook = ElasticsearchPythonHook(hosts=[es_host])
+    body = {"aggs": {"unique_sources": {"terms": {"field": "source"}}}}
+
+    # Unfornately the ElasticsearchPythonHook's search function doesn't work with aggs, because it returns the "hits" key only
+    # See source code at https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_modules/airflow/providers/elasticsearch/hooks/elasticsearch.html#ElasticsearchPythonHook
+    # Therefore using get_conn to call the search from the ES client
+    es_client = es_hook.get_conn
+    # es_result object looks like: [{'key': 'flickr', 'doc_count': 2500}, {'key': 'stocksnap', 'doc_count': 2500}]
+    es_result = es_client.search(body=body, index=index)
+    result = {}
+    for source_count in es_result:
+        result |= {source_count["key"]: source_count["doc_count"]}
+
+    # result is a dict like {'flickr': 2500, 'stocksnap': 2500}
+    return result
+
+
+@task
 def create_index(index_config, es_host: str):
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
