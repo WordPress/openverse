@@ -513,20 +513,19 @@ def test__get_extension_from_url(image_url, expected_ext):
 
 
 @pytest.mark.parametrize(
-    "content_type",
-    "expected_ext",
+    "content_type, expected_ext",
     [
-        ("image/jpeg", ".jpeg"),
-        ("image/png", ".png"),
-        ("image/gif", ".gif"),
-        ("image/svg+xml", ".svg"),
-        ("audio/midi", ".mid"),
-        ("audio/mpeg", ".mp3"),
-        ("audio/ogg", ".oga"),
-        ("application/ogg", ".ogx"),
-        ("audio/opus", ".opus"),
-        ("audio/wav", ".wav"),
-        ("video/webm", ".webm"),
+        ("image/jpeg", "jpeg"),
+        ("image/png", "png"),
+        ("image/gif", "gif"),
+        ("image/svg+xml", "svg"),
+        ("audio/midi", "mid"),
+        ("audio/mpeg", "mp3"),
+        ("audio/ogg", "oga"),
+        ("application/ogg", "ogx"),
+        ("audio/opus", "opus"),
+        ("audio/wav", "wav"),
+        ("video/webm", "webm"),
     ],
 )
 def test_get_extension_from_content_type(content_type, expected_ext):
