@@ -520,12 +520,15 @@ def test__get_extension_from_url(image_url, expected_ext):
         ("image/png", "png"),
         ("image/gif", "gif"),
         ("image/svg+xml", "svg"),
-        ("audio/midi", "mid"),
+        ("audio/midi", "midi"),
         ("audio/mpeg", "mp3"),
-        ("audio/ogg", "oga"),
+        ("audio/ogg", None),
         ("audio/opus", "opus"),
-        ("audio/wav", "wav"),
+        ("audio/wav", None),
         ("video/webm", "webm"),
+        (None, None),
+        (5, None),
+        ([], None)
     ],
 )
 def test_get_extension_from_content_type(content_type, expected_ext):
