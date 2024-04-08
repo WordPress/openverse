@@ -196,6 +196,16 @@ class ProviderDataIngester(ABC):
 
         self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
+        environment = Variable.get(
+            "ENVIRONMENT", default_var='dev'
+        )
+
+        should_verbose_log = self.dag_id in Variable.get(
+            "SHOULD_VERBOSE_LOG", default_var=[], deserialize_json=True
+        )
+
+        self._should_verbose_log = environment != 'prod' or should_verbose_log
+
     def _init_media_stores(self, day_shift: int = None) -> dict[str, MediaStore]:
         """Initialize a media store for each media type supported by this provider."""
 
@@ -427,6 +437,7 @@ class ProviderDataIngester(ABC):
         # * any `additional_query_params`, which are provided via the DagRun conf
         #   and applied to all batches, in every round of ingestion
         next_query_params = self.get_next_query_params(prev_query_params)
+        self._verbose_log(f"Next set of query params: {next_query_params}")
         fixed_query_params = fixed_query_params or {}
         return next_query_params | fixed_query_params | self.additional_query_params
 
@@ -528,6 +539,7 @@ class ProviderDataIngester(ABC):
 
         for data in media_batch:
             if not (record_data := self.get_record_data(data)):
+                self._verbose_log("No entries to process in this record")
                 continue
 
             record_data = (
@@ -537,6 +549,9 @@ class ProviderDataIngester(ABC):
                     record_data,
                 ]
             )
+
+            if len(record_data) > 1:
+                self._verbose_log(f"{len(record_data)} entries where found in this record")
 
             for record in record_data:
                 # We need to know what type of record we're handling in
@@ -551,6 +566,8 @@ class ProviderDataIngester(ABC):
                 if self.limit and (self.record_count + processed_count) >= self.limit:
                     logger.info("Ingestion limit has been reached. Halting processing.")
                     return processed_count
+
+        self._verbose_log(f"{processed_count} items where processed")
 
         return processed_count
 
@@ -587,3 +604,7 @@ class ProviderDataIngester(ABC):
             total += store.commit()
         logger.info(f"Committed {total} records")
         return total
+
+    def _verbose_log(self, msg: str):
+        if self._should_verbose_log:
+            logger.info(msg)
