@@ -157,7 +157,7 @@ to fill out all sections correctly.
 #### Initial Response
 
 ```md
-Hi `@user`, could you update your pr description to use the
+Hi `@user`, could you update your PR description to use the
 [pull request template](https://github.com/WordPress/openverse/blob/main/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md)?
 If you have any questions please let us know in the comments.
 ```
