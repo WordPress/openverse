@@ -516,7 +516,7 @@ def test__get_extension_from_url(image_url, expected_ext):
     "content_type, expected_ext",
     [
         ("image/png;charset=UTF-8", "png"),
-        ("image/jpeg", "jpeg"),
+        ("image/jpeg", "jpg"),
         ("image/png", "png"),
         ("image/gif", "gif"),
         ("image/svg+xml", "svg"),

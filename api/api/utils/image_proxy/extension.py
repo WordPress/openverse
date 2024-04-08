@@ -80,6 +80,5 @@ def _get_file_extension_from_content_type(content_type: str) -> str | None:
     header.
     """
     if content_type and "/" in content_type:
-        #filtered_type = content_type.split("/")[1].split(";")[0].split("+")[0]
         return mimetypes.guess_extension(content_type.split(";")[0], strict=False).strip('.')
     return None
