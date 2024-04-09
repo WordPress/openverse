@@ -102,11 +102,11 @@ ingestion outside of the workflow. The TSV file will be saved in your /tmp/tmp
 folder.
 
 - First make sure that the directory with the scripts is in your PYTHONPATH
-  ```
+  ```bash
   export PYTHONPATH=<path_to_openverse>/catalog/dags
   ```
 - Then cd into the Openverse dir and run the script as so:
-  ```
+  ```bash
   python catalog/dags/providers/provider_api_scripts/<your_script>.py
   ```
 
