@@ -105,7 +105,7 @@ folder.
   ```
   export PYTHONPATH=<path_to_openverse>/catalog/dags
   ```
-- Then cd into the openverse dir and run the script as so:
+- Then cd into the Openverse dir and run the script as so:
   ```
   python catalog/dags/providers/provider_api_scripts/<your_script>.py
   ```
