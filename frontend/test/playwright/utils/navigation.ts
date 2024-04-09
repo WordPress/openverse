@@ -204,30 +204,28 @@ export const preparePageForTests = async (
   }> = {}
 ) => {
   const { dismissBanners = true, dismissFilter = true } = options
-  const defaultFeatures: Record<string, "on" | "off"> = {
-    fetch_sensitive: "off",
-    fake_sensitive: "off",
-    analytics: "on",
-    additional_search_types: "off",
-    additional_search_views: "off",
-  }
-  const features = {
-    ...defaultFeatures,
-    ...options.features,
-  }
-  const featuresCookie: Record<string, "on" | "off"> = {}
-  for (const [feature, status] of Object.entries(features)) {
-    featuresCookie[feature] = status
-  }
 
-  await setCookies(page.context(), {
-    features: featuresCookie,
+  const cookiesToSet: Record<string, unknown> = {
     ui: {
       dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
       isFilterDismissed: dismissFilter ?? false,
       breakpoint,
     },
-  })
+  }
+  if (options.features) {
+    const features: Record<string, "on" | "off"> = {
+      fetch_sensitive: "off",
+      fake_sensitive: "off",
+      analytics: "on",
+      additional_search_types: "off",
+      additional_search_views: "on",
+    }
+    for (const [feature, status] of Object.entries(options.features)) {
+      features[feature] = status
+    }
+    cookiesToSet.features = features
+  }
+  await setCookies(page.context(), cookiesToSet)
 }
 
 export const goToSearchTerm = async (
@@ -380,7 +378,7 @@ export interface CookieMap {
 
 export const setCookies = async (
   context: BrowserContext,
-  cookies: CookieMap
+  cookies: Record<string, unknown>
 ) => {
   const existingCookies = await context.cookies()
   const cookiesToSet = Object.entries(cookies).map(([name, value]) => {

@@ -19,11 +19,11 @@ import {
   COOKIE,
   SESSION,
 } from "~/constants/feature-flag"
-import { LOCAL, DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
+import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
 import type { Dictionary } from "vue-router/types/router"
 
-type FlagName = keyof (typeof featureData)["features"]
+export type FlagName = keyof (typeof featureData)["features"]
 
 export const isFlagName = (name: string): name is FlagName => {
   return Object.keys(featureData.features).includes(name)
@@ -34,90 +34,15 @@ export interface FeatureFlagState {
 
 const FEATURE_FLAG = "feature_flag"
 
-/**
- * Get the status of the flag. If the flag status is environment dependent, this
- * function will use the flag status for the current environment based on the
- * `DEPLOYMENT_ENV` environment variable.
- *
- * @param flag - the flag for which to get the status
- */
-export const getFlagStatus = (flag: FeatureFlag): FlagStatus => {
-  const deployEnv = (process.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
-  if (typeof flag.status === "string") {
-    return flag.status
-  } else {
-    const envIndex = DEPLOY_ENVS.indexOf(deployEnv)
-    for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
-      if (DEPLOY_ENVS[i] in flag.status) {
-        return flag.status[DEPLOY_ENVS[i]]
-      }
-    }
-  }
-  return DISABLED
-}
-
-/**
- * Get the state of the feature based on the status of the feature flag and the
- * preferences of the user.
- *
- * @param flag - the flag for which to get the state
- */
-const getFeatureState = (flag: FeatureFlag): FeatureState => {
-  const status = getFlagStatus(flag)
-  if (status === SWITCHABLE) {
-    return flag.preferredState ?? flag.defaultState ?? OFF
-  }
-  if (status === ENABLED) {
-    return ON
-  }
-  return OFF
-}
-
 export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
   state: () =>
     ({
       flags: featureData.features,
     }) as FeatureFlagState,
   getters: {
-    /**
-     * Get the state of the named feature, based on config and cookie.
-     *
-     * Prefer `isOn` for most use cases.
-     */
-    featureState:
-      (state: FeatureFlagState) =>
-      (name: FlagName): FeatureState => {
-        if (name in state.flags) {
-          return getFeatureState(state.flags[name])
-        } else {
-          warn(`Invalid feature flag accessed: ${name}`)
-          return ON
-        }
-      },
-    /**
-     * Proxy for `featureState` to simplify the majority of flag state checks.
-     *
-     * Prefer this for most use cases over using `featureState` directly.
-     *
-     * @returns `true` if the flag is on, false otherwise
-     */
-    isOn() {
-      return (name: FlagName): boolean => this.featureState(name) === ON
+    deploymentEnv(): DeployEnv {
+      return this.$nuxt.$config.deploymentEnv
     },
-    /**
-     * Get the mapping of switchable features to their preferred states.
-     */
-    flagStateMap:
-      (state: FeatureFlagState) =>
-      (dest: string): Record<string, FeatureState> => {
-        const featureMap: Record<string, FeatureState> = {}
-        Object.entries(state.flags).forEach(([name, flag]) => {
-          if (getFlagStatus(flag) === SWITCHABLE && flag.storage === dest) {
-            featureMap[name] = getFeatureState(flag)
-          }
-        })
-        return featureMap
-      },
   },
   actions: {
     /**
@@ -131,7 +56,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
     initFromCookies(cookies: Record<string, FeatureState>) {
       Object.entries(cookies).forEach(([name, state]) => {
         const flag = this.flags[name as FlagName]
-        if (flag && getFlagStatus(flag) === SWITCHABLE) {
+        if (flag && this.getFlagStatus(flag) === SWITCHABLE) {
           Vue.set(flag, "preferredState", state)
         }
       })
@@ -188,7 +113,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
           const flagName = name.substring(3) as FlagName
           const flag = this.flags[flagName]
           if (
-            getFlagStatus(flag) === SWITCHABLE &&
+            this.getFlagStatus(flag) === SWITCHABLE &&
             flag.supportsQuery !== false
           ) {
             Vue.set(flag, "preferredState", state)
@@ -203,7 +128,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      */
     toggleFeature(name: FlagName, targetState: FeatureState) {
       const flag = this.flags[name]
-      if (getFlagStatus(flag) === SWITCHABLE) {
+      if (this.getFlagStatus(flag) === SWITCHABLE) {
         flag.preferredState = targetState
         this.writeToCookie()
         this.writeToSession()
@@ -222,7 +147,92 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
     syncAnalyticsWithLocalStorage() {
       const storage = useStorage<boolean | null>("plausible_ignore", null)
       storage.value =
-        getFeatureState(this.flags["analytics"]) === ON ? null : true
+        this.getFeatureState(this.flags["analytics"]) === ON ? null : true
+    },
+
+    /**
+     * Get the status of the flag. If the flag status is environment dependent, this
+     * function will use the flag status for the current environment based on the
+     * `DEPLOYMENT_ENV` environment variable.
+     *
+     * @param flag - the flag for which to get the status
+     */
+    getFlagStatus(flag: FeatureFlag): FlagStatus {
+      if (typeof flag.status === "string") {
+        return flag.status
+      } else {
+        const envIndex = DEPLOY_ENVS.indexOf(this.deploymentEnv)
+        for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
+          if (DEPLOY_ENVS[i] in flag.status) {
+            return flag.status[DEPLOY_ENVS[i]]
+          }
+        }
+      }
+      return DISABLED
+    },
+
+    /**
+     * Get the mapping of switchable features to their preferred states.
+     */
+    flagStateMap(dest: string): Record<string, FeatureState> {
+      const featureMap: Record<string, FeatureState> = {}
+      Object.entries(this.flags).forEach(([name, flag]) => {
+        if (this.getFlagStatus(flag) === SWITCHABLE && flag.storage === dest) {
+          featureMap[name] = this.getFeatureState(flag)
+        }
+      })
+      return featureMap
+    },
+
+    isSwitchable(name: string): boolean {
+      if (!isFlagName(name)) {
+        throw new Error(
+          `Error getting switchable status for flag ${name}: it does not exist.`
+        )
+      }
+      return this.getFlagStatus(this.flags[name]) === SWITCHABLE
+    },
+
+    /**
+     * Get the state of the feature based on the status of the feature flag and the
+     * preferences of the user.
+     *
+     * @param flag - the flag for which to get the state
+     */
+    getFeatureState(flag: FeatureFlag): FeatureState {
+      const status = this.getFlagStatus(flag)
+      if (status === SWITCHABLE) {
+        return flag.preferredState ?? flag.defaultState ?? OFF
+      }
+      if (status === ENABLED) {
+        return ON
+      }
+      return OFF
+    },
+
+    /**
+     * Get the state of the named feature, based on config and cookie.
+     *
+     * Prefer `isOn` for most use cases.
+     */
+    featureState(name: FlagName): FeatureState {
+      if (name in this.flags) {
+        return this.getFeatureState(this.flags[name])
+      } else {
+        warn(`Invalid feature flag accessed: ${name}`)
+        return ON
+      }
+    },
+
+    /**
+     * Proxy for `featureState` to simplify the majority of flag state checks.
+     *
+     * Prefer this for most use cases over using `featureState` directly.
+     *
+     * @returns `true` if the flag is on, false otherwise
+     */
+    isOn(name: FlagName): boolean {
+      return this.featureState(name) === ON
     },
   },
 })
