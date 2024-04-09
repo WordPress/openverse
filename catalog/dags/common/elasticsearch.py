@@ -80,6 +80,10 @@ def remove_excluded_index_settings(index_config):
 
 @task
 def get_record_count_group_by_sources(es_host: str, index: str):
+    """
+    Airflow task that returns a dict where the keys are the sources, and the values are the counts.
+    The function calls Elasticsearch to run an aggs query to do a count grouped by the field "source", and parses the result into a dict.
+    """
     es_hook = ElasticsearchPythonHook(hosts=[es_host])
     body = {"aggs": {"unique_sources": {"terms": {"field": "source"}}}}
 
@@ -89,11 +93,11 @@ def get_record_count_group_by_sources(es_host: str, index: str):
     es_client = es_hook.get_conn
     # es_result object looks like: [{'key': 'flickr', 'doc_count': 2500}, {'key': 'stocksnap', 'doc_count': 2500}]
     es_result = es_client.search(body=body, index=index)
+    es_buckets = es_result["aggregations"]["unique_sources"]["buckets"]
     result = {}
-    for source_count in es_result:
+    for source_count in es_buckets:
         result |= {source_count["key"]: source_count["doc_count"]}
 
-    # result is a dict like {'flickr': 2500, 'stocksnap': 2500}
     return result
 
 

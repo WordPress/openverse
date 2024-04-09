@@ -17,21 +17,23 @@ def report_status(media_type: str, message: str, dag_id: str):
     return message
 
 
-def report_record_difference(before: str, after: str, media_type: str, dag_id: str):
-    before = int(before)
-    after = int(after)
-    count_diff = after - before
-    percent_diff = (count_diff / before) * 100
-    # Note for formatting:
-    # '+' - number will always have a sign in front of it
-    # ',' - number is comma separated
-    # '.' - number is a float
+def report_record_difference(before: dict, after: dict, media_type: str, dag_id: str):
+    all_keys = before.keys() | after.keys()
+    total_before = sum(before.values())
+    total_after = sum(after.values())
+    count_diff = total_after - total_before
+    percent_diff = (count_diff / total_before) * 100
+    breakdown_diff = {k: after.get(k, 0) - before.get(k, 0) for k in all_keys}
+    breakdown_message = "\n".join(f"{k}:{v:+,}" for k, v in breakdown_diff.items())
+
     message = f"""
 Data refresh for {media_type} complete! :tada:
-_Note: All values are row estimates and are not (but nearly) exact_
-*Record count difference for `{media_type}`*: {before:,} → {after:,}
+_Note: All values are now from elasticsearch_
+*Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
 *Change*: {count_diff:+,} ({percent_diff:+}% Δ)
+*Breakdown of changes*:\n
 """
+    message += breakdown_message
     slack.send_message(
         text=message, dag_id=dag_id, username="Data refresh record difference"
     )

@@ -29,13 +29,12 @@ from collections.abc import Sequence
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
+from common import elasticsearch as es
 from common.constants import (
     DAG_DEFAULT_ARGS,
-    OPENLEDGER_API_CONN_ID,
-    XCOM_PULL_TEMPLATE,
+    PRODUCTION,
 )
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
-from common.sql import PGExecuteQueryOperator, single_value
 from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 from data_refresh.reporting import report_record_difference
@@ -75,27 +74,12 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
     )
 
     with dag:
-        # Count estimate SQL for determining the number of rows in the API table. While
-        # this query is not exact, it is close to accurate since the API media table
-        # does not receive many (if any) updates/insertions/deletions once the data
-        # refresh is complete. In testing this was shown to be accurate and fast
-        # (~0.000002% off and 1/14000th of the execution time). However, the reality is
-        # that this count is *not* exact, so we show it as an estimate in reports.
-        count_sql = f"""
-        SELECT c.reltuples::bigint AS estimate
-        FROM   pg_class c
-        JOIN   pg_namespace n ON n.oid = c.relnamespace
-        WHERE  c.relname = '{data_refresh.media_type}'
-        AND    n.nspname = 'public';
-        """
+        es_host = es.get_es_host(environment=PRODUCTION)
 
         # Get the current number of records in the target API table
-        before_record_count = PGExecuteQueryOperator(
-            task_id="get_before_record_count",
-            conn_id=OPENLEDGER_API_CONN_ID,
-            sql=count_sql,
-            handler=single_value,
-            return_last=True,
+        before_record_count = es.get_record_count_group_by_sources(
+            es_host=es_host,
+            index=data_refresh.media_type,
         )
 
         # Trigger the data refresh on the remote ingestion server, and wait
@@ -105,12 +89,9 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Get the final number of records in the API table after the refresh
-        after_record_count = PGExecuteQueryOperator(
-            task_id="get_after_record_count",
-            conn_id=OPENLEDGER_API_CONN_ID,
-            sql=count_sql,
-            handler=single_value,
-            return_last=True,
+        after_record_count = es.get_record_count_group_by_sources(
+            es_host=es_host,
+            index=data_refresh.media_type,
         )
 
         # Report the count difference to Slack
@@ -118,12 +99,8 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
             task_id="report_record_counts",
             python_callable=report_record_difference,
             op_kwargs={
-                "before": XCOM_PULL_TEMPLATE.format(
-                    before_record_count.task_id, "return_value"
-                ),
-                "after": XCOM_PULL_TEMPLATE.format(
-                    after_record_count.task_id, "return_value"
-                ),
+                "before": before_record_count,
+                "after": after_record_count,
                 "media_type": data_refresh.media_type,
                 "dag_id": data_refresh.dag_id,
             },
