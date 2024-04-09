@@ -60,11 +60,34 @@ const pages = {
     ogTitle: "Openverse",
     robots: "all",
   },
+  tag: {
+    url: "/image/collection?tag=cat",
+    title: "cat images | Openverse",
+    ogImage: "/openverse-default.jpg",
+    ogTitle: "cat images | Openverse",
+    robots: "all",
+  },
+  source: {
+    url: "/image/collection?source=flickr",
+    title: "Flickr images | Openverse",
+    ogImage: "/openverse-default.jpg",
+    ogTitle: "Flickr images | Openverse",
+    robots: "all",
+  },
+  creator: {
+    url: "/image/collection?source=flickr&creator=strogoscope",
+    title: "strogoscope | Openverse",
+    ogImage: "/openverse-default.jpg",
+    ogTitle: "strogoscope | Openverse",
+    robots: "all",
+  },
 }
 test.describe("page metadata", () => {
   for (const openversePage of Object.values(pages)) {
     test(`${openversePage.url}`, async ({ page }) => {
-      await preparePageForTests(page, "xl")
+      await preparePageForTests(page, "xl", {
+        features: { additional_search_views: "on" },
+      })
       await page.goto(openversePage.url)
       await expect(page).toHaveTitle(openversePage.title)
       const metaDescription = page.locator('meta[name="description"]')

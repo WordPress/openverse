@@ -57,6 +57,13 @@ const mergedPrsQ = (repo) =>
 const closedIssuesQ = (repo) =>
   `repo:${org}/${repo} is:issue is:closed closed:>=${startDate}`
 
+/* Other constants */
+
+const stackNameMap = {
+  api: 'API',
+  mgmt: 'Management',
+}
+
 /* Format issues, PRs and repos as HTML */
 
 /**
@@ -69,16 +76,42 @@ const closedIssuesQ = (repo) =>
 const getItemsHtml = (title, items) => {
   if (!items.length) return []
 
+  // Get a unique list of stack labels
+  const stacks = [
+    ...new Set(
+      items
+        .flatMap((item) => item.labels) // Flatten all labels into a single array
+        .map((label) => label.name) // Extract the name of each label
+        .filter((name) => name.startsWith('🧱 stack'))
+    ),
+  ].sort()
+
+  // Aggregate items by stack
+  let itemsByStack = {}
+
+  for (const stack of stacks) {
+    const stackName = stack.split(':')[1].trim()
+    itemsByStack[stackName] = items
+      .filter((item) => item.labels.map((label) => label.name).includes(stack))
+      .sort((a, b) => a.number - b.number)
+  }
+
   return [
     `<h3>${title}</h3>`,
-    '<ul>',
-    ...items.map((item) => {
-      const href = item.html_url
-      const number = `#${item.number}`
-      const title = escapeHtml(item.title)
-      return `<li><a href="${href}">${number}</a>: ${title}`
-    }),
-    '</ul>',
+    // Produce a list of elements for each stack, then combine them all
+    ...Object.entries(itemsByStack)
+      .map(([stackName, items]) => [
+        `<h4>${stackNameMap[stackName] || stackName.replace(/\b[a-z]/g, (match) => match.toUpperCase())}</h4>`,
+        '<ul>',
+        ...items.map((item) => {
+          const href = item.html_url
+          const number = `#${item.number}`
+          const title = escapeHtml(item.title)
+          return `<li><a href="${href}">${number}</a>: ${title}`
+        }),
+        '</ul>',
+      ])
+      .flat(),
   ]
 }
 

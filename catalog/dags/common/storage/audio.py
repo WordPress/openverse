@@ -54,7 +54,7 @@ class AudioStore(MediaStore):
         creator_url: str | None = None,
         title: str | None = None,
         meta_data: dict | str | None = None,
-        raw_tags: list | str | None = None,
+        raw_tags: list | set | None = None,
         watermarked: bool | None = False,
         duration: int | None = None,
         bit_rate: int | None = None,
@@ -112,7 +112,7 @@ class AudioStore(MediaStore):
                              in this dictionary, and `license_url` is
                              given as an argument, the argument will
                              replace the one given in the dictionary.
-        raw_tags:            List of tags associated with the audio.
+        raw_tags:            List or set of tags associated with the audio.
         watermarked:         True only if audio has a watermark.
         duration:            in milliseconds
         bit_rate:            Audio bit rate as int.
@@ -138,7 +138,7 @@ class AudioStore(MediaStore):
                              and the `provider` argument in the
                              AudioStore init function is the specific
                              provider of the audio.
-        ingestion_type:      set programmatically
+        ingestion_type:      Set programmatically.
         """
         if audio_set is None:
             audio_set_data = None

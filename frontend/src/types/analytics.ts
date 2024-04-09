@@ -1,6 +1,7 @@
 import type {
   MediaType,
   SearchType,
+  SupportedMediaType,
   SupportedSearchType,
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
@@ -435,6 +436,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
   }
+
   /**
    * Description: The user expands collapsed tags or collapses the expanded ones.
    *
@@ -456,6 +458,25 @@ export type Events = {
     requestKind: RequestKind
     /** The search type when the network error occurred */
     searchType: SupportedSearchType
+  }
+
+  /**
+   * Description: Time client-side search responses. Gives us observability into
+   * real user experience of search timings.
+   * Questions:
+   * - How long does it take for the client to receive a response to search requests?
+   */
+  SEARCH_RESPONSE_TIME: {
+    /** the media type being searched */
+    mediaType: SupportedMediaType
+    /** the Cloudflare cache status, denoting whether the request hit Cloudflare or went all the way to our servers */
+    cfCacheStatus: string
+    /** the IATA location identifier as part of the `cf-ray` header, indicating the data centre the request passed through */
+    cfRayIATA: string
+    /** how many seconds it took to receive a response for the request */
+    elapsedTime: number
+    /** full query string */
+    queryString: string
   }
 }
 

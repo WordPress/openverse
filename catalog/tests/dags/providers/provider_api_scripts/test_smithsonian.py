@@ -2,10 +2,10 @@ from unittest.mock import patch
 
 import pytest
 from airflow.exceptions import AirflowException
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
+
 from providers.provider_api_scripts.smithsonian import SmithsonianDataIngester
 
 

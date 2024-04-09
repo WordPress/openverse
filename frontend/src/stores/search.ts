@@ -114,21 +114,20 @@ export function computeQueryParams(
   return searchQuery
 }
 
-// TODO: After the API changes are done, replace
-// `tags` with `unstable__tag`
+// TODO: Remove `unstable__` parameters after https://github.com/WordPress/openverse/issues/3919
 export function buildCollectionQuery(
   collectionParams: CollectionParams
 ): PaginatedCollectionQuery {
   const { collection, ...params } = collectionParams
 
   const query: PaginatedCollectionQuery = {
+    collection,
+    unstable__collection: collection,
     ...params,
     ...getSensitiveQuery("API"),
-    unstable__collection: collection,
   }
   if ("tag" in query) {
-    query.tags = query.tag
-    delete query.tag
+    query.unstable__tag = query.tag
   }
   return query
 }
@@ -333,9 +332,10 @@ export const useSearchStore = defineStore("search", {
 
       this.addRecentSearch(formattedTerm)
     },
+
     /**
      * Sets the collectionParams and mediaType for the collection page.
-     * Resets the filters and search term.
+     * Resets the filters, search term and clears media in the media store.
      */
     setCollectionState(
       collectionParams: CollectionParams,
@@ -345,6 +345,8 @@ export const useSearchStore = defineStore("search", {
       this.strategy = collectionParams.collection
       this.setSearchType(mediaType)
       this.clearFilters()
+      const mediaStore = useMediaStore()
+      mediaStore.clearMedia()
     },
     /**
      * Called before navigating to a `/search` path, and when the

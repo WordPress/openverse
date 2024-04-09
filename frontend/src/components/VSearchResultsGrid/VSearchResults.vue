@@ -9,7 +9,10 @@
     <template #header>
       <header v-if="searchTerm" class="my-0 md:mb-8 md:mt-4">
         <VSearchResultsTitle
+          :search-term="searchTerm"
           :size="results.type === 'all' ? 'large' : 'default'"
+          :search-type="results.type"
+          :result-counts="resultCounts"
           >{{ searchTerm }}</VSearchResultsTitle
         >
       </header>
@@ -99,7 +102,9 @@ export default defineComponent({
 
     const collectionLabel = computed(() => {
       return i18n
-        .t("browsePage.aria.results", { query: props.searchTerm })
+        .t(`browsePage.aria.results.${props.results.type}`, {
+          query: props.searchTerm,
+        })
         .toString()
     })
     const contentLinkPath = (mediaType: SupportedMediaType) =>

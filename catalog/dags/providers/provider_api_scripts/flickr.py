@@ -17,7 +17,6 @@ from datetime import datetime, timedelta
 import lxml.html as html
 from airflow.models import Variable
 
-from common import constants
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
@@ -175,10 +174,6 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             # Increment the page number on subsequent requests
             return {**prev_query_params, "page": prev_query_params["page"] + 1}
 
-    def get_media_type(self, record):
-        # We only ingest images from Flickr
-        return constants.IMAGE
-
     def get_batch_data(self, response_json):
         self.requests_count += 1
         if response_json is None or response_json.get("stat") != "ok":
@@ -318,9 +313,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # arbitrarily large data in the DB.
         raw_tag_string = image_data.get("tags", "").strip()[:max_tag_string_length]
         if raw_tag_string:
-            # We sort for further consistency between runs, saving on
-            # inserts into the DB later.
-            raw_tags = sorted(list(set(raw_tag_string.split())))
+            raw_tags = raw_tag_string.split()
         return raw_tags
 
     @staticmethod

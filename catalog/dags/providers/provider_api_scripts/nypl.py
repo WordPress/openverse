@@ -4,7 +4,6 @@ from urllib.parse import parse_qs, urlparse
 
 from airflow.models import Variable
 
-from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
@@ -74,10 +73,6 @@ class NyplDataIngester(ProviderDataIngester):
                 **prev_query_params,
                 "page": prev_query_params["page"] + 1,
             }
-
-    def get_media_type(self, record):
-        # This provider only supports Images.
-        return constants.IMAGE
 
     def get_batch_data(self, response_json):
         if response_json:

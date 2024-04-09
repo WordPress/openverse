@@ -25,7 +25,12 @@ export const createPinia = () =>
         },
       },
       error: jest.fn(),
-      localePath: jest.fn(),
+      localePath: jest.fn((val) => {
+        const queryString = Object.keys(val?.query)
+          .map((key) => key + "=" + val?.query[key])
+          .join("&")
+        return `${val?.path ?? "/"}?${queryString}`
+      }),
     },
   }))
 

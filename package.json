@@ -13,18 +13,18 @@
     "preeslint": "pnpm --filter '@openverse/eslint-plugin' run build",
     "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json"
   },
-  "packageManager": "pnpm@8.12.1",
+  "packageManager": "pnpm@8.15.6",
   "engines": {
     "node": ">= 18.0.0 <19",
-    "pnpm": ">= 8.12.1"
+    "pnpm": ">= 8.15.6"
   },
   "volta": {
-    "node": "18.19.1"
+    "node": "18.20.0"
   },
   "devDependencies": {
     "@openverse/eslint-plugin": "workspace:0.0.0",
     "prettier": "3.2.5",
-    "prettier-plugin-tailwindcss": "0.5.11",
+    "prettier-plugin-tailwindcss": "0.5.13",
     "typescript": "5.2.2",
     "vue-tsc": "1.8.27"
   },

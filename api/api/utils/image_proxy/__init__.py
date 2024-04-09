@@ -14,7 +14,6 @@ from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.asyncio import do_not_wait_for
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
 from api.utils.image_proxy.photon import get_photon_request_params
@@ -166,9 +165,7 @@ async def get(
             params=params,
             headers=headers,
         )
-        do_not_wait_for(
-            _tally_response(tallies, media_info, month, domain, upstream_response)
-        )
+        await _tally_response(tallies, media_info, month, domain, upstream_response)
         upstream_response.raise_for_status()
         status_code = upstream_response.status
         content_type = upstream_response.headers.get("Content-Type")
@@ -193,9 +190,7 @@ async def get(
 
         if isinstance(exc, ClientResponseError):
             status = exc.status
-            do_not_wait_for(
-                _tally_client_response_errors(tallies, month, domain, status)
-            )
+            await _tally_client_response_errors(tallies, month, domain, status)
             logger.warning(
                 f"Failed to render thumbnail "
                 f"{upstream_url=} {status=} "

@@ -2,10 +2,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from requests.exceptions import HTTPError
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
+
 from common.licenses.licenses import LicenseInfo
 from providers.provider_api_scripts.freesound import FreesoundDataIngester
 

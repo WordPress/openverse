@@ -15,9 +15,10 @@
     <h2>
       {{ $t("privacy.cookies.title") }}
     </h2>
-    <i18n path="privacy.cookies.content" tag="p">
-      <template #openverse>Openverse</template>
-    </i18n>
+    <p>
+      {{ $t("privacy.cookies.content.a", { openverse: "Openverse" }) }}
+      {{ $t("privacy.cookies.content.b", { openverse: "Openverse" }) }}
+    </p>
 
     <h2>
       {{ $t("privacy.contact.title") }}

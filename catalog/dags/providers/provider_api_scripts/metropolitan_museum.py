@@ -28,11 +28,9 @@ Notes:                  https://metmuseum.github.io/#search
 import argparse
 import logging
 
-from provider_data_ingester import ProviderDataIngester
-
-from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
+from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
 logging.basicConfig(
@@ -167,10 +165,6 @@ class MetMuseumDataIngester(ProviderDataIngester):
 
     def _get_artist_name(self, object_json: dict) -> str | None:
         return object_json.get("artistDisplayName")
-
-    def get_media_type(self, object_json: dict):
-        # This provider only supports Images.
-        return constants.IMAGE
 
 
 def main(date: str):

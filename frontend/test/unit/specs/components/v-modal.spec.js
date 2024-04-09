@@ -1,6 +1,6 @@
 import Vue, { ref, computed } from "vue"
 import { screen } from "@testing-library/vue"
-import userEvent from "@testing-library/user-event"
+import { default as userEvent } from "@testing-library/user-event"
 
 import { render } from "~~/test/unit/test-utils/render"
 
@@ -112,7 +112,7 @@ describe("VModal", () => {
     await doOpen()
 
     expect(getDialog()).toBeVisible()
-    expect(() => screen.getByText(/custom initial focus/i)).not.toThrow()
+    expect(screen.getByText(/custom initial focus/i)).toHaveFocus()
   })
 
   it("should hide the modal on escape", async () => {

@@ -12,12 +12,11 @@ from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
 from asgiref.sync import sync_to_async
 
 from api.constants.media_types import MediaType
-from api.constants.search import SearchStrategy
 from api.controllers import search_controller
 from api.controllers.elasticsearch.related import related_media
 from api.models import ContentProvider
 from api.models.media import AbstractMedia
-from api.serializers import audio_serializers, media_serializers
+from api.serializers import media_serializers
 from api.serializers.provider_serializers import ProviderSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
@@ -32,7 +31,6 @@ from api.utils.throttle import (
 logger = logging.getLogger(__name__)
 
 MediaListRequestSerializer = Union[
-    audio_serializers.AudioCollectionRequestSerializer,
     media_serializers.PaginatedRequestSerializer,
     media_serializers.MediaSearchRequestSerializer,
 ]
@@ -59,7 +57,6 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
     model_class: type[AbstractMedia] = None
     media_type: MediaType | None = None
     query_serializer_class = None
-    collection_serializer_class = None
     default_index = None
 
     def __init__(self, *args, **kwargs):
@@ -100,7 +97,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     def _get_request_serializer(self, request):
         req_serializer = self.query_serializer_class(
-            data=request.query_params, context={"request": request}
+            data=request.query_params,
+            context={"request": request, "media_type": self.media_type},
         )
         req_serializer.is_valid(raise_exception=True)
         return req_serializer
@@ -145,7 +143,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     def list(self, request, *_, **__):
         params = self._get_request_serializer(request)
-        return self.get_media_results(request, "search", params)
+        return self.get_media_results(request, params)
 
     def _validate_source(self, source):
         valid_sources = search_controller.get_sources(self.media_type)
@@ -155,50 +153,14 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
                 detail=f"Invalid source '{source}'. Valid sources are: {valid_string}.",
             )
 
-    def collection(self, request, tag, source, creator, *_, **__):
-        if tag:
-            collection_params = {"tag": tag}
-        elif creator:
-            collection_params = {"creator": creator, "source": source}
-        else:
-            collection_params = {"source": source}
-        if source:
-            self._validate_source(source)
-
-        params = self.collection_serializer_class(
-            data=request.query_params, context={"request": request}
-        )
-        params.is_valid(raise_exception=True)
-
-        return self.get_media_results(request, "collection", params, collection_params)
-
-    @action(detail=False, methods=["get"], url_path=r"tag/(?P<tag>[^/.]+)")
-    def tag_collection(self, request, tag, *_, **__):
-        return self.collection(request, tag, None, None)
-
-    @action(detail=False, methods=["get"], url_path=r"source/(?P<source>[^/.]+)")
-    def source_collection(self, request, source, *_, **__):
-        return self.collection(request, None, source, None)
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"source/(?P<source>[^/.]+)/creator/(?P<creator>.+)",
-    )
-    def creator_collection(self, request, source, creator):
-        return self.collection(request, None, source, creator)
-
-    # Common functionality for search and collection views
-
     def get_media_results(
         self,
         request,
-        strategy: SearchStrategy,
         params: MediaListRequestSerializer,
-        collection_params: dict[str, str] | None = None,
     ):
         page_size = self.paginator.page_size = params.data["page_size"]
         page = self.paginator.page = params.data["page"]
+        self.paginator.warnings = params.context["warnings"]
 
         hashed_ip = hash(self._get_user_ip(request))
         filter_dead = params.validated_data.get("filter_dead", True)
@@ -219,9 +181,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
                 num_results,
                 search_context,
             ) = search_controller.query_media(
-                strategy,
                 params,
-                collection_params,
                 search_index,
                 exact_index,
                 page_size,

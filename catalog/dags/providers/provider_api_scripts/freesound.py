@@ -20,7 +20,6 @@ from airflow.models import Variable
 from requests.exceptions import ConnectionError, HTTPError, SSLError
 from retry import retry
 
-from common import constants
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -52,9 +51,6 @@ class FreesoundDataIngester(ProviderDataIngester):
         }
 
         super().__init__(*args, **kwargs)
-
-    def get_media_type(self, record: dict) -> str:
-        return constants.AUDIO
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:

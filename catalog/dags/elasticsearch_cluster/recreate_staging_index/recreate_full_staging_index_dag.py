@@ -34,11 +34,9 @@ Because this DAG runs on the staging ingestion server and staging elasticsearch
 cluster, it does _not_ interfere with the `data_refresh` or
 `create_filtered_index` DAGs.
 
-However, as the DAG operates on the staging API database it will exit
-immediately if any of the following DAGs are running:
-* `staging_database_restore`
-* `create_proportional_by_provider_staging_index`
-* `create_new_staging_es_index`
+However, as the DAG operates on the staging API database and ES cluster it will exit
+immediately if any of the DAGs tagged as part of the `staging_es_concurrency` group
+are already running.
 """
 
 from datetime import datetime
@@ -52,16 +50,13 @@ from common.constants import (
     AUDIO,
     DAG_DEFAULT_ARGS,
     MEDIA_TYPES,
-    STAGING,
     XCOM_PULL_TEMPLATE,
 )
-from common.sensors.utils import prevent_concurrency_with_dags
-from database.staging_database_restore.constants import (
-    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
+from common.sensors.constants import (
+    STAGING_DB_CONCURRENCY_TAG,
+    STAGING_ES_CONCURRENCY_TAG,
 )
-from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
-    CREATE_NEW_INDEX_CONFIGS,
-)
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
     DAG_ID,
     create_index,
@@ -76,7 +71,12 @@ from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index im
     default_args=DAG_DEFAULT_ARGS,
     schedule=None,
     start_date=datetime(2023, 4, 1),
-    tags=["database", "elasticsearch"],
+    tags=[
+        "database",
+        "elasticsearch",
+        STAGING_DB_CONCURRENCY_TAG,
+        STAGING_ES_CONCURRENCY_TAG,
+    ],
     max_active_runs=1,
     catchup=False,
     doc_md=__doc__,
@@ -108,13 +108,21 @@ from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index im
     render_template_as_native_obj=True,
 )
 def recreate_full_staging_index():
-    # Fail early if the staging_db_restore DAG or the create_new_staging_es_index DAG
+    # Fail early if any other DAG that operates on the staging elasticsearch cluster
     # is running
-    prevent_concurrency = prevent_concurrency_with_dags(
-        external_dag_ids=[
-            STAGING_DB_RESTORE_DAG_ID,
-            CREATE_NEW_INDEX_CONFIGS[STAGING].dag_id,
-        ]
+    prevent_concurrency_es = prevent_concurrency_with_dags_with_tag.override(
+        group_id="prevent_concurrency_with_elasticsearch_dags"
+    )(
+        tag=STAGING_ES_CONCURRENCY_TAG,
+    )
+
+    # Because this DAG pulls records from the staging API database during reindexing
+    # rather than reindexing from another ES index, it must also prevent concurrency
+    # with DAGs that affect the staging DB.
+    prevent_concurrency_db = prevent_concurrency_with_dags_with_tag.override(
+        group_id="prevent_concurrency_with_api_db_dags"
+    )(
+        tag=STAGING_DB_CONCURRENCY_TAG,
     )
 
     target_alias = get_target_alias(
@@ -178,8 +186,10 @@ def recreate_full_staging_index():
     )
 
     # Set up dependencies
-    prevent_concurrency >> target_alias >> get_current_index_if_exists
-    get_current_index_if_exists >> new_index_suffix
+    prevent_concurrency_es >> target_alias
+    prevent_concurrency_db >> target_alias
+
+    target_alias >> get_current_index_if_exists >> new_index_suffix
     new_index_suffix >> do_create_index >> do_point_alias
     do_point_alias >> check_if_should_delete_index
     check_if_should_delete_index >> [delete_old_index, notify_complete]

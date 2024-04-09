@@ -41,18 +41,15 @@ The following are DAGs grouped by their primary tag:
 
 ### Database
 
-| DAG ID                                                                                        | Schedule Interval |
-| --------------------------------------------------------------------------------------------- | ----------------- |
-| [`batched_update`](#batched_update)                                                           | `None`            |
-| [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index) | `None`            |
-| [`delete_records`](#delete_records)                                                           | `None`            |
-| [`point_production_es_alias`](#point_production_es_alias)                                     | `None`            |
-| [`point_staging_es_alias`](#point_staging_es_alias)                                           | `None`            |
-| [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)             | `None`            |
-| [`recreate_full_staging_index`](#recreate_full_staging_index)                                 | `None`            |
-| [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation)             | `None`            |
-| [`report_pending_reported_media`](#report_pending_reported_media)                             | `@weekly`         |
-| [`staging_database_restore`](#staging_database_restore)                                       | `@monthly`        |
+| DAG ID                                                                            | Schedule Interval |
+| --------------------------------------------------------------------------------- | ----------------- |
+| [`batched_update`](#batched_update)                                               | `None`            |
+| [`delete_records`](#delete_records)                                               | `None`            |
+| [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
+| [`recreate_full_staging_index`](#recreate_full_staging_index)                     | `None`            |
+| [`recreate_image_popularity_calculation`](#recreate_image_popularity_calculation) | `None`            |
+| [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
+| [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
 
 ### Elasticsearch
 
@@ -60,6 +57,9 @@ The following are DAGs grouped by their primary tag:
 | ----------------------------------------------------------------------------------------------- | ----------------- |
 | [`create_new_production_es_index`](#create_new_production_es_index)                             | `None`            |
 | [`create_new_staging_es_index`](#create_new_staging_es_index)                                   | `None`            |
+| [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)   | `None`            |
+| [`point_production_es_alias`](#point_production_es_alias)                                       | `None`            |
+| [`point_staging_es_alias`](#point_staging_es_alias)                                             | `None`            |
 | [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck) | `*/15 * * * *`    |
 | [`staging_elasticsearch_cluster_healthcheck`](#staging_elasticsearch_cluster_healthcheck)       | `*/15 * * * *`    |
 
@@ -284,7 +284,7 @@ implementation plan:
 
 ### `batched_update`
 
-Batched Update DAG
+#### Batched Update DAG
 
 This DAG is used to run a batched SQL update on a media table in the Catalog
 database. It is automatically triggered by the `popularity_refresh` DAGs to
@@ -335,19 +335,29 @@ to null would look like this:
 }
 ```
 
+##### Automatic Failure Recovery
+
 The `update_batches` task automatically keeps track of its progress in an
 Airflow variable suffixed with the `query_id`. If the task fails, when it
-resumes (either through a retry or by being manually cleared), it will pick up
-from where it left off. Manually managing this Airflow variable should not be
-necessary.
+retries it will pick up from where it left off. The DAG can still fail if the
+configured number of retries are exceeded.
 
-It is also possible to start an entirely new DagRun using an existing temp
-table, by setting the `resume_update` param to True. With this option enabled,
-the DAG will skip creating the temp table and instead attempt to run an update
-with an existing temp table matching the `query_id`. This option should only be
+##### Manual Recovery
+
+If the DAG does fail, the update can be manually resumed by triggering a new
+DagRun with the same `query_id` and `update_query`, and enabling the
+`resume_update` param. The DAG will skip temp table creation and resume progress
+using the Airflow variable created on the previous run. **Manually managing this
+Airflow variable should not be necessary.**
+
+It is also possible to start an entirely new update using an existing temp
+table, by setting the `resume_update` param to True but providing a new
+`update_query`. The DAG will begin running the new update on records selected
+from the existing temp table matching the `query_id`. This option should only be
 used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
-which caused DAG failures during the `update_batches` step.
+which caused DAG failures during the `update_batches` step. In this case, verify
+that the `BATCH_START` var is set appropriately for your needs.
 
 ### `cc_mixter_workflow`
 
@@ -433,8 +443,9 @@ source from which to pull documents.
 
 There are two mechanisms that prevent this from happening:
 
-1. The filtered index creation DAGs are not allowed to run if a data refresh for
-   the media type is already running.
+1. The filtered index creation DAGs fail immediately if any of the DAGs that are
+   tagged as part of the `production-es-concurrency` group (including the data
+   refreshes) are currently running.
 2. The data refresh DAGs will wait for any pre-existing filtered index creation
    DAG runs for the media type to finish before continuing.
 
@@ -488,8 +499,9 @@ source from which to pull documents.
 
 There are two mechanisms that prevent this from happening:
 
-1. The filtered index creation DAGs are not allowed to run if a data refresh for
-   the media type is already running.
+1. The filtered index creation DAGs fail immediately if any of the DAGs that are
+   tagged as part of the `production-es-concurrency` group (including the data
+   refreshes) are currently running.
 2. The data refresh DAGs will wait for any pre-existing filtered index creation
    DAG runs for the media type to finish before continuing.
 
@@ -600,6 +612,13 @@ The resulting, merged configuration will be:
 }
 ```
 
+##### Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`create_new_staging_es_index` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
+
 ### `create_new_staging_es_index`
 
 #### Create New ES Index DAG
@@ -704,6 +723,13 @@ The resulting, merged configuration will be:
 }
 ```
 
+##### Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`create_new_staging_es_index` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
+
 ### `create_proportional_by_source_staging_index`
 
 #### Create Proportional By Source Staging Index DAG
@@ -732,16 +758,10 @@ This DAG is on a `None` schedule and is run manually.
 
 ##### Race conditions
 
-Because this DAG runs on the staging ingestion server and staging elasticsearch
-cluster, it does _not_ interfere with the `data_refresh` or
-`create_filtered_index` DAGs.
-
-However, as the DAG operates on the staging API database it will exit
-immediately if any of the following DAGs are running:
-
-- `staging_database_restore`
-- `recreate_full_staging_index`
-- `create_new_staging_es_index`
+Because this DAG runs on the staging elasticsearch cluster, it does _not_
+interfere with the production `data_refresh` or `create_filtered_index` DAGs.
+However, it will fail immediately if any of the DAGs tagged as part of the
+`staging-es-concurrency` group are running.
 
 ### `delete_records`
 
@@ -1071,6 +1091,13 @@ also delete that index afterward.
 
 This DAG is on a `None` schedule and is run manually.
 
+##### Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`point_staging_alias` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
+
 ### `point_staging_es_alias`
 
 #### Point ES Alias DAG
@@ -1086,6 +1113,13 @@ also delete that index afterward.
 ##### When this DAG runs
 
 This DAG is on a `None` schedule and is run manually.
+
+##### Race conditions
+
+Each DAG will fail immediately if any of the DAGs tagged as part of the
+es-concurrency group for the DAG's environment is running. (E.g., the
+`point_staging_alias` DAG fails immediately if any DAGs tagged with
+`staging-es-concurrency` are running.)
 
 ### `pr_review_reminders`
 
@@ -1192,12 +1226,9 @@ Because this DAG runs on the staging ingestion server and staging elasticsearch
 cluster, it does _not_ interfere with the `data_refresh` or
 `create_filtered_index` DAGs.
 
-However, as the DAG operates on the staging API database it will exit
-immediately if any of the following DAGs are running:
-
-- `staging_database_restore`
-- `create_proportional_by_provider_staging_index`
-- `create_new_staging_es_index`
+However, as the DAG operates on the staging API database and ES cluster it will
+exit immediately if any of the DAGs tagged as part of the
+`staging_es_concurrency` group are already running.
 
 ### `recreate_image_popularity_calculation`
 
@@ -1277,7 +1308,7 @@ Notes: https://www.smk.dk/en/article/smk-api/
 
 ### `staging_database_restore`
 
-#### Update the staging database
+#### Staging Database Restore DAG
 
 This DAG is responsible for updating the staging database using the most recent
 snapshot of the production database.
