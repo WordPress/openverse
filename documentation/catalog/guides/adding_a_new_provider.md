@@ -97,6 +97,10 @@ in the
 as well as a corresponding test file. Complete the TODOs detailed in the
 generated files to implement behavior specific to your API.
 
+You can run the provider script directly from the command line to run the
+ingestion outside of the workflow. First make sure that the directory with the
+scripts is in your PYTHONPATH
+
 Some APIs may not fit perfectly into the established `ProviderDataIngester`
 pattern. For advanced use cases and examples of how to modify the ingestion
 flow, see the
