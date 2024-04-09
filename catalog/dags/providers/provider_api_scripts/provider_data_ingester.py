@@ -196,9 +196,7 @@ class ProviderDataIngester(ABC):
 
         self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
-        environment = Variable.get(
-            "ENVIRONMENT", default_var="local"
-        )
+        environment = Variable.get("ENVIRONMENT", default_var="local")
 
         should_verbose_log = self.dag_id in Variable.get(
             "SHOULD_VERBOSE_LOG", default_var=[], deserialize_json=True
@@ -551,7 +549,9 @@ class ProviderDataIngester(ABC):
             )
 
             if len(record_data) > 1:
-                self._verbose_log(f"{len(record_data)} entries where found in this record")
+                self._verbose_log(
+                    f"{len(record_data)} entries where found in this record"
+                )
 
             for record in record_data:
                 # We need to know what type of record we're handling in
