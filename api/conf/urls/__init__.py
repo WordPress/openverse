@@ -36,11 +36,13 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("healthcheck/", HealthCheck.as_view(), name="health"),
     path("v1/", include(versioned_paths)),
+] + [
     path(
-        "robots.txt/",
+        f"{file}",
         TemplateView.as_view(
-            template_name="robots.txt",
+            template_name=file,
             content_type="text/plain",
         ),
-    ),
+    )
+    for file in ["robots.txt", "ai.txt"]
 ]
