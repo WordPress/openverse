@@ -18,11 +18,11 @@ importers:
         specifier: 0.5.13
         version: 0.5.13(prettier@3.2.5)
       typescript:
-        specifier: 5.2.2
-        version: 5.2.2
+        specifier: 5.4.4
+        version: 5.4.4
       vue-tsc:
         specifier: 1.8.27
-        version: 1.8.27(typescript@5.2.2)
+        version: 1.8.27(typescript@5.4.4)
 
   automations/js:
     dependencies:
@@ -7094,6 +7094,26 @@ packages:
       muggle-string: 0.3.1
       path-browserify: 1.0.1
       typescript: 5.2.2
+      vue-template-compiler: 2.7.15
+    dev: true
+
+  /@vue/language-core@1.8.27(typescript@5.4.4):
+    resolution: {integrity: sha512-L8Kc27VdQserNaCUNiSFdDl9LWT24ly8Hpwf1ECy3aFb9m6bDhBGQYOujDm21N7EW3moKIOKEanQwe1q5BK+mA==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@volar/language-core': 1.11.1
+      '@volar/source-map': 1.11.1
+      '@vue/compiler-dom': 3.3.4
+      '@vue/shared': 3.3.4
+      computeds: 0.0.1
+      minimatch: 9.0.3
+      muggle-string: 0.3.1
+      path-browserify: 1.0.1
+      typescript: 5.4.4
       vue-template-compiler: 2.7.15
     dev: true
 
@@ -19830,6 +19850,12 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  /typescript@5.4.4:
+    resolution: {integrity: sha512-dGE2Vv8cpVvw28v8HCPqyb08EzbBURxDpuhJvTrusShUfGnhHBafDsLdS1EhhxyL6BJQE+2cT3dDPAv+MQ6oLw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
+
   /ua-parser-js@1.0.35:
     resolution: {integrity: sha512-fKnGuqmTBnIE+/KXSzCn4db8RTigUzw1AN0DmdU6hJovUTbYJKyqj+8Mt1c4VfRDnOVJnENmfYkIPZ946UrSAA==}
     dev: false
@@ -20573,6 +20599,18 @@ packages:
       '@vue/language-core': 1.8.27(typescript@5.2.2)
       semver: 7.5.4
       typescript: 5.2.2
+    dev: true
+
+  /vue-tsc@1.8.27(typescript@5.4.4):
+    resolution: {integrity: sha512-WesKCAZCRAbmmhuGl3+VrdWItEvfoFIPXOvUJkjULi+x+6G/Dy69yO3TBRJDr9eUlmsNAwVmxsNZxvHKzbkKdg==}
+    hasBin: true
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      '@volar/typescript': 1.11.1
+      '@vue/language-core': 1.8.27(typescript@5.4.4)
+      semver: 7.5.4
+      typescript: 5.4.4
     dev: true
 
   /vue@2.7.15:
