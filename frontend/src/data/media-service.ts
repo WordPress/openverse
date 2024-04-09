@@ -10,9 +10,7 @@ import type { Events } from "~/types/analytics"
 
 import type { AxiosResponse } from "axios"
 
-export type SearchTimeEventPayload =
-  | Events["AUDIO_SEARCH_RESPONSE_TIME"]
-  | Events["IMAGE_SEARCH_RESPONSE_TIME"]
+export type SearchTimeEventPayload = Events["SEARCH_RESPONSE_TIME"]
 
 export interface MediaResult<
   T extends Media | Media[] | Record<string, Media>,
@@ -77,6 +75,7 @@ class MediaService<T extends Media> {
       cfRayIATA: String(cfRayIATA),
       elapsedTime: elapsedSeconds,
       queryString: url.search,
+      mediaType: this.mediaType,
     }
   }
 

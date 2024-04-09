@@ -27,7 +27,6 @@ import { deepFreeze } from "~/utils/deep-freeze"
 interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
   hasStarted: boolean
 }
-import type { EventName } from "~/types/analytics"
 import type { SearchTimeEventPayload } from "~/data/media-service"
 
 export type MediaStoreResult = {
@@ -450,14 +449,9 @@ export const useMediaStore = defineStore("media", {
       this.currentPage = 0
     },
 
-    recordSearchTime(
-      payload: SearchTimeEventPayload | undefined,
-      mediaType: SupportedMediaType
-    ) {
+    recordSearchTime(payload: SearchTimeEventPayload | undefined) {
       if (payload) {
-        const eventName =
-          `${mediaType.toUpperCase()}_SEARCH_RESPONSE_TIME` as EventName
-        this.$nuxt.$sendCustomEvent(eventName, payload)
+        this.$nuxt.$sendCustomEvent("SEARCH_RESPONSE_TIME", payload)
       }
     },
 
@@ -484,7 +478,7 @@ export const useMediaStore = defineStore("media", {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
         const { eventPayload, data } = await service.search(queryParams)
-        this.recordSearchTime(eventPayload, mediaType)
+        this.recordSearchTime(eventPayload)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**

@@ -111,6 +111,7 @@ describe("Media Service search and recordSearchTime", () => {
       cfRayIATA: "SJC",
       elapsedTime: 2,
       queryString: "?q=apple",
+      mediaType: "image",
     })
 
     const AUDIO_QUERY_PARAMS = { q: "table" }
@@ -121,6 +122,7 @@ describe("Media Service search and recordSearchTime", () => {
       cfRayIATA: "LHR",
       elapsedTime: 3,
       queryString: "?q=table&peaks=true",
+      mediaType: "audio",
     })
   })
 })
