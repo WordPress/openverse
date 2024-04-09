@@ -204,7 +204,7 @@ class ProviderDataIngester(ABC):
             "SHOULD_VERBOSE_LOG", default_var=[], deserialize_json=True
         )
 
-        self._should_verbose_log = environment != 'prod' or should_verbose_log
+        self._should_verbose_log = environment == "local" or should_verbose_log
 
     def _init_media_stores(self, day_shift: int = None) -> dict[str, MediaStore]:
         """Initialize a media store for each media type supported by this provider."""
