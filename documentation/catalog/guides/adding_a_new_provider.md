@@ -98,8 +98,17 @@ as well as a corresponding test file. Complete the TODOs detailed in the
 generated files to implement behavior specific to your API.
 
 You can run the provider script directly from the command line to run the
-ingestion outside of the workflow. First make sure that the directory with the
-scripts is in your PYTHONPATH
+ingestion outside of the workflow. The TSV file will be saved in your /tmp/tmp
+folder.
+
+- First make sure that the directory with the scripts is in your PYTHONPATH
+  ```
+  export PYTHONPATH=<path_to_openverse>/catalog/dags
+  ```
+- Then cd into the openverse dir and run the script as so:
+  ```
+  python catalog/dags/providers/provider_api_scripts/<your_script>.py
+  ```
 
 Some APIs may not fit perfectly into the established `ProviderDataIngester`
 pattern. For advanced use cases and examples of how to modify the ingestion
