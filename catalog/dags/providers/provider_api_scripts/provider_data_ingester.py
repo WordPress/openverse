@@ -197,7 +197,7 @@ class ProviderDataIngester(ABC):
         self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
         environment = Variable.get(
-            "ENVIRONMENT", default_var='dev'
+            "ENVIRONMENT", default_var="local"
         )
 
         should_verbose_log = self.dag_id in Variable.get(
