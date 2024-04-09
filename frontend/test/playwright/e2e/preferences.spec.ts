@@ -73,7 +73,6 @@ test.describe("switchable features", () => {
 
       const featureCookie = await getFeatureCookies(page, feature.storageCookie)
       expect(featureCookie[name]).toEqual(feature.to)
-      expect(1).toEqual(9)
     })
   }
 })
