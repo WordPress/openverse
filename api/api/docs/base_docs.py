@@ -15,6 +15,7 @@ from drf_spectacular.utils import (
 )
 
 from api.constants.media_types import MediaType
+from api.constants.parameters import COLLECTION, TAG
 
 
 def fields_to_md(field_names):
@@ -141,7 +142,7 @@ tag_path_parameter = OpenApiParameter(
 )
 
 SEARCH_DESCRIPTION_DEFAULT = """
-Return audio files that match the query.
+Return {media_type} that match the query.
 
 This endpoint allows you to search within specific fields, or to retrieve
 a collection of all {media_type} from a specific source, creator or tag.
@@ -169,11 +170,11 @@ The default search results are sorted by relevance.
 
 ### Collection search
 The collection search allows to retrieve a collection of media from a specific source,
-creator or tag. The `collection` parameter is used to specify the type of collection to retrieve.
+creator or tag. The `{collection_param}` parameter is used to specify the type of collection to retrieve.
 
-- `collection=tag&tag=tagName` will return the media with tag `tagName`.
-- `collection=source&source=sourceName` will return the media from source `sourceName`.
-- `collection=creator&creator=creatorName` will return the media by creator `creatorName`.
+- `{collection_param}=tag&{tag_param}=tagName` will return the media with tag `tagName`.
+- `{collection_param}=source&source=sourceName` will return the media from source `sourceName`.
+- `{collection_param}=creator&creator=creatorName&source=sourceName` will return the media by creator `creatorName` at `sourceName`.
 
 Collection results are sorted by the time they were added to Openverse, with the most recent
 additions appearing first. The filters such as `license` are not available for collections.
@@ -201,3 +202,15 @@ SEARCH_DESCRIPTION = (
     if settings.SHOW_COLLECTION_DOCS
     else SEARCH_DESCRIPTION_COLLECTIONS_DISABLED
 )
+
+NON_FILTER_FIELDS = [
+    "q",
+    TAG,
+    COLLECTION,
+    "page",
+    "page_size",
+    "unstable__sort_by",
+    "unstable__sort_dir",
+    "unstable__authority",
+    "unstable__authority_boost",
+]

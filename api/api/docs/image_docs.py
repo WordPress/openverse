@@ -6,7 +6,9 @@ from rest_framework.exceptions import (
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
+from api.constants.parameters import COLLECTION, TAG
 from api.docs.base_docs import (
+    NON_FILTER_FIELDS,
     SEARCH_DESCRIPTION,
     custom_extend_schema,
     fields_to_md,
@@ -42,11 +44,16 @@ from api.serializers.provider_serializers import ProviderSerializer
 
 
 serializer = ImageSearchRequestSerializer(context={"media_type": "image"})
-image_filter_fields = fields_to_md([f for f in serializer.field_names if f != "q"])
+image_filter_fields = fields_to_md(
+    [f for f in serializer.field_names if f not in NON_FILTER_FIELDS]
+)
+
 
 image_search_description = SEARCH_DESCRIPTION.format(
     filter_fields=image_filter_fields,
     media_type="images",
+    collection_param=COLLECTION,
+    tag_param=TAG,
 )
 
 search = custom_extend_schema(
