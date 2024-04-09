@@ -28,7 +28,6 @@ const config: PlaywrightTestConfig = {
       API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
       PW: "true",
-      DEPLOYMENT_ENV: "staging",
     },
   },
   use: {
