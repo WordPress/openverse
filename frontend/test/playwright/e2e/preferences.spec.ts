@@ -35,11 +35,11 @@ const getSwitchableInput = async (
   checked: boolean
 ) => {
   const checkbox = page.locator(`input[type=checkbox]#${name}`).first()
-  expect(await checkbox.getAttribute("disabled")).toBeNull()
+  await expect(checkbox).toBeEnabled()
   if (checked) {
-    await expect(checkbox).toHaveAttribute("checked", "checked")
+    await expect(checkbox).toBeChecked()
   } else {
-    await expect(checkbox).not.toHaveAttribute("checked")
+    await expect(checkbox).not.toBeChecked()
   }
   return checkbox
 }
@@ -57,11 +57,12 @@ test.describe("switchable features", () => {
       const featureFlag = await getSwitchableInput(page, name, feature.checked)
       await featureFlag.click()
 
-      const inputCheckedStatus = await page
-        .locator(`#${name}`)
-        .first()
-        .getAttribute("checked")
-      expect(inputCheckedStatus).toEqual(feature.checked ? "checked" : null)
+      // eslint-disable-next-line playwright/no-conditional-in-test
+      if (feature.checked) {
+        await expect(featureFlag).not.toBeChecked()
+      } else {
+        await expect(featureFlag).toBeChecked()
+      }
     })
 
     test(`switching ${name} from ${feature.from} to ${feature.to} saves state in a cookie`, async ({
