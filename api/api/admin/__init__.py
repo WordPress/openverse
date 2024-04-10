@@ -147,7 +147,6 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
     currently logged-in user's preferences
     """
 
-    can_delete = False
     verbose_name_plural = "My Preferences"
     verbose_name = "My Preferences"
     form = UserPreferencesAdminForm
@@ -156,11 +155,11 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.filter(user=request.user)
 
-    def has_change_permission(self, request, obj=None):
-        if not obj:
-            # the changelist itself
-            return True
-        return obj.user == request.user
+    def has_add_permission(*args, **kwargs):
+        return False
+
+    def has_delete_permission(*args, **kwargs):
+        return False
 
     def changelist_view(self, request, extra_context=None):
         obj = self.get_queryset(request).first()
