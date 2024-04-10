@@ -112,7 +112,7 @@
     "@testing-library/vue": "^5.9.0",
     "@types/express-useragent": "^1.0.2",
     "@types/jest": "^29.5.12",
-    "@types/node": "18.19.28",
+    "@types/node": "18.19.31",
     "@types/throttle-debounce": "^5.0.0",
     "@types/uuid": "^9.0.6",
     "@vue/test-utils": "^1.1.3",
