@@ -1,11 +1,11 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
 class UserPreferences(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     preferences = models.JSONField(default=dict)
 
     def __str__(self):
@@ -31,7 +31,7 @@ class UserPreferences(models.Model):
         self.moderator |= {"blur_images": value}
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserPreferences.objects.create(user=instance)
