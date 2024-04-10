@@ -32,24 +32,28 @@ into Airflow itself, and removing the ingestion server entirely.
 The work which must be moved into Airflow can be split into these abstract
 steps, which will be discussed separately in this IP:
 
-- **Copy Data**: A FDW extension is used to connect the API database to the
-  upstream (catalog) database. The entire contents of the upstream media table
-  are copied into a new temp table in the API database. This temp table will
-  later replace the main media table in the API.
+- **Copy Data**: An
+  [FDW extension](https://www.postgresql.org/docs/current/postgres-fdw.html) is
+  used to connect the API database to the upstream (catalog) database. The
+  entire contents of the upstream media table are copied into a new temp table
+  in the API database. This temp table will later replace the main media table
+  in the API.
 - **Clean Data**: Data clean up which includes removing denylisted tags and
   cleaning URLs. This step will become unnecessary when the
   [Catalog Data Cleaning project](https://github.com/WordPress/openverse/issues/430)
-  is completed, which moves all data cleaning steps into ingestion.
+  is completed, which moves all data cleaning steps upstream into the initial
+  provider ingestion process.
 - **Create Index**: Create a new Elasticsearch index, matching the configuration
   of the existing media index.
 - **Distributed Reindex**: Convert each record from the new temp table to the
   format required by an Elasticsearch document, and then reindex them into the
   newly created index. Because this step is by far the most time consuming, the
-  reindex is distributed across multiple **indexer workers**, which are
-  themselves running on EC2 instances (6 in production, 2 in staging). Each
-  indexer worker serves a small API which can be used to trigger a reindexing
-  task for an equal portion of the work. The workers are started by the
-  ingestion-server when needed, and automatically spun down when complete.
+  reindex is distributed across multiple **indexer workers**. In the current
+  implementation, the indexer workers are themselves running on EC2 instances (6
+  in production, 2 in staging). Each indexer worker serves a small API which can
+  be used to trigger a reindexing task for an equal portion of the work. The
+  workers are started by the ingestion-server when needed, and automatically
+  spun down when complete.
 - **Create and Populate Filtered Index**: Create a new Elasticsearch index
   matching the configuration of the existing _filtered_ index, and then reindex
   documents into it from the new media index, applying appropriate filtering for
@@ -377,7 +381,7 @@ to add a new `catalog-indexer-worker` service. Its build context should point to
 the nested `data_refresh/indexer_worker` directory, and it should map the
 exposed port to enable the API to be reached by the catalog.
 
-When this work is complete, it should be possible to run `just catalog/ipython`
+When this work is complete, it should be possible to run `just catalog/shell`
 and curl the new indexer worker. The existing ingestion-server and
 indexer-worker services are unaffected (it is still possible to run legacy data
 refreshes locally and in production).
@@ -392,12 +396,12 @@ code can all be refactored from
 [`distributed_reindex_scheduler.py`](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/distributed_reindex_scheduler.py).
 
 - Use Airflow's
-  [EC2Hook#describe_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.describe_instances)
+  [EC2Hook::describe_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.describe_instances)
   to get a list of internal URLs bound to the indexer workers for the
   appropriate environment. In the local environment, this will instead return
   the URL for the catalog-indexer-worker Docker container.
 - Use
-  [EC2Hook#start_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.start_instances)
+  [EC2Hook::start_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.start_instances)
   to start the appropriate EC2 instances. This step should skip in a local
   environment.
 - Use dynamic task mapping to generate a Sensor for each of the expected indexer
@@ -411,8 +415,11 @@ code can all be refactored from
   - Use a Sensor to ping the worker's `task/{task_id}` endpoint until the task
     is complete, logging the progress as it goes
   - Use the
-    [EC2Hook#stop_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.stop_instances)
-    to shut the instance down. This step should skip in a local environment.
+    [EC2Hook::stop_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.stop_instances)
+    to shut the instance down. It should use the
+    [`NONE_FAILED` TriggerRule](https://github.com/WordPress/openverse/issues/286)
+    to ensure that the instances are shut down, even if there are upstream
+    failures. This step should skip in a local environment.
 
 ### Create the Terraform and Ansible resources needed to deploy the new indexer workers
 
@@ -503,9 +510,8 @@ will no longer be necessary and can then be deleted.
 
 ### Update the load_sample_data scripts
 
-Our `load_sample_data.sh` scripts currently use `just` commands to ]run parts of
-the data
-refresh](https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/load_sample_data.sh#L98)
+Our `load_sample_data.sh` scripts currently use `just` commands to
+[run parts of the data refresh](https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/load_sample_data.sh#L98)
 on the local ingestion server, as part of setting up the local development
 environment. We should update the scripts to instead use the Airflow CLI to
 unpause the two data refresh DAGs and await their completion.
@@ -540,14 +546,16 @@ No new tools or packages are required.
   Project.
 - [Catalog Data Cleaning project](https://github.com/WordPress/openverse/issues/430),
   which removes the Clean Data steps from the data refresh
+- [Switch Python Package Management Away from Pipenv](https://github.com/WordPress/openverse/issues/286)
 
 ## Alternatives
 
 <!-- Describe any alternatives considered and why they were not chosen or recommended. -->
 
 The alternative options of using an ECS approach or performing the reindex
-entirely in Airflow are discussed at length in the [Approach to the Distributed
-Reindex][#approach-to-the-distributed-reindex] section.
+entirely in Airflow are discussed at length in the
+[Approach to the Distributed Reindex](#approach-to-the-distributed-reindex)
+section.
 
 ## Blockers
 
@@ -582,5 +590,6 @@ monitor the first production data refreshes closely.
 
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
 
-[^1]
+[^1]:
+
 https://towardsdatascience.com/using-apache-airflow-dockeroperator-with-docker-compose-57d0217c8219
