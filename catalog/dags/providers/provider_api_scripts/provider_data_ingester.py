@@ -251,6 +251,8 @@ class ProviderDataIngester(ABC):
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
         while should_continue:
+            self._verbose_log(f"Next set of query params: {query_params}")
+
             if query_params is None:
                 # Break out of ingestion if no query_params are supplied. This can
                 # happen when the final `override_query_params` is processed.
@@ -435,7 +437,6 @@ class ProviderDataIngester(ABC):
         # * any `additional_query_params`, which are provided via the DagRun conf
         #   and applied to all batches, in every round of ingestion
         next_query_params = self.get_next_query_params(prev_query_params)
-        self._verbose_log(f"Next set of query params: {next_query_params}")
         fixed_query_params = fixed_query_params or {}
         return next_query_params | fixed_query_params | self.additional_query_params
 
@@ -537,7 +538,7 @@ class ProviderDataIngester(ABC):
 
         for data in media_batch:
             if not (record_data := self.get_record_data(data)):
-                self._verbose_log("No entries to process in this record")
+                self._verbose_log("No data could be processed from this batch item.")
                 continue
 
             record_data = (
@@ -550,7 +551,7 @@ class ProviderDataIngester(ABC):
 
             if len(record_data) > 1:
                 self._verbose_log(
-                    f"{len(record_data)} entries where found in this record"
+                    f"{len(record_data)} records were processed from this batch item."
                 )
 
             for record in record_data:
@@ -567,7 +568,7 @@ class ProviderDataIngester(ABC):
                     logger.info("Ingestion limit has been reached. Halting processing.")
                     return processed_count
 
-        self._verbose_log(f"{processed_count} items where processed")
+        self._verbose_log(f"{processed_count} records where processed in this batch.")
 
         return processed_count
 
