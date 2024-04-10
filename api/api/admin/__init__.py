@@ -155,6 +155,9 @@ class IndividualUserPreferencesAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.filter(user=request.user)
 
+    def has_change_permission(self, request, obj=None):
+        return True
+
     def has_add_permission(*args, **kwargs):
         return False
 
