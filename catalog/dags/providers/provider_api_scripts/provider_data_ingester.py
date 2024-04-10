@@ -196,13 +196,9 @@ class ProviderDataIngester(ABC):
 
         self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
-        environment = Variable.get("ENVIRONMENT", default_var="local")
-
-        should_verbose_log = self.dag_id in Variable.get(
+        self._should_verbose_log = self.dag_id in Variable.get(
             "SHOULD_VERBOSE_LOG", default_var=[], deserialize_json=True
         )
-
-        self._should_verbose_log = environment == "local" or should_verbose_log
 
     def _init_media_stores(self, day_shift: int = None) -> dict[str, MediaStore]:
         """Initialize a media store for each media type supported by this provider."""
