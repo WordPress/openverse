@@ -586,7 +586,9 @@ def report_aggregate_reingestion_errors(
         f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
         f" ingestion days while running the `{provider_conf.dag_id}` DAG. See the following"
         " logs for details:\n"
-    ) + "\n".join(f"  - {task.log_url}" for task in failed_pull_data_tasks)
+    ) + "\n".join(
+        f"  - <{task.log_url}|{task.task_id}>" for task in failed_pull_data_tasks
+    )
 
     slack.send_alert(message, provider_conf.dag_id, "Aggregate Reingestion Error")
 
