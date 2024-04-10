@@ -486,6 +486,7 @@ class ProviderDataIngester(ABC):
 
         # Build a list of records from the response
         batch = self.get_batch_data(response_json)
+        self._verbose_log("Batch data:", batch)
 
         # Optionally, apply some logic to the response to determine whether
         # ingestion should continue or if should be short-circuited. By default
@@ -606,6 +607,9 @@ class ProviderDataIngester(ABC):
         logger.info(f"Committed {total} records")
         return total
 
-    def _verbose_log(self, msg: str):
+    def _verbose_log(self, msg: str, data=[]):
         if self._should_verbose_log:
             logger.info(msg)
+            if data:
+                for item in data[:5]:
+                    logger.info(f"\t{item}")
