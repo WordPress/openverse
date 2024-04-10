@@ -12,8 +12,8 @@ import yaml
 from api.models.media import AbstractMedia
 
 
-preamble_path = Path(__file__).parents[2] / "docs" / "media_properties" / "preamble.md"
-output_path = Path(__file__).parents[3] / "media_properties.md"
+PREAMBLE_PATH = Path(__file__).parents[2] / "docs" / "media_properties" / "preamble.md"
+OUTPUT_PATH = Path(__file__).parents[3] / "media_properties.md"
 
 
 @dataclass
@@ -179,7 +179,7 @@ def generate_docs(props: dict[str, list[FieldInfo]]) -> str:
 
     output = ""
 
-    output += preamble_path.read_text()
+    output += PREAMBLE_PATH.read_text()
     output += "\n"
 
     for model, fields in props.items():
@@ -328,4 +328,4 @@ class Command(BaseCommand):
     def handle(self, **options):
         props = parse_models()
         docs = generate_docs(props)
-        output_path.write_text(docs)
+        OUTPUT_PATH.write_text(docs)
