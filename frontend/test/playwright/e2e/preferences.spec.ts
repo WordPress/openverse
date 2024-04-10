@@ -2,32 +2,45 @@ import { test, expect, Page } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
+import featureData from "~~/feat/feature-flags.json"
+
+import { _getFlagStatus, type FlagName } from "~/stores/feature-flag"
+import type { FeatureFlag } from "~/types/feature-flag"
+
+const deployEnv = "staging" as const
+
 const getFeatureCookies = async (page: Page, cookieName: string) => {
   const cookies = await page.context().cookies()
   const cookieValue = cookies.find(
     (cookie) => cookie.name === cookieName
   )?.value
   if (!cookieValue) {
-    console.error("no cookie value found for", cookieName, "cookie", cookies)
     return {}
   }
   return JSON.parse(decodeURIComponent(cookieValue))
 }
 
-const features = {
-  fetch_sensitive: {
-    checked: false,
-    from: "off",
-    to: "on",
-    storageCookie: "sessionFeatures",
-  },
-  additional_search_views: {
-    checked: true,
-    from: "on",
-    to: "off",
-    storageCookie: "features",
-  },
+/**
+ * Ensure that the features to be tested are not out of sync with the feature flags.
+ */
+const getFeaturesToTest = () => {
+  const testableFeatures = {
+    fetch_sensitive: "off",
+    additional_search_views: "on",
+  } as const
+  for (const [name, state] of Object.entries(testableFeatures)) {
+    const flag = featureData.features[name as FlagName] as FeatureFlag
+    if (_getFlagStatus(flag, deployEnv) !== "switchable") {
+      throw new Error(`Feature ${name} is not switchable`)
+    }
+    if (flag.defaultState !== state) {
+      throw new Error(`Feature ${name} is not in the expected state ${state}`)
+    }
+  }
+  return testableFeatures
 }
+
+const features = getFeaturesToTest()
 
 const getSwitchableInput = async (
   page: Page,
@@ -49,31 +62,34 @@ test.describe("switchable features", () => {
     await preparePageForTests(page, "xl")
   })
 
-  for (const [name, feature] of Object.entries(features)) {
-    test(`can switch ${name} from ${feature.from} to ${feature.to}`, async ({
-      page,
-    }) => {
+  for (const [name, defaultState] of Object.entries(features)) {
+    const checked = defaultState === "on"
+
+    test(`can switch ${name} from ${defaultState}`, async ({ page }) => {
       await page.goto(`/preferences`)
-      const featureFlag = await getSwitchableInput(page, name, feature.checked)
+      const featureFlag = await getSwitchableInput(page, name, checked)
       await featureFlag.click()
 
       // eslint-disable-next-line playwright/no-conditional-in-test
-      if (feature.checked) {
+      if (checked) {
         await expect(featureFlag).not.toBeChecked()
       } else {
         await expect(featureFlag).toBeChecked()
       }
     })
 
-    test(`switching ${name} from ${feature.from} to ${feature.to} saves state in a cookie`, async ({
+    test(`switching ${name} from ${defaultState} saves state in a cookie`, async ({
       page,
     }) => {
       await page.goto(`/preferences`)
-      const featureFlag = await getSwitchableInput(page, name, feature.checked)
+      const featureFlag = await getSwitchableInput(page, name, checked)
       await featureFlag.click()
 
-      const featureCookie = await getFeatureCookies(page, feature.storageCookie)
-      expect(featureCookie[name]).toEqual(feature.to)
+      const storageCookie = { cookie: "features", session: "sessionFeatures" }[
+        featureData.features[name as FlagName].storage as "cookie" | "session"
+      ]
+      const featureCookie = await getFeatureCookies(page, storageCookie)
+      expect(featureCookie[name]).toEqual(defaultState === "on" ? "off" : "on")
     })
   }
 })

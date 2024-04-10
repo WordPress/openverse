@@ -32,6 +32,20 @@ export interface FeatureFlagState {
   flags: Record<FlagName, FeatureFlag>
 }
 
+export const _getFlagStatus = (flag: FeatureFlag, deployEnv: DeployEnv) => {
+  if (typeof flag.status === "string") {
+    return flag.status
+  } else {
+    const envIndex = DEPLOY_ENVS.indexOf(deployEnv)
+    for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
+      if (DEPLOY_ENVS[i] in flag.status) {
+        return flag.status[DEPLOY_ENVS[i]]
+      }
+    }
+  }
+  return DISABLED
+}
+
 const FEATURE_FLAG = "feature_flag"
 
 export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
@@ -158,17 +172,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * @param flag - the flag for which to get the status
      */
     getFlagStatus(flag: FeatureFlag): FlagStatus {
-      if (typeof flag.status === "string") {
-        return flag.status
-      } else {
-        const envIndex = DEPLOY_ENVS.indexOf(this.deploymentEnv)
-        for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
-          if (DEPLOY_ENVS[i] in flag.status) {
-            return flag.status[DEPLOY_ENVS[i]]
-          }
-        }
-      }
-      return DISABLED
+      return _getFlagStatus(flag, this.deploymentEnv)
     },
 
     /**
