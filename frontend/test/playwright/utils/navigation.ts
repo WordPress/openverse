@@ -205,7 +205,7 @@ export const preparePageForTests = async (
 ) => {
   const { dismissBanners = true, dismissFilter = true } = options
 
-  const cookiesToSet: Record<string, unknown> = {
+  const cookiesToSet: CookieMap = {
     ui: {
       dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
       isFilterDismissed: dismissFilter ?? false,
@@ -378,7 +378,7 @@ export interface CookieMap {
 
 export const setCookies = async (
   context: BrowserContext,
-  cookies: Record<string, unknown>
+  cookies: CookieMap
 ) => {
   const existingCookies = await context.cookies()
   const cookiesToSet = Object.entries(cookies).map(([name, value]) => {
