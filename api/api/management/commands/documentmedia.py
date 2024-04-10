@@ -56,8 +56,8 @@ class FieldInfo:
             return None
         if internal_type == "ArrayField":
             # ``ArrayField`` is a PostgreSQL-specific field.
-            return "https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#arrayfield"
-        return f"https://docs.djangoproject.com/en/dev/ref/models/fields/#{internal_type.lower()}"
+            return "https://docs.djangoproject.com/en/stable/ref/contrib/postgres/fields/#arrayfield"
+        return f"https://docs.djangoproject.com/en/stable/ref/models/fields/#{internal_type.lower()}"
 
     @property
     def internal_type(self) -> str | tuple[str, str]:
