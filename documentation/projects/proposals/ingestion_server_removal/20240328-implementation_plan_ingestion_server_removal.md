@@ -135,9 +135,8 @@ approaches:
 Maintaining the
 [EC2 worker instances](https://calculator.aws/#/createCalculator/ec2-enhancement),
 provided we continue to automatically stop the instances when not in use, would
-be cheaper than using
-[ECS](https://calculator.aws/#/createCalculator/Fargate)[^1], given equivalent
-resources.
+be cheaper than using [ECS](https://calculator.aws/#/createCalculator/Fargate),
+given equivalent resources.
 
 Since our existing indexer workers do not use all of the resources available, we
 can also consider reducing resources for the workers. For EC2, we are already
@@ -604,9 +603,8 @@ monitor the first production data refreshes closely.
 
 [^1]:
     See
-    https://github.com/WordPress/openverse/pull/4026#pullrequestreview-1978477921
+    [comment](https://github.com/WordPress/openverse/pull/4026#pullrequestreview-1978477921)
     for specific cost assessment, courtesy of @sarayourfriend
 
 [^2]:
-
-https://towardsdatascience.com/using-apache-airflow-dockeroperator-with-docker-compose-57d0217c8219
+    https://towardsdatascience.com/using-apache-airflow-dockeroperator-with-docker-compose-57d0217c8219
