@@ -114,8 +114,12 @@ of maintaining remote workers that can be run only when needed.
 
 Two other options were evaluated for this IP:
 
-- Simply move the 8 total existing EC2 worker instances into the catalog, and
-  connect to them directly from Airflow.
+- Keep the EC2 instances as they are now, but connect to them directly from
+  Airflow. Rather than managing the 8 total EC2 instances directly, we will
+  instead set up an EC2 Auto Scaling group for each environment, with an initial
+  desired capacity of 0. The data refresh DAGs will spin up instances by
+  increasing this desired capacity. (More details follow later in this
+  document.)
 - Remove the EC2 instances entirely in favor of a new ECS task definition using
   the `indexer-worker` image, which would remove all API code and contain only
   the reindexing script. Airflow would spin up the appropriate number of ECS
@@ -200,40 +204,38 @@ into the status of the task from Airflow.
 
 #### Impact on Deployments
 
-This is the greatest strength of the ECS approach. Each time an ECS task is spun
-up on Fargate, it will pull the Docker image configured in the task definition.
-By using the `latest` tag in this configuration we can ensure that the latest
-indexer-worker image is pulled each time, which means that any changes to the
-reindexing code will become live in production as soon as the new docker image
-is published after merging on `main`.
+This is a great strength of both approaches, each of which would eliminate the
+need for deployments when changes are made to the data refresh code (including
+changes to the indexer workers).
 
-For the EC2 approach, any changes to the reindexing script or its dependencies
-would require deploying the catalog (and by extension the indexer workers).
-However:
+Each time an ECS task is spun up on Fargate, it will pull the Docker image
+configured in the task definition. By using the `latest` tag in this
+configuration we can ensure that the latest indexer-worker image is pulled each
+time, which means that any changes to the reindexing code will become live in
+production as soon as the new docker image is published after merging on `main`.
 
-- No deployment would be required for changes to the vast majority of the data
-  refresh implementation, including the data copy, filtered index creation,
-  alias management, and all aspects of orchestrating the indexer workers.
-- _If_ deploying the indexer-worker becomes a frequent issue in the future, we
-  could iterate on the data refresh DAG to automatically update the workers. For
-  example we could use an Airflow
-  [SSHOperator](https://docs.aws.amazon.com/mwaa/latest/userguide/samples-ssh.html)
-  to connect to the instances and pull the latest image before triggering the
-  task. I think this is unlikely enough to be a problem that this does not need
-  to be a requirement of the initial implementation.
+The EC2 approach uses an ASG to achieve a similar result. Because the ASG will
+actually terminate (rather than stop) the instances when their work is complete
+and start _new_ instances for each data refresh, we can pull the Docker image
+with the `latest` tag in the `user_data` script so that the latest Docker image
+is pulled each time a new data refresh starts. By using AWS Systems Manager
+parameters instead of AMI IDs in the launch template, we can even use the ASG to
+automatically use new AMI IDs without needing to deploy a new launch template
+each time a system dependency is updated.
 
 ### Conclusion
 
-The ECS approach allows us to remove 100% of the server management code, and
-eliminates the need for deployments in essentially every case (unless the task
-definition itself changes). However it is more expensive, more difficult to
-implement, and requires a special secondary implementation for running locally
-that may be prone to cross-platform issues.
+Both approaches allow us to eliminate the need for deployments in almost all
+cases, except for when changes are made to the task definition and launch
+template respectively.
 
-The EC2 approach on the other hand is cheaper, quicker to implement, and gets us
-the vast majority of what we want in terms of removing complexity and reducing
-the need for deployments. Consequently I argue here that the EC2 approach is the
-one we should pursue.
+The main advantage of the ECS approach is that it allows us to remove 100% of
+the server management code. However, it is more difficult to implement, likely
+more expensive, and requires a special secondary implementation for running
+locally that may be prone to cross-platform issues. The EC2 approach on the
+other hand is cheaper, quicker to implement, and gets us the vast majority of
+what we want in terms of removing complexity. Consequently I argue here that the
+EC2 approach is the one we should pursue.
 
 ## Step-by-step plan
 
@@ -262,8 +264,8 @@ developed as separate DAGs alongside the current ones.
    indexer worker image locally.
 1. Add the distributed reindexing step to the DAG (excludes infrastructure
    work).
-1. Add the `catalog-indexer-worker` to the Terraform configuration for the
-   catalog, and add steps to deploy them in the related Ansible playbooks.
+1. Set up the necessary resources for the ASGs for staging and production in the
+   catalog Terraform configuration.
 1. Add all remaining steps to the data refresh DAGs:
    `Create and Populated Filtered Index`, `Reapply Constraints`,
    `Promote Table`, `Promote Index`, `Delete Index`.
@@ -336,9 +338,9 @@ server's work:
 
 ### Implement new catalog indexer worker
 
-In this step we will create the new catalog-indexer-worker Docker image, and add
-distributed reindexing to the new DAGs. This step does not include the
-infrastructure work to actually create the new EC2 instances.
+In this step we will create the new catalog-indexer-worker Docker image. This
+step does not include adding the orchestration steps to the DAG, or the
+infrastructure work to actually create the ASGs.
 
 First we will create a new `indexer-worker` directory under
 `catalog/dags/data_refresh`, which will contain the contents of the new indexer
@@ -390,22 +392,26 @@ refreshes locally and in production).
 
 In this step we will add tasks to the data refresh DAGs to orchestrate the
 distributed reindex. At the end of this step, it will be possible to run a
-distributed reindex locally. Because the infrastructure work to create the EC2
-instances is not complete, it can not be run on production yet. The following
-code can all be refactored from
+distributed reindex _locally_, but because the infrastructure work to create the
+ASGs is not complete, it can not be run on production yet. The following code
+can all be refactored from
 [`distributed_reindex_scheduler.py`](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/distributed_reindex_scheduler.py).
 
-- Use Airflow's
-  [EC2Hook::describe_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.describe_instances)
-  to get a list of internal URLs bound to the indexer workers for the
-  appropriate environment. In the local environment, this will instead return
-  the URL for the catalog-indexer-worker Docker container.
 - Use
-  [EC2Hook::start_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.start_instances)
-  to start the appropriate EC2 instances. This step should skip in a local
-  environment.
-- Use dynamic task mapping to generate a Sensor for each of the expected indexer
-  workers, and ping its `healthcheck` endpoint until it passes.
+  [`describe_auto_scaling_groups`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/autoscaling/client/describe_auto_scaling_groups.html)
+  and filter by tags to select the appropriate ASG for the desired environment.
+  (Skips in local env.)
+- Use
+  [`set_desired_capacity`](https://boto3.amazonaws.com/v1/documentation/api/1.26.86/reference/services/autoscaling/client/set_desired_capacity.html)
+  to increase the desired capacity of the ASG to the desired number of workers,
+  depending on the environment. This will cause the ASG to begin spinning up
+  instances. (Skips in local env.)
+- Use
+  [`describe_auto_scaling_groups`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/autoscaling/client/describe_auto_scaling_groups.html)
+  to poll the ASG until all instances have been started, and get the EC2
+  instance IDs. (Skips in local env.)
+- Use dynamic task mapping to generate a Sensor for each of the instance IDs,
+  and ping its `healthcheck` endpoint until it passes.
 - Use dynamic task mapping to distribute reindexing across the indexer workers
   by first calculating `start` and `end` indices that will split the records in
   the media table into even portions, depending on the number of workers
@@ -414,55 +420,44 @@ code can all be refactored from
     `end_index` it should handle
   - Use a Sensor to ping the worker's `task/{task_id}` endpoint until the task
     is complete, logging the progress as it goes
-  - Use the
-    [EC2Hook::stop_instances](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/hooks/ec2/index.html#airflow.providers.amazon.aws.hooks.ec2.EC2Hook.stop_instances)
-    to shut the instance down. It should use the
-    [`NONE_FAILED` TriggerRule](https://github.com/WordPress/openverse/issues/286)
-    to ensure that the instances are shut down, even if there are upstream
-    failures. This step should skip in a local environment.
+- Use
+  [`terminate_instance_in_auto_scaling_group`](https://boto3.amazonaws.com/v1/documentation/api/1.26.86/reference/services/autoscaling/client/terminate_instance_in_auto_scaling_group.html)
+  to terminate the instance. Make sure to set `ShouldDecrementDesiredCapacity`
+  to `True` to ensure that the ASG does not try to replace the instance. This
+  task should use the
+  [`NONE_FAILED` TriggerRule](https://github.com/WordPress/openverse/issues/286)
+  to ensure that the instances are terminated, even if there are upstream
+  failures. (Skips in local env.)
+- Finally, after all tasks have finished (regardless of success/failure), we
+  should have a cleanup task that calls `set_desired_capacity` to 0. Generally
+  this should be a no-op, but if an instance crashes during reindexing (rather
+  than simply failing during reindexing) the ASG will spin up a replacement and
+  Airflow will not automatically clean it up. This task ensures that any
+  dangling instances are terminated.
+
+```{note}
+It is not possible to retry a single indexer worker with this set up, because once a worker fails the instance is actually terminated (rather than simply stopped). If a task that triggers a reindex is cleared after an instance has been terminated, it will simply fail. The entire reindex must be restarted from the first step in this task group.
+
+However, there is a valuable tradoff to this approach: it ensures that all of the indexer workers in a data refresh are identical, while still allowing us to avoid manual deployments every time the indexer logic changes. For example, imagine some changes to the reindexing logic are merged to `main` while a data refresh is actively underway, and a new Docker image is published. If one indexer worker failed, and it were possible to retry **just** that indexer worker, it would use the new Docker image -- leading to inconsistency in the behavior of different workers within a single data refresh.
+```
 
 ### Create the Terraform and Ansible resources needed to deploy the new indexer workers
 
-In this step we will add the resources needed to actually deploy the new indexer
-workers. At the time that this IP is being written, work to
-[deploy Airflow with Ansible](https://github.com/WordPress/openverse-infrastructure/pull/829)
-is actively underway. This IP builds off of this implementation and is blocked
-by its success in production.
+In this step we will add the resources needed to actually configure the ASGs.
 
-The goals are to:
+Some important notes:
 
-- Add the Terraform resources for the indexer worker to
-  [`next/production/airflow.tf`](https://github.com/WordPress/openverse-infrastructure/blob/7a8fdd02dc448cfb9f2991f7b4ece1da7349209c/next/production/airflow.tf),
-  using the generic ec2-service module. The configuration can be copied from the
-  [current configuration](https://github.com/WordPress/openverse-infrastructure/tree/main/modules/services/ingestion-server)
-  in the ingestion-server.
-  [This PR](https://github.com/WordPress/openverse-infrastructure/pull/829) can
-  be used as a guide.
-- Update the Airflow
-  [Ansible playbooks](https://github.com/WordPress/openverse-infrastructure/blob/7a8fdd02dc448cfb9f2991f7b4ece1da7349209c/ansible/roles/airflow/tasks/airflow.yml)
-  to deploy the indexer workers alongside the catalog.
-
-The existing logic for deploying Airflow can be followed closely when adding the
-catalog-indexer-worker. The majority of this is already implemented and the
-existing conventions should be followed, including planning by default, checking
-whether a data refresh is currently in progress, skipping if no differences
-exist, and checking for positive confirmation before deployment. It is most
-useful to note what differs about the catalog-indexer-workers:
-
-- **Important**: when the compose stack is restarted for the indexer workers, it
-  is critical that the indexer workers must shut themselves down as soon as
-  setup is complete. They will be spun up automatically by the DAG when needed
-  and should not be left running.
 - Currently, the staging and production workers are split into separate
   environments (i.e., a staging deploy is used to deploy the 2 staging workers
   separately from the 6 production workers). It is more accurate to view all 8
   workers as production instances (i.e., part of the production catalog
   deployment), which merely _operate_ on different environments. As such all 8
-  should be part of the production catalog deploy, but each instance should have
-  an environment `tag` applied which indicates which environment it is intended
-  to be used for.
+  should be part of the production deployment, but two separate ASGs which are
+  tagged indicating their intended environment.
 - The playbooks must be updated to check if any of the four _new_ data refresh
   DAGs are running before deploying, as well.
+- The `user_data` script should be updated to pull the Docker image with the
+  `latest` tag.
 
 ### Add remaining steps to the Data Refresh DAGs
 
@@ -556,6 +551,11 @@ The alternative options of using an ECS approach or performing the reindex
 entirely in Airflow are discussed at length in the
 [Approach to the Distributed Reindex](#approach-to-the-distributed-reindex)
 section.
+
+It is also possible to use EC2 instances but manage them directly in Airflow
+using EC2 operators to start and stop the instances as needed. However, more
+infrastructure work is required in this approach, and we would require
+deployments whenever there are code changes in the indexer workers.
 
 ## Blockers
 
