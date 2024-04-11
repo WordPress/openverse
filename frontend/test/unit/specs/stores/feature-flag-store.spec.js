@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { getFlagStatus, useFeatureFlagStore } from "~/stores/feature-flag"
 import { OFF, COOKIE, SESSION } from "~/constants/feature-flag"
 
 jest.mock(
@@ -143,16 +143,19 @@ describe("Feature flag store", () => {
     ${"staging"}    | ${"off"}
     ${"production"} | ${"off"}
   `(
-    "returns $expectedState for $environment",
+    "returns $featureState for $environment",
     ({ environment, featureState }) => {
+      const initialValue = process.env.DEPLOYMENT_ENV
+      process.env.DEPLOYMENT_ENV = environment
       const featureFlagStore = useFeatureFlagStore()
-      featureFlagStore.$nuxt.$config.deploymentEnv = environment
+
       expect(featureFlagStore.featureState("feat_env_specific")).toEqual(
         featureState
       )
       expect(featureFlagStore.isOn("feat_env_specific")).toEqual(
         featureState === "on"
       )
+      process.env.DEPLOYMENT_ENV = initialValue
     }
   )
 
@@ -164,13 +167,13 @@ describe("Feature flag store", () => {
   `(
     "handles fallback for missing $environment",
     ({ environment, flagStatus }) => {
-      const featureFlagStore = useFeatureFlagStore()
-      featureFlagStore.$nuxt.$config.deploymentEnv = environment
-      expect(
-        useFeatureFlagStore().getFlagStatus({
-          status: { staging: "switchable" },
-        })
-      ).toEqual(flagStatus)
+      const initialValue = process.env.DEPLOYMENT_ENV
+      process.env.DEPLOYMENT_ENV = environment
+      const actualStatus = getFlagStatus({
+        status: { staging: "switchable" },
+      })
+      expect(actualStatus).toEqual(flagStatus)
+      process.env.DEPLOYMENT_ENV = initialValue
     }
   )
 
@@ -180,8 +183,11 @@ describe("Feature flag store", () => {
     ${SESSION} | ${"feat_switchable_optin"}
   `("returns mapping of switchable flags", ({ storage, flagName }) => {
     const featureFlagStore = useFeatureFlagStore()
-    const flagStateMap = featureFlagStore.flagStateMap(storage)
+    featureFlagStore.initFromCookies({
+      [flagName]: featureFlagStore.flags[flagName].defaultState,
+    })
 
+    const flagStateMap = featureFlagStore.flagStateMap(storage)
     expect(flagStateMap).toHaveProperty(flagName)
 
     expect(flagStateMap).not.toHaveProperty("feat_enabled")

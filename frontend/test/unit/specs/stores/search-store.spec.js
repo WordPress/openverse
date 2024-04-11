@@ -491,11 +491,11 @@ describe("Search Store", () => {
     `(
       "changing searchType from $searchType clears all but $expectedFilterCount $nextSearchType filters",
       async ({ searchType, nextSearchType, expectedFilterCount }) => {
-        const searchStore = useSearchStore()
-        searchStore.setSearchType(searchType)
-
         const featureFlagStore = useFeatureFlagStore()
         featureFlagStore.toggleFeature("additional_search_types", "on")
+
+        const searchStore = useSearchStore()
+        searchStore.setSearchType(searchType)
 
         // Set all filters to checked
         for (let ft in searchStore.filters) {
