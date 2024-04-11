@@ -31,7 +31,7 @@ Data refresh for {media_type} complete! :tada:
 _Note: All values are now from elasticsearch_
 *Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
 *Change*: {count_diff:+,} ({percent_diff:+}% Δ)
-*Breakdown of changes*:\n
+*Breakdown of changes*:
 """
     message += breakdown_message
     slack.send_message(
