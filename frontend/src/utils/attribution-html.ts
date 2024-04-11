@@ -244,7 +244,9 @@ export const getAttribution = (
     })
   }
 
-  const attribution = tFn("text", attributionParts).replace(/\s{2}/g, " ")
+  const attribution = tFn("text", attributionParts)
+    .replace(/\s{2}/g, " ")
+    .trim()
 
   return isPlaintext
     ? attribution
