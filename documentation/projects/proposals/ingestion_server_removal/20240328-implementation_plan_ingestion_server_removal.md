@@ -600,6 +600,8 @@ monitor the first production data refreshes closely.
 
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
 
+- [Search relevancy sandbox](https://github.com/WordPress/openverse/issues/392)
+
 [^1]:
     See
     https://github.com/WordPress/openverse/pull/4026#pullrequestreview-1978477921
