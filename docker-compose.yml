@@ -188,7 +188,7 @@ services:
       - api
     image: docker.io/redis:7.2.4
     ports:
-      - "50264:6379"
+      - "50263:6379"
 
   es:
     profiles:
@@ -197,12 +197,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
     ports:
       - "50292:9200"
-    environment:
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-      - http.cors.enabled=true
-      - http.cors.allow-origin=/.*/
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    env_file:
+      - docker/es/env.docker
     healthcheck:
       test:
         [
