@@ -135,7 +135,17 @@ approaches:
 Maintaining the
 [EC2 worker instances](https://calculator.aws/#/createCalculator/ec2-enhancement),
 provided we continue to automatically stop the instances when not in use, would
-be cheaper than using [ECS](https://calculator.aws/#/createCalculator/Fargate).
+be cheaper than using
+[ECS](https://calculator.aws/#/createCalculator/Fargate)[^1], given equivalent
+resources.
+
+Since our existing indexer workers do not use all of the resources available, we
+can also consider reducing resources for the workers. For EC2, we are already
+using the cheapest possible offering that will comfortably accommodate our
+memory consumption. Since ECS is more flexible and allows scaling vCPU and RAM
+independently, it is possible that ECS could be cheaper than EC2 with careful
+adjustment of resources[^1].
+
 Notably both solutions are _signifcantly_ cheaper than the current
 implementation, because the bulk of the cost comes from constantly running the
 two m5.xlarge EC2 instances for the ingestion servers.
@@ -189,7 +199,7 @@ in local development to spin up a worker as a local Docker container.
 This is still relatively complex, however, because the worker Docker containers
 must be launched from Airflow, which is itself dockerized. This requires either
 using a Docker-in-Docker approach, which should typically be avoided, or
-modifying the configuration to allow Airflow to launch sibling containers[^1].
+modifying the configuration to allow Airflow to launch sibling containers[^2].
 Requirements differ across operating systems, yet this **must** be tested and
 maintained across platforms because the data refresh is used as a critical step
 in setting up our local development environment.
@@ -591,5 +601,10 @@ monitor the first production data refreshes closely.
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
 
 [^1]:
+    See
+    https://github.com/WordPress/openverse/pull/4026#pullrequestreview-1978477921
+    for specific cost assessment, courtesy of @sarayourfriend
+
+[^2]:
 
 https://towardsdatascience.com/using-apache-airflow-dockeroperator-with-docker-compose-57d0217c8219
