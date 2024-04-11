@@ -19,8 +19,8 @@ DOCS = Path(__file__).parent / "docs"
 DOC_MD_PATH = Path(__file__).parent / "media_properties.md"
 SOURCE_MD_PATH = DOCS / "media_props.md"
 
-PREAMBLE = open(DOCS / "preamble.md").read()
-POSTAMBLE = open(DOCS / "postamble.md").read()
+PREAMBLE = (DOCS / "preamble.md").read_text()
+POSTAMBLE = (DOCS / "postamble.md").read_text()
 
 
 @dataclass
