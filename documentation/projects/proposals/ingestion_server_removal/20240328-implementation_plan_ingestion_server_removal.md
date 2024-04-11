@@ -435,7 +435,7 @@ can all be refactored from
   to terminate the instance. Make sure to set `ShouldDecrementDesiredCapacity`
   to `True` to ensure that the ASG does not try to replace the instance. This
   task should use the
-  [`NONE_FAILED` TriggerRule](https://github.com/WordPress/openverse/issues/286)
+  [`NONE_FAILED` TriggerRule](https://airflow.apache.org/docs/apache-airflow/1.10.9/concepts.html#trigger-rules)
   to ensure that the instances are terminated, even if there are upstream
   failures. (Skips in local env.)
 - Finally, after all tasks have finished (regardless of success/failure), we
