@@ -53,7 +53,8 @@
     "create:component-storybook-test": "remake component-storybook-test",
     "create:component-unit-test": "remake component-unit-test",
     "create:component-scaffolding": "npm-run-all \"create:component-sfc --output=src/components --name={1}\" \"create:story --output=src/components/{1}/meta --name={1}\" \"create:component-unit-test --output=test/unit/specs/components/{1} --name={1} --fileName={2}\" \"create:component-storybook-test --output=test/storybook/visual-regression --fileName={2} --name={1}\" --",
-    "create:component": "./bin/create-component.sh"
+    "create:component": "./bin/create-component.sh",
+    "doc:media-props": "node ./scripts/document-media.js"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.5.3",

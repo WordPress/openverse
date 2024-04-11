@@ -450,6 +450,7 @@ jobs:
           - validate_openapi
           - check_migrations
           - test_doc
+          - test_media_props
         include:
           - name: check_django
             recipe: api/dj check
@@ -459,6 +460,8 @@ jobs:
             recipe: api/dj makemigrations --check
           - name: test_doc
             recipe: api/doc-test
+          - name: test_media_props
+            recipe: api/generate-docs
 
     steps:
       - name: Checkout repository
@@ -554,9 +557,12 @@ jobs:
       matrix:
         name:
           - unit_test
+          - test_media_props
         include:
           - name: unit_test
-            script: "test:unit"
+            recipe: frontend/run test:unit
+          - name: test_media_props
+            recipe: frontend/generate-docs
 
     steps:
       - name: Checkout repository
@@ -568,8 +574,8 @@ jobs:
           setup_python: false
           install_recipe: node-install
 
-      - name: Run Nuxt checks
-        run: just frontend/run ${{ matrix.script }}
+      - name: Run check recipe
+        run: just ${{ matrix.recipe }}
 
   # This job runs when `nuxt-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.

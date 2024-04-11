@@ -1,3 +1,8 @@
+// This module contains types and interfaces for media items.
+//
+// The source code of this package is parsed to create the media properties
+// documentation by the script `scripts/document-media.js`.
+
 import type { SupportedMediaType } from "~/constants/media"
 import type { License, LicenseVersion } from "~/constants/license"
 import {
@@ -15,8 +20,22 @@ export interface Tag {
  * for individual media.
  */
 export interface Media {
+  /**
+   * the UUID4 identifier of the media item
+   *
+   * @see {@link https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)|UUID4}
+   */
   id: string
+  /**
+   * the name of the creative work; This involves the following kinds of
+   * changes to the original title:
+   *
+   * - remove the file extension
+   * - escape HTML
+   * - handle empty titles
+   */
   title: string
+  /** the raw name of the creative work, as returned by the API */
   originalTitle: string
 
   creator?: string
@@ -57,7 +76,9 @@ export interface Media {
 export interface ImageDetail extends Media {
   frontendMediaType: "image"
 
+  /** the vertical length of the image in pixels */
   height?: number
+  /** the horizontal length of the image in pixels */
   width?: number
 }
 
@@ -77,8 +98,21 @@ export interface AudioDetail extends Media {
   audio_set?: AudioSet
   genres?: string[]
   length?: string
+  /** the time period of the track in milliseconds */
   duration?: number
+  /**
+   * amount of digital audio data transmitted or processed in unit time; This
+   * field holds numbers measured in bits per second.
+   *
+   * @see {@link https://en.wikipedia.org/wiki/Bit_rate#Audio|Wikipedia}
+   */
   bit_rate?: number
+  /**
+   * number of samples for digital representation taken in unit time; This field
+   * holds numbers measured in hertz.
+   *
+   * @see {@link https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Audio_sampling|Wikipedia}
+   */
   sample_rate?: number
   alt_files?: { provider: string; filetype: string }[]
   peaks?: number[]
