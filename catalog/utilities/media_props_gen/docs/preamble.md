@@ -1,4 +1,4 @@
-# Media Properties
+# Catalog Media Properties
 
 _This document is auto-generated from the source code in
 [/catalog/utilities/media_props_gen/generate_media_properties.py](https://github.com/WordPress/openverse/blob/main/catalog/utilities/media_props_gen/generate_media_properties.py)._
