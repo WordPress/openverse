@@ -41,9 +41,22 @@ class StockSnapDataIngester(ProviderDataIngester):
         self._page_counter = 0
 
     def get_next_query_params(self, prev_query_params, **kwargs):
-        # StockSnap uses /{page} at the end of the endpoint url instead of query params.
-        self._page_counter += 1
-        return {}
+        if prev_query_params:
+            return {"page": prev_query_params["page"] + 1}
+        return {"page": 1}
+
+    def _get_query_params(
+        self, prev_query_params: dict | None, **kwargs
+    ) -> dict | None:
+        query_params = super()._get_query_params(prev_query_params, **kwargs)
+        if query_params:
+            # Record the page that we are currently on so that it can be used as part of
+            # the endpoint URL.
+            self._page_counter = query_params.get("page", 1)
+        # We still return a "fake" query parameter in order to allow appropriate
+        # starting/stopping of the ingestion process at a specific page.
+        # This query parameter is not used.
+        return query_params
 
     @property
     def endpoint(self):

@@ -114,11 +114,16 @@ def test_process_batch(filesize_mock):
 
 
 def test_endpoint_increment():
-    expect_result = ({}, "https://stocksnap.io/api/load-photos/date/desc/1")
+    expect_result = ({"page": 1}, "https://stocksnap.io/api/load-photos/date/desc/1")
     query_params = stocksnap.get_next_query_params(None)
     next_endpoint = stocksnap.endpoint
     actual_result = (query_params, next_endpoint)
     assert expect_result == actual_result
+
+
+def test_initial_params_respected():
+    stocksnap = StockSnapDataIngester(conf={"initial_query_params": {"page": 5}})
+    assert stocksnap._page_counter == 5
 
 
 def test_get_record_data_returns_none_when_media_data_none():
