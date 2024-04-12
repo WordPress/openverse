@@ -57,7 +57,7 @@ import {
   ref,
   watch,
 } from "vue"
-import { useContext, useRoute } from "@nuxtjs/composition-api"
+import { useRoute } from "@nuxtjs/composition-api"
 
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
@@ -154,7 +154,6 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const i18n = useI18n()
-    const { $sentry } = useContext()
 
     const activeMediaStore = useActiveMediaStore()
     const route = useRoute()
@@ -363,34 +362,7 @@ export default defineComponent({
       if (!localAudio) {
         initLocalAudio()
       }
-
-      const playPromise = localAudio?.play()
-      // Check if the audio can be played successfully
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          let message: string
-          switch (err.name) {
-            case "NotAllowedError": {
-              message = "err_unallowed"
-              break
-            }
-            case "NotSupportedError": {
-              message = "err_unsupported"
-              break
-            }
-            case "AbortError": {
-              message = "err_aborted"
-              break
-            }
-            default: {
-              message = "err_unknown"
-              $sentry.captureException(err)
-            }
-          }
-          activeMediaStore.setMessage({ message })
-          localAudio?.pause()
-        })
-      }
+      activeMediaStore.playAudio(localAudio)
     }
     const pause = () => localAudio?.pause()
 

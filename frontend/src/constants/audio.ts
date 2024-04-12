@@ -49,3 +49,8 @@ export const statusVerbMap = Object.freeze({
 
 export const audioStatusVerbs = Object.values(statusVerbMap)
 export type AudioStatusVerb = (typeof audioStatusVerbs)[number]
+export const audioErrorMessages = {
+  NotAllowedError: "err_unallowed",
+  NotSupportedError: "err_unsupported",
+  AbortError: "err_aborted",
+} as const
