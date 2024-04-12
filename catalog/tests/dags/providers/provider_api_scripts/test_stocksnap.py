@@ -39,7 +39,7 @@ def test_get_media_type():
 
 
 def test_endpoint_with_initialized_page_counter():
-    expect_result = "https://stocksnap.io/api/load-photos/date/desc/0"
+    expect_result = "https://stocksnap.io/api/load-photos/date/desc/1"
     actual_result = stocksnap.endpoint
     assert expect_result == actual_result
 
@@ -123,7 +123,9 @@ def test_endpoint_increment():
 
 def test_initial_params_respected():
     stocksnap = StockSnapDataIngester(conf={"initial_query_params": {"page": 5}})
+    query_params = stocksnap._get_query_params(None)
     assert stocksnap._page_counter == 5
+    assert query_params == {"page": 5}
 
 
 def test_get_record_data_returns_none_when_media_data_none():

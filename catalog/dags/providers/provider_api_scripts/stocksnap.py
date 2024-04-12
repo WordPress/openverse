@@ -38,7 +38,7 @@ class StockSnapDataIngester(ProviderDataIngester):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._page_counter = 0
+        self._page_counter = 1
 
     def get_next_query_params(self, prev_query_params, **kwargs):
         if prev_query_params:
