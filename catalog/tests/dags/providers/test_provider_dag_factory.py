@@ -232,7 +232,7 @@ def test_create_report_load_completion_for_reingestion_dag():
         assert op_kwargs["duration"] == ingestion_metrics["duration"]
         assert op_kwargs["record_counts_by_media_type"] == ingestion_metrics["record_counts_by_media_type"]
         assert op_kwargs["dated"] == dated
-        assert op_kwargs["is_reingestion_workflow"] == True
+        assert op_kwargs["is_reingestion_workflow"]
 
         assert "date_range_start" not in op_kwargs
         assert "date_range_end" not in op_kwargs
