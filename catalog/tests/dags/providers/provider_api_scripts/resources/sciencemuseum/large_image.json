@@ -1,9 +1,16 @@
 {
   "large": {
+    "resizable": true,
+    "@type": "image",
     "format": "jpeg",
+    "modified": 1472014477000,
     "location": "3/563/large_1999_0299_0001__0002_.jpg",
     "location_is_relative": true,
     "measurements": {
+      "filesize": {
+        "units": "bytes",
+        "value": 58772
+      },
       "dimensions": [
         {
           "dimension": "height",
@@ -16,9 +23,6 @@
           "value": 1536
         }
       ]
-    },
-    "modified": 1472014477000,
-    "resizable": true,
-    "type": "image"
+    }
   }
 }

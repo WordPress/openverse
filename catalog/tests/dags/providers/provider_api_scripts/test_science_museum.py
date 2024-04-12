@@ -167,25 +167,24 @@ def test_get_record_data_returns_empty_list_for_falsy_image_required_values(reco
 def test_get_record_data_success(object_data):
     actual_record_data = sm.get_record_data(object_data)
     actual_image_data = actual_record_data[0]
-    assert len(actual_record_data) == 12
+    assert len(actual_record_data) == 3
 
     expected_image_data = {
-        "foreign_identifier": "i4453",
-        "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co56202/telescope-by-galileo-replica-telescope-galilean-telescope-refracting-replica",
-        "url": "https://coimages.sciencemuseumgroup.org.uk/images/4/453/large_1923_0668__0002_.jpg",
-        "height": 1151,
+        "foreign_identifier": "i458349",
+        "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co84905/small-votive-organ-of-unknown-type-votive-viscera",
+        "url": "https://coimages.sciencemuseumgroup.org.uk/images/458/349/large_a659676__0001_.jpg",
+        "height": 1150,
         "width": 1536,
         "filetype": "jpeg",
         "license_info": BY_SA_4_0,
-        "creator": "Galileo Galilei",
-        "title": "Telescope by Galileo (replica) (telescope - Galilean; telescope - refracting; replica)",
+        "creator": "Unknown maker",
+        "title": "Small votive organ of unknown type",
         "meta_data": {
-            "accession number": "1923-668",
-            "category": "SCM - Astronomy",
-            "description": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches "
-            "and magnification of 21 times.  Made by Cipriani and purchased from the Museo di "
-            "Fisica e Storia Naturale, Florence, Italy in 1923.",
-            "name": "telescope - refracting",
+            "accession number": "A659676",
+            "category": "SCM - Classical & Medieval Medicine",
+            "description": "Small votive organ of unknown type, built up from coiled strips of terracotta, probably Roman, 200BCE-200BC",
+            "name": "votive viscera",
+            "creditline": "Loan, Wellcome Trust",
         },
     }
     for key, value in expected_image_data.items():
@@ -204,12 +203,12 @@ def test_creator_info_success(object_data):
     attributes = object_data["attributes"]
     actual_creator = sm._get_creator_info(attributes)
 
-    assert actual_creator == "Galileo Galilei"
+    assert actual_creator == "Unknown maker"
 
 
 def test_creator_info_fail(object_data):
     attributes = object_data["attributes"]
-    attributes["lifecycle"]["creation"][0].pop("maker", None)
+    attributes["creation"].pop("maker", None)
     actual_creator = sm._get_creator_info(attributes)
 
     assert actual_creator is None
@@ -313,30 +312,30 @@ def test_get_dimensions_none():
     [
         # Typical license with dash
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-SA 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC-BY-NC-SA 4.0"}]}},
             BY_NC_SA_4_0,
         ),
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-ND 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC-BY-NC-ND 4.0"}]}},
             BY_NC_ND_4_0,
         ),
         # Typical license with space
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC BY-NC-SA 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC BY-NC-SA 4.0"}]}},
             BY_NC_SA_4_0,
         ),
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC BY-SA 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC BY-SA 4.0"}]}},
             BY_SA_4_0,
         ),
         # No legal section
         (
-            {"source": {}},
+            {},
             None,
         ),
         # No usage terms
         (
-            {"source": {"legal": {"rights": [{"details": "Details!"}]}}},
+            {"legal": {"rights": [{"details": "Details!"}]}},
             None,
         ),
         # Invalid usage terms
