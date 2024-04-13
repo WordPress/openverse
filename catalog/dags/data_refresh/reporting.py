@@ -24,11 +24,11 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
     count_diff = total_after - total_before
     percent_diff = (count_diff / total_before) * 100
     breakdown_diff = {k: after.get(k, 0) - before.get(k, 0) for k in all_keys}
-    breakdown_message = "\n".join(f"{k}:{v:+,}" for k, v in breakdown_diff.items())
+    breakdown_message = "\n".join(f"`{k}`:{v:+,}" for k, v in breakdown_diff.items())
 
     message = f"""
 Data refresh for {media_type} complete! :tada:
-_Note: All values are now from elasticsearch_
+_Note: All values are retrieved from elasticsearch_
 *Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
 *Change*: {count_diff:+,} ({percent_diff:+}% Δ)
 *Breakdown of changes*:
