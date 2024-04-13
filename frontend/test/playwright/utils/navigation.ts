@@ -204,30 +204,28 @@ export const preparePageForTests = async (
   }> = {}
 ) => {
   const { dismissBanners = true, dismissFilter = true } = options
-  const defaultFeatures: Record<string, "on" | "off"> = {
-    fetch_sensitive: "off",
-    fake_sensitive: "off",
-    analytics: "on",
-    additional_search_types: "off",
-    additional_search_views: "off",
-  }
-  const features = {
-    ...defaultFeatures,
-    ...options.features,
-  }
-  const featuresCookie: Record<string, "on" | "off"> = {}
-  for (const [feature, status] of Object.entries(features)) {
-    featuresCookie[feature] = status
-  }
 
-  await setCookies(page.context(), {
-    features: featuresCookie,
+  const cookiesToSet: CookieMap = {
     ui: {
       dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
       isFilterDismissed: dismissFilter ?? false,
       breakpoint,
     },
-  })
+  }
+  if (options.features) {
+    const features: Record<string, "on" | "off"> = {
+      fetch_sensitive: "off",
+      fake_sensitive: "off",
+      analytics: "on",
+      additional_search_types: "off",
+      additional_search_views: "on",
+    }
+    for (const [feature, status] of Object.entries(options.features)) {
+      features[feature] = status
+    }
+    cookiesToSet.features = features
+  }
+  await setCookies(page.context(), cookiesToSet)
 }
 
 export const goToSearchTerm = async (

@@ -6,6 +6,9 @@ import { normalizeFetchingError } from "~/plugins/errors"
 export const createPinia = () =>
   pinia.createPinia().use(() => ({
     $nuxt: {
+      $config: {
+        deploymentEnv: "staging",
+      },
       $openverseApiToken: "",
       $processFetchingError: jest.fn(normalizeFetchingError),
       $sentry: {
