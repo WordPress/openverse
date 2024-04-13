@@ -26,6 +26,11 @@ from data_refresh.reporting import report_record_difference, report_status
             {"src1": 2000, "src2": 10},
             ["4,020 → 2,010", "-2,010 (-50.0%", "`src1`:-2,000", "`src2`:-10"],
         ],
+        [
+            {},
+            {"src1": 10, "src2": 10},
+            ["0 → 20", "+20 (+inf%", "`src1`:+10", "`src2`:+10"],
+        ],
     ],
 )
 def test_record_reporting(before, after, expected_in_message):

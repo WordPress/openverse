@@ -22,7 +22,10 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
     total_before = sum(before.values())
     total_after = sum(after.values())
     count_diff = total_after - total_before
-    percent_diff = (count_diff / total_before) * 100
+    if total_before > 0:
+        percent_diff = (count_diff / total_before) * 100
+    else:
+        percent_diff = float("inf")
     breakdown_diff = {k: after.get(k, 0) - before.get(k, 0) for k in all_keys}
     breakdown_message = "\n".join(f"`{k}`:{v:+,}" for k, v in breakdown_diff.items())
 
