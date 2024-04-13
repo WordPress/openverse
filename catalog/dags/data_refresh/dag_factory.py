@@ -77,7 +77,9 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         es_host = es.get_es_host(environment=PRODUCTION)
 
         # Get the current number of records in the target API table
-        before_record_count = es.get_record_count_group_by_sources(
+        before_record_count = es.get_record_count_group_by_sources.override(
+            task_id="get_before_record_count"
+        )(
             es_host=es_host,
             index=data_refresh.media_type,
         )
@@ -89,7 +91,9 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
         )
 
         # Get the final number of records in the API table after the refresh
-        after_record_count = es.get_record_count_group_by_sources(
+        after_record_count = es.get_record_count_group_by_sources.override(
+            task_id="get_after_record_count"
+        )(
             es_host=es_host,
             index=data_refresh.media_type,
         )
