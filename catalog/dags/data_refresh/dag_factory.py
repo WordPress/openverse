@@ -28,6 +28,7 @@ from collections.abc import Sequence
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 from common import elasticsearch as es
 from common.constants import (
@@ -92,7 +93,7 @@ def create_data_refresh_dag(data_refresh: DataRefresh, external_dag_ids: Sequenc
 
         # Get the final number of records in the API table after the refresh
         after_record_count = es.get_record_count_group_by_sources.override(
-            task_id="get_after_record_count"
+            task_id="get_after_record_count", trigger_rule=TriggerRule.NONE_FAILED
         )(
             es_host=es_host,
             index=data_refresh.media_type,
