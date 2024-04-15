@@ -229,16 +229,14 @@ def test_create_report_load_completion_for_reingestion_dag():
         assert report_task.task_id == "report_load_completion"
         assert report_task.python_callable == mock_report_completion
 
-        op_kwargs = report_task.op_kwargs
-        assert op_kwargs["dag_id"] == dag_id
-        assert op_kwargs["media_types"] == media_types
-        assert op_kwargs["duration"] == ingestion_metrics["duration"]
-        assert (
-            op_kwargs["record_counts_by_media_type"]
-            == ingestion_metrics["record_counts_by_media_type"]
-        )
-        assert op_kwargs["dated"] == dated
-        assert op_kwargs["is_reingestion_workflow"]
+        assert report_task.op_kwargs == {
+            "dag_id": dag_id,
+            "media_types": media_types,
+            "duration": ingestion_metrics["duration"],
+            "record_counts_by_media_type": ingestion_metrics["record_counts_by_media_type"],
+            "dated": dated,
+            "is_reingestion_worfklow": True,
+        }
 
         assert "date_range_start" not in op_kwargs
         assert "date_range_end" not in op_kwargs
