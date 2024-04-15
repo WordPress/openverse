@@ -25,21 +25,6 @@ src_dc_path = this_dir.parent.parent.joinpath("docker-compose.yml")
 dest_dc_path = this_dir.joinpath("integration-docker-compose.yml")
 
 
-def _prune_services(conf: dict):
-    """
-    Prune the unnecessary services from the Docker Compose configuration.
-
-    After this step, only those that are used in the integration tests are left.
-
-    :param conf: the Docker Compose configuration
-    """
-
-    services_to_keep = {"es", "ingestion_server", "indexer_worker", "db", "upstream_db"}
-    for service_name in dict(conf["services"]):
-        if service_name not in services_to_keep:
-            del conf["services"][service_name]
-
-
 def _map_ports(conf: dict):
     """
     Change the port mappings for the services to avoid conflicts.
@@ -102,21 +87,6 @@ def _remove_volumes(conf: dict):
     conf["volumes"] = {}
 
 
-def _change_directories(conf: dict):
-    """
-    Update the relative paths of the directories like build context or bind volumes.
-
-    :param conf: the Docker Compose configuration
-    """
-
-    for service in {"ingestion_server", "indexer_worker"}:
-        conf["services"][service]["volumes"] = ["../:/ingestion_server"]
-        conf["services"][service]["build"] = "../"
-
-    upstream_db_build = conf["services"]["upstream_db"]["build"]["context"]
-    conf["services"]["upstream_db"]["build"]["context"] = f"../../{upstream_db_build}"
-
-
 def _rename_services(conf: dict):
     """
     Add the 'integration_' prefix to the services to distinguish them from dev services.
@@ -145,10 +115,6 @@ def gen_integration_compose():
     )
     conf = yaml.safe_load(proc.stdout)
 
-    print("│ Pruning unwanted services... ", end="")
-    _prune_services(conf)
-    print("done")
-
     print("│ Mapping alternative ports... ", end="")
     _map_ports(conf)
     print("done")
@@ -159,10 +125,6 @@ def gen_integration_compose():
 
     print("│ Removing volumes... ", end="")
     _remove_volumes(conf)
-    print("done")
-
-    print("│ Changing directories... ", end="")
-    _change_directories(conf)
     print("done")
 
     print("│ Renaming services... ", end="")
