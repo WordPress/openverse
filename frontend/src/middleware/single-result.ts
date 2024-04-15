@@ -34,12 +34,6 @@ export const singleResultMiddleware: Middleware = async ({
     // Client-side rendering
     singleResultStore.setMediaById(mediaType, route.params.id)
 
-    console.log(
-      from,
-      from.path,
-      isSearchPath(from.path),
-      isCollectionPath(from.path)
-    )
     if (from && (isSearchPath(from.path) || isCollectionPath(from.path))) {
       const searchStore = useSearchStore($pinia)
       searchStore.setBackToSearchPath(from.fullPath)
