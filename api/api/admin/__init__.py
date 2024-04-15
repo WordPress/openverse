@@ -1,11 +1,22 @@
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
+from django.http.response import HttpResponseRedirect
+from django.urls import reverse
 
 from oauth2_provider.models import AccessToken
 
+from api.admin.forms import UserPreferencesAdminForm
 from api.admin.site import openverse_admin
-from api.models import PENDING, Audio, AudioReport, ContentProvider, Image, ImageReport
+from api.models import (
+    PENDING,
+    Audio,
+    AudioReport,
+    ContentProvider,
+    Image,
+    ImageReport,
+    UserPreferences,
+)
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.models.oauth import ThrottledApplication
 
@@ -127,3 +138,34 @@ class AccessTokenAdmin(admin.ModelAdmin):
         "created",
         "updated",
     )
+
+
+@admin.register(UserPreferences)
+class IndividualUserPreferencesAdmin(admin.ModelAdmin):
+    """
+    Model admin for showing user preferences. This should only ever show the
+    currently logged-in user's preferences
+    """
+
+    verbose_name_plural = "My Preferences"
+    verbose_name = "My Preferences"
+    form = UserPreferencesAdminForm
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(user=request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_add_permission(*args, **kwargs):
+        return False
+
+    def has_delete_permission(*args, **kwargs):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        obj = self.get_queryset(request).first()
+        return HttpResponseRedirect(
+            reverse("admin:api_userpreferences_change", args=[obj.id])
+        )
