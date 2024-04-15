@@ -335,8 +335,10 @@ def create_report_load_completion(
     }
 
     if not is_reingestion_workflow:
-        op_kwargs["date_range_start"] = "{{ data_interval_start | ds }}"
-        op_kwargs["date_range_end"] = "{{ data_interval_end | ds }}"
+        op_kwargs = op_kwargs | {
+            "date_range_start": "{{ data_interval_start | ds }}",
+            "date_range_end": "{{ data_interval_end | ds }}",
+        }
 
     return PythonOperator(
         task_id="report_load_completion",
