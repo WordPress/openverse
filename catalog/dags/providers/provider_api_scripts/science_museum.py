@@ -165,7 +165,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             return None
         if url.startswith("http"):
             return url
-        return f"https://coimages.sciencemuseumgroup.org.uk/images/{url}"
+        return f"https://coimages.sciencemuseumgroup.org.uk/{url}"
 
     @staticmethod
     def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
