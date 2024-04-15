@@ -34,17 +34,10 @@ def _map_ports(conf: dict):
     :param conf: the Docker Compose configuration
     """
 
-    for service_name, service in conf["services"].items():
+    for service_name in conf["services"].keys():
+        service = conf["services"][service_name]
         if "ports" in service:
-            ports = service["ports"]
-            ports = [
-                f"{service_ports[service_name]}:{port.split(':')[1]}" for port in ports
-            ]
-            service["ports"] = ports
-        elif "expose" in service and service_name in service_ports:
-            exposes = service["expose"]
-            ports = [f"{service_ports[service_name]}:{expose}" for expose in exposes]
-            service["ports"] = ports
+            service["ports"][0]["published"] = service_ports[service_name]
 
 
 def _fixup_env(conf: dict):
