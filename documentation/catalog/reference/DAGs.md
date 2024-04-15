@@ -32,36 +32,36 @@ The following are DAGs grouped by their primary tag:
 
 ### Data Refresh
 
-| DAG ID                                                        | Schedule Interval |
-| ------------------------------------------------------------- | ----------------- |
-| [`audio_data_refresh`](#audio_data_refresh)                   | `0 0 * * 1`       |
-| [`create_filtered_audio_index`](#create_filtered_audio_index) | `None`            |
-| [`create_filtered_image_index`](#create_filtered_audio_index) | `None`            |
-| [`image_data_refresh`](#audio_data_refresh)                   | `0 0 * * 1`       |
+| DAG ID                                                             | Schedule Interval |
+| ------------------------------------------------------------------ | ----------------- |
+| [`audio_data_refresh`](#media_type_data_refresh)                   | `0 0 * * 1`       |
+| [`create_filtered_audio_index`](#create_filtered_media_type_index) | `None`            |
+| [`create_filtered_image_index`](#create_filtered_media_type_index) | `None`            |
+| [`image_data_refresh`](#media_type_data_refresh)                   | `0 0 * * 1`       |
 
 ### Database
 
-| DAG ID                                                                            | Schedule Interval |
-| --------------------------------------------------------------------------------- | ----------------- |
-| [`batched_update`](#batched_update)                                               | `None`            |
-| [`delete_records`](#delete_records)                                               | `None`            |
-| [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
-| [`recreate_full_staging_index`](#recreate_full_staging_index)                     | `None`            |
-| [`recreate_image_popularity_calculation`](#recreate_audio_popularity_calculation) | `None`            |
-| [`report_pending_reported_media`](#report_pending_reported_media)                 | `@weekly`         |
-| [`staging_database_restore`](#staging_database_restore)                           | `@monthly`        |
+| DAG ID                                                                                 | Schedule Interval |
+| -------------------------------------------------------------------------------------- | ----------------- |
+| [`batched_update`](#batched_update)                                                    | `None`            |
+| [`delete_records`](#delete_records)                                                    | `None`            |
+| [`recreate_audio_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
+| [`recreate_full_staging_index`](#recreate_full_staging_index)                          | `None`            |
+| [`recreate_image_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
+| [`report_pending_reported_media`](#report_pending_reported_media)                      | `@weekly`         |
+| [`staging_database_restore`](#staging_database_restore)                                | `@monthly`        |
 
 ### Elasticsearch
 
-| DAG ID                                                                                          | Schedule Interval |
-| ----------------------------------------------------------------------------------------------- | ----------------- |
-| [`create_new_production_es_index`](#create_new_production_es_index)                             | `None`            |
-| [`create_new_staging_es_index`](#create_new_production_es_index)                                | `None`            |
-| [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)   | `None`            |
-| [`point_production_es_alias`](#point_production_es_alias)                                       | `None`            |
-| [`point_staging_es_alias`](#point_production_es_alias)                                          | `None`            |
-| [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck) | `*/15 * * * *`    |
-| [`staging_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)    | `*/15 * * * *`    |
+| DAG ID                                                                                           | Schedule Interval |
+| ------------------------------------------------------------------------------------------------ | ----------------- |
+| [`create_new_production_es_index`](#create_new_environment_es_index)                             | `None`            |
+| [`create_new_staging_es_index`](#create_new_environment_es_index)                                | `None`            |
+| [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)    | `None`            |
+| [`point_production_es_alias`](#point_environment_es_alias)                                       | `None`            |
+| [`point_staging_es_alias`](#point_environment_es_alias)                                          | `None`            |
+| [`production_elasticsearch_cluster_healthcheck`](#environment_elasticsearch_cluster_healthcheck) | `*/15 * * * *`    |
+| [`staging_elasticsearch_cluster_healthcheck`](#environment_elasticsearch_cluster_healthcheck)    | `*/15 * * * *`    |
 
 ### Maintenance
 
@@ -82,10 +82,10 @@ The following are DAGs grouped by their primary tag:
 
 ### Popularity Refresh
 
-| DAG ID                                                  | Schedule Interval |
-| ------------------------------------------------------- | ----------------- |
-| [`audio_popularity_refresh`](#audio_popularity_refresh) | `@monthly`        |
-| [`image_popularity_refresh`](#audio_popularity_refresh) | `@monthly`        |
+| DAG ID                                                       | Schedule Interval |
+| ------------------------------------------------------------ | ----------------- |
+| [`audio_popularity_refresh`](#media_type_popularity_refresh) | `@monthly`        |
+| [`image_popularity_refresh`](#media_type_popularity_refresh) | `@monthly`        |
 
 ### Provider
 
@@ -131,15 +131,13 @@ The following is documentation associated with each DAG (where available):
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
 1.  [`auckland_museum_workflow`](#auckland_museum_workflow)
-1.  [`audio_data_refresh`](#audio_data_refresh)
-1.  [`audio_popularity_refresh`](#audio_popularity_refresh)
 1.  [`batched_update`](#batched_update)
 1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)
-1.  [`create_filtered_audio_index`](#create_filtered_audio_index)
-1.  [`create_filtered_image_index`](#create_filtered_audio_index)
-1.  [`create_new_production_es_index`](#create_new_production_es_index)
-1.  [`create_new_staging_es_index`](#create_new_production_es_index)
+1.  [`create_filtered_audio_index`](#create_filtered_media_type_index)
+1.  [`create_filtered_image_index`](#create_filtered_media_type_index)
+1.  [`create_new_production_es_index`](#create_new_environment_es_index)
+1.  [`create_new_staging_es_index`](#create_new_environment_es_index)
 1.  [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)
 1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
@@ -148,8 +146,6 @@ The following is documentation associated with each DAG (where available):
 1.  [`flickr_reingestion_workflow`](#flickr_workflow)
 1.  [`flickr_workflow`](#flickr_workflow)
 1.  [`freesound_workflow`](#freesound_workflow)
-1.  [`image_data_refresh`](#audio_data_refresh)
-1.  [`image_popularity_refresh`](#audio_popularity_refresh)
 1.  [`inaturalist_workflow`](#inaturalist_workflow)
 1.  [`jamendo_workflow`](#jamendo_workflow)
 1.  [`justtakeitfree_workflow`](#justtakeitfree_workflow)
@@ -160,25 +156,29 @@ The following is documentation associated with each DAG (where available):
 1.  [`oauth2_token_refresh`](#oauth2_token_refresh)
 1.  [`phylopic_reingestion_workflow`](#phylopic_workflow)
 1.  [`phylopic_workflow`](#phylopic_workflow)
-1.  [`point_production_es_alias`](#point_production_es_alias)
-1.  [`point_staging_es_alias`](#point_production_es_alias)
+1.  [`point_production_es_alias`](#point_environment_es_alias)
+1.  [`point_staging_es_alias`](#point_environment_es_alias)
 1.  [`pr_review_reminders`](#pr_review_reminders)
-1.  [`production_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)
 1.  [`rawpixel_workflow`](#rawpixel_workflow)
-1.  [`recreate_audio_popularity_calculation`](#recreate_audio_popularity_calculation)
 1.  [`recreate_full_staging_index`](#recreate_full_staging_index)
-1.  [`recreate_image_popularity_calculation`](#recreate_audio_popularity_calculation)
+1.  [`recreate_audio_popularity_calculation`](#recreate_media_type_popularity_calculation)
+1.  [`recreate_image_popularity_calculation`](#recreate_media_type_popularity_calculation)
 1.  [`report_pending_reported_media`](#report_pending_reported_media)
 1.  [`rotate_db_snapshots`](#rotate_db_snapshots)
 1.  [`science_museum_workflow`](#science_museum_workflow)
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
 1.  [`staging_database_restore`](#staging_database_restore)
-1.  [`staging_elasticsearch_cluster_healthcheck`](#production_elasticsearch_cluster_healthcheck)
 1.  [`stocksnap_workflow`](#stocksnap_workflow)
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_commons_workflow)
 1.  [`wordpress_workflow`](#wordpress_workflow)
+1.  [`production_elasticsearch_cluster_healthcheck`](#environment_elasticsearch_cluster_healthcheck)
+1.  [`staging_elasticsearch_cluster_healthcheck`](#environment_elasticsearch_cluster_healthcheck)
+1.  [`audio_data_refresh`](#media_type_data_refresh)
+1.  [`image_data_refresh`](#media_type_data_refresh)
+1.  [`audio_popularity_refresh`](#media_type_popularity_refresh)
+1.  [`image_popularity_refresh`](#media_type_popularity_refresh)
 
 ### `add_license_url`
 
@@ -234,53 +234,6 @@ https://github.com/AucklandMuseum/API/wiki/Tutorial
 | ------------ | ------------------- | ---------------- |
 | /search, /id | 10                  | 1000             |
 | /id/media    | 10                  | 1000             |
-
-### `audio_data_refresh`
-
-#### Data Refresh DAG Factory
-
-This file generates our data refresh DAGs using a factory function. For the
-given media type these DAGs will initiate a data refresh on the ingestion server
-and await the success or failure of that task.
-
-A data refresh occurs on the Ingestion server in the Openverse project. This is
-a task which imports data from the upstream Catalog database into the API,
-copies contents to a new Elasticsearch index, and finally makes the index
-"live". This process is necessary to make new content added to the Catalog by
-our provider DAGs available to the API. You can read more in the
-[README](https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md)
-Importantly, the data refresh TaskGroup is also configured to handle concurrency
-requirements of the Ingestion server. Finally, once the origin indexes have been
-refreshed, the corresponding filtered index creation DAG is triggered.
-
-You can find more background information on this process in the following issues
-and related PRs:
-
-- [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
-- [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
-
-### `audio_popularity_refresh`
-
-#### Popularity Refresh DAG Factory
-
-This file generates our popularity refresh DAGs using a factory function.
-
-For the given media type these DAGs will first update the popularity metrics
-table, adding any new metrics and updating the percentile that is used in
-calculating the popularity constants. It then refreshes the popularity constants
-view, which recalculates the popularity constant for each provider.
-
-Once the constants have been updated, the DAG will trigger a `batched_update`
-DagRun for each provider of this media_type that is configured to support
-popularity data. The batched update recalculates standardized popularity scores
-for all records, using the new constant. When the updates are complete, all
-records have up-to-date popularity data. This DAG can be run concurrently with
-data refreshes and regular ingestion.
-
-You can find more background information on this process in the following
-implementation plan:
-
-- [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
 
 ### `batched_update`
 
@@ -396,7 +349,7 @@ issue has been resolved.
 
 The DAG runs weekly.
 
-### `create_filtered_audio_index`
+### `create_filtered_{media_type}_index`
 
 #### Create filtered index DAG factory
 
@@ -452,7 +405,7 @@ There are two mechanisms that prevent this from happening:
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
 
-### `create_new_production_es_index`
+### `create_new_{environment}_es_index`
 
 #### Create New ES Index DAG
 
@@ -817,7 +770,7 @@ Output: TSV file containing the image, their respective meta-data.
 
 Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
 
-### `point_production_es_alias`
+### `point_{environment}_es_alias`
 
 #### Point ES Alias DAG
 
@@ -863,23 +816,6 @@ Unfortunately the DAG does not know when someone is on vacation. It is up to the
 author of the PR to re-assign review if one of the randomly selected reviewers
 is unavailable for the time period during which the PR should be reviewed.
 
-### `production_elasticsearch_cluster_healthcheck`
-
-Monitor staging and production Elasticsearch cluster health endpoint.
-
-Requests the cluster health and alerts under the following conditions:
-
-- Red cluster health
-- Unexpected number of nodes
-- Unresponsive cluster
-
-Additionally, the DAG will notify (rather than alert) when the cluster health is
-yellow. Yellow cluster health may or may not be an issue, depending on whether
-it is expected, and occurs whenever shards and replicas are being relocated
-(e.g., during reindexes). It is worthwhile to notify in these cases, as an
-assurance, but we could choose to add logic that ignores yellow cluster health
-during data refresh or other similar operations.
-
 ### `rawpixel_workflow`
 
 Content Provider: Rawpixel
@@ -893,20 +829,6 @@ undocumented, and we will need to contact Rawpixel directly if we run into any
 issues. The public API max results range is limited to 100,000 results, although
 the API key we've been given can circumvent this limit.
 https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
-
-### `recreate_audio_popularity_calculation`
-
-This file generates Apache Airflow DAGs that, for the given media type,
-completely wipes out and recreates the PostgreSQL functions involved in
-calculating our standardized popularity metric.
-
-Note that they do not drop any tables or views related to popularity, and they
-do not perform any popularity calculations. Once this DAG has been run, the
-associated popularity refresh DAG must be run in order to actually recalculate
-popularity constants and standardized popularity scores using the new functions.
-
-These DAGs are not on a schedule, and should only be run manually when new SQL
-code is deployed for the calculation.
 
 ### `recreate_full_staging_index`
 
@@ -948,6 +870,20 @@ cluster, it does _not_ interfere with the `data_refresh` or
 However, as the DAG operates on the staging API database and ES cluster it will
 exit immediately if any of the DAGs tagged as part of the
 `staging_es_concurrency` group are already running.
+
+### `recreate_{media_type}_popularity_calculation`
+
+This file generates Apache Airflow DAGs that, for the given media type,
+completely wipes out and recreates the PostgreSQL functions involved in
+calculating our standardized popularity metric.
+
+Note that they do not drop any tables or views related to popularity, and they
+do not perform any popularity calculations. Once this DAG has been run, the
+associated popularity refresh DAG must be run in order to actually recalculate
+popularity constants and standardized popularity scores using the new functions.
+
+These DAGs are not on a schedule, and should only be run manually when new SQL
+code is deployed for the calculation.
 
 ### `report_pending_reported_media`
 
@@ -1176,3 +1112,67 @@ Output: TSV file containing the media metadata.
 
 Notes: https://wordpress.org/photos/wp-json/wp/v2 Provide photos, media, users
 and more related resources. No rate limit specified.
+
+### `{environment}_elasticsearch_cluster_healthcheck`
+
+Monitor staging and production Elasticsearch cluster health endpoint.
+
+Requests the cluster health and alerts under the following conditions:
+
+- Red cluster health
+- Unexpected number of nodes
+- Unresponsive cluster
+
+Additionally, the DAG will notify (rather than alert) when the cluster health is
+yellow. Yellow cluster health may or may not be an issue, depending on whether
+it is expected, and occurs whenever shards and replicas are being relocated
+(e.g., during reindexes). It is worthwhile to notify in these cases, as an
+assurance, but we could choose to add logic that ignores yellow cluster health
+during data refresh or other similar operations.
+
+### `{media_type}_data_refresh`
+
+#### Data Refresh DAG Factory
+
+This file generates our data refresh DAGs using a factory function. For the
+given media type these DAGs will initiate a data refresh on the ingestion server
+and await the success or failure of that task.
+
+A data refresh occurs on the Ingestion server in the Openverse project. This is
+a task which imports data from the upstream Catalog database into the API,
+copies contents to a new Elasticsearch index, and finally makes the index
+"live". This process is necessary to make new content added to the Catalog by
+our provider DAGs available to the API. You can read more in the
+[README](https://github.com/WordPress/openverse/blob/main/ingestion_server/README.md)
+Importantly, the data refresh TaskGroup is also configured to handle concurrency
+requirements of the Ingestion server. Finally, once the origin indexes have been
+refreshed, the corresponding filtered index creation DAG is triggered.
+
+You can find more background information on this process in the following issues
+and related PRs:
+
+- [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
+- [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
+
+### `{media_type}_popularity_refresh`
+
+#### Popularity Refresh DAG Factory
+
+This file generates our popularity refresh DAGs using a factory function.
+
+For the given media type these DAGs will first update the popularity metrics
+table, adding any new metrics and updating the percentile that is used in
+calculating the popularity constants. It then refreshes the popularity constants
+view, which recalculates the popularity constant for each provider.
+
+Once the constants have been updated, the DAG will trigger a `batched_update`
+DagRun for each provider of this media_type that is configured to support
+popularity data. The batched update recalculates standardized popularity scores
+for all records, using the new constant. When the updates are complete, all
+records have up-to-date popularity data. This DAG can be run concurrently with
+data refreshes and regular ingestion.
+
+You can find more background information on this process in the following
+implementation plan:
+
+- [[Implementation Plan] Decoupling Popularity Calculations from the Data Refresh](https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html)
