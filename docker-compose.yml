@@ -2,6 +2,7 @@ version: "2.4"
 
 include:
   - "catalog/compose.yml"
+  - "ingestion_server/compose.yml"
   - "api/compose.yml"
 
 services:
@@ -146,55 +147,6 @@ services:
         hard: 65536
     volumes:
       - es-data:/usr/share/elasticsearch/data
-
-  ingestion_server:
-    profiles:
-      - ingestion_server
-      - api
-    build:
-      context: ./ingestion_server/
-      target: ing
-      args: # Automatically inferred from env vars, unless specified
-        - INGESTION_PY_VERSION
-    image: openverse-ingestion_server
-    ports:
-      - "50281:8001"
-    depends_on:
-      - db
-      - upstream_db
-      - es
-      - indexer_worker
-    volumes:
-      - ./ingestion_server:/ingestion_server:z
-    env_file:
-      - ingestion_server/env.docker
-      - ingestion_server/.env
-    stdin_open: true
-    tty: true
-
-  indexer_worker:
-    profiles:
-      - ingestion_server
-      - api
-    build:
-      context: ./ingestion_server/
-      target: ing
-      args: # Automatically inferred from env vars, unless specified
-        - INGESTION_PY_VERSION
-    image: openverse-ingestion_server
-    command: gunicorn indexer_worker:api --bind 0.0.0.0:8002
-    expose:
-      - "8002"
-    depends_on:
-      - db
-      - upstream_db
-      - es
-    volumes:
-      - ./ingestion_server:/ingestion_server:z
-    env_file:
-      - ingestion_server/env.docker
-    stdin_open: true
-    tty: true
 
   frontend_nginx:
     profiles:

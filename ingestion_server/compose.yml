@@ -1,0 +1,39 @@
+# Common build configuration for the ingestion server
+# Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
+x-ingestion-server-common: &ingestion-server-common
+  profiles:
+    - ingestion_server
+    - api
+  build:
+    target: ing
+    args: # Automatically inferred from env vars, unless specified
+      - INGESTION_PY_VERSION
+  image: openverse-ingestion_server
+  env_file:
+    - env.docker
+    - .env
+  volumes:
+    - .:/ingestion_server:z
+  stdin_open: true
+  tty: true
+
+services:
+  ingestion_server:
+    <<: *ingestion-server-common
+    depends_on:
+      - db
+      - upstream_db
+      - es
+      - indexer_worker
+    ports:
+      - "50281:8001"
+
+  indexer_worker:
+    <<: *ingestion-server-common
+    depends_on:
+      - db
+      - upstream_db
+      - es
+    command: gunicorn indexer_worker:api --bind 0.0.0.0:8002
+    expose:
+      - "8002"
