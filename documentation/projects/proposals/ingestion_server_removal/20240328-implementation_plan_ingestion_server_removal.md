@@ -160,7 +160,7 @@ from the current setup.
 
 The ECS approach requires slightly less code, because it would allow us to
 completely remove all of the server logic needed in the EC2 instances. The
-docker image need only contain the script for reindexing.
+Docker image need only contain the script for reindexing.
 
 For the EC2 instances we would continue to serve a minimal API with the
 following endpoints:
@@ -434,7 +434,7 @@ can all be refactored from
   to terminate the instance. Make sure to set `ShouldDecrementDesiredCapacity`
   to `True` to ensure that the ASG does not try to replace the instance. This
   task should use the
-  [`NONE_FAILED` TriggerRule](https://airflow.apache.org/docs/apache-airflow/1.10.9/concepts.html#trigger-rules)
+  [`NONE_SKIPPED` TriggerRule](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#trigger-rules)
   to ensure that the instances are terminated, even if there are upstream
   failures. (Skips in local env.)
 - Finally, after all tasks have finished (regardless of success/failure), we
