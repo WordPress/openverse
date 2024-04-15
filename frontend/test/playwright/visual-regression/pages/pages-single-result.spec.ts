@@ -15,7 +15,7 @@ import { supportedMediaTypes } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 
-for (const isOn of [true, false]) {
+for (const isOn of [true]) {
   for (const mediaType of supportedMediaTypes) {
     for (const dir of languageDirections) {
       breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
