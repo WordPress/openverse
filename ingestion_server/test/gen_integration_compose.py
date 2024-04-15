@@ -73,17 +73,12 @@ def _remove_volumes(conf: dict):
 
     :param conf: the Docker Compose configuration
     """
-    volumes_to_remove = {
-        "db": "api-postgres",
-        "upstream_db": "catalog-postgres",
-        "es": "es-data",
-    }
 
-    for service, volume_to_remove in volumes_to_remove.items():
-        volumes = conf["services"][service]["volumes"]
-        volumes = [volume for volume in volumes if volume_to_remove not in volume]
-        conf["services"][service]["volumes"] = volumes
-
+    for service_name in conf["services"].keys():
+        volumes = conf["services"][service_name]["volumes"]
+        conf["services"][service_name]["volumes"] = [
+            volume for volume in volumes if volume["source"] not in conf["volumes"]
+        ]
     conf["volumes"] = {}
 
 
