@@ -233,10 +233,12 @@ def test_create_report_load_completion_for_reingestion_dag():
             "dag_id": dag_id,
             "media_types": media_types,
             "duration": ingestion_metrics["duration"],
-            "record_counts_by_media_type": ingestion_metrics["record_counts_by_media_type"],
+            "record_counts_by_media_type": ingestion_metrics[
+                "record_counts_by_media_type"
+            ],
             "dated": dated,
             "is_reingestion_worfklow": True,
         }
 
-        assert "date_range_start" not in op_kwargs
-        assert "date_range_end" not in op_kwargs
+        assert "date_range_start" not in report_task.op_kwargs
+        assert "date_range_end" not in report_task.op_kwargs
