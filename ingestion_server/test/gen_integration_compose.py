@@ -137,39 +137,33 @@ def _rename_services(conf: dict):
 def gen_integration_compose():
     print("Generating Docker Compose configuration for integration tests...")
 
-    with open(src_dc_path) as src_dc:
-        conf = yaml.safe_load(src_dc)
+    conf = yaml.safe_load(src_dc_path.read_bytes())
 
-        print("│ Pruning unwanted services... ", end="")
-        _prune_services(conf)
-        print("done")
+    print("│ Pruning unwanted services... ", end="")
+    _prune_services(conf)
+    print("done")
 
-        print("│ Mapping alternative ports... ", end="")
-        _map_ports(conf)
-        print("done")
+    print("│ Mapping alternative ports... ", end="")
+    _map_ports(conf)
+    print("done")
 
-        print("│ Updating environment variables... ", end="")
-        _fixup_env(conf)
-        print("done")
+    print("│ Updating environment variables... ", end="")
+    _fixup_env(conf)
+    print("done")
 
-        print("│ Removing volumes... ", end="")
-        _remove_volumes(conf)
-        print("done")
+    print("│ Removing volumes... ", end="")
+    _remove_volumes(conf)
+    print("done")
 
-        print("│ Changing directories... ", end="")
-        _change_directories(conf)
-        print("done")
+    print("│ Changing directories... ", end="")
+    _change_directories(conf)
+    print("done")
 
-        print("│ Renaming services... ", end="")
-        _rename_services(conf)
-        print("done")
+    print("│ Renaming services... ", end="")
+    _rename_services(conf)
+    print("done")
 
-        with open(dest_dc_path, "w") as dest_dc:
-            dest_dc.write(
-                "# This is an auto-generated Docker Compose configuration file.\n"
-                "# Do not modify this file directly. Your changes will be overwritten.\n\n"
-            )
-            yaml.dump(conf, dest_dc, default_flow_style=False)
+    dest_dc_path.write_text(yaml.safe_dump(conf, default_flow_style=False))
 
     print("done\n")
     return dest_dc_path
