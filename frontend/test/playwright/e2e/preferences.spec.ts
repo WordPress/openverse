@@ -26,7 +26,7 @@ const getFeatureCookies = async (page: Page, cookieName: string) => {
 const getFeaturesToTest = () => {
   const testableFeatures = {
     fetch_sensitive: "off",
-    additional_search_views: "on",
+    analytics: "on",
   } as const
   for (const [name, state] of Object.entries(testableFeatures)) {
     const flag = featureData.features[name as FlagName] as FeatureFlag
