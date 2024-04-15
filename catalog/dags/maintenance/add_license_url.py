@@ -12,19 +12,16 @@ last step, logging the statistics.
 
 import csv
 import logging
-from collections import defaultdict
 from datetime import timedelta
 from tempfile import NamedTemporaryFile
 from textwrap import dedent
 
-from airflow.models import DAG
+from airflow.decorators import dag, task
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
-from airflow.utils.trigger_rule import TriggerRule
 from psycopg2._json import Json
 
-from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
+from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.licenses import get_license_info_from_license_pair
 from common.slack import send_message
 from common.sql import RETURN_ROW_COUNT, PostgresHook
@@ -32,107 +29,147 @@ from providers.provider_dag_factory import AWS_CONN_ID, OPENVERSE_BUCKET
 
 
 DAG_ID = "add_license_url"
-UPDATE_LICENSE_URL = "update_license_url"
-FINAL_REPORT = "final_report"
-
-ALERT_EMAIL_ADDRESSES = ""
 
 logger = logging.getLogger(__name__)
 
-base_url = "https://creativecommons.org/"
-
 
 def get_null_counts(
-    postgres_conn_id: str,
-    task: AbstractOperator,
+    dag_task: AbstractOperator,
+    postgres_conn_id: str = POSTGRES_CONN_ID,
 ) -> int:
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+        default_statement_timeout=PostgresHook.get_execution_timeout(dag_task),
     )
-    null_meta_data_count = postgres.get_first(
-        dedent("SELECT COUNT(*) from image WHERE meta_data IS NULL;")
+    nulls_count = postgres.get_first(
+        dedent("SELECT COUNT(*) from image WHERE meta_data->>'license_url' IS NULL")
     )[0]
-    return null_meta_data_count
+    return nulls_count
 
 
+@task
+def get_license_groups(
+    dag_task: AbstractOperator = None, postgres_conn_id: str = POSTGRES_CONN_ID
+) -> list[tuple[str, str]]:
+    """
+    Get license groups of rows that don't have a `license_url` in their
+    `meta_data` field.
+
+    :return: List of (license, version) tuples.
+    """
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=PostgresHook.get_execution_timeout(dag_task),
+    )
+
+    select_query = dedent("""
+        SELECT license, license_version, count(identifier)
+        FROM image WHERE meta_data->>'license_url' IS NULL
+        GROUP BY license, license_version
+    """)
+    license_groups = postgres.get_records(select_query)
+
+    total_nulls = sum(group[2] for group in license_groups)
+
+    message = f"""
+    Starting `{DAG_ID}` DAG. Found {len(license_groups)} license groups with {total_nulls}
+    records without `license_url` in `meta_data` left.
+    """
+    send_message(
+        message,
+        username="Airflow DAG Data Normalization - license_url",
+        dag_id=DAG_ID,
+    )
+
+    return [(group[0], group[1]) for group in license_groups]
+
+
+@task
 def update_license_url(
-    postgres_conn_id: str, s3_bucket, aws_conn_id, task: AbstractOperator
-) -> dict[str, int]:
-    """Add license_url to meta_data batching all records with the same license.
-    :param aws_conn_id: AWS connection id
-    :param s3_bucket: the bucket to upload the invalid items TSV to
-    :param task: automatically passed by Airflow, used to set the execution timeout
+    license_group: tuple[str, str],
+    batch_size: int = 10_000,
+    dag_task: AbstractOperator = None,
+    postgres_conn_id: str = POSTGRES_CONN_ID,
+) -> int:
+    """
+    Add license_url to meta_data batching all records with the same license.
+
+    :param dag_task: automatically passed by Airflow, used to set the execution timeout
     :param postgres_conn_id: Postgres connection id
     """
 
-    logger.info("Getting image records with NULL in meta_data.")
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+        default_statement_timeout=PostgresHook.get_execution_timeout(dag_task),
     )
-
-    select_query = dedent(
-        """
-    SELECT identifier, license, license_version
-    FROM image WHERE meta_data IS NULL;"""
-    )
-    records_with_null_in_metadata = postgres.get_records(select_query)
-    logger.info(f"{len(records_with_null_in_metadata)} records found.")
-
-    # Dictionary with license pair as key and list of identifiers as value
-    records_to_update = defaultdict(list)
-
-    for result in records_with_null_in_metadata:
-        identifier, license_, version = result
-        # Some CC0 and PDM licenses are stored as uppercase in the database
-        license_ = license_.lower()
-        records_to_update[(license_, version)].append(identifier)
-
+    license_, version = license_group
+    *_, license_url = get_license_info_from_license_pair(license_, version)
+    license_url_dict = {"license_url": license_url}
     total_updated = 0
-    updated_by_license = {}
 
-    invalid_items = []
+    if license_url is None:
+        logger.warning(f"No license pair ({license_}, {version}) in the license map.")
+        return 0
 
-    for (license_, version), identifiers in records_to_update.items():
-        *_, license_url = get_license_info_from_license_pair(license_, version)
-        if license_url is None:
-            logger.info(f"No license pair ({license_}, {version}) in the license map.")
-            for identifier in identifiers:
-                invalid_items.append(
-                    {
-                        "license": license_,
-                        "license_version": version,
-                        "identifier": identifier,
-                    }
-                )
-            continue
-        logger.info(
-            f"{len(identifiers):4} items will be updated "
-            f"with {license_url} and {license_}."
-        )
-        license_url_dict = {"license_url": license_url}
-        update_query = dedent(
-            f"""
-            UPDATE image
-            SET meta_data = {Json(license_url_dict)}, license='{license_}'
-            WHERE identifier IN ({','.join([f"'{r}'" for r in identifiers])});
-            """
-        )
-        updated_count: int = postgres.run(
+    logging.info(
+        f"Will update license_url in `meta_data` for {license_} {version}"
+        f"to {license_url}."
+    )
+
+    # Merge existing metadata with the new license_url
+    update_query = dedent(
+        f"""
+        UPDATE image
+        SET meta_data = ({Json(license_url_dict)}::jsonb || meta_data)
+        WHERE identifier IN (
+            SELECT identifier
+            FROM image
+            WHERE license = '{license_}' AND license_version = '{version}'
+                AND meta_data->>'license_url' IS NULL
+            LIMIT {batch_size}
+            FOR UPDATE SKIP LOCKED
+        );
+        """
+    )
+
+    updated_count = 1
+
+    while updated_count:
+        updated_count = postgres.run(
             update_query, autocommit=True, handler=RETURN_ROW_COUNT
         )
-        logger.info(f"{updated_count} records updated with {license_url}.")
-        if updated_count:
-            updated_by_license[license_url] = updated_count
         total_updated += updated_count
-    logger.info(f"Updated {total_updated} rows")
-    # Save the invalid_items to S3 as a TSV
-    save_to_s3(aws_conn_id, invalid_items, s3_bucket)
-    return updated_by_license
+    logger.info(f"Updated {total_updated} rows with {license_url}.")
+
+    return total_updated
 
 
-def save_to_s3(aws_conn_id, invalid_items, s3_bucket):
+@task
+def final_report(updated, dag_task: AbstractOperator = None):
+    """
+    Check for null in `meta_data` and send a message to Slack with the statistics
+    of the DAG run.
+
+    :param updated: total number of records updated
+    :param dag_task: automatically passed by Airflow, used to set the execution timeout.
+    """
+    total_updated = sum(updated)
+    null_counts = get_null_counts(dag_task)
+    message = f"""
+    `{DAG_ID}` DAG run completed. Updated {total_updated} records with `license_url` in the
+    `meta_data` field. Now there are {null_counts} records left pending.
+    """
+    send_message(
+        message,
+        username="Airflow DAG Data Normalization - license_url",
+        dag_id=DAG_ID,
+    )
+
+
+@task
+def save_to_s3(
+    invalid_items, aws_conn_id: str = AWS_CONN_ID, s3_bucket: str = OPENVERSE_BUCKET
+):
     """
     Save the records with invalid license pairs to S3.
     :param aws_conn_id: AWS connection id
@@ -159,81 +196,24 @@ def save_to_s3(aws_conn_id, invalid_items, s3_bucket):
         s3.load_file(f.name, s3_key, bucket_name=s3_bucket, replace=True)
 
 
-def final_report(
-    postgres_conn_id: str,
-    updated_by_license: dict[str, int] | None,
-    task: AbstractOperator = None,
-):
-    """Check for null in `meta_data` and send a message to Slack
-    with the statistics of the DAG run.
-
-    :param postgres_conn_id: Postgres connection id.
-    :param updated_by_license: stringified JSON with the number of records updated
-    for each license_url. If `update_license_url` was skipped, this will be "None".
-    :param task: automatically passed by Airflow, used to set the execution timeout.
-    """
-    null_meta_data_count = get_null_counts(postgres_conn_id, task)
-
-    if not updated_by_license:
-        updated_message = "No records were updated."
-    else:
-        formatted_item_count = "".join(
-            [
-                f"{license_url}: {count} rows\n"
-                for license_url, count in updated_by_license.items()
-            ]
-        )
-        updated_message = f"Update statistics:\n{formatted_item_count}"
-    message = f"""
-`add_license_url` DAG run completed.
-{updated_message}
-Now, there are {null_meta_data_count} records with NULL meta_data left.
-"""
-    send_message(
-        message,
-        username="Airflow DAG Data Normalization - license_url",
-        dag_id=DAG_ID,
-    )
-
-    logger.info(message)
-
-
-dag = DAG(
+@dag(
     dag_id=DAG_ID,
+    schedule=None,
+    catchup=False,
+    tags=["data_normalization"],
+    doc_md=__doc__,
     default_args={
         **DAG_DEFAULT_ARGS,
         "retries": 0,
         "execution_timeout": timedelta(hours=5),
     },
-    schedule=None,
-    catchup=False,
-    doc_md=__doc__,
-    tags=["data_normalization"],
     render_template_as_native_obj=True,
 )
+def add_license_url():
+    license_groups = get_license_groups()
+    updated = update_license_url.expand(license_group=license_groups)
+    # save_to_s3(invalid_items)
+    final_report(updated)
 
-with dag:
-    update_license_url = PythonOperator(
-        task_id=UPDATE_LICENSE_URL,
-        python_callable=update_license_url,
-        op_kwargs={
-            "postgres_conn_id": POSTGRES_CONN_ID,
-            "s3_bucket": OPENVERSE_BUCKET,
-            "aws_conn_id": AWS_CONN_ID,
-        },
-    )
-    final_report = PythonOperator(
-        task_id=FINAL_REPORT,
-        python_callable=final_report,
-        trigger_rule=TriggerRule.ALL_DONE,
-        op_kwargs={
-            "postgres_conn_id": POSTGRES_CONN_ID,
-            "updated_by_license": XCOM_PULL_TEMPLATE.format(
-                update_license_url.task_id, "return_value"
-            ),
-        },
-    )
 
-    # update_license_url only updates the images if there are records
-    # with NULL meta_data that have valid license pairs.
-    update_license_url >> final_report
+add_license_url()
