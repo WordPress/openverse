@@ -1,31 +1,8 @@
 version: "2.4"
 
 include:
+  - "catalog/compose.yml"
   - "api/compose.yml"
-
-# Common build configuration for Airflow
-# Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
-x-airflow-common: &airflow-common
-  profiles:
-    - catalog
-  restart: on-failure
-  depends_on:
-    - postgres
-    - s3
-  image: openverse_catalog
-  env_file:
-    - .env
-    - catalog/.env
-  build:
-    context: ./catalog/
-    target: cat
-    args: # Automatically inferred from env vars, unless specified
-      - REQUIREMENTS_FILE=requirements-dev.txt
-      - CATALOG_PY_VERSION
-      - CATALOG_AIRFLOW_VERSION
-  volumes:
-    - ./catalog:/opt/airflow/catalog:z
-    - catalog-cache:/home/airflow/.cache
 
 services:
   # Database used by the API
@@ -105,47 +82,6 @@ services:
       - ./catalog/tests/s3-data:/data:rw,z
       - ./docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/load_to_s3_entrypoint.sh
-
-  # Dev changes for the scheduler
-  scheduler:
-    <<: *airflow-common
-    depends_on:
-      - upstream_db
-      - s3
-    command: scheduler
-    expose:
-      - "8793" # Used for fetching logs
-    environment:
-      # Upgrade the DB on startup
-      _AIRFLOW_DB_MIGRATE: "true"
-      _AIRFLOW_WWW_USER_CREATE: "true"
-      _AIRFLOW_WWW_USER_USERNAME: airflow
-      _AIRFLOW_WWW_USER_PASSWORD: airflow
-      _AIRFLOW_WWW_USER_FIRSTNAME: Air
-      _AIRFLOW_WWW_USER_LASTNAME: Flow
-      _AIRFLOW_WWW_USER_EMAIL: airflow@example.com
-
-  # Dev changes for the triggerer
-  triggerer:
-    <<: *airflow-common
-    depends_on:
-      - upstream_db
-      - s3
-    expose:
-      - "8794" # Used for logs
-    command: triggerer
-
-  # Dev changes for the webserver container
-  webserver:
-    <<: *airflow-common
-    depends_on:
-      - upstream_db
-      - s3
-      - scheduler
-      - triggerer
-    command: webserver
-    ports:
-      - "${AIRFLOW_PORT}:8080"
 
   plausible_db:
     profiles:
@@ -288,4 +224,3 @@ volumes:
   plausible-clickhouse:
   es-data:
   minio:
-  catalog-cache:
