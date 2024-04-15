@@ -63,5 +63,45 @@ services:
     ports:
       - "${AIRFLOW_PORT}:8080"
 
+  s3:
+    profiles:
+      - catalog_dependencies
+      - catalog
+    image: docker.io/minio/minio:latest
+    ports:
+      - "5010:5000"
+      - "5011:5001"
+    env_file:
+      - ../.env
+      - docker/minio/.env
+    command: minio server /data --address :5000 --console-address :5001
+    volumes:
+      - minio:/data
+      - ../docker/minio/s3_entrypoint.sh:/opt/minio/s3_entrypoint.sh:ro,z
+    entrypoint: /opt/minio/s3_entrypoint.sh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5010/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  load_to_s3:
+    profiles:
+      - catalog_dependencies
+      - catalog
+    image: docker.io/minio/mc:latest
+    env_file:
+      - ../.env
+      - docker/minio/.env
+    depends_on:
+      - s3
+    volumes:
+      # Buckets for testing provider data imported from s3 are subdirectories under
+      # /tests/s3-data/
+      - ./tests/s3-data:/data:rw,z
+      - ../docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro,z
+    entrypoint: /opt/minio/load_to_s3_entrypoint.sh
+
 volumes:
   catalog-cache:
+  minio:
