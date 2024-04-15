@@ -11,6 +11,7 @@ environment.
 """
 
 import pathlib
+import subprocess
 
 import yaml
 
@@ -137,7 +138,12 @@ def _rename_services(conf: dict):
 def gen_integration_compose():
     print("Generating Docker Compose configuration for integration tests...")
 
-    conf = yaml.safe_load(src_dc_path.read_bytes())
+    proc = subprocess.run(
+        args=["docker", "compose", "--profile", "ingestion_server", "config"],
+        capture_output=True,
+        cwd=this_dir.parents[1],
+    )
+    conf = yaml.safe_load(proc.stdout)
 
     print("│ Pruning unwanted services... ", end="")
     _prune_services(conf)
