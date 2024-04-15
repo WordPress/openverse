@@ -1,5 +1,8 @@
 version: "2.4"
 
+include:
+  - "api/compose.yml"
+
 # Common build configuration for Airflow
 # Extension field, see https://docs.docker.com/compose/compose-file/compose-file-v3/#extension-fields
 x-airflow-common: &airflow-common
@@ -183,13 +186,6 @@ services:
     env_file:
       - docker/plausible/env.docker
 
-  cache:
-    profiles:
-      - api
-    image: docker.io/redis:7.2.4
-    ports:
-      - "50263:6379"
-
   es:
     profiles:
       - ingestion_server
@@ -214,30 +210,6 @@ services:
         hard: 65536
     volumes:
       - es-data:/usr/share/elasticsearch/data
-
-  web:
-    profiles:
-      - api
-    build:
-      context: ./api/
-      target: api
-      args: # Automatically inferred from env vars, unless specified
-        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
-        - API_PY_VERSION
-    image: openverse-api
-    volumes:
-      - ./api:/api:z
-    ports:
-      - "50280:50280"
-    depends_on:
-      - db
-      - es
-      - cache
-    env_file:
-      - api/env.docker
-      - api/.env
-    stdin_open: true
-    tty: true
 
   ingestion_server:
     profiles:
@@ -287,37 +259,6 @@ services:
       - ingestion_server/env.docker
     stdin_open: true
     tty: true
-
-  nginx:
-    profiles:
-      - api
-    build:
-      context: ./api/
-      target: nginx
-      args: # Automatically inferred from env vars, unless specified
-        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
-        - API_PY_VERSION
-    ports:
-      - "50270:8080"
-    environment:
-      DJANGO_NGINX_UPSTREAM_URL: web:50280
-    depends_on:
-      - web
-
-  proxy:
-    profiles:
-      - api
-    image: docker.io/nginx:alpine
-    ports:
-      - "50200:9080"
-      - "50243:9443"
-    environment:
-      HTTPS_PORT: 50243 # See `ports` mapping above.
-    depends_on:
-      - web
-    volumes:
-      - ./docker/nginx/templates:/etc/nginx/templates:z
-      - ./docker/nginx/certs:/etc/nginx/certs:z
 
   frontend_nginx:
     profiles:

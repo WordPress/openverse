@@ -1,0 +1,60 @@
+services:
+  cache:
+    profiles:
+      - api
+    image: docker.io/redis:7.2.4
+    ports:
+      - "50263:6379"
+
+  web:
+    profiles:
+      - api
+    build:
+      target: api
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - API_PY_VERSION
+    image: openverse-api
+    volumes:
+      - .:/api:z
+    ports:
+      - "50280:50280"
+    depends_on:
+      - db
+      - es
+      - cache
+    env_file:
+      - env.docker
+      - .env
+    stdin_open: true
+    tty: true
+
+  nginx:
+    profiles:
+      - api
+    build:
+      target: nginx
+      args: # Automatically inferred from env vars, unless specified
+        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
+        - API_PY_VERSION
+    ports:
+      - "50270:8080"
+    environment:
+      DJANGO_NGINX_UPSTREAM_URL: web:50280
+    depends_on:
+      - web
+
+  proxy:
+    profiles:
+      - api
+    image: docker.io/nginx:alpine
+    ports:
+      - "50200:9080"
+      - "50243:9443"
+    environment:
+      HTTPS_PORT: 50243 # See `ports` mapping above.
+    depends_on:
+      - web
+    volumes:
+      - ../docker/nginx/templates:/etc/nginx/templates:z
+      - ../docker/nginx/certs:/etc/nginx/certs:z
