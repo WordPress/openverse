@@ -20,8 +20,7 @@ from .test_constants import service_ports
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
-# Docker Compose config will be copied from ``src_dc_path`` to ``dest_dc_path``
-src_dc_path = this_dir.parent.parent.joinpath("docker-compose.yml")
+# Docker Compose config will be written to ``dest_dc_path``
 dest_dc_path = this_dir.joinpath("integration-docker-compose.yml")
 
 
@@ -50,19 +49,18 @@ def _map_ports(conf: dict):
 
 def _fixup_env(conf: dict):
     """
-    Change the relative paths to the environment files to absolute paths.
-
-    This ensures that they are point to valid locations in the new Docker Compose file.
+    Map environment variables that reference other services to the new service
+    names that are just prefixed with 'integration_'.
 
     :param conf: the Docker Compose configuration
     """
 
-    for service in {"es", "db", "upstream_db"}:
-        env_files = conf["services"][service]["env_file"]
-        env_files = [str(src_dc_path.parent.joinpath(path)) for path in env_files]
-        conf["services"][service]["env_file"] = env_files
     for service in {"ingestion_server", "indexer_worker"}:
-        conf["services"][service]["env_file"] = ["env.integration"]
+        env = conf["services"][service]["environment"]
+        conf["services"][service]["environment"] = {
+            key: f"integration_{value}" if value in conf["services"] else value
+            for key, value in env.items()
+        }
 
 
 def _remove_volumes(conf: dict):
