@@ -4,6 +4,7 @@ include:
   - "catalog/compose.yml"
   - "ingestion_server/compose.yml"
   - "api/compose.yml"
+  - "frontend/compose.yml"
 
 services:
   # Database used by the API
@@ -147,27 +148,6 @@ services:
         hard: 65536
     volumes:
       - es-data:/usr/share/elasticsearch/data
-
-  frontend_nginx:
-    profiles:
-      - frontend
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile.nginx
-      target: nginx
-      args: # Automatically inferred from env vars, unless specified
-        - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
-        - FRONTEND_NODE_VERSION
-        - FRONTEND_PNPM_VERSION
-    ports:
-      - "50290:8080"
-    environment:
-      OPENVERSE_NGINX_UPSTREAM_URL: ${HOST_NETWORK_ADDRESS:-172.17.0.1}:8443
-      OPENVERSE_NGINX_PLAUSIBLE_EVENT_URL: http://plausible:8000/api/event
-      # Set to Docker network resolver to be able to resolve the `plausible` container.
-      # This would be the default but Nginx requires it to be explicitly set when
-      # making outgoing requests (e.g., to plausible.io)
-      OPENVERSE_NGINX_DNS_RESOLVER: 127.0.0.11
 
 volumes:
   api-postgres:
