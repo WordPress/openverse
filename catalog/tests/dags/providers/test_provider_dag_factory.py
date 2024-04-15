@@ -237,7 +237,7 @@ def test_create_report_load_completion_for_reingestion_dag():
                 "record_counts_by_media_type"
             ],
             "dated": dated,
-            "is_reingestion_worfklow": True,
+            "is_reingestion_workflow": True,
         }
 
         assert "date_range_start" not in report_task.op_kwargs
