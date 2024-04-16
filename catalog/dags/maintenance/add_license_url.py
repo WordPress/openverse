@@ -224,8 +224,8 @@ def save_to_s3(
 )
 def add_license_url():
     license_groups = get_license_groups()
-    updated = update_license_url.expand(
-        license_group=license_groups, batch_size="{{ params.batch_size }}"
+    updated = update_license_url.partial(batch_size="{{ params.batch_size }}").expand(
+        license_group=license_groups
     )
     # save_to_s3(invalid_items)
     final_report(updated)
