@@ -10,23 +10,22 @@ the `meta_data` column are updated, the DAG will only run the first and the
 last step, logging the statistics.
 """
 
-import csv
 import logging
 from datetime import timedelta
-from tempfile import NamedTemporaryFile
 from textwrap import dedent
 
 from airflow.decorators import dag, task
+from airflow.exceptions import AirflowSkipException
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.param import Param
-from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.utils.state import State
+from airflow.utils.trigger_rule import TriggerRule
 from psycopg2._json import Json
 
+from common import slack
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.licenses import get_license_info_from_license_pair
-from common.slack import send_message
 from common.sql import RETURN_ROW_COUNT, PostgresHook
-from providers.provider_dag_factory import AWS_CONN_ID, OPENVERSE_BUCKET
 
 
 DAG_ID = "add_license_url"
@@ -82,7 +81,7 @@ Starting `{DAG_ID}` DAG. Found {len(license_groups)} license groups with {total_
 records without `license_url` in `meta_data` left.\nCount per license-version:
 {licenses_detailed}
     """
-    send_message(
+    slack.send_message(
         message,
         username="Airflow DAG Data Normalization - license_url",
         dag_id=DAG_ID,
@@ -105,10 +104,12 @@ def update_license_url(
     :param dag_task: automatically passed by Airflow, used to set the execution timeout.
     """
     license_, version = license_group
-    *_, license_url = get_license_info_from_license_pair(license_, version)
-    if license_url is None:
-        logger.warning(f"No license pair ({license_}, {version}) in the license map.")
-        return 0
+    license_info = get_license_info_from_license_pair(license_, version)
+    if license_info is None:
+        raise AirflowSkipException(
+            f"No license pair ({license_}, {version}) in the license map."
+        )
+    *_, license_url = license_info
 
     logging.info(
         f"Will add `license_url` in `meta_data` for records with license "
@@ -148,8 +149,8 @@ def update_license_url(
     return total_updated
 
 
-@task
-def final_report(updated, dag_task: AbstractOperator = None):
+@task(trigger_rule=TriggerRule.ALL_DONE)
+def report_completion(updated, dag_task: AbstractOperator = None):
     """
     Check for null in `meta_data` and send a message to Slack with the statistics
     of the DAG run.
@@ -162,44 +163,45 @@ def final_report(updated, dag_task: AbstractOperator = None):
     null_counts = run_sql(query, method="get_first", dag_task=dag_task)[0]
 
     message = f"""
-    `{DAG_ID}` DAG run completed. Updated {total_updated} records with `license_url` in the
-    `meta_data` field. {null_counts} records left pending.
+    `{DAG_ID}` DAG run completed. Updated {total_updated} record(s) with `license_url` in the
+    `meta_data` field. {null_counts} record(s) left pending.
     """
-    send_message(
+    slack.send_message(
         message,
         username="Airflow DAG Data Normalization - license_url",
         dag_id=DAG_ID,
     )
 
 
-@task
-def save_to_s3(
-    invalid_items, aws_conn_id: str = AWS_CONN_ID, s3_bucket: str = OPENVERSE_BUCKET
-):
+@task(trigger_rule=TriggerRule.ALL_DONE)
+def report_failed_license_pairs(dag_run=None):
     """
-    Save the records with invalid license pairs to S3.
-    :param aws_conn_id: AWS connection id
-    :param invalid_items: The list of dictionaries with the invalid items
-    :param s3_bucket: S3 bucket
+    Send a message to Slack with the license-version pairs that could not be found
+    in the license map.
     """
-    if not invalid_items:
-        return
+    skipped_tasks = [
+        dag_task
+        for dag_task in dag_run.get_task_instances(state=State.SKIPPED)
+        if "update_license_url" in dag_task.task_id
+    ]
 
-    s3_key = "invalid_items.tsv"
+    if not skipped_tasks:
+        raise AirflowSkipException
 
-    with NamedTemporaryFile(mode="w+", encoding="utf-8") as f:
-        tsv_writer = csv.DictWriter(
-            f, delimiter="\t", fieldnames=["license", "license_version", "identifier"]
-        )
-        tsv_writer.writeheader()
-        for item in invalid_items:
-            tsv_writer.writerow(item)
-        f.seek(0)
-        logger.info(f"Uploading the invalid items to {s3_bucket}:{s3_key}")
-        with open(f.name) as fp:
-            logger.info(fp.read())
-        s3 = S3Hook(aws_conn_id=aws_conn_id)
-        s3.load_file(f.name, s3_key, bucket_name=s3_bucket, replace=True)
+    message = (
+        f"""
+    One or more license pairs could not be found in the license map while running
+    the `{DAG_ID} DAG. See the logs for more details:
+    """
+    ) + "\n".join(
+        f"  - <{dag_task.log_url}|{dag_task.task_id}>" for dag_task in skipped_tasks[:5]
+    )
+
+    slack.send_alert(
+        message,
+        username="Airflow DAG Data Normalization - license_url",
+        dag_id=DAG_ID,
+    )
 
 
 @dag(
@@ -228,7 +230,8 @@ def add_license_url():
         license_group=license_groups
     )
     # save_to_s3(invalid_items)
-    final_report(updated)
+    report_completion(updated)
+    updated >> report_failed_license_pairs()
 
 
 add_license_url()
