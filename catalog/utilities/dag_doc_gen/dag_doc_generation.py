@@ -208,7 +208,7 @@ def generate_type_subsection(
     text += header + "\n"
     text += "| " + " | ".join(["---"] * column_count) + " |"
 
-    for dag in dags_info:
+    for dag in sorted(dags_info, key=lambda d: d.mapped_dag_id):
         dag_id = f"`{dag.dag_id}`"
         # If we have documentation for the DAG, we'll want to link to it within the
         # markdown, so we reference it using the heading text (the DAG ID)

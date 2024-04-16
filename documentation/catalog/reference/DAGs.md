@@ -34,9 +34,9 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                             | Schedule Interval |
 | ------------------------------------------------------------------ | ----------------- |
-| [`audio_data_refresh`](#media_type_data_refresh)                   | `0 0 * * 1`       |
 | [`create_filtered_audio_index`](#create_filtered_media_type_index) | `None`            |
 | [`create_filtered_image_index`](#create_filtered_media_type_index) | `None`            |
+| [`audio_data_refresh`](#media_type_data_refresh)                   | `0 0 * * 1`       |
 | [`image_data_refresh`](#media_type_data_refresh)                   | `0 0 * * 1`       |
 
 ### Database
@@ -45,8 +45,8 @@ The following are DAGs grouped by their primary tag:
 | -------------------------------------------------------------------------------------- | ----------------- |
 | [`batched_update`](#batched_update)                                                    | `None`            |
 | [`delete_records`](#delete_records)                                                    | `None`            |
-| [`recreate_audio_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                          | `None`            |
+| [`recreate_audio_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
 | [`recreate_image_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                      | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                                | `@monthly`        |
