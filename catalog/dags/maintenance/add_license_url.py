@@ -70,10 +70,14 @@ def get_license_groups(
     license_groups = postgres.get_records(select_query)
 
     total_nulls = sum(group[2] for group in license_groups)
+    licenses_detailed = "\n".join(
+        f"{group[0]} \t{group[1]} \t{group[2]}" for group in license_groups
+    )
 
     message = f"""
-    Starting `{DAG_ID}` DAG. Found {len(license_groups)} license groups with {total_nulls}
-    records without `license_url` in `meta_data` left.
+Starting `{DAG_ID}` DAG. Found {len(license_groups)} license groups with {total_nulls}
+records without `license_url` in `meta_data` left.\nCount per license-version:
+{licenses_detailed}
     """
     send_message(
         message,
@@ -133,7 +137,6 @@ def update_license_url(
     )
 
     updated_count = 1
-
     while updated_count:
         updated_count = postgres.run(
             update_query, autocommit=True, handler=RETURN_ROW_COUNT
@@ -157,7 +160,7 @@ def final_report(updated, dag_task: AbstractOperator = None):
     null_counts = get_null_counts(dag_task)
     message = f"""
     `{DAG_ID}` DAG run completed. Updated {total_updated} records with `license_url` in the
-    `meta_data` field. Now there are {null_counts} records left pending.
+    `meta_data` field. {null_counts} records left pending.
     """
     send_message(
         message,
