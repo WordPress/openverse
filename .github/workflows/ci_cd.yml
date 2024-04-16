@@ -366,7 +366,9 @@ jobs:
           setup_images: upstream_db ingestion_server
 
       - name: Run ingestion-server tests
-        run: just ingestion_server/test-local
+        run: |
+          just env
+          just ingestion_server/test-local
 
       - name: Print ingestion-server test logs
         run: |

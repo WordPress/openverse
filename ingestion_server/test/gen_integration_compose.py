@@ -11,6 +11,7 @@ environment.
 """
 
 import pathlib
+import subprocess
 
 import yaml
 
@@ -19,24 +20,8 @@ from .test_constants import service_ports
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
-# Docker Compose config will be copied from ``src_dc_path`` to ``dest_dc_path``
-src_dc_path = this_dir.parent.parent.joinpath("docker-compose.yml")
+# Docker Compose config will be written to ``dest_dc_path``
 dest_dc_path = this_dir.joinpath("integration-docker-compose.yml")
-
-
-def _prune_services(conf: dict):
-    """
-    Prune the unnecessary services from the Docker Compose configuration.
-
-    After this step, only those that are used in the integration tests are left.
-
-    :param conf: the Docker Compose configuration
-    """
-
-    services_to_keep = {"es", "ingestion_server", "indexer_worker", "db", "upstream_db"}
-    for service_name in dict(conf["services"]):
-        if service_name not in services_to_keep:
-            del conf["services"][service_name]
 
 
 def _map_ports(conf: dict):
@@ -49,34 +34,26 @@ def _map_ports(conf: dict):
     :param conf: the Docker Compose configuration
     """
 
-    for service_name, service in conf["services"].items():
+    for service_name in conf["services"].keys():
+        service = conf["services"][service_name]
         if "ports" in service:
-            ports = service["ports"]
-            ports = [
-                f"{service_ports[service_name]}:{port.split(':')[1]}" for port in ports
-            ]
-            service["ports"] = ports
-        elif "expose" in service and service_name in service_ports:
-            exposes = service["expose"]
-            ports = [f"{service_ports[service_name]}:{expose}" for expose in exposes]
-            service["ports"] = ports
+            service["ports"][0]["published"] = service_ports[service_name]
 
 
 def _fixup_env(conf: dict):
     """
-    Change the relative paths to the environment files to absolute paths.
-
-    This ensures that they are point to valid locations in the new Docker Compose file.
+    Map environment variables that reference other services to the new service
+    names that are just prefixed with 'integration_'.
 
     :param conf: the Docker Compose configuration
     """
 
-    for service in {"es", "db", "upstream_db"}:
-        env_files = conf["services"][service]["env_file"]
-        env_files = [str(src_dc_path.parent.joinpath(path)) for path in env_files]
-        conf["services"][service]["env_file"] = env_files
     for service in {"ingestion_server", "indexer_worker"}:
-        conf["services"][service]["env_file"] = ["env.integration"]
+        env = conf["services"][service]["environment"]
+        conf["services"][service]["environment"] = {
+            key: f"integration_{value}" if value in conf["services"] else value
+            for key, value in env.items()
+        }
 
 
 def _remove_volumes(conf: dict):
@@ -87,33 +64,13 @@ def _remove_volumes(conf: dict):
 
     :param conf: the Docker Compose configuration
     """
-    volumes_to_remove = {
-        "db": "api-postgres",
-        "upstream_db": "catalog-postgres",
-        "es": "es-data",
-    }
 
-    for service, volume_to_remove in volumes_to_remove.items():
-        volumes = conf["services"][service]["volumes"]
-        volumes = [volume for volume in volumes if volume_to_remove not in volume]
-        conf["services"][service]["volumes"] = volumes
-
+    for service_name in conf["services"].keys():
+        volumes = conf["services"][service_name]["volumes"]
+        conf["services"][service_name]["volumes"] = [
+            volume for volume in volumes if volume["source"] not in conf["volumes"]
+        ]
     conf["volumes"] = {}
-
-
-def _change_directories(conf: dict):
-    """
-    Update the relative paths of the directories like build context or bind volumes.
-
-    :param conf: the Docker Compose configuration
-    """
-
-    for service in {"ingestion_server", "indexer_worker"}:
-        conf["services"][service]["volumes"] = ["../:/ingestion_server"]
-        conf["services"][service]["build"] = "../"
-
-    upstream_db_build = conf["services"]["upstream_db"]["build"]["context"]
-    conf["services"]["upstream_db"]["build"]["context"] = f"../../{upstream_db_build}"
 
 
 def _rename_services(conf: dict):
@@ -137,39 +94,30 @@ def _rename_services(conf: dict):
 def gen_integration_compose():
     print("Generating Docker Compose configuration for integration tests...")
 
-    with open(src_dc_path) as src_dc:
-        conf = yaml.safe_load(src_dc)
+    proc = subprocess.run(
+        args=["docker", "compose", "--profile", "ingestion_server", "config"],
+        capture_output=True,
+        cwd=this_dir.parents[1],
+    )
+    conf = yaml.safe_load(proc.stdout)
 
-        print("│ Pruning unwanted services... ", end="")
-        _prune_services(conf)
-        print("done")
+    print("│ Mapping alternative ports... ", end="")
+    _map_ports(conf)
+    print("done")
 
-        print("│ Mapping alternative ports... ", end="")
-        _map_ports(conf)
-        print("done")
+    print("│ Updating environment variables... ", end="")
+    _fixup_env(conf)
+    print("done")
 
-        print("│ Updating environment variables... ", end="")
-        _fixup_env(conf)
-        print("done")
+    print("│ Removing volumes... ", end="")
+    _remove_volumes(conf)
+    print("done")
 
-        print("│ Removing volumes... ", end="")
-        _remove_volumes(conf)
-        print("done")
+    print("│ Renaming services... ", end="")
+    _rename_services(conf)
+    print("done")
 
-        print("│ Changing directories... ", end="")
-        _change_directories(conf)
-        print("done")
-
-        print("│ Renaming services... ", end="")
-        _rename_services(conf)
-        print("done")
-
-        with open(dest_dc_path, "w") as dest_dc:
-            dest_dc.write(
-                "# This is an auto-generated Docker Compose configuration file.\n"
-                "# Do not modify this file directly. Your changes will be overwritten.\n\n"
-            )
-            yaml.dump(conf, dest_dc, default_flow_style=False)
+    dest_dc_path.write_text(yaml.safe_dump(conf, default_flow_style=False))
 
     print("done\n")
     return dest_dc_path
