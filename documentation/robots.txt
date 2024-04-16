@@ -1,9 +1,3 @@
-# Block API endpoints
-User-agent: *
-Disallow: /v1/images/
-Disallow: /v1/audio/
-Disallow: /v1/auth/
-
 User-agent: GPTBot
 Disallow: /
 

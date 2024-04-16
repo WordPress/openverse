@@ -76,6 +76,7 @@ html_favicon = (
 )
 
 html_static_path = ["_static"]
+html_extra_path = ["robots.txt", "ai.txt"]
 
 html_show_copyright = False
 
