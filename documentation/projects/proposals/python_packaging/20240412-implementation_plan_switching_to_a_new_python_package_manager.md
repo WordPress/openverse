@@ -105,9 +105,10 @@ the path forward.
 - all-in-one tool (at least trying to be)
 - provisions
   [@indygreg's python-build-standalone](https://github.com/indygreg/python-build-standalone)
+- PEP 621 compliant
 - fastest among all options considered (written in Rust, uses
   [`uv`](https://github.com/astral-sh/uv/) under the hood)
-- lockfile is `requirements.txt`
+- lockfile follows `requirements.txt` standard
 - supports monorepo workspaces
 - developed by [Armin Ronacher](https://github.com/mitsuhiko)
 - fastest growing in terms of GitHub stars
@@ -116,7 +117,6 @@ the path forward.
 
 #### Why not?
 
-- PEP 621 non-compliant
 - looks like
   [1 core maintainer](https://github.com/astral-sh/rye/graphs/contributors)
 - [no stable v1 yet](https://github.com/astral-sh/rye/releases)
@@ -161,7 +161,7 @@ the path forward.
 - good CLI experience for developers
 - highest GitHub stars and forks indicative of high popularity
 - looks like
-  [2 core maintainers](https://github.com/astral-sh/rye/graphs/contributors)
+  [2 core maintainers](https://github.com/python-poetry/poetry/graphs/contributors)
   (> 1)
 - supported by
   [Renovate](https://docs.renovatebot.com/modules/manager/poetry/)[^poetry_reno]
