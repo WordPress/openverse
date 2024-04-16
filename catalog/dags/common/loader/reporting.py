@@ -167,8 +167,10 @@ def report_completion(
         media_type_reports += "\n"
 
     date_range = "_all_"
-    if dated and not is_reingestion_workflow:
+    if dated:
         date_range = f"{date_range_start} -> {date_range_end}"
+    if is_reingestion_workflow:
+        date_range = "_multi-time period spread_"
 
     # Collect data into a single message
     message = f"""
