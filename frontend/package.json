@@ -60,7 +60,7 @@
     "@floating-ui/dom": "^1.5.3",
     "@nuxt/components": "^2.2.1",
     "@nuxt/vue-app": "^2.17.2",
-    "@nuxtjs/composition-api": "^0.33.1",
+    "@nuxtjs/composition-api": "^0.34.0",
     "@nuxtjs/i18n": "^7.3.1",
     "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/redirect-module": "^0.3.1",
