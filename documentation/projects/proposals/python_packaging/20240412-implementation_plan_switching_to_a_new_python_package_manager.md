@@ -9,15 +9,8 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] TBD
-- [ ] TBD
-
-## Project links
-
-<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
-
-- [Project Thread]()
-- [Project Proposal](/)
+- [ ] @sarayourfriend
+- [ ] @AetherUnbound
 
 ## Overview
 
