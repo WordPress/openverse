@@ -127,7 +127,7 @@ def update_license_url(
     update_query = dedent(
         f"""
         UPDATE image
-        SET meta_data = ({Json(license_url_dict)}::jsonb || meta_data)
+        SET meta_data = ({Json(license_url_dict)}::jsonb || meta_data), updated_on = now()
         WHERE identifier IN (
             SELECT identifier
             FROM image
