@@ -72,7 +72,7 @@ services:
       - "5011:5001"
     env_file:
       - .env
-      - docker/minio/.env
+      - ../docker/minio/.env
     command: minio server /data --address :5000 --console-address :5001
     volumes:
       - minio:/data
@@ -91,7 +91,7 @@ services:
     image: docker.io/minio/mc:latest
     env_file:
       - .env
-      - docker/minio/.env
+      - ../docker/minio/.env
     depends_on:
       - s3
     volumes:
