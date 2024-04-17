@@ -131,6 +131,9 @@ the path forward.
 #### Why?
 
 - PEP 621 compliant
+- supports libraries (build and publish to PyPI) as well as apps
+- generates cross-platform lockfiles
+- good CLI experience for developers
 - supported by [Renovate](https://docs.renovatebot.com/modules/manager/pep621/)
   and
   [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates#pip-and-pip-compile)
@@ -147,8 +150,6 @@ the path forward.
   [1 core maintainer](https://github.com/pdm-project/pdm/graphs/contributors)
 - fewest GitHub stars and forks indicative of low popularity
 - [flagship feature rejected](https://pdm-project.org/en/latest/usage/pep582/)
-- [does not support editable main dependencies](https://pdm-project.org/en/latest/usage/dependency/#editable-dependencies)
-  [⚠️ deal-breaker]
 
 ### [Poetry](https://python-poetry.org/)
 
@@ -185,16 +186,13 @@ the path forward.
 
 ### Conclusions
 
-Poetry is the only one that does not have a deal-breaker for us. Hence it was
-selected as the next package manager of choice.
+We have opted to use PDM because of its compliance with various PEP standards,
+as well as its support for caches. It will support us to build Python libraries
+as well as applications.
 
-Regarding PEP non-compliance, the maintainers have confirmed that PEP 621 will
-be supported in v2.x. As for only supporting one build backend, that backend is
-capable enough for us and does what we need in terms of building libraries.
-
-Also, both PDM and Rye are currently actively developed. If their respective
-deal-breakers are resolved, they can be re-considered in the future. I have good
-hopes for Rye to be a strong contender in the future.
+I have good hopes for Rye to be a strong contender in the future once it is
+mature and popular enough to be taken seriously. If Poetry manages to become PEP
+compliant and faster, it may be considered in the future too.
 
 ## Step-by-step plan
 
