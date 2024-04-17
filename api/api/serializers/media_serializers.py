@@ -12,6 +12,7 @@ from rest_framework.request import Request
 
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
+from ov_attribution.license import License
 
 from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
@@ -32,7 +33,6 @@ from api.serializers.docs import (
 )
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
-from api.utils.licenses import get_license_url
 from api.utils.url import add_protocol
 
 
@@ -741,8 +741,8 @@ class MediaSerializer(BaseModelSerializer):
         output["license"] = output["license"].lower()
 
         if output.get("license_url") is None:
-            output["license_url"] = get_license_url(
-                output["license"], output["license_version"]
+            output["license_url"] = License(output["license"]).url(
+                output["license_version"]
             )
 
         # Ensure URLs have scheme
