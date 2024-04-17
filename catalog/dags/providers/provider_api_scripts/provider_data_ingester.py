@@ -603,7 +603,7 @@ class ProviderDataIngester(ABC):
         logger.info(f"Committed {total} records")
         return total
 
-    def _verbose_log(self, msg: str, data=[]):
+    def _verbose_log(self, msg: str, data: list = None):
         if self._should_verbose_log:
             logger.info(msg)
             if data:
