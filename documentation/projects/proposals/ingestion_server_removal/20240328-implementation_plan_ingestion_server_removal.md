@@ -446,6 +446,8 @@ can all be refactored from
 It is not possible to retry a single indexer worker with this set up, because once a worker fails the instance is actually terminated (rather than simply stopped). If a task that triggers a reindex is cleared after an instance has been terminated, it will simply fail. The entire reindex must be restarted from the first step in this task group.
 
 However, there is a valuable tradoff to this approach: it ensures that all of the indexer workers in a data refresh are identical, while still allowing us to avoid manual deployments every time the indexer logic changes. For example, imagine some changes to the reindexing logic are merged to `main` while a data refresh is actively underway, and a new Docker image is published. If one indexer worker failed, and it were possible to retry **just** that indexer worker, it would use the new Docker image -- leading to inconsistency in the behavior of different workers within a single data refresh.
+
+In future iterations this may also be solved by using AMIs with the Docker image baked in, and then preventing launch template version bumps while a data refresh is running.
 ```
 
 ### Create the Terraform and Ansible resources needed to deploy the new indexer workers
