@@ -1,5 +1,12 @@
+import logging
 import re
 from urllib.parse import quote, unquote
+
+
+DOUBLE_BACKSLASH_ESCAPE = re.compile(
+    r"\\(x)([\da-f]{2})|\\(u)([\da-f]{4})", re.IGNORECASE
+)
+NO_BACKSLASH_ESCAPE = re.compile(r"(u)([\da-f]{4})", re.IGNORECASE)
 
 
 def convert_grp(grp: str) -> str | None:
@@ -20,12 +27,6 @@ def decode_data(data: str | None = "") -> str:
     if not data:
         return ""
 
-    regexes = [
-        r"\\(x)([\da-f]{2})",  # \\xe9 - é
-        r"\\(u)([\da-f]{4})",  # \\u00e9 - é
-        r"(u)([\da-f]{4})",  # u00e9 - é
-    ]
-
     def replace_func(match):
         """Replace the matched group with the converted character if possible, otherwise return the original string."""
         prefix, grp = match.groups()
@@ -33,8 +34,15 @@ def decode_data(data: str | None = "") -> str:
             return converted
         return f"{prefix}{grp}"
 
-    for regex in regexes:
-        data = re.sub(regex, replace_func, data, flags=re.IGNORECASE)
+    # Handle characters encoded with double backslashes
+    if DOUBLE_BACKSLASH_ESCAPE.search(data):
+        try:
+            decoded_data = data.encode().decode("unicode_escape")
+            data = decoded_data
+        except (UnicodeDecodeError, UnicodeEncodeError):
+            logging.debug(f"Failed to decode data with double backslash: {data}")
+    # Handle characters encoded without backslashes
+    data = re.sub(NO_BACKSLASH_ESCAPE, replace_func, data)
 
     return unquote(data)
 
