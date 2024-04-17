@@ -32,26 +32,77 @@ implementation:
 
 ### Philosophy
 
-The way @fcoveram has designed the color system for dark mode is crucial to
-understanding the implementation here. This project uses a "palette swap" where
-each color has a 1:1 replacement from light mode to dark mode. While we _will_
-include easy mechanisms for exceptions to this rule, they do not appear to be
-necessary based on the designs. Implementing our dark mode, then, should allow
-component authors to write the component once, using semantic color names, that
-will automatically switch between their light and dark mode counterparts.
+Understanding the way @fcoveram has designed the color system for dark mode is
+crucial to understanding this implementation. Quite simply and elegantly, the
+designs use a "palette swap" approach in which each color has a 1:1 replacement
+from light mode to dark mode.
+
+While we _will_ include easy mechanisms for exceptions to this rule, they do not
+appear to be necessary based on the designs. Implementing our dark mode, then,
+should allow component authors to write components _once_, using semantic color
+names, that will automatically switch between their light and dark mode
+counterparts.
 
 ### Implementation
 
 We will switch our color names defined in the tailwind configuration to use
 semantic names, for example replacing "pink" with "primary" and "yellow" with
-"complement". Instead of hardcoding these colors in the tailwind configuration,
-the tailwind configuration will refer to CSS variables defined in our root css
+"complement". Instead of hardcoding these colors in the Tailwind configuration,
+the tailwind configuration will reference CSS variables defined in our root css
 file. The value of the CSS variables will be switched based on a dark mode CSS
 class added to the HTML root when dark mode is enabled.
 
 Tailwind's built in `dark:` modifier can be used for any styles which need to
 override the default behavior or add dark-mode specific styles beyond the core
 palette swap.
+
+Here are pretend, simplified examples of this setup.
+
+In our primary CSS file, we setup two lists of CSS variables with different
+values when the `.dark-mode` class is present:
+
+```css
+:root {
+  --color-foreground: black;
+  --color-background: white;
+}
+
+.dark-mode {
+  --color-foreground: white;
+  --color-background: black;
+}
+```
+
+In our Tailwind config, we reference these variables:
+
+```js
+const config = {
+  theme: {
+    colors: {
+      foreground: "var(--color-foreground)",
+      background: "var(--color-background)",
+    },
+  },
+}
+```
+
+In a component, we use the Tailwind classes:
+
+```vue
+<template>
+  <!-- This will be black in light mode and white in dark mode! -->
+  <p class="text-foreground">Hello World</p>
+</template>
+```
+
+Finally, if we needed an "escape hatch" to make sure this component was _always_
+black, _regardless_ of dark mode:
+
+```vue
+<template>
+  <p class="text-foreground dark:text-background">Hello World</p>
+</template>
+```
 
 ## Expected Outcomes
 
@@ -100,10 +151,12 @@ The following plan requires approved designs and semantic color names.
       of the `tailwind.css` file. **At this point, the full dark mode appearance
       should be able to be tested manually by @fcoveram and
       @wordpress/openverse-frontend for any inconsistiencies or problems**.
+   5. Create a `color-mode.ts` test utility for playwright that works comparably
+      to the `breakpoint.ts` utility, wrapping tests
 2. Parallel Work Stream "B": Toggling dark mode
 
-   1. Create a `SHOW_DARK_MODE_TOGGLE` feature flag which is disabled by default
-      and available in every environment.
+   1. Create a `DARK_MODE_UI_TOGGLE` feature flag which is off by default and
+      switchable in staging.
    2. Implement logic for calculating a current "color mode" with the following
       state:
 
@@ -114,13 +167,9 @@ The following plan requires approved designs and semantic color names.
       }
       ```
 
-      The color mode should be stored in a cookie so that a previous user choice
-      can be used when rendering via SSR and avoiding a flash of light mode
-      styles for dark mode users.
-
-      _TODO: I need to decide if we should just use v2 of the official "nuxt
-      color mode" plugin, which seems pretty drop-in and straightforward, or
-      write a custom implementation_.
+      The color mode should be stored in a cookie so that a previously-selected
+      user choice can be used when rendering via SSR and, avoiding a flash of
+      light mode styles for dark mode users.
 
    3. Behind the feature flag, Add the new user interface element which toggles
       dark mode. Default to "light" mode but support choosing between "dark",
