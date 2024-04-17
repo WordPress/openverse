@@ -14,6 +14,7 @@ from api.serializers.audio_serializers import AudioSerializer
 def audio_fixture():
     audio = Audio(
         identifier=uuid.uuid4(),
+        license="cc0",
     )
     audio.save()
     return audio
@@ -50,6 +51,7 @@ def test_audio_serializer_with_non_required_alt_audio_fields_missing():
     ]
     audio = Audio(
         identifier=uuid.uuid4(),
+        license="cc0",
         alt_files=alt_files,
     )
     audio.save()
