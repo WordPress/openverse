@@ -47,11 +47,11 @@
       "addLabels": ["🟨 tech: javascript"]
     },
     {
-      "matchFileNames": ["{frontend,packages}/**"],
+      "matchFileNames": ["frontend/**", "packages/eslint-plugin/**"],
       "addLabels": ["🧱 stack: frontend"]
     },
     {
-      "matchFileNames": ["api/**"],
+      "matchFileNames": ["api/**", "packages/ov-attribution/**"],
       "addLabels": ["🧱 stack: api"]
     },
     {
@@ -73,7 +73,8 @@
         "api/**",
         "catalog/**",
         "ingestion_server/**",
-        "documentation/**"
+        "documentation/**",
+        "packages/ov-attribution/**"
       ]
     },
     {
