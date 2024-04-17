@@ -21,7 +21,7 @@ from psycopg2.extras import DictCursor, Json
 
 from ingestion_server.db_helpers import database_connect
 from ingestion_server.indexer import DB_BUFFER_SIZE
-from ingestion_server.strings import decode_data, deduplicate_tags
+from ingestion_server.strings import decode_data
 
 
 # Number of records to buffer in memory at once
@@ -161,7 +161,7 @@ class CleanupFunctions:
                 tag["name"] = decoded_tag_name
             tag_output.append(tag)
 
-        deduplicated_tags = deduplicate_tags(tag_output)
+        deduplicated_tags = CleanupFunctions.deduplicate_tags(tag_output)
         if len(deduplicated_tags) != len(tag_output):
             update_required = True
             tag_output = deduplicated_tags
