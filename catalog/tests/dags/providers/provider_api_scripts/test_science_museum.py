@@ -176,6 +176,7 @@ def test_get_record_data_success(object_data):
         "height": 1150,
         "width": 1536,
         "filetype": "jpeg",
+        "filesize": 134947,
         "license_info": BY_SA_4_0,
         "creator": "Unknown maker",
         "title": "Small votive organ of unknown type",
@@ -216,8 +217,8 @@ def test_creator_info_fail(object_data):
 
 def test_image_info_large():
     large_image = _get_resource_json("large_image.json")
-    actual_image, actual_height, actual_width, actual_filetype = sm._get_image_info(
-        large_image
+    actual_image, actual_height, actual_width, actual_filetype, actual_filesize = (
+        sm._get_image_info(large_image)
     )
     expected_image = (
         "https://coimages.sciencemuseumgroup.org.uk/3/563/"
@@ -226,17 +227,19 @@ def test_image_info_large():
     expected_height = 1022
     expected_width = 1536
     expected_filetype = "jpeg"
+    expected_filesize = 58772
 
     assert actual_image == expected_image
     assert actual_height == expected_height
     assert actual_width == expected_width
     assert actual_filetype == expected_filetype
+    assert actual_filesize == expected_filesize
 
 
 def test_image_info_medium():
     medium_image = _get_resource_json("medium_image.json")
-    actual_url, actual_height, actual_width, actual_filetype = sm._get_image_info(
-        medium_image
+    actual_url, actual_height, actual_width, actual_filetype, actual_filesize = (
+        sm._get_image_info(medium_image)
     )
 
     expected_image = (
@@ -250,15 +253,19 @@ def test_image_info_medium():
     assert actual_height == expected_height
     assert actual_width == expected_width
     assert actual_filetype == "jpeg"
+    assert actual_filesize is None
 
 
 def test_image_info_failure():
-    actual_url, actual_height, actual_width, actual_filetype = sm._get_image_info({})
+    actual_url, actual_height, actual_width, actual_filetype, actual_filesize = (
+        sm._get_image_info({})
+    )
 
     assert actual_url is None
     assert actual_height is None
     assert actual_width is None
     assert actual_filetype is None
+    assert actual_filesize is None
 
 
 def test_check_relative_url():

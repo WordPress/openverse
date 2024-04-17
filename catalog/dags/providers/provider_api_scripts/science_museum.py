@@ -130,6 +130,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 height,
                 width,
                 filetype,
+                filesize,
             ) = self._get_image_info(processed)
             if not url:
                 continue
@@ -144,6 +145,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 "height": height,
                 "width": width,
                 "filetype": filetype,
+                "filesize": filesize,
                 "license_info": license_info,
                 "creator": creator,
                 "title": title,
@@ -187,15 +189,25 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_image_info(
         processed: dict,
-    ) -> tuple[str | None, int | None, int | None, str | None]:
-        height, width, filetype = None, None, None
+    ) -> tuple[str | None, int | None, int | None, str | None, int | None]:
+        height, width, filetype, filesize = None, None, None, None
         image_data = processed.get("large") or processed.get("medium", {})
 
         url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
         if url:
             filetype = image_data.get("format")
             height, width = ScienceMuseumDataIngester._get_dimensions(image_data)
-        return url, height, width, filetype
+
+            if not (
+                filesize := int(
+                    image_data.get("measurements", {})
+                    .get("filesize", {})
+                    .get("value", 0)
+                )
+            ):
+                filesize = None
+
+        return url, height, width, filetype, filesize
 
     @staticmethod
     def _get_first_list_value(key: str, attributes: dict) -> str | None:
