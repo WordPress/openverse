@@ -419,8 +419,6 @@ can all be refactored from
   [`describe_auto_scaling_groups`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/autoscaling/client/describe_auto_scaling_groups.html)
   to poll the ASG until all instances have been started, and get the EC2
   instance IDs. (Skips in local env.)
-- Use dynamic task mapping to generate a Sensor for each of the instance IDs,
-  and ping its `healthcheck` endpoint until it passes.
 - Use dynamic task mapping to distribute reindexing across the indexer workers
   by first calculating `start` and `end` indices that will split the records in
   the media table into even portions, depending on the number of workers
