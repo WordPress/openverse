@@ -33,6 +33,7 @@ from api.serializers.docs import (
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
 from api.utils.licenses import get_license_url
+from api.utils.strings import clean_tags
 from api.utils.url import add_protocol
 
 
@@ -749,6 +750,9 @@ class MediaSerializer(BaseModelSerializer):
         url_fields = ["url", "creator_url", "foreign_landing_url"]
         for url_field in url_fields:
             output[url_field] = add_protocol(output[url_field])
+
+        # Decode and deduplicate the tags
+        output["tags"] = clean_tags(output.get("tags", []))
 
         return output
 

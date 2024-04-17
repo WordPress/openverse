@@ -27,7 +27,11 @@ def execute_request(request):
 
 @pytest.mark.parametrize("in_val, out_val", list(audio_mappings.items()))
 def test_audio_success_examples(in_val, out_val):
+    print(f"in_val: {in_val}")
+    print(f"out_val: {out_val}")
     res = execute_request(in_val)
+    print(f"res: {res}")
+    print(f"out_val['application/json']: {out_val['application/json']}")
     assert res == out_val["application/json"]
 
 

@@ -28,7 +28,6 @@ base_audio = {
         {"accuracy": None, "name": "strings"},
         {"accuracy": None, "name": "energetic"},
         {"accuracy": None, "name": "acoustic"},
-        {"accuracy": None, "name": "vocal"},
         {"accuracy": None, "name": "voice"},
         {"accuracy": None, "name": "funkyhouse"},
     ],
