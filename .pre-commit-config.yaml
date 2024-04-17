@@ -63,7 +63,7 @@ repos:
         additional_dependencies:
           - prettier@3.2.5
           - prettier-plugin-tailwindcss@0.5.11
-          - typescript@5.4.4
+          - typescript@5.4.5
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.10.0
