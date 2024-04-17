@@ -460,7 +460,8 @@ Some important notes:
   workers as production instances (i.e., part of the production catalog
   deployment), which merely _operate_ on different environments. As such all 8
   should be part of the production deployment, but two separate ASGs which are
-  tagged indicating their intended environment.
+  given a "staging-indexer-worker-pool" and "production-indexer-worker-pool"
+  tag, respectively, to indicate their intended environment.
 - The playbooks must be updated to check if any of the four _new_ data refresh
   DAGs are running before deploying, as well.
 - The `user_data` script should be updated to pull the Docker image with the
