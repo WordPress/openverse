@@ -21,6 +21,7 @@ from psycopg2.extras import DictCursor, Json
 
 from ingestion_server.db_helpers import database_connect
 from ingestion_server.indexer import DB_BUFFER_SIZE
+from ingestion_server.strings import decode_data, deduplicate_tags
 
 
 # Number of records to buffer in memory at once
@@ -117,6 +118,22 @@ class CleanupFunctions:
             return None
 
     @staticmethod
+    def deduplicate_tags(tags: list[dict]) -> list[dict]:
+        """
+        Remove tags that have the same name and provider.
+        Not comparing accuracy here: if the tags have different accuracy values,
+        they will also have different provider values (e.g., `clarifai` vs `flickr`).
+        """
+        seen = set()
+        unique_tags = []
+        for i, tag in enumerate(tags):
+            tag_tuple = (tag["name"], tag.get("provider"))
+            if tag_tuple not in seen:
+                seen.add(tag_tuple)
+                unique_tags.append(tag)
+        return unique_tags
+
+    @staticmethod
     def cleanup_tags(tags):
         """
         Delete denylisted and low-accuracy tags.
@@ -129,19 +146,25 @@ class CleanupFunctions:
         if not tags:
             return None
         for tag in tags:
-            below_threshold = False
             if "accuracy" in tag and float(tag["accuracy"]) < TAG_MIN_CONFIDENCE:
-                below_threshold = True
-            if "name" in tag and isinstance(tag["name"], str):
-                lower_tag = tag["name"].lower()
-                should_filter = _tag_denylisted(lower_tag) or below_threshold
-            else:
-                log.warning(f'Filtering malformed tag "{tag}" in "{tags}"')
-                should_filter = True
-            if should_filter:
                 update_required = True
-            else:
-                tag_output.append(tag)
+                continue
+            if "name" not in tag or not isinstance(tag["name"], str):
+                update_required = True
+                continue
+            decoded_tag_name = decode_data(tag["name"])
+            if _tag_denylisted(decoded_tag_name.lower()):
+                update_required = True
+                continue
+            if decoded_tag_name != tag["name"]:
+                update_required = True
+                tag["name"] = decoded_tag_name
+            tag_output.append(tag)
+
+        deduplicated_tags = deduplicate_tags(tag_output)
+        if len(deduplicated_tags) != len(tag_output):
+            update_required = True
+            tag_output = deduplicated_tags
 
         if update_required:
             fragment = Json(tag_output)
