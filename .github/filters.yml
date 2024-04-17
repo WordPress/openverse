@@ -9,6 +9,7 @@ catalog:
   - docker-compose.yml
 api:
   - api/**
+  - packages/ov-attribution/**
   - docker/db/**
   - docker/es/**
   - docker/nginx/**

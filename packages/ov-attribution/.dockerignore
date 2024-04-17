@@ -1,0 +1,5 @@
+.pytest_cache/
+test/
+
+# New virtualenv will be created in the container
+.venv/
