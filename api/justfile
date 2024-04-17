@@ -14,8 +14,8 @@ NO_COLOR := "\\033[0m"
 # Version #
 ###########
 
-export API_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
-export PGCLI_VERSION := `grep 'pgcli' Pipfile | awk -F' = ' '{print $2}' | sed 's/\~//g; s/"//g; s/=//g'`
+export API_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
+export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | awk -F'"' '{print $2}'`
 
 # Print the Python version specified in the `Pipfile`
 @py-version:
@@ -29,8 +29,8 @@ export PGCLI_VERSION := `grep 'pgcli' Pipfile | awk -F' = ' '{print $2}' | sed '
 ###########
 
 # Install dependencies
-install *args="--dev":
-    pipenv install {{ args }}
+install *args:
+    pdm install {{ args }}
 
 ######
 # Up #
@@ -92,7 +92,7 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 
 # Run Django administrative commands locally
 dj-local +args="":
-    pipenv run python manage.py {{ args }}
+    pdm run python manage.py {{ args }}
 
 # Run Django administrative commands inside the Docker container
 dj +args="": wait-up
@@ -145,7 +145,7 @@ test *args: wait-up
 
 # Run API tests locally
 test-local *args:
-    pipenv run pytest {{ args }}
+    pdm run pytest {{ args }}
 
 # Run smoke test for the API docs
 doc-test: wait-up

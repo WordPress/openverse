@@ -29,8 +29,13 @@ includes = {
     },
     "catalog": {"image": "catalog", "target": "cat"},
     "ingestion_server": {"image": "ingestion_server", "target": "ing"},
-    "api": {"image": "api", "target": "api"},
-    "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
+    "api": {"image": "api", "target": "api", "build-contexts": "packages=./packages"},
+    "api_nginx": {
+        "image": "api_nginx",
+        "context": "api",
+        "target": "nginx",
+        "build-contexts": "packages=./packages",
+    },
     "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
     "frontend_nginx": {
         "image": "frontend_nginx",
