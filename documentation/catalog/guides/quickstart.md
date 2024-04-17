@@ -186,7 +186,7 @@ just recreate
 > **Note**: Any recipes or scripts which output files to the container's mounted
 > volumes will need to be run as the root user. This can be done with the
 > `DC_USER=root` environment variable for `just` recipes. For example, see the
-> [generate-dag-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L126).
+> [generate-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L124).
 
 [justfile]: https://github.com/WordPress/openverse/blob/main/catalog/justfile
 [dockercompose]:

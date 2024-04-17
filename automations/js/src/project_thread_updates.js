@@ -4,10 +4,10 @@
 const DAYS_UPDATED_WITHIN = 14
 
 const activeDevelopmentStatuses = [
-  'In Kickoff',
-  'In RFC',
-  'In Progress',
-  'Shipped',
+  '🚀 In Kickoff',
+  '💬 In RFC',
+  '🚧 In Progress',
+  '🚢 Shipped',
 ]
 
 const GET_PROJECT_CARDS = `

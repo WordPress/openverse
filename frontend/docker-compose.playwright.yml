@@ -19,4 +19,3 @@ services:
       - DEBUG=pw:webserver
       - UPDATE_TAPES=${UPDATE_TAPES:-false}
       - FASTSTART=${FASTSTART:-false}
-    cpus: 0.000

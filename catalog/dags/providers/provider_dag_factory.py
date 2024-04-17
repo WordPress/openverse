@@ -69,14 +69,18 @@ import re
 from string import Template
 
 from airflow import DAG
+from airflow.decorators import task
+from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.models.mappedoperator import MappedOperator
 from airflow.models.param import Param
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
+from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
+from common import slack
 from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
 from common.loader import loader, reporting, s3, sql
@@ -109,8 +113,10 @@ def _apply_configuration_overrides(dag: DAG, overrides: list[TaskOverride]):
     if not overrides:
         return
 
-    for task in dag.tasks:
-        if (task_overrides := _get_overrides_for_task(task.task_id, overrides)) is None:
+    for dag_task in dag.tasks:
+        if (
+            task_overrides := _get_overrides_for_task(dag_task.task_id, overrides)
+        ) is None:
             continue
 
         # Format timeout override and apply
@@ -118,10 +124,10 @@ def _apply_configuration_overrides(dag: DAG, overrides: list[TaskOverride]):
         if timeout_override:
             # If the task is a MappedOperator, apply the timeout to partial
             # kwargs to ensure it is set on each mapped task.
-            if isinstance(task, MappedOperator):
-                task.partial_kwargs["execution_timeout"] = timeout_override
+            if isinstance(dag_task, MappedOperator):
+                dag_task.partial_kwargs["execution_timeout"] = timeout_override
             else:
-                task.execution_timeout = timeout_override
+                dag_task.execution_timeout = timeout_override
 
 
 def _get_overrides_for_task(
@@ -139,8 +145,16 @@ def _get_overrides_for_task(
     return None
 
 
+def _get_media_type_descriptor(media_types):
+    """
+    Given the list of supported media types, get the short media type descriptor
+    used in task_ids.
+    """
+    return "mixed" if len(media_types) > 1 else media_types[0]
+
+
 def create_ingestion_workflow(
-    conf: ProviderWorkflow, day_shift: int = 0, is_reingestion: bool = False
+    provider_conf: ProviderWorkflow, day_shift: int = 0, is_reingestion: bool = False
 ):
     """
     Create a TaskGroup that performs the ingestion tasks.
@@ -150,12 +164,12 @@ def create_ingestion_workflow(
 
     Required Arguments:
 
-    conf: ProviderWorkflow configuration object.
+    provider_conf: ProviderWorkflow configuration object.
 
     Optional Arguments:
 
     day_shift: integer giving the number of days before the current logical date
-               for which ingestion should run (if `conf.dated==True`).
+               for which ingestion should run (if `provider_conf.dated==True`).
     is_reingestion: is this workflow a reingestion workflow
     """
 
@@ -164,8 +178,8 @@ def create_ingestion_workflow(
         return f"{id_str}{f'_day_shift_{day_shift}' if day_shift else ''}"
 
     with TaskGroup(group_id=append_day_shift("ingest_data")) as ingest_data:
-        media_type_name = "mixed" if len(conf.media_types) > 1 else conf.media_types[0]
-        provider_name = conf.dag_id.replace("_workflow", "")
+        provider_name = provider_conf.dag_id.replace("_workflow", "")
+        media_type_name = _get_media_type_descriptor(provider_conf.media_types)
 
         # Unique identifier used to generate the load_table name
         identifier = f"{{{{ ts_nodash }}}}_{provider_name}"
@@ -173,10 +187,10 @@ def create_ingestion_workflow(
             identifier = f"{day_shift}_{identifier}"
 
         ingestion_kwargs = {
-            "ingester_class": conf.ingester_class,
-            "media_types": conf.media_types,
+            "ingester_class": provider_conf.ingester_class,
+            "media_types": provider_conf.media_types,
         }
-        if conf.dated:
+        if provider_conf.dated:
             ingestion_kwargs["args"] = [
                 DATE_RANGE_ARG_TEMPLATE.format(day_shift),
                 day_shift,  # Pass day_shift in as the tsv_suffix
@@ -189,15 +203,21 @@ def create_ingestion_workflow(
                 **ingestion_kwargs,
             },
             depends_on_past=False,
-            execution_timeout=conf.pull_timeout,
+            execution_timeout=provider_conf.pull_timeout,
             # If the data pull fails, we want to load all data that's been retrieved
             # thus far before we attempt again
             retries=0,
+            # Only report errors to Slack in non-reingestion workflows. For reingestion,
+            # ingestion errors will be reported in aggregate after all reingestion
+            # days have been attempted.
+            on_failure_callback=(
+                slack.on_failure_callback if not is_reingestion else None
+            ),
         )
 
         load_tasks = []
         record_counts_by_media_type: reporting.MediaTypeRecordMetrics = {}
-        for media_type in conf.media_types:
+        for media_type in provider_conf.media_types:
             with TaskGroup(
                 group_id=append_day_shift(f"load_{media_type}_data")
             ) as load_data:
@@ -232,7 +252,7 @@ def create_ingestion_workflow(
                         ),
                         "aws_conn_id": AWS_CONN_ID,
                         "extra_args": {
-                            "StorageClass": conf.s3_tsv_storage_class,
+                            "StorageClass": provider_conf.s3_tsv_storage_class,
                         },
                     },
                     trigger_rule=TriggerRule.NONE_SKIPPED,
@@ -263,7 +283,7 @@ def create_ingestion_workflow(
                 )
                 upsert_data = PythonOperator(
                     task_id=append_day_shift("upsert_data"),
-                    execution_timeout=conf.upsert_timeout,
+                    execution_timeout=provider_conf.upsert_timeout,
                     retries=1,
                     python_callable=loader.upsert_data,
                     op_kwargs={
@@ -301,12 +321,12 @@ def create_ingestion_workflow(
 
         pull_data >> load_tasks
 
-        if conf.create_preingestion_tasks:
-            preingestion_tasks = conf.create_preingestion_tasks()
+        if provider_conf.create_preingestion_tasks:
+            preingestion_tasks = provider_conf.create_preingestion_tasks()
             preingestion_tasks >> pull_data
 
-        if conf.create_postingestion_tasks:
-            postingestion_tasks = conf.create_postingestion_tasks()
+        if provider_conf.create_postingestion_tasks:
+            postingestion_tasks = provider_conf.create_postingestion_tasks()
             load_tasks >> postingestion_tasks
 
     ingestion_metrics = {
@@ -341,36 +361,36 @@ def create_report_load_completion(
     )
 
 
-def create_provider_api_workflow_dag(conf: ProviderWorkflow):
+def create_provider_api_workflow_dag(provider_conf: ProviderWorkflow):
     """
     Instantiate a DAG that will run the given `main_function`.
 
     Required Arguments:
 
-    conf: ProviderWorkflow configuration object.
+    provider_conf: ProviderWorkflow configuration object.
     """
-    default_args = {**DAG_DEFAULT_ARGS, **(conf.default_args or {})}
+    default_args = {**DAG_DEFAULT_ARGS, **(provider_conf.default_args or {})}
 
     # catchup is turned on by default for dated DAGs to allow backfilling.
     # It can be overridden with the `CATCHUP_ENABLED` Airflow variable.
-    catchup_enabled = conf.dated and Variable.get(
+    catchup_enabled = provider_conf.dated and Variable.get(
         "CATCHUP_ENABLED", default_var=True, deserialize_json=True
     )
 
     dag = DAG(
-        dag_id=conf.dag_id,
-        default_args={**default_args, "start_date": conf.start_date},
-        max_active_tasks=conf.max_active_tasks,
-        max_active_runs=conf.max_active_runs,
-        start_date=conf.start_date,
-        schedule=conf.schedule_string,
+        dag_id=provider_conf.dag_id,
+        default_args={**default_args, "start_date": provider_conf.start_date},
+        max_active_tasks=provider_conf.max_active_tasks,
+        max_active_runs=provider_conf.max_active_runs,
+        start_date=provider_conf.start_date,
+        schedule=provider_conf.schedule_string,
         catchup=catchup_enabled,
-        doc_md=conf.doc_md,
+        doc_md=provider_conf.doc_md,
         tags=[
             "provider",
-            *[f"provider: {media_type}" for media_type in conf.media_types],
-            f"ingestion: {'dated' if conf.dated else 'full'}",
-            *conf.tags,
+            *[f"provider: {media_type}" for media_type in provider_conf.media_types],
+            f"ingestion: {'dated' if provider_conf.dated else 'full'}",
+            *provider_conf.tags,
         ],
         render_template_as_native_obj=True,
         user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
@@ -433,38 +453,44 @@ def create_provider_api_workflow_dag(conf: ProviderWorkflow):
     )
 
     with dag:
-        if callable(getattr(conf.ingester_class, "create_ingestion_workflow", None)):
+        if callable(
+            getattr(provider_conf.ingester_class, "create_ingestion_workflow", None)
+        ):
             (
                 ingest_data,
                 ingestion_metrics,
-            ) = conf.ingester_class.create_ingestion_workflow()
+            ) = provider_conf.ingester_class.create_ingestion_workflow()
         else:
-            ingest_data, ingestion_metrics = create_ingestion_workflow(conf)
+            ingest_data, ingestion_metrics = create_ingestion_workflow(provider_conf)
 
         report_load_completion = create_report_load_completion(
-            conf.dag_id, conf.media_types, ingestion_metrics, conf.dated
+            provider_conf.dag_id,
+            provider_conf.media_types,
+            ingestion_metrics,
+            provider_conf.dated,
         )
 
         ingest_data >> report_load_completion
 
     # Apply any overrides from the DAG configuration
-    _apply_configuration_overrides(dag, conf.overrides)
+    _apply_configuration_overrides(dag, provider_conf.overrides)
 
     return dag
 
 
 def _build_partitioned_ingest_workflows(
-    partitioned_reingestion_days: list[list[int]], conf: ProviderReingestionWorkflow
+    partitioned_reingestion_days: list[list[int]],
+    provider_conf: ProviderReingestionWorkflow,
 ):
     """
     Build a list of lists of ingestion tasks.
 
-    These are parameterized by the given dag conf and a list of day shifts.
+    These are parameterized by the given dag provider_conf and a list of day shifts.
     Calculation is explained below.
 
     Required Arguments:
 
-    conf:                          ProviderReingestionWorkflow configuration
+    provider_conf:                 ProviderReingestionWorkflow configuration
                                    object used to configure the ingestion tasks.
     partitioned_reingestion_days:  list of lists of integers. It gives the
                                    set of days before the current execution
@@ -519,7 +545,7 @@ def _build_partitioned_ingest_workflows(
         workflow_list = []
         for day_shift in partition:
             ingest_data, ingestion_metrics = create_ingestion_workflow(
-                conf, day_shift, is_reingestion=True
+                provider_conf, day_shift, is_reingestion=True
             )
             workflow_list.append(ingest_data)
             duration_list.append(ingestion_metrics["duration"])
@@ -537,18 +563,49 @@ def _build_partitioned_ingest_workflows(
     return partitioned_workflows, total_ingestion_metrics
 
 
+@task
+def report_aggregate_reingestion_errors(
+    provider_conf: ProviderReingestionWorkflow, dag_run=None
+):
+    """
+    Report ingestion errors that occurred during a reingestion workflow in
+    a single, aggregate slack message. If no errors were encountered, skip.
+    """
+    # Get the list of failed `pull_data` tasks
+    media_type_name = _get_media_type_descriptor(provider_conf.media_types)
+    failed_pull_data_tasks = [
+        task
+        for task in dag_run.get_task_instances(state=State.FAILED)
+        if f"pull_{media_type_name}_data" in task.task_id
+    ]
+
+    if not failed_pull_data_tasks:
+        raise AirflowSkipException
+
+    message = (
+        f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
+        f" ingestion days while running the `{provider_conf.dag_id}` DAG. See the"
+        " logs for details:\n"
+    ) + "\n".join(
+        f"  - <{task.log_url}|{task.task_id}>" for task in failed_pull_data_tasks[:5]
+    )
+
+    slack.send_alert(message, provider_conf.dag_id, "Aggregate Reingestion Error")
+
+
 def create_day_partitioned_reingestion_dag(
-    conf: ProviderReingestionWorkflow, partitioned_reingestion_days: list[list[int]]
+    provider_conf: ProviderReingestionWorkflow,
+    partitioned_reingestion_days: list[list[int]],
 ):
     """
     Instantiate a DAG that will run ingestion using the given configuration.
 
-    In addition to a `conf` object and `reingestion_day_list_list`, this is
+    In addition to a `provider_conf` object and `reingestion_day_list_list`, this is
     parameterized by a number of dates calculated using the reingestion day list.
 
     Required Arguments:
 
-    conf:                       ProviderReingestionWorkflow configuration
+    provider_conf:              ProviderReingestionWorkflow configuration
                                 object used to configure the ingestion tasks.
     reingestion_day_list_list:  list of lists of integers. It gives the
                                 set of days before the current execution
@@ -557,19 +614,22 @@ def create_day_partitioned_reingestion_dag(
                                 describes how the calls to the function
                                 should be prioritized.
     """
-    default_args = {**DAG_DEFAULT_ARGS, **(conf.default_args or {})}
+    default_args = {**DAG_DEFAULT_ARGS, **(provider_conf.default_args or {})}
     dag = DAG(
-        dag_id=conf.dag_id,
-        default_args={**default_args, "start_date": conf.start_date},
-        max_active_tasks=conf.max_active_tasks,
-        max_active_runs=conf.max_active_runs,
-        dagrun_timeout=conf.dagrun_timeout,
-        schedule=conf.schedule_string,
-        start_date=conf.start_date,
+        dag_id=provider_conf.dag_id,
+        default_args={**default_args, "start_date": provider_conf.start_date},
+        max_active_tasks=provider_conf.max_active_tasks,
+        max_active_runs=provider_conf.max_active_runs,
+        dagrun_timeout=provider_conf.dagrun_timeout,
+        schedule=provider_conf.schedule_string,
+        start_date=provider_conf.start_date,
         catchup=False,
-        doc_md=conf.doc_md,
+        doc_md=provider_conf.doc_md,
         tags=["provider-reingestion"]
-        + [f"provider-reingestion: {media_type}" for media_type in conf.media_types],
+        + [
+            f"provider-reingestion: {media_type}"
+            for media_type in provider_conf.media_types
+        ],
         render_template_as_native_obj=True,
         user_defined_macros={"date_partition_for_prefix": date_partition_for_prefix},
     )
@@ -578,7 +638,9 @@ def create_day_partitioned_reingestion_dag(
         (
             partitioned_ingest_workflows,
             ingestion_metrics,
-        ) = _build_partitioned_ingest_workflows(partitioned_reingestion_days, conf)
+        ) = _build_partitioned_ingest_workflows(
+            partitioned_reingestion_days, provider_conf
+        )
 
         # For each 'level', make a gather task that waits for all of the reingestion
         # tasks at that level to complete.
@@ -594,17 +656,26 @@ def create_day_partitioned_reingestion_dag(
             # This gates the tasks at each level.
             gather_operator >> partitioned_ingest_workflows[i + 1]
 
+        report_aggregate_errors = report_aggregate_reingestion_errors(provider_conf)
+
         # Create a single report_load_completion task, passing in the list of duration
         # and counts data for each completed task.
         report_load_completion = create_report_load_completion(
-            conf.dag_id, conf.media_types, ingestion_metrics, conf.dated
+            provider_conf.dag_id,
+            provider_conf.media_types,
+            ingestion_metrics,
+            provider_conf.dated,
         )
 
         # report_load_completion is downstream of all the ingestion TaskGroups in the
         # final list.
-        partitioned_ingest_workflows[-1] >> report_load_completion
+        (
+            partitioned_ingest_workflows[-1]
+            >> report_aggregate_errors
+            >> report_load_completion
+        )
 
     # Apply any overrides from the DAG configuration
-    _apply_configuration_overrides(dag, conf.overrides)
+    _apply_configuration_overrides(dag, provider_conf.overrides)
 
     return dag

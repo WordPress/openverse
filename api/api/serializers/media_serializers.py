@@ -17,6 +17,7 @@ from api.constants import sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.media_types import MediaType
 from api.constants.parameters import COLLECTION, TAG
+from api.constants.search import COLLECTIONS
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
 from api.models.media import AbstractMedia
@@ -27,6 +28,7 @@ from api.serializers.docs import (
     EXCLUDED_SOURCE_HELP_TEXT,
     SOURCE_HELP_TEXT,
     TAG_HELP_TEXT,
+    UNSTABLE_WARNING,
 )
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
@@ -97,22 +99,11 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return value
 
 
-EXCLUDED_COLLECTION_REQUEST_FIELDS = (
-    [] if settings.SHOW_COLLECTION_DOCS else [COLLECTION, TAG]
-)
-
-
 @extend_schema_serializer(
-    # Hide unstable and internal fields from documentation.
+    # Hide internal fields from documentation.
     # Also see `field_names` below.
     exclude_fields=[
-        "unstable__sort_by",
-        "unstable__sort_dir",
-        "unstable__authority",
-        "unstable__authority_boost",
-        "unstable__include_sensitive_results",
         "internal__index",
-        *EXCLUDED_COLLECTION_REQUEST_FIELDS,
     ],
 )
 class MediaSearchRequestSerializer(PaginatedRequestSerializer):
@@ -133,28 +124,18 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         "license_type",
         "creator",
         "tags",
-        # TODO: Uncomment after https://github.com/WordPress/openverse/issues/3919
-        # "collection",
-        # "tag",
+        COLLECTION,
+        TAG,
         "title",
         "filter_dead",
         "extension",
         "mature",
-        # Excluded unstable fields, also see `exclude_fields` above.
-        # "unstable__sort_by",
-        # "unstable__sort_dir",
-        # "unstable__authority",
-        # "unstable__authority_boost",
-        # "unstable__include_sensitive_results",
+        "unstable__sort_by",
+        "unstable__sort_dir",
+        "unstable__authority",
+        "unstable__authority_boost",
+        "unstable__include_sensitive_results",
     ]
-    # TODO: Remove after https://github.com/WordPress/openverse/issues/3919
-    if settings.SHOW_COLLECTION_DOCS:
-        field_names.extend(
-            [
-                TAG,
-                COLLECTION,
-            ]
-        )
     field_names.extend(PaginatedRequestSerializer.field_names)
     """
     Keep the fields names in sync with the actual fields below as this list is
@@ -199,6 +180,20 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         required=False,
         max_length=200,
     )
+    unstable__collection = serializers.ChoiceField(
+        source="collection",
+        label="collection",
+        choices=COLLECTIONS,
+        help_text=COLLECTION_HELP_TEXT,
+        required=False,
+    )
+    unstable__tag = serializers.CharField(
+        label="tag",
+        source="tag",
+        help_text=TAG_HELP_TEXT,
+        required=False,
+        max_length=200,
+    )
     license = serializers.CharField(
         label="licenses",
         help_text=make_comma_separated_help_text(LICENSE_GROUPS["all"], "licenses"),
@@ -236,14 +231,14 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     #   - validators for these fields in ``MediaSearchRequestSerializer``
     unstable__sort_by = serializers.ChoiceField(
         source="sort_by",
-        help_text="The field which should be the basis for sorting results.",
+        help_text=f"{UNSTABLE_WARNING}The field which should be the basis for sorting results.",
         choices=SORT_FIELDS,
         required=False,
         default=RELEVANCE,
     )
     unstable__sort_dir = serializers.ChoiceField(
         source="sort_dir",
-        help_text="The direction of sorting. Cannot be applied when sorting by "
+        help_text=f"{UNSTABLE_WARNING}The direction of sorting. Cannot be applied when sorting by "
         "`relevance`.",
         choices=SORT_DIRECTIONS,
         required=False,
@@ -251,14 +246,14 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     )
     unstable__authority = serializers.BooleanField(
         label="authority",
-        help_text="If enabled, the search will add a boost to results that are "
+        help_text=f"{UNSTABLE_WARNING}If enabled, the search will add a boost to results that are "
         "from authoritative sources.",
         required=False,
         default=False,
     )
     unstable__authority_boost = serializers.FloatField(
         label="authority_boost",
-        help_text="The boost coefficient to apply to authoritative sources, "
+        help_text=f"{UNSTABLE_WARNING}The boost coefficient to apply to authoritative sources, "
         "multiplied with the popularity boost.",
         required=False,
         default=1.0,
@@ -268,24 +263,9 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     unstable__include_sensitive_results = serializers.BooleanField(
         source="include_sensitive_results",
         label="include_sensitive_results",
-        help_text="Whether to include results considered sensitive.",
+        help_text=f"{UNSTABLE_WARNING}Whether to include results considered sensitive.",
         required=False,
         default=False,
-    )
-
-    unstable__tag = serializers.CharField(
-        label="tag",
-        source="tag",
-        help_text=TAG_HELP_TEXT,
-        required=False,
-        max_length=200,
-    )
-    unstable__collection = serializers.ChoiceField(
-        source="collection",
-        label="collection",
-        choices=["tag", "source", "creator"],
-        help_text=COLLECTION_HELP_TEXT,
-        required=False,
     )
 
     # The ``internal__`` prefix is used in the query params.
@@ -317,6 +297,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         variables = {
             "origin": settings.CANONICAL_ORIGIN,
             "media_path": media_path,
+            "collection_param": COLLECTION,
         }
 
         self.fields["source"].help_text = SOURCE_HELP_TEXT.format(**variables)

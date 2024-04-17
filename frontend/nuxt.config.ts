@@ -346,6 +346,7 @@ const config: NuxtConfig = {
         environment: process.env.SENTRY_ENVIRONMENT,
       },
     },
+    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
   },
 }
 

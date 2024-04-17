@@ -438,16 +438,14 @@ class INaturalistDataIngester(ProviderDataIngester):
                     task_id="consolidate_load_statistics",
                     python_callable=INaturalistDataIngester.consolidate_load_statistics,
                     op_kwargs={
-                        "all_results": XCOM_PULL_TEMPLATE.format(
-                            load_transformed_data.task_id, "return_value"
-                        ),
+                        "all_results": load_transformed_data.output,
                     },
                     doc_md=(
                         "Total load counts across batches from load_transformed_data."
                     ),
                     retries=0,
+                    trigger_rule=TriggerRule.NONE_SKIPPED,
                 )
-
                 (
                     create_loading_table
                     >> get_batches

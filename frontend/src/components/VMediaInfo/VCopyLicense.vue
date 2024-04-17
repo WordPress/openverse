@@ -28,16 +28,16 @@
         :media-id="media.id"
         :media-type="media.frontendMediaType"
       >
-        <p id="attribution-html" class="break-all font-mono" dir="ltr">
-          {{ getAttributionMarkup() }}
-        </p>
+        <!-- Ignore reason: the interpolated string cannot have any whitespace around it when inside <p>, else there will be unwanted whitespace -->
+        <!-- prettier-ignore -->
+        <p id="attribution-html" class="break-all font-mono" dir="ltr">{{ getAttributionMarkup() }}</p>
       </VLicenseTabPanel>
       <VLicenseTabPanel
         :tab="tabs[2]"
         :media-id="media.id"
         :media-type="media.frontendMediaType"
       >
-        {{ getAttributionMarkup({ isPlaintext: true }) }}
+        <p>{{ getAttributionMarkup({ isPlaintext: true }) }}</p>
       </VLicenseTabPanel>
     </VTabs>
   </div>

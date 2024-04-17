@@ -512,6 +512,28 @@ def test__get_extension_from_url(image_url, expected_ext):
     assert extension._get_file_extension_from_url(image_url) == expected_ext
 
 
+@pytest.mark.parametrize(
+    "content_type, expected_ext",
+    [
+        ("image/png;charset=UTF-8", "png"),
+        ("image/jpeg", "jpg"),
+        ("image/png", "png"),
+        ("image/gif", "gif"),
+        ("image/svg+xml", "svg"),
+        ("audio/midi", "midi"),
+        ("audio/mpeg", "mp3"),
+        ("audio/ogg", None),
+        ("audio/opus", "opus"),
+        ("audio/wav", None),
+        ("video/webm", "webm"),
+        (None, None),
+        ("foobar", None),
+    ],
+)
+def test_get_extension_from_content_type(content_type, expected_ext):
+    assert extension._get_file_extension_from_content_type(content_type) == expected_ext
+
+
 @pytest.mark.django_db
 @pytest.mark.parametrize("image_type", ["apng", "tiff", "bmp"])
 def test_photon_get_raises_by_not_allowed_types(photon_get, image_type):

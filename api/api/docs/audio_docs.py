@@ -6,7 +6,9 @@ from rest_framework.exceptions import (
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 
+from api.constants.parameters import COLLECTION, TAG
 from api.docs.base_docs import (
+    NON_FILTER_FIELDS,
     SEARCH_DESCRIPTION,
     custom_extend_schema,
     fields_to_md,
@@ -40,11 +42,15 @@ from api.serializers.provider_serializers import ProviderSerializer
 
 
 serializer = AudioSearchRequestSerializer(context={"media_type": "audio"})
-audio_filter_fields = fields_to_md([f for f in serializer.field_names if f != "q"])
+audio_filter_fields = fields_to_md(
+    [f for f in serializer.field_names if f not in NON_FILTER_FIELDS]
+)
 
 audio_search_description = SEARCH_DESCRIPTION.format(
     filter_fields=audio_filter_fields,
     media_type="audio files",
+    collection_param=COLLECTION,
+    tag_param=TAG,
 )
 
 search = custom_extend_schema(
