@@ -145,3 +145,7 @@ generate-dag-docs fail_on_diff="false":
 # Generate files for a new provider
 add-provider provider_name endpoint +media_types="image":
     python3 templates/create_provider_ingester.py "{{ provider_name }}" "{{ endpoint }}" -m {{ media_types }}
+
+# Run a python script (args) directly in the container specified in the SERVICE env-var, default is "scheduler"
+run *args:
+    just ../run {{ SERVICE }} python {{ args }}
