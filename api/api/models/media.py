@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from elasticsearch import Elasticsearch, NotFoundError
-from ov_attribution.attribution import get_attribution_text
-from ov_attribution.license import License
+from openverse_attribution.attribution import get_attribution_text
+from openverse_attribution.license import License
 
 from api.constants.moderation import DecisionAction
 from api.models.base import OpenLedgerModel

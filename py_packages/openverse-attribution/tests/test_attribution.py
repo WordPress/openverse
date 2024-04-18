@@ -1,5 +1,5 @@
 import pytest
-from ov_attribution.attribution import get_attribution_text
+from openverse_attribution.attribution import get_attribution_text
 
 
 BLANK = object()

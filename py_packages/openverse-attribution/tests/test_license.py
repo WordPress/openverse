@@ -1,5 +1,5 @@
 import pytest
-from ov_attribution.license import License
+from openverse_attribution.license import License
 
 
 def test_raises_value_error_on_invalid_license():

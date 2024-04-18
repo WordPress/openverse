@@ -1,6 +1,6 @@
 import re
 
-from ov_attribution.license import License
+from openverse_attribution.license import License
 
 
 def get_attribution_text(

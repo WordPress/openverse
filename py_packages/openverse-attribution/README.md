@@ -1,7 +1,7 @@
-# ov-attribution
+# openverse-attribution
 
-`ov-attribution` is a Python library that provides utilities related to open
-licenses, tools, and attribution.
+`openverse-attribution` is a Python library that provides utilities related to
+open licenses, tools, and attribution.
 
 This library is a part of the Openverse project. For more information, refer to
 the

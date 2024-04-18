@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:7ba068dec7406dbd4bfc2dd57955af9632cc4acf37c2a0e389709ce1f9887c2b"
+content_hash = "sha256:b556ba31e51ddd6fd716cd15576cf6485d187ef2949b57588183f036a4873257"
 
 [[package]]
 name = "adrf"
@@ -1029,6 +1029,15 @@ files = [
 ]
 
 [[package]]
+name = "openverse-attribution"
+version = "0.1.0"
+requires_python = "==3.11.*"
+editable = true
+path = "../py_packages/openverse-attribution"
+summary = "Provides utilities related to open licenses, tools, and attribution."
+groups = ["default", "overrides"]
+
+[[package]]
 name = "ordered-set"
 version = "4.1.0"
 requires_python = ">=3.7"
@@ -1051,15 +1060,6 @@ files = [
     {file = "orderedmultidict-1.0.1-py2.py3-none-any.whl", hash = "sha256:43c839a17ee3cdd62234c47deca1a8508a3f2ca1d0678a3bf791c87cf84adbf3"},
     {file = "orderedmultidict-1.0.1.tar.gz", hash = "sha256:04070bbb5e87291cc9bfa51df413677faf2141c73c61d2a5f7b26bea3cd882ad"},
 ]
-
-[[package]]
-name = "ov-attribution"
-version = "0.1.0"
-requires_python = "==3.11.*"
-editable = true
-path = "../packages/ov-attribution"
-summary = "Provides utilities related to open licenses, tools, and attribution."
-groups = ["default", "overrides"]
 
 [[package]]
 name = "packaging"

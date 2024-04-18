@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 import requests
-from ov_attribution.attribution import get_attribution_text
+from openverse_attribution.attribution import get_attribution_text
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 from sentry_sdk import capture_exception
 
