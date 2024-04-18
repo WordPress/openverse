@@ -66,7 +66,7 @@ ARG CATALOG_AIRFLOW_VERSION
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
 ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${CATALOG_AIRFLOW_VERSION}/constraints-${CATALOG_PY_VERSION}.txt"
 
-RUN pip install --user -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
+RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 
 COPY entrypoint.sh /opt/airflow/entrypoint.sh
 

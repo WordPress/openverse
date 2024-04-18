@@ -198,8 +198,8 @@ def test_ts_pairs_and_kwargs_are_available_in_get_next_query_params():
         # When get_next_query_params is called, the start and end timestamps
         # are passed in as kwargs *in addition to any other kwargs passed to
         # ingest_records*
-        assert ingester.get_next_query_params.called_with(
-            start_ts=mock_start, end_ts=mock_end, foo="foo", bar="bar"
+        ingester.get_next_query_params.assert_called_with(
+            None, start_ts=mock_start, end_ts=mock_end, foo="foo", bar="bar"
         )
 
 
