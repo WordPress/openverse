@@ -1,7 +1,7 @@
-# `ov-attribution`
+# `openverse-attribution`
 
-`ov-attribution` is a Python library that provides utilities related to open
-licenses, tools, and attribution.
+`openverse-attribution` is a Python library that provides utilities related to
+open licenses, tools, and attribution.
 
 Refer to the in-code documentation for more in-depth information about each
 property and function.
@@ -29,7 +29,7 @@ provides access to a number of properties and methods about that particular
 license.
 
 ```python
-from ov_attribution.license import License
+from openverse_attribution.license import License
 
 lic = License("by")
 lic.url()           # 'https://creativecommons.org/licenses/by/4.0/'
@@ -60,7 +60,7 @@ The second sentence with the URL to the deed is optional and can be disabled by
 passing `False` to the `license_url` param.
 
 ```python
-from ov_attribution.attribution import get_attribution_text
+from openverse_attribution.attribution import get_attribution_text
 
 get_attribution_text(
   "cc0",

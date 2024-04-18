@@ -91,7 +91,7 @@ how to add/maintain them.
 :titlesonly:
 :glob:
 
-ov_attribution/index
+openverse_attribution/index
 ```
 
 ```{caution}
