@@ -146,6 +146,6 @@ generate-dag-docs fail_on_diff="false":
 add-provider provider_name endpoint +media_types="image":
     python3 templates/create_provider_ingester.py "{{ provider_name }}" "{{ endpoint }}" -m {{ media_types }}
 
-# Run a python script (args) directly in the container specified in the SERVICE env-var, default is "scheduler"
-run *args:
-    just ../run {{ SERVICE }} python {{ args }}
+# Run bash in the container set in the SERVICE env-var
+run:
+    just ../run {{ SERVICE }} bash
