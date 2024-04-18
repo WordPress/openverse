@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:b556ba31e51ddd6fd716cd15576cf6485d187ef2949b57588183f036a4873257"
+content_hash = "sha256:59a20e5ea52861d51e07a7ecb65ce616af9f937a1a6f33e2587f233a42bc008f"
 
 [[package]]
 name = "adrf"
