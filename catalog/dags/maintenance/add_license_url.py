@@ -156,7 +156,7 @@ def report_completion(updated, dag_task: AbstractOperator = None):
     :param updated: total number of records updated
     :param dag_task: automatically passed by Airflow, used to set the execution timeout.
     """
-    total_updated = sum(updated)
+    total_updated = sum(updated) if updated else 0
     query = "SELECT COUNT(*) from image WHERE meta_data->>'license_url' IS NULL"
     null_counts = run_sql(query, method="get_first", dag_task=dag_task)[0]
 
