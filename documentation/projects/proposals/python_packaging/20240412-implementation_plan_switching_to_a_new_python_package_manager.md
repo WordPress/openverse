@@ -196,7 +196,7 @@ compliant and faster, it may be considered in the future too.
 
 ## Step-by-step plan
 
-1. Replace Pipenv with Poetry.
+1. Replace Pipenv with PDM.
 2. Update Renovate configuration.
 3. Update `Dockerfile`s.
 4. Update `just` recipes.
