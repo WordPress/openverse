@@ -22,5 +22,3 @@ auth_key_info_200_example = {
         "rate_limit_model": "enhanced",
     }
 }
-
-auth_key_info_403_example = {"application/json": "Forbidden"}

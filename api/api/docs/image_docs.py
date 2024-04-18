@@ -1,4 +1,5 @@
 from rest_framework.exceptions import (
+    AuthenticationFailed,
     NotAuthenticated,
     NotFound,
     ValidationError,
@@ -78,7 +79,10 @@ stats = custom_extend_schema(
 
         By using this endpoint, you can obtain info about content providers such
         as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
-    res={200: (ProviderSerializer(many=True), image_stats_200_example)},
+    res={
+        200: (ProviderSerializer(many=True), image_stats_200_example),
+        401: (AuthenticationFailed, None),
+    },
     eg=[image_stats_curl],
 )
 
@@ -90,6 +94,7 @@ detail = custom_extend_schema(
         {fields_to_md(ImageSerializer.Meta.fields)}""",
     res={
         200: (ImageSerializer, image_detail_200_example),
+        401: (AuthenticationFailed, None),
         404: (NotFound, image_detail_404_example),
     },
     eg=[image_detail_curl],
@@ -103,6 +108,7 @@ related = custom_extend_schema(
         {fields_to_md(ImageSerializer.Meta.fields)}.""",
     res={
         200: (ImageSerializer, image_related_200_example),
+        401: (AuthenticationFailed, None),
         404: (NotFound, image_related_404_example),
     },
     eg=[image_related_curl],
@@ -111,6 +117,7 @@ related = custom_extend_schema(
 report = custom_extend_schema(
     res={
         201: (ImageReportRequestSerializer, image_complain_201_example),
+        401: (AuthenticationFailed, None),
         400: (ValidationError, None),
     },
     eg=[image_complain_curl],
@@ -118,17 +125,28 @@ report = custom_extend_schema(
 
 thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
-    responses={200: OpenApiResponse(description="Thumbnail image"), 404: NotFound},
+    responses={
+        200: OpenApiResponse(description="Thumbnail image"),
+        404: NotFound,
+        401: AuthenticationFailed,
+    },
 )
 
 oembed = custom_extend_schema(
     params=OembedRequestSerializer,
     res={
         200: (OembedSerializer, image_oembed_200_example),
-        404: (NotFound, image_oembed_404_example),
         400: (ValidationError, image_oembed_400_example),
+        401: (AuthenticationFailed, None),
+        404: (NotFound, image_oembed_404_example),
     },
     eg=[image_oembed_curl],
 )
 
-watermark = extend_schema(deprecated=True, responses={404: NotFound})
+watermark = extend_schema(
+    deprecated=True,
+    responses={
+        401: AuthenticationFailed,
+        404: NotFound,
+    },
+)

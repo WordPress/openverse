@@ -47,7 +47,6 @@ from api.examples.oauth2_requests import (
 )
 from api.examples.oauth2_responses import (
     auth_key_info_200_example,
-    auth_key_info_403_example,
     auth_register_201_example,
     auth_token_200_example,
 )
