@@ -31,6 +31,12 @@ from data_refresh.reporting import report_record_difference, report_status
             {"src1": 10, "src2": 10},
             ["0 → 20", "+20 (+inf%", "`src1`:+10", "`src2`:+10"],
         ],
+        [
+            {"src1": 10, "src2": 10},
+            {},
+            ["20 → 0", "-20 (-100.0%", "`src1`:-10", "`src2`:-10"],
+        ],
+        [{}, {}, ["Both indices missing? No breakdown to show"]],
     ],
 )
 def test_record_reporting(before, after, expected_in_message):

@@ -27,7 +27,12 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
     else:
         percent_diff = float("inf")
     breakdown_diff = {k: after.get(k, 0) - before.get(k, 0) for k in all_keys}
-    breakdown_message = "\n".join(f"`{k}`:{v:+,}" for k, v in breakdown_diff.items())
+    if breakdown_diff:
+        breakdown_message = "\n".join(
+            f"`{k}`:{v:+,}" for k, v in breakdown_diff.items()
+        )
+    else:
+        breakdown_message = "Both indices missing? No breakdown to show"
 
     message = f"""
 Data refresh for {media_type} complete! :tada:
