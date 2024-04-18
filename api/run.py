@@ -16,7 +16,7 @@ if __name__ == "__main__":
         # directory, which is the API project root set by ``Dockerfile``.
         reload_dirs=[
             ".",  # default, API directory
-            "../py_packages/",
+            "../py-packages/",
         ],
         log_level="debug",
         log_config={

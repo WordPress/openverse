@@ -1033,7 +1033,7 @@ name = "openverse-attribution"
 version = "0.1.0"
 requires_python = "==3.11.*"
 editable = true
-path = "../py_packages/openverse-attribution"
+path = "../py-packages/openverse-attribution"
 summary = "Provides utilities related to open licenses, tools, and attribution."
 groups = ["default", "overrides"]
 

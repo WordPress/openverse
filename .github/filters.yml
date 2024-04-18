@@ -9,7 +9,7 @@ catalog:
   - docker-compose.yml
 api:
   - api/**
-  - py_packages/**
+  - py-packages/**
   - docker/db/**
   - docker/es/**
   - docker/nginx/**

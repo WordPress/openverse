@@ -35,7 +35,7 @@ RUN apt-get update \
   && pip install pdm~=2.14
 
 # Copy subpackages from additional build-context 'packages'
-COPY --from=packages openverse-attribution ./py_packages/openverse-attribution
+COPY --from=packages openverse-attribution ./py-packages/openverse-attribution
 
 # Copy the Python project manifest and PDM lockfile into the container
 COPY pyproject.toml pdm.lock ./
@@ -98,7 +98,7 @@ RUN useradd --create-home opener \
 USER opener
 
 # Copy code into the final image
-COPY --chown=opener --from=packages openverse-attribution /py_packages/openverse-attribution/
+COPY --chown=opener --from=packages openverse-attribution /py-packages/openverse-attribution/
 COPY --chown=opener . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`

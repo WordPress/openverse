@@ -32,13 +32,13 @@ includes = {
     "api": {
         "image": "api",
         "target": "api",
-        "build-contexts": "packages=./py_packages",
+        "build-contexts": "packages=./py-packages",
     },
     "api_nginx": {
         "image": "api_nginx",
         "context": "api",
         "target": "nginx",
-        "build-contexts": "packages=./py_packages",
+        "build-contexts": "packages=./py-packages",
     },
     "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
     "frontend_nginx": {
