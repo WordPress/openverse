@@ -14,6 +14,8 @@ NO_COLOR := "\\033[0m"
 # Version #
 ###########
 
+# These commands use standard GNU tools instead of `pdm` because we do not
+# require PDM on the host machine for API development.
 export API_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
 export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | awk -F'"' '{print $2}'`
 
