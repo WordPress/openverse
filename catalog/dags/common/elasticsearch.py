@@ -90,7 +90,12 @@ def get_record_count_group_by_sources(es_host: str, index: str):
     # See source code at https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_modules/airflow/providers/elasticsearch/hooks/elasticsearch.html#ElasticsearchPythonHook
     # Therefore using get_conn to call the search from the ES client
     es_client = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-    es_result = es_client.search(body=body, index=index)
+    try:
+        es_result = es_client.search(body=body, index=index)
+    except NotFoundError as err:
+        logger.warning(f"Elasticsearch index: {index} does not exist. Error msg: {err}")
+        return {}
+
     # es_buckets object looks like: [{'key': 'flickr', 'doc_count': 2500}, {'key': 'stocksnap', 'doc_count': 2500}]
     es_buckets = es_result["aggregations"]["unique_sources"]["buckets"]
     result = {
