@@ -888,7 +888,7 @@
        * _{spacebar}_ part of "Press {spacebar} to play or pause the track."
        */
       spacebar: "Spacebar",
-    }, 
+    },
   },
   audioResults: {
     snackbar: {
