@@ -2,7 +2,7 @@
 
 # Note: Unpinned packages have their versions determined by the Airflow constraints file
 
-apache-airflow[amazon,postgres,http,elasticsearch]==2.8.4
+apache-airflow[amazon,postgres,http,elasticsearch]==2.9.0
 lxml
 psycopg2-binary
 requests-file==2.0.*
