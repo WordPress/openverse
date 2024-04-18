@@ -47,7 +47,7 @@
       "addLabels": ["🟨 tech: javascript"]
     },
     {
-      "matchFileNames": ["frontend/**", "packages/eslint-plugin/**"],
+      "matchFileNames": ["{frontend,packages}/**"],
       "addLabels": ["🧱 stack: frontend"]
     },
     {

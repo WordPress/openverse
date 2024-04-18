@@ -24,7 +24,7 @@ ingestion_server:
   - load_sample_data.sh
 frontend:
   - frontend/**
-  - packages/eslint-plugin/**
+  - packages/**
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
