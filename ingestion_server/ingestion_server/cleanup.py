@@ -7,12 +7,15 @@ This includes cleaning up malformed URLs and filtering out undesirable tags.
 import csv
 import logging as log
 import multiprocessing
+import os
 import time
 import uuid
 from urllib.parse import urlparse
 
+import boto3
 import requests as re
 import tldextract
+from decouple import config
 from psycopg2.extras import DictCursor, Json
 
 from ingestion_server.db_helpers import database_connect
@@ -272,24 +275,58 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
     return cleaned_values
 
 
-def save_cleaned_data(result: dict) -> dict[str, int]:
-    log.info("Saving cleaned data...")
-    start_time = time.time()
+class CleanDataUploader:
+    # Number of records to buffer in memory before writing to disk
+    mem_buffer_size = 100
 
-    cleanup_counts = {field: len(items) for field, items in result.items()}
-    for field, cleaned_items in result.items():
-        # Skip the tag field because the file is too large and fills up the disk
-        if field == "tag":
-            continue
-        if cleaned_items:
-            with open(f"{field}.tsv", "a") as f:
-                csv_writer = csv.writer(f, delimiter="\t")
-                csv_writer.writerows(cleaned_items)
+    # Size (in MB) of local file buffer before writing to S3
+    disk_buffer_size = 10 * 1024 * 1024
 
-    end_time = time.time()
-    total_time = end_time - start_time
-    log.info(f"Finished saving cleaned data in {total_time},\n{cleanup_counts}")
-    return cleanup_counts
+    buffer = {
+        field: {"part": 1, "rows": []}
+        for field in _cleanup_config["tables"]["image"]["sources"]["*"]["fields"]
+    }
+
+    def __init__(self):
+        bucket_name = config("AWS_S3_BUCKET", default="openverse-catalog")
+        self.s3 = boto3.resource(
+            "s3", region_name=config("AWS_REGION", default="us-east-1")
+        )
+        self.s3_bucket = self.s3.Bucket(bucket_name)
+
+    def _save_to_disk(self, field: str, force_upload=False):
+        log.info(f"Saving {len(self.buffer[field])} rows of `{field}` to local file.")
+        with open(f"{field}.tsv", "a") as f:
+            csv_writer = csv.writer(f, delimiter="\t")
+            csv_writer.writerows(self.buffer[field]["rows"])
+            # Clean memory buffer of saved rows
+            self.buffer[field]["rows"] = []
+
+        if os.path.getsize(f"{field}.tsv") >= self.disk_buffer_size or force_upload:
+            self._upload_to_s3(field)
+
+    def _upload_to_s3(self, field: str):
+        part_number = self.buffer[field]["part"]
+        log.info(f"Uploading file part {part_number} of `{field}` to S3...")
+        s3_file_name = f"shared/data-refresh-cleaned-data/{field}_{part_number}.tsv"
+        self.s3_bucket.upload_file(f"{field}.tsv", s3_file_name)
+        self.buffer[field]["part"] += 1
+        os.remove(f"{field}.tsv")
+
+    def save(self, result: dict) -> dict[str, int]:
+        for field, cleaned_items in result.items():
+            if cleaned_items:
+                self.buffer[field]["rows"] += cleaned_items
+                if len(self.buffer[field]["rows"]) >= self.mem_buffer_size:
+                    self._save_to_disk(field)
+
+        return {field: len(items) for field, items in result.items()}
+
+    def flush(self):
+        log.info("Saving remaining rows and deleting temporary files...")
+        for field in self.buffer:
+            if self.buffer[field]["rows"]:
+                self._save_to_disk(field, force_upload=True)
 
 
 def clean_image_data(table):
@@ -299,6 +336,7 @@ def clean_image_data(table):
     :param table: The staging table for the new data
     :return: None
     """
+    data_uploader = CleanDataUploader()
 
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
@@ -364,7 +402,7 @@ def clean_image_data(table):
                 log.info(f"Starting {len(jobs)} cleaning jobs")
 
                 for result in pool.starmap(_clean_data_worker, jobs):
-                    batch_cleaned_counts = save_cleaned_data(result)
+                    batch_cleaned_counts = data_uploader.save(result)
                     for field in batch_cleaned_counts:
                         cleaned_counts_by_field[field] += batch_cleaned_counts[field]
                 pool.close()
@@ -383,6 +421,7 @@ def clean_image_data(table):
     conn.commit()
     iter_cur.close()
     conn.close()
+    data_uploader.flush()
     end_time = time.time()
     cleanup_time = end_time - start_time
     log.info(
