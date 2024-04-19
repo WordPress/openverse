@@ -19,10 +19,11 @@ NO_COLOR := "\\033[0m"
 export API_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
 export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | awk -F'"' '{print $2}'`
 
-# Print the Python version specified in the `Pipfile`
+# Print the Python version specified in `pyproject.toml`
 @py-version:
     echo $API_PY_VERSION
 
+# Print the pinned `pgcli` version from the PDM lockfile
 @pgcli-version:
     echo $PGCLI_VERSION
 

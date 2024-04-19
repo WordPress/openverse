@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# Automatically build image using Python version specified in the `Pipfile`.
+# Automatically build image using Python version specified in `pyproject.toml`
 ARG API_PY_VERSION
 
 ##################
