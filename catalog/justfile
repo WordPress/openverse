@@ -84,7 +84,6 @@ shell:
 # Launch an IPython shell in a new container under `SERVICE`
 ipython *args: up-deps
     env DC_USER="airflow" just ../run \
-        --rm \
         --workdir /opt/airflow/catalog/dags \
         {{ SERVICE }} \
         bash -c \'ipython {{ args }}\'
@@ -100,7 +99,6 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 # Run a command in a test container under `SERVICE`
 _mount-test command: up-deps
     env DC_USER="airflow" just ../run \
-        --rm \
         -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
         -w /opt/airflow/catalog \
         --volume \'{{ justfile_directory() }}/../docker\':/opt/airflow/docker/ \
